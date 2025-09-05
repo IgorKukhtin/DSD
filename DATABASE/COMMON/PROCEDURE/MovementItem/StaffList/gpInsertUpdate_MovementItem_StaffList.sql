@@ -54,7 +54,7 @@ BEGIN
                                                                    );
      END IF; 
 
-     --пробуем найти элемент справочника, нсли не находим, тогда сохраняем новый
+     -- пробуем найти элемент справочника, нсли не находим, тогда сохраняем новый
      vbStaffHoursId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_StaffHours() AND TRIM ( UPPER (Object.ValueData)) = TRIM (UPPER (inStaffHoursName)));
      IF COALESCE (vbStaffHoursId,0) = 0 
      THEN 
@@ -67,7 +67,12 @@ BEGIN
                                                              );
      END IF;
      
-     --пробуем найти элемент справочника, нсли не находим, тогда сохраняем новый
+     -- замена
+     IF zfConvert_StringToFloat (inStaffHoursLengthName) = 0
+     THEN
+         inStaffHoursLengthName:= '0';
+     END IF;
+     -- пробуем найти элемент справочника, нсли не находим, тогда сохраняем новый
      vbStaffHoursLengthId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_StaffHoursLength() AND TRIM ( UPPER (Object.ValueData)) = TRIM (UPPER (inStaffHoursLengthName)));
      IF COALESCE (vbStaffHoursLengthId,0) = 0 
      THEN 
@@ -89,7 +94,7 @@ BEGIN
                                                   , inPersonalId          := inPersonalId    
                                                   , inStaffPaidKindId     := inStaffPaidKindId    
                                                   , inStaffHoursDayId     := vbStaffHoursDayId    
-                                                  , inStaffHoursId        := vbtaffHoursId       
+                                                  , inStaffHoursId        := vbStaffHoursId       
                                                   , inStaffHoursLengthId  := vbStaffHoursLengthId
                                                   , inAmount              := inAmount             
                                                   , inAmountReport        := inAmountReport       

@@ -5,8 +5,8 @@ DROP FUNCTION IF EXISTS gpSelect_MovementItem_StaffList (Integer, Boolean, Boole
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_StaffList(
     IN inMovementId  Integer      , -- ключ Документа
-    IN inShowAll     Boolean      , -- 
-    IN inIsErased    Boolean      , -- 
+    IN inShowAll     Boolean      , --
+    IN inIsErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id                   Integer
@@ -21,7 +21,7 @@ RETURNS TABLE (Id                   Integer
              , StaffHoursId         Integer
              , StaffHoursName       TVarChar
              , StaffHoursLengthId   Integer
-             , StaffHoursLengthName TVarChar
+             , StaffHoursLengthName Integer
              , PersonalId           Integer
              , PersonalName         TVarChar
              , Amount               TFloat
@@ -38,8 +38,8 @@ RETURNS TABLE (Id                   Integer
              , Staff_Summ_MK        TFloat
              , Staff_Summ_real      TFloat
              , Staff_Summ_add       TFloat
-             , Comment              TVarChar 
-             , isErased             Boolean 
+             , Comment              TVarChar
+             , isErased             Boolean
              --
              , TotalStaffCount  TFloat          --Всього змін за місяць для посади (кол.понед * StaffCount_1 + кол вт * StaffCount_2 и т.д.)
              , TotalStaffHoursLength  TFloat    --ФРЧ (фонд робочого часу) для посади   TotalStaffCount * StaffHoursLength
@@ -61,7 +61,7 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_StaffList());
      vbUserId:= lpGetUserBySession (inSession);
 
-     SELECT DATE_TRUNC ('MONTH', Movement.OperDate) 
+     SELECT DATE_TRUNC ('MONTH', Movement.OperDate)
           , DATE_TRUNC ('MONTH', Movement.OperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
           , MovementLinkObject_Unit.ObjectId AS UnitId
     INTO vbStartDate, vbEndDate, vbUnitId
@@ -73,10 +73,10 @@ BEGIN
      WHERE Movement.Id = inMovementId;
 
      RETURN QUERY
-       WITH 
+       WITH
             --кол. дней по дням недели
             tmpDay AS (WITH
-                       tmpDate AS (SELECT GENERATE_SERIES (vbStartDate, vbEndDate, '1 DAY' :: INTERVAL) AS OperDate) 
+                       tmpDate AS (SELECT GENERATE_SERIES (vbStartDate, vbEndDate, '1 DAY' :: INTERVAL) AS OperDate)
 
                        SELECT SUM (CASE WHEN tmpWeekDay.Number = 1 THEN 1 ELSE 0 END) AS Count_1
                             , SUM (CASE WHEN tmpWeekDay.Number = 2 THEN 1 ELSE 0 END) AS Count_2
@@ -88,13 +88,13 @@ BEGIN
                        FROM tmpDate
                             LEFT JOIN zfCalc_DayOfWeekName (tmpDate.OperDate) AS tmpWeekDay ON 1=1
                        )
-          , tmpStaffList_object AS (SELECT tmp.PositionId 
-                                          , tmp.PositionName               
+          , tmpStaffList_object AS (SELECT tmp.PositionId
+                                          , tmp.PositionName
                                           , tmp.PositionLevelId
                                           , tmp.PositionLevelName
                                           , tmp.HoursPlan
                                           , tmp.HoursDay
-                                          , tmp.PersonalCount         
+                                          , tmp.PersonalCount
                                     FROM gpSelect_Object_StaffList(inUnitId := vbUnitId , inisShowAll := 'False' ,  inSession := inSession) AS tmp
                                     WHERE inShowAll = TRUE
                                       AND COALESCE (vbUnitId,0) <> 0
@@ -147,7 +147,7 @@ BEGIN
                               + tmpDay.Count_5 * COALESCE (MIFloat_StaffCount_5.ValueData, 0)
                               + tmpDay.Count_6 * COALESCE (MIFloat_StaffCount_6.ValueData, 0)
                               + tmpDay.Count_7 * COALESCE (MIFloat_StaffCount_7.ValueData, 0)
-                              + COALESCE (MIFloat_StaffCount_Invent.ValueData, 0) )           ::TFloat AS TotalStaffCount 
+                              + COALESCE (MIFloat_StaffCount_Invent.ValueData, 0) )           ::TFloat AS TotalStaffCount
                         FROM tmpMI AS MovementItem
                              LEFT JOIN tmpMIFloat AS MIFloat_AmountReport
                                                   ON MIFloat_AmountReport.MovementItemId = MovementItem.Id
@@ -193,13 +193,13 @@ BEGIN
                                                        ON MILinkObject_PositionLevel.MovementItemId = MovementItem.Id
                                                       AND MILinkObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel()
                              LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = MILinkObject_PositionLevel.ObjectId
-                             LEFT JOIN tmpDay ON 1=1 
+                             LEFT JOIN tmpDay ON 1=1
                         )
 
        --
 
-             
-       -- Результат 
+
+       -- Результат
        SELECT 0                  AS Id
             , tmp.PositionId
             , tmp.PositionName
@@ -212,7 +212,7 @@ BEGIN
             , 0    ::Integer     AS StaffHoursId
             , ''   ::TVarChar    AS StaffHoursName
             , 0    ::Integer     AS StaffHoursLengthId
-            , ''   ::TVarChar    AS StaffHoursLengthName
+            , 0    ::Integer     AS StaffHoursLengthName
             , 0    ::Integer     AS PersonalId
             , ''   ::TVarChar    AS PersonalName
 
@@ -232,16 +232,16 @@ BEGIN
             , 0    ::TFloat      AS Staff_Summ_add
 
             , ''   ::TVarChar    AS Comment
-            , FALSE ::Boolean    AS isErased                                                
-            
+            , FALSE ::Boolean    AS isErased
+
             , 0    ::TFloat      AS TotalStaffCount
             , 0    ::TFloat      AS TotalStaffHoursLength
             , 0    ::TFloat      AS NormCount
-            , 0    ::TFloat      AS NormHours 
+            , 0    ::TFloat      AS NormHours
             , 0    ::TFloat      AS WageFund
             , 0    ::TFloat      AS WageFund_byOne
        FROM tmpStaffList_object AS tmp
-            LEFT JOIN tmpData ON tmpData.ObjectId = tmp.PositionId
+            LEFT JOIN tmpData ON tmpData.ObjectId        = tmp.PositionId
                              AND tmpData.PositionLevelId = tmp.PositionLevelId
        WHERE tmpData.ObjectId IS NULL
 
@@ -257,13 +257,18 @@ BEGIN
             , Object_StaffHoursDay.ValueData                AS StaffHoursDayName
             , Object_StaffHours.Id                          AS StaffHoursId
             , Object_StaffHours.ValueData                   AS StaffHoursName
-            , Object_StaffHoursLength.Id                    AS StaffHoursLengthId
-            , Object_StaffHoursLength.ValueData             AS StaffHoursLengthName
+              -- Продолжительность смены, часы
+            , Object_StaffHoursLength.Id                                             AS StaffHoursLengthId
+            , zfConvert_StringToFloat (Object_StaffHoursLength.ValueData) :: Integer AS StaffHoursLengthName
+              --
             , Object_Personal.Id                            AS PersonalId
             , Object_Personal.ValueData                     AS PersonalName
 
+              -- ШР для справочника
             , MovementItem.Amount            ::TFloat AS Amount
+              -- ШР для отчета
             , MovementItem.AmountReport      ::TFloat AS AmountReport
+              -- Кількість штатних одиниць в смену пн.....
             , MovementItem.StaffCount_1      ::TFloat AS StaffCount_1
             , MovementItem.StaffCount_2      ::TFloat AS StaffCount_2
             , MovementItem.StaffCount_3      ::TFloat AS StaffCount_3
@@ -271,37 +276,49 @@ BEGIN
             , MovementItem.StaffCount_5      ::TFloat AS StaffCount_5
             , MovementItem.StaffCount_6      ::TFloat AS StaffCount_6
             , MovementItem.StaffCount_7      ::TFloat AS StaffCount_7
+              -- Кількість штатних одиниць в смену Инаентаризация
             , MovementItem.StaffCount_Invent ::TFloat AS StaffCount_Invent
+              --
             , MovementItem.Staff_Price       ::TFloat AS Staff_Price
             , MovementItem.Staff_Summ_MK     ::TFloat AS Staff_Summ_MK
             , MovementItem.Staff_Summ_real   ::TFloat AS Staff_Summ_real
             , MovementItem.Staff_Summ_add    ::TFloat AS Staff_Summ_add
 
             , MIString_Comment.ValueData                      ::TVarChar AS Comment
-            , MovementItem.isErased                                                
-            
-            --Всього змін за місяць для посади (кол.понед * StaffCount_1 + кол вт * StaffCount_2 и т.д.)
+            , MovementItem.isErased
+
+              -- Всього змін за місяць для посади (кол.понед * StaffCount_1 + кол вт * StaffCount_2 и т.д.)
             , MovementItem.TotalStaffCount ::TFloat AS TotalStaffCount
-            --ФРЧ (фонд робочого часу) для посади   TotalStaffCount * StaffHoursLength
-            , (MovementItem.TotalStaffCount * Object_StaffHoursLength.ValueData::TFloat) ::TFloat AS TotalStaffHoursLength
-            --Норма змін для 1-єї шт.од   TotalStaffCount / StaffHoursLength
-            , CASE WHEN COALESCE (Object_StaffHoursLength.ValueData::TFloat,0) <> 0 THEN MovementItem.TotalStaffCount / Object_StaffHoursLength.ValueData::TFloat ELSE 0 END ::TFloat AS NormCount
-            --Норма часу для 1-єї шт.од   TotalStaffHoursLength / StaffHoursLength
-            , CASE WHEN COALESCE (Object_StaffHoursLength.ValueData::TFloat,0) <> 0 THEN (MovementItem.TotalStaffCount * Object_StaffHoursLength.ValueData::TFloat) / Object_StaffHoursLength.ValueData::TFloat ELSE 0 END ::TFloat AS NormHours 
-            --ФОП за місяць (формула)    Staff_Price *  TotalStaffCount +Staff_Summ_MK+ Staff_Summ_real	+ Staff_Summ_add
-            , (MovementItem.Staff_Price * MovementItem.TotalStaffCount 
-             + MovementItem.Staff_Summ_MK
-             + MovementItem.Staff_Summ_real
-             + MovementItem.Staff_Summ_add) ::TFloat AS WageFund
-            --ЗП для 1-єї шт.од до оподаткуання   WageFund / AmountReport
-            , CASE WHEN COALESCE (MovementItem.AmountReport,0) <> 0 
-                   THEN (MovementItem.Staff_Price * MovementItem.TotalStaffCount 
-                       + MovementItem.Staff_Summ_MK
-                       + MovementItem.Staff_Summ_real
-                       + MovementItem.Staff_Summ_add) / MovementItem.AmountReport
+
+              -- ФРЧ (фонд робочого часу) для посади   TotalStaffCount * StaffHoursLength
+            , (MovementItem.TotalStaffCount * zfConvert_StringToNumber (Object_StaffHoursLength.ValueData)) ::TFloat AS TotalStaffHoursLength
+
+              -- Норма змін для 1-єї шт.од   TotalStaffCount / Amount
+            , CASE WHEN COALESCE (MovementItem.Amount, 0) <> 0 THEN MovementItem.TotalStaffCount / MovementItem.Amount ELSE 0 END ::TFloat AS NormCount
+
+              -- Норма часу для 1-єї шт.од   TotalStaffHoursLength / Amount
+            , CASE WHEN COALESCE (MovementItem.Amount, 0) <> 0
+                        THEN (MovementItem.TotalStaffCount * zfConvert_StringToNumber (Object_StaffHoursLength.ValueData)) / MovementItem.Amount
+                       ELSE 0
+              END ::TFloat AS NormHours
+
+              -- ФОП за місяць Staff_Price *  TotalStaffCount +Staff_Summ_MK+ Staff_Summ_real	+ Staff_Summ_add
+            , (COALESCE (MovementItem.Staff_Price, 0) * COALESCE (MovementItem.TotalStaffCount, 0)
+             + COALESCE (MovementItem.Staff_Summ_MK, 0)
+             + COALESCE (MovementItem.Staff_Summ_real, 0)
+             + COALESCE (MovementItem.Staff_Summ_add, 0)
+              ) ::TFloat AS WageFund
+
+              -- ЗП для 1-єї шт.од до оподаткуання   WageFund / AmountReport
+            , CASE WHEN COALESCE (MovementItem.AmountReport, 0) <> 0
+                   THEN (COALESCE (MovementItem.Staff_Price, 0) * COALESCE (MovementItem.TotalStaffCount, 0)
+                       + COALESCE (MovementItem.Staff_Summ_MK, 0)
+                       + COALESCE (MovementItem.Staff_Summ_real, 0)
+                       + COALESCE (MovementItem.Staff_Summ_add, 0)
+                        ) / MovementItem.AmountReport
                    ELSE 0
               END :: TFloat AS WageFund_byOne
-            
+
        FROM tmpData AS MovementItem
             LEFT JOIN Object AS Object_Position ON Object_Position.Id = MovementItem.ObjectId
 
