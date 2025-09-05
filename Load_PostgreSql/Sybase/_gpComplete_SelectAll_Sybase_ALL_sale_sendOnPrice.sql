@@ -210,17 +210,29 @@ END IF;
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
 --      AND Movement.DescId IN (zc_Movement_Loss())
 --      AND Movement.DescId IN (zc_Movement_Send())
-        AND Movement.DescId IN (zc_Movement_SendOnPrice())
+--        AND Movement.DescId IN (zc_Movement_SendOnPrice())
 --      AND Movement.DescId IN (zc_Movement_Sale())
 --      AND Movement.DescId IN (zc_Movement_Inventory(), zc_Movement_SendOnPrice(), zc_Movement_Loss(), zc_Movement_Sale())
        -- AND Movement.DescId IN (zc_Movement_Inventory())
-       -- AND Movement.DescId IN (zc_Movement_ReturnIn())
+       AND Movement.DescId IN (zc_Movement_ReturnIn())
 --      AND Movement.DescId IN (zc_Movement_ProductionUnion())
 --      AND Movement.DescId IN (zc_Movement_SendOnPrice())
        AND Movement.StatusId = zc_Enum_Status_Complete()
 --       AND (MLO_To.ObjectId = zc_Unit_RK())
-       AND MLO_From.ObjectId = zc_Unit_RK()
+      -- AND MLO_To.ObjectId = zc_Unit_RK()
     --   AND MLO_To.ObjectId IN (zc_Unit_RK(), 8462 , 8461, 256716, 1387416)
+    AND MLO_To.ObjectId IN (8462 , 256716, 1387416
+                                          , 428365 -- Склад возвратов ф.Киев
+                                          , 346094 -- Склад возвратов ф.Одесса
+                                          , 428366 -- Склад возвратов ф.Кривой Рог
+                                          , 428364 -- Склад возвратов ф.Николаев (Херсон)
+                                          , 409007 -- Склад возвратов ф.Харьков
+                                          , 428363 -- Склад возвратов ф.Черкассы (Кировоград)
+                                          , 309599 -- Склад возвратов ф.Запорожье
+                                          , 3080696 -- Склад возвратов ф.Львов
+                                          , 11921036 -- Склад повернень ф.Вінниця
+                                          , 8020715 -- Склад Возвратов (Ирна)
+                           )
 
 
     ) AS tmp
