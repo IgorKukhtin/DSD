@@ -148,7 +148,7 @@ BEGIN
        SELECT Object_Goods.Id                     AS Id
             , Object_Goods.ObjectCode             AS Code
               --
-            , Object_Goods.ValueData              AS Name
+            , LEFT (Object_Goods.ValueData, 125) :: TVarChar AS Name
             , ObjectString_Article.ValueData      AS Article
             , ObjectString_Article.ArticleFilter  AS ArticleFilter
 
@@ -222,7 +222,8 @@ BEGIN
             LEFT JOIN tmpReceiptGoods ON tmpReceiptGoods.GoodsId = Object_Goods.Id
                                   
         ORDER BY Object_Goods.Id  desc
-            ;
+        -- LIMIT CASE WHEN vbUserId = 5 THEN 100 ELSE 400000 END
+       ;
 
 END;
 $BODY$
