@@ -278,10 +278,14 @@ BEGIN
             , MovementItem.StaffCount_7      ::TFloat AS StaffCount_7
               -- Кількість штатних одиниць в смену Инаентаризация
             , MovementItem.StaffCount_Invent ::TFloat AS StaffCount_Invent
-              --
+
+              -- Тарифікація
             , MovementItem.Staff_Price       ::TFloat AS Staff_Price
+              -- МК
             , MovementItem.Staff_Summ_MK     ::TFloat AS Staff_Summ_MK
+              -- Відрядна оплата
             , MovementItem.Staff_Summ_real   ::TFloat AS Staff_Summ_real
+              -- Преміальний фонд
             , MovementItem.Staff_Summ_add    ::TFloat AS Staff_Summ_add
 
             , MIString_Comment.ValueData                      ::TVarChar AS Comment
@@ -303,21 +307,80 @@ BEGIN
               END ::TFloat AS NormHours
 
               -- ФОП за місяць Staff_Price *  TotalStaffCount +Staff_Summ_MK+ Staff_Summ_real	+ Staff_Summ_add
-            , (COALESCE (MovementItem.Staff_Price, 0) * COALESCE (MovementItem.TotalStaffCount, 0)
+            , CASE WHEN COALESCE (MovementItem.AmountReport, 0) < 0.5
+                        THEN 0
+                   
+                   WHEN Object_StaffPaidKind.ValueData ILIKE 'Зміни\час'
+                        THEN COALESCE (MovementItem.TotalStaffCount, 0) * COALESCE (MovementItem.Staff_Price, 0)
+                           + COALESCE (MovementItem.Staff_Summ_MK, 0) * COALESCE (MovementItem.AmountReport, 0)
+                           + COALESCE (MovementItem.Staff_Summ_real, 0)
+                           + COALESCE (MovementItem.Staff_Summ_add, 0)
+
+                   WHEN Object_StaffPaidKind.ValueData ILIKE 'відрядно'
+                        THEN COALESCE (MovementItem.Staff_Summ_MK, 0) * COALESCE (MovementItem.AmountReport, 0)
+                           + COALESCE (MovementItem.Staff_Summ_real, 0)
+                           + COALESCE (MovementItem.Staff_Summ_add, 0)
+
+                   WHEN Object_StaffPaidKind.ValueData ILIKE 'доплата за 1 день'
+                        THEN COALESCE (MovementItem.TotalStaffCount, 0) * COALESCE (MovementItem.Staff_Price, 0)
+                           + COALESCE (MovementItem.Staff_Summ_MK, 0)
+                           + COALESCE (MovementItem.Staff_Summ_real, 0)
+                           + COALESCE (MovementItem.Staff_Summ_add, 0)
+
+                   WHEN Object_StaffPaidKind.ValueData ILIKE 'відрядно підробіток'
+                        THEN COALESCE (MovementItem.Staff_Summ_real, 0)
+
+                   WHEN Object_StaffPaidKind.ValueData ILIKE 'Оклад/місяць'
+                        THEN (COALESCE (MovementItem.Staff_Price, 0) + COALESCE (MovementItem.Staff_Summ_MK, 0)) * COALESCE (MovementItem.AmountReport, 0)
+                           + COALESCE (MovementItem.Staff_Summ_real, 0)
+                           + COALESCE (MovementItem.Staff_Summ_add, 0)
+
+                   ELSE 0
+             /*COALESCE (MovementItem.Staff_Price, 0) * COALESCE (MovementItem.TotalStaffCount, 0)
              + COALESCE (MovementItem.Staff_Summ_MK, 0)
              + COALESCE (MovementItem.Staff_Summ_real, 0)
-             + COALESCE (MovementItem.Staff_Summ_add, 0)
-              ) ::TFloat AS WageFund
+             + COALESCE (MovementItem.Staff_Summ_add, 0)*/
+              END :: TFloat AS WageFund
+
 
               -- ЗП для 1-єї шт.од до оподаткуання   WageFund / AmountReport
-            , CASE WHEN COALESCE (MovementItem.AmountReport, 0) <> 0
-                   THEN (COALESCE (MovementItem.Staff_Price, 0) * COALESCE (MovementItem.TotalStaffCount, 0)
-                       + COALESCE (MovementItem.Staff_Summ_MK, 0)
-                       + COALESCE (MovementItem.Staff_Summ_real, 0)
-                       + COALESCE (MovementItem.Staff_Summ_add, 0)
-                        ) / MovementItem.AmountReport
+            ,(CASE WHEN COALESCE (MovementItem.AmountReport, 0) < 0.5
+                        THEN 0
+                   
+                   WHEN Object_StaffPaidKind.ValueData ILIKE 'Зміни\час'
+                        THEN COALESCE (MovementItem.TotalStaffCount, 0) * COALESCE (MovementItem.Staff_Price, 0)
+                           + COALESCE (MovementItem.Staff_Summ_MK, 0) * COALESCE (MovementItem.AmountReport, 0)
+                           + COALESCE (MovementItem.Staff_Summ_real, 0)
+                           + COALESCE (MovementItem.Staff_Summ_add, 0)
+
+                   WHEN Object_StaffPaidKind.ValueData ILIKE 'відрядно'
+                        THEN COALESCE (MovementItem.Staff_Summ_MK, 0) * COALESCE (MovementItem.AmountReport, 0)
+                           + COALESCE (MovementItem.Staff_Summ_real, 0)
+                           + COALESCE (MovementItem.Staff_Summ_add, 0)
+
+                   WHEN Object_StaffPaidKind.ValueData ILIKE 'доплата за 1 день'
+                        THEN COALESCE (MovementItem.TotalStaffCount, 0) * COALESCE (MovementItem.Staff_Price, 0)
+                           + COALESCE (MovementItem.Staff_Summ_MK, 0)
+                           + COALESCE (MovementItem.Staff_Summ_real, 0)
+                           + COALESCE (MovementItem.Staff_Summ_add, 0)
+
+                   WHEN Object_StaffPaidKind.ValueData ILIKE 'відрядно підробіток'
+                        THEN COALESCE (MovementItem.Staff_Summ_real, 0)
+
+                   WHEN Object_StaffPaidKind.ValueData ILIKE 'Оклад/місяць'
+                        THEN (COALESCE (MovementItem.Staff_Price, 0) + COALESCE (MovementItem.Staff_Summ_MK, 0)) * COALESCE (MovementItem.AmountReport, 0)
+                           + COALESCE (MovementItem.Staff_Summ_real, 0)
+                           + COALESCE (MovementItem.Staff_Summ_add, 0)
+
                    ELSE 0
-              END :: TFloat AS WageFund_byOne
+               END
+
+             / CASE WHEN COALESCE (MovementItem.AmountReport, 0) < 0.5
+                        THEN 1
+                    ELSE MovementItem.AmountReport
+               END
+               
+              ):: TFloat AS WageFund_byOne
 
        FROM tmpData AS MovementItem
             LEFT JOIN Object AS Object_Position ON Object_Position.Id = MovementItem.ObjectId
