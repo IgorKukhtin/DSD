@@ -46,12 +46,13 @@ type
     // Получить список логинов с сервера
     class function GetLoginList(pStorage: IStorage): string;
     class function spCheckGoogleOTPAuthent (pStorage: IStorage; const pSession, pProjectName, pUserName, pGoogleSecret: string; ANeedShowException: Boolean = True): boolean;
+    class function spCheckPhoneAuthentSMS (pStorage: IStorage;const pSession, pPhoneAuthent: string; ANeedShowException: Boolean = True): boolean;
   end;
 
 implementation
 
 uses iniFiles, Xml.XMLDoc, UtilConst, SysUtils, IdIPWatch, Xml.XmlIntf, CommonData, WinAPI.Windows,
-  vcl.Forms, vcl.Dialogs, dsdAction, GoogleOTPRegistration, GoogleOTPDialogPsw;
+  vcl.Forms, vcl.Dialogs, dsdAction, GoogleOTPRegistration, GoogleOTPDialogPsw, DialogPswSms;
 
 {------------------------------------------------------------------------------}
 function GetIniFile(out AIniFileName: String):boolean;
@@ -100,6 +101,84 @@ begin
   FSession := ASession;
   FLocal := ALocal;
   FLogin := ALogin;
+end;
+{------------------------------------------------------------------------------}
+class function TAuthentication.spCheckPhoneAuthentSMS (pStorage: IStorage;const pSession, pPhoneAuthent: string; ANeedShowException: Boolean = True): boolean;
+var SendSMSAction_ks : TdsdSendSMSKyivstarAction;
+var SendSMSAction : TdsdSendSMSAction;
+var N: IXMLNode;
+    pXML : String;
+begin
+    Result:= pPhoneAuthent = '';
+    // выход
+    if Result = TRUE then exit;
+
+    //
+    pXML :=
+    '<xml Session = "' + pSession + '" >' +
+      '<gpSelect_Object_User_bySMS OutputType="otResult">' +
+        '<inPhoneAuthent DataType="ftString" Value="%s" />' +
+      '</gpSelect_Object_User_bySMS>' +
+    '</xml>';
+
+    try
+      N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pPhoneAuthent]), False, 4, ANeedShowException)).DocumentElement;
+      //
+      if Assigned(N) then Result:= N.GetAttribute(AnsiLowerCase('Message_sms')) <> '' else Result:= false;
+      //
+      if Assigned(N) and (Result = TRUE) then
+      begin
+         try
+           // Send SMS
+           if N.GetAttribute(AnsiLowerCase('isKS')) = TRUE
+           then begin
+               //SendSMSAction_ks:= TdsdSendSMSCPAAction.Create(nil);
+               SendSMSAction_ks:= TdsdSendSMSKyivstarAction.Create(nil);
+               //
+               SendSMSAction_ks.AlphaName.Value  := N.GetAttribute(AnsiLowerCase('AlphaName_Sms'));
+               SendSMSAction_ks.Host.Value       := N.GetAttribute(AnsiLowerCase('HostName_Sms'));
+               SendSMSAction_ks.Environment.Value:= N.GetAttribute(AnsiLowerCase('Environment_Sms'));
+               SendSMSAction_ks.Version.Value    := N.GetAttribute(AnsiLowerCase('Version_Sms'));
+               SendSMSAction_ks.ClientId.Value   := N.GetAttribute(AnsiLowerCase('ClientId'));
+               SendSMSAction_ks.ClientSecret.Value:= N.GetAttribute(AnsiLowerCase('ClientSecret'));
+               SendSMSAction_ks.ClientSecret.Value:= N.GetAttribute(AnsiLowerCase('ClientSecret'));
+               SendSMSAction_ks.Message.Value := N.GetAttribute(AnsiLowerCase('Message_sms'));
+               SendSMSAction_ks.Phones.Value  := N.GetAttribute(AnsiLowerCase('PhoneNum_sms'));
+               //Result:= SendSMSAction_ks.Authentication;
+               Result:= SendSMSAction_ks.Execute;
+           end
+           else begin
+               SendSMSAction:= TdsdSendSMSAction.Create(nil);
+               //
+               SendSMSAction.Host.Value    := N.GetAttribute(AnsiLowerCase('HostName_Sms'));
+               SendSMSAction.Login.Value   := N.GetAttribute(AnsiLowerCase('Login_sms'));
+               SendSMSAction.Password.Value:= N.GetAttribute(AnsiLowerCase('Password_sms'));
+               SendSMSAction.ShowCost.Value:= N.GetAttribute(AnsiLowerCase('ShowCost_sms'));
+               SendSMSAction.Message.Value := N.GetAttribute(AnsiLowerCase('Message_sms'));
+               SendSMSAction.Phones.Value  := N.GetAttribute(AnsiLowerCase('PhoneNum_sms'));
+               Result:= SendSMSAction.Execute;
+           end;
+           //Result:= true;
+           if not Result then begin ShowMessage('Ошибка при отправке СМС на номер <'+pPhoneAuthent+'>.Работа с программой заблокирована.');exit;end;
+         except
+           Result:= false;
+           exit;
+         end;
+         //
+
+         // Check Enter SMS
+         with TDialogPswSmsForm.Create(nil) do
+         begin
+              Result:= Execute (pStorage, pSession) <> '';
+              Free;
+         end;
+
+      end;
+
+    finally
+       if Assigned (SendSMSAction_ks) then SendSMSAction_ks.Free;
+       if Assigned (SendSMSAction)    then SendSMSAction.Free;
+    end;
 end;
 {------------------------------------------------------------------------------}
 class function TAuthentication.spCheckGoogleOTPAuthent (pStorage: IStorage; const pSession, pProjectName, pUserName, pGoogleSecret: string; ANeedShowException: Boolean = True): boolean;
@@ -208,6 +287,8 @@ begin
             '<inIP           DataType="ftString" Value="%s" />' +
             '<ioisGoogleOTP  DataType="ftBoolean" Value="%s" />' +
             '<ioGoogleSecret DataType="ftString" Value="%s" />' +
+            // еще параметр - PhoneAuthent
+            '<ioPhoneAuthent DataType="ftString" Value="%s" />' +
           '</gpCheckLogin>' +
         '</xml>'
       else if POS(AnsiUpperCase('Farmacy'), AnsiUpperCase(ProjectName)) = 1
@@ -244,8 +325,12 @@ begin
        N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pUserName, pPassword, IP_str, BoutiqueName]), False, 4, ANeedShowException)).DocumentElement
   else if isProject = TRUE
        then
+         // для Project - еще 2 параметра - для Google Authenticator + 1 параметр - Телефон для аутентификации
+         //N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pUserName, pPassword, IP_str, 'False', '', '']), False, 4, ANeedShowException)).DocumentElement
+
          // для Project - еще еще 2 параметра - для Google Authenticator
-         N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pUserName, pPassword, IP_str, 'False', '']), False, 4, ANeedShowException)).DocumentElement
+         N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pUserName, pPassword, IP_str, 'False', '', '']), False, 4, ANeedShowException)).DocumentElement
+
        else if POS(AnsiUpperCase('Farmacy'), AnsiUpperCase(ProjectName)) = 1 then
          N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pUserName, pPassword, IP_str, ProjectName]), False, 4, ANeedShowException)).DocumentElement
        else
@@ -255,6 +340,8 @@ begin
   //
   if Assigned(N) then
   begin
+       // сформировали смс, проверили что он корректный
+       //if isProject = TRUE then result := spCheckPhoneAuthentSMS(pStorage, N.GetAttribute(AnsiLowerCase(gcSession)), N.GetAttribute(AnsiLowerCase('ioPhoneAuthent')), ANeedShowException);
        // Google Authenticator
        if (isProject = TRUE) and N.GetAttribute(AnsiLowerCase('ioisGoogleOTP')) then
          result := spCheckGoogleOTPAuthent(pStorage, N.GetAttribute(AnsiLowerCase(gcSession)), ProjectName, pUserName, N.GetAttribute(AnsiLowerCase('ioGoogleSecret')), ANeedShowException);
