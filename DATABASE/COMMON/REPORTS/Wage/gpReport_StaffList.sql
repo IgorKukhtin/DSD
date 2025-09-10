@@ -363,10 +363,7 @@ BEGIN
                              WHERE (ObjectLink_StaffListCost_ModelService.ChildObjectId = inModelServiceId OR inModelServiceId = 0)
  
                             )                         
- 
- 
-      
-  -- результат                      
+    -- результат                      
     SELECT
         tmpStaffList.Id AS StaffListId            -- Штатное расписание
        ,tmpStaffList.StaffListCode
@@ -397,14 +394,34 @@ BEGIN
        ,tmpStaffList.SelectKindCode
        ,tmpStaffList.SelectKindName
        ,tmpStaffList.Ratio                 -- Коэффициент для выбора данных
-       ,tmpStaffList.ModelServiceItemChild_FromId       -- Товар,Группа(От кого) (из справочника Подчиненные элементы Модели начисления)
+
+        -- Товар,Группа(От кого) (из справочника Подчиненные элементы Модели начисления)
+       ,tmpStaffList.ModelServiceItemChild_FromId
        ,tmpStaffList.ModelServiceItemChild_FromDescId
-       ,tmpStaffList.ModelServiceItemChild_FromCode
-       ,tmpStaffList.ModelServiceItemChild_FromName
-       ,tmpStaffList.ModelServiceItemChild_ToId         -- Товар,Группа(Кому) (из справочника Подчиненные элементы Модели начисления)
+        --
+       ,CASE WHEN COALESCE (tmpStaffList.ModelServiceItemChild_FromId, 0) = 0 THEN NULL WHEN tmpStaffList.ModelServiceItemChild_FromDescId = zc_Object_Goods() THEN tmpStaffList.ModelServiceItemChild_FromCode ELSE -1 * tmpStaffList.ModelServiceItemChild_FromId END :: Integer AS ModelServiceItemChild_FromDescId
+        --
+       ,CASE WHEN tmpStaffList.ModelServiceItemChild_FromDescId = zc_Object_Goods()
+                  THEN tmpStaffList.ModelServiceItemChild_FromName
+             ELSE COALESCE (Object_GoodsGroup_Parent_from_next2.ValueData || ' ', '')
+               || COALESCE (Object_GoodsGroup_Parent_from_next.ValueData || ' ', '')
+               || COALESCE (Object_GoodsGroup_Parent_from.ValueData || ' ', '')
+               || tmpStaffList.ModelServiceItemChild_FromName
+        END :: TVarChar AS ModelServiceItemChild_FromName
+
+        -- Товар,Группа(Кому) (из справочника Подчиненные элементы Модели начисления)
+       ,tmpStaffList.ModelServiceItemChild_ToId
        ,tmpStaffList.ModelServiceItemChild_ToDescId
-       ,tmpStaffList.ModelServiceItemChild_ToCode
-       ,tmpStaffList.ModelServiceItemChild_ToName
+        --
+       ,CASE WHEN COALESCE (tmpStaffList.ModelServiceItemChild_ToId, 0) = 0 THEN NULL WHEN tmpStaffList.ModelServiceItemChild_ToDescId = zc_Object_Goods() THEN tmpStaffList.ModelServiceItemChild_ToCode ELSE -1 * tmpStaffList.ModelServiceItemChild_ToId END :: Integer AS ModelServiceItemChild_ToCode
+        --
+       ,CASE WHEN tmpStaffList.ModelServiceItemChild_ToDescId = zc_Object_Goods() 
+                  THEN tmpStaffList.ModelServiceItemChild_ToName
+             ELSE COALESCE (Object_GoodsGroup_Parent_to_next2.ValueData || ' ', '')
+               || COALESCE (Object_GoodsGroup_Parent_to_next.ValueData || ' ', '')
+               || COALESCE (Object_GoodsGroup_Parent_to.ValueData || ' ', '')
+               || tmpStaffList.ModelServiceItemChild_ToName
+        END :: TVarChar AS ModelServiceItemChild_ToName
 
        , tmpStaffList.StorageLineId_From
        , tmpStaffList.StorageLineName_From
@@ -432,7 +449,41 @@ BEGIN
        , tmpStaffList.UpdateDate_StaffListCost       
 
     FROM tmpStaffListModel AS tmpStaffList
-  UNION  all
+
+          -- Товар,Группа(От кого) (из справочника Подчиненные элементы Модели начисления)
+          LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_Parent_from
+                               ON ObjectLink_GoodsGroup_Parent_from.ObjectId = tmpStaffList.ModelServiceItemChild_FromId
+                              AND ObjectLink_GoodsGroup_Parent_from.DescId   = zc_ObjectLink_GoodsGroup_Parent()
+          LEFT JOIN Object AS Object_GoodsGroup_Parent_from ON Object_GoodsGroup_Parent_from.Id = ObjectLink_GoodsGroup_Parent_from.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_Parent_from_next
+                               ON ObjectLink_GoodsGroup_Parent_from_next.ObjectId = Object_GoodsGroup_Parent_from.Id
+                              AND ObjectLink_GoodsGroup_Parent_from_next.DescId   = zc_ObjectLink_GoodsGroup_Parent()
+          LEFT JOIN Object AS Object_GoodsGroup_Parent_from_next ON Object_GoodsGroup_Parent_from_next.Id = ObjectLink_GoodsGroup_Parent_from_next.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_Parent_from_next2
+                               ON ObjectLink_GoodsGroup_Parent_from_next2.ObjectId = Object_GoodsGroup_Parent_from_next.Id
+                              AND ObjectLink_GoodsGroup_Parent_from_next2.DescId   = zc_ObjectLink_GoodsGroup_Parent()
+          LEFT JOIN Object AS Object_GoodsGroup_Parent_from_next2 ON Object_GoodsGroup_Parent_from_next2.Id = ObjectLink_GoodsGroup_Parent_from_next2.ChildObjectId
+
+
+          -- Товар,Группа(Кому) (из справочника Подчиненные элементы Модели начисления)
+          LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_Parent_to
+                               ON ObjectLink_GoodsGroup_Parent_to.ObjectId = tmpStaffList.ModelServiceItemChild_ToId
+                              AND ObjectLink_GoodsGroup_Parent_to.DescId   = zc_ObjectLink_GoodsGroup_Parent()
+          LEFT JOIN Object AS Object_GoodsGroup_Parent_to ON Object_GoodsGroup_Parent_to.Id = ObjectLink_GoodsGroup_Parent_to.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_Parent_to_next
+                               ON ObjectLink_GoodsGroup_Parent_to_next.ObjectId = Object_GoodsGroup_Parent_to.Id
+                              AND ObjectLink_GoodsGroup_Parent_to_next.DescId   = zc_ObjectLink_GoodsGroup_Parent()
+          LEFT JOIN Object AS Object_GoodsGroup_Parent_to_next ON Object_GoodsGroup_Parent_to_next.Id = ObjectLink_GoodsGroup_Parent_to_next.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_Parent_to_next2
+                               ON ObjectLink_GoodsGroup_Parent_to_next2.ObjectId = Object_GoodsGroup_Parent_to_next.Id
+                              AND ObjectLink_GoodsGroup_Parent_to_next2.DescId   = zc_ObjectLink_GoodsGroup_Parent()
+          LEFT JOIN Object AS Object_GoodsGroup_Parent_to_next2 ON Object_GoodsGroup_Parent_to_next2.Id = ObjectLink_GoodsGroup_Parent_to_next2.ChildObjectId
+
+  UNION ALL
    SELECT
          tmpStaffList.Id AS StaffListId           -- Штатное расписание
        ,tmpStaffList.StaffListCode
@@ -465,11 +516,11 @@ BEGIN
        ,0 :: TFloat      AS Ratio                 -- Коэффициент для выбора данных
        ,0 ::Integer      AS ModelServiceItemChild_FromId       -- Товар,Группа(От кого) (из справочника Подчиненные элементы Модели начисления)
        ,0 ::Integer      AS ModelServiceItemChild_FromDescId
-       ,0 ::Integer      AS ModelServiceItemChild_FromCode
+       ,NULL ::Integer      AS ModelServiceItemChild_FromCode
        ,''::TVarChar     AS ModelServiceItemChild_FromName
        ,0 ::Integer      AS ModelServiceItemChild_ToId         -- Товар,Группа(Кому) (из справочника Подчиненные элементы Модели начисления)
        ,0 ::Integer      AS ModelServiceItemChild_ToDescId
-       ,0 ::Integer      AS ModelServiceItemChild_ToCode
+       ,NULL ::Integer      AS ModelServiceItemChild_ToCode
        ,''::TVarChar     AS ModelServiceItemChild_ToName
 
        , 0 ::Integer      AS StorageLineId_From
@@ -512,4 +563,4 @@ $BODY$
 */
 -- тест
 -- select * from gpReport_StaffList22 (inUnitId := 8395 , inModelServiceId := 0 , inPositionId := 0,  inSession := '5');
---select * from gpReport_StaffList (inUnitId := 8451 , inModelServiceId := 582633 , inPositionId := 12452 ,  inSession := '9457');
+-- select * from gpReport_StaffList (inUnitId := 8451 , inModelServiceId := 582633 , inPositionId := 12452 ,  inSession := '9457');

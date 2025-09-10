@@ -147,22 +147,24 @@ BEGIN
          , ObjectString_Comment.ValueData      AS Comment
 
          , Object_From.Id          AS FromId
-         , CASE WHEN Object_From.ObjectCode > 0 THEN Object_From.ObjectCode ELSE Object_From.Id END :: Integer AS FromCode
+         , CASE WHEN Object_From.DescId = zc_Object_Goods() THEN Object_From.ObjectCode ELSE -1 * Object_From.Id END :: Integer AS FromCode
          , CASE WHEN Object_From.DescId = zc_Object_Goods() THEN /*'(' || Object_From.ObjectCode :: TvarChar || ') ' ||*/ Object_From.ValueData
                 ELSE COALESCE (Object_GoodsGroup_Parent_from_next2.ValueData || ' ', '')
                   || COALESCE (Object_GoodsGroup_Parent_from_next.ValueData || ' ', '')
-                  || COALESCE (Object_GoodsGroup_Parent_from.ValueData || ' ', '') || Object_From.ValueData
-                  || CASE WHEN Object_From.ObjectCode > 0 THEN '' ELSE '' END 
+                  || COALESCE (Object_GoodsGroup_Parent_from.ValueData || ' ', '')
+                  || Object_From.ValueData
+                  -- || CASE WHEN Object_From.ObjectCode > 0 THEN '' ELSE '' END 
            END :: TVarChar AS FromName
          , ObjectDesc_From.ItemName  ::TVarChar AS DescName_from
 
          , Object_To.Id         AS ToId
-         , CASE WHEN Object_To.ObjectCode > 0 THEN Object_To.ObjectCode ELSE Object_To.Id END :: Integer AS ToCode
-         , CASE WHEN Object_From.DescId = zc_Object_Goods() THEN /*'(' || Object_To.ObjectCode :: TvarChar || ') ' ||*/ Object_To.ValueData
+         , CASE WHEN Object_To.DescId = zc_Object_Goods() THEN Object_To.ObjectCode ELSE -1 * Object_To.Id END :: Integer AS ToCode
+         , CASE WHEN Object_To.DescId = zc_Object_Goods() THEN /*'(' || Object_To.ObjectCode :: TvarChar || ') ' ||*/ Object_To.ValueData
                 ELSE COALESCE (Object_GoodsGroup_Parent_to_next2.ValueData || ' ', '')
                   || COALESCE (Object_GoodsGroup_Parent_to_next.ValueData || ' ', '')
-                  || COALESCE (Object_GoodsGroup_Parent_to.ValueData || ' ', '') || Object_To.ValueData
-                  || CASE WHEN Object_To.ObjectCode > 0 THEN '' ELSE '' END
+                  || COALESCE (Object_GoodsGroup_Parent_to.ValueData || ' ', '')
+                  || Object_To.ValueData
+                  --|| CASE WHEN Object_To.ObjectCode > 0 THEN '' ELSE '' END
            END :: TVarChar AS ToName
          , ObjectDesc_To.ItemName  ::TVarChar AS DescName_to 
 
