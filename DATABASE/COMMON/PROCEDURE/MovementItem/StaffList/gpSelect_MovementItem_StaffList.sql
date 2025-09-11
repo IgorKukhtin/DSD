@@ -389,10 +389,6 @@ BEGIN
                                   ON MIString_Comment.MovementItemId = MovementItem.Id
                                  AND MIString_Comment.DescId = zc_MIString_Comment()
 
-            /*LEFT JOIN tmpMILinkObject AS MILinkObject_PositionLevel
-                                      ON MILinkObject_PositionLevel.MovementItemId = cId
-                                     AND MILinkObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel()
-            */
             LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = MovementItem.PositionLevelId
 
             LEFT JOIN tmpMILinkObject AS MILinkObject_StaffPaidKind

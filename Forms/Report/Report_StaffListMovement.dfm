@@ -147,6 +147,8 @@ inherited Report_StaffListMovementForm: TReport_StaffListMovementForm
   inherited Panel: TPanel
     Width = 998
     Height = 53
+    ExplicitLeft = -8
+    ExplicitTop = -8
     ExplicitWidth = 998
     ExplicitHeight = 53
     inherited deStart: TcxDateEdit
@@ -158,30 +160,32 @@ inherited Report_StaffListMovementForm: TReport_StaffListMovementForm
       Width = 91
     end
     inherited deEnd: TcxDateEdit
-      Left = 113
+      Left = 825
       Top = 23
-      ExplicitLeft = 113
+      Visible = False
+      ExplicitLeft = 825
       ExplicitTop = 23
       ExplicitWidth = 110
       Width = 110
     end
     inherited cxLabel1: TcxLabel
-      Left = 16
-      Top = 0
-      ExplicitLeft = 16
-      ExplicitTop = 0
+      Left = 13
+      Caption = #1053#1072' '#1076#1072#1090#1091':'
+      ExplicitLeft = 13
+      ExplicitWidth = 49
     end
     inherited cxLabel2: TcxLabel
-      Left = 113
-      ExplicitLeft = 113
+      Left = 825
+      Visible = False
+      ExplicitLeft = 825
     end
     object cxLabel4: TcxLabel
-      Left = 236
+      Left = 119
       Top = 6
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object ceUnit: TcxButtonEdit
-      Left = 236
+      Left = 119
       Top = 23
       Properties.Buttons = <
         item
@@ -193,12 +197,12 @@ inherited Report_StaffListMovementForm: TReport_StaffListMovementForm
       Width = 256
     end
     object cxLabel5: TcxLabel
-      Left = 505
+      Left = 388
       Top = 6
       Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' 1 '#1088#1110#1074#1085#1103':'
     end
     object ceDepartment: TcxButtonEdit
-      Left = 505
+      Left = 388
       Top = 23
       Properties.Buttons = <
         item
@@ -478,14 +482,6 @@ inherited Report_StaffListMovementForm: TReport_StaffListMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inEndDate'
-        Value = Null
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inUnitId'
         Value = Null
         Component = GuidesUnit
@@ -499,6 +495,13 @@ inherited Report_StaffListMovementForm: TReport_StaffListMovementForm
         Component = GuidesDepartment
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 80
@@ -569,8 +572,10 @@ inherited Report_StaffListMovementForm: TReport_StaffListMovementForm
     end
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 64
-    Top = 24
+    DateStart = nil
+    DateEnd = nil
+    Left = 56
+    Top = 56
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
