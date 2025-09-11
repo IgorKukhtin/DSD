@@ -241,8 +241,8 @@ BEGIN
             , 0    ::TFloat      AS WageFund
             , 0    ::TFloat      AS WageFund_byOne
        FROM tmpStaffList_object AS tmp
-            LEFT JOIN tmpData ON tmpData.ObjectId        = tmp.PositionId
-                             AND tmpData.PositionLevelId = tmp.PositionLevelId
+            LEFT JOIN tmpData ON tmpData.ObjectId = tmp.PositionId
+                             AND COALESCE (tmpData.PositionLevelId,0) = COALESCE (tmp.PositionLevelId,0)
        WHERE tmpData.ObjectId IS NULL
 
      UNION
