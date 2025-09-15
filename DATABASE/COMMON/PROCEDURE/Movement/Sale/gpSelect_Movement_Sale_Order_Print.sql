@@ -31,8 +31,8 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
      vbUserId:= lpGetUserBySession (inSession);
-     
-     
+
+
      IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_OrderExternal())
      THEN
          vbMovementId_order:= inMovementId;
@@ -67,10 +67,10 @@ BEGIN
         WHERE MovementLinkMovement.MovementChildId = vbMovementId_order -- inMovementId
           AND MovementLinkMovement.DescId          = zc_MovementLinkMovement_Order()
        ;
-     -- 
+     --
      ANALYZE _tmpListMovement;
-     
-     
+
+
      -- если это для Кишени + Варус
      vbIsDiffTax_10:= EXISTS (SELECT 1
                               FROM _tmpListMovement
@@ -180,9 +180,9 @@ BEGIN
                         LEFT JOIN tmpToolsWeighing_DiffSaleOrder ON tmpToolsWeighing_DiffSaleOrder.ParentId = tmpToolsWeighing_Branch.ParentId
                    LIMIT 1
                   );
-     
+
     --- кому из шапки заявки
-    vbToId := (SELECT MovementLinkObject_From.ObjectId  
+    vbToId := (SELECT MovementLinkObject_From.ObjectId
                FROM MovementLinkObject AS MovementLinkObject_From
                WHERE MovementLinkObject_From.MovementId = vbMovementId_order -- inMovementId
                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From());
@@ -234,28 +234,39 @@ BEGIN
     RETURN NEXT Cursor1;
     OPEN Cursor2 FOR
 
-     WITH tmpWeighing AS (--текущее взвешивание и кол-во ящиков при взвешивании
+     WITH tmpWeighing AS (-- текущее взвешивание и кол-во ящиков при взвешивании
                           WITH
                           tmp AS (SELECT Movement.Id AS MovementId
                                        , Movement.StatusId
+                                         -- Считаем все, иначе нужны только ящики
+                                       , CASE WHEN Movement.Id = inMovementId_Weighing OR COALESCE (inMovementId_Weighing, 0) = 0
+                                                   THEN TRUE
+                                                   ELSE FALSE
+                                         END AS isCalc
                                   FROM MovementLinkMovement AS MLM_Order
-                                      INNER JOIN Movement ON Movement.Id = MLM_Order.MovementId
-                                                         AND Movement.DescId = zc_Movement_WeighingPartner()
-                                                         AND Movement.StatusId <> zc_Enum_Status_Erased() --= zc_Enum_Status_UnComplete()
-                                                         AND (Movement.Id = inMovementId_Weighing OR COALESCE (inMovementId_Weighing, 0) = 0)
+                                       INNER JOIN Movement ON Movement.Id = MLM_Order.MovementId
+                                                          AND Movement.DescId = zc_Movement_WeighingPartner()
+                                                          AND Movement.StatusId <> zc_Enum_Status_Erased() --= zc_Enum_Status_UnComplete()
+                                                        --AND (Movement.Id = inMovementId_Weighing OR COALESCE (inMovementId_Weighing, 0) = 0)
                                   WHERE MLM_Order.MovementChildId = inMovementId -- id заявки
                                     AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
-                                UNION
+
+                                 UNION
                                   SELECT Movement.Id AS MovementId
                                        , Movement.StatusId
+                                         -- Считаем все, иначе нужны только ящики
+                                       , CASE WHEN Movement.Id = inMovementId_Weighing OR COALESCE (inMovementId_Weighing, 0) = 0
+                                                   THEN TRUE
+                                                   ELSE FALSE
+                                         END AS isCalc
                                   FROM MovementLinkMovement AS MLM_Order
                                       INNER JOIN Movement ON Movement.Id = MLM_Order.MovementId
                                                          AND Movement.DescId = zc_Movement_WeighingProduction()
                                                          AND Movement.StatusId <> zc_Enum_Status_Erased() --= zc_Enum_Status_UnComplete()
-                                                         AND (Movement.Id = inMovementId_Weighing OR COALESCE (inMovementId_Weighing, 0) = 0)
+                                                       --AND (Movement.Id = inMovementId_Weighing OR COALESCE (inMovementId_Weighing, 0) = 0)
                                   WHERE MLM_Order.MovementChildId = vbMovementId_order -- inMovementId -- id заявки
-                                    AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
-                                  )
+                                    AND MLM_Order.DescId          = zc_MovementLinkMovement_Order()
+                                 )
                         , tmpMI AS (SELECT MovementItem.*
                                     FROM MovementItem
                                     WHERE MovementItem.MovementId IN(SELECT DISTINCT tmp.MovementId FROM tmp)
@@ -266,7 +277,7 @@ BEGIN
                                       FROM MovementItemLinkObject
                                       WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                           AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
-                                      ) 
+                                      )
                         , tmpMIFloat AS (SELECT *
                                          FROM MovementItemFloat
                                          WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
@@ -287,7 +298,7 @@ BEGIN
                                            FROM MovementItemBoolean
                                            WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                                AND MovementItemBoolean.DescId IN (zc_MIBoolean_BarCode())
-                                           )                                     
+                                           )
 
                           SELECT MovementItem.ObjectId                                     AS GoodsId
                                , CASE WHEN MovementLinkObject_From.ObjectId = 8445 -- Склад МИНУСОВКА
@@ -297,20 +308,23 @@ BEGIN
                                  END                                                       AS GoodsKindId
                                , COALESCE (MIString_PartionGoods.ValueData, '')            AS PartionGoods
                                , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())  AS PartionGoodsDate
-                               , SUM (CASE WHEN MovementLinkObject_To.ObjectId   = vbToId AND tmp.StatusId = zc_Enum_Status_UnComplete() THEN COALESCE (MIFloat_AmountPartner.ValueData, MovementItem.Amount) ELSE 0 END) AS Amount
-                               , SUM (CASE WHEN MovementLinkObject_From.ObjectId = vbToId AND tmp.StatusId = zc_Enum_Status_UnComplete() THEN COALESCE (MIFloat_AmountPartner.ValueData, MovementItem.Amount) ELSE 0 END) AS Amount_ret
-                               --Скан.ящики (кол-во MovementItem с признаком zc_MIBoolean_BarCode) 
-                               , SUM (CASE WHEN COALESCE (MIBoolean_BarCode.ValueData, FALSE) = TRUE THEN COALESCE (MIFloat_BoxCount.ValueData,0) ELSE 0 END) AS BoxCount_scan
-                               , COUNT(*) AS myC
+                                 --
+                               , SUM (CASE WHEN tmp.isCalc = TRUE AND MovementLinkObject_To.ObjectId   = vbToId AND tmp.StatusId = zc_Enum_Status_UnComplete() THEN COALESCE (MIFloat_AmountPartner.ValueData, MovementItem.Amount) ELSE 0 END) AS Amount
+                               , SUM (CASE WHEN tmp.isCalc = TRUE AND MovementLinkObject_From.ObjectId = vbToId AND tmp.StatusId = zc_Enum_Status_UnComplete() THEN COALESCE (MIFloat_AmountPartner.ValueData, MovementItem.Amount) ELSE 0 END) AS Amount_ret
+                                 -- Скан.ящики (кол-во MovementItem с признаком zc_MIBoolean_BarCode)
+                               , SUM (CASE WHEN COALESCE (MIBoolean_BarCode.ValueData, FALSE) = TRUE THEN COALESCE (MIFloat_BoxCount.ValueData, 0) ELSE 0 END) AS BoxCount_scan
+                                 --
+                             --, COUNT(*) AS myC
+                               , SUM (CASE WHEN tmp.isCalc = TRUE THEN 1 ELSE 0 END) AS myC
                           FROM tmp
                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                              ON MovementLinkObject_From.MovementId = tmp.MovementId
                                                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-          
+
                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                              ON MovementLinkObject_To.MovementId = tmp.MovementId
                                                             AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-          
+
                                 INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = tmp.MovementId
 
                                 LEFT JOIN tmpMIFloat AS MIFloat_AmountPartner
@@ -356,7 +370,7 @@ BEGIN
                                , SUM (CASE WHEN _tmpListMovement.FromId = vbToId THEN COALESCE (MIFloat_AmountPartner.ValueData, MovementItem.Amount,0) ELSE 0 END) AS Amount_ret  --  возврат
 
                            FROM _tmpListMovement
-                           
+
                                 INNER JOIN MovementItem ON MovementItem.MovementId = _tmpListMovement.MovementId
                                                        AND MovementItem.DescId     = zc_MI_Master()
                                                        AND MovementItem.isErased   = FALSE
@@ -456,7 +470,7 @@ BEGIN
                                      , COALESCE (tmpWeighing.Amount_ret, 0)                            AS Amount_Weighing_ret
                                      , COALESCE (tmpMI.Amount, 0)                                      AS Amount
                                      , COALESCE (tmpMI.Amount_ret, 0)                                  AS Amount_ret
-, COALESCE (tmpWeighing.BoxCount_scan, 0) AS AmountBox_Weighing_scan
+                                     , COALESCE (tmpWeighing.BoxCount_scan, 0)                         AS AmountBox_Weighing_scan
                                      , tmpWeighing.myC
                                 FROM tmpWeighing
                                      FULL JOIN tmpMI ON tmpMI.GoodsId          =  tmpWeighing.GoodsId
@@ -493,7 +507,7 @@ BEGIN
                                                   INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
                                                                         ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
                                                                        AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
-                                    
+
                                                   LEFT JOIN ObjectFloat AS ObjectFloat_BoxCount
                                                                         ON ObjectFloat_BoxCount.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                                                        AND ObjectFloat_BoxCount.DescId = zc_ObjectFloat_GoodsPropertyValue_BoxCount()
@@ -503,9 +517,9 @@ BEGIN
                                                                      AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
                                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
                                                                       ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                                                     AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()                                    
+                                                                     AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
                                             WHERE ObjectFloat_BoxCount.ValueData <> 0
-                                            )
+                                           )
 
        -- результат
        SELECT Object_Goods.ObjectCode  			  AS GoodsCode
@@ -534,7 +548,7 @@ BEGIN
 
             , tmpResult1.AmountBox_Weighing_scan
             , tmpResult1.AmountBox_order
-            --подсветить желтым колонку "Скан.ящики" - если не совпадает с заказом
+              -- подсветить желтым колонку "Скан.ящики" - если не совпадает с заказом
             , CASE WHEN tmpResult1.AmountBox_Weighing_scan <> tmpResult1.AmountBox_order THEN TRUE ELSE FALSE END AS isDiff_AmountBox
 
             , tmpResult1.PartionGoods
@@ -558,7 +572,7 @@ BEGIN
                         THEN 100
                    ELSE 0
               END  :: TFloat AS CountDiff_B_tax
-              
+
             , CASE -- 10%, теперь 0% -  на штучном товаре + если РК - подсвечивать отклонение
                    WHEN EXISTS (SELECT 1 FROM _tmpListMovement WHERE _tmpListMovement.FromId = zc_Unit_RK())
                     AND tmpResult1.MeasureId = zc_Measure_Sh()
@@ -570,7 +584,7 @@ BEGIN
                                     ELSE 0
                                END  :: TFloat
                         THEN TRUE
-                        
+
                    -- 10% - ВК + Варус + если РК
                    WHEN EXISTS (SELECT 1 FROM _tmpListMovement WHERE _tmpListMovement.FromId = zc_Unit_RK())
                     AND vbIsDiffTax_10 = TRUE
@@ -582,7 +596,7 @@ BEGIN
                                     ELSE 0
                                END  :: TFloat
                         THEN TRUE
-                        
+
                    -- если РК
                    WHEN EXISTS (SELECT 1 FROM _tmpListMovement WHERE _tmpListMovement.FromId = zc_Unit_RK())
                         -- CountDiff_B_tax
@@ -593,7 +607,7 @@ BEGIN
                                      ELSE 0
                                 END  :: TFloat
                         THEN TRUE
-                        
+
                    -- Остальные
                    WHEN -- CountDiff_B_tax
                         19.99 < CASE WHEN tmpResult1.Amount_Order > 0
@@ -615,34 +629,34 @@ BEGIN
                   , tmpResult1.GoodsKindId
                   , tmpResult1.MeasureId
                   , tmpResult1.MeasureName
-      
+
                   , tmpResult1.Amount
                   , tmpResult1.Amount_Sh
                   , tmpResult1.Amount_Weight
-      
+
                   , tmpResult1.Amount_Weighing
                   , tmpResult1.Amount_Weighing_Sh
                   , tmpResult1.Amount_Weighing_Weight
-      
+
                   --
                   , tmpResult1.Amount_ret
                   , tmpResult1.Amount_Sh_ret
                   , tmpResult1.Amount_Weight_ret
-      
+
                   , tmpResult1.Amount_Weighing_ret
                   , tmpResult1.Amount_Weighing_Sh_ret
                   , tmpResult1.Amount_Weighing_Weight_ret
-                  
+
                   , tmpResult1.PartionGoods
-      
+
                   , tmpResult1.Amount_Order
                   , tmpResult1.Amount_Order_Sh
                   , tmpResult1.Amount_Order_Weight
-      
+
                   , tmpResult1.AmountSecond_Order
                   , tmpResult1.AmountSecond_Order_Sh
                   , tmpResult1.AmountSecond_Order_Weight
-      
+
                     -- Больше чем заказ
                   , CASE WHEN tmpResult1.Amount_Weighing + tmpResult1.Amount - tmpResult1.Amount_Order - tmpResult1.AmountSecond_Order
                             - (tmpResult1.Amount_Weighing_ret + tmpResult1.Amount_ret) > 0
@@ -657,7 +671,7 @@ BEGIN
                                    -(tmpResult1.Amount_Weighing_ret + tmpResult1.Amount_ret))
                          ELSE 0
                     END AS CountDiff_M
-      
+
                     -- Больше чем заказ
                   , CASE WHEN tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight
                             - (tmpResult1.Amount_Weighing_Weight_ret + tmpResult1.Amount_Weight_ret) > 0
@@ -677,24 +691,24 @@ BEGIN
                     -- кол-во заказа по % откл.
                   , ((COALESCE (tmpResult1.Amount_Order,0) + COALESCE (tmpResult1.AmountSecond_Order,0)) * vbDiffTax / 100) AS AmountTax
 
-                  --
+                    --
                   , CASE WHEN COALESCE (tmpObject_GoodsPropertyValue.BoxCount, 0) > 1 THEN tmpResult1.AmountBox_Weighing_scan ELSE 0 END  AS AmountBox_Weighing_scan
-                  --Заказ ящики
+                    -- Заказ ящики
                   , CAST (CASE WHEN COALESCE (tmpObject_GoodsPropertyValue.BoxCount, 0) > 1   ---было >0
-                                    THEN CAST ((tmpResult1.Amount_Order) / COALESCE (tmpObject_GoodsPropertyValue.BoxCount, 0) AS NUMERIC (16, 4))
+                                    THEN CAST ((tmpResult1.Amount_Order) / COALESCE (tmpObject_GoodsPropertyValue.BoxCount, 0) AS NUMERIC (16, 0))
                                ELSE 0
-                          END AS NUMERIC(16,1)) :: TFloat AS AmountBox_order
+                          END AS NUMERIC(16,0)) :: TFloat AS AmountBox_order
              FROM ( SELECT tmpResult.GoodsId
                          , tmpResult.GoodsKindId
-      
+
                          , Object_Measure.Id           AS MeasureId
                          , Object_Measure.ValueData    AS MeasureName
-                         
-                         
+
+
                          -- сгруппируем без партии, на печати партия не выводится
                          --, (CASE WHEN tmpResult.PartionGoods <> '' THEN tmpResult.PartionGoods WHEN tmpResult.PartionGoodsDate <> zc_DateStart() THEN TO_CHAR (tmpResult.PartionGoodsDate, 'DD.MM.YYYY') ELSE '' END) :: TVarChar AS PartionGoods
                          , '' :: TVarChar AS PartionGoods
-      
+
                          , SUM (tmpResult.Amount)                                                                                              :: TFloat AS Amount
                          , SUM (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.Amount ELSE 0 END)                                :: TFloat AS Amount_Sh
                          , SUM (tmpResult.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS Amount_Weight
@@ -702,44 +716,44 @@ BEGIN
                          , SUM (tmpResult.Amount_ret)                                                                                              :: TFloat AS Amount_ret
                          , SUM (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.Amount_ret ELSE 0 END)                                :: TFloat AS Amount_Sh_ret
                          , SUM (tmpResult.Amount_ret * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS Amount_Weight_ret
-      
+
                          , SUM (tmpResult.Amount_Weighing)                                                                                              :: TFloat AS Amount_Weighing
                          , SUM (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.Amount_Weighing ELSE 0 END)                                :: TFloat AS Amount_Weighing_Sh
                          , SUM (tmpResult.Amount_Weighing * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS Amount_Weighing_Weight
-      
+
                          , SUM (tmpResult.Amount_Weighing_ret)                                                                                              :: TFloat AS Amount_Weighing_ret
                          , SUM (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.Amount_Weighing_ret ELSE 0 END)                                :: TFloat AS Amount_Weighing_Sh_ret
-                         , SUM (tmpResult.Amount_Weighing_ret * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS Amount_Weighing_Weight_ret 
-                         
+                         , SUM (tmpResult.Amount_Weighing_ret * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS Amount_Weighing_Weight_ret
+
                          , SUM (tmpResult.AmountBox_Weighing_scan)                                                                                             :: TFloat AS AmountBox_Weighing_scan
 
                          , SUM (tmpResult.Amount_Order)                                                                                              :: TFloat AS Amount_Order
                          , SUM (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.Amount_Order ELSE 0 END)                                :: TFloat AS Amount_Order_Sh
                          , SUM (tmpResult.Amount_Order * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS Amount_Order_Weight
-      
+
                          , SUM (tmpResult.AmountSecond_Order)                                                                                              :: TFloat AS AmountSecond_Order
                          , SUM (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.AmountSecond_Order ELSE 0 END)                                :: TFloat AS AmountSecond_Order_Sh
                          , SUM (tmpResult.AmountSecond_Order * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS AmountSecond_Order_Weight
-                         
+
                          , SUM (tmpResult.myC) AS myC
-      
-      
+
+
                    FROM tmpResult
-      
+
                         LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                        ON ObjectLink_Goods_Measure.ObjectId = tmpResult.GoodsId
                                       AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                         LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-      
+
                         LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                         ON ObjectFloat_Weight.ObjectId = tmpResult.GoodsId
                                        AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
                    GROUP BY tmpResult.GoodsId
                           , tmpResult.GoodsKindId
                           , Object_Measure.Id
-                          , Object_Measure.ValueData 
-                    ) AS tmpResult1 
-                    
+                          , Object_Measure.ValueData
+                    ) AS tmpResult1
+
                  LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = tmpResult1.GoodsId
                                                        AND tmpObject_GoodsPropertyValue.GoodsKindId = tmpResult1.GoodsKindId
              ) AS tmpResult1
@@ -756,7 +770,7 @@ BEGIN
                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpResult1.GoodsId
                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
-        WHERE (inIsDiff = FALSE OR (tmpResult1.Amount + tmpResult1.Amount_Weighing) < (tmpResult1.Amount_Order + tmpResult1.AmountSecond_Order))
+        WHERE (inIsDiff    = FALSE OR (tmpResult1.Amount + tmpResult1.Amount_Weighing) < (tmpResult1.Amount_Order + tmpResult1.AmountSecond_Order))
           AND (inIsDiffTax = FALSE OR (-- или значение Больше чем заказ больше чем разрешенный %
                                        (tmpResult1.AmountTax <= CountDiff_B AND CountDiff_B <> 0)
                                        -- значение Меньше чем заказ больше чем разрешенный %
@@ -773,15 +787,10 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 25.08.25         * 
+ 25.08.25         *
  03.03.20         *
  26.04.18         *
  09.07.15         *
 */
 -- тест
--- select * from gpSelect_Movement_Sale_Order_Print(inMovementId := 32006828 , inMovementId_Weighing := 0 , inIsDiff := 'False' , inIsDiffTax := 'False' ,  inSession := '9457');  FETCH ALL "<unnamed portal 40>";
-
-
-
-
-
+-- SELECT * FROM gpSelect_Movement_Sale_Order_Print(inMovementId := 32006828 , inMovementId_Weighing := 0 , inIsDiff := 'False' , inIsDiffTax := 'False' ,  inSession := '9457'); -- FETCH ALL "<unnamed portal 40>";

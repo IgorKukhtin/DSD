@@ -29,6 +29,11 @@ BEGIN
      if vbUserId IN (9457) then RETURN; end if; 
      
      
+     IF EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 8 AND 12
+     THEN
+         RAISE EXCEPTION 'Ошибка.Повторите действие через 45 мин.';
+     END IF;
+
 
      vbisPersonalService := (SELECT OB.ValueData FROM ObjectBoolean AS OB WHERE OB.DescId = zc_ObjectBoolean_Unit_PersonalService() AND OB.ObjectId = inUnitId);
 

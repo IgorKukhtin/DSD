@@ -79,23 +79,25 @@ BEGIN
            EXISTS (SELECT 1
                    FROM MovementLinkMovement AS MovementLinkMovement_Order
                         INNER JOIN Movement AS Movement_Order ON Movement_Order.Id        = MovementLinkMovement_Order.MovementChildId
-                                                             AND Movement_Order.InvNumber = '45515127'
+                                                             AND (Movement_Order.InvNumber ILIKE '1737576'
+                                                               OR Movement_Order.InvNumber ILIKE '1737577'
+                                                                 )
                    WHERE MovementLinkMovement_Order.MovementId = inMovementId
                      AND MovementLinkMovement_Order.DescId     = zc_MovementLinkMovement_Order()
                   )
         OR EXISTS (SELECT 1
                    FROM MovementLinkMovement AS MovementLinkMovement_Order
                         INNER JOIN Movement AS Movement_Order ON Movement_Order.Id        = MovementLinkMovement_Order.MovementChildId
-                           LEFT JOIN MovementString AS MovementString_InvNumberPartner
-                                                    ON MovementString_InvNumberPartner.MovementId = Movement_Order.Id
-                                                   AND MovementString_InvNumberPartner.DescId     = zc_MovementString_InvNumberPartner()
-                                                   AND MovementString_InvNumberPartner.ValueData ILIKE '45515127'
+                           INNER JOIN MovementString AS MovementString_InvNumberPartner
+                                                     ON MovementString_InvNumberPartner.MovementId = Movement_Order.Id
+                                                    AND MovementString_InvNumberPartner.DescId     = zc_MovementString_InvNumberPartner()
+                                                    AND MovementString_InvNumberPartner.ValueData ILIKE 'test-01'
                    WHERE MovementLinkMovement_Order.MovementId = inMovementId
                      AND MovementLinkMovement_Order.DescId     = zc_MovementLinkMovement_Order()
                   )
-        OR vbUserId <> 5
+        --OR vbUserId <> 5
           )
-      AND 1=0
+      AND 1=1
    THEN
 
     vbMovementId_Sale:= (SELECT Movement.ParentId FROM Movement WHERE Movement.Id = inMovementId);
@@ -314,4 +316,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Scale_MI_Goods_gofro (31880127, 10091394, 1, zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Scale_MI_Goods_gofro (32155057, 877320, 1, zfCalc_UserAdmin())
