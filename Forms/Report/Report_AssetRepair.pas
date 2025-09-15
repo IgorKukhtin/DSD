@@ -23,7 +23,7 @@ uses
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, dsdGuides,
-  cxButtonEdit, ChoicePeriod, cxLabel, cxCheckBox, dxBarExtItems;
+  cxButtonEdit, ChoicePeriod, cxLabel, cxCheckBox, dxBarExtItems, dsdCommon;
 
 type
   TReport_AssetRepairForm = class(TParentForm)
@@ -74,6 +74,7 @@ type
     AssetName: TcxGridDBColumn;
     GoodsGroupName: TcxGridDBColumn;
     GoodsGroupNameFull: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
   private
   public
   end;

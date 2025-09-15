@@ -241,8 +241,8 @@ BEGIN
             , 0    ::TFloat      AS WageFund
             , 0    ::TFloat      AS WageFund_byOne
        FROM tmpStaffList_object AS tmp
-            LEFT JOIN tmpData ON tmpData.ObjectId        = tmp.PositionId
-                             AND tmpData.PositionLevelId = tmp.PositionLevelId
+            LEFT JOIN tmpData ON tmpData.ObjectId = tmp.PositionId
+                             AND COALESCE (tmpData.PositionLevelId,0) = COALESCE (tmp.PositionLevelId,0)
        WHERE tmpData.ObjectId IS NULL
 
      UNION
@@ -389,10 +389,6 @@ BEGIN
                                   ON MIString_Comment.MovementItemId = MovementItem.Id
                                  AND MIString_Comment.DescId = zc_MIString_Comment()
 
-            /*LEFT JOIN tmpMILinkObject AS MILinkObject_PositionLevel
-                                      ON MILinkObject_PositionLevel.MovementItemId = cId
-                                     AND MILinkObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel()
-            */
             LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = MovementItem.PositionLevelId
 
             LEFT JOIN tmpMILinkObject AS MILinkObject_StaffPaidKind

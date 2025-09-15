@@ -752,10 +752,23 @@ inherited StaffListMovementForm: TStaffListMovementForm
   inherited ActionList: TActionList
     Left = 55
     Top = 303
+    object actRefreshGet: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = True
+    end
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
-    object InsertRecord: TInsertRecord [2]
+    object InsertRecord: TInsertRecord [3]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -766,12 +779,12 @@ inherited StaffListMovementForm: TStaffListMovementForm
       ImageIndex = 0
     end
     inherited actInsertUpdateMovement: TdsdExecStoredProc
-      StoredProc = nil
       StoredProcList = <
         item
+          StoredProc = spInsertUpdateMovement
         end
         item
-          StoredProc = spInsertUpdateMovement
+          StoredProc = spGet
         end>
     end
     inherited actPrint: TdsdPrintAction
@@ -816,7 +829,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
         item
         end>
     end
-    object actPositionLevelChoice: TOpenChoiceForm [14]
+    object actPositionLevelChoice: TOpenChoiceForm [15]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -843,7 +856,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
         end>
       isShowModal = True
     end
-    object actStaffPaidKindChoiceForm: TOpenChoiceForm [15]
+    object actStaffPaidKindChoiceForm: TOpenChoiceForm [16]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -870,7 +883,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
         end>
       isShowModal = True
     end
-    object actStaffHoursDayChoiceForm: TOpenChoiceForm [16]
+    object actStaffHoursDayChoiceForm: TOpenChoiceForm [17]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -897,7 +910,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
         end>
       isShowModal = True
     end
-    object actStaffHoursChoiceForm: TOpenChoiceForm [17]
+    object actStaffHoursChoiceForm: TOpenChoiceForm [18]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -924,7 +937,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
         end>
       isShowModal = True
     end
-    object actStaffHoursLengthChoiceForm: TOpenChoiceForm [18]
+    object actStaffHoursLengthChoiceForm: TOpenChoiceForm [19]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -951,7 +964,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
         end>
       isShowModal = True
     end
-    object actPersonalChoiceForm: TOpenChoiceForm [19]
+    object actPersonalChoiceForm: TOpenChoiceForm [20]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -978,7 +991,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
         end>
       isShowModal = True
     end
-    object actPositionChoice: TOpenChoiceForm [20]
+    object actPositionChoice: TOpenChoiceForm [21]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1584,8 +1597,8 @@ inherited StaffListMovementForm: TStaffListMovementForm
       end
       item
       end>
-    Left = 128
-    Top = 240
+    Left = 96
+    Top = 264
   end
   inherited HeaderSaver: THeaderSaver
     ControlList = <
@@ -1955,7 +1968,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
   object HeaderExit: THeaderExit
     ExitList = <
       item
-        Control = edUnit
+        Control = edOperDate
       end
       item
       end
@@ -1965,6 +1978,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
       end
       item
       end>
+    Action = actRefreshGet
     Left = 624
     Top = 264
   end

@@ -56,7 +56,7 @@ object Report_StaffListMovementDialogForm: TReport_StaffListMovementDialogForm
   object cxLabel2: TcxLabel
     Left = 13
     Top = 6
-    Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
+    Caption = #1053#1072' '#1076#1072#1090#1091':'
   end
   object deStart: TcxDateEdit
     Left = 13
@@ -72,12 +72,14 @@ object Report_StaffListMovementDialogForm: TReport_StaffListMovementDialogForm
     EditValue = 42370d
     Properties.ShowTime = False
     TabOrder = 6
+    Visible = False
     Width = 110
   end
   object cxLabel4: TcxLabel
     Left = 127
     Top = 6
     Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
+    Visible = False
   end
   object cxLabel5: TcxLabel
     Left = 11

@@ -55,6 +55,11 @@ type
     actSetUnErased: TdsdUpdateErased;
     bbSetErased: TdxBarButton;
     bbSetUnErased: TdxBarButton;
+    actShowAll: TBooleanStoredProcAction;
+    bbIsShowAll: TdxBarButton;
+    dsdGridToExcel: TdsdGridToExcel;
+    bbGridToExcel: TdxBarButton;
+    isErased: TcxGridDBColumn;
   private
     { Private declarations }
   public

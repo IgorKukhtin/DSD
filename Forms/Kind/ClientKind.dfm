@@ -12,8 +12,8 @@ object ClientKindForm: TClientKindForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
@@ -24,7 +24,6 @@ object ClientKindForm: TClientKindForm
     Height = 239
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 465
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -32,8 +31,11 @@ object ClientKindForm: TClientKindForm
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
+      Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
       OptionsBehavior.IncSearchItem = clName
+      OptionsCustomize.ColumnHiding = True
+      OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
@@ -57,6 +59,13 @@ object ClientKindForm: TClientKindForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 252
+      end
+      object isErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        Visible = False
+        Options.Editing = False
+        Width = 50
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -149,6 +158,14 @@ object ClientKindForm: TClientKindForm
         end
         item
           Visible = True
+          ItemName = 'bbIsShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -158,6 +175,14 @@ object ClientKindForm: TClientKindForm
         item
           Visible = True
           ItemName = 'bbChoiceGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
         end
         item
           Visible = True
@@ -206,6 +231,14 @@ object ClientKindForm: TClientKindForm
     end
     object bbSetUnErased: TdxBarButton
       Action = actSetUnErased
+      Category = 0
+    end
+    object bbIsShowAll: TdxBarButton
+      Action = actShowAll
+      Category = 0
+    end
+    object bbGridToExcel: TdxBarButton
+      Action = dsdGridToExcel
       Category = 0
     end
   end
@@ -356,6 +389,34 @@ object ClientKindForm: TClientKindForm
       isSetErased = False
       DataSource = DataSource
     end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
+    object dsdGridToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      MoveParams = <>
+      Grid = cxGrid
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ClientKind'
@@ -364,7 +425,15 @@ object ClientKindForm: TClientKindForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inIsShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 152
     Top = 128

@@ -147,6 +147,9 @@ type
     actExecisManyForm: TdsdInsertUpdateAction;
     mac_isMany: TMultiAction;
     mac_isMany_Print: TMultiAction;
+    actPrint_Error: TdsdPrintAction;
+    bbPrint_Error: TdxBarButton;
+    Print_error: TcxGridDBColumn;
   private
     { Private declarations }
   public

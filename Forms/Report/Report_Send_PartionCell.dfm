@@ -4,6 +4,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
   ClientWidth = 1540
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -416
   ExplicitWidth = 1556
   ExplicitHeight = 447
   PixelsPerInch = 96
@@ -1646,6 +1647,13 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             Options.Editing = False
             Width = 55
           end
+          object Print_error: TcxGridDBColumn
+            Caption = #1054#1096#1080#1073#1082#1072
+            DataBinding.FieldName = 'Print_error'
+            Visible = False
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end
@@ -1823,7 +1831,57 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
   inherited ActionList: TActionList
     Left = 79
     Top = 271
-    object actRefreshCell: TdsdDataSetRefresh [0]
+    object actPrint_Error: TdsdPrintAction [0]
+      Category = 'Print'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1054#1096#1080#1073#1082#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1054#1096#1080#1073#1082#1080
+      ImageIndex = 23
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 45474d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 45474d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isCell'
+          Value = False
+          Component = cbisCell
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103'('#1086#1096#1080#1073#1082#1080')'
+      ReportNameParam.Value = #1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103'('#1086#1096#1080#1073#1082#1080')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actRefreshCell: TdsdDataSetRefresh [1]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -1837,7 +1895,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actRefreshPartion: TdsdDataSetRefresh [1]
+    object actRefreshPartion: TdsdDataSetRefresh [2]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -3419,6 +3477,14 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Error'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end>
     end
@@ -3470,6 +3536,10 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     end
     object bbOpenForm_isManyEdit: TdxBarButton
       Action = actOpenForm_isManyEdit
+      Category = 0
+    end
+    object bbPrint_Error: TdxBarButton
+      Action = actPrint_Error
       Category = 0
     end
   end

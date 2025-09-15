@@ -102,6 +102,7 @@ type
     actInsertMIMaster_byMovement: TdsdExecStoredProc;
     macInsertMI_byMovement: TMultiAction;
     bbInsertMI_byMovement: TdxBarButton;
+    actRefreshGet: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
