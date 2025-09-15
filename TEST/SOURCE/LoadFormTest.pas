@@ -2650,13 +2650,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_Inventory_scaleDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovement_Inventory_scaleDialogForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingPartner_PassportForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingPartner_PassportForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingPartner_PassportDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingPartner_PassportDialogForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WP_PassportPSWDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WP_PassportPSWDialogForm');
 
@@ -2703,10 +2703,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PartionCellDialogForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PartionCellForm');
- // exit;
-
+  exit;
+  {
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellRemainsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PartionCellRemainsDialogForm');

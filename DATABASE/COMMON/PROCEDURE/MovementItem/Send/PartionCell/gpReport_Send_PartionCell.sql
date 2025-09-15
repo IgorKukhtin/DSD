@@ -233,6 +233,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperD
              , InsertDate_ChoiceCell_mi TDateTime
 
              , isLock_record Boolean
+             , Print_error   Integer
               )
 AS
 $BODY$
@@ -927,6 +928,24 @@ BEGIN
                                            , (tmpData_list.PartionCellId_real)
                                            , tmpData_list.isMany
                                    )
+      --проверка что дл€ 1 €чейки несколько товаров, видов товара или разные партии 
+    , tmpError AS (WITH
+                    --€чейки отбор и ошибка исключить , т.к. они повтор€ютс€ дл€ разных товаров и партий
+                   tmpCell AS (SELECT Object.Id
+                               FROM Object
+                               WHERE Object.Descid = zc_Object_PartionCell()
+                                 AND Object.ObjectCode IN (0,1)
+                               ) 
+
+                   SELECT tmp.PartionCellId    
+                   FROM tmpData_PartionCell_All_All AS tmp
+                   WHERE tmp.PartionCellId NOT IN (SELECT tmpCell.Id FROM tmpCell)
+                   GROUP BY tmp.PartionCellId
+                   HAVING COUNT (DISTINCT tmp.GoodsId) > 1
+                       OR COUNT (DISTINCT tmp.GoodsKindId) > 1
+                       OR COUNT (DISTINCT COALESCE (tmp.PartionGoodsDate, zc_DateStart()) ) > 1 
+                   )
+
       -- “олько заполненные €чейки - є п/п
     , tmpData_PartionCell_All AS (SELECT tmpData_PartionCell_All_All.MovementId        -- ***
                                        , tmpData_PartionCell_All_All.MovementDescId    -- ***
@@ -997,13 +1016,14 @@ BEGIN
                                                                    , COALESCE (ObjectFloat_Level.ValueData, 0)
                                                                    , COALESCE (Object_PartionCell_real.ObjectCode, Object_PartionCell.ObjectCode, 0)
                                                            ) AS Ord
-
+                                       , CASE WHEN tmpError.PartionCellId IS NOT NULL THEN 1 ELSE 0 END AS Print_error
                                   FROM tmpData_PartionCell_All_All
                                        LEFT JOIN Object AS Object_PartionCell      ON Object_PartionCell.Id      = tmpData_PartionCell_All_All.PartionCellId
                                        LEFT JOIN Object AS Object_PartionCell_real ON Object_PartionCell_real.Id = tmpData_PartionCell_All_All.PartionCellId_real
                                        LEFT JOIN ObjectFloat AS ObjectFloat_Level
                                                              ON ObjectFloat_Level.ObjectId = COALESCE (Object_PartionCell_real.Id, Object_PartionCell.Id)
                                                             AND ObjectFloat_Level.DescId   = zc_ObjectFloat_PartionCell_Level()
+                                       LEFT JOIN tmpError ON tmpError.PartionCellId = tmpData_PartionCell_All_All.PartionCellId
                                  )
 
 
@@ -1184,6 +1204,7 @@ BEGIN
 
                                    , STRING_AGG (DISTINCT CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) > 22  THEN tmpData_PartionCell_All.PartionCellName_calc ELSE '' END, ';') AS PartionCellName_ets
 
+                                   , MAX (tmpData_PartionCell_All.Print_error) AS Print_error
                               FROM tmpData_PartionCell_All
 
                               GROUP BY tmpData_PartionCell_All.MovementId
@@ -1452,6 +1473,7 @@ BEGIN
                                                                                                        , COALESCE (tmpData_MI.PartionGoodsDate, tmpData_MI.PartionGoodsDate, zc_DateStart()) ASC
                                                                                                         ) :: Integer AS Ord*/
 
+                         , tmpData_PartionCell.Print_error
                   FROM tmpData_MI -- расчет кол-во - мастер
 
                        LEFT JOIN MovementDesc ON MovementDesc.Id = tmpData_MI.MovementDescId
@@ -1934,6 +1956,7 @@ BEGIN
 
         , FALSE :: Boolean AS isLock_record
 
+        , tmpResult.Print_error ::Integer --дл€ печати
    FROM tmpResult
         -- нашли ћесто отбора
         LEFT JOIN tmpChoiceCell ON tmpChoiceCell.GoodsId = tmpResult.GoodsId
@@ -3261,7 +3284,7 @@ BEGIN
         , CASE WHEN tmpResult.isPartionCell_Many_7 = FALSE THEN tmpResult.ColorFon_7 ELSE zc_Color_Red()  END :: Integer  AS ColorFon_7
         , CASE WHEN tmpResult.isPartionCell_Many_8 = FALSE THEN tmpResult.ColorFon_8 ELSE zc_Color_Red()  END :: Integer  AS ColorFon_8
         , CASE WHEN tmpResult.isPartionCell_Many_9 = FALSE THEN tmpResult.ColorFon_9 ELSE zc_Color_Red()  END :: Integer  AS ColorFon_9
-        , CASE WHEN tmpResult.isPartionCell_Many_10 = FALSE THEN tmpResult.ColorFon_10 ELSE zc_Color_Red() END :: Integer  AS ColorFon_10
+        , CASE WHEN tmpResult.isPartionCell_Many_10 = FALSE THEN tmpResult.ColorFon_10 ELSE zc_Color_Red()  END :: Integer AS ColorFon_10
         , CASE WHEN tmpResult.isPartionCell_Many_11 = FALSE THEN tmpResult.ColorFon_11 ELSE zc_Color_Red()  END :: Integer AS ColorFon_11
         , CASE WHEN tmpResult.isPartionCell_Many_12 = FALSE THEN tmpResult.ColorFon_12 ELSE zc_Color_Red()  END :: Integer AS ColorFon_12
         , CASE WHEN tmpResult.isPartionCell_Many_13 = FALSE THEN tmpResult.ColorFon_13 ELSE zc_Color_Red()  END :: Integer AS ColorFon_13
@@ -3482,7 +3505,7 @@ BEGIN
         , NULL            :: TDateTime AS InsertDate_ChoiceCell_mi
 
         , FALSE :: Boolean AS isLock_record
-
+        , 0 ::Integer AS Print_error  --дл€ печати
    FROM tmpResult
   ;
 
@@ -3515,3 +3538,6 @@ zc_ObjectFloat_OrderType_TermProduction
 
 --SELECT * FROM gpReport_Send_PartionCell (inStartDate:= '02.06.2025', inEndDate:= '03.06.2025', inUnitId:= 8459, inIsMovement:= FALSE, inIsCell:= FALSE, inIsShowAll:= FALSE, inSession := '9457') 
 --where GoodsCode = 221;
+
+--select * from gpReport_Send_PartionCell(inStartDate := ('11.09.2025')::TDateTime , inEndDate := ('11.09.2025')::TDateTime , inUnitId := 8459 , inIsMovement := 'False' , inisCell := 'False' , inIsShowAll := 'False' ,  inSession := '9457')
+--where goodsId = 2116
