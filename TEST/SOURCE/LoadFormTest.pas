@@ -3417,13 +3417,13 @@ end;
 
 procedure TLoadFormTest.LoadReportAssetFormTest;
 begin
-{
-TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AssetRepairForm'));
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AssetRepairForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_AssetRepairForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AssetRepairDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_AssetRepairDialogForm');
   exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSold_AssetNoBalanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSold_AssetNoBalanceForm');
   exit;

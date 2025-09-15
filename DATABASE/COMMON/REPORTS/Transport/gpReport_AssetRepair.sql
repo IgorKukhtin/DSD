@@ -14,6 +14,7 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar, Movem
              , AssetId Integer, AssetCode Integer, AssetName TVarChar
              , CarId Integer, CarCode Integer, CarName TVarChar
              , ObjectId Integer, ObjectCode Integer, ObjectName TVarChar, DescName TVarChar
+             , MeasureId Integer, MeasureName TVarChar 
              , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , UnitId Integer, UnitName TVarChar
              , BranchId Integer, BranchName TVarChar
@@ -247,6 +248,9 @@ BEGIN
              , Object.ValueData        AS ObjectName
              , ObjectDesc.ItemName     AS DescName
 
+             , Object_Measure.Id               AS MeasureId
+             , Object_Measure.ValueData        AS MeasureName
+
              , Object_GoodsGroup.Id           AS GoodsGroupId
              , Object_GoodsGroup.ValueData    AS GoodsGroupName
              , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
@@ -277,6 +281,11 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
                                    ON ObjectString_Goods_GroupNameFull.ObjectId = tmpData.ObjectId
                                   AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = tmpData.ObjectId
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Asset_Car
                                  ON ObjectLink_Asset_Car.ObjectId = tmpData.AssetId

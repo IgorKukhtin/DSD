@@ -183,6 +183,14 @@ object Report_AssetRepairForm: TReport_AssetRepairForm
         Options.Editing = False
         Width = 98
       end
+      object MeasureName: TcxGridDBColumn
+        Caption = #1045#1076'. '#1080#1079#1084'.'
+        DataBinding.FieldName = 'MeasureName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object DescName: TcxGridDBColumn
         Caption = #1069#1083#1077#1084#1077#1085#1090' ('#1090#1086#1074#1072#1088' / '#1091#1087' '#1089#1090#1072#1090#1100#1103')'
         DataBinding.FieldName = 'DescName'
@@ -660,6 +668,7 @@ object Report_AssetRepairForm: TReport_AssetRepairForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 304
     Top = 296
