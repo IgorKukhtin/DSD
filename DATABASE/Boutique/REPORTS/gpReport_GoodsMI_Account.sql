@@ -533,7 +533,8 @@ BEGIN
                                 LEFT JOIN tmpDebt ON tmpDebt.PartionId = tmp.PartionId
                                                  AND tmpDebt.ClientId  = tmp.ClientId
                                                  AND tmpDebt.GoodsId   = tmp.GoodsId
-                                                 --AND tmpDebt.MI_Id     = tmp.MI_Id
+                                                 -- !!!
+                                                 AND tmpDebt.MI_Id     = tmp.MI_Id
                            WHERE COALESCE (tmp.TotalPay, 0) <> 0 OR tmp.SummChangePercent <> 0
                        UNION ALL
                            SELECT tmp.MovementId
