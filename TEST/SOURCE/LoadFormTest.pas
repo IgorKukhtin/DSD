@@ -222,6 +222,7 @@ type
     procedure LoadSheetWorkTimeCloseFormTest;
     procedure LoadSmsSettingsFormTest;
     procedure LoadStaffListFormTest;
+    procedure LoadStaffListMemberFormTest;
     procedure LoadStaffListMovementFormTest;
     procedure LoadStickerFormTest;
     procedure LoadStorageLineFormTest;
@@ -4479,10 +4480,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberHoliday_ChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberHoliday_ChoiceForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ChoiceForm');
-
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalPosition_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalPosition_ObjectForm');
 
@@ -4631,6 +4633,9 @@ end;
 
 procedure TLoadFormTest.LoadStaffListFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStaffListKindForm');
+  exit;
   {
   //штатное расписание данные
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListDataForm'));
@@ -4668,6 +4673,19 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffHoursLengthEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStaffHoursLengthEditForm');
   end;
+
+  procedure TLoadFormTest.LoadStaffListMemberFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStaffListKindForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListMemberJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStaffListMemberJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListMemberForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStaffListMemberForm');
+
+end;
+
 
  procedure TLoadFormTest.LoadStaffListMovementFormTest;
 begin

@@ -1124,7 +1124,10 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_StaffHours_Comment', zc_object_StaffHours(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_StaffHours_Comment');
  
-
+  CREATE OR REPLACE FUNCTION zc_ObjectString_StaffListKind_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_StaffListKind_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_StaffListKind_Comment', zc_Object_StaffListKind(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_StaffListKind_Comment');
+ 
 
 
                           

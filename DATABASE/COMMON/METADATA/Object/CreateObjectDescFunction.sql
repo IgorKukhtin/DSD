@@ -1132,6 +1132,16 @@ INSERT INTO ObjectDesc (Code, ItemName)
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_StaffHoursLength', 'Продолжительность смены - Штатное расписание' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_StaffHoursLength');
 
+  CREATE OR REPLACE FUNCTION zc_Object_StaffListKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_StaffListKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_StaffListKind', 'Вид оформления в штат' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_StaffListKind');
+
+
+
+
+
+
+
 
 
 --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1768,6 +1778,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 15.09.25         * zc_Object_StaffListKind
  19.02.25         * zc_Object_MessagePersonalService
  11.12.24         * zc_Object_UnitPeresort
  02.12.24         * zc_Object_SiteTag

@@ -1168,6 +1168,16 @@ BEGIN
 
 END $$;
 
+DO $$
+BEGIN
+
+     -- !!! Вид оформления в штат
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListKind_In(),  inDescId:= zc_Object_StaffListKind(), inCode:= 1, inName:= 'Прием на работу'          , inEnumName:= 'zc_Enum_StaffListKind_In');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListKind_Out(), inDescId:= zc_Object_StaffListKind(), inCode:= 2, inName:= 'Увольнение'               , inEnumName:= 'zc_Enum_StaffListKind_Out');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListKind_Send(),inDescId:= zc_Object_StaffListKind(), inCode:= 3, inName:= 'Перевод'                  , inEnumName:= 'zc_Enum_StaffListKind_Send');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListKind_Add(), inDescId:= zc_Object_StaffListKind(), inCode:= 4, inName:= 'Прием по совместительству', inEnumName:= 'zc_Enum_StaffListKind_Add');
+END $$;
+
 
 /* Закомментил, т.к. 1 раз добавили и харэ
 --Загрузка в Документ <Ведомость начисления зарплаты>
