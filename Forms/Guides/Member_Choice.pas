@@ -49,6 +49,7 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    PositionLevelName: TcxGridDBColumn;
   private
     { Private declarations }
   public

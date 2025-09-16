@@ -27,7 +27,6 @@ object Member_ChoiceForm: TMember_ChoiceForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 625
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -147,6 +146,12 @@ object Member_ChoiceForm: TMember_ChoiceForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 30
+      end
+      object PositionLevelName: TcxGridDBColumn
+        Caption = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
+        DataBinding.FieldName = 'PositionLevelName'
+        Options.Editing = False
+        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel

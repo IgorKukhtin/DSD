@@ -69,6 +69,8 @@ type
     cxLabel14: TcxLabel;
     cxLabel15: TcxLabel;
     ceComment: TcxTextEdit;
+    cxButton1: TcxButton;
+    actOpenChoiceFormMember: TOpenChoiceForm;
   private
     { Private declarations }
   public

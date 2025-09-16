@@ -4676,6 +4676,9 @@ begin
 
   procedure TLoadFormTest.LoadStaffListMemberFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListItemChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStaffListItemChoiceForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStaffListKindForm');
 
@@ -4689,6 +4692,7 @@ end;
 
  procedure TLoadFormTest.LoadStaffListMovementFormTest;
 begin
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStaffListJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListMovementForm'));

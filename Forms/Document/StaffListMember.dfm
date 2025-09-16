@@ -1,26 +1,26 @@
 inherited StaffListMemberForm: TStaffListMemberForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1082#1072#1079' '#1087#1086' '#1086#1090#1087#1091#1089#1082#1072#1084'>'
-  ClientHeight = 371
-  ClientWidth = 709
+  ClientHeight = 352
+  ClientWidth = 716
   AddOnFormData.isSingle = False
-  ExplicitWidth = 715
-  ExplicitHeight = 400
+  ExplicitWidth = 722
+  ExplicitHeight = 381
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 439
-    Top = 332
+    Left = 409
+    Top = 314
     Height = 26
-    ExplicitLeft = 439
-    ExplicitTop = 332
+    ExplicitLeft = 409
+    ExplicitTop = 314
     ExplicitHeight = 26
   end
   inherited bbCancel: TcxButton
-    Left = 578
-    Top = 332
+    Left = 548
+    Top = 314
     Height = 26
-    ExplicitLeft = 578
-    ExplicitTop = 332
+    ExplicitLeft = 548
+    ExplicitTop = 314
     ExplicitHeight = 26
   end
   object cxLabel1: TcxLabel [2]
@@ -43,8 +43,8 @@ inherited StaffListMemberForm: TStaffListMemberForm
     Width = 88
   end
   object cxLabel6: TcxLabel [5]
-    Left = 8
-    Top = 255
+    Left = 369
+    Top = 7
     Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
   end
   object edInvNumber: TcxTextEdit [6]
@@ -56,8 +56,8 @@ inherited StaffListMemberForm: TStaffListMemberForm
     Width = 75
   end
   object edUpdateDate: TcxDateEdit [7]
-    Left = 8
-    Top = 322
+    Left = 368
+    Top = 70
     EditValue = 42092d
     Properties.Kind = ckDateTime
     Properties.ReadOnly = True
@@ -67,18 +67,18 @@ inherited StaffListMemberForm: TStaffListMemberForm
     Width = 130
   end
   object cxLabel2: TcxLabel [8]
-    Left = 8
-    Top = 302
+    Left = 368
+    Top = 52
     Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
   end
   object cxLabel9: TcxLabel [9]
-    Left = 148
-    Top = 254
+    Left = 508
+    Top = 7
     Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
   end
   object edInsert: TcxButtonEdit [10]
-    Left = 148
-    Top = 275
+    Left = 508
+    Top = 27
     Properties.Buttons = <
       item
         Default = True
@@ -90,13 +90,13 @@ inherited StaffListMemberForm: TStaffListMemberForm
     Width = 191
   end
   object cxLabel8: TcxLabel [11]
-    Left = 148
-    Top = 302
+    Left = 508
+    Top = 52
     Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
   end
   object edUpdate: TcxButtonEdit [12]
-    Left = 148
-    Top = 322
+    Left = 508
+    Top = 70
     Properties.Buttons = <
       item
         Default = True
@@ -125,8 +125,8 @@ inherited StaffListMemberForm: TStaffListMemberForm
     Width = 331
   end
   object edInsertDate: TcxDateEdit [15]
-    Left = 8
-    Top = 275
+    Left = 368
+    Top = 27
     EditValue = 42092d
     Properties.Kind = ckDateTime
     Properties.ReadOnly = True
@@ -136,13 +136,13 @@ inherited StaffListMemberForm: TStaffListMemberForm
     Width = 130
   end
   object cxLabel10: TcxLabel [16]
-    Left = 368
-    Top = 85
+    Left = 8
+    Top = 298
     Caption = #1055#1088#1080#1095#1080#1085#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
   end
   object edReasonOut: TcxButtonEdit [17]
-    Left = 368
-    Top = 102
+    Left = 8
+    Top = 316
     Properties.Buttons = <
       item
         Default = True
@@ -254,7 +254,7 @@ inherited StaffListMemberForm: TStaffListMemberForm
     Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1076#1086' '#1087#1077#1088#1077#1074#1086#1076#1072')'
   end
   object ceUnit_old: TcxButtonEdit [30]
-    Left = 368
+    Left = 369
     Top = 144
     Properties.Buttons = <
       item
@@ -266,13 +266,13 @@ inherited StaffListMemberForm: TStaffListMemberForm
     Width = 331
   end
   object cxLabel13: TcxLabel [31]
-    Left = 368
+    Left = 369
     Top = 128
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1076#1086' '#1087#1077#1088#1077#1074#1086#1076#1072')'
   end
   object edStaffListKind: TcxButtonEdit [32]
-    Left = 368
-    Top = 63
+    Left = 8
+    Top = 273
     Properties.Buttons = <
       item
         Default = True
@@ -283,13 +283,13 @@ inherited StaffListMemberForm: TStaffListMemberForm
     Width = 331
   end
   object cxLabel14: TcxLabel [33]
-    Left = 368
-    Top = 46
+    Left = 8
+    Top = 254
     Caption = #1042#1080#1076' '#1086#1092#1086#1088#1084#1083#1077#1085#1080#1103' '#1074' '#1096#1090#1072#1090
   end
   object cxLabel15: TcxLabel [34]
     Left = 368
-    Top = 255
+    Top = 254
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [35]
@@ -297,6 +297,16 @@ inherited StaffListMemberForm: TStaffListMemberForm
     Top = 273
     TabOrder = 35
     Width = 331
+  end
+  object cxButton1: TcxButton [36]
+    Left = 547
+    Top = 101
+    Width = 152
+    Height = 26
+    Action = actOpenChoiceFormMember
+    Default = True
+    ModalResult = 1
+    TabOrder = 36
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 299
@@ -308,12 +318,92 @@ inherited StaffListMemberForm: TStaffListMemberForm
   end
   inherited ActionList: TActionList
     Left = 511
-    Top = 261
+    Top = 262
     inherited InsertUpdateGuides: TdsdInsertUpdateGuides [0]
+      Caption = #1042#1099#1073#1088#1072#1090#1100' '#1076#1083#1103' '#1087#1077#1088#1077#1074#1086#1076#1072
     end
     inherited actRefresh: TdsdDataSetRefresh [1]
     end
     inherited FormClose: TdsdFormClose [2]
+    end
+    object actOpenChoiceFormMember: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1042#1067#1073#1088#1072#1090#1100' '#1076#1083#1103' '#1087#1077#1088#1077#1074#1086#1076#1072
+      FormName = 'TMember_ChoiceForm'
+      FormNameParam.Value = 'TMember_ChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = GuidesUnit_old
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = GuidesUnit_old
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionId'
+          Value = Null
+          Component = GuidesPosition_old
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionName'
+          Value = Null
+          Component = GuidesPosition_old
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionLevelId'
+          Value = Null
+          Component = GuidesPositionLevel_old
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionLevelName'
+          Value = Null
+          Component = GuidesPositionLevel_old
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PersonalId_send'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Key'
+          Value = Null
+          Component = GuideMember
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = GuideMember
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
   end
   inherited FormParams: TdsdFormParams
@@ -332,7 +422,7 @@ inherited StaffListMemberForm: TStaffListMemberForm
         MultiSelectSeparator = ','
       end>
     Left = 580
-    Top = 261
+    Top = 262
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_StaffListMember'
@@ -457,8 +547,8 @@ inherited StaffListMemberForm: TStaffListMemberForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 632
-    Top = 2
+    Left = 672
+    Top = 290
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_StaffListMember'
@@ -701,8 +791,8 @@ inherited StaffListMemberForm: TStaffListMemberForm
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
-    Left = 568
-    Top = 1
+    Left = 640
+    Top = 289
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Name = 'Id'
@@ -804,7 +894,7 @@ inherited StaffListMemberForm: TStaffListMemberForm
         Value = Null
         Component = cbMain
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -812,7 +902,7 @@ inherited StaffListMemberForm: TStaffListMemberForm
         Value = Null
         Component = cbOfficial
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -820,6 +910,7 @@ inherited StaffListMemberForm: TStaffListMemberForm
         Value = Null
         Component = GuidesUnit
         ComponentItem = 'Key'
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -828,6 +919,7 @@ inherited StaffListMemberForm: TStaffListMemberForm
         Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -835,6 +927,7 @@ inherited StaffListMemberForm: TStaffListMemberForm
         Value = Null
         Component = GuidesPosition
         ComponentItem = 'Key'
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -843,6 +936,7 @@ inherited StaffListMemberForm: TStaffListMemberForm
         Component = GuidesPosition
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -850,6 +944,7 @@ inherited StaffListMemberForm: TStaffListMemberForm
         Value = Null
         Component = GuidesPositionLevel
         ComponentItem = 'Key'
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -858,6 +953,7 @@ inherited StaffListMemberForm: TStaffListMemberForm
         Component = GuidesPositionLevel
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 150
@@ -920,20 +1016,20 @@ inherited StaffListMemberForm: TStaffListMemberForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 526
-    Top = 80
+    Left = 166
+    Top = 288
   end
   object GuidesUnit: TdsdGuides
-    KeyField = 'Id'
+    KeyField = 'UnitId'
     LookupControl = ceUnit
-    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.Value = 'TStaffListItemChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnit_ObjectForm'
+    FormName = 'TStaffListItemChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'Key'
+        Name = 'UnitId'
         Value = ''
         Component = GuidesUnit
         ComponentItem = 'Key'
@@ -942,72 +1038,162 @@ inherited StaffListMemberForm: TStaffListMemberForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TextValue'
+        Name = 'UnitName'
         Value = ''
         Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionId'
+        Value = Null
+        Component = GuidesPosition
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionName'
+        Value = Null
+        Component = GuidesPosition
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionLevelId'
+        Value = Null
+        Component = GuidesPositionLevel
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionLevelName'
+        Value = Null
+        Component = GuidesPositionLevel
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 135
   end
   object GuidesPosition: TdsdGuides
-    KeyField = 'Id'
+    KeyField = 'PositionId'
     LookupControl = cePosition
-    FormNameParam.Value = 'TPositionForm'
+    FormNameParam.Value = 'TStaffListItemChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPositionForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TStaffListItemChoiceForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'Key'
+        Name = 'UnitId'
         Value = ''
-        Component = GuidesPosition
+        Component = GuidesUnit
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TextValue'
+        Name = 'UnitName'
         Value = ''
-        Component = GuidesPosition
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionId'
+        Value = Null
+        Component = GuidesPosition
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionName'
+        Value = Null
+        Component = GuidesPosition
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionLevelId'
+        Value = Null
+        Component = GuidesPositionLevel
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionLevelName'
+        Value = Null
+        Component = GuidesPositionLevel
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 135
     Top = 176
   end
   object GuidesPositionLevel: TdsdGuides
-    KeyField = 'Id'
+    KeyField = 'PositionLevelId'
     LookupControl = cePositionLevel
-    FormNameParam.Value = 'TPositionLevelForm'
+    FormNameParam.Value = 'TStaffListItemChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPositionLevelForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TStaffListItemChoiceForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'Key'
+        Name = 'UnitId'
         Value = ''
-        Component = GuidesPositionLevel
+        Component = GuidesUnit
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TextValue'
+        Name = 'UnitName'
         Value = ''
-        Component = GuidesPositionLevel
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionId'
+        Value = Null
+        Component = GuidesPosition
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionName'
+        Value = Null
+        Component = GuidesPosition
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionLevelId'
+        Value = Null
+        Component = GuidesPositionLevel
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionLevelName'
+        Value = Null
+        Component = GuidesPositionLevel
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 223
@@ -1016,6 +1202,7 @@ inherited StaffListMemberForm: TStaffListMemberForm
   object GuidesPositionLevel_old: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePositionLevel_old
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TPositionLevelForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1041,11 +1228,12 @@ inherited StaffListMemberForm: TStaffListMemberForm
         MultiSelectSeparator = ','
       end>
     Left = 575
-    Top = 201
+    Top = 202
   end
   object GuidesPosition_old: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePosition_old
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TPositionForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1071,11 +1259,12 @@ inherited StaffListMemberForm: TStaffListMemberForm
         MultiSelectSeparator = ','
       end>
     Left = 487
-    Top = 168
+    Top = 169
   end
   object GuidesUnit_old: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit_old
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1101,7 +1290,7 @@ inherited StaffListMemberForm: TStaffListMemberForm
         MultiSelectSeparator = ','
       end>
     Left = 552
-    Top = 127
+    Top = 128
   end
   object GuidesStaffListKind: TdsdGuides
     KeyField = 'Id'
@@ -1129,7 +1318,7 @@ inherited StaffListMemberForm: TStaffListMemberForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 534
-    Top = 38
+    Left = 174
+    Top = 246
   end
 end
