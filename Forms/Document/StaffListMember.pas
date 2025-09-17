@@ -71,6 +71,33 @@ type
     ceComment: TcxTextEdit;
     cxButton1: TcxButton;
     actOpenChoiceFormMember: TOpenChoiceForm;
+    cxLabel16: TcxLabel;
+    cePersonalServiceList: TcxButtonEdit;
+    cxLabel17: TcxLabel;
+    cePersonalServiceListOfficial: TcxButtonEdit;
+    GuidesPersonalServiceListOfficial: TdsdGuides;
+    cxLabel18: TcxLabel;
+    cePersonalServiceListCardSecond: TcxButtonEdit;
+    GuidesPersonalServiceList: TdsdGuides;
+    ceSheetWorkTime: TcxButtonEdit;
+    cxLabel19: TcxLabel;
+    GuidesSheetWorkTime: TdsdGuides;
+    GuidesPersonalServiceListCardSecond: TdsdGuides;
+    cePersonalGroup: TcxButtonEdit;
+    cxLabel20: TcxLabel;
+    GuidesPersonalGroup: TdsdGuides;
+    cxLabel21: TcxLabel;
+    ceStorageLine: TcxButtonEdit;
+    GuidesStorageLine: TdsdGuides;
+    cxLabel22: TcxLabel;
+    cePersonalServiceListAvanceF2: TcxButtonEdit;
+    GuidesPersonalServiceListAvanceF2: TdsdGuides;
+    cxLabel23: TcxLabel;
+    edMember_Refer: TcxButtonEdit;
+    cxLabel24: TcxLabel;
+    edMember_Mentor: TcxButtonEdit;
+    GuidesMember_Refer: TdsdGuides;
+    GuidesMember_Mentor: TdsdGuides;
   private
     { Private declarations }
   public
