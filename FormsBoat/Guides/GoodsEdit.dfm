@@ -432,13 +432,13 @@
         Width = 135
       end
       object cxLabel10: TcxLabel
-        Left = 184
-        Top = 294
+        Left = 40
+        Top = 292
         Caption = #1043#1088#1091#1087#1087#1072' '#1089#1082#1080#1076#1082#1080' '#1091' '#1087#1072#1088#1090'.'
       end
       object ceDiscountParner: TcxButtonEdit
-        Left = 184
-        Top = 313
+        Left = 40
+        Top = 311
         Properties.Buttons = <
           item
             Default = True
@@ -514,8 +514,8 @@
         Caption = #1052#1080#1085'. '#1082#1086#1083'. '#1085#1072' '#1089#1082#1083#1072#1076#1077
       end
       object cxLabel17: TcxLabel
-        Left = 40
-        Top = 294
+        Left = 231
+        Top = 417
         Caption = #1058#1080#1087' '#1053#1044#1057
       end
       object cxLabel18: TcxLabel
@@ -635,8 +635,8 @@
         Width = 67
       end
       object edTaxKind: TcxButtonEdit
-        Left = 40
-        Top = 313
+        Left = 231
+        Top = 432
         Properties.Buttons = <
           item
             Default = True
@@ -644,7 +644,7 @@
           end>
         Properties.ReadOnly = True
         TabOrder = 49
-        Width = 135
+        Width = 88
       end
       object cxLabel288: TcxLabel
         Left = 40
@@ -736,17 +736,17 @@
         Caption = 'Ladenpreis'
       end
       object cxLabel29: TcxLabel
-        Left = 231
-        Top = 417
+        Left = 184
+        Top = 292
         Caption = 'Weight'
       end
       object ceWeight: TcxCurrencyEdit
-        Left = 231
-        Top = 434
+        Left = 184
+        Top = 311
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####'
         TabOrder = 64
-        Width = 90
+        Width = 135
       end
     end
     object Child: TcxTabSheet
@@ -1627,8 +1627,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 64
-    Top = 312
+    Left = 208
+    Top = 272
   end
   object GuidesProdColor: TdsdGuides
     KeyField = 'Id'
@@ -1939,8 +1939,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 141
-    Top = 324
+    Left = 101
+    Top = 332
   end
   object spInsertDocument: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_GoodsDocument'
