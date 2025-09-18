@@ -137,7 +137,7 @@ BEGIN
      -- сохранили свойство <Цена>
      vbPrice:= (SELECT lpGet.ValuePrice FROM lpGet_MovementItem_PriceList ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId), inGoodsId, vbUserId) AS lpGet);
      --
-     IF COALESCE (ioPrice, 0) = 0
+     IF COALESCE (vbPrice, 0) = 0
      THEN
          vbPrice:= (SELECT ObjectFloat_EKPrice.ValueData FROM ObjectFloat AS ObjectFloat_EKPrice WHERE ObjectFloat_EKPrice.ObjectId = inGoodsId AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice());
      END IF;
