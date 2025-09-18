@@ -27,8 +27,6 @@ object GoodsMainForm: TGoodsMainForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 59
-    ExplicitHeight = 406
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -252,6 +250,15 @@ object GoodsMainForm: TGoodsMainForm
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 70
+      end
+      object Weight: TcxGridDBColumn
+        DataBinding.FieldName = 'Weight'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1077#1089
+        Options.Editing = False
+        Width = 45
       end
       object EngineName: TcxGridDBColumn
         Caption = 'Engine'

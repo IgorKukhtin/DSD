@@ -27,7 +27,7 @@ uses
   cxImage, dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage,
   cxDBData, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGrid, cxSplitter, cxPCdxBarPopupMenu,
-  cxPC, cxSSheet;
+  cxPC, cxSSheet, dsdCommon;
 
 type
   TGoodsEditForm = class(TParentForm)
@@ -207,6 +207,8 @@ type
     GuidesPriceList: TdsdGuides;
     edOperPriceList: TcxCurrencyEdit;
     cxLabel28: TcxLabel;
+    cxLabel29: TcxLabel;
+    ceWeight: TcxCurrencyEdit;
   private
     { Private declarations }
   public

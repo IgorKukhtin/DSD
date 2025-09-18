@@ -18,10 +18,16 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar,T
                                                   , Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                   , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                   , TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar
                                                   , Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                   , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                   , Integer, TDateTime, TFloat, TVarChar);
+*/
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar
+                                                  , Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                  , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                  , Integer, TDateTime, TFloat, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
  INOUT ioId                     Integer   , -- ключ объекта <Товар>
     IN inCode                   Integer   , -- Код объекта <Товар>
@@ -33,9 +39,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inMatchCode              TVarChar,
     IN inFeeNumber              TVarChar,
     IN inComment                TVarChar,
+    IN inGoodsSizeName          TVarChar,
     IN inIsArc                  Boolean,
     IN inFeet                   TFloat,
-    IN inMetres                 TFloat,            
+    IN inMetres                 TFloat, 
+    IN inWeight                 TFloat, -- Вес           
     IN inAmountMin              TFloat,
     IN inAmountRefer            TFloat,
     IN inEKPrice                TFloat,
@@ -44,7 +52,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inMeasureId              Integer,
     IN inGoodsTagId             Integer,
     IN inGoodsTypeId            Integer,
-    IN inGoodsSizeId            Integer,
+    --IN inGoodsSizeId            Integer,
     IN inProdColorId            Integer,
     IN inPartnerId              Integer,
     IN inUnitId                 Integer,
@@ -66,6 +74,8 @@ $BODY$
 
    DECLARE vbObjectName TVarChar;
    DECLARE vbFieldName TVarChar;
+   
+   DECLARE vbGoodsSizeId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Goods());
@@ -165,6 +175,24 @@ BEGIN
    END IF;
    */
 
+   --
+   IF COALESCE (inGoodsSizeName, '') <> ''
+   THEN
+       -- пробуем найти Размер
+       vbGoodsSizeId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsSize() AND TRIM (Object.ValueData) Like TRIM (inGoodsSizeName));
+       --если не находим создаем
+       IF COALESCE (vbGoodsSizeId,0) = 0
+       THEN
+            vbGoodsSizeId := (SELECT tmp.ioId
+                              FROM gpInsertUpdate_Object_GoodsSize (ioId        := 0         :: Integer
+                                                                  , ioCode      := 0         :: Integer
+                                                                  , inName      := TRIM (inGoodsSizeName) ::TVarChar
+                                                                  , inComment   := ''        :: TVarChar
+                                                                  , inSession   := inSession :: TVarChar
+                                                                   ) AS tmp);
+       END IF;
+   END IF;
+   
    -- из ближайшей группы где установлено <Признак товара>
    --inGoodsTagId:= lfGet_Object_GoodsGroup_GoodsTagId (inGoodsGroupId);
 
@@ -209,7 +237,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_Feet(), ioId, inFeet);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_Metres(), ioId, inMetres);
-
+   -- сохранили свойство <Вес>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_Weight(), ioId, inWeight);
 
    -- сохранили связь с <Группой товара>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroup(), ioId, inGoodsGroupId);
@@ -220,7 +249,7 @@ BEGIN
    -- сохранили связь с < >
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsType(), ioId, inGoodsTypeId);
    -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsSize(), ioId, inGoodsSizeId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsSize(), ioId, vbGoodsSizeId);
    -- сохранили связь с <>
    --IF inProdColorId > 0 THEN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_ProdColor(), ioId, inProdColorId);

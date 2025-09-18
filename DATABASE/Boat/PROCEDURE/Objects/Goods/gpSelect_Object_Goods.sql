@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_all TVarChar
              , isArc Boolean
                --
              , Feet TFloat, Metres TFloat
+             , Weight TFloat
              , AmountMin TFloat, AmountRefer TFloat  
              
              , AmountRemains TFloat
@@ -342,6 +343,7 @@ BEGIN
 
             , ObjectFloat_Feet.ValueData    ::TFloat AS Feet
             , ObjectFloat_Metres.ValueData  ::TFloat AS Metres
+            , ObjectFloat_Weight.ValueData  ::TFloat AS Weight
 
             , ObjectFloat_Min.ValueData          AS AmountMin
             , ObjectFloat_Refer.ValueData        AS AmountRefer
@@ -614,6 +616,10 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_Metres
                                   ON ObjectFloat_Metres.ObjectId = Object_Goods.Id
                                  AND ObjectFloat_Metres.DescId   = zc_ObjectFloat_Goods_Metres()
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                  ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
+                                 AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
 
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Arc
                                     ON ObjectBoolean_Arc.ObjectId = Object_Goods.Id
