@@ -104,7 +104,7 @@ BEGIN
                         FROM ObjectString AS ObjectString_Article
                              INNER JOIN Object ON Object.Id       = ObjectString_Article.ObjectId
                                               AND Object.DescId   = zc_Object_Goods()
-                                              AND Object.isErased = FALSE
+                                            --AND Object.isErased = FALSE
                         WHERE ObjectString_Article.ValueData ILIKE inArticle
                           AND ObjectString_Article.DescId    = zc_ObjectString_Article()
                         LIMIT 1
@@ -126,6 +126,10 @@ BEGIN
                                                     , inFeeNumber        := Null     :: TVarChar
                                                     , inComment          := Null     :: TVarChar
                                                     , inIsArc            := FALSE    :: Boolean
+
+                                                    , inFeet             := 0
+                                                    , inMetres           := 0
+
                                                     , inAmountMin        := 0             :: TFloat
                                                     , inAmountRefer      := 0             :: TFloat
                                                     , inEKPrice          := CAST (CASE WHEN COALESCE (inMeasureMult,0) <> 0 THEN inAmount / inMeasureMult ELSE inAmount END AS NUMERIC (16,2)) :: TFloat
@@ -146,7 +150,10 @@ BEGIN
                                                     , inOperPriceList    := 0        :: TFloat
                                                     , inSession          := inSession        :: TVarChar
                                                     );
-               
+
+          ELSEIF EXISTS (SELECT 1 FROM Object WHERE Object.Id = vbGoodsId AND Object.isErased = TRUE)
+          THEN
+               UPDATE Object SET isErased = FALSE WHERE Object.Id = vbGoodsId AND Object.isErased = TRUE;
           END IF;
 
 
