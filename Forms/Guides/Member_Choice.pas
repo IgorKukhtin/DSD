@@ -21,7 +21,7 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  DataModul, cxButtonEdit;
+  DataModul, cxButtonEdit, dsdCommon;
 
 type
   TMember_ChoiceForm = class(TParentForm)
@@ -49,6 +49,7 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    PositionLevelName: TcxGridDBColumn;
   private
     { Private declarations }
   public

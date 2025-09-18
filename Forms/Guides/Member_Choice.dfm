@@ -3,7 +3,7 @@ object Member_ChoiceForm: TMember_ChoiceForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
   ClientHeight = 537
-  ClientWidth = 625
+  ClientWidth = 878
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object Member_ChoiceForm: TMember_ChoiceForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 625
+    Width = 878
     Height = 511
     Align = alClient
     TabOrder = 0
@@ -146,6 +146,12 @@ object Member_ChoiceForm: TMember_ChoiceForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 30
+      end
+      object PositionLevelName: TcxGridDBColumn
+        Caption = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
+        DataBinding.FieldName = 'PositionLevelName'
+        Options.Editing = False
+        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -325,11 +331,25 @@ object Member_ChoiceForm: TMember_ChoiceForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'UnitId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'UnitName'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'UnitName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PositionId'
           MultiSelectSeparator = ','
         end
         item
@@ -346,6 +366,37 @@ object Member_ChoiceForm: TMember_ChoiceForm
           Component = ClientDataSet
           ComponentItem = 'BranchName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionLevelId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PositionLevelId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionLevelName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PositionLevelName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMain'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'isMain'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isOfficial'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'isOfficial'
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -431,6 +482,7 @@ object Member_ChoiceForm: TMember_ChoiceForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 328
     Top = 264

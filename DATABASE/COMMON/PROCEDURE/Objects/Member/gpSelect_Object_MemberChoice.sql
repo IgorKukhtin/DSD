@@ -8,13 +8,17 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_MemberChoice(
 )
 
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , isMain Boolean
              , isOfficial Boolean
              , isNotCompensation Boolean
              , BranchCode Integer, BranchName TVarChar
-             , UnitCode Integer, UnitName TVarChar
-             , PositionCode Integer, PositionName TVarChar
+             , UnitId Integer, UnitCode Integer, UnitName TVarChar
+             , PositionId Integer, PositionCode Integer, PositionName TVarChar
+             , PositionLevelId Integer, PositionLevelName TVarChar
              , DateIn TDateTime, DateOut TDateTime
-             , isDateOut Boolean, PersonalId Integer
+             , isDateOut Boolean
+             
+             , PersonalId Integer
              , isErased Boolean
               )
 AS
@@ -33,8 +37,9 @@ BEGIN
                  OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11481474)
                  -- Трейд-маркетинг (согласование)
                  OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11317677)
-                 OR vbUserId = 80373 -- "Прохорова С.А."
+                 OR vbUserId = 80373 -- "Прохорова С.А."  
                ;
+
 
    -- определяется уровень доступа
    vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
@@ -45,14 +50,22 @@ BEGIN
                 AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11317677)
                    ;
 
+    IF vbUserId = 9457
+    THEN 
+        vbIsAllUnit    :=TRUE;
+        vbIsConstraint :=FALSE;
+    END IF;
+
    -- Результат
    RETURN QUERY
       WITH tmpPersonal AS (SELECT lfSelect.MemberId
                                 , lfSelect.PersonalId
                                 , lfSelect.UnitId
                                 , lfSelect.PositionId
+                                , lfSelect.PositionLevelId
                                 , lfSelect.BranchId
                                 , lfSelect.isDateOut
+                                , lfSelect.isMain
                                 , lfSelect.Ord
                            FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
                            WHERE lfSelect.Ord = 1
@@ -73,16 +86,20 @@ BEGIN
          , Object_Member.ObjectCode AS Code
          , Object_Member.ValueData  AS Name
 
+         , tmpPersonal.isMain                      ::Boolean AS isMain
          , ObjectBoolean_Official.ValueData        ::Boolean AS isOfficial
          , COALESCE (ObjectBoolean_NotCompensation.ValueData, FALSE) :: Boolean  AS isNotCompensation
 
          , Object_Branch.ObjectCode   AS BranchCode
          , Object_Branch.ValueData    AS BranchName
+         , Object_Unit.Id             AS UnitId
          , Object_Unit.ObjectCode     AS UnitCode
          , Object_Unit.ValueData      AS UnitName
+         , Object_Position.Id         AS PositionId
          , Object_Position.ObjectCode AS PositionCode
          , Object_Position.ValueData  AS PositionName
-
+         , Object_Position.Id              AS PositionLevelId
+         , Object_PositionLevel.ValueData  AS PositionLevelName
          , ObjectDate_DateIn.ValueData AS DateIn
          , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN NULL ELSE ObjectDate_DateOut.ValueData END :: TDateTime AS DateOut
          , tmpPersonal.isDateOut   :: Boolean
@@ -125,6 +142,7 @@ BEGIN
          LEFT JOIN Object AS Object_Branch   ON Object_Branch.Id   = tmpPersonal.BranchId
          LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id     = tmpPersonal.UnitId
          LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
+         LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = tmpPersonal.PositionLevelId
 
          LEFT JOIN ObjectDate AS ObjectDate_DateIn
                               ON ObjectDate_DateIn.ObjectId = tmpPersonal.PersonalId
@@ -148,15 +166,21 @@ BEGIN
              CAST (0 as Integer)    AS Id
            , 0              AS Code
            , CAST ('УДАЛИТЬ' as TVarChar)  AS NAME
+           , FALSE          AS isMain
            , FALSE          AS isOfficial
            , FALSE          AS isNotCompensation
 
            , 0              AS BranchCode
            , '' :: TVarChar AS BranchName
+           , 0              AS UnitId
            , 0              AS UnitCode
            , '' :: TVarChar AS UnitName
+           , 0              AS PositionId
            , 0              AS PositionCode
            , '' :: TVarChar AS PositionName
+
+           , 0              AS PositionLevelId
+           , '' :: TVarChar AS PositionLevelName
 
            , NULL :: TDateTime AS DateIn
            , NULL :: TDateTime AS DateOut
@@ -165,7 +189,6 @@ BEGIN
            , 0              AS PersonalId
 
            , FALSE          AS isErased
-
 
     ;
 

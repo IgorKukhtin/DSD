@@ -27,6 +27,8 @@ object StaffListChoiceForm: TStaffListChoiceForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitLeft = 24
+    ExplicitTop = 8
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -115,8 +117,8 @@ object StaffListChoiceForm: TStaffListChoiceForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -246,6 +248,7 @@ object StaffListChoiceForm: TStaffListChoiceForm
     Top = 160
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -259,49 +262,66 @@ object StaffListChoiceForm: TStaffListChoiceForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <
         item
           Name = 'Key'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'Code'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitId'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'UnitName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PositionId'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'PositionId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PositionName'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'PositionName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PositionLevelId'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'PositionLevelId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PositionLevelName'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'PositionLevelName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -310,6 +330,7 @@ object StaffListChoiceForm: TStaffListChoiceForm
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -325,6 +346,7 @@ object StaffListChoiceForm: TStaffListChoiceForm
         DataSet = ClientDataSet
       end>
     Params = <>
+    PackSize = 1
     Left = 48
     Top = 216
   end
@@ -351,6 +373,14 @@ object StaffListChoiceForm: TStaffListChoiceForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
     Left = 168
     Top = 216
   end
@@ -361,10 +391,13 @@ object StaffListChoiceForm: TStaffListChoiceForm
     Params = <
       item
         Name = 'inObjectId'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
+    PackSize = 1
     Left = 288
     Top = 208
   end

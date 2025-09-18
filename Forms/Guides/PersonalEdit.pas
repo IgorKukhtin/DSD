@@ -21,7 +21,7 @@ uses
   Vcl.ActnList, cxMaskEdit, cxDropDownEdit, cxLookupEdit, cxDBLookupEdit,
   cxDBLookupComboBox, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel,
   cxTextEdit, cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar,
-  cxCheckBox, dxSkinscxPCPainter, cxPCdxBarPopupMenu, cxPC;
+  cxCheckBox, dxSkinscxPCPainter, cxPCdxBarPopupMenu, cxPC, dsdCommon;
 
 type
   TPersonalEditForm = class(TParentForm)

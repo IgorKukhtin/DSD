@@ -393,7 +393,7 @@
             Default = True
             Kind = bkEllipsis
           end>
-        Properties.ReadOnly = True
+        Properties.ReadOnly = False
         TabOrder = 14
         Width = 135
       end
@@ -658,19 +658,19 @@
         Properties.DisplayFormat = ',0.####'
         Properties.UseDisplayFormatWhenEditing = True
         TabOrder = 3
-        Width = 135
+        Width = 90
       end
       object ceMetres: TcxCurrencyEdit
-        Left = 182
+        Left = 135
         Top = 434
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####'
         TabOrder = 4
-        Width = 137
+        Width = 90
       end
       object cxLabel26: TcxLabel
-        Left = 184
-        Top = 416
+        Left = 135
+        Top = 417
         Caption = 'Metres'
       end
       object cxLabel24: TcxLabel
@@ -734,6 +734,19 @@
         Top = 583
         Hint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089
         Caption = 'Ladenpreis'
+      end
+      object cxLabel29: TcxLabel
+        Left = 231
+        Top = 417
+        Caption = 'Weight'
+      end
+      object ceWeight: TcxCurrencyEdit
+        Left = 231
+        Top = 434
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####'
+        TabOrder = 64
+        Width = 90
       end
     end
     object Child: TcxTabSheet
@@ -1021,6 +1034,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsSizeName'
+        Value = ''
+        Component = edGoodsSize
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsArc'
         Value = Null
         Component = ceIsArc
@@ -1040,6 +1061,14 @@
         Name = 'inMetres'
         Value = Null
         Component = ceMetres
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeight'
+        Value = Null
+        Component = ceWeight
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1104,14 +1133,6 @@
         Name = 'inGoodsTypeId'
         Value = Null
         Component = GuidesGoodsType
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsSizeId'
-        Value = ''
-        Component = GuidesGoodsSize
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1570,6 +1591,13 @@
         Component = edOperPriceList
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Weight'
+        Value = Null
+        Component = ceWeight
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 8
@@ -1627,7 +1655,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 56
-    Top = 266
+    Top = 218
   end
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
@@ -1726,8 +1754,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 48
-    Top = 408
+    Left = 88
+    Top = 400
   end
   object GuidesGoodsGroup: TdsdGuides
     KeyField = 'Id'
@@ -1884,8 +1912,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 121
-    Top = 464
+    Left = 73
+    Top = 480
   end
   object GuidesTaxKind: TdsdGuides
     KeyField = 'Id'
@@ -1952,8 +1980,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 448
-    Top = 152
+    Left = 464
+    Top = 120
   end
   object spDocumentSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_GoodsDocument'
@@ -2714,20 +2742,20 @@
     ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 264
-    Top = 416
+    Top = 368
   end
   object ClientDataSet1: TClientDataSet
     Aggregates = <>
     IndexFieldNames = 'Id'
     MasterFields = 'Id'
     Params = <>
-    Left = 248
-    Top = 464
+    Left = 232
+    Top = 512
   end
   object DataSource1: TDataSource
     DataSet = ClientDataSet1
-    Left = 304
-    Top = 464
+    Left = 272
+    Top = 544
   end
   object apSelectChild: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_GoodsChild'

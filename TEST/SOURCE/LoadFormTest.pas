@@ -142,7 +142,7 @@ type
     procedure LoadPartionCellFormTest;
     procedure LoadPersonalReportFormTest;
     procedure LoadPersonalAccountFormTest;
-    procedure LoadPersonalFormTest;
+    procedure ‡‡LoadPersonalFormTest;
     procedure LoadPersonalGroupMovementFormTest;
     procedure LoadPersonalSendCashFormTest;
     procedure LoadPersonalGroupSummAddFormTest;
@@ -222,6 +222,7 @@ type
     procedure LoadSheetWorkTimeCloseFormTest;
     procedure LoadSmsSettingsFormTest;
     procedure LoadStaffListFormTest;
+    procedure LoadStaffListMemberFormTest;
     procedure LoadStaffListMovementFormTest;
     procedure LoadStickerFormTest;
     procedure LoadStorageLineFormTest;
@@ -639,10 +640,10 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TScale_GofroForm'));
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TScale_GofroForm'));
   TdsdFormStorageFactory.GetStorage.Load('TScale_GofroForm');
   exit;
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKindPeresortForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKindPeresortForm');
   exit;
@@ -668,15 +669,15 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_Name_BUHDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_Name_BUHDialogForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
-  exit;
+  {exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_AssetProdForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_AssetProdForm');
   exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
   exit;
@@ -4479,10 +4480,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberHoliday_ChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberHoliday_ChoiceForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ChoiceForm');
-
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalPosition_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalPosition_ObjectForm');
 
@@ -4631,6 +4633,9 @@ end;
 
 procedure TLoadFormTest.LoadStaffListFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStaffListKindForm');
+  exit;
   {
   //¯Ú‡ÚÌÓÂ ‡ÒÔËÒ‡ÌËÂ ‰‡ÌÌ˚Â
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListDataForm'));
@@ -4669,8 +4674,25 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TStaffHoursLengthEditForm');
   end;
 
+  procedure TLoadFormTest.LoadStaffListMemberFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListItemChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStaffListItemChoiceForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStaffListKindForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListMemberJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStaffListMemberJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListMemberForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStaffListMemberForm');
+
+end;
+
+
  procedure TLoadFormTest.LoadStaffListMovementFormTest;
 begin
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStaffListJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListMovementForm'));
@@ -4902,17 +4924,18 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReasonOutForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReasonOutEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReasonOutEditForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalForm');
 
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalEditForm');
- }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonal_ChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonal_ChoiceForm');
   //exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonal_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonal_ObjectForm');
   //exit;

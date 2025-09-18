@@ -197,7 +197,7 @@ BEGIN
    outBankSecondTwoName  := (SELECT Object.ValueData FROM Object WHERE Object.DescId = zc_Object_Bank() AND Object.Id = inBankSecondTwoId);
    outBankSecondDiffName := (SELECT Object.ValueData FROM Object WHERE Object.DescId = zc_Object_Bank() AND Object.Id = inBankSecondDiffId);
     
-   IF vbUserId = 9457 THEN RAISE EXCEPTION 'Test. OK'; END IF;
+ --  IF vbUserId = 9457 THEN RAISE EXCEPTION 'Test. OK'; END IF;
     
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

@@ -20,7 +20,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Personal(
     IN inSheetWorkTimeId                   Integer   , -- Режим работы (Шаблон табеля р.вр.)
     IN inStorageLineId                     Integer   , -- ссылка на линию производства
     
-    IN inMember_ReferId                    Integer   , -- сФамилия рекомендателя
+    IN inMember_ReferId                    Integer   , -- Фамилия рекомендателя
     IN inMember_MentorId                   Integer   , -- Фамилия наставника 	
     IN inReasonOutId                       Integer   , -- Причина увольнения 	
     
@@ -209,7 +209,7 @@ BEGIN
    -- для Админа
    IF vbUserId IN (5, 9457)
    THEN
-       RAISE EXCEPTION 'Ошибка.test=ok';
+      -- RAISE EXCEPTION 'Ошибка.test=ok';
    END IF;
 
 END;

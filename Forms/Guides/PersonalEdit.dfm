@@ -128,7 +128,7 @@
       end
       object edDateIn: TcxDateEdit
         Left = 16
-        Top = 231
+        Top = 226
         Properties.SaveTime = False
         Properties.ShowTime = False
         TabOrder = 12

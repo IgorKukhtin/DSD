@@ -624,6 +624,13 @@ CREATE OR REPLACE FUNCTION zc_Movement_StaffList() RETURNS Integer AS $BODY$BEGI
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_StaffList', 'Штатное расписание(изменения)' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_StaffList');
 
+CREATE OR REPLACE FUNCTION zc_Movement_StaffListMember() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_StaffListMember'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_StaffListMember', 'Штатное расписание (сотрудники)' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_StaffListMember');
+
+
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОР

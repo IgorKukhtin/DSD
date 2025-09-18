@@ -262,6 +262,15 @@ object GoodsForm: TGoodsForm
         Options.Editing = False
         Width = 70
       end
+      object Weight: TcxGridDBColumn
+        DataBinding.FieldName = 'Weight'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1077#1089
+        Options.Editing = False
+        Width = 45
+      end
       object EngineName: TcxGridDBColumn
         Caption = 'Engine'
         DataBinding.FieldName = 'EngineName'

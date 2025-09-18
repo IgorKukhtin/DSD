@@ -1608,7 +1608,11 @@ uses
   Report_StaffListMovementDialog in '..\..\Forms\Report\Report_StaffListMovementDialog.pas' {Report_StaffListMovementDialogForm: TParentForm},
   Report_StaffListMovement in '..\..\Forms\Report\Report_StaffListMovement.pas' {Report_StaffListMovementForm: TParentForm},
   Report_StaffListRankingDialog in '..\..\Forms\Report\Report_StaffListRankingDialog.pas' {Report_StaffListRankingDialogForm: TParentForm},
-  Report_StaffListRanking in '..\..\Forms\Report\Report_StaffListRanking.pas' {Report_StaffListRankingForm: TParentForm};
+  Report_StaffListRanking in '..\..\Forms\Report\Report_StaffListRanking.pas' {Report_StaffListRankingForm: TParentForm},
+  StaffListKind in '..\..\Forms\Kind\StaffListKind.pas' {StaffListKindForm: TParentForm},
+  StaffListMemberJournal in '..\..\Forms\Document\StaffListMemberJournal.pas' {StaffListMemberJournalForm: TParentForm},
+  StaffListItemChoice in '..\..\Forms\Document\StaffListItemChoice.pas' {StaffListItemChoiceForm: TParentForm},
+  StaffListMember in '..\..\Forms\Document\StaffListMember.pas' {StaffListMemberForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

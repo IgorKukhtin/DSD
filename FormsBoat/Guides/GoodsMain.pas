@@ -22,7 +22,7 @@ uses
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxButtonEdit,
   cxCurrencyEdit, ExternalLoad, cxContainer, cxImage, Vcl.ExtCtrls, cxTextEdit,
-  cxLabel, dsdGuides, cxMaskEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons;
+  cxLabel, dsdGuides, cxMaskEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons, dsdCommon;
 
 type
   TGoodsMainForm = class(TParentForm)

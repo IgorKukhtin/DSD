@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PartnerDate TDateTime
              , isArc Boolean
              , Feet TFloat, Metres TFloat
+             , Weight TFloat
              , AmountMin TFloat, AmountRefer TFloat
              , EKPrice TFloat, EmpfPrice TFloat
              , BasisPrice TFloat 
@@ -68,7 +69,8 @@ BEGIN
            , FALSE      :: Boolean AS isArc
 
            , CAST (0 as TFloat)    AS Feet
-           , CAST (0 as TFloat)    AS Metres
+           , CAST (0 as TFloat)    AS Metres 
+           , CAST (0 as TFloat)    AS Weight
 
            , CAST (0 as TFloat)    AS AmountMin
            , CAST (0 as TFloat)    AS AmountRefer
@@ -131,6 +133,7 @@ BEGIN
 
             , ObjectFloat_Feet.ValueData    ::TFloat AS Feet
             , ObjectFloat_Metres.ValueData  ::TFloat AS Metres
+            , ObjectFloat_Weight.ValueData  ::TFloat AS Weight
 
             , ObjectFloat_Min.ValueData          AS AmountMin
             , ObjectFloat_Refer.ValueData        AS AmountRefer
@@ -261,6 +264,9 @@ BEGIN
              LEFT JOIN ObjectFloat AS ObjectFloat_Metres
                                    ON ObjectFloat_Metres.ObjectId = Object_Goods.Id
                                   AND ObjectFloat_Metres.DescId   = zc_ObjectFloat_Goods_Metres()
+             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                   ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
+                                  AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
 
              LEFT JOIN ObjectBoolean AS ObjectBoolean_Arc
                                      ON ObjectBoolean_Arc.ObjectId = Object_Goods.Id
@@ -302,6 +308,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 18.09.25         * add Weight
  28.03.24         * inPriceListId
  14.08.23         * inMaskId
  11.11.20         *

@@ -1204,7 +1204,7 @@ BEGIN
 
                                    , STRING_AGG (DISTINCT CASE WHEN COALESCE (tmpData_PartionCell_All.Ord, 0) > 22  THEN tmpData_PartionCell_All.PartionCellName_calc ELSE '' END, ';') AS PartionCellName_ets
 
-                                   , MAX (tmpData_PartionCell_All.Print_error) AS Print_error
+                                   , MAX (COALESCE (tmpData_PartionCell_All.Print_error,0)) AS Print_error
                               FROM tmpData_PartionCell_All
 
                               GROUP BY tmpData_PartionCell_All.MovementId
@@ -1956,7 +1956,7 @@ BEGIN
 
         , FALSE :: Boolean AS isLock_record
 
-        , tmpResult.Print_error ::Integer --для печати
+        , COALESCE (tmpResult.Print_error,0) ::Integer AS Print_error --для печати Ошибки
    FROM tmpResult
         -- нашли Место отбора
         LEFT JOIN tmpChoiceCell ON tmpChoiceCell.GoodsId = tmpResult.GoodsId

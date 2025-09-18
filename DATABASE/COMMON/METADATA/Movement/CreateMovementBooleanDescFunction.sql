@@ -535,12 +535,21 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_Gofro() RETURNS integer AS $BODY$B
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_Gofro', 'Гофро(автосписание)'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_Gofro');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_Official() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_Official'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_Official', 'Оформлен официально'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_Official');
 
-  
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_Main() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_Main'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_Main', 'Основное место работы'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_Main');
+
+
     
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 15.09.25         * zc_MovementBoolean_Main
+                    zc_MovementBoolean_Official
  28.07.25         * zc_MovementBoolean_Gofro
  17.11.24         * zc_MovementBoolean_DocPartner
  15.11.24         * zc_MovementBoolean_MultWithVAT
