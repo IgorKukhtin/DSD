@@ -97,6 +97,28 @@ BEGIN
                                                         )
                      )
 
+
+        , tmpPersonal AS (SELECT Object_Personal.Id
+                          FROM Object AS Object_Personal
+                               INNER JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                     ON ObjectLink_Personal_Member.ObjectId = Object_Personal.Id
+                                                    AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+                                                    AND ObjectLink_Personal_Member.ChildObjectId IN ()
+                               INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                                     ON ObjectLink_Personal_Unit.ObjectId = Object_Personal.Id
+                                                    AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                                                    AND ObjectLink_Personal_Unit.ChildObjectId = inUnitId                      
+                               INNER JOIN ObjectLink AS ObjectLink_Personal_Position
+                                                     ON ObjectLink_Personal_Position.ObjectId = Object_Personal.Id
+                                                    AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+                                                    AND ObjectLink_Personal_Position.ChildObjectId = inPositionId
+                               LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
+                                                    ON ObjectLink_Personal_PositionLevel.ObjectId = Object_Personal.Id
+                                                   AND ObjectLink_Personal_PositionLevel.DescId = zc_ObjectLink_Personal_PositionLevel()
+                          WHERE Object_Personal.DescId = zc_Object_Personal()
+                            AND Object_Personal.isErased = FALSE
+                            AND COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId,0) = COALESCE (inPositionLevelId,0)
+                       )
        -- Результат
        SELECT
              Movement.Id

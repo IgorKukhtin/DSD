@@ -37,8 +37,9 @@ BEGIN
                  OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11481474)
                  -- Трейд-маркетинг (согласование)
                  OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11317677)
-                 OR vbUserId = 80373 -- "Прохорова С.А."
+                 OR vbUserId = 80373 -- "Прохорова С.А."  
                ;
+
 
    -- определяется уровень доступа
    vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
@@ -48,6 +49,12 @@ BEGIN
                 -- Трейд-маркетинг (согласование)
                 AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11317677)
                    ;
+
+    IF vbUserId = 9457
+    THEN 
+        vbIsAllUnit    :=TRUE;
+        vbIsConstraint :=FALSE;
+    END IF;
 
    -- Результат
    RETURN QUERY

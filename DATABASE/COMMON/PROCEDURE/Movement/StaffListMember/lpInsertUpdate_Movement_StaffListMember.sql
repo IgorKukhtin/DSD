@@ -38,6 +38,11 @@ BEGIN
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
+     IF COALESCE (inInvNumber,'') = ''
+     THEN
+         inInvNumber := CAST (NEXTVAL ('movement_StaffListMember_seq') AS TVarChar);
+     END IF;
+
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_StaffListMember(), inInvNumber, inOperDate, NULL);
     
@@ -57,6 +62,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit_old(), ioId, inUnitId_old);
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReasonOut(), ioId, inReasonOutId);
+     -- сохранили связь с <>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_StaffListKind(), ioId, inStaffListKindId);
 
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Official(), ioId, inisOfficial);

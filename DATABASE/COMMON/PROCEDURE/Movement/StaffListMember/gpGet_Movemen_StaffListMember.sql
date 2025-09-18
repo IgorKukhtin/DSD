@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_StaffListMember(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , MemberId Integer, MemberName TVarChar
+             , PersonalId Integer
              , PositionId Integer, PositionName TVarChar
              , PositionLevelId Integer, PositionLevelName TVarChar
              , UnitId Integer, UnitName TVarChar
@@ -17,6 +18,17 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , UnitId_old Integer, UnitName_old TVarChar
              , ReasonOutId Integer, ReasonOutName TVarChar
              , StaffListKindId Integer, StaffListKindName TVarChar
+             
+             , PersonalGroupId Integer, PersonalGroupName TVarChar
+             , PersonalServiceListId Integer, PersonalServiceListName TVarChar
+             , PersonalServiceListOfficialId Integer, PersonalServiceListOfficialName TVarChar
+             , ServiceListId_AvanceF2 Integer, ServiceListName_AvanceF2 TVarChar
+             , ServiceListCardSecondId Integer, ServiceListCardSecondName TVarChar
+             , SheetWorkTimeId Integer, SheetWorkTimeName TVarChar
+             , StorageLineId Integer, StorageLineName TVarChar
+             , Member_ReferId Integer, Member_ReferName TVarChar
+             , Member_MentorId Integer, Member_MentorName TVarChar            
+             
              , isOfficial Boolean, isMain Boolean
              , Comment TVarChar
              , InsertId Integer, InsertName TVarChar
@@ -41,6 +53,7 @@ BEGIN
              , inOperDate                                       AS OperDate
              , 0                                                AS MemberId
              , CAST ('' AS TVarChar)                            AS MemberName
+             , 0                                                AS PersonalId
              , 0                                                AS PositionId       
              , CAST ('' AS TVarChar)                            AS PositionName     
              , 0                                                AS PositionLevelId  
@@ -56,7 +69,27 @@ BEGIN
              , 0                                                AS ReasonOutId      
              , CAST ('' AS TVarChar)                            AS ReasonOutName    
              , 0                                                AS StaffListKindId  
-             , CAST ('' AS TVarChar)                            AS StaffListKindName
+             , CAST ('' AS TVarChar)                            AS StaffListKindName 
+             
+             , CAST (0 as Integer)      AS PersonalGroupId
+             , CAST ('' as TVarChar)    AS PersonalGroupName
+             , CAST (0 as Integer)      AS PersonalServiceListId 
+             , CAST ('' as TVarChar)    AS PersonalServiceListName
+             , CAST (0 as Integer)      AS PersonalServiceListOfficialId 
+             , CAST ('' as TVarChar)    AS PersonalServiceListOfficialName
+             , CAST (0 as Integer)      AS PersonalServiceListCardSecondId 
+             , CAST ('' as TVarChar)    AS PersonalServiceListCardSecondName
+             , 0                        AS ServiceListId_AvanceF2
+             , CAST ('' as TVarChar)    AS ServiceListName_AvanceF2
+             , CAST (0 as Integer)      AS SheetWorkTimeId 
+             , CAST ('' as TVarChar)    AS SheetWorkTimeName
+             , CAST (0 as Integer)      AS StorageLineId
+             , CAST ('' as TVarChar)    AS StorageLineName
+             , 0                        AS Member_ReferId
+             , CAST ('' as TVarChar)    AS Member_ReferName
+             , 0                        AS Member_MentorId
+             , CAST ('' as TVarChar)    AS Member_MentorName
+           
              , CAST (FALSE AS Boolean)                          AS isOfficial
              , CAST (FALSE AS Boolean)                          AS isMain
              , CAST ('' AS TVarChar)                            AS Comment
@@ -72,7 +105,35 @@ BEGIN
 
      ELSE
      -- Результат
-     RETURN QUERY 
+     RETURN QUERY
+       WITH
+       tmpPersonal AS (SELECT Object_Personal.Id AS PersonalId
+                            , ObjectLink_Personal_Unit.ChildObjectId          AS UnitId
+                            , ObjectLink_Personal_Position.ChildObjectId      AS PositionId
+                            , ObjectLink_Personal_PositionLevel.ChildObjectId AS PositionLevelId
+                            , COALESCE (ObjectBoolean_Main.ValueData, FALSE)  AS isMain
+                            , ROW_NUMBER() OVER(PARTITION BY Object_Personal.Id, ObjectLink_Personal_Unit.ChildObjectId, ObjectLink_Personal_Position.ChildObjectId, COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId,0), COALESCE (ObjectBoolean_Main.ValueData, FALSE) ) AS Ord
+                       FROM Object AS Object_Personal
+                            INNER JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                  ON ObjectLink_Personal_Member.ObjectId = Object_Personal.Id
+                                                 AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+                                                 AND ObjectLink_Personal_Member.ChildObjectId = (SELECT MLO.ObjectId FROM  MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_Member() AND MLO.MovementId = inMovementId)
+                            LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
+                                                 ON ObjectLink_Personal_Position.ObjectId = Object_Personal.Id
+                                                AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+                            LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
+                                                 ON ObjectLink_Personal_PositionLevel.ObjectId = Object_Personal.Id
+                                                AND ObjectLink_Personal_PositionLevel.DescId = zc_ObjectLink_Personal_PositionLevel()
+                            LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                                 ON ObjectLink_Personal_Unit.ObjectId = Object_Personal.Id
+                                                AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+
+                            LEFT JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                    ON ObjectBoolean_Main.ObjectId = Object_Personal.Id
+                                                   AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Personal_Main()                            
+                      WHERE Object_Personal.DescId = zc_Object_Personal()
+                        AND Object_Personal.isErased = FALSE 
+                       ) 
        SELECT
              Movement.Id
            , Movement.InvNumber
@@ -80,7 +141,7 @@ BEGIN
 
            , Object_Member.Id                      AS MemberId
            , Object_Member.ValueData               AS MemberName
-
+           , COALESCE (tmpPersonal.PersonalId,0)::Integer AS PersonalId
            , Object_Position.Id                    AS PositionId
            , Object_Position.ValueData             AS PositionName
            , Object_PositionLevel.Id               AS PositionLevelId
@@ -99,6 +160,28 @@ BEGIN
            , Object_ReasonOut.ValueData            AS ReasonOutName
            , Object_StaffListKind.Id               AS StaffListKindId
            , Object_StaffListKind.ValueData        AS StaffListKindName
+
+           , ObjectLink_Personal_PersonalGroup.ChildObjectId  AS PersonalGroupId
+           , Object_PersonalGroup.ValueData                   AS PersonalGroupName
+
+           , Object_PersonalServiceList.Id                    AS PersonalServiceListId
+           , Object_PersonalServiceList.ValueData             AS PersonalServiceListName
+           , Object_PersonalServiceListOfficial.Id            AS PersonalServiceListOfficialId
+           , Object_PersonalServiceListOfficial.ValueData     AS PersonalServiceListOfficialName
+           , Object_PersonalServiceListCardSecond.Id          AS PersonalServiceListCardSecondId
+           , Object_PersonalServiceListCardSecond.ValueData   AS PersonalServiceListCardSecondName
+           , Object_PersonalServiceListAvance_F2.Id           AS ServiceListId_AvanceF2
+           , Object_PersonalServiceListAvance_F2.ValueData    AS ServiceListName_AvanceF2
+
+           , Object_SheetWorkTime.Id                          AS SheetWorkTimeId
+           , Object_SheetWorkTime.ValueData                   AS SheetWorkTimeName
+           , Object_StorageLine.Id                            AS StorageLineId
+           , Object_StorageLine.ValueData                     AS StorageLineName
+           , Object_Member_Refer.Id                           AS Member_ReferId
+           , Object_Member_Refer.ValueData                    AS Member_ReferName
+           , Object_Member_Mentor.Id                          AS Member_MentorId
+           , Object_Member_Mentor.ValueData                   AS Member_MentorName
+
 
            , COALESCE (MovementBoolean_Official.ValueData, FALSE) ::Boolean  AS isOfficial
            , COALESCE (MovementBoolean_Main.ValueData, FALSE)     ::Boolean  AS isMain
@@ -187,6 +270,53 @@ BEGIN
                                          ON MovementLinkObject_Update.MovementId = Movement.Id
                                         AND MovementLinkObject_Update.DescId = zc_MovementLinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MovementLinkObject_Update.ObjectId
+
+            LEFT JOIN tmpPersonal ON tmpPersonal.UnitId = MovementLinkObject_Unit.ObjectId
+                                 AND tmpPersonal.PositionId = MovementLinkObject_Position.ObjectId
+                                 AND COALESCE (tmpPersonal.PositionLevelId,0) = COALESCE (MovementLinkObject_PositionLevel.ObjectId,0)
+                                 AND tmpPersonal.isMain = COALESCE (MovementBoolean_Main.ValueData, FALSE)
+                                 AND tmpPersonal.Ord = 1
+            
+          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
+                               ON ObjectLink_Personal_PersonalServiceList.ObjectId = tmpPersonal.PersonalId
+                              AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+          LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = ObjectLink_Personal_PersonalServiceList.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceListOfficial
+                               ON ObjectLink_Personal_PersonalServiceListOfficial.ObjectId = tmpPersonal.PersonalId
+                              AND ObjectLink_Personal_PersonalServiceListOfficial.DescId = zc_ObjectLink_Personal_PersonalServiceListOfficial()
+          LEFT JOIN Object AS Object_PersonalServiceListOfficial ON Object_PersonalServiceListOfficial.Id = ObjectLink_Personal_PersonalServiceListOfficial.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceListCardSecond
+                               ON ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId = tmpPersonal.PersonalId
+                              AND ObjectLink_Personal_PersonalServiceListCardSecond.DescId = zc_ObjectLink_Personal_PersonalServiceListCardSecond()
+          LEFT JOIN Object AS Object_PersonalServiceListCardSecond ON Object_PersonalServiceListCardSecond.Id = ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Avance_F2
+                               ON ObjectLink_PersonalServiceList_Avance_F2.ObjectId = tmpPersonal.PersonalId
+                              AND ObjectLink_PersonalServiceList_Avance_F2.DescId = zc_ObjectLink_Personal_PersonalServiceListAvance_F2()
+          LEFT JOIN Object AS Object_PersonalServiceListAvance_F2 ON Object_PersonalServiceListAvance_F2.Id = ObjectLink_PersonalServiceList_Avance_F2.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Personal_SheetWorkTime
+                               ON ObjectLink_Personal_SheetWorkTime.ObjectId = tmpPersonal.PersonalId
+                              AND ObjectLink_Personal_SheetWorkTime.DescId = zc_ObjectLink_Personal_SheetWorkTime()
+          LEFT JOIN Object AS Object_SheetWorkTime ON Object_SheetWorkTime.Id = ObjectLink_Personal_SheetWorkTime.ChildObjectId
+          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
+                               ON ObjectLink_Personal_PersonalGroup.ObjectId = tmpPersonal.PersonalId
+                              AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
+          LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
+          LEFT JOIN ObjectLink AS ObjectLink_Personal_StorageLine
+                               ON ObjectLink_Personal_StorageLine.ObjectId = tmpPersonal.PersonalId
+                              AND ObjectLink_Personal_StorageLine.DescId = zc_ObjectLink_Personal_StorageLine()
+          LEFT JOIN Object AS Object_StorageLine ON Object_StorageLine.Id = ObjectLink_Personal_StorageLine.ChildObjectId
+          LEFT JOIN ObjectLink AS ObjectLink_Personal_Member_Refer
+                               ON ObjectLink_Personal_Member_Refer.ObjectId = tmpPersonal.PersonalId
+                              AND ObjectLink_Personal_Member_Refer.DescId = zc_ObjectLink_Personal_Member_Refer()
+          LEFT JOIN Object AS Object_Member_Refer ON Object_Member_Refer.Id   = ObjectLink_Personal_Member_Refer.ChildObjectId
+          LEFT JOIN ObjectLink AS ObjectLink_Personal_Member_Mentor
+                               ON ObjectLink_Personal_Member_Mentor.ObjectId = tmpPersonal.PersonalId
+                              AND ObjectLink_Personal_Member_Mentor.DescId = zc_ObjectLink_Personal_Member_Mentor()
+          LEFT JOIN Object AS Object_Member_Mentor ON Object_Member_Mentor.Id = ObjectLink_Personal_Member_Mentor.ChildObjectId
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_StaffListMember()
       ;
@@ -203,4 +333,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_StaffListMember (inMovementId:= 0, inOperDate:= '01.01.2015', inSession:= zfCalc_UserAdmin())
+--  select * from gpGet_Movement_StaffListMember(inMovementId := 32266687 , inOperDate := ('16.09.2025')::TDateTime ,  inSession := '9457');

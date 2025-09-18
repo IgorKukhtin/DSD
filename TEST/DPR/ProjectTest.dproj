@@ -5670,12 +5670,12 @@
 				<Form>StaffListMemberJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\StaffListMember.pas">
-				<Form>StaffListMemberForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\StaffListItemChoice.pas">
 				<Form>StaffListItemChoiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\StaffListMember.pas">
+				<Form>StaffListMemberForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

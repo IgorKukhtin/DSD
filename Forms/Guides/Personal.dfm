@@ -27,8 +27,8 @@ object PersonalForm: TPersonalForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 1346
-    ExplicitHeight = 422
+    ExplicitLeft = 32
+    ExplicitTop = 18
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -514,7 +514,7 @@ object PersonalForm: TPersonalForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 10
+    TabOrder = 9
     Width = 161
   end
   object ceServiceListCardSecond: TcxButtonEdit
@@ -1031,6 +1031,21 @@ object PersonalForm: TPersonalForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'UnitId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'UnitName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'PositionId'
           Value = Null
           Component = ClientDataSet
@@ -1046,17 +1061,122 @@ object PersonalForm: TPersonalForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'UnitId'
+          Name = 'PositionLevelId'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'UnitId'
+          ComponentItem = 'PositionLevelId'
           MultiSelectSeparator = ','
         end
         item
-          Name = 'UnitName'
+          Name = 'PositionLevelName'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'UnitName'
+          ComponentItem = 'PositionLevelName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalGroupId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalGroupId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalGroupName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalGroupName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalServiceListId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalServiceListId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalServiceListName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalServiceListName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalServiceListOfficialId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalServiceListOfficialId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalServiceListOfficialName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalServiceListOfficialName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ServiceListId_AvanceF2'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ServiceListId_AvanceF2'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ServiceListName_AvanceF2'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ServiceListName_AvanceF2'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ServiceListCardSecondId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ServiceListCardSecondId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ServiceListCardSecondName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ServiceListCardSecondName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SheetWorkTimeId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'SheetWorkTimeId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SheetWorkTimeName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'SheetWorkTimeName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StorageLineId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'StorageLineId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StorageLineName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'StorageLineName'
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -1084,6 +1204,43 @@ object PersonalForm: TPersonalForm
           Name = 'ContractName'
           Value = ''
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Member_ReferId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Member_ReferId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Member_ReferName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Member_ReferName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Member_MentorId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Member_MentorId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Member_MentorName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Member_MentorName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MemberId'
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072

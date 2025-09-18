@@ -1611,8 +1611,8 @@ uses
   Report_StaffListRanking in '..\..\Forms\Report\Report_StaffListRanking.pas' {Report_StaffListRankingForm: TParentForm},
   StaffListKind in '..\..\Forms\Kind\StaffListKind.pas' {StaffListKindForm: TParentForm},
   StaffListMemberJournal in '..\..\Forms\Document\StaffListMemberJournal.pas' {StaffListMemberJournalForm: TParentForm},
-  StaffListMember in '..\..\Forms\Document\StaffListMember.pas' {StaffListMemberForm: TParentForm},
-  StaffListItemChoice in '..\..\Forms\Document\StaffListItemChoice.pas' {StaffListItemChoiceForm: TParentForm};
+  StaffListItemChoice in '..\..\Forms\Document\StaffListItemChoice.pas' {StaffListItemChoiceForm: TParentForm},
+  StaffListMember in '..\..\Forms\Document\StaffListMember.pas' {StaffListMemberForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

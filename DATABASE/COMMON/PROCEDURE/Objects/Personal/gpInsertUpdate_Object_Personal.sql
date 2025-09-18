@@ -209,7 +209,7 @@ BEGIN
    -- для Админа
    IF vbUserId IN (5, 9457)
    THEN
-       RAISE EXCEPTION 'Ошибка.test=ok';
+      -- RAISE EXCEPTION 'Ошибка.test=ok';
    END IF;
 
 END;
