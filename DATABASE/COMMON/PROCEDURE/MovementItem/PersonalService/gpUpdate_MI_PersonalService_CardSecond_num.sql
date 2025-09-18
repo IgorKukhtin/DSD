@@ -69,7 +69,7 @@ END IF;
 
 
      -- определяем
-     vbBankId_const_1:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Bank() AND Object.isErased = FALSE AND Object.ValueData ILIKE '%Банк Восток%' ORDER BY Object.Id DESC LIMIT 1);
+     vbBankId_const_1:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Bank() AND Object.isErased = FALSE AND (Object.ValueData ILIKE '%Банк Восток%' OR Object.ObjectCode = 2 ) ORDER BY Object.ObjectCode ASC LIMIT 1);
      vbBankId_const_2:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Bank() AND Object.isErased = FALSE AND Object.ValueData ILIKE '%ОТП БАНК%' ORDER BY Object.Id DESC LIMIT 1);
 
 
