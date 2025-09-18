@@ -27,6 +27,7 @@ object GoodsMainForm: TGoodsMainForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 92
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -91,6 +92,7 @@ object GoodsMainForm: TGoodsMainForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+        Options.Editing = False
         Width = 150
       end
       object GoodsGroupName: TcxGridDBColumn
@@ -106,6 +108,7 @@ object GoodsMainForm: TGoodsMainForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 172
       end
       object Code: TcxGridDBColumn
@@ -121,6 +124,7 @@ object GoodsMainForm: TGoodsMainForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1082#1086#1076
+        Options.Editing = False
         Width = 63
       end
       object Article: TcxGridDBColumn
@@ -135,6 +139,7 @@ object GoodsMainForm: TGoodsMainForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object Article_all: TcxGridDBColumn
@@ -150,6 +155,7 @@ object GoodsMainForm: TGoodsMainForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object ArticleVergl: TcxGridDBColumn
@@ -165,6 +171,7 @@ object GoodsMainForm: TGoodsMainForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1040#1088#1090#1080#1082#1091#1083' ('#1072#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074#1085#1099#1081')'
+        Options.Editing = False
         Width = 80
       end
       object GoodsArticle: TcxGridDBColumn
@@ -182,6 +189,7 @@ object GoodsMainForm: TGoodsMainForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = #1040#1088#1090#1080#1082#1091#1083' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' ('#1074' '#1079#1072#1075#1088#1091#1079#1082#1077' '#1087#1088#1072#1081#1089#1086#1074')'
+        Options.Editing = False
         Width = 80
       end
       object Name: TcxGridDBColumn
@@ -196,6 +204,7 @@ object GoodsMainForm: TGoodsMainForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 206
       end
       object ModelName_calc: TcxGridDBColumn
@@ -257,7 +266,6 @@ object GoodsMainForm: TGoodsMainForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1042#1077#1089
-        Options.Editing = False
         Width = 45
       end
       object EngineName: TcxGridDBColumn
@@ -289,7 +297,6 @@ object GoodsMainForm: TGoodsMainForm
         DataBinding.FieldName = 'GoodsSizeName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 80
       end
       object EKPrice: TcxGridDBColumn
@@ -534,6 +541,7 @@ object GoodsMainForm: TGoodsMainForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 100
       end
       object ASIN: TcxGridDBColumn
@@ -547,6 +555,7 @@ object GoodsMainForm: TGoodsMainForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
       object MatchCode: TcxGridDBColumn
@@ -562,6 +571,7 @@ object GoodsMainForm: TGoodsMainForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1076' '#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1080#1103
+        Options.Editing = False
         Width = 120
       end
       object FeeNumber: TcxGridDBColumn
@@ -577,6 +587,7 @@ object GoodsMainForm: TGoodsMainForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #8470' '#1090#1072#1084#1086#1078#1077#1085#1085#1086#1081' '#1087#1086#1096#1083#1080#1085#1099
+        Options.Editing = False
         Width = 55
       end
       object InfoMoneyCode: TcxGridDBColumn
@@ -770,6 +781,7 @@ object GoodsMainForm: TGoodsMainForm
       object Color_Value: TcxGridDBColumn
         DataBinding.FieldName = 'Color_Value'
         Visible = False
+        Options.Editing = False
         VisibleForCustomization = False
         Width = 55
       end
@@ -1651,8 +1663,10 @@ object GoodsMainForm: TGoodsMainForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate
       StoredProcList = <
         item
+          StoredProc = spInsertUpdate
         end>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
@@ -2297,5 +2311,289 @@ object GoodsMainForm: TGoodsMainForm
       end>
     Left = 568
     Top = 80
+  end
+  object spInsertUpdate: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_Goods'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCode'
+        Value = 0.000000000000000000
+        Component = ClientDataSet
+        ComponentItem = 'Code'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName'
+        Value = ''
+        Component = ClientDataSet
+        ComponentItem = 'Name'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inArticle'
+        Value = ''
+        Component = ClientDataSet
+        ComponentItem = 'Article'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inArticleVergl'
+        Value = ''
+        Component = ClientDataSet
+        ComponentItem = 'ArticleVergl'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEAN'
+        Value = ''
+        Component = ClientDataSet
+        ComponentItem = 'EAN'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inASIN'
+        Value = ''
+        Component = ClientDataSet
+        ComponentItem = 'ASIN'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMatchCode'
+        Value = ''
+        Component = ClientDataSet
+        ComponentItem = 'MatchCode'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFeeNumber'
+        Value = ''
+        Component = ClientDataSet
+        ComponentItem = 'FeeNumber'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = ''
+        Component = ClientDataSet
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsSizeName'
+        Value = ''
+        Component = ClientDataSet
+        ComponentItem = 'GoodsSizeName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsArc'
+        Value = False
+        Component = ClientDataSet
+        ComponentItem = 'IsArc'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFeet'
+        Value = 0.000000000000000000
+        Component = ClientDataSet
+        ComponentItem = 'Feet'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMetres'
+        Value = 0.000000000000000000
+        Component = ClientDataSet
+        ComponentItem = 'Metres'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeight'
+        Value = 0.000000000000000000
+        Component = ClientDataSet
+        ComponentItem = 'Weight'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountMin'
+        Value = 0.000000000000000000
+        Component = ClientDataSet
+        ComponentItem = 'AmountMin'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountRefer'
+        Value = 0.000000000000000000
+        Component = ClientDataSet
+        ComponentItem = 'AmountRefer'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEKPrice'
+        Value = 0.000000000000000000
+        Component = ClientDataSet
+        ComponentItem = 'EKPrice'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEmpfPrice'
+        Value = 0.000000000000000000
+        Component = ClientDataSet
+        ComponentItem = 'EmpfPrice'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsGroupId'
+        Value = ''
+        Component = ClientDataSet
+        ComponentItem = 'GoodsGroupId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMeasureId'
+        Value = ''
+        Component = ClientDataSet
+        ComponentItem = 'MeasureId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsTagId'
+        Value = ''
+        Component = ClientDataSet
+        ComponentItem = 'GoodsTagId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsTypeId'
+        Value = ''
+        Component = ClientDataSet
+        ComponentItem = 'GoodsTypeId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProdColorId'
+        Value = ''
+        Component = ClientDataSet
+        ComponentItem = 'ProdColorId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerId'
+        Value = ''
+        Component = ClientDataSet
+        ComponentItem = 'PartnerId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = ClientDataSet
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiscountPartnerId'
+        Value = ''
+        Component = ClientDataSet
+        ComponentItem = 'DiscountPartnerId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTaxKindId'
+        Value = ''
+        Component = ClientDataSet
+        ComponentItem = 'TaxKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEngineId'
+        Value = ''
+        Component = ClientDataSet
+        ComponentItem = 'EngineId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceListId'
+        Value = '2773'
+        Component = ClientDataSet
+        ComponentItem = 'PriceListId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDate_price'
+        Value = 43831d
+        Component = ClientDataSet
+        ComponentItem = 'StartDate_price'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperPriceList'
+        Value = 0.000000000000000000
+        Component = ClientDataSet
+        ComponentItem = 'BasisPrice'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 368
+    Top = 280
   end
 end
