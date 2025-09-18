@@ -80,6 +80,8 @@ BEGIN
                          UNION SELECT zc_Enum_Process_AccessKey_DocumentDnepr() AS AccessKeyId WHERE vbIsXleb = TRUE
                          -- Винница видит Львов
                          UNION SELECT zc_Enum_Process_AccessKey_DocumentLviv() WHERE vbIsVinnica = TRUE
+                         -- Винница видит Киев
+                         UNION SELECT zc_Enum_Process_AccessKey_DocumentKiev() WHERE vbIsVinnica = TRUE
                               )
         , tmpBranchJuridical_all AS (SELECT DISTINCT ObjectLink_Juridical.ChildObjectId AS JuridicalId, COALESCE (ObjectLink_Unit.ChildObjectId, 0) AS UnitId
                                      FROM ObjectLink AS ObjectLink_Juridical
