@@ -142,7 +142,7 @@ type
     procedure LoadPartionCellFormTest;
     procedure LoadPersonalReportFormTest;
     procedure LoadPersonalAccountFormTest;
-    procedure ‡‡LoadPersonalFormTest;
+    procedure LoadPersonalFormTest;
     procedure LoadPersonalGroupMovementFormTest;
     procedure LoadPersonalSendCashFormTest;
     procedure LoadPersonalGroupSummAddFormTest;
@@ -672,12 +672,13 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
-  {exit;
+  {
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_AssetProdForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_AssetProdForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
   exit;
@@ -695,11 +696,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTree_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsTree_ObjectForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKindForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_NormForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_NormForm');
 
@@ -4927,8 +4928,8 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalForm');
+  exit;
 
-  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalEditForm');
 
@@ -4949,7 +4950,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPersonalGroupForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalGroupEditForm');
-  }
+
 end;
 
  procedure TLoadFormTest.LoadPersonalGroupMovementFormTest;

@@ -28,7 +28,7 @@ BEGIN
 
 
      -- Проверка
-     IF COALESCE (inOperDate, zc_DateStart()) < '01.01.2015'
+     IF COALESCE (inOperDate, zc_DateStart()) < '01.01.2015'  AND inDescId <> zc_Movement_StaffListMember()
      THEN
          RAISE EXCEPTION 'Ошибка.Создание документа с датой <%> невозможно.', zfConvert_DateToString (COALESCE (inOperDate, zc_DateStart()));
      END IF;

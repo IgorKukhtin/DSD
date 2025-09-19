@@ -18,6 +18,14 @@ $BODY$
    DECLARE vbPeriodCloseId_two Integer;
    DECLARE vbCloseDate         TDateTime;
 BEGIN
+
+     -- !!!только Перепроведение ШР Сотрудники - временно НЕТ ограничений!!!
+     IF inUserId IN (9457) AND inMovementDescId = zc_Movement_StaffListMember()
+     THEN
+          RETURN; -- !!!выход!!!
+     END IF;
+     
+
      -- !!!только Перепроведение с/с - НЕТ ограничений!!!
      IF inUserId IN (zc_Enum_Process_Auto_PrimeCost()
                    , zc_Enum_Process_Auto_ReComplete()
