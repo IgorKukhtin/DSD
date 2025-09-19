@@ -38,7 +38,7 @@ BEGIN
     END IF;
 
     -- Проверка - Eсли не нашли
-    IF COALESCE (inPartnerId,0) = 0
+    IF COALESCE (inPartnerId, 0) = 0
     THEN
          RAISE EXCEPTION 'Ошибка.Не выбран Поставщик';
     END IF;
@@ -156,6 +156,25 @@ BEGIN
                UPDATE Object SET isErased = FALSE WHERE Object.Id = vbGoodsId AND Object.isErased = TRUE;
           END IF;
 
+
+          -- Проверка
+          IF 1 < (SELECT COUNT(*)
+                  FROM Movement
+                       INNER JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                                     ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                                    AND MovementLinkObject_Partner.DescId     = zc_MovementLinkObject_Partner()
+                                                    AND MovementLinkObject_Partner.ObjectId   = inPartnerId
+                  WHERE Movement.OperDate = inOperDate
+                    AND Movement.DescId   = zc_Movement_PriceList()
+                    AND Movement.StatusId <> zc_Enum_Status_Erased()
+                 )
+          THEN 
+              RAISE EXCEPTION 'Ошибка.Должен быть один документ с ценами%для Поставщик = <%> за = <%>.'
+                             , CHR (13)
+                             , lfGet_Object_ValueData_sh (inPartnerId)
+                             , zfConvert_DateToString (inOperDate)
+                              ;
+          END IF;
 
           -- пробуем найти документ
           vbMovementId := (SELECT Movement.Id

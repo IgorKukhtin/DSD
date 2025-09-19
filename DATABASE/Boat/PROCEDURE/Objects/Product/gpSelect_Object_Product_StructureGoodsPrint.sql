@@ -281,7 +281,12 @@ BEGIN
            , Object_dt.Id                                 AS ObjectId_dt
            , Object_dt.ObjectCode                         AS ObjectCode_dt
            , ObjectString_Article_dt.ValueData            AS Article_Object_dt
-           , Object_dt.ValueData                          AS ObjectName_dt
+
+           , CASE WHEN 1=1 AND vbUserId = 5 AND LENGTH (Object_dt.ValueData) > 121
+                       THEN '*error*' || LENGTH (Object_dt.ValueData) :: TVarChar || '* ' || LEFT (Object_dt.ValueData, 100)
+                  ELSE LEFT (Object_dt.ValueData, 121)
+             END :: TVarChar  AS ObjectName_dt
+
          --, (Object_dt.ValueData || ' '  || tmpItem_Detail.GoodsId_basis :: TVarChar) :: TVarChar AS ObjectName_dt
 
            , ObjectDesc_dt.ItemName                       AS DescName_dt

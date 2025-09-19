@@ -38,6 +38,31 @@ BEGIN
                                    AND ObjectString_EAN.DescId    = zc_ObjectString_EAN()
                                    AND ObjectString_EAN.ValueData ILIKE TRIM (inBarCode)||'%'
        WHERE Object.DescId   = zc_Object_Goods();
+       
+       IF vbCountGoods = 0
+       THEN 
+          SELECT COUNT(*), MAX(Object.Id)
+          INTO vbCountGoods, vbGoodsId
+          FROM Object
+               INNER JOIN ObjectString AS ObjectString_Article
+                                       ON ObjectString_Article.ObjectId  = Object.Id
+                                      AND ObjectString_Article.DescId    = zc_ObjectString_Article()
+                                      AND ObjectString_Article.ValueData ILIKE TRIM (inBarCode)||'%'
+          WHERE Object.DescId   = zc_Object_Goods();
+       END IF;
+
+       IF vbCountGoods = 0
+       THEN 
+          SELECT COUNT(*), MAX(Object.Id)
+          INTO vbCountGoods, vbGoodsId
+          FROM Object
+               INNER JOIN ObjectString AS ObjectString_ArticleVergl
+                                       ON ObjectString_ArticleVergl.ObjectId  = Object.Id
+                                      AND ObjectString_ArticleVergl.DescId    = zc_ObjectString_ArticleVergl()
+                                      AND ObjectString_ArticleVergl.ValueData ILIKE TRIM (inBarCode)||'%'
+          WHERE Object.DescId   = zc_Object_Goods();
+       END IF;
+
      END IF;
 
      -- Нашли
