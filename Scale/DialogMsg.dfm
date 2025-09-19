@@ -34,7 +34,6 @@ inherited DialogMsgForm: TDialogMsgForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 6
     object MemoMsg: TMemo
       Left = 0
       Top = 0

@@ -99,7 +99,7 @@ var
   DMMainScaleForm: TDMMainScaleForm;
 
 implementation
-uses Forms,FormStorage,Inifiles,TypInfo,DialogMovementDesc,UtilConst, DateUtils ;
+uses Forms,FormStorage,Inifiles,TypInfo,DialogMovementDesc,UtilConst, DateUtils, DialogMsg ;
 {$R *.dfm}
 {------------------------------------------------------------------------}
 procedure TDMMainScaleForm.DataModuleCreate(Sender: TObject);
@@ -935,16 +935,13 @@ begin
     //and(SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <= 210)
     and(execParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Sale)
     and(GoodsId_exec_Insert_Scale_MI = execParamsMI.ParamByName('GoodsId').AsInteger)
+    and(ParamsMI.ParamByName('isBarCode').AsBoolean = FALSE)
     then begin
         // наверно ошибочное сохранение 2 раза
-        ShowMessage ('Ошибка.Дублирование взвешивания.'
-                    +#10+#13
-                    +'Вес на табло = <'+FloatToStr(execParamsMI.ParamByName('RealWeight').AsFloat)+'>'
-                    +#10+#13
-                    +DateTimeToStr(time_exec_Insert_Scale_MI)
-                    +#10+#13
-                    +DateTimeToStr(now)
-                    );
+        DialogMsgForm.Execute ('Ошибка.Дублирование взвешивания.' + DateTimeToStr(now)
+                              ,'Вес на табло = <'+FloatToStr(execParamsMI.ParamByName('RealWeight').AsFloat)+'>'
+                              ,DateTimeToStr(time_exec_Insert_Scale_MI)
+                              );
         Result:= true;
         exit;
     end;
