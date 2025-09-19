@@ -170,6 +170,7 @@ type
     GuidesPriceList: TdsdGuides;
     StartDate_price: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
+    spInsertUpdate: TdsdStoredProc;
   private
     { Private declarations }
   public
