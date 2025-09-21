@@ -22,7 +22,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon,
+  Vcl.ExtCtrls;
 
 type
   TPersonal_ChoiceForm = class(TParentForm)
@@ -76,6 +77,16 @@ type
     spGet_ScalePSW: TdsdStoredProc;
     mactMember_UpdateDialog: TMultiAction;
     actGet_ScalePSW: TdsdExecStoredProc;
+    Panel: TPanel;
+    cxLabel4: TcxLabel;
+    edUnitName_search: TcxTextEdit;
+    cxLabel5: TcxLabel;
+    edMemberName_search: TcxTextEdit;
+    edPositionName_search: TcxTextEdit;
+    cxLabel7: TcxLabel;
+    FieldFilter: TdsdFieldFilter;
+    cxLabel1: TcxLabel;
+    edPositionLevel_serch: TcxTextEdit;
   private
     { Private declarations }
   public

@@ -250,7 +250,7 @@ inherited StaffListMemberForm: TStaffListMemberForm
   end
   object cxLabel12: TcxLabel [29]
     Left = 367
-    Top = 196
+    Top = 202
     Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1076#1086' '#1087#1077#1088#1077#1074#1086#1076#1072')'
   end
   object ceUnit_old: TcxButtonEdit [30]
@@ -1809,6 +1809,13 @@ inherited StaffListMemberForm: TStaffListMemberForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate'
+        Value = Null
+        Component = edOperDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 177
@@ -1869,6 +1876,13 @@ inherited StaffListMemberForm: TStaffListMemberForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate'
+        Value = Null
+        Component = edOperDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 135
     Top = 213
@@ -1928,6 +1942,13 @@ inherited StaffListMemberForm: TStaffListMemberForm
         Component = GuidesPositionLevel
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate'
+        Value = Null
+        Component = edOperDate
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 223
