@@ -1,30 +1,30 @@
 inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077')>'
-  ClientHeight = 427
+  ClientHeight = 426
   ClientWidth = 1298
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1314
-  ExplicitHeight = 466
+  ExplicitHeight = 465
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 99
     Width = 1298
-    Height = 328
+    Height = 327
     TabOrder = 3
     ExplicitTop = 99
     ExplicitWidth = 1298
     ExplicitHeight = 328
-    ClientRectBottom = 328
+    ClientRectBottom = 327
     ClientRectRight = 1298
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1298
       ExplicitHeight = 328
       inherited cxGrid: TcxGrid
         Width = 1298
-        Height = 328
+        Height = 327
         ExplicitWidth = 1298
         ExplicitHeight = 328
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -126,6 +126,14 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 49
+          end
+          object Month: TcxGridDBColumn
+            Caption = #1052#1077#1089#1103#1094
+            DataBinding.FieldName = 'Month'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 79
           end
           object isPeresort: TcxGridDBColumn
             Caption = #1055#1077#1088#1077#1089#1086#1088#1090'.'
@@ -399,6 +407,7 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
   inherited Panel: TPanel
     Width = 1298
     Height = 73
+    ExplicitTop = 2
     ExplicitWidth = 1298
     ExplicitHeight = 73
     inherited deStart: TcxDateEdit
@@ -492,10 +501,10 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
       Top = 5
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       TabOrder = 11
-      Width = 172
+      Width = 147
     end
     object cbIsPartion: TcxCheckBox
-      Left = 964
+      Left = 966
       Top = 29
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1087#1072#1088#1090#1080#1080' '#1080#1083#1080' '#1074#1080#1076' '#1090#1086#1074'.'
       TabOrder = 12
@@ -535,7 +544,7 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
       Width = 147
     end
     object cbPeresort: TcxCheckBox
-      Left = 1164
+      Left = 1116
       Top = 5
       Caption = #1055#1077#1088#1077#1089#1086#1088#1090
       TabOrder = 17
@@ -543,10 +552,17 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
     end
     object cbisUnit: TcxCheckBox
       Left = 1164
-      Top = 32
+      Top = 29
       Caption = #1055#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
       TabOrder = 18
       Width = 129
+    end
+    object cbMonth: TcxCheckBox
+      Left = 1199
+      Top = 5
+      Caption = #1055#1086' '#1084#1077#1089#1103#1094#1072#1084
+      TabOrder = 19
+      Width = 86
     end
   end
   object cxLabel7: TcxLabel [2]
@@ -859,6 +875,14 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMonth'
+          Value = Null
+          Component = cbMonth
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1025,6 +1049,14 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inIsMonth'
+        Value = Null
+        Component = cbMonth
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsGroupId'
         Value = ''
         Component = GoodsGroupGuides
@@ -1179,6 +1211,9 @@ inherited Report_GoodsMI_ProductionUnionForm: TReport_GoodsMI_ProductionUnionFor
       end
       item
         Component = cbIsMovement
+      end
+      item
+        Component = cbMonth
       end>
     Left = 232
     Top = 208

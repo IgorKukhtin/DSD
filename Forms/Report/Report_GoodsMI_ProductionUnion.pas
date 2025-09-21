@@ -82,6 +82,8 @@ type
     UnitName_from: TcxGridDBColumn;
     UnitName_to: TcxGridDBColumn;
     cbisUnit: TcxCheckBox;
+    Month: TcxGridDBColumn;
+    cbMonth: TcxCheckBox;
   private
     { Private declarations }
   public
