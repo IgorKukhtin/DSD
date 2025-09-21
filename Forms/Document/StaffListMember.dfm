@@ -299,7 +299,7 @@ inherited StaffListMemberForm: TStaffListMemberForm
     Width = 331
   end
   object cxButton1: TcxButton [36]
-    Left = 369
+    Left = 368
     Top = 444
     Width = 150
     Height = 26
@@ -494,8 +494,8 @@ inherited StaffListMemberForm: TStaffListMemberForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = #1042#1067#1073#1088#1072#1090#1100' '#1076#1083#1103' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
-      FormName = 'TPersonalForm'
-      FormNameParam.Value = 'TPersonalForm'
+      FormName = 'TPersonal_ChoiceForm'
+      FormNameParam.Value = 'TPersonal_ChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -708,8 +708,8 @@ inherited StaffListMemberForm: TStaffListMemberForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = #1042#1067#1073#1088#1072#1090#1100' '#1076#1083#1103' '#1087#1077#1088#1077#1074#1086#1076#1072
-      FormName = 'TPersonalForm'
-      FormNameParam.Value = 'TPersonalForm'
+      FormName = 'TPersonal_ChoiceForm'
+      FormNameParam.Value = 'TPersonal_ChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
