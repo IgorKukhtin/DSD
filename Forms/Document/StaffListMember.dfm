@@ -8,19 +8,19 @@ inherited StaffListMemberForm: TStaffListMemberForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 526
-    Top = 484
+    Left = 486
+    Top = 493
     Height = 26
-    ExplicitLeft = 526
-    ExplicitTop = 484
+    ExplicitLeft = 486
+    ExplicitTop = 493
     ExplicitHeight = 26
   end
   inherited bbCancel: TcxButton
-    Left = 624
-    Top = 484
+    Left = 608
+    Top = 493
     Height = 26
-    ExplicitLeft = 624
-    ExplicitTop = 484
+    ExplicitLeft = 608
+    ExplicitTop = 493
     ExplicitHeight = 26
   end
   object cxLabel1: TcxLabel [2]
@@ -299,9 +299,9 @@ inherited StaffListMemberForm: TStaffListMemberForm
     Width = 331
   end
   object cxButton1: TcxButton [36]
-    Left = 368
-    Top = 484
-    Width = 132
+    Left = 369
+    Top = 444
+    Width = 150
     Height = 26
     Action = actOpenChoiceFormMember
     Default = True
@@ -461,6 +461,16 @@ inherited StaffListMemberForm: TStaffListMemberForm
     TabOrder = 54
     Width = 331
   end
+  object cxButton2: TcxButton [55]
+    Left = 548
+    Top = 444
+    Width = 150
+    Height = 26
+    Action = actOpenChoiceMemberDel
+    Default = True
+    ModalResult = 1
+    TabOrder = 55
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 299
     Top = 65528
@@ -470,14 +480,228 @@ inherited StaffListMemberForm: TStaffListMemberForm
     Top = 65531
   end
   inherited ActionList: TActionList
-    Left = 511
-    Top = 262
+    Left = 663
+    Top = 278
     inherited InsertUpdateGuides: TdsdInsertUpdateGuides [0]
       Caption = #1042#1099#1073#1088#1072#1090#1100' '#1076#1083#1103' '#1087#1077#1088#1077#1074#1086#1076#1072
     end
     inherited actRefresh: TdsdDataSetRefresh [1]
     end
     inherited FormClose: TdsdFormClose [2]
+    end
+    object actOpenChoiceMemberDel: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1042#1067#1073#1088#1072#1090#1100' '#1076#1083#1103' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
+      FormName = 'TPersonalForm'
+      FormNameParam.Value = 'TPersonalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MemberId'
+          Value = ''
+          Component = GuideMember
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = ''
+          Component = GuideMember
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'PersonalId_old'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionId'
+          Value = ''
+          Component = GuidesPosition
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionName'
+          Value = ''
+          Component = GuidesPosition
+          ComponentItem = 'Key'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionLevelId'
+          Value = ''
+          Component = GuidesPositionLevel
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionLevelName'
+          Value = ''
+          Component = GuidesPositionLevel
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalGroupId'
+          Value = ''
+          Component = GuidesPersonalGroup
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalGroupName'
+          Value = ''
+          Component = GuidesPersonalGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalServiceListId'
+          Value = ''
+          Component = GuidesPersonalServiceList
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalServiceListName'
+          Value = ''
+          Component = GuidesPersonalServiceList
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ServiceListId_AvanceF2'
+          Value = ''
+          Component = GuidesPersonalServiceListAvanceF2
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ServiceListName_AvanceF2'
+          Value = ''
+          Component = GuidesPersonalServiceListAvanceF2
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ServiceListCardSecondId'
+          Value = ''
+          Component = cePersonalServiceListCardSecond
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ServiceListCardSecondName'
+          Value = ''
+          Component = cePersonalServiceListCardSecond
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalServiceListOfficialId'
+          Value = ''
+          Component = cePersonalServiceListOfficial
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalServiceListOfficialName'
+          Value = ''
+          Component = cePersonalServiceListOfficial
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SheetWorkTimeId'
+          Value = ''
+          Component = GuidesSheetWorkTime
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SheetWorkTimeName'
+          Value = ''
+          Component = GuidesSheetWorkTime
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StorageLineId'
+          Value = ''
+          Component = GuidesStorageLine
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StorageLineName'
+          Value = ''
+          Component = GuidesStorageLine
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Member_MentorId'
+          Value = ''
+          Component = GuidesMember_Mentor
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Member_MentorName'
+          Value = ''
+          Component = GuidesMember_Mentor
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Member_ReferId'
+          Value = ''
+          Component = GuidesMember_Refer
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Member_ReferName'
+          Value = ''
+          Component = GuidesMember_Refer
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
     object actOpenChoiceFormMember: TOpenChoiceForm
       Category = 'DSDLib'
@@ -1301,8 +1525,8 @@ inherited StaffListMemberForm: TStaffListMemberForm
         ComponentItem = 'PersonalId'
         MultiSelectSeparator = ','
       end>
-    Left = 615
-    Top = 442
+    Left = 583
+    Top = 490
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Name = 'Id'
@@ -1466,8 +1690,8 @@ inherited StaffListMemberForm: TStaffListMemberForm
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
-    Left = 150
-    Top = 86
+    Left = 118
+    Top = 102
   end
   object GuideUpdate: TdsdGuides
     KeyField = 'Id'
@@ -1827,9 +2051,17 @@ inherited StaffListMemberForm: TStaffListMemberForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMain'
+        Value = Null
+        Component = cbMain
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 574
-    Top = 90
+    Left = 214
+    Top = 106
   end
   object GuidesPersonalServiceListOfficial: TdsdGuides
     KeyField = 'Id'

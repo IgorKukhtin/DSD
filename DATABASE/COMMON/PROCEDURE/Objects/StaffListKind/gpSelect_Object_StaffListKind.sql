@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_StaffListKind(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , EnumName TVarChar
-             , Comment TVarChar
+             , Comment TVarChar 
+             , isMain Boolean
              , isErased Boolean) AS
 $BODY$BEGIN
 
@@ -20,7 +21,8 @@ $BODY$BEGIN
       , Object_StaffListKind.ObjectCode   AS Code
       , Object_StaffListKind.ValueData    AS Name
       , ObjectString_Enum.ValueData       AS EnumName
-      , ObjectString_Comment.ValueData    AS Comment 
+      , ObjectString_Comment.ValueData    AS Comment
+      , TRUE                    ::Boolean AS isMain  
       , Object_StaffListKind.isErased     AS isErased
       
    FROM OBJECT AS Object_StaffListKind
