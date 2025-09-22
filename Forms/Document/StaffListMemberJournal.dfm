@@ -229,7 +229,7 @@ inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
             DataBinding.FieldName = 'UnitName_old'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
+            HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1076#1086' '#1087#1077#1088#1077#1074#1086#1076#1072
             Options.Editing = False
             Width = 106
           end
@@ -238,7 +238,7 @@ inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
             DataBinding.FieldName = 'PositionName_old'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1086#1083#1078#1085#1086#1089#1090#1100' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
+            HeaderHint = #1044#1086#1083#1078#1085#1086#1089#1090#1100' '#1076#1086' '#1087#1077#1088#1077#1074#1086#1076#1072
             Options.Editing = False
             Width = 90
           end
@@ -247,6 +247,7 @@ inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
             DataBinding.FieldName = 'PositionLevelName_old'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080' '#1076#1086' '#1087#1077#1088#1077#1074#1086#1076#1072
             Options.Editing = False
             Width = 80
           end
@@ -273,6 +274,12 @@ inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
+          end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            Options.Editing = False
+            Width = 80
           end
           object ReasonOutName: TcxGridDBColumn
             Caption = #1055#1088#1080#1095#1080#1085#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
@@ -613,11 +620,15 @@ inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True

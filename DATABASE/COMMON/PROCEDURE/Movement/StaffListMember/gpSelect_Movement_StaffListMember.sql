@@ -92,8 +92,6 @@ BEGIN
                                                        , zc_MovementLinkObject_PositionLevel_old()
                                                        , zc_MovementLinkObject_Insert()
                                                        , zc_MovementLinkObject_Update()
-                                                       
-                                                       , zc_MovementLinkObject_Member()
                                                         )
                      )
 

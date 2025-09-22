@@ -2,14 +2,16 @@
 -- Function: gpSelect_StaffListItemChoice ()
 
 DROP FUNCTION IF EXISTS gpSelect_StaffListItemChoice (TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_StaffListItemChoice (TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_StaffListItemChoice(
     IN inStartDate      TDateTime , --
     IN inUnitId         Integer,   --подразделение
-    IN inDepartmentId   Integer,   --Департамент
+    IN inDepartmentId   Integer,   --Департамент 
+    IN inPositionId     Integer,   --должность
     IN inSession        TVarChar   --сессия пользователя
 )
-RETURNS TABLE(
+RETURNS TABLE(Id  Integer
             , DepartmentId                   Integer
             , DepartmentName                 TVarChar
             , UnitId                         Integer
@@ -61,6 +63,7 @@ BEGIN
               WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                 AND MovementItem.DescId = zc_MI_Master()
                 AND MovementItem.isErased = FALSE
+                AND (MovementItem.ObjectId = inPositionId OR inPositionId = 0)
               )  
 
   , tmpMILinkObject AS (SELECT MovementItemLinkObject.*
@@ -152,4 +155,4 @@ $BODY$
  6.09.25         *
 */
 -- тест
--- select * from gpSelect_StaffListChoice (inStartDate:= '26.09.2025'::TDateTime, inUnitId := 0 , inDepartmentId := 0 , inSession := '5');
+-- select * from gpSelect_StaffListItemChoice (inStartDate:= '26.09.2025'::TDateTime, inUnitId := 0 , inDepartmentId := 0 , inPositionId:=7176081, inSession := '5');

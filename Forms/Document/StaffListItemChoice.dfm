@@ -3,26 +3,27 @@ inherited StaffListItemChoiceForm: TStaffListItemChoiceForm
   ClientHeight = 401
   ClientWidth = 849
   AddOnFormData.ChoiceAction = actChoiceGuides
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 865
   ExplicitHeight = 440
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 79
+    Top = 112
     Width = 849
-    Height = 322
+    Height = 289
     TabOrder = 3
     ExplicitTop = 79
     ExplicitWidth = 849
     ExplicitHeight = 322
-    ClientRectBottom = 322
+    ClientRectBottom = 289
     ClientRectRight = 849
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 849
       ExplicitHeight = 322
       inherited cxGrid: TcxGrid
         Width = 849
-        Height = 322
+        Height = 289
         ExplicitWidth = 849
         ExplicitHeight = 322
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -108,6 +109,7 @@ inherited StaffListItemChoiceForm: TStaffListItemChoiceForm
   inherited Panel: TPanel
     Width = 849
     Height = 53
+    ExplicitTop = -1
     ExplicitWidth = 849
     ExplicitHeight = 53
     inherited deStart: TcxDateEdit
@@ -140,12 +142,12 @@ inherited StaffListItemChoiceForm: TStaffListItemChoiceForm
       ExplicitLeft = 825
     end
     object cxLabel4: TcxLabel
-      Left = 119
+      Left = 116
       Top = 6
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object ceUnit: TcxButtonEdit
-      Left = 119
+      Left = 116
       Top = 23
       Properties.Buttons = <
         item
@@ -154,15 +156,15 @@ inherited StaffListItemChoiceForm: TStaffListItemChoiceForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 256
+      Width = 170
     end
     object cxLabel5: TcxLabel
-      Left = 388
+      Left = 298
       Top = 6
       Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' 1 '#1088#1110#1074#1085#1103':'
     end
     object ceDepartment: TcxButtonEdit
-      Left = 388
+      Left = 298
       Top = 23
       Properties.Buttons = <
         item
@@ -171,7 +173,98 @@ inherited StaffListItemChoiceForm: TStaffListItemChoiceForm
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 256
+      Width = 170
+    end
+    object cxLabel12: TcxLabel
+      Left = 474
+      Top = 6
+      Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100':'
+    end
+    object cePosition: TcxButtonEdit
+      Left = 474
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 9
+      Width = 170
+    end
+  end
+  object Panel1: TPanel [2]
+    Left = 0
+    Top = 53
+    Width = 849
+    Height = 33
+    Align = alTop
+    TabOrder = 6
+    ExplicitLeft = -34
+    ExplicitTop = 0
+    ExplicitWidth = 883
+    object cxLabel3: TcxLabel
+      Left = 3
+      Top = 3
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edUnitName_search: TcxTextEdit
+      Left = 121
+      Top = 4
+      TabOrder = 1
+      DesignSize = (
+        120
+        21)
+      Width = 120
+    end
+    object edPositionName_search: TcxTextEdit
+      Left = 334
+      Top = 4
+      TabOrder = 2
+      DesignSize = (
+        120
+        21)
+      Width = 120
+    end
+    object cxLabel7: TcxLabel
+      Left = 247
+      Top = 3
+      Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object cxLabel8: TcxLabel
+      Left = 460
+      Top = 3
+      Caption = #1056#1072#1079#1088#1103#1076':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edPositionLevel_serch: TcxTextEdit
+      Left = 518
+      Top = 5
+      TabOrder = 5
+      DesignSize = (
+        120
+        21)
+      Width = 120
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -527,10 +620,11 @@ inherited StaffListItemChoiceForm: TStaffListItemChoiceForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPositionId'
         Value = Null
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptUnknown
+        Component = GuidesPosition
+        ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 80
@@ -621,9 +715,15 @@ inherited StaffListItemChoiceForm: TStaffListItemChoiceForm
         Component = GuidesUnit
       end
       item
+        Component = GuidesDepartment
       end
       item
-        Component = GuidesDepartment
+        Component = GuidesPosition
+      end
+      item
+      end
+      item
+        Component = deStart
       end>
     Left = 408
     Top = 200
@@ -654,7 +754,7 @@ inherited StaffListItemChoiceForm: TStaffListItemChoiceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 344
+    Left = 208
     Top = 13
   end
   object GuidesDepartment: TdsdGuides
@@ -683,7 +783,7 @@ inherited StaffListItemChoiceForm: TStaffListItemChoiceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 616
+    Left = 368
     Top = 13
   end
   object spPersonalService: TdsdStoredProc
@@ -923,5 +1023,69 @@ inherited StaffListItemChoiceForm: TStaffListItemChoiceForm
     PackSize = 1
     Left = 304
     Top = 288
+  end
+  object FieldFilter: TdsdFieldFilter
+    TextEdit = edUnitName_search
+    DataSet = MasterCDS
+    Column = UnitName
+    ColumnList = <
+      item
+        Column = UnitName
+      end
+      item
+        Column = PositionName
+        TextEdit = edPositionName_search
+      end
+      item
+        Column = PositionLevelName
+        TextEdit = edPositionLevel_serch
+      end>
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 704
+    Top = 152
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'OperDate'
+        Value = Null
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 552
+    Top = 192
+  end
+  object GuidesPosition: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePosition
+    FormNameParam.Value = 'TPositionForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPositionForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPosition
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPosition
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 542
+    Top = 6
   end
 end

@@ -1,8 +1,8 @@
--- Function: gpInsert_Movement_StaffListMember_byPersonal ()
+-- Function: gpInsert_Movement_StaffListMember_byPersonalDel ()
+--сохранение удаленных
+DROP FUNCTION IF EXISTS gpInsert_Movement_StaffListMember_byPersonalDel (Integer, TVarChar);
 
-DROP FUNCTION IF EXISTS gpInsert_Movement_StaffListMember_byPersonal (Integer, TVarChar);
-
-CREATE OR REPLACE FUNCTION gpInsert_Movement_StaffListMember_byPersonal(
+CREATE OR REPLACE FUNCTION gpInsert_Movement_StaffListMember_byPersonalDel(
     IN inParam               Integer   , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )     
@@ -38,7 +38,7 @@ BEGIN
            WITH
            tmpViewPersonal AS (SELECT *
                                FROM Object_Personal_View
-                               WHERE Object_Personal_View.isERased = FALSE
+                               WHERE Object_Personal_View.isERased = TRUE
                                )
            --вспомогательная, если есть перевод но нет второй записи с переводом - берем сотр. с большим Id 
          , tmp_PersonalDop AS (SELECT tmpViewPersonal.*
@@ -299,4 +299,53 @@ $BODY$
 --****
 --SELECT * FROM gpInsert_Movement_StaffListMember_byPersonal( inParam  := 3 :: Integer, inSession :='9457'::TVarChar)
 
+ /*
+ 
+WITH
+           tmpViewPersonal AS (SELECT *
+                               , ROW_NUMBER() OVER (PARTITION BY Object_Personal_View.MemberId ORDER BY Object_Personal_View.DateOut DESC) AS Ord 
+                               FROM Object_Personal_View
+                               WHERE Object_Personal_View.isERased = TRUE --and MemberId = 12474
+                               order by MemberId, DateOut
+                               )
+ , tmpSave AS (WITH  
+                     tmpMovement AS (SELECT Movement.*
+                                     FROM  Movement 
+                                     WHERE Movement.DescId = zc_Movement_StaffListMember()
+                                   -- AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                       AND Movement.StatusId = zc_Enum_Status_Complete() 
+                                     )
 
+                   , tmpMLO AS (SELECT MovementLinkObject.*
+                                FROM MovementLinkObject
+                                WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement) 
+                                  AND MovementLinkObject.DescId IN (zc_MovementLinkObject_StaffListKind() 
+                                                                  , zc_MovementLinkObject_Member()
+                                                                   )
+                                )
+                    SELECT DISTINCT MovementLinkObject_Member.ObjectId AS MemberId
+                     /*   , CASE WHEN MovementLinkObject_StaffListKind.ObjectId IN (zc_Enum_StaffListKind_In(), zc_Enum_StaffListKind_Add()) THEN 1
+                               WHEN MovementLinkObject_StaffListKind.ObjectId IN (zc_Enum_StaffListKind_Send()) THEN 2
+                               WHEN MovementLinkObject_StaffListKind.ObjectId IN (zc_Enum_StaffListKind_Out()) THEN 3
+                          END AS Param 
+*/
+                    FROM tmpMovement AS Movement    
+                         INNER JOIN tmpMLO AS MovementLinkObject_Member
+                                        ON MovementLinkObject_Member.MovementId = Movement.Id
+                                       AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
+                       LEFT JOIN Object AS Object_Member ON Object_Member.Id = MovementLinkObject_Member.ObjectId
+           
+                       LEFT JOIN tmpMLO AS MovementLinkObject_StaffListKind
+                                        ON MovementLinkObject_StaffListKind.MovementId = Movement.Id
+                                       AND MovementLinkObject_StaffListKind.DescId = zc_MovementLinkObject_StaffListKind()
+                       LEFT JOIN Object AS Object_StaffListKind ON Object_StaffListKind.Id = MovementLinkObject_StaffListKind.ObjectId
+                     )
+
+SELECT  tmp.MemberId
+FROM tmpViewPersonal AS tmp
+  LEFT JOIN tmpSave ON tmpSave.MemberId = tmp.MemberId
+                                 --AND tmpSave.Param = 1
+ WHERE  tmpSave.MemberId IS NULL
+and tmp.Ord = 1 
+ 
+ */

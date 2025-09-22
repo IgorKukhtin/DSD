@@ -50,6 +50,7 @@ type
     ReasonOutName: TcxGridDBColumn;
     actOpenFormMemberHolidayEdit: TdsdOpenForm;
     bbOpenFormMemberHolidayEdit: TdxBarButton;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -100,7 +100,7 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Существует аналогичный документ <%> для <%>.', (SELECT Movement.InvNumber||' от '||Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId)
                                                                               , (SELECT Object.ValueData FROM Object WHERE Object.Id = inMemberId);
      END IF;
-
+   
      --проверка существования сотрудника
      vbPersonalId := (SELECT Object_Personal.Id
                       FROM Object AS Object_Personal
@@ -122,7 +122,9 @@ BEGIN
                       WHERE Object_Personal.DescId = zc_Object_Personal()
                         AND Object_Personal.isErased = FALSE
                         AND COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId,0) = COALESCE (inPositionLevelId,0)
-                      );
+                      ); 
+   
+       
      /*
      --
      IF COALESCE (vbPersonalId,0) <> 0
@@ -177,7 +179,7 @@ BEGIN
                                                                       , vbDateSend,  CHR (13) ;     
   */
      --сохранение обновлени сотрудника
-     PERFORM gpInsertUpdate_Object_Personal(ioId                              := COALESCE (vbPersonalId,0)         ::Integer    -- ключ объекта <Сотрудники>
+  /*   PERFORM gpInsertUpdate_Object_Personal(ioId                              := COALESCE (vbPersonalId,0)         ::Integer    -- ключ объекта <Сотрудники>
                                           , inMemberId                        := inMemberId                        ::Integer    -- ссылка на Физ.лица
                                           , inPositionId                      := inPositionId                      ::Integer    -- ссылка на Должность
                                           , inPositionLevelId                 := inPositionLevelId                 ::Integer    -- ссылка на Разряд должности
@@ -204,7 +206,7 @@ BEGIN
                                           , inSession                         := inSession                         ::TVarChar   -- сессия пользователя 
                                           ) ;
     
-
+      */
      -- сохранили <Документ>
      ioId:= lpInsertUpdate_Movement_StaffListMember ( ioId                  := ioId
                                                     , inInvNumber           := inInvNumber

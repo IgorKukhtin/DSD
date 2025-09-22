@@ -1,4 +1,4 @@
--- Function: gpReport_GoodsMI_ProductionUnion ()
+-- Function: gpReport_ProductionUnion_Olap ()
 
 DROP FUNCTION IF EXISTS gpReport_ProductionUnion_Olap (TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertProductionUnion_Olap (TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);

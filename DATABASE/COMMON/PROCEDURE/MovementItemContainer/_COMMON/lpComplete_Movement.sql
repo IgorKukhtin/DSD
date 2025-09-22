@@ -152,7 +152,7 @@ BEGIN
   END IF;
 
 
-  IF vbUserId_save > 0 OR COALESCE (vbDescId, 0) <> zc_Movement_PersonalService()
+  IF vbUserId_save > 0 OR COALESCE (vbDescId, 0) <> zc_Movement_PersonalService() OR COALESCE (vbDescId, 0) <> zc_Movement_StaffListMember()
   THEN
       -- !!!НОВАЯ СХЕМА ПРОВЕРКИ - Закрытый период!!!
       PERFORM lpCheckPeriodClose (inOperDate      := vbOperDate

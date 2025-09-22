@@ -98,6 +98,8 @@ type
     edMember_Mentor: TcxButtonEdit;
     GuidesMember_Refer: TdsdGuides;
     GuidesMember_Mentor: TdsdGuides;
+    cxButton2: TcxButton;
+    actOpenChoiceMemberDel: TOpenChoiceForm;
   private
     { Private declarations }
   public

@@ -54,6 +54,18 @@ type
     actPersonalServiceErased: TdsdExecStoredProc;
     actChoiceGuides: TdsdChoiceGuides;
     bbChoiceGuides: TdxBarButton;
+    Panel1: TPanel;
+    cxLabel3: TcxLabel;
+    edUnitName_search: TcxTextEdit;
+    edPositionName_search: TcxTextEdit;
+    cxLabel7: TcxLabel;
+    cxLabel8: TcxLabel;
+    edPositionLevel_serch: TcxTextEdit;
+    FieldFilter: TdsdFieldFilter;
+    FormParams: TdsdFormParams;
+    cxLabel12: TcxLabel;
+    cePosition: TcxButtonEdit;
+    GuidesPosition: TdsdGuides;
   private
     { Private declarations }
   public

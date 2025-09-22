@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionUnion (TDateTime, TDateTime,  Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionUnion (TDateTime, TDateTime,  Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionUnion (TDateTime, TDateTime,  Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionUnion (TDateTime, TDateTime,  Boolean, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionUnion (
     IN inStartDate          TDateTime ,
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionUnion (
     IN inIsPartion          Boolean   ,
     IN inIsPeresort         Boolean   ,
     IN inIsUnit             Boolean   ,
+    IN inIsMonth            Boolean   ,    
     IN inGoodsGroupId       Integer   ,
     IN inGoodsId            Integer   ,
     IN inChildGoodsGroupId  Integer   ,
@@ -19,7 +21,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionUnion (
     IN inToId               Integer   ,    -- кому
     IN inSession            TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime, DescName TVarChar
+RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime, Month TDateTime, DescName TVarChar
              , isPeresort Boolean, isClosed Boolean
              , DocumentKindName TVarChar
              , SubjectDocName  TVarChar
@@ -109,6 +111,7 @@ BEGIN
     RETURN QUERY
       WITH tmpMI_ContainerIn AS
                        (SELECT CASE WHEN inIsMovement = FALSE THEN 0 ELSE MIContainer.MovementId END AS MovementId
+                             , CASE WHEN inIsMovement = TRUE OR inIsMonth = TRUE THEN DATE_TRUNC ('MONTH', MIContainer.OperDate) ELSE DATE_TRUNC ('MONTH', inStartDate) END ::TDateTime AS Month
                              , COALESCE (MovementBoolean_Peresort.ValueData, FALSE) AS isPeresort
                              , CASE WHEN inIsMovement = TRUE THEN COALESCE (MovementBoolean_Closed.ValueData, FALSE) ELSE FALSE END AS isClosed
                              , COALESCE (MLO_DocumentKind.ObjectId, 0)              AS DocumentKindId
@@ -161,7 +164,8 @@ BEGIN
                                , CASE WHEN inIsPartion = FALSE THEN COALESCE (MIContainer.ObjectIntId_Analyzer, 0) ELSE COALESCE (MIContainer.ObjectIntId_Analyzer, 0) END
                                , Object_SubjectDoc.ValueData
                                , CASE WHEN inIsUnit = TRUE THEN MIContainer.ObjectExtId_Analyzer ELSE 0 END
-                               , CASE WHEN inIsUnit = TRUE THEN MIContainer.WhereObjectId_Analyzer ELSE 0 END
+                               , CASE WHEN inIsUnit = TRUE THEN MIContainer.WhereObjectId_Analyzer ELSE 0 END 
+                               , CASE WHEN inIsMovement = TRUE OR inIsMonth = TRUE THEN DATE_TRUNC ('MONTH', MIContainer.OperDate) ELSE DATE_TRUNC ('MONTH', inStartDate) END 
                        )
          , tmpContainer_in AS (SELECT DISTINCT 
                                       tmpMI_ContainerIn.ContainerId
@@ -176,6 +180,7 @@ BEGIN
                               )
          , tmpMI_ContainerOut AS
                        (SELECT CASE WHEN inIsMovement = FALSE THEN 0 ELSE MIContainer.MovementId END AS MovementId
+                             , CASE WHEN inIsMovement = TRUE OR inIsMonth = TRUE THEN DATE_TRUNC ('MONTH', MIContainer.OperDate) ELSE DATE_TRUNC ('MONTH', inStartDate) END ::TDateTime AS Month
                              , MIContainer.DescId                AS MIContainerDescId
                              , COALESCE (MovementBoolean_Peresort.ValueData, FALSE) AS isPeresort
                              , COALESCE (MovementBoolean_Closed.ValueData, False)   AS isClosed
@@ -230,12 +235,14 @@ BEGIN
                                , CASE WHEN inIsPartion = FALSE THEN 0 ELSE MIContainer.ObjectIntId_Analyzer END
                                , CASE WHEN inIsUnit = TRUE THEN MIContainer.WhereObjectId_Analyzer ELSE 0 END
                                , CASE WHEN inIsUnit = TRUE THEN MIContainer.ObjectExtId_Analyzer ELSE 0 END
+                               , CASE WHEN inIsMovement = TRUE OR inIsMonth = TRUE THEN DATE_TRUNC ('MONTH', MIContainer.OperDate) ELSE DATE_TRUNC ('MONTH', inStartDate) END
                        )
 
 
       -- Результат
       SELECT Movement.InvNumber
            , Movement.OperDate
+           , CASE WHEN inIsMovement = TRUE OR inIsMonth = TRUE THEN tmpOperationGroup.Month ELSE NULL END ::TDateTime AS Month
            , CAST (MovementDesc.ItemName AS TVarChar) AS DescName
 
            , tmpOperationGroup.isPeresort :: Boolean AS isPeresort
@@ -310,6 +317,7 @@ BEGIN
                  , tmpMI_in.Comment
                  , tmpMI_in.FromId
                  , tmpMI_in.ToId
+                 , tmpMI_in.Month
 
                  , tmpMI_out.PartionGoodsId AS PartionGoodsId_out
                  , tmpMI_out.GoodsId        AS GoodsId_out
@@ -331,6 +339,7 @@ BEGIN
                        , STRING_AGG (DISTINCT tmpMI_ContainerIn.SubjectDocName, '; ') AS SubjectDocName
                        , tmpMI_ContainerIn.FromId
                        , tmpMI_ContainerIn.ToId
+                       , tmpMI_ContainerIn.Month
                   FROM tmpMI_ContainerIn
                        LEFT JOIN tmpContainer_in ON tmpContainer_in.ContainerId    = tmpMI_ContainerIn.ContainerId
                                                 AND tmpContainer_in.MovementItemId = tmpMI_ContainerIn.MovementItemId
@@ -344,6 +353,7 @@ BEGIN
                          , tmpMI_ContainerIn.GoodsKindId
                          , tmpMI_ContainerIn.FromId
                          , tmpMI_ContainerIn.ToId
+                         , tmpMI_ContainerIn.Month
                  ) AS tmpMI_in
                  LEFT JOIN (SELECT tmpMI_ContainerOut.MovementId
                                  , tmpMI_ContainerOut.isPeresort
@@ -360,6 +370,7 @@ BEGIN
                                  , SUM (CASE WHEN tmpMI_ContainerOut.MIContainerDescId = zc_MIContainer_Summ()  THEN tmpMI_ContainerOut.Amount ELSE 0 END) AS OperSumm
                                  , tmpMI_ContainerOut.FromId
                                  , tmpMI_ContainerOut.ToId
+                                 , tmpMI_ContainerOut.Month
                             FROM tmpMI_ContainerOut
                                  LEFT JOIN ContainerLinkObject AS ContainerLO_PartionGoods
                                                                ON ContainerLO_PartionGoods.ContainerId = tmpMI_ContainerOut.ContainerId
@@ -376,6 +387,7 @@ BEGIN
                                    , CASE WHEN inIsPartion = FALSE THEN 0 ELSE COALESCE (ContainerLO_PartionGoods.ObjectId, 0) END
                                    , tmpMI_ContainerOut.FromId
                                    , tmpMI_ContainerOut.ToId
+                                   , tmpMI_ContainerOut.Month
                            ) AS tmpMI_out ON tmpMI_out.MovementId        = tmpMI_in.MovementId
                                          AND tmpMI_out.isPeresort        = tmpMI_in.isPeresort
                                          AND tmpMI_out.DocumentKindId    = tmpMI_in.DocumentKindId
@@ -384,6 +396,7 @@ BEGIN
                                          AND tmpMI_out.PartionGoodsId_in = tmpMI_in.PartionGoodsId
                                          AND tmpMI_out.FromId            = tmpMI_in.FromId
                                          AND tmpMI_out.ToId              = tmpMI_in.ToId
+                                         AND tmpMI_out.Month             = tmpMI_in.Month
             ) AS tmpOperationGroup
 
              LEFT JOIN Movement ON Movement.Id = tmpOperationGroup.MovementId
@@ -468,4 +481,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_ProductionUnion(inStartDate:= '01.09.2024', inEndDate:= '30.09.2024', inIsMovement:= FALSE, inIsPartion:= FALSE, inIsPeresort:=TRUE, inIsUnit:= TRUE, inGoodsGroupId:= 0, inGoodsId:= 0, inChildGoodsGroupId:= 0, inChildGoodsId:=0, inFromId:= 0, inToId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_ProductionUnion(inStartDate:= '01.09.2024', inEndDate:= '30.09.2024', inIsMovement:= FALSE, inIsPartion:= FALSE, inIsPeresort:=TRUE, inIsUnit:= TRUE, inIsMonth := False,inGoodsGroupId:= 0, inGoodsId:= 0, inChildGoodsGroupId:= 0, inChildGoodsId:=0, inFromId:= 0, inToId:= 0, inSession:= zfCalc_UserAdmin());

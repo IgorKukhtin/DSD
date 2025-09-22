@@ -191,6 +191,13 @@ object Report_GoodsMI_ProductionUnionDialogForm: TReport_GoodsMI_ProductionUnion
     TabOrder = 21
     Width = 127
   end
+  object cbMonth: TcxCheckBox
+    Left = 125
+    Top = 53
+    Caption = #1055#1086' '#1084#1077#1089#1103#1094#1072#1084
+    TabOrder = 22
+    Width = 86
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -362,6 +369,14 @@ object Report_GoodsMI_ProductionUnionDialogForm: TReport_GoodsMI_ProductionUnion
         Name = 'isUnit'
         Value = Null
         Component = cbisUnit
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMonth'
+        Value = Null
+        Component = cbMonth
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

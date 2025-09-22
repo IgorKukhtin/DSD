@@ -3,7 +3,7 @@ object Personal_ChoiceForm: TPersonal_ChoiceForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080'>'
   ClientHeight = 358
-  ClientWidth = 808
+  ClientWidth = 883
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,9 +20,9 @@ object Personal_ChoiceForm: TPersonal_ChoiceForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
-    Width = 808
-    Height = 332
+    Top = 59
+    Width = 883
+    Height = 299
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -189,8 +189,101 @@ object Personal_ChoiceForm: TPersonal_ChoiceForm
     EditValue = 42948d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 8
+    TabOrder = 7
     Width = 85
+  end
+  object Panel: TPanel
+    Left = 0
+    Top = 0
+    Width = 883
+    Height = 33
+    Align = alTop
+    TabOrder = 9
+    ExplicitLeft = 8
+    object cxLabel4: TcxLabel
+      Left = 3
+      Top = 3
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edUnitName_search: TcxTextEdit
+      Left = 121
+      Top = 4
+      TabOrder = 1
+      DesignSize = (
+        120
+        21)
+      Width = 120
+    end
+    object cxLabel5: TcxLabel
+      Left = 247
+      Top = 3
+      Caption = #1060#1048#1054':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edMemberName_search: TcxTextEdit
+      Left = 286
+      Top = 4
+      TabOrder = 3
+      DesignSize = (
+        120
+        21)
+      Width = 120
+    end
+    object edPositionName_search: TcxTextEdit
+      Left = 499
+      Top = 4
+      TabOrder = 4
+      DesignSize = (
+        120
+        21)
+      Width = 120
+    end
+    object cxLabel7: TcxLabel
+      Left = 412
+      Top = 3
+      Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object cxLabel1: TcxLabel
+      Left = 627
+      Top = 3
+      Caption = #1056#1072#1079#1088#1103#1076':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edPositionLevel_serch: TcxTextEdit
+      Left = 682
+      Top = 4
+      TabOrder = 7
+      DesignSize = (
+        120
+        21)
+      Width = 120
+    end
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -215,8 +308,8 @@ object Personal_ChoiceForm: TPersonal_ChoiceForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 288
-    Top = 104
+    Left = 344
+    Top = 96
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -235,7 +328,7 @@ object Personal_ChoiceForm: TPersonal_ChoiceForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 168
+    Left = 208
     Top = 104
     DockControlHeights = (
       0
@@ -493,6 +586,148 @@ object Personal_ChoiceForm: TPersonal_ChoiceForm
           Component = ClientDataSet
           ComponentItem = 'PersonalServiceListName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionLevelId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PositionLevelId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionLevelName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PositionLevelName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalGroupId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalGroupId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalGroupName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalGroupName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalServiceListOfficialId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalServiceListOfficialId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalServiceListOfficialName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalServiceListOfficialName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ServiceListId_AvanceF2'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ServiceListId_AvanceF2'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ServiceListName_AvanceF2'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ServiceListName_AvanceF2'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ServiceListCardSecondId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ServiceListCardSecondId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ServiceListCardSecondName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ServiceListCardSecondName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SheetWorkTimeId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'SheetWorkTimeId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SheetWorkTimeName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'SheetWorkTimeName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StorageLineId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'StorageLineId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StorageLineName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'StorageLineName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Member_ReferId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Member_ReferId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Member_ReferName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Member_ReferName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Member_MentorId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Member_MentorId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Member_MentorName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Member_MentorName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MemberId'
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -764,5 +999,30 @@ object Personal_ChoiceForm: TPersonal_ChoiceForm
     PackSize = 1
     Left = 168
     Top = 224
+  end
+  object FieldFilter: TdsdFieldFilter
+    TextEdit = edUnitName_search
+    DataSet = ClientDataSet
+    Column = UnitName
+    ColumnList = <
+      item
+        Column = UnitName
+      end
+      item
+        Column = MemberName
+        TextEdit = edMemberName_search
+      end
+      item
+        Column = PositionName
+        TextEdit = edPositionName_search
+      end
+      item
+        Column = PositionLevelName
+        TextEdit = edPositionLevel_serch
+      end>
+    ActionNumber1 = dsdChoiceGuides
+    CheckBoxList = <>
+    Left = 704
+    Top = 152
   end
 end
