@@ -19,7 +19,7 @@ BEGIN
 
 
      -- –ÂÁÛÎ¸Ú‡Ú
-     SELECT CASE WHEN ObjectLink_PersonalServiceList_Bank.ChildObjectId = 6314382 -- œ¿“ "¡¿Õ  ¬Œ—“Œ " -- 76968
+     SELECT CASE WHEN ObjectLink_PersonalServiceList_Bank.ChildObjectId IN (76968, 6314382) -- ¿“ VST BANK + œ¿“ "¡¿Õ  ¬Œ—“Œ " -- 76968
                   AND ObjectLink_PersonalServiceList_PSLExportKind.ChildObjectId = zc_Enum_PSLExportKind_iBank()
                       THEN 'Vostok_'
                  WHEN ObjectLink_PersonalServiceList_PSLExportKind.ChildObjectId = zc_Enum_PSLExportKind_iBank()
@@ -29,7 +29,7 @@ BEGIN
                       THEN 'OTP_'
                  ELSE ''
             END AS FileNamePrefix
-          , CASE WHEN ObjectLink_PersonalServiceList_Bank.ChildObjectId = 6314382 -- œ¿“ "¡¿Õ  ¬Œ—“Œ "
+          , CASE WHEN ObjectLink_PersonalServiceList_Bank.ChildObjectId IN (76968, 6314382) -- ¿“ VST BANK + œ¿“ "¡¿Õ  ¬Œ—“Œ "
                   AND ObjectLink_PersonalServiceList_PSLExportKind.ChildObjectId = zc_Enum_PSLExportKind_iBank()
                       THEN '.txt'
                  WHEN ObjectLink_PersonalServiceList_PSLExportKind.ChildObjectId = zc_Enum_PSLExportKind_iBank()
