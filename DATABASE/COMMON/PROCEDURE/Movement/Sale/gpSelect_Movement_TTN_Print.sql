@@ -71,6 +71,7 @@ BEGIN
 
 
      IF TRIM (COALESCE (vbMemberName1_check, '')) = ''
+         -- включено для MemberName1 or PersonalDriverName
          AND 1=1
          AND vbUserId <> zc_Enum_Process_Auto_PrimeCost()
      THEN
