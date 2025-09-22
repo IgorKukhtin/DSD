@@ -25,24 +25,25 @@ $BODY$
   DECLARE vbMeasureId        Integer;
   DECLARE vbMeasureParentId  Integer;
   DECLARE vbDiscountPartnerId Integer;
+  DECLARE vbCount             Integer;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpGetUserBySession (inSession);
+   -- проверка прав пользователя на вызов процедуры
+   vbUserId:= lpGetUserBySession (inSession);
 
-     -- RAISE EXCEPTION 'Ошибка. inArticle = <%>  Не найден.', inArticle;
+   -- RAISE EXCEPTION 'Ошибка. inArticle = <%>  Не найден.', inArticle;
 
-    -- Eсли нет цены - выход
-    IF COALESCE (inAmount, 0) = 0
-    THEN
-        RETURN;
-    END IF;
+   -- Eсли нет цены - выход
+   IF COALESCE (inAmount, 0) = 0
+   THEN
+       RETURN;
+   END IF;
 
-    -- Проверка - Eсли не нашли
-    IF COALESCE (inPartnerId, 0) = 0
-    THEN
-         RAISE EXCEPTION 'Ошибка.Не выбран Поставщик';
-    END IF;
-
+   -- Проверка - Eсли не нашли
+   IF COALESCE (inPartnerId, 0) = 0
+   THEN
+        RAISE EXCEPTION 'Ошибка.Не выбран Поставщик';
+   END IF;
+    
 
    IF COALESCE (inMeasureName,'')<> ''
    THEN
@@ -99,7 +100,11 @@ BEGIN
 
    IF COALESCE (inArticle,'') <> ''
    THEN
-          -- поиск в спр. товара
+  
+        -- Проверка
+        vbCount:= (SELECT COUNT(*) FROM ObjectString AS OS WHERE OS.ValueData ILIKE inArticle AND OS.DescId = zc_ObjectString_Article());
+
+        -- поиск в спр. товара
           vbGoodsId := (SELECT ObjectString_Article.ObjectId
                         FROM ObjectString AS ObjectString_Article
                              INNER JOIN Object ON Object.Id       = ObjectString_Article.ObjectId
@@ -240,6 +245,20 @@ BEGIN
                                                                    , inisOutlet          := FALSE         ::Boolean
                                                                    , inUserId            := vbUserId      :: Integer
                                                                     );
+
+        -- Проверка
+        IF vbCount < (SELECT COUNT(*) FROM ObjectString AS OS WHERE OS.ValueData ILIKE inArticle AND OS.DescId = zc_ObjectString_Article())
+           AND vbCount > 0 
+        THEN
+            RAISE EXCEPTION 'Ошибка.Дублирование Article = <%> (%) (%) % <%>'
+                           , inArticle
+                           , vbCount
+                           , (SELECT COUNT(*) FROM ObjectString AS OS WHERE OS.ValueData ILIKE inArticle AND OS.DescId = zc_ObjectString_Article())
+                           , CHR (13)
+                           , inGoodsName
+                            ;
+        END IF;
+
      END IF;
 
 END;
