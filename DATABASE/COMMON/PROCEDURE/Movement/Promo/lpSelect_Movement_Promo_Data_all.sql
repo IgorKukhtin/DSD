@@ -51,24 +51,37 @@ BEGIN
                                                    AND MI_Child.ObjectId = zc_Enum_ConditionPromo_ContractChangePercentOff() -- без учета % скидки по договору
                                                    AND MI_Child.isErased   = FALSE
                       )
+
+       , tmpMovement_promo AS (SELECT Movement_PromoPartner.*
+                               FROM Movement AS Movement_PromoPartner
+                               WHERE Movement_PromoPartner.ParentId IN (SELECT DISTINCT tmpMovement.MovementId FROM tmpMovement)
+                               --AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
+                                 AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
+                              )
+
+       , tmpMLO_promo AS (SELECT MovementLinkObject.*
+                          FROM MovementLinkObject
+                          WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement_promo.Id FROM tmpMovement_promo)
+                         )
+
        , tmpPartner_all AS 
                       (SELECT tmpMovement.MovementId
                             , tmpMovement.MovementPromo
                             , COALESCE (MLO_Partner.ObjectId, 0) AS ObjectId
                             , Object_by.DescId                   AS ObjectDescId
                        FROM tmpMovement
-                            INNER JOIN Movement AS Movement_PromoPartner
-                                                ON Movement_PromoPartner.ParentId = tmpMovement.MovementId
-                                               AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
-                                               AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
-                            LEFT JOIN MovementLinkObject AS MLO_Partner
+                            INNER JOIN tmpMovement_promo AS Movement_PromoPartner
+                                                         ON Movement_PromoPartner.ParentId = tmpMovement.MovementId
+                                                        AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
+                                                        AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
+                            LEFT JOIN tmpMLO_promo AS MLO_Partner
                                                          ON MLO_Partner.MovementId = Movement_PromoPartner.Id
                                                         AND MLO_Partner.DescId     = zc_MovementLinkObject_Partner()
                             LEFT JOIN Object AS Object_by ON Object_by.Id = MLO_Partner.ObjectId
-                            LEFT JOIN MovementLinkObject AS MLO_Contract
+                            LEFT JOIN tmpMLO_promo AS MLO_Contract
                                                          ON MLO_Contract.MovementId = Movement_PromoPartner.Id
                                                         AND MLO_Contract.DescId     = zc_MovementLinkObject_Contract()
-                            LEFT JOIN MovementLinkObject AS MLO_Unit
+                            LEFT JOIN tmpMLO_promo AS MLO_Unit
                                                          ON MLO_Unit.MovementId = tmpMovement.MovementId
                                                         AND MLO_Unit.DescId = zc_MovementLinkObject_Unit()
                        WHERE (MLO_Contract.ObjectId = inContractId OR COALESCE (MLO_Contract.ObjectId, 0) = 0)
