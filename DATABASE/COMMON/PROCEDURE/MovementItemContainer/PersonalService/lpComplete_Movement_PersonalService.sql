@@ -54,6 +54,7 @@ BEGIN
      AND NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = vbPersonalServiceListId AND OB.DescId = zc_ObjectBoolean_PersonalServiceList_Detail() AND OB.ValueData = TRUE)
      AND NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = vbPersonalServiceListId AND OL.DescId = zc_ObjectLink_PersonalServiceList_PaidKind() AND OL.ChildObjectId = zc_Enum_PaidKind_FirstForm())
      AND vbPersonalServiceListId <> 1064330 -- Відомість 1.Лікарняні за рахунок ПФ
+     AND NOT EXISTS (SELECT 1 FROM Object  WHERE Object.Id = vbPersonalServiceListId AND Object.ValueData NOT ILIKE '%Лікарняні за рахунок ПФ%')
      THEN
          PERFORM lpUpdate_MI_PersonalService_SummAuditAdd (inMovementId, vbPersonalServiceListId, inUserId);
 
