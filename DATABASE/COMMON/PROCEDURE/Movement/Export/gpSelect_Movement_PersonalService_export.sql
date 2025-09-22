@@ -221,7 +221,7 @@ BEGIN
 	-- INSERT INTO _tmpResult (NPP, RowData) VALUES (-60, 'PAYER_BANK_ACCOUNT=29244006');
 
 	-- Период начисления
-        IF vbBankId IN (76968, 6314382) -- ПАТ "БАНК ВОСТОК"
+        IF vbBankId IN (76968, 6314382) -- АТ VST BANK + ПАТ "БАНК ВОСТОК"
         THEN
             -- INSERT INTO _tmpResult (NPP, RowData) VALUES (-10, 'PERIOD='||TO_CHAR(NOW(), 'TMMonth yyyy'));
             INSERT INTO _tmpResult (NPP, RowData) VALUES (-10, 'PERIOD=0' || EXTRACT (MONTH FROM CURRENT_DATE) :: TVarChar || ',' || EXTRACT (YEAR FROM CURRENT_DATE) :: TVarChar);
@@ -231,7 +231,10 @@ BEGIN
 	-- *** Строчный вывод
 	i := 0; -- обнуляем автонумерацию
 	FOR r IN (-- SELECT gpSelect.card
-	          SELECT CASE WHEN vbBankId IN (76968, 6314382) THEN SUBSTRING (gpSelect.card FROM char_length(gpSelect.card) - 13 for 14 ) ELSE gpSelect.card END AS card
+	          SELECT CASE WHEN vbBankId IN (76968, 6314382) -- АТ VST BANK + ПАТ "БАНК ВОСТОК"
+                                   THEN SUBSTRING (gpSelect.card FROM char_length(gpSelect.card) - 13 for 14 ) 
+                              ELSE gpSelect.card
+                         END AS card
 	               , gpSelect.personalname
 	               , TRIM (gpSelect.INN) AS INN
 	               , COALESCE (gpSelect.SummCardRecalc, 0) + COALESCE (gpSelect.SummHosp, 0) AS SummCardRecalc
