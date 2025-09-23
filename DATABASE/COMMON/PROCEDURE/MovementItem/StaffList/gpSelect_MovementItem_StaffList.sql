@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_StaffList(
 )
 RETURNS TABLE (Id                   Integer
              , PositionId           Integer
+             , PositionCode         Integer
              , PositionName         TVarChar
              , PositionLevelId      Integer
              , PositionLevelName    TVarChar
@@ -89,6 +90,7 @@ BEGIN
                             LEFT JOIN zfCalc_DayOfWeekName (tmpDate.OperDate) AS tmpWeekDay ON 1=1
                        )
           , tmpStaffList_object AS (SELECT tmp.PositionId
+                                          , tmp.PositionCode
                                           , tmp.PositionName
                                           , tmp.PositionLevelId
                                           , tmp.PositionLevelName
@@ -202,6 +204,7 @@ BEGIN
        -- Результат
        SELECT 0                  AS Id
             , tmp.PositionId
+            , tmp.PositionCode
             , tmp.PositionName
             , tmp.PositionLevelId
             , tmp.PositionLevelName
@@ -248,6 +251,7 @@ BEGIN
      UNION
        SELECT MovementItem.Id                               AS Id
             , Object_Position.Id                            AS PositionId
+            , Object_Position.ObjectCode                    AS PositionCode
             , Object_Position.ValueData                     AS PositionName
             , Object_PositionLevel.Id                       AS PositionLevelId
             , Object_PositionLevel.ValueData                AS PositionLevelName

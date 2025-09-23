@@ -79,6 +79,8 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Object_Goods());
      vbUserId:= lpGetUserBySession (inSession);
+     
+     -- IF vbUserId = 5 THEN inShowAll:= TRUE; END IF;
 
 
      -- Определили
@@ -149,6 +151,7 @@ BEGIN
                                    AND Object.isErased = FALSE
                                  GROUP BY ObjectLink_GoodsArticle_Goods.ChildObjectId
                                  )
+             -- ошибка - Article
            , tmpGoods_err_1 AS (SELECT LOWER (ObjectString_Article.ValueData) AS Article
                                 FROM Object AS Object_Goods
                                      JOIN ObjectString AS ObjectString_Article
@@ -157,18 +160,24 @@ BEGIN
                                                       AND ObjectString_Article.ValueData <> ''
                                 WHERE Object_Goods.DescId   = zc_Object_Goods()
                                   AND Object_Goods.isErased = FALSE
+                                  -- когда ВСЕ
+                                  AND inIsLimit_100 = FALSE
                                 GROUP BY LOWER (ObjectString_Article.ValueData)
                                 HAVING COUNT (*) > 1
                                )
+             -- ошибка - GoodsCode
            , tmpGoods_err_2 AS (SELECT Object_Goods.ObjectCode AS GoodsCode
                                 FROM Object AS Object_Goods
                                 WHERE Object_Goods.DescId     = zc_Object_Goods()
                                   AND Object_Goods.ObjectCode <> 0
                                 --AND Object_Goods.isErased = FALSE
                                 --AND 1=0
+                                  -- когда ВСЕ
+                                  AND inIsLimit_100 = FALSE
                                 GROUP BY Object_Goods.ObjectCode
                                 HAVING COUNT (*) > 1
                                )
+             -- ошибка - EAN
            , tmpGoods_err_3 AS (SELECT ObjectString_EAN.ValueData AS EAN
                                 FROM Object AS Object_Goods
                                      JOIN ObjectString AS ObjectString_EAN
@@ -177,11 +186,12 @@ BEGIN
                                                       AND ObjectString_EAN.ValueData <> ''
                                 WHERE Object_Goods.DescId   = zc_Object_Goods()
                                   AND Object_Goods.isErased = FALSE
-                                --AND 1=0
+                                  -- когда ВСЕ
+                                  AND inIsLimit_100 = FALSE
                                 GROUP BY ObjectString_EAN.ValueData
                                 HAVING COUNT (*) > 1
                                )
-          -- все
+          -- все что в сборке
         , tmpReceiptGoods AS (SELECT Object_ReceiptGoods_find_View.GoodsId
                                      -- это узел (да/нет)
                                    , Object_ReceiptGoods_find_View.isReceiptGoods_group
@@ -208,33 +218,56 @@ BEGIN
                                    , Object_ReceiptGoods_find_View.UnitName_parent_receipt
             
                               FROM Object_ReceiptGoods_find_View
+                              -- когда ВСЕ
+                              WHERE inIsLimit_100 = FALSE
                              )
+           -- !!!или все или 100!!!
          , tmpGoods_limit AS (SELECT Object_Goods.*
                               FROM Object AS Object_Goods
+                                   LEFT JOIN ObjectBoolean AS ObjectBoolean_Arc
+                                                           ON ObjectBoolean_Arc.ObjectId = Object_Goods.Id
+                                                          AND ObjectBoolean_Arc.DescId = zc_ObjectBoolean_Goods_Arc()
                               WHERE Object_Goods.DescId = zc_Object_Goods()
                               --AND Object_Goods.isErased = FALSE
                                 AND (Object_Goods.isErased = FALSE OR inShowAll = TRUE)
+                                -- нет дублей
+                                AND ((ObjectBoolean_Arc.ValueData = TRUE AND vbUserId = 5 AND inShowAll = TRUE AND 1=0)
+                                  OR ObjectBoolean_Arc.ValueData = FALSE
+                                    )
                                 --AND (Object_Goods.ObjectCode < 0 or vbUserId <> 5)
                             --ORDER BY Object_Goods.Id ASC
                               ORDER BY CASE WHEN vbUserId = 5 AND 1=0 THEN Object_Goods.Id ELSE 0 END ASC, Object_Goods.Id DESC
                               LIMIT CASE WHEN inIsLimit_100 = TRUE THEN 100 WHEN vbUserId = 5 AND 1=0 THEN 20000 ELSE 350000 END
                              )
-         , tmpGoods AS (SELECT tmpGoods_limit.*
+         , tmpGoods AS (-- здесь ВСЕ или 100
+                        SELECT tmpGoods_limit.*
                         FROM tmpGoods_limit
+
                        UNION
+                        -- эти всегда
                         SELECT Object_Goods.*
                         FROM Object AS Object_Goods
                         WHERE Object_Goods.DescId = zc_Object_Goods()
+                          -- если есть в сборке
                           AND Object_Goods.Id IN (SELECT DISTINCT tmpReceiptGoods.GoodsId FROM tmpReceiptGoods)
+                          -- когда ВСЕ
                           AND inIsLimit_100 = FALSE
 
                        UNION
+                        -- эти всегда
                         SELECT Object_Goods.*
                         FROM Object AS Object_Goods
                              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                                   ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                                                  AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
                              LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
+                             -- нет дублей
+                             INNER JOIN ObjectBoolean AS ObjectBoolean_Arc
+                                                      ON ObjectBoolean_Arc.ObjectId  = Object_Goods.Id
+                                                     AND ObjectBoolean_Arc.DescId    = zc_ObjectBoolean_Goods_Arc()
+                                                     AND ObjectBoolean_Arc.ValueData = FALSE
+
                              INNER JOIN ObjectString AS ObjectString_Article
                                                      ON ObjectString_Article.ObjectId = Object_Goods.Id
                                                     AND ObjectString_Article.DescId = zc_ObjectString_Article()
@@ -255,9 +288,13 @@ BEGIN
                                                         )
                                                   --AND Object_Goods.ObjectCode < 0
                         WHERE Object_Goods.DescId = zc_Object_Goods()
-                        --AND inIsLimit_100 = TRUE
+                          -- когда только 100
+                          --AND inIsLimit_100 = TRUE
+                          -- когда все
                           AND inIsLimit_100 = FALSE
+
                        UNION
+                        -- все что в сборке - в Заказе Клиента
                         SELECT DISTINCT Object_Goods.*
                         FROM Movement
                              INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
@@ -265,42 +302,45 @@ BEGIN
                              INNER JOIN Object AS Object_Goods
                                                ON Object_Goods.Id     = MovementItem.ObjectId
                                               AND Object_Goods.DescId = zc_Object_Goods()
-                        WHERE Movement.DescId = zc_Movement_OrderClient()
+
+                        WHERE Movement.DescId   = zc_Movement_OrderClient()
+                          AND Movement.StatusId = zc_Enum_Status_Complete()
+                          -- когда все
                           AND inIsLimit_100 = FALSE
                         --AND vbUserId = 5
                         --AND inIsLimit_100 = TRUE
                         --AND 1=0
                        )
-           --текущие остатки
+           -- текущие остатки
          , tmpRemains AS (SELECT Container.ObjectId            AS GoodsId
-                               --, Container.WhereObjectId       AS UnitId
-                               , Sum(Container.Amount)::TFloat AS Remains
+                             --, Container.WhereObjectId       AS UnitId
+                               , SUM (Container.Amount)        AS Remains
                           FROM Container
                           WHERE Container.WhereObjectId = 35139 -- Склад Основной
                             AND Container.DescId        = zc_Container_Count()
                             AND Container.ObjectId IN (SELECT DISTINCT tmpGoods.Id FROM tmpGoods)
                             AND Container.Amount <> 0
                           GROUP BY Container.ObjectId
-                                 --, Container.WhereObjectId
-                          HAVING Sum(Container.Amount) <> 0
+                               --, Container.WhereObjectId
+                          HAVING SUM (Container.Amount) <> 0
                          )
 
        -- Результат
        SELECT Object_Goods.Id                     AS Id
             , Object_Goods.ObjectCode             AS Code
               --
-            , Object_Goods.ValueData              AS Name
-            , zfCalc_GoodsName_all (ObjectString_Article.ValueData, Object_Goods.ValueData) AS Name_all
+            , LEFT (Object_Goods.ValueData, 124) :: TVarChar AS Name
+            , LEFT (zfCalc_GoodsName_all (ObjectString_Article.ValueData, Object_Goods.ValueData), 124) :: TVarChar AS Name_all
               --
             , ObjectString_Article.ValueData      AS Article
             , zfCalc_Article_all (COALESCE (ObjectString_Article.ValueData, '') || '_' || COALESCE (ObjectString_ArticleVergl.ValueData, '')) ::TVarChar AS Article_all
               --
             , (CASE WHEN tmpGoods_err_1.Article   IS NOT NULL
-                         THEN '**a*'
+                         THEN '**a-1*'
                     WHEN tmpGoods_err_2.GoodsCode IS NOT NULL
-                         THEN '**c*'
+                         THEN '**c-2*'
                     WHEN tmpGoods_err_3.EAN       IS NOT NULL
-                         THEN '**e*'
+                         THEN '**e-3*'
                     ELSE ''
                END || COALESCE (ObjectString_ArticleVergl.ValueData, '')) :: TVarChar AS ArticleVergl
               -- Артикул Комплектующие (в загрузке прайсов)
@@ -327,7 +367,7 @@ BEGIN
             , ObjectString_MatchCode.ValueData      AS MatchCode
             , ObjectString_FeeNumber.ValueData      AS FeeNumber
             , ObjectString_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-            , ObjectString_Comment.ValueData        AS Comment
+            , LEFT (ObjectString_Comment.ValueData, 124) :: TVarChar        AS Comment
 
             , ObjectDate_PartnerDate.ValueData  :: TDateTime AS PartnerDate
 
@@ -683,7 +723,8 @@ BEGIN
         --WHERE ObjectString_Article.ValueData ILIKE 'AGL%'
 
         ORDER BY Object_Goods.Id  desc
-        --LIMIT 197022
+        -- LIMIT 197022
+        -- LIMIT CASE WHEN vbUserId = 5 THEN  185000 else 300000 end
             ;
 
 END;

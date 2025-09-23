@@ -1900,7 +1900,10 @@ BEGIN
                                                                       AND Container_Summ.DescId = zc_Container_Summ()
                            WHERE ContainerId_Goods_Alternative <> 0
                              AND InfoMoneyDestinationId        <> zc_Enum_InfoMoneyDestination_20500() -- 20500; "Оборотная тара"
-                             AND vbPartnerId_To = 0 -- !!!если НЕ возврат от Контрагента -> Контрагенту!!!
+                             -- !!!если НЕ возврат от Контрагента -> Контрагенту!!!
+                             AND vbPartnerId_To = 0
+                             --
+                             AND (vbUnitId_HistoryCost = 0 OR vbUnitId_HistoryCost = vbUnitId_To)
      ;
      -- начало цикла по курсору
      LOOP
@@ -1981,11 +1984,11 @@ BEGIN
             , 0 AS ContainerId_Transit -- Счет Транзит, определим позже
               -- с/с1 - для количества: приход на остаток
             , SUM (CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0)
-                       * CASE WHEN vbUnitId_HistoryCost > 0 AND vbUnitId_HistoryCost <> vbUnitId_To THEN 0.2 ELSE 1 END
+                       * CASE WHEN vbUnitId_HistoryCost > 0 AND vbUnitId_HistoryCost <> vbUnitId_To THEN 0 /*0.2*/ ELSE 1 END
                         AS NUMERIC (16,4))) AS OperSumm
               -- с/с2 - для количества: контрагента
             , SUM (CAST (_tmpItem.OperCount_Partner * COALESCE (HistoryCost.Price, 0)
-                       * CASE WHEN vbUnitId_HistoryCost > 0 AND vbUnitId_HistoryCost <> vbUnitId_To THEN 0.2 ELSE 1 END
+                       * CASE WHEN vbUnitId_HistoryCost > 0 AND vbUnitId_HistoryCost <> vbUnitId_To THEN 0 /*0.2*/ ELSE 1 END
                         AS NUMERIC (16,4))) AS OperSumm_Partner
         FROM _tmpItem
              -- так находим для тары
@@ -2005,10 +2008,12 @@ BEGIN
                                       ON ContainerObjectCost_Basis.ContainerId = COALESCE (lfContainerSumm_20901.ContainerId, Container_Summ.Id)
                                      AND ContainerObjectCost_Basis.ObjectCostDescId = zc_ObjectCost_Basis()*/
              LEFT JOIN HistoryCost ON HistoryCost.ContainerId = CASE WHEN vbUnitId_HistoryCost > 0 AND vbUnitId_HistoryCost <> vbUnitId_To
+                                                                     THEN 0
+                                                                     /*WHEN vbUnitId_HistoryCost > 0 AND vbUnitId_HistoryCost <> vbUnitId_To
                                                                       AND (vbOperDate < '01.01.2022' OR vbOperDatePartner < '01.01.2022')
                                                                      THEN 0
                                                                      WHEN (vbUnitId_HistoryCost > 0 AND vbUnitId_HistoryCost <> vbUnitId_To)
-                                                                     THEN Container_Summ_Alternative.Id
+                                                                     THEN Container_Summ_Alternative.Id*/
                                                                      ELSE COALESCE (lfContainerSumm_20901.ContainerId, Container_Summ_Alternative.Id, Container_Summ.Id) -- HistoryCost.ObjectCostId = ContainerObjectCost_Basis.ObjectCostId
                                                                 END
                                    AND CASE WHEN DATE_TRUNC ('MONTH', vbOperDatePartner) < DATE_TRUNC ('MONTH', vbOperDate)
@@ -2166,11 +2171,11 @@ BEGIN
          -- с/с РК
          UPDATE _tmpItemSumm SET -- с/с1 - для количества: приход на остаток
                                  OperSumm               = CAST (tmpList.OperCount * tmpList.Price
-                                                              * CASE WHEN vbUnitId_HistoryCost > 0 AND vbUnitId_HistoryCost <> vbUnitId_To THEN 0.2 ELSE 1 END
+                                                              * CASE WHEN vbUnitId_HistoryCost > 0 AND vbUnitId_HistoryCost <> vbUnitId_To THEN 0 /*0.2*/ ELSE 1 END
                                                                 AS NUMERIC (16,4))
                                  -- с/с2 - для количества: контрагента
                                , OperSumm_Partner       = CAST (tmpList.OperCount_Partner * tmpList.Price
-                                                              * CASE WHEN vbUnitId_HistoryCost > 0 AND vbUnitId_HistoryCost <> vbUnitId_To THEN 0.2 ELSE 1 END
+                                                              * CASE WHEN vbUnitId_HistoryCost > 0 AND vbUnitId_HistoryCost <> vbUnitId_To THEN 0 /*0.2*/ ELSE 1 END
                                                                 AS NUMERIC (16,4))
 
          FROM (WITH tmpList AS (SELECT DISTINCT _tmpItem.GoodsId, _tmpItem.GoodsKindId

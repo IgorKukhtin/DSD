@@ -103,6 +103,7 @@ type
     macInsertMI_byMovement: TMultiAction;
     bbInsertMI_byMovement: TdxBarButton;
     actRefreshGet: TdsdDataSetRefresh;
+    PositionCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -77,7 +77,17 @@ BEGIN
                                                           AND Movement.OperDate BETWEEN inOperDate - INTERVAL '5 DAY' AND inOperDate + INTERVAL '5 DAY'
                                                         --AND Movement.StatusId <> zc_Enum_Status_Erased()
                               );
-     vbMovementDescId_Transport:= (SELECT Movement.DescId FROM Movement WHERE Movement.Id = vbMovementId_Transport);
+
+    -- Проверка
+    IF COALESCE (inMemberId1, 0) = 0 AND 1=0
+    THEN
+        -- Отримав водій/експедитор
+        RAISE EXCEPTION 'Ошибка.Не установлено значение <ФИО (Водитель)>.'
+                       ;
+    END IF;
+
+    --
+    vbMovementDescId_Transport:= (SELECT Movement.DescId FROM Movement WHERE Movement.Id = vbMovementId_Transport);
                               
     -- Проверка
     IF COALESCE (vbMovementId_Transport, 0) = 0 AND TRIM (inBarCode) <> ''
@@ -176,8 +186,10 @@ BEGIN
      END IF;
 
 
-     IF COALESCE (vbMovementId_Transport, 0) = 0 AND TRIM (inPersonalDriverName) <> ''
-        AND NOT EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inPersonalDriverId AND Object.DescId = zc_Object_Personal() AND Object.ValueData = inPersonalDriverName)
+     IF -- ????? COALESCE (vbMovementId_Transport, 0) = 0 AND
+           TRIM (inPersonalDriverName) <> ''
+       AND NOT EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inPersonalDriverId AND Object.DescId = zc_Object_Personal() AND Object.ValueData = inPersonalDriverName)
+       AND (COALESCE (inPersonalDriverId, 0) = 0 OR COALESCE (vbMovementId_Transport, 0) = 0)
      THEN
          -- нашли <Сотрудник (водитель)>
          inPersonalDriverId:= (SELECT Object_MemberExternal.Id FROM Object AS Object_MemberExternal WHERE Object_MemberExternal.ValueData = TRIM (inPersonalDriverName) AND Object_MemberExternal.DescId = zc_Object_MemberExternal());

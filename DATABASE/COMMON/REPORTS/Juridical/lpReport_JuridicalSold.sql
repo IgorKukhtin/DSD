@@ -755,6 +755,7 @@ BEGIN
            LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = tmpContract.ContractConditionKindId
 
           LEFT JOIN Object AS Object_PartionMovement ON Object_PartionMovement.Id = Operation.PartionMovementId
+          -- Плановая дата оплаты по накладной - партионный учет долгов
           LEFT JOIN ObjectDate AS ObjectDate_PartionMovement_Payment
                                ON ObjectDate_PartionMovement_Payment.ObjectId = Operation.PartionMovementId
                               AND ObjectDate_PartionMovement_Payment.DescId = zc_ObjectDate_PartionMovement_Payment()

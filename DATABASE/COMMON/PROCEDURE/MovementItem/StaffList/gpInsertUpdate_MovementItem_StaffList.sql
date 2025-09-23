@@ -42,7 +42,7 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_StaffList());
 
      --пробуем найти элемент справочника, нсли не находим, тогда сохран€ем новый
-     vbStaffHoursDayId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_StaffHoursDay() AND TRIM ( UPPER (Object.ValueData)) = TRIM (UPPER (inStaffHoursDayName)));
+     vbStaffHoursDayId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_StaffHoursDay() AND TRIM (Object.ValueData) ILIKE TRIM (inStaffHoursDayName) LIMIT 1);
      IF COALESCE (vbStaffHoursDayId,0) = 0 
      THEN 
          -- не нашли —охран€ем 
@@ -55,7 +55,7 @@ BEGIN
      END IF; 
 
      -- пробуем найти элемент справочника, нсли не находим, тогда сохран€ем новый
-     vbStaffHoursId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_StaffHours() AND TRIM ( UPPER (Object.ValueData)) = TRIM (UPPER (inStaffHoursName)));
+     vbStaffHoursId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_StaffHours() AND TRIM (Object.ValueData) ILIKE TRIM (inStaffHoursName) LIMIT 1);
      IF COALESCE (vbStaffHoursId,0) = 0 
      THEN 
          -- не нашли —охран€ем 
@@ -73,7 +73,7 @@ BEGIN
          inStaffHoursLengthName:= '0';
      END IF;
      -- пробуем найти элемент справочника, нсли не находим, тогда сохран€ем новый
-     vbStaffHoursLengthId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_StaffHoursLength() AND TRIM ( UPPER (Object.ValueData)) = TRIM (UPPER (inStaffHoursLengthName)));
+     vbStaffHoursLengthId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_StaffHoursLength() AND TRIM (Object.ValueData) ILIKE TRIM (inStaffHoursLengthName) LIMIT 1);
      IF COALESCE (vbStaffHoursLengthId,0) = 0 
      THEN 
          -- не нашли —охран€ем 
