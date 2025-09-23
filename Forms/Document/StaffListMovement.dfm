@@ -2,6 +2,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1064#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077' ('#1080#1079#1084#1077#1085#1077#1085#1080#1103')>'
   ClientHeight = 564
   ClientWidth = 1153
+  ExplicitTop = -76
   ExplicitWidth = 1169
   ExplicitHeight = 603
   PixelsPerInch = 96
@@ -119,7 +120,15 @@ inherited StaffListMovementForm: TStaffListMovementForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object PositionName: TcxGridDBColumn [0]
+          object PositionCode: TcxGridDBColumn [0]
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'PositionCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object PositionName: TcxGridDBColumn [1]
             Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
             DataBinding.FieldName = 'PositionName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -134,7 +143,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 222
           end
-          object PositionLevelName: TcxGridDBColumn [1]
+          object PositionLevelName: TcxGridDBColumn [2]
             Caption = #1056#1072#1079#1088#1103#1076
             DataBinding.FieldName = 'PositionLevelName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -144,12 +153,12 @@ inherited StaffListMovementForm: TStaffListMovementForm
                 Default = True
                 Kind = bkEllipsis
               end>
-            Properties.ReadOnly = False
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object StaffHoursDayName: TcxGridDBColumn [2]
+          object StaffHoursDayName: TcxGridDBColumn [3]
             Caption = #1043#1088#1072#1092#1080#1082' '#1088#1072#1073#1086#1090#1099
             DataBinding.FieldName = 'StaffHoursDayName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -163,7 +172,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 79
           end
-          object AmountReport: TcxGridDBColumn [3]
+          object AmountReport: TcxGridDBColumn [4]
             Caption = #1064#1056' '#1076#1083#1103' '#1086#1090#1095#1077#1090#1072
             DataBinding.FieldName = 'AmountReport'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -171,7 +180,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object Amount: TcxGridDBColumn [4]
+          object Amount: TcxGridDBColumn [5]
             Caption = #1064#1056' '#1076#1083#1103' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -182,7 +191,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
             HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1096#1090#1072#1090#1085#1080#1093' '#1086#1076#1080#1085#1080#1094#1100
             Width = 70
           end
-          object StaffHoursName: TcxGridDBColumn [5]
+          object StaffHoursName: TcxGridDBColumn [6]
             Caption = #1063#1072#1089#1099' '#1088#1072#1073#1086#1090#1099
             DataBinding.FieldName = 'StaffHoursName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -196,7 +205,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 83
           end
-          object StaffHoursLengthName: TcxGridDBColumn [6]
+          object StaffHoursLengthName: TcxGridDBColumn [7]
             Caption = #1055#1088#1086#1076'. '#1089#1084#1077#1085#1099', '#1095#1072#1089#1099' '#9
             DataBinding.FieldName = 'StaffHoursLengthName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -211,7 +220,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
             HeaderHint = #1055#1088#1086#1076#1086#1083#1078#1080#1090#1077#1083#1100#1085#1086#1089#1090#1100' '#1089#1084#1077#1085#1099', '#1095#1072#1089#1099' '#9
             Width = 59
           end
-          object StaffCount_1: TcxGridDBColumn [7]
+          object StaffCount_1: TcxGridDBColumn [8]
             Caption = '1.'#1087#1085'.'
             DataBinding.FieldName = 'StaffCount_1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -222,8 +231,8 @@ inherited StaffListMovementForm: TStaffListMovementForm
             HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1096#1090#1072#1090#1085#1080#1093' '#1086#1076#1080#1085#1080#1094#1100' '#1074' '#1089#1084#1077#1085#1091' '#1087#1085'.'
             Width = 38
           end
-          object StaffCount_2: TcxGridDBColumn [8]
-            Caption = '2.'#1087#1085'.'
+          object StaffCount_2: TcxGridDBColumn [9]
+            Caption = '2.'#1074#1090'.'
             DataBinding.FieldName = 'StaffCount_2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.;-,0.; ;'
@@ -232,8 +241,8 @@ inherited StaffListMovementForm: TStaffListMovementForm
             HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1096#1090#1072#1090#1085#1080#1093' '#1086#1076#1080#1085#1080#1094#1100' '#1074' '#1089#1084#1077#1085#1091' '#1074#1090'.'
             Width = 38
           end
-          object StaffCount_3: TcxGridDBColumn [9]
-            Caption = '3.'#1087#1085'.'
+          object StaffCount_3: TcxGridDBColumn [10]
+            Caption = '3.'#1089#1088'.'
             DataBinding.FieldName = 'StaffCount_3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.;-,0.; ;'
@@ -242,8 +251,8 @@ inherited StaffListMovementForm: TStaffListMovementForm
             HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1096#1090#1072#1090#1085#1080#1093' '#1086#1076#1080#1085#1080#1094#1100' '#1074' '#1089#1084#1077#1085#1091' '#1089#1088'.'
             Width = 38
           end
-          object StaffCount_4: TcxGridDBColumn [10]
-            Caption = '4.'#1087#1085'.'
+          object StaffCount_4: TcxGridDBColumn [11]
+            Caption = '4.'#1095#1090'.'
             DataBinding.FieldName = 'StaffCount_4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.;-,0.; ;'
@@ -252,8 +261,8 @@ inherited StaffListMovementForm: TStaffListMovementForm
             HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1096#1090#1072#1090#1085#1080#1093' '#1086#1076#1080#1085#1080#1094#1100' '#1074' '#1089#1084#1077#1085#1091' '#1095#1090'.'
             Width = 38
           end
-          object StaffCount_5: TcxGridDBColumn [11]
-            Caption = '5.'#1087#1085'.'
+          object StaffCount_5: TcxGridDBColumn [12]
+            Caption = '5.'#1087#1090'.'
             DataBinding.FieldName = 'StaffCount_5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.;-,0.; ;'
@@ -262,8 +271,8 @@ inherited StaffListMovementForm: TStaffListMovementForm
             HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1096#1090#1072#1090#1085#1080#1093' '#1086#1076#1080#1085#1080#1094#1100' '#1074' '#1089#1084#1077#1085#1091' '#1087#1090'.'
             Width = 38
           end
-          object StaffCount_6: TcxGridDBColumn [12]
-            Caption = '6.'#1087#1085'.'
+          object StaffCount_6: TcxGridDBColumn [13]
+            Caption = '6.'#1089#1073'.'
             DataBinding.FieldName = 'StaffCount_6'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.;-,0.; ;'
@@ -272,8 +281,8 @@ inherited StaffListMovementForm: TStaffListMovementForm
             HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1096#1090#1072#1090#1085#1080#1093' '#1086#1076#1080#1085#1080#1094#1100' '#1074' '#1089#1084#1077#1085#1091' '#1089#1073'.'
             Width = 38
           end
-          object StaffCount_7: TcxGridDBColumn [13]
-            Caption = '7.'#1087#1085'.'
+          object StaffCount_7: TcxGridDBColumn [14]
+            Caption = '7.'#1074#1089'.'
             DataBinding.FieldName = 'StaffCount_7'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.;-,0.; ;'
@@ -282,7 +291,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
             HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1096#1090#1072#1090#1085#1080#1093' '#1086#1076#1080#1085#1080#1094#1100' '#1074' '#1089#1084#1077#1085#1091' '#1074#1089'.'
             Width = 38
           end
-          object StaffCount_Invent: TcxGridDBColumn [14]
+          object StaffCount_Invent: TcxGridDBColumn [15]
             Caption = #1048#1085#1074#1077#1085#1090'.'
             DataBinding.FieldName = 'StaffCount_Invent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -292,7 +301,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
             HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1096#1090#1072#1090#1085#1080#1093' '#1086#1076#1080#1085#1080#1094#1100' '#1074' '#1089#1084#1077#1085#1091' '#1048#1085#1072#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
             Width = 54
           end
-          object TotalStaffCount: TcxGridDBColumn [15]
+          object TotalStaffCount: TcxGridDBColumn [16]
             Caption = #1042#1089#1100#1086#1075#1086' '#1079#1084#1110#1085' '#1079#1072' '#1084#1110#1089#1103#1094#1100' '#1076#1083#1103' '#1087#1086#1089#1072#1076#1080
             DataBinding.FieldName = 'TotalStaffCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -303,7 +312,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
             Options.Editing = False
             Width = 70
           end
-          object TotalStaffHoursLength: TcxGridDBColumn [16]
+          object TotalStaffHoursLength: TcxGridDBColumn [17]
             Caption = #1060#1056#1063' ('#1092#1086#1085#1076' '#1088#1086#1073#1086#1095#1086#1075#1086' '#1095#1072#1089#1091')'
             DataBinding.FieldName = 'TotalStaffHoursLength'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -314,7 +323,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
             Options.Editing = False
             Width = 70
           end
-          object NormCount: TcxGridDBColumn [17]
+          object NormCount: TcxGridDBColumn [18]
             Caption = #1053#1086#1088#1084#1072' '#1079#1084#1110#1085' '#1076#1083#1103' 1-'#1108#1111' '#1096#1090'.'#1086#1076
             DataBinding.FieldName = 'NormCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -325,7 +334,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
             Options.Editing = False
             Width = 70
           end
-          object NormHours: TcxGridDBColumn [18]
+          object NormHours: TcxGridDBColumn [19]
             Caption = #1053#1086#1088#1084#1072' '#1095#1072#1089#1091' '#1076#1083#1103' 1-'#1108#1111' '#1096#1090'.'#1086#1076
             DataBinding.FieldName = 'NormHours'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -336,7 +345,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
             Options.Editing = False
             Width = 70
           end
-          object StaffPaidKindName: TcxGridDBColumn [19]
+          object StaffPaidKindName: TcxGridDBColumn [20]
             Caption = #1042#1080#1076' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'StaffPaidKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -351,7 +360,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 66
           end
-          object Staff_Price: TcxGridDBColumn [20]
+          object Staff_Price: TcxGridDBColumn [21]
             Caption = #1058#1072#1088#1080#1092#1080#1082#1072#1094#1080#1103
             DataBinding.FieldName = 'Staff_Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -360,7 +369,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 64
           end
-          object Staff_Summ_MK: TcxGridDBColumn [21]
+          object Staff_Summ_MK: TcxGridDBColumn [22]
             Caption = #1052#1050
             DataBinding.FieldName = 'Staff_Summ_MK'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -369,7 +378,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 65
           end
-          object Staff_Summ_real: TcxGridDBColumn [22]
+          object Staff_Summ_real: TcxGridDBColumn [23]
             Caption = #1057#1076#1077#1083#1100#1085#1072#1103' '#1086#1087#1083#1072#1090#1072
             DataBinding.FieldName = 'Staff_Summ_real'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -378,7 +387,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object Staff_Summ_add: TcxGridDBColumn [23]
+          object Staff_Summ_add: TcxGridDBColumn [24]
             Caption = #1055#1088#1077#1084#1080#1072#1083#1100#1085#1080#1081' '#1092#1086#1085#1076
             DataBinding.FieldName = 'Staff_Summ_add'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -387,7 +396,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object WageFund: TcxGridDBColumn [24]
+          object WageFund: TcxGridDBColumn [25]
             Caption = #1060#1054#1055' '#1079#1072' '#1084#1110#1089#1103#1094#1100
             DataBinding.FieldName = 'WageFund'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -398,7 +407,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
             Options.Editing = False
             Width = 70
           end
-          object WageFund_byOne: TcxGridDBColumn [25]
+          object WageFund_byOne: TcxGridDBColumn [26]
             Caption = #1047#1055' '#1076#1083#1103' 1-'#1108#1111' '#1096#1090'.'#1086#1076' '#1076#1086' '#1086#1087#1086#1076#1072#1090#1082#1091#1072#1085#1085#1103
             DataBinding.FieldName = 'WageFund_byOne'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -409,7 +418,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
             Options.Editing = False
             Width = 77
           end
-          object PersonalName: TcxGridDBColumn [26]
+          object PersonalName: TcxGridDBColumn [27]
             Caption = #1052#1077#1085#1077#1076#1078#1077#1088' '#1087#1086' '#1087#1077#1088#1089#1086#1085#1072#1083#1091
             DataBinding.FieldName = 'PersonalName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -419,9 +428,9 @@ inherited StaffListMovementForm: TStaffListMovementForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 112
           end
           inherited colIsErased: TcxGridDBColumn
@@ -763,6 +772,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     inherited actRefresh: TdsdDataSetRefresh

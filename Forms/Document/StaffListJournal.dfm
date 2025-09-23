@@ -231,9 +231,9 @@ inherited StaffListJournalForm: TStaffListJournalForm
     Width = 1064
     ExplicitWidth = 1064
     inherited deStart: TcxDateEdit
-      Left = 101
-      EditValue = 42370d
-      ExplicitLeft = 101
+      Left = 103
+      EditValue = 45658d
+      ExplicitLeft = 103
       ExplicitWidth = 79
       Width = 79
     end
@@ -866,10 +866,10 @@ inherited StaffListJournalForm: TStaffListJournalForm
         Component = GuidesUnit
       end
       item
-        Component = deEnd
+        Component = deStart
       end
       item
-        Component = deStart
+        Component = deEnd
       end>
     Left = 408
     Top = 344
