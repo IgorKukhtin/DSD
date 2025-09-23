@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , isPositionLevel Boolean
              , Comment TVarChar
              , UnitId Integer, UnitName TVarChar                
-             , PositionId Integer, PositionName TVarChar                
+             , PositionId Integer, PositionCode Integer, PositionName TVarChar                
              , PositionLevelId Integer, PositionLevelName TVarChar                
              , isErased boolean
              , UpdateName TVarChar, UpdateDate TDateTime
@@ -76,6 +76,7 @@ BEGIN
          , Object_Unit.ValueData   AS UnitName
 
          , Object_Position.Id         AS PositionId
+         , Object_Position.ObjectCode AS PositionCode
          , Object_Position.ValueData  AS PositionName
 
          , Object_PositionLevel.Id          AS PositionLevelId
