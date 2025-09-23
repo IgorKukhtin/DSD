@@ -11,7 +11,9 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                              , Integer, Integer, Integer, Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoGoods(
@@ -35,11 +37,18 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoGoods(
  INOUT ioTaxRetIn             TFloat    , -- % возвратa  
     IN inAmountMarket         TFloat    , --Кол-во факт (маркет бюджет)
     IN inSummOutMarket        TFloat    , --Сумма факт кредит(маркет бюджет)
-    IN inSummInMarket         TFloat    , --Сумма факт дебет(маркет бюджет) 
+    IN inSummInMarket         TFloat    , --Сумма факт дебет(маркет бюджет)
+    IN inValue_m              TFloat    , -- Значение m
+    IN inValue_n              TFloat    , -- Значение n 
  INOUT ioGoodsKindId          Integer   , -- ИД обьекта <Вид товара>
    OUT outGoodsKindName       TVarChar  , -- 
  INOUT ioGoodsKindCompleteId  Integer   , -- ИД обьекта <Вид товара (примечание)>
    OUT outGoodsKindCompleteName TVarChar, -- 
+
+    IN inGoodsId_out           Integer,    -- Товар (Покупка)
+    IN inGoodsKindId_out       Integer,    -- Вид товара(Покупка)
+    IN inPromoDiscountKindId   Integer,    -- Тип скидки(Акция)
+       
     IN inComment              TVarChar  , -- Комментарий     
     IN inTradeMarkId                    Integer,  --Торговая марка 
     IN inGoodsGroupPropertyId           Integer,
@@ -47,7 +56,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoGoods(
    OUT outTradeMarkName                 TVarChar, 
    OUT outGoodsGroupPropertyName        TVarChar,     
    OUT outGoodsGroupPropertyName_Parent TVarChar, 
-   OUT outGoodsGroupDirectionName       TVarChar, 
+   OUT outGoodsGroupDirectionName       TVarChar,
+   
     IN inSession              TVarChar    -- сессия пользователя
 )
 AS
@@ -259,6 +269,9 @@ BEGIN
                                                   , inTradeMarkId          := inTradeMarkId
                                                   , inGoodsGroupPropertyId := inGoodsGroupPropertyId
                                                   , inGoodsGroupDirectionId:= inGoodsGroupDirectionId
+                                                  , inGoodsId_out          := inGoodsId_out         ::Integer    -- Товар (Покупка)
+                                                  , inGoodsKindId_out      := inGoodsKindId_out     ::Integer    -- Вид товара(Покупка)
+                                                  , inPromoDiscountKindId  := inPromoDiscountKindId ::Integer    -- Тип скидки(Акция)
                                                   , inComment              := inComment
                                                   , inUserId               := vbUserId
                                                    );

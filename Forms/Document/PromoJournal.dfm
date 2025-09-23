@@ -67,6 +67,14 @@ inherited PromoJournalForm: TPromoJournalForm
             Options.Editing = False
             Width = 111
           end
+          object PromoSchemaKindName: TcxGridDBColumn
+            Caption = #1055#1088#1086#1084#1086'- '#1084#1077#1093#1072#1085#1080#1082#1072
+            DataBinding.FieldName = 'PromoSchemaKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object PaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'

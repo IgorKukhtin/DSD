@@ -1179,6 +1179,23 @@ BEGIN
 END $$;
 
 
+DO $$
+BEGIN
+     -- !!! Промо-механика
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoSchemaKind_m_n() , inDescId:= zc_Object_PromoSchemaKind(), inCode:= 1, inName:= 'm по цене n'                             , inEnumName:= 'zc_Enum_PromoSchemaKind_m_n');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoSchemaKind_Tax() , inDescId:= zc_Object_PromoSchemaKind(), inCode:= 2, inName:= 'Покупай один – получи скидку на другой'  , inEnumName:= 'zc_Enum_PromoSchemaKind_Tax');
+END $$;
+
+
+DO $$
+BEGIN
+     -- !!! Тип скидки(Акция)
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoDiscountKind_Summ(), inDescId:= zc_Object_PromoDiscountKind(), inCode:= 1, inName:= 'Скидка в грн для цены с НДС'  , inEnumName:= 'zc_Enum_PromoDiscountKind_Summ');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoDiscountKind_Tax() , inDescId:= zc_Object_PromoDiscountKind(), inCode:= 2, inName:= 'Скидка в % для цены без НДС'  , inEnumName:= 'zc_Enum_PromoDiscountKind_Tax');
+END $$;
+
+
+
 /* Закомментил, т.к. 1 раз добавили и харэ
 --Загрузка в Документ <Ведомость начисления зарплаты>
 DO $$

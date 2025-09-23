@@ -601,6 +601,18 @@ type
     bb: TdxBarButton;
     cxLabel28: TcxLabel;
     cbOperDateOrder_text: TcxTextEdit;
+    GuidesPromoSchemaKind: TdsdGuides;
+    cxLabel29: TcxLabel;
+    edPromoSchemaKind: TcxButtonEdit;
+    PromoDiscountKindName: TcxGridDBColumn;
+    GoodsName_out: TcxGridDBColumn;
+    GoodsKindName_out: TcxGridDBColumn;
+    GoodsCode_out: TcxGridDBColumn;
+    Value_n: TcxGridDBColumn;
+    Value_m: TcxGridDBColumn;
+    actGoodsOutChoiceForm: TOpenChoiceForm;
+    actGoodsKindOutChoiceForm: TOpenChoiceForm;
+    actPromoDiscountKindChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

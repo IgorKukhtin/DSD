@@ -43,7 +43,8 @@ BEGIN
                                           , inUnitId         := tmp.UnitId
                                           , inPersonalTradeId:= tmp.PersonalTradeId
                                           , inPersonalId     := tmp.PersonalId 
-                                          , inPaidKindId     := tmp.PaidKindId
+                                          , inPaidKindId     := tmp.PaidKindId 
+                                          , inPromoSchemaKindId := tmp.PromoSchemaKindId
                                           , inUserId         := vbUserId
                                            )
      FROM gpGet_Movement_Promo (ioId, inOperDate, 'False', inSession) AS tmp;

@@ -1160,9 +1160,19 @@ INSERT INTO MovementItemFloatDesc (Code, ItemName)
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_Staff_Summ_add', 'Премиальний фонд' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Staff_Summ_add');
 
+ CREATE OR REPLACE FUNCTION zc_MIFloat_Value_m() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Value_m'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_Value_m', 'Значение m' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Value_m');
 
+ CREATE OR REPLACE FUNCTION zc_MIFloat_Value_n() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Value_n'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_Value_n', 'Значение n' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Value_n');
 
-
+  
+ 
+ 
+ 
+ 
 ----!!!!!!Farmacy
 
 
@@ -1985,6 +1995,8 @@ INSERT INTO MovementItemFloatDesc(Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 23.09.25         * zc_MIFloat_Value_m
+                    zc_MIFloat_Value_n
  30.06.25         * zc_MIFloat_PromoTax
                     zc_MIFloat_PricePromo
                     zc_MIFloat_PricePromo_new

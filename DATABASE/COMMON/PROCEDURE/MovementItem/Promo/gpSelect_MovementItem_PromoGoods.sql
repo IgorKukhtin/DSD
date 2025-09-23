@@ -17,8 +17,8 @@ RETURNS TABLE (
       , MeasureName         TVarChar --Единица измерения
       , TradeMarkId Integer, TradeMarkName       TVarChar --Торговая марка 
       , GoodsGroupPropertyId Integer, GoodsGroupPropertyName TVarChar, GoodsGroupPropertyId_Parent Integer, GoodsGroupPropertyName_Parent TVarChar 
-      , GoodsGroupDirectionId Integer, GoodsGroupDirectionName TVarChar
-
+      , GoodsGroupDirectionId Integer, GoodsGroupDirectionName TVarChar 
+      
       , Amount              TFloat --% скидки на товар
       , MainDiscount        TFloat -- Общая скидка для покупателя, %
       , Price               TFloat --Цена в прайсе c учетом скидки по договору
@@ -66,7 +66,20 @@ RETURNS TABLE (
       , GoodsKindName          TVarChar --Наименование обьекта <Вид товара>
       , GoodsKindCompleteId    Integer --ИД обьекта <Вид товара (примечание)>
       , GoodsKindCompleteName  TVarChar --Наименование обьекта <Вид товара(примечание)>
-      , GoodsKindName_List     TVarChar --Наименование обьекта <Вид товара (справочно)>
+      , GoodsKindName_List     TVarChar --Наименование обьекта <Вид товара (справочно)> 
+      
+      , GoodsId_out             Integer  --Товар (Покупка), а скидка на товар ObjectId
+      , GoodsCode_out           Integer  --Товар (Покупка), а скидка на товар ObjectId
+      , GoodsName_out           TVarChar --Товар (Покупка), а скидка на товар ObjectId
+      , GoodsKindId_out         Integer  --Вид товара(Покупка), а скидка на товар zc_MILinkObject_GoodsKind
+      , GoodsKindName_out       TVarChar --Вид товара(Покупка), а скидка на товар zc_MILinkObject_GoodsKind
+
+      , PromoDiscountKindId     Integer  --ИД Тип скидки(Акция)
+      , PromoDiscountKindName   TVarChar --Наименование Тип скидки(Акция)
+
+      , Value_m                 TFloat   -- Значение m
+      , Value_n                 TFloat   -- Значение n
+      
       , Comment                TVarChar --Комментарий       
       , isErased               Boolean  --удален
 )
@@ -225,6 +238,16 @@ BEGIN
              , Object_GoodsKindComplete.ValueData     AS GoodsKindCompleteName       --Наименование обьекта <Вид товара(Примечание)>
              , tmpGoodsKind_list.GoodsKindName_List ::TVarChar                       -- Наименование обьекта <Вид товара (справочно)>
 
+             , Object_GoodsOut.Id                     AS GoodsId_out             --ИД 
+             , Object_GoodsOut.ObjectCode::Integer    AS GoodsCode_out           --код 
+             , Object_GoodsOut.ValueData              AS GoodsName_out           --наименование 
+             , Object_GoodsKindOut.Id                 AS GoodsKindId_out         --ИД 
+             , Object_GoodsKindOut.ValueData          AS GoodsKindName_out       --Наименование 
+             , Object_PromoDiscountKind.Id            AS PromoDiscountKindId     --ИД 
+             , Object_PromoDiscountKind.ValueData     AS PromoDiscountKindName   --Наименование 
+             , MIFloat_Value_m.ValueData    ::TFloat  AS Value_m
+             , MIFloat_Value_n.ValueData    ::TFloat  AS Value_n
+
              , MIString_Comment.ValueData             AS Comment                     -- Примечание
              , MovementItem.isErased                  AS isErased                    -- Удален
              --, CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END::TFloat as GoodsWeight -- Вес
@@ -319,6 +342,12 @@ BEGIN
                                          ON MIFloat_SummInMarket.MovementItemId = MovementItem.Id
                                         AND MIFloat_SummInMarket.DescId = zc_MIFloat_SummInMarket()
 
+             LEFT JOIN MovementItemFloat AS MIFloat_Value_m
+                                         ON MIFloat_Value_m.MovementItemId = MovementItem.Id
+                                        AND MIFloat_Value_m.DescId = zc_MIFloat_Value_m()
+             LEFT JOIN MovementItemFloat AS MIFloat_Value_n
+                                         ON MIFloat_Value_n.MovementItemId = MovementItem.Id
+                                        AND MIFloat_Value_n.DescId = zc_MIFloat_Value_n()
 
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
@@ -381,6 +410,20 @@ BEGIN
                                  AND ObjectLink_Goods_GoodsGroupDirection.DescId = zc_ObjectLink_Goods_GoodsGroupDirection()
              LEFT JOIN Object AS Object_GoodsGroupDirection ON Object_GoodsGroupDirection.Id = COALESCE (MILinkObject_GoodsGroupDirection.ObjectId, ObjectLink_Goods_GoodsGroupDirection.ChildObjectId)
 
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsOut
+                                              ON MILinkObject_GoodsOut.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_GoodsOut.DescId = zc_MILinkObject_Goods_out()
+             LEFT JOIN Object AS Object_GoodsOut ON Object_GoodsOut.Id = MILinkObject_GoodsOut.ObjectId
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindOut
+                                              ON MILinkObject_GoodsKindOut.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_GoodsKindOut.DescId = zc_MILinkObject_GoodsKind_out()
+             LEFT JOIN Object AS Object_GoodsKindOut ON Object_GoodsKindOut.Id = MILinkObject_GoodsKindOut.ObjectId
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_PromoDiscountKind
+                                              ON MILinkObject_PromoDiscountKind.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_PromoDiscountKind.DescId = zc_MILinkObject_PromoDiscountKind()
+             LEFT JOIN Object AS Object_PromoDiscountKind ON Object_PromoDiscountKind.Id = MILinkObject_PromoDiscountKind.ObjectId
         WHERE MovementItem.DescId = zc_MI_Master()
           AND MovementItem.MovementId = inMovementId
           AND (MovementItem.isErased = FALSE OR inIsErased = TRUE);
@@ -388,11 +431,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_PromoGoods (Integer, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_MovementItem_PromoGoods (Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+ 23.09.25         * 
  22.10.20         * add TaxRetIn
  14.07.20         * add OperPriceList
  06.07.20         * add AmountRealPromo

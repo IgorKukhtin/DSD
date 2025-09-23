@@ -102,6 +102,7 @@ type
     bbOpenFormPromo_MI_Detail: TdxBarButton;
     bbInsertUpdate_MI_Promo_Detail: TdxBarButton;
     spInsertUpdate_MI_Promo_Detail: TdsdStoredProc;
+    PromoSchemaKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

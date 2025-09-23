@@ -725,12 +725,16 @@ CREATE OR REPLACE FUNCTION zc_MILinkObject_Personal() RETURNS Integer AS $BODY$B
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_Personal', 'Менеджер по персоналу' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Personal');
 
+CREATE OR REPLACE FUNCTION zc_MILinkObject_PromoDiscountKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PromoDiscountKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_PromoDiscountKind', 'Тип скидки(Акция)' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PromoDiscountKind');
 
-    
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Шаблий О.В.
+ 23.09.25         * zc_MILinkObject_PromoDiscountKind
  12.02.25         * zc_MILinkObject_inBuh
  29.05.24         * zc_MILinkObject_PartionCell_6...12
                     zc_MILinkObject_PartionCell_real_6...12

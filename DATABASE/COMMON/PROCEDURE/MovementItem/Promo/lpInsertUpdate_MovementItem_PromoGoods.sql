@@ -5,7 +5,8 @@
 -- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Integer);
 
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PromoGoods(
@@ -27,11 +28,16 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PromoGoods(
     IN inAmountMarket          TFloat    , --Кол-во факт (маркет бюджет)
     IN inSummOutMarket         TFloat    , --Сумма факт кредит(маркет бюджет)
     IN inSummInMarket          TFloat    , --Сумма факт дебет(маркет бюджет)
+    IN inValue_m               TFloat    , -- Значение m
+    IN inValue_n               TFloat    , -- Значение n
     IN inGoodsKindId           Integer   , --ИД обьекта <Вид товара>
     IN inGoodsKindCompleteId   Integer   , --ИД обьекта <Вид товара (примечание)>
     IN inTradeMarkId                    Integer,  --Торговая марка
     IN inGoodsGroupPropertyId           Integer,
     IN inGoodsGroupDirectionId          Integer,
+    IN inGoodsId_out           Integer,    -- Товар (Покупка)
+    IN inGoodsKindId_out       Integer,    -- Вид товара(Покупка)
+    IN inPromoDiscountKindId   Integer,    -- Тип скидки(Акция)
     IN inComment               TVarChar  , --Комментарий
     IN inUserId                Integer     -- пользователь
 )
@@ -100,6 +106,12 @@ BEGIN
     -- сохранили <Сумма факт кредит(маркет бюджет)>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummOutMarket(), ioId, inSummOutMarket);
 
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Value_m(), ioId, inValue_m);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Value_n(), ioId, inValue_n);
+
+
     -- сохранили связь с <Вид товара>
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
     -- сохранили связь с <Вид товара (примечание)> - может быть замена
@@ -114,6 +126,15 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsGroupProperty(), ioId, CASE WHEN COALESCE (inGoodsId,0) = 0 THEN inGoodsGroupPropertyId ELSE NULL END ::Integer);
     -- сохранили связь с <Вид товара>
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsGroupDirection(), ioId, CASE WHEN COALESCE (inGoodsId,0) = 0 THEN inGoodsGroupDirectionId ELSE NULL END ::Integer);
+
+
+    -- сохранили связь с <товар (Покупка)>
+    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods_out(), ioId, inGoodsId_out);
+    -- сохранили связь с <Вид товара(Покупка)>
+    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind_out(), ioId, inGoodsKindId_out);
+    -- сохранили связь с < 	Тип скидки(Акция)>
+    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PromoDiscountKind(), ioId, inPromoDiscountKindId);
+
 
     -- сохранили <Комментарий>
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
@@ -138,6 +159,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 23.09.25         *
  23.08.24         *
  07.08.24         *
  22.10.20         * inTaxRetIn

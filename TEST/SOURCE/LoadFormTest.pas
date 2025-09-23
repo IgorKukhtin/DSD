@@ -162,6 +162,8 @@ type
     procedure LoadPositionFormTest;
     procedure LoadPromoKindFormTest;
     procedure LoadPromoStateKindFormTest;
+    procedure LoadPromoSchemaKindFormTest;
+    procedure LoadPromoDiscountKindFormTest;
     procedure LoadPromoFormTest;
     procedure LoadPromoTradeFormTest;
     procedure LoadQualityFormTest;
@@ -4063,10 +4065,10 @@ end;
 
 procedure TLoadFormTest.LoadPromoFormTest;
 begin
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromo_MI_DetailForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromo_MI_DetailForm');
-  {
+
    TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoice_byPromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoice_byPromoForm');
 
@@ -4081,10 +4083,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoManagerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoManagerJournalForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoJournalForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoForm');
    {
@@ -4127,6 +4129,19 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoStateKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoStateKindForm');
 end;
+
+procedure TLoadFormTest.LoadPromoSchemaKindFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoSchemaKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromoSchemaKindForm');
+end;
+
+procedure TLoadFormTest.LoadPromoDiscountKindFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoDiscountKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromoDiscountKindForm');
+end;
+
 
 procedure TLoadFormTest.LoadTradeMarkFormTest;
 begin
