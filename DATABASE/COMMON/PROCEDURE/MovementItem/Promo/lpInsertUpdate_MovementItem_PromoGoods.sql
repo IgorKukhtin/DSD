@@ -9,6 +9,37 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Integer);
 
 
+ lpinsertupdate_movementitem_promogoods(
+ ioid := integer, 
+ inmovementid := integer, 
+ ingoodsid := integer, 
+ inamount := tfloat, 
+ inprice := tfloat, 
+ inoperpricelist := tfloat, 
+ inpricesale := tfloat, 
+ inpricewithoutvat := tfloat, 
+ inpricewithvat := tfloat, 
+ inpricetender := tfloat, 
+ incountforprice := tfloat, 
+ inamountreal := tfloat, 
+ inamountplanmin := tfloat, 
+ inamountplanmax := tfloat, 
+ intaxretin := tfloat, 
+ inamountmarket := tfloat, 
+ insummoutmarket := tfloat, 
+ insumminmarket := tfloat, 
+ ingoodskindid := integer, 
+ ingoodskindcompleteid := integer, 
+ intrademarkid := integer, 
+ ingoodsgrouppropertyid := integer, 
+ ingoodsgroupdirectionid := integer, 
+ ingoodsid_out := integer, 
+ ingoodskindid_out := integer, 
+ inpromodiscountkindid := integer, 
+ incomment := tvarchar, 
+ inuserid := integer)
+  не существует
+ 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PromoGoods(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId            Integer   , -- Ключ объекта <Документ>

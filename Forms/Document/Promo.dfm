@@ -3,8 +3,6 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 707
   ClientWidth = 1579
-  ExplicitLeft = -393
-  ExplicitTop = -114
   ExplicitWidth = 1595
   ExplicitHeight = 746
   PixelsPerInch = 96
@@ -786,6 +784,7 @@
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 88
@@ -804,10 +803,11 @@
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actGoodsKindOutChoiceForm
+                Action = actGoodsOutChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -822,6 +822,7 @@
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -829,6 +830,8 @@
           object Value_m: TcxGridDBColumn
             Caption = #1047#1085#1072#1095#1077#1085#1080#1077' m'
             DataBinding.FieldName = 'Value_m'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -836,6 +839,8 @@
           object Value_n: TcxGridDBColumn
             Caption = #1047#1085#1072#1095#1077#1085#1080#1077' n'
             DataBinding.FieldName = 'Value_n'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -3724,7 +3729,6 @@
     Width = 1579
     Height = 113
     TabOrder = 3
-    ExplicitTop = -2
     ExplicitWidth = 1579
     ExplicitHeight = 113
     inherited edInvNumber: TcxTextEdit
@@ -8358,6 +8362,9 @@
       end
       item
         Control = cbCost
+      end
+      item
+        Control = edPromoSchemaKind
       end>
     Left = 256
     Top = 265
@@ -11400,7 +11407,7 @@
   object PlanMasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 960
+    Left = 944
     Top = 192
   end
   object PlanMasterDS: TDataSource

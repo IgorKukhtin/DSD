@@ -1612,7 +1612,9 @@ uses
   StaffListMemberJournal in '..\..\Forms\Document\StaffListMemberJournal.pas' {StaffListMemberJournalForm: TParentForm},
   StaffListItemChoice in '..\..\Forms\Document\StaffListItemChoice.pas' {StaffListItemChoiceForm: TParentForm},
   StaffListMember in '..\..\Forms\Document\StaffListMember.pas' {StaffListMemberForm: TParentForm},
-  StaffListJournal in '..\..\Forms\Document\StaffListJournal.pas' {StaffListJournalForm: TParentForm};
+  StaffListJournal in '..\..\Forms\Document\StaffListJournal.pas' {StaffListJournalForm: TParentForm},
+  PromoDiscountKind in '..\..\Forms\Kind\PromoDiscountKind.pas' {PromoDiscountKindForm: TParentForm},
+  PromoSchemaKind in '..\..\Forms\Kind\PromoSchemaKind.pas' {PromoSchemaKindForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -264,6 +264,8 @@ BEGIN
                                                   , inAmountMarket         := inAmountMarket
                                                   , inSummOutMarket        := inSummOutMarket
                                                   , inSummInMarket         := inSummInMarket
+                                                  , inValue_m              := inValue_m
+                                                  , inValue_n              := inValue_n
                                                   , inGoodsKindId          := ioGoodsKindId
                                                   , inGoodsKindCompleteId  := ioGoodsKindCompleteId
                                                   , inTradeMarkId          := inTradeMarkId
@@ -342,6 +344,9 @@ BEGIN
              LEFT JOIN Object AS Object_GoodsGroupDirection ON Object_GoodsGroupDirection.Id = COALESCE (MILinkObject_GoodsGroupDirection.ObjectId, ObjectLink_Goods_GoodsGroupDirection.ChildObjectId)
 
     WHERE MovementItem.Id = ioId;
+
+
+IF  vbUserId = 9457 THEN RAISE EXCEPTION 'Admin - Test = OK'; END IF;
 
 END;
 $BODY$
