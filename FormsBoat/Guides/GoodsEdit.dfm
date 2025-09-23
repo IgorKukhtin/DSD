@@ -848,8 +848,8 @@
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 248
-    Top = 80
+    Left = 272
+    Top = 104
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1627,8 +1627,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 208
-    Top = 272
+    Left = 192
+    Top = 232
   end
   object GuidesProdColor: TdsdGuides
     KeyField = 'Id'
@@ -1654,7 +1654,7 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 56
+    Left = 112
     Top = 218
   end
   object GuidesInfoMoney: TdsdGuides
@@ -1682,7 +1682,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 280
-    Top = 147
+    Top = 99
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1700,7 +1700,7 @@
     Top = 562
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 104
+    Left = 96
     Top = 40
   end
   object GuidesGoodsSize: TdsdGuides
@@ -2647,13 +2647,13 @@
     MasterSource = DocumentDS
     PacketRecords = 0
     Params = <>
-    Left = 720
-    Top = 144
+    Left = 704
+    Top = 160
   end
   object DataSourceDoc: TDataSource
     DataSet = ClientDataSetDoc
-    Left = 776
-    Top = 144
+    Left = 784
+    Top = 152
   end
   object spDocumentSelect2: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_GoodsDocument'
@@ -2706,8 +2706,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 624
-    Top = 152
+    Left = 600
+    Top = 112
   end
   object dsdDBViewAddOn1: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -2805,7 +2805,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 72
-    Top = 112
+    Left = 136
+    Top = 88
   end
 end

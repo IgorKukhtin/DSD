@@ -174,6 +174,14 @@ inherited StaffListJournalForm: TStaffListJournalForm
             Options.Editing = False
             Width = 96
           end
+          object Department_twoName: TcxGridDBColumn
+            Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' 2 '#1088#1110#1074#1085#1103
+            DataBinding.FieldName = 'Department_twoName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 96
+          end
           object PersonalHeadName: TcxGridDBColumn
             Caption = #1056#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
             DataBinding.FieldName = 'PersonalHeadName'

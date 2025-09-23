@@ -1602,7 +1602,6 @@ uses
   StaffHoursLength in '..\..\Forms\Guides\StaffHoursLength.pas' {StaffHoursLengthForm: TParentForm},
   StaffPaidKindEdit in '..\..\Forms\Guides\StaffPaidKindEdit.pas' {StaffPaidKindEditForm: TParentForm},
   StaffListMovement in '..\..\Forms\Document\StaffListMovement.pas' {StaffListMovementForm: TParentForm},
-  StaffListJournal in '..\..\Forms\Document\StaffListJournal.pas' {StaffListJournalForm: TParentForm},
   ClientKindEdit in '..\..\Forms\Kind\ClientKindEdit.pas' {ClientKindEditForm: TParentForm},
   StaffListJournalChoice in '..\..\Forms\Document\StaffListJournalChoice.pas' {StaffListJournalChoiceForm: TParentForm},
   Report_StaffListMovementDialog in '..\..\Forms\Report\Report_StaffListMovementDialog.pas' {Report_StaffListMovementDialogForm: TParentForm},
@@ -1612,7 +1611,8 @@ uses
   StaffListKind in '..\..\Forms\Kind\StaffListKind.pas' {StaffListKindForm: TParentForm},
   StaffListMemberJournal in '..\..\Forms\Document\StaffListMemberJournal.pas' {StaffListMemberJournalForm: TParentForm},
   StaffListItemChoice in '..\..\Forms\Document\StaffListItemChoice.pas' {StaffListItemChoiceForm: TParentForm},
-  StaffListMember in '..\..\Forms\Document\StaffListMember.pas' {StaffListMemberForm: TParentForm};
+  StaffListMember in '..\..\Forms\Document\StaffListMember.pas' {StaffListMemberForm: TParentForm},
+  StaffListJournal in '..\..\Forms\Document\StaffListJournal.pas' {StaffListJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

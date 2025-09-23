@@ -104,6 +104,8 @@ type
     bbInsertMI_byMovement: TdxBarButton;
     actRefreshGet: TdsdDataSetRefresh;
     PositionCode: TcxGridDBColumn;
+    cxLabel10: TcxLabel;
+    edDepartment2: TcxButtonEdit;
   private
     { Private declarations }
   public

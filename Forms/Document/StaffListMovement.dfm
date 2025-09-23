@@ -2,7 +2,6 @@ inherited StaffListMovementForm: TStaffListMovementForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1064#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077' ('#1080#1079#1084#1077#1085#1077#1085#1080#1103')>'
   ClientHeight = 564
   ClientWidth = 1153
-  ExplicitTop = -76
   ExplicitWidth = 1169
   ExplicitHeight = 603
   PixelsPerInch = 96
@@ -176,7 +175,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
             Caption = #1064#1056' '#1076#1083#1103' '#1086#1090#1095#1077#1090#1072
             DataBinding.FieldName = 'AmountReport'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.;-,0.; ;'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
@@ -185,7 +184,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.;-,0.; ;'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1096#1090#1072#1090#1085#1080#1093' '#1086#1076#1080#1085#1080#1094#1100
@@ -501,15 +500,15 @@ inherited StaffListMovementForm: TStaffListMovementForm
           Kind = bkEllipsis
         end>
       TabOrder = 7
-      Width = 209
+      Width = 269
     end
     object cxLabel22: TcxLabel
-      Left = 570
+      Left = 629
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 570
+      Left = 629
       Top = 63
       TabOrder = 9
       Width = 243
@@ -531,12 +530,12 @@ inherited StaffListMovementForm: TStaffListMovementForm
       Width = 148
     end
     object cxLabel7: TcxLabel
-      Left = 831
+      Left = 890
       Top = 45
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
     end
     object edInsertName: TcxButtonEdit
-      Left = 830
+      Left = 889
       Top = 63
       Properties.Buttons = <
         item
@@ -563,15 +562,15 @@ inherited StaffListMovementForm: TStaffListMovementForm
         end>
       Properties.ReadOnly = True
       TabOrder = 15
-      Width = 209
+      Width = 133
     end
     object cxLabel14: TcxLabel
-      Left = 570
+      Left = 629
       Top = 5
       Caption = #1056#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
     end
     object cePersonalHead: TcxButtonEdit
-      Left = 570
+      Left = 629
       Top = 23
       Properties.Buttons = <
         item
@@ -660,7 +659,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
     end
   end
   object edUpdateName: TcxButtonEdit [2]
-    Left = 830
+    Left = 889
     Top = 23
     Properties.Buttons = <
       item
@@ -673,7 +672,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
     Width = 187
   end
   object cxLabel4: TcxLabel [3]
-    Left = 830
+    Left = 889
     Top = 5
     Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
   end
@@ -749,6 +748,23 @@ inherited StaffListMovementForm: TStaffListMovementForm
     Properties.ReadOnly = True
     TabOrder = 15
     Width = 28
+  end
+  object cxLabel10: TcxLabel [12]
+    Left = 487
+    Top = 45
+    Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' 2 '#1088#1110#1074#1085#1103
+  end
+  object edDepartment2: TcxButtonEdit [13]
+    Left = 487
+    Top = 63
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 17
+    Width = 130
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 187
@@ -1029,7 +1045,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
       isShowModal = True
     end
     object actOpenStaffListJournalChoice: TOpenChoiceForm
-      Category = 'Income'
+      Category = 'Add'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'OpenChoiceFormIncome'
@@ -1081,7 +1097,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
       isShowModal = True
     end
     object actInsertMIMaster_byMovement: TdsdExecStoredProc
-      Category = 'Income'
+      Category = 'Add'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spInsert_MI_byMovement
@@ -1092,7 +1108,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
       Caption = 'actInsertMIMaster_byMovement'
     end
     object macInsertMI_byMovement: TMultiAction
-      Category = 'Income'
+      Category = 'Add'
       MoveParams = <>
       ActionList = <
         item
@@ -1496,6 +1512,13 @@ inherited StaffListMovementForm: TStaffListMovementForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'Department_twoName'
+        Value = Null
+        Component = edDepartment2
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'Count_1'
         Value = Null
         Component = edCount_1
@@ -1659,12 +1682,12 @@ inherited StaffListMovementForm: TStaffListMovementForm
     Top = 328
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_OrderReturnTare_SetErased'
+    StoredProcName = 'gpMovementItem_StaffList_SetErased'
     Left = 710
     Top = 440
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_OrderReturnTare_SetUnErased'
+    StoredProcName = 'gpMovementItem_StaffList_SetUnErased'
     Left = 718
     Top = 384
   end
@@ -2020,8 +2043,8 @@ inherited StaffListMovementForm: TStaffListMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 655
-    Top = 7
+    Left = 743
+    Top = 15
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -2075,8 +2098,8 @@ inherited StaffListMovementForm: TStaffListMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 440
-    Top = 48
+    Left = 432
+    Top = 8
   end
   object spInsert_MI_byMovement: TdsdStoredProc
     StoredProcName = 'gpInsert_MI_StaffList_byMovement'

@@ -13,7 +13,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , UnitId Integer, UnitName TVarChar                               -- Подразделение
              , PersonalHeadId Integer, PersonalHeadName TVarChar               -- Руководитель подразделения
-             , DepartmentId Integer, DepartmentName TVarChar                   -- Департамент
+             , DepartmentId Integer, DepartmentName TVarChar                   -- Департамент 
+             , Department_twoId Integer, Department_twoName TVarChar
              , Comment TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
@@ -82,6 +83,8 @@ BEGIN
             , ''       :: TVarChar  AS PersonalHeadName
             , 0                     AS DepartmentId
             , ''       :: TVarChar  AS DepartmentName
+            , 0                     AS Department_twoId
+            , ''       :: TVarChar  AS Department_twoName
 
             , ''       :: TVarChar  AS Comment
 
@@ -140,6 +143,8 @@ BEGIN
             , Object_PersonalHead.ValueData    AS PersonalHeadName
             , Object_Department.Id             AS DepartmentId
             , Object_Department.ValueData      AS DepartmentName
+            , Object_Department_two.Id         AS Department_twoId
+            , Object_Department_two.ValueData  AS Department_twoName
 
             , MovementString_Comment.ValueData AS Comment
 
@@ -173,6 +178,11 @@ BEGIN
                                  ON ObjectLink_Unit_Department.ObjectId = MovementLinkObject_Unit.ObjectId
                                 AND ObjectLink_Unit_Department.DescId = zc_ObjectLink_Unit_Department()
             LEFT JOIN Object AS Object_Department ON Object_Department.Id = ObjectLink_Unit_Department.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Department_two
+                                 ON ObjectLink_Unit_Department_two.ObjectId = MovementLinkObject_Unit.ObjectId
+                                AND ObjectLink_Unit_Department_two.DescId = zc_ObjectLink_Unit_Department_two()
+            LEFT JOIN Object AS Object_Department_two ON Object_Department_two.Id = ObjectLink_Unit_Department_two.ChildObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalHead
                                          ON MovementLinkObject_PersonalHead.MovementId = Movement.Id
@@ -214,4 +224,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_StaffList (inMovementId:= 14521952, inOperDate := CURRENT_DATE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Movement_StaffList (inMovementId:= 14521952, inOperDate := CURRENT_DATE, inMask:= false, inSession:= zfCalc_UserAdmin())
