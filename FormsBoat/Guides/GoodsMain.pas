@@ -171,6 +171,8 @@ type
     StartDate_price: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
     spInsertUpdate: TdsdStoredProc;
+    actUpdateDocPhoto: TdsdInsertUpdateAction;
+    bbactUpdateDocPhoto: TdxBarButton;
   private
     { Private declarations }
   public

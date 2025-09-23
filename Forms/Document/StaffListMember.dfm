@@ -24,9 +24,9 @@ inherited StaffListMemberForm: TStaffListMemberForm
     ExplicitHeight = 26
   end
   object cxLabel1: TcxLabel [2]
-    Left = 94
+    Left = 93
     Top = 1
-    Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+    Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084'/'#1087#1077#1088#1077#1074#1086#1076'/'#1091#1074#1086#1083#1100#1085#1077#1085#1080#1077
   end
   object lbInvNumber: TcxLabel [3]
     Left = 8
@@ -34,13 +34,13 @@ inherited StaffListMemberForm: TStaffListMemberForm
     Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
   object edOperDate: TcxDateEdit [4]
-    Left = 94
+    Left = 93
     Top = 21
     EditValue = 42092d
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 2
-    Width = 88
+    Width = 180
   end
   object cxLabel6: TcxLabel [5]
     Left = 369
@@ -472,12 +472,12 @@ inherited StaffListMemberForm: TStaffListMemberForm
     TabOrder = 55
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 299
-    Top = 65528
+    Left = 291
+    Top = 40
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 232
-    Top = 65531
+    Left = 224
+    Top = 83
   end
   inherited ActionList: TActionList
     Left = 663

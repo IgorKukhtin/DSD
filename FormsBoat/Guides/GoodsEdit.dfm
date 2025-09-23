@@ -44,6 +44,8 @@
       Styles.Header = dmMain.cxHeaderStyle
       TabOrder = 0
       DataController.DataSource = PhotoDS
+      ExplicitLeft = 1
+      ExplicitTop = 322
       Version = 1
       object colFileName: TcxDBEditorRow
         Options.CanAutoHeight = False

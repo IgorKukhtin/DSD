@@ -1045,6 +1045,18 @@ object GoodsForm: TGoodsForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateDocPhoto'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbSetErased'
         end
         item
@@ -1212,6 +1224,10 @@ object GoodsForm: TGoodsForm
     end
     object bbInsertMask: TdxBarButton
       Action = actInsertMask
+      Category = 0
+    end
+    object bbUpdateDocPhoto: TdxBarButton
+      Action = actUpdateDocPhoto
       Category = 0
     end
   end
@@ -2020,6 +2036,37 @@ object GoodsForm: TGoodsForm
       PostDataSetBeforeExecute = False
       Caption = #1054#1090#1084#1077#1085#1072
       ImageIndex = 52
+    end
+    object actUpdateDocPhoto: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088'/ '#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1060#1086#1090#1086
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088'/ '#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1060#1086#1090#1086
+      ImageIndex = 29
+      FormName = 'TGoodsPhotoEditForm'
+      FormNameParam.Value = 'TGoodsPhotoEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId_OrderClient'
+          Value = Null
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
   end
   object spSelect: TdsdStoredProc

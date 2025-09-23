@@ -559,6 +559,9 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPhotoEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsPhotoEditForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_limitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_limitForm');
 

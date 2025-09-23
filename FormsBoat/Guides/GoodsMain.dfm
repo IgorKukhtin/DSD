@@ -27,7 +27,6 @@ object GoodsMainForm: TGoodsMainForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 92
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -1038,6 +1037,18 @@ object GoodsMainForm: TGoodsMainForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbactUpdateDocPhoto'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbSetErased'
         end
         item
@@ -1205,6 +1216,10 @@ object GoodsMainForm: TGoodsMainForm
     end
     object bbInsertMask: TdxBarButton
       Action = actInsertMask
+      Category = 0
+    end
+    object bbactUpdateDocPhoto: TdxBarButton
+      Action = actUpdateDocPhoto
       Category = 0
     end
   end
@@ -2007,6 +2022,36 @@ object GoodsMainForm: TGoodsMainForm
       PostDataSetBeforeExecute = False
       Caption = #1054#1090#1084#1077#1085#1072
       ImageIndex = 52
+    end
+    object actUpdateDocPhoto: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088'/ '#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1060#1086#1090#1086
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088'/ '#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1060#1086#1090#1086
+      ImageIndex = 29
+      FormName = 'TGoodsPhotoEditForm'
+      FormNameParam.Value = 'TGoodsPhotoEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId_OrderClient'
+          Value = Null
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = DataSource
+      IdFieldName = 'Id'
     end
   end
   object spSelect: TdsdStoredProc
