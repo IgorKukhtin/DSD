@@ -2,7 +2,6 @@ inherited StaffListMovementForm: TStaffListMovementForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1064#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077' ('#1080#1079#1084#1077#1085#1077#1085#1080#1103')>'
   ClientHeight = 564
   ClientWidth = 1153
-  ExplicitTop = -76
   ExplicitWidth = 1169
   ExplicitHeight = 603
   PixelsPerInch = 96
@@ -1029,7 +1028,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
       isShowModal = True
     end
     object actOpenStaffListJournalChoice: TOpenChoiceForm
-      Category = 'Income'
+      Category = 'Add'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'OpenChoiceFormIncome'
@@ -1081,7 +1080,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
       isShowModal = True
     end
     object actInsertMIMaster_byMovement: TdsdExecStoredProc
-      Category = 'Income'
+      Category = 'Add'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spInsert_MI_byMovement
@@ -1092,7 +1091,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
       Caption = 'actInsertMIMaster_byMovement'
     end
     object macInsertMI_byMovement: TMultiAction
-      Category = 'Income'
+      Category = 'Add'
       MoveParams = <>
       ActionList = <
         item
@@ -1659,12 +1658,12 @@ inherited StaffListMovementForm: TStaffListMovementForm
     Top = 328
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_OrderReturnTare_SetErased'
+    StoredProcName = 'gpMovementItem_StaffList_SetErased'
     Left = 710
     Top = 440
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_OrderReturnTare_SetUnErased'
+    StoredProcName = 'gpMovementItem_StaffList_SetUnErased'
     Left = 718
     Top = 384
   end
