@@ -23,7 +23,9 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , PromoKindId      Integer     --Вид акции
              , PromoKindName    TVarChar    --Вид акции
              , PromoStateKindId Integer     -- Состояние Акции
-             , PromoStateKindName TVarChar  -- Состояние Акции
+             , PromoStateKindName  TVarChar  -- Состояние Акции
+             , PromoSchemaKindId   Integer     -- Промо-механика
+             , PromoSchemaKindName TVarChar    -- Промо-механика
              , PriceListId      Integer     --Прайс лист
              , PriceListName    TVarChar    --Прайс лист
              , StartPromo       TDateTime   --Дата начала акции
@@ -200,6 +202,8 @@ BEGIN
              , Object_PromoKind.ValueData                  AS PromoKindName      --Вид акции
              , Object_PromoStateKind.Id                    AS PromoStateKindId        --Состояние акции
              , Object_PromoStateKind.ValueData             AS PromoStateKindName      --Состояние акции
+             , Object_PromoSchemaKind.Id                   AS PromoSchemaKindId        --Промо-механика
+             , Object_PromoSchemaKind.ValueData            AS PromoSchemaKindName      --Промо-механика            
              , MovementLinkObject_PriceList.ObjectId       AS PriceListId        --Прайс Лист
              , Object_PriceList.ValueData                  AS PriceListName      --Прайс Лист
              , MovementDate_StartPromo.ValueData           AS StartPromo         --Дата начала акции
@@ -418,6 +422,11 @@ BEGIN
                                          AND MovementLinkObject_PromoStateKind.DescId = zc_MovementLinkObject_PromoStateKind()
              LEFT JOIN Object AS Object_PromoStateKind ON Object_PromoStateKind.Id = MovementLinkObject_PromoStateKind.ObjectId
 
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_PromoSchemaKind
+                                          ON MovementLinkObject_PromoSchemaKind.MovementId = Movement_Promo.Id
+                                         AND MovementLinkObject_PromoSchemaKind.DescId = zc_MovementLinkObject_PromoSchemaKind()
+             LEFT JOIN Object AS Object_PromoSchemaKind ON Object_PromoSchemaKind.Id = MovementLinkObject_PromoSchemaKind.ObjectId
+
              LEFT JOIN tmpMovement_PromoPartner AS Movement_PromoPartner
                                                 ON Movement_PromoPartner.ParentId = Movement_Promo.Id
                                                AND inIsAllPartner = TRUE
@@ -450,6 +459,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 23.09.25         * zc_MovementLinkObject_PromoSchemaKind
  16.09.22         * zc_MovementDate_Message
  05.10.20         *
  13.07.20         * ChangePercent

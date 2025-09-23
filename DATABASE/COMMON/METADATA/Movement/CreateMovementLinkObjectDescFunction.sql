@@ -445,6 +445,9 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_PositionLevel_old() RETURNS Int
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_PositionLevel_old', '***Разряд должности' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PositionLevel_old');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_PromoSchemaKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PromoSchemaKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_PromoSchemaKind', 'Промо-механика' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PromoSchemaKind');
 
 
 
@@ -682,6 +685,7 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 23.09.25         * zc_MovementLinkObject_PromoSchemaKind
  20.08.25         * zc_MovementLinkObject_PersonalHead
  02.12.24         * zc_MovementLinkObject_SiteTag
  07.08.24         * zc_MovementLinkObject_TradeMark

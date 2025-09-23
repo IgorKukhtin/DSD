@@ -17,11 +17,12 @@
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
-    Left = 15
-    Top = 188
+    Left = 33
+    Top = 230
     Properties.ReadOnly = True
     TabOrder = 0
-    Width = 186
+    Visible = False
+    Width = 187
   end
   object cxLabel1: TcxLabel
     Left = 14
@@ -315,6 +316,13 @@
     Action = actSetVisiblePanelPhoto
     ModalResult = 8
     TabOrder = 23
+  end
+  object edNameMemo: TcxMemo
+    Left = 14
+    Top = 188
+    TabOrder = 24
+    Height = 63
+    Width = 188
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -673,6 +681,13 @@
         Value = Null
         Component = GuidesMeasure
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Name'
+        Value = Null
+        Component = edNameMemo
         DataType = ftString
         MultiSelectSeparator = ','
       end>

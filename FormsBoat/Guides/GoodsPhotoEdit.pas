@@ -27,7 +27,7 @@ uses
   cxImage, dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage,
   cxDBData, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGrid, cxSplitter, cxGridBandedTableView,
-  cxGridDBBandedTableView, dsdCommon;
+  cxGridDBBandedTableView, dsdCommon, cxMemo;
 
 type
   TGoodsPhotoEditForm = class(TParentForm)
@@ -126,6 +126,7 @@ type
     ceMeasure: TcxButtonEdit;
     GuidesMeasure: TdsdGuides;
     cxButton3: TcxButton;
+    edNameMemo: TcxMemo;
   private
     { Private declarations }
   public

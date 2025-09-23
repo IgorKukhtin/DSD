@@ -11,7 +11,7 @@ CREATE OR REPLACE VIEW Movement_Promo_View AS
       , Object_Status.ObjectCode                    AS StatusCode         --код статуса
       , Object_Status.ValueData                     AS StatusName         --Статус
       , MovementLinkObject_PromoKind.ObjectId       AS PromoKindId        --Вид акции
-      , Object_PromoKind.ValueData                  AS PromoKindName      --Вид акции
+      , Object_PromoKind.ValueData                  AS PromoKindName      --Вид акции 
       , MovementLinkObject_PriceList.ObjectId       AS PriceListId        --Прайс Лист
       , Object_PriceList.ValueData                  AS PriceListName      --Прайс Лист
       , MovementDate_StartPromo.ValueData           AS StartPromo         --Дата начала акции
@@ -36,7 +36,9 @@ CREATE OR REPLACE VIEW Movement_Promo_View AS
       , MovementDate_CheckDate.ValueData            AS CheckDate          --Дата согласования
 
       , Object_PromoStateKind.Id                    AS PromoStateKindId        --Состояние акции
-      , Object_PromoStateKind.ValueData             AS PromoStateKindName      --Состояние акции
+      , Object_PromoStateKind.ValueData             AS PromoStateKindName      --Состояние акции  
+      , Object_PromoSchemaKind.Id                   AS PromoSchemaKindId        --Промо-механика
+      , Object_PromoSchemaKind.ValueData            AS PromoSchemaKindName      --Промо-механика
       , COALESCE (MovementFloat_PromoStateKind.ValueData,0) ::TFloat  AS PromoStateKind  -- Приоритет для состояния
       , CASE WHEN COALESCE (MovementFloat_PromoStateKind.ValueData,0) = 1 THEN  TRUE ELSE FALSE END :: Boolean AS isPromoStateKind  -- Приоритет для состояния
       
@@ -168,6 +170,11 @@ CREATE OR REPLACE VIEW Movement_Promo_View AS
                                     AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_PromoSchemaKind
+                                     ON MovementLinkObject_PromoSchemaKind.MovementId = Movement_Promo.Id
+                                    AND MovementLinkObject_PromoSchemaKind.DescId = zc_MovementLinkObject_PromoSchemaKind()
+        LEFT JOIN Object AS Object_PromoSchemaKind ON Object_PromoSchemaKind.Id = MovementLinkObject_PromoSchemaKind.ObjectId
+
         LEFT JOIN MovementBoolean AS MovementBoolean_Cost
                                   ON MovementBoolean_Cost.MovementId = Movement_Promo.Id
                                  AND MovementBoolean_Cost.DescId = zc_MovementBoolean_Cost()
@@ -182,6 +189,7 @@ ALTER TABLE Movement_Promo_View
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
+ 23.09.25         *
  31.10.15                                                         * 
 */
 

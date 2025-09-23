@@ -19,7 +19,9 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , PromoKindId      Integer     --Вид акции
              , PromoKindName    TVarChar    --Вид акции
              , PromoStateKindId Integer     -- Состояние Акции
-             , PromoStateKindName TVarChar  -- Состояние Акции
+             , PromoStateKindName TVarChar  -- Состояние Акции 
+             , PromoSchemaKindId   Integer     -- Промо-механика
+             , PromoSchemaKindName TVarChar    -- Промо-механика
              , PriceListId      Integer     --прайс лист
              , PriceListName    TVarChar    --Прайс лист
              , StartPromo       TDateTime   --Дата начала акции
@@ -101,9 +103,11 @@ BEGIN
           , NULL::TVarChar                                    AS PaidKindName
           , NULL::Integer                                     AS PromoKindId         --Вид акции
           , NULL::TVarChar                                    AS PromoKindName       --Вид акции
-          , 0                                                 AS PromoStateKindId        --Состояние акции
-          , NULL::TVarChar                                    AS PromoStateKindName      --Состояние акции
-
+          , 0                                                 AS PromoStateKindId    --Состояние акции
+          , NULL::TVarChar                                    AS PromoStateKindName  --Состояние акции
+          , NULL::Integer                                     AS PromoSchemaKindId   -- Промо-механика
+          , NULL::TVarChar                                    AS PromoSchemaKindName -- Промо-механика
+             
           , Object_PriceList.Id                               AS PriceListId         --Прайс лист
           , Object_PriceList.ValueData                        AS PriceListName       --Прайс лист
           , NULL::TDateTime                                   AS StartPromo          --Дата начала акции
@@ -179,7 +183,9 @@ BEGIN
           , Movement_Promo.PromoKindId        --Вид акции
           , Movement_Promo.PromoKindName      --Вид акции
           , Movement_Promo.PromoStateKindId   --Состояние акции
-          , Movement_Promo.PromoStateKindName --Состояние акции
+          , Movement_Promo.PromoStateKindName --Состояние акции 
+          , Movement_Promo.PromoSchemaKindId        --Промо-механика
+          , Movement_Promo.PromoSchemaKindName      --Промо-механика 
           , Movement_Promo.PriceListId        --
           , Movement_Promo.PriceListName      --
           , Movement_Promo.StartPromo         --Дата начала акции
@@ -231,6 +237,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 23.09.25         * PromoSchemaKind
  01.05.23         *
  07.05.21         * add inMask
  13.07.20         * ChangePercent
