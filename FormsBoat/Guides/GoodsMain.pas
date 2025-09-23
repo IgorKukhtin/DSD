@@ -30,7 +30,6 @@ type
     cxGridDBTableView: TcxGridDBTableView;
     Code: TcxGridDBColumn;
     Name: TcxGridDBColumn;
-    TaxKind_Value: TcxGridDBColumn;
     GoodsGroupName: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
     PartnerName: TcxGridDBColumn;
@@ -55,7 +54,7 @@ type
     actSetErased: TdsdUpdateErased;
     actSetUnErased: TdsdUpdateErased;
     actChoiceGuides: TdsdChoiceGuides;
-    dsdGridToExcel1: TdsdGridToExcel;
+    actGridToExcel: TdsdGridToExcel;
     spSelect: TdsdStoredProc;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     spErasedUnErased: TdsdStoredProc;
@@ -72,28 +71,17 @@ type
     EAN: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    ProtocolOpenForm: TdsdOpenForm;
+    actProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
-    TaxKindName: TcxGridDBColumn;
     actInsert: TdsdInsertUpdateAction;
     actUpdate: TdsdInsertUpdateAction;
-    actUpdateisPartionCount: TdsdExecStoredProc;
-    actUpdateisPartionSumm: TdsdExecStoredProc;
     PartnerDate: TcxGridDBColumn;
-    actDatePeriodDialog: TExecuteDialog;
-    actUpdateGoods_In: TdsdExecStoredProc;
-    macUpdateGoods_In: TMultiAction;
     bbUpdateGoods_In: TdxBarButton;
     FormParams: TdsdFormParams;
     actUpdateDataSet: TdsdUpdateDataSet;
-    actChoiceAsset: TOpenChoiceForm;
     GoodsSizeName: TcxGridDBColumn;
     EmpfPrice: TcxGridDBColumn;
     EKPrice: TcxGridDBColumn;
-    actUpdate_WeightTare: TdsdExecStoredProc;
-    macUpdate_WeightTare: TMultiAction;
-    macUpdate_WeightTareList: TMultiAction;
-    ExecuteDialogWeightTare: TExecuteDialog;
     actGetImportSetting_Goods_Price: TdsdExecStoredProc;
     actDoLoad: TExecuteImportSettingsAction;
     actStartLoad: TMultiAction;
@@ -134,7 +122,6 @@ type
     Len_9: TcxGridDBColumn;
     Len_10: TcxGridDBColumn;
     isReceiptGoods: TcxGridDBColumn;
-    Colors: TcxGridDBColumn;
     Color_Value: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edUnit: TcxButtonEdit;
@@ -170,9 +157,11 @@ type
     GuidesPriceList: TdsdGuides;
     StartDate_price: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
-    spInsertUpdate: TdsdStoredProc;
+    AmountRemains: TcxGridDBColumn;
     actUpdateDocPhoto: TdsdInsertUpdateAction;
-    bbactUpdateDocPhoto: TdxBarButton;
+    bbUpdateDocPhoto: TdxBarButton;
+    cxButton1: TcxButton;
+    spInsertUpdate: TdsdStoredProc;
   private
     { Private declarations }
   public
