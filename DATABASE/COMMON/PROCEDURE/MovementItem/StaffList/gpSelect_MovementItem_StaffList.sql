@@ -314,7 +314,7 @@ BEGIN
             , CASE WHEN COALESCE (MovementItem.AmountReport, 0) < 0.5
                         THEN 0
                    
-                   WHEN Object_StaffPaidKind.ValueData ILIKE '«м≥ни\час'
+                   WHEN Object_StaffPaidKind.ValueData ILIKE '%«м≥ни%'
                         THEN COALESCE (MovementItem.TotalStaffCount, 0) * COALESCE (MovementItem.Staff_Price, 0)
                            + COALESCE (MovementItem.Staff_Summ_MK, 0) * COALESCE (MovementItem.AmountReport, 0)
                            + COALESCE (MovementItem.Staff_Summ_real, 0)
@@ -325,7 +325,7 @@ BEGIN
                            + COALESCE (MovementItem.Staff_Summ_real, 0)
                            + COALESCE (MovementItem.Staff_Summ_add, 0)
 
-                   WHEN Object_StaffPaidKind.ValueData ILIKE 'доплата за 1 день'
+                   WHEN Object_StaffPaidKind.ValueData ILIKE '%доплата%'
                         THEN COALESCE (MovementItem.TotalStaffCount, 0) * COALESCE (MovementItem.Staff_Price, 0)
                            + COALESCE (MovementItem.Staff_Summ_MK, 0)
                            + COALESCE (MovementItem.Staff_Summ_real, 0)
@@ -334,7 +334,7 @@ BEGIN
                    WHEN Object_StaffPaidKind.ValueData ILIKE 'в≥др€дно п≥дроб≥ток'
                         THEN COALESCE (MovementItem.Staff_Summ_real, 0)
 
-                   WHEN Object_StaffPaidKind.ValueData ILIKE 'ќклад/м≥с€ць'
+                   WHEN Object_StaffPaidKind.ValueData ILIKE '%ќклад%'
                         THEN (COALESCE (MovementItem.Staff_Price, 0) + COALESCE (MovementItem.Staff_Summ_MK, 0)) * COALESCE (MovementItem.AmountReport, 0)
                            + COALESCE (MovementItem.Staff_Summ_real, 0)
                            + COALESCE (MovementItem.Staff_Summ_add, 0)
@@ -351,7 +351,7 @@ BEGIN
             ,(CASE WHEN COALESCE (MovementItem.AmountReport, 0) < 0.5
                         THEN 0
                    
-                   WHEN Object_StaffPaidKind.ValueData ILIKE '«м≥ни\час'
+                   WHEN Object_StaffPaidKind.ValueData ILIKE '%«м≥ни%'
                         THEN COALESCE (MovementItem.TotalStaffCount, 0) * COALESCE (MovementItem.Staff_Price, 0)
                            + COALESCE (MovementItem.Staff_Summ_MK, 0) * COALESCE (MovementItem.AmountReport, 0)
                            + COALESCE (MovementItem.Staff_Summ_real, 0)
@@ -362,7 +362,7 @@ BEGIN
                            + COALESCE (MovementItem.Staff_Summ_real, 0)
                            + COALESCE (MovementItem.Staff_Summ_add, 0)
 
-                   WHEN Object_StaffPaidKind.ValueData ILIKE 'доплата за 1 день'
+                   WHEN Object_StaffPaidKind.ValueData ILIKE '%доплата%'
                         THEN COALESCE (MovementItem.TotalStaffCount, 0) * COALESCE (MovementItem.Staff_Price, 0)
                            + COALESCE (MovementItem.Staff_Summ_MK, 0)
                            + COALESCE (MovementItem.Staff_Summ_real, 0)
@@ -371,7 +371,7 @@ BEGIN
                    WHEN Object_StaffPaidKind.ValueData ILIKE 'в≥др€дно п≥дроб≥ток'
                         THEN COALESCE (MovementItem.Staff_Summ_real, 0)
 
-                   WHEN Object_StaffPaidKind.ValueData ILIKE 'ќклад/м≥с€ць'
+                   WHEN Object_StaffPaidKind.ValueData ILIKE '%ќклад%'
                         THEN (COALESCE (MovementItem.Staff_Price, 0) + COALESCE (MovementItem.Staff_Summ_MK, 0)) * COALESCE (MovementItem.AmountReport, 0)
                            + COALESCE (MovementItem.Staff_Summ_real, 0)
                            + COALESCE (MovementItem.Staff_Summ_add, 0)
