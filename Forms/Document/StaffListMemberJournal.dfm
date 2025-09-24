@@ -54,10 +54,43 @@ inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
             Width = 55
           end
           inherited colOperDate: TcxGridDBColumn [1]
+            Visible = False
             HeaderAlignmentHorz = taCenter
             Width = 60
           end
-          inherited colInvNumber: TcxGridDBColumn [2]
+          object DateIn: TcxGridDBColumn [2]
+            Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072
+            DataBinding.FieldName = 'DateIn'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 78
+          end
+          object DateSend: TcxGridDBColumn [3]
+            Caption = #1044#1072#1090#1072' '#1087#1077#1088#1077#1074#1086#1076#1072
+            DataBinding.FieldName = 'DateSend'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object DateOut: TcxGridDBColumn [4]
+            Caption = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'DateOut'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
+          end
+          object isDateOut: TcxGridDBColumn [5]
+            Caption = #1059#1074#1086#1083#1077#1085
+            DataBinding.FieldName = 'isDateOut'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          inherited colInvNumber: TcxGridDBColumn [6]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
             Width = 92

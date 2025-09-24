@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_StaffListMember(
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
+             , DateIn TDateTime, DateSend TDateTime, DateOut TDateTime
              , StatusId Integer, StatusCode Integer, StatusName TVarChar
              , MemberId Integer, MemberName TVarChar
              , PositionId Integer, PositionName TVarChar
@@ -21,7 +22,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , UnitId_old Integer, UnitName_old TVarChar
              , ReasonOutId Integer, ReasonOutName TVarChar
              , StaffListKindId Integer, StaffListKindName TVarChar
-             , isOfficial Boolean, isMain Boolean
+             , isOfficial Boolean, isMain Boolean 
+             , isDateOut Boolean
              , Comment TVarChar
              , InsertName TVarChar
              , UpdateName TVarChar
@@ -96,7 +98,7 @@ BEGIN
                      )
 
 
-        , tmpPersonal AS (SELECT Object_Personal.Id
+      /*  , tmpPersonal AS (SELECT Object_Personal.Id
                           FROM Object AS Object_Personal
                                INNER JOIN ObjectLink AS ObjectLink_Personal_Member
                                                      ON ObjectLink_Personal_Member.ObjectId = Object_Personal.Id
@@ -116,12 +118,16 @@ BEGIN
                           WHERE Object_Personal.DescId = zc_Object_Personal()
                             AND Object_Personal.isErased = FALSE
                             AND COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId,0) = COALESCE (inPositionLevelId,0)
-                       )
+                       ) 
+                       */
        -- Результат
        SELECT
              Movement.Id
            , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
            , Movement.OperDate
+           , CASE WHEN Object_StaffListKind.Id IN (zc_Enum_StaffListKind_In(), zc_Enum_StaffListKind_Add()) THEN Movement.OperDate ELSE NULL END ::TDateTime AS DateIn
+           , CASE WHEN Object_StaffListKind.Id = zc_Enum_StaffListKind_Send() THEN Movement.OperDate ELSE NULL END ::TDateTime AS DateSend
+           , CASE WHEN Object_StaffListKind.Id = zc_Enum_StaffListKind_Out()  THEN Movement.OperDate ELSE NULL END ::TDateTime AS DateOut
            , Object_Status.Id                      AS StatusId
            , Object_Status.ObjectCode              AS StatusCode
            , Object_Status.ValueData               AS StatusName
@@ -150,6 +156,7 @@ BEGIN
 
            , COALESCE (MovementBoolean_Official.ValueData, FALSE) ::Boolean  AS isOfficial
            , COALESCE (MovementBoolean_Main.ValueData, FALSE)     ::Boolean  AS isMain
+           , CASE WHEN Object_StaffListKind.Id = zc_Enum_StaffListKind_Out() THEN TRUE ELSE FALSE END ::Boolean AS isDateOut 
 
            , MovementString_Comment.ValueData                     ::TVarChar AS Comment
            

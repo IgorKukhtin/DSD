@@ -51,6 +51,10 @@ type
     actOpenFormMemberHolidayEdit: TdsdOpenForm;
     bbOpenFormMemberHolidayEdit: TdxBarButton;
     Comment: TcxGridDBColumn;
+    DateIn: TcxGridDBColumn;
+    DateOut: TcxGridDBColumn;
+    DateSend: TcxGridDBColumn;
+    isDateOut: TcxGridDBColumn;
   private
     { Private declarations }
   public

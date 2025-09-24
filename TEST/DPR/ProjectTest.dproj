@@ -5686,6 +5686,10 @@
 				<Form>PromoSchemaKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_StaffListMember_byPersonal.pas">
+				<Form>Report_StaffListMember_byPersonalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

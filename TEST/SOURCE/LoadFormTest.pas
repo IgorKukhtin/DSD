@@ -4692,6 +4692,11 @@ begin
 
   procedure TLoadFormTest.LoadStaffListMemberFormTest;
 begin
+
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StaffListMember_byPersonalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_StaffListMember_byPersonalForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListItemChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStaffListItemChoiceForm');
 
