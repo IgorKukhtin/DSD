@@ -213,7 +213,11 @@ inherited Report_StaffListMember_byPersonalForm: TReport_StaffListMember_byPerso
       Left = 303
       Top = 17
       Caption = #1059#1095#1080#1090#1099#1074#1072#1090#1100' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      ParentShowHint = False
+      ShowHint = False
+      State = cbsChecked
       TabOrder = 6
+      Visible = False
       Width = 140
     end
   end
