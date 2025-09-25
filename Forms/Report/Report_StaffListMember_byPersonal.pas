@@ -45,6 +45,7 @@ type
     macPersonalServiceAll: TMultiAction;
     actPersonalServiceErased: TdsdExecStoredProc;
     cbErased: TcxCheckBox;
+    MemberCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

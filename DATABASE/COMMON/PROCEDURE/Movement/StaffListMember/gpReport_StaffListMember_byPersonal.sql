@@ -1,6 +1,5 @@
 -- Function: gpSelect_StaffListMember_byPersonal()
 
-DROP FUNCTION IF EXISTS gpSelect_StaffListMember_byPersonal (Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_StaffListMember_byPersonal (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_StaffListMember_byPersonal(
@@ -9,8 +8,9 @@ CREATE OR REPLACE FUNCTION gpReport_StaffListMember_byPersonal(
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (DateIn TDateTime, DateSend TDateTime, DateOut TDateTime
+             , OperDate TDateTime
              , PersonalId Integer
-             , MemberId Integer, MemberName TVarChar
+             , MemberId Integer, MemberCode Integer, MemberName TVarChar
              , PositionId Integer, PositionName TVarChar
              , PositionLevelId Integer, PositionLevelName TVarChar
              , UnitId Integer, UnitName TVarChar
@@ -20,8 +20,9 @@ RETURNS TABLE (DateIn TDateTime, DateSend TDateTime, DateOut TDateTime
              , StaffListKindId Integer, StaffListKindName TVarChar
              , isOfficial Boolean, isMain Boolean 
              , isDateOut Boolean
-             --, InsertName TVarChar
-             --, InsertDate TDateTime
+             , UserId_pr Integer, UserName_pr TVarChar
+             , Operdate_pr TDateTime 
+             , Comment TVarChar
               )
 AS
 $BODY$
@@ -270,7 +271,7 @@ BEGIN
                     , tmp.isOfficial         
                     , tmp.isMain
                     , tmp.StaffListKindId
-                    , tmp.Comment
+                    , 1 AS Comment
                FROM tmpIn AS tmp
              UNION 
                --первый раз прием
@@ -317,7 +318,7 @@ BEGIN
                     , tmp.isOfficial         
                     , tmp.isMain
                     , tmp.StaffListKindId
-                    , tmp.Comment
+                    , 1 AS Comment
                FROM tmpAdd AS tmp
              UNION 
                --уволенные 
@@ -333,7 +334,7 @@ BEGIN
                     , tmp.isOfficial         
                     , tmp.isMain
                     , tmp.StaffListKindId
-                    , tmp.Comment
+                    , 3 AS Comment
                FROM tmpOut AS tmp
                )
 
@@ -390,7 +391,7 @@ BEGIN
                        , tmp.isOfficial         
                        , tmp.isMain
                        , zc_Enum_StaffListKind_In() AS StaffListKindId
-                       , tmp.Comment
+                       , 1 AS Comment
                  FROM tmpErased AS tmp
                UNION 
                   SELECT tmp.DateOut AS OperDate
@@ -405,71 +406,113 @@ BEGIN
                        , tmp.isOfficial         
                        , tmp.isMain
                        , zc_Enum_StaffListKind_Out() AS StaffListKindId
-                       , tmp.Comment
+                       , 3 AS Comment
                   FROM tmpErased AS tmp
                  )               
-       --выбор уже сохраненных сотрудников, чтоб не дублировались документы
-    /*  , tmpSave AS (WITH  
-                     tmpMovement AS (SELECT Movement.*
-                                     FROM  Movement 
-                                     WHERE Movement.DescId = zc_Movement_StaffListMember()
-                                   -- AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-                                       AND Movement.StatusId = zc_Enum_Status_Complete() 
-                                     )
 
-                   , tmpMLO AS (SELECT MovementLinkObject.*
-                                FROM MovementLinkObject
-                                WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement) 
-                                  AND MovementLinkObject.DescId IN (zc_MovementLinkObject_StaffListKind() 
-                                                                  , zc_MovementLinkObject_Member()
-                                                                   )
-                                )
-                    SELECT DISTINCT MovementLinkObject_Member.ObjectId AS MemberId
-                        , CASE WHEN MovementLinkObject_StaffListKind.ObjectId IN (zc_Enum_StaffListKind_In(), zc_Enum_StaffListKind_Add()) THEN 1
-                               WHEN MovementLinkObject_StaffListKind.ObjectId IN (zc_Enum_StaffListKind_Send()) THEN 2
-                               WHEN MovementLinkObject_StaffListKind.ObjectId IN (zc_Enum_StaffListKind_Out()) THEN 3
-                          END AS Param 
-                    FROM tmpMovement AS Movement    
-                         INNER JOIN tmpMLO AS MovementLinkObject_Member
-                                        ON MovementLinkObject_Member.MovementId = Movement.Id
-                                       AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
-                       LEFT JOIN Object AS Object_Member ON Object_Member.Id = MovementLinkObject_Member.ObjectId
-           
-                       LEFT JOIN tmpMLO AS MovementLinkObject_StaffListKind
-                                        ON MovementLinkObject_StaffListKind.MovementId = Movement.Id
-                                       AND MovementLinkObject_StaffListKind.DescId = zc_MovementLinkObject_StaffListKind()
-                       LEFT JOIN Object AS Object_StaffListKind ON Object_StaffListKind.Id = MovementLinkObject_StaffListKind.ObjectId
-                     )
-                     */
+
+   , tmpProtocol_in AS (SELECT tmp.Operdate
+                             , tmp.UserId
+                             , tmp.PersonalId
+                             , tmp.Id
+                             , ROW_NUMBER() OVER (PARTITION BY tmp.PersonalId ORDER BY tmp.Operdate ASC ) AS Ord
+                        FROM (
+                             SELECT ObjectProtocol.Operdate
+                                  , ObjectProtocol.Id AS Id
+                                  , ObjectProtocol.UserId AS UserId
+                                  , ObjectProtocol.ObjectId AS PersonalId
+                             FROM ObjectProtocol
+                                 INNER JOIN (SELECT DISTINCT tmpAll.PersonalId 
+                                             FROM tmpAll
+                                             WHERE tmpAll.StaffListKindId IN (zc_Enum_StaffListKind_In(), zc_Enum_StaffListKind_Add())
+                                            ) AS tmpData ON tmpData.PersonalId = objectProtocol.ObjectId 
+                            -- WHERE ObjectProtocol.isInsert = True
+                             ) AS tmp
+                       )
+
+   , tmpProtocol_send AS (SELECT tmp.Operdate
+                               , tmp.DateSend 
+                               , tmp.UserId
+                               , tmp.PersonalId
+                               , tmp.Id
+                               , ROW_NUMBER() OVER (PARTITION BY tmp.PersonalId,tmp.DateSend   ORDER BY tmp.Operdate ASC ) AS Ord
+                               
+                          FROM (
+                               SELECT zfConvert_StringToDate ( REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Дата перевода сотрудника"]  /@FieldValue', ObjectProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')) AS DateSend
+                                    , ObjectProtocol.Operdate
+                                    , ObjectProtocol.Id AS Id
+                                    , ObjectProtocol.UserId AS UserId
+                                    , ObjectProtocol.ObjectId AS PersonalId
+                               FROM objectProtocol
+                                   INNER JOIN (SELECT DISTINCT tmpAll.PersonalId 
+                                               FROM tmpAll
+                                               WHERE tmpAll.StaffListKindId = zc_Enum_StaffListKind_Send()
+                                              ) AS tmpData ON tmpData.PersonalId = objectProtocol.ObjectId 
+                               ) AS tmp
+                          WHERE tmp.DateSend is not null
+                         )
+
+   , tmpProtocol_out AS (SELECT tmp.Operdate
+                              , tmp.DateOut 
+                              , tmp.UserId
+                              , tmp.PersonalId
+                              , tmp.Id
+                              , ROW_NUMBER() OVER (PARTITION BY tmp.PersonalId, tmp.DateOut ORDER BY tmp.Operdate ASC ) AS Ord
+                              
+                         FROM (SELECT zfConvert_StringToDate ( REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Дата увольнения у сотрудника"]  /@FieldValue', ObjectProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')) AS DateOut
+                                    , ObjectProtocol.Operdate
+                                    , ObjectProtocol.Id AS Id
+                                    , ObjectProtocol.UserId AS UserId
+                                    , ObjectProtocol.ObjectId AS PersonalId
+                              FROM objectProtocol 
+                                  INNER JOIN (SELECT DISTINCT tmpAll.PersonalId 
+                                              FROM tmpAll
+                                              WHERE tmpAll.StaffListKindId = zc_Enum_StaffListKind_Out()
+                                             ) AS tmpData ON tmpData.PersonalId = objectProtocol.ObjectId 
+                              --WHERE isInsert = True
+                              ) AS tmp
+                              --WHERE tmp.DateSend is not null
+                         )
+                 
  
           SELECT CASE WHEN Object_StaffListKind.Id IN (zc_Enum_StaffListKind_In(), zc_Enum_StaffListKind_Add()) THEN tmp.OperDate ELSE NULL END ::TDateTime AS DateIn
                , CASE WHEN Object_StaffListKind.Id = zc_Enum_StaffListKind_Send() THEN tmp.OperDate ELSE NULL END ::TDateTime AS DateSend
                , CASE WHEN Object_StaffListKind.Id = zc_Enum_StaffListKind_Out()  THEN tmp.OperDate ELSE NULL END ::TDateTime AS DateOut
+               , tmp.OperDate
                , tmp.PersonalId
-           , Object_Member.Id                      AS MemberId
-           , Object_Member.ValueData               AS MemberName
+               , Object_Member.Id                      AS MemberId
+               , Object_Member.ObjectCode              AS MemberCode
+               , Object_Member.ValueData               AS MemberName
 
-           , Object_Position.Id                    AS PositionId
-           , Object_Position.ValueData             AS PositionName
-           , Object_PositionLevel.Id               AS PositionLevelId
-           , Object_PositionLevel.ValueData        AS PositionLevelName
-           , Object_Unit.Id                        AS UnitId
-           , Object_Unit.ValueData                 AS UnitName
+               , Object_Position.Id                    AS PositionId
+               , Object_Position.ValueData             AS PositionName
+               , Object_PositionLevel.Id               AS PositionLevelId
+               , Object_PositionLevel.ValueData        AS PositionLevelName
+               , Object_Unit.Id                        AS UnitId
+               , Object_Unit.ValueData                 AS UnitName
 
-           , Object_Position_old.Id                AS PositionId_old
-           , Object_Position_old.ValueData         AS PositionName_old
-           , Object_PositionLevel_old.Id           AS PositionLevelId_old
-           , Object_PositionLevel_old.ValueData    AS PositionLevelName_old
-           , Object_Unit_old.Id                    AS UnitId_old
-           , Object_Unit_old.ValueData             AS UnitName_old
+               , Object_Position_old.Id                AS PositionId_old
+               , Object_Position_old.ValueData         AS PositionName_old
+               , Object_PositionLevel_old.Id           AS PositionLevelId_old
+               , Object_PositionLevel_old.ValueData    AS PositionLevelName_old
+               , Object_Unit_old.Id                    AS UnitId_old
+               , Object_Unit_old.ValueData             AS UnitName_old
 
-           , Object_StaffListKind.Id               AS StaffListKindId
-           , Object_StaffListKind.ValueData        AS StaffListKindName
+               , Object_StaffListKind.Id               AS StaffListKindId
+               , Object_StaffListKind.ValueData        AS StaffListKindName
 
-           , tmp.isOfficial ::Boolean  AS isOfficial
-           , tmp.isMain     ::Boolean  AS isMain
-           , CASE WHEN Object_StaffListKind.Id = zc_Enum_StaffListKind_Out() THEN TRUE ELSE FALSE END ::Boolean AS isDateOut 
+               , tmp.isOfficial ::Boolean  AS isOfficial
+               , tmp.isMain     ::Boolean  AS isMain
+               , CASE WHEN Object_StaffListKind.Id = zc_Enum_StaffListKind_Out() THEN TRUE ELSE FALSE END ::Boolean AS isDateOut 
+                   
+               , Object_User_pr.Id        ::Integer  AS UserId_pr
+               , Object_User_pr.ValueData ::TVarChar AS UserName_pr
                
+               , CASE WHEN Object_StaffListKind.Id IN (zc_Enum_StaffListKind_In(), zc_Enum_StaffListKind_Add()) THEN tmpProtocol_in.Operdate
+                      WHEN Object_StaffListKind.Id = zc_Enum_StaffListKind_Send() THEN tmpProtocol_send.Operdate
+                      WHEN Object_StaffListKind.Id = zc_Enum_StaffListKind_Out() THEN tmpProtocol_out.Operdate
+                 END  ::TDateTime AS Operdate_pr
+               , ('Авто.'||tmp.Comment::TVarChar) ::TVarChar 
           FROM tmpAll AS tmp 
                LEFT JOIN Object AS Object_StaffListKind ON Object_StaffListKind.Id = tmp.StaffListKindId
                LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmp.MemberId 
@@ -479,7 +522,26 @@ BEGIN
                LEFT JOIN Object AS Object_Unit_old ON Object_Unit_old.Id = tmp.UnitId_old
                LEFT JOIN Object AS Object_Position_old ON Object_Position_old.Id = tmp.PositionId_old
                LEFT JOIN Object AS Object_PositionLevel_old ON Object_PositionLevel_old.Id = tmp.PositionLevelId_old
-            
+
+               LEFT JOIN tmpProtocol_in ON tmpProtocol_in.PersonalId = tmp.PersonalId
+                                     --  AND tmpProtocol_in.DateOut = tmp.OperDate 
+                                     AND tmpProtocol_in.Ord = 1
+                                     AND tmp.StaffListKindId IN (zc_Enum_StaffListKind_In(), zc_Enum_StaffListKind_Add())
+
+               LEFT JOIN tmpProtocol_send ON tmpProtocol_send.PersonalId = tmp.PersonalId
+                                         AND tmpProtocol_send.DateSend = tmp.OperDate
+                                         AND tmpProtocol_send.Ord = 1
+                                         AND tmp.StaffListKindId = zc_Enum_StaffListKind_Send()
+                                         
+               LEFT JOIN tmpProtocol_out ON tmpProtocol_out.PersonalId = tmp.PersonalId
+                                        AND tmpProtocol_out.DateOut = tmp.OperDate
+                                        AND tmpProtocol_out.Ord = 1 
+                                        AND tmp.StaffListKindId = zc_Enum_StaffListKind_Out() 
+
+               LEFT JOIN Object AS Object_User_pr ON Object_User_pr.Id = CASE WHEN Object_StaffListKind.Id IN (zc_Enum_StaffListKind_In(), zc_Enum_StaffListKind_Add()) THEN tmpProtocol_in.UserId
+                                                                              WHEN Object_StaffListKind.Id = zc_Enum_StaffListKind_Send() THEN tmpProtocol_send.UserId
+                                                                              WHEN Object_StaffListKind.Id = zc_Enum_StaffListKind_Out() THEN tmpProtocol_out.UserId
+                                                                         END                                                       
           ORDER BY tmp.MemberId, tmp.OperDate, tmp.PersonalId, tmp.Comment, tmp.ismain 
 
 
@@ -498,3 +560,56 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_StaffListMember_byPersonal (inMemberId:= 0, inIsErased:=true, inSession:= zfCalc_UserAdmin())
+
+ /*  
+      заполнение документов ШР сотрудники
+ WITH 
+ tmpData AS (
+            SELECT tmp.*
+            FROM gpReport_StaffListMember_byPersonal (inMemberId:= 0 , inIsErased:=true, inSession:= zfCalc_UserAdmin())  AS tmp
+           -- WHERE tmp.MemberId <> 11121446 
+            )
+
+     SELECT lpInsert_Movement_StaffListMember ( ioId                  := 0    ::Integer
+                                              , inInvNumber           := NULL ::TVarChar
+                                              , inOperDate            := tmp.OperDate
+                                              , inMemberId            := tmp.MemberId 
+                                              , inPositionId          := tmp.PositionId
+                                              , inPositionLevelId     := tmp.PositionLevelId    
+                                              , inUnitId              := tmp.UnitId             
+                                              , inPositionId_old      := 0         ::Integer 
+                                              , inPositionLevelId_old := 0    ::Integer
+                                              , inUnitId_old          := 0             ::Integer     
+                                              , inReasonOutId         := 0    ::Integer   
+                                              , inStaffListKindId     := tmp.StaffListKindId    
+                                              , inisOfficial          := tmp.isOfficial         
+                                              , inisMain              := tmp.isMain             
+                                              , inComment             := ('Авто.'||tmp.Comment::TVarChar) ::TVarChar 
+                                              , inUserId_protocol     := tmp.UserId_pr       ::Integer
+                                              , inOperDate_protocol   := tmp.Operdate_pr     ::TDateTime          
+                                              , inUserId              := vbUserId
+                                               )
+     FROM  tmpData AS tmp
+     
+     
+     
+     */                        
+     
+     
+     
+     /*
+     
+       
+удаление Осторожно 
+
+ WITH  tmpMovement22 AS (SELECT Movement.Id
+                        --FROM Movement
+                        WHERE Movement.DescId = zc_Movement_StaffListMember()
+                                         -- AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                          --AND Movement.StatusId = tmpStatus.StatusId
+                        )
+select *--lpDelete_Movement (tmpMovement22.Id , '9457') 
+from tmpMovement22
+limit 1
+     
+     */

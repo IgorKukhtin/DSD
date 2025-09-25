@@ -29,6 +29,7 @@ inherited Report_StaffListMember_byPersonalForm: TReport_StaffListMember_byPerso
             item
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
+              Column = MemberName
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -75,6 +76,15 @@ inherited Report_StaffListMember_byPersonalForm: TReport_StaffListMember_byPerso
             DataBinding.FieldName = 'isDateOut'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object MemberCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'MemberCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1092#1080#1079'.'#1083#1080#1094#1072
             Options.Editing = False
             Width = 70
           end
@@ -152,6 +162,22 @@ inherited Report_StaffListMember_byPersonalForm: TReport_StaffListMember_byPerso
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
+          end
+          object UserName_pr: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1087#1088#1086#1090#1086#1082#1086#1083')'
+            DataBinding.FieldName = 'UserName_pr'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 101
+          end
+          object Operdate_pr: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1087#1088#1086#1090#1086#1082#1086#1083')'
+            DataBinding.FieldName = 'Operdate_pr'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 78
           end
         end
       end
