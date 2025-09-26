@@ -577,17 +577,17 @@ $BODY$
                                               , inPositionId          := tmp.PositionId
                                               , inPositionLevelId     := tmp.PositionLevelId    
                                               , inUnitId              := tmp.UnitId             
-                                              , inPositionId_old      := 0         ::Integer 
-                                              , inPositionLevelId_old := 0    ::Integer
-                                              , inUnitId_old          := 0             ::Integer     
+                                              , inPositionId_old      := tmp.PositionId_old         ::Integer 
+                                              , inPositionLevelId_old := tmp.PositionLevelId_old    ::Integer
+                                              , inUnitId_old          := tmp.UnitId_old             ::Integer     
                                               , inReasonOutId         := 0    ::Integer   
                                               , inStaffListKindId     := tmp.StaffListKindId    
                                               , inisOfficial          := tmp.isOfficial         
                                               , inisMain              := tmp.isMain             
-                                              , inComment             := ('Авто.'||tmp.Comment::TVarChar) ::TVarChar 
+                                              , inComment             := tmp.Comment::TVarChar
                                               , inUserId_protocol     := tmp.UserId_pr       ::Integer
                                               , inOperDate_protocol   := tmp.Operdate_pr     ::TDateTime          
-                                              , inUserId              := vbUserId
+                                              , inUserId              := 9457
                                                )
      FROM  tmpData AS tmp
      
