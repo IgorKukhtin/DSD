@@ -1582,6 +1582,8 @@ type
     miStaffListMemberJournal: TMenuItem;
     actReport_StaffListMember_byPersonal: TdsdOpenForm;
     miReport_StaffListMember_byPersonal: TMenuItem;
+    actStaffListCloseJournal: TdsdOpenForm;
+    miStaffListCloseJournal: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

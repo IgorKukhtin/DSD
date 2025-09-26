@@ -19,13 +19,15 @@ object GoodsTagForm: TGoodsTagForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 59
     Width = 538
-    Height = 350
+    Height = 317
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitTop = 26
+    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -99,6 +101,38 @@ object GoodsTagForm: TGoodsTagForm
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Top = 26
+    Width = 538
+    Height = 33
+    Align = alTop
+    TabOrder = 5
+    ExplicitLeft = 8
+    ExplicitTop = 34
+    ExplicitWidth = 521
+    object lbSearchName: TcxLabel
+      Left = 14
+      Top = 6
+      Caption = #1053#1072#1079#1074#1072#1085#1080#1077' :'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchName: TcxTextEdit
+      Left = 93
+      Top = 7
+      TabOrder = 1
+      DesignSize = (
+        200
+        21)
+      Width = 200
     end
   end
   object DataSource: TDataSource
@@ -526,8 +560,22 @@ object GoodsTagForm: TGoodsTagForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 48
     Top = 216
+  end
+  object FieldFilter_Name: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = ClientDataSet
+    Column = Name
+    ColumnList = <
+      item
+        Column = Name
+      end>
+    ActionNumber1 = dsdChoiceGuides
+    CheckBoxList = <>
+    Left = 320
+    Top = 72
   end
 end

@@ -265,6 +265,13 @@ object GoodsMainForm: TGoodsMainForm
       object GoodsSizeName: TcxGridDBColumn
         Caption = 'Gr'#246#223'e'
         DataBinding.FieldName = 'GoodsSizeName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actGoodsSizeChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1056#1072#1079#1084#1077#1088
@@ -1891,6 +1898,33 @@ object GoodsMainForm: TGoodsMainForm
       DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
+    end
+    object actGoodsSizeChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsSizeForm'
+      FormName = 'TGoodsSizeForm'
+      FormNameParam.Value = 'TGoodsSizeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsSizeId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsSizeName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
   end
   object spSelect: TdsdStoredProc

@@ -628,7 +628,9 @@ CREATE OR REPLACE FUNCTION zc_Movement_StaffListMember() RETURNS Integer AS $BOD
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_StaffListMember', 'Штатное расписание (сотрудники)' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_StaffListMember');
 
-
+CREATE OR REPLACE FUNCTION zc_Movement_StaffListClose() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_StaffListClose'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_StaffListClose', 'Закрытие периода, Штатное расписание' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_StaffListClose');
 
 
 
@@ -636,6 +638,7 @@ INSERT INTO MovementDesc (Code, ItemName)
  ИСТОР
  ИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 25.09.25         * Закрытие периода, Штатное расписание
  20.08.25         * zc_Movement_StaffList
  21.07.25         * zc_Movement_HospitalDoc_1C
  18.09.24         * zc_Movement_PromoTradeSign

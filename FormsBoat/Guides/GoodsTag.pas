@@ -21,7 +21,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  cxContainer, cxTextEdit, cxLabel, Vcl.ExtCtrls, dsdCommon;
 
 type
   TGoodsTagForm = class(TParentForm)
@@ -60,6 +61,10 @@ type
     actSetUnErased: TdsdUpdateErased;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    Panel2: TPanel;
+    lbSearchName: TcxLabel;
+    edSearchName: TcxTextEdit;
+    FieldFilter_Name: TdsdFieldFilter;
   private
     { Private declarations }
   public

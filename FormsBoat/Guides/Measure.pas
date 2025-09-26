@@ -23,7 +23,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, dsdCommon;
 
 type
   TMeasureForm = class(TParentForm)
@@ -86,6 +86,10 @@ type
     spInsertUpdate: TdsdStoredProc;
     spInsertUpdateCode: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    Panel2: TPanel;
+    lbSearchName: TcxLabel;
+    edSearchName: TcxTextEdit;
+    FieldFilter_Name: TdsdFieldFilter;
   private
     { Private declarations }
   public
