@@ -4,20 +4,18 @@ DO $$
 BEGIN
 
 /*
--- select count(*) from _bi_Table_Report_OrderClient
-TRUNCATE TABLE _bi_Table_Report_OrderClient;
+-- select count(*) from _bi_Table_OrderClient
+TRUNCATE TABLE _bi_Table_OrderClient;
 */
 
-      IF NOT (EXISTS (SELECT table_name FROM INFORMATION_SCHEMA.tables WHERE table_name ILIKE ('_bi_Table_Report_OrderClient')))
+      IF NOT (EXISTS (SELECT table_name FROM INFORMATION_SCHEMA.tables WHERE table_name ILIKE ('_bi_Table_OrderClient')))
       THEN
-           -- DROP TABLE _bi_Table_Report_OrderClient
+           -- DROP TABLE _bi_Table_OrderClient
            --
-           CREATE TABLE _bi_Table_Report_OrderClient (
+           CREATE TABLE _bi_Table_OrderClient (
               Id              BIGSERIAL NOT NULL,
               -- Id Документа
               MovementId     Integer,
-              -- Вид Документа
-              MovementDescId Integer,
               -- Дата покупателя
               OperDate       TDateTime,
               -- Дата Склад
@@ -25,21 +23,29 @@ TRUNCATE TABLE _bi_Table_Report_OrderClient;
               -- Дата Заявки
               OperDate_order TDateTime,
               -- № Документа
-              InvNumber      Integer,
+              InvNumber        Integer,
+              InvNumberPartner TVarChar,
 
               -- Юр. Лицо
               JuridicalId    Integer,
               -- Контрагент
               PartnerId      Integer,
+              -- Подразделение
+              UnitId         Integer,
+
+              -- Примечание
+              Comment        TVarChar,
+              Comment_car    TVarChar,
 
               -- УП Статья назначения
               InfoMoneyId    Integer,
               -- Форма оплаты
               PaidKindId     Integer,
-              -- Филиал
-              BranchId       Integer,
               -- Договор
               ContractId     Integer,
+
+              -- % Скидки
+              ChangePercent  TFloat,
 
               -- Товар
               GoodsId        Integer,
@@ -47,8 +53,7 @@ TRUNCATE TABLE _bi_Table_Report_OrderClient;
               GoodsKindId    Integer,
 
               -- Документ Акция
-              MovementId_promo    Integer,
-
+              MovementId_promo Integer,
 
               -- Вес Заказ ИТОГО
               Amount         TFloat,
@@ -76,14 +81,17 @@ TRUNCATE TABLE _bi_Table_Report_OrderClient;
               -- Акция - Сумма с НДС ИТОГО
               Summ_promo       TFloat,
 
+              isEdi      Boolean,
+              isVchasno  Boolean,
+
               --
-              CONSTRAINT pk_bi_Table_Report_OrderClient PRIMARY KEY (Id)
+              CONSTRAINT pk_bi_Table_OrderClient PRIMARY KEY (Id)
            );
 
-          -- CREATE INDEX idx_bi_Table_Report_OrderClient_OperDate ON _bi_Table_Report_OrderClient (OperDate);
+          -- CREATE INDEX idx_bi_Table_OrderClient_OperDate ON _bi_Table_OrderClient (OperDate);
 
-          GRANT ALL ON TABLE PUBLIC._bi_Table_Report_OrderClient TO admin;
-          GRANT ALL ON TABLE PUBLIC._bi_Table_Report_OrderClient TO project;
+          GRANT ALL ON TABLE PUBLIC._bi_Table_OrderClient TO admin;
+          GRANT ALL ON TABLE PUBLIC._bi_Table_OrderClient TO project;
 
       END IF;
 
