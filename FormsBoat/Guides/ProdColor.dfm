@@ -25,8 +25,6 @@ object ProdColorForm: TProdColorForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 63
-    ExplicitHeight = 313
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -234,7 +232,7 @@ object ProdColorForm: TProdColorForm
       Width = 138
     end
     object lbSearchName: TcxLabel
-      Left = 3
+      Left = 2
       Top = 39
       Caption = #1053#1072#1079#1074#1072#1085#1080#1077' : '
       ParentFont = False
@@ -695,7 +693,7 @@ object ProdColorForm: TProdColorForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 296
+    Left = 256
     Top = 72
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

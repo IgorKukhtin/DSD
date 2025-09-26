@@ -162,6 +162,7 @@ type
     bbUpdateDocPhoto: TdxBarButton;
     cxButton1: TcxButton;
     spInsertUpdate: TdsdStoredProc;
+    actGoodsSizeChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

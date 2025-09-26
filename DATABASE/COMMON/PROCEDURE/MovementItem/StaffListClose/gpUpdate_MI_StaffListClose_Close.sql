@@ -1,9 +1,11 @@
 -- Function: gpUpdate_MI_StaffListClose_Close()
 
 DROP FUNCTION IF EXISTS gpUpdate_MI_StaffListClose_Close (Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MI_StaffListClose_Close (Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MI_StaffListClose_Close(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
+    IN inUnitId              Integer   , -- Подразделение(Исключение)
     IN inAmount              TFloat    , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -27,6 +29,7 @@ BEGIN
      -- сохранили <Элемент документа>
      PERFORM lpInsertUpdate_MovementItem_StaffListClose (ioId         := 0
                                                        , inMovementId := inMovementId
+                                                       , inUnitId     := inUnitId
                                                        , inAmount     := inAmount
                                                        , inUserId     := vbUserId
                                                         ) AS tmp;
