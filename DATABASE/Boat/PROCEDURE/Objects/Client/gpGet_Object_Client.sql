@@ -78,7 +78,7 @@ BEGIN
            , 0 ::TFloat               AS DayBank
         FROM Object_InfoMoney_View
              LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm()
-             LEFT JOIN Object AS Object_TaxKind  ON Object_TaxKind.Id = zc_TaxKind_Basis()
+             LEFT JOIN Object AS Object_TaxKind  ON Object_TaxKind.Id = zc_Enum_TaxKind_WithVAT() -- zc_Enum_TaxKind_Basis
         WHERE Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30101()
        ;
    ELSE
