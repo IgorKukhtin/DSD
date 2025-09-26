@@ -44,8 +44,6 @@
       Styles.Header = dmMain.cxHeaderStyle
       TabOrder = 0
       DataController.DataSource = PhotoDS
-      ExplicitLeft = 1
-      ExplicitTop = 322
       Version = 1
       object colFileName: TcxDBEditorRow
         Options.CanAutoHeight = False
@@ -276,6 +274,7 @@
     object Main: TcxTabSheet
       Caption = 'Main'
       ImageIndex = 0
+      ExplicitLeft = -1
       object edName: TcxTextEdit
         Left = 40
         Top = 102
@@ -333,7 +332,7 @@
           end>
         Properties.ReadOnly = True
         TabOrder = 6
-        Width = 187
+        Width = 135
       end
       object ceMeasure: TcxButtonEdit
         Left = 40
@@ -576,7 +575,7 @@
         Width = 86
       end
       object cxLabel23: TcxLabel
-        Left = 231
+        Left = 184
         Top = 124
         Hint = #8470' '#1090#1072#1084#1086#1078'. '#1087#1086#1096#1083#1080#1085#1099
         Caption = 'Zolltarif Nr'
@@ -584,10 +583,10 @@
         ShowHint = True
       end
       object edFeeNumber: TcxTextEdit
-        Left = 233
+        Left = 184
         Top = 142
         TabOrder = 41
-        Width = 86
+        Width = 75
       end
       object cxLabel2: TcxLabel
         Left = 40
@@ -749,6 +748,20 @@
         Properties.DisplayFormat = ',0.####'
         TabOrder = 64
         Width = 135
+      end
+      object cxLabel30: TcxLabel
+        Left = 268
+        Top = 124
+        Caption = #1054#1089#1090#1072#1090#1086#1082
+      end
+      object edAmountRemains: TcxCurrencyEdit
+        Left = 268
+        Top = 142
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####'
+        Properties.ReadOnly = True
+        TabOrder = 66
+        Width = 51
       end
     end
     object Child: TcxTabSheet
@@ -1219,7 +1232,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Top = 128
+    Left = 8
+    Top = 104
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1251,8 +1265,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 208
-    Top = 48
+    Left = 344
+    Top = 24
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Goods'
@@ -1600,6 +1614,13 @@
         Component = ceWeight
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountRemains'
+        Value = Null
+        Component = edAmountRemains
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 8
@@ -1702,8 +1723,8 @@
     Top = 562
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 96
-    Top = 40
+    Left = 8
+    Top = 160
   end
   object GuidesGoodsSize: TdsdGuides
     KeyField = 'Id'
@@ -1783,8 +1804,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 72
-    Top = 128
+    Left = 120
+    Top = 120
   end
   object GuidesGoodsTag: TdsdGuides
     KeyField = 'Id'
@@ -1810,8 +1831,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 112
-    Top = 192
+    Left = 104
+    Top = 160
   end
   object GuidesDiscountPartner: TdsdGuides
     KeyField = 'Id'
@@ -1884,8 +1905,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 232
-    Top = 176
+    Left = 208
+    Top = 168
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'

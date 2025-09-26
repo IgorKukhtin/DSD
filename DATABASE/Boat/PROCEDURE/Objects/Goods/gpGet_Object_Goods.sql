@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Feet TFloat, Metres TFloat
              , Weight TFloat
              , AmountMin TFloat, AmountRefer TFloat
+             , AmountRemains TFloat
              , EKPrice TFloat, EmpfPrice TFloat
              , BasisPrice TFloat 
              , StartDate_price TDateTime
@@ -74,6 +75,7 @@ BEGIN
 
            , CAST (0 as TFloat)    AS AmountMin
            , CAST (0 as TFloat)    AS AmountRefer
+           , CAST (0 as TFloat)    AS AmountRemains
            , CAST (0 as TFloat)    AS EKPrice
            , CAST (0 as TFloat)    AS EmpfPrice  
            , CAST (0 as TFloat)    AS BasisPrice
@@ -114,6 +116,17 @@ BEGIN
                                                                       , inOperDate   := CURRENT_DATE) AS tmp
                             )
 
+           -- текущие остатки
+         , tmpRemains AS (SELECT Container.ObjectId            AS GoodsId
+                               , SUM (Container.Amount)        AS Remains
+                          FROM Container
+                          WHERE Container.WhereObjectId = 35139 -- Склад Основной
+                            AND Container.DescId        = zc_Container_Count()
+                            AND Container.Amount <> 0
+                            AND Container.ObjectId = inId
+                          GROUP BY Container.ObjectId
+                          HAVING SUM (Container.Amount) <> 0
+                         )
        ---
        SELECT CASE WHEN inMaskId <> 0 THEN 0 ELSE Object_Goods.Id END ::Integer AS Id
             , CASE WHEN inMaskId <> 0 THEN lfGet_ObjectCode(0, zc_Object_Goods()) ELSE Object_Goods.ObjectCode END ::Integer AS Code
@@ -137,6 +150,9 @@ BEGIN
 
             , ObjectFloat_Min.ValueData          AS AmountMin
             , ObjectFloat_Refer.ValueData        AS AmountRefer
+            --остатки на гл. складе
+            , tmpRemains.Remains ::TFloat        AS AmountRemains
+
             , ObjectFloat_EKPrice.ValueData      AS EKPrice
             , ObjectFloat_EmpfPrice.ValueData    AS EmpfPrice
 
@@ -297,6 +313,7 @@ BEGIN
              
              LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
 
+             LEFT JOIN tmpRemains ON 1 = 1
        WHERE Object_Goods.Id = CASE WHEN COALESCE (inId, 0) = 0 THEN COALESCE (inMaskId,0) ELSE inId END;
 
    END IF;
@@ -308,6 +325,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.09.25         * AmountRemains
  18.09.25         * add Weight
  28.03.24         * inPriceListId
  14.08.23         * inMaskId

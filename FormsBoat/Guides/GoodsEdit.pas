@@ -209,6 +209,8 @@ type
     cxLabel28: TcxLabel;
     cxLabel29: TcxLabel;
     ceWeight: TcxCurrencyEdit;
+    cxLabel30: TcxLabel;
+    edAmountRemains: TcxCurrencyEdit;
   private
     { Private declarations }
   public
