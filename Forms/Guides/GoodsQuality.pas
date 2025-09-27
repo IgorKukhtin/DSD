@@ -22,7 +22,7 @@ uses
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
   DataModul, cxButtonEdit, cxContainer, cxLabel, dsdGuides, cxTextEdit,
-  cxMaskEdit;
+  cxMaskEdit, dsdCommon;
 
 type
   TGoodsQualityForm = class(TParentForm)
@@ -77,6 +77,7 @@ type
     QualityCode: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    Value21: TcxGridDBColumn;
   private
     { Private declarations }
   public

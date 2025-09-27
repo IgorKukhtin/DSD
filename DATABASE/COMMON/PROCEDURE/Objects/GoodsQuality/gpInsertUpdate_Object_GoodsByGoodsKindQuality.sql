@@ -2,6 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsByGoodsKindQuality (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar, TFloat, Integer, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsByGoodsKindQuality (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar, TVarChar, TFloat, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsByGoodsKindQuality (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar, TVarChar, TFloat, Integer, Integer, Integer, Boolean, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKindQuality(
  INOUT ioId	          Integer   ,    -- ключ объекта <>
@@ -17,6 +19,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKindQuality(
     IN inValue8           TVarChar  ,    --
     IN inValue9           TVarChar  ,    --
     IN inValue10          TVarChar  ,    --
+    IN inValue21          TVarChar  ,    --
     IN inValue1_gk        TVarChar  ,    --
     IN inValue11_gk       TVarChar  ,    --
     IN inNormInDays_gk    TFloat    ,    --
@@ -115,6 +118,9 @@ $BODY$
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_GoodsQuality_Value9(), ioId, inValue9);
    -- сохранили св-во <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_GoodsQuality_Value10(), ioId, inValue10);
+   -- сохранили св-во <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_GoodsQuality_Value21(), ioId, inValue21);
+
    --
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsQuality_Goods(), ioId, inGoodsId);
    --
@@ -144,8 +150,8 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.09.25         *
  06.12.20         *
-
 */
 
 -- тест

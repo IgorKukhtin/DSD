@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean
              , Value5 TVarChar, Value6 TVarChar
              , Value7 TVarChar, Value8 TVarChar
              , Value9 TVarChar, Value10 TVarChar
+             , Value21 TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
              , GoodsGroupName TVarChar
@@ -70,6 +71,7 @@ BEGIN
            , ObjectString_Value8.ValueData AS Value8
            , ObjectString_Value9.ValueData AS Value9
            , ObjectString_Value10.ValueData AS Value10
+           , COALESCE (ObjectString_Value21.ValueData,'')::TVarChar  AS Value21
 
            , Object_Goods.Id              AS GoodsId
            , Object_Goods.ObjectCode      AS GoodsCode
@@ -92,35 +94,38 @@ BEGIN
            LEFT JOIN Object AS Object_Quality ON Object_Quality.Id = GoodsQuality_Quality.ChildObjectId
 
            LEFT JOIN ObjectString AS ObjectString_Value1
-                               ON ObjectString_Value1.ObjectId = Object_GoodsQuality.Id
-                              AND ObjectString_Value1.DescId = zc_ObjectString_GoodsQuality_Value1()
+                                  ON ObjectString_Value1.ObjectId = Object_GoodsQuality.Id
+                                 AND ObjectString_Value1.DescId = zc_ObjectString_GoodsQuality_Value1()
            LEFT JOIN ObjectString AS ObjectString_Value2
-                               ON ObjectString_Value2.ObjectId = Object_GoodsQuality.Id
-                              AND ObjectString_Value2.DescId = zc_ObjectString_GoodsQuality_Value2()
+                                  ON ObjectString_Value2.ObjectId = Object_GoodsQuality.Id
+                                 AND ObjectString_Value2.DescId = zc_ObjectString_GoodsQuality_Value2()
            LEFT JOIN ObjectString AS ObjectString_Value3
-                               ON ObjectString_Value3.ObjectId = Object_GoodsQuality.Id
-                              AND ObjectString_Value3.DescId = zc_ObjectString_GoodsQuality_Value3()
+                                  ON ObjectString_Value3.ObjectId = Object_GoodsQuality.Id
+                                 AND ObjectString_Value3.DescId = zc_ObjectString_GoodsQuality_Value3()
            LEFT JOIN ObjectString AS ObjectString_Value4
-                               ON ObjectString_Value4.ObjectId = Object_GoodsQuality.Id
-                              AND ObjectString_Value4.DescId = zc_ObjectString_GoodsQuality_Value4()
+                                  ON ObjectString_Value4.ObjectId = Object_GoodsQuality.Id
+                                 AND ObjectString_Value4.DescId = zc_ObjectString_GoodsQuality_Value4()
            LEFT JOIN ObjectString AS ObjectString_Value5
-                               ON ObjectString_Value5.ObjectId = Object_GoodsQuality.Id
-                              AND ObjectString_Value5.DescId = zc_ObjectString_GoodsQuality_Value5()
+                                  ON ObjectString_Value5.ObjectId = Object_GoodsQuality.Id
+                                 AND ObjectString_Value5.DescId = zc_ObjectString_GoodsQuality_Value5()
            LEFT JOIN ObjectString AS ObjectString_Value6
-                               ON ObjectString_Value6.ObjectId = Object_GoodsQuality.Id
-                              AND ObjectString_Value6.DescId = zc_ObjectString_GoodsQuality_Value6()
+                                  ON ObjectString_Value6.ObjectId = Object_GoodsQuality.Id
+                                 AND ObjectString_Value6.DescId = zc_ObjectString_GoodsQuality_Value6()
            LEFT JOIN ObjectString AS ObjectString_Value7
-                               ON ObjectString_Value7.ObjectId = Object_GoodsQuality.Id
-                              AND ObjectString_Value7.DescId = zc_ObjectString_GoodsQuality_Value7()
+                                  ON ObjectString_Value7.ObjectId = Object_GoodsQuality.Id
+                                 AND ObjectString_Value7.DescId = zc_ObjectString_GoodsQuality_Value7()
            LEFT JOIN ObjectString AS ObjectString_Value8
-                               ON ObjectString_Value8.ObjectId = Object_GoodsQuality.Id
-                              AND ObjectString_Value8.DescId = zc_ObjectString_GoodsQuality_Value8()
+                                  ON ObjectString_Value8.ObjectId = Object_GoodsQuality.Id
+                                 AND ObjectString_Value8.DescId = zc_ObjectString_GoodsQuality_Value8()
            LEFT JOIN ObjectString AS ObjectString_Value9
-                               ON ObjectString_Value9.ObjectId = Object_GoodsQuality.Id
-                              AND ObjectString_Value9.DescId = zc_ObjectString_GoodsQuality_Value9()
+                                  ON ObjectString_Value9.ObjectId = Object_GoodsQuality.Id
+                                 AND ObjectString_Value9.DescId = zc_ObjectString_GoodsQuality_Value9()
            LEFT JOIN ObjectString AS ObjectString_Value10
-                               ON ObjectString_Value10.ObjectId = Object_GoodsQuality.Id
-                              AND ObjectString_Value10.DescId = zc_ObjectString_GoodsQuality_Value10()
+                                  ON ObjectString_Value10.ObjectId = Object_GoodsQuality.Id
+                                 AND ObjectString_Value10.DescId = zc_ObjectString_GoodsQuality_Value10()
+           LEFT JOIN ObjectString AS ObjectString_Value21
+                                  ON ObjectString_Value21.ObjectId = Object_GoodsQuality.Id 
+                                 AND ObjectString_Value21.DescId = zc_ObjectString_GoodsQuality_Value21()
 
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Klipsa
                                    ON ObjectBoolean_Klipsa.ObjectId = Object_GoodsQuality.Id
@@ -217,6 +222,7 @@ BEGIN
            , COALESCE (ObjectString_Value8.ValueData, '')::TVarChar  AS Value8
            , COALESCE (ObjectString_Value9.ValueData, '')::TVarChar  AS Value9
            , COALESCE (ObjectString_Value10.ValueData,'')::TVarChar  AS Value10
+           , COALESCE (ObjectString_Value21.ValueData,'')::TVarChar  AS Value21
 
            , Object_Goods.GoodsId        AS GoodsId
            , Object_Goods.GoodsCode      AS GoodsCode
@@ -242,32 +248,35 @@ BEGIN
                                   ON ObjectString_Value1.ObjectId = Object_GoodsQuality.Id
                                  AND ObjectString_Value1.DescId = zc_ObjectString_GoodsQuality_Value1()
            LEFT JOIN ObjectString AS ObjectString_Value2
-                               ON ObjectString_Value2.ObjectId = Object_GoodsQuality.Id
-                              AND ObjectString_Value2.DescId = zc_ObjectString_GoodsQuality_Value2()
+                                  ON ObjectString_Value2.ObjectId = Object_GoodsQuality.Id
+                                 AND ObjectString_Value2.DescId = zc_ObjectString_GoodsQuality_Value2()
            LEFT JOIN ObjectString AS ObjectString_Value3
-                               ON ObjectString_Value3.ObjectId = Object_GoodsQuality.Id
-                              AND ObjectString_Value3.DescId = zc_ObjectString_GoodsQuality_Value3()
+                                  ON ObjectString_Value3.ObjectId = Object_GoodsQuality.Id
+                                 AND ObjectString_Value3.DescId = zc_ObjectString_GoodsQuality_Value3()
            LEFT JOIN ObjectString AS ObjectString_Value4
-                               ON ObjectString_Value4.ObjectId = Object_GoodsQuality.Id
-                              AND ObjectString_Value4.DescId = zc_ObjectString_GoodsQuality_Value4()
+                                  ON ObjectString_Value4.ObjectId = Object_GoodsQuality.Id
+                                 AND ObjectString_Value4.DescId = zc_ObjectString_GoodsQuality_Value4()
            LEFT JOIN ObjectString AS ObjectString_Value5
-                               ON ObjectString_Value5.ObjectId = Object_GoodsQuality.Id
-                              AND ObjectString_Value5.DescId = zc_ObjectString_GoodsQuality_Value5()
+                                  ON ObjectString_Value5.ObjectId = Object_GoodsQuality.Id
+                                 AND ObjectString_Value5.DescId = zc_ObjectString_GoodsQuality_Value5()
            LEFT JOIN ObjectString AS ObjectString_Value6
-                               ON ObjectString_Value6.ObjectId = Object_GoodsQuality.Id
-                              AND ObjectString_Value6.DescId = zc_ObjectString_GoodsQuality_Value6()
+                                  ON ObjectString_Value6.ObjectId = Object_GoodsQuality.Id
+                                 AND ObjectString_Value6.DescId = zc_ObjectString_GoodsQuality_Value6()
            LEFT JOIN ObjectString AS ObjectString_Value7
-                               ON ObjectString_Value7.ObjectId = Object_GoodsQuality.Id
-                              AND ObjectString_Value7.DescId = zc_ObjectString_GoodsQuality_Value7()
+                                  ON ObjectString_Value7.ObjectId = Object_GoodsQuality.Id
+                                 AND ObjectString_Value7.DescId = zc_ObjectString_GoodsQuality_Value7()
            LEFT JOIN ObjectString AS ObjectString_Value8
-                               ON ObjectString_Value8.ObjectId = Object_GoodsQuality.Id
-                              AND ObjectString_Value8.DescId = zc_ObjectString_GoodsQuality_Value8()
+                                  ON ObjectString_Value8.ObjectId = Object_GoodsQuality.Id
+                                 AND ObjectString_Value8.DescId = zc_ObjectString_GoodsQuality_Value8()
            LEFT JOIN ObjectString AS ObjectString_Value9
-                               ON ObjectString_Value9.ObjectId = Object_GoodsQuality.Id
-                              AND ObjectString_Value9.DescId = zc_ObjectString_GoodsQuality_Value9()
+                                  ON ObjectString_Value9.ObjectId = Object_GoodsQuality.Id
+                                 AND ObjectString_Value9.DescId = zc_ObjectString_GoodsQuality_Value9()
            LEFT JOIN ObjectString AS ObjectString_Value10
-                               ON ObjectString_Value10.ObjectId = Object_GoodsQuality.Id
-                              AND ObjectString_Value10.DescId = zc_ObjectString_GoodsQuality_Value10()
+                                  ON ObjectString_Value10.ObjectId = Object_GoodsQuality.Id
+                                 AND ObjectString_Value10.DescId = zc_ObjectString_GoodsQuality_Value10()
+           LEFT JOIN ObjectString AS ObjectString_Value21
+                                  ON ObjectString_Value21.ObjectId = Object_GoodsQuality.Id 
+                                 AND ObjectString_Value21.DescId = zc_ObjectString_GoodsQuality_Value21()
 
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Klipsa
                                    ON ObjectBoolean_Klipsa.ObjectId = Object_GoodsQuality.Id
@@ -300,13 +309,14 @@ BEGIN
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_GoodsByGoodsKindQuality (Integer, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_GoodsByGoodsKindQuality (Integer, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 27.09.25         *
  23.09.20         * isKlipsa
  12.02.15         * change inInfomoney Ì‡ inQualityId
  09.02.15         * add Object_Quality
