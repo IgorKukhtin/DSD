@@ -1649,8 +1649,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 192
-    Top = 232
+    Left = 272
+    Top = 184
   end
   object GuidesProdColor: TdsdGuides
     KeyField = 'Id'
@@ -1749,8 +1749,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 256
-    Top = 224
+    Left = 232
+    Top = 240
   end
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'
@@ -1776,8 +1776,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 88
-    Top = 400
+    Left = 104
+    Top = 368
   end
   object GuidesGoodsGroup: TdsdGuides
     KeyField = 'Id'
@@ -1904,8 +1904,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 208
-    Top = 168
+    Left = 256
+    Top = 160
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -2629,7 +2629,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 118
+    Left = 102
     Top = 556
   end
   object dsdDBViewAddOnDoc: TdsdDBViewAddOn

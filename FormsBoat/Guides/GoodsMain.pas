@@ -163,6 +163,17 @@ type
     cxButton1: TcxButton;
     spInsertUpdate: TdsdStoredProc;
     actGoodsSizeChoiceForm: TOpenChoiceForm;
+    actGoodsGroupChoiceForm: TOpenChoiceForm;
+    actMeasureChoiceForm: TOpenChoiceForm;
+    actProdColorChoiceForm: TOpenChoiceForm;
+    actGoodsTypeChoiceForm: TOpenChoiceForm;
+    actGoodsTagChoiceForm: TOpenChoiceForm;
+    actPartnerChoiceForm: TOpenChoiceForm;
+    actEngineChoiceForm: TOpenChoiceForm;
+    OpenChoiceForm7: TOpenChoiceForm;
+    OpenChoiceForm8: TOpenChoiceForm;
+    OpenChoiceForm9: TOpenChoiceForm;
+    OpenChoiceForm10: TOpenChoiceForm;
   private
     { Private declarations }
   public
