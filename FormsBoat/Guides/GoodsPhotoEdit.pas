@@ -127,6 +127,26 @@ type
     GuidesMeasure: TdsdGuides;
     cxButton3: TcxButton;
     edNameMemo: TcxMemo;
+    cxLabel30: TcxLabel;
+    edAmountRemains: TcxCurrencyEdit;
+    cxLabel7: TcxLabel;
+    edGoodsSize: TcxButtonEdit;
+    GuidesGoodsSize: TdsdGuides;
+    cxLabel29: TcxLabel;
+    ceWeight: TcxCurrencyEdit;
+    cxLabel8: TcxLabel;
+    edPartner: TcxButtonEdit;
+    GuidesPartner: TdsdGuides;
+    cxLabel16: TcxLabel;
+    edComment: TcxTextEdit;
+    cxLabel2: TcxLabel;
+    edProdColor: TcxButtonEdit;
+    cxLabel9: TcxLabel;
+    ceParentGroup: TcxButtonEdit;
+    GuidesGoodsGroup: TdsdGuides;
+    edEKPrice: TcxCurrencyEdit;
+    cxLabel10: TcxLabel;
+    GuidesProdColor: TdsdGuides;
   private
     { Private declarations }
   public

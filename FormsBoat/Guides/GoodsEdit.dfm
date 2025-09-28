@@ -274,7 +274,6 @@
     object Main: TcxTabSheet
       Caption = 'Main'
       ImageIndex = 0
-      ExplicitLeft = -1
       object edName: TcxTextEdit
         Left = 40
         Top = 102
@@ -301,7 +300,7 @@
       end
       object cxLabel3: TcxLabel
         Left = 40
-        Top = 124
+        Top = 129
         Caption = #1043#1088#1091#1087#1087#1072
       end
       object cxLabel4: TcxLabel
@@ -360,7 +359,7 @@
       end
       object cxLabel5: TcxLabel
         Left = 40
-        Top = 207
+        Top = 204
         Caption = 'Farbe'
       end
       object ceInfoMoney: TcxButtonEdit
@@ -382,8 +381,8 @@
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
       end
       object cxLabel7: TcxLabel
-        Left = 184
-        Top = 249
+        Left = 181
+        Top = 246
         Caption = 'Gr'#246#223'e'
       end
       object edGoodsSize: TcxButtonEdit
@@ -400,7 +399,7 @@
       end
       object cxLabel8: TcxLabel
         Left = 40
-        Top = 336
+        Top = 338
         Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
       end
       object edPartner: TcxButtonEdit
@@ -618,8 +617,8 @@
         Caption = 'Empf. VK'
       end
       object cxLabel16: TcxLabel
-        Left = 182
-        Top = 539
+        Left = 181
+        Top = 543
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
       end
       object edComment: TcxTextEdit
@@ -737,8 +736,8 @@
         Caption = 'Ladenpreis'
       end
       object cxLabel29: TcxLabel
-        Left = 184
-        Top = 292
+        Left = 181
+        Top = 288
         Caption = 'Weight'
       end
       object ceWeight: TcxCurrencyEdit
@@ -1935,7 +1934,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 73
+    Left = 89
     Top = 480
   end
   object GuidesTaxKind: TdsdGuides
@@ -2630,8 +2629,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 86
-    Top = 580
+    Left = 118
+    Top = 556
   end
   object dsdDBViewAddOnDoc: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -2773,7 +2772,7 @@
     MasterFields = 'Id'
     Params = <>
     Left = 232
-    Top = 512
+    Top = 456
   end
   object DataSource1: TDataSource
     DataSet = ClientDataSet1
