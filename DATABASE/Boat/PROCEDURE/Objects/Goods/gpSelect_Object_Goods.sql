@@ -43,7 +43,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_all TVarChar
              , GoodsTagId Integer, GoodsTagName TVarChar
              , GoodsTypeId  Integer, GoodsTypeName TVarChar
              , GoodsSizeId  Integer, GoodsSizeName TVarChar
-             , ProdColorId Integer, ProdColorName TVarChar, Color_Value Integer
+             , ProdColorId Integer, ProdColorName TVarChar
+             , Color_Value Integer, Color_remains Integer
              , PartnerId Integer, PartnerName   TVarChar
              , UnitId Integer, UnitName TVarChar
                -- Где эта деталь/Узел участвует в сборке Узла/Лодки
@@ -445,6 +446,7 @@ BEGIN
             , Object_ProdColor.Id                AS ProdColorId
             , Object_ProdColor.ValueData         AS ProdColorName
             , COALESCE(ObjectFloat_ProdColor_Value.ValueData, zc_Color_White())::Integer  AS Color_Value
+            , CASE WHEN COALESCE (tmpRemains.Remains,0) <> 0 THEN zc_Color_Yelow() ELSE zc_Color_White() END ::Integer AS Color_remains 
             , Object_Partner.Id                  AS PartnerId
             , Object_Partner.ValueData           AS PartnerName
 

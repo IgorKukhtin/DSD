@@ -300,12 +300,12 @@
       end
       object cxLabel3: TcxLabel
         Left = 40
-        Top = 129
+        Top = 124
         Caption = #1043#1088#1091#1087#1087#1072
       end
       object cxLabel4: TcxLabel
         Left = 40
-        Top = 249
+        Top = 251
         Caption = #1045#1076'. '#1080#1079#1084'.'
       end
       object edRefer: TcxLabel
@@ -359,7 +359,7 @@
       end
       object cxLabel5: TcxLabel
         Left = 40
-        Top = 204
+        Top = 207
         Caption = 'Farbe'
       end
       object ceInfoMoney: TcxButtonEdit
@@ -381,8 +381,8 @@
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
       end
       object cxLabel7: TcxLabel
-        Left = 181
-        Top = 246
+        Left = 184
+        Top = 251
         Caption = 'Gr'#246#223'e'
       end
       object edGoodsSize: TcxButtonEdit
@@ -399,7 +399,7 @@
       end
       object cxLabel8: TcxLabel
         Left = 40
-        Top = 338
+        Top = 337
         Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
       end
       object edPartner: TcxButtonEdit
@@ -736,8 +736,8 @@
         Caption = 'Ladenpreis'
       end
       object cxLabel29: TcxLabel
-        Left = 181
-        Top = 288
+        Left = 184
+        Top = 292
         Caption = 'Weight'
       end
       object ceWeight: TcxCurrencyEdit

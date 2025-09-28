@@ -27,7 +27,6 @@ object GoodsMainForm: TGoodsMainForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 89
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -781,6 +780,13 @@ object GoodsMainForm: TGoodsMainForm
       end
       object Color_Value: TcxGridDBColumn
         DataBinding.FieldName = 'Color_Value'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object Color_remains: TcxGridDBColumn
+        DataBinding.FieldName = 'Color_remains'
         Visible = False
         Options.Editing = False
         VisibleForCustomization = False
@@ -2008,6 +2014,11 @@ object GoodsMainForm: TGoodsMainForm
     ChartList = <>
     ColorRuleList = <
       item
+        BackGroundValueColumn = Color_remains
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ProdColorName
         BackGroundValueColumn = Color_Value
         ColorValueList = <>
       end>
