@@ -92,9 +92,9 @@ AS
               SELECT -- Id Документа
                      Movement.Id                            AS MovementId
                      -- Дата покупателя
-                   , MovementDate_OperDatePartner.ValueData AS OperDate
+                   , (MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDate
                      -- Дата Склад
-                   , Movement.OperDate AS OperDate_sklad
+                   , MovementDate_OperDatePartner.ValueData AS OperDate_sklad
                      -- Дата Заявки
                    , Movement.OperDate AS OperDate_order
                      -- № Документа
@@ -196,6 +196,9 @@ AS
                                ELSE 0
                           END) :: TFloat AS Summ_promo
 
+                   , CASE WHEN COALESCE (TRIM (MovementString_DealId.ValueData), '')    <> '' THEN FALSE 
+                          WHEN COALESCE (MovementLinkMovement_Order.MovementChildId, 0) <> 0  THEN TRUE ELSE FALSE END ::Boolean AS isEdi
+                   , CASE WHEN COALESCE (TRIM (MovementString_DealId.ValueData), '')    <> '' THEN TRUE ELSE FALSE END ::Boolean AS isVchasno
 
               FROM Movement
                    -- Покупатель
@@ -203,6 +206,9 @@ AS
                                                 ON MovementLinkObject_From.MovementId = Movement.Id
                                                AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
                    LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+                   LEFT JOIN ObjectFloat AS ObjectFloat_DocumentDayCount
+                                         ON ObjectFloat_DocumentDayCount.ObjectId = MovementLinkObject_From.ObjectId
+                                        AND ObjectFloat_DocumentDayCount.DescId   = zc_ObjectFloat_Partner_DocumentDayCount()
 
                    -- Подразделение
                    LEFT JOIN MovementLinkObject AS MovementLinkObject_To
@@ -214,6 +220,10 @@ AS
                    LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
                                                   ON MovementLinkMovement_Order.MovementId = Movement.Id
                                                  AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+                   LEFT JOIN MovementString AS MovementString_DealId
+                                            ON MovementString_DealId.MovementId = MovementLinkMovement_Order.MovementChildId
+                                           AND MovementString_DealId.DescId     = zc_MovementString_DealId()
+
                    -- Юр. Лицо
                    INNER JOIN ObjectLink AS OL_Partner_Juridical
                                          ON OL_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
@@ -333,4 +343,5 @@ ALTER TABLE _bi_Report_OrderClient_View OWNER TO project;
 */
 
 -- тест
+-- SELECT sum(Amount), isEdi, isVchasno FROM _bi_Table_OrderClient where  OperDate between '01.09.2025' and '27.09.2025' GROUP BY isEdi, isVchasno
 -- SELECT * FROM _bi_Report_OrderClient_View WHERE OperDate BETWEEN CURRENT_DATE - INTERVAL '1 DAY' AND CURRENT_DATE AND DescId_partner <> zc_Object_Unit()

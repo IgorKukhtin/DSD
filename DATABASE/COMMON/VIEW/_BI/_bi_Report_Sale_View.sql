@@ -396,7 +396,7 @@ AS
                                          ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                                         AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
 
-                   -- Документ Заявка покупателя - не из прводок
+                   -- Документ Заявка покупателя - не из проводок
                    LEFT JOIN MovementLinkMovement AS MLM_Order
                                                   ON MLM_Order.MovementId = MIContainer.MovementId
                                                  AND MLM_Order.DescId     = zc_MovementLinkMovement_Order()
