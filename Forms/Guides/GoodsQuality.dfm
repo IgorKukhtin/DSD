@@ -261,7 +261,7 @@ object GoodsQualityForm: TGoodsQualityForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = dsdQualityGuides
+        Component = QualityGuides
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -378,10 +378,9 @@ object GoodsQualityForm: TGoodsQualityForm
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
-      Caption = '     '
       Category = 0
-      Hint = '     '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
@@ -417,10 +416,10 @@ object GoodsQualityForm: TGoodsQualityForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -432,10 +431,10 @@ object GoodsQualityForm: TGoodsQualityForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdateObject
+      StoredProc = spInsertUpdate
       StoredProcList = <
         item
-          StoredProc = spInsertUpdateObject
+          StoredProc = spInsertUpdate
         end>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
@@ -511,10 +510,10 @@ object GoodsQualityForm: TGoodsQualityForm
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
@@ -592,7 +591,7 @@ object GoodsQualityForm: TGoodsQualityForm
       isShowModal = False
     end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_GoodsQuality'
     DataSet = ClientDataSet
     DataSets = <
@@ -603,7 +602,7 @@ object GoodsQualityForm: TGoodsQualityForm
       item
         Name = 'inQualityId'
         Value = Null
-        Component = dsdQualityGuides
+        Component = QualityGuides
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -619,11 +618,11 @@ object GoodsQualityForm: TGoodsQualityForm
     Left = 48
     Top = 216
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 168
     Top = 160
   end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
+  object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
@@ -655,7 +654,7 @@ object GoodsQualityForm: TGoodsQualityForm
     Left = 168
     Top = 216
   end
-  object spInsertUpdateObject: TdsdStoredProc
+  object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_GoodsQuality'
     DataSets = <>
     OutputType = otResult
@@ -813,7 +812,7 @@ object GoodsQualityForm: TGoodsQualityForm
     Left = 128
     Top = 296
   end
-  object dsdQualityGuides: TdsdGuides
+  object QualityGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceQuality
     FormNameParam.Value = 'TQualityForm'
@@ -825,14 +824,14 @@ object GoodsQualityForm: TGoodsQualityForm
       item
         Name = 'Key'
         Value = ''
-        Component = dsdQualityGuides
+        Component = QualityGuides
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = dsdQualityGuides
+        Component = QualityGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -846,7 +845,7 @@ object GoodsQualityForm: TGoodsQualityForm
     RefreshAction = actRefresh
     ComponentList = <
       item
-        Component = dsdQualityGuides
+        Component = QualityGuides
       end
       item
         Component = actShowAll

@@ -200,6 +200,14 @@ object GoodsQuality_RawForm: TGoodsQuality_RawForm
         HeaderAlignmentVert = vaCenter
         Width = 112
       end
+      object Value21: TcxGridDBColumn
+        Caption = #1059#1084#1086#1074#1080' '#1090#1088#1072#1085#1089#1087#1086#1088#1090#1091#1074#1072#1085#1085#1103' '#1087#1088#1080' t '#1085#1077' '#1074#1080#1097#1077
+        DataBinding.FieldName = 'Value21'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1082#1086#1083#1086#1085#1082#1072' 18'
+        Width = 80
+      end
       object Name: TcxGridDBColumn
         Caption = 
           #1042#1080#1075#1086#1090#1086#1074#1083#1077#1085#1110' '#1079#1072' '#1090#1077#1093#1085#1086#1083#1086#1075#1110#1095#1085#1086#1102' '#1110#1085#1089#1090#1088#1091#1082#1094#1110#1108#1102' '#1079' '#1076#1086#1090#1088#1080#1084#1072#1085#1085#1103#1084', '#1089#1072#1085#1110#1090#1072#1088#1085 +
@@ -216,7 +224,6 @@ object GoodsQuality_RawForm: TGoodsQuality_RawForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 58
       end
@@ -255,7 +262,7 @@ object GoodsQuality_RawForm: TGoodsQuality_RawForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = dsdQualityGuides
+        Component = QualityGuides
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -411,10 +418,10 @@ object GoodsQuality_RawForm: TGoodsQuality_RawForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -426,10 +433,10 @@ object GoodsQuality_RawForm: TGoodsQuality_RawForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdateObject
+      StoredProc = spInsertUpdate
       StoredProcList = <
         item
-          StoredProc = spInsertUpdateObject
+          StoredProc = spInsertUpdate
         end>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
@@ -505,10 +512,10 @@ object GoodsQuality_RawForm: TGoodsQuality_RawForm
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
@@ -586,7 +593,7 @@ object GoodsQuality_RawForm: TGoodsQuality_RawForm
       isShowModal = False
     end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_GoodsQuality'
     DataSet = ClientDataSet
     DataSets = <
@@ -597,7 +604,7 @@ object GoodsQuality_RawForm: TGoodsQuality_RawForm
       item
         Name = 'inQualityId'
         Value = Null
-        Component = dsdQualityGuides
+        Component = QualityGuides
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -613,11 +620,11 @@ object GoodsQuality_RawForm: TGoodsQuality_RawForm
     Left = 48
     Top = 216
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 168
     Top = 160
   end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
+  object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
@@ -638,15 +645,18 @@ object GoodsQuality_RawForm: TGoodsQuality_RawForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 168
     Top = 216
   end
-  object spInsertUpdateObject: TdsdStoredProc
+  object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_GoodsQuality'
     DataSets = <>
     OutputType = otResult
@@ -767,6 +777,15 @@ object GoodsQuality_RawForm: TGoodsQuality_RawForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inValue21'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Value21'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId'
         Value = Null
         Component = ClientDataSet
@@ -792,10 +811,10 @@ object GoodsQuality_RawForm: TGoodsQuality_RawForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 128
-    Top = 296
+    Left = 304
+    Top = 248
   end
-  object dsdQualityGuides: TdsdGuides
+  object QualityGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceQuality
     FormNameParam.Value = 'TQualityForm'
@@ -807,14 +826,14 @@ object GoodsQuality_RawForm: TGoodsQuality_RawForm
       item
         Name = 'Key'
         Value = ''
-        Component = dsdQualityGuides
+        Component = QualityGuides
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = dsdQualityGuides
+        Component = QualityGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -828,7 +847,7 @@ object GoodsQuality_RawForm: TGoodsQuality_RawForm
     RefreshAction = actRefresh
     ComponentList = <
       item
-        Component = dsdQualityGuides
+        Component = QualityGuides
       end
       item
         Component = actShowAll
