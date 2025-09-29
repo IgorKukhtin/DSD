@@ -27,6 +27,8 @@ object GoodsMainForm: TGoodsMainForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = -338
+    ExplicitTop = 89
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -511,26 +513,12 @@ object GoodsMainForm: TGoodsMainForm
       end
       object EAN: TcxGridDBColumn
         DataBinding.FieldName = 'EAN'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
       object ASIN: TcxGridDBColumn
         DataBinding.FieldName = 'ASIN'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -538,13 +526,6 @@ object GoodsMainForm: TGoodsMainForm
       object MatchCode: TcxGridDBColumn
         Caption = 'Matchcode'
         DataBinding.FieldName = 'MatchCode'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1076' '#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1080#1103
@@ -553,13 +534,6 @@ object GoodsMainForm: TGoodsMainForm
       object FeeNumber: TcxGridDBColumn
         Caption = 'Zolltarif Nr'
         DataBinding.FieldName = 'FeeNumber'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #8470' '#1090#1072#1084#1086#1078#1077#1085#1085#1086#1081' '#1087#1086#1096#1083#1080#1085#1099
