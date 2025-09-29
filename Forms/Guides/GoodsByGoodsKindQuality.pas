@@ -22,7 +22,7 @@ uses
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
   DataModul, cxButtonEdit, cxContainer, cxLabel, dsdGuides, cxTextEdit,
-  cxMaskEdit, cxCurrencyEdit;
+  cxMaskEdit, cxCurrencyEdit, dsdCommon;
 
 type
   TGoodsByGoodsKindQualityForm = class(TParentForm)

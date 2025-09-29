@@ -201,6 +201,13 @@ object GoodsQualityForm: TGoodsQualityForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
+      object Value21: TcxGridDBColumn
+        Caption = #1059#1084#1086#1074#1080' '#1090#1088#1072#1085#1089#1087#1086#1088#1090#1091#1074#1072#1085#1085#1103' '#1087#1088#1080' t '#1085#1077' '#1074#1080#1097#1077', '#1082#1086#1083#1086#1085#1082#1072' 18'
+        DataBinding.FieldName = 'Value21'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 91
+      end
       object Name: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1043#1054#1057#1058', '#1044#1057#1058#1059','#1058#1059', '#8470'17'
         DataBinding.FieldName = 'Name'
@@ -764,6 +771,15 @@ object GoodsQualityForm: TGoodsQualityForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Value10'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue21'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Value21'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

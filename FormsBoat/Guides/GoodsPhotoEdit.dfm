@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' - Document / Photo>'
-  ClientHeight = 412
+  ClientHeight = 595
   ClientWidth = 972
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -31,7 +31,7 @@
   end
   object cxButton1: TcxButton
     Left = 15
-    Top = 359
+    Top = 545
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -41,7 +41,7 @@
   end
   object cxButton2: TcxButton
     Left = 126
-    Top = 359
+    Top = 545
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -68,20 +68,22 @@
     Left = 216
     Top = 0
     Width = 756
-    Height = 412
+    Height = 595
     Align = alRight
     Anchors = [akLeft, akTop, akRight, akBottom]
     Caption = 'PanelMain'
     ShowCaption = False
     TabOrder = 6
+    ExplicitHeight = 412
     object Panel: TPanel
       Left = 1
       Top = 1
       Width = 232
-      Height = 410
+      Height = 593
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 0
+      ExplicitHeight = 410
       object dxBarDockControl1: TdxBarDockControl
         Left = 0
         Top = 0
@@ -101,18 +103,20 @@
         Left = 0
         Top = 29
         Width = 232
-        Height = 381
+        Height = 564
         Align = alClient
         Caption = 'PanelPhotoList'
         ShowCaption = False
         TabOrder = 2
+        ExplicitHeight = 381
         object cxGrid3: TcxGrid
           Left = 1
           Top = 19
           Width = 230
-          Height = 361
+          Height = 544
           Align = alClient
           TabOrder = 0
+          ExplicitHeight = 361
           object cxGridDBBandedTableView1: TcxGridDBBandedTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = PhotoDS
@@ -165,11 +169,12 @@
       Left = 233
       Top = 1
       Width = 522
-      Height = 410
+      Height = 593
       Align = alClient
       Caption = 'PanelView'
       ShowCaption = False
       TabOrder = 1
+      ExplicitHeight = 410
       object PanelPhoto: TPanel
         Left = 1
         Top = 1
@@ -256,20 +261,20 @@
     Width = 90
   end
   object cxLabel20: TcxLabel
-    Left = 14
+    Left = 15
     Top = 90
     Caption = 'EAN'
   end
   object edEAN: TcxTextEdit
-    Left = 15
-    Top = 108
+    Left = 14
+    Top = 107
     Properties.ReadOnly = True
     TabOrder = 12
     Width = 90
   end
   object edASIN: TcxTextEdit
     Left = 111
-    Top = 108
+    Top = 107
     Properties.ReadOnly = True
     TabOrder = 14
     Width = 90
@@ -305,17 +310,17 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 20
+    TabOrder = 18
     Width = 90
   end
   object cxButton3: TcxButton
     Left = 8
-    Top = 312
+    Top = 498
     Width = 186
     Height = 25
     Action = actSetVisiblePanelPhoto
     ModalResult = 8
-    TabOrder = 23
+    TabOrder = 22
   end
   object edNameMemo: TcxMemo
     Left = 14
@@ -324,10 +329,134 @@
     Height = 63
     Width = 188
   end
+  object cxLabel30: TcxLabel
+    Left = 143
+    Top = 255
+    Caption = #1054#1089#1090#1072#1090#1086#1082
+  end
+  object edAmountRemains: TcxCurrencyEdit
+    Left = 143
+    Top = 272
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    Properties.ReadOnly = True
+    TabOrder = 26
+    Width = 58
+  end
+  object cxLabel7: TcxLabel
+    Left = 101
+    Top = 379
+    Caption = 'Gr'#246#223'e'
+  end
+  object edGoodsSize: TcxButtonEdit
+    Left = 101
+    Top = 396
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = False
+    TabOrder = 28
+    Width = 100
+  end
+  object cxLabel29: TcxLabel
+    Left = 14
+    Top = 379
+    Caption = 'Weight'
+  end
+  object ceWeight: TcxCurrencyEdit
+    Left = 14
+    Top = 396
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    Properties.ReadOnly = True
+    TabOrder = 30
+    Width = 82
+  end
+  object cxLabel8: TcxLabel
+    Left = 14
+    Top = 297
+    Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+  end
+  object edPartner: TcxButtonEdit
+    Left = 14
+    Top = 313
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 32
+    Width = 187
+  end
+  object cxLabel16: TcxLabel
+    Left = 14
+    Top = 422
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+  end
+  object edComment: TcxTextEdit
+    Left = 14
+    Top = 440
+    Properties.ReadOnly = True
+    TabOrder = 34
+    Width = 187
+  end
+  object cxLabel2: TcxLabel
+    Left = 14
+    Top = 339
+    Caption = 'Farbe'
+  end
+  object edProdColor: TcxButtonEdit
+    Left = 14
+    Top = 355
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 36
+    Width = 123
+  end
+  object cxLabel9: TcxLabel
+    Left = 14
+    Top = 255
+    Caption = #1043#1088#1091#1087#1087#1072
+  end
+  object ceParentGroup: TcxButtonEdit
+    Left = 14
+    Top = 272
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 38
+    Width = 123
+  end
+  object edEKPrice: TcxCurrencyEdit
+    Left = 143
+    Top = 355
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    Properties.ReadOnly = True
+    Properties.UseDisplayFormatWhenEditing = True
+    TabOrder = 39
+    Width = 58
+  end
+  object cxLabel10: TcxLabel
+    Left = 143
+    Top = 339
+    Hint = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057' '#1079#1072#1082#1091#1087'.'
+    Caption = 'Netto EK'
+  end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 168
-    Top = 256
+    Left = 896
+    Top = 448
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -592,8 +721,8 @@
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 80
-    Top = 256
+    Left = 664
+    Top = 424
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Goods'
@@ -690,6 +819,94 @@
         Component = edNameMemo
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupId'
+        Value = Null
+        Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupName'
+        Value = Null
+        Component = GuidesGoodsGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountRemains'
+        Value = Null
+        Component = edAmountRemains
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerId'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerName'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsSizeId'
+        Value = Null
+        Component = GuidesGoodsSize
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsSizeName'
+        Value = Null
+        Component = GuidesGoodsSize
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EKPrice'
+        Value = Null
+        Component = edEKPrice
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProdColorId'
+        Value = Null
+        Component = GuidesProdColor
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProdColorName'
+        Value = Null
+        Component = GuidesProdColor
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Weight'
+        Value = Null
+        Component = ceWeight
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = edComment
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 40
@@ -712,16 +929,16 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 121
-    Top = 251
+    Left = 561
+    Top = 427
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 160
-    Top = 392
+    Left = 176
+    Top = 522
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 99
-    Top = 364
+    Top = 550
   end
   object PhotoCDS: TClientDataSet
     Aggregates = <>
@@ -837,7 +1054,7 @@
   object ActionList1: TActionList
     Images = dmMain.ImageList
     Left = 21
-    Top = 365
+    Top = 551
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1265,5 +1482,117 @@
       end>
     Left = 160
     Top = 128
+  end
+  object GuidesGoodsSize: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsSize
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TGoodsSizeForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsSizeForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoodsSize
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoodsSize
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 152
+    Top = 199
+  end
+  object GuidesPartner: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartner
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TPartnerForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPartnerForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 128
+    Top = 297
+  end
+  object GuidesGoodsGroup: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceParentGroup
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TGoodsGroupChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsGroupChoiceForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoodsGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 80
+    Top = 256
+  end
+  object GuidesProdColor: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edProdColor
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TProdColorForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TProdColorForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesProdColor
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesProdColor
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 56
+    Top = 338
   end
 end

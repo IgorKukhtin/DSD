@@ -180,6 +180,7 @@ BEGIN
                   , ObjectString_Value8.ValueData AS Value8
                   , ObjectString_Value9.ValueData AS Value9
                   , ObjectString_Value10.ValueData AS Value10
+                  , ObjectString_Value21.ValueData AS Value21
               FROM tmpMIGoods
                    INNER JOIN ObjectLink AS ObjectLink_GoodsQuality_Goods
                                          ON ObjectLink_GoodsQuality_Goods.ChildObjectId = tmpMIGoods.GoodsId
@@ -233,6 +234,10 @@ BEGIN
                    LEFT JOIN ObjectString AS ObjectString_Value10
                                           ON ObjectString_Value10.ObjectId = ObjectLink_GoodsQuality_Goods.ObjectId
                                          AND ObjectString_Value10.DescId = zc_ObjectString_GoodsQuality_Value10()
+                   LEFT JOIN ObjectString AS ObjectString_Value21
+                                          ON ObjectString_Value21.ObjectId = ObjectLink_GoodsQuality_Goods.ObjectId
+                                         AND ObjectString_Value21.DescId = zc_ObjectString_GoodsQuality_Value21()
+
 /* 
                    LEFT JOIN ObjectLink AS ObjectLink_Quality_Juridical
                                         ON ObjectLink_Quality_Juridical.ObjectId = Object_Quality.Id
@@ -563,6 +568,7 @@ BEGIN
            , tmpGoodsQuality.Value8
            , tmpGoodsQuality.Value9
            , tmpGoodsQuality.Value10
+           , tmpGoodsQuality.Value21
              -- для вида товара - Вид пакування/стан продукції 
            , tmpMIGoodsByGoodsKind.Value11_gk
 
@@ -730,6 +736,7 @@ BEGIN
                                     , ObjectString_Value8.ValueData AS Value8
                                     , ObjectString_Value9.ValueData AS Value9
                                     , ObjectString_Value10.ValueData AS Value10
+                                    , ObjectString_Value21.ValueData AS Value21
                                 FROM tmpMIGoods
                                      INNER JOIN ObjectLink AS ObjectLink_GoodsQuality_Goods
                                                            ON ObjectLink_GoodsQuality_Goods.ChildObjectId = tmpMIGoods.GoodsId
@@ -783,6 +790,9 @@ BEGIN
                                      LEFT JOIN ObjectString AS ObjectString_Value10
                                                             ON ObjectString_Value10.ObjectId = ObjectLink_GoodsQuality_Goods.ObjectId
                                                            AND ObjectString_Value10.DescId = zc_ObjectString_GoodsQuality_Value10()
+                                     LEFT JOIN ObjectString AS ObjectString_Value21
+                                                            ON ObjectString_Value21.ObjectId = ObjectLink_GoodsQuality_Goods.ObjectId
+                                                           AND ObjectString_Value21.DescId = zc_ObjectString_GoodsQuality_Value21()
                   /* 
                                      LEFT JOIN ObjectLink AS ObjectLink_Quality_Juridical
                                                           ON ObjectLink_Quality_Juridical.ObjectId = Object_Quality.Id
@@ -1096,6 +1106,7 @@ BEGIN
            , tmpGoodsQuality.Value8
            , tmpGoodsQuality.Value9
            , tmpGoodsQuality.Value10
+           , tmpGoodsQuality.Value21
 
            , tmpMovement_QualityParams.InvNumber AS InvNumber_Quality
            , tmpMovement_QualityParams.OperDate AS OperDate_Quality
@@ -1167,6 +1178,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 27.09.25         * Value21
  19.02.21         * add DaysQ_gk
  24.07.19         *
  13.01.17         * add CodeUKTZED

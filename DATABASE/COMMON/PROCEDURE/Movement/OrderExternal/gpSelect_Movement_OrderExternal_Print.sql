@@ -614,6 +614,17 @@ BEGIN
                                    , ROW_NUMBER() OVER (PARTITION BY gpSelect.GoodsId, gpSelect.GoodsKindId ORDER BY gpSelect.NPP) AS Ord
                               FROM gpSelect_Object_ChoiceCell (FALSE, inSession) AS gpSelect
                              )
+           --срок годности
+          , tmpGoodsQuality AS (SELECT GoodsQuality_Goods.ChildObjectId AS GoodsId
+                                     , ObjectString_Value2.ValueData    AS Value2 
+                                FROM ObjectLink AS GoodsQuality_Goods
+                                     LEFT JOIN ObjectString AS ObjectString_Value2
+                                                            ON ObjectString_Value2.ObjectId = GoodsQuality_Goods.ObjectId
+                                                           AND ObjectString_Value2.DescId = zc_ObjectString_GoodsQuality_Value2()
+                                
+                                WHERE GoodsQuality_Goods.DescId = zc_ObjectLink_GoodsQuality_Goods() 
+                                  AND GoodsQuality_Goods.ChildObjectId IN (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI)
+                                )
 
 
        -- Результат
@@ -686,7 +697,10 @@ BEGIN
            , COALESCE (tmpChoiceCell.CellCode, tmpChoiceCell_two.CellCode)           ::Integer  AS CellCode
            , COALESCE (tmpChoiceCell.NPP, tmpChoiceCell_two.NPP)                     ::Integer  AS NPP_NE_nado
            , COALESCE (tmpChoiceCell.CellName, tmpChoiceCell_two.CellName)           ::TVarChar AS CellName
-           , COALESCE (tmpChoiceCell.CellName_shot, tmpChoiceCell_two.CellName_shot) ::TVarChar AS CellName_shot
+           , COALESCE (tmpChoiceCell.CellName_shot, tmpChoiceCell_two.CellName_shot) ::TVarChar AS CellName_shot  
+           
+           --
+           , tmpGoodsQuality.Value2   AS Value2
        FROM (SELECT tmpMI.MovementItemId
                   , tmpMI.GoodsId
                   , tmpMI.GoodsKindId
@@ -774,6 +788,7 @@ BEGIN
                                    AND tmpChoiceCell_two.Ord = 1
                                    AND tmpChoiceCell.GoodsId IS NULL
 
+            LEFT JOIN tmpGoodsQuality ON tmpGoodsQuality.GoodsId = tmpMI.GoodsId
        WHERE tmpMI.Amount <> 0 OR tmpMI.AmountSecond <> 0
        -- ORDER BY ObjectString_Goods_GroupNameFull.ValueData, Object_Goods.ValueData, Object_GoodsKind.ValueData
        ;

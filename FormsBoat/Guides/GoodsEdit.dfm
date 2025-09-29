@@ -274,7 +274,6 @@
     object Main: TcxTabSheet
       Caption = 'Main'
       ImageIndex = 0
-      ExplicitLeft = -1
       object edName: TcxTextEdit
         Left = 40
         Top = 102
@@ -306,7 +305,7 @@
       end
       object cxLabel4: TcxLabel
         Left = 40
-        Top = 249
+        Top = 251
         Caption = #1045#1076'. '#1080#1079#1084'.'
       end
       object edRefer: TcxLabel
@@ -383,7 +382,7 @@
       end
       object cxLabel7: TcxLabel
         Left = 184
-        Top = 249
+        Top = 251
         Caption = 'Gr'#246#223'e'
       end
       object edGoodsSize: TcxButtonEdit
@@ -400,7 +399,7 @@
       end
       object cxLabel8: TcxLabel
         Left = 40
-        Top = 336
+        Top = 337
         Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
       end
       object edPartner: TcxButtonEdit
@@ -618,8 +617,8 @@
         Caption = 'Empf. VK'
       end
       object cxLabel16: TcxLabel
-        Left = 182
-        Top = 539
+        Left = 181
+        Top = 543
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
       end
       object edComment: TcxTextEdit
@@ -1650,8 +1649,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 192
-    Top = 232
+    Left = 272
+    Top = 184
   end
   object GuidesProdColor: TdsdGuides
     KeyField = 'Id'
@@ -1750,8 +1749,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 256
-    Top = 224
+    Left = 232
+    Top = 240
   end
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'
@@ -1777,8 +1776,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 88
-    Top = 400
+    Left = 104
+    Top = 368
   end
   object GuidesGoodsGroup: TdsdGuides
     KeyField = 'Id'
@@ -1905,8 +1904,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 208
-    Top = 168
+    Left = 256
+    Top = 160
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -1935,7 +1934,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 73
+    Left = 89
     Top = 480
   end
   object GuidesTaxKind: TdsdGuides
@@ -2630,8 +2629,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 86
-    Top = 580
+    Left = 102
+    Top = 556
   end
   object dsdDBViewAddOnDoc: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -2773,7 +2772,7 @@
     MasterFields = 'Id'
     Params = <>
     Left = 232
-    Top = 512
+    Top = 456
   end
   object DataSource1: TDataSource
     DataSet = ClientDataSet1

@@ -27,6 +27,7 @@ object GoodsMainForm: TGoodsMainForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = -338
     ExplicitTop = 89
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
@@ -110,6 +111,7 @@ object GoodsMainForm: TGoodsMainForm
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
+            Action = actGoodsGroupChoiceForm
             Default = True
             Kind = bkEllipsis
           end>
@@ -220,27 +222,48 @@ object GoodsMainForm: TGoodsMainForm
       object GoodsTagName: TcxGridDBColumn
         Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103
         DataBinding.FieldName = 'GoodsTagName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actGoodsTagChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 80
       end
       object GoodsTypeName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1076#1077#1090#1072#1083#1080
         DataBinding.FieldName = 'GoodsTypeName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actGoodsTypeChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 100
       end
       object MeasureName: TcxGridDBColumn
         Caption = #1045#1076'. '#1080#1079#1084'.'
         DataBinding.FieldName = 'MeasureName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actMeasureChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 55
       end
       object AmountRemains: TcxGridDBColumn
@@ -281,20 +304,34 @@ object GoodsMainForm: TGoodsMainForm
       object EngineName: TcxGridDBColumn
         Caption = 'Engine'
         DataBinding.FieldName = 'EngineName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actEngineChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1052#1086#1090#1086#1088
-        Options.Editing = False
         Width = 80
       end
       object ProdColorName: TcxGridDBColumn
         Caption = 'Farbe'
         DataBinding.FieldName = 'ProdColorName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actProdColorChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1074#1077#1090
-        Options.Editing = False
         Width = 100
       end
       object EKPrice: TcxGridDBColumn
@@ -406,13 +443,13 @@ object GoodsMainForm: TGoodsMainForm
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
+            Action = actPartnerChoiceForm
             Default = True
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 100
       end
       object DiscountPartnerName: TcxGridDBColumn
@@ -476,26 +513,12 @@ object GoodsMainForm: TGoodsMainForm
       end
       object EAN: TcxGridDBColumn
         DataBinding.FieldName = 'EAN'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
       object ASIN: TcxGridDBColumn
         DataBinding.FieldName = 'ASIN'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -503,13 +526,6 @@ object GoodsMainForm: TGoodsMainForm
       object MatchCode: TcxGridDBColumn
         Caption = 'Matchcode'
         DataBinding.FieldName = 'MatchCode'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1076' '#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1080#1103
@@ -518,13 +534,6 @@ object GoodsMainForm: TGoodsMainForm
       object FeeNumber: TcxGridDBColumn
         Caption = 'Zolltarif Nr'
         DataBinding.FieldName = 'FeeNumber'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #8470' '#1090#1072#1084#1086#1078#1077#1085#1085#1086#1081' '#1087#1086#1096#1083#1080#1085#1099
@@ -781,6 +790,13 @@ object GoodsMainForm: TGoodsMainForm
       end
       object Color_Value: TcxGridDBColumn
         DataBinding.FieldName = 'Color_Value'
+        Visible = False
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object Color_remains: TcxGridDBColumn
+        DataBinding.FieldName = 'Color_remains'
         Visible = False
         Options.Editing = False
         VisibleForCustomization = False
@@ -1645,6 +1661,276 @@ object GoodsMainForm: TGoodsMainForm
       ImportSettingsId.MultiSelectSeparator = ','
       ExternalParams = <>
     end
+    object actMeasureChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TMeasureForm'
+      FormName = 'TMeasureForm'
+      FormNameParam.Value = 'TMeasureForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MeasureId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MeasureName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actProdColorChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TProdColorForm'
+      FormName = 'TProdColorForm'
+      FormNameParam.Value = 'TProdColorForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ProdColorId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ProdColorName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actGoodsTypeChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TGoodsTypeForm'
+      FormName = 'TGoodsTypeForm'
+      FormNameParam.Value = 'TGoodsTypeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsTypeId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsTypeName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actGoodsTagChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TGoodsTagForm'
+      FormName = 'TGoodsTagForm'
+      FormNameParam.Value = 'TGoodsTagForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsTagId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsTagName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actPartnerChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PartnerForm'
+      FormName = 'TPartnerForm'
+      FormNameParam.Value = 'TPartnerForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actEngineChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TProdEngineForm'
+      FormName = 'TProdEngineForm'
+      FormNameParam.Value = 'TProdEngineForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'EngineId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'EngineName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object OpenChoiceForm7: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsSizeForm'
+      FormName = 'TGoodsGroupChoiceForm'
+      FormNameParam.Value = 'TGoodsGroupChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsGroupId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsGroupName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object OpenChoiceForm8: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsSizeForm'
+      FormName = 'TGoodsGroupChoiceForm'
+      FormNameParam.Value = 'TGoodsGroupChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsGroupId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsGroupName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object OpenChoiceForm9: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsSizeForm'
+      FormName = 'TGoodsGroupChoiceForm'
+      FormNameParam.Value = 'TGoodsGroupChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsGroupId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsGroupName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object OpenChoiceForm10: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsSizeForm'
+      FormName = 'TGoodsGroupChoiceForm'
+      FormNameParam.Value = 'TGoodsGroupChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsGroupId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsGroupName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object actStartLoad: TMultiAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
@@ -1717,6 +2003,33 @@ object GoodsMainForm: TGoodsMainForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actGoodsGroupChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TGoodsGroupChoiceForm'
+      FormName = 'TGoodsGroupChoiceForm'
+      FormNameParam.Value = 'TGoodsGroupChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsGroupId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsGroupName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
     object actInsertUpdate_Unit: TdsdExecStoredProc
       Category = 'Update'
@@ -2008,6 +2321,11 @@ object GoodsMainForm: TGoodsMainForm
     ChartList = <>
     ColorRuleList = <
       item
+        BackGroundValueColumn = Color_remains
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ProdColorName
         BackGroundValueColumn = Color_Value
         ColorValueList = <>
       end>

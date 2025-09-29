@@ -2577,11 +2577,11 @@ procedure TLoadFormTest.LoadQualityFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKindQualityForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKindQualityForm');
-  exit;
+  //exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsQualityForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsQualityForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsQuality_RawForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsQuality_RawForm');
   exit;

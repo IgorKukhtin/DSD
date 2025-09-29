@@ -785,6 +785,12 @@ object GoodsForm: TGoodsForm
         VisibleForCustomization = False
         Width = 55
       end
+      object Color_remains: TcxGridDBColumn
+        DataBinding.FieldName = 'Color_remains'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 55
+      end
       object Name_all: TcxGridDBColumn
         Caption = '***'#1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name_all'
@@ -2007,6 +2013,11 @@ object GoodsForm: TGoodsForm
     ChartList = <>
     ColorRuleList = <
       item
+        BackGroundValueColumn = Color_remains
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ProdColorName
         BackGroundValueColumn = Color_Value
         ColorValueList = <>
       end>

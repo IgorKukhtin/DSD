@@ -687,6 +687,12 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsQuality_Value10() RETURNS Intege
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_GoodsQuality_Value10', zc_Object_GoodsQuality(), 'Умови зберігання, колонка 16' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsQuality_Value10');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsQuality_Value21() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsQuality_Value21'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_GoodsQuality_Value21', zc_Object_GoodsQuality(), 'Умови транспортування при t не вище, колонка 17' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsQuality_Value21');
+
+
+
 --!!!Quality
 CREATE OR REPLACE FUNCTION zc_ObjectString_Quality_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Quality_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
@@ -1737,6 +1743,7 @@ INSERT INTO ObjectStringDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 27.09.25         * zc_ObjectString_GoodsQuality_Value21
  19.02.25         * zc_ObjectString_MessagePersonalService_Comment
  21.01.25         * zc_ObjectString_GoodsGroupProperty_QualityINN
  02.12.24         * zc_ObjectString_SiteTag_Comment
