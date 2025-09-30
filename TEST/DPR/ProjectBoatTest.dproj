@@ -1393,6 +1393,10 @@
 				<Form>GoodsDocumentPhotoEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\GoodsMain_Choice.pas">
+				<Form>GoodsMain_ChoiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
