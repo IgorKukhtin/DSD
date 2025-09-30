@@ -85,6 +85,21 @@ inherited SaleForm: TSaleForm
               Format = ',0.####'
               Kind = skSum
               Column = BoxWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Value_m
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Value_n
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Value_promo
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -153,6 +168,21 @@ inherited SaleForm: TSaleForm
               Format = ',0.####'
               Kind = skSum
               Column = BoxWeight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Value_m
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Value_n
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Value_promo
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -640,6 +670,67 @@ inherited SaleForm: TSaleForm
           end
           inherited colIsErased: TcxGridDBColumn
             Width = 25
+          end
+          object PromoDiscountKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1089#1082#1080#1076#1082#1080' ('#1040#1082#1094#1080#1103')'
+            DataBinding.FieldName = 'PromoDiscountKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 88
+          end
+          object GoodsCode_out: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088' ('#1055#1086#1082#1091#1087#1082#1072')'
+            DataBinding.FieldName = 'GoodsCode_out'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object GoodsName_out: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088' ('#1055#1086#1082#1091#1087#1082#1072')'
+            DataBinding.FieldName = 'GoodsName_out'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object GoodsKindName_out: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088' ('#1055#1086#1082#1091#1087#1082#1072')'
+            DataBinding.FieldName = 'GoodsKindName_out'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Value_m: TcxGridDBColumn
+            Caption = #1047#1085#1072#1095#1077#1085#1080#1077' m'
+            DataBinding.FieldName = 'Value_m'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Value_n: TcxGridDBColumn
+            Caption = #1047#1085#1072#1095#1077#1085#1080#1077' n'
+            DataBinding.FieldName = 'Value_n'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Value_promo: TcxGridDBColumn
+            Caption = #1055#1086#1076#1072#1088#1086#1095#1085#1086#1077' '#1082#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Value_promo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object GoodsName_old: TcxGridDBColumn
             Caption = '***'#1058#1086#1074#1072#1088

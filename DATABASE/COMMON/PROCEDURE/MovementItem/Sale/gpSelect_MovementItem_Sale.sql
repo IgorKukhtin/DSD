@@ -35,6 +35,17 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , WeightPackage_calc TFloat         --Вес пакетов
              , BoxWeight          TFloat         --ВЕс упаковок
              , AmountPartnerWeightWithBox TFloat --вес брутто
+
+             , GoodsId_out             Integer  --Товар (Покупка), а скидка на товар ObjectId
+             , GoodsCode_out           Integer  --Товар (Покупка), а скидка на товар ObjectId
+             , GoodsName_out           TVarChar --Товар (Покупка), а скидка на товар ObjectId
+             , GoodsKindId_out         Integer  --Вид товара(Покупка), а скидка на товар zc_MILinkObject_GoodsKind
+             , GoodsKindName_out       TVarChar --Вид товара(Покупка), а скидка на товар zc_MILinkObject_GoodsKind
+             , PromoDiscountKindId     Integer  --ИД Тип скидки(Акция)
+             , PromoDiscountKindName   TVarChar --Наименование Тип скидки(Акция)
+             , Value_m                 TFloat   -- Значение m
+             , Value_n                 TFloat   -- Значение n
+             , Value_promo             TFloat   -- подарочное кол-во
               )
 AS
 $BODY$
@@ -245,7 +256,13 @@ BEGIN
 
                                  , MILinkObject_GoodsReal.ObjectId                   AS GoodsRealId
                                  , COALESCE (MILinkObject_GoodsKindReal.ObjectId, 0) AS GoodsKindRealId
-                            FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+
+                                 , MILinkObject_GoodsOut.ObjectId                AS GoodsId_out
+                                 , MILinkObject_GoodsKindOut.ObjectId            AS GoodsKindId_out
+                                 , MILinkObject_PromoDiscountKind.ObjectId       AS PromoDiscountKindId
+                                 , MIFloat_Value_m.ValueData           ::TFloat  AS Value_m
+                                 , MIFloat_Value_n.ValueData           ::TFloat  AS Value_n 
+                           FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                                  INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                         AND MovementItem.DescId     = zc_MI_Master()
                                                         AND MovementItem.isErased   = tmpIsErased.isErased
@@ -326,6 +343,28 @@ BEGIN
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindReal
                                                                   ON MILinkObject_GoodsKindReal.MovementItemId = MovementItem.Id
                                                                  AND MILinkObject_GoodsKindReal.DescId = zc_MILinkObject_GoodsKindReal()
+
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsOut
+                                                                  ON MILinkObject_GoodsOut.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_GoodsOut.DescId = zc_MILinkObject_Goods_out()
+                      
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindOut
+                                                                  ON MILinkObject_GoodsKindOut.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_GoodsKindOut.DescId = zc_MILinkObject_GoodsKind_out()
+                      
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_PromoDiscountKind
+                                                                  ON MILinkObject_PromoDiscountKind.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_PromoDiscountKind.DescId = zc_MILinkObject_PromoDiscountKind()
+
+                                 LEFT JOIN MovementItemFloat AS MIFloat_Value_m
+                                                             ON MIFloat_Value_m.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_Value_m.DescId = zc_MIFloat_Value_m()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_Value_n
+                                                             ON MIFloat_Value_n.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_Value_n.DescId = zc_MIFloat_Value_n()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_Value_promo
+                                                             ON MIFloat_Value_promo.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_Value_promo.DescId = zc_MIFloat_Value_promo()
                            )
            -- Связь с акциями для существующих MovementItem
         , tmpMIPromo_all AS (SELECT tmp.MovementId_Promo                          AS MovementId_Promo
@@ -482,6 +521,17 @@ BEGIN
            , 0 :: TFloat AS WeightPackage_calc
            , 0 :: TFloat AS BoxWeight 
            , 0 :: TFloat AS AmountPartnerWeightWithBox
+
+           , 0 ::Integer                AS GoodsId_out             --ИД 
+           , 0 ::Integer                AS GoodsCode_out           --код 
+           , '' ::TVarChar              AS GoodsName_out           --наименование 
+           , 0 ::Integer                AS GoodsKindId_out         --ИД 
+           , '' ::TVarChar              AS GoodsKindName_out       --Наименование 
+           , 0 ::Integer                AS PromoDiscountKindId     --ИД 
+           , '' ::TVarChar              AS PromoDiscountKindName   --Наименование 
+           , 0  ::TFloat                AS Value_m
+           , 0  ::TFloat                AS Value_n
+           , 0  ::TFloat                AS Value_promo
        FROM (SELECT Object_Goods.Id                                        AS GoodsId
                   , Object_Goods.ObjectCode                                AS GoodsCode
 
@@ -687,6 +737,17 @@ BEGIN
            , 0 ::TFloat  AS WeightPackage_calc 
            , 0 :: TFloat AS BoxWeight
            , 0 :: TFloat AS AmountPartnerWeightWithBox
+
+           , Object_GoodsOut.Id                     AS GoodsId_out             --ИД 
+           , Object_GoodsOut.ObjectCode::Integer    AS GoodsCode_out           --код 
+           , Object_GoodsOut.ValueData              AS GoodsName_out           --наименование 
+           , Object_GoodsKindOut.Id                 AS GoodsKindId_out         --ИД 
+           , Object_GoodsKindOut.ValueData          AS GoodsKindName_out       --Наименование 
+           , Object_PromoDiscountKind.Id            AS PromoDiscountKindId     --ИД 
+           , Object_PromoDiscountKind.ValueData     AS PromoDiscountKindName   --Наименование 
+           , tmpMI_Goods.Value_m          ::TFloat  AS Value_m
+           , tmpMI_Goods.Value_n          ::TFloat  AS Value_n
+           , tmpMI_Goods.Value_promo      ::TFloat  AS Value_promo
        FROM tmpMI_Goods
             LEFT JOIN tmpMIPromo ON tmpMIPromo.MovementId_Promo = tmpMI_Goods.MovementId_Promo
                                 AND tmpMIPromo.GoodsId          = tmpMI_Goods.GoodsId
@@ -748,7 +809,12 @@ BEGIN
                                AND COALESCE (tmpMI_Tax.GoodsKindId,0) = COALESCE (tmpMI_Goods.GoodsKindId, 0) 
 
             LEFT JOIN Object AS Object_GoodsReal     ON Object_GoodsReal.Id     = tmpMI_Goods.GoodsRealId
-            LEFT JOIN Object AS Object_GoodsKindReal ON Object_GoodsKindReal.Id = tmpMI_Goods.GoodsKindRealId
+            LEFT JOIN Object AS Object_GoodsKindReal ON Object_GoodsKindReal.Id = tmpMI_Goods.GoodsKindRealId   
+            
+            LEFT JOIN Object AS Object_GoodsOut ON Object_GoodsOut.Id = tmpMI_Goods.GoodsId_Out
+            LEFT JOIN Object AS Object_GoodsKindOut ON Object_GoodsKindOut.Id = tmpMI_Goods.GoodsKindId_Out
+
+            LEFT JOIN Object AS Object_PromoDiscountKind ON Object_PromoDiscountKind.Id = tmpMI_Goods.PromoDiscountKindId
            ;
      ELSE
 
@@ -816,7 +882,13 @@ BEGIN
                                  
                                  -- так считаем Кол-во Упаковок (пакетов)
                                  , (CASE WHEN MIFloat_WeightTare.ValueData < 0.1 THEN COALESCE (MIFloat_CountTare.ValueData, 0) ELSE 0 END) AS CountPackage_calc
-                                
+
+                                 , MILinkObject_GoodsOut.ObjectId                AS GoodsId_out
+                                 , MILinkObject_GoodsKindOut.ObjectId            AS GoodsKindId_out
+                                 , MILinkObject_PromoDiscountKind.ObjectId       AS PromoDiscountKindId
+                                 , MIFloat_Value_m.ValueData           ::TFloat  AS Value_m
+                                 , MIFloat_Value_n.ValueData           ::TFloat  AS Value_n
+                                 , MIFloat_Value_promo.ValueData       ::TFloat  AS Value_promo                                
                             FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                                  INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                         AND MovementItem.DescId     = zc_MI_Master()
@@ -907,6 +979,28 @@ BEGIN
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindReal
                                                                   ON MILinkObject_GoodsKindReal.MovementItemId = MovementItem.Id
                                                                  AND MILinkObject_GoodsKindReal.DescId = zc_MILinkObject_GoodsKindReal()
+
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsOut
+                                                                  ON MILinkObject_GoodsOut.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_GoodsOut.DescId = zc_MILinkObject_Goods_out()
+                    
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindOut
+                                                                  ON MILinkObject_GoodsKindOut.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_GoodsKindOut.DescId = zc_MILinkObject_GoodsKind_out()
+                    
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_PromoDiscountKind
+                                                                  ON MILinkObject_PromoDiscountKind.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_PromoDiscountKind.DescId = zc_MILinkObject_PromoDiscountKind()
+
+                                LEFT JOIN MovementItemFloat AS MIFloat_Value_m
+                                                            ON MIFloat_Value_m.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_Value_m.DescId = zc_MIFloat_Value_m()
+                                LEFT JOIN MovementItemFloat AS MIFloat_Value_n
+                                                            ON MIFloat_Value_n.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_Value_n.DescId = zc_MIFloat_Value_n()
+                                LEFT JOIN MovementItemFloat AS MIFloat_Value_promo
+                                                            ON MIFloat_Value_promo.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_Value_promo.DescId = zc_MIFloat_Value_promo()
                            )
            -- Связь с акциями для существующих MovementItem
         , tmpMIPromo_all AS (SELECT tmp.MovementId_Promo                          AS MovementId_Promo
@@ -1093,6 +1187,17 @@ BEGIN
                               , COALESCE (tmpGoodsByGoodsKindSub.isPeresort, False) AS isPeresort
 
                               , tmpMI_Goods.CountPackage_calc
+
+                              , Object_GoodsOut.Id                     AS GoodsId_out             --ИД 
+                              , Object_GoodsOut.ObjectCode::Integer    AS GoodsCode_out           --код 
+                              , Object_GoodsOut.ValueData              AS GoodsName_out           --наименование 
+                              , Object_GoodsKindOut.Id                 AS GoodsKindId_out         --ИД 
+                              , Object_GoodsKindOut.ValueData          AS GoodsKindName_out       --Наименование 
+                              , Object_PromoDiscountKind.Id            AS PromoDiscountKindId     --ИД 
+                              , Object_PromoDiscountKind.ValueData     AS PromoDiscountKindName   --Наименование 
+                              , tmpMI_Goods.Value_m          ::TFloat  AS Value_m
+                              , tmpMI_Goods.Value_n          ::TFloat  AS Value_n
+                              , tmpMI_Goods.Value_promo      ::TFloat  AS Value_promo
                           FROM tmpMI_Goods
                                LEFT JOIN tmpMIPromo ON tmpMIPromo.MovementId_Promo = tmpMI_Goods.MovementId_Promo
                                                    AND tmpMIPromo.GoodsId          = tmpMI_Goods.GoodsId
@@ -1129,6 +1234,10 @@ BEGIN
 
                                LEFT JOIN Object AS Object_Box ON Object_Box.Id = tmpMI_Goods.BoxId
                                LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = tmpMI_Goods.AssetId
+
+                               LEFT JOIN Object AS Object_GoodsOut ON Object_GoodsOut.Id = tmpMI_Goods.GoodsId_Out
+                               LEFT JOIN Object AS Object_GoodsKindOut ON Object_GoodsKindOut.Id = tmpMI_Goods.GoodsKindId_Out
+                               LEFT JOIN Object AS Object_PromoDiscountKind ON Object_PromoDiscountKind.Id = tmpMI_Goods.PromoDiscountKindId
 
                                LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                                       ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI_Goods.GoodsId
@@ -1300,6 +1409,17 @@ BEGIN
                    ELSE 0
               END
              ) :: TFloat AS AmountPartnerWeightWithBox
+           
+           , tmpResult.GoodsId_Out 
+           , tmpResult.GoodsCode_out
+           , tmpResult.GoodsName_out
+           , tmpResult.GoodsKindId_Out
+           , tmpResult.GoodsKindName_out
+           , tmpResult.PromoDiscountKindId
+           , tmpResult.PromoDiscountKindName
+           , tmpResult.Value_m     :: TFloat
+           , tmpResult.Value_n     :: TFloat 
+           , tmpResult.Value_promo :: TFloat
        FROM tmpResult
             LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId     = tmpResult.GoodsId
                                                   AND tmpObject_GoodsPropertyValue.GoodsKindId = tmpResult.GoodsKindId
@@ -1327,6 +1447,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 30.09.25         *
  22.01.24         * GoodsName_old
  30.09.22         * GoodsReal
  26.07.22         * add Count
