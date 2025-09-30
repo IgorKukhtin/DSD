@@ -27,8 +27,6 @@ object GoodsMainForm: TGoodsMainForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = -338
-    ExplicitTop = 89
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -2188,8 +2186,8 @@ object GoodsMainForm: TGoodsMainForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1055#1088#1086#1089#1084#1086#1090#1088' '#1060#1086#1090#1086
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' / '#1055#1088#1086#1089#1084#1086#1090#1088' '#1060#1086#1090#1086
       ImageIndex = 86
-      FormName = 'TGoodsPhotoEditForm'
-      FormNameParam.Value = 'TGoodsPhotoEditForm'
+      FormName = 'TGoodsDocumentPhotoEditForm'
+      FormNameParam.Value = 'TGoodsDocumentPhotoEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
