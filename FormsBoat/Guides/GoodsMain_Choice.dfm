@@ -965,7 +965,7 @@ object GoodsMain_ChoiceForm: TGoodsMain_ChoiceForm
       TabOrder = 1
     end
     object btnChoiceGuides: TcxButton
-      Left = 254
+      Left = 261
       Top = 7
       Width = 85
       Height = 25
@@ -2873,5 +2873,28 @@ object GoodsMain_ChoiceForm: TGoodsMain_ChoiceForm
     PackSize = 1
     Left = 368
     Top = 280
+  end
+  object HeaderExit: THeaderExit
+    ExitList = <
+      item
+        Control = edArticle
+      end
+      item
+        Control = edName
+      end>
+    Action = actRefresh
+    Left = 800
+    Top = 200
+  end
+  object EnterMoveNext: TEnterMoveNext
+    EnterMoveNextList = <
+      item
+        Control = edArticle
+      end
+      item
+        Control = edName
+      end>
+    Left = 800
+    Top = 248
   end
 end

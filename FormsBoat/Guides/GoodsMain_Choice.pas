@@ -178,6 +178,8 @@ type
     edArticle: TcxTextEdit;
     cxLabel2: TcxLabel;
     edName: TcxTextEdit;
+    HeaderExit: THeaderExit;
+    EnterMoveNext: TEnterMoveNext;
   private
     { Private declarations }
   public
