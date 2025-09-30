@@ -1,6 +1,7 @@
 -- Function: gpInsert_bi_Table_Remains
 
 DROP FUNCTION IF EXISTS gpInsert_bi_Table_Remains (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_bi_Table_Remains (TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_bi_Table_Remains(
     IN inOperDate     TDateTime ,

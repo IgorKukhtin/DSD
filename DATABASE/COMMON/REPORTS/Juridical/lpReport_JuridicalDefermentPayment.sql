@@ -125,7 +125,7 @@ BEGIN
         , tmpAccount AS (SELECT inAccountId AS AccountId UNION SELECT zc_Enum_Account_30151() AS AccountId WHERE inAccountId = zc_Enum_Account_30101()
                    UNION SELECT Object_Account_View.AccountId FROM Object_Account_View WHERE COALESCE (inAccountId, 0) = 0 AND AccountGroupId = zc_Enum_AccountGroup_30000() -- Дебиторы
                         )
-        , tmpListBranch_Constraint AS (SELECT ObjectLink_Contract_Personal.ObjectId AS ContractId
+        , tmpListBranch_Constraint AS (SELECT DISTINCT ObjectLink_Contract_Personal.ObjectId AS ContractId
                                        FROM ObjectLink AS ObjectLink_Unit_Branch
                                             INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
                                                                   ON ObjectLink_Personal_Unit.ChildObjectId = ObjectLink_Unit_Branch.ObjectId
@@ -135,9 +135,24 @@ BEGIN
                                                                  AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
                                        WHERE ObjectLink_Unit_Branch.ChildObjectId = vbObjectId_Constraint_Branch
                                          AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-                                       GROUP BY ObjectLink_Contract_Personal.ObjectId
+
+                                      UNION
+                                       SELECT ObjectLink_Contract_Juridical.ObjectId AS ContractId
+                                       FROM ObjectLink AS ObjectLink_Contract_Juridical
+                                            INNER JOIN ObjectLink AS ObjectLink_Contract_PaidKind
+                                                                  ON ObjectLink_Contract_PaidKind.ObjectId      = ObjectLink_Contract_Juridical.ObjectId
+                                                                 AND ObjectLink_Contract_PaidKind.DescId        = zc_ObjectLink_Contract_PaidKind()
+                                                                 AND ObjectLink_Contract_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
+                                       -- СІЛЬПО-ФУД ТОВ
+                                       WHERE ObjectLink_Contract_Juridical.ChildObjectId = 862910
+                                         AND ObjectLink_Contract_Juridical.DescId        = zc_ObjectLink_Contract_Juridical()
+                                         -- Ковальчук И.Л. - Керівник
+                                         AND inUserId = 328886
                                       )
-        , tmpJuridical AS (SELECT lfSelect_Object_Juridical_byGroup.JuridicalId FROM lfSelect_Object_Juridical_byGroup (inJuridicalGroupId) AS lfSelect_Object_Juridical_byGroup WHERE inJuridicalGroupId <> 0)
+        , tmpJuridical AS (SELECT lfSelect_Object_Juridical_byGroup.JuridicalId
+                           FROM lfSelect_Object_Juridical_byGroup (inJuridicalGroupId) AS lfSelect_Object_Juridical_byGroup
+                           WHERE inJuridicalGroupId <> 0
+                          )
 
           -- НЕ Разрешен просмотр долги Маркетинг - НАЛ
         , tmpInfoMoney_not AS (SELECT Object_InfoMoney_View.*
@@ -426,8 +441,10 @@ BEGIN
 
                   WHERE (CLO_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
                     AND (CLO_Branch.ObjectId = inBranchId OR COALESCE (inBranchId, 0) = 0
-                         -- OR ((ObjectLink_Juridical_JuridicalGroup.ChildObjectId = inJuridicalGroupId OR tmpListBranch_Constraint.ContractId > 0) AND vbIsBranch = FALSE)) -- !!!пересорт!!
-                         OR ((tmpJuridical.JuridicalId > 0 OR tmpListBranch_Constraint.ContractId > 0) AND vbIsBranch = FALSE)) -- !!!пересорт!!
+                         -- OR ((ObjectLink_Juridical_JuridicalGroup.ChildObjectId = inJuridicalGroupId OR tmpListBranch_Constraint.ContractId > 0) AND vbIsBranch = FALSE) -- !!!пересорт!!
+                         -- !!!пересорт!!
+                         OR ((tmpJuridical.JuridicalId > 0 OR tmpListBranch_Constraint.ContractId > 0) AND vbIsBranch = FALSE)
+                        )
                     -- AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = inJuridicalGroupId OR COALESCE (inJuridicalGroupId, 0) = 0
                     AND (tmpJuridical.JuridicalId > 0 OR COALESCE (inJuridicalGroupId, 0) = 0
                          OR tmpListBranch_Constraint.ContractId > 0

@@ -22,7 +22,7 @@ uses
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
   DataModul, cxButtonEdit, cxContainer, cxLabel, dsdGuides, cxTextEdit,
-  cxMaskEdit;
+  cxMaskEdit, dsdCommon;
 
 type
   TGoodsQuality_RawForm = class(TParentForm)
@@ -44,9 +44,9 @@ type
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
     dsdGridToExcel: TdsdGridToExcel;
-    dsdStoredProc: TdsdStoredProc;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
+    spSelect: TdsdStoredProc;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    DBViewAddOn: TdsdDBViewAddOn;
     Value2: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     isErased: TcxGridDBColumn;
@@ -54,7 +54,7 @@ type
     Value4: TcxGridDBColumn;
     Value5: TcxGridDBColumn;
     Value6: TcxGridDBColumn;
-    spInsertUpdateObject: TdsdStoredProc;
+    spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     Name: TcxGridDBColumn;
     Value7: TcxGridDBColumn;
@@ -67,7 +67,7 @@ type
     bb: TdxBarControlContainerItem;
     bb1: TdxBarControlContainerItem;
     ceQuality: TcxButtonEdit;
-    dsdQualityGuides: TdsdGuides;
+    QualityGuides: TdsdGuides;
     cxLabel6: TcxLabel;
     RefreshDispatcher: TRefreshDispatcher;
     GoodsGroupName: TcxGridDBColumn;
@@ -78,6 +78,7 @@ type
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     isKlipsa: TcxGridDBColumn;
+    Value21: TcxGridDBColumn;
   private
     { Private declarations }
   public

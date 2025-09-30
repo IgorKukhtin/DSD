@@ -712,7 +712,14 @@ BEGIN
          , tmpGoods.GoodsGroupNameFull
          , tmpGoods.GoodsGroupName
          , tmpGoods.Article
-         , tmpRes.ProdColorName  :: TVarChar AS ProdColorName
+
+         , CASE WHEN vbUserId = 5 AND 1=0
+                     THEN Object_ProdColorGroup.ValueData
+                WHEN Object_ProdColorGroup.ValueData ILIKE 'teak' AND Object_MaterialOptions.ValueData <> '' 
+                     THEN Object_MaterialOptions.ValueData || ' ' || tmpRes.ProdColorName
+                ELSE tmpRes.ProdColorName
+           END :: TVarChar AS ProdColorName
+
          , COALESCE(tmpRes.ProdColorValue, ProdColorComent.Value, ProdColorName.Value)  :: TVarChar AS ProdColorValue
          , COALESCE(tmpRes.Color_ProdColorValue, ProdColorComent.Color_Value, ProdColorName.Color_Value, zc_Color_White()) ::Integer AS Color_ProdColorValue
          , tmpGoods.MeasureName

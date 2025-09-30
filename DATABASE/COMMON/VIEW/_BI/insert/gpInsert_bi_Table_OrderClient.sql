@@ -1,93 +1,96 @@
--- View: _bi_Report_OrderClient_View
+-- Function: gpInsert_bi_Table_OrderClient
 
-DROP VIEW IF EXISTS _bi_Doc_OrderExternal_View;
-DROP VIEW IF EXISTS _bi_Report_OrderClient_View;
+DROP FUNCTION IF EXISTS gpInsert_bi_Table_OrderClient (TDateTime, TDateTime, TVarChar);
 
-/*
--- Документы - Заявка покупателя
--- данные:
-
--- Id Документа
-MovementId
--- Дата покупателя
-OperDate
--- Дата Склад
-OperDate_sklad
--- Дата Заявки
-OperDate_order
--- № Документа
-InvNumber
-InvNumberPartner
-
--- Юр. Лицо
-JuridicalId
-JuridicalName
-
--- Контрагент
-PartnerId
-DescId_partner
-PartnerName
-
--- Подразделение
-UnitId
-UnitName
-
--- Примечание
-Comment
-Comment_car
-
--- УП Статья назначения
-InfoMoneyId
--- Форма оплаты
-PaidKindId
--- Договор
-ContractId
-
--- % Скидки
-ChangePercent
-
--- Товар
-GoodsId
--- Вид Товара
-GoodsKindId
-
--- Документ Акция
-MovementId_promo
--- Признак Акция да/нет
-isPromo
-
--- Вес Заказ ИТОГО
-Amount
--- Шт.
-Amount_sh
-
--- Вес Заказ
-AmountFirst
--- Шт.
-AmountFirst_sh
-
--- Вес дозаказ
-AmountSecond      TFloat,
--- Шт.
-AmountSecond_sh   TFloat,
-
--- Акция - Заказ ИТОГО
-Amount_promo
--- Шт.
-Amount_promo_sh
-
-
--- Сумма с НДС Заказ ИТОГО
-Summ
--- Акция - Сумма с НДС ИТОГО
-Summ_promo
-
-*/
-
-
-CREATE OR REPLACE VIEW _bi_Report_OrderClient_View
+CREATE OR REPLACE FUNCTION gpInsert_bi_Table_OrderClient(
+    IN inStartDate    TDateTime ,
+    IN inEndDate      TDateTime ,
+    IN inSession      TVarChar       -- сессия пользователя
+)
+RETURNS VOID
 AS
+$BODY$
+BEGIN
+      -- inStartDate:='01.01.2025';
+      --
 
+      IF EXTRACT (HOUR FROM CURRENT_TIMESTAMP) NOT IN (11) OR 1=1
+      THEN
+          DELETE FROM _bi_Table_OrderClient WHERE OperDate BETWEEN inStartDate AND inEndDate;
+      END IF;
+
+
+      -- РЕЗУЛЬТАТ
+      INSERT INTO _bi_Table_OrderClient (-- Id Документа
+                                         MovementId
+                                         -- Дата покупателя
+                                       , OperDate
+                                         -- Дата Склад
+                                       , OperDate_sklad
+                                         -- Дата Заявки
+                                       , OperDate_order
+                                         -- № Документа
+                                       , InvNumber
+                                       , InvNumberPartner
+
+                                         -- Юр. Лицо
+                                       , JuridicalId
+                                         -- Контрагент
+                                       , PartnerId
+                                         -- Подразделение
+                                       , UnitId
+
+                                       , Comment
+                                       , Comment_car
+
+                                         -- УП Статья назначения
+                                       , InfoMoneyId
+                                         -- Форма оплаты
+                                       , PaidKindId
+                                         -- Договор
+                                       , ContractId
+
+                                         -- % Скидки
+                                       , ChangePercent
+
+                                         -- Товар
+                                       , GoodsId
+                                         -- Вид Товара
+                                       , GoodsKindId
+
+                                         -- Документ Акция
+                                       , MovementId_promo
+
+                                         -- Вес Заказ ИТОГО
+                                       , Amount
+                                         -- Шт.
+                                       , Amount_sh
+
+                                         -- Вес Заказ
+                                       , AmountFirst
+                                         -- Шт.
+                                       , AmountFirst_sh
+
+                                         -- Вес дозаказ
+                                       , AmountSecond
+                                         -- Шт.
+                                       , AmountSecond_sh
+
+                                         -- Акция - Заказ ИТОГО
+                                       , Amount_promo
+                                         -- Шт.
+                                       , Amount_promo_sh
+
+
+                                         -- Сумма с НДС Заказ ИТОГО
+                                       , Summ
+                                         -- Акция - Сумма с НДС ИТОГО
+                                       , Summ_promo
+
+                                       , isEdi
+                                       , isVchasno
+
+                                        )
               -- Результат
               SELECT -- Id Документа
                      Movement.Id                            AS MovementId
@@ -98,20 +101,20 @@ AS
                      -- Дата Заявки
                    , Movement.OperDate AS OperDate_order
                      -- № Документа
-                   , Movement.InvNumber
+                   , zfConvert_StringToNumber (Movement.InvNumber)            AS InvNumber
                    , COALESCE (MovementString_InvNumberPartner.ValueData, '') AS InvNumberPartner
 
                      -- Юр. Лицо
                    , OL_Partner_Juridical.ChildObjectId          AS JuridicalId
-                   , Object_Juridical.ValueData                  AS JuridicalName
+                   --, Object_Juridical.ValueData                AS JuridicalName
                      -- Контрагент
                    , MovementLinkObject_From.ObjectId            AS PartnerId
-                   , COALESCE (Object_From.DescId, 0)            AS DescId_partner
-                   , Object_From.ValueData                       AS PartnerName
+                   --, COALESCE (Object_From.DescId, 0)            AS DescId_partner
+                   --, Object_From.ValueData                       AS PartnerName
 
                      -- Подразделение
                    , Object_To.Id                                AS UnitId
-                   , Object_To.ValueData                         AS UnitName
+                   --, Object_To.ValueData                         AS UnitName
 
                      -- Примечание
                    , MovementString_Comment.ValueData            AS Comment
@@ -119,34 +122,34 @@ AS
 
                      -- УП Статья назначения
                    , OL_Contract_InfoMoney.ObjectId              AS InfoMoneyId
-                   , Object_InfoMoney.ValueData                  AS InfoMoneyName
+                   --, Object_InfoMoney.ValueData                  AS InfoMoneyName
                      -- Форма оплаты
                    , MovementLinkObject_PaidKind.ObjectId        AS PaidKindId
-                   , Object_PaidKind.ValueData                   AS PaidKindName
+                   --, Object_PaidKind.ValueData                   AS PaidKindName
 
                      -- Договор
                    , MovementLinkObject_Contract.ObjectId        AS ContractId
-                   , Object_Contract.ValueData                   AS ContractName
+                   --, Object_Contract.ValueData                   AS ContractName
 
                      -- (+)% Скидки (-)% Наценки
                    , -1 * COALESCE (MovementFloat_ChangePercent.ValueData, 0) AS ChangePercent
 
                      -- Товар
                    , MovementItem.ObjectId                       AS GoodsId
-                   , Object_Goods.ObjectCode                     AS GoodsCode
-                   , Object_Goods.ValueData                      AS GoodsName
+                   --, Object_Goods.ObjectCode                     AS GoodsCode
+                   --, Object_Goods.ValueData                      AS GoodsName
                      -- Вид Товара
                    , MILinkObject_GoodsKind.ObjectId             AS GoodsKindId
-                   , Object_GoodsKind.ObjectCode                 AS GoodsKindCode
-                   , Object_GoodsKind.ValueData                  AS GoodsKindName
+                   --, Object_GoodsKind.ObjectCode                 AS GoodsKindCode
+                   --, Object_GoodsKind.ValueData                  AS GoodsKindName
                      -- Ед.изм. Товара
-                   , Object_Measure.ObjectCode                   AS MeasureCode
-                   , Object_Measure.ValueData                    AS MeasureName
+                   --, Object_Measure.ObjectCode                   AS MeasureCode
+                   --, Object_Measure.ValueData                    AS MeasureName
 
                      -- Документ Акция
                    , MIFloat_PromoMovement.ValueData  :: Integer AS MovementId_promo
                      -- Признак Акция да/нет
-                   , CASE WHEN MIFloat_PromoMovement.ValueData > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPromo
+                   --, CASE WHEN MIFloat_PromoMovement.ValueData > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPromo
 
                      -- Вес Заказ ИТОГО
                    ,  ((MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0))
@@ -324,24 +327,25 @@ AS
                                          ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                                         AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
 
-              WHERE Movement.DescId  = zc_Movement_OrderExternal()
+              WHERE Movement.DescId   = zc_Movement_OrderExternal()
                 AND Movement.StatusId = zc_Enum_Status_Complete()
-                --AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-                AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '1 DAY' AND CURRENT_DATE AND Object_From.DescId <> zc_Object_Unit()
+                AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                -- !!! только покупатели
+                AND Object_From.DescId <> zc_Object_Unit()
              ;
 
 
-ALTER TABLE _bi_Report_OrderClient_View OWNER TO postgres;
-ALTER TABLE _bi_Report_OrderClient_View OWNER TO admin;
-ALTER TABLE _bi_Report_OrderClient_View OWNER TO project;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
 
-/*-------------------------------------------------------------------------------*/
-/*
+/*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 10.09.25                                        *
+ 11.07.25                                        * all
 */
 
 -- тест
--- SELECT sum(Amount), isEdi, isVchasno FROM _bi_Table_OrderClient where  OperDate between '01.09.2025' and '27.09.2025' GROUP BY isEdi, isVchasno
--- SELECT * FROM _bi_Report_OrderClient_View WHERE OperDate BETWEEN CURRENT_DATE - INTERVAL '1 DAY' AND CURRENT_DATE AND DescId_partner <> zc_Object_Unit()
+-- DELETE FROM  _bi_Table_OrderClient WHERE OperDate between '20.07.2025 9:00' and '20.07.2025 9:10'
+-- SELECT DATE_TRUNC ('MONTH', OperDate), count(*), sum(Amount), isEdi, isVchasno FROM _bi_Table_OrderClient where OperDate between '01.01.2025' and '31.12.2025' GROUP BY DATE_TRUNC ('MONTH', OperDate), isEdi, isVchasno ORDER BY 1, isEdi, isVchasno
+-- SELECT * FROM gpInsert_bi_Table_OrderClient (inStartDate:= '01.09.2025', inEndDate:= '28.09.2025', inSession:= zfCalc_UserAdmin())
