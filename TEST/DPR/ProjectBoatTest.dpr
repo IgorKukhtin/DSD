@@ -402,7 +402,9 @@ uses
   invoice_delnote_base in '..\..\SOURCE\EDI\invoice_delnote_base.pas',
   OrderClient in '..\..\FormsBoat\Document\OrderClient.pas' {OrderClientForm: TParentForm},
   OrderClient_ChoiceByDetail in '..\..\FormsBoat\Document\OrderClient_ChoiceByDetail.pas' {OrderClient_ChoiceByDetailForm: TParentForm},
-  GoodsPhotoEdit in '..\..\FormsBoat\Guides\GoodsPhotoEdit.pas' {GoodsPhotoEditForm: TParentForm};
+  GoodsPhotoEdit in '..\..\FormsBoat\Guides\GoodsPhotoEdit.pas' {GoodsPhotoEditForm: TParentForm},
+  GoodsDocumentPhotoEdit in '..\..\FormsBoat\Guides\GoodsDocumentPhotoEdit.pas' {GoodsDocumentPhotoEditForm: TParentForm},
+  GoodsMain_Choice in '..\..\FormsBoat\Guides\GoodsMain_Choice.pas' {GoodsMain_ChoiceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

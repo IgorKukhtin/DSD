@@ -559,11 +559,17 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsDocumentPhotoEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsDocumentPhotoEditForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPhotoEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPhotoEditForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_limitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_limitForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsMain_ChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsMain_ChoiceForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsMainForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsMainForm');

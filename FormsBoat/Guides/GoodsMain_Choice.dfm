@@ -1,7 +1,7 @@
-object GoodsMainForm: TGoodsMainForm
+object GoodsMain_ChoiceForm: TGoodsMain_ChoiceForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <***'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' ('#1074#1099#1073#1086#1088')>'
   ClientHeight = 506
   ClientWidth = 1036
   Color = clBtnFace
@@ -908,7 +908,7 @@ object GoodsMainForm: TGoodsMainForm
     end
     object edPriceList: TcxButtonEdit
       Left = 79
-      Top = 6
+      Top = 7
       Properties.Buttons = <
         item
           Default = True
@@ -917,6 +917,28 @@ object GoodsMainForm: TGoodsMainForm
       TabOrder = 9
       Text = #1056#1086#1079#1085#1080#1095#1085#1072#1103' '#1094#1077#1085#1072
       Width = 171
+    end
+    object cxLabel18: TcxLabel
+      Left = 295
+      Top = 7
+      Caption = 'Artikel Nr:'
+    end
+    object edArticle: TcxTextEdit
+      Left = 351
+      Top = 6
+      TabOrder = 11
+      Width = 115
+    end
+    object cxLabel2: TcxLabel
+      Left = 498
+      Top = 7
+      Caption = #1053#1072#1079#1074#1072#1085#1080#1077':'
+    end
+    object edName: TcxTextEdit
+      Left = 558
+      Top = 7
+      TabOrder = 13
+      Width = 287
     end
   end
   object Panel_btn: TPanel
@@ -943,7 +965,7 @@ object GoodsMainForm: TGoodsMainForm
       TabOrder = 1
     end
     object btnChoiceGuides: TcxButton
-      Left = 254
+      Left = 261
       Top = 7
       Width = 85
       Height = 25
@@ -2240,7 +2262,7 @@ object GoodsMainForm: TGoodsMainForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Goods'
+    StoredProcName = 'gpSelect_Object_Goods_Choice'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -2267,6 +2289,22 @@ object GoodsMainForm: TGoodsMainForm
         Name = 'inIsLimit_100'
         Value = False
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inArticle'
+        Value = Null
+        Component = edArticle
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName'
+        Value = Null
+        Component = edName
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -2542,9 +2580,15 @@ object GoodsMainForm: TGoodsMainForm
     ComponentList = <
       item
         Component = GuidesPriceList
+      end
+      item
+        Component = edArticle
+      end
+      item
+        Component = edName
       end>
-    Left = 568
-    Top = 80
+    Left = 752
+    Top = 72
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Goods'
@@ -2829,5 +2873,28 @@ object GoodsMainForm: TGoodsMainForm
     PackSize = 1
     Left = 368
     Top = 280
+  end
+  object HeaderExit: THeaderExit
+    ExitList = <
+      item
+        Control = edArticle
+      end
+      item
+        Control = edName
+      end>
+    Action = actRefresh
+    Left = 800
+    Top = 200
+  end
+  object EnterMoveNext: TEnterMoveNext
+    EnterMoveNextList = <
+      item
+        Control = edArticle
+      end
+      item
+        Control = edName
+      end>
+    Left = 800
+    Top = 248
   end
 end

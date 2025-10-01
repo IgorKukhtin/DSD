@@ -1168,6 +1168,13 @@ INSERT INTO MovementItemFloatDesc (Code, ItemName)
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_Value_n', 'Значение n' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Value_n');
 
+ CREATE OR REPLACE FUNCTION zc_MIFloat_Value_promo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Value_promo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_Value_promo', 'подарочное кол-во' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Value_promo');
+
+
+
+
   
  
  

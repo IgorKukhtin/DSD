@@ -1880,8 +1880,8 @@ object GoodsForm: TGoodsForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1055#1088#1086#1089#1084#1086#1090#1088' '#1060#1086#1090#1086
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' / '#1055#1088#1086#1089#1084#1086#1090#1088' '#1060#1086#1090#1086
       ImageIndex = 86
-      FormName = 'TGoodsPhotoEditForm'
-      FormNameParam.Value = 'TGoodsPhotoEditForm'
+      FormName = 'TGoodsDocumentPhotoEditForm'
+      FormNameParam.Value = 'TGoodsDocumentPhotoEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

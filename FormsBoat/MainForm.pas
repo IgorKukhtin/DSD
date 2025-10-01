@@ -328,6 +328,8 @@ type
     N6: TMenuItem;
     actProdOptionsTranslate: TdsdOpenForm;
     miProdOptionsTranslate: TMenuItem;
+    actGoodsMain_Choice: TdsdOpenForm;
+    miGoodsMain_Choice: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure actExit_btnExecute(Sender: TObject);
   private
