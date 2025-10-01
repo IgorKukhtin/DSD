@@ -1,7 +1,7 @@
 object GoodsMain_ChoiceForm: TGoodsMain_ChoiceForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' ('#1074#1099#1073#1086#1088')>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' ('#1087#1086#1080#1089#1082')>'
   ClientHeight = 506
   ClientWidth = 1036
   Color = clBtnFace
@@ -25,7 +25,7 @@ object GoodsMain_ChoiceForm: TGoodsMain_ChoiceForm
     Width = 1036
     Height = 377
     Align = alClient
-    TabOrder = 0
+    TabOrder = 1
     LookAndFeel.NativeStyle = False
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
@@ -820,20 +820,20 @@ object GoodsMain_ChoiceForm: TGoodsMain_ChoiceForm
     Width = 1036
     Height = 62
     Align = alTop
-    TabOrder = 1
+    TabOrder = 0
     object edSearchArticle: TcxTextEdit
-      Left = 125
-      Top = 34
-      TabOrder = 0
+      Left = 146
+      Top = 35
+      TabOrder = 2
       DesignSize = (
         125
         21)
       Width = 125
     end
     object lbSearchArticle: TcxLabel
-      Left = 3
-      Top = 33
-      Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
+      Left = 22
+      Top = 34
+      Caption = #1055#1086#1080#1089#1082' Artikel Nr :'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -843,9 +843,9 @@ object GoodsMain_ChoiceForm: TGoodsMain_ChoiceForm
       Style.IsFontAssigned = True
     end
     object lbSearchCode: TcxLabel
-      Left = 268
-      Top = 33
-      Caption = 'Interne Nr : '
+      Left = 588
+      Top = 34
+      Caption = 'Interne Nr :'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -855,9 +855,9 @@ object GoodsMain_ChoiceForm: TGoodsMain_ChoiceForm
       Style.IsFontAssigned = True
     end
     object lbSearchName: TcxLabel
-      Left = 478
-      Top = 33
-      Caption = #1053#1072#1079#1074#1072#1085#1080#1077' : '
+      Left = 335
+      Top = 34
+      Caption = #1053#1072#1079#1074#1072#1085#1080#1077' :'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -867,78 +867,106 @@ object GoodsMain_ChoiceForm: TGoodsMain_ChoiceForm
       Style.IsFontAssigned = True
     end
     object edSearchCode: TcxTextEdit
-      Left = 351
-      Top = 34
-      TabOrder = 5
-      DesignSize = (
-        115
-        21)
-      Width = 115
-    end
-    object edSearchName: TcxTextEdit
-      Left = 558
-      Top = 34
+      Left = 670
+      Top = 35
       TabOrder = 4
       DesignSize = (
-        140
+        125
         21)
-      Width = 140
+      Width = 125
+    end
+    object edSearchName: TcxTextEdit
+      Left = 417
+      Top = 35
+      TabOrder = 3
+      DesignSize = (
+        156
+        21)
+      Width = 156
     end
     object cxLabel4: TcxLabel
-      Left = 715
-      Top = 35
-      Caption = #1057#1082#1083#1072#1076' ('#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'):'
+      Left = 845
+      Top = 13
+      Caption = #1057#1082#1083#1072#1076' :'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -11
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
     end
     object edUnit: TcxButtonEdit
-      Left = 852
-      Top = 34
+      Left = 895
+      Top = 9
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 7
-      Width = 188
+      TabOrder = 5
+      Width = 130
     end
     object cxLabel1: TcxLabel
-      Left = 8
-      Top = 7
-      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090':'
+      Left = 817
+      Top = 36
+      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' :'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -11
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
     end
     object edPriceList: TcxButtonEdit
-      Left = 79
-      Top = 7
+      Left = 895
+      Top = 35
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 9
+      TabOrder = 6
       Text = #1056#1086#1079#1085#1080#1095#1085#1072#1103' '#1094#1077#1085#1072
-      Width = 171
+      Width = 130
     end
     object cxLabel18: TcxLabel
-      Left = 295
+      Left = 6
       Top = 7
-      Caption = 'Artikel Nr:'
+      Caption = #1042#1099#1073#1088#1072#1090#1100' Artikel Nr :'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
     end
     object edArticle: TcxTextEdit
-      Left = 351
-      Top = 6
-      TabOrder = 11
-      Width = 115
+      Left = 146
+      Top = 8
+      TabOrder = 0
+      Width = 125
     end
     object cxLabel2: TcxLabel
-      Left = 498
+      Left = 282
       Top = 7
-      Caption = #1053#1072#1079#1074#1072#1085#1080#1077':'
+      Caption = #1042#1099#1073#1088#1072#1090#1100' '#1053#1072#1079#1074#1072#1085#1080#1077' :'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -12
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
     end
     object edName: TcxTextEdit
-      Left = 558
-      Top = 7
-      TabOrder = 13
-      Width = 287
+      Left = 415
+      Top = 8
+      TabOrder = 1
+      Width = 156
     end
   end
   object Panel_btn: TPanel
@@ -2467,11 +2495,8 @@ object GoodsMain_ChoiceForm: TGoodsMain_ChoiceForm
   object FieldFilter_Article: TdsdFieldFilter
     TextEdit = edSearchArticle
     DataSet = ClientDataSet
-    Column = Article
+    Column = Article_all
     ColumnList = <
-      item
-        Column = Article
-      end
       item
         Column = Article_all
       end
@@ -2514,8 +2539,8 @@ object GoodsMain_ChoiceForm: TGoodsMain_ChoiceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 927
-    Top = 11
+    Left = 959
+    Top = 99
   end
   object spInsUpd_Unit: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Goods_Unit'
@@ -2539,8 +2564,8 @@ object GoodsMain_ChoiceForm: TGoodsMain_ChoiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 892
-    Top = 56
+    Left = 820
+    Top = 96
   end
   object GuidesPriceList: TdsdGuides
     KeyField = 'Id'
@@ -2570,8 +2595,8 @@ object GoodsMain_ChoiceForm: TGoodsMain_ChoiceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 160
-    Top = 8
+    Left = 888
+    Top = 72
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -2892,7 +2917,22 @@ object GoodsMain_ChoiceForm: TGoodsMain_ChoiceForm
         Control = edArticle
       end
       item
+        Control = edSearchArticle
+      end
+      item
+        Control = edSearchCode
+      end
+      item
+        Control = edSearchName
+      end
+      item
+        Control = cxGrid
+      end
+      item
         Control = edName
+      end
+      item
+        Control = cxGrid
       end>
     Left = 800
     Top = 248

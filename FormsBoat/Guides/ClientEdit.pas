@@ -20,7 +20,7 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   dsdGuides, cxMaskEdit, cxButtonEdit, dxSkinscxPCPainter, cxPCdxBarPopupMenu,
-  cxPC;
+  cxPC, dsdCommon;
 
 type
   TClientEditForm = class(TParentForm)
