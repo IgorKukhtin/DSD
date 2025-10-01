@@ -1043,11 +1043,17 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_PaidKind
                                   ON ObjectLink_PersonalServiceList_PaidKind.ObjectId      = MILinkObject_MoneyPlace.ObjectId
                                  AND ObjectLink_PersonalServiceList_PaidKind.DescId        = zc_ObjectLink_PersonalServiceList_PaidKind()
+
+            -- !!!исключить Ведомость Лікарняні!!!
+             LEFT JOIN Object AS Object_PersonalServiceList_check ON Object_PersonalServiceList_check.Id = MILinkObject_MoneyPlace.ObjectId
+
              LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_two
                                   ON ObjectLink_PersonalServiceList_two.ObjectId = MI_Child.ObjectId
                                  AND ObjectLink_PersonalServiceList_two.DescId   = zc_ObjectLink_Personal_PersonalServiceList()
                                   -- !!!исключить Ведомость Больничные соц страх БН!!!
-                                 AND MILinkObject_MoneyPlace.ObjectId <> 1064330 
+                                 AND MILinkObject_MoneyPlace.ObjectId <> 1064330
+                                 -- !!!исключить Ведомость Лікарняні!!!
+                                 AND Object_PersonalServiceList_check.ValueData NOT ILIKE '%Лікарняні за рахунок ПФ%'
                                   -- !!!вот он БН!!!
                                  AND ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
 
@@ -1185,11 +1191,17 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_PaidKind
                                   ON ObjectLink_PersonalServiceList_PaidKind.ObjectId      = MILinkObject_MoneyPlace.ObjectId
                                  AND ObjectLink_PersonalServiceList_PaidKind.DescId        = zc_ObjectLink_PersonalServiceList_PaidKind()
+
+            -- !!!исключить Ведомость Лікарняні!!!
+             LEFT JOIN Object AS Object_PersonalServiceList_check ON Object_PersonalServiceList_check.Id = MILinkObject_MoneyPlace.ObjectId
+
              LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_two
                                   ON ObjectLink_PersonalServiceList_two.ObjectId = MI_Child.ObjectId
                                  AND ObjectLink_PersonalServiceList_two.DescId   = zc_ObjectLink_Personal_PersonalServiceList()
                                   -- !!!исключить Ведомость Больничные соц страх БН!!!
                                  AND MILinkObject_MoneyPlace.ObjectId <> 1064330 
+                                 -- !!!исключить Ведомость Лікарняні!!!
+                                 AND Object_PersonalServiceList_check.ValueData NOT ILIKE '%Лікарняні за рахунок ПФ%'
                                   -- !!!вот он БН!!!
                                  AND ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
 

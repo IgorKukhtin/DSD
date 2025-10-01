@@ -34,7 +34,7 @@ RETURNS TABLE (ContainerId Integer, JuridicalCode Integer, JuridicalName TVarCha
              , AreaName TVarChar, AreaName_Partner TVarChar
              , CurrencyName TVarChar
              , ContractConditionKindName TVarChar, ContractConditionValue TFloat
-             , PartionMovementName TVarChar
+             , PartionMovementId Integer, PartionMovementName TVarChar
              , PaymentDate TDateTime
              , AccountId Integer, JuridicalId Integer, PartnerId Integer, InfoMoneyId Integer, ContractId Integer, PaidKindId Integer, BranchId Integer
              , StartAmount_A TFloat, StartAmount_P TFloat, StartAmountD TFloat, StartAmountK TFloat
