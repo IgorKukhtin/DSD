@@ -261,7 +261,8 @@ BEGIN
                                  , MILinkObject_GoodsKindOut.ObjectId            AS GoodsKindId_out
                                  , MILinkObject_PromoDiscountKind.ObjectId       AS PromoDiscountKindId
                                  , MIFloat_Value_m.ValueData           ::TFloat  AS Value_m
-                                 , MIFloat_Value_n.ValueData           ::TFloat  AS Value_n 
+                                 , MIFloat_Value_n.ValueData           ::TFloat  AS Value_n
+                                 , MIFloat_Value_promo.ValueData       ::TFloat  AS Value_promo 
                            FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                                  INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                         AND MovementItem.DescId     = zc_MI_Master()
