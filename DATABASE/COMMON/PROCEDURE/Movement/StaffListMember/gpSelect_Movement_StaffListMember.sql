@@ -97,37 +97,59 @@ BEGIN
                                                         )
                      )
 
-
-      /*  , tmpPersonal AS (SELECT Object_Personal.Id
+          --дату приема берем по основному месту работы, но только если дата документа >= дата приема в сотрудниках
+        , tmpPersonal AS (SELECT DISTINCT
+                                 ObjectLink_Personal_Member.ChildObjectId AS MemberId
+                               , ObjectDate_DateIn.ValueData              AS DateIn
+                               , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN NULL ELSE ObjectDate_DateOut.ValueData END AS DateOut
+                               , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN FALSE ELSE TRUE END AS isDateOut
                           FROM Object AS Object_Personal
                                INNER JOIN ObjectLink AS ObjectLink_Personal_Member
                                                      ON ObjectLink_Personal_Member.ObjectId = Object_Personal.Id
                                                     AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
-                                                    AND ObjectLink_Personal_Member.ChildObjectId IN ()
                                INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
                                                      ON ObjectLink_Personal_Unit.ObjectId = Object_Personal.Id
                                                     AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
-                                                    AND ObjectLink_Personal_Unit.ChildObjectId = inUnitId                      
-                               INNER JOIN ObjectLink AS ObjectLink_Personal_Position
-                                                     ON ObjectLink_Personal_Position.ObjectId = Object_Personal.Id
-                                                    AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
-                                                    AND ObjectLink_Personal_Position.ChildObjectId = inPositionId
-                               LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
-                                                    ON ObjectLink_Personal_PositionLevel.ObjectId = Object_Personal.Id
-                                                   AND ObjectLink_Personal_PositionLevel.DescId = zc_ObjectLink_Personal_PositionLevel()
+                               INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                        ON ObjectBoolean_Main.ObjectId = Object_Personal.Id
+                                                       AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Personal_Main()
+                                                       AND COALESCE (ObjectBoolean_Main.ValueData, FALSE) = TRUE
+
+                               LEFT JOIN ObjectDate AS ObjectDate_DateIn
+                                                    ON ObjectDate_DateIn.ObjectId = Object_Personal.Id
+                                                   AND ObjectDate_DateIn.DescId = zc_ObjectDate_Personal_In()
+                               LEFT JOIN ObjectDate AS ObjectDate_DateOut
+                                                    ON ObjectDate_DateOut.ObjectId = Object_Personal.Id
+                                                   AND ObjectDate_DateOut.DescId = zc_ObjectDate_Personal_Out()
                           WHERE Object_Personal.DescId = zc_Object_Personal()
                             AND Object_Personal.isErased = FALSE
-                            AND COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId,0) = COALESCE (inPositionLevelId,0)
                        ) 
-                       */
+                       
+
+        , tmpData AS (SELECT Movement.*
+                           , MovementLinkObject_Member.ObjectId        AS MemberId
+                           , MovementLinkObject_StaffListKind.ObjectId AS StaffListKindId                         
+                      FROM tmpMovement AS Movement
+                           LEFT JOIN tmpMLO AS MovementLinkObject_Member
+                                            ON MovementLinkObject_Member.MovementId = Movement.Id
+                                           AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
+                           LEFT JOIN tmpMLO AS MovementLinkObject_StaffListKind
+                                            ON MovementLinkObject_StaffListKind.MovementId = Movement.Id
+                                           AND MovementLinkObject_StaffListKind.DescId = zc_MovementLinkObject_StaffListKind()
+                      )
+
        -- Результат
        SELECT
              Movement.Id
            , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
            , Movement.OperDate
-           , CASE WHEN Object_StaffListKind.Id IN (zc_Enum_StaffListKind_In(), zc_Enum_StaffListKind_Add()) THEN Movement.OperDate ELSE NULL END ::TDateTime AS DateIn
+           , CASE WHEN Object_StaffListKind.Id IN (zc_Enum_StaffListKind_In(), zc_Enum_StaffListKind_Add()) THEN Movement.OperDate
+                  ELSE tmpPersonal.DateIn 
+             END ::TDateTime AS DateIn
            , CASE WHEN Object_StaffListKind.Id = zc_Enum_StaffListKind_Send() THEN Movement.OperDate ELSE NULL END ::TDateTime AS DateSend
-           , CASE WHEN Object_StaffListKind.Id = zc_Enum_StaffListKind_Out()  THEN Movement.OperDate ELSE NULL END ::TDateTime AS DateOut
+           , CASE WHEN Object_StaffListKind.Id = zc_Enum_StaffListKind_Out()  THEN Movement.OperDate
+                  ELSE tmpPersonal.DateOut
+             END ::TDateTime AS DateOut
            , Object_Status.Id                      AS StatusId
            , Object_Status.ObjectCode              AS StatusCode
            , Object_Status.ValueData               AS StatusName
@@ -156,7 +178,9 @@ BEGIN
 
            , COALESCE (MovementBoolean_Official.ValueData, FALSE) ::Boolean  AS isOfficial
            , COALESCE (MovementBoolean_Main.ValueData, FALSE)     ::Boolean  AS isMain
-           , CASE WHEN Object_StaffListKind.Id = zc_Enum_StaffListKind_Out() THEN TRUE ELSE FALSE END ::Boolean AS isDateOut 
+           , CASE WHEN Object_StaffListKind.Id = zc_Enum_StaffListKind_Out() THEN TRUE
+                  ELSE COALESCE (tmpPersonal.isDateOut, FALSE)
+             END ::Boolean AS isDateOut 
 
            , MovementString_Comment.ValueData                     ::TVarChar AS Comment
            
@@ -165,7 +189,7 @@ BEGIN
            , MovementDate_Insert.ValueData         AS InsertDate
            , MovementDate_Update.ValueData         AS UpdateDate
 
-       FROM tmpMovement AS Movement
+       FROM tmpData AS Movement
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -189,10 +213,7 @@ BEGIN
                                         ON MovementString_Comment.MovementId = Movement.Id
                                        AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
-            LEFT JOIN tmpMLO AS MovementLinkObject_Member
-                             ON MovementLinkObject_Member.MovementId = Movement.Id
-                            AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
-            LEFT JOIN Object AS Object_Member ON Object_Member.Id = MovementLinkObject_Member.ObjectId
+            LEFT JOIN Object AS Object_Member ON Object_Member.Id = Movement.MemberId
 
             LEFT JOIN tmpMLO AS MovementLinkObject_ReasonOut
                              ON MovementLinkObject_ReasonOut.MovementId = Movement.Id
@@ -244,7 +265,10 @@ BEGIN
                             AND MovementLinkObject_Update.DescId = zc_MovementLinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MovementLinkObject_Update.ObjectId
 
-
+            LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = Movement.MemberId
+                                 AND tmpPersonal.DateIn <= Movement.OperDate
+                                 AND COALESCE (tmpPersonal.DateOut, zc_DateEnd()) >= Movement.OperDate
+                              --   AND Object_StaffListKind.Id IN (zc_Enum_StaffListKind_Send(), zc_Enum_StaffListKind_Out())
       ;
 
 END;
