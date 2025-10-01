@@ -4708,7 +4708,6 @@ end;
 procedure TLoadFormTest.LoadStaffListMemberFormTest;
 begin
 
-
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StaffListMember_byPersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_StaffListMember_byPersonalForm');
 
@@ -4723,6 +4722,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListMemberForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStaffListMemberForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListMemberJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStaffListMemberJournalChoiceForm');
 end;
 
 

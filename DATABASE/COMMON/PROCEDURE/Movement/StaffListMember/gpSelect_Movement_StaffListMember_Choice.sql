@@ -1,11 +1,9 @@
--- Function: gpSelect_Movement_StaffListMember()
+-- Function: gpSelect_Movement_StaffListMember_Choice()
 
--- DROP FUNCTION IF EXISTS gpSelect_Movement_StaffListMember (TDateTime, TDateTime, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_StaffListMember (TDateTime, TDateTime, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_StaffListMember_Choice (Integer, Boolean, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_StaffListMember(
-    IN inStartDate         TDateTime , --
-    IN inEndDate           TDateTime , --
+CREATE OR REPLACE FUNCTION gpSelect_Movement_StaffListMember_Choice(
+    IN inMemberId          Integer, --
     IN inIsErased          Boolean ,
     IN inJuridicalBasisId  Integer ,
     IN inSession           TVarChar    -- сессия пользователя
@@ -39,10 +37,7 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_StaffListMember());
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- !!!Только просмотр Аудитор!!!
-     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
-
-     -- Результат
+      -- Результат
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
                        UNION
@@ -52,10 +47,15 @@ BEGIN
                        )
 
         , tmpMovement AS (SELECT Movement.*
+                               , MovementLinkObject_Member.ObjectId AS MemberId
                         FROM tmpStatus
                              JOIN Movement ON Movement.DescId = zc_Movement_StaffListMember()
-                                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                          --AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                                           AND Movement.StatusId = tmpStatus.StatusId
+                             INNER JOIN MovementLinkObject AS MovementLinkObject_Member
+                                                           ON MovementLinkObject_Member.MovementId = Movement.Id
+                                                          AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
+                                                          AND MovementLinkObject_Member.ObjectId = inMemberId                             
                         )
 
         , tmpMovementBoolean AS (SELECT MovementBoolean.*
@@ -85,7 +85,7 @@ BEGIN
                      WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement) 
                        AND MovementLinkObject.DescId IN (zc_MovementLinkObject_ReasonOut()
                                                        , zc_MovementLinkObject_StaffListKind() 
-                                                       , zc_MovementLinkObject_Member()
+                                                       --, zc_MovementLinkObject_Member()
                                                        , zc_MovementLinkObject_Unit()
                                                        , zc_MovementLinkObject_Position()
                                                        , zc_MovementLinkObject_PositionLevel()
@@ -125,18 +125,6 @@ BEGIN
                           --  AND Object_Personal.isErased = FALSE
                        ) 
                        
-
-        , tmpData AS (SELECT Movement.*
-                           , MovementLinkObject_Member.ObjectId        AS MemberId
-                           , MovementLinkObject_StaffListKind.ObjectId AS StaffListKindId                         
-                      FROM tmpMovement AS Movement
-                           LEFT JOIN tmpMLO AS MovementLinkObject_Member
-                                            ON MovementLinkObject_Member.MovementId = Movement.Id
-                                           AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
-                           LEFT JOIN tmpMLO AS MovementLinkObject_StaffListKind
-                                            ON MovementLinkObject_StaffListKind.MovementId = Movement.Id
-                                           AND MovementLinkObject_StaffListKind.DescId = zc_MovementLinkObject_StaffListKind()
-                      )
 
        -- Результат
        SELECT
@@ -190,7 +178,7 @@ BEGIN
            , MovementDate_Insert.ValueData         AS InsertDate
            , MovementDate_Update.ValueData         AS UpdateDate
 
-       FROM tmpData AS Movement
+       FROM tmpMovement AS Movement
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -279,8 +267,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 15.09.25         *
+ 01.10.25         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_StaffListMember (inStartDate:= '01.08.2023', inEndDate:= '01.08.2023', inIsErased:=true, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_StaffListMember_Choice (inMemberId:= 8474, inIsErased:=true, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())

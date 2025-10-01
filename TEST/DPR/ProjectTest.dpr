@@ -1609,7 +1609,6 @@ uses
   Report_StaffListRankingDialog in '..\..\Forms\Report\Report_StaffListRankingDialog.pas' {Report_StaffListRankingDialogForm: TParentForm},
   Report_StaffListRanking in '..\..\Forms\Report\Report_StaffListRanking.pas' {Report_StaffListRankingForm: TParentForm},
   StaffListKind in '..\..\Forms\Kind\StaffListKind.pas' {StaffListKindForm: TParentForm},
-  StaffListMemberJournal in '..\..\Forms\Document\StaffListMemberJournal.pas' {StaffListMemberJournalForm: TParentForm},
   StaffListItemChoice in '..\..\Forms\Document\StaffListItemChoice.pas' {StaffListItemChoiceForm: TParentForm},
   StaffListMember in '..\..\Forms\Document\StaffListMember.pas' {StaffListMemberForm: TParentForm},
   StaffListJournal in '..\..\Forms\Document\StaffListJournal.pas' {StaffListJournalForm: TParentForm},
@@ -1618,7 +1617,9 @@ uses
   Report_StaffListMember_byPersonal in '..\..\Forms\Report\Report_StaffListMember_byPersonal.pas' {Report_StaffListMember_byPersonalForm: TParentForm},
   StaffListClose in '..\..\Forms\Document\StaffListClose.pas' {StaffListCloseForm: TParentForm},
   StaffListCloseJournal in '..\..\Forms\Document\StaffListCloseJournal.pas' {StaffListCloseJournalForm: TParentForm},
-  StaffListCloseEdit in '..\..\Forms\Document\StaffListCloseEdit.pas' {StaffListCloseEditForm: TParentForm};
+  StaffListCloseEdit in '..\..\Forms\Document\StaffListCloseEdit.pas' {StaffListCloseEditForm: TParentForm},
+  StaffListMemberJournal in '..\..\Forms\Document\StaffListMemberJournal.pas' {StaffListMemberJournalForm: TParentForm},
+  StaffListMemberJournalChoice in '..\..\Forms\Document\StaffListMemberJournalChoice.pas' {StaffListMemberJournalChoiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -1,4 +1,4 @@
-unit StaffListMemberJournal;
+unit StaffListMemberJournalChoice;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
 
 type
-  TStaffListMemberJournalForm = class(TAncestorJournalForm)
+  TStaffListMemberJournalChoiceForm = class(TAncestorJournalForm)
     bbTax: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
@@ -55,8 +55,9 @@ type
     DateOut: TcxGridDBColumn;
     DateSend: TcxGridDBColumn;
     isDateOut: TcxGridDBColumn;
-    actOpenStaffListMember_Choice: TdsdOpenForm;
-    bbOpenStaffListMember_Choice: TdxBarButton;
+    cxLabel11: TcxLabel;
+    edMember: TcxButtonEdit;
+    GuideMember: TdsdGuides;
     MemberCode: TcxGridDBColumn;
   private
     { Private declarations }
@@ -68,5 +69,5 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TStaffListMemberJournalForm);
+  RegisterClass(TStaffListMemberJournalChoiceForm);
 end.

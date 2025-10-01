@@ -1,10 +1,9 @@
-inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
+inherited StaffListMemberJournalChoiceForm: TStaffListMemberJournalChoiceForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1064#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082#1080')>'
   ClientHeight = 537
   ClientWidth = 975
   AddOnFormData.RefreshAction = actRefreshStart
-  AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitTop = -39
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 991
   ExplicitHeight = 576
   PixelsPerInch = 96
@@ -109,7 +108,7 @@ inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
             DataBinding.FieldName = 'MemberName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 102
+            Width = 119
           end
           object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -242,10 +241,43 @@ inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
     Width = 975
     ExplicitWidth = 975
     inherited deStart: TcxDateEdit
+      Left = 468
       EditValue = 44927d
+      Visible = False
+      ExplicitLeft = 468
     end
     inherited deEnd: TcxDateEdit
+      Left = 607
       EditValue = 44927d
+      Visible = False
+      ExplicitLeft = 607
+    end
+    inherited cxLabel1: TcxLabel
+      Left = 427
+      Visible = False
+      ExplicitLeft = 427
+    end
+    inherited cxLabel2: TcxLabel
+      Left = 559
+      Visible = False
+      ExplicitLeft = 559
+    end
+    object cxLabel11: TcxLabel
+      Left = 17
+      Top = 6
+      Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072':'
+    end
+    object edMember: TcxButtonEdit
+      Left = 112
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 5
+      Width = 309
     end
   end
   object cxLabel27: TcxLabel [2]
@@ -445,37 +477,6 @@ inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
         end>
       isShowModal = False
     end
-    object actOpenStaffListMember_Choice: TdsdOpenForm
-      Category = 'DSDLib'
-      TabSheet = tsMain
-      MoveParams = <>
-      Caption = #1048#1089#1090#1086#1088#1080#1103' '#1087#1086' '#1092#1080#1079'. '#1083#1080#1094#1091
-      Hint = #1048#1089#1090#1086#1088#1080#1103' '#1087#1086' '#1092#1080#1079'. '#1083#1080#1094#1091
-      ImageIndex = 25
-      FormName = 'TStaffListMemberJournalChoiceForm'
-      FormNameParam.Value = 'TStaffListMemberJournalChoiceForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'MemberId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MemberId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MemberName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MemberName'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -485,21 +486,13 @@ inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_StaffListMember'
+    StoredProcName = 'gpSelect_Movement_StaffListMember_Choice'
     Params = <
       item
-        Name = 'instartdate'
+        Name = 'inMemberId'
         Value = 41640d
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inenddate'
-        Value = 41640d
-        Component = deEnd
-        DataType = ftDateTime
+        Component = GuideMember
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -517,6 +510,14 @@ inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inenddate'
+        Value = 41640d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 136
@@ -584,14 +585,6 @@ inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbOpenStaffListMember_Choice'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -643,10 +636,6 @@ inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
       Action = actOpenFormMemberHolidayEdit
       Category = 0
     end
-    object bbOpenStaffListMember_Choice: TdxBarButton
-      Action = actOpenStaffListMember_Choice
-      Category = 0
-    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColorRuleList = <
@@ -674,6 +663,9 @@ inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
       end
       item
         Component = JuridicalBasisGuides
+      end
+      item
+        Component = GuideMember
       end>
     Left = 408
     Top = 344
@@ -716,15 +708,18 @@ inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ReportNameLoss'
+        Name = 'MemberId'
         Value = Null
-        DataType = ftString
+        Component = GuideMember
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ReportNameLossTax'
+        Name = 'MemberName'
         Value = Null
+        Component = GuideMember
+        ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -825,5 +820,93 @@ inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
     PackSize = 1
     Left = 824
     Top = 48
+  end
+  object GuideMember: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMember
+    FormNameParam.Value = 'TMember_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMember_ChoiceForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuideMember
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuideMember
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMain'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isOfficial'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionLevelId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionLevelName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end>
+    Left = 254
+    Top = 6
   end
 end

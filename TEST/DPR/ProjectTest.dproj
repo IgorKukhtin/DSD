@@ -5662,10 +5662,6 @@
 				<Form>StaffListKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\StaffListMemberJournal.pas">
-				<Form>StaffListMemberJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\StaffListItemChoice.pas">
 				<Form>StaffListItemChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -5700,6 +5696,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\StaffListCloseEdit.pas">
 				<Form>StaffListCloseEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\StaffListMemberJournal.pas">
+				<Form>StaffListMemberJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\StaffListMemberJournalChoice.pas">
+				<Form>StaffListMemberJournalChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
