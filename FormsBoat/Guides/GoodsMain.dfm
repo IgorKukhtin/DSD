@@ -2429,11 +2429,8 @@ object GoodsMainForm: TGoodsMainForm
   object FieldFilter_Article: TdsdFieldFilter
     TextEdit = edSearchArticle
     DataSet = ClientDataSet
-    Column = Article
+    Column = Article_all
     ColumnList = <
-      item
-        Column = Article
-      end
       item
         Column = Article_all
       end
