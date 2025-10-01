@@ -8,9 +8,11 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsGroupProperty(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ParentId Integer, ParentName TVarChar
              , QualityINN TVarChar
-             , isErased boolean) AS
-$BODY
-$BEGIN
+             , isErased boolean
+              )
+AS
+$BODY$
+BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroupProperty()());
@@ -37,6 +39,7 @@ $BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_GoodsGroupProperty_Parent_check
                              ON ObjectLink_GoodsGroupProperty_Parent_check.ChildObjectId = Object.Id
                             AND ObjectLink_GoodsGroupProperty_Parent_check.DescId = zc_ObjectLink_GoodsGroupProperty_Parent()
+                            AND ObjectLink_GoodsGroupProperty_Parent_check.ChildObjectId <> ObjectLink_GoodsGroupProperty_Parent_check.ObjectId
 
    WHERE Object.DescId = zc_Object_GoodsGroupProperty()
      AND ObjectLink_GoodsGroupProperty_Parent_check.ChildObjectId IS NULL
