@@ -23,7 +23,7 @@ object ClientEditForm: TClientEditForm
     Height = 25
     Action = actVATNumberValidation
     Default = True
-    TabOrder = 0
+    TabOrder = 3
   end
   object cxButton1: TcxButton
     Left = 101
@@ -42,14 +42,14 @@ object ClientEditForm: TClientEditForm
     Action = actFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
-    TabOrder = 3
+    TabOrder = 2
   end
   object cxPageControl1: TcxPageControl
     Left = 24
     Top = 32
     Width = 576
     Height = 353
-    TabOrder = 2
+    TabOrder = 0
     Properties.ActivePage = Main
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 353
@@ -70,7 +70,7 @@ object ClientEditForm: TClientEditForm
         Properties.DecimalPlaces = 0
         Properties.DisplayFormat = '0'
         Properties.ReadOnly = True
-        TabOrder = 3
+        TabOrder = 13
         Width = 130
       end
       object edName: TcxTextEdit
@@ -91,8 +91,8 @@ object ClientEditForm: TClientEditForm
       end
       object edComment: TcxTextEdit
         Left = 10
-        Top = 296
-        TabOrder = 5
+        Top = 294
+        TabOrder = 12
         Width = 558
       end
       object edMobile: TcxTextEdit
@@ -109,7 +109,7 @@ object ClientEditForm: TClientEditForm
       object edStreet: TcxTextEdit
         Left = 10
         Top = 163
-        TabOrder = 11
+        TabOrder = 5
         Width = 273
       end
       object cxLabel25: TcxLabel
@@ -120,13 +120,13 @@ object ClientEditForm: TClientEditForm
       object edStreet_add: TcxTextEdit
         Left = 295
         Top = 163
-        TabOrder = 14
+        TabOrder = 6
         Width = 273
       end
       object edEmail: TcxTextEdit
         Left = 295
         Top = 204
-        TabOrder = 24
+        TabOrder = 8
         Width = 273
       end
       object cxLabel12: TcxLabel
@@ -148,7 +148,7 @@ object ClientEditForm: TClientEditForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 8
+        TabOrder = 1
         Width = 130
       end
       object cxLabel20: TcxLabel
@@ -158,26 +158,26 @@ object ClientEditForm: TClientEditForm
       end
       object edTaxNumber: TcxTextEdit
         Left = 295
-        Top = 25
-        TabOrder = 9
+        Top = 26
+        TabOrder = 14
         Width = 127
       end
       object edName1: TcxTextEdit
         Left = 10
         Top = 249
-        TabOrder = 12
+        TabOrder = 9
         Width = 183
       end
       object edName2: TcxTextEdit
-        Left = 202
+        Left = 205
         Top = 249
-        TabOrder = 13
+        TabOrder = 10
         Width = 183
       end
       object edName3: TcxTextEdit
         Left = 394
         Top = 249
-        TabOrder = 15
+        TabOrder = 11
         Width = 174
       end
       object cxLabel22: TcxLabel
@@ -198,7 +198,7 @@ object ClientEditForm: TClientEditForm
             Default = True
             Kind = bkEllipsis
           end>
-        TabOrder = 16
+        TabOrder = 4
         Width = 273
       end
       object cxLabel23: TcxLabel
@@ -208,13 +208,13 @@ object ClientEditForm: TClientEditForm
       end
       object edCountry: TcxButtonEdit
         Left = 153
-        Top = 117
+        Top = 116
         Properties.Buttons = <
           item
             Default = True
             Kind = bkEllipsis
           end>
-        TabOrder = 27
+        TabOrder = 3
         Width = 130
       end
       object edPLZ: TcxButtonEdit
@@ -225,7 +225,7 @@ object ClientEditForm: TClientEditForm
             Default = True
             Kind = bkEllipsis
           end>
-        TabOrder = 17
+        TabOrder = 2
         Width = 130
       end
       object cxLabel14: TcxLabel
@@ -245,7 +245,7 @@ object ClientEditForm: TClientEditForm
       object edIBAN: TcxTextEdit
         Left = 270
         Top = 112
-        TabOrder = 15
+        TabOrder = 7
         Width = 271
       end
       object cxLabel8: TcxLabel
@@ -260,7 +260,7 @@ object ClientEditForm: TClientEditForm
       end
       object edCodeDB: TcxTextEdit
         Left = 3
-        Top = 22
+        Top = 21
         TabOrder = 0
         Width = 114
       end
@@ -278,7 +278,7 @@ object ClientEditForm: TClientEditForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 1
+        TabOrder = 6
         Width = 255
       end
       object cxLabel4: TcxLabel
@@ -300,7 +300,7 @@ object ClientEditForm: TClientEditForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 2
+        TabOrder = 5
         Width = 271
       end
       object edMember: TcxTextEdit
@@ -322,7 +322,7 @@ object ClientEditForm: TClientEditForm
       object edFax: TcxTextEdit
         Left = 270
         Top = 206
-        TabOrder = 16
+        TabOrder = 11
         Width = 271
       end
       object cxLabel21: TcxLabel
@@ -332,7 +332,7 @@ object ClientEditForm: TClientEditForm
       end
       object edPaidKind: TcxButtonEdit
         Left = 270
-        Top = 161
+        Top = 160
         Properties.Buttons = <
           item
             Default = True
@@ -350,13 +350,13 @@ object ClientEditForm: TClientEditForm
       object edPhone: TcxTextEdit
         Left = 3
         Top = 206
-        TabOrder = 8
+        TabOrder = 10
         Width = 255
       end
       object edWWW: TcxTextEdit
         Left = 3
-        Top = 161
-        TabOrder = 7
+        Top = 160
+        TabOrder = 8
         Width = 255
       end
       object cxLabel6: TcxLabel
@@ -366,10 +366,10 @@ object ClientEditForm: TClientEditForm
       end
       object edDiscountTax: TcxCurrencyEdit
         Left = 128
-        Top = 22
+        Top = 21
         Properties.DecimalPlaces = 2
         Properties.DisplayFormat = ',0.00'
-        TabOrder = 3
+        TabOrder = 1
         Width = 130
       end
       object cxLabel17: TcxLabel
@@ -382,18 +382,18 @@ object ClientEditForm: TClientEditForm
       end
       object ceDayCalendar: TcxCurrencyEdit
         Left = 270
-        Top = 22
+        Top = 21
         Properties.DecimalPlaces = 0
         Properties.DisplayFormat = '0'
-        TabOrder = 5
+        TabOrder = 2
         Width = 130
       end
       object ceDayBank: TcxCurrencyEdit
         Left = 411
-        Top = 22
+        Top = 21
         Properties.DecimalPlaces = 0
         Properties.DisplayFormat = '0'
-        TabOrder = 6
+        TabOrder = 3
         Width = 130
       end
       object cxLabel18: TcxLabel

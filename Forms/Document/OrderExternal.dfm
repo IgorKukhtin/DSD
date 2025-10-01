@@ -2,6 +2,7 @@ inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')>'
   ClientHeight = 460
   ClientWidth = 1434
+  ExplicitLeft = -540
   ExplicitWidth = 1450
   ExplicitHeight = 499
   PixelsPerInch = 96
@@ -436,6 +437,12 @@ inherited OrderExternalForm: TOrderExternalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object ColorB_promo: TcxGridDBColumn
+            DataBinding.FieldName = 'ColorB_promo'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 55
           end
         end
       end
@@ -2049,6 +2056,11 @@ inherited OrderExternalForm: TOrderExternalForm
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnlyEditingCellOnEnter = True
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = ColorB_promo
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <
       item
         Column = GoodsCode

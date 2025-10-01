@@ -2892,7 +2892,22 @@ object GoodsMain_ChoiceForm: TGoodsMain_ChoiceForm
         Control = edArticle
       end
       item
+        Control = edSearchArticle
+      end
+      item
+        Control = edSearchCode
+      end
+      item
+        Control = edSearchName
+      end
+      item
+        Control = cxGrid
+      end
+      item
         Control = edName
+      end
+      item
+        Control = cxGrid
       end>
     Left = 800
     Top = 248

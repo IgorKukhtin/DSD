@@ -173,6 +173,7 @@ type
     mactPrint_Order3: TMultiAction;
     actPrint_3: TdsdPrintAction;
     bbPrint_Order3: TdxBarButton;
+    ColorB_promo: TcxGridDBColumn;
   private
     { Private declarations }
   public
