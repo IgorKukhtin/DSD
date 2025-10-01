@@ -16,48 +16,77 @@ TRUNCATE TABLE _bi_Table_JuridicalSold;
               Id             BIGSERIAL NOT NULL,
               -- Дата
               OperDate       TDateTime,
-              --
+              -- Id партии
               ContainerId    Integer,
+              -- Счет
+              AccountId      Integer,
               -- Юр.л.
               JuridicalId    Integer,
               -- Контрагент
               PartnerId      Integer,
-              -- Филиал
-              BranchId       Integer,
               -- Договор
               ContractId     Integer,
               -- ФО
               PaidKindId     Integer,
               -- УП статья
               InfoMoneyId    Integer,
-              -- Счет
-              AccountId      Integer,
+              -- Филиал
+              BranchId       Integer,
+              -- Партионный учет
+              PartionMovementId Integer,
 
-              -- Начальный Долг Покупателя
-              StartSumm       TFloat,
-              -- Конечный Долг Покупателя
-              EndSumm         TFloat,
+              -- Начальный Долг Покупателя - Долг нам
+              StartSumm_a     TFloat,
+              -- Конечный Долг Покупателя - Долг нам
+              EndSumm_a       TFloat,
+              -- Начальный Долг Маркетинг - Долг мы
+              StartSumm_p     TFloat,
+              -- Конечный Долг Маркетинг - Долг мы
+              EndSumm_p       TFloat,
+
               -- Debet
               DebetSumm       TFloat,
               -- Kredit
               KreditSumm      TFloat,
 
-              -- Продажа (факт без уч. скидки)
-              SaleRealSumm_total      TFloat,
-              -- Возврат от пок. (факт без уч. скидки)
-              ReturnInRealSumm_total  TFloat,
-              -- Продажа (факт с уч. скидки)
-              SaleRealSumm            TFloat,
-              -- Возврат от пок. (факт с уч. скидки)
-              ReturnInRealSumm        TFloat,
-              -- Оплата (+)прих (-)расх.
-              MoneySumm               TFloat,
-              -- Корр. цены (+)доход (-)расх.
-              PriceCorrectiveSumm     TFloat,
-              -- Вз-зачет (+)опл.прих. (-)опл.расх.
-              SendDebtSumm            TFloat,
-              -- Проочее
-              OthSumm                 TFloat,
+              -- Приход от поставщика - Долг мы
+              IncomeSumm_p      TFloat,
+              -- Возврат поставщику - Долг мы
+              ReturnOutSumm_p   TFloat,
+
+              -- Продажа (факт без уч. скидки) - Долг нам
+              SaleRealSumm_total_a      TFloat,
+              -- Возврат от пок. (факт без уч. скидки) - Долг нам
+              ReturnInRealSumm_total_a  TFloat,
+              -- Продажа (факт с уч. скидки) - Долг нам
+              SaleRealSumm_a            TFloat,
+              -- Возврат от пок. (факт с уч. скидки) - Долг нам
+              ReturnInRealSumm_a        TFloat,
+
+              -- Услуги факт оказан. - Долг нам
+              ServiceRealSumm_a         TFloat,
+              -- Услуги факт получ. - Долг мы
+              ServiceRealSumm_p         TFloat,
+
+              -- Оплата прих - Долг нам
+              MoneySumm_a               TFloat,
+              -- Оплата расх - Долг мы
+              MoneySumm_p               TFloat,
+
+              -- Корр. цены - Долг нам +
+              PriceCorrectiveSumm_a     TFloat,
+              -- Корр. цены - Долг мы  +
+              PriceCorrectiveSumm_p     TFloat,
+
+              -- Вз-зачет - Долг нам +
+              SendDebtSumm_a            TFloat,
+              -- Вз-зачет - Долг мы +
+              SendDebtSumm_p            TFloat,
+
+              -- Прочее - Долг нам +
+              OthSumm_a                 TFloat,
+              -- Прочее - Долг мы +
+              OthSumm_p                 TFloat,
               --
               CONSTRAINT pk_bi_Table_JuridicalSold PRIMARY KEY (Id)
            );

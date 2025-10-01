@@ -77,7 +77,7 @@ BEGIN
 
 
      -- Разрешен просмотр долги Маркетинг - НАЛ
-     vbIsInfoMoneyDestination_21500:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS tmp WHERE tmp.UserId = inUserId AND tmp.RoleId = 8852398);
+     vbIsInfoMoneyDestination_21500:= inUserId = 5 OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS tmp WHERE tmp.UserId = inUserId AND tmp.RoleId = 8852398);
 
      -- определяется ...
      vbIsBranch:= COALESCE (inBranchId, 0) > 0;
@@ -256,6 +256,7 @@ BEGIN
                                  , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_IncomeAsset()) AND MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS IncomeSumm
                                  , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnOut() THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS ReturnOutSumm
 
+                                   -- Продажа (бухг.)
                                  , SUM (CASE WHEN MIContainer.OperDate <= inEndDate
                                              THEN CASE
                                                      --WHEN inUserId = 5 AND MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut())
@@ -268,9 +269,12 @@ BEGIN
                                              ELSE 0
                                         END) AS SaleSumm
 
+                                   -- Продажа (факт с уч. скидки)
                                  , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_PriceCorrective()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END)
                                  + SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service()) AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10300() THEN MIContainer.Amount ELSE 0 END ELSE 0 END)
                                    AS SaleRealSumm
+
+                                   -- Cкидка (продажа)
                                  , SUM (CASE WHEN MIContainer.OperDate <= inEndDate
                                              THEN CASE
                                                      --WHEN inUserId = 5 and MIContainer.MovementDescId IN (zc_Movement_Sale()/*, zc_Movement_Service(), zc_Movement_PriceCorrective()*/) AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10300() THEN -1 * MIContainer.Amount
@@ -293,19 +297,36 @@ BEGIN
                                  , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_PersonalAccount()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END
                   --                    + CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_IncomeAsset()) AND MIContainer.Amount > 0   THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END
                                        ) AS MoneySumm
-                                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service(), zc_Movement_ProfitLossService(), zc_Movement_ProfitIncomeService(), zc_Movement_TransportService()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ServiceSumm
-                                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProfitLossService(), zc_Movement_ProfitIncomeService(), zc_Movement_TransportService()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)
-                                 + SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service()) AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_SaleSumm_10300() THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)
-                                   AS ServiceRealSumm
+
+                                   -- Услуги бухг. (+)получ. (-)оказан.
+                                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service(), zc_Movement_TransportService()) THEN -1 * MIContainer.Amount ELSE 0 END
+                                                                                       + CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProfitLossService(), zc_Movement_ProfitIncomeService()) AND tmpContainer.PaidKindId <> zc_Enum_PaidKind_FirstForm() THEN -1 * MIContainer.Amount ELSE 0 END
+                                             ELSE 0
+                                        END) AS ServiceSumm
+
+                                   -- Услуги факт (+)получ. (-)оказан.
+                                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_TransportService()) THEN -1 * MIContainer.Amount ELSE 0 END
+                                                                                       + CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProfitLossService(), zc_Movement_ProfitIncomeService()) AND tmpContainer.PaidKindId <> zc_Enum_PaidKind_FirstForm() THEN -1 * MIContainer.Amount ELSE 0 END
+                                                                                       + CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service()) AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_SaleSumm_10300() THEN -1 * MIContainer.Amount ELSE 0 END
+                                                                                       
+                                             ELSE 0
+                                        END) AS ServiceRealSumm
 
                                  , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_SendDebt()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS SendDebtSumm
                                  , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Currency()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS ChangeCurrencySumm
-                                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId NOT IN (zc_Movement_Income(), zc_Movement_IncomeAsset(), zc_Movement_ReturnOut()
+
+                                   -- OtherSumm
+                                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProfitLossService(), zc_Movement_ProfitIncomeService())
+                                                                                               AND tmpContainer.PaidKindId = zc_Enum_PaidKind_FirstForm()
+                                                                                                   THEN MIContainer.Amount
+
+                                                                                              WHEN MIContainer.MovementDescId NOT IN (zc_Movement_Income(), zc_Movement_IncomeAsset(), zc_Movement_ReturnOut()
                                                                                                                                     , zc_Movement_Sale(), zc_Movement_ReturnIn()
                                                                                                                                     , zc_Movement_PriceCorrective()
                                                                                                                                     , zc_Movement_TransferDebtOut(), zc_Movement_TransferDebtIn()
                                                                                                                                     , zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_PersonalAccount()
-                                                                                                                                    , zc_Movement_Service(), zc_Movement_ProfitLossService(), zc_Movement_ProfitIncomeService(), zc_Movement_TransportService()
+                                                                                                                                    , zc_Movement_Service(), zc_Movement_TransportService()
+                                                                                                                                    , zc_Movement_ProfitLossService(), zc_Movement_ProfitIncomeService()
                                                                                                                                     , zc_Movement_SendDebt()
                                                                                                                                     , zc_Movement_Currency()
                                                                                                                                     , zc_Movement_ChangePercent()
@@ -313,10 +334,11 @@ BEGIN
                                                                                                    THEN MIContainer.Amount
                                                                                               ELSE 0
                                                                                          END
+                                                                                       + CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_IncomeAsset()) AND MIContainer.Amount > 0 THEN 1 * MIContainer.Amount ELSE 0 END
                                              ELSE 0
                                         END
-                                      + CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_IncomeAsset()) AND MIContainer.Amount > 0   THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END
                                        ) AS OtherSumm
+
                                  , tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS EndAmount
                                  ---
                                  , 0 AS StartAmount_Currency
@@ -348,7 +370,7 @@ BEGIN
                                     , tmpContainer.ContractId, tmpContainer.BranchId, tmpContainer.PartionMovementId
                                     , tmpContainer.CurrencyId
                           UNION ALL
-                            -- 1.2. сумма даижения в валюте операции - Currency
+                            -- 1.2. сумма движения в валюте операции - Currency
                             SELECT tmpContainer.ContainerId, tmpContainer.ObjectId, tmpContainer.JuridicalId, tmpContainer.InfoMoneyId, tmpContainer.PaidKindId
                                  , tmpContainer.ContractId, tmpContainer.BranchId, tmpContainer.PartionMovementId
                                  , tmpContainer.CurrencyId
@@ -373,7 +395,7 @@ BEGIN
                                  , 0 AS ChangeCurrencySumm
                                  , 0 AS OtherSumm
                                  , 0 AS EndAmount
-                                 --------
+                                   --------
                                  , tmpContainer.Amount_Currency - COALESCE(SUM (MIContainer.Amount), 0) AS StartAmount_Currency
                                  , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS DebetSumm_Currency
                                  , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS KreditSumm_Currency
@@ -522,16 +544,27 @@ BEGIN
 
         (Operation.IncomeSumm * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
         (Operation.ReturnOutSumm * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
-        (Operation.SaleSumm * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
-        (Operation.SaleRealSumm * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
-        (Operation.SaleSumm_10300 * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
 
+        -- Продажа (бухг.)
+        (Operation.SaleSumm * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
+
+        -- Продажа (факт с уч. скидки)
+        (Operation.SaleRealSumm * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
+        -- Cкидка (продажа)
+        (Operation.SaleSumm_10300 * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
+        -- Продажа (факт без уч. скидки)
         ((Operation.SaleRealSumm + Operation.SaleSumm_10300) * COALESCE (tmpReport_res.Koeff, 1.0)) ::TFloat AS SaleRealSumm_total,
 
+        -- Возврат от пок. (бухг.)
         (Operation.ReturnInSumm * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
+
+        -- Возврат от пок. (факт с уч. скидки)
         (Operation.ReturnInRealSumm * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
+        -- Cкидка (возврат от пок.)
         (Operation.ReturnInSumm_10300 * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
+        -- Возврат от пок. (факт без уч. скидки)
         ((Operation.ReturnInRealSumm + Operation.ReturnInSumm_10300) * COALESCE (tmpReport_res.Koeff, 1.0)) ::TFloat AS ReturnInRealSumm_total,
+
         (Operation.PriceCorrectiveSumm * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
         (Operation.ChangePercentSumm * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat AS ChangePercentSumm,
         (Operation.MoneySumm * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,

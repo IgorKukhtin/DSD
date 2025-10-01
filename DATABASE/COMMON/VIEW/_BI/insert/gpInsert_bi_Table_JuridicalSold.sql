@@ -21,217 +21,427 @@ BEGIN
 
 
       -- РЕЗУЛЬТАТ
-      INSERT INTO _bi_Table_JuridicalSold (-- Id Документа
-                                         MovementId
-                                         -- Дата Получатель
-                                       , OperDate
-                                         -- Дата Отправитель
-                                       , OperDate_sklad
-                                         -- № Документа
-                                       , InvNumber
+      INSERT INTO _bi_Table_JuridicalSold (--
+                                           OperDate
+                                           -- Id партии
+                                         , ContainerId
+                                           -- Счет
+                                         , AccountId
+                                           -- Юр.л.
+                                         , JuridicalId
+                                           -- Контрагент
+                                         , PartnerId
+                                           -- Договор
+                                         , ContractId
+                                           -- ФО
+                                         , PaidKindId
+                                           -- УП статья
+                                         , InfoMoneyId
+                                           -- Филиал
+                                         , BranchId
+                                           -- Партионный учет
+                                         , PartionMovementId
 
-                                         -- Подразделение - Филиал От кого
-                                       , UnitId_from
-                                         -- Подразделение - Филиал Кому - Днепр
-                                       , UnitId_to
+                                           -- Начальный Долг Покупателя - Долг нам
+                                         , StartSumm_a
+                                           -- Конечный Долг Покупателя - Долг нам
+                                         , EndSumm_a
+                                           -- Начальный Долг Маркетинг - Долг мы
+                                         , StartSumm_p
+                                           -- Конечный Долг Маркетинг - Долг мы
+                                         , EndSumm_p
 
-                                         -- Товар
-                                       , GoodsId
-                                         -- Вид Товара
-                                       , GoodsKindId
+                                           -- Debet
+                                         , DebetSumm
+                                           -- Kredit
+                                         , KreditSumm
 
-                                         -- Документ Заявка покупателя
-                                       , MovementId_order
+                                           -- Приход от поставщика - Долг мы
+                                         , IncomeSumm_p
+                                           -- Возврат поставщику - Долг мы
+                                         , ReturnOutSumm_p
 
-                                         -- Документ Акция
-                                       , MovementId_promo
+                                           -- Продажа (факт без уч. скидки) - Долг нам
+                                         , SaleRealSumm_total_a
+                                           -- Возврат от пок. (факт без уч. скидки) - Долг нам
+                                         , ReturnInRealSumm_total_a
+                                           -- Продажа (факт с уч. скидки) - Долг нам
+                                         , SaleRealSumm_a
+                                           -- Возврат от пок. (факт с уч. скидки) - Долг нам
+                                         , ReturnInRealSumm_a
 
-                                         -- Вес Отправитель
-                                       , Amount
-                                         -- Шт.
-                                       , Amount_sh
+                                           -- Услуги факт оказан. - Долг нам
+                                         , ServiceRealSumm_a
+                                           -- Услуги факт получ. - Долг мы
+                                         , ServiceRealSumm_p
+                                           -- Оплата прих - Долг нам
+                                         , MoneySumm_a
+                                           -- Оплата расх - Долг мы
+                                         , MoneySumm_p
+                                           -- Корр. цены - Долг нам
+                                         , PriceCorrectiveSumm_p
+                                           -- Вз-зачет
+                                         , SendDebtSumm_a
+                                         , SendDebtSumm_p
+                                           -- Прочее
+                                         , OthSumm_a
+                                         , OthSumm_p
+                                          )
+              -- 1.1. Результат - 30101 - Дебиторы + покупатели + Продукция
+              SELECT tmpReport.OperDate
+                   , tmpReport.ContainerId
+                   , tmpReport.AccountId
+                   , tmpReport.JuridicalId
+                   , tmpReport.PartnerId
+                   , tmpReport.ContractId
+                   , tmpReport.PaidKindId
+                   , tmpReport.InfoMoneyId
+                   , tmpReport.BranchId
 
-                                         -- Вес Получатель
-                                       , AmountPartner
-                                         -- Шт.
-                                       , AmountPartner_sh
+                     -- Начальный Долг Покупателя - Долг нам
+                   , SUM (tmpReport.StartSumm) AS StartSumm_a
+                     -- Конечный Долг Покупателя - Долг нам
+                   , SUM (tmpReport.EndSumm)   AS EndSumm_a
 
-                                         -- Акция - Получатель
-                                       , AmountPartner_promo
-                                         -- Шт.
-                                       , AmountPartner_promo_sh
+                    -- Начальный Долг Маркетинг - Долг мы
+                   , 0 AS StartSumm_p
+                     -- Конечный Долг Маркетинг - Долг мы
+                   , 0 AS EndSumm_p
 
-                                         -- Сумма с НДС Получатель
-                                       , SummPartner
-                                         -- Акция - Сумма с НДС Получатель
-                                       , SummPartner_promo
-                                        )
-              -- Результат
-              WITH tmpReport AS  SELECT tmpReport.*
-                                 FROM lpReport_JuridicalSold (inStartDate              := inStartDate
-                                                            , inEndDate                := inEndDate
-                                                            , inStartDate_sale         := CASE WHEN inStartDate = inEndDate OR EXTRACT (MONTH FROM CURRENT_DATE) = EXTRACT (MONTH FROM inEndDate) THEN DATE_TRUNC ('MONTH', inStartDate) - INTERVAL '1 MONTH' ELSE inStartDate END
-                                                            , inEndDate_sale           := CASE WHEN inStartDate = inEndDate OR EXTRACT (MONTH FROM CURRENT_DATE) = EXTRACT (MONTH FROM inEndDate) THEN DATE_TRUNC ('MONTH', inStartDate) - INTERVAL '1 DAY'   ELSE inEndDate   END
-                                                            , inAccountId              := inAccountId
-                                                            , inInfoMoneyId            := inInfoMoneyId
-                                                            , inInfoMoneyGroupId       := inInfoMoneyGroupId
-                                                            , inInfoMoneyDestinationId := inInfoMoneyDestinationId
-                                                            , inPaidKindId             := inPaidKindId
-                                                            , inBranchId               := inBranchId
-                                                            , inJuridicalGroupId       := inJuridicalGroupId
-                                                            , inCurrencyId             := inCurrencyId
-                                                            , inIsPartionMovement      := inIsPartionMovement
-                                                            , inUserId                 := vbUserId
-                                                             ) AS tmpReport
+                     -- Debet
+                   , SUM (tmpReport.DebetSumm)   AS DebetSumm
+                     -- Kredit
+                   , SUM (tmpReport.KreditSumm)  AS KreditSumm
 
-                     Movement.Id                            AS MovementId
-                     -- Дата Получатель
-                   , MovementDate_OperDatePartner.ValueData AS OperDate
-                     -- Дата Отправитель
-                   , Movement.OperDate                      AS OperDate_sklad
-                     -- № Документа
-                   , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
+                     -- Приход от поставщика - Долг мы * -1
+                   , SUM (tmpReport.IncomeSumm)   AS IncomeSumm_p
+                     -- Возврат поставщику - Долг мы
+                   , SUM (tmpReport.ReturnOutSumm)   AS ReturnOutSumm_p
 
-                     -- Подразделение - Филиал От кого
-                   , Object_From.Id                              AS UnitId_from
-                   --, Object_From.ValueData                       AS UnitName_from
+                     -- Продажа (факт без уч. скидки) - Долг нам
+                   , SUM (tmpReport.SaleRealSumm_total)       AS SaleRealSumm_total_a
+                     -- Возврат от пок. (факт без уч. скидки) - Долг нам * -1
+                   , SUM (tmpReport.ReturnInRealSumm_total)   AS ReturnInRealSumm_total_a
+                     -- Продажа (факт с уч. скидки) - Долг нам
+                   , SUM (tmpReport.SaleRealSumm)             AS SaleRealSumm_a
+                     -- Возврат от пок. (факт с уч. скидки) - Долг нам * -1
+                   , SUM (tmpReport.ReturnInRealSumm)         AS ReturnInRealSumm_a
 
-                     -- Подразделение - Филиал Кому - Днепр
-                   , Object_To.Id                                AS UnitId_to
-                   --, Object_To.ValueData                         AS UnitName_to
+                     -- Услуги факт оказан. - Долг нам * -1
+                   , SUM (CASE WHEN tmpReport.ServiceRealSumm < 0 THEN -1 * tmpReport.ServiceRealSumm ELSE 0 END) AS ServiceRealSumm_a
+                     -- Услуги факт получ. - Долг мы
+                   , SUM (CASE WHEN tmpReport.ServiceRealSumm > 0 THEN  1 * tmpReport.ServiceRealSumm ELSE 0 END) AS ServiceRealSumm_p
 
-                     -- Товар
-                   , MovementItem.ObjectId                       AS GoodsId
-                   --, Object_Goods.ObjectCode                     AS GoodsCode
-                   --, Object_Goods.ValueData                      AS GoodsName
-                     -- Вид Товара
-                   , MILinkObject_GoodsKind.ObjectId             AS GoodsKindId
-                   --, Object_GoodsKind.ObjectCode                 AS GoodsKindCode
-                   --, Object_GoodsKind.ValueData                  AS GoodsKindName
-                     -- Ед.изм. Товара
-                   --, Object_Measure.ObjectCode                   AS MeasureCode
-                   --, Object_Measure.ValueData                    AS MeasureName
+                     -- Оплата прих - Долг нам * -1
+                   , SUM (tmpReport.MoneySumm)                AS MoneySumm_a
+                     -- Оплата расх - Долг мы
+                   , 0                                        AS MoneySumm_p
 
-                     -- Документ Заявка покупателя
-                   , MLM_Order.MovementChildId                   AS MovementId_order
-                     -- Документ Акция
-                   , MIFloat_PromoMovement.ValueData  :: Integer AS MovementId_promo
-                     -- Признак Акция да/нет
-                   --, CASE WHEN MIFloat_PromoMovement.ValueData > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPromo
+                     -- Корр. цены - Долг нам
+                   , SUM (CASE WHEN tmpReport.PriceCorrectiveSumm > 0 THEN  1 * tmpReport.PriceCorrectiveSumm ELSE 0 END) AS PriceCorrectiveSumm_a
+                     -- Корр. цены - Долг мы
+                   , SUM (CASE WHEN tmpReport.PriceCorrectiveSumm < 0 THEN -1 * tmpReport.PriceCorrectiveSumm ELSE 0 END) AS PriceCorrectiveSumm_p
 
-                     -- Вес Отправитель
-                   ,  (MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
-                      ) :: TFloat AS Amount
-                     -- Шт.
-                   ,  (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
-                                 THEN MovementItem.Amount
-                            ELSE 0
-                       END) :: TFloat AS Amount_sh
+                     -- Вз-зачет - Долг нам -1
+                   , SUM (CASE WHEN tmpReport.SendDebtSumm < 0 THEN -1 * tmpReport.ServiceRealSumm ELSE 0 END) AS SendDebtSumm_a
+                     -- Вз-зачет - Долг мы
+                   , SUM (CASE WHEN tmpReport.SendDebtSumm > 0 THEN  1 * tmpReport.ServiceRealSumm ELSE 0 END) AS SendDebtSumm_p
 
-                     -- Вес Получатель
-                   ,  (COALESCE (MIFloat_AmountPartner.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
-                      ) :: TFloat AS AmountPartner
-                     -- Шт.
-                   ,  (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
-                                 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
-                            ELSE 0
-                       END) :: TFloat AS AmountPartner_sh
+                     -- Прочее - Долг нам
+                   , SUM (CASE WHEN tmpReport.ChangeCurrencySumm + tmpReport.OtherSumm + tmpReport.ServiceSumm_pls > 0 THEN  1 * (tmpReport.ChangeCurrencySumm + tmpReport.OtherSumm + tmpReport.ServiceSumm_pls) ELSE 0 END) AS OthSumm_a
+                     -- Прочее - Долг мы
+                   , SUM (CASE WHEN tmpReport.ChangeCurrencySumm + tmpReport.OtherSumm + tmpReport.ServiceSumm_pls < 0 THEN -1 * (tmpReport.ChangeCurrencySumm + tmpReport.OtherSumm + tmpReport.ServiceSumm_pls) ELSE 0 END) AS OthSumm_p
 
-                     -- Акция - Получатель
-                   ,  (CASE WHEN MIFloat_PromoMovement.ValueData > 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END
-                     * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
-                      ) :: TFloat AS AmountPartner_promo
-                     -- Шт.
-                   ,  (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND MIFloat_PromoMovement.ValueData > 0
-                                 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
-                            ELSE 0
-                      END) :: TFloat AS AmountPartner_promo_sh
+              FROM lpReport_bi_JuridicalSold (inStartDate              := inStartDate
+                                            , inEndDate                := inEndDate
+                                              -- 30101 - Дебиторы + покупатели + Продукция
+                                            , inAccountId              := zc_Enum_Account_30101()
+                                            , inInfoMoneyId            := 0
+                                            , inInfoMoneyGroupId       := 0
+                                            , inInfoMoneyDestinationId := 0
+                                            , inPaidKindId             := 0
+                                            , inIsPartionMovement      := FALSE
+                                            , inUserId                 := zfCalc_UserAdmin() :: Integer
+                                             ) AS tmpReport
+              GROUP BY tmpReport.ContainerId
+                     , tmpReport.AccountId
+                     , tmpReport.OperDate
+                     , tmpReport.JuridicalId
+                     , tmpReport.PartnerId
+                     , tmpReport.InfoMoneyId
+                     , tmpReport.ContractId
+                     , tmpReport.PaidKindId
+                     , tmpReport.BranchId
 
-                     -- Сумма с НДС Получатель
-                   ,  (1.2 * COALESCE (MIFloat_AmountPartner.ValueData, 0) * COALESCE (MIFloat_Price.ValueData, 0)
-                     / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
-                      ) :: TFloat AS Summ
+             UNION ALL
+              -- 1.2. Результат - 30102 - Дебиторы + покупатели + Мясное сырье
+              SELECT tmpReport.OperDate
+                   , tmpReport.ContainerId
+                   , tmpReport.AccountId
+                   , tmpReport.JuridicalId
+                   , tmpReport.PartnerId
+                   , tmpReport.ContractId
+                   , tmpReport.PaidKindId
+                   , tmpReport.InfoMoneyId
+                   , tmpReport.BranchId
 
-                     -- Акция - Сумма с НДС Получатель
-                   ,  (CASE WHEN MIFloat_PromoMovement.ValueData > 0
-                                    THEN 1.2 * COALESCE (MIFloat_AmountPartner.ValueData, 0) * COALESCE (MIFloat_Price.ValueData, 0)
-                                       / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
-                               ELSE 0
-                          END) :: TFloat AS Summ_promo
+                     -- Начальный Долг Покупателя - Долг нам
+                   , SUM (tmpReport.StartSumm) AS StartSumm_a
+                     -- Конечный Долг Покупателя - Долг нам
+                   , SUM (tmpReport.EndSumm)   AS EndSumm_a
+
+                    -- Начальный Долг Маркетинг - Долг мы
+                   , 0 AS StartSumm_p
+                     -- Конечный Долг Маркетинг - Долг мы
+                   , 0 AS EndSumm_p
+
+                     -- Debet
+                   , SUM (tmpReport.DebetSumm)   AS DebetSumm
+                     -- Kredit
+                   , SUM (tmpReport.KreditSumm)  AS KreditSumm
+
+                     -- Приход от поставщика - Долг мы * -1
+                   , SUM (tmpReport.IncomeSumm)   AS IncomeSumm_p
+                     -- Возврат поставщику - Долг мы
+                   , SUM (tmpReport.ReturnOutSumm)   AS ReturnOutSumm_p
+
+                     -- Продажа (факт без уч. скидки) - Долг нам
+                   , SUM (tmpReport.SaleRealSumm_total)       AS SaleRealSumm_total_a
+                     -- Возврат от пок. (факт без уч. скидки) - Долг нам * -1
+                   , SUM (tmpReport.ReturnInRealSumm_total)   AS ReturnInRealSumm_total_a
+                     -- Продажа (факт с уч. скидки) - Долг нам
+                   , SUM (tmpReport.SaleRealSumm)             AS SaleRealSumm_a
+                     -- Возврат от пок. (факт с уч. скидки) - Долг нам * -1
+                   , SUM (tmpReport.ReturnInRealSumm)         AS ReturnInRealSumm_a
+
+                     -- Услуги факт оказан. - Долг нам * -1
+                   , SUM (CASE WHEN tmpReport.ServiceRealSumm < 0 THEN -1 * tmpReport.ServiceRealSumm ELSE 0 END) AS ServiceRealSumm_a
+                     -- Услуги факт получ. - Долг мы
+                   , SUM (CASE WHEN tmpReport.ServiceRealSumm > 0 THEN  1 * tmpReport.ServiceRealSumm ELSE 0 END) AS ServiceRealSumm_p
+
+                     -- Оплата прих - Долг нам * -1
+                   , SUM (tmpReport.MoneySumm)                AS MoneySumm_a
+                     -- Оплата расх - Долг мы
+                   , 0                                        AS MoneySumm_p
+
+                     -- Корр. цены - Долг нам
+                   , SUM (CASE WHEN tmpReport.PriceCorrectiveSumm > 0 THEN  1 * tmpReport.PriceCorrectiveSumm ELSE 0 END) AS PriceCorrectiveSumm_a
+                     -- Корр. цены - Долг мы
+                   , SUM (CASE WHEN tmpReport.PriceCorrectiveSumm < 0 THEN -1 * tmpReport.PriceCorrectiveSumm ELSE 0 END) AS PriceCorrectiveSumm_p
+
+                     -- Вз-зачет - Долг нам -1
+                   , SUM (CASE WHEN tmpReport.SendDebtSumm < 0 THEN -1 * tmpReport.ServiceRealSumm ELSE 0 END) AS SendDebtSumm_a
+                     -- Вз-зачет - Долг мы
+                   , SUM (CASE WHEN tmpReport.SendDebtSumm > 0 THEN  1 * tmpReport.ServiceRealSumm ELSE 0 END) AS SendDebtSumm_p
+
+                     -- Прочее - Долг нам
+                   , SUM (CASE WHEN tmpReport.ChangeCurrencySumm + tmpReport.OtherSumm + tmpReport.ServiceSumm_pls > 0 THEN  1 * (tmpReport.ChangeCurrencySumm + tmpReport.OtherSumm + tmpReport.ServiceSumm_pls) ELSE 0 END) AS OthSumm_a
+                     -- Прочее - Долг мы
+                   , SUM (CASE WHEN tmpReport.ChangeCurrencySumm + tmpReport.OtherSumm + tmpReport.ServiceSumm_pls < 0 THEN -1 * (tmpReport.ChangeCurrencySumm + tmpReport.OtherSumm + tmpReport.ServiceSumm_pls) ELSE 0 END) AS OthSumm_p
+
+              FROM lpReport_bi_JuridicalSold (inStartDate              := inStartDate
+                                            , inEndDate                := inEndDate
+                                              -- 30102 - Дебиторы + покупатели + Мясное сырье
+                                            , inAccountId              := zc_Enum_Account_30102()
+                                            , inInfoMoneyId            := 0
+                                            , inInfoMoneyGroupId       := 0
+                                            , inInfoMoneyDestinationId := 0
+                                            , inPaidKindId             := 0
+                                            , inIsPartionMovement      := FALSE
+                                            , inUserId                 := zfCalc_UserAdmin() :: Integer
+                                             ) AS tmpReport
+              GROUP BY tmpReport.ContainerId
+                     , tmpReport.AccountId
+                     , tmpReport.OperDate
+                     , tmpReport.JuridicalId
+                     , tmpReport.PartnerId
+                     , tmpReport.InfoMoneyId
+                     , tmpReport.ContractId
+                     , tmpReport.PaidKindId
+                     , tmpReport.BranchId
+
+             UNION ALL
+              -- 1.3. Результат - 30151 - Дебиторы + покупатели ВЭД + Продукция
+              SELECT tmpReport.OperDate
+                   , tmpReport.ContainerId
+                   , tmpReport.AccountId
+                   , tmpReport.JuridicalId
+                   , tmpReport.PartnerId
+                   , tmpReport.ContractId
+                   , tmpReport.PaidKindId
+                   , tmpReport.InfoMoneyId
+                   , tmpReport.BranchId
+
+                     -- Начальный Долг Покупателя - Долг нам
+                   , SUM (tmpReport.StartSumm) AS StartSumm_a
+                     -- Конечный Долг Покупателя - Долг нам
+                   , SUM (tmpReport.EndSumm)   AS EndSumm_a
+
+                    -- Начальный Долг Маркетинг - Долг мы
+                   , 0 AS StartSumm_p
+                     -- Конечный Долг Маркетинг - Долг мы
+                   , 0 AS EndSumm_p
+
+                     -- Debet
+                   , SUM (tmpReport.DebetSumm)   AS DebetSumm
+                     -- Kredit
+                   , SUM (tmpReport.KreditSumm)  AS KreditSumm
+
+                     -- Приход от поставщика - Долг мы * -1
+                   , SUM (tmpReport.IncomeSumm)   AS IncomeSumm_p
+                     -- Возврат поставщику - Долг мы
+                   , SUM (tmpReport.ReturnOutSumm)   AS ReturnOutSumm_p
+
+                     -- Продажа (факт без уч. скидки) - Долг нам
+                   , SUM (tmpReport.SaleRealSumm_total)       AS SaleRealSumm_total_a
+                     -- Возврат от пок. (факт без уч. скидки) - Долг нам * -1
+                   , SUM (tmpReport.ReturnInRealSumm_total)   AS ReturnInRealSumm_total_a
+                     -- Продажа (факт с уч. скидки) - Долг нам
+                   , SUM (tmpReport.SaleRealSumm)             AS SaleRealSumm_a
+                     -- Возврат от пок. (факт с уч. скидки) - Долг нам * -1
+                   , SUM (tmpReport.ReturnInRealSumm)         AS ReturnInRealSumm_a
+
+                     -- Услуги факт оказан. - Долг нам * -1
+                   , SUM (CASE WHEN tmpReport.ServiceRealSumm < 0 THEN -1 * tmpReport.ServiceRealSumm ELSE 0 END) AS ServiceRealSumm_a
+                     -- Услуги факт получ. - Долг мы
+                   , SUM (CASE WHEN tmpReport.ServiceRealSumm > 0 THEN  1 * tmpReport.ServiceRealSumm ELSE 0 END) AS ServiceRealSumm_p
+
+                     -- Оплата прих - Долг нам * -1
+                   , SUM (tmpReport.MoneySumm)                AS MoneySumm_a
+                     -- Оплата расх - Долг мы
+                   , 0                                        AS MoneySumm_p
+
+                     -- Корр. цены - Долг нам
+                   , SUM (CASE WHEN tmpReport.PriceCorrectiveSumm > 0 THEN  1 * tmpReport.PriceCorrectiveSumm ELSE 0 END) AS PriceCorrectiveSumm_a
+                     -- Корр. цены - Долг мы
+                   , SUM (CASE WHEN tmpReport.PriceCorrectiveSumm < 0 THEN -1 * tmpReport.PriceCorrectiveSumm ELSE 0 END) AS PriceCorrectiveSumm_p
+
+                     -- Вз-зачет - Долг нам -1
+                   , SUM (CASE WHEN tmpReport.SendDebtSumm < 0 THEN -1 * tmpReport.ServiceRealSumm ELSE 0 END) AS SendDebtSumm_a
+                     -- Вз-зачет - Долг мы
+                   , SUM (CASE WHEN tmpReport.SendDebtSumm > 0 THEN  1 * tmpReport.ServiceRealSumm ELSE 0 END) AS SendDebtSumm_p
+
+                     -- Прочее - Долг нам
+                   , SUM (CASE WHEN tmpReport.ChangeCurrencySumm + tmpReport.OtherSumm + tmpReport.ServiceSumm_pls > 0 THEN  1 * (tmpReport.ChangeCurrencySumm + tmpReport.OtherSumm + tmpReport.ServiceSumm_pls) ELSE 0 END) AS OthSumm_a
+                     -- Прочее - Долг мы
+                   , SUM (CASE WHEN tmpReport.ChangeCurrencySumm + tmpReport.OtherSumm + tmpReport.ServiceSumm_pls < 0 THEN -1 * (tmpReport.ChangeCurrencySumm + tmpReport.OtherSumm + tmpReport.ServiceSumm_pls) ELSE 0 END) AS OthSumm_p
+
+              FROM lpReport_bi_JuridicalSold (inStartDate              := inStartDate
+                                            , inEndDate                := inEndDate
+                                              -- 30151 - Дебиторы + покупатели ВЭД + Продукция
+                                            , inAccountId              := zc_Enum_Account_30151()
+                                            , inInfoMoneyId            := 0
+                                            , inInfoMoneyGroupId       := 0
+                                            , inInfoMoneyDestinationId := 0
+                                            , inPaidKindId             := 0
+                                            , inIsPartionMovement      := FALSE
+                                            , inUserId                 := zfCalc_UserAdmin() :: Integer
+                                             ) AS tmpReport
+              GROUP BY tmpReport.ContainerId
+                     , tmpReport.AccountId
+                     , tmpReport.OperDate
+                     , tmpReport.JuridicalId
+                     , tmpReport.PartnerId
+                     , tmpReport.InfoMoneyId
+                     , tmpReport.ContractId
+                     , tmpReport.PaidKindId
+                     , tmpReport.BranchId
+
+             UNION ALL
+              -- 2.1. Результат - БН - 50401 - Расходы будущих периодов + Услуги по маркетингу + Маркетинг
+              SELECT tmpReport.OperDate
+                   , tmpReport.ContainerId
+                   , tmpReport.AccountId
+                   , tmpReport.JuridicalId
+                   , tmpReport.PartnerId
+                   , tmpReport.ContractId
+                   , tmpReport.PaidKindId
+                   , tmpReport.InfoMoneyId
+                   , tmpReport.BranchId
+
+                     -- Начальный Долг Покупателя - Долг нам
+                   , 0 AS StartSumm_a
+                     -- Конечный Долг Покупателя - Долг нам
+                   , 0 AS EndSumm_a
+
+                    -- Начальный Долг Маркетинг - Долг мы
+                   , -1 * SUM (tmpReport.StartSumm) AS StartSumm_p
+                     -- Конечный Долг Маркетинг - Долг мы
+                   , -1 * SUM (tmpReport.EndSumm)   AS EndSumm_p
+
+                     -- Debet
+                   , SUM (tmpReport.DebetSumm)   AS DebetSumm
+                     -- Kredit
+                   , SUM (tmpReport.KreditSumm)  AS KreditSumm
+
+                     -- Приход от поставщика - Долг мы * -1
+                   , SUM (tmpReport.IncomeSumm)   AS IncomeSumm_p
+                     -- Возврат поставщику - Долг мы
+                   , SUM (tmpReport.ReturnOutSumm)   AS ReturnOutSumm_p
+
+                     -- Продажа (факт без уч. скидки) - Долг нам
+                   , SUM (tmpReport.SaleRealSumm_total)       AS SaleRealSumm_total_a
+                     -- Возврат от пок. (факт без уч. скидки) - Долг нам * -1
+                   , SUM (tmpReport.ReturnInRealSumm_total)   AS ReturnInRealSumm_total_a
+                     -- Продажа (факт с уч. скидки) - Долг нам
+                   , SUM (tmpReport.SaleRealSumm)             AS SaleRealSumm_a
+                     -- Возврат от пок. (факт с уч. скидки) - Долг нам * -1
+                   , SUM (tmpReport.ReturnInRealSumm)         AS ReturnInRealSumm_a
+
+                     -- Услуги факт оказан. - Долг нам * -1
+                   , 0 AS ServiceRealSumm_a
+                     -- Услуги факт получ. - Долг мы
+                   , SUM (tmpReport.ServiceSumm_pls) AS ServiceRealSumm_p
+
+                     -- Оплата прих - Долг нам * -1
+                   , 0                               AS MoneySumm_a
+                     -- Оплата расх - Долг мы
+                   , -1 * SUM (tmpReport.MoneySumm)  AS MoneySumm_p
+
+                     -- Корр. цены - Долг нам
+                   , SUM (CASE WHEN tmpReport.PriceCorrectiveSumm > 0 THEN  1 * tmpReport.PriceCorrectiveSumm ELSE 0 END) AS PriceCorrectiveSumm_a
+                     -- Корр. цены - Долг мы
+                   , SUM (CASE WHEN tmpReport.PriceCorrectiveSumm < 0 THEN -1 * tmpReport.PriceCorrectiveSumm ELSE 0 END) AS PriceCorrectiveSumm_p
+
+                     -- Вз-зачет - Долг нам -1
+                   , SUM (CASE WHEN tmpReport.SendDebtSumm < 0 THEN -1 * tmpReport.ServiceRealSumm ELSE 0 END) AS SendDebtSumm_a
+                     -- Вз-зачет - Долг мы
+                   , SUM (CASE WHEN tmpReport.SendDebtSumm > 0 THEN  1 * tmpReport.ServiceRealSumm ELSE 0 END) AS SendDebtSumm_p
+
+                     -- Прочее - Долг нам
+                   , SUM (CASE WHEN tmpReport.ChangeCurrencySumm + tmpReport.OtherSumm - tmpReport.ServiceRealSumm > 0 THEN  1 * (tmpReport.ChangeCurrencySumm + tmpReport.OtherSumm - tmpReport.ServiceRealSumm) ELSE 0 END) AS OthSumm_a
+                     -- Прочее - Долг мы
+                   , SUM (CASE WHEN tmpReport.ChangeCurrencySumm + tmpReport.OtherSumm - tmpReport.ServiceRealSumm < 0 THEN -1 * (tmpReport.ChangeCurrencySumm + tmpReport.OtherSumm - tmpReport.ServiceRealSumm) ELSE 0 END) AS OthSumm_p
+
+              FROM lpReport_bi_JuridicalSold (inStartDate              := inStartDate
+                                            , inEndDate                := inEndDate
+                                              -- БН - 50401 - Расходы будущих периодов + Услуги по маркетингу + Маркетинг
+                                            , inAccountId              := zc_Enum_Account_50401()
+                                            , inInfoMoneyId            := 0
+                                            , inInfoMoneyGroupId       := 0
+                                            , inInfoMoneyDestinationId := 0
+                                            , inPaidKindId             := 0
+                                            , inIsPartionMovement      := FALSE
+                                            , inUserId                 := zfCalc_UserAdmin() :: Integer
+                                             ) AS tmpReport
+              GROUP BY tmpReport.ContainerId
+                     , tmpReport.AccountId
+                     , tmpReport.OperDate
+                     , tmpReport.JuridicalId
+                     , tmpReport.PartnerId
+                     , tmpReport.InfoMoneyId
+                     , tmpReport.ContractId
+                     , tmpReport.PaidKindId
+                     , tmpReport.BranchId
+
+-- 30101 - Дебиторы + покупатели + Продукция
+-- 30102 - Дебиторы + покупатели + Мясное сырье
+-- 30151 - Дебиторы + покупатели ВЭД + Продукция
+
+-- БН - 50401 - Расходы будущих периодов + Услуги по маркетингу + Маркетинг
+-- НАЛ - 70301 - Услуги по маркетингу	Маркетинг
 
 
-              FROM Movement
-                   -- Подразделение - Филиал От кого
-                   LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                                ON MovementLinkObject_From.MovementId = Movement.Id
-                                               AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
-                   LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-                   -- Подразделение - Филиал Кому - Днепр
-                   LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                ON MovementLinkObject_To.MovementId = Movement.Id
-                                               AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
-                   LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
-
-                   -- Дата отгрузки контрагенту
-                   LEFT JOIN MovementDate AS MovementDate_OperDatePartner
-                                          ON MovementDate_OperDatePartner.MovementId =  Movement.Id
-                                         AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-                   -- Комментарий
-                   LEFT JOIN MovementString AS MovementString_Comment
-                                            ON MovementString_Comment.MovementId = Movement.Id
-                                           AND MovementString_Comment.DescId     = zc_MovementString_Comment()
-                   -- Документ Заявка покупателя
-                   LEFT JOIN MovementLinkMovement AS MLM_Order
-                                                  ON MLM_Order.MovementId = Movement.Id
-                                                 AND MLM_Order.DescId     = zc_MovementLinkMovement_Order()
-
-                   -- Строки документа
-                   LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                         AND MovementItem.DescId     = zc_MI_Master()
-                                         AND MovementItem.isErased   = FALSE
-                   -- Товар
-                   LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
-
-                   -- Вид товаров
-                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                   AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
-                   LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
-
-                   -- Количество дозаказ
-                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                              AND MIFloat_AmountPartner.DescId         = zc_MIFloat_AmountPartner()
-                   -- Цена
-                   LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                               ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                   -- Цена за количество
-                   LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                               ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                              AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-
-                   -- Документ Акция
-                   LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
-                                               ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
-                                              AND MIFloat_PromoMovement.DescId         = zc_MIFloat_PromoMovementId()
-
-                   -- Ед.изм. Товара
-                   LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                        ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
-                                       AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
-                   LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-
-                   -- Вес Товара
-                   LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                         ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
-                                        AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
-
-              WHERE Movement.DescId   = zc_Movement_SendOnPrice()
-                AND Movement.StatusId = zc_Enum_Status_Complete()
-                AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-                -- !!! только Дільниця обліку і реалізації м`ясної сировини + РК
-                AND Object_From.Id IN (zc_Unit_RK()) -- 133049,
              ;
 
 
@@ -247,5 +457,5 @@ $BODY$
 
 -- тест
 -- DELETE FROM  _bi_Table_JuridicalSold WHERE OperDate between '20.07.2025 9:00' and '20.07.2025 9:10'
--- SELECT DATE_TRUNC ('MONTH', OperDate), sum(Amount), sum(SummPartner), COUNT(*) FROM _bi_Table_JuridicalSold where  OperDate between '01.01.2025' and '28.09.2025' GROUP BY DATE_TRUNC ('MONTH', OperDate) ORDER BY 1 DESC
--- SELECT * FROM gpInsert_bi_Table_JuridicalSold (inStartDate:= '01.01.2025', inEndDate:= '28.09.2025', inSession:= zfCalc_UserAdmin())
+-- SELECT OperDate, AccountName_all, sum(StartSumm_a), sum(StartSumm_p)  FROM _bi_Table_JuridicalSold left join _bi_Guide_Account_View on _bi_Guide_Account_View.Id = _bi_Table_JuridicalSold.AccountId where OperDate between '01.09.2025' and '01.09.2025' GROUP BY OperDate, AccountName_all ORDER BY 1 DESC, 2
+-- SELECT * FROM gpInsert_bi_Table_JuridicalSold (inStartDate:= '01.09.2025', inEndDate:= '30.09.2025', inSession:= zfCalc_UserAdmin())
