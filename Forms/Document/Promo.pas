@@ -613,6 +613,26 @@ type
     actGoodsOutChoiceForm: TOpenChoiceForm;
     actGoodsKindOutChoiceForm: TOpenChoiceForm;
     actPromoDiscountKindChoiceForm: TOpenChoiceForm;
+    TabSheet_out: TcxTabSheet;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView_out: TcxGridDBTableView;
+    TradeMarkName_tsout: TcxGridDBColumn;
+    GoodsCode_tsout: TcxGridDBColumn;
+    GoodsName_tsout: TcxGridDBColumn;
+    GoodsKindName_tsout: TcxGridDBColumn;
+    GoodsKindCompleteName_tsout: TcxGridDBColumn;
+    GoodsKindName_List_tsout: TcxGridDBColumn;
+    MeasureName_tsout: TcxGridDBColumn;
+    PromoDiscountKindName_tsout: TcxGridDBColumn;
+    GoodsCode_out_tsout: TcxGridDBColumn;
+    GoodsName_out_tsout: TcxGridDBColumn;
+    GoodsKindName_out_tsout: TcxGridDBColumn;
+    Value_m_tsout: TcxGridDBColumn;
+    Value_n_tsout: TcxGridDBColumn;
+    cxGridLevel9: TcxGridLevel;
+    isErased_tsout: TcxGridDBColumn;
+    dsdDBViewAddOn_out: TdsdDBViewAddOn;
+    spInsertUpdateMIMaster_out: TdsdStoredProc;
   private
     { Private declarations }
   public
