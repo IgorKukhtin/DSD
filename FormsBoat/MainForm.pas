@@ -330,6 +330,9 @@ type
     miProdOptionsTranslate: TMenuItem;
     actGoodsMain_Choice: TdsdOpenForm;
     miGoodsMain_Choice: TMenuItem;
+    cxButton3: TcxButton;
+    miLine10_6: TMenuItem;
+    actGoodsMain_Choice_btn: TdsdOpenForm;
     procedure FormCreate(Sender: TObject);
     procedure actExit_btnExecute(Sender: TObject);
   private
