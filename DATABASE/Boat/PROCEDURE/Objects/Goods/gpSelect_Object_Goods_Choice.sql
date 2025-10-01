@@ -116,6 +116,7 @@ BEGIN
                                     , inPriceListId AS PriceListId
                                FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId   --zc_PriceList_Basis()
                                                                         , inOperDate   := CURRENT_DATE) AS tmp
+                               WHERE 1=0
                               )
           -- все что в сборке
         , tmpReceiptGoods AS (SELECT Object_ReceiptGoods_find_View.GoodsId
@@ -161,8 +162,8 @@ BEGIN
                               --AND Object_Goods.isErased = FALSE
                                 AND (Object_Goods.isErased = FALSE OR inShowAll = TRUE)
                                 -- огр. по вх. параметрам
-                                AND ((Object_Goods.ValueData         ILIKE ('%'||inName   ||'%') AND TRIM (inName)    <> '')
-                                  OR (ObjectString_Article.ValueData ILIKE ('%'||inArticle||'%') AND TRIM (inArticle) <> '')
+                                AND ((Object_Goods.ValueData         ILIKE ('%'||inName   ||'%') AND LENGTH (TRIM (inName))    > 2)
+                                  OR (ObjectString_Article.ValueData ILIKE ('%'||inArticle||'%') AND LENGTH (TRIM (inArticle)) > 2)
                                   OR TRIM (inName) = '*'
                                   OR TRIM (inArticle) = '*'
                                     )
