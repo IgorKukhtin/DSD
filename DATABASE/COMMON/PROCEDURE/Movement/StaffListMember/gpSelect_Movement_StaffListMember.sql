@@ -122,7 +122,7 @@ BEGIN
                                                     ON ObjectDate_DateOut.ObjectId = Object_Personal.Id
                                                    AND ObjectDate_DateOut.DescId = zc_ObjectDate_Personal_Out()
                           WHERE Object_Personal.DescId = zc_Object_Personal()
-                            AND Object_Personal.isErased = FALSE
+                          --  AND Object_Personal.isErased = FALSE
                        ) 
                        
 

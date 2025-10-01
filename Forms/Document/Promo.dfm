@@ -330,7 +330,7 @@
             Width = 80
           end
           object Amount: TcxGridDBColumn [11]
-            Caption = '% '#1089#1082#1080#1076#1082#1080
+            Caption = #1057#1082#1080#1076#1082#1072
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -1033,6 +1033,9 @@
           object tsPromoPartnerList: TcxTabSheet
             Caption = '2.2. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             ImageIndex = 1
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object grPartnerList: TcxGrid
               Left = 0
               Top = 0
@@ -1532,9 +1535,357 @@
         end
       end
     end
+    object TabSheet_out: TcxTabSheet
+      Caption = #1055#1088#1086#1084#1086'-'#1084#1077#1093#1072#1085#1080#1082#1072
+      ImageIndex = 9
+      object cxGrid1: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 1579
+        Height = 544
+        Align = alClient
+        PopupMenu = PopupMenu
+        TabOrder = 0
+        object cxGridDBTableView_out: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = MasterDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = GoodsName_tsout
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object TradeMarkName_tsout: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
+            DataBinding.FieldName = 'TradeMarkName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceTradeMark
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object GoodsCode_tsout: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'GoodsCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 47
+          end
+          object GoodsName_tsout: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088
+            DataBinding.FieldName = 'GoodsName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 150
+          end
+          object GoodsKindName_tsout: TcxGridDBColumn
+            Caption = #1042#1080#1076
+            DataBinding.FieldName = 'GoodsKindName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsKindChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080' ('#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1088#1080' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1072#1082#1094#1080#1080')'
+            Options.Editing = False
+            Width = 90
+          end
+          object GoodsKindCompleteName_tsout: TcxGridDBColumn
+            Caption = #1042#1080#1076' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
+            DataBinding.FieldName = 'GoodsKindCompleteName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsKindCompleteChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
+            Options.Editing = False
+            Width = 85
+          end
+          object GoodsKindName_List_tsout: TcxGridDBColumn
+            Caption = #1042#1080#1076' ('#1089#1087#1088#1072#1074#1086#1095#1085#1086')'
+            DataBinding.FieldName = 'GoodsKindName_List'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080' ('#1089#1087#1088#1072#1074#1086#1095#1085#1086')'
+            Options.Editing = False
+            Width = 77
+          end
+          object MeasureName_tsout: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 35
+          end
+          object Amount_tsout: TcxGridDBColumn
+            Caption = #1057#1082#1080#1076#1082#1072
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object PromoDiscountKindName_tsout: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1089#1082#1080#1076#1082#1080' ('#1040#1082#1094#1080#1103')'
+            DataBinding.FieldName = 'PromoDiscountKindName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actPromoDiscountKindChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 88
+          end
+          object GoodsCode_out_tsout: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088' ('#1055#1086#1082#1091#1087#1082#1072')'
+            DataBinding.FieldName = 'GoodsCode_out'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object GoodsName_out_tsout: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088' ('#1055#1086#1082#1091#1087#1082#1072')'
+            DataBinding.FieldName = 'GoodsName_out'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsOutChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object GoodsKindName_out_tsout: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088' ('#1055#1086#1082#1091#1087#1082#1072')'
+            DataBinding.FieldName = 'GoodsKindName_out'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsKindOutChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Value_m_tsout: TcxGridDBColumn
+            Caption = #1047#1085#1072#1095#1077#1085#1080#1077' m'
+            DataBinding.FieldName = 'Value_m'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Value_n_tsout: TcxGridDBColumn
+            Caption = #1047#1085#1072#1095#1077#1085#1080#1077' n'
+            DataBinding.FieldName = 'Value_n'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object isErased_tsout: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isErased'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+        end
+        object cxGridLevel9: TcxGridLevel
+          GridView = cxGridDBTableView_out
+        end
+      end
+    end
     object cxTabSheetCalc: TcxTabSheet
       Caption = '2.1.'#1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - '#1089#1082#1080#1076#1082#1072
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridCalc: TcxGrid
         Left = 0
         Top = 0
@@ -1543,6 +1894,8 @@
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
+        ExplicitLeft = 3
+        ExplicitTop = 56
         object cxGridDBTableViewCalc: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = CalcDS
@@ -1875,6 +2228,9 @@
     object cxTabSheetCalc2: TcxTabSheet
       Caption = '2.2.'#1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridCalc2: TcxGrid
         Left = 0
         Top = 0
@@ -1883,6 +2239,7 @@
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
+        ExplicitTop = 48
         object cxGridDBTableViewCalc2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = CalcDS2
@@ -2201,6 +2558,9 @@
     object cxTabSheetSign: TcxTabSheet
       Caption = '3.'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -2294,6 +2654,9 @@
     object cxTabSheetMessage: TcxTabSheet
       Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1103
       ImageIndex = 6
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -2443,6 +2806,9 @@
     object cxTabSheetPromoInvoice: TcxTabSheet
       Caption = '4.'#1057#1095#1077#1090#1072' '#1076#1083#1103' '#1072#1082#1094#1080#1080
       ImageIndex = 6
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GridPromoInvoice: TcxGrid
         Left = 0
         Top = 0
@@ -2636,6 +3002,9 @@
     object cxTabSheetStat: TcxTabSheet
       Caption = '5.1.'#1057#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1087#1088#1086#1076#1072#1078
       ImageIndex = 5
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
@@ -3217,6 +3586,9 @@
     object cxTabSheetPlanSale: TcxTabSheet
       Caption = '5.2.'#1055#1083#1072#1085' '#1087#1088#1086#1076#1072#1078' '#1040#1082#1094#1080#1103
       ImageIndex = 7
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridPlanMaster: TcxGrid
         Left = 0
         Top = 0
@@ -3415,6 +3787,9 @@
     object cxTabSheetPlanProd: TcxTabSheet
       Caption = '5.3.'#1055#1083#1072#1085' '#1087#1088'-'#1074#1072' '#1076#1083#1103' '#1040#1082#1094#1080#1080
       ImageIndex = 8
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridPlanChild: TcxGrid
         Left = 0
         Top = 0
@@ -8079,8 +8454,8 @@
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end>
-    Left = 312
-    Top = 264
+    Left = 88
+    Top = 192
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Promo'
@@ -8285,8 +8660,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 282
-    Top = 312
+    Left = 18
+    Top = 192
   end
   inherited GuidesFiller: TGuidesFiller
     Left = 216
@@ -8710,8 +9085,8 @@
     Top = 248
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
-    Left = 456
-    Top = 304
+    Left = 384
+    Top = 368
   end
   inherited spGetTotalSumm: TdsdStoredProc
     StoredProcName = ''
@@ -9483,8 +9858,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 128
-    Top = 208
+    Left = 88
+    Top = 304
   end
   object PartnerListCDS: TClientDataSet
     Aggregates = <>
@@ -9988,8 +10363,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 320
-    Top = 216
+    Left = 280
+    Top = 232
   end
   object PlanCDS: TClientDataSet
     Aggregates = <>
@@ -11873,5 +12248,358 @@
       end>
     Left = 1412
     Top = 88
+  end
+  object dsdDBViewAddOn_out: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView_out
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <
+      item
+        Param.Value = Null
+        Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
+        DataSummaryItemIndex = -1
+      end>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
+    Left = 86
+    Top = 409
+  end
+  object spInsertUpdateMIMaster_out: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_PromoGoods'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioOperPriceList'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperPriceList'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceSale'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PriceSale'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPriceWithOutVAT'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PriceWithOutVAT'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPriceWithVAT'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PriceWithVAT'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceTender'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PriceTender'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioCountForPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountForPrice'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountReal'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountReal'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountRealWeight'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountRealWeight'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountPlanMin'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountPlanMin'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountPlanMinWeight'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountPlanMinWeight'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountPlanMax'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountPlanMax'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountPlanMaxWeight'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountPlanMaxWeight'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioTaxRetIn'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TaxRetIn'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountMarket'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountMarket'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummOutMarket'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummOutMarket'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummInMarket'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummInMarket'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue_m'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Value_m'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue_n'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Value_n'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioGoodsKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsKindName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioGoodsKindCompleteId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindCompleteId'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsKindCompleteName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindCompleteName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId_out'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId_out'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId_out'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId_out'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPromoDiscountKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PromoDiscountKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTradeMarkId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TradeMarkId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsGroupPropertyId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsGroupPropertyId_Parent'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsGroupDirectionId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsGroupDirectionId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTradeMarkName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TradeMarkName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsGroupPropertyName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsGroupPropertyName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsGroupPropertyName_Parent'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsGroupPropertyName_Parent'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsGroupDirectionName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsGroupDirectionName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 392
+    Top = 312
   end
 end
