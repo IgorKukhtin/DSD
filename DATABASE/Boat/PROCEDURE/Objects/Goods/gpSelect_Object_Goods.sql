@@ -697,18 +697,24 @@ BEGIN
                               AND tmpPhoto1.Ord = 1
             LEFT JOIN ObjectBLOB AS ObjectBlob_GoodsPhoto_Data1
                                  ON ObjectBlob_GoodsPhoto_Data1.ObjectId = tmpPhoto1.PhotoId
+                                -- отключили
+                                AND 1=0
 
             LEFT JOIN tmpPhoto AS tmpPhoto2
                                ON tmpPhoto2.GoodsId = Object_Goods.Id
                               AND tmpPhoto2.Ord = 2
             LEFT JOIN ObjectBLOB AS ObjectBlob_GoodsPhoto_Data2
                                  ON ObjectBlob_GoodsPhoto_Data2.ObjectId = tmpPhoto2.PhotoId
+                                -- отключили
+                                AND 1=0
 
             LEFT JOIN tmpPhoto AS tmpPhoto3
                                ON tmpPhoto3.GoodsId = Object_Goods.Id
                               AND tmpPhoto3.Ord = 3
             LEFT JOIN ObjectBLOB AS ObjectBlob_GoodsPhoto_Data3
                                  ON ObjectBlob_GoodsPhoto_Data3.ObjectId = tmpPhoto3.PhotoId
+                                -- отключили
+                                AND 1=0
 
             LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
 
@@ -745,12 +751,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Goods (inShowAll:= FALSE, inIsLimit_100:= TRUE, inSession := zfCalc_UserAdmin())
-
-
-
--- select * from gpSelect_Object_Goods(inShowAll := 'True' , inIsLimit_100 := 'False' ,  inSession := '5');
--- select * from Object where descId = zc_Object_Goods() order by id desc limit 1000
-
--- select count(*) from Object where descId = zc_Object_Goods()
--- SELECT * FROM gpSelect_Object_Goods (inShowAll:= FALSE, inIsLimit_100:= TRUE, inSession := zfCalc_UserAdmin()) order by id desc limit 1000--
+-- SELECT * FROM gpSelect_Object_Goods (inPriceListId:= 0, inShowAll:= FALSE, inIsLimit_100:= TRUE, inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Goods (inPriceListId:= 0, inShowAll:= FALSE, inIsLimit_100:= FALSE, inSession := zfCalc_UserAdmin())

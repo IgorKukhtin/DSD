@@ -90,32 +90,7 @@ BEGIN
      -- Результат
      RETURN QUERY
        WITH 
-            tmpMovementPL_all AS (SELECT Movement.Id
-                                       , Movement.InvNumber       AS InvNumber
-                                       , MovementString.ValueData AS Comment
-                                       , MovementItem.ObjectId    AS GoodsId
-                                  FROM Movement
-                                       INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                              AND MovementItem.DescId    = zc_MI_Master()
-                                       LEFT JOIN MovementString ON MovementString.MovementId = Movement.Id
-                                                               AND MovementString.DescId     = zc_MovementString_Comment()
-                                  WHERE Movement.OperDate BETWEEN '01.01.2022' AND CURRENT_DATE
-                                    AND Movement.DescId   = zc_Movement_PriceList()
-                                    AND Movement.StatusId = zc_Enum_Status_Complete()
-                                  --AND vbUserId NOT IN (5, 236658)
-                                  --AND vbUserId NOT IN (236658)
-                                    AND inIsLimit_100 = FALSE
-
-                                  ORDER BY MovementItem.ObjectId, Movement.Id
-                                 )
-          , tmpMovementPL AS (SELECT STRING_AGG (tmpMovementPL_all.InvNumber, ';')    AS InvNumber
-                                   , STRING_AGG (tmpMovementPL_all.Comment, ';') AS Comment
-                                   , tmpMovementPL_all.GoodsId
-                              FROM (SELECT DISTINCT tmpMovementPL_all.InvNumber, tmpMovementPL_all.Comment, tmpMovementPL_all.GoodsId, tmpMovementPL_all.Id FROM tmpMovementPL_all ORDER BY tmpMovementPL_all.GoodsId, tmpMovementPL_all.Id
-                                   ) AS tmpMovementPL_all
-                              GROUP BY tmpMovementPL_all.GoodsId
-                             )
-          , tmpPhoto AS (SELECT ObjectLink_GoodsPhoto_Goods.ChildObjectId AS GoodsId
+            tmpPhoto AS (SELECT ObjectLink_GoodsPhoto_Goods.ChildObjectId AS GoodsId
                               , Object_GoodsPhoto.Id                      AS PhotoId
                               , ROW_NUMBER() OVER (PARTITION BY ObjectLink_GoodsPhoto_Goods.ChildObjectId ORDER BY Object_GoodsPhoto.Id) AS Ord
                          FROM Object AS Object_GoodsPhoto
@@ -124,6 +99,7 @@ BEGIN
                                                AND ObjectLink_GoodsPhoto_Goods.DescId   = zc_ObjectLink_GoodsPhoto_Goods()
                           WHERE Object_GoodsPhoto.DescId   = zc_Object_GoodsPhoto()
                             AND Object_GoodsPhoto.isErased = FALSE
+                            AND 1=0
                         )
            , tmpDoc AS (SELECT DISTINCT ObjectLink_GoodsDocument_Goods.ChildObjectId AS GoodsId
                          FROM Object AS Object_GoodsDocument
@@ -132,6 +108,7 @@ BEGIN
                                                AND ObjectLink_GoodsDocument_Goods.DescId   = zc_ObjectLink_GoodsDocument_Goods()
                           WHERE Object_GoodsDocument.DescId   = zc_Object_GoodsDocument()
                             AND Object_GoodsDocument.isErased = FALSE
+                            AND 1=0
                        )
            , tmpPriceBasis AS (SELECT tmp.GoodsId
                                     , tmp.StartDate
@@ -140,58 +117,6 @@ BEGIN
                                FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId   --zc_PriceList_Basis()
                                                                         , inOperDate   := CURRENT_DATE) AS tmp
                               )
-
-             -- Артикул Комплектующие (в загрузке прайсов)
-           , tmpGoodsArticle AS (SELECT ObjectLink_GoodsArticle_Goods.ChildObjectId    AS GoodsId
-                                      , STRING_AGG (Object.ValueData, '; ') ::TVarChar AS GoodsArticle
-                                 FROM Object
-                                      INNER JOIN ObjectLink AS ObjectLink_GoodsArticle_Goods
-                                                            ON ObjectLink_GoodsArticle_Goods.ObjectId = Object.Id
-                                                           AND ObjectLink_GoodsArticle_Goods.DescId   = zc_ObjectLink_GoodsArticle_Goods()
-                                 WHERE Object.DescId = zc_Object_GoodsArticle()
-                                   AND Object.isErased = FALSE
-                                 GROUP BY ObjectLink_GoodsArticle_Goods.ChildObjectId
-                                 )
-             -- ошибка - Article
-           , tmpGoods_err_1 AS (SELECT LOWER (ObjectString_Article.ValueData) AS Article
-                                FROM Object AS Object_Goods
-                                     JOIN ObjectString AS ObjectString_Article
-                                                       ON ObjectString_Article.ObjectId = Object_Goods.Id
-                                                      AND ObjectString_Article.DescId   = zc_ObjectString_Article()
-                                                      AND ObjectString_Article.ValueData <> ''
-                                WHERE Object_Goods.DescId   = zc_Object_Goods()
-                                  AND Object_Goods.isErased = FALSE
-                                  -- когда ВСЕ
-                                  AND inIsLimit_100 = FALSE
-                                GROUP BY LOWER (ObjectString_Article.ValueData)
-                                HAVING COUNT (*) > 1
-                               )
-             -- ошибка - GoodsCode
-           , tmpGoods_err_2 AS (SELECT Object_Goods.ObjectCode AS GoodsCode
-                                FROM Object AS Object_Goods
-                                WHERE Object_Goods.DescId     = zc_Object_Goods()
-                                  AND Object_Goods.ObjectCode <> 0
-                                --AND Object_Goods.isErased = FALSE
-                                --AND 1=0
-                                  -- когда ВСЕ
-                                  AND inIsLimit_100 = FALSE
-                                GROUP BY Object_Goods.ObjectCode
-                                HAVING COUNT (*) > 1
-                               )
-             -- ошибка - EAN
-           , tmpGoods_err_3 AS (SELECT ObjectString_EAN.ValueData AS EAN
-                                FROM Object AS Object_Goods
-                                     JOIN ObjectString AS ObjectString_EAN
-                                                       ON ObjectString_EAN.ObjectId = Object_Goods.Id
-                                                      AND ObjectString_EAN.DescId   = zc_ObjectString_EAN()
-                                                      AND ObjectString_EAN.ValueData <> ''
-                                WHERE Object_Goods.DescId   = zc_Object_Goods()
-                                  AND Object_Goods.isErased = FALSE
-                                  -- когда ВСЕ
-                                  AND inIsLimit_100 = FALSE
-                                GROUP BY ObjectString_EAN.ValueData
-                                HAVING COUNT (*) > 1
-                               )
           -- все что в сборке
         , tmpReceiptGoods AS (SELECT Object_ReceiptGoods_find_View.GoodsId
                                      -- это узел (да/нет)
@@ -235,24 +160,18 @@ BEGIN
                               WHERE Object_Goods.DescId = zc_Object_Goods()
                               --AND Object_Goods.isErased = FALSE
                                 AND (Object_Goods.isErased = FALSE OR inShowAll = TRUE)
-                                -- нет дублей
-                                AND ((ObjectBoolean_Arc.ValueData = TRUE AND vbUserId = 5 AND inShowAll = TRUE AND 1=0)
-                                  OR ObjectBoolean_Arc.ValueData = FALSE
+                                -- огр. по вх. параметрам
+                                AND ((Object_Goods.ValueData         ILIKE ('%'||inName   ||'%') AND TRIM (inName)    <> '')
+                                  OR (ObjectString_Article.ValueData ILIKE ('%'||inArticle||'%') AND TRIM (inArticle) <> '')
+                                  OR TRIM (inName) = '*'
+                                  OR TRIM (inArticle) = '*'
                                     )
-                                --огр. по вх. параметрам
-                                AND (TRIM (UPPER (Object_Goods.ValueData)) = TRIM (UPPER (inName)) OR COALESCE (inName,'') = '')
-                                AND (TRIM (UPPER (ObjectString_Article.ValueData)) = TRIM (UPPER (inArticle)) OR COALESCE (inArticle,'') = '')
-                                
-                                --AND (Object_Goods.ObjectCode < 0 or vbUserId <> 5)
-                            --ORDER BY Object_Goods.Id ASC
-                              ORDER BY CASE WHEN vbUserId = 5 AND 1=0 THEN Object_Goods.Id ELSE 0 END ASC, Object_Goods.Id DESC
-                              LIMIT CASE WHEN inIsLimit_100 = TRUE THEN 100 WHEN vbUserId = 5 AND 1=1 THEN 20000 ELSE 350000 END
                              )
          , tmpGoods AS (-- здесь ВСЕ или 100
                         SELECT tmpGoods_limit.*
                         FROM tmpGoods_limit
 
-                       UNION
+                      /*UNION
                         -- эти всегда
                         SELECT Object_Goods.*
                         FROM Object AS Object_Goods
@@ -260,9 +179,9 @@ BEGIN
                           -- если есть в сборке
                           AND Object_Goods.Id IN (SELECT DISTINCT tmpReceiptGoods.GoodsId FROM tmpReceiptGoods)
                           -- когда ВСЕ
-                          AND inIsLimit_100 = FALSE
+                          AND inIsLimit_100 = FALSE*/
 
-                       UNION
+                     /*UNION
                         -- эти всегда
                         SELECT Object_Goods.*
                         FROM Object AS Object_Goods
@@ -301,26 +220,7 @@ BEGIN
                           --AND inIsLimit_100 = TRUE
                           -- когда все
                           AND inIsLimit_100 = FALSE   
-                          AND (COALESCE (inArticle,'') = '' AND COALESCE (inName,'') = '') 
-
-                       UNION
-                        -- все что в сборке - в Заказе Клиента
-                        SELECT DISTINCT Object_Goods.*
-                        FROM Movement
-                             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                    AND MovementItem.DescId     IN (zc_MI_Child(), zc_MI_Detail(), zc_MI_Reserv())
-                             INNER JOIN Object AS Object_Goods
-                                               ON Object_Goods.Id     = MovementItem.ObjectId
-                                              AND Object_Goods.DescId = zc_Object_Goods()
-
-                        WHERE Movement.DescId   = zc_Movement_OrderClient()
-                          AND Movement.StatusId = zc_Enum_Status_Complete()
-                          -- когда все
-                          AND inIsLimit_100 = FALSE  
-                          AND (COALESCE (inArticle,'') = '' AND COALESCE (inName,'') = '')
-                        --AND vbUserId = 5
-                        --AND inIsLimit_100 = TRUE
-                        --AND 1=0
+                          AND (COALESCE (inArticle,'') = '' AND COALESCE (inName,'') = '')*/
                        )
            -- текущие остатки
          , tmpRemains AS (SELECT Container.ObjectId            AS GoodsId
@@ -346,16 +246,9 @@ BEGIN
             , ObjectString_Article.ValueData      AS Article
             , zfCalc_Article_all (COALESCE (ObjectString_Article.ValueData, '') || '_' || COALESCE (ObjectString_ArticleVergl.ValueData, '')) ::TVarChar AS Article_all
               --
-            , (CASE WHEN tmpGoods_err_1.Article   IS NOT NULL
-                         THEN '**a-1*'
-                    WHEN tmpGoods_err_2.GoodsCode IS NOT NULL
-                         THEN '**c-2*'
-                    WHEN tmpGoods_err_3.EAN       IS NOT NULL
-                         THEN '**e-3*'
-                    ELSE ''
-               END || COALESCE (ObjectString_ArticleVergl.ValueData, '')) :: TVarChar AS ArticleVergl
+            , COALESCE (ObjectString_ArticleVergl.ValueData, '') :: TVarChar AS ArticleVergl
               -- Артикул Комплектующие (в загрузке прайсов)
-            , Object_GoodsArticle.GoodsArticle ::TVarChar AS GoodsArticle
+            , '' ::TVarChar AS GoodsArticle
               --
             , CASE WHEN ObjectString_Comment.ValueData ILIKE '%Hypalon%'
                      OR ObjectString_Comment.ValueData ILIKE '%HULL%'
@@ -399,7 +292,7 @@ BEGIN
             , ObjectFloat_Min.ValueData          AS AmountMin
             , ObjectFloat_Refer.ValueData        AS AmountRefer
             
-            --остатки на гл. складе
+              -- остатки на гл. складе
             , tmpRemains.Remains ::TFloat        AS AmountRemains
 
               -- Цена вх. без НДС
@@ -415,19 +308,19 @@ BEGIN
                  * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100) ) AS NUMERIC (16, 2)) ::TFloat AS EmpfPriceWVAT
 
               -- Цена продажи без НДС
-            , CASE WHEN vbPriceWithVAT = FALSE
+            , /*CASE WHEN vbPriceWithVAT = FALSE
                    THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
                    ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
-              END ::TFloat AS BasisPrice
+              END*/ 0 ::TFloat AS BasisPrice
 
               -- Цена продажи с НДС
-            , CASE WHEN vbPriceWithVAT = FALSE
+            , /*CASE WHEN vbPriceWithVAT = FALSE
                    THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
                    ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
-              END ::TFloat AS BasisPriceWVAT
+              END*/ 0 ::TFloat AS BasisPriceWVAT
               
               -- Цена продажи без НДС - передается в грид
-            , CASE WHEN vbPriceWithVAT = FALSE AND tmpPriceBasis.ValuePrice > 0
+            , /*CASE WHEN vbPriceWithVAT = FALSE AND tmpPriceBasis.ValuePrice > 0
                    THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
                    WHEN vbPriceWithVAT = TRUE AND tmpPriceBasis.ValuePrice > 0
                    THEN CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
@@ -438,10 +331,10 @@ BEGIN
 
                    ELSE 0
 
-              END ::TFloat AS BasisPrice_choice  
+              END*/ 0 ::TFloat AS BasisPrice_choice  
               
-            , tmpPriceBasis.StartDate ::TDateTime AS StartDate_price
-            , tmpPriceBasis.PriceListId ::Integer 
+            , NULL ::TDateTime -- tmpPriceBasis.StartDate ::TDateTime AS StartDate_price
+            , CASE WHEN inPriceListId > 0 THEN inPriceListId ELSE zc_PriceList_Basis() END ::Integer 
 
             , Object_GoodsGroup.Id               AS GoodsGroupId
             , Object_GoodsGroup.ValueData        AS GoodsGroupName
@@ -463,7 +356,7 @@ BEGIN
             , Object_Unit.Id                     AS UnitId
             --, Object_Unit.ValueData              AS UnitName
      
-            , CASE -- узел Стеклопластик + Опция
+            , /*CASE -- узел Стеклопластик + Опция
                    WHEN tmpReceiptGoods.isReceiptGoods_group = TRUE AND tmpReceiptGoods.isProdOptions = TRUE
                         -- Склад Основной
                         THEN lfGet_Object_ValueData_sh (35139)
@@ -493,18 +386,18 @@ BEGIN
                    -- Склад Основной
                    ELSE lfGet_Object_ValueData_sh (35139)
 
-              END  :: TVarChar AS UnitName
+              END*/ '' :: TVarChar AS UnitName
 
               -- На каком участке происходит расход Узла/Детали на сборку
-            , tmpReceiptGoods.UnitName_receipt
+            , '' :: TVarChar -- tmpReceiptGoods.UnitName_receipt
               -- На каком участке происходит расход Детали на сборку ПФ
-            , tmpReceiptGoods.UnitName_child_receipt
+            , '' :: TVarChar -- tmpReceiptGoods.UnitName_child_receipt
               -- На каком участке происходит сборка Узла
-            , tmpReceiptGoods.UnitName_parent_receipt
+            , '' :: TVarChar -- tmpReceiptGoods.UnitName_parent_receipt
 
 
               -- в каком ОДНОМ Узле/Модель лодки Детали/узлы участвуют в сборке, т.е. что собирается
-            , tmpReceiptGoods.GoodsName_receipt
+            , '' :: TVarChar -- tmpReceiptGoods.GoodsName_receipt
               -- в каких ВСЕХ Узлах/Моделях лодки Детали/узлы участвуют в сборке, т.е. что собирается
           --, SUBSTRING (tmpReceiptGoods.GoodsName_receipt_all, 1, 128) :: TVarChar AS GoodsName_receipt
 
@@ -528,16 +421,16 @@ BEGIN
             , Object_Update.ValueData            AS UpdateName
             , ObjectDate_Update.ValueData        AS UpdateDate
 
-            , CASE WHEN tmpDoc.GoodsId    > 0 THEN TRUE ELSE FALSE END :: Boolean AS isDoc
-            , CASE WHEN tmpPhoto1.GoodsId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPhoto
+            , FALSE :: Boolean -- CASE WHEN tmpDoc.GoodsId    > 0 THEN TRUE ELSE FALSE END :: Boolean AS isDoc
+            , FALSE :: Boolean -- CASE WHEN tmpPhoto1.GoodsId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPhoto
 
-            , tmpMovementPL.InvNumber     :: TVarChar AS InvNumber_pl
-            , tmpMovementPL.Comment       :: TVarChar AS Comment_pl
-            , tmpMovementPL_count.myCount :: Integer  AS myCount_pl
+            , '' :: TVarChar -- tmpMovementPL.InvNumber     :: TVarChar AS InvNumber_pl
+            , '' :: TVarChar -- tmpMovementPL.Comment       :: TVarChar AS Comment_pl
+            , 0  :: Integer  -- tmpMovementPL_count.myCount :: Integer  AS myCount_pl
 
             , LENGTH (Object_Goods.ValueData)                :: Integer AS Len_1
             , LENGTH (ObjectString_Article.ValueData)        :: Integer AS Len_2
-            , LENGTH (Object_GoodsArticle.GoodsArticle)      :: Integer AS Len_3
+            , 0 :: Integer -- LENGTH (Object_GoodsArticle.GoodsArticle)      :: Integer AS Len_3
             , LENGTH (ObjectString_EAN.ValueData)            :: Integer AS Len_4
             , LENGTH (ObjectString_GoodsGroupFull.ValueData) :: Integer AS Len_5
             , LENGTH (ObjectString_Comment.ValueData)        :: Integer AS Len_6
@@ -549,15 +442,7 @@ BEGIN
             , Object_Goods.isErased              AS isErased
 
        FROM tmpGoods AS Object_Goods
-            LEFT JOIN tmpMovementPL ON tmpMovementPL.GoodsId = Object_Goods.Id
-            LEFT JOIN (SELECT tmpMovementPL_count.GoodsId, MAX (tmpMovementPL_count.myCount) AS myCount
-                       FROM (SELECT tmpMovementPL_all.Id, tmpMovementPL_all.GoodsId, COUNT(*) AS myCount
-                             FROM tmpMovementPL_all
-                             GROUP BY tmpMovementPL_all.Id, tmpMovementPL_all.GoodsId
-                             HAVING COUNT(*) > 1
-                            ) AS tmpMovementPL_count
-                       GROUP BY tmpMovementPL_count.GoodsId
-                      ) AS tmpMovementPL_count ON tmpMovementPL_count.GoodsId = Object_Goods.Id
+
             LEFT JOIN ObjectString AS ObjectString_Comment
                                    ON ObjectString_Comment.ObjectId = Object_Goods.Id
                                   AND ObjectString_Comment.DescId = zc_ObjectString_Goods_Comment()
@@ -699,35 +584,6 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_MatchCode
                                    ON ObjectString_MatchCode.ObjectId = Object_Goods.Id
                                   AND ObjectString_MatchCode.DescId = zc_ObjectString_MatchCode()
-
-            LEFT JOIN tmpDoc ON tmpDoc.GoodsId = Object_Goods.Id
-
-            LEFT JOIN tmpPhoto AS tmpPhoto1
-                               ON tmpPhoto1.GoodsId = Object_Goods.Id
-                              AND tmpPhoto1.Ord = 1
-            LEFT JOIN ObjectBLOB AS ObjectBlob_GoodsPhoto_Data1
-                                 ON ObjectBlob_GoodsPhoto_Data1.ObjectId = tmpPhoto1.PhotoId
-
-            LEFT JOIN tmpPhoto AS tmpPhoto2
-                               ON tmpPhoto2.GoodsId = Object_Goods.Id
-                              AND tmpPhoto2.Ord = 2
-            LEFT JOIN ObjectBLOB AS ObjectBlob_GoodsPhoto_Data2
-                                 ON ObjectBlob_GoodsPhoto_Data2.ObjectId = tmpPhoto2.PhotoId
-
-            LEFT JOIN tmpPhoto AS tmpPhoto3
-                               ON tmpPhoto3.GoodsId = Object_Goods.Id
-                              AND tmpPhoto3.Ord = 3
-            LEFT JOIN ObjectBLOB AS ObjectBlob_GoodsPhoto_Data3
-                                 ON ObjectBlob_GoodsPhoto_Data3.ObjectId = tmpPhoto3.PhotoId
-
-            LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
-
-            LEFT JOIN tmpGoodsArticle AS Object_GoodsArticle ON Object_GoodsArticle.GoodsId = Object_Goods.Id
-
-            LEFT JOIN tmpGoods_err_1 ON tmpGoods_err_1.Article   ILIKE ObjectString_Article.ValueData
-            LEFT JOIN tmpGoods_err_2 ON tmpGoods_err_2.GoodsCode = Object_Goods.ObjectCode
-            LEFT JOIN tmpGoods_err_3 ON tmpGoods_err_3.EAN       = ObjectString_EAN.ValueData
-
             -- это
             LEFT JOIN tmpReceiptGoods ON tmpReceiptGoods.GoodsId = Object_Goods.Id
 
