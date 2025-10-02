@@ -423,7 +423,7 @@ BEGIN
              LEFT JOIN MovementItemLinkObject AS MILinkObject_PromoDiscountKind
                                               ON MILinkObject_PromoDiscountKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_PromoDiscountKind.DescId = zc_MILinkObject_PromoDiscountKind()
-             LEFT JOIN Object AS Object_PromoDiscountKind ON Object_PromoDiscountKind.Id = MILinkObject_PromoDiscountKind.ObjectId
+             LEFT JOIN Object AS Object_PromoDiscountKind ON Object_PromoDiscountKind.Id = COALESCE (MILinkObject_PromoDiscountKind.ObjectId, zc_Enum_PromoDiscountKind_Tax())
         WHERE MovementItem.DescId = zc_MI_Master()
           AND MovementItem.MovementId = inMovementId
           AND (MovementItem.isErased = FALSE OR inIsErased = TRUE);
