@@ -23,7 +23,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, ExternalLoad;
+  dxSkinXmas2008Blue, ExternalLoad, dsdCommon;
 
 type
   TPriceListMovementForm = class(TAncestorDocument_boatForm)
@@ -129,6 +129,11 @@ type
     actGetImportSetting_RapidMarine: TdsdExecStoredProc;
     mactStartLoad_RapidMarine: TMultiAction;
     bbStartLoad_RapidMarine: TdxBarButton;
+    spGetImportSettingId_Brunswick: TdsdStoredProc;
+    actDoLoad_Brunswick: TExecuteImportSettingsAction;
+    actGetImportSettingId_Brunswick: TdsdExecStoredProc;
+    mactStartLoad_Brunswick: TMultiAction;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

@@ -327,6 +327,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
     Width = 1069
     Height = 93
     TabOrder = 3
+    ExplicitLeft = 8
     ExplicitWidth = 1069
     ExplicitHeight = 93
     inherited edInvNumber: TcxTextEdit
@@ -555,7 +556,45 @@ inherited PriceListMovementForm: TPriceListMovementForm
           MultiSelectSeparator = ','
         end>
     end
-    object actGetImportSettingId_ASGEMEA: TdsdExecStoredProc [4]
+    object actGetImportSettingId_Brunswick: TdsdExecStoredProc [4]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId_Brunswick
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId_Brunswick
+        end>
+      Caption = 'actGetImportSetting_SkiDoo'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1094#1077#1085#1099
+    end
+    object actDoLoad_Brunswick: TExecuteImportSettingsAction [5]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerId'
+          Value = ''
+          Component = GuidesPartner
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
+    object actGetImportSettingId_ASGEMEA: TdsdExecStoredProc [6]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -567,7 +606,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
       Caption = 'actGetImportSetting_GoodsASGEMEA'
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '
     end
-    object actGetImportSettingId_Uflex1: TdsdExecStoredProc [5]
+    object actGetImportSettingId_Uflex1: TdsdExecStoredProc [7]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -579,7 +618,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
       Caption = 'actGetImportSetting_SkiDoo'
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1055#1088#1080#1093#1086#1076#1072' '#1080#1079' '#1092#1072#1081#1083#1072
     end
-    object actGetImportSettingId_Uflex3: TdsdExecStoredProc [6]
+    object actGetImportSettingId_Uflex3: TdsdExecStoredProc [8]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -591,7 +630,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
       Caption = 'actGetImportSetting_GoodsArticle'
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '
     end
-    object actDoLoad_Uflex2: TExecuteImportSettingsAction [7]
+    object actDoLoad_Uflex2: TExecuteImportSettingsAction [9]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -617,7 +656,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
           MultiSelectSeparator = ','
         end>
     end
-    object ExecuteImportSettingsAction1: TExecuteImportSettingsAction [8]
+    object ExecuteImportSettingsAction1: TExecuteImportSettingsAction [10]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ImportSettingsId.Value = Null
@@ -650,7 +689,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
           MultiSelectSeparator = ','
         end>
     end
-    object actGetImportSettingId_Uflex2: TdsdExecStoredProc [9]
+    object actGetImportSettingId_Uflex2: TdsdExecStoredProc [11]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -662,7 +701,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
       Caption = 'actGetImportSetting__Uflex2'
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1055#1088#1080#1093#1086#1076#1072' '#1080#1079' '#1092#1072#1081#1083#1072
     end
-    object actGetImportSetting_RapidMarine: TdsdExecStoredProc [10]
+    object actGetImportSetting_RapidMarine: TdsdExecStoredProc [12]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -675,7 +714,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Rapid Marine '#1080#1079' '#1092#1072#1081#1083#1072
       ImageIndex = 48
     end
-    object actDoLoad_RapidMarine: TExecuteImportSettingsAction [11]
+    object actDoLoad_RapidMarine: TExecuteImportSettingsAction [13]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ImportSettingsId.Value = Null
@@ -700,7 +739,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
           MultiSelectSeparator = ','
         end>
     end
-    object mactStartLoad_RapidMarine: TMultiAction [12]
+    object mactStartLoad_RapidMarine: TMultiAction [14]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ActionList = <
@@ -720,7 +759,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
       ImageIndex = 48
       WithoutNext = True
     end
-    object mactStartLoad_ASGEMEA: TMultiAction [13]
+    object mactStartLoad_ASGEMEA: TMultiAction [15]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ActionList = <
@@ -740,7 +779,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
       ImageIndex = 47
       WithoutNext = True
     end
-    object actDoLoad_Uflex1: TExecuteImportSettingsAction [15]
+    object actDoLoad_Uflex1: TExecuteImportSettingsAction [17]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ImportSettingsId.Value = Null
@@ -780,7 +819,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
         end>
       ShortCut = 49220
     end
-    object mactStartLoad_Uflex3: TMultiAction [17]
+    object mactStartLoad_Uflex3: TMultiAction [19]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ActionList = <
@@ -800,7 +839,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
       ImageIndex = 50
       WithoutNext = True
     end
-    object mactAdd_limit: TMultiAction [18]
+    object mactAdd_limit: TMultiAction [20]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -815,7 +854,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
       ImageIndex = 0
       WithoutNext = True
     end
-    object actAdd_limit: TdsdInsertUpdateAction [19]
+    object actAdd_limit: TdsdInsertUpdateAction [21]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'> ('#1083#1080#1084#1080#1090')'
@@ -855,7 +894,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
       DataSource = MasterDS
       IdFieldName = 'Id'
     end
-    object actGetImportSetting_Gotthardt: TdsdExecStoredProc [20]
+    object actGetImportSetting_Gotthardt: TdsdExecStoredProc [22]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -872,7 +911,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
         end>
       ShortCut = 49220
     end
-    object actDoLoad_ASGEMEA: TExecuteImportSettingsAction [22]
+    object actDoLoad_ASGEMEA: TExecuteImportSettingsAction [24]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ImportSettingsId.Value = Null
@@ -905,7 +944,27 @@ inherited PriceListMovementForm: TPriceListMovementForm
           MultiSelectSeparator = ','
         end>
     end
-    object mactStartLoad_Gotthardt: TMultiAction [23]
+    object mactStartLoad_Brunswick: TMultiAction [25]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSettingId_Brunswick
+        end
+        item
+          Action = actDoLoad_Brunswick
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Brunswick '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Brunswick '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Brunswick '#1080#1079' '#1092#1072#1081#1083#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Brunswick '#1080#1079' '#1092#1072#1081#1083#1072
+      ImageIndex = 49
+      WithoutNext = True
+    end
+    object mactStartLoad_Gotthardt: TMultiAction [26]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ActionList = <
@@ -925,7 +984,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
       ImageIndex = 27
       WithoutNext = True
     end
-    object mactStartLoad_Uflex1: TMultiAction [25]
+    object mactStartLoad_Uflex1: TMultiAction [28]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ActionList = <
@@ -945,7 +1004,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
       ImageIndex = 79
       WithoutNext = True
     end
-    object mactStartLoad_Uflex2: TMultiAction [26]
+    object mactStartLoad_Uflex2: TMultiAction [29]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ActionList = <
@@ -1017,7 +1076,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
         item
         end>
     end
-    object mactAdd: TMultiAction [34]
+    object mactAdd: TMultiAction [37]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -1032,7 +1091,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
       ImageIndex = 0
       WithoutNext = True
     end
-    object actAdd: TdsdInsertUpdateAction [35]
+    object actAdd: TdsdInsertUpdateAction [38]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
@@ -1072,7 +1131,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
       DataSource = MasterDS
       IdFieldName = 'Id'
     end
-    object actMeasureParentChoice: TOpenChoiceForm [37]
+    object actMeasureParentChoice: TOpenChoiceForm [40]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1099,7 +1158,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
         end>
       isShowModal = True
     end
-    object actMeasureChoice: TOpenChoiceForm [38]
+    object actMeasureChoice: TOpenChoiceForm [41]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1126,7 +1185,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
         end>
       isShowModal = True
     end
-    object actDiscountPartnerChoice: TOpenChoiceForm [39]
+    object actDiscountPartnerChoice: TOpenChoiceForm [42]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1153,7 +1212,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
         end>
       isShowModal = True
     end
-    object actGoodsChoice: TOpenChoiceForm [40]
+    object actGoodsChoice: TOpenChoiceForm [43]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1691,6 +1750,14 @@ inherited PriceListMovementForm: TPriceListMovementForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -1803,6 +1870,10 @@ inherited PriceListMovementForm: TPriceListMovementForm
     end
     object bbStartLoad_RapidMarine: TdxBarButton
       Action = mactStartLoad_RapidMarine
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = mactStartLoad_Brunswick
       Category = 0
     end
   end
@@ -2763,5 +2834,39 @@ inherited PriceListMovementForm: TPriceListMovementForm
     PackSize = 1
     Left = 712
     Top = 296
+  end
+  object spGetImportSettingId_Brunswick: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 
+          'TPriceListBrunswickForm;zc_Object_ImportSetting_PriceListBrunswi' +
+          'ck'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1000
+    Top = 352
   end
 end
