@@ -2,7 +2,6 @@ inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')>'
   ClientHeight = 460
   ClientWidth = 1434
-  ExplicitLeft = -540
   ExplicitWidth = 1450
   ExplicitHeight = 499
   PixelsPerInch = 96
@@ -70,6 +69,21 @@ inherited OrderExternalForm: TOrderExternalForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountWeightDiff_child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Value_m
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Value_n
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Value_promo
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -120,6 +134,21 @@ inherited OrderExternalForm: TOrderExternalForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountWeightDiff_child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Value_m
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Value_n
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Value_promo
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -367,7 +396,68 @@ inherited OrderExternalForm: TOrderExternalForm
             Options.Editing = False
             Width = 210
           end
-          object LineNum: TcxGridDBColumn [24]
+          object PromoDiscountKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1089#1082#1080#1076#1082#1080' ('#1040#1082#1094#1080#1103')'
+            DataBinding.FieldName = 'PromoDiscountKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 88
+          end
+          object GoodsCode_out: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088' ('#1055#1086#1082#1091#1087#1082#1072')'
+            DataBinding.FieldName = 'GoodsCode_out'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object GoodsName_out: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088' ('#1055#1086#1082#1091#1087#1082#1072')'
+            DataBinding.FieldName = 'GoodsName_out'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object GoodsKindName_out: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088' ('#1055#1086#1082#1091#1087#1082#1072')'
+            DataBinding.FieldName = 'GoodsKindName_out'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Value_m: TcxGridDBColumn
+            Caption = #1047#1085#1072#1095#1077#1085#1080#1077' m'
+            DataBinding.FieldName = 'Value_m'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Value_n: TcxGridDBColumn
+            Caption = #1047#1085#1072#1095#1077#1085#1080#1077' n'
+            DataBinding.FieldName = 'Value_n'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Value_promo: TcxGridDBColumn
+            Caption = #1055#1086#1076#1072#1088#1086#1095#1085#1086#1077' '#1082#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Value_promo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object LineNum: TcxGridDBColumn
             Caption = #8470' '#1087'/'#1087
             DataBinding.FieldName = 'LineNum'
             HeaderAlignmentHorz = taCenter
@@ -3778,8 +3868,8 @@ inherited OrderExternalForm: TOrderExternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 866
-    Top = 200
+    Left = 890
+    Top = 264
   end
   object spUpdate_MIChild_AmountNull: TdsdStoredProc
     StoredProcName = 'gpUpdateMIChild_OrderExternal_AmountNull'

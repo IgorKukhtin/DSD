@@ -902,11 +902,16 @@ BEGIN
                                      ON MovementItemLinkObject.MovementItemId = MovementItem.Id
                                     AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
                         )*/
+          , tmpMILO_GoodsKind AS (SELECT MovementItemLinkObject.*
+                                 FROM MovementItemLinkObject
+                                 WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_G.Id FROM tmpMI_G)
+                                   AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind() 
+                                 )
+
           , tmpMI_LO AS (SELECT MovementItemLinkObject.*
                          FROM MovementItemLinkObject
                          WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_G.Id FROM tmpMI_G)
-                           AND MovementItemLinkObject.DescId IN (zc_MILinkObject_GoodsKind() 
-                                                               , zc_MILinkObject_Goods_out()
+                           AND MovementItemLinkObject.DescId IN (zc_MILinkObject_Goods_out()
                                                                , zc_MILinkObject_GoodsKind_out()
                                                                , zc_MILinkObject_PromoDiscountKind()
                                                                )
@@ -959,8 +964,9 @@ BEGIN
                                  , MIFloat_Value_n.ValueData           ::TFloat  AS Value_n
                                  , MIFloat_Value_promo.ValueData       ::TFloat  AS Value_promo
                             FROM tmpMI_G AS MovementItem
-                                 LEFT JOIN tmpMI_LO AS MILinkObject_GoodsKind
-                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                 LEFT JOIN tmpMILO_GoodsKind AS MILinkObject_GoodsKind
+                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                                                                
                                  LEFT JOIN tmpMI_Float AS MIFloat_Price
                                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -1434,7 +1440,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_OrderExternal (Integer, Integer, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_MovementItem_OrderExternal (Integer, Integer, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*
