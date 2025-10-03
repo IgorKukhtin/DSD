@@ -1671,6 +1671,22 @@ object GoodsMain_ChoiceForm: TGoodsMain_ChoiceForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inArticle'
+          Value = Null
+          Component = edArticle
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inName'
+          Value = Null
+          Component = edName
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = DataSource

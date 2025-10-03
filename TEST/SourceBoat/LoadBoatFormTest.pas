@@ -571,6 +571,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsMain_ChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsMain_ChoiceForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_ChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoods_ChoiceForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsMainForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsMainForm');
 

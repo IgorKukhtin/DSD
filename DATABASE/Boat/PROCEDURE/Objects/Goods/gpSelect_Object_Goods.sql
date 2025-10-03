@@ -238,7 +238,7 @@ BEGIN
                                 --AND (Object_Goods.ObjectCode < 0 or vbUserId <> 5)
                             --ORDER BY Object_Goods.Id ASC
                               ORDER BY CASE WHEN vbUserId = 5 AND 1=0 THEN Object_Goods.Id ELSE 0 END ASC, Object_Goods.Id DESC
-                              LIMIT CASE WHEN inIsLimit_100 = TRUE THEN 100 WHEN vbUserId = 5 AND 1=0 THEN 20000 ELSE 350000 END
+                              LIMIT CASE WHEN inIsLimit_100 = TRUE THEN 100 WHEN vbUserId = 5 AND 1=1 THEN 20000 ELSE 350000 END
                              )
          , tmpGoods AS (-- здесь ВСЕ или 100
                         SELECT tmpGoods_limit.*
