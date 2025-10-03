@@ -1688,7 +1688,20 @@ BEGIN
                                                                                  )
                                                         END
                          -- определяется счет !!!если "виртуальная" прибыль текущего периода!!!, т.е. возврат на филиале по ценам прайса (если склад возвратов)
-                       , AccountId_SummIn_60000 = CASE WHEN vbUnitId_HistoryCost <> vbUnitId_To -- если признак НЕ установлен сам в себя
+                       , AccountId_SummIn_60000 = CASE WHEN vbUnitId_HistoryCost > 0 AND vbUnitId_HistoryCost <> vbUnitId_To -- если признак НЕ установлен сам в себя
+                                                        AND vbOperDate >= '01.09.2025'
+
+                                                       THEN lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы
+                                                                                       , inAccountDirectionId     := vbAccountDirectionId_To
+                                                                                       , inInfoMoneyDestinationId := CASE WHEN 1=0 AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
+                                                                                                                               THEN zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                                                                                          ELSE _tmpItem.InfoMoneyDestinationId
+                                                                                                                     END
+                                                                                       , inInfoMoneyId            := NULL
+                                                                                       , inUserId                 := inUserId
+                                                                                        )
+
+                                                       WHEN vbUnitId_HistoryCost <> vbUnitId_To -- если признак НЕ установлен сам в себя
                                                          OR vbBranchId_To = zc_Branch_Basis()   -- !!!ИЛИ!!! это "Главный" филиал
                                                          OR vbOperDate < '01.01.2022' OR vbOperDatePartner < '01.01.2022'
                                                             THEN 0
@@ -1704,7 +1717,20 @@ BEGIN
                                                                                         )
                                                     END
                         -- определяется счет !!!если "виртуальная" прибыль текущего периода!!!, т.е. возврат на филиале по ценам прайса (если склад возвратов)
-                      , AccountId_SummOut_60000 = CASE WHEN vbUnitId_HistoryCost <> vbUnitId_To -- если признак НЕ установлен сам в себя
+                      , AccountId_SummOut_60000 = CASE WHEN vbUnitId_HistoryCost > 0 AND vbUnitId_HistoryCost <> vbUnitId_To -- если признак НЕ установлен сам в себя
+                                                        AND vbOperDate >= '01.09.2025'
+
+                                                       THEN lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_60000() -- Прибыль будущих периодов
+                                                                                       , inAccountDirectionId     := zc_Enum_AccountDirection_60200() -- Прибыль будущих периодов + на филиалах
+                                                                                       , inInfoMoneyDestinationId := CASE WHEN 1=0 AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
+                                                                                                                               THEN zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                                                                                          ELSE _tmpItem.InfoMoneyDestinationId
+                                                                                                                     END
+                                                                                       , inInfoMoneyId            := NULL
+                                                                                       , inUserId                 := inUserId
+                                                                                        )
+
+                                                       WHEN vbUnitId_HistoryCost <> vbUnitId_To -- если признак НЕ установлен сам в себя
                                                          OR vbBranchId_To = zc_Branch_Basis()   -- !!!ИЛИ!!! это "Главный" филиал
                                                          OR vbOperDate < '01.01.2022' OR vbOperDatePartner < '01.01.2022'
                                                             THEN 0
@@ -2026,8 +2052,11 @@ BEGIN
                                        END BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
         WHERE zc_isHistoryCost() = TRUE -- !!!если нужны проводки!!!
           AND vbIsHistoryCost= TRUE -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!
-          AND (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) <> 0                -- здесь нули !!!НЕ НУЖНЫ!!!
-            OR _tmpItem.OperCount_Partner * COALESCE (HistoryCost.Price, 0) <> 0)       -- здесь нули !!!НЕ НУЖНЫ!!!
+          AND (-- здесь нули !!!НЕ НУЖНЫ!!!
+               _tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) * CASE WHEN vbUnitId_HistoryCost > 0 AND vbUnitId_HistoryCost <> vbUnitId_To THEN 0 /*0.2*/ ELSE 1 END <> 0
+               -- здесь нули !!!НЕ НУЖНЫ!!!
+            OR _tmpItem.OperCount_Partner * COALESCE (HistoryCost.Price, 0) * CASE WHEN vbUnitId_HistoryCost > 0 AND vbUnitId_HistoryCost <> vbUnitId_To THEN 0 /*0.2*/ ELSE 1 END <> 0
+              )
           AND vbPartnerId_To = 0 -- !!!если НЕ продажа от Контрагента -> Контрагенту!!!
           AND AccountId_SummIn_60000  = 0 -- !!!если НЕ "виртуальная" прибыль текущего периода!!!
           AND AccountId_SummOut_60000 = 0 -- !!!если НЕ "виртуальная" прибыль текущего периода!!!
@@ -2097,9 +2126,24 @@ BEGIN
 )
     ;*/
 
-     -- для филиалов вытянуть с/с РК
-     IF COALESCE (vbBranchId_To, 0) NOT IN (0, zc_Branch_Basis())
+    -- для склад Возвратов филиалов с/с по цене Прайса = прибыль текущего периода - новая схема с 01.09.2025
+    IF COALESCE (vbBranchId_To, 0) NOT IN (0, zc_Branch_Basis())
+       AND vbUnitId_HistoryCost > 0 AND vbUnitId_HistoryCost <> vbUnitId_To -- если признак НЕ установлен сам в себя
+       AND vbOperDate >= '01.09.2025'
+       AND 1=0
+    THEN
+        RAISE EXCEPTION 'Ошибка.тест <%>  <%>'
+        , (select count(*) from _tmpItemSumm)
+        , (SELECT sum (tmp.mySign * _tmpItem.OperSumm_PriceList)
+       FROM (SELECT 1 AS mySign, TRUE AS isActive UNION SELECT -1 AS mySign, FALSE AS isActive) AS tmp
+             INNER JOIN _tmpItem ON AccountId_SummIn_60000 <> 0 OR AccountId_SummOut_60000 <> 0)
+;
+
+    -- для филиалов вытянуть с/с РК
+    ELSEIF COALESCE (vbBranchId_To, 0) NOT IN (0, zc_Branch_Basis())
         AND EXISTS (SELECT 1 FROM _tmpItem LEFT JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId WHERE _tmpItemSumm.MovementItemId IS NULL)
+        -- для склад Возвратов филиалов другая схема
+        AND (vbUnitId_HistoryCost = 0 OR vbUnitId_HistoryCost = vbUnitId_To)
      THEN
          -- добавили новые ContainerId
          INSERT INTO _tmpItemSumm (MovementItemId, ContainerId_ProfitLoss_40208, ContainerId_ProfitLoss_10800, ContainerId, AccountId, ContainerId_Transit, OperSumm, OperSumm_Partner)
@@ -3050,11 +3094,11 @@ end if;
                                 , inUserId     := inUserId
                                  );
 
--- !!! ВРЕМЕННО !!!
- IF inUserId = 5 and 1=1 THEN
-    RAISE EXCEPTION 'Admin - Test = OK : %   %', vbOperSumm_Partner_ChangePercent_byItem, vbOperSumm_Partner_ChangePercent
-      ;
-END IF;
+  -- !!! ВРЕМЕННО !!!
+  IF inUserId = 5 and 1=1 THEN
+     RAISE EXCEPTION 'Admin - Test = OK : %   %', vbOperSumm_Partner_ChangePercent_byItem, vbOperSumm_Partner_ChangePercent
+       ;
+  END IF;
 
 
 END;
@@ -3109,5 +3153,4 @@ $BODY$
 -- SELECT * FROM gpComplete_Movement_ReturnIn (inMovementId:= 602578, inIsLastComplete:= FALSE, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 10154, inSession:= '2')
 
--- select gpComplete_All_Sybase(    25743210  ,  false    , '')
--- select gpComplete_All_Sybase(    29901793  ,  false    , '')
+-- select gpComplete_All_Sybase (32297028 ,  false    , '')
