@@ -106,7 +106,7 @@ BEGIN
                                                     , inGoodsTagId        := 0           :: Integer
                                                     , inGoodsTypeId       := 0           :: Integer
                                                     , inProdColorId       := 0           :: Integer
-                                                    , inPartnerId         := vbPartnerId :: Integer
+                                                    , inPartnerId         := inPartnerId :: Integer
                                                     , inUnitId            := 0           :: Integer
                                                     , inDiscountPartnerId := 0           :: Integer
                                                     , inTaxKindId         := 0           :: Integer
