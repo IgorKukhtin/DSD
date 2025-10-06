@@ -2,28 +2,29 @@
   ActiveControl = edOperDate
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 707
-  ClientWidth = 1579
-  ExplicitWidth = 1595
+  ClientWidth = 1540
+  ExplicitLeft = -663
+  ExplicitWidth = 1556
   ExplicitHeight = 746
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 139
-    Width = 1579
+    Width = 1540
     Height = 568
     ExplicitTop = 139
-    ExplicitWidth = 1579
+    ExplicitWidth = 1540
     ExplicitHeight = 568
     ClientRectBottom = 568
-    ClientRectRight = 1579
+    ClientRectRight = 1540
     inherited tsMain: TcxTabSheet
       Caption = '&1. '#1058#1086#1074#1072#1088#1099
-      ExplicitWidth = 1579
+      ExplicitWidth = 1540
       ExplicitHeight = 544
       inherited cxGrid: TcxGrid
-        Width = 1579
+        Width = 1540
         Height = 179
-        ExplicitWidth = 1579
+        ExplicitWidth = 1540
         ExplicitHeight = 179
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -850,12 +851,12 @@
       object Panel1: TPanel
         Left = 0
         Top = 187
-        Width = 1579
+        Width = 1540
         Height = 173
         Align = alBottom
         TabOrder = 1
         object cxSplitter1: TcxSplitter
-          Left = 696
+          Left = 657
           Top = 1
           Width = 8
           Height = 171
@@ -866,21 +867,21 @@
         object cxPageControl1: TcxPageControl
           Left = 1
           Top = 1
-          Width = 695
+          Width = 656
           Height = 171
           Align = alClient
           TabOrder = 1
           Properties.ActivePage = tsPartner
           Properties.CustomButtons.Buttons = <>
           ClientRectBottom = 171
-          ClientRectRight = 695
+          ClientRectRight = 656
           ClientRectTop = 24
           object tsPartner: TcxTabSheet
             Caption = '2.1. '#1055#1072#1088#1090#1085#1077#1088#1099
             object cxGridPartner: TcxGrid
               Left = 0
               Top = 0
-              Width = 695
+              Width = 656
               Height = 147
               Align = alClient
               PopupMenu = pmPartner
@@ -1036,7 +1037,7 @@
             object grPartnerList: TcxGrid
               Left = 0
               Top = 0
-              Width = 695
+              Width = 656
               Height = 147
               Align = alClient
               TabOrder = 0
@@ -1134,7 +1135,7 @@
           end
         end
         object cxPageControl2: TcxPageControl
-          Left = 704
+          Left = 665
           Top = 1
           Width = 256
           Height = 171
@@ -1223,7 +1224,7 @@
           end
         end
         object cxPageControl3: TcxPageControl
-          Left = 968
+          Left = 929
           Top = 1
           Width = 265
           Height = 171
@@ -1313,7 +1314,7 @@
           end
         end
         object cxSplitter3: TcxSplitter
-          Left = 960
+          Left = 921
           Top = 1
           Width = 8
           Height = 171
@@ -1322,7 +1323,7 @@
           Control = cxPageControl3
         end
         object cxSplitter5: TcxSplitter
-          Left = 1233
+          Left = 1194
           Top = 1
           Width = 8
           Height = 171
@@ -1331,7 +1332,7 @@
           Control = cxPageControl4
         end
         object cxPageControl4: TcxPageControl
-          Left = 1241
+          Left = 1202
           Top = 1
           Width = 337
           Height = 171
@@ -1417,7 +1418,7 @@
       object cxSplitter4: TcxSplitter
         Left = 0
         Top = 179
-        Width = 1579
+        Width = 1540
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
@@ -1426,7 +1427,7 @@
       object cxSplitter2: TcxSplitter
         Left = 0
         Top = 360
-        Width = 1579
+        Width = 1540
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
@@ -1435,7 +1436,7 @@
       object cxGridPromoStateKind: TcxGrid
         Left = 0
         Top = 368
-        Width = 1579
+        Width = 1540
         Height = 176
         Align = alBottom
         PopupMenu = PromoStateKindPopupMenu
@@ -1538,7 +1539,7 @@
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
-        Width = 1579
+        Width = 1540
         Height = 544
         Align = alClient
         PopupMenu = PopupMenu
@@ -1743,7 +1744,6 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080' ('#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1088#1080' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1072#1082#1094#1080#1080')'
-            Options.Editing = False
             Width = 90
           end
           object GoodsKindCompleteName_tsout: TcxGridDBColumn
@@ -1760,7 +1760,6 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
-            Options.Editing = False
             Width = 85
           end
           object GoodsKindName_List_tsout: TcxGridDBColumn
@@ -1780,6 +1779,21 @@
             Options.Editing = False
             Width = 35
           end
+          object PromoDiscountKindName_tsout: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'PromoDiscountKindName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actPromoDiscountKindChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 88
+          end
           object Amount_tsout: TcxGridDBColumn
             Caption = #1057#1082#1080#1076#1082#1072
             DataBinding.FieldName = 'Amount'
@@ -1789,6 +1803,62 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
+          end
+          object Value_m_tsout: TcxGridDBColumn
+            Caption = #1047#1085#1072#1095#1077#1085#1080#1077' m'
+            DataBinding.FieldName = 'Value_m'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Value_n_tsout: TcxGridDBColumn
+            Caption = #1047#1085#1072#1095#1077#1085#1080#1077' n'
+            DataBinding.FieldName = 'Value_n'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object GoodsCode_out_tsout: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088' ('#1055#1086#1082#1091#1087#1082#1072')'
+            DataBinding.FieldName = 'GoodsCode_out'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object GoodsName_out_tsout: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088' ('#1055#1086#1082#1091#1087#1082#1072')'
+            DataBinding.FieldName = 'GoodsName_out'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsOutChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object GoodsKindName_out_tsout: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088' ('#1055#1086#1082#1091#1087#1082#1072')'
+            DataBinding.FieldName = 'GoodsKindName_out'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsKindOutChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object PriceSale_tsout: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1085#1072' '#1087#1086#1083#1082#1077', '#1075#1088#1085
@@ -1846,80 +1916,17 @@
             Options.Editing = False
             Width = 70
           end
-          object PromoDiscountKindName_tsout: TcxGridDBColumn
-            Caption = #1058#1080#1087' '#1089#1082#1080#1076#1082#1080
-            DataBinding.FieldName = 'PromoDiscountKindName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actPromoDiscountKindChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 88
-          end
-          object GoodsCode_out_tsout: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088' ('#1055#1086#1082#1091#1087#1082#1072')'
-            DataBinding.FieldName = 'GoodsCode_out'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object GoodsName_out_tsout: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088' ('#1055#1086#1082#1091#1087#1082#1072')'
-            DataBinding.FieldName = 'GoodsName_out'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actGoodsOutChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
+          object Comment_tsout: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object GoodsKindName_out_tsout: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088' ('#1055#1086#1082#1091#1087#1082#1072')'
-            DataBinding.FieldName = 'GoodsKindName_out'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actGoodsKindOutChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object Value_m_tsout: TcxGridDBColumn
-            Caption = #1047#1085#1072#1095#1077#1085#1080#1077' m'
-            DataBinding.FieldName = 'Value_m'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object Value_n_tsout: TcxGridDBColumn
-            Caption = #1047#1085#1072#1095#1077#1085#1080#1077' n'
-            DataBinding.FieldName = 'Value_n'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
           object isErased_tsout: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1937,7 +1944,7 @@
       object cxGridCalc: TcxGrid
         Left = 0
         Top = 0
-        Width = 1579
+        Width = 1540
         Height = 544
         Align = alClient
         TabOrder = 0
@@ -2277,7 +2284,7 @@
       object cxGridCalc2: TcxGrid
         Left = 0
         Top = 0
-        Width = 1579
+        Width = 1540
         Height = 544
         Align = alClient
         TabOrder = 0
@@ -2603,7 +2610,7 @@
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
-        Width = 1579
+        Width = 1540
         Height = 544
         Align = alClient
         TabOrder = 0
@@ -2696,7 +2703,7 @@
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
-        Width = 1579
+        Width = 1540
         Height = 544
         Align = alClient
         TabOrder = 0
@@ -2845,7 +2852,7 @@
       object GridPromoInvoice: TcxGrid
         Left = 0
         Top = 0
-        Width = 1579
+        Width = 1540
         Height = 544
         Align = alClient
         TabOrder = 0
@@ -3038,7 +3045,7 @@
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
-        Width = 1579
+        Width = 1540
         Height = 544
         Align = alClient
         TabOrder = 0
@@ -3619,7 +3626,7 @@
       object cxGridPlanMaster: TcxGrid
         Left = 0
         Top = 0
-        Width = 1579
+        Width = 1540
         Height = 544
         Align = alClient
         TabOrder = 0
@@ -3817,7 +3824,7 @@
       object cxGridPlanChild: TcxGrid
         Left = 0
         Top = 0
-        Width = 1579
+        Width = 1540
         Height = 544
         Align = alClient
         TabOrder = 0
@@ -4125,10 +4132,10 @@
     end
   end
   inherited DataPanel: TPanel
-    Width = 1579
+    Width = 1540
     Height = 113
     TabOrder = 3
-    ExplicitWidth = 1579
+    ExplicitWidth = 1540
     ExplicitHeight = 113
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -4141,9 +4148,9 @@
     end
     inherited cxLabel1: TcxLabel
       Left = 8
-      Top = 4
+      Top = 2
       ExplicitLeft = 8
-      ExplicitTop = 4
+      ExplicitTop = 2
     end
     inherited edOperDate: TcxDateEdit
       Left = 89
@@ -4158,9 +4165,9 @@
     end
     inherited cxLabel2: TcxLabel
       Left = 89
-      Top = 4
+      Top = 2
       ExplicitLeft = 89
-      ExplicitTop = 4
+      ExplicitTop = 2
     end
     inherited cxLabel15: TcxLabel
       Top = 38
@@ -4177,7 +4184,7 @@
     end
     object cxLabel4: TcxLabel
       Left = 579
-      Top = 4
+      Top = 2
       Caption = #1059#1089#1083#1086#1074#1080#1103' '#1091#1095#1072#1089#1090#1080#1103' '
     end
     object edPromoKind: TcxButtonEdit
@@ -4194,7 +4201,7 @@
     end
     object cxLabel11: TcxLabel
       Left = 788
-      Top = 4
+      Top = 2
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
     end
     object edPriceList: TcxButtonEdit
@@ -4211,7 +4218,7 @@
     end
     object cxLabel5: TcxLabel
       Left = 195
-      Top = 4
+      Top = 2
       Caption = #1040#1082#1094#1080#1103' '#1089
     end
     object deStartPromo: TcxDateEdit
@@ -4225,7 +4232,7 @@
     end
     object cxLabel6: TcxLabel
       Left = 285
-      Top = 4
+      Top = 2
       Caption = #1040#1082#1094#1080#1103' '#1087#1086
     end
     object deEndPromo: TcxDateEdit
@@ -4367,11 +4374,11 @@
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 202
+      Width = 183
     end
     object cxLabel17: TcxLabel
       Left = 1351
-      Top = 4
+      Top = 2
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object cxLabel18: TcxLabel
@@ -4448,7 +4455,7 @@
       Width = 110
     end
     object cbPromoStateKind: TcxCheckBox
-      Left = 1287
+      Left = 1285
       Top = 18
       Hint = #1057#1088#1086#1095#1085#1086' '#1044#1072'/'#1053#1077#1090
       Caption = #1057#1088#1086#1095#1085#1086
@@ -4456,7 +4463,7 @@
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 42
-      Width = 58
+      Width = 63
     end
     object cxLabel24: TcxLabel
       Left = 810
@@ -4476,8 +4483,8 @@
       Width = 103
     end
     object cxLabel27: TcxLabel
-      Left = 706
-      Top = 4
+      Left = 707
+      Top = 2
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
     object edPaidKind: TcxButtonEdit
@@ -4502,7 +4509,7 @@
     end
     object cxLabel28: TcxLabel
       Left = 380
-      Top = 4
+      Top = 2
       Caption = #1055#1086' '#1076#1072#1090#1077
     end
     object cbOperDateOrder_text: TcxTextEdit
@@ -4514,7 +4521,7 @@
       Width = 178
     end
     object cxLabel29: TcxLabel
-      Left = 1366
+      Left = 1351
       Top = 74
       Caption = #1055#1088#1086#1084#1086'-'#1084#1077#1093#1072#1085#1080#1082#1072
     end
@@ -4532,7 +4539,7 @@
   end
   object cxLabel19: TcxLabel [3]
     Left = 919
-    Top = 4
+    Top = 2
     Caption = #1052#1077#1089#1103#1094' '#1072#1082#1094#1080#1080
   end
   object cxLabel21: TcxLabel [4]
@@ -4574,7 +4581,7 @@
   end
   object cxLabel23: TcxLabel [9]
     Left = 1137
-    Top = 5
+    Top = 2
     Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077
   end
   object cxLabel25: TcxLabel [10]
@@ -4596,7 +4603,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 15
-    Width = 178
+    Width = 163
   end
   object cxLabel26: TcxLabel [12]
     Left = 195
@@ -4615,7 +4622,7 @@
     Width = 83
   end
   object edPromoSchemaKind: TcxButtonEdit [14]
-    Left = 1366
+    Left = 1351
     Top = 90
     Properties.Buttons = <
       item
@@ -4624,7 +4631,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 18
-    Width = 187
+    Width = 183
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 139

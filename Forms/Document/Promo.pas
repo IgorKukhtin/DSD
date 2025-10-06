@@ -635,6 +635,7 @@ type
     GuidesPromoSchemaKind: TdsdGuides;
     InsertRecord_out: TInsertRecord;
     dxBarButton1: TdxBarButton;
+    Comment_tsout: TcxGridDBColumn;
   private
     { Private declarations }
   public
