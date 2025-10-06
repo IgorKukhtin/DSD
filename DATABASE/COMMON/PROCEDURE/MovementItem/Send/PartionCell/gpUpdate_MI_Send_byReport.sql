@@ -355,6 +355,30 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
      -- если не нашли ошибка
      IF COALESCE (inIsRePack, FALSE) = TRUE
+      AND (COALESCE (inMovementItemId, 0) = 0
+        OR COALESCE (ioPartionCellName_1, '') <> ''
+        OR COALESCE (ioPartionCellName_2, '') <> ''
+        OR COALESCE (ioPartionCellName_3, '') <> ''
+        OR COALESCE (ioPartionCellName_4, '') <> ''
+        OR COALESCE (ioPartionCellName_5, '') <> ''
+        OR COALESCE (ioPartionCellName_6, '') <> ''
+        OR COALESCE (ioPartionCellName_7, '') <> ''
+        OR COALESCE (ioPartionCellName_8, '') <> ''
+        OR COALESCE (ioPartionCellName_9, '') <> ''
+        OR COALESCE (ioPartionCellName_10, '') <> ''
+        OR COALESCE (ioPartionCellName_11, '') <> ''
+        OR COALESCE (ioPartionCellName_12, '') <> ''
+        OR COALESCE (ioPartionCellName_13, '') <> ''
+        OR COALESCE (ioPartionCellName_14, '') <> ''
+        OR COALESCE (ioPartionCellName_15, '') <> ''
+        OR COALESCE (ioPartionCellName_16, '') <> ''
+        OR COALESCE (ioPartionCellName_17, '') <> ''
+        OR COALESCE (ioPartionCellName_18, '') <> ''
+        OR COALESCE (ioPartionCellName_19, '') <> ''
+        OR COALESCE (ioPartionCellName_20, '') <> ''
+        OR COALESCE (ioPartionCellName_21, '') <> ''
+        OR COALESCE (ioPartionCellName_22, '') <> ''
+          )
      THEN
          RAISE EXCEPTION 'Ошибка.Для <Перепак.> нет прав заполнять.';
      END IF;

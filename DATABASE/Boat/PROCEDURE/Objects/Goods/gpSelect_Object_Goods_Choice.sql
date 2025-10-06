@@ -149,6 +149,9 @@ BEGIN
                                    LEFT JOIN ObjectString AS ObjectString_Article
                                                           ON ObjectString_Article.ObjectId = Object_Goods.Id
                                                          AND ObjectString_Article.DescId = zc_ObjectString_Article()
+                                   LEFT JOIN ObjectString AS ObjectString_EAN
+                                                          ON ObjectString_EAN.ObjectId = Object_Goods.Id
+                                                         AND ObjectString_EAN.DescId   = zc_ObjectString_EAN()
 
                               WHERE Object_Goods.DescId = zc_Object_Goods()
                               --AND Object_Goods.isErased = FALSE
@@ -156,6 +159,7 @@ BEGIN
                                 -- огр. по вх. параметрам
                                 AND ((Object_Goods.ValueData         ILIKE ('%'||inName   ||'%') AND LENGTH (TRIM (inName))    > 2)
                                   OR (ObjectString_Article.ValueData ILIKE ('%'||inArticle||'%') AND LENGTH (TRIM (inArticle)) > 2)
+                                  OR (ObjectString_EAN.ValueData ILIKE ('%'||inArticle||'%') AND LENGTH (TRIM (inArticle)) > 10)
                                   OR TRIM (inName) = '*'
                                   OR TRIM (inArticle) = '*'
                                     )
@@ -257,7 +261,7 @@ BEGIN
             , LEFT (zfCalc_GoodsName_all (ObjectString_Article.ValueData, Object_Goods.ValueData), 124) :: TVarChar AS Name_all
               --
             , ObjectString_Article.ValueData      AS Article
-            , zfCalc_Article_all (COALESCE (ObjectString_Article.ValueData, '') || '_' || COALESCE (ObjectString_ArticleVergl.ValueData, '')) ::TVarChar AS Article_all
+            , zfCalc_Article_all (COALESCE (ObjectString_Article.ValueData, '') || '_' || COALESCE (ObjectString_ArticleVergl.ValueData, '') || '_' || COALESCE (ObjectString_EAN.ValueData, '')) ::TVarChar AS Article_all
               --
             , COALESCE (ObjectString_ArticleVergl.ValueData, '') :: TVarChar AS ArticleVergl
               -- Артикул Комплектующие (в загрузке прайсов)

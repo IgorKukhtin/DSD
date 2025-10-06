@@ -334,7 +334,7 @@ BEGIN
             , LEFT (zfCalc_GoodsName_all (ObjectString_Article.ValueData, Object_Goods.ValueData), 124) :: TVarChar AS Name_all
               --
             , ObjectString_Article.ValueData      AS Article
-            , zfCalc_Article_all (COALESCE (ObjectString_Article.ValueData, '') || '_' || COALESCE (ObjectString_ArticleVergl.ValueData, '')) ::TVarChar AS Article_all
+            , zfCalc_Article_all (COALESCE (ObjectString_Article.ValueData, '') || '_' || COALESCE (ObjectString_ArticleVergl.ValueData, '') || '_' || COALESCE (ObjectString_EAN.ValueData, '') || '_' || COALESCE (ObjectString_EAN.ValueData, '')) ::TVarChar AS Article_all
               --
             , (CASE WHEN tmpGoods_err_1.Article   IS NOT NULL
                          THEN '**a-1*'
