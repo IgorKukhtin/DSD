@@ -633,6 +633,8 @@ type
     spInsertUpdateMIMaster_out: TdsdStoredProc;
     edPromoSchemaKind: TcxButtonEdit;
     GuidesPromoSchemaKind: TdsdGuides;
+    InsertRecord_out: TInsertRecord;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public
