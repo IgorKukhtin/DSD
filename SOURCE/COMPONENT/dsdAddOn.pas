@@ -6389,6 +6389,8 @@ begin
   if not Assigned(FDataSet) then Exit;
   if not FDataSet.Active then Exit;
   if not Assigned(Column) and not Assigned(FCheckColumn) then Exit;
+  if (not FDataSet.Filtered) and (FOldStr = '') then Exit;
+
   FDataSet.DisableControls;
   B := FDataSet.GetBookmark;
   try

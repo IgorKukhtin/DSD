@@ -2510,6 +2510,7 @@ object GoodsMain_ChoiceForm: TGoodsMain_ChoiceForm
   end
   object FieldFilter_Article: TdsdFieldFilter
     TextEdit = edSearchArticle
+    ActiveEdit = edArticle
     DataSet = ClientDataSet
     Column = Article_all
     ColumnList = <
