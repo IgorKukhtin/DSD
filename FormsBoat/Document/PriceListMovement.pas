@@ -112,7 +112,7 @@ type
     cxLabel6: TcxLabel;
     edBarCode1: TcxTextEdit;
     cxLabel8: TcxLabel;
-    EnterMoveNext1: TEnterMoveNext;
+    EnterMoveNext: TEnterMoveNext;
     actGoodsItem1: TdsdInsertUpdateAction;
     macGoodsItem1: TMultiAction;
     actGoodsItemGet1: TdsdExecStoredProc;
@@ -134,6 +134,7 @@ type
     actGetImportSettingId_Brunswick: TdsdExecStoredProc;
     mactStartLoad_Brunswick: TMultiAction;
     dxBarButton1: TdxBarButton;
+    dxBarSubItem1: TdxBarSubItem;
   private
     { Private declarations }
   public

@@ -1,5 +1,5 @@
 inherited PriceListMovementForm: TPriceListMovementForm
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090'>'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
   ClientHeight = 668
   ClientWidth = 1069
   ExplicitWidth = 1085
@@ -327,7 +327,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
     Width = 1069
     Height = 93
     TabOrder = 3
-    ExplicitLeft = 8
+    ExplicitTop = 8
     ExplicitWidth = 1069
     ExplicitHeight = 93
     inherited edInvNumber: TcxTextEdit
@@ -754,7 +754,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
         end>
       QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Rapid Marine '#1080#1079' '#1092#1072#1081#1083#1072'?'
       InfoAfterExecute = #1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Rapid Marine '#1079#1072#1075#1088#1091#1078#1077#1085#1099
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Rapid Marine '#1080#1079' '#1092#1072#1081#1083#1072
+      Caption = #1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Rapid Marine'
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Rapid Marine '#1080#1079' '#1092#1072#1081#1083#1072
       ImageIndex = 48
       WithoutNext = True
@@ -774,7 +774,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
         end>
       QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090'ASG EMEA '#1080#1079' '#1092#1072#1081#1083#1072'?'
       InfoAfterExecute = #1076#1086#1082#1091#1084#1077#1085#1090' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090' '#1079#1072#1075#1088#1091#1078#1077#1085
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090' ASG EMEA '#1080#1079' '#1092#1072#1081#1083#1072
+      Caption = #1055#1088#1072#1081#1089' '#1083#1080#1089#1090' ASG EMEA'
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090' ASG EMEA '#1080#1079' '#1092#1072#1081#1083#1072
       ImageIndex = 47
       WithoutNext = True
@@ -832,10 +832,10 @@ inherited PriceListMovementForm: TPriceListMovementForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' '#1080'  GoodsArticle '#1080#1079' '#1092#1072#1081#1083#1072'?'
-      InfoAfterExecute = #1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' '#1080'  GoodsArticle '#1079#1072#1075#1088#1091#1078#1077#1085#1099
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' '#1080'  GoodsArticle '#1080#1079' '#1092#1072#1081#1083#1072
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' '#1080'  GoodsArticle '#1080#1079' '#1092#1072#1081#1083#1072
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1055#1088#1072#1081#1089' + GoodsArticle '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1055#1088#1072#1081#1089' + GoodsArticle '#1079#1072#1075#1088#1091#1078#1077#1085
+      Caption = #1055#1088#1072#1081#1089' + GoodsArticle'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' + GoodsArticle '#1080#1079' '#1092#1072#1081#1083#1072
       ImageIndex = 50
       WithoutNext = True
     end
@@ -849,8 +849,8 @@ inherited PriceListMovementForm: TPriceListMovementForm
         item
           Action = actRefreshMI
         end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'> ('#1083#1080#1084#1080#1090')'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'> ('#1083#1080#1084#1080#1090')'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' ('#1087#1086#1080#1089#1082')>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'> ('#1087#1086#1080#1089#1082')'
       ImageIndex = 0
       WithoutNext = True
     end
@@ -957,10 +957,10 @@ inherited PriceListMovementForm: TPriceListMovementForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Brunswick '#1080#1079' '#1092#1072#1081#1083#1072'?'
-      InfoAfterExecute = #1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Brunswick '#1079#1072#1075#1088#1091#1078#1077#1085#1099
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Brunswick '#1080#1079' '#1092#1072#1081#1083#1072
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Brunswick '#1080#1079' '#1092#1072#1081#1083#1072
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1055#1088#1072#1081#1089' Brunswick '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1055#1088#1072#1081#1089' Brunswick '#1079#1072#1075#1088#1091#1078#1077#1085
+      Caption = #1055#1088#1072#1081#1089' Brunswick'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' Brunswick '#1080#1079' '#1092#1072#1081#1083#1072
       ImageIndex = 49
       WithoutNext = True
     end
@@ -979,7 +979,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
         end>
       QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Gotthardt '#1080#1079' '#1092#1072#1081#1083#1072'?'
       InfoAfterExecute = #1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Gotthardt'#1079#1072#1075#1088#1091#1078#1077#1085#1099
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Gotthardt '#1080#1079' '#1092#1072#1081#1083#1072
+      Caption = #1055#1088#1072#1081#1089' Gotthardt'
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Gotthardt '#1080#1079' '#1092#1072#1081#1083#1072
       ImageIndex = 27
       WithoutNext = True
@@ -999,7 +999,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
         end>
       QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Uflex-1 '#1080#1079' '#1092#1072#1081#1083#1072'?'
       InfoAfterExecute = #1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Uflex-1 '#1079#1072#1075#1088#1091#1078#1077#1085#1099
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Uflex-1 '#1080#1079' '#1092#1072#1081#1083#1072
+      Caption = #1055#1088#1072#1081#1089' Uflex-1'
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Uflex-1 '#1080#1079' '#1092#1072#1081#1083#1072
       ImageIndex = 79
       WithoutNext = True
@@ -1019,7 +1019,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
         end>
       QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Uflex-2 '#1080#1079' '#1092#1072#1081#1083#1072'?'
       InfoAfterExecute = #1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Uflex-2 '#1079#1072#1075#1088#1091#1078#1077#1085#1099
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Uflex-2 '#1080#1079' '#1092#1072#1081#1083#1072
+      Caption = #1055#1088#1072#1081#1089' Uflex-2'
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Uflex-2 '#1080#1079' '#1092#1072#1081#1083#1072
       ImageIndex = 80
       WithoutNext = True
@@ -1217,8 +1217,8 @@ inherited PriceListMovementForm: TPriceListMovementForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'GoodsForm'
-      FormName = 'TGoodsForm'
-      FormNameParam.Value = 'TGoodsForm'
+      FormName = 'TGoods_ChoiceForm'
+      FormNameParam.Value = 'TGoods_ChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1426,10 +1426,10 @@ inherited PriceListMovementForm: TPriceListMovementForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Osculati '#1080#1079' '#1092#1072#1081#1083#1072'?'
-      InfoAfterExecute = #1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Osculati '#1079#1072#1075#1088#1091#1078#1077#1085#1099
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Osculati '#1080#1079' '#1092#1072#1081#1083#1072
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' Osculati '#1080#1079' '#1092#1072#1081#1083#1072
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1055#1088#1072#1081#1089' Osculati '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1055#1088#1072#1081#1089' Osculati '#1079#1072#1075#1088#1091#1078#1077#1085
+      Caption = #1055#1088#1072#1081#1089' Osculati'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' Osculati '#1080#1079' '#1092#1072#1081#1083#1072
       ImageIndex = 74
       WithoutNext = True
     end
@@ -1446,10 +1446,10 @@ inherited PriceListMovementForm: TPriceListMovementForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' SkiDoo '#1080#1079' '#1092#1072#1081#1083#1072'?'
-      InfoAfterExecute = #1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' SkiDoo '#1079#1072#1075#1088#1091#1078#1077#1085#1099
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' SkiDoo '#1080#1079' '#1092#1072#1081#1083#1072
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' SkiDoo '#1080#1079' '#1092#1072#1081#1083#1072
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1055#1088#1072#1081#1089' SkiDoo?'
+      InfoAfterExecute = #1055#1088#1072#1081#1089' SkiDoo '#1079#1072#1075#1088#1091#1078#1077#1085
+      Caption = #1055#1088#1072#1081#1089' SkiDoo'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089' SkiDoo '#1080#1079' '#1092#1072#1081#1083#1072
       ImageIndex = 41
       WithoutNext = True
     end
@@ -1662,7 +1662,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertRecord'
+          ItemName = 'bbAdd_limit'
         end
         item
           Visible = True
@@ -1678,7 +1678,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
         end
         item
           Visible = True
-          ItemName = 'bbAdd_limit'
+          ItemName = 'bbInsertRecord'
         end
         item
           Visible = True
@@ -1694,63 +1694,11 @@ inherited PriceListMovementForm: TPriceListMovementForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStartLoad_SkiDoo'
+          ItemName = 'dxBarSubItem1'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStartLoad_Osculati'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStartLoad_Gotthardt'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStartLoad_Uflex1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStartLoad_Uflex2'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStartLoad_Uflex3'
-        end
-        item
-          Visible = True
-          ItemName = 'bbtStartLoad_ASGEMEA'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStartLoad_RapidMarine'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton1'
         end
         item
           Visible = True
@@ -1774,6 +1722,8 @@ inherited PriceListMovementForm: TPriceListMovementForm
         end>
     end
     inherited dxBarStatic: TdxBarStatic
+      Caption = ''
+      Hint = ''
       ShowCaption = False
     end
     inherited bbPrint: TdxBarButton
@@ -1875,6 +1825,48 @@ inherited PriceListMovementForm: TPriceListMovementForm
     object dxBarButton1: TdxBarButton
       Action = mactStartLoad_Brunswick
       Category = 0
+    end
+    object dxBarSubItem1: TdxBarSubItem
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1072#1081#1089
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbStartLoad_SkiDoo'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoad_Osculati'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoad_Gotthardt'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoad_Uflex1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoad_Uflex2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbtStartLoad_ASGEMEA'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoad_RapidMarine'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoad_Uflex3'
+        end>
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -2746,7 +2738,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
     Left = 920
     Top = 528
   end
-  object EnterMoveNext1: TEnterMoveNext
+  object EnterMoveNext: TEnterMoveNext
     EnterMoveNextList = <
       item
         Control = edBarCode1

@@ -725,10 +725,10 @@ object PriceListItemEdit_limitForm: TPriceListItemEdit_limitForm
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
-    FormNameParam.Value = 'TGoods_limitForm'
+    FormNameParam.Value = 'TGoods_ChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoods_limitForm'
+    FormName = 'TGoods_ChoiceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

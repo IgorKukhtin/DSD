@@ -557,9 +557,6 @@ object IncomeForm: TIncomeForm
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -1311,7 +1308,7 @@ object IncomeForm: TIncomeForm
       object cxSplitter_Bottom: TcxSplitter
         Left = 0
         Top = 184
-        Width = 8
+        Width = 1372
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
@@ -2885,8 +2882,8 @@ object IncomeForm: TIncomeForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'GoodsForm'
-      FormName = 'TGoodsForm'
-      FormNameParam.Value = 'TGoodsForm'
+      FormName = 'TGoods_ChoiceForm'
+      FormNameParam.Value = 'TGoods_ChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

@@ -1,27 +1,27 @@
 inherited PriceListJournalForm: TPriceListJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
   ClientHeight = 535
-  ClientWidth = 782
+  ClientWidth = 872
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 798
+  ExplicitWidth = 888
   ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 782
+    Width = 872
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 782
+    ExplicitWidth = 872
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 782
+    ClientRectRight = 872
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 782
+      ExplicitWidth = 872
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 782
+        Width = 872
         Height = 478
-        ExplicitWidth = 782
+        ExplicitWidth = 872
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -136,6 +136,7 @@ inherited PriceListJournalForm: TPriceListJournalForm
           object PartnerCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1086#1089#1090'.'
             DataBinding.FieldName = 'PartnerCode'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1076' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             Options.Editing = False
@@ -193,13 +194,13 @@ inherited PriceListJournalForm: TPriceListJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 782
-    ExplicitWidth = 782
+    Width = 872
+    ExplicitWidth = 872
     inherited deStart: TcxDateEdit
-      EditValue = 45292d
+      EditValue = 45658d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 45292d
+      EditValue = 45658d
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -387,7 +388,6 @@ inherited PriceListJournalForm: TPriceListJournalForm
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1047#1072#1075#1088#1091#1079#1082#1072' '#1087#1088#1072#1081#1089#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1047#1072#1075#1088#1091#1079#1082#1072' '#1087#1088#1072#1081#1089#1072'>'
-      ShortCut = 13
       ImageIndex = 28
       FormName = 'TPriceListItemsLoadForm'
       FormNameParam.Value = 'TPriceListItemsLoadForm'
@@ -604,11 +604,7 @@ inherited PriceListJournalForm: TPriceListJournalForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMovementProtocol'
+          ItemName = 'bbOpenPriceListLoad'
         end
         item
           Visible = True
@@ -624,7 +620,11 @@ inherited PriceListJournalForm: TPriceListJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbOpenPriceListLoad'
+          ItemName = 'bbMovementProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object bbTax: TdxBarButton

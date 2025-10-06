@@ -1046,6 +1046,9 @@ object SendForm: TSendForm
     object cxTabSheetScan: TcxTabSheet
       Caption = #1057#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1085#1072' '#1084#1086#1073'. '#1091#1089#1090#1088#1086#1081#1089#1090#1074#1072#1093
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -2850,8 +2853,8 @@ object SendForm: TSendForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'GoodsForm'
-      FormName = 'TGoodsForm'
-      FormNameParam.Value = 'TGoodsForm'
+      FormName = 'TGoods_ChoiceForm'
+      FormNameParam.Value = 'TGoods_ChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
