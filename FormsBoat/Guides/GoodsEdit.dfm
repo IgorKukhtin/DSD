@@ -1297,6 +1297,24 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inArticle'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inArticle'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'Name'
         Value = ''
         Component = edName

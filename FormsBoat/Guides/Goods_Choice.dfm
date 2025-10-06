@@ -1,7 +1,7 @@
-object GoodsMainForm: TGoodsMainForm
+object Goods_ChoiceForm: TGoods_ChoiceForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <***'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' ('#1087#1086#1080#1089#1082')>'
   ClientHeight = 506
   ClientWidth = 1036
   Color = clBtnFace
@@ -25,7 +25,7 @@ object GoodsMainForm: TGoodsMainForm
     Width = 1036
     Height = 377
     Align = alClient
-    TabOrder = 0
+    TabOrder = 1
     LookAndFeel.NativeStyle = False
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
@@ -57,6 +57,7 @@ object GoodsMainForm: TGoodsMainForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.Footer = True
       OptionsView.HeaderHeight = 40
@@ -101,6 +102,7 @@ object GoodsMainForm: TGoodsMainForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+        Options.Editing = False
         Width = 150
       end
       object GoodsGroupName: TcxGridDBColumn
@@ -117,6 +119,7 @@ object GoodsMainForm: TGoodsMainForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 172
       end
       object Code: TcxGridDBColumn
@@ -132,6 +135,7 @@ object GoodsMainForm: TGoodsMainForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1082#1086#1076
+        Options.Editing = False
         Width = 63
       end
       object Article: TcxGridDBColumn
@@ -146,6 +150,7 @@ object GoodsMainForm: TGoodsMainForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object Article_all: TcxGridDBColumn
@@ -161,6 +166,7 @@ object GoodsMainForm: TGoodsMainForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object ArticleVergl: TcxGridDBColumn
@@ -176,6 +182,7 @@ object GoodsMainForm: TGoodsMainForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1040#1088#1090#1080#1082#1091#1083' ('#1072#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074#1085#1099#1081')'
+        Options.Editing = False
         Width = 80
       end
       object GoodsArticle: TcxGridDBColumn
@@ -193,6 +200,7 @@ object GoodsMainForm: TGoodsMainForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = #1040#1088#1090#1080#1082#1091#1083' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' ('#1074' '#1079#1072#1075#1088#1091#1079#1082#1077' '#1087#1088#1072#1081#1089#1086#1074')'
+        Options.Editing = False
         Width = 80
       end
       object Name: TcxGridDBColumn
@@ -207,6 +215,7 @@ object GoodsMainForm: TGoodsMainForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 206
       end
       object ModelName_calc: TcxGridDBColumn
@@ -231,6 +240,7 @@ object GoodsMainForm: TGoodsMainForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object GoodsTypeName: TcxGridDBColumn
@@ -247,6 +257,7 @@ object GoodsMainForm: TGoodsMainForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 100
       end
       object MeasureName: TcxGridDBColumn
@@ -262,6 +273,7 @@ object GoodsMainForm: TGoodsMainForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
       object AmountRemains: TcxGridDBColumn
@@ -282,6 +294,7 @@ object GoodsMainForm: TGoodsMainForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1042#1077#1089
+        Options.Editing = False
         Width = 45
       end
       object GoodsSizeName: TcxGridDBColumn
@@ -297,6 +310,7 @@ object GoodsMainForm: TGoodsMainForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1056#1072#1079#1084#1077#1088
+        Options.Editing = False
         Width = 80
       end
       object EngineName: TcxGridDBColumn
@@ -314,6 +328,7 @@ object GoodsMainForm: TGoodsMainForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1052#1086#1090#1086#1088
+        Options.Editing = False
         Width = 80
       end
       object ProdColorName: TcxGridDBColumn
@@ -330,6 +345,7 @@ object GoodsMainForm: TGoodsMainForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1074#1077#1090
+        Options.Editing = False
         Width = 100
       end
       object EKPrice: TcxGridDBColumn
@@ -448,6 +464,7 @@ object GoodsMainForm: TGoodsMainForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 100
       end
       object DiscountPartnerName: TcxGridDBColumn
@@ -513,12 +530,14 @@ object GoodsMainForm: TGoodsMainForm
         DataBinding.FieldName = 'EAN'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 100
       end
       object ASIN: TcxGridDBColumn
         DataBinding.FieldName = 'ASIN'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
       object MatchCode: TcxGridDBColumn
@@ -527,6 +546,7 @@ object GoodsMainForm: TGoodsMainForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1076' '#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1080#1103
+        Options.Editing = False
         Width = 120
       end
       object FeeNumber: TcxGridDBColumn
@@ -535,6 +555,7 @@ object GoodsMainForm: TGoodsMainForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #8470' '#1090#1072#1084#1086#1078#1077#1085#1085#1086#1081' '#1087#1086#1096#1083#1080#1085#1099
+        Options.Editing = False
         Width = 55
       end
       object InfoMoneyCode: TcxGridDBColumn
@@ -820,20 +841,20 @@ object GoodsMainForm: TGoodsMainForm
     Width = 1036
     Height = 62
     Align = alTop
-    TabOrder = 1
+    TabOrder = 0
     object edSearchArticle: TcxTextEdit
-      Left = 125
-      Top = 34
-      TabOrder = 0
+      Left = 146
+      Top = 35
+      TabOrder = 2
       DesignSize = (
         125
         21)
       Width = 125
     end
     object lbSearchArticle: TcxLabel
-      Left = 3
-      Top = 33
-      Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
+      Left = 22
+      Top = 34
+      Caption = #1055#1086#1080#1089#1082' Artikel Nr :'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -843,9 +864,9 @@ object GoodsMainForm: TGoodsMainForm
       Style.IsFontAssigned = True
     end
     object lbSearchCode: TcxLabel
-      Left = 268
-      Top = 33
-      Caption = 'Interne Nr : '
+      Left = 588
+      Top = 34
+      Caption = 'Interne Nr :'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -855,9 +876,9 @@ object GoodsMainForm: TGoodsMainForm
       Style.IsFontAssigned = True
     end
     object lbSearchName: TcxLabel
-      Left = 478
-      Top = 33
-      Caption = #1053#1072#1079#1074#1072#1085#1080#1077' : '
+      Left = 335
+      Top = 34
+      Caption = #1053#1072#1079#1074#1072#1085#1080#1077' :'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -867,56 +888,106 @@ object GoodsMainForm: TGoodsMainForm
       Style.IsFontAssigned = True
     end
     object edSearchCode: TcxTextEdit
-      Left = 351
-      Top = 34
-      TabOrder = 5
-      DesignSize = (
-        115
-        21)
-      Width = 115
-    end
-    object edSearchName: TcxTextEdit
-      Left = 558
-      Top = 34
+      Left = 670
+      Top = 35
       TabOrder = 4
       DesignSize = (
-        140
+        125
         21)
-      Width = 140
+      Width = 125
+    end
+    object edSearchName: TcxTextEdit
+      Left = 417
+      Top = 35
+      TabOrder = 3
+      DesignSize = (
+        156
+        21)
+      Width = 156
     end
     object cxLabel4: TcxLabel
-      Left = 715
-      Top = 35
-      Caption = #1057#1082#1083#1072#1076' ('#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'):'
+      Left = 845
+      Top = 13
+      Caption = #1057#1082#1083#1072#1076' :'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -11
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
     end
     object edUnit: TcxButtonEdit
-      Left = 852
-      Top = 34
+      Left = 895
+      Top = 9
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 7
-      Width = 188
+      TabOrder = 5
+      Width = 130
     end
     object cxLabel1: TcxLabel
-      Left = 8
-      Top = 7
-      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090':'
+      Left = 817
+      Top = 36
+      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' :'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -11
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
     end
     object edPriceList: TcxButtonEdit
-      Left = 79
-      Top = 6
+      Left = 895
+      Top = 35
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 9
+      TabOrder = 6
       Text = #1056#1086#1079#1085#1080#1095#1085#1072#1103' '#1094#1077#1085#1072
-      Width = 171
+      Width = 130
+    end
+    object cxLabel18: TcxLabel
+      Left = 6
+      Top = 7
+      Caption = #1042#1099#1073#1088#1072#1090#1100' Artikel Nr :'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edArticle: TcxTextEdit
+      Left = 146
+      Top = 8
+      TabOrder = 0
+      Width = 125
+    end
+    object cxLabel2: TcxLabel
+      Left = 282
+      Top = 7
+      Caption = #1042#1099#1073#1088#1072#1090#1100' '#1053#1072#1079#1074#1072#1085#1080#1077' :'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -12
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edName: TcxTextEdit
+      Left = 415
+      Top = 8
+      TabOrder = 1
+      Width = 156
     end
   end
   object Panel_btn: TPanel
@@ -943,7 +1014,7 @@ object GoodsMainForm: TGoodsMainForm
       TabOrder = 1
     end
     object btnChoiceGuides: TcxButton
-      Left = 254
+      Left = 261
       Top = 7
       Width = 85
       Height = 25
@@ -1625,6 +1696,7 @@ object GoodsMainForm: TGoodsMainForm
         item
           Name = 'inArticle'
           Value = Null
+          Component = edArticle
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1632,6 +1704,7 @@ object GoodsMainForm: TGoodsMainForm
         item
           Name = 'inName'
           Value = Null
+          Component = edName
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -2254,7 +2327,7 @@ object GoodsMainForm: TGoodsMainForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Goods'
+    StoredProcName = 'gpSelect_Object_Goods_Choice'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -2281,6 +2354,22 @@ object GoodsMainForm: TGoodsMainForm
         Name = 'inIsLimit_100'
         Value = False
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inArticle'
+        Value = Null
+        Component = edArticle
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName'
+        Value = Null
+        Component = edName
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -2487,8 +2576,8 @@ object GoodsMainForm: TGoodsMainForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 927
-    Top = 11
+    Left = 959
+    Top = 99
   end
   object spInsUpd_Unit: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Goods_Unit'
@@ -2512,8 +2601,8 @@ object GoodsMainForm: TGoodsMainForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 892
-    Top = 56
+    Left = 820
+    Top = 96
   end
   object GuidesPriceList: TdsdGuides
     KeyField = 'Id'
@@ -2543,8 +2632,8 @@ object GoodsMainForm: TGoodsMainForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 160
-    Top = 8
+    Left = 888
+    Top = 72
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -2553,9 +2642,15 @@ object GoodsMainForm: TGoodsMainForm
     ComponentList = <
       item
         Component = GuidesPriceList
+      end
+      item
+        Component = edArticle
+      end
+      item
+        Component = edName
       end>
-    Left = 568
-    Top = 80
+    Left = 752
+    Top = 72
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Goods'
@@ -2840,5 +2935,43 @@ object GoodsMainForm: TGoodsMainForm
     PackSize = 1
     Left = 368
     Top = 280
+  end
+  object HeaderExit: THeaderExit
+    ExitList = <
+      item
+        Control = edArticle
+      end
+      item
+        Control = edName
+      end>
+    Action = actRefresh
+    Left = 800
+    Top = 200
+  end
+  object EnterMoveNext: TEnterMoveNext
+    EnterMoveNextList = <
+      item
+        Control = edArticle
+      end
+      item
+        Control = edSearchArticle
+      end
+      item
+        Control = edSearchCode
+      end
+      item
+        Control = edSearchName
+      end
+      item
+        Control = cxGrid
+      end
+      item
+        Control = edName
+      end
+      item
+        Control = cxGrid
+      end>
+    Left = 800
+    Top = 248
   end
 end

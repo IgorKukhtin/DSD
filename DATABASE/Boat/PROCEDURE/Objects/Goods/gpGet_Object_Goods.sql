@@ -3,11 +3,14 @@
 DROP FUNCTION IF EXISTS gpGet_Object_Goods (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Object_Goods (Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Object_Goods (Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_Goods (Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Goods(
     IN inId          Integer,       -- Товар 
     IN inPriceListId Integer,
     IN inMaskId      Integer   ,    -- id для копирования
+    IN inArticle     TVarChar  ,
+    IN inName        TVarChar  ,    
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
@@ -57,8 +60,8 @@ BEGIN
        SELECT
              CAST (0 as Integer)    AS Id
            , lfGet_ObjectCode(0, zc_Object_Goods()) AS Code
-           , CAST ('' as TVarChar)  AS Name
-           , CAST ('' as TVarChar) AS Article
+           , COALESCE (inName, '')      ::TVarChar  AS Name
+           , COALESCE (inArticle,'')    ::TVarChar  AS Article
            , CAST ('' as TVarChar) AS ArticleVergl
            , CAST ('' as TVarChar) AS EAN
            , CAST ('' as TVarChar) AS ASIN
@@ -315,7 +318,6 @@ BEGIN
 
              LEFT JOIN tmpRemains ON 1 = 1
        WHERE Object_Goods.Id = CASE WHEN COALESCE (inId, 0) = 0 THEN COALESCE (inMaskId,0) ELSE inId END;
-
    END IF;
 
 END;
@@ -325,6 +327,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.10.25         * inArticle, inName
  26.09.25         * AmountRemains
  18.09.25         * add Weight
  28.03.24         * inPriceListId
@@ -333,4 +336,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_Goods (1, zc_PriceList_Basis(), 1, '2')
+-- SELECT * FROM gpGet_Object_Goods (0, zc_PriceList_Basis(), 0, '3434', 'Test', '2')

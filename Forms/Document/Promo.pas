@@ -601,9 +601,7 @@ type
     bb: TdxBarButton;
     cxLabel28: TcxLabel;
     cbOperDateOrder_text: TcxTextEdit;
-    GuidesPromoSchemaKind: TdsdGuides;
     cxLabel29: TcxLabel;
-    edPromoSchemaKind: TcxButtonEdit;
     PromoDiscountKindName: TcxGridDBColumn;
     GoodsName_out: TcxGridDBColumn;
     GoodsKindName_out: TcxGridDBColumn;
@@ -633,6 +631,10 @@ type
     isErased_tsout: TcxGridDBColumn;
     dsdDBViewAddOn_out: TdsdDBViewAddOn;
     spInsertUpdateMIMaster_out: TdsdStoredProc;
+    edPromoSchemaKind: TcxButtonEdit;
+    GuidesPromoSchemaKind: TdsdGuides;
+    InsertRecord_out: TInsertRecord;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

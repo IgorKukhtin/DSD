@@ -392,8 +392,8 @@ object IncomeItemEdit_limitForm: TIncomeItemEdit_limitForm
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       Hint = #1042#1099#1073#1088#1072#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       ImageIndex = 7
-      FormName = 'TGoodsMain_ChoiceForm'
-      FormNameParam.Value = 'TGoodsMain_ChoiceForm'
+      FormName = 'TGoods_ChoiceForm'
+      FormNameParam.Value = 'TGoods_ChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -873,7 +873,7 @@ object IncomeItemEdit_limitForm: TIncomeItemEdit_limitForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 176
+    Left = 112
     Top = 41
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -883,10 +883,10 @@ object IncomeItemEdit_limitForm: TIncomeItemEdit_limitForm
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoodsName
-    FormNameParam.Value = 'TGoodsMain_ChoiceForm'
+    FormNameParam.Value = 'TGoods_ChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsMain_ChoiceForm'
+    FormName = 'TGoods_ChoiceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
