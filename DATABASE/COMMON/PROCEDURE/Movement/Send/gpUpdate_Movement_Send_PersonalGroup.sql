@@ -14,8 +14,11 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Send_PersonalGroup());
 
-     -- сохранили связь с документом <Заявки сторонние>
+     -- сохранили
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalGroup(), inId, inPersonalGroupId);
+
+     -- сохранили протокол
+     PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE);
 
 END;
 $BODY$
@@ -28,4 +31,4 @@ $BODY$
 */
 
 -- тест
--- 
+--

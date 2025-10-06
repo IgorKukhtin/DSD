@@ -4,8 +4,8 @@ DROP FUNCTION IF EXISTS gpUpdate_Movement_Send_isRePack (Integer, Boolean, TVarC
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_Send_isRePack(
     IN inId                      Integer   , -- Ключ объекта <Документ Перемещение>
-    IN inisRePack                Boolean   , -- 
-   OUT outisRePack               Boolean   , -- 
+    IN inisRePack                Boolean   , --
+   OUT outisRePack               Boolean   , --
     IN inSession                 TVarChar    -- сессия пользователя
 )
 RETURNS Boolean AS
@@ -16,8 +16,11 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Send_isRePack());
 
      outisRePack := NOT inisRePack;
-     -- сохранили связь с документом <Заявки сторонние>
+     -- сохранили
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isRePack(), inId, outisRePack);
+
+     -- сохранили протокол
+     PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE);
 
 END;
 $BODY$
@@ -30,4 +33,4 @@ $BODY$
 */
 
 -- тест
--- 
+--
