@@ -2936,10 +2936,10 @@ object GoodsMain_ChoiceForm: TGoodsMain_ChoiceForm
         Control = edSearchArticle
       end
       item
-        Control = edSearchCode
+        Control = edSearchName
       end
       item
-        Control = edSearchName
+        Control = edSearchCode
       end
       item
         Control = cxGrid

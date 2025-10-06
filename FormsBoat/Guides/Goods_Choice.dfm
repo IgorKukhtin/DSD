@@ -2531,6 +2531,7 @@ object Goods_ChoiceForm: TGoods_ChoiceForm
   end
   object FieldFilter_Article: TdsdFieldFilter
     TextEdit = edSearchArticle
+    ActiveEdit = edArticle
     DataSet = ClientDataSet
     Column = Article_all
     ColumnList = <
@@ -2957,10 +2958,10 @@ object Goods_ChoiceForm: TGoods_ChoiceForm
         Control = edSearchArticle
       end
       item
-        Control = edSearchCode
+        Control = edSearchName
       end
       item
-        Control = edSearchName
+        Control = edSearchCode
       end
       item
         Control = cxGrid
