@@ -110,14 +110,6 @@ BEGIN
                             AND Object_GoodsDocument.isErased = FALSE
                             AND 1=0
                        )
-           , tmpPriceBasis AS (SELECT tmp.GoodsId
-                                    , tmp.StartDate
-                                    , tmp.ValuePrice
-                                    , inPriceListId AS PriceListId
-                               FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId   --zc_PriceList_Basis()
-                                                                        , inOperDate   := CURRENT_DATE) AS tmp
-                               WHERE 1=0
-                              )
           -- все что в сборке
         , tmpReceiptGoods AS (SELECT Object_ReceiptGoods_find_View.GoodsId
                                      -- это узел (да/нет)
@@ -223,6 +215,26 @@ BEGIN
                           AND inIsLimit_100 = FALSE   
                           AND (COALESCE (inArticle,'') = '' AND COALESCE (inName,'') = '')*/
                        )
+           , tmpPriceBasis AS (SELECT ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
+                                    , ObjectHistory_PriceListItem.StartDate            AS StartDate
+                                    , ObjectHistoryFloat_PriceListItem_Value.ValueData AS ValuePrice
+                                    , inPriceListId                                    AS PriceListId
+                               FROM ObjectLink AS ObjectLink_PriceListItem_Goods
+                                    INNER JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
+                                                          ON ObjectLink_PriceListItem_PriceList.ObjectId     = ObjectLink_PriceListItem_Goods.ObjectId
+                                                         AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+                                                         AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
+                                    LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
+                                                            ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                                           AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
+                                                           AND CURRENT_DATE >= ObjectHistory_PriceListItem.StartDate AND CURRENT_DATE < ObjectHistory_PriceListItem.EndDate
+                                    INNER JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
+                                                                  ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                                 AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                                                                 AND ObjectHistoryFloat_PriceListItem_Value.ValueData <> 0
+                               WHERE ObjectLink_PriceListItem_Goods.ChildObjectId IN (SELECT DISTINCT tmpGoods.Id FROM tmpGoods)
+                                 AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
+                              )
            -- текущие остатки
          , tmpRemains AS (SELECT Container.ObjectId            AS GoodsId
                              --, Container.WhereObjectId       AS UnitId
@@ -309,19 +321,19 @@ BEGIN
                  * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100) ) AS NUMERIC (16, 2)) ::TFloat AS EmpfPriceWVAT
 
               -- Цена продажи без НДС
-            , /*CASE WHEN vbPriceWithVAT = FALSE
+            , CASE WHEN vbPriceWithVAT = FALSE
                    THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
                    ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
-              END*/ 0 ::TFloat AS BasisPrice
+              END ::TFloat AS BasisPrice
 
               -- Цена продажи с НДС
-            , /*CASE WHEN vbPriceWithVAT = FALSE
+            , CASE WHEN vbPriceWithVAT = FALSE
                    THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
                    ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
-              END*/ 0 ::TFloat AS BasisPriceWVAT
+              END ::TFloat AS BasisPriceWVAT
               
               -- Цена продажи без НДС - передается в грид
-            , /*CASE WHEN vbPriceWithVAT = FALSE AND tmpPriceBasis.ValuePrice > 0
+            , CASE WHEN vbPriceWithVAT = FALSE AND tmpPriceBasis.ValuePrice > 0
                    THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
                    WHEN vbPriceWithVAT = TRUE AND tmpPriceBasis.ValuePrice > 0
                    THEN CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
@@ -332,10 +344,10 @@ BEGIN
 
                    ELSE 0
 
-              END*/ 0 ::TFloat AS BasisPrice_choice  
+              END ::TFloat AS BasisPrice_choice  
               
-            , NULL ::TDateTime -- tmpPriceBasis.StartDate ::TDateTime AS StartDate_price
-            , CASE WHEN inPriceListId > 0 THEN inPriceListId ELSE zc_PriceList_Basis() END ::Integer 
+            , tmpPriceBasis.StartDate ::TDateTime AS StartDate_price
+            , tmpPriceBasis.PriceListId ::Integer 
 
             , Object_GoodsGroup.Id               AS GoodsGroupId
             , Object_GoodsGroup.ValueData        AS GoodsGroupName
@@ -588,7 +600,12 @@ BEGIN
             -- это
             LEFT JOIN tmpReceiptGoods ON tmpReceiptGoods.GoodsId = Object_Goods.Id
 
+            -- это
             LEFT JOIN tmpRemains ON tmpRemains.GoodsId = Object_Goods.Id
+
+            -- это
+            LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
+
         --WHERE ObjectString_Article.ValueData ILIKE 'AGL%'
 
         ORDER BY Object_Goods.Id  desc
