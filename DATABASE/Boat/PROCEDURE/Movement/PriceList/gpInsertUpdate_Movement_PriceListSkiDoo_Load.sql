@@ -1,15 +1,16 @@
 --
+
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PriceListSkiDoo_Load (TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PriceListSkiDoo_Load(
     IN inOperDate                   TDateTime,     -- дата документа
     IN inPartnerId                  Integer,
     IN inArticle                    TVarChar,      -- Article
-    IN inGoodsName                  TVarChar,      -- 
-    IN inMeasureName                TVarChar,      -- 
-    IN inMeasureParentName          TVarChar,      -- 
-    IN inDiscountPartnerName         TVarChar,      -- 
-    IN inMeasureMult                TFloat  ,      -- 
+    IN inGoodsName                  TVarChar,      --
+    IN inMeasureName                TVarChar,      --
+    IN inMeasureParentName          TVarChar,      --
+    IN inDiscountPartnerName         TVarChar,      --
+    IN inMeasureMult                TFloat  ,      --
     IN inEmpfPriceParent            TFloat  ,
     IN inPriceParent                TFloat  ,
     IN inAmount                     TFloat  ,
@@ -43,15 +44,15 @@ BEGIN
    THEN
         RAISE EXCEPTION 'Ошибка.Не выбран Поставщик';
    END IF;
-    
+
 
    IF COALESCE (inMeasureName,'')<> ''
    THEN
-       vbMeasureId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Measure() AND Object.ValueData Like TRIM (inMeasureName));    
+       vbMeasureId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Measure() AND Object.ValueData Like TRIM (inMeasureName));
        --если не находим создаем
        IF COALESCE (vbMeasureId,0) = 0
        THEN
-   
+
         vbMeasureId := (SELECT tmp.ioId
                         FROM gpInsertUpdate_Object_Measure (ioId           := 0         :: Integer
                                                           , ioCode         := 0         :: Integer
@@ -65,11 +66,11 @@ BEGIN
 
    IF COALESCE (inMeasureParentName,'')<> ''
    THEN
-       vbMeasureParentId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Measure() AND Object.ValueData Like TRIM (inMeasureParentName));    
+       vbMeasureParentId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Measure() AND Object.ValueData Like TRIM (inMeasureParentName));
        --если не находим создаем
        IF COALESCE (vbMeasureParentId,0) = 0
        THEN
-   
+
         vbMeasureParentId := (SELECT tmp.ioId
                               FROM gpInsertUpdate_Object_Measure (ioId           := 0         :: Integer
                                                                 , ioCode         := 0         :: Integer
@@ -83,7 +84,7 @@ BEGIN
 
    IF COALESCE (inDiscountPartnerName,'')<> ''
    THEN
-       vbDiscountPartnerId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_DiscountPartner() AND Object.ValueData Like TRIM (inDiscountPartnerName));    
+       vbDiscountPartnerId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_DiscountPartner() AND Object.ValueData Like TRIM (inDiscountPartnerName));
        --если не находим создаем
        IF COALESCE (vbDiscountPartnerId,0) = 0
        THEN
@@ -100,7 +101,7 @@ BEGIN
 
    IF COALESCE (inArticle,'') <> ''
    THEN
-  
+
         -- Проверка
         vbCount:= (SELECT COUNT(*) FROM ObjectString AS OS WHERE OS.ValueData ILIKE inArticle AND OS.DescId = zc_ObjectString_Article());
 
@@ -127,7 +128,7 @@ BEGIN
                                                     , inArticleVergl     := Null     :: TVarChar
                                                     , inEAN              := Null     :: TVarChar
                                                     , inASIN             := Null     :: TVarChar
-                                                    , inMatchCode        := Null     :: TVarChar 
+                                                    , inMatchCode        := Null     :: TVarChar
                                                     , inFeeNumber        := Null     :: TVarChar
                                                     , inComment          := Null     :: TVarChar
                                                     , inIsArc            := FALSE    :: Boolean
@@ -149,9 +150,9 @@ BEGIN
                                                     , inUnitId           := 0                :: Integer
                                                     , inDiscountPartnerId := vbDiscountPartnerId    :: Integer
                                                     , inTaxKindId        := 0                :: Integer
-                                                    , inEngineId         := NULL             
+                                                    , inEngineId         := NULL
                                                     , inPriceListId      := Null     ::Integer
-                                                    , inStartDate_price  := Null     ::TDateTime 
+                                                    , inStartDate_price  := Null     ::TDateTime
                                                     , inOperPriceList    := 0        :: TFloat
                                                     , inSession          := inSession        :: TVarChar
                                                     );
@@ -173,7 +174,7 @@ BEGIN
                     AND Movement.DescId   = zc_Movement_PriceList()
                     AND Movement.StatusId <> zc_Enum_Status_Erased()
                  )
-          THEN 
+          THEN
               RAISE EXCEPTION 'Ошибка.Должен быть один документ с ценами%для Поставщик = <%> за = <%>.'
                              , CHR (13)
                              , lfGet_Object_ValueData_sh (inPartnerId)
@@ -248,7 +249,7 @@ BEGIN
 
         -- Проверка
         IF vbCount < (SELECT COUNT(*) FROM ObjectString AS OS WHERE OS.ValueData ILIKE inArticle AND OS.DescId = zc_ObjectString_Article())
-           AND vbCount > 0 
+           AND vbCount > 0
         THEN
             RAISE EXCEPTION 'Ошибка.Дублирование Article = <%> (%) (%) % <%>'
                            , inArticle

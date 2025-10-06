@@ -1,13 +1,14 @@
 --
+
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PriceListBrunswick_Load (TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PriceListBrunswick_Load(
     IN inOperDate                   TDateTime,     -- дата документа
     IN inPartnerId                  Integer,
     IN inArticle                    TVarChar,      -- Article
-    IN inGoodsName                  TVarChar,      -- 
-    IN inGoodsGroupName             TVarChar,      -- 
-    IN inNonStocking                TVarChar,      -- 
+    IN inGoodsName                  TVarChar,      --
+    IN inGoodsGroupName             TVarChar,      --
+    IN inNonStocking                TVarChar,      --
     IN inAmount                     TFloat  ,      --price
     IN inWeight                     TFloat  ,      --вес
     IN inSession                    TVarChar       -- сессия пользователя
@@ -20,13 +21,14 @@ $BODY$
   DECLARE vbMovementId       Integer;
   DECLARE vbMovementItemId   Integer;
   DECLARE vbGoodsGroupId     Integer;
+  DECLARE vbCount            Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
      -- RAISE EXCEPTION 'Ошибка. inArticle = <%>  Не найден.', inArticle;
 
-    IF TRIM (UPPER (COALESCE (inNonStocking,''))) = 'NON STOCKING ITEMS' 
+    IF TRIM (UPPER (COALESCE (inNonStocking,''))) = 'NON STOCKING ITEMS'
     THEN
         RETURN;
     END IF;
@@ -46,12 +48,15 @@ BEGIN
 
    IF COALESCE (inArticle,'') <> ''
    THEN
+          -- Проверка
+          vbCount:= (SELECT COUNT(*) FROM ObjectString AS OS WHERE OS.ValueData ILIKE inArticle AND OS.DescId = zc_ObjectString_Article());
+
           -- поиск в спр. товара
           vbGoodsId := (SELECT ObjectString_Article.ObjectId
                         FROM ObjectString AS ObjectString_Article
                              INNER JOIN Object ON Object.Id       = ObjectString_Article.ObjectId
                                               AND Object.DescId   = zc_Object_Goods()
-                                              AND Object.isErased = FALSE
+                                            --AND Object.isErased = FALSE
                         WHERE ObjectString_Article.ValueData ILIKE inArticle
                           AND ObjectString_Article.DescId    = zc_ObjectString_Article()
                         LIMIT 1
@@ -75,12 +80,12 @@ BEGIN
                                                                            , inSession         := inSession :: TVarChar
                                                                             ) AS tmp);
               END IF;
-        
-          
- 
-             
 
-              
+
+
+
+
+
              -- создаем
              vbGoodsId := gpInsertUpdate_Object_Goods(ioId                := COALESCE (vbGoodsId,0)::  Integer
                                                     , inCode              := lfGet_ObjectCode(0, zc_Object_Goods())    :: Integer
@@ -89,14 +94,14 @@ BEGIN
                                                     , inArticleVergl      := Null     :: TVarChar
                                                     , inEAN               := Null     :: TVarChar
                                                     , inASIN              := Null     :: TVarChar
-                                                    , inMatchCode         := Null     :: TVarChar 
+                                                    , inMatchCode         := Null     :: TVarChar
                                                     , inFeeNumber         := Null     :: TVarChar
-                                                    , inComment           := Null     :: TVarChar 
+                                                    , inComment           := Null     :: TVarChar
                                                     , inGoodsSizeName     := Null     :: TVarChar
                                                     , inIsArc             := FALSE    :: Boolean
                                                     , inFeet              := 0        :: TFloat
-                                                    , inMetres            := 0        :: TFloat     
-                                                    , inWeight            := inWeight :: TFloat -- Вес 
+                                                    , inMetres            := 0        :: TFloat
+                                                    , inWeight            := inWeight :: TFloat -- Вес
                                                     , inAmountMin         := 0        :: TFloat
                                                     , inAmountRefer       := 0        :: TFloat
                                                     , inEKPrice           := CAST (inAmount AS NUMERIC (16,2)) :: TFloat
@@ -112,12 +117,35 @@ BEGIN
                                                     , inTaxKindId         := 0           :: Integer
                                                     , inEngineId          := NULL        :: Integer
                                                     , inPriceListId       := Null        :: Integer
-                                                    , inStartDate_price   := Null        :: TDateTime 
+                                                    , inStartDate_price   := Null        :: TDateTime
                                                     , inOperPriceList     := 0           :: TFloat
                                                     , inSession           := inSession   :: TVarChar
                                                     );
+
+          ELSEIF EXISTS (SELECT 1 FROM Object WHERE Object.Id = vbGoodsId AND Object.isErased = TRUE)
+          THEN
+               UPDATE Object SET isErased = FALSE WHERE Object.Id = vbGoodsId AND Object.isErased = TRUE;
           END IF;
 
+
+          -- Проверка
+          IF 1 < (SELECT COUNT(*)
+                  FROM Movement
+                       INNER JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                                     ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                                    AND MovementLinkObject_Partner.DescId     = zc_MovementLinkObject_Partner()
+                                                    AND MovementLinkObject_Partner.ObjectId   = inPartnerId
+                  WHERE Movement.OperDate = inOperDate
+                    AND Movement.DescId   = zc_Movement_PriceList()
+                    AND Movement.StatusId <> zc_Enum_Status_Erased()
+                 )
+          THEN
+              RAISE EXCEPTION 'Ошибка.Должен быть один документ с ценами%для Поставщик = <%> за = <%>.'
+                             , CHR (13)
+                             , lfGet_Object_ValueData_sh (inPartnerId)
+                             , zfConvert_DateToString (inOperDate)
+                              ;
+          END IF;
 
           -- пробуем найти документ
           vbMovementId := (SELECT Movement.Id
@@ -171,8 +199,22 @@ BEGIN
                                                                    , inisOutlet          := FALSE        ::Boolean
                                                                    , inUserId            := vbUserId     :: Integer
                                                                     );
+
+        -- Проверка
+        IF vbCount < (SELECT COUNT(*) FROM ObjectString AS OS WHERE OS.ValueData ILIKE inArticle AND OS.DescId = zc_ObjectString_Article())
+           AND vbCount > 0
+        THEN
+            RAISE EXCEPTION 'Ошибка.Дублирование Article = <%> (%) (%) % <%>'
+                           , inArticle
+                           , vbCount
+                           , (SELECT COUNT(*) FROM ObjectString AS OS WHERE OS.ValueData ILIKE inArticle AND OS.DescId = zc_ObjectString_Article())
+                           , CHR (13)
+                           , inGoodsName
+                            ;
+        END IF;
+
    END IF;
-   
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
