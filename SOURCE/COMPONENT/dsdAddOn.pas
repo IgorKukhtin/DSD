@@ -1311,6 +1311,7 @@ type
   TdsdFieldFilter = class(TdsdComponent)
   private
     FTextEdit: TcxTextEdit;
+    FActiveEdit: TcxTextEdit;
     FDataSet: TDataSet;
     FColumn: TcxGridColumn;
     FColumnList: TOwnedCollection;
@@ -1352,6 +1353,7 @@ type
   published
     // Edit - для ввода текста фильтра
     property TextEdit: TcxTextEdit read FTextEdit write SetTextEdit;
+    property ActiveEdit: TcxTextEdit read FActiveEdit write FActiveEdit;
     property DataSet: TDataSet read FDataSet write SetDataSet;
     property Column: TcxGridColumn read GetColumn write SetColumn;
     // Коллекция столюбиков для фильтра
