@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' '#1057#1095#1077#1090#1072'>'
-  ClientHeight = 323
+  ClientHeight = 364
   ClientWidth = 421
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -23,7 +23,7 @@
   end
   object cxButtonOK: TcxButton
     Left = 195
-    Top = 283
+    Top = 298
     Width = 90
     Height = 25
     Action = actInsertUpdate
@@ -33,7 +33,7 @@
   end
   object cxButtonCancel: TcxButton
     Left = 312
-    Top = 283
+    Top = 298
     Width = 90
     Height = 25
     Action = actFormClose
@@ -132,7 +132,7 @@
   end
   object btnGoodsChoiceForm: TcxButton
     Left = 8
-    Top = 283
+    Top = 298
     Width = 150
     Height = 25
     Hint = #1042#1099#1073#1086#1088' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
@@ -201,7 +201,7 @@
   object cxLabel7: TcxLabel
     Left = 279
     Top = 117
-    Caption = #1054#1089#1090#1072#1090#1086#1082' '#1090#1077#1082#1091#1097#1080#1081
+    Caption = #1054#1089#1090#1072#1090#1086#1082
   end
   object ceRemains: TcxCurrencyEdit
     Left = 279
@@ -216,7 +216,7 @@
     Style.Font.Height = -11
     Style.Font.Name = 'Tahoma'
     Style.Font.Style = [fsBold]
-    Style.TextColor = clBlack
+    Style.TextColor = clBlue
     Style.IsFontAssigned = True
     TabOrder = 22
     Width = 95
@@ -273,8 +273,8 @@
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       Hint = #1042#1099#1073#1088#1072#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       ImageIndex = 7
-      FormName = 'TGoodsForm'
-      FormNameParam.Value = 'TGoodsForm'
+      FormName = 'TGoods_ChoiceForm'
+      FormNameParam.Value = 'TGoods_ChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -316,6 +316,13 @@
           Component = ceOperPrice
           DataType = ftFloat
           ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AmountRemains'
+          Value = Null
+          Component = ceRemains
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -578,10 +585,10 @@
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoodsName
-    FormNameParam.Value = 'TGoodsForm'
+    FormNameParam.Value = 'TGoods_ChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsForm'
+    FormName = 'TGoods_ChoiceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
