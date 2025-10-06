@@ -22,12 +22,133 @@ BEGIN
      vbEndSale  := (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_EndSale());
 
 
-     -- проверка - если нет ВСЕХ подписей, проводить нельзя
+     -- Проверка - если нет ВСЕХ подписей, проводить нельзя
      PERFORM lpCheck_Movement_Promo_Sign (inMovementId:= inMovementId
                                         , inIsComplete:= TRUE
                                         , inIsUpdate  := FALSE
                                         , inUserId    := vbUserId
                                          );
+
+    -- Проверка - Промо-механика - zc_Enum_PromoSchemaKind_m_n
+    IF EXISTS (SELECT 1 FROM MovementLinkObject AS MLO
+               WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PromoSchemaKind() AND MLO.ObjectId = zc_Enum_PromoSchemaKind_m_n())
+    THEN
+        --
+        IF EXISTS (SELECT 1
+                   FROM (SELECT 1 AS x) AS xx
+                        LEFT JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                              AND MovementItem.DescId     = zc_MI_Master()
+                                              AND MovementItem.isErased   = FALSE
+                        LEFT JOIN MovementItemFloat AS MIFloat_Value_m
+                                                    ON MIFloat_Value_m.MovementItemId = MovementItem.Id
+                                                   AND MIFloat_Value_m.DescId         = zc_MIFloat_Value_m()
+                   WHERE COALESCE (MIFloat_Value_m.ValueData, 0) = 0
+                  )
+        THEN
+            RAISE EXCEPTION 'Ошибка.Для Акции <%> необходимо заполнить ячейку <Значение m>.', lfGet_Object_ValueData_sh (zc_Enum_PromoSchemaKind_m_n());
+        END IF;
+        --
+        IF EXISTS (SELECT 1
+                   FROM (SELECT 1 AS x) AS xx
+                        LEFT JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                              AND MovementItem.DescId     = zc_MI_Master()
+                                              AND MovementItem.isErased   = FALSE
+                        LEFT JOIN MovementItemFloat AS MIFloat_Value_n
+                                                    ON MIFloat_Value_n.MovementItemId = MovementItem.Id
+                                                   AND MIFloat_Value_n.DescId         = zc_MIFloat_Value_n()
+                   WHERE COALESCE (MIFloat_Value_n.ValueData, 0) = 0
+                  )
+        THEN
+            RAISE EXCEPTION 'Ошибка.Для Акции <%> необходимо заполнить ячейку <Значение n>.', lfGet_Object_ValueData_sh (zc_Enum_PromoSchemaKind_m_n());
+        END IF;
+
+    END IF;
+
+
+    -- Проверка - Промо-механика - zc_Enum_PromoSchemaKind_Tax
+    IF EXISTS (SELECT 1 FROM MovementLinkObject AS MLO
+               WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PromoSchemaKind() AND MLO.ObjectId = zc_Enum_PromoSchemaKind_Tax())
+    THEN
+        --
+        IF EXISTS (SELECT 1
+                   FROM (SELECT 1 AS x) AS xx
+                        LEFT JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                              AND MovementItem.DescId     = zc_MI_Master()
+                                              AND MovementItem.isErased   = FALSE
+                   WHERE COALESCE (MovementItem.Amount, 0) = 0
+                  )
+        THEN
+            RAISE EXCEPTION 'Ошибка.Для Акции <%> необходимо заполнить ячейку <Значение скидки>.', lfGet_Object_ValueData_sh (zc_Enum_PromoSchemaKind_Tax());
+        END IF;
+        --
+        IF EXISTS (SELECT 1
+                   FROM (SELECT 1 AS x) AS xx
+                        LEFT JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                              AND MovementItem.DescId     = zc_MI_Master()
+                                              AND MovementItem.isErased   = FALSE
+                        LEFT JOIN MovementItemLinkObject AS MILO_PromoDiscountKind
+                                                         ON MILO_PromoDiscountKind.MovementItemId = MovementItem.Id
+                                                        AND MILO_PromoDiscountKind.DescId         = zc_MILinkObject_PromoDiscountKind()
+                   WHERE COALESCE (MILO_PromoDiscountKind.ObjectId, 0) = 0
+                  )
+           -- временно убрал
+           AND 1=0
+        THEN
+            RAISE EXCEPTION 'Ошибка.Для Акции <%> необходимо заполнить ячейку <Тип скидки>.', lfGet_Object_ValueData_sh (zc_Enum_PromoSchemaKind_Tax());
+        END IF;
+
+        --
+        IF EXISTS (SELECT 1
+                   FROM (SELECT 1 AS x) AS xx
+                        LEFT JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                              AND MovementItem.DescId     = zc_MI_Master()
+                                              AND MovementItem.isErased   = FALSE
+                        LEFT JOIN MovementItemLinkObject AS MILO_Goods_out
+                                                         ON MILO_Goods_out.MovementItemId = MovementItem.Id
+                                                        AND MILO_Goods_out.DescId         = zc_MILinkObject_Goods_out()
+                   WHERE COALESCE (MILO_Goods_out.ObjectId, 0) = 0
+                  )
+        THEN
+            RAISE EXCEPTION 'Ошибка.Для Акции <%> необходимо заполнить ячейку <Товар (Покупка)>.', lfGet_Object_ValueData_sh (zc_Enum_PromoSchemaKind_Tax());
+        END IF;
+
+        --
+        IF EXISTS (SELECT 1
+                   FROM (SELECT 1 AS x) AS xx
+                        LEFT JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                              AND MovementItem.DescId     = zc_MI_Master()
+                                              AND MovementItem.isErased   = FALSE
+                        LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind_out
+                                                         ON MILO_GoodsKind_out.MovementItemId = MovementItem.Id
+                                                        AND MILO_GoodsKind_out.DescId         = zc_MILinkObject_GoodsKind_out()
+                   WHERE COALESCE (MILO_GoodsKind_out.ObjectId, 0) = 0
+                  )
+        THEN
+            RAISE EXCEPTION 'Ошибка.Для Акции <%> необходимо заполнить ячейку <Вид товара(Покупка)>.', lfGet_Object_ValueData_sh (zc_Enum_PromoSchemaKind_Tax());
+        END IF;
+        
+    ELSE
+        -- Для всех Акций, кроме zc_Enum_PromoSchemaKind_Tax
+        IF EXISTS (SELECT 1
+                   FROM (SELECT 1 AS x) AS xx
+                        LEFT JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                              AND MovementItem.DescId     = zc_MI_Master()
+                                              AND MovementItem.isErased   = FALSE
+                        INNER JOIN MovementItemLinkObject AS MILO_PromoDiscountKind
+                                                          ON MILO_PromoDiscountKind.MovementItemId = MovementItem.Id
+                                                         AND MILO_PromoDiscountKind.DescId         = zc_MILinkObject_PromoDiscountKind()
+                                                         AND MILO_PromoDiscountKind.ObjectId       = zc_Enum_PromoDiscountKind_Summ()
+                  )
+        THEN
+            -- !!! Для всех кроме Покупай один – получи скидку на другой
+            RAISE EXCEPTION 'Ошибка.Только для Акции <%> можно установить скидку = <%>.'
+                          , lfGet_Object_ValueData_sh (zc_Enum_PromoSchemaKind_Tax())
+                          , lfGet_Object_ValueData_sh (zc_Enum_PromoDiscountKind_Summ())
+                           ;
+        END IF;
+
+    END IF;
+
 
     -- Проверили - Компенсация,грн 
     IF EXISTS (SELECT 1

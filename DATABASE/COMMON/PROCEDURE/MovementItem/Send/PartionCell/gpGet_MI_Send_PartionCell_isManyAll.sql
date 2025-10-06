@@ -605,28 +605,28 @@ BEGIN
      RETURN QUERY 
      WITH
      tmpMI AS (
-               SELECT MILinkObject_PartionCell_1.ObjectId  AS PartionCellId_1
-                    , MILinkObject_PartionCell_2.ObjectId  AS PartionCellId_2
-                    , MILinkObject_PartionCell_3.ObjectId  AS PartionCellId_3
-                    , MILinkObject_PartionCell_4.ObjectId  AS PartionCellId_4
-                    , MILinkObject_PartionCell_5.ObjectId  AS PartionCellId_5
-                    , MILinkObject_PartionCell_6.ObjectId  AS PartionCellId_6
-                    , MILinkObject_PartionCell_7.ObjectId  AS PartionCellId_7
-                    , MILinkObject_PartionCell_8.ObjectId  AS PartionCellId_8
-                    , MILinkObject_PartionCell_9.ObjectId  AS PartionCellId_9
-                    , MILinkObject_PartionCell_10.ObjectId AS PartionCellId_10
-                    , MILinkObject_PartionCell_11.ObjectId AS PartionCellId_11
-                    , MILinkObject_PartionCell_12.ObjectId AS PartionCellId_12
-                    , MILinkObject_PartionCell_13.ObjectId AS PartionCellId_13
-                    , MILinkObject_PartionCell_14.ObjectId AS PartionCellId_14
-                    , MILinkObject_PartionCell_15.ObjectId AS PartionCellId_15
-                    , MILinkObject_PartionCell_16.ObjectId AS PartionCellId_16
-                    , MILinkObject_PartionCell_17.ObjectId AS PartionCellId_17
-                    , MILinkObject_PartionCell_18.ObjectId AS PartionCellId_18
-                    , MILinkObject_PartionCell_19.ObjectId AS PartionCellId_19
-                    , MILinkObject_PartionCell_20.ObjectId AS PartionCellId_20
-                    , MILinkObject_PartionCell_21.ObjectId AS PartionCellId_21
-                    , MILinkObject_PartionCell_22.ObjectId AS PartionCellId_22
+               SELECT MAX (MILinkObject_PartionCell_1.ObjectId)  AS PartionCellId_1
+                    , MAX (MILinkObject_PartionCell_2.ObjectId)  AS PartionCellId_2
+                    , MAX (MILinkObject_PartionCell_3.ObjectId)  AS PartionCellId_3
+                    , MAX (MILinkObject_PartionCell_4.ObjectId)  AS PartionCellId_4
+                    , MAX (MILinkObject_PartionCell_5.ObjectId)  AS PartionCellId_5
+                    , MAX (MILinkObject_PartionCell_6.ObjectId)  AS PartionCellId_6
+                    , MAX (MILinkObject_PartionCell_7.ObjectId)  AS PartionCellId_7
+                    , MAX (MILinkObject_PartionCell_8.ObjectId)  AS PartionCellId_8
+                    , MAX (MILinkObject_PartionCell_9.ObjectId)  AS PartionCellId_9
+                    , MAX (MILinkObject_PartionCell_10.ObjectId) AS PartionCellId_10
+                    , MAX (MILinkObject_PartionCell_11.ObjectId) AS PartionCellId_11
+                    , MAX (MILinkObject_PartionCell_12.ObjectId) AS PartionCellId_12
+                    , MAX (MILinkObject_PartionCell_13.ObjectId) AS PartionCellId_13
+                    , MAX (MILinkObject_PartionCell_14.ObjectId) AS PartionCellId_14
+                    , MAX (MILinkObject_PartionCell_15.ObjectId) AS PartionCellId_15
+                    , MAX (MILinkObject_PartionCell_16.ObjectId) AS PartionCellId_16
+                    , MAX (MILinkObject_PartionCell_17.ObjectId) AS PartionCellId_17
+                    , MAX (MILinkObject_PartionCell_18.ObjectId) AS PartionCellId_18
+                    , MAX (MILinkObject_PartionCell_19.ObjectId) AS PartionCellId_19
+                    , MAX (MILinkObject_PartionCell_20.ObjectId) AS PartionCellId_20
+                    , MAX (MILinkObject_PartionCell_21.ObjectId) AS PartionCellId_21
+                    , MAX (MILinkObject_PartionCell_22.ObjectId) AS PartionCellId_22
 
                     , SUM (CASE WHEN COALESCE (MIBoolean_PartionCell_Many_1.ValueData, FALSE)= FALSE THEN 0 ELSE 1 END)   AS isMany_1 
                     , SUM (CASE WHEN COALESCE (MIBoolean_PartionCell_Many_2.ValueData, FALSE)= FALSE THEN 0 ELSE 1 END)   AS isMany_2 
@@ -787,7 +787,7 @@ BEGIN
                                              ON MILinkObject_PartionCell_22.MovementItemId = _tmpItem_PartionCell.MovementItemId
                                             AND MILinkObject_PartionCell_22.DescId = zc_MILinkObject_PartionCell_22()
  
-           GROUP BY  MILinkObject_PartionCell_1.ObjectId
+           /*GROUP BY  MILinkObject_PartionCell_1.ObjectId
                    , MILinkObject_PartionCell_2.ObjectId
                    , MILinkObject_PartionCell_3.ObjectId
                    , MILinkObject_PartionCell_4.ObjectId
@@ -808,8 +808,7 @@ BEGIN
                    , MILinkObject_PartionCell_19.ObjectId
                    , MILinkObject_PartionCell_20.ObjectId
                    , MILinkObject_PartionCell_21.ObjectId
-                   , MILinkObject_PartionCell_22.ObjectId
-               
+                   , MILinkObject_PartionCell_22.ObjectId*/
                )
 
      SELECT  Object_PartionCell_1.Id            AS PartionCellId_1
@@ -956,3 +955,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpGet_MI_Send_PartionCell_isManyAll (inMovementId := 0, inMovementItemId:=0, inUnitId:=0, inGoodsId:=0, inGoodsKindId:=0, inPartionGoodsDate := '01.01.2014', inSession:= '2')
 -- select * from gpGet_MI_Send_PartionCell_isManyAll(inMovementId := 0 , inMovementItemId := 0 , inUnitId := 8459 , inGoodsId := 2894 , inGoodsKindId := 8344 , inPartionGoodsDate := ('18.05.2025')::TDateTime ,  inSession := '9457');
+-- select * from gpGet_MI_Send_PartionCell_isManyAll(inMovementId := 0 , inMovementItemId := 0 , inUnitId := 8459 , inGoodsId := 539328 , inGoodsKindId := 5808945 , inPartionGoodsDate := ('02.10.2025')::TDateTime ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');
