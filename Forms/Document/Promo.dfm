@@ -1789,7 +1789,6 @@
             Properties.DisplayFormat = ',0.####'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 50
           end
           object PromoDiscountKindName_tsout: TcxGridDBColumn
