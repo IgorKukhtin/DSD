@@ -133,7 +133,10 @@ BEGIN
             --
             , tmpInvoice.*
 
-            , zfCalc_ReceiptNumber_print (tmpInvoice.ReceiptNumber :: TVarChar) AS ReceiptNumber_str
+            , CASE WHEN tmpInvoice.InvoiceKindId IN (zc_Enum_InvoiceKind_Proforma())
+                   THEN zfCalc_ReceiptNumber_print (tmpInvoice.InvNumber :: TVarChar)
+                   ELSE zfCalc_ReceiptNumber_print (tmpInvoice.ReceiptNumber :: TVarChar)
+              END :: TVarChar AS ReceiptNumber_str
             , zfCalc_InvNumber_print (tmpProduct.InvNumber_OrderClient :: TVarChar) AS InvNumber_OrderClient_str
               -- сумма счета - с НДС
             , tmpInvoice.AmountIn     ::TFloat AS Invoice_summ
@@ -237,10 +240,17 @@ BEGIN
 
               END  :: TVarChar AS Comment_PrePay_deu
 
-            , CASE WHEN tmpInvoice.InvoiceKindId IN (zc_Enum_InvoiceKind_PrePay(), zc_Enum_InvoiceKind_Return()) THEN 'Receipt'   ELSE 'Invoice' END :: TVarChar AS InvoiceName_en
+            , CASE WHEN tmpInvoice.InvoiceKindId IN (zc_Enum_InvoiceKind_Proforma()) THEN 'Proforma Invoice'   
+                   WHEN tmpInvoice.InvoiceKindId IN (zc_Enum_InvoiceKind_PrePay(), zc_Enum_InvoiceKind_Return()) THEN 'Receipt'
+                   ELSE 'Invoice'
+              END :: TVarChar AS InvoiceName_en
+
             , CASE WHEN tmpInvoice.InvoiceKindId IN (zc_Enum_InvoiceKind_PrePay(), zc_Enum_InvoiceKind_Return()) THEN 'ReceiptNo' ELSE 'Invoice' END :: TVarChar AS InvoiceNameRet_en
 
-            , CASE WHEN tmpInvoice.InvoiceKindId IN (zc_Enum_InvoiceKind_PrePay(), zc_Enum_InvoiceKind_Return()) THEN 'Quittung'   ELSE 'Invoice' END :: TVarChar AS InvoiceName_deu
+            , CASE WHEN tmpInvoice.InvoiceKindId IN (zc_Enum_InvoiceKind_Proforma()) THEN 'Proforma Invoice'   
+                   WHEN tmpInvoice.InvoiceKindId IN (zc_Enum_InvoiceKind_PrePay(), zc_Enum_InvoiceKind_Return()) THEN 'Quittung' 
+                   ELSE 'Invoice'
+              END :: TVarChar AS InvoiceName_deu
             , CASE WHEN tmpInvoice.InvoiceKindId IN (zc_Enum_InvoiceKind_PrePay(), zc_Enum_InvoiceKind_Return()) THEN 'QuittungNo' ELSE 'Invoice' END :: TVarChar AS InvoiceNameRet_deu
 
              --Reservation Fee  [FormatFloat( ',0.0', <frxDBDHeader."Persent_invoice">)]%  for [frxDBDHeader."modelname_full"] Order: [frxDBDHeader."invnumber_orderclient"]

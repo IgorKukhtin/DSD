@@ -85,8 +85,9 @@ BEGIN
             , Object_Goods.ValueData          AS GoodsName
             , ObjectString_Article.ValueData  AS Article
             , MovementItem.Amount         ::TFloat AS Amount
-            --остатки на гл. складе
-            , CASE WHEN Movement.StatusId = zc_Enum_Status_UnComplete() THEN COALESCE (tmpRemains.Remains,0) - COALESCE (MovementItem.Amount,0) ELSE tmpRemains.Remains END  ::TFloat AS AmountRemains 
+              -- остатки на гл. складе
+          --, CASE WHEN Movement.StatusId = zc_Enum_Status_UnComplete() THEN COALESCE (tmpRemains.Remains,0) - COALESCE (MovementItem.Amount,0) ELSE tmpRemains.Remains END  ::TFloat AS AmountRemains 
+            , tmpRemains.Remains         ::TFloat AS AmountRemains 
             --цена без НДС
             , MIFloat_OperPrice.ValueData ::TFloat AS OperPrice  
              --Сумма без ндс

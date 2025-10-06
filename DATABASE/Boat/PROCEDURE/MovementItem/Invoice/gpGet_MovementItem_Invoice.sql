@@ -81,8 +81,8 @@ BEGIN
                , Object_Partner.ValueData       AS PartnerName
                , MovementItem.Amount                       ::TFloat AS Amount
 
-               --остатки на гл. складе
-               , tmpRemains.Remains                        ::TFloat AS AmountRemains
+                 -- остатки на гл. складе
+               , COALESCE (tmpRemains.Remains, 0)           ::TFloat AS AmountRemains
 
                , COALESCE (MIFloat_OperPrice.ValueData, 0) ::TFloat AS OperPrice 
                , COALESCE (MIFloat_SummMVAT.ValueData,0)   ::TFloat AS SummMVAT   --Сумма без ндс
