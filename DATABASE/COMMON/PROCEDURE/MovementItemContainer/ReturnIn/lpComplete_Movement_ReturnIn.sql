@@ -1689,6 +1689,7 @@ BEGIN
                                                         END
                          -- определ€етс€ счет !!!если "виртуальна€" прибыль текущего периода!!!, т.е. возврат на филиале по ценам прайса (если склад возвратов)
                        , AccountId_SummIn_60000 = CASE WHEN vbUnitId_HistoryCost > 0 AND vbUnitId_HistoryCost <> vbUnitId_To -- если признак Ќ≈ установлен сам в себ€
+                                                        AND COALESCE (vbBranchId_To, 0) NOT IN (0, zc_Branch_Basis())
                                                         AND vbOperDate >= '01.09.2025'
 
                                                        THEN lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- «апасы
@@ -1718,6 +1719,7 @@ BEGIN
                                                     END
                         -- определ€етс€ счет !!!если "виртуальна€" прибыль текущего периода!!!, т.е. возврат на филиале по ценам прайса (если склад возвратов)
                       , AccountId_SummOut_60000 = CASE WHEN vbUnitId_HistoryCost > 0 AND vbUnitId_HistoryCost <> vbUnitId_To -- если признак Ќ≈ установлен сам в себ€
+                                                        AND COALESCE (vbBranchId_To, 0) NOT IN (0, zc_Branch_Basis())
                                                         AND vbOperDate >= '01.09.2025'
 
                                                        THEN lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_60000() -- ѕрибыль будущих периодов
@@ -3101,8 +3103,7 @@ end if;
   END IF;
 
 
-END;
-$BODY$
+END;$BODY$
   LANGUAGE plpgsql VOLATILE;
 
 /*
