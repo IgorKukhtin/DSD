@@ -3404,7 +3404,7 @@
         Name = 'ioid'
         Value = '0'
         Component = FormParams
-        ComponentItem = 'inProductDocumentId'
+        ComponentItem = 'InvoicePdfId'
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
