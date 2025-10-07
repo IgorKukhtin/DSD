@@ -46,6 +46,8 @@ RETURNS TABLE (ContainerId Integer, OperDate TDateTime
              , PriceCorrectiveSumm TFloat, ChangePercentSumm TFloat
              , MoneySumm TFloat, ServiceSumm TFloat, ServiceRealSumm TFloat, ServiceSumm_pls TFloat
              , TransferDebtSumm TFloat, SendDebtSumm TFloat, ChangeCurrencySumm TFloat, OtherSumm TFloat
+               -- Сумма для отсрочки
+             , SaleSumm_debt TFloat
               )
 AS
 $BODY$
@@ -218,6 +220,14 @@ BEGIN
                                         END
                                        ) AS OtherSumm
 
+                                 -- Сумма для отсрочки
+                               , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale()
+                                                THEN MIContainer.Amount
+                                           WHEN MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_Income()) AND MIContainer.isActive = TRUE
+                                                THEN MIContainer.Amount
+                                           ELSE 0
+                                      END) AS SaleSumm_debt
+
                             FROM tmpContainer
                                   INNER JOIN MovementItemContainer AS MIContainer
                                                                    ON MIContainer.ContainerId = tmpContainer.ContainerId
@@ -288,6 +298,9 @@ BEGIN
                                  , 0 AS ChangeCurrencySumm
                                  , 0 AS OtherSumm
 
+                                   -- Сумма для отсрочки
+                                 , 0 AS SaleSumm_debt
+
                             FROM tmpDebt_start
                                  -- все св-ва
                                  LEFT JOIN tmpContainer ON tmpContainer.ContainerId = tmpDebt_start.ContainerId
@@ -339,6 +352,9 @@ BEGIN
 
                                  , 0 AS ChangeCurrencySumm
                                  , 0 AS OtherSumm
+
+                                   -- Сумма для отсрочки
+                                 , 0 AS SaleSumm_debt
 
                             FROM -- накопительно Движение по КАЖДОМУ дню
                                  (SELECT tmpList.ContainerId
@@ -427,6 +443,9 @@ BEGIN
 
                                    -- OtherSumm
                                  , Operation_all.OtherSumm
+
+                                   -- Сумма для отсрочки
+                                 , Operation_all.SaleSumm_debt
 
                             FROM Operation_all
                                  -- все св-ва
@@ -526,7 +545,10 @@ BEGIN
         Operation.SendDebtSumm :: TFloat,
         --
         Operation.ChangeCurrencySumm :: TFloat,
-        Operation.OtherSumm :: TFloat
+        Operation.OtherSumm :: TFloat,
+        
+        -- Сумма для отсрочки
+        Operation.SaleSumm_debt :: TFloat
 
      FROM
          (SELECT MAX (Operation_all.ContainerId) AS ContainerId
@@ -569,6 +591,8 @@ BEGIN
                , SUM (Operation_all.SendDebtSumm)        AS SendDebtSumm
                , SUM (Operation_all.ChangeCurrencySumm)  AS ChangeCurrencySumm
                , SUM (Operation_all.OtherSumm)           AS OtherSumm
+
+               , SUM (Operation_all.SaleSumm_debt)       AS SaleSumm_debt
 
           FROM Operation_sum AS Operation_all
                -- конечный долг - в следующем дне

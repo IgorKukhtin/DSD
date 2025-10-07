@@ -86,6 +86,9 @@ BEGIN
                                            -- Прочее
                                          , OthSumm_a
                                          , OthSumm_p
+
+                                           -- Сумма для отсрочки
+                                         , SaleSumm_debt
                                           )
               -- 1.1. Результат - 30101 - Дебиторы + покупатели + Продукция
               SELECT tmpReport.OperDate
@@ -151,6 +154,9 @@ BEGIN
                    , SUM (CASE WHEN tmpReport.ChangeCurrencySumm + tmpReport.OtherSumm + tmpReport.ServiceSumm_pls > 0 THEN  1 * (tmpReport.ChangeCurrencySumm + tmpReport.OtherSumm + tmpReport.ServiceSumm_pls) ELSE 0 END) AS OthSumm_a
                      -- Прочее - Долг мы
                    , SUM (CASE WHEN tmpReport.ChangeCurrencySumm + tmpReport.OtherSumm + tmpReport.ServiceSumm_pls < 0 THEN -1 * (tmpReport.ChangeCurrencySumm + tmpReport.OtherSumm + tmpReport.ServiceSumm_pls) ELSE 0 END) AS OthSumm_p
+
+                     -- Сумма для отсрочки
+                   , SUM (tmpReport.SaleSumm_debt) AS SaleSumm_debt
 
               FROM lpReport_bi_JuridicalSold (inStartDate              := inStartDate
                                             , inEndDate                := inEndDate
@@ -239,6 +245,9 @@ BEGIN
                      -- Прочее - Долг мы
                    , SUM (CASE WHEN tmpReport.ChangeCurrencySumm + tmpReport.OtherSumm + tmpReport.ServiceSumm_pls < 0 THEN -1 * (tmpReport.ChangeCurrencySumm + tmpReport.OtherSumm + tmpReport.ServiceSumm_pls) ELSE 0 END) AS OthSumm_p
 
+                     -- Сумма для отсрочки
+                   , SUM (tmpReport.SaleSumm_debt) AS SaleSumm_debt
+
               FROM lpReport_bi_JuridicalSold (inStartDate              := inStartDate
                                             , inEndDate                := inEndDate
                                               -- 30102 - Дебиторы + покупатели + Мясное сырье
@@ -326,6 +335,9 @@ BEGIN
                      -- Прочее - Долг мы
                    , SUM (CASE WHEN tmpReport.ChangeCurrencySumm + tmpReport.OtherSumm + tmpReport.ServiceSumm_pls < 0 THEN -1 * (tmpReport.ChangeCurrencySumm + tmpReport.OtherSumm + tmpReport.ServiceSumm_pls) ELSE 0 END) AS OthSumm_p
 
+                     -- Сумма для отсрочки
+                   , SUM (tmpReport.SaleSumm_debt) AS SaleSumm_debt
+
               FROM lpReport_bi_JuridicalSold (inStartDate              := inStartDate
                                             , inEndDate                := inEndDate
                                               -- 30151 - Дебиторы + покупатели ВЭД + Продукция
@@ -412,6 +424,9 @@ BEGIN
                    , SUM (CASE WHEN tmpReport.ChangeCurrencySumm + tmpReport.OtherSumm - tmpReport.ServiceRealSumm > 0 THEN  1 * (tmpReport.ChangeCurrencySumm + tmpReport.OtherSumm - tmpReport.ServiceRealSumm) ELSE 0 END) AS OthSumm_a
                      -- Прочее - Долг мы
                    , SUM (CASE WHEN tmpReport.ChangeCurrencySumm + tmpReport.OtherSumm - tmpReport.ServiceRealSumm < 0 THEN -1 * (tmpReport.ChangeCurrencySumm + tmpReport.OtherSumm - tmpReport.ServiceRealSumm) ELSE 0 END) AS OthSumm_p
+
+                     -- Сумма для отсрочки
+                   , 0 AS SaleSumm_debt
 
               FROM lpReport_bi_JuridicalSold (inStartDate              := inStartDate
                                             , inEndDate                := inEndDate

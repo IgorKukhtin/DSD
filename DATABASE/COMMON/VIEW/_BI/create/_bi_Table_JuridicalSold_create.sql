@@ -87,11 +87,41 @@ TRUNCATE TABLE _bi_Table_JuridicalSold;
               OthSumm_a                 TFloat,
               -- Прочее - Долг мы +
               OthSumm_p                 TFloat,
+
+              -- Сумма для отсрочки
+              SaleSumm_debt             TFloat,
               --
               CONSTRAINT pk_bi_Table_JuridicalSold PRIMARY KEY (Id)
            );
 
-          -- CREATE INDEX idx_bi_Table_JuridicalSold_OperDate ON _bi_Table_JuridicalSold (OperDate);
+          -- 1.1.
+          CREATE INDEX idx_bi_Table_JuridicalSold_OperDate ON _bi_Table_JuridicalSold (OperDate
+                                                                                     , ContractId
+                                                                                      );
+          -- 1.2.
+          CREATE INDEX idx_bi_Table_JuridicalSold_OperDate_all ON _bi_Table_JuridicalSold (OperDate
+                                                                                         , ContractId
+                                                                                         , JuridicalId
+                                                                                         , PartnerId
+                                                                                         , PaidKindId
+                                                                                         , InfoMoneyId
+                                                                                         , BranchId
+                                                                                         , AccountId
+                                                                                          );
+          -- 2.1.
+          CREATE INDEX idx_bi_Table_JuridicalSold_ContractId  ON _bi_Table_JuridicalSold (ContractId
+                                                                                        , OperDate
+                                                                                         );
+          -- 2.2.
+          CREATE INDEX idx_bi_Table_JuridicalSold_ContractId_all ON _bi_Table_JuridicalSold (ContractId
+                                                                                           , OperDate
+                                                                                           , JuridicalId
+                                                                                           , PartnerId
+                                                                                           , PaidKindId
+                                                                                           , InfoMoneyId
+                                                                                           , BranchId
+                                                                                           , AccountId
+                                                                                          );
 
           GRANT ALL ON TABLE PUBLIC._bi_Table_JuridicalSold TO admin;
           GRANT ALL ON TABLE PUBLIC._bi_Table_JuridicalSold TO project;
