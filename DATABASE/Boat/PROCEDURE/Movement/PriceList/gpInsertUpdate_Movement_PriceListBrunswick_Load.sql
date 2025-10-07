@@ -1,6 +1,6 @@
 --
-
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PriceListBrunswick_Load (TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PriceListBrunswick_Load (TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PriceListBrunswick_Load(
     IN inOperDate                   TDateTime,     -- дата документа
@@ -10,7 +10,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PriceListBrunswick_Load(
     IN inGoodsGroupName             TVarChar,      --
     IN inNonStocking                TVarChar,      --
     IN inAmount                     TFloat  ,      --price
-    IN inWeight                     TFloat  ,      --вес
+    IN inWeight                     TFloat  ,      --вес   
+    IN inEAN                        TVarChar,
+    IN inFeeNumber                  TVarChar,
     IN inSession                    TVarChar       -- сессия пользователя
 )
 RETURNS VOID
@@ -92,10 +94,10 @@ BEGIN
                                                     , inName              := TRIM (inGoodsName)       :: TVarChar
                                                     , inArticle           := TRIM (inArticle)         :: TVarChar
                                                     , inArticleVergl      := Null     :: TVarChar
-                                                    , inEAN               := Null     :: TVarChar
+                                                    , inEAN               := inEAN    :: TVarChar
                                                     , inASIN              := Null     :: TVarChar
                                                     , inMatchCode         := Null     :: TVarChar
-                                                    , inFeeNumber         := Null     :: TVarChar
+                                                    , inFeeNumber         := inFeeNumber :: TVarChar
                                                     , inComment           := Null     :: TVarChar
                                                     , inGoodsSizeName     := Null     :: TVarChar
                                                     , inIsArc             := FALSE    :: Boolean
