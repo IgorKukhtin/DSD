@@ -34,7 +34,7 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-       WITH tmpMovementPL_all AS (SELECT Movement.Id
+       WITH /*tmpMovementPL_all AS (SELECT Movement.Id
                                        , Movement.InvNumber       AS InvNumber
                                        , MovementString.ValueData AS Comment
                                        , MovementItem.ObjectId    AS GoodsId
@@ -55,9 +55,9 @@ BEGIN
                               FROM (SELECT DISTINCT tmpMovementPL_all.InvNumber, tmpMovementPL_all.Comment, tmpMovementPL_all.GoodsId, tmpMovementPL_all.Id FROM tmpMovementPL_all ORDER BY tmpMovementPL_all.GoodsId, tmpMovementPL_all.Id
                                    ) AS tmpMovementPL_all
                               GROUP BY tmpMovementPL_all.GoodsId
-                             )
+                             )*/
           -- все
-        , tmpReceiptGoods AS (SELECT Object_ReceiptGoods_find_View.GoodsId
+          tmpReceiptGoods AS (SELECT Object_ReceiptGoods_find_View.GoodsId
                                      -- это узел (да/нет)
                                    , Object_ReceiptGoods_find_View.isReceiptGoods_group
                                      -- все из чего собирается + узлы

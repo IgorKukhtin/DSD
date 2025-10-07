@@ -28,7 +28,7 @@ BEGIN
 
      -- RAISE EXCEPTION 'Ошибка. inArticle = <%>  Не найден.', inArticle;
 
-    IF TRIM (UPPER (COALESCE (inNonStocking,''))) = 'NON STOCKING ITEMS'
+    IF TRIM (inNonStocking) ILIKE 'NON STOCKING ITEMS'
     THEN
         RETURN;
     END IF;
