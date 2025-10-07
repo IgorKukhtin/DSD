@@ -1274,6 +1274,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     Height = 73
     Align = alBottom
     TabOrder = 6
+    ExplicitTop = 526
     object btnInsert: TcxButton
       Left = 517
       Top = 10
@@ -1631,6 +1632,22 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+    end
+    object actSetErased_AccountInvoice: TdsdChangeMovementStatus [11]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSetErased_AccountInvoice
+      StoredProcList = <
+        item
+          StoredProc = spSetErased_AccountInvoice
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090'> + <'#1057#1095#1077#1090'>'
+      ImageIndex = 52
+      Status = mtDelete
+      DataSource = MasterDS
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090'> + <'#1057#1095#1077#1090'>?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090'> + <'#1057#1095#1077#1090'> '#1091#1076#1072#1083#1077#1085#1099
     end
     inherited actComplete: TdsdChangeMovementStatus
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090'>'
@@ -2532,6 +2549,10 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         item
           Visible = True
           ItemName = 'bbDelete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErased_AccountInvoice'
         end>
     end
     object bbDetail: TdxBarSubItem
@@ -2614,6 +2635,11 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     end
     object bbOpenFormPdfAllEdit: TdxBarButton
       Action = actOpenFormPdfAllEdit
+      Category = 0
+    end
+    object bbSetErased_AccountInvoice: TdxBarButton
+      Action = actSetErased_AccountInvoice
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' + <'#1057#1095#1077#1090'>'
       Category = 0
     end
   end
@@ -3212,5 +3238,30 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     PackSize = 1
     Left = 544
     Top = 288
+  end
+  object spSetErased_AccountInvoice: TdsdStoredProc
+    StoredProcName = 'gpSetErased_Movement_BankAccount_Invoce'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Invoice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Invoice'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 288
+    Top = 280
   end
 end

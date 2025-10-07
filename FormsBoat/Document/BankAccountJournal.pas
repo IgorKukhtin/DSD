@@ -181,6 +181,9 @@ type
     actInsertDocument: TdsdExecStoredProc;
     actDocumentOpenInvoice: TDocumentOpenAction;
     Comment_Product_child: TcxGridDBColumn;
+    spSetErased_AccountInvoice: TdsdStoredProc;
+    bbSetErased_AccountInvoice: TdxBarButton;
+    actSetErased_AccountInvoice: TdsdChangeMovementStatus;
   private
     { Private declarations }
   public
