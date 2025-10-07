@@ -43,6 +43,36 @@ BEGIN
      ELSE
         vbAmount := -1 * inAmountOut;
      END IF;
+     
+
+     -- Если
+     IF ioId > 0
+        AND (inVATPercent <> COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioId AND MF.DescId = zc_MovementFloat_VATPercent()), 0)
+        -- OR ioId = 6288
+            )
+        AND EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = ioId AND MI.isErased = FALSE AND MI.DescId = zc_MI_Master())
+     THEN
+         -- дописали св-во
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummPVAT(), MovementItem.Id
+                                                 , zfCalc_SummWVAT_4 ((MovementItem.Amount * COALESCE (MIF_OperPrice.ValueData, 0)) ::TFloat
+                                                                    , inVATPercent
+                                                                     ))
+         FROM MovementItem
+              LEFT JOIN MovementItemFloat AS MIF_OperPrice
+                                          ON MIF_OperPrice.MovementItemId = MovementItem.Id
+                                         AND MIF_OperPrice.DescId         = zc_MIFloat_OperPrice()
+         WHERE MovementItem.MovementId = ioId
+           AND MovementItem.isErased   = FALSE
+           AND MovementItem.DescId   = zc_MI_Master()
+         ;
+
+         -- Сохранили свойство <% НДС>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), ioId, inVATPercent);
+
+         -- !!!Пересчет!!! - формировать сумму с ндс автоматом и записывать в zc_MovementFloat_Amount
+         vbAmount:= lpInsertUpdate_Movement_Invoice_Amount (ioId, vbUserId);
+
+     END IF;
 
 
      -- Если это Счет
@@ -215,7 +245,7 @@ BEGIN
                                            , inOperDate         := inOperDate
                                            , inPlanDate         := inPlanDate
                                            , inVATPercent       := inVATPercent
-                                           , inAmount           := vbAmount :: Tfloat
+                                           , inAmount           := vbAmount :: TFloat
                                            , inInvNumberPartner := inInvNumberPartner
                                            , inReceiptNumber    := inReceiptNumber
                                            , inComment          := CASE WHEN inComment = '*' THEN '' ELSE inComment END

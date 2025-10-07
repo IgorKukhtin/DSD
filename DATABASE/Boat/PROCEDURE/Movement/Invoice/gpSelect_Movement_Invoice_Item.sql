@@ -96,7 +96,7 @@ BEGIN
                         )  ::TFloat AS SummMVAT
             -- Ñóììà ñ ÍÄÑ
             , COALESCE (MIFloat_SummPVAT.ValueData
-                     , zfCalc_SummWVAT_4 ((COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0)) ::TFloat, MovementFloat_VATPercent.ValueData)
+                      , zfCalc_SummWVAT_4 ((COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0)) ::TFloat, MovementFloat_VATPercent.ValueData)
                         )  ::TFloat AS SummPVAT  
             --Ñóììà ÍÄÑ
             , ( COALESCE (MIFloat_SummPVAT.ValueData, zfCalc_SummWVAT_4 ((COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0))::TFloat, MovementFloat_VATPercent.ValueData)) 
