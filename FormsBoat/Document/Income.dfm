@@ -642,7 +642,7 @@ object IncomeForm: TIncomeForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Remains
+              Column = AmountRemains
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -691,7 +691,7 @@ object IncomeForm: TIncomeForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Remains
+              Column = AmountRemains
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -922,9 +922,9 @@ object IncomeForm: TIncomeForm
             Options.Editing = False
             Width = 70
           end
-          object Remains: TcxGridDBColumn
+          object AmountRemains: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
-            DataBinding.FieldName = 'Remains'
+            DataBinding.FieldName = 'AmountRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'

@@ -68,7 +68,7 @@ BEGIN
 
        -- текущие остатки
      , tmpRemains AS (SELECT Container.ObjectId              AS GoodsId
-                           , SUM (Container.Amount) ::TFloat AS Remains
+                           , SUM (Container.Amount) ::TFloat AS AmountRemains
                       FROM Container
                       WHERE Container.WhereObjectId = zc_Unit_Sklad() -- 35139 -- Склад Основной
                         AND Container.DescId        = zc_Container_Count()
@@ -87,8 +87,8 @@ BEGIN
             , ObjectString_Article.ValueData  AS Article
             , MovementItem.Amount         ::TFloat AS Amount
               -- остатки на гл. складе
-          --, CASE WHEN Movement.StatusId = zc_Enum_Status_UnComplete() THEN COALESCE (tmpRemains.Remains,0) - COALESCE (MovementItem.Amount,0) ELSE tmpRemains.Remains END  ::TFloat AS AmountRemains
-            , tmpRemains.Remains         ::TFloat AS AmountRemains
+          --, CASE WHEN Movement.StatusId = zc_Enum_Status_UnComplete() THEN COALESCE (tmpRemains.AmountRemains,0) - COALESCE (MovementItem.Amount,0) ELSE tmpRemains.AmountRemains END  ::TFloat AS AmountRemains
+            , tmpRemains.AmountRemains    ::TFloat AS AmountRemains
             --цена без НДС
             , MIFloat_OperPrice.ValueData ::TFloat AS OperPrice
              --Сумма без ндс
@@ -141,6 +141,7 @@ BEGIN
                                    ON ObjectString_Article.ObjectId = MovementItem.ObjectId
                                   AND ObjectString_Article.DescId   = zc_ObjectString_Article()
 
+            -- остатки
             LEFT JOIN tmpRemains ON tmpRemains.GoodsId = Object_Goods.Id
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
