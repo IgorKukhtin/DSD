@@ -41,6 +41,9 @@ BEGIN
                                                              AND ObjectLink_Goods_ProdColor.DescId = zc_ObjectLink_Goods_ProdColor()
                                         INNER JOIN Object AS Object_Goods ON Object_Goods.Id       = ObjectLink_Goods_ProdColor.ObjectId
                                                                          AND Object_Goods.isErased = FALSE
+                                                                         AND Object_Goods.ValueData NOT ILIKE 'AGL%'
+                                                                         AND Object_Goods.ValueData NOT ILIKE '%AGL-%'
+                                                                         AND Object_Goods.ValueData NOT ILIKE '%ÀGL-%'
                             
                                         LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                                              ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
