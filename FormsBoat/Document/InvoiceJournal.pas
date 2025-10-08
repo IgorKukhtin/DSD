@@ -182,6 +182,7 @@ type
     cxButton2: TcxButton;
     btnSetErasedItem: TcxButton;
     AmountRemains: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
   private
     { Private declarations }
   public

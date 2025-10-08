@@ -328,6 +328,7 @@ type
     actUpdateMask: TdsdExecStoredProc;
     mactUpdateMaskIncome: TMultiAction;
     bbUpdateMaskIncome: TdxBarButton;
+    Weight: TcxGridDBColumn;
   private
   public
   end;

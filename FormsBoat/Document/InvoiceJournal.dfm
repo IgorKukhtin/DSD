@@ -3,6 +3,7 @@
   ClientHeight = 569
   ClientWidth = 1279
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -385
   ExplicitWidth = 1295
   ExplicitHeight = 608
   PixelsPerInch = 96
@@ -1147,6 +1148,14 @@
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 199
+      end
+      object MeasureName: TcxGridDBColumn
+        Caption = #1045#1076'.'#1080#1079#1084'.'
+        DataBinding.FieldName = 'MeasureName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
       end
       object AmountRemains: TcxGridDBColumn
         Caption = #1054#1089#1090#1072#1090#1086#1082
