@@ -100,7 +100,7 @@ BEGIN
    THEN
        SELECT tmp.outStartDate
             , tmp.ioPriceNoVAT             -- цена без ндс  
-      INTO outStartDate_pr, outSalePrice_pr
+              INTO outStartDate_pr, outSalePrice_pr
        FROM  gpInsertUpdate_ObjectHistory_PriceListItemLast (ioId         := NULL                  -- сам найдет нужный Id
                                                            , inPriceListId:= COALESCE (inPriceListId, zc_PriceList_Basis()) ::Integer  -- !!!Базовый Прайс!!!
                                                            , inGoodsId    := ioId        :: Integer

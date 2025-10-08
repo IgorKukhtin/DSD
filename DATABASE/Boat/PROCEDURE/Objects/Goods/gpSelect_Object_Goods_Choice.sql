@@ -222,12 +222,12 @@ BEGIN
            , tmpPriceBasis AS (SELECT ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
                                     , ObjectHistory_PriceListItem.StartDate            AS StartDate
                                     , ObjectHistoryFloat_PriceListItem_Value.ValueData AS ValuePrice
-                                    , inPriceListId                                    AS PriceListId
+                                    , ObjectLink_PriceListItem_PriceList.ChildObjectId AS PriceListId
                                FROM ObjectLink AS ObjectLink_PriceListItem_Goods
                                     INNER JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
                                                           ON ObjectLink_PriceListItem_PriceList.ObjectId     = ObjectLink_PriceListItem_Goods.ObjectId
                                                          AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
-                                                         AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
+                                                         AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId -- zc_PriceList_Basis()
                                     LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
                                                             ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
                                                            AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()

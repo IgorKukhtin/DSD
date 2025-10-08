@@ -411,6 +411,8 @@ BEGIN
             , '' :: TVarChar AS CommentOpt 
             , 999 :: Integer AS NPP
        WHERE (SELECT COUNT (*) FROM tmpProdOptItems) = 0
+       -- NPP
+       ORDER BY 11
        ;
 
      RETURN NEXT Cursor2;

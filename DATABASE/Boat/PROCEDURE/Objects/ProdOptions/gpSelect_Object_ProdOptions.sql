@@ -535,4 +535,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ProdOptions (0, zc_PriceList_Basis(), False, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ProdOptions (0, zc_PriceList_Basis(), 0, 0, 0, 0, False, zfCalc_UserAdmin())
