@@ -1110,7 +1110,7 @@ object ProdColorPatternGoodsEditForm: TProdColorPatternGoodsEditForm
         end>
       isShowModal = False
     end
-    object dsdChoiceGuides: TdsdChoiceGuides
+    object actChoiceGuides_2: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
       Params = <
@@ -1191,8 +1191,8 @@ object ProdColorPatternGoodsEditForm: TProdColorPatternGoodsEditForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'actChoiceFormProdColor'
-      FormName = 'TGoodsForm'
-      FormNameParam.Value = 'TGoodsForm'
+      FormName = 'TGoods_ChoiceForm'
+      FormNameParam.Value = 'TGoods_ChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1856,7 +1856,7 @@ object ProdColorPatternGoodsEditForm: TProdColorPatternGoodsEditForm
       item
         Column = ObjectName_ch1
       end>
-    ActionNumber1 = dsdChoiceGuides
+    ActionNumber1 = actChoiceGuides_2
     CheckBoxList = <>
     Left = 720
     Top = 224
@@ -1869,7 +1869,7 @@ object ProdColorPatternGoodsEditForm: TProdColorPatternGoodsEditForm
       item
         Column = ObjectCode_ch1
       end>
-    ActionNumber1 = dsdChoiceGuides
+    ActionNumber1 = actChoiceGuides_2
     CheckBoxList = <>
     Left = 640
     Top = 232
@@ -1882,7 +1882,7 @@ object ProdColorPatternGoodsEditForm: TProdColorPatternGoodsEditForm
       item
         Column = Article_all_ch1
       end>
-    ActionNumber1 = dsdChoiceGuides
+    ActionNumber1 = actChoiceGuides_2
     CheckBoxList = <>
     Left = 776
     Top = 200
@@ -1891,10 +1891,10 @@ object ProdColorPatternGoodsEditForm: TProdColorPatternGoodsEditForm
     KeyField = 'Id'
     LookupControl = edGoods
     DisableGuidesOpen = True
-    FormNameParam.Value = 'TGoodsForm'
+    FormNameParam.Value = 'TGoods_ChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsForm'
+    FormName = 'TGoods_ChoiceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

@@ -605,7 +605,6 @@ inherited Report_OrderClient_byBoatChoiceForm: TReport_OrderClient_byBoatChoiceF
     inherited deStart: TcxDateEdit
       Left = 118
       Top = 4
-      EditValue = 44927d
       Properties.SaveTime = False
       ExplicitLeft = 118
       ExplicitTop = 4
@@ -613,7 +612,6 @@ inherited Report_OrderClient_byBoatChoiceForm: TReport_OrderClient_byBoatChoiceF
     inherited deEnd: TcxDateEdit
       Left = 118
       Top = 31
-      EditValue = 44927d
       Properties.SaveTime = False
       ExplicitLeft = 118
       ExplicitTop = 31
@@ -1385,10 +1383,10 @@ inherited Report_OrderClient_byBoatChoiceForm: TReport_OrderClient_byBoatChoiceF
     KeyField = 'Id'
     LookupControl = edGoods
     DisableGuidesOpen = True
-    FormNameParam.Value = 'TGoodsForm'
+    FormNameParam.Value = 'TGoods_ChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsForm'
+    FormName = 'TGoods_ChoiceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

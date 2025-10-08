@@ -23,7 +23,7 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   cxButtonEdit, cxCurrencyEdit, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit,
-  cxLabel, Vcl.ExtCtrls;
+  cxLabel, Vcl.ExtCtrls, dsdCommon;
 
 type
   TProdColorPatternGoodsEditForm = class(TParentForm)
@@ -96,7 +96,7 @@ type
     cxLabel18: TcxLabel;
     Panel1: TPanel;
     spInsertUpdate_Child1: TdsdStoredProc;
-    dsdChoiceGuides: TdsdChoiceGuides;
+    actChoiceGuides_2: TdsdChoiceGuides;
     actChoiceFormReceiptLevel_ch1: TOpenChoiceForm;
     actChoiceFormMaterialOptions_1: TOpenChoiceForm;
     actChoiceFormGoods_1: TOpenChoiceForm;

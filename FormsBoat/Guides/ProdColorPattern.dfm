@@ -26,8 +26,6 @@ object ProdColorPatternForm: TProdColorPatternForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitLeft = 383
-    ExplicitTop = -78
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -957,8 +955,8 @@ object ProdColorPatternForm: TProdColorPatternForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'actChoiceFormProdColor'
-      FormName = 'TGoodsForm'
-      FormNameParam.Value = 'TGoodsForm'
+      FormName = 'TGoods_ChoiceForm'
+      FormNameParam.Value = 'TGoods_ChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1243,6 +1241,7 @@ object ProdColorPatternForm: TProdColorPatternForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 104
     Top = 248

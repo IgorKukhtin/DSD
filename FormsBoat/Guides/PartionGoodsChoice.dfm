@@ -14,17 +14,17 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
     Height = 262
     ExplicitTop = 96
     ExplicitWidth = 853
-    ExplicitHeight = 303
+    ExplicitHeight = 262
     ClientRectBottom = 262
     ClientRectRight = 853
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 853
-      ExplicitHeight = 303
+      ExplicitHeight = 262
       inherited cxGrid: TcxGrid
         Width = 853
         Height = 262
         ExplicitWidth = 853
-        ExplicitHeight = 303
+        ExplicitHeight = 262
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -397,7 +397,6 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
     Height = 41
     Align = alBottom
     TabOrder = 8
-    ExplicitTop = 364
     object btnChoiceGuides: TcxButton
       Left = 195
       Top = 7
@@ -808,10 +807,10 @@ inherited PartionGoodsChoiceForm: TPartionGoodsChoiceForm
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
-    FormNameParam.Value = 'TGoodsForm'
+    FormNameParam.Value = 'TGoods_ChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsForm'
+    FormName = 'TGoods_ChoiceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

@@ -233,14 +233,14 @@ object ProductionUnionForm: TProductionUnionForm
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 132
+    Top = 123
     Width = 1084
-    Height = 400
+    Height = 409
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 400
+    ClientRectBottom = 409
     ClientRectRight = 1084
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
@@ -250,13 +250,13 @@ object ProductionUnionForm: TProductionUnionForm
         Left = 0
         Top = 0
         Width = 1084
-        Height = 376
+        Height = 385
         Align = alClient
         Caption = 'Panel_all'
         TabOrder = 0
         object cxSplitter_Bottom_Child: TcxSplitter
           Left = 1
-          Top = 252
+          Top = 261
           Width = 1082
           Height = 8
           HotZoneClassName = 'TcxMediaPlayer8Style'
@@ -265,7 +265,7 @@ object ProductionUnionForm: TProductionUnionForm
         end
         object cxGrid_Child: TcxGrid
           Left = 1
-          Top = 260
+          Top = 269
           Width = 1082
           Height = 115
           Align = alBottom
@@ -608,7 +608,7 @@ object ProductionUnionForm: TProductionUnionForm
         end
         object cxGrid_Detail: TcxGrid
           Left = 1
-          Top = 137
+          Top = 146
           Width = 1082
           Height = 115
           Align = alBottom
@@ -884,7 +884,7 @@ object ProductionUnionForm: TProductionUnionForm
         end
         object cxSplitter_Bottom_Detail: TcxSplitter
           Left = 1
-          Top = 129
+          Top = 138
           Width = 1082
           Height = 8
           HotZoneClassName = 'TcxMediaPlayer8Style'
@@ -895,7 +895,7 @@ object ProductionUnionForm: TProductionUnionForm
           Left = 1
           Top = 1
           Width = 1082
-          Height = 128
+          Height = 137
           Align = alClient
           TabOrder = 0
           object cxGridDBTableViewMaster: TcxGridDBTableView
@@ -1266,6 +1266,9 @@ object ProductionUnionForm: TProductionUnionForm
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -1655,6 +1658,9 @@ object ProductionUnionForm: TProductionUnionForm
     object cxTabSheetScan: TcxTabSheet
       Caption = #1057#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1085#1072' '#1084#1086#1073'. '#1091#1089#1090#1088#1086#1081#1089#1090#1074#1072#1093
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -2058,7 +2064,7 @@ object ProductionUnionForm: TProductionUnionForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -18
+    Font.Height = -12
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
@@ -2077,7 +2083,7 @@ object ProductionUnionForm: TProductionUnionForm
     DockControlHeights = (
       0
       0
-      35
+      26
       0)
     object dxBarManagerBar: TdxBar
       AllowClose = False
@@ -2753,8 +2759,8 @@ object ProductionUnionForm: TProductionUnionForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       ImageIndex = 1
-      FormName = 'TGoodsForm'
-      FormNameParam.Value = 'TGoodsForm'
+      FormName = 'TGoods_ChoiceForm'
+      FormNameParam.Value = 'TGoods_ChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

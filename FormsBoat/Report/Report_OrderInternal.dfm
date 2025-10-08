@@ -1017,6 +1017,10 @@ inherited Report_OrderInternalForm: TReport_OrderInternalForm
     TextEdit = edSearchArticle
     DataSet = MasterCDS
     Column = Article_all
+    ColumnList = <
+      item
+        Column = Article_all
+      end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
     Left = 248

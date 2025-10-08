@@ -653,7 +653,6 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
     inherited deStart: TcxDateEdit
       Left = 118
       Top = 4
-      EditValue = 44927d
       Properties.SaveTime = False
       ExplicitLeft = 118
       ExplicitTop = 4
@@ -663,7 +662,6 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
     inherited deEnd: TcxDateEdit
       Left = 118
       Top = 28
-      EditValue = 44927d
       Properties.SaveTime = False
       ExplicitLeft = 118
       ExplicitTop = 28

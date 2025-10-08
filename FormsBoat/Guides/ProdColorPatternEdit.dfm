@@ -556,10 +556,10 @@ object ProdColorPatternEditForm: TProdColorPatternEditForm
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
-    FormNameParam.Value = 'TGoodsForm'
+    FormNameParam.Value = 'TGoods_ChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsForm'
+    FormName = 'TGoods_ChoiceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1070,6 +1070,7 @@ object ProdColorPatternEditForm: TProdColorPatternEditForm
         FieldName = 'Image3'
         Image = Image3
       end>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 744
     Top = 304

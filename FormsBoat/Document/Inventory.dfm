@@ -2200,7 +2200,7 @@ object InventoryForm: TInventoryForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
-      Caption = 'TGoodsForm'
+      Caption = ''
       FormName = 'TGoods_ChoiceForm'
       FormNameParam.Value = 'TGoods_ChoiceForm'
       FormNameParam.DataType = ftString

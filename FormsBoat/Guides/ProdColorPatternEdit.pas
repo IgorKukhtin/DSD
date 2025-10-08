@@ -24,7 +24,7 @@ uses
   dxSkinsdxBarPainter, dxBarExtItems, dxBar, cxClasses, Document,
   Datasnap.DBClient, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxImage, cxVGrid, cxDBVGrid,
-  cxInplaceContainer, Vcl.ExtCtrls;
+  cxInplaceContainer, Vcl.ExtCtrls, dsdCommon;
 
 type
   TProdColorPatternEditForm = class(TParentForm)

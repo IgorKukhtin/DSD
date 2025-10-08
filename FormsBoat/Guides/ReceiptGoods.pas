@@ -24,7 +24,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   cxCurrencyEdit, cxSplitter, cxButtonEdit, ExternalLoad, Vcl.Menus,
   Vcl.ExtCtrls, cxContainer, cxTextEdit, cxLabel, dsdGuides, cxMaskEdit,
-  Vcl.StdCtrls, cxButtons;
+  Vcl.StdCtrls, cxButtons, dsdCommon;
 
 type
   TReceiptGoodsForm = class(TParentForm)

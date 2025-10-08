@@ -3,7 +3,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1052#1086#1076#1077#1083#1080'>'
   ClientHeight = 584
-  ClientWidth = 1565
+  ClientWidth = 1540
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,24 +20,22 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   object PanelMaster: TPanel
     Left = 0
     Top = 59
-    Width = 1565
+    Width = 1540
     Height = 209
     Align = alTop
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 1221
     object cxGrid: TcxGrid
       Left = 0
       Top = 17
-      Width = 1565
+      Width = 1540
       Height = 192
       Align = alClient
       PopupMenu = PopupMenu
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitWidth = 1221
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -304,14 +302,13 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     object Panel3: TPanel
       Left = 0
       Top = 0
-      Width = 1565
+      Width = 1540
       Height = 17
       Align = alTop
       Caption = #1057#1073#1086#1088#1082#1072' '#1084#1086#1076#1077#1083#1080
       Color = clSkyBlue
       ParentBackground = False
       TabOrder = 1
-      ExplicitWidth = 1221
     end
     object lbReceiptLevel: TcxLabel
       Left = 338
@@ -352,7 +349,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     end
   end
   object PanelProdColorPattern: TPanel
-    Left = 1053
+    Left = 1028
     Top = 273
     Width = 512
     Height = 247
@@ -361,7 +358,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     BevelKind = bkTile
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitLeft = 709
     object cxGridProdColorPattern: TcxGrid
       Left = 0
       Top = 17
@@ -688,24 +684,22 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   object PanelGoods: TPanel
     Left = 0
     Top = 273
-    Width = 1045
+    Width = 1020
     Height = 247
     Align = alClient
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitWidth = 701
     object cxGridGoods: TcxGrid
       Left = 0
       Top = 17
-      Width = 1045
+      Width = 1020
       Height = 230
       Align = alClient
       PopupMenu = PopupMenuColor
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitWidth = 701
       object cxGridDBTableViewGoods: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = GoodsDS
@@ -1334,42 +1328,38 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     object Panel1: TPanel
       Left = 0
       Top = 0
-      Width = 1045
+      Width = 1020
       Height = 17
       Align = alTop
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
       Color = clAqua
       ParentBackground = False
       TabOrder = 1
-      ExplicitWidth = 701
     end
   end
   object cxTopSplitter: TcxSplitter
     Left = 0
     Top = 268
-    Width = 1565
+    Width = 1540
     Height = 5
     AlignSplitter = salTop
     Control = PanelMaster
-    ExplicitWidth = 1221
   end
   object cxSplitterRight: TcxSplitter
-    Left = 1045
+    Left = 1020
     Top = 273
     Width = 8
     Height = 247
     AlignSplitter = salRight
     Control = PanelProdColorPattern
-    ExplicitLeft = 701
   end
   object Panel4: TPanel
     Left = 0
     Top = 0
-    Width = 1565
+    Width = 1540
     Height = 33
     Align = alTop
     TabOrder = 6
-    ExplicitWidth = 1221
     object lbSearchArticle: TcxLabel
       Left = 22
       Top = 6
@@ -1415,11 +1405,10 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   object Panel_btn: TPanel
     Left = 0
     Top = 520
-    Width = 1565
+    Width = 1540
     Height = 64
     Align = alBottom
     TabOrder = 12
-    ExplicitWidth = 1221
     object btnInsert: TcxButton
       Left = 17
       Top = 4

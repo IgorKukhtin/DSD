@@ -21,7 +21,7 @@ uses
   Vcl.ActnList, cxMaskEdit, cxDropDownEdit, cxLookupEdit, cxDBLookupEdit,
   cxDBLookupComboBox, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel,
   cxTextEdit, cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar,
-  cxCheckBox;
+  cxCheckBox, dsdCommon;
 
 type
   TPriceListGoodsItemEditForm = class(TParentForm)

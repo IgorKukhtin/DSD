@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox, cxSplitter, Vcl.StdCtrls, cxButtons;
+  cxImageComboBox, cxSplitter, Vcl.StdCtrls, cxButtons, dsdCommon;
 
 type
   TProductionUnionForm = class(TParentForm)

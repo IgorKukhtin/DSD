@@ -20,7 +20,7 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   dsdGuides, cxMaskEdit, cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
-  cxDropDownEdit, cxCalendar, cxCheckBox;
+  cxDropDownEdit, cxCalendar, cxCheckBox, dsdCommon;
 
 type
   TReceiptGoodsEditForm = class(TParentForm)

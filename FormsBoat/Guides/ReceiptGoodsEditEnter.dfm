@@ -187,6 +187,9 @@ object ReceiptGoodsEditEnterForm: TReceiptGoodsEditEnterForm
         item
           StoredProc = spInsert_Goods_joint
         end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actFormClose: TdsdFormClose
@@ -201,6 +204,9 @@ object ReceiptGoodsEditEnterForm: TReceiptGoodsEditEnterForm
         item
           StoredProc = spGet_Article
         end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
   end
@@ -406,10 +412,10 @@ object ReceiptGoodsEditEnterForm: TReceiptGoodsEditEnterForm
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
-    FormNameParam.Value = 'TGoodsForm'
+    FormNameParam.Value = 'TGoods_ChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsForm'
+    FormName = 'TGoods_ChoiceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

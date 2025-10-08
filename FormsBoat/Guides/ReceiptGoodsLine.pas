@@ -23,7 +23,8 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   cxCurrencyEdit, cxSplitter, cxButtonEdit, ExternalLoad, Vcl.Menus,
-  Vcl.ExtCtrls, cxContainer, cxTextEdit, cxLabel, dsdGuides, cxMaskEdit;
+  Vcl.ExtCtrls, cxContainer, cxTextEdit, cxLabel, dsdGuides, cxMaskEdit,
+  dsdCommon;
 
 type
   TReceiptGoodsLineForm = class(TParentForm)

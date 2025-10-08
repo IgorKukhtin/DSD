@@ -26,7 +26,6 @@
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 854
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -531,7 +530,6 @@
     Height = 39
     Align = alBottom
     TabOrder = 3
-    ExplicitWidth = 854
     object btnInsert: TcxButton
       Left = 546
       Top = 6
@@ -602,7 +600,6 @@
     Height = 73
     Align = alTop
     TabOrder = 8
-    ExplicitWidth = 854
     object cxLabel3: TcxLabel
       Left = 376
       Top = 46
@@ -1500,8 +1497,8 @@
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'actChoiceFormGoods'
-      FormName = 'TGoodsForm'
-      FormNameParam.Value = 'TGoodsForm'
+      FormName = 'TGoods_ChoiceForm'
+      FormNameParam.Value = 'TGoods_ChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

@@ -23,7 +23,7 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   cxButtonEdit, cxCurrencyEdit, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit,
-  cxLabel;
+  cxLabel, dsdCommon;
 
 type
   TProdColorPatternForm = class(TParentForm)
