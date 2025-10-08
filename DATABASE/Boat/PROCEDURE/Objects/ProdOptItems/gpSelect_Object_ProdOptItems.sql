@@ -84,16 +84,31 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-     WITH
-          -- Цена продажи - БЕЗ НДС
-          tmpPriceBasis AS (SELECT lfSelect.GoodsId
+     WITH -- Цена продажи - БЕЗ НДС
+          tmpPriceBasis AS (SELECT ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
+                                 , ObjectHistory_PriceListItem.StartDate            AS StartDate
+                                   -- Цена продажи без НДС
                                  , CASE WHEN vbPriceWithVAT_pl = FALSE
-                                        THEN COALESCE (lfSelect.ValuePrice, 0)
-                                        -- расчет
-                                        ELSE zfCalc_Summ_NoVAT (lfSelect.ValuePrice, vbTaxKindValue_basis)
-                                   END ::TFloat  AS ValuePrice
-                            FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
-                                                                     , inOperDate   := CURRENT_DATE) AS lfSelect
+                                     THEN ObjectHistoryFloat_PriceListItem_Value.ValueData
+                                     -- расчет
+                                     ELSE zfCalc_Summ_NoVAT (ObjectHistoryFloat_PriceListItem_Value.ValueData, vbTaxKindValue_basis)
+                                END ::TFloat AS ValuePrice
+
+                            FROM ObjectLink AS ObjectLink_PriceListItem_Goods
+                                 INNER JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
+                                                       ON ObjectLink_PriceListItem_PriceList.ObjectId     = ObjectLink_PriceListItem_Goods.ObjectId
+                                                      AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+                                                      AND ObjectLink_PriceListItem_PriceList.ChildObjectId = zc_PriceList_Basis()
+                                 LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
+                                                         ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                                        AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
+                                                        AND CURRENT_DATE >= ObjectHistory_PriceListItem.StartDate AND CURRENT_DATE < ObjectHistory_PriceListItem.EndDate
+                                 INNER JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
+                                                               ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                              AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                                                              AND ObjectHistoryFloat_PriceListItem_Value.ValueData <> 0
+                            WHERE ObjectLink_PriceListItem_Goods.ChildObjectId IN (SELECT DISTINCT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.DescId IN (zc_ObjectLink_ProdOptions_Goods(), zc_ObjectLink_ProdOptItems_Goods()))
+                              AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
                            )
   -- все Элементы сборки Модели - берем только Boat Structure
 , tmpProdColorPattern_all AS (SELECT lpSelect.ModelId, lpSelect.ReceiptProdModelId
@@ -645,7 +660,7 @@ BEGIN
                                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
                      )
-         -- все цвета для свчязки с примечаниями
+         -- все цвета для связки с примечаниями
        , tmpProdColor AS (SELECT Object_ProdColor.ValueData      AS Name
                                , ObjectString_Value.ValueData    AS Value
                                , COALESCE(ObjectFloat_Value.ValueData, zc_Color_White())::Integer  AS Color_Value

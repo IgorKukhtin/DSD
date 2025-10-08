@@ -21,7 +21,11 @@ BEGIN
 
    -- нашли если это Boat Structure
    vbProdColorPatternId:= (SELECT tmp.ProdColorPatternId
-                           FROM gpSelect_Object_ProdOptItems (inMovementId_OrderClient := 0
+                           FROM gpSelect_Object_ProdOptItems (inMovementId_OrderClient := COALESCE ((SELECT OF_OrderClient.ValueData
+                                                                                                     FROM ObjectFloat AS OF_OrderClient
+                                                                                                     WHERE OF_OrderClient.ObjectId = inObjectId
+                                                                                                       AND OF_OrderClient.DescId   = zc_ObjectFloat_ProdOptItems_OrderClient()
+                                                                                                    ), 0) :: Integer
                                                             , inIsShowAll:= FALSE
                                                             , inIsErased := TRUE
                                                             , inIsSale   := TRUE
