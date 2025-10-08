@@ -2252,8 +2252,8 @@
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'actChoiceFormGoods_item'
-      FormName = 'TGoodsForm'
-      FormNameParam.Value = 'TGoodsForm'
+      FormName = 'TGoods_ChoiceForm'
+      FormNameParam.Value = 'TGoods_ChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

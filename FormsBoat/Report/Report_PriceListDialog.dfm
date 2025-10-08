@@ -230,10 +230,10 @@ object Report_PriceListDialogForm: TReport_PriceListDialogForm
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
-    FormNameParam.Value = 'TGoodsForm'
+    FormNameParam.Value = 'TGoods_ChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsForm'
+    FormName = 'TGoods_ChoiceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -254,8 +254,8 @@ object Report_PriceListDialogForm: TReport_PriceListDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 312
-    Top = 111
+    Left = 264
+    Top = 103
   end
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'

@@ -889,10 +889,10 @@ inherited Report_PriceListForm: TReport_PriceListForm
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
-    FormNameParam.Value = 'TGoodsForm'
+    FormNameParam.Value = 'TGoods_ChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsForm'
+    FormName = 'TGoods_ChoiceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1079,6 +1079,10 @@ inherited Report_PriceListForm: TReport_PriceListForm
     TextEdit = edSearchArticle
     DataSet = MasterCDS
     Column = Article_all
+    ColumnList = <
+      item
+        Column = Article_all
+      end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
     Left = 248

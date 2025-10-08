@@ -578,7 +578,6 @@ inherited Report_OrderClientForm: TReport_OrderClientForm
     inherited deStart: TcxDateEdit
       Left = 118
       Top = 4
-      EditValue = 44927d
       Properties.SaveTime = False
       ExplicitLeft = 118
       ExplicitTop = 4
@@ -586,7 +585,6 @@ inherited Report_OrderClientForm: TReport_OrderClientForm
     inherited deEnd: TcxDateEdit
       Left = 118
       Top = 30
-      EditValue = 44927d
       Properties.SaveTime = False
       ExplicitLeft = 118
       ExplicitTop = 30
@@ -1139,10 +1137,10 @@ inherited Report_OrderClientForm: TReport_OrderClientForm
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
-    FormNameParam.Value = 'TGoodsForm'
+    FormNameParam.Value = 'TGoods_ChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsForm'
+    FormName = 'TGoods_ChoiceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1329,6 +1327,10 @@ inherited Report_OrderClientForm: TReport_OrderClientForm
     TextEdit = edSearchArticle
     DataSet = MasterCDS
     Column = Article_all
+    ColumnList = <
+      item
+        Column = Article_all
+      end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
     Left = 280

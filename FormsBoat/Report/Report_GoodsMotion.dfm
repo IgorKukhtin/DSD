@@ -14,17 +14,17 @@
     Height = 261
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1228
+    ExplicitWidth = 1284
     ExplicitHeight = 261
     ClientRectBottom = 261
     ClientRectRight = 1284
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1228
+      ExplicitWidth = 1284
       ExplicitHeight = 261
       inherited cxGrid: TcxGrid
         Width = 1284
         Height = 261
-        ExplicitWidth = 1228
+        ExplicitWidth = 1284
         ExplicitHeight = 261
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -661,9 +661,7 @@
   inherited Panel: TPanel
     Width = 1284
     Height = 54
-    ExplicitLeft = -32
-    ExplicitTop = 8
-    ExplicitWidth = 1244
+    ExplicitWidth = 1284
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
@@ -1728,10 +1726,10 @@
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
-    FormNameParam.Value = 'TGoodsForm'
+    FormNameParam.Value = 'TGoods_ChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsForm'
+    FormName = 'TGoods_ChoiceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
