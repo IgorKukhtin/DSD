@@ -329,6 +329,7 @@ type
     mactUpdateMaskIncome: TMultiAction;
     bbUpdateMaskIncome: TdxBarButton;
     Weight: TcxGridDBColumn;
+    Remains: TcxGridDBColumn;
   private
   public
   end;

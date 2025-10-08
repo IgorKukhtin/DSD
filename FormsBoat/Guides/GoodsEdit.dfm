@@ -310,7 +310,7 @@
       end
       object edRefer: TcxLabel
         Left = 184
-        Top = 459
+        Top = 458
         Caption = #1056#1077#1082#1086#1084#1077#1085#1076'. '#1082#1086#1083'. '#1079#1072#1082#1091#1087#1082#1080
       end
       object ceRefer: TcxCurrencyEdit
@@ -510,7 +510,7 @@
       end
       object cxLabel14: TcxLabel
         Left = 40
-        Top = 460
+        Top = 458
         Caption = #1052#1080#1085'. '#1082#1086#1083'. '#1085#1072' '#1089#1082#1083#1072#1076#1077
       end
       object cxLabel17: TcxLabel
@@ -589,7 +589,7 @@
       end
       object cxLabel2: TcxLabel
         Left = 40
-        Top = 500
+        Top = 498
         Hint = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057' '#1079#1072#1082#1091#1087'.'
         Caption = 'Netto EK'
       end
@@ -612,13 +612,13 @@
       end
       object cxLabel15: TcxLabel
         Left = 184
-        Top = 500
+        Top = 498
         Hint = #1062#1077#1085#1072' '#1088#1077#1082#1086#1084#1077#1085#1076#1091#1077#1084#1072#1103' '#1073#1077#1079' '#1053#1044#1057
         Caption = 'Empf. VK'
       end
       object cxLabel16: TcxLabel
-        Left = 181
-        Top = 543
+        Left = 182
+        Top = 538
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
       end
       object edComment: TcxTextEdit
@@ -675,7 +675,7 @@
       end
       object cxLabel24: TcxLabel
         Left = 40
-        Top = 539
+        Top = 538
         Caption = 'Engine'
       end
       object edEngine: TcxButtonEdit
@@ -1800,10 +1800,10 @@
   object GuidesGoodsGroup: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceParentGroup
-    FormNameParam.Value = 'TGoodsGroupChoiceForm'
+    FormNameParam.Value = 'TGoodsGroup_ListForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsGroupChoiceForm'
+    FormName = 'TGoodsGroup_ListForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1821,8 +1821,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 120
-    Top = 120
+    Left = 96
+    Top = 160
   end
   object GuidesGoodsTag: TdsdGuides
     KeyField = 'Id'
@@ -1848,8 +1848,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 104
-    Top = 160
+    Left = 144
+    Top = 184
   end
   object GuidesDiscountPartner: TdsdGuides
     KeyField = 'Id'
