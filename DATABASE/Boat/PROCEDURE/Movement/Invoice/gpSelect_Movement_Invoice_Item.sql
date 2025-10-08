@@ -66,16 +66,15 @@ BEGIN
                                    AND (MovementItem.isErased = inIsErased OR inIsErased = TRUE)
                  )
 
-       --текущие остатки
-     , tmpRemains AS (SELECT Container.ObjectId            AS GoodsId
-                           , Sum(Container.Amount)::TFloat AS Remains
+       -- текущие остатки
+     , tmpRemains AS (SELECT Container.ObjectId              AS GoodsId
+                           , SUM (Container.Amount) ::TFloat AS Remains
                       FROM Container
-                      WHERE Container.WhereObjectId = 35139 -- Склад Основной
+                      WHERE Container.WhereObjectId = zc_Unit_Sklad() -- 35139 -- Склад Основной
                         AND Container.DescId        = zc_Container_Count()
                         AND Container.ObjectId IN (SELECT DISTINCT tmpMI.ObjectId FROM tmpMI)
                         AND Container.Amount <> 0
                       GROUP BY Container.ObjectId
-                      HAVING Sum(Container.Amount) <> 0
                      )
 
        -- Результат

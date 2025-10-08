@@ -129,7 +129,7 @@ BEGIN
 
     END IF;
 
-RAISE EXCEPTION 'Ошибка. <%>.', vbSum_OrderClient;
+    -- RAISE EXCEPTION 'Ошибка. <%>.', vbSum_OrderClient;
 
 
      -- Параметр из документа
