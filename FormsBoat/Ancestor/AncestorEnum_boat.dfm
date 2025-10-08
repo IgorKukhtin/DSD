@@ -2,6 +2,8 @@ inherited AncestorEnum_boatForm: TAncestorEnum_boatForm
   ActiveControl = cxGrid
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = actChoiceGuides
+  ExplicitWidth = 320
+  ExplicitHeight = 240
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
