@@ -27,14 +27,14 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_all TVarChar
                --
              , Feet TFloat, Metres TFloat
              , Weight TFloat
-             , AmountMin TFloat, AmountRefer TFloat  
-             
+             , AmountMin TFloat, AmountRefer TFloat
+
              , AmountRemains TFloat
 
              , EKPrice TFloat, EKPriceWVAT TFloat
              , EmpfPrice TFloat, EmpfPriceWVAT TFloat
              , BasisPrice TFloat, BasisPriceWVAT TFloat
-             , BasisPrice_choice TFloat 
+             , BasisPrice_choice TFloat
              , StartDate_price TDateTime
              , PriceListId Integer
 
@@ -69,7 +69,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_all TVarChar
              , Comment_pl TVarChar
              , myCount_pl Integer
              , Len_1 Integer, Len_2 Integer, Len_3 Integer, Len_4 Integer, Len_5 Integer, Len_6 Integer, Len_7 Integer, Len_8 Integer, Len_9 Integer, Len_10 Integer
-             
+
              , isErased Boolean
               )
 AS
@@ -80,7 +80,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Object_Goods());
      vbUserId:= lpGetUserBySession (inSession);
-     
+
      -- IF vbUserId = 5 THEN inShowAll:= TRUE; END IF;
 
 
@@ -89,43 +89,23 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-       WITH 
-            tmpPhoto AS (SELECT ObjectLink_GoodsPhoto_Goods.ChildObjectId AS GoodsId
-                              , Object_GoodsPhoto.Id                      AS PhotoId
-                              , ROW_NUMBER() OVER (PARTITION BY ObjectLink_GoodsPhoto_Goods.ChildObjectId ORDER BY Object_GoodsPhoto.Id) AS Ord
-                         FROM Object AS Object_GoodsPhoto
-                                JOIN ObjectLink AS ObjectLink_GoodsPhoto_Goods
-                                                ON ObjectLink_GoodsPhoto_Goods.ObjectId = Object_GoodsPhoto.Id
-                                               AND ObjectLink_GoodsPhoto_Goods.DescId   = zc_ObjectLink_GoodsPhoto_Goods()
-                          WHERE Object_GoodsPhoto.DescId   = zc_Object_GoodsPhoto()
-                            AND Object_GoodsPhoto.isErased = FALSE
-                            AND 1=0
-                        )
-           , tmpDoc AS (SELECT DISTINCT ObjectLink_GoodsDocument_Goods.ChildObjectId AS GoodsId
-                         FROM Object AS Object_GoodsDocument
-                                JOIN ObjectLink AS ObjectLink_GoodsDocument_Goods
-                                                ON ObjectLink_GoodsDocument_Goods.ObjectId = Object_GoodsDocument.Id
-                                               AND ObjectLink_GoodsDocument_Goods.DescId   = zc_ObjectLink_GoodsDocument_Goods()
-                          WHERE Object_GoodsDocument.DescId   = zc_Object_GoodsDocument()
-                            AND Object_GoodsDocument.isErased = FALSE
-                            AND 1=0
-                       )
+       WITH
           -- все что в сборке
-        , tmpReceiptGoods AS (SELECT Object_ReceiptGoods_find_View.GoodsId
+          tmpReceiptGoods AS (SELECT Object_ReceiptGoods_find_View.GoodsId
                                      -- это узел (да/нет)
                                    , Object_ReceiptGoods_find_View.isReceiptGoods_group
                                      -- все из чего собирается + узлы
                                    , Object_ReceiptGoods_find_View.isReceiptGoods
                                      -- Опция (да/нет) - Участвует в опциях
                                    , Object_ReceiptGoods_find_View.isProdOptions
-                       
+
                                      -- в каком ОДНОМ Узле/Модель лодки Детали/узлы участвуют в сборке, т.е. что собирается
                                    , Object_ReceiptGoods_find_View.GoodsId_receipt
                                      -- в каком ОДНОМ Узле/Модель лодки Детали/узлы участвуют в сборке, т.е. что собирается
                                    , Object_ReceiptGoods_find_View.GoodsName_receipt
                                      -- в каких ВСЕХ Узлах/Моделях лодки Детали/узлы участвуют в сборке, т.е. что собирается
                                    , Object_ReceiptGoods_find_View.GoodsName_receipt_all
-                       
+
                                      -- На каком участке происходит расход Узла/Детали на сборку
                                    , Object_ReceiptGoods_find_View.UnitId_receipt
                                    , Object_ReceiptGoods_find_View.UnitName_receipt
@@ -135,7 +115,7 @@ BEGIN
                                      -- На каком участке происходит сборка Узла
                                    , Object_ReceiptGoods_find_View.UnitId_parent_receipt
                                    , Object_ReceiptGoods_find_View.UnitName_parent_receipt
-            
+
                               FROM Object_ReceiptGoods_find_View
                               -- когда ВСЕ
                               WHERE inIsLimit_100 = FALSE
@@ -216,7 +196,7 @@ BEGIN
                           -- когда только 100
                           --AND inIsLimit_100 = TRUE
                           -- когда все
-                          AND inIsLimit_100 = FALSE   
+                          AND inIsLimit_100 = FALSE
                           AND (COALESCE (inArticle,'') = '' AND COALESCE (inName,'') = '')*/
                        )
            , tmpPriceBasis AS (SELECT ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
@@ -239,6 +219,25 @@ BEGIN
                                WHERE ObjectLink_PriceListItem_Goods.ChildObjectId IN (SELECT DISTINCT tmpGoods.Id FROM tmpGoods)
                                  AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
                               )
+          , tmpPhoto AS (SELECT DISTINCT ObjectLink_GoodsPhoto_Goods.ChildObjectId AS GoodsId
+                         FROM Object AS Object_GoodsPhoto
+                              JOIN ObjectLink AS ObjectLink_GoodsPhoto_Goods
+                                              ON ObjectLink_GoodsPhoto_Goods.ObjectId = Object_GoodsPhoto.Id
+                                             AND ObjectLink_GoodsPhoto_Goods.DescId   = zc_ObjectLink_GoodsPhoto_Goods()
+                                             AND ObjectLink_GoodsPhoto_Goods.ChildObjectId IN (SELECT DISTINCT tmpGoods.Id FROM tmpGoods)
+                          WHERE Object_GoodsPhoto.DescId   = zc_Object_GoodsPhoto()
+                            AND Object_GoodsPhoto.isErased = FALSE
+                        )
+           , tmpDoc AS (SELECT DISTINCT ObjectLink_GoodsDocument_Goods.ChildObjectId AS GoodsId
+                         FROM Object AS Object_GoodsDocument
+                              JOIN ObjectLink AS ObjectLink_GoodsDocument_Goods
+                                              ON ObjectLink_GoodsDocument_Goods.ObjectId = Object_GoodsDocument.Id
+                                             AND ObjectLink_GoodsDocument_Goods.DescId   = zc_ObjectLink_GoodsDocument_Goods()
+                                             AND ObjectLink_GoodsDocument_Goods.ChildObjectId IN (SELECT DISTINCT tmpGoods.Id FROM tmpGoods)
+                          WHERE Object_GoodsDocument.DescId   = zc_Object_GoodsDocument()
+                            AND Object_GoodsDocument.isErased = FALSE
+                       )
+
            -- текущие остатки
          , tmpRemains AS (SELECT Container.ObjectId            AS GoodsId
                              --, Container.WhereObjectId       AS UnitId
@@ -308,7 +307,7 @@ BEGIN
 
             , ObjectFloat_Min.ValueData          AS AmountMin
             , ObjectFloat_Refer.ValueData        AS AmountRefer
-            
+
               -- остатки на гл. складе
             , tmpRemains.Remains ::TFloat        AS AmountRemains
 
@@ -335,7 +334,7 @@ BEGIN
                    THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
                    ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
               END ::TFloat AS BasisPriceWVAT
-              
+
               -- Цена продажи без НДС - передается в грид
             , CASE WHEN vbPriceWithVAT = FALSE AND tmpPriceBasis.ValuePrice > 0
                    THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
@@ -348,10 +347,10 @@ BEGIN
 
                    ELSE 0
 
-              END ::TFloat AS BasisPrice_choice  
-              
+              END ::TFloat AS BasisPrice_choice
+
             , tmpPriceBasis.StartDate ::TDateTime AS StartDate_price
-            , tmpPriceBasis.PriceListId ::Integer 
+            , tmpPriceBasis.PriceListId ::Integer
 
             , Object_GoodsGroup.Id               AS GoodsGroupId
             , Object_GoodsGroup.ValueData        AS GoodsGroupName
@@ -366,13 +365,13 @@ BEGIN
             , Object_ProdColor.Id                AS ProdColorId
             , Object_ProdColor.ValueData         AS ProdColorName
             , COALESCE(ObjectFloat_ProdColor_Value.ValueData, zc_Color_White())::Integer  AS Color_Value
-            , CASE WHEN COALESCE (tmpRemains.Remains,0) <> 0 THEN zc_Color_Yelow() ELSE zc_Color_White() END ::Integer AS Color_remains 
+            , CASE WHEN COALESCE (tmpRemains.Remains,0) <> 0 THEN zc_Color_Yelow() ELSE zc_Color_White() END ::Integer AS Color_remains
             , Object_Partner.Id                  AS PartnerId
             , Object_Partner.ValueData           AS PartnerName
 
             , Object_Unit.Id                     AS UnitId
             --, Object_Unit.ValueData              AS UnitName
-     
+
             , /*CASE -- узел Стеклопластик + Опция
                    WHEN tmpReceiptGoods.isReceiptGoods_group = TRUE AND tmpReceiptGoods.isProdOptions = TRUE
                         -- Склад Основной
@@ -438,8 +437,8 @@ BEGIN
             , Object_Update.ValueData            AS UpdateName
             , ObjectDate_Update.ValueData        AS UpdateDate
 
-            , FALSE :: Boolean -- CASE WHEN tmpDoc.GoodsId    > 0 THEN TRUE ELSE FALSE END :: Boolean AS isDoc
-            , FALSE :: Boolean -- CASE WHEN tmpPhoto1.GoodsId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPhoto
+            , CASE WHEN tmpDoc.GoodsId   > 0 THEN TRUE ELSE FALSE END :: Boolean AS isDoc
+            , CASE WHEN tmpPhoto.GoodsId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPhoto
 
             , '' :: TVarChar -- tmpMovementPL.InvNumber     :: TVarChar AS InvNumber_pl
             , '' :: TVarChar -- tmpMovementPL.Comment       :: TVarChar AS Comment_pl
@@ -609,6 +608,10 @@ BEGIN
 
             -- это
             LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
+
+            -- это
+            LEFT JOIN tmpDoc   ON tmpDoc.GoodsId   = Object_Goods.Id
+            LEFT JOIN tmpPhoto ON tmpPhoto.GoodsId = Object_Goods.Id
 
         --WHERE ObjectString_Article.ValueData ILIKE 'AGL%'
 
