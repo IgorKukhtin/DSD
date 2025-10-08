@@ -9,21 +9,22 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Invoice_Item(
     IN inIsErased      Boolean ,
     IN inSession       TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (MovementId Integer
-             , Id         Integer
-             , GoodsId    Integer
-             , GoodsCode  Integer
-             , GoodsName  TVarChar
-             , Article    TVarChar
-             , Amount     TFloat 
-             , AmountRemains TFloat
-             , OperPrice  TFloat
-             , SummMVAT   TFloat 
-             , SummPVAT   TFloat
-             , Summа_VAT  TFloat
-             , Comment    TVarChar
-             , Ord Integer
-             , isErased   Boolean
+RETURNS TABLE (MovementId      Integer
+             , Id              Integer
+             , GoodsId         Integer
+             , GoodsCode       Integer
+             , GoodsName       TVarChar
+             , MeasureName     TVarChar
+             , Article         TVarChar
+             , Amount          TFloat
+             , AmountRemains   TFloat
+             , OperPrice       TFloat
+             , SummMVAT        TFloat
+             , SummPVAT        TFloat
+             , Summа_VAT       TFloat
+             , Comment         TVarChar
+             , Ord             Integer
+             , isErased        Boolean
              )
 AS
 $BODY$
@@ -63,8 +64,8 @@ BEGIN
                  WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                                    AND MovementItem.DescId = zc_MI_Master()
                                    AND (MovementItem.isErased = inIsErased OR inIsErased = TRUE)
-                 )  
-                
+                 )
+
        --текущие остатки
      , tmpRemains AS (SELECT Container.ObjectId            AS GoodsId
                            , Sum(Container.Amount)::TFloat AS Remains
@@ -83,13 +84,14 @@ BEGIN
             , MovementItem.ObjectId           AS GoodsId
             , Object_Goods.ObjectCode         AS GoodsCode
             , Object_Goods.ValueData          AS GoodsName
+            , Object_Measure.ValueData        AS MeasureName
             , ObjectString_Article.ValueData  AS Article
             , MovementItem.Amount         ::TFloat AS Amount
               -- остатки на гл. складе
-          --, CASE WHEN Movement.StatusId = zc_Enum_Status_UnComplete() THEN COALESCE (tmpRemains.Remains,0) - COALESCE (MovementItem.Amount,0) ELSE tmpRemains.Remains END  ::TFloat AS AmountRemains 
-            , tmpRemains.Remains         ::TFloat AS AmountRemains 
+          --, CASE WHEN Movement.StatusId = zc_Enum_Status_UnComplete() THEN COALESCE (tmpRemains.Remains,0) - COALESCE (MovementItem.Amount,0) ELSE tmpRemains.Remains END  ::TFloat AS AmountRemains
+            , tmpRemains.Remains         ::TFloat AS AmountRemains
             --цена без НДС
-            , MIFloat_OperPrice.ValueData ::TFloat AS OperPrice  
+            , MIFloat_OperPrice.ValueData ::TFloat AS OperPrice
              --Сумма без ндс
             , COALESCE (MIFloat_SummMVAT.ValueData
                      , (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0))
@@ -97,21 +99,21 @@ BEGIN
             -- Сумма с НДС
             , COALESCE (MIFloat_SummPVAT.ValueData
                       , zfCalc_SummWVAT_4 ((COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0)) ::TFloat, MovementFloat_VATPercent.ValueData)
-                        )  ::TFloat AS SummPVAT  
+                        )  ::TFloat AS SummPVAT
             --Сумма НДС
-            , ( COALESCE (MIFloat_SummPVAT.ValueData, zfCalc_SummWVAT_4 ((COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0))::TFloat, MovementFloat_VATPercent.ValueData)) 
-             -  COALESCE (MIFloat_SummMVAT.ValueData, (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0))) ) ::TFloat AS Summа_VAT 
+            , ( COALESCE (MIFloat_SummPVAT.ValueData, zfCalc_SummWVAT_4 ((COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0))::TFloat, MovementFloat_VATPercent.ValueData))
+             -  COALESCE (MIFloat_SummMVAT.ValueData, (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0))) ) ::TFloat AS Summа_VAT
 
-            --, (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0)) ::TFloat AS Summа 
+            --, (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0)) ::TFloat AS Summа
             --, zfCalc_SummWVAT_4 (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0), MovementFloat_VATPercent.ValueData) ::TFloat Summа_WVAT
-            --, (zfCalc_SummWVAT_4 (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0),MovementFloat_VATPercent.ValueData) -  (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0))) ::TFloat Summа_VAT 
+            --, (zfCalc_SummWVAT_4 (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0),MovementFloat_VATPercent.ValueData) -  (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0))) ::TFloat Summа_VAT
 
             --, CASE WHEN vbUserId = 5 THEN LENGTH (MIString_Comment.ValueData) :: TVarChar ELSE MIString_Comment.ValueData END :: TVarChar  AS Comment
             , LEFT (MIString_Comment.ValueData, 125) :: TVarChar AS Comment
             , ROW_NUMBER() OVER (ORDER BY MovementItem.Id ASC) :: Integer AS Ord
             , MovementItem.isErased           AS isErased
-            
-       FROM tmpMovement AS Movement 
+
+       FROM tmpMovement AS Movement
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId = Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
@@ -120,9 +122,9 @@ BEGIN
 
             LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
                                         ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
-                                       AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice() 
+                                       AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()
 
-            LEFT JOIN MovementItemFloat AS MIFloat_SummMVAT                                        
+            LEFT JOIN MovementItemFloat AS MIFloat_SummMVAT
                                         ON MIFloat_SummMVAT.MovementItemId = MovementItem.Id
                                        AND MIFloat_SummMVAT.DescId         = zc_MIFloat_SummMVAT()  --Сумма без ндс
             LEFT JOIN MovementItemFloat AS MIFloat_SummPVAT
@@ -141,6 +143,12 @@ BEGIN
                                   AND ObjectString_Article.DescId   = zc_ObjectString_Article()
 
             LEFT JOIN tmpRemains ON tmpRemains.GoodsId = Object_Goods.Id
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
 -- where vbUserId <> 5 -- or Movement.Id = 6187
 -- or Movement.Id <> 6163
           ;
