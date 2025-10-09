@@ -19,7 +19,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, cxCheckBox;
+  dxSkinXmas2008Blue, cxCheckBox, dsdCommon;
 
 type
   TIncomeItemEditForm = class(TParentForm)
@@ -77,6 +77,11 @@ type
     edPartionCell: TcxTextEdit;
     actPartionCellChoiceForm: TOpenChoiceForm;
     btnPartionCellChoice: TcxButton;
+    cxLabel13: TcxLabel;
+    edGoodsSize: TcxButtonEdit;
+    cxLabel29: TcxLabel;
+    ceWeight: TcxCurrencyEdit;
+    GuidesGoodsSize: TdsdGuides;
   private
     { Private declarations }
   public

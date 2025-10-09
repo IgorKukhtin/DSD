@@ -4,6 +4,10 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income (Integer, Integer, In
                                                           , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                           , TVarChar, TVarChar, TVarChar, TVarChar
                                                            );
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income (Integer, Integer, Integer
+                                                          , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                          , TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TVarChar
+                                                           );
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -25,6 +29,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income(
     IN inPartNumber          TVarChar  , -- № по тех паспорту
  INOUT ioPartionCellName     TVarChar  , -- код или название
     IN inComment             TVarChar  , --
+    IN inGoodsSizeName       TVarChar  , -- размер
+    IN inWeight              TFloat    , -- вес
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -41,6 +47,7 @@ $BODY$
    DECLARE vbTaxKindValue TFloat;
 
    DECLARE vbPartionCellId Integer;
+   DECLARE vbGoodsSizeId   Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());
@@ -127,7 +134,36 @@ BEGIN
          vbPartionCellId := NULL ::Integer;
      END IF;
 
+   --
+   IF COALESCE (inGoodsSizeName, '') <> ''
+   THEN
+       -- пробуем найти Размер
+       vbGoodsSizeId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsSize() AND TRIM (Object.ValueData) Like TRIM (inGoodsSizeName));
+       --если не находим создаем
+       IF COALESCE (vbGoodsSizeId,0) = 0
+       THEN
+            vbGoodsSizeId := (SELECT tmp.ioId
+                              FROM gpInsertUpdate_Object_GoodsSize (ioId        := 0         :: Integer
+                                                                  , ioCode      := 0         :: Integer
+                                                                  , inName      := TRIM (inGoodsSizeName) ::TVarChar
+                                                                  , inComment   := ''        :: TVarChar
+                                                                  , inSession   := inSession :: TVarChar
+                                                                   ) AS tmp);
+       END IF;
+       -- сохранили связь с <>
+       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsSize(), inGoodsId, vbGoodsSizeId);
+   END IF;
 
+   IF COALESCE (inWeight,0) <> 0
+   THEN
+       -- сохранили свойство <Вес>
+       PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_Weight(), inGoodsId, inWeight);   
+   END IF;
+
+   -- сохранили протокол изменения товара
+   PERFORM lpInsert_ObjectProtocol (inGoodsId, vbUserId);
+   
+   
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 

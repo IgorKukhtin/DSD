@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_MovementItem_Income()
+-- Function: lpInsertUpdate_MovementItem_Income()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Income (Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer);
 

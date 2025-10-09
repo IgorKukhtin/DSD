@@ -40,8 +40,9 @@ BEGIN
                                  , gpSelect.OperPriceList
                                  , gpSelect.PartNumber
                                  , gpSelect.PartionCellName
-                                 , gpSelect.Comment
-
+                                 , gpSelect.Comment 
+                                 , gpSelect.GoodsSizeName
+                                 , gpSelect.Weight
                             FROM gpSelect_MI_Income_Master (inMovementMaskId, FALSE, FALSE, inSession) AS gpSelect
                            )
 
@@ -74,9 +75,10 @@ BEGIN
                                                , inPartNumber          := tmpMI.PartNumber
                                                , ioPartionCellName     := tmpMI.PartionCellName
                                                , inComment             := tmpMI.Comment
+                                               , inGoodsSizeName       := tmpMI.GoodsSizeName
+                                               , inWeight              := tmpMI.Weight
                                                , inSession             := inSession
                                                 )
-
      FROM tmpMI;
 
 END;

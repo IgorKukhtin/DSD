@@ -2,6 +2,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
   ClientHeight = 668
   ClientWidth = 1069
+  ExplicitTop = -35
   ExplicitWidth = 1085
   ExplicitHeight = 707
   PixelsPerInch = 96
@@ -319,6 +320,30 @@ inherited PriceListMovementForm: TPriceListMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
+          object EAN: TcxGridDBColumn
+            DataBinding.FieldName = 'EAN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object FeeNumber: TcxGridDBColumn
+            Caption = 'Zolltarif Nr'
+            DataBinding.FieldName = 'FeeNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1090#1072#1084#1086#1078#1077#1085#1085#1086#1081' '#1087#1086#1096#1083#1080#1085#1099
+            Options.Editing = False
+            Width = 55
+          end
+          object Weight: TcxGridDBColumn
+            DataBinding.FieldName = 'Weight'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1077#1089
+            Options.Editing = False
+            Width = 45
+          end
         end
       end
     end
@@ -327,7 +352,6 @@ inherited PriceListMovementForm: TPriceListMovementForm
     Width = 1069
     Height = 93
     TabOrder = 3
-    ExplicitTop = 8
     ExplicitWidth = 1069
     ExplicitHeight = 93
     inherited edInvNumber: TcxTextEdit

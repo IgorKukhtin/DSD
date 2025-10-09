@@ -2,7 +2,7 @@ object IncomeItemEdit_limitForm: TIncomeItemEdit_limitForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100' ***'#1055#1088#1080#1093#1086#1076
-  ClientHeight = 290
+  ClientHeight = 286
   ClientWidth = 520
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -308,6 +308,36 @@ object IncomeItemEdit_limitForm: TIncomeItemEdit_limitForm
     ShowHint = True
     TabOrder = 33
   end
+  object cxLabel13: TcxLabel
+    Left = 148
+    Top = 99
+    Caption = 'Gr'#246#223'e'
+  end
+  object edGoodsSize: TcxButtonEdit
+    Left = 148
+    Top = 116
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = False
+    TabOrder = 35
+    Width = 80
+  end
+  object cxLabel29: TcxLabel
+    Left = 241
+    Top = 99
+    Caption = 'Weight'
+  end
+  object ceWeight: TcxCurrencyEdit
+    Left = 241
+    Top = 116
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 37
+    Width = 80
+  end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 231
@@ -605,6 +635,22 @@ object IncomeItemEdit_limitForm: TIncomeItemEdit_limitForm
         Value = Null
         Component = ceComment
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsSizeName'
+        Value = Null
+        Component = edGoodsSize
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeight'
+        Value = Null
+        Component = ceWeight
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1213,8 +1259,8 @@ object IncomeItemEdit_limitForm: TIncomeItemEdit_limitForm
     ActionItemList = <
       item
       end>
-    Left = 136
-    Top = 80
+    Left = 96
+    Top = 88
   end
   object EnterMoveNext: TEnterMoveNext
     EnterMoveNextList = <
@@ -1271,7 +1317,34 @@ object IncomeItemEdit_limitForm: TIncomeItemEdit_limitForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 204
-    Top = 97
+    Left = 260
+    Top = 49
+  end
+  object GuidesGoodsSize: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsSize
+    FormNameParam.Value = 'TGoodsSizeForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsSizeForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoodsSize
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoodsSize
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 192
+    Top = 112
   end
 end
