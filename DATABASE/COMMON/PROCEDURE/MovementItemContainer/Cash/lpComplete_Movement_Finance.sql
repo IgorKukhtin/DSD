@@ -250,6 +250,9 @@ BEGIN
                                                               THEN zc_Enum_Account_30204() -- Дворкин
                                                          WHEN zc_Enum_InfoMoney_21151()
                                                               THEN zc_Enum_Account_30205() -- ЕКСПЕРТ-АГРОТРЕЙД
+                                                         WHEN zc_Enum_InfoMoney_21152()
+                                                              THEN zc_Enum_Account_30206() -- Алан АЗИЯ
+                                                         ELSE 0
                                                     END
 
                                           -- сотрудники (подотчетные лица)
@@ -304,7 +307,15 @@ BEGIN
      -- 1.1.4. проверка
      IF EXISTS (SELECT AccountId FROM _tmpItem WHERE COALESCE (AccountId, 0) = 0)
      THEN
-         RAISE EXCEPTION 'Ошибка.Счет не определен.Документ № <%> (%)', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), inMovementId;
+         RAISE EXCEPTION 'Ошибка.Счет баланса для% <%> <%> (%) %не определен.Документ № <%> (%)'
+                       , CHR (13)
+                       , (SELECT lfGet_Object_ValueData_sh (AccountGroupId)     FROM _tmpItem WHERE COALESCE (AccountId, 0) = 0 LIMIT 1)
+                       , (SELECT lfGet_Object_ValueData_sh (AccountDirectionId) FROM _tmpItem WHERE COALESCE (AccountId, 0) = 0 LIMIT 1)
+                       , (SELECT COUNT(*) FROM _tmpItem WHERE COALESCE (AccountId, 0) = 0)
+                       , CHR (13)
+                       , (SELECT InvNumber FROM Movement WHERE Id = inMovementId)
+                       , inMovementId
+                       ;
      END IF;
 
      -- 1.1.5. если встречается проводка по прибыли, тогда у корреспондирующих проводках надо установить zc_Enum_AnalyzerId_ProfitLoss
@@ -366,6 +377,7 @@ end if;
                                                       WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40400() -- Финансовая деятельность + проценты по кредитам
                                                         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40700() -- Финансовая деятельность + Лиол
                                                         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40900() -- Финансовая деятельность + Финансовая помощь
+                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Финансовая деятельность + Покупка/продажа валюты
                                                          --THEN zc_Enum_ProfitLossDirection_80100() -- Расходы с прибыли + Финансовая деятельность
                                                            THEN zc_Enum_ProfitLossDirection_75100() -- Финансовая деятельность + Финансовая деятельность
 
