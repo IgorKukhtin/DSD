@@ -128,7 +128,7 @@ BEGIN
                                                          , inPartnerId  := vbPartnerId
                                                          , inContractId := vbContractId
                                                          , inUnitId     := vbUnitId
-                                                         , inUserId     := vbUserId
+                                                       --, inUserId     := vbUserId
                                                           ) AS tmp
                        )
             -- Цены из прайса
@@ -251,6 +251,9 @@ BEGIN
                                  , MIFloat_Value_m.ValueData           ::TFloat  AS Value_m
                                  , MIFloat_Value_n.ValueData           ::TFloat  AS Value_n
                                  , MIFloat_Value_promo.ValueData       ::TFloat  AS Value_promo
+
+                                 , CAST (ROW_NUMBER() OVER (ORDER BY MovementItem.Id) AS Integer) AS LineNum
+
                             FROM tmpMI_G AS MovementItem
                                  LEFT JOIN tmpMI_LO AS MILinkObject_GoodsKind
                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -403,6 +406,9 @@ BEGIN
                            , tmpMI_Goods.Value_m
                            , tmpMI_Goods.Value_n
                            , tmpMI_Goods.Value_promo
+
+                           , tmpMI_Goods.LineNum
+
                        FROM tmpMI_Goods
                             LEFT JOIN tmpMIPromo ON tmpMIPromo.MovementId_Promo = tmpMI_Goods.MovementId_Promo
                                                 AND tmpMIPromo.GoodsId          = tmpMI_Goods.GoodsId
@@ -562,6 +568,9 @@ BEGIN
                                , tmpMI.Value_m
                                , tmpMI.Value_n
                                , tmpMI.Value_promo
+
+                               , tmpMI.LineNum
+
                           FROM tmpMI
                                FULL JOIN tmpMI_EDI_find ON tmpMI_EDI_find.MovementItemId = tmpMI.MovementItemId
                          )
@@ -761,7 +770,7 @@ BEGIN
       UNION ALL
        SELECT
              tmpMI.MovementItemId :: Integer    AS Id
-           , CAST (row_number() OVER (ORDER BY tmpMI.MovementItemId) AS Integer) AS LineNum
+           , CAST (tmpMI.LineNum AS Integer)    AS LineNum
            , Object_Goods.Id                    AS GoodsId
            , Object_Goods.ObjectCode            AS GoodsCode
            , Object_Goods.ValueData             AS GoodsName
@@ -882,7 +891,7 @@ BEGIN
                                                          , inPartnerId  := vbPartnerId
                                                          , inContractId := vbContractId
                                                          , inUnitId     := vbUnitId
-                                                         , inUserId     := vbUserId
+                                                      --, inUserId     := vbUserId
                                                           ) AS tmp
                        )
             -- Существующие MovementItem
@@ -1331,7 +1340,7 @@ BEGIN
           , tmpObject_GoodsKind     AS (SELECT * FROM Object WHERE Object.Id IN (SELECT DISTINCT tmpMI_all.GoodsKindId     FROM tmpMI_all))
           , tmpObject_Goods_Out     AS (SELECT * FROM Object WHERE Object.Id IN (SELECT DISTINCT tmpMI_all.GoodsId_Out     FROM tmpMI_all))
           , tmpObject_GoodsKind_Out AS (SELECT * FROM Object WHERE Object.Id IN (SELECT DISTINCT tmpMI_all.GoodsKindId_Out FROM tmpMI_all))
-       --
+       -- Результат
        SELECT
              tmpMI.MovementItemId :: Integer    AS Id
            --, CAST (row_number() OVER (ORDER BY tmpMI.MovementItemId) AS Integer) AS LineNum
@@ -1450,8 +1459,8 @@ BEGIN
 
             LEFT JOIN Object AS Object_PromoDiscountKind ON Object_PromoDiscountKind.Id = tmpMI.PromoDiscountKindId
 
-            LEFT JOIN tmpObject_Goods_Out AS Object_GoodsOut     ON Object_GoodsOut.Id     = tmpMI.GoodsId_Out
-            LEFT JOIN tmpObject_Goods_Out AS Object_GoodsKindOut ON Object_GoodsKindOut.Id = tmpMI.GoodsKindId_Out
+            LEFT JOIN tmpObject_Goods_Out     AS Object_GoodsOut     ON Object_GoodsOut.Id     = tmpMI.GoodsId_Out
+            LEFT JOIN tmpObject_GoodsKind_Out AS Object_GoodsKindOut ON Object_GoodsKindOut.Id = tmpMI.GoodsKindId_Out
        ;
 
      END IF;
