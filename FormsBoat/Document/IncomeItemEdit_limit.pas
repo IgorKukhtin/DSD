@@ -77,6 +77,11 @@ type
     edPartionCell: TcxTextEdit;
     actPartionCellChoiceForm: TOpenChoiceForm;
     btnPartionCellChoice: TcxButton;
+    cxLabel13: TcxLabel;
+    edGoodsSize: TcxButtonEdit;
+    cxLabel29: TcxLabel;
+    ceWeight: TcxCurrencyEdit;
+    GuidesGoodsSize: TdsdGuides;
   private
     { Private declarations }
   public

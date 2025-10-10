@@ -330,6 +330,7 @@ type
     bbUpdateMaskIncome: TdxBarButton;
     Weight: TcxGridDBColumn;
     AmountRemains: TcxGridDBColumn;
+    actGoodsSizeChoiceForm: TOpenChoiceForm;
   private
   public
   end;

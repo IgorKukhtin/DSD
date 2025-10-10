@@ -794,6 +794,13 @@ object IncomeForm: TIncomeForm
             Visible = False
             Width = 70
           end
+          object EAN: TcxGridDBColumn
+            DataBinding.FieldName = 'EAN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
           object GoodsCode: TcxGridDBColumn
             Caption = 'Interne Nr'
             DataBinding.FieldName = 'GoodsCode'
@@ -882,16 +889,21 @@ object IncomeForm: TIncomeForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 55
           end
           object GoodsSizeName: TcxGridDBColumn
             Caption = 'Gr'#246#223'e'
             DataBinding.FieldName = 'GoodsSizeName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsSizeChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1056#1072#1079#1084#1077#1088
-            Options.Editing = False
             Width = 70
           end
           object GoodsTagName: TcxGridDBColumn
@@ -1351,9 +1363,6 @@ object IncomeForm: TIncomeForm
     object cxTabSheetCost: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GridCost: TcxGrid
         Left = 0
         Top = 0
@@ -4074,6 +4083,33 @@ object IncomeForm: TIncomeForm
         end>
       isShowModal = True
     end
+    object actGoodsSizeChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsSizeForm'
+      FormName = 'TGoodsSizeForm'
+      FormNameParam.Value = 'TGoodsSizeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsSizeId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsSizeName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -4294,6 +4330,24 @@ object IncomeForm: TIncomeForm
         Component = MasterCDS
         ComponentItem = 'Comment'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsSizeName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsSizeName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeight'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Weight'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -6030,8 +6084,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 944
-    Top = 248
+    Left = 936
+    Top = 296
   end
   object HeaderExit11: THeaderExit
     ExitList = <
