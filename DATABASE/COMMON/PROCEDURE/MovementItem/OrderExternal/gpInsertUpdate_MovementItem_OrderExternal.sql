@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_OrderExternal()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderExternal (Integer, Integer, Integer, TFloat, TFloat, Integer, TFloat, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderExternal (Integer, Integer, Integer, TFloat, TFloat, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderExternal (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderExternal(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderExternal(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inAmountSecond        TFloat    , -- Количество дозаказ
+    IN inAmountManual        TFloat    , -- ЗАЯВКА-0
     IN inGoodsKindId         Integer   , -- Виды товаров
  INOUT ioPrice               TFloat    , -- Цена
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
@@ -124,6 +126,7 @@ AND (NOT EXISTS (SELECT 1
                                                    , inGoodsId            := inGoodsId
                                                    , inAmount             := inAmount
                                                    , inAmountSecond       := inAmountSecond
+                                                   , inAmountManual       := inAmountManual
                                                    , inGoodsKindId        := inGoodsKindId
                                                    , ioPrice              := ioPrice
                                                    , ioCountForPrice      := ioCountForPrice
@@ -142,6 +145,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.10.25         * inAmountManual
  19.10.14                                        *
 */
 

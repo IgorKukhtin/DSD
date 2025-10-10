@@ -174,6 +174,8 @@ type
     actPrint_3: TdsdPrintAction;
     bbPrint_Order3: TdxBarButton;
     ColorB_promo: TcxGridDBColumn;
+    cbManual: TcxCheckBox;
+    AmountManual: TcxGridDBColumn;
   private
     { Private declarations }
   public

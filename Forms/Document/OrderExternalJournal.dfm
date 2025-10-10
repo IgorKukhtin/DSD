@@ -453,6 +453,14 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             HeaderHint = #1041#1099#1083' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085' '#1088#1077#1079#1077#1088#1074
             Options.Editing = False
           end
+          object isManual: TcxGridDBColumn
+            Caption = #1047#1040#1071#1042#1050#1040'-0'
+            DataBinding.FieldName = 'isManual'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object PartnerName: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
             DataBinding.FieldName = 'PartnerName'

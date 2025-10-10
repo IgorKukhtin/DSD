@@ -146,6 +146,7 @@ type
     mactPrint_OrderCell_Pak_copy3: TMultiAction;
     bbPrint_OrderCell_Pak_copy2: TdxBarButton;
     bbPrint_OrderCell_Pak_copy3: TdxBarButton;
+    isManual: TcxGridDBColumn;
   private
     { Private declarations }
   public

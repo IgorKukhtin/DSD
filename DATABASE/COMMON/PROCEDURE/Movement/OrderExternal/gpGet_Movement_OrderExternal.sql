@@ -36,6 +36,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isAuto Boolean
              , isMask Boolean  -- вернуть обратно False 
              , IsRemains Boolean
+             , isManual Boolean 
              , Comment TVarChar
               )
 AS
@@ -133,6 +134,7 @@ BEGIN
              , CAST (TRUE  AS Boolean)                          AS isAuto
              , CAST (FALSE AS Boolean)                          AS isMask
              , CAST (FALSE AS Boolean)                          AS IsRemains
+             , CAST (FALSE AS Boolean)                          AS isManual
              , CAST ('' as TVarChar) 		                    AS Comment 
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
@@ -238,6 +240,7 @@ BEGIN
            , COALESCE (MovementBoolean_isAuto.ValueData, TRUE) AS isAuto
            , CAST (FALSE AS Boolean)                AS isMask
            , COALESCE (MovementBoolean_Remains.ValueData, FALSE) ::Boolean AS IsRemains
+           , COALESCE (MovementBoolean_Manual.ValueData, FALSE)  ::Boolean AS isManual
            , MovementString_Comment.ValueData       AS Comment
 
        FROM Movement
@@ -284,6 +287,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Remains
                                       ON MovementBoolean_Remains.MovementId = Movement.Id
                                      AND MovementBoolean_Remains.DescId = zc_MovementBoolean_Remains()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Manual
+                                      ON MovementBoolean_Manual.MovementId = Movement.Id
+                                     AND MovementBoolean_Manual.DescId = zc_MovementBoolean_Manual()
 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
@@ -371,7 +378,7 @@ BEGIN
                                         AND MovementLinkObject_CarInfo.DescId = zc_MovementLinkObject_CarInfo()
             LEFT JOIN Object AS Object_CarInfo ON Object_CarInfo.Id = MovementLinkObject_CarInfo.ObjectId
 
-       WHERE Movement.Id =  inMovementId
+       WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_OrderExternal();
 
        END IF;
@@ -385,6 +392,7 @@ ALTER FUNCTION gpGet_Movement_OrderExternal (Integer, TDateTime, TVarChar) OWNER
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.10.25         * isManual
  14.06.22         * CarInfo
  25.06.21         * add inMask
  25.05.21         * isPrintComment
