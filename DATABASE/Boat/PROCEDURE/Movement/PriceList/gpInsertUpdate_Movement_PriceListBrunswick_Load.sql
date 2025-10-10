@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PriceListBrunswick_Load(
     IN inGoodsGroupName             TVarChar,      --
     IN inNonStocking                TVarChar,      --
     IN inAmount                     TFloat  ,      --price
-    IN inWeight                     TFloat  ,      --вес   
+    IN inWeight                     TFloat  ,      --вес
     IN inEAN                        TVarChar,
     IN inFeeNumber                  TVarChar,
     IN inSession                    TVarChar       -- сессия пользователя
@@ -127,6 +127,34 @@ BEGIN
           ELSEIF EXISTS (SELECT 1 FROM Object WHERE Object.Id = vbGoodsId AND Object.isErased = TRUE)
           THEN
                UPDATE Object SET isErased = FALSE WHERE Object.Id = vbGoodsId AND Object.isErased = TRUE;
+
+               --
+               IF TRIM (inEAN) <> ''
+               THEN
+                   -- сохранили свойство <>
+                   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_EAN(), vbGoodsId, TRIM (inEAN));
+               END IF;
+
+               IF TRIM (inFeeNumber) <> ''
+               THEN
+                   -- сохранили свойство <>
+                   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_FeeNumber(), vbGoodsId, TRIM (inFeeNumber));
+               END IF;
+
+          ELSEIF inEAN <> '' OR inFeeNumber <> ''
+          THEN
+               IF TRIM (inEAN) <> ''
+               THEN
+                   -- сохранили свойство <>
+                   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_EAN(), vbGoodsId, TRIM (inEAN));
+               END IF;
+
+               IF TRIM (inFeeNumber) <> ''
+               THEN
+                   -- сохранили свойство <>
+                   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_FeeNumber(), vbGoodsId, TRIM (inFeeNumber));
+               END IF;
+
           END IF;
 
 
