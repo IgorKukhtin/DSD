@@ -2,12 +2,14 @@
 -- Function: lpSelect_Movement_Promo_Data()
 
 DROP FUNCTION IF EXISTS lpSelect_Movement_Promo_Data (TDateTime, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpSelect_Movement_Promo_Data (TDateTime, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpSelect_Movement_Promo_Data(
     IN inOperDate     TDateTime , --
     IN inPartnerId    Integer   , --
     IN inContractId   Integer   , --
     IN inUnitId       Integer     --
+--  IN inUserId       Integer     --
 )
 RETURNS TABLE (MovementId          Integer -- Документ
              , GoodsId             Integer
@@ -25,6 +27,10 @@ AS
 $BODY$
 BEGIN
      -- RAISE EXCEPTION '% % % %', inOperDate, inPartnerId, inContractId, inUnitId;
+     
+     --
+     -- IF inUserId = 5 AND 1=1 THEN RETURN; END IF;
+
 
      -- Результат
      RETURN QUERY
