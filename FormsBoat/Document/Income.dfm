@@ -891,6 +891,18 @@ object IncomeForm: TIncomeForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          object Weight_old: TcxGridDBColumn
+            Caption = '*Weight'
+            DataBinding.FieldName = 'Weight_old'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object GoodsSizeName: TcxGridDBColumn
             Caption = 'Gr'#246#223'e'
             DataBinding.FieldName = 'GoodsSizeName'
@@ -904,6 +916,16 @@ object IncomeForm: TIncomeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1056#1072#1079#1084#1077#1088
+            Width = 70
+          end
+          object GoodsSizeName_old: TcxGridDBColumn
+            Caption = '*Gr'#246#223'e'
+            DataBinding.FieldName = 'GoodsSizeName_old'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1079#1084#1077#1088
+            Options.Editing = False
             Width = 70
           end
           object GoodsTagName: TcxGridDBColumn
@@ -4343,10 +4365,28 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioGoodsSizeName_old'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsSizeName_old'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inWeight'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Weight'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWeight_old'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Weight_old'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

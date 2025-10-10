@@ -24,6 +24,8 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , PartNumber     TVarChar
              , PartionCellId Integer, PartionCellName TVarChar
              , Comment        TVarChar
+             , GoodsSizeId  Integer, GoodsSizeName TVarChar, GoodsSizeName_old TVarChar
+             , Weight TFloat, Weight_old  TFloat
               )
 AS
 $BODY$
@@ -112,6 +114,11 @@ BEGIN
                , Object_PartionCell.Id                                             :: Integer  AS PartionCellId
                , Object_PartionCell.ValueData                                      :: TVarChar AS PartionCellName
                , tmpMI.Comment                                                     :: TVarChar AS Comment
+               , Object_GoodsSize.Id                AS GoodsSizeId
+               , Object_GoodsSize.ValueData         AS GoodsSizeName
+               , Object_GoodsSize.ValueData         AS GoodsSizeName_old
+               , ObjectFloat_Weight.ValueData       AS Weight
+               , ObjectFloat_Weight.ValueData       AS Weight_old
            FROM tmpGoods
                 LEFT JOIN tmpMI ON tmpMI.Id > 0
                 LEFT JOIN tmpPriceBasis ON tmpPriceBasis.ValuePrice > 0
@@ -127,6 +134,15 @@ BEGIN
                 LEFT JOIN ObjectFloat AS ObjectFloat_EmpfPrice
                                       ON ObjectFloat_EmpfPrice.ObjectId = Object_Goods.Id
                                      AND ObjectFloat_EmpfPrice.DescId   = zc_ObjectFloat_Goods_EmpfPrice()
+
+                LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                      ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
+                                     AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
+
+                LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsSize
+                                     ON ObjectLink_Goods_GoodsSize.ObjectId = Object_Goods.Id
+                                    AND ObjectLink_Goods_GoodsSize.DescId = zc_ObjectLink_Goods_GoodsSize()
+                LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = ObjectLink_Goods_GoodsSize.ChildObjectId
 
                 LEFT JOIN MovementItemLinkObject AS MILO_PartionCell
                                                  ON MILO_PartionCell.MovementItemId = tmpMI.Id
