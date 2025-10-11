@@ -2,14 +2,17 @@
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderExternal (Integer, Integer, Integer, TFloat, TFloat, Integer, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderExternal (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderExternal (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderExternal(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
-    IN inAmount              TFloat    , -- Количество
+ INOUT ioAmount              TFloat    , -- Количество
+ INOUT ioAmount_old          TFloat    , -- Количество
     IN inAmountSecond        TFloat    , -- Количество дозаказ
     IN inAmountManual        TFloat    , -- ЗАЯВКА-0
+ INOUT ioAmountManual_old    TFloat    , -- ЗАЯВКА-0
     IN inGoodsKindId         Integer   , -- Виды товаров
  INOUT ioPrice               TFloat    , -- Цена
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
@@ -115,6 +118,33 @@ AND (NOT EXISTS (SELECT 1
          END IF;
      END IF;
 
+     IF vbUserId = 9457
+     THEN
+         IF COALESCE (inAmountManual,0) = 0 AND COALESCE (ioAmountManual_old,0) <> 0
+         THEN 
+              --обнуляем все
+              ioAmount := 0;
+              ioAmount_old := 0;
+              ioAmountManual_old := 0;
+         END IF;
+         IF COALESCE (inAmountManual,0) <> 0 AND COALESCE (inAmountManual,0) <> COALESCE (ioAmountManual_old,0)
+         THEN
+             IF COALESCE (ioAmount,0) <> COALESCE (ioAmount_old,0)
+             THEN
+                 ioAmount_old := ioAmount;
+                 ioAmountManual_old := inAmountManual;
+             ELSE 
+                 ioAmount := inAmountManual;
+                 ioAmount_old := inAmountManual;
+                 ioAmountManual_old := inAmountManual;
+             END IF;
+         ELSE
+             IF COALESCE (ioAmount,0) <> COALESCE (ioAmount_old,0)
+             THEN
+                 ioAmount_old := ioAmount;
+             END IF;
+         END IF;
+     END IF;
 
      -- сохранили
      SELECT tmp.ioId, tmp.ioPrice, tmp.ioCountForPrice, tmp.outAmountSumm
@@ -124,7 +154,7 @@ AND (NOT EXISTS (SELECT 1
      FROM lpInsertUpdate_MovementItem_OrderExternal (ioId                 := ioId
                                                    , inMovementId         := inMovementId
                                                    , inGoodsId            := inGoodsId
-                                                   , inAmount             := inAmount
+                                                   , inAmount             := ioAmount
                                                    , inAmountSecond       := inAmountSecond
                                                    , inAmountManual       := inAmountManual
                                                    , inGoodsKindId        := inGoodsKindId

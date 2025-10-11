@@ -12,8 +12,9 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderExternal(
 )
 RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupCode Integer, GoodsGroupNameFull TVarChar
-             , AmountRemains TFloat, Amount TFloat, AmountEDI TFloat, AmountSecond TFloat
-             , AmountManual TFloat
+             , AmountRemains TFloat, Amount TFloat, Amount_old TFloat
+             , AmountEDI TFloat, AmountSecond TFloat
+             , AmountManual TFloat, AmountManual_old TFloat
              , GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
              , Price TFloat, PriceEDI TFloat, CountForPrice TFloat, AmountSumm TFloat, AmountSumm_Partner TFloat, ChangePercent TFloat
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
@@ -684,9 +685,11 @@ BEGIN
 
            , tmpRemains.Amount          AS AmountRemains
            , 0 :: TFloat                AS Amount
+           , 0 :: TFloat                AS Amount_old
            , 0 :: TFloat                AS AmountEDI
            , 0 :: TFloat                AS AmountSecond
            , 0 :: TFloat                AS AmountManual
+           , 0 :: TFloat                AS AmountManual_old
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
            , Object_Measure.ValueData   AS MeasureName
@@ -789,9 +792,11 @@ BEGIN
 
            , tmpMI.AmountRemains :: TFloat      AS AmountRemains
            , tmpMI.Amount :: TFloat             AS Amount
+           , tmpMI.Amount :: TFloat             AS Amount_old
            , tmpMI.AmountEDI :: TFloat          AS AmountEDI
            , tmpMI.AmountSecond :: TFloat       AS AmountSecond
            , tmpMI.AmountManual :: TFloat       AS AmountManual
+           , tmpMI.AmountManual :: TFloat       AS AmountManual_old
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
            , Object_Measure.ValueData           AS MeasureName
@@ -1371,9 +1376,11 @@ BEGIN
 
            , tmpMI.AmountRemains :: TFloat      AS AmountRemains
            , tmpMI.Amount :: TFloat             AS Amount
+           , tmpMI.Amount :: TFloat             AS Amount_old
            , tmpMI.AmountEDI :: TFloat          AS AmountEDI
            , tmpMI.AmountSecond :: TFloat       AS AmountSecond
            , tmpMI.AmountManual :: TFloat       AS AmountManual
+           , tmpMI.AmountManual :: TFloat       AS AmountManual_old
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
            , Object_Measure.ValueData           AS MeasureName

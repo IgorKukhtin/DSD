@@ -14,17 +14,17 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
     Height = 286
     TabOrder = 3
     ExplicitTop = 91
-    ExplicitWidth = 1092
+    ExplicitWidth = 1142
     ExplicitHeight = 286
     ClientRectBottom = 286
     ClientRectRight = 1142
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1092
+      ExplicitWidth = 1142
       ExplicitHeight = 286
       inherited cxGrid: TcxGrid
         Width = 1142
         Height = 286
-        ExplicitWidth = 1092
+        ExplicitWidth = 1142
         ExplicitHeight = 286
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -237,6 +237,11 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
               Format = ',0.####'
               Kind = skSum
               Column = AmountBox
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Amount_inf
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -453,6 +458,11 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
               Format = ',0.####'
               Kind = skSum
               Column = AmountBox
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Amount_inf
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -558,6 +568,15 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
             DataBinding.FieldName = 'InvNumber_Order'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object isManual_Order: TcxGridDBColumn
+            Caption = #1047#1040#1071#1042#1050#1040'-0 ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isManual_Order'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object OperDate_Sale: TcxGridDBColumn
@@ -839,6 +858,19 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Amount_inf: TcxGridDBColumn
+            Caption = #1047#1072#1082#1072#1079' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'Amount_inf'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1072#1079' '#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086
+            Options.Editing = False
             Width = 70
           end
           object SumSale: TcxGridDBColumn
@@ -1301,7 +1333,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
   inherited Panel: TPanel
     Width = 1142
     Height = 65
-    ExplicitWidth = 1092
+    ExplicitWidth = 1142
     ExplicitHeight = 65
     inherited deStart: TcxDateEdit
       Left = 118

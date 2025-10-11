@@ -2995,12 +2995,21 @@ inherited OrderExternalForm: TOrderExternalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmount'
+        Name = 'ioAmount'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioAmount_old'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount_old'
+        DataType = ftFloat
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -3019,6 +3028,15 @@ inherited OrderExternalForm: TOrderExternalForm
         ComponentItem = 'AmountManual'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioAmountManual_old'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountManual_old'
+        DataType = ftFloat
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
