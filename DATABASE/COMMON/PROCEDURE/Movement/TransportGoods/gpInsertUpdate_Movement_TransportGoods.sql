@@ -92,7 +92,7 @@ BEGIN
     -- Проверка
     IF COALESCE (vbMovementId_Transport, 0) = 0 AND TRIM (inBarCode) <> ''
     THEN
-        RAISE EXCEPTION 'Ошибка.Документ с % <%> не найден.Период с <> по <>.'
+        RAISE EXCEPTION 'Ошибка.Документ с % <%> не найден.Период с <%> по <%>.'
                       , CASE WHEN CHAR_LENGTH (inBarCode) >= 13 THEN 'Ш/К' ELSE '№' END
                       , inBarCode
                       , zfConvert_DateToString (inOperDate - INTERVAL '5 DAY')
