@@ -24,7 +24,8 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   cxCurrencyEdit, cxSplitter, cxButtonEdit, ExternalLoad, Vcl.Menus,
   Vcl.ExtCtrls, cxImageComboBox, Vcl.StdCtrls, cxButtons, cxContainer,
-  cxTextEdit, cxLabel, Document, dsdCommon;
+  cxTextEdit, cxLabel, Document, dsdCommon, Vcl.ComCtrls, dxCore, cxDateUtils,
+  cxMaskEdit, cxDropDownEdit, cxCalendar, dsdGuides;
 
 type
   TProductForm = class(TParentForm)
@@ -280,6 +281,13 @@ type
     spGetFileName_Confirm_disc: TdsdStoredProc;
     actGetFileName_Confirmation_disc: TdsdExecStoredProc;
     bbSave_Confirmation: TdxBarButton;
+    Panel5: TPanel;
+    cxLabel3: TcxLabel;
+    edOperDate: TcxDateEdit;
+    cbis—hangePrice: TcxCheckBox;
+    cxLabel2: TcxLabel;
+    edPriceList: TcxButtonEdit;
+    GuidesPriceList: TdsdGuides;
   private
     { Private declarations }
   public

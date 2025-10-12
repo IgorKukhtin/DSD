@@ -20,9 +20,9 @@
   TextHeight = 13
   object PanelMaster: TPanel
     Left = 0
-    Top = 26
+    Top = 56
     Width = 1188
-    Height = 175
+    Height = 145
     Align = alClient
     BevelEdges = [beLeft]
     BevelOuter = bvNone
@@ -31,12 +31,13 @@
       Left = 0
       Top = 50
       Width = 1188
-      Height = 125
+      Height = 95
       Align = alClient
       PopupMenu = PopupMenu
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitHeight = 125
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -1742,7 +1743,6 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089
-            Options.Editing = False
             Width = 70
           end
           object SalePriceWVAT_ch2: TcxGridDBColumn
@@ -1860,7 +1860,7 @@
     Width = 1188
     Height = 64
     Align = alBottom
-    TabOrder = 4
+    TabOrder = 3
     object btnInsert: TcxButton
       Left = 81
       Top = 5
@@ -1950,6 +1950,52 @@
       ParentShowHint = False
       ShowHint = True
       TabOrder = 8
+    end
+  end
+  object Panel5: TPanel
+    Left = 0
+    Top = 26
+    Width = 1188
+    Height = 30
+    Align = alTop
+    TabOrder = 8
+    object cxLabel3: TcxLabel
+      Left = 327
+      Top = 5
+      Caption = #1044#1072#1090#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1094#1077#1085#1099' :'
+    end
+    object edOperDate: TcxDateEdit
+      Left = 450
+      Top = 4
+      EditValue = 43831d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 1
+      Width = 82
+    end
+    object cbisСhangePrice: TcxCheckBox
+      Left = 542
+      Top = 4
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1094#1077#1085#1091' ('#1076#1072'/'#1085#1077#1090')'
+      TabOrder = 2
+      Width = 148
+    end
+    object cxLabel2: TcxLabel
+      Left = 11
+      Top = 5
+      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090':'
+    end
+    object edPriceList: TcxButtonEdit
+      Left = 77
+      Top = 4
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 4
+      Text = #1056#1086#1079#1085#1080#1095#1085#1072#1103' '#1094#1077#1085#1072
+      Width = 238
     end
   end
   object DataSource: TDataSource
@@ -5120,6 +5166,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPriceListId'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'ioGoodsId'
         Value = Null
         Component = ProdOptItemsCDS
@@ -5195,6 +5249,22 @@
         Component = ProdOptItemsCDS
         ComponentItem = 'CommentOpt'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChangePrice'
+        Value = Null
+        Component = cbisСhangePrice
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -5768,5 +5838,36 @@
     PackSize = 1
     Left = 1112
     Top = 232
+  end
+  object GuidesPriceList: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPriceList
+    Key = '2773'
+    TextValue = #1056#1086#1079#1085#1080#1095#1085#1072#1103' '#1094#1077#1085#1072
+    FormNameParam.Value = 'TPriceListForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPriceListForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '2773'
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = #1056#1086#1079#1085#1080#1095#1085#1072#1103' '#1094#1077#1085#1072
+        Component = GuidesPriceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 176
+    Top = 16
   end
 end
