@@ -136,6 +136,7 @@ type
     MovementPromo_order: TcxGridDBColumn;
     MovementPromo_sale: TcxGridDBColumn;
     actRefreshPromo: TdsdDataSetRefresh;
+    isManual_Order: TcxGridDBColumn;
   private
     { Private declarations }
   public

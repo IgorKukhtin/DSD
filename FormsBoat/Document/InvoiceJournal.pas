@@ -183,6 +183,11 @@ type
     btnSetErasedItem: TcxButton;
     AmountRemains: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
+    actReport_Goods_child: TdsdOpenForm;
+    dxBarButton2: TdxBarButton;
+    edUnit: TcxButtonEdit;
+    cxLabel6: TcxLabel;
+    GuidesUnit: TdsdGuides;
   private
     { Private declarations }
   public

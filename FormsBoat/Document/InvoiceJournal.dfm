@@ -3,7 +3,6 @@
   ClientHeight = 569
   ClientWidth = 1279
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -385
   ExplicitWidth = 1295
   ExplicitHeight = 608
   PixelsPerInch = 96
@@ -777,6 +776,27 @@
       TabOrder = 11
       Text = #1040#1085#1075#1083#1080#1081#1089#1082#1080#1081
       Width = 141
+    end
+    object edUnit: TcxButtonEdit
+      Left = 467
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 12
+      Text = #1057#1082#1083#1072#1076' '#1054#1089#1085#1086#1074#1085#1086#1081
+      Width = 230
+    end
+    object cxLabel6: TcxLabel
+      Left = 426
+      Top = 6
+      Hint = #1054#1090' '#1082#1086#1075#1086
+      Caption = #1057#1082#1083#1072#1076':'
+      ParentShowHint = False
+      ShowHint = True
     end
   end
   object Panel_btn: TPanel [2]
@@ -2613,6 +2633,83 @@
       ToAddress.DataType = ftString
       ToAddress.MultiSelectSeparator = ','
     end
+    object actReport_Goods_child: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1084'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1084'>'
+      ImageIndex = 40
+      FormName = 'TReport_GoodsForm'
+      FormNameParam.Value = 'TReport_GoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitGroupId'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitGroupName'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = ItemCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = ItemCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionId'
+          Value = Null
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Article'
+          Value = Null
+          Component = ItemCDS
+          ComponentItem = 'Article'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = ItemCDS
+          ComponentItem = 'GoodsCode'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 115
@@ -2935,6 +3032,10 @@
         item
           Visible = True
           ItemName = 'bbOpenIncomeCostByInvoice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
         end>
     end
     object bbInsert_Pay: TdxBarButton
@@ -2955,6 +3056,10 @@
     end
     object bbExport_invoice: TdxBarButton
       Action = mactExport_invoice
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actReport_Goods_child
       Category = 0
     end
   end
@@ -3047,6 +3152,20 @@
       item
         Name = 'LanguageCode'
         Value = '3'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = '35139'
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = #1057#1082#1083#1072#1076' '#1054#1089#1085#1086#1074#1085#1086#1081
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
         MultiSelectSeparator = ','
       end>
   end
@@ -3584,5 +3703,56 @@
         MultiSelectSeparator = ','
       end>
     Left = 840
+  end
+  object GuidesUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    Key = '35139'
+    TextValue = #1057#1082#1083#1072#1076' '#1054#1089#1085#1086#1074#1085#1086#1081
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountTax'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKind_Value'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindId'
+        Value = ''
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindName'
+        Value = ''
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 504
   end
 end

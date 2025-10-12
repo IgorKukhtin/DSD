@@ -8,7 +8,10 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income (Integer, Integer, In
                                                           , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                           , TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TVarChar
                                                            );
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income (Integer, Integer, Integer
+                                                          , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                          , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TVarChar
+                                                           );
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
@@ -30,7 +33,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income(
  INOUT ioPartionCellName     TVarChar  , -- код или название
     IN inComment             TVarChar  , --
     IN inGoodsSizeName       TVarChar  , -- размер
+ INOUT ioGoodsSizeName_old   TVarChar  , -- размер
     IN inWeight              TFloat    , -- вес
+ INOUT ioWeight_old          TFloat    , -- вес
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -134,35 +139,42 @@ BEGIN
          vbPartionCellId := NULL ::Integer;
      END IF;
 
-   --
-   IF COALESCE (inGoodsSizeName, '') <> ''
-   THEN
-       -- пробуем найти Размер
-       vbGoodsSizeId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsSize() AND TRIM (Object.ValueData) Like TRIM (inGoodsSizeName));
-       --если не находим создаем
-       IF COALESCE (vbGoodsSizeId,0) = 0
-       THEN
-            vbGoodsSizeId := (SELECT tmp.ioId
-                              FROM gpInsertUpdate_Object_GoodsSize (ioId        := 0         :: Integer
-                                                                  , ioCode      := 0         :: Integer
-                                                                  , inName      := TRIM (inGoodsSizeName) ::TVarChar
-                                                                  , inComment   := ''        :: TVarChar
-                                                                  , inSession   := inSession :: TVarChar
-                                                                   ) AS tmp);
-       END IF;
-       -- сохранили связь с <>
-       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsSize(), inGoodsId, vbGoodsSizeId);
-   END IF;
+     --
+     IF COALESCE (inGoodsSizeName, '') <> COALESCE (ioGoodsSizeName_old,'')
+     THEN
+         -- пробуем найти Размер
+         vbGoodsSizeId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsSize() AND TRIM (Object.ValueData) Like TRIM (inGoodsSizeName));
+         --если не находим создаем
+         IF COALESCE (vbGoodsSizeId,0) = 0
+         THEN
+              vbGoodsSizeId := (SELECT tmp.ioId
+                                FROM gpInsertUpdate_Object_GoodsSize (ioId        := 0         :: Integer
+                                                                    , ioCode      := 0         :: Integer
+                                                                    , inName      := TRIM (inGoodsSizeName) ::TVarChar
+                                                                    , inComment   := ''        :: TVarChar
+                                                                    , inSession   := inSession :: TVarChar
+                                                                     ) AS tmp);
+         END IF;
+         -- сохранили связь с <>
+         PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsSize(), inGoodsId, vbGoodsSizeId);
+  
+         -- сохранили протокол изменения товара
+         PERFORM lpInsert_ObjectProtocol (inGoodsId, vbUserId);
+         
+         ioGoodsSizeName_old := inGoodsSizeName;
+     END IF;
+  
+     IF COALESCE (inWeight,0) <> COALESCE (ioWeight_old,0)
+     THEN
+         -- сохранили свойство <Вес>
+         PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_Weight(), inGoodsId, inWeight);
+  
+         -- сохранили протокол изменения товара
+         PERFORM lpInsert_ObjectProtocol (inGoodsId, vbUserId);
+         
+         ioWeight_old := inWeight;          
+     END IF;
 
-   IF COALESCE (inWeight,0) <> 0
-   THEN
-       -- сохранили свойство <Вес>
-       PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_Weight(), inGoodsId, inWeight);   
-   END IF;
-
-   -- сохранили протокол изменения товара
-   PERFORM lpInsert_ObjectProtocol (inGoodsId, vbUserId);
-   
    
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;

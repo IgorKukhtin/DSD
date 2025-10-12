@@ -27,7 +27,7 @@ RETURNS TABLE (MovementId             Integer
              
              , OperDatePartner_order  TDateTime
              , OperDatePartner_sale   TDateTime
-           
+             , isManual_Order Boolean
              , ContractCode Integer, ContractNumber TVarChar, ContractTagName TVarChar, ContractTagGroupName TVarChar
              , FromCode Integer, FromName TVarChar
              , ToCode Integer, ToName TVarChar
@@ -62,13 +62,12 @@ RETURNS TABLE (MovementId             Integer
              , Amount_Weight_Dozakaz2 TFloat, Amount_Sh_Dozakaz2 TFloat
 
              , Amount TFloat, AmountZakaz TFloat, AmountSecond1 TFloat, AmountSecond2 TFloat
+             , AmountManual TFloat
              , Amount_Weight TFloat--, TotalAmount_Weight TFloat
              , AmountZakaz_Weight TFloat, Amount_Sh TFloat, AmountZakaz_Sh TFloat
-
              , Amount_WeightSK TFloat
-             
-             , AmountWeight_calc   TFloat, AmountWeight_calc1  TFloat, AmountWeight_calc2  TFloat, AmountWeight_calc3  TFloat 
-             
+             , AmountWeight_calc   TFloat, AmountWeight_calc1  TFloat, AmountWeight_calc2  TFloat, AmountWeight_calc3  TFloat
+
              , Amount_Child_one    TFloat       -- с Остатка
              , Amount_Child_sec    TFloat       -- с Прихода
              , Amount_Child        TFloat       -- Итого
@@ -518,9 +517,16 @@ BEGIN
                             FROM MovementString
                             WHERE MovementString.MovementId IN (SELECT DISTINCT tmpMov.Id FROM tmpMov)
                               AND MovementString.DescId IN (zc_MovementString_Comment()
-                                                         )
+                                                           )
                            )
 
+    , tmpMovementBoolean AS (SELECT MovementBoolean.*
+                             FROM MovementBoolean
+                             WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpMov.Id FROM tmpMov)
+                               AND MovementBoolean.DescId IN (zc_MovementBoolean_Manual()
+                                                            , zc_MovementBoolean_PriceWithVAT()
+                                                              )
+                            )
     , tmpMovementItemLinkObject AS (SELECT MovementItemLinkObject.*
                                     FROM MovementItemLinkObject
                                     WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_Master.Id FROM tmpMI_Master)
@@ -534,6 +540,7 @@ BEGIN
                                  AND MovementItemFloat.DescId IN (zc_MIFloat_AmountSecond()
                                                                 , zc_MIFloat_Price()
                                                                 , zc_MIFloat_CountForPrice()
+                                                                , zc_MIFloat_AmountManual()
                                                                 )
                               )
                    
@@ -550,6 +557,8 @@ BEGIN
                              , CASE WHEN inIsRemains = FALSE THEN COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) ELSE FALSE END AS isPriceWithVAT
                              , CASE WHEN inIsRemains = FALSE THEN COALESCE (MovementFloat_VATPercent.ValueData, 0)  ELSE 0 END        AS VATPercent
                              , CASE WHEN inIsRemains = FALSE THEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) ELSE 0 END      AS ChangePercent
+                             , CASE WHEN inIsByDoc = TRUE THEN COALESCE (MovementBoolean_Manual.ValueData, FALSE) ELSE FALSE END ::Boolean AS isManual
+                             
                              , MovementItem.ObjectId                                    AS GoodsId
                              , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId NOT IN (zc_Enum_InfoMoney_30102(), zc_Enum_InfoMoney_30103()) THEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) END AS GoodsKindId
                              , CASE WHEN inIsRemains = FALSE THEN ObjectLink_Goods_InfoMoney.ChildObjectId ELSE 0 END                 AS InfoMoneyId
@@ -558,7 +567,7 @@ BEGIN
                              , SUM (CASE WHEN Movement.OperDate <> COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) THEN MovementItem.Amount ELSE 0 END) AS Amount2
                              , SUM (CASE WHEN Movement.OperDate =  COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) THEN COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountSecond1
                              , SUM (CASE WHEN Movement.OperDate <> COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) THEN COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountSecond2
-                             
+                             , SUM (COALESCE (MIFloat_AmountManual.ValueData,0)) AS AmountManual
                              --
                              , SUM (CASE WHEN COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) = inStartDate    THEN COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS Amount_calc
                              , SUM (CASE WHEN COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) = vbStartDate_1  THEN COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS Amount_calc1
@@ -642,9 +651,13 @@ BEGIN
                                                    ON MovementDate_CarInfo.MovementId = Movement.Id
                                                   AND MovementDate_CarInfo.DescId = zc_MovementDate_CarInfo()
 
-                            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                                      ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
-                                                     AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+                            LEFT JOIN tmpMovementBoolean AS MovementBoolean_PriceWithVAT
+                                                         ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                                        AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+                            LEFT JOIN tmpMovementBoolean AS MovementBoolean_Manual
+                                                         ON MovementBoolean_Manual.MovementId =  Movement.Id
+                                                        AND MovementBoolean_Manual.DescId = zc_MovementBoolean_Manual()
+
                             LEFT JOIN tmpMovementFloat AS MovementFloat_VATPercent
                                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
                                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
@@ -665,8 +678,12 @@ BEGIN
                                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                  
                             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountSecond
-                                                        ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                                                           ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                            LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountManual
+                                                           ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+ 
                             LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_GoodsKind
                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -740,6 +757,7 @@ BEGIN
                                                                  END
                                    ELSE NULL
                               END
+                            , CASE WHEN inIsByDoc = TRUE THEN COALESCE (MovementBoolean_Manual.ValueData, FALSE) ELSE FALSE END
                           )
 
      , tmpMovement AS (SELECT tmpMovement2.MovementId
@@ -752,6 +770,7 @@ BEGIN
                             , tmpMovement2.RouteSortingId
                             , tmpMovement2.PersonalId
                             , tmpMovement2.PaidKindId
+                            , tmpMovement2.isManual
                             , tmpMovement2.GoodsKindId
                             , tmpMovement2.GoodsId
                             , tmpMovement2.InfoMoneyId
@@ -767,7 +786,8 @@ BEGIN
                             , SUM (Amount1 + Amount2 + tmpMovement2.AmountSecond1 + tmpMovement2.AmountSecond2) AS Amount
                             , SUM (Amount1 + Amount2 )                                AS AmountZakaz
                             , SUM (tmpMovement2.AmountSecond1)                        AS AmountSecond1
-                            , SUM (tmpMovement2.AmountSecond2)                        AS AmountSecond2
+                            , SUM (tmpMovement2.AmountSecond2)                        AS AmountSecond2 
+                            , SUM (tmpMovement2.AmountManual)                         AS AmountManual
                             , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN Amount1 ELSE 0 END)                                 AS Amount_Sh1
                             , SUM (Amount1 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)  AS Amount_Weight1
                             , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN Amount2 ELSE 0 END)                                 AS Amount_Sh2
@@ -835,6 +855,7 @@ BEGIN
                               , tmpMovement2.RouteSortingId
                               , tmpMovement2.PersonalId
                               , tmpMovement2.PaidKindId
+                              , tmpMovement2.isManual
                               , tmpMovement2.GoodsKindId
                               , tmpMovement2.GoodsId
                               , tmpMovement2.InfoMoneyId
@@ -1056,7 +1077,9 @@ BEGIN
            , tmpMLM_All.OperDatePartner                 AS OperDatePartner_Master
 
            , tmpMovement.OperDatePartner_order  :: TDateTime
-           , tmpMovement.OperDatePartner_sale   :: TDateTime
+           , tmpMovement.OperDatePartner_sale   :: TDateTime 
+           
+           , tmpMovement.isManual               :: Boolean
 
            , View_Contract_InvNumber.ContractCode
            , View_Contract_InvNumber.InvNumber          AS ContractNumber
@@ -1118,6 +1141,7 @@ BEGIN
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN (tmpMovement.AmountZakaz) ELSE 0 END                    :: TFloat AS AmountZakaz                       -- количество без дозаказа
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountSecond1 ELSE 0 END                    :: TFloat AS AmountSecond1
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountSecond2 ELSE 0 END                    :: TFloat AS AmountSecond2
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN (tmpMovement.AmountManual) ELSE 0 END                   :: TFloat AS AmountManual
 
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN (tmpMovement.Amount_Weight1 + tmpMovement.Amount_Weight2 + tmpMovement.AmountSecond_Weight1 + tmpMovement.AmountSecond_Weight2) ELSE 0 END :: TFloat AS Amount_Weight
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN (tmpMovement.Amount_Weight1 + tmpMovement.Amount_Weight2) ELSE 0 END                                                                       :: TFloat AS AmountZakaz_Weight  -- вес без дозаказа
@@ -1325,6 +1349,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 11.10.25         * AmountManual
  20.06.22         *
  12.03.21         *
  14.12.20         * add Comment

@@ -242,6 +242,11 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountSh_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountManual
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -458,6 +463,11 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountSh_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountManual
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -736,6 +746,14 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
+          end
+          object isManual: TcxGridDBColumn
+            Caption = #1047#1040#1071#1042#1050#1040'-0 ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isManual'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object OperDate_CarInfo: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1086#1090#1075#1088#1091#1079#1082#1080
@@ -1105,6 +1123,15 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'-'#1074#1086', '#1074#1077#1089' ('#1044#1072#1090#1072' '#1085#1072#1095'. +3<= '#1044#1072#1090#1072'.'#1091' '#1087#1086#1082#1091#1087')'
+            Width = 70
+          end
+          object AmountManual: TcxGridDBColumn
+            Caption = #1047#1040#1071#1042#1050#1040'-0'
+            DataBinding.FieldName = 'AmountManual'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object Amount_child_one: TcxGridDBColumn

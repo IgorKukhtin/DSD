@@ -647,11 +647,29 @@ object IncomeItemEdit_limitForm: TIncomeItemEdit_limitForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioGoodsSizeName_old'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'GoodsSizeName_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inWeight'
         Value = Null
         Component = ceWeight
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWeight_old'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Weight_old'
+        DataType = ftFloat
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -901,6 +919,44 @@ object IncomeItemEdit_limitForm: TIncomeItemEdit_limitForm
         Value = Null
         Component = edPartionCell
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsSizeId'
+        Value = Null
+        Component = GuidesGoodsSize
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsSizeName'
+        Value = Null
+        Component = GuidesGoodsSize
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsSizeName_old'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'GoodsSizeName_old'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Weight'
+        Value = Null
+        Component = ceWeight
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Weight_old'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Weight_old'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1

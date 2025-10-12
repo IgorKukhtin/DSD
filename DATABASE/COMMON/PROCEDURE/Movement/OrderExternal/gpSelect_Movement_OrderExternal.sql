@@ -31,7 +31,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCount TFloat, TotalCountSecond TFloat
              , isEDI Boolean
              , IsRemains Boolean
-             , isPromo Boolean
+             , isPromo Boolean 
+             , isManual Boolean
              , MovementPromo TVarChar
              , Comment TVarChar
              , InsertName TVarChar
@@ -166,7 +167,8 @@ BEGIN
            , COALESCE (MovementLinkMovement_Order.MovementId, 0) <> 0 AS isEDI
            , COALESCE (MovementBoolean_Remains.ValueData, FALSE) ::Boolean AS IsRemains
 
-           , COALESCE (MovementBoolean_Promo.ValueData, FALSE) AS isPromo
+           , COALESCE (MovementBoolean_Promo.ValueData, FALSE)  ::Boolean AS isPromo
+           , COALESCE (MovementBoolean_Manual.ValueData, FALSE) ::Boolean AS isManual
            , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndSale.ValueData) AS MovementPromo
 
            , MovementString_Comment.ValueData       AS Comment
@@ -318,6 +320,10 @@ BEGIN
                                       ON MovementBoolean_Remains.MovementId = Movement.Id
                                      AND MovementBoolean_Remains.DescId = zc_MovementBoolean_Remains()
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_Manual
+                                      ON MovementBoolean_Manual.MovementId = Movement.Id
+                                     AND MovementBoolean_Manual.DescId = zc_MovementBoolean_Manual()
+
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
@@ -405,6 +411,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 10.10.25         *
  25.05.21         *
  02.05.19         *
  05.10.16         * add inJuridicalBasisId
