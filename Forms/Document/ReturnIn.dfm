@@ -804,6 +804,9 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object l: TcxGrid
         Left = 0
         Top = 0
@@ -2488,9 +2491,6 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           StoredProc = spSelectDetail
-        end
-        item
-          StoredProc = spSelect_MI_Child_reason
         end>
       RefreshOnTabSetChanges = True
     end
@@ -2509,6 +2509,7 @@ inherited ReturnInForm: TReturnInForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DetailDS
@@ -8361,7 +8362,6 @@ inherited ReturnInForm: TReturnInForm
     Top = 384
   end
   object spSelect_MI_Child_reason: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItemChild_ReturnIn'
     DataSet = ChildCDS_Reason
     DataSets = <
       item
@@ -8427,7 +8427,7 @@ inherited ReturnInForm: TReturnInForm
     Top = 552
   end
   object ChildDS_Reason: TDataSource
-    DataSet = ChildCDS_Reason
+    DataSet = DetailCDS
     Left = 776
     Top = 552
   end
