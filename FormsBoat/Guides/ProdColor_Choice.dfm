@@ -25,8 +25,6 @@ object ProdColor_ChoiceForm: TProdColor_ChoiceForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 95
-    ExplicitHeight = 281
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -552,6 +550,14 @@ object ProdColor_ChoiceForm: TProdColor_ChoiceForm
         end>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
+    end
+    object actSetFocused: TdsdSetFocusedAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actSetFocused'
+      ControlName.Value = 'FieldFilter_Article'
+      ControlName.DataType = ftString
+      ControlName.MultiSelectSeparator = ','
     end
   end
   object spSelect: TdsdStoredProc
