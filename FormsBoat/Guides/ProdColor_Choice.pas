@@ -1,4 +1,4 @@
- unit ProdColor_goods;
+unit ProdColor_Choice;
 
 interface
 
@@ -22,10 +22,11 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCurrencyEdit, cxContainer, cxLabel, cxTextEdit, Vcl.ExtCtrls, dsdCommon;
+  cxContainer, cxTextEdit, cxMaskEdit, cxButtonEdit, cxLabel, Vcl.ExtCtrls,
+  dsdGuides, dsdCommon;
 
 type
-  TProdColor_goodsForm = class(TParentForm)
+  TProdColor_ChoiceForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -64,23 +65,13 @@ type
     Comment: TcxGridDBColumn;
     spUnErased: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
-    GoodsCode: TcxGridDBColumn;
-    Article: TcxGridDBColumn;
-    GoodsName: TcxGridDBColumn;
-    GoodsGroupName: TcxGridDBColumn;
-    GoodsGroupNameFull: TcxGridDBColumn;
-    EKPrice: TcxGridDBColumn;
-    EKPriceWVAT: TcxGridDBColumn;
-    BasisPrice: TcxGridDBColumn;
-    BasisPriceWVAT: TcxGridDBColumn;
+    Value: TcxGridDBColumn;
     Colors: TcxGridDBColumn;
     Color_Value: TcxGridDBColumn;
     Panel2: TPanel;
-    edSearchArticle: TcxTextEdit;
-    lbSearchArticle: TcxLabel;
-    lbSearchCode: TcxLabel;
+    spInsertUpdate: TdsdStoredProc;
+    RefreshDispatcher: TRefreshDispatcher;
     lbSearchName: TcxLabel;
-    edSearchGoods: TcxTextEdit;
     edSearchName: TcxTextEdit;
     FieldFilter_Article: TdsdFieldFilter;
   private
@@ -94,6 +85,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TProdColor_goodsForm);
+  RegisterClass(TProdColor_ChoiceForm);
 
 end.

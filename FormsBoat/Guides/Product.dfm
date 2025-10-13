@@ -37,7 +37,6 @@
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitHeight = 125
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -988,6 +987,8 @@
       Height = 33
       Align = alTop
       TabOrder = 2
+      ExplicitLeft = 1
+      ExplicitTop = 1
       object lbSearchName: TcxLabel
         Left = 5
         Top = 7

@@ -751,6 +751,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdColorForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProdColorForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdColor_ChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProdColor_ChoiceForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdColor_goodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProdColor_goodsForm');
 
