@@ -165,8 +165,6 @@ object ProdColor_ChoiceForm: TProdColor_ChoiceForm
     Height = 30
     Align = alTop
     TabOrder = 5
-    ExplicitLeft = -8
-    ExplicitTop = 40
     object lbSearchName: TcxLabel
       Left = 10
       Top = 3

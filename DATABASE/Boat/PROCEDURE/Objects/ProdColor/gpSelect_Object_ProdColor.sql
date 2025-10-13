@@ -112,3 +112,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Object_ProdColor (inIsShowAll:= TRUE, inSession:= zfCalc_UserAdmin())
+-- select * from gpSelect_Object_ProdColor(inLanguageId1 := 0 , inLanguageId2 := 0 , inLanguageId3 := 0 , inLanguageId4 := 0 , inIsShowAll := 'False' ,  inSession := '5');
