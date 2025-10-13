@@ -82,6 +82,8 @@ type
     cxLabel29: TcxLabel;
     ceWeight: TcxCurrencyEdit;
     GuidesGoodsSize: TdsdGuides;
+    cxLabel15: TcxLabel;
+    ceRemains: TcxCurrencyEdit;
   private
     { Private declarations }
   public

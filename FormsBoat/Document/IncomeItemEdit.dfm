@@ -110,7 +110,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
   end
   object ceOperPriceList: TcxCurrencyEdit
     Left = 431
-    Top = 116
+    Top = 115
     Hint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -338,6 +338,29 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 37
+    Width = 80
+  end
+  object cxLabel15: TcxLabel
+    Left = 320
+    Top = 99
+    Caption = #1054#1089#1090#1072#1090#1086#1082
+  end
+  object ceRemains: TcxCurrencyEdit
+    Left = 320
+    Top = 115
+    ParentFont = False
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    Properties.EditFormat = ',0.####'
+    Properties.ReadOnly = True
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -11
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.TextColor = clBlue
+    Style.IsFontAssigned = True
+    TabOrder = 39
     Width = 80
   end
   object ActionList: TActionList
@@ -965,6 +988,13 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Weight_old'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountRemains'
+        Value = Null
+        Component = ceRemains
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
