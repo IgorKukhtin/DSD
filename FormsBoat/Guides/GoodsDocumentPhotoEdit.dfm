@@ -1912,10 +1912,10 @@
     KeyField = 'Id'
     LookupControl = edProdColor
     DisableGuidesOpen = True
-    FormNameParam.Value = 'TProdColorForm'
+    FormNameParam.Value = 'TProdColor_ChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TProdColorForm'
+    FormName = 'TProdColor_ChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
