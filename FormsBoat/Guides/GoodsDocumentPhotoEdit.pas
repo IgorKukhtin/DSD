@@ -27,7 +27,7 @@ uses
   cxImage, dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage,
   cxDBData, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGrid, cxSplitter, cxGridBandedTableView,
-  cxGridDBBandedTableView, dsdCommon, cxMemo;
+  cxGridDBBandedTableView, dsdCommon, cxMemo, cxPCdxBarPopupMenu, cxPC;
 
 type
   TGoodsDocumentPhotoEditForm = class(TParentForm)
@@ -140,6 +140,18 @@ type
     GuidesPartner: TdsdGuides;
     GuidesProdColor: TdsdGuides;
     edArticle: TcxTextEdit;
+    cxPageControl1: TcxPageControl;
+    cxTabSheet1: TcxTabSheet;
+    cxTabSheet2: TcxTabSheet;
+    cxTabSheet3: TcxTabSheet;
+    cxTabSheet4: TcxTabSheet;
+    cxTabSheet5: TcxTabSheet;
+    Panel2: TPanel;
+    Panel3: TPanel;
+    Panel4: TPanel;
+    cxImage1: TcxImage;
+    cxImage2: TcxImage;
+    cxImage3: TcxImage;
   private
     { Private declarations }
   public
