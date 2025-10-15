@@ -6382,6 +6382,7 @@ end;
 
 procedure TdsdFieldFilter.OnEditExit(Sender: TObject);
   var B: TBookMark; Item : TCollectionItem; bDo : Boolean;
+  fExit : Boolean;
 begin
   FTimer.Enabled:=False;
   FProgressBar.Position:=0;
@@ -6389,7 +6390,12 @@ begin
   if not Assigned(FDataSet) then Exit;
   if not FDataSet.Active then Exit;
   if not Assigned(Column) and not Assigned(FCheckColumn) then Exit;
-  if (not FDataSet.Filtered) and (FOldStr = '') then Exit;
+  if (not FDataSet.Filtered) then
+  begin
+      fExit:= true;
+      for Item in FColumnList do if TColumnFieldFilterItem(Item).FOldStr <> '' then fExit:= false;
+      if fExit then Exit;
+  end;
 
   FDataSet.DisableControls;
   B := FDataSet.GetBookmark;
