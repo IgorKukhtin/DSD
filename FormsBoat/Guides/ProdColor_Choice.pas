@@ -1,4 +1,4 @@
-unit GoodsType;
+unit ProdColor_Choice;
 
 interface
 
@@ -22,10 +22,11 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxContainer, cxTextEdit, cxLabel, Vcl.ExtCtrls, dsdCommon;
+  cxContainer, cxTextEdit, cxMaskEdit, cxButtonEdit, cxLabel, Vcl.ExtCtrls,
+  dsdGuides, dsdCommon;
 
 type
-  TGoodsTypeForm = class(TParentForm)
+  TProdColor_ChoiceForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -64,10 +65,15 @@ type
     Comment: TcxGridDBColumn;
     spUnErased: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    Value: TcxGridDBColumn;
+    Colors: TcxGridDBColumn;
+    Color_Value: TcxGridDBColumn;
     Panel2: TPanel;
+    spInsertUpdate: TdsdStoredProc;
+    RefreshDispatcher: TRefreshDispatcher;
     lbSearchName: TcxLabel;
     edSearchName: TcxTextEdit;
-    FieldFilter_Name: TdsdFieldFilter;
+    FieldFilter_Article: TdsdFieldFilter;
     actSetFocused: TdsdSetFocusedAction;
   private
     { Private declarations }
@@ -80,6 +86,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TGoodsTypeForm);
+  RegisterClass(TProdColor_ChoiceForm);
 
 end.

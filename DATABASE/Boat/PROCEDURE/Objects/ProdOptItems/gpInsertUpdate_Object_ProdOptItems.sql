@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_Object_ProdOptItems()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptItems(
  INOUT ioId                     Integer   , -- Ключ
@@ -11,15 +13,18 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptItems(
     IN inProdColorPatternId     Integer   ,
     IN inMaterialOptionsId      Integer   ,
     IN inMovementId_OrderClient Integer   ,
+    IN inPriceListId            Integer   ,   --прайс для SalePrice 
  INOUT ioGoodsId                Integer   ,
    OUT outGoodsName             TVarChar  ,
     IN inAmount                 TFloat    ,
     IN inPriceIn                TFloat    ,
-    IN inPriceOut               TFloat    ,
+    IN inPriceOut               TFloat    ,   --inSalePrice
     IN inDiscountTax            TFloat    ,
     IN inPartNumber             TVarChar  ,
     IN inComment                TVarChar  ,
     IN inCommentOpt             TVarChar  ,
+    IN inOperDate               TDateTime ,   -- дата изменения цены 
+    IN inisСhangePrice          Boolean   ,   -- Изменить цену (да/нет)
     IN inIsEnabled              Boolean   , 
    OUT outIsErased              Boolean   , -- удален
     IN inSession                TVarChar    -- сессия пользователя
@@ -32,6 +37,7 @@ $BODY$
    DECLARE vbProdOptionsId Integer;
    DECLARE vbIsInsert Boolean;
    DECLARE vbMI_Id Integer;
+   DECLARE vbSalePrice TFloat;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ProdOptItems());
@@ -333,7 +339,34 @@ BEGIN
     
        -- сохранили свойство <>
        PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptItems_OrderClient(), ioId, inMovementId_OrderClient);
-    
+
+       --если признак изменить цену = Да  (inisСhangePrice )  тогда  формировать еще в истории  
+       IF COALESCE (inisСhangePrice, FALSE) = TRUE
+       THEN
+           PERFORM gpInsertUpdate_ObjectHistory_PriceListItemLast (ioId         := NULL                  -- сам найдет нужный Id
+                                                                 , inPriceListId:= COALESCE (inPriceListId, zc_PriceList_Basis()) ::Integer  -- !!!Базовый Прайс!!!
+                                                                 , inGoodsId    := ioId        :: Integer
+                                                                 , inOperDate   := inOperDate  :: TDateTime
+                                                                 , ioPriceNoVAT := inPriceOut :: TFloat
+                                                                 , ioPriceWVAT  := 0           :: TFloat
+                                                                 , inIsLast     := TRUE        :: Boolean
+                                                                 , inSession    := inSession   :: TVarChar
+                                                                  ) AS tmp;
+
+           -- сохранили свойство <>
+           PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptions_SalePrice(), ioProdOptionsId, inPriceOut);
+            
+       ELSE  
+           --сохраненное значение
+           vbSalePrice := (SELECT OF.ValueData FROM ObjectFloat AS OF WHERE OF.DescId = zc_ObjectFloat_ProdOptions_SalePrice() AND OF.ObjectId = ioProdOptionsId) ::TFloat;
+           IF COALESCE (vbSalePrice,0) <> COALESCE (inPriceOut)
+           THEN
+               RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Для изменеия цены установите значение <Изменить цену> = ДА'
+                                                     , inProcedureName := 'gpInsertUpdate_Object_ProdOptItems'
+                                                     , inUserId        := vbUserId
+                                                      );
+           END IF;
+       END IF;    
     
        IF vbIsInsert = TRUE THEN
           -- сохранили свойство <Дата создания>
@@ -409,6 +442,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.10.25         *
  29.05.23         *
  06.04.21         * inAmount
  04.01.21         * inDiscountTax

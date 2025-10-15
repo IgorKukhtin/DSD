@@ -405,7 +405,8 @@ uses
   GoodsPhotoEdit in '..\..\FormsBoat\Guides\GoodsPhotoEdit.pas' {GoodsPhotoEditForm: TParentForm},
   GoodsDocumentPhotoEdit in '..\..\FormsBoat\Guides\GoodsDocumentPhotoEdit.pas' {GoodsDocumentPhotoEditForm: TParentForm},
   GoodsMain_Choice in '..\..\FormsBoat\Guides\GoodsMain_Choice.pas' {GoodsMain_ChoiceForm: TParentForm},
-  Goods_Choice in '..\..\FormsBoat\Guides\Goods_Choice.pas' {Goods_ChoiceForm: TParentForm};
+  Goods_Choice in '..\..\FormsBoat\Guides\Goods_Choice.pas' {Goods_ChoiceForm: TParentForm},
+  ProdColor_Choice in '..\..\FormsBoat\Guides\ProdColor_Choice.pas' {ProdColor_ChoiceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

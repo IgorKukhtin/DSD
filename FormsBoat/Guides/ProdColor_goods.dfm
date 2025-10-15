@@ -3,7 +3,7 @@ object ProdColor_goodsForm: TProdColor_goodsForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <Farbe+Article>'
   ClientHeight = 376
-  ClientWidth = 786
+  ClientWidth = 817
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,13 +18,16 @@ object ProdColor_goodsForm: TProdColor_goodsForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
-    Width = 786
-    Height = 350
+    Top = 64
+    Width = 817
+    Height = 312
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitTop = 26
+    ExplicitWidth = 786
+    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -212,6 +215,77 @@ object ProdColor_goodsForm: TProdColor_goodsForm
       GridView = cxGridDBTableView
     end
   end
+  object Panel2: TPanel
+    Left = 0
+    Top = 26
+    Width = 817
+    Height = 38
+    Align = alTop
+    TabOrder = 5
+    object edSearchArticle: TcxTextEdit
+      Left = 335
+      Top = 8
+      TabOrder = 0
+      DesignSize = (
+        125
+        21)
+      Width = 125
+    end
+    object lbSearchArticle: TcxLabel
+      Left = 9
+      Top = 8
+      Caption = #1055#1086#1080#1089#1082' Farbe : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object lbSearchCode: TcxLabel
+      Left = 478
+      Top = 8
+      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object lbSearchName: TcxLabel
+      Left = 259
+      Top = 8
+      Caption = 'Artikel Nr :'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchGoods: TcxTextEdit
+      Left = 607
+      Top = 8
+      TabOrder = 5
+      DesignSize = (
+        115
+        21)
+      Width = 115
+    end
+    object edSearchName: TcxTextEdit
+      Left = 105
+      Top = 8
+      TabOrder = 4
+      DesignSize = (
+        140
+        21)
+      Width = 140
+    end
+  end
   object DataSource: TDataSource
     DataSet = MasterCDS
     Left = 56
@@ -235,8 +309,8 @@ object ProdColor_goodsForm: TProdColor_goodsForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 96
-    Top = 64
+    Left = 88
+    Top = 112
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -256,7 +330,7 @@ object ProdColor_goodsForm: TProdColor_goodsForm
     ShowShortCutInHint = True
     UseSystemFont = True
     Left = 48
-    Top = 64
+    Top = 112
     DockControlHeights = (
       0
       0
@@ -388,7 +462,7 @@ object ProdColor_goodsForm: TProdColor_goodsForm
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 8
-    Top = 64
+    Top = 104
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -694,8 +768,8 @@ object ProdColor_goodsForm: TProdColor_goodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 432
-    Top = 80
+    Left = 352
+    Top = 120
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 288
@@ -733,6 +807,7 @@ object ProdColor_goodsForm: TProdColor_goodsForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 104
     Top = 248
@@ -760,5 +835,26 @@ object ProdColor_goodsForm: TProdColor_goodsForm
     PackSize = 1
     Left = 432
     Top = 128
+  end
+  object FieldFilter_Article: TdsdFieldFilter
+    TextEdit = edSearchArticle
+    DataSet = MasterCDS
+    Column = Article
+    ColumnList = <
+      item
+        Column = Article
+      end
+      item
+        Column = Name
+        TextEdit = edSearchName
+      end
+      item
+        Column = GoodsName
+        TextEdit = edSearchGoods
+      end>
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 592
+    Top = 112
   end
 end

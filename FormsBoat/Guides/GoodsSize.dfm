@@ -15,6 +15,7 @@ object GoodsSizeForm: TGoodsSizeForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = actChoiceGuides
+  AddOnFormData.SetFocusedAction = actSetFocused
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -26,9 +27,6 @@ object GoodsSizeForm: TGoodsSizeForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 26
-    ExplicitWidth = 541
-    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -120,9 +118,6 @@ object GoodsSizeForm: TGoodsSizeForm
     Height = 33
     Align = alTop
     TabOrder = 5
-    ExplicitLeft = -561
-    ExplicitTop = 0
-    ExplicitWidth = 1102
     object lbSearchName: TcxLabel
       Left = 14
       Top = 6
@@ -507,6 +502,14 @@ object GoodsSizeForm: TGoodsSizeForm
         end>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
+    end
+    object actSetFocused: TdsdSetFocusedAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actSetFocused'
+      ControlName.Value = 'FieldFilter_Name'
+      ControlName.DataType = ftString
+      ControlName.MultiSelectSeparator = ','
     end
   end
   object spSelect: TdsdStoredProc

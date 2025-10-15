@@ -338,6 +338,29 @@ object IncomeItemEdit_limitForm: TIncomeItemEdit_limitForm
     TabOrder = 37
     Width = 80
   end
+  object cxLabel15: TcxLabel
+    Left = 328
+    Top = 100
+    Caption = #1054#1089#1090#1072#1090#1086#1082
+  end
+  object ceRemains: TcxCurrencyEdit
+    Left = 328
+    Top = 116
+    ParentFont = False
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    Properties.EditFormat = ',0.####'
+    Properties.ReadOnly = True
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -11
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.TextColor = clBlue
+    Style.IsFontAssigned = True
+    TabOrder = 39
+    Width = 80
+  end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 231
@@ -958,6 +981,13 @@ object IncomeItemEdit_limitForm: TIncomeItemEdit_limitForm
         ComponentItem = 'Weight_old'
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountRemains'
+        Value = Null
+        Component = ceRemains
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 392
@@ -1279,7 +1309,7 @@ object IncomeItemEdit_limitForm: TIncomeItemEdit_limitForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 261
+    Left = 245
     Top = 86
   end
   object HeaderExit: THeaderExit

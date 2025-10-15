@@ -1778,8 +1778,8 @@ object Goods_ChoiceForm: TGoods_ChoiceForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'TProdColorForm'
-      FormName = 'TProdColorForm'
-      FormNameParam.Value = 'TProdColorForm'
+      FormName = 'TProdColor_ChoiceForm'
+      FormNameParam.Value = 'TProdColor_ChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

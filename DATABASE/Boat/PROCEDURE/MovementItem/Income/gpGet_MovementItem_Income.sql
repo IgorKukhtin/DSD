@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , Article TVarChar
              , Amount         TFloat
              , Amount_old     TFloat
+             , AmountRemains  TFloat
              , OperPrice_orig TFloat
              , CountForPrice  TFloat
              , DiscountTax    TFloat
@@ -92,6 +93,20 @@ BEGIN
                                                                         , COALESCE ((SELECT tmpMI.GoodsId FROM tmpMI WHERE tmpMI.GoodsId > 0), inGoodsId)
                                                                          ) AS tmp
                                  )
+
+         --текущие остатки
+       , tmpRemains AS (SELECT Container.ObjectId            AS GoodsId
+                             , Sum(Container.Amount)::TFloat AS Remains
+                         FROM Container
+                         WHERE Container.WhereObjectId = 35139 -- Склад Основной
+                           AND Container.DescId        = zc_Container_Count()
+                           AND Container.ObjectId IN (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI)
+                           AND Container.Amount <> 0
+                         GROUP BY Container.ObjectId
+                                --, Container.WhereObjectId
+                         HAVING Sum(Container.Amount) <> 0
+                        )
+
            -- Результат
            SELECT
                  inId                           AS Id
@@ -102,6 +117,9 @@ BEGIN
 
                , COALESCE (tmpMI.Amount, 1)                                        :: TFloat   AS Amount
                , CASE WHEN tmpMI.Id > 0 THEN tmpMI.Amount ELSE 0 END               :: TFloat   AS Amount_old
+
+               -- остатки на гл. складе
+               , COALESCE (tmpRemains.Remains, 0)           ::TFloat AS AmountRemains
 
                , COALESCE (tmpMI.OperPrice_orig, ObjectFloat_EKPrice.ValueData, 0) :: TFloat   AS OperPrice_orig
                , COALESCE (tmpMI.CountForPrice, 1)                                 :: TFloat   AS CountForPrice
@@ -148,6 +166,8 @@ BEGIN
                                                  ON MILO_PartionCell.MovementItemId = tmpMI.Id
                                                 AND MILO_PartionCell.DescId = zc_MILinkObject_PartionCell()
                 LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = MILO_PartionCell.ObjectId
+
+                LEFT JOIN tmpRemains ON tmpRemains.GoodsId = Object_Goods.Id
                ;
 END;
 $BODY$

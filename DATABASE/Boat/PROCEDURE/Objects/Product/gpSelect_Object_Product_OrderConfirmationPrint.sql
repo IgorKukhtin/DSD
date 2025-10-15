@@ -374,7 +374,9 @@ BEGIN
                    ELSE zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (tmpProdOptItems.Amount * tmpProdOptItems.SalePrice, COALESCE (vbDiscountTax,0)), vbDiscountNextTax) 
               END  ::TFloat AS Sale_summ_tax
             , tmpProdOptItems.CommentOpt
-            , tmpProdOptItems.NPP   :: Integer  
+            , tmpProdOptItems.NPP   :: Integer
+            --признак  SalePrice <> 0 - печатать или нет
+            , CASE WHEN COALESCE (tmpProdOptItems.SalePrice,0) <> 0 THEN TRUE ELSE TRUE /*FALSE*/ END ::Boolean AS isPrint  
        FROM tmpProdOptItems
      UNION
        SELECT tmp.GoodsName                  AS GoodsName
@@ -388,6 +390,8 @@ BEGIN
             , zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (tmp.Amount * tmp.OperPrice, COALESCE (vbDiscountTax,0)), vbDiscountNextTax)  ::TFloat AS Sale_summ_tax
             , '' ::TVarChar AS CommentOpt 
             , ROW_NUMBER() OVER (ORDER BY tmp.GoodsName) :: Integer  AS NPP
+            --признак  SalePrice <> 0 - печатать или нет
+            , CASE WHEN COALESCE (tmp.OperPrice,0) <> 0 THEN TRUE ELSE TRUE /*FALSE*/ END ::Boolean AS isPrint
        FROM tmpOrderClient AS tmp
             LEFT JOIN ObjectString AS ObjectString_Article
                                    ON ObjectString_Article.ObjectId = tmp.GoodsId
@@ -410,6 +414,8 @@ BEGIN
             , 0  :: TFloat   AS Sale_summ_tax
             , '' :: TVarChar AS CommentOpt 
             , 999 :: Integer AS NPP
+            --признак  SalePrice <> 0 - печатать или нет
+            , TRUE /*FALSE*/  ::Boolean AS isPrint
        WHERE (SELECT COUNT (*) FROM tmpProdOptItems) = 0
        -- NPP
        ORDER BY 11

@@ -22,7 +22,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCurrencyEdit;
+  cxCurrencyEdit, cxContainer, cxLabel, cxTextEdit, Vcl.ExtCtrls, dsdCommon;
 
 type
   TProdColor_goodsForm = class(TParentForm)
@@ -75,6 +75,14 @@ type
     BasisPriceWVAT: TcxGridDBColumn;
     Colors: TcxGridDBColumn;
     Color_Value: TcxGridDBColumn;
+    Panel2: TPanel;
+    edSearchArticle: TcxTextEdit;
+    lbSearchArticle: TcxLabel;
+    lbSearchCode: TcxLabel;
+    lbSearchName: TcxLabel;
+    edSearchGoods: TcxTextEdit;
+    edSearchName: TcxTextEdit;
+    FieldFilter_Article: TdsdFieldFilter;
   private
     { Private declarations }
   public

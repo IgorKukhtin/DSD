@@ -91,11 +91,16 @@ tmpMI AS (SELECT DISTINCT tmp.Id
                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+                     LEFT JOIN MovementItemDate AS MovementItemDate
+                                                ON MovementItemDate.MovementItemId = MovementItem.Id
+                                               AND MovementItemDate.DescId = zc_MIDate_PartionGoods()
                 WHERE Movement.DescId = zc_Movement_Send()
                   AND Movement.OperDate = inPartionGoodsDate
                   AND Movement.StatusId = zc_Enum_Status_Complete()
                   AND (COALESCE (MILinkObject_GoodsKind.ObjectId,0) = COALESCE (inGoodsKindId,0) OR inGoodsKindId = 0)
                   AND COALESCE (MovementBoolean_isRePack.ValueData, FALSE) = inIsRePack
+                  AND MovementItemDate.ValueData IS NULL
               UNION
                 --запрос по партиям из проводок
                 SELECT DISTINCT tmp.Id

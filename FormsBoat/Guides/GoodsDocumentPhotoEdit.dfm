@@ -3,7 +3,7 @@
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' - Document / Photo>'
   ClientHeight = 651
-  ClientWidth = 972
+  ClientWidth = 970
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -54,7 +54,7 @@
   object PanelMain: TPanel
     Left = 216
     Top = 0
-    Width = 756
+    Width = 754
     Height = 651
     Align = alRight
     Anchors = [akLeft, akTop, akRight, akBottom]
@@ -79,27 +79,30 @@
       end
       object dxBarDockControl3: TdxBarDockControl
         Left = 0
-        Top = 301
+        Top = 291
         Width = 232
         Height = 26
         Align = dalTop
         BarManager = BarManager
+        ExplicitTop = 301
       end
       object Panel1: TPanel
         Left = 0
         Top = 26
         Width = 232
-        Height = 275
+        Height = 265
         Align = alTop
         Caption = 'Panel1'
         TabOrder = 2
         object cxGrid2: TcxGrid
           Left = 1
           Top = 19
-          Width = 226
-          Height = 255
+          Width = 225
+          Height = 245
           Align = alClient
           TabOrder = 0
+          ExplicitWidth = 227
+          ExplicitHeight = 201
           object cxGrid2DBBandedTableView1: TcxGridDBBandedTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = DocumentDS
@@ -161,12 +164,14 @@
           end
         end
         object cxRightSplitter: TcxSplitter
-          Left = 227
+          Left = 226
           Top = 19
           Width = 4
-          Height = 255
+          Height = 245
           AlignSplitter = salRight
           Control = cxGrid2
+          ExplicitLeft = 227
+          ExplicitHeight = 255
         end
         object cxLabel2: TcxLabel
           Left = 1
@@ -181,25 +186,29 @@
           Style.Font.Style = [fsBold]
           Style.IsFontAssigned = True
           Properties.Alignment.Horz = taCenter
+          ExplicitWidth = 230
           AnchorX = 116
         end
       end
       object PanelPhotoList: TPanel
         Left = 0
-        Top = 327
+        Top = 317
         Width = 232
-        Height = 322
+        Height = 332
         Align = alClient
         Caption = 'PanelPhotoList'
         ShowCaption = False
         TabOrder = 3
+        ExplicitTop = 327
+        ExplicitHeight = 322
         object cxGrid3: TcxGrid
           Left = 1
           Top = 19
           Width = 230
-          Height = 302
+          Height = 312
           Align = alClient
           TabOrder = 0
+          ExplicitHeight = 302
           object cxGridDBBandedTableView1: TcxGridDBBandedTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = PhotoDS
@@ -251,78 +260,165 @@
     object PanelView: TPanel
       Left = 233
       Top = 1
-      Width = 522
+      Width = 520
       Height = 649
       Align = alClient
       Caption = 'PanelView'
       ShowCaption = False
       TabOrder = 1
-      object PanelDocView: TPanel
+      object cxPageControl1: TcxPageControl
         Left = 1
         Top = 1
-        Width = 520
-        Height = 489
+        Width = 518
+        Height = 647
         Align = alClient
-        Caption = 'PanelDocView'
-        ShowCaption = False
         TabOrder = 0
-      end
-      object PanelPhoto: TPanel
-        Left = 1
-        Top = 490
-        Width = 520
-        Height = 158
-        Align = alBottom
-        Caption = 'PanelPhoto'
-        ShowCaption = False
-        TabOrder = 1
-        object Image3: TcxImage
-          Left = 341
-          Top = 1
-          Align = alLeft
-          Properties.ReadOnly = True
-          TabOrder = 0
-          Height = 156
-          Width = 170
-        end
-        object Image2: TcxImage
-          Left = 171
-          Top = 1
-          Align = alLeft
-          Properties.ReadOnly = True
-          TabOrder = 1
-          Height = 156
-          Width = 170
-        end
-        object Image1: TcxImage
-          Left = 1
-          Top = 1
-          Align = alLeft
-          Properties.ReadOnly = True
-          TabOrder = 2
-          Height = 156
-          Width = 170
-        end
-        object cxGrid1: TcxGrid
-          Left = 85
-          Top = 54
-          Width = 330
-          Height = 107
-          TabOrder = 3
-          Visible = False
-          object cxGrid1DBTableView1: TcxGridDBTableView
-            Navigator.Buttons.CustomButtons = <>
-            DataController.DataSource = DataSource
-            DataController.Summary.DefaultGroupSummaryItems = <>
-            DataController.Summary.FooterSummaryItems = <>
-            DataController.Summary.SummaryGroups = <>
-            object cxGrid1DBTableView1Column1: TcxGridDBColumn
-              DataBinding.FieldName = 'Id'
-              Width = 60
+        Properties.ActivePage = cxTabSheet1
+        Properties.CustomButtons.Buttons = <>
+        ClientRectBottom = 647
+        ClientRectRight = 518
+        ClientRectTop = 24
+        object cxTabSheet1: TcxTabSheet
+          Caption = #1060#1086#1090#1086'-1'
+          ImageIndex = 0
+          object Panel2: TPanel
+            Left = 0
+            Top = 0
+            Width = 518
+            Height = 623
+            Align = alClient
+            Caption = 'PanelP1'
+            TabOrder = 0
+            object cxImage1: TcxImage
+              Left = 1
+              Top = 1
+              Align = alClient
+              Properties.ReadOnly = True
+              TabOrder = 0
+              Height = 621
+              Width = 516
             end
           end
-          object cxGrid1Level1: TcxGridLevel
-            GridView = cxGrid1DBTableView1
+        end
+        object cxTabSheet2: TcxTabSheet
+          Caption = #1060#1086#1090#1086'-2'
+          ImageIndex = 1
+          object Panel3: TPanel
+            Left = 0
+            Top = 0
+            Width = 518
+            Height = 623
+            Align = alClient
+            Caption = 'PanelP2'
+            TabOrder = 0
+            object cxImage2: TcxImage
+              Left = 1
+              Top = 1
+              Align = alClient
+              Properties.ReadOnly = True
+              TabOrder = 0
+              Height = 621
+              Width = 516
+            end
+          end
+        end
+        object cxTabSheet3: TcxTabSheet
+          Caption = #1060#1086#1090#1086'-3'
+          ImageIndex = 2
+          object Panel4: TPanel
+            Left = 0
+            Top = 0
+            Width = 518
+            Height = 623
+            Align = alClient
+            Caption = 'PanelP3'
+            TabOrder = 0
+            object cxImage3: TcxImage
+              Left = 1
+              Top = 1
+              Align = alClient
+              Properties.ReadOnly = True
+              TabOrder = 0
+              Height = 621
+              Width = 516
+            end
+          end
+        end
+        object cxTabSheet4: TcxTabSheet
+          Caption = #1060#1086#1090#1086' '#1074#1089#1077
+          ImageIndex = 3
+          object PanelPhoto: TPanel
+            Left = 0
+            Top = 0
+            Width = 518
+            Height = 350
+            Align = alTop
+            Caption = 'PanelPhoto'
+            ShowCaption = False
+            TabOrder = 0
+            object Image3: TcxImage
+              Left = 341
+              Top = 1
+              Align = alLeft
+              Properties.ReadOnly = True
+              TabOrder = 0
+              Height = 348
+              Width = 170
+            end
+            object Image2: TcxImage
+              Left = 171
+              Top = 1
+              Align = alLeft
+              Properties.ReadOnly = True
+              TabOrder = 1
+              Height = 348
+              Width = 170
+            end
+            object Image1: TcxImage
+              Left = 1
+              Top = 1
+              Align = alLeft
+              Properties.ReadOnly = True
+              TabOrder = 2
+              Height = 348
+              Width = 170
+            end
+            object cxGrid1: TcxGrid
+              Left = 177
+              Top = 206
+              Width = 330
+              Height = 107
+              TabOrder = 3
+              Visible = False
+              object cxGrid1DBTableView1: TcxGridDBTableView
+                Navigator.Buttons.CustomButtons = <>
+                DataController.DataSource = DataSource
+                DataController.Summary.DefaultGroupSummaryItems = <>
+                DataController.Summary.FooterSummaryItems = <>
+                DataController.Summary.SummaryGroups = <>
+                object cxGrid1DBTableView1Column1: TcxGridDBColumn
+                  DataBinding.FieldName = 'Id'
+                  Width = 60
+                end
+              end
+              object cxGrid1Level1: TcxGridLevel
+                GridView = cxGrid1DBTableView1
+              end
+            end
+          end
+        end
+        object cxTabSheet5: TcxTabSheet
+          Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+          ImageIndex = 4
+          object PanelDocView: TPanel
+            Left = 0
+            Top = 0
+            Width = 518
+            Height = 623
+            Align = alClient
+            Caption = 'PanelDocView'
+            ShowCaption = False
+            TabOrder = 0
           end
         end
       end
@@ -854,6 +950,20 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inArticle'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'Name'
         Value = ''
         DataType = ftString
@@ -1131,8 +1241,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 584
-    Top = 40
+    Left = 544
+    Top = 56
   end
   object spGetDocument: TdsdStoredProc
     StoredProcName = 'gpGet_Object_GoodsDocument'
@@ -1733,11 +1843,23 @@
       item
         FieldName = 'Image3'
         Image = Image3
+      end
+      item
+        FieldName = 'Image1'
+        Image = cxImage1
+      end
+      item
+        FieldName = 'Image2'
+        Image = cxImage2
+      end
+      item
+        FieldName = 'Image3'
+        Image = cxImage3
       end>
     ViewDocumentList = <>
     PropertiesCellList = <>
-    Left = 904
-    Top = 528
+    Left = 489
+    Top = 536
   end
   object dsdDBViewAddOnDoc: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1793,8 +1915,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 488
-    Top = 208
+    Left = 544
+    Top = 192
   end
   object GuidesMeasure: TdsdGuides
     KeyField = 'Id'
@@ -1912,10 +2034,10 @@
     KeyField = 'Id'
     LookupControl = edProdColor
     DisableGuidesOpen = True
-    FormNameParam.Value = 'TProdColorForm'
+    FormNameParam.Value = 'TProdColor_ChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TProdColorForm'
+    FormName = 'TProdColor_ChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
