@@ -36,17 +36,26 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNum
              , isPromo Boolean
              , isList Boolean
              , isPrinted Boolean
-             , isWeighing_inf Boolean  
+             , isWeighing_inf Boolean
              , MovementId_OrderReturnTare Integer
-             , InvNumber_OrderReturnTare  TVarChar 
-             
+             , InvNumber_OrderReturnTare  TVarChar
+
              , MovementId_TransportGoods Integer
              , InvNumber_TransportGoods TVarChar
              , OperDate_TransportGoods TDateTime
              )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId          Integer;
+   DECLARE vbMovementId_sale Integer;
+   DECLARE vbContractId      Integer;
+   DECLARE vbPriceListId_in  Integer;
+   DECLARE vbUserId_insert   Integer;
+   DECLARE vbMemberId_insert Integer;
+   DECLARE vbReestrKindId    Integer;
+
+   DECLARE vbMovementId_OrderReturnTare Integer;
+   DECLARE vbMovementId_TransportGoods  Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_ReturnIn());
@@ -78,7 +87,7 @@ BEGIN
              , CAST (0 as TFloat)                       AS TotalSummPVAT
              , CAST (0 as TFloat)                       AS TotalSumm
              , CAST (0 as TFloat)                       AS CurrencyPartnerValue
-             , CAST (0 as TFloat)                       AS ParPartnerValue 
+             , CAST (0 as TFloat)                       AS ParPartnerValue
              , CAST (0 as TFloat)                       AS CorrSumm
              , 0                                        AS FromId
              , CAST ('' as TVarChar)                    AS FromName
@@ -114,19 +123,19 @@ BEGIN
              , CAST ('' AS TVarChar)                    AS MemberExpName
 
              , 0                   	                    AS ReestrKindId
-             , CAST ('' AS TVarChar)                    AS ReestrKindName 
+             , CAST ('' AS TVarChar)                    AS ReestrKindName
 
              , 0                   	                    AS SubjectDocId
              , CAST ('' AS TVarChar)                    AS SubjectDocName
 
              , 0                                        AS ReasonId
-             , CAST ('' AS TVarChar)                    AS ReasonName 
+             , CAST ('' AS TVarChar)                    AS ReasonName
 
              , CAST ('' as TVarChar)                    AS Comment
-             , CAST (FALSE AS Boolean)                  AS isPromo 
+             , CAST (FALSE AS Boolean)                  AS isPromo
              , CAST (FALSE AS Boolean)                  AS isList
              , CAST (FALSE AS Boolean)                  AS isPrinted
-             , CAST (FALSE AS Boolean)                  AS isWeighing_inf  
+             , CAST (FALSE AS Boolean)                  AS isWeighing_inf
              ,  0                                       AS MovementId_OrderReturnTare
              , '' :: TVarChar                           AS InvNumber_OrderReturnTare
 
@@ -169,20 +178,38 @@ BEGIN
          ;
      ELSE
 
+     --
+     vbMovementId_sale:= (SELECT MIFloat_MovementId.ValueData :: Integer AS MovementId
+                          FROM MovementItem
+                               INNER JOIN MovementItemFloat AS MIFloat_MovementId
+                                                            ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+                                                           AND MIFloat_MovementId.ValueData > 0
+                          WHERE MovementItem.MovementId = inMovementId
+                            AND MovementItem.DescId     = zc_MI_Master()
+                            AND MovementItem.isErased   = FALSE
+                          ORDER BY MovementItem.Id DESC
+                          LIMIT 1
+                         );
+     --
+     vbContractId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract());
+     --
+     vbPriceListId_in:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PriceListIn());
+     --
+     vbReestrKindId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_ReestrKind());
+     --
+     vbUserId_insert:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Insert());
+     --
+     vbMemberId_insert:= (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbUserId_insert AND OL.DescId = zc_ObjectLink_User_Member());
+
+     --
+     vbMovementId_OrderReturnTare:= (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_OrderReturnTare());
+     --
+     vbMovementId_TransportGoods:= (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_TransportGoods());
+
+     -- Результат
      RETURN QUERY
-       WITH tmpMI AS (SELECT MIFloat_MovementId.ValueData :: Integer AS MovementId
-                      FROM MovementItem
-                           INNER JOIN MovementItemFloat AS MIFloat_MovementId
-                                                        ON MIFloat_MovementId.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
-                                                       AND MIFloat_MovementId.ValueData > 0
-                      WHERE MovementItem.MovementId = inMovementId
-                        AND MovementItem.DescId     = zc_MI_Master()
-                        AND MovementItem.isErased   = FALSE
-                      ORDER BY MovementItem.Id DESC
-                      LIMIT 1
-                     )
-          , tmpPriceList AS (SELECT Object_PriceList.Id AS PriceListId, Object_PriceList.ValueData AS PriceListName
+       WITH tmpPriceList AS (SELECT Object_PriceList.Id AS PriceListId, Object_PriceList.ValueData AS PriceListName
                              FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
                                                                        , inPartnerId      := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
                                                                        , inMovementDescId := zc_Movement_ReturnIn()
@@ -195,14 +222,31 @@ BEGIN
                                   LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = tmp.PriceListId
                              LIMIT 1
                             )
-        -- взвешивание контрагент
+          -- взвешивание контрагент
         , tmpWeighingPartner AS (SELECT DISTINCT Movement.ParentId
                                  FROM Movement
                                  WHERE Movement.ParentId = inMovementId
                                    AND Movement.DescId = zc_Movement_WeighingPartner()
                                 )
+          --
+        , tmpMovement AS (SELECT * FROM Movement WHERE Movement.Id = inMovementId)
+          --
+        , tmpContract AS (SELECT * FROM Object_Contract_InvNumber_View WHERE Object_Contract_InvNumber_View.ContractId = vbContractId)
+          --
+        , tmpPriceList_in AS (SELECT * FROM Object WHERE Object.Id = vbPriceListId_in)
+          --
+        , tmpReestrKind AS (SELECT * FROM Object WHERE Object.Id = vbReestrKindId)
 
+          --
+        , tmpUser_insert AS (SELECT * FROM Object WHERE Object.Id = vbUserId_insert)
+          --
+        , tmpMember_insert AS (SELECT * FROM Object WHERE Object.Id = vbMemberId_insert)
 
+          --
+        , tmpMovement_OrderReturnTare AS (SELECT * FROM Movement WHERE Movement.Id = vbMovementId_OrderReturnTare)
+        , tmpMovement_TransportGoods  AS (SELECT * FROM Movement WHERE Movement.Id = vbMovementId_TransportGoods)
+
+       -- Результат
        SELECT
              Movement.Id
            , Movement.InvNumber
@@ -257,7 +301,7 @@ BEGIN
 
            , (DATE_TRUNC ('MONTH', MovementDate_OperDatePartner.ValueData) - INTERVAL '4 MONTH') :: TDateTime AS StartDateTax
 
-           , tmpMI.MovementId                       AS MovementId_Partion
+           , Movement_PartionMovement.Id            AS MovementId_Partion
            , zfCalc_PartionMovementName (Movement_PartionMovement.DescId, MovementDesc_PartionMovement.ItemName, Movement_PartionMovement.InvNumber, MovementDate_OperDatePartner_PartionMovement.ValueData) AS PartionMovementName
 
            , Object_Member.Id                       AS MemberId
@@ -273,7 +317,7 @@ BEGIN
            , Object_SubjectDoc.ValueData            AS SubjectDocName
 
            , 0                   		    AS ReasonId
-           , CAST ('' AS TVarChar)                  AS ReasonName 
+           , CAST ('' AS TVarChar)                  AS ReasonName
 
            , MovementString_Comment.ValueData       AS Comment
 
@@ -289,9 +333,8 @@ BEGIN
            , Movement_TransportGoods.InvNumber      AS InvNumber_TransportGoods
            , COALESCE (Movement_TransportGoods.OperDate, Movement.OperDate) AS OperDate_TransportGoods
 
-       FROM Movement
-            LEFT JOIN tmpMI ON 1 = 1
-            LEFT JOIN Movement AS Movement_PartionMovement ON Movement_PartionMovement.Id = tmpMI.MovementId
+       FROM tmpMovement AS Movement
+            LEFT JOIN Movement AS Movement_PartionMovement ON Movement_PartionMovement.Id = vbMovementId_sale
             LEFT JOIN MovementDesc AS MovementDesc_PartionMovement ON MovementDesc_PartionMovement.Id = Movement_PartionMovement.DescId
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner_PartionMovement
                                    ON MovementDate_OperDatePartner_PartionMovement.MovementId =  Movement_PartionMovement.Id
@@ -299,82 +342,82 @@ BEGIN
 
             LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.id = Movement.ParentId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-           
+
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
-                                     ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                     ON MovementString_InvNumberPartner.MovementId =  inMovementId
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
             LEFT JOIN MovementString AS MovementString_InvNumberMark
-                                     ON MovementString_InvNumberMark.MovementId =  Movement.Id
+                                     ON MovementString_InvNumberMark.MovementId =  inMovementId
                                     AND MovementString_InvNumberMark.DescId = zc_MovementString_InvNumberMark()
-            LEFT JOIN MovementString AS MovementString_Comment 
-                                     ON MovementString_Comment.MovementId = Movement.Id
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId = inMovementId
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
-            
+
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
-                                      ON MovementBoolean_Checked.MovementId =  Movement.Id
+                                      ON MovementBoolean_Checked.MovementId =  inMovementId
                                      AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_isPartner
-                                      ON MovementBoolean_isPartner.MovementId =  Movement.Id
+                                      ON MovementBoolean_isPartner.MovementId =  inMovementId
                                      AND MovementBoolean_isPartner.DescId = zc_MovementBoolean_isPartner()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Promo
-                                      ON MovementBoolean_Promo.MovementId =  Movement.Id
+                                      ON MovementBoolean_Promo.MovementId =  inMovementId
                                      AND MovementBoolean_Promo.DescId = zc_MovementBoolean_Promo()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_List
-                                      ON MovementBoolean_List.MovementId = Movement.Id
+                                      ON MovementBoolean_List.MovementId = inMovementId
                                      AND MovementBoolean_List.DescId = zc_MovementBoolean_List()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Print
-                                      ON MovementBoolean_Print.MovementId = Movement.Id
+                                      ON MovementBoolean_Print.MovementId = inMovementId
                                      AND MovementBoolean_Print.DescId = zc_MovementBoolean_Print()
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
-                                   ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+                                   ON MovementDate_OperDatePartner.MovementId =  inMovementId
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                      ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                      ON MovementBoolean_PriceWithVAT.MovementId =  inMovementId
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
-                                    ON MovementFloat_VATPercent.MovementId =  Movement.Id
+                                    ON MovementFloat_VATPercent.MovementId =  inMovementId
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
 
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
-                                    ON MovementFloat_ChangePercent.MovementId =  Movement.Id
+                                    ON MovementFloat_ChangePercent.MovementId =  inMovementId
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                    ON MovementFloat_TotalCount.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalCount.MovementId =  inMovementId
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
-                                    ON MovementFloat_TotalSummMVAT.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalSummMVAT.MovementId =  inMovementId
                                    AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
-                                    ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalSummPVAT.MovementId =  inMovementId
                                    AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalSumm.MovementId =  inMovementId
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-            
+
             LEFT JOIN MovementFloat AS MovementFloat_CurrencyPartnerValue
-                                    ON MovementFloat_CurrencyPartnerValue.MovementId =  Movement.Id
+                                    ON MovementFloat_CurrencyPartnerValue.MovementId =  inMovementId
                                    AND MovementFloat_CurrencyPartnerValue.DescId = zc_MovementFloat_CurrencyPartnerValue()
             LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
-                                    ON MovementFloat_ParPartnerValue.MovementId =  Movement.Id
+                                    ON MovementFloat_ParPartnerValue.MovementId =  inMovementId
                                    AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
 
             LEFT JOIN MovementFloat AS MovementFloat_CorrSumm
-                                    ON MovementFloat_CorrSumm.MovementId =  Movement.Id
+                                    ON MovementFloat_CorrSumm.MovementId =  inMovementId
                                    AND MovementFloat_CorrSumm.DescId = zc_MovementFloat_CorrSumm()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                         ON MovementLinkObject_From.MovementId = Movement.Id
+                                         ON MovementLinkObject_From.MovementId = inMovementId
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
@@ -384,92 +427,77 @@ BEGIN
             LEFT JOIN Object AS Object_JuridicalFrom ON Object_JuridicalFrom.Id = ObjectLink_Partner_Juridical.ChildObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                         ON MovementLinkObject_To.MovementId = Movement.Id
+                                         ON MovementLinkObject_To.MovementId = inMovementId
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
-                                         ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                         ON MovementLinkObject_PaidKind.MovementId = inMovementId
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                         ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                        AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
+            -- оптимизация
+            LEFT JOIN tmpContract AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = vbContractId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
-                                         ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id
+                                         ON MovementLinkObject_CurrencyDocument.MovementId = inMovementId
                                         AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
             LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = MovementLinkObject_CurrencyDocument.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner
-                                         ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id
+                                         ON MovementLinkObject_CurrencyPartner.MovementId = inMovementId
                                         AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
             LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Member
-                                         ON MovementLinkObject_Member.MovementId = Movement.Id
+                                         ON MovementLinkObject_Member.MovementId = inMovementId
                                         AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = MovementLinkObject_Member.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberExp
-                                         ON MovementLinkObject_MemberExp.MovementId = Movement.Id
+                                         ON MovementLinkObject_MemberExp.MovementId = inMovementId
                                         AND MovementLinkObject_MemberExp.DescId = zc_MovementLinkObject_MemberExp()
             LEFT JOIN Object AS Object_MemberExp ON Object_MemberExp.Id = MovementLinkObject_MemberExp.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
-                                         ON MovementLinkObject_ReestrKind.MovementId = Movement.Id
-                                        AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
-            LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
+            -- оптимизация
+            LEFT JOIN tmpReestrKind AS Object_ReestrKind ON Object_ReestrKind.Id = vbReestrKindId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
-                                         ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
+                                         ON MovementLinkObject_SubjectDoc.MovementId = inMovementId
                                         AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
             LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceListIn
-                                         ON MovementLinkObject_PriceListIn.MovementId = Movement.Id
-                                        AND MovementLinkObject_PriceListIn.DescId = zc_MovementLinkObject_PriceListIn()
-            LEFT JOIN Object AS Object_PriceListIn ON Object_PriceListIn.Id = MovementLinkObject_PriceListIn.ObjectId
+            -- оптимизация
+            LEFT JOIN tmpPriceList_in AS Object_PriceListIn ON Object_PriceListIn.Id = vbPriceListId_In
 
 --add Tax
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
-                                         ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
+                                         ON MovementLinkObject_DocumentTaxKind.MovementId = inMovementId
                                         AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
 
             LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
 
-            LEFT JOIN Object as ObjectCurrencycyDocumentInf 
+            LEFT JOIN Object as ObjectCurrencycyDocumentInf
                              on ObjectCurrencycyDocumentInf.descid= zc_Object_Currency()
                             AND ObjectCurrencycyDocumentInf.id = 14461
 --
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
-                                         ON MovementLinkObject_Insert.MovementId = Movement.Id
-                                        AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
-            LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_Insert.ObjectId
+            -- оптимизация
+            LEFT JOIN tmpUser_insert   AS Object_User         ON Object_User.Id         = vbUserId_insert
+            -- оптимизация
+            LEFT JOIN tmpMember_insert AS Object_MemberInsert ON Object_MemberInsert.Id = vbMemberId_insert
 
             LEFT JOIN MovementString AS MovementString_GUID
-                                     ON MovementString_GUID.MovementId = Movement.Id
+                                     ON MovementString_GUID.MovementId = inMovementId
                                     AND MovementString_GUID.DescId = zc_MovementString_GUID()
 
-            LEFT JOIN ObjectLink AS ObjectLink_User_Member
-                                 ON ObjectLink_User_Member.ObjectId = Object_User.Id
-                                AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-            LEFT JOIN Object AS Object_MemberInsert ON Object_MemberInsert.Id = ObjectLink_User_Member.ChildObjectId
 
-            LEFT JOIN tmpWeighingPartner ON tmpWeighingPartner.ParentId = Movement.Id
+            LEFT JOIN tmpWeighingPartner ON tmpWeighingPartner.ParentId = inMovementId
 
-            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_OrderReturnTare
-                                           ON MovementLinkMovement_OrderReturnTare.MovementId = Movement.Id
-                                          AND MovementLinkMovement_OrderReturnTare.DescId = zc_MovementLinkMovement_OrderReturnTare()
-            LEFT JOIN Movement AS Movement_OrderReturnTare ON Movement_OrderReturnTare.Id = MovementLinkMovement_OrderReturnTare.MovementChildId
+            -- оптимизация
+            LEFT JOIN tmpMovement_OrderReturnTare AS Movement_OrderReturnTare ON Movement_OrderReturnTare.Id = vbMovementId_OrderReturnTare
+            -- оптимизация
+            LEFT JOIN tmpMovement_TransportGoods  AS Movement_TransportGoods  ON Movement_TransportGoods.Id  = vbMovementId_TransportGoods
 
-            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_TransportGoods
-                                           ON MovementLinkMovement_TransportGoods.MovementId = Movement.Id
-                                          AND MovementLinkMovement_TransportGoods.DescId = zc_MovementLinkMovement_TransportGoods()
-            LEFT JOIN Movement AS Movement_TransportGoods ON Movement_TransportGoods.Id = MovementLinkMovement_TransportGoods.MovementChildId
- 
          WHERE Movement.Id     =  inMovementId
            AND Movement.DescId = zc_Movement_ReturnIn();
 
@@ -478,7 +506,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Movement_ReturnIn (Integer, TDateTime, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -504,4 +531,4 @@ ALTER FUNCTION gpGet_Movement_ReturnIn (Integer, TDateTime, TVarChar) OWNER TO p
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_ReturnIn (inMovementId:= 1, inOperDate:= CURRENT_DATE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Movement_ReturnIn (inMovementId:= 32514982, inOperDate:= CURRENT_DATE, inSession:= zfCalc_UserAdmin())
