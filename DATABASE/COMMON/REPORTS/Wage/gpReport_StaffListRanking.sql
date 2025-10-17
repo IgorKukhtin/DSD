@@ -128,26 +128,23 @@ BEGIN
                        , COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId,0) 
                 )*/
                 
-  , tmpFact AS (SELECT SUM (tmp.Amount) AS Amount
-                     , tmp.UnitId
-                     , tmp.PositionId
-                     , tmp.PositionLevelId
-                     , STRING_AGG (Object_Member.ValueData, CHR (13), order Object_Member.ValueData) AS MemberName  
-                FROM (SELECT MovementLinkObject_Unit.ObjectId          AS UnitId
-                           , MovementLinkObject_Position.ObjectId      AS PositionId
-                           , MovementLinkObject_PositionLevel.ObjectId AS PositionLevelId
-                           , MovementBoolean_Main.ValueData            AS isMain
-                           , MovementLinkObject_Member.ObjectId        AS MemberId
-                           , Movement.Id                               AS MovementId
-                           , MovementLinkObject_StaffListKind.ObjectId AS StaffListKindId
-                           , ROW_NUMBER () OVER (PARTITION BY MovementLinkObject_Unit.ObjectId
-                                                            , MovementLinkObject_Member.ObjectId
-                                                            , CASE WHEN MovementBoolean_Main.ValueData = TRUE THEN 0 ELSE 1 END -- по гл. должности нужно взять 1, для по совместительству всех
-                                                            
-                                                 ORDER BY Movement.OperDate DESC, Movement.Id DESC, CASE WHEN MovementBoolean_Main.ValueData = TRUE THEN 0 ELSE 1 END 
-                                                 ) AS Ord
-                          , 1 AS Amount
-                      FROM Movement    
+  , tmpFact AS (WITH
+                tmp AS (SELECT MovementLinkObject_Unit.ObjectId          AS UnitId
+                             , MovementLinkObject_Position.ObjectId      AS PositionId
+                             , MovementLinkObject_PositionLevel.ObjectId AS PositionLevelId
+                             , MovementBoolean_Main.ValueData            AS isMain
+                             , MovementLinkObject_Member.ObjectId        AS MemberId
+                             , Movement.Id                               AS MovementId
+                             , Movement.OperDate                         AS OperDate
+                             , MovementLinkObject_StaffListKind.ObjectId AS StaffListKindId
+                             , ROW_NUMBER () OVER (PARTITION BY MovementLinkObject_Unit.ObjectId
+                                                              , MovementLinkObject_Member.ObjectId
+                                                              , CASE WHEN MovementBoolean_Main.ValueData = TRUE THEN 0 ELSE 1 END -- по гл. должности нужно взять 1, для по совместительству всех
+                                                              
+                                                   ORDER BY Movement.OperDate DESC, Movement.Id DESC, CASE WHEN MovementBoolean_Main.ValueData = TRUE THEN 0 ELSE 1 END 
+                                                   ) AS Ord
+                            , 1 AS Amount
+                        FROM Movement    
                            INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
@@ -176,13 +173,38 @@ BEGIN
                                                      ON MovementBoolean_Main.MovementId = Movement.Id
                                                     AND MovementBoolean_Main.DescId = zc_MovementBoolean_Main()
 
-                         WHERE Movement.DescId = zc_Movement_StaffListMember()
-                           AND Movement.OperDate <= inStartDate
-                           AND Movement.StatusId = zc_Enum_Status_Complete()
-                         ) AS tmp
-                       LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmp.MemberId
-                WHERE ((tmp.isMain = TRUE AND tmp.Ord = 1) OR (tmp.isMain = FALSE))
-                  AND tmp.StaffListKindId <> zc_Enum_StaffListKind_Out()
+                        WHERE Movement.DescId = zc_Movement_StaffListMember()
+                          AND Movement.OperDate <= inStartDate
+                          AND Movement.StatusId = zc_Enum_Status_Complete()
+                        ) 
+
+                SELECT SUM (tmp.Amount) AS Amount
+                          , tmp.UnitId
+                          , tmp.PositionId
+                          , tmp.PositionLevelId
+                          , STRING_AGG ( tmp.MemberName
+                                      , '; ' /*CHR (13)*/ order by tmp.MemberName) AS MemberName 
+                FROM (SELECT tmp.* 
+                          , '1,'||Object_Member.ValueData AS MemberName
+                      FROM tmp
+                           LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmp.MemberId 
+                      WHERE (tmp.isMain = TRUE AND tmp.Ord = 1)
+                       AND tmp.StaffListKindId <> zc_Enum_StaffListKind_Out()
+                    UNION      
+                      SELECT tmp.* 
+                          , '2,'||Object_Member.ValueData AS MemberName
+                      FROM tmp
+                          LEFT JOIN tmp AS tmp1 ON tmp1.OperDate = tmp.OperDate
+                                               AND tmp1.UnitId = tmp.UnitId
+                                               AND tmp1.PositionId = tmp.PositionId
+                                               AND tmp1.PositionLevelId = tmp.PositionLevelId
+                                               AND tmp1.MemberId = tmp.MemberId
+                                               AND tmp1.isMain = TRUE
+                          LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmp.MemberId
+                      WHERE (tmp.isMain = FALSE)
+                        AND tmp.StaffListKindId <> zc_Enum_StaffListKind_Out()
+                        AND tmp1.MemberId IS NULL
+                    ) AS tmp
                 GROUP BY tmp.UnitId
                        , tmp.PositionId
                        , tmp.PositionLevelId  
@@ -221,7 +243,7 @@ BEGIN
                       , Object_StaffHours.ValueData       ::TVarChar  AS StaffHoursName      
                       , COALESCE (MIFloat_AmountReport.ValueData, 0) ::TFloat AS AmountPlan         -- ШР для отчета из документа     
                       , tmpFact.Amount  ::TFloat    AS AmountFact         -- шт.ед. из спр. Сотрудники - основное место работы = Да, дата приема/увольнения считаем как раб. день, т.е. эту шт. ед. считаем в кол.факт 
-                      , (COALESCE (MIFloat_AmountReport.ValueData, 0) - COALESCE (tmpFact.Amount,0))  ::TFloat    AS Amount_diff
+                      , (COALESCE (tmpFact.Amount,0) - COALESCE (MIFloat_AmountReport.ValueData, 0))  ::TFloat    AS Amount_diff
                       , CAST (CASE WHEN COALESCE (MIFloat_AmountReport.ValueData, 0) <> 0 
                                    THEN (COALESCE (tmpFact.Amount,0)/COALESCE (MIFloat_AmountReport.ValueData, 0) * 100)
                                    ELSE 0
@@ -290,7 +312,7 @@ BEGIN
          , tmpResult.Persent_diff         ::TFloat
          , tmpResult.MemberName           ::TVarChar
     FROM tmpResult
-    WHERE tmpResult.MemberName IS NOT NULL
+  --  WHERE tmpResult.MemberName IS NOT NULL
   UNION
     SELECT tmpResult.DepartmentId
          , tmpResult.DepartmentName       ::TVarChar
@@ -311,7 +333,7 @@ BEGIN
          , tmpResult.Persent_diff         ::TFloat
          , 'Вакансія'   ::TVarChar  AS MemberName
     FROM tmpResult
-    WHERE COALESCE (tmpResult.Amount_diff, 0) > 0
+    WHERE COALESCE (tmpResult.Amount_diff, 0) < 0
 
    --- добавить строки Вакансия, если кол-во факт меньше штатного
    
