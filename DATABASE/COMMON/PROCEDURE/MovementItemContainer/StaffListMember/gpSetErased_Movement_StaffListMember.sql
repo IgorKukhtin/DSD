@@ -10,15 +10,49 @@ RETURNS VOID
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbMemberId Integer;
+  DECLARE vbMovementId_last Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_StaffListMember());
 
+     -- проверить нет ли документа после 
+     SELECT Movement.OperDate
+          , MovementLinkObject_Member.ObjectId AS MemberId
+    INTO vbOperDate, vbMemberId
+     FROM Movement
+          INNER JOIN MovementLinkObject AS MovementLinkObject_Member
+                                        ON MovementLinkObject_Member.MovementId = Movement.Id
+                                       AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
+     WHERE Movement.Id = inMovementId
+     ;
+
+     vbMovementId_last := (--проверка на наличие хоть одного документа после текущего
+                           SELECT Movement.*
+                           FROM Movement 
+                                INNER JOIN MovementLinkObject AS MovementLinkObject_Member
+                                                              ON MovementLinkObject_Member.MovementId = Movement.Id
+                                                             AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
+                                                             AND MovementLinkObject_Member.ObjectId = vbMemberId
+                           WHERE Movement.DescId = zc_Movement_StaffListMember()
+                             AND Movement.OperDate >= vbOperDate
+                             AND Movement.StatusId = zc_Enum_Status_Complete()
+                             AND Movement.Id <> inMovementId
+                           LIMIT 1
+                           );
+
+     IF COALESCE (vbMovementId_last,0) <> 0
+     THEN
+          RAISE EXCEPTION 'Ошибка.Удаление запрещено. Есть более поздние документы.';  
+     END IF;  
+     
+     
+     
      -- Удаляем Документ
      PERFORM lpSetErased_Movement (inMovementId := inMovementId
                                  , inUserId     := vbUserId);
 
-
+     if vbUserId = 9457 then RAISE EXCEPTION 'Админ.Test Ok.';  end if;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

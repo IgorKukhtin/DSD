@@ -53,6 +53,7 @@ type
     macPersonalServiceAll: TMultiAction;
     actPersonalServiceErased: TdsdExecStoredProc;
     Persent_diff: TcxGridDBColumn;
+    MemberName: TcxGridDBColumn;
   private
     { Private declarations }
   public

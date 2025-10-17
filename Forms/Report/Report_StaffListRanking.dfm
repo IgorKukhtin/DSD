@@ -23,6 +23,8 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
       inherited cxGrid: TcxGrid
         Width = 998
         Height = 322
+        ExplicitLeft = 72
+        ExplicitTop = 80
         ExplicitWidth = 998
         ExplicitHeight = 322
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -35,6 +37,7 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
+          OptionsView.CellAutoHeight = True
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -77,6 +80,14 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 131
+          end
+          object MemberName: TcxGridDBColumn
+            Caption = #1060#1048#1054
+            DataBinding.FieldName = 'MemberName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 215
           end
           object AmountPlan: TcxGridDBColumn
             Caption = #1055#1083#1072#1085' '#1064#1056
@@ -154,30 +165,32 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
       Width = 91
     end
     inherited deEnd: TcxDateEdit
-      Left = 113
+      Left = 857
       Top = 23
-      ExplicitLeft = 113
+      Visible = False
+      ExplicitLeft = 857
       ExplicitTop = 23
       ExplicitWidth = 110
       Width = 110
     end
     inherited cxLabel1: TcxLabel
-      Left = 16
-      Top = 0
-      ExplicitLeft = 16
-      ExplicitTop = 0
+      Left = 13
+      Caption = #1053#1072' '#1076#1072#1090#1091':'
+      ExplicitLeft = 13
+      ExplicitWidth = 49
     end
     inherited cxLabel2: TcxLabel
-      Left = 113
-      ExplicitLeft = 113
+      Left = 857
+      Visible = False
+      ExplicitLeft = 857
     end
     object cxLabel4: TcxLabel
-      Left = 236
+      Left = 114
       Top = 6
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object ceUnit: TcxButtonEdit
-      Left = 236
+      Left = 114
       Top = 23
       Properties.Buttons = <
         item
@@ -189,12 +202,12 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
       Width = 256
     end
     object cxLabel5: TcxLabel
-      Left = 505
+      Left = 383
       Top = 6
       Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' 1 '#1088#1110#1074#1085#1103':'
     end
     object ceDepartment: TcxButtonEdit
-      Left = 505
+      Left = 383
       Top = 23
       Properties.Buttons = <
         item
@@ -474,14 +487,6 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inEndDate'
-        Value = Null
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inUnitId'
         Value = Null
         Component = GuidesUnit
@@ -495,6 +500,12 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
         Component = GuidesDepartment
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 80
@@ -565,7 +576,9 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
     end
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 64
+    DateStart = nil
+    DateEnd = nil
+    Left = 928
     Top = 24
   end
   inherited RefreshDispatcher: TRefreshDispatcher
