@@ -5,21 +5,30 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderExternal (Integer, Inte
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderExternal (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderExternal(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inGoodsId             Integer   , -- Товары
- INOUT ioAmount              TFloat    , -- Количество
- INOUT ioAmount_old          TFloat    , -- Количество
-    IN inAmountSecond        TFloat    , -- Количество дозаказ
-    IN inAmountManual        TFloat    , -- ЗАЯВКА-0
- INOUT ioAmountManual_old    TFloat    , -- ЗАЯВКА-0
-    IN inGoodsKindId         Integer   , -- Виды товаров
- INOUT ioPrice               TFloat    , -- Цена
- INOUT ioCountForPrice       TFloat    , -- Цена за количество
-   OUT outAmountSumm         TFloat    , -- Сумма расчетная
-   OUT outMovementPromo      TVarChar  , --
-   OUT outPricePromo         TFloat    , --
-    IN inSession             TVarChar    -- сессия пользователя
+ INOUT ioId                       Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId               Integer   , -- Ключ объекта <Документ>
+    IN inGoodsId                  Integer   , -- Товары
+ INOUT ioAmount                   TFloat    , -- Количество
+ INOUT ioAmount_old               TFloat    , -- Количество
+    IN inAmountSecond             TFloat    , -- Количество дозаказ
+    IN inAmountManual             TFloat    , -- ЗАЯВКА-0
+ INOUT ioAmountManual_old         TFloat    , -- ЗАЯВКА-0
+    IN inGoodsKindId              Integer   , -- Виды товаров
+ INOUT ioPrice                    TFloat    , -- Цена
+ INOUT ioCountForPrice            TFloat    , -- Цена за количество
+   OUT outAmountSumm              TFloat    , -- Сумма расчетная
+   OUT outMovementPromo           TVarChar  , --
+   OUT outPricePromo              TFloat    , --
+
+   OUT outPromoSchemaKindName     TVarChar  , -- Промо-механика
+   OUT outPromoDiscountKindName   TVarChar  , -- Тип скидки - % или сумма
+   OUT outGoodsCode_out           Integer   , --
+   OUT outGoodsName_out           TVarChar  , --
+   OUT outGoodsKindName_out       TVarChar  , --
+   OUT outValue_m                 TFloat    , -- Значение m
+   OUT outValue_n                 TFloat    , -- Значение n
+   OUT outValue_promo             TFloat    , -- подарочное кол-во
+    IN inSession                  TVarChar    -- сессия пользователя
 )
 RETURNS RECORD AS
 $BODY$
@@ -70,7 +79,7 @@ AND NOT EXISTS (SELECT 1
 AND (NOT EXISTS (SELECT 1
                  FROM ObjectLink AS OL
                       INNER JOIN ObjectLink AS OL_Juridical_Retail
-                                            ON OL_Juridical_Retail.ObjectId = OL.ChildObjectId 
+                                            ON OL_Juridical_Retail.ObjectId = OL.ChildObjectId
                                            AND OL_Juridical_Retail.DescId   =  zc_ObjectLink_Juridical_Retail()
                                            AND OL_Juridical_Retail.ChildObjectId = 310854 -- Фоззі
                  WHERE OL.ObjectId   = vbPartnerId
@@ -93,7 +102,7 @@ AND (NOT EXISTS (SELECT 1
                            AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
                            AND Object_GoodsByGoodsKind_View.GoodsId = inGoodsId
                            AND COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) = COALESCE (inGoodsKindId,0)
-                        )  
+                        )
                AND EXISTS (SELECT 1 FROM ObjectLink AS OL
                                     WHERE OL.ObjectId = inGoodsId
                                       AND OL.DescId   = zc_ObjectLink_Goods_InfoMoney()
@@ -121,7 +130,7 @@ AND (NOT EXISTS (SELECT 1
      IF vbUserId = 9457
      THEN
          IF COALESCE (inAmountManual,0) = 0 AND COALESCE (ioAmountManual_old,0) <> 0
-         THEN 
+         THEN
               --обнуляем все
               ioAmount := 0;
               ioAmount_old := 0;
@@ -133,7 +142,7 @@ AND (NOT EXISTS (SELECT 1
              THEN
                  ioAmount_old := ioAmount;
                  ioAmountManual_old := inAmountManual;
-             ELSE 
+             ELSE
                  ioAmount := inAmountManual;
                  ioAmount_old := inAmountManual;
                  ioAmountManual_old := inAmountManual;
@@ -150,7 +159,25 @@ AND (NOT EXISTS (SELECT 1
      SELECT tmp.ioId, tmp.ioPrice, tmp.ioCountForPrice, tmp.outAmountSumm
           , zfCalc_PromoMovementName (tmp.outMovementId_Promo, NULL, NULL, NULL, NULL)
           , tmp.outPricePromo
+
+          , lfGet_Object_ValueData_sh (tmp.outPromoSchemaKindId)
+          , lfGet_Object_ValueData_sh (tmp.outPromoDiscountKindId)
+          , (SELECT Object.ObjectCode FROM Object WHERE Object.Id = tmp.outGoodsId_out)
+          , lfGet_Object_ValueData_sh (tmp.outGoodsId_out)
+          , lfGet_Object_ValueData_sh (tmp.outGoodsKindId_out)
+          , tmp.outValue_m
+          , tmp.outValue_n
+          , tmp.outValue_promo
+
             INTO ioId, ioPrice, ioCountForPrice, outAmountSumm, outMovementPromo, outPricePromo
+               , outPromoSchemaKindName
+               , outPromoDiscountKindName
+               , outGoodsCode_out
+               , outGoodsName_out
+               , outGoodsKindName_out
+               , outValue_m
+               , outValue_n
+               , outValue_promo
      FROM lpInsertUpdate_MovementItem_OrderExternal (ioId                 := ioId
                                                    , inMovementId         := inMovementId
                                                    , inGoodsId            := inGoodsId

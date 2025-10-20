@@ -22,7 +22,7 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Promo());
 
 
-     -- Проверили - Ви товара
+     -- Проверили - Вид товара
      IF EXISTS (SELECT 1
                 FROM MovementItem
                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind

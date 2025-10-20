@@ -15,13 +15,27 @@ RETURNS TABLE (MovementId          Integer -- Документ
              , GoodsId             Integer
              , GoodsKindId         Integer
              , MovementPromo       TVarChar
-             , TaxPromo            TFloat  
-             , PriceWithOutVAT     TFloat  -- Цена отгрузки без учета НДС, с учетом скидки, грн
-             , PriceWithVAT        TFloat  -- Цена отгрузки с учетом НДС, с учетом скидки, грн
+
+             , TaxPromo              TFloat   -- % или сумма Скидки Товар
+             , PromoDiscountKindId   Integer -- Тип скидки - % или сумма
+
+             , PriceWithOutVAT       TFloat  -- Цена отгрузки без учета НДС, с учетом скидки, грн
+             , PriceWithVAT          TFloat  -- Цена отгрузки с учетом НДС, с учетом скидки, грн
              , CountForPrice         TFloat
              , PriceWithOutVAT_orig  TFloat   -- Цена отгрузки без учета НДС, с учетом скидки, грн
              , PriceWithVAT_orig     TFloat   -- Цена отгрузки с учетом НДС, с учетом скидки, грн
-             , isChangePercent     Boolean -- учитывать % скидки по договору
+
+             , isChangePercent       Boolean -- учитывать % скидки по договору
+
+               -- Промо-механика
+             , PromoSchemaKindId     Integer
+               -- Товар (факт отгрузка), если он есть - тогда Промо-механика
+             , GoodsId_out           Integer
+             , GoodsKindId_out       Integer
+               -- Значение m
+             , Value_m               TFloat
+               -- Значение n
+             , Value_n               TFloat
               )
 AS
 $BODY$
@@ -38,13 +52,30 @@ BEGIN
              , tmp.GoodsId
              , tmp.GoodsKindId
              , tmp.MovementPromo
+
+               -- % или сумма Скидки Товар
              , tmp.TaxPromo
+               -- Тип скидки - % или сумма
+             , tmp.PromoDiscountKindId
+
              , tmp.PriceWithOutVAT
              , tmp.PriceWithVAT
              , tmp.CountForPrice
              , tmp.PriceWithOutVAT_orig
              , tmp.PriceWithVAT_orig
+
              , tmp.isChangePercent
+
+               -- Промо-механика
+             , tmp.PromoSchemaKindId
+               -- Товар (факт отгрузка), если он есть - тогда Промо-механика
+             , tmp.GoodsId_out    
+             , tmp.GoodsKindId_out
+               -- Значение m
+             , tmp.Value_m
+               -- Значение n
+             , tmp.Value_n
+
         FROM lpSelect_Movement_Promo_Data_all (inOperDate     := inOperDate
                                              , inPartnerId    := inPartnerId
                                              , inContractId   := inContractId

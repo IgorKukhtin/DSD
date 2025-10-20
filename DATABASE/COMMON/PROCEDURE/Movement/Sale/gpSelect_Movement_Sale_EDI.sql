@@ -495,8 +495,12 @@ END IF;
 
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
            , MovementString_DealId.ValueData            AS DealId
-           , MovementString_DocumentId_vch.ValueData    AS DocumentId_vch
+           , CASE WHEN MovementString_DocId_vch_Condra.ValueData <> '' AND vbUserId = 5
+                       THEN MovementString_DocId_vch_Condra.ValueData
+                  ELSE MovementString_DocumentId_vch.ValueData
+             END :: TVarChar AS DocumentId_vch
            , MovementString_VchasnoId.ValueData         AS VchasnoId
+           , MovementString_DocId_vch_Condra.ValueData  AS DocId_vch_Condra
 
              -- Налоговая
            , MovementLinkMovement_Tax.MovementChildId AS MovementId_tax
@@ -786,6 +790,9 @@ END IF;
             LEFT JOIN MovementString AS MovementString_VchasnoId
                                      ON MovementString_VchasnoId.MovementId = Movement_EDI.Id
                                     AND MovementString_VchasnoId.DescId = zc_MovementString_VchasnoId()
+            LEFT JOIN MovementString AS MovementString_DocId_vch_Condra
+                                     ON MovementString_DocId_vch_Condra.MovementId = Movement_EDI.Id
+                                    AND MovementString_DocId_vch_Condra.DescId = zc_MovementString_DocId_vch_Condra()
 
             LEFT JOIN tmpMovementString AS MovementString_InvNumberOrder
                                         ON MovementString_InvNumberOrder.MovementId = Movement.Id

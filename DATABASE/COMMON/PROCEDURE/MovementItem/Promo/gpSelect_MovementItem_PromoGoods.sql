@@ -85,11 +85,20 @@ RETURNS TABLE (
 )
 AS
 $BODY$
-    DECLARE vbUserId Integer;
+   DECLARE vbUserId            Integer;
+   DECLARE vbPromoSchemaKindId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_PromoGoods());
     vbUserId:= lpGetUserBySession (inSession);
+
+
+    -- поиск параметры
+    SELECT COALESCE (Movement_Promo.PromoSchemaKindId, 0)
+           INTO vbPromoSchemaKindId
+    FROM Movement_Promo_View AS Movement_Promo
+    WHERE Movement_Promo.Id = inMovementId;
+
 
 
     CREATE TEMP TABLE _tmpPromoPartner (PartnerId Integer) ON COMMIT DROP;
@@ -171,10 +180,26 @@ BEGIN
              , MIFloat_OperPriceList.ValueData ::TFloat AS OperPriceList     -- Цена в прайсе
              , MIFloat_PriceSale.ValueData            AS PriceSale           --Цена на полке
 
-               --Цена отгрузки без учета НДС, с учетом скидки, грн
-             , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN MIFloat_PriceWithOutVAT.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_PriceWithOutVAT.ValueData END AS Numeric (16, 8)) AS PriceWithOutVAT
-               --Цена отгрузки с учетом НДС, с учетом скидки, грн
-             , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN MIFloat_PriceWithVAT.ValueData    / MIFloat_CountForPrice.ValueData ELSE MIFloat_PriceWithVAT.ValueData    END AS Numeric (16, 8)) AS PriceWithVAT
+               -- Цена отгрузки без учета НДС, с учетом скидки, грн
+             , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN MIFloat_PriceWithOutVAT.ValueData / MIFloat_CountForPrice.ValueData
+
+                          -- !!!Замена!!!! - m по цене n
+                          WHEN vbPromoSchemaKindId = zc_Enum_PromoSchemaKind_m_n() AND MIFloat_Value_m.ValueData > 0
+                               THEN CAST (MIFloat_PriceWithOutVAT.ValueData * MIFloat_Value_n.ValueData / MIFloat_Value_m.ValueData AS NUMERIC (16, 2))
+
+                          ELSE MIFloat_PriceWithOutVAT.ValueData
+                     END AS Numeric (16, 8)
+                    ) AS PriceWithOutVAT
+               -- Цена отгрузки с учетом НДС, с учетом скидки, грн
+             , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN MIFloat_PriceWithVAT.ValueData    / MIFloat_CountForPrice.ValueData
+
+                          -- !!!Замена!!!! - m по цене n
+                          WHEN vbPromoSchemaKindId = zc_Enum_PromoSchemaKind_m_n() AND MIFloat_Value_m.ValueData > 0
+                               THEN CAST (MIFloat_PriceWithVAT.ValueData * MIFloat_Value_n.ValueData / MIFloat_Value_m.ValueData AS NUMERIC (16, 2))
+
+                          ELSE MIFloat_PriceWithVAT.ValueData
+                     END AS Numeric (16, 8)
+                    ) AS PriceWithVAT
 
                 -- На сколько корректируется Цена (из-за округлений)
              ,  MIFloat_PriceCorr.ValueData AS PriceCorr

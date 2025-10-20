@@ -51,6 +51,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , DocumentId_vch TVarChar
              , VchasnoId      TVarChar
              , DocId_vch      TVarChar
+             , DocId_vch_Condra TVarChar
              , isVchasno      Boolean
              , isEdiComdoc    Boolean
               )
@@ -176,10 +177,11 @@ BEGIN
            , 'O=Державна фіскальна служба України;CN=Державна фіскальна служба України.  ОТРИМАНО;Serial=2122385;C=UA;L=Київ'
               :: TBlob AS NameFiscal
 
-           , MovementString_DealId.ValueData         ::TVarChar AS DealId
-           , MovementString_DocumentId_vch.ValueData ::TVarChar AS DocumentId_vch
-           , MovementString_VchasnoId.ValueData      ::TVarChar AS VchasnoId
-           , MovementString_DocId_vch.ValueData      ::TVarChar AS DocId_vch
+           , MovementString_DealId.ValueData             ::TVarChar AS DealId
+           , MovementString_DocumentId_vch.ValueData     ::TVarChar AS DocumentId_vch
+           , MovementString_VchasnoId.ValueData          ::TVarChar AS VchasnoId
+           , MovementString_DocId_vch.ValueData          ::TVarChar AS DocId_vch
+           , MovementString_DocId_vch_Condra.ValueData   ::TVarChar AS DocId_vch_Condra
            , CASE WHEN COALESCE (TRIM (MovementString_DealId.ValueData), '') <> '' THEN TRUE ELSE FALSE END ::Boolean AS isVchasno
              -- Загрузка ComDoc Вчасно-EDI
            , COALESCE(MovementBoolean_EdiComdoc.ValueData, FALSE) AS isEdiComdoc
@@ -372,7 +374,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_DocId_vch
                                      ON MovementString_DocId_vch.MovementId = Movement.Id
                                     AND MovementString_DocId_vch.DescId     = zc_MovementString_DocId_vch()
-                                    
+            LEFT JOIN MovementString AS MovementString_DocId_vch_Condra
+                                     ON MovementString_DocId_vch_Condra.MovementId = Movement.Id
+                                    AND MovementString_DocId_vch_Condra.DescId     = zc_MovementString_DocId_vch_Condra()
+
             -- Загрузка ComDoc Вчасно-EDI
             LEFT JOIN MovementBoolean AS MovementBoolean_EdiComdoc
                                       ON MovementBoolean_EdiComdoc.MovementId =  Movement.Id
@@ -395,7 +400,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 26.03.25         * DocumentId_vch, VchasnoId 
+ 26.03.25         * DocumentId_vch, VchasnoId
  16.02.15                         *
  19.10.14                                        * add Contract... AND Unit...
  09.10.14                                        * rem --***
