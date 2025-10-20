@@ -23,8 +23,6 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
       inherited cxGrid: TcxGrid
         Width = 998
         Height = 322
-        ExplicitLeft = 72
-        ExplicitTop = 80
         ExplicitWidth = 998
         ExplicitHeight = 322
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -103,13 +101,37 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
             Caption = #1060#1072#1082#1090' '#1064#1056
             DataBinding.FieldName = 'AmountFact'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 85
           end
+          object AmountFact_add: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090' '#1064#1056' ('#1089#1086#1074#1084'.)'
+            DataBinding.FieldName = 'AmountFact_add'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1060#1072#1082#1090' '#1064#1056' ('#1089#1086#1074#1084#1077#1097#1077#1085#1080#1077') '#1080#1085#1092'.'
+            Width = 85
+          end
+          object MemberName_add: TcxGridDBColumn
+            Caption = #1060#1048#1054' ('#1089#1086#1074#1084'.)'
+            DataBinding.FieldName = 'MemberName_add'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1060#1048#1054' ('#1089#1086#1074#1084#1077#1097#1077#1085#1080#1077') '#1080#1085#1092'.'
+            Options.Editing = False
+            Width = 215
+          end
           object Amount_diff: TcxGridDBColumn
             Caption = #1044#1077#1083#1100#1090#1072
             DataBinding.FieldName = 'Amount_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -119,6 +141,7 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
             Caption = '% '#1082#1086#1084#1083#1077#1082#1090#1072#1094#1080#1080
             DataBinding.FieldName = 'Persent_diff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

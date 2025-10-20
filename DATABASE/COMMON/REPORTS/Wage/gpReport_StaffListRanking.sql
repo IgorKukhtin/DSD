@@ -26,10 +26,12 @@ RETURNS TABLE(
             , StaffHoursDayName    TVarChar  -- График работы
             , StaffHoursName       TVarChar  --Години роботи
             , AmountPlan           TFloat    --План ШР (по классификатору)
-            , AmountFact           TFloat    --Факт ШР
+            , AmountFact           TFloat    --Факт ШР 
+            , AmountFact_add       TFloat    -- факт совместительство
             , Amount_diff          TFloat    --Дельта 
             , Persent_diff         TFloat    -- % комлектації
-            , MemberName           TVarChar
+            , MemberName           Text
+            , MemberName_add       Text
             
             
 )
@@ -143,7 +145,7 @@ BEGIN
                                                               
                                                    ORDER BY Movement.OperDate DESC, Movement.Id DESC, CASE WHEN MovementBoolean_Main.ValueData = TRUE THEN 0 ELSE 1 END 
                                                    ) AS Ord
-                            , 1 AS Amount
+                            --, 1 AS Amount
                         FROM Movement    
                            INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
@@ -176,38 +178,80 @@ BEGIN
                         WHERE Movement.DescId = zc_Movement_StaffListMember()
                           AND Movement.OperDate <= inStartDate
                           AND Movement.StatusId = zc_Enum_Status_Complete()
-                        ) 
+                        )   
+                --определяем уволенных
+              , tmp_Out AS (SELECT tmp.*
+                            FROM tmp
+                            WHERE tmp.StaffListKindId = zc_Enum_StaffListKind_Out()
+                              AND tmp.OperDate <= inStartDate
+                            ) 
+              , tmp_add AS (SELECT SUM (tmp.Amount_add) AS Amount_add --совместительство   
+                                 , tmp.UnitId
+                                 , tmp.PositionId
+                                 , COALESCE (tmp.PositionLevelId,0) AS PositionLevelId
+                                 , STRING_AGG ( Object_Member.ValueData
+                                              , CHR (13) order by Object_Member.ValueData) AS MemberName_add
+                            FROM (
+                                  SELECT tmp.* 
+                                      , 1 ::TFloat AS Amount_add
+                                  FROM tmp
+                                      LEFT JOIN tmp AS tmp1 ON tmp1.OperDate = tmp.OperDate
+                                                           AND tmp1.UnitId = tmp.UnitId
+                                                           AND tmp1.PositionId = tmp.PositionId
+                                                           AND tmp1.PositionLevelId = tmp.PositionLevelId
+                                                           AND tmp1.MemberId = tmp.MemberId
+                                                           AND tmp1.isMain = TRUE 
+                                      LEFT JOIN tmp_Out ON tmp_Out.OperDate >= tmp.OperDate
+                                                       AND tmp_Out.UnitId = tmp.UnitId
+                                                       AND tmp_Out.PositionId = tmp.PositionId
+                                                       AND tmp_Out.PositionLevelId = tmp.PositionLevelId
+                                                       AND tmp_Out.MemberId = tmp.MemberId
+                                                       AND tmp_Out.isMain = FALSE
+                                  WHERE (tmp.isMain = FALSE)
+                                    AND tmp.StaffListKindId <> zc_Enum_StaffListKind_Out()
+                                    AND tmp1.MemberId IS NULL
+                                    AND tmp_Out.MemberId IS NULL
+                                 ) AS tmp
+                                 LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmp.MemberId 
+                            GROUP BY tmp.UnitId
+                                   , tmp.PositionId
+                                   , COALESCE (tmp.PositionLevelId,0)
+                            )
 
-                SELECT SUM (tmp.Amount) AS Amount
-                          , tmp.UnitId
-                          , tmp.PositionId
-                          , tmp.PositionLevelId
-                          , STRING_AGG ( tmp.MemberName
-                                      , '; ' /*CHR (13)*/ order by tmp.MemberName) AS MemberName 
+
+                SELECT SUM (tmp.Amount)         AS Amount
+                     , COALESCE(tmp_add.Amount_add,0) AS Amount_add --совместительство   
+                     , tmp.UnitId
+                     , tmp.PositionId
+                     , tmp.PositionLevelId
+                     , STRING_AGG ( tmp.MemberName
+                                  , CHR (13) order by tmp.MemberName) AS MemberName
+                     , tmp_add.MemberName_add 
                 FROM (SELECT tmp.* 
-                          , '1,'||Object_Member.ValueData AS MemberName
+                          , Object_Member.ValueData AS MemberName
+                          , 1 ::TFloat AS Amount
                       FROM tmp
                            LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmp.MemberId 
+
+                           LEFT JOIN tmp_Out ON tmp_Out.OperDate >= tmp.OperDate
+                                            AND tmp_Out.UnitId = tmp.UnitId
+                                            AND tmp_Out.PositionId = tmp.PositionId
+                                            AND tmp_Out.PositionLevelId = tmp.PositionLevelId
+                                            AND tmp_Out.MemberId = tmp.MemberId
+                                            AND tmp_Out.isMain = TRUE                           
+
                       WHERE (tmp.isMain = TRUE AND tmp.Ord = 1)
                        AND tmp.StaffListKindId <> zc_Enum_StaffListKind_Out()
-                    UNION      
-                      SELECT tmp.* 
-                          , '2,'||Object_Member.ValueData AS MemberName
-                      FROM tmp
-                          LEFT JOIN tmp AS tmp1 ON tmp1.OperDate = tmp.OperDate
-                                               AND tmp1.UnitId = tmp.UnitId
-                                               AND tmp1.PositionId = tmp.PositionId
-                                               AND tmp1.PositionLevelId = tmp.PositionLevelId
-                                               AND tmp1.MemberId = tmp.MemberId
-                                               AND tmp1.isMain = TRUE
-                          LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmp.MemberId
-                      WHERE (tmp.isMain = FALSE)
-                        AND tmp.StaffListKindId <> zc_Enum_StaffListKind_Out()
-                        AND tmp1.MemberId IS NULL
+                       AND tmp_Out.MemberId IS NULL
                     ) AS tmp
+                     LEFT JOIN tmp_add ON tmp_add.UnitId = tmp.UnitId
+                                      AND tmp_add.PositionId = tmp.PositionId
+                                      AND tmp_add.PositionLevelId = tmp.PositionLevelId
                 GROUP BY tmp.UnitId
                        , tmp.PositionId
-                       , tmp.PositionLevelId  
+                       , tmp.PositionLevelId 
+                       , COALESCE(tmp_add.Amount_add,0)
+                       , tmp_add.MemberName_add 
                 )             
                 
    
@@ -242,14 +286,16 @@ BEGIN
                       , Object_StaffHoursDay.ValueData    ::TVarChar  AS StaffHoursDayName   
                       , Object_StaffHours.ValueData       ::TVarChar  AS StaffHoursName      
                       , COALESCE (MIFloat_AmountReport.ValueData, 0) ::TFloat AS AmountPlan         -- ШР для отчета из документа     
-                      , tmpFact.Amount  ::TFloat    AS AmountFact         -- шт.ед. из спр. Сотрудники - основное место работы = Да, дата приема/увольнения считаем как раб. день, т.е. эту шт. ед. считаем в кол.факт 
+                      , tmpFact.Amount      ::TFloat    AS AmountFact         -- шт.ед. из спр. Сотрудники - основное место работы = Да, дата приема/увольнения считаем как раб. день, т.е. эту шт. ед. считаем в кол.факт 
+                      , tmpFact.Amount_add  ::TFloat    AS AmountFact_add     -- совместительство информационно
                       , (COALESCE (tmpFact.Amount,0) - COALESCE (MIFloat_AmountReport.ValueData, 0))  ::TFloat    AS Amount_diff
                       , CAST (CASE WHEN COALESCE (MIFloat_AmountReport.ValueData, 0) <> 0 
                                    THEN (COALESCE (tmpFact.Amount,0)/COALESCE (MIFloat_AmountReport.ValueData, 0) * 100)
                                    ELSE 0
                               END
                               AS NUMERIC (16,0))   ::TFloat    AS Persent_diff
-                      , tmpFact.MemberName 
+                      , tmpFact.MemberName
+                      , tmpFact.MemberName_add 
                  FROM tmpData AS Movement
                       LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Movement.UnitId
                       LEFT JOIN Object AS Object_Department ON Object_Department.Id = Movement.DepartmentId
@@ -288,6 +334,7 @@ BEGIN
                         , Object_Position.ValueData
                         , Object_PositionLevel.ValueData 
                         , tmpFact.MemberName
+                        , tmpFact.MemberName_add
            )
            
            
@@ -308,9 +355,11 @@ BEGIN
          , tmpResult.StaffHoursName       ::TVarChar
          , tmpResult.AmountPlan           ::TFloat        -- ШР для отчета из документа     
          , tmpResult.AmountFact           ::TFloat       -- шт.ед. из спр. Сотрудники - основное место работы = Да, дата приема/увольнения считаем как раб. день, т.е. эту шт. ед. считаем в кол.факт 
+         , tmpResult.AmountFact_add       ::TFloat
          , tmpResult.Amount_diff          ::TFloat
          , tmpResult.Persent_diff         ::TFloat
-         , tmpResult.MemberName           ::TVarChar
+         , tmpResult.MemberName           ::Text
+         , tmpResult.MemberName_add       ::Text
     FROM tmpResult
   --  WHERE tmpResult.MemberName IS NOT NULL
   UNION
@@ -329,11 +378,14 @@ BEGIN
          , tmpResult.StaffHoursName       ::TVarChar
          , tmpResult.AmountPlan           ::TFloat        -- ШР для отчета из документа     
          , tmpResult.AmountFact           ::TFloat       -- шт.ед. из спр. Сотрудники - основное место работы = Да, дата приема/увольнения считаем как раб. день, т.е. эту шт. ед. считаем в кол.факт 
+         , 0       ::TFloat         AS AmountFact_add
          , tmpResult.Amount_diff          ::TFloat
          , tmpResult.Persent_diff         ::TFloat
-         , 'Вакансія'   ::TVarChar  AS MemberName
+         , 'Вакансія'   ::Text  AS MemberName
+         , ''           ::Text  AS MemberName_add
     FROM tmpResult
     WHERE COALESCE (tmpResult.Amount_diff, 0) < 0
+
 
    --- добавить строки Вакансия, если кол-во факт меньше штатного
    
@@ -348,4 +400,4 @@ $BODY$
  29.08.25         *
 */
 -- тест
--- select * from gpReport_StaffListRanking (inStartDate:= '02.10.2025'::TDateTime, inUnitId := 7271510 , inDepartmentId := 0 , inSession := '5');
+--select * from gpReport_StaffListRanking (inStartDate:= '02.10.2025'::TDateTime, inUnitId := 7271510 , inDepartmentId := 0 , inSession := '5');
