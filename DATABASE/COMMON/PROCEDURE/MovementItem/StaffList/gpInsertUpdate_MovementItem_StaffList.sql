@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_StaffList (Integer, Integer, Integer,Integer, Integer, Integer,Integer, Integer,  Integer,  TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_StaffList (Integer, Integer, Integer,Integer, Integer, Integer,TVarChar, TVarChar,  TVarChar,  TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_StaffList (Integer, Integer, Integer,Integer, Integer, Integer,TVarChar, TVarChar,  TVarChar,  TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_StaffList(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -25,6 +26,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_StaffList(
     IN inStaffCount_Invent     TFloat    , --
     IN inStaff_Price           TFloat    , --
     IN inStaff_Summ_MK         TFloat    , --
+    IN inStaff_Summ_MK3        TFloat    , --
+    IN inStaff_Summ_MK6        TFloat    , --
     IN inStaff_Summ_real       TFloat    , --
     IN inStaff_Summ_add        TFloat    , --
     IN inComment               TVarChar  , -- 
@@ -108,6 +111,8 @@ BEGIN
                                                   , inStaffCount_Invent   := inStaffCount_Invent  
                                                   , inStaff_Price         := inStaff_Price        
                                                   , inStaff_Summ_MK       := inStaff_Summ_MK
+                                                  , inStaff_Summ_MK3      := inStaff_Summ_MK3
+                                                  , inStaff_Summ_MK6      := inStaff_Summ_MK6
                                                   , inStaff_Summ_real     := inStaff_Summ_real    
                                                   , inStaff_Summ_add      := inStaff_Summ_add
                                                   , inComment             := inComment
@@ -120,6 +125,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.10.25         * Staff_Summ_MK3, Staff_Summ_MK6
  20.08.25         *
 */
 

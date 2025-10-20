@@ -1,10 +1,7 @@
 -- Function: lpInsertUpdate_MovementItem_StaffList()
   
-  функция lpinsertupdate_movementitem_stafflist(ioid := integer, inmovementid := integer, inpositionid := integer, inpositionlevelid := integer, instaffpaidkindid := integer, instaffhoursdayid := integer, instaffhoursid := integer, inpstaffhourslengthid := integer, inpersonalid := integer
-  , inamount := tfloat, inamountreport := tfloat, instaffcount_1 := tfloat, instaffcount_2 := tfloat, instaffcount_3 := tfloat, instaffcount_4 := tfloat, instaffcount_5 := tfloat, instaffcount_6 := tfloat, instaffcount_7 := tfloat, instaffcount_invent := tfloat, instaff_price := tfloat
-  , instaff_summ_mk := tfloat, instaff_summ_real := tfloat, instaff_summ_add := tfloat, incomment := tvarchar, inuserid := integer) не существует
-  
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_StaffList (Integer, Integer, Integer,Integer, Integer, Integer,Integer, Integer, Integer, TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_StaffList (Integer, Integer, Integer,Integer, Integer, Integer,Integer, Integer, Integer, TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_StaffList(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -28,6 +25,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_StaffList(
     IN inStaffCount_Invent     TFloat    , --
     IN inStaff_Price           TFloat    , --
     IN inStaff_Summ_MK         TFloat    , --
+    IN inStaff_Summ_MK3        TFloat    , --
+    IN inStaff_Summ_MK6        TFloat    , --
     IN inStaff_Summ_real       TFloat    , --
     IN inStaff_Summ_add        TFloat    , --
     IN inComment               TVarChar  , -- 
@@ -80,6 +79,10 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Staff_Summ_MK(), ioId, inStaff_Summ_MK);
      -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Staff_Summ_MK_3(), ioId, inStaff_Summ_MK3);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Staff_Summ_MK_6(), ioId, inStaff_Summ_MK6);
+     -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Staff_Summ_real(), ioId, inStaff_Summ_real);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Staff_Summ_add(), ioId, inStaff_Summ_add);
@@ -102,8 +105,8 @@ BEGIN
      -- пересчитали Итоговые суммы по накладной
      --PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
-      -- сохранили протокол
-      PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
+     -- сохранили протокол
+     PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
 
 END;
 $BODY$
@@ -112,6 +115,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.10.25         * Staff_Summ_MK3, Staff_Summ_MK6
  20.08.25         *
 */
 

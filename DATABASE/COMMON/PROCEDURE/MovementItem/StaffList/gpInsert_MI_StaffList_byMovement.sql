@@ -36,6 +36,8 @@ BEGIN
                                                   , inStaffCount_Invent   := tmp.StaffCount_Invent  
                                                   , inStaff_Price         := tmp.Staff_Price        
                                                   , inStaff_Summ_MK       := tmp.Staff_Summ_MK
+                                                  , inStaff_Summ_MK3      := tmp.Staff_Summ_MK3
+                                                  , inStaff_Summ_MK6      := tmp.Staff_Summ_MK6
                                                   , inStaff_Summ_real     := tmp.Staff_Summ_real    
                                                   , inStaff_Summ_add      := tmp.Staff_Summ_add
                                                   , inComment             := tmp.Comment
@@ -61,7 +63,9 @@ BEGIN
                   , tmpMI_mask.StaffCount_7      ::TFloat
                   , tmpMI_mask.StaffCount_Invent ::TFloat
                   , tmpMI_mask.Staff_Price       ::TFloat
-                  , tmpMI_mask.Staff_Summ_MK     ::TFloat
+                  , tmpMI_mask.Staff_Summ_MK     ::TFloat 
+                  , tmpMI_mask.Staff_Summ_MK3    ::TFloat
+                  , tmpMI_mask.Staff_Summ_MK6    ::TFloat
                   , tmpMI_mask.Staff_Summ_real   ::TFloat
                   , tmpMI_mask.Staff_Summ_add    ::TFloat
                   , tmpMI_mask.Comment           ::TVarChar
@@ -106,6 +110,8 @@ BEGIN
                        , COALESCE (MIFloat_StaffCount_Invent.ValueData, 0) ::TFloat AS StaffCount_Invent
                        , COALESCE (MIFloat_Staff_Price.ValueData, 0)       ::TFloat AS Staff_Price
                        , COALESCE (MIFloat_Staff_Summ_MK.ValueData, 0)     ::TFloat AS Staff_Summ_MK
+                       , COALESCE (MIFloat_Staff_Summ_MK3.ValueData, 0)    ::TFloat AS Staff_Summ_MK3
+                       , COALESCE (MIFloat_Staff_Summ_MK6.ValueData, 0)    ::TFloat AS Staff_Summ_MK6
                        , COALESCE (MIFloat_Staff_Summ_real.ValueData, 0)   ::TFloat AS Staff_Summ_real
                        , COALESCE (MIFloat_Staff_Summ_add.ValueData, 0)    ::TFloat AS Staff_Summ_add
                        , MIString_Comment.ValueData                        ::TVarChar AS Comment
@@ -144,6 +150,14 @@ BEGIN
                        LEFT JOIN tmpMIFloat AS MIFloat_Staff_Summ_MK
                                             ON MIFloat_Staff_Summ_MK.MovementItemId = MovementItem.Id
                                            AND MIFloat_Staff_Summ_MK.DescId = zc_MIFloat_Staff_Summ_MK()
+
+                       LEFT JOIN tmpMIFloat AS MIFloat_Staff_Summ_MK3
+                                            ON MIFloat_Staff_Summ_MK3.MovementItemId = MovementItem.Id
+                                           AND MIFloat_Staff_Summ_MK3.DescId = zc_MIFloat_Staff_Summ_MK_3()
+                       LEFT JOIN tmpMIFloat AS MIFloat_Staff_Summ_MK6
+                                            ON MIFloat_Staff_Summ_MK6.MovementItemId = MovementItem.Id
+                                           AND MIFloat_Staff_Summ_MK6.DescId = zc_MIFloat_Staff_Summ_MK_6()
+
                        LEFT JOIN tmpMIFloat AS MIFloat_Staff_Summ_real
                                             ON MIFloat_Staff_Summ_real.MovementItemId = MovementItem.Id
                                            AND MIFloat_Staff_Summ_real.DescId = zc_MIFloat_Staff_Summ_real()
@@ -172,7 +186,6 @@ BEGIN
                        LEFT JOIN tmpMIString AS MIString_Comment
                                              ON MIString_Comment.MovementItemId = MovementItem.Id
                                             AND MIString_Comment.DescId = zc_MIString_Comment()
-         
                   ) tmpMI_mask
 
                   LEFT JOIN (SELECT MovementItem.Id                               AS MovementItemId
@@ -197,6 +210,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 20.10.25         * Staff_Summ_MK3, Staff_Summ_MK6
  26.08.25         *
 */
 

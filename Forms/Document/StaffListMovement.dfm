@@ -369,15 +369,33 @@ inherited StaffListMovementForm: TStaffListMovementForm
             Width = 64
           end
           object Staff_Summ_MK: TcxGridDBColumn [22]
-            Caption = #1052#1050
+            Caption = #1052#1050'- '#1084#1110#1089#1103#1094#1100
             DataBinding.FieldName = 'Staff_Summ_MK'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 51
+          end
+          object Staff_Summ_MK3: TcxGridDBColumn [23]
+            Caption = #1052#1050'- '#1082#1074#1072#1088#1090#1072#1083
+            DataBinding.FieldName = 'Staff_Summ_MK3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 65
           end
-          object Staff_Summ_real: TcxGridDBColumn [23]
+          object Staff_Summ_MK6: TcxGridDBColumn [24]
+            Caption = #1052#1050'- '#1087#1110#1074#1088#1110#1095#1095#1072
+            DataBinding.FieldName = 'Staff_Summ_MK6'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 65
+          end
+          object Staff_Summ_real: TcxGridDBColumn [25]
             Caption = #1057#1076#1077#1083#1100#1085#1072#1103' '#1086#1087#1083#1072#1090#1072
             DataBinding.FieldName = 'Staff_Summ_real'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -386,7 +404,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object Staff_Summ_add: TcxGridDBColumn [24]
+          object Staff_Summ_add: TcxGridDBColumn [26]
             Caption = #1055#1088#1077#1084#1080#1072#1083#1100#1085#1080#1081' '#1092#1086#1085#1076
             DataBinding.FieldName = 'Staff_Summ_add'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -395,7 +413,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object WageFund: TcxGridDBColumn [25]
+          object WageFund: TcxGridDBColumn [27]
             Caption = #1060#1054#1055' '#1079#1072' '#1084#1110#1089#1103#1094#1100
             DataBinding.FieldName = 'WageFund'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -406,7 +424,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
             Options.Editing = False
             Width = 70
           end
-          object WageFund_byOne: TcxGridDBColumn [26]
+          object WageFund_byOne: TcxGridDBColumn [28]
             Caption = #1047#1055' '#1076#1083#1103' 1-'#1108#1111' '#1096#1090'.'#1086#1076' '#1076#1086' '#1086#1087#1086#1076#1072#1090#1082#1091#1072#1085#1085#1103
             DataBinding.FieldName = 'WageFund_byOne'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -417,7 +435,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
             Options.Editing = False
             Width = 77
           end
-          object PersonalName: TcxGridDBColumn [27]
+          object PersonalName: TcxGridDBColumn [29]
             Caption = #1052#1077#1085#1077#1076#1078#1077#1088' '#1087#1086' '#1087#1077#1088#1089#1086#1085#1072#1083#1091
             DataBinding.FieldName = 'PersonalName'
             PropertiesClassName = 'TcxButtonEditProperties'
