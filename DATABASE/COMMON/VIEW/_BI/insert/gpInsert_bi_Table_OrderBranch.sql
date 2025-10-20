@@ -77,7 +77,7 @@ BEGIN
               -- Результат
               SELECT -- Id Документа
                      Movement.Id                            AS MovementId
-                     -- Дата Филиал
+                     -- Дата Филиал - Продажа = ???Дата Склад???
                    , MovementDate_OperDatePartner.ValueData AS OperDate
                      -- Дата Склад
                    , MovementDate_OperDatePartner.ValueData AS OperDate_sklad

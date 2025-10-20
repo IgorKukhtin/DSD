@@ -30,15 +30,28 @@ BEGIN
     END IF;
 
 
-   -- сохранили ІД doc Desadv
-   IF TRIM (COALESCE (inId_doc, '')) <> ''
+   -- если режим Condra
+   IF TRIM (inId_doc) <> '' AND TRIM (inDocumentId) <> ''
    THEN
+       -- проверили что есть ІД doc Desadv
+       IF NOT EXISTS (SELECT 1 FROM MovementString AS MS WHERE MS.MovementId = inMovementId AND MS.DescId = zc_MovementString_DocId_vch() AND MS.ValueData = inId_doc)
+       THEN
+           RAISE EXCEPTION 'Ошибка.Не найден ІД Desadv = <%>.', inId_doc;
+       END IF;
+
+       -- сохранили ІД doc Condra
+       PERFORM lpInsertUpdate_MovementString (zc_MovementString_DocId_vch_Condra(), inMovementId, inDocumentId);
+
+   ELSEIF TRIM (inId_doc) <> ''
+   THEN
+       -- сохранили ІД doc Desadv
        PERFORM lpInsertUpdate_MovementString (zc_MovementString_DocId_vch(), inMovementId, inId_doc);
    END IF;
 
-   -- сохранили DocumentId
-   IF TRIM (COALESCE (inDocumentId, '')) <> ''
+   -- + не режим Condra
+   IF TRIM (COALESCE (inDocumentId, '')) <> '' AND TRIM (COALESCE (inId_doc, '')) = ''
    THEN
+       -- сохранили DocumentId
        PERFORM lpInsertUpdate_MovementString (zc_MovementString_DocumentId_vch(), inMovementId, inDocumentId);
    END IF;
 
@@ -46,6 +59,13 @@ BEGIN
    IF TRIM (COALESCE (inVchasnoId, '')) <> ''
    THEN
        PERFORM lpInsertUpdate_MovementString (zc_MovementString_VchasnoId(), inMovementId, inVchasnoId);
+   END IF;
+
+
+   -- сохранили Протокол
+   IF TRIM (inId_doc) <> '' OR TRIM (inDocumentId) <> '' OR TRIM (inVchasnoId) <> ''
+   THEN
+       PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
    END IF;
 
 
@@ -76,8 +96,7 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

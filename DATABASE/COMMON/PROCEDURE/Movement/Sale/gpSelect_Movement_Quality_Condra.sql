@@ -7,10 +7,15 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Quality_Condra(
     IN inSession            TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (MovementId_edi         Integer
+               -- DocumentId
              , DocumentId_vch         TVarChar
+               -- DealId
              , DealId                 TVarChar
+               -- VchasnoId
              , VchasnoId              TVarChar
+               -- ІД Desadv
              , DocId_vch              TVarChar
+
              , InvNumber_order        TVarChar
              , InvNumber              TVarChar
              , FileName               TVarChar
@@ -67,10 +72,14 @@ BEGIN
 
                                -- GLN місця доставки
                              , ObjectString_Partner_GLNCode.ValueData     AS DeliveryPlaceGLNCode
-                               --
+
+                               -- DocumentId
                              , MovementString_DocumentId_vch.ValueData    AS DocumentId_vch
+                               -- DealId
                              , MovementString_DealId.ValueData            AS DealId
+                               -- VchasnoId
                              , MovementString_VchasnoId.ValueData         AS VchasnoId
+                               -- ІД Desadv
                              , MovementString_DocId_vch.ValueData         AS DocId_vch
 
                         FROM MovementLinkMovement AS MovementLinkMovement_Order
@@ -87,15 +96,19 @@ BEGIN
                                                       ON MovementString_InvNumberPartner.MovementId = Movement_EDI.Id
                                                      AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
+                             -- DealId
                              LEFT JOIN MovementString AS MovementString_DealId
                                                       ON MovementString_DealId.MovementId = Movement_EDI.Id
                                                      AND MovementString_DealId.DescId = zc_MovementString_DealId()
+                             -- DocumentId
                              LEFT JOIN MovementString AS MovementString_DocumentId_vch
                                                       ON MovementString_DocumentId_vch.MovementId = Movement_EDI.Id
                                                      AND MovementString_DocumentId_vch.DescId = zc_MovementString_DocumentId_vch()
+                             -- VchasnoId
                              LEFT JOIN MovementString AS MovementString_VchasnoId
                                                       ON MovementString_VchasnoId.MovementId = Movement_EDI.Id
                                                      AND MovementString_VchasnoId.DescId = zc_MovementString_VchasnoId()
+                             -- ІД Desadv
                              LEFT JOIN MovementString AS MovementString_DocId_vch
                                                       ON MovementString_DocId_vch.MovementId = Movement_EDI.Id
                                                      AND MovementString_DocId_vch.DescId     = zc_MovementString_DocId_vch()
@@ -201,10 +214,15 @@ BEGIN
                        )
        SELECT
               tmpData.MovementId_edi
+              -- DocumentId
             , tmpData.DocumentId_vch
+              -- DealId
             , tmpData.DealId
+              -- VchasnoId
             , tmpData.VchasnoId
+              -- ІД Desadv
             , tmpData.DocId_vch
+
             , tmpData.InvNumber_order
             , tmpData.InvNumber
               -- имя отправляемого файла (с диска)
@@ -217,6 +235,8 @@ BEGIN
             , '2002'                                       :: TVarChar AS document_function_code
             , ''                                           :: TVarChar AS FileName_pdf
           --, COALESCE (gpGet.outFileName, '')             :: TVarChar AS FileName_pdf
+
+              -- ІД Desadv
             , COALESCE (tmpData.DocId_vch, '')             :: TVarChar AS doc_to_attach_id -- DocumentId_vch -- VchasnoId -- tmpData.DealId
             , COALESCE (tmpData.InvNumber_order, '')       :: TVarChar AS doc_to_attach_number
 

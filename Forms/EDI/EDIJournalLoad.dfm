@@ -533,8 +533,22 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
             Width = 107
           end
           object DocId_vch: TcxGridDBColumn
-            Caption = #1030#1044' doc'
+            Caption = #1030#1044' Desadv'
             DataBinding.FieldName = 'DocId_vch'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object DocId_vch_Condra: TcxGridDBColumn
+            Caption = #1030#1044' Condra'
+            DataBinding.FieldName = 'DocId_vch_Condra'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item

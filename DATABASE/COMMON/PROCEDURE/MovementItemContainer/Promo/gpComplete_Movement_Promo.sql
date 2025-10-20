@@ -381,7 +381,7 @@ BEGIN
                                 , inUserId     := vbUserId
                                  );
 
-     if vbUserId = 5 AND 1=1 then RAISE EXCEPTION 'Нет Прав - что б ничего не делать'; end if;
+     if vbUserId = 5 AND 1=0 then RAISE EXCEPTION 'Нет Прав - что б ничего не делать'; end if;
 
 
 END;

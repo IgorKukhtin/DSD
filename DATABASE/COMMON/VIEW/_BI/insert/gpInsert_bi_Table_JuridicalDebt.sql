@@ -12,6 +12,9 @@ AS
 $BODY$
 BEGIN
       -- inStartDate:='01.01.2025';
+      
+      -- IF inStartDate < '01.10.2025' THEN RETURN; END IF;
+      
       --
 
       IF EXTRACT (HOUR FROM CURRENT_TIMESTAMP) NOT IN (11) OR 1=1

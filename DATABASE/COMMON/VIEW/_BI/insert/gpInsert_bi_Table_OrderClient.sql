@@ -94,7 +94,7 @@ BEGIN
               -- Результат
               SELECT -- Id Документа
                      Movement.Id                            AS MovementId
-                     -- Дата покупателя
+                     -- Дата покупателя - Продажа
                    , (MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDate
                      -- Дата Склад
                    , MovementDate_OperDatePartner.ValueData AS OperDate_sklad

@@ -4,19 +4,28 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderExternal (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_OrderExternal(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inGoodsId             Integer   , -- Товары
-    IN inAmount              TFloat    , -- Количество
-    IN inAmountSecond        TFloat    , -- Количество дозаказ
-    IN inAmountManual        TFloat    , -- ЗАЯВКА-0
-    IN inGoodsKindId         Integer   , -- Виды товаров
- INOUT ioPrice               TFloat    , -- Цена
- INOUT ioCountForPrice       TFloat    , -- Цена за количество
-   OUT outAmountSumm         TFloat    , -- Сумма расчетная
-   OUT outMovementId_Promo   Integer   ,
-   OUT outPricePromo         TFloat    ,
-    IN inUserId              Integer     -- пользователь
+ INOUT ioId                   Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId           Integer   , -- Ключ объекта <Документ>
+    IN inGoodsId              Integer   , -- Товары
+    IN inAmount               TFloat    , -- Количество
+    IN inAmountSecond         TFloat    , -- Количество дозаказ
+    IN inAmountManual         TFloat    , -- ЗАЯВКА-0
+    IN inGoodsKindId          Integer   , -- Виды товаров
+ INOUT ioPrice                TFloat    , -- Цена
+ INOUT ioCountForPrice        TFloat    , -- Цена за количество
+   OUT outAmountSumm          TFloat    , -- Сумма расчетная
+   OUT outMovementId_Promo    Integer   ,
+   OUT outPricePromo          TFloat    ,
+
+   OUT outPromoSchemaKindId   Integer   , -- Промо-механика
+   OUT outPromoDiscountKindId Integer   , -- Тип скидки - % или сумма
+   OUT outGoodsId_out         Integer   , -- Товар (факт отгрузка), если он есть - тогда Промо-механика
+   OUT outGoodsKindId_out     Integer   , -- Товар (факт отгрузка), если он есть - тогда Промо-механика
+   OUT outValue_m             TFloat    , -- Значение m
+   OUT outValue_n             TFloat    , -- Значение n
+   OUT outValue_promo         TFloat    , -- подарочное кол-во
+
+    IN inUserId               Integer     -- пользователь
 )
 RETURNS RECORD AS
 $BODY$
@@ -39,12 +48,12 @@ BEGIN
 
      -- Проверка zc_ObjectBoolean_GoodsByGoodsKind_Order
      IF EXISTS (SELECT 1
-                FROM MovementLinkObject AS MLO 
+                FROM MovementLinkObject AS MLO
                 WHERE MLO.MovementId = inMovementId
                   AND MLO.DescId = zc_MovementLinkObject_To()
                   AND MLO.ObjectId IN (SELECT tt.UnitId FROM Object_Unit_check_isOrder_View_two AS tt WHERE 1=0)
-               ) 
-     THEN   
+               )
+     THEN
          -- если товара и вид товара нет в zc_ObjectBoolean_GoodsByGoodsKind_Order - тогда ошиибка
          IF NOT EXISTS (SELECT 1
                         FROM ObjectBoolean AS ObjectBoolean_Order
@@ -57,8 +66,8 @@ BEGIN
                           AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
                           AND Object_GoodsByGoodsKind_View.GoodsId = inGoodsId
                           AND COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) = COALESCE (inGoodsKindId,0)
-                          --AND ObjectBoolean_NotMobile.ObjectId IS 
-                        )  
+                          --AND ObjectBoolean_NotMobile.ObjectId IS
+                        )
               AND EXISTS (SELECT 1 FROM ObjectLink AS OL
                                    WHERE OL.ObjectId = inGoodsId
                                      AND OL.DescId   = zc_ObjectLink_Goods_InfoMoney()
@@ -74,7 +83,7 @@ BEGIN
                             , lfGet_Object_ValueData_sh (inGoodsKindId)
                             , CHR (13)
                             , CHR (13)
-                            , (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_OrderExternal()) 
+                            , (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_OrderExternal())
                             , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId)
                             , zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId))
                             , CHR (13)
@@ -82,7 +91,7 @@ BEGIN
                              ;
          END IF;
      END IF;
-       
+
      -- !!!временно - пока есть ошибка на моб устройстве с ценами!!!
      IF COALESCE (ioPrice, 0) = 0 -- AND EXISTS (SELECT 1 FROM MovementString AS MS WHERE MS.MovementId = inMovementId AND MS.DescId = zc_MovementString_GUID())
      THEN
@@ -120,14 +129,64 @@ BEGIN
      -- Цены с НДС
      vbPriceWithVAT:= (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_PriceWithVAT());
      -- параметры акции
-     SELECT tmp.MovementId, CASE WHEN /*tmp.TaxPromo <> 0*/ 1=1 AND vbPriceWithVAT = TRUE THEN tmp.PriceWithVAT_orig
-                                 WHEN /*tmp.TaxPromo <> 0*/ 1=1 THEN tmp.PriceWithOutVAT_orig
-                                 ELSE 0
-                            END
+     SELECT tmp.MovementId
+          , CASE WHEN tmp.PromoSchemaKindId = zc_Enum_PromoSchemaKind_m_n() AND tmp.Value_m > 0 AND (COALESCE (inAmount, 0) + COALESCE (inAmountSecond, 0)) > 0 AND vbPriceWithVAT = TRUE
+                      THEN zfCalc_Summ_PromoSchema_m_n
+                           ((COALESCE (inAmount, 0) + COALESCE (inAmountSecond, 0)
+                            -- минус подарочное кол-во
+                           - FLOOR ((COALESCE (inAmount, 0) + COALESCE (inAmountSecond, 0)) / tmp.Value_m) * (tmp.Value_m - tmp.Value_n)
+                            ) * tmp.PriceWithVAT_orig
+                          -- делим на общее кол-во
+                          / (COALESCE (inAmount, 0) + COALESCE (inAmountSecond, 0))
+                           )
+
+                 WHEN tmp.PromoSchemaKindId = zc_Enum_PromoSchemaKind_m_n() AND tmp.Value_m > 0 AND (COALESCE (inAmount, 0) + COALESCE (inAmountSecond, 0)) > 0
+                      THEN zfCalc_Summ_PromoSchema_m_n
+                           ((COALESCE (inAmount, 0) + COALESCE (inAmountSecond, 0)
+                            -- минус подарочное кол-во
+                           - FLOOR ((COALESCE (inAmount, 0) + COALESCE (inAmountSecond, 0)) / tmp.Value_m) * (tmp.Value_m - tmp.Value_n)
+                            ) * tmp.PriceWithOutVAT_orig
+                          -- делим на общее кол-во
+                          / (COALESCE (inAmount, 0) + COALESCE (inAmountSecond, 0))
+                           )
+
+                 WHEN /*tmp.TaxPromo <> 0*/ 1=1 AND vbPriceWithVAT = TRUE THEN tmp.PriceWithVAT_orig
+                 WHEN /*tmp.TaxPromo <> 0*/ 1=1 THEN tmp.PriceWithOutVAT_orig
+                 ELSE 0
+            END AS PricePromo
+
           , tmp.CountForPrice
           , tmp.TaxPromo
           , tmp.isChangePercent
+
+          , tmp.PromoSchemaKindId
+          , tmp.PromoDiscountKindId
+          , tmp.GoodsId_out
+          , tmp.GoodsKindId_out
+          , tmp.Value_m
+          , tmp.Value_n
+
+            -- подарочное кол-во
+          , CASE WHEN tmp.PromoSchemaKindId = zc_Enum_PromoSchemaKind_m_n() AND tmp.Value_m > 0
+                      THEN FLOOR ((COALESCE (inAmount, 0) + COALESCE (inAmountSecond, 0)) / tmp.Value_m) * (tmp.Value_m - tmp.Value_n)
+                      ELSE 0
+            END
+
             INTO outMovementId_Promo, outPricePromo, vbCountForPricePromo, vbTaxPromo, vbIsChangePercent_Promo
+                 -- Промо-механика
+               , outPromoSchemaKindId
+                 -- Тип скидки - % или сумма
+               , outPromoDiscountKindId
+               -- Товар (факт отгрузка), если он есть - тогда Промо-механика
+               , outGoodsId_out
+               , outGoodsKindId_out
+                 -- Значение m
+               , outValue_m
+                 -- Значение n
+               , outValue_n
+                 -- подарочное кол-во
+               , outValue_promo
+
      FROM lpGet_Movement_Promo_Data (inOperDate   := CASE WHEN TRUE = (SELECT ObjectBoolean_OperDateOrder.ValueData
                                                                        FROM ObjectLink AS ObjectLink_Juridical
                                                                             INNER JOIN ObjectLink AS ObjectLink_Retail
@@ -157,10 +216,11 @@ BEGIN
      -- !!!замена для акции!!
      IF outMovementId_Promo > 0
      THEN
+        -- если Тенедер
         IF NOT EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = outMovementId_Promo AND MB.DescId = zc_MovementBoolean_Promo() AND MB.ValueData = TRUE)
         THEN
               -- меняется значение - для Тенедер
-             IF outPricePromo > 0 OR inUserId = 5
+             IF outPricePromo > 0 -- OR inUserId = 5
              THEN
                  ioPrice:= outPricePromo;
              END IF;
@@ -168,7 +228,7 @@ BEGIN
         ELSEIF COALESCE (ioId, 0) = 0 /*AND vbTaxPromo <> 0*/
         THEN
             -- меняется значение
-            IF outPricePromo > 0 OR inUserId = 5
+            IF outPricePromo > 0 -- OR inUserId = 5
             THEN
                 ioPrice:= outPricePromo;
                 ioCountForPrice:= vbCountForPricePromo;
@@ -177,9 +237,10 @@ BEGIN
         ELSE IF ioId <> 0 AND ioPrice <> outPricePromo /*AND vbTaxPromo <> 0*/
              THEN
                  IF EXISTS (SELECT 1 FROM MovementString AS MS WHERE MS.MovementId = inMovementId AND MS.DescId = zc_MovementString_GUID())
+                    OR outPromoSchemaKindId = zc_Enum_PromoSchemaKind_m_n()
                  THEN
                      -- меняется значение
-                     IF outPricePromo > 0 OR inUserId = 5
+                     IF outPricePromo > 0 -- OR inUserId = 5
                      THEN
                          ioPrice:= outPricePromo;
                      END IF;
@@ -203,7 +264,7 @@ BEGIN
                                                    , inOperDatePartner       := NULL
                                                    , inDayPrior_PriceReturn  := NULL
                                                    , inIsPrior               := FALSE -- !!!отказались от старых цен!!!
-                                                   , inOperDatePartner_order := (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner()) 
+                                                   , inOperDatePartner_order := (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
                                                    , inGoodsId               := inGoodsId
                                                    , inGoodsKindId           := inGoodsKindId
                                                    , inPrice                 := ioPrice
@@ -234,6 +295,22 @@ BEGIN
 
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
+
+     -- сохранили связь с <Тип скидки - % или сумма>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PromoDiscountKind(), ioId, outPromoDiscountKindId);
+     -- сохранили связь с <Товар (факт отгрузка)>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods_out(), ioId, outGoodsId_out);
+     -- сохранили связь с <Виды товаров (факт отгрузка)>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind_out(), ioId, outGoodsKindId_out);
+
+     -- сохранили свойство <Значение m>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Value_m(), ioId, COALESCE (outValue_m, 0));
+     -- сохранили свойство <Значение n>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Value_n(), ioId, COALESCE (outValue_n, 0));
+     -- сохранили свойство <Значение n>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Value_promo(), ioId, COALESCE (outValue_promo, 0));
+     
+
 
      -- сохранили свойство <Цена>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, ioPrice);

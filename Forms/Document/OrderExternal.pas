@@ -176,6 +176,7 @@ type
     ColorB_promo: TcxGridDBColumn;
     cbManual: TcxCheckBox;
     AmountManual: TcxGridDBColumn;
+    PromoSchemaKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

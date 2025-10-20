@@ -14,13 +14,27 @@ RETURNS TABLE (MovementId            Integer -- Документ
              , GoodsId               Integer
              , GoodsKindId           Integer
              , MovementPromo         TVarChar -- 
-             , TaxPromo              TFloat   -- % скидки товар
+
+             , TaxPromo              TFloat   -- % или сумма Скидки Товар
+             , PromoDiscountKindId   Integer -- Тип скидки - % или сумма
+
              , PriceWithOutVAT       TFloat   -- Цена отгрузки без учета НДС, с учетом скидки, грн
              , PriceWithVAT          TFloat   -- Цена отгрузки с учетом НДС, с учетом скидки, грн
              , CountForPrice         TFloat
              , PriceWithOutVAT_orig  TFloat   -- Цена отгрузки без учета НДС, с учетом скидки, грн
              , PriceWithVAT_orig     TFloat   -- Цена отгрузки с учетом НДС, с учетом скидки, грн
+
              , isChangePercent       Boolean  -- учитывать % скидки по договору
+
+               -- Промо-механика
+             , PromoSchemaKindId     Integer
+               -- Товар (факт отгрузка), если он есть - тогда Промо-механика
+             , GoodsId_out           Integer
+             , GoodsKindId_out       Integer
+               -- Значение m
+             , Value_m               TFloat
+               -- Значение n
+             , Value_n               TFloat
               )
 AS
 $BODY$
@@ -120,13 +134,33 @@ BEGIN
        , tmpResult AS (SELECT DISTINCT
                               tmpPartner.MovementId
                             , tmpPartner.MovementPromo
+
+                              -- % или сумма Скидки
                             , MovementItem.Amount   AS TaxPromo
+                              -- Тип скидки - % или сумма
+                            , COALESCE (MILinkObject_PromoDiscountKind.ObjectId, 0) :: Integer AS PromoDiscountKindId
+
                             , MovementItem.ObjectId AS GoodsId
                           --, 0                     AS GoodsKindId
                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)   AS GoodsKindId
+
+                              -- Цена отгрузки без НДС, с учетом скидки
                             , COALESCE (MIFloat_PriceWithOutVAT.ValueData, 0) AS PriceWithOutVAT
+                              -- Цена отгрузки с НДС, с учетом скидки
                             , COALESCE (MIFloat_PriceWithVAT.ValueData, 0)    AS PriceWithVAT
+                              --
                             , CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
+
+                             -- Промо-механика
+                           , COALESCE (MLO_PromoSchemaKind.ObjectId, 0)        :: Integer AS PromoSchemaKindId
+                             -- Товар (факт отгрузка), если он есть - тогда Промо-механика
+                           , COALESCE (MILinkObject_Goods_out.ObjectId, 0)     :: Integer AS GoodsId_out
+                           , COALESCE (MILinkObject_GoodsKind_out.ObjectId, 0) :: Integer AS GoodsKindId_out
+                             -- Значение m
+                           , COALESCE (MIFloat_Value_m.ValueData, 0)           :: TFloat  AS Value_m
+                             -- Значение n
+                           , COALESCE (MIFloat_Value_n.ValueData, 0)           :: TFloat  AS Value_n
+
                        FROM tmpPartner
                             INNER JOIN MovementItem ON MovementItem.MovementId = tmpPartner.MovementId
                                                    AND MovementItem.DescId = zc_MI_Master()
@@ -144,19 +178,60 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                            -- Промо-механика
+                            LEFT JOIN MovementLinkObject AS MLO_PromoSchemaKind
+                                                         ON MLO_PromoSchemaKind.MovementId = tmpPartner.MovementId
+                                                        AND MLO_PromoSchemaKind.DescId     = zc_MovementLinkObject_PromoSchemaKind()
+                            -- Тип скидки - % или сумма
+                            LEFT JOIN MovementItemLinkObject AS MILinkObject_PromoDiscountKind
+                                                             ON MILinkObject_PromoDiscountKind.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_PromoDiscountKind.DescId         = zc_MILinkObject_PromoDiscountKind()
+                            -- Товар (факт отгрузка), если он есть - тогда Промо-механика
+                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods_out
+                                                             ON MILinkObject_Goods_out.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_Goods_out.DescId         = zc_MILinkObject_Goods_out()
+                            -- Виды товаров (факт отгрузка), если он есть - тогда Промо-механика
+                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind_out
+                                                             ON MILinkObject_GoodsKind_out.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_GoodsKind_out.DescId         = zc_MILinkObject_GoodsKind_out()
+                            -- Значение m
+                            LEFT JOIN MovementItemFloat AS MIFloat_Value_m
+                                                        ON MIFloat_Value_m.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_Value_m.DescId         = zc_MIFloat_Value_m()
+                            -- Значение n
+                            LEFT JOIN MovementItemFloat AS MIFloat_Value_n
+                                                        ON MIFloat_Value_n.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_Value_n.DescId         = zc_MIFloat_Value_n()
                       )
         -- Результат
         SELECT tmpResult.MovementId
              , tmpResult.GoodsId
              , tmpResult.GoodsKindId :: Integer AS GoodsKindId
              , tmpResult.MovementPromo
+               -- % или сумма Скидки
              , tmpResult.TaxPromo
+               -- Тип скидки - % или сумма
+             , tmpResult.PromoDiscountKindId
+
              , (tmpResult.PriceWithOutVAT / tmpResult.CountForPrice) :: TFloat AS PriceWithOutVAT
              , (tmpResult.PriceWithVAT    / tmpResult.CountForPrice) :: TFloat AS PriceWithVAT
              , tmpResult.CountForPrice   :: TFloat AS CountForPrice
              , tmpResult.PriceWithOutVAT :: TFloat AS PriceWithOutVAT_orig
              , tmpResult.PriceWithVAT    :: TFloat AS PriceWithVAT_orig
+
+               -- без учета % скидки по договору
              , CASE WHEN tmpChangePercent.MovementId > 0 THEN FALSE ELSE TRUE END :: Boolean AS isChangePercent
+
+               -- Промо-механика
+             , tmpResult.PromoSchemaKindId
+               -- Товар (факт отгрузка), если он есть - тогда Промо-механика
+             , tmpResult.GoodsId_out
+             , tmpResult.GoodsKindId_out
+               -- Значение m
+             , tmpResult.Value_m
+               -- Значение n
+             , tmpResult.Value_n
+
         FROM tmpResult
              LEFT JOIN tmpChangePercent ON tmpChangePercent.MovementId = tmpResult.MovementId
        ;

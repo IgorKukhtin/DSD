@@ -29,6 +29,12 @@ BEGIN
           AND (Object.ValueData NOT ILIKE 'gpReport_GoodsMI_byMovement'
             OR vbUserId <> 5
               )
+
+        /*AND (Object.ValueData ILIKE '%Report%'
+            OR Object.ValueData ILIKE '%Mobile%'
+          --OR vbUserId = 5
+              )*/
+
        UNION
         SELECT 0 :: Integer AS Id
              , 0 :: Integer AS Code

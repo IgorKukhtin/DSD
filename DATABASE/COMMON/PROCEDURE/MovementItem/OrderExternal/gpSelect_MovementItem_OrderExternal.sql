@@ -28,13 +28,14 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , AmountWeight_child TFloat
              , AmountWeightDiff_child TFloat
 
-             , GoodsId_out             Integer  --Товар (Покупка), а скидка на товар ObjectId
-             , GoodsCode_out           Integer  --Товар (Покупка), а скидка на товар ObjectId
-             , GoodsName_out           TVarChar --Товар (Покупка), а скидка на товар ObjectId
-             , GoodsKindId_out         Integer  --Вид товара(Покупка), а скидка на товар zc_MILinkObject_GoodsKind
-             , GoodsKindName_out       TVarChar --Вид товара(Покупка), а скидка на товар zc_MILinkObject_GoodsKind
-             , PromoDiscountKindId     Integer  --ИД Тип скидки(Акция)
-             , PromoDiscountKindName   TVarChar --Наименование Тип скидки(Акция)
+             , GoodsId_out             Integer  -- Товар (Покупка), а скидка на товар ObjectId
+             , GoodsCode_out           Integer  -- Товар (Покупка), а скидка на товар ObjectId
+             , GoodsName_out           TVarChar -- Товар (Покупка), а скидка на товар ObjectId
+             , GoodsKindId_out         Integer  -- Вид товара(Покупка), а скидка на товар zc_MILinkObject_GoodsKind
+             , GoodsKindName_out       TVarChar -- Вид товара(Покупка), а скидка на товар zc_MILinkObject_GoodsKind
+             , PromoSchemaKindName     TVarChar -- Промо-механика
+             , PromoDiscountKindId     Integer  -- ИД Тип скидки(Акция)
+             , PromoDiscountKindName   TVarChar -- Наименование Тип скидки(Акция)
              , Value_m                 TFloat   -- Значение m
              , Value_n                 TFloat   -- Значение n
              , Value_promo             TFloat   -- подарочное кол-во
@@ -120,7 +121,8 @@ BEGIN
 
 
      -- Результат
-     IF inShowAll THEN
+     IF inShowAll = TRUE
+     THEN
 
      -- Результат такой
      RETURN QUERY
@@ -733,6 +735,7 @@ BEGIN
            , '' ::TVarChar              AS GoodsName_out
            , 0 ::Integer                AS GoodsKindId_out
            , '' ::TVarChar              AS GoodsKindName_out
+           , '' ::TVarChar              AS PromoSchemaKindName
            , 0 ::Integer                AS PromoDiscountKindId
            , '' ::TVarChar              AS PromoDiscountKindName
            , 0  ::TFloat                AS Value_m
@@ -855,11 +858,14 @@ BEGIN
            , Object_GoodsOut.ValueData              AS GoodsName_out
            , Object_GoodsKindOut.Id                 AS GoodsKindId_out
            , Object_GoodsKindOut.ValueData          AS GoodsKindName_out
+
+           , Object_PromoSchemaKind.ValueData       AS PromoSchemaKindName
            , Object_PromoDiscountKind.Id            AS PromoDiscountKindId
            , Object_PromoDiscountKind.ValueData     AS PromoDiscountKindName
            , tmpMI.Value_m
            , tmpMI.Value_n
            , tmpMI.Value_promo
+
        FROM tmpMI_all AS tmpMI
             LEFT JOIN tmpPromo ON tmpPromo.GoodsId      = tmpMI.GoodsId
                               AND (tmpPromo.GoodsKindId = tmpMI.GoodsKindId OR tmpPromo.GoodsKindId = 0)
@@ -892,8 +898,9 @@ BEGIN
 
             LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI.MovementItemId
 
-            LEFT JOIN Object AS Object_GoodsOut ON Object_GoodsOut.Id = tmpMI.GoodsId_Out
-            LEFT JOIN Object AS Object_GoodsKindOut ON Object_GoodsKindOut.Id = tmpMI.GoodsKindId_Out
+            LEFT JOIN Object AS Object_GoodsOut          ON Object_GoodsOut.Id          = tmpMI.GoodsId_Out
+            LEFT JOIN Object AS Object_GoodsKindOut      ON Object_GoodsKindOut.Id      = tmpMI.GoodsKindId_Out
+            LEFT JOIN Object AS Object_PromoSchemaKind   ON Object_PromoSchemaKind.Id   = Movement_Promo_View.PromoSchemaKindId
             LEFT JOIN Object AS Object_PromoDiscountKind ON Object_PromoDiscountKind.Id = tmpMI.PromoDiscountKindId
            ;
 
@@ -1061,6 +1068,7 @@ BEGIN
                                    , MovementItem.Id                               AS MovementItemId
                                    , MovementItem.ObjectId                         AS GoodsId
                                    , MovementItem.Amount                           AS TaxPromo
+                                 --, COALESCE (MLO_PromoSchemaKind.ObjectId, 0)    AS PromoSchemaKindId
 
                               FROM (SELECT DISTINCT tmpMI_Goods.MovementId_Promo :: Integer AS MovementId_Promo
                                     FROM tmpMI_Goods
@@ -1087,12 +1095,29 @@ BEGIN
                                  WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMIPromo_all.MovementItemId FROM tmpMIPromo_all)
                                    AND MovementItemFloat.DescId = zc_MIFloat_CountForPrice()
                                 )
+          -- Значение m
+        , tmpPromoMI_Float_m AS (SELECT MovementItemFloat.*
+                                 FROM MovementItemFloat
+                                 WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMIPromo_all.MovementItemId FROM tmpMIPromo_all)
+                                   AND MovementItemFloat.DescId = zc_MIFloat_Value_m()
+                                   AND 1=0
+                                )
+          -- Значение n
+        , tmpPromoMI_Float_n AS (SELECT MovementItemFloat.*
+                                 FROM MovementItemFloat
+                                 WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMIPromo_all.MovementItemId FROM tmpMIPromo_all)
+                                   AND MovementItemFloat.DescId = zc_MIFloat_Value_n()
+                                   AND 1=0
+                                )
            -- Акции по товарам для существующих MovementItem
          , tmpMIPromo AS (SELECT DISTINCT
                                  tmpMIPromo_all.MovementId_Promo
+                             --, tmpMIPromo_all.PromoSchemaKindId
                                , tmpMIPromo_all.GoodsId
                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                                , CASE WHEN /*tmpMIPromo_all.TaxPromo <> 0*/ 1=1 THEN MIFloat_PriceWithOutVAT.ValueData / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END ELSE 0 END AS PricePromo
+                               , tmpPromoMI_Float_m.ValueData AS Value_m
+                               , tmpPromoMI_Float_n.ValueData AS Value_n
                           FROM tmpMIPromo_all
                                LEFT JOIN tmpPromoMI_LO AS MILinkObject_GoodsKind
                                                        ON MILinkObject_GoodsKind.MovementItemId = tmpMIPromo_all.MovementItemId
@@ -1100,6 +1125,10 @@ BEGIN
                                                           ON MIFloat_PriceWithOutVAT.MovementItemId = tmpMIPromo_all.MovementItemId
                                LEFT JOIN tmpPromoMI_Float2 AS MIFloat_CountForPrice
                                                            ON MIFloat_CountForPrice.MovementItemId = tmpMIPromo_all.MovementItemId
+                               LEFT JOIN tmpPromoMI_Float_m AS tmpPromoMI_Float_m
+                                                            ON tmpPromoMI_Float_m.MovementItemId = tmpMIPromo_all.MovementItemId
+                               LEFT JOIN tmpPromoMI_Float_n AS tmpPromoMI_Float_n
+                                                            ON tmpPromoMI_Float_n.MovementItemId = tmpMIPromo_all.MovementItemId
                          )
             -- Остатки
           , tmpRemains AS (SELECT tmpMI_Goods.MovementItemId
@@ -1135,6 +1164,11 @@ BEGIN
                              AND vbIsOrderDnepr = FALSE
                            GROUP BY tmpMI_Goods.MovementItemId
                           )
+          , tmpMLO_PromoSchemaKind AS (SELECT MLO_PromoSchemaKind.*
+                                       FROM MovementLinkObject AS MLO_PromoSchemaKind
+                                       WHERE MLO_PromoSchemaKind.MovementId IN (SELECT DISTINCT tmpMI_Goods.MovementId_Promo FROM tmpMI_Goods)
+                                         AND MLO_PromoSchemaKind.DescId     = zc_MovementLinkObject_PromoSchemaKind()
+                                      )
             -- LEFT JOIN Товаров из заявки + Акции + Остатки
           , tmpMI AS (SELECT COALESCE (tmpMI_Goods.MovementItemId, 0)                   AS MovementItemId
                            , COALESCE (tmpMI_Goods.GoodsId, 0)                          AS GoodsId
@@ -1150,7 +1184,19 @@ BEGIN
                            , COALESCE (tmpMI_Goods.ChangePercent, 0)                    AS ChangePercent
 
                            , COALESCE (tmpMI_Goods.MovementId_Promo, 0)                 AS MovementId_Promo
-                           , COALESCE (tmpMIPromo.PricePromo, 0)                        AS PricePromo
+                           , CASE WHEN MLO_PromoSchemaKind.ObjectId = zc_Enum_PromoSchemaKind_m_n() AND tmpMI_Goods.Value_m > 0 AND (COALESCE (tmpMI_Goods.Amount, 0) + COALESCE (tmpMI_Goods.AmountSecond, 0)) > 0
+                                       THEN -- подарочное кол-во
+                                            zfCalc_Summ_PromoSchema_m_n
+                                            ((COALESCE (tmpMI_Goods.Amount, 0) + COALESCE (tmpMI_Goods.AmountSecond, 0)
+                                             -- минус подарочное кол-во
+                                            - FLOOR ((COALESCE (tmpMI_Goods.Amount, 0) + COALESCE (tmpMI_Goods.AmountSecond, 0)) / tmpMI_Goods.Value_m) * (tmpMI_Goods.Value_m - tmpMI_Goods.Value_n)
+                                             ) * tmpMIPromo.PricePromo
+                                             -- делим на общее кол-во
+                                           / (COALESCE (tmpMI_Goods.Amount, 0) + COALESCE (tmpMI_Goods.AmountSecond, 0))
+                                            )
+                                  ELSE COALESCE (tmpMIPromo.PricePromo, 0)
+                             END AS PricePromo
+
                            , COALESCE (tmpMI_Goods.StartBegin, NULL)    :: TDateTime    AS StartBegin
                            , COALESCE (tmpMI_Goods.EndBegin, NULL)      :: TDateTime    AS EndBegin
                            , COALESCE (tmpMI_Goods.diffBegin_sec, 0)    :: TFloat       AS diffBegin_sec
@@ -1181,6 +1227,10 @@ BEGIN
                             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                                   ON ObjectFloat_Weight.ObjectId = COALESCE (tmpMI_Goods.GoodsId, 0)
                                                  AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
+                            -- Промо-механика
+                            LEFT JOIN tmpMLO_PromoSchemaKind AS MLO_PromoSchemaKind
+                                                             ON MLO_PromoSchemaKind.MovementId = tmpMI_Goods.MovementId_Promo
+                                                            AND MLO_PromoSchemaKind.DescId     = zc_MovementLinkObject_PromoSchemaKind()
                      )
             -- Товары из EDI
           , tmpMI_EDI_All AS (SELECT MovementItem.Id
@@ -1414,9 +1464,37 @@ BEGIN
                   ELSE ''
               END) :: TVarChar AS MovementPromo
 
-           , CAST (CASE WHEN 1 = 0 AND tmpMI.PricePromo <> 0 THEN tmpMI.PricePromo
-                        WHEN /*tmpPromo.TaxPromo <> 0 AND*/ tmpPromo.GoodsId > 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT_orig / tmpPromo.CountForPrice
-                        WHEN /*tmpPromo.TaxPromo <> 0*/ tmpPromo.GoodsId > 0 AND 1=1 THEN tmpPromo.PriceWithOutVAT_orig / tmpPromo.CountForPrice
+           , CAST (CASE WHEN 1 = 0 AND tmpMI.PricePromo <> 0
+                             THEN tmpMI.PricePromo
+                        WHEN tmpPromo.GoodsId > 0 AND vbPriceWithVAT = TRUE -- AND tmpPromo.TaxPromo <> 0
+                             THEN CASE WHEN tmpPromo.PromoSchemaKindId = zc_Enum_PromoSchemaKind_m_n() AND tmpPromo.Value_m > 0 AND (COALESCE (tmpMI.Amount, 0) + COALESCE (tmpMI.AmountSecond, 0)) > 0
+                                            THEN -- подарочное кол-во
+                                                 zfCalc_Summ_PromoSchema_m_n
+                                                 ((COALESCE (tmpMI.Amount, 0) + COALESCE (tmpMI.AmountSecond, 0)
+                                                  -- минус подарочное кол-во
+                                                 - FLOOR ((COALESCE (tmpMI.Amount, 0) + COALESCE (tmpMI.AmountSecond, 0)) / tmpPromo.Value_m) * (tmpPromo.Value_m - tmpPromo.Value_n)
+                                                  ) * tmpPromo.PriceWithVAT_orig / tmpPromo.CountForPrice
+                                                -- делим на общее кол-во
+                                                / (COALESCE (tmpMI.Amount, 0) + COALESCE (tmpMI.AmountSecond, 0))
+                                                 )
+
+                                       ELSE tmpPromo.PriceWithVAT_orig / tmpPromo.CountForPrice
+                                  END 
+
+                        WHEN tmpPromo.GoodsId > 0 AND 1=1 -- AND tmpPromo.TaxPromo <> 0
+                             THEN CASE WHEN tmpPromo.PromoSchemaKindId = zc_Enum_PromoSchemaKind_m_n() AND tmpPromo.Value_m > 0 AND (COALESCE (tmpMI.Amount, 0) + COALESCE (tmpMI.AmountSecond, 0)) > 0
+                                            THEN -- подарочное кол-во
+                                                 zfCalc_Summ_PromoSchema_m_n
+                                                 ((COALESCE (tmpMI.Amount, 0) + COALESCE (tmpMI.AmountSecond, 0)
+                                                   -- минус подарочное кол-во
+                                                 - FLOOR ((COALESCE (tmpMI.Amount, 0) + COALESCE (tmpMI.AmountSecond, 0)) / tmpPromo.Value_m) * (tmpPromo.Value_m - tmpPromo.Value_n)
+                                                  ) * tmpPromo.PriceWithOutVAT_orig / tmpPromo.CountForPrice
+                                                 -- делим на общее кол-во
+                                                / (COALESCE (tmpMI.Amount, 0) + COALESCE (tmpMI.AmountSecond, 0))
+                                                 )
+
+                                       ELSE tmpPromo.PriceWithOutVAT_orig / tmpPromo.CountForPrice
+                                  END 
                         ELSE 0
                    END AS Numeric (16,8)) AS PricePromo
 
@@ -1441,6 +1519,8 @@ BEGIN
            , Object_GoodsOut.ValueData              AS GoodsName_out
            , Object_GoodsKindOut.Id                 AS GoodsKindId_out
            , Object_GoodsKindOut.ValueData          AS GoodsKindName_out
+
+           , Object_PromoSchemaKind.ValueData       AS PromoSchemaKindName
            , Object_PromoDiscountKind.Id            AS PromoDiscountKindId
            , Object_PromoDiscountKind.ValueData     AS PromoDiscountKindName
            , tmpMI.Value_m                ::TFloat  AS Value_m
@@ -1483,6 +1563,7 @@ BEGIN
 
             LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI.MovementItemId
 
+            LEFT JOIN Object AS Object_PromoSchemaKind   ON Object_PromoSchemaKind.Id   = Movement_Promo_View.PromoSchemaKindId
             LEFT JOIN Object AS Object_PromoDiscountKind ON Object_PromoDiscountKind.Id = tmpMI.PromoDiscountKindId
 
             LEFT JOIN tmpObject_Goods_Out     AS Object_GoodsOut     ON Object_GoodsOut.Id     = tmpMI.GoodsId_Out

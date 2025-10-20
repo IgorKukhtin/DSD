@@ -257,6 +257,7 @@ type
     DataCondraCDS: TClientDataSet;
     actSelectData_Condra: TdsdExecStoredProc;
     DocId_vch: TcxGridDBColumn;
+    DocId_vch_Condra: TcxGridDBColumn;
   private
     { Private declarations }
   public

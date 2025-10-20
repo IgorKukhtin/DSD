@@ -262,15 +262,36 @@ BEGIN
     ELSE
         IF ioCountForPrice > 1
         THEN
-            --  Скидка в грн для цены с НДС 
-            IF vbPromoSchemaKindId > 0 AND inPromoDiscountKindId = zc_Enum_PromoDiscountKind_Summ()
+            -- m по цене n
+            IF vbPromoSchemaKindId = zc_Enum_PromoSchemaKind_m_n()
+            THEN
+                -- Проверка
+                IF COALESCE (inValue_m, 0) = 0
+                THEN
+                    RAISE EXCEPTION 'Ошибка.Для Акции <%> не заполнена ячейка <Значение m>.', lfGet_Object_ValueData_sh (zc_Enum_PromoSchemaKind_m_n());
+                END IF;
+                -- Проверка
+                IF COALESCE (inValue_n, 0) = 0
+                THEN
+                    RAISE EXCEPTION 'Ошибка.Для Акции <%> не заполнена ячейка <Значение n>.', lfGet_Object_ValueData_sh (zc_Enum_PromoSchemaKind_m_n());
+                END IF;
+
+                -- расчитать <Цена отгрузки без учета НДС, с учетом скидки, грн>
+                outPriceWithOutVAT := ROUND (ioPrice * 1 / 1, 4) + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_PriceCorr()), 0);
+                -- расчитать <Цена отгрузки с учетом НДС, с учетом скидки, грн>
+                outPriceWithVAT := ROUND (outPriceWithOutVAT * (1 + vbVAT / 100.0), CASE WHEN ioCountForPrice = 10 THEN 1 ELSE 0 END);
+                -- еще раз расчитать <Цена отгрузки без учета НДС, с учетом скидки, грн>
+                outPriceWithOutVAT := ROUND (outPriceWithVAT / (1 + vbVAT / 100.0), 4) + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_PriceCorr()), 0);
+
+            --  Скидка Сумма с НДС в грн для цены с НДС 
+            ELSEIF vbPromoSchemaKindId > 0 AND inPromoDiscountKindId = zc_Enum_PromoDiscountKind_Summ()
             THEN
                 -- расчитать <Цена отгрузки без учета НДС, с учетом скидки, грн>
                 outPriceWithOutVAT := ROUND (ioPrice - COALESCE (inAmount / (1 + vbVAT / 100.0) / 100.0), 2) + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_PriceCorr()), 0);
                 -- расчитать <Цена отгрузки с учетом НДС, с учетом скидки, грн>
                 outPriceWithVAT := ROUND (outPriceWithOutVAT * (1 + vbVAT / 100.0), CASE WHEN ioCountForPrice = 10 THEN 1 ELSE 0 END);
                 -- еще раз расчитать <Цена отгрузки без учета НДС, с учетом скидки, грн>
-                outPriceWithOutVAT := ROUND (outPriceWithOutVAT / (1 + vbVAT / 100.0), 4) + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_PriceCorr()), 0);
+                outPriceWithOutVAT := ROUND (outPriceWithVAT / (1 + vbVAT / 100.0), 4) + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_PriceCorr()), 0);
 
             ELSE
                 -- расчитать <Цена отгрузки без учета НДС, с учетом скидки, грн>
@@ -278,11 +299,32 @@ BEGIN
                 -- расчитать <Цена отгрузки с учетом НДС, с учетом скидки, грн>
                 outPriceWithVAT := ROUND (outPriceWithOutVAT * (1 + vbVAT / 100.0), CASE WHEN ioCountForPrice = 10 THEN 1 ELSE 0 END);
                 -- еще раз расчитать <Цена отгрузки без учета НДС, с учетом скидки, грн>
-                outPriceWithOutVAT := ROUND (outPriceWithOutVAT / (1 + vbVAT / 100.0), 4) + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_PriceCorr()), 0);
+                outPriceWithOutVAT := ROUND (outPriceWithVAT / (1 + vbVAT / 100.0), 4) + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_PriceCorr()), 0);
             END IF;
+
+        -- если нет ioCountForPrice
         ELSE
-            --  Скидка в грн для цены с НДС 
-            IF vbPromoSchemaKindId > 0 AND inPromoDiscountKindId = zc_Enum_PromoDiscountKind_Summ()
+            -- m по цене n
+            IF vbPromoSchemaKindId = zc_Enum_PromoSchemaKind_m_n()
+            THEN
+                -- Проверка
+                IF COALESCE (inValue_m, 0) = 0
+                THEN
+                    RAISE EXCEPTION 'Ошибка.Для Акции <%> не заполнена ячейка <Значение m>.', lfGet_Object_ValueData_sh (zc_Enum_PromoSchemaKind_m_n());
+                END IF;
+                -- Проверка
+                IF COALESCE (inValue_n, 0) = 0
+                THEN
+                    RAISE EXCEPTION 'Ошибка.Для Акции <%> не заполнена ячейка <Значение n>.', lfGet_Object_ValueData_sh (zc_Enum_PromoSchemaKind_m_n());
+                END IF;
+
+                -- расчитать <Цена отгрузки без учета НДС, с учетом скидки, грн>
+                outPriceWithOutVAT := ROUND (ioPrice * 1 / 1, 2) + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_PriceCorr()), 0);
+                -- расчитать <Цена отгрузки с учетом НДС, с учетом скидки, грн>
+                outPriceWithVAT := ROUND (outPriceWithOutVAT * (1 + vbVAT / 100.0), 2);
+
+            --  Скидка Сумма с НДС в грн для цены с НДС 
+            ELSEIF vbPromoSchemaKindId > 0 AND inPromoDiscountKindId = zc_Enum_PromoDiscountKind_Summ()
             THEN
                 -- расчитать <Цена отгрузки без учета НДС, с учетом скидки, грн>
                 outPriceWithOutVAT := ROUND (ioPrice - COALESCE (inAmount / (1 + vbVAT / 100.0) / 100.0), 2) + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_PriceCorr()), 0);
@@ -392,7 +434,7 @@ BEGIN
          , Object_GoodsGroupProperty.ValueData       AS GoodsGroupPropertyName
          , Object_GoodsGroupPropertyParent.ValueData AS GoodsGroupPropertyName_Parent
          , Object_GoodsGroupDirection.ValueData      AS GoodsGroupDirectionName
-   INTO outTradeMarkName, outGoodsGroupPropertyName, outGoodsGroupPropertyName_Parent, outGoodsGroupDirectionName
+           INTO outTradeMarkName, outGoodsGroupPropertyName, outGoodsGroupPropertyName_Parent, outGoodsGroupDirectionName
     FROM MovementItem
              LEFT JOIN MovementItemLinkObject AS MILinkObject_TradeMark
                                               ON MILinkObject_TradeMark.MovementItemId = MovementItem.Id
@@ -428,6 +470,28 @@ BEGIN
              LEFT JOIN Object AS Object_GoodsGroupDirection ON Object_GoodsGroupDirection.Id = COALESCE (MILinkObject_GoodsGroupDirection.ObjectId, ObjectLink_Goods_GoodsGroupDirection.ChildObjectId)
 
     WHERE MovementItem.Id = ioId;
+
+
+    -- !!!Замена!!!! - m по цене n
+    IF vbPromoSchemaKindId = zc_Enum_PromoSchemaKind_m_n()
+    THEN
+        -- Проверка
+        IF COALESCE (inValue_m, 0) = 0
+        THEN
+            RAISE EXCEPTION 'Ошибка.Для Акции <%> не заполнена ячейка <Значение m>.', lfGet_Object_ValueData_sh (zc_Enum_PromoSchemaKind_m_n());
+        END IF;
+        -- Проверка
+        IF COALESCE (inValue_n, 0) = 0
+        THEN
+            RAISE EXCEPTION 'Ошибка.Для Акции <%> не заполнена ячейка <Значение n>.', lfGet_Object_ValueData_sh (zc_Enum_PromoSchemaKind_m_n());
+        END IF;
+
+        -- расчитать <Цена отгрузки без учета НДС, с учетом скидки, грн>
+        outPriceWithOutVAT := zfCalc_Summ_PromoSchema_m_n (ioPrice * inValue_n / inValue_m) + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_PriceCorr()), 0);
+        -- расчитать <Цена отгрузки с учетом НДС, с учетом скидки, грн>
+        outPriceWithVAT := ROUND (outPriceWithOutVAT * (1 + vbVAT / 100.0), 2);
+
+    END IF;
 
 
 IF  vbUserId = 9457 THEN RAISE EXCEPTION 'Admin - Test = OK'; END IF;
