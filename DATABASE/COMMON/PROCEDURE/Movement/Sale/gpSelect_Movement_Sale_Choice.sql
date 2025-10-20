@@ -115,6 +115,15 @@ BEGIN
                                    AND Object_Juridical.DescId = zc_Object_Juridical()
                                    -- если нет
                                    AND tmpBranchJuridical_all.JuridicalId IS NULL
+
+                                UNION
+                                 SELECT Object_Juridical.Id AS JuridicalId, 0 AS UnitId
+                                 FROM Object AS Object_Juridical
+                                      LEFT JOIN tmpBranchJuridical_all ON tmpBranchJuridical_all.JuridicalId = Object_Juridical.Id
+                                 WHERE Object_Juridical.Id IN (78348) -- ЕПІЦЕНТР К ТОВ
+                                   AND Object_Juridical.DescId = zc_Object_Juridical()
+                                   -- если нет
+                                   AND tmpBranchJuridical_all.JuridicalId IS NULL
                                 )
         --документы Заявка на возврат тары
        /*  --не должно здесь біть
