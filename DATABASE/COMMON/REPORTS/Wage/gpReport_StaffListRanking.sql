@@ -258,10 +258,15 @@ BEGIN
    
   , tmpData AS (SELECT Movement.DepartmentId
                      , Movement.UnitId
-                     , MovementItem.Id       AS MovementItemId
                      , MovementItem.ObjectId AS PositionId
                      , COALESCE (MILinkObject_PositionLevel.ObjectId,0) AS PositionLevelId
-                     , ROW_NUMBER() OVER (PARTITION BY Movement.DepartmentId, Movement.UnitId, MovementItem.ObjectId, COALESCE (MILinkObject_PositionLevel.ObjectId,0)) AS Ord
+                     --, ROW_NUMBER() OVER (PARTITION BY Movement.DepartmentId, Movement.UnitId, MovementItem.ObjectId, COALESCE (MILinkObject_PositionLevel.ObjectId,0)) AS Ord
+
+                     , MILinkObject_Personal.ObjectId           AS PersonalId
+                     , MILinkObject_StaffHoursDay.ObjectId      AS StaffHoursDayId   
+                     , MILinkObject_StaffHours.ObjectId         AS StaffHoursId     
+                     , SUM (COALESCE (MIFloat_AmountReport.ValueData, 0)) ::TFloat AS AmountPlan         -- ШР для отчета из документа     
+
                 FROM tmpMovement AS Movement
                      LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Movement.UnitId
                      LEFT JOIN Object AS Object_Department ON Object_Department.Id = Movement.DepartmentId
@@ -271,6 +276,29 @@ BEGIN
                      LEFT JOIN tmpMILinkObject AS MILinkObject_PositionLevel
                                                ON MILinkObject_PositionLevel.MovementItemId = MovementItem.Id
                                               AND MILinkObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel()
+
+                     LEFT JOIN tmpMILinkObject AS MILinkObject_StaffHoursDay
+                                               ON MILinkObject_StaffHoursDay.MovementItemId = MovementItem.Id
+                                              AND MILinkObject_StaffHoursDay.DescId = zc_MILinkObject_StaffHoursDay()
+
+                     LEFT JOIN tmpMILinkObject AS MILinkObject_StaffHours
+                                               ON MILinkObject_StaffHours.MovementItemId = MovementItem.Id
+                                              AND MILinkObject_StaffHours.DescId = zc_MILinkObject_StaffHours()
+
+                     LEFT JOIN tmpMILinkObject AS MILinkObject_Personal
+                                               ON MILinkObject_Personal.MovementItemId = MovementItem.Id
+                                              AND MILinkObject_Personal.DescId = zc_MILinkObject_Personal()
+
+                     LEFT JOIN tmpMIFloat AS MIFloat_AmountReport                                                                                    
+                                          ON MIFloat_AmountReport.MovementItemId = MovementItem.Id
+                                         AND MIFloat_AmountReport.DescId = zc_MIFloat_AmountReport()   
+                GROUP BY Movement.DepartmentId
+                       , Movement.UnitId
+                       , MovementItem.ObjectId
+                       , COALESCE (MILinkObject_PositionLevel.ObjectId,0)
+                       , MILinkObject_Personal.ObjectId
+                       , MILinkObject_StaffHoursDay.ObjectId  
+                       , MILinkObject_StaffHours.ObjectId
                      )
   , tmpResult AS(SELECT Object_Department.Id                          AS DepartmentId
                       , Object_Department.ValueData       ::TVarChar  AS DepartmentName      
@@ -285,12 +313,12 @@ BEGIN
                       , Object_Personal.ValueData         ::TVarChar  AS PersonalName        
                       , Object_StaffHoursDay.ValueData    ::TVarChar  AS StaffHoursDayName   
                       , Object_StaffHours.ValueData       ::TVarChar  AS StaffHoursName      
-                      , COALESCE (MIFloat_AmountReport.ValueData, 0) ::TFloat AS AmountPlan         -- ШР для отчета из документа     
+                      , COALESCE (Movement.AmountPlan, 0) ::TFloat AS AmountPlan         -- ШР для отчета из документа     
                       , tmpFact.Amount      ::TFloat    AS AmountFact         -- шт.ед. из спр. Сотрудники - основное место работы = Да, дата приема/увольнения считаем как раб. день, т.е. эту шт. ед. считаем в кол.факт 
                       , tmpFact.Amount_add  ::TFloat    AS AmountFact_add     -- совместительство информационно
-                      , (COALESCE (tmpFact.Amount,0) - COALESCE (MIFloat_AmountReport.ValueData, 0))  ::TFloat    AS Amount_diff
-                      , CAST (CASE WHEN COALESCE (MIFloat_AmountReport.ValueData, 0) <> 0 
-                                   THEN (COALESCE (tmpFact.Amount,0)/COALESCE (MIFloat_AmountReport.ValueData, 0) * 100)
+                      , (COALESCE (tmpFact.Amount,0) - COALESCE (Movement.AmountPlan, 0))  ::TFloat    AS Amount_diff
+                      , CAST (CASE WHEN COALESCE (Movement.AmountPlan, 0) <> 0 
+                                   THEN (COALESCE (tmpFact.Amount,0)/COALESCE (Movement.AmountPlan, 0) * 100)
                                    ELSE 0
                               END
                               AS NUMERIC (16,0))   ::TFloat    AS Persent_diff
@@ -301,34 +329,19 @@ BEGIN
                       LEFT JOIN Object AS Object_Department ON Object_Department.Id = Movement.DepartmentId
                       LEFT JOIN Object AS Object_Position ON Object_Position.Id = Movement.PositionId
                       LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = Movement.PositionLevelId
-             
-                      LEFT JOIN tmpMILinkObject AS MILinkObject_StaffHoursDay
-                                                ON MILinkObject_StaffHoursDay.MovementItemId = Movement.MovementItemId
-                                               AND MILinkObject_StaffHoursDay.DescId = zc_MILinkObject_StaffHoursDay()
-                      LEFT JOIN Object AS Object_StaffHoursDay ON Object_StaffHoursDay.Id = MILinkObject_StaffHoursDay.ObjectId
-             
-                      LEFT JOIN tmpMILinkObject AS MILinkObject_StaffHours
-                                                ON MILinkObject_StaffHours.MovementItemId = Movement.MovementItemId
-                                               AND MILinkObject_StaffHours.DescId = zc_MILinkObject_StaffHours()
-                      LEFT JOIN Object AS Object_StaffHours ON Object_StaffHours.Id = MILinkObject_StaffHours.ObjectId
-             
-                      LEFT JOIN tmpMILinkObject AS MILinkObject_Personal
-                                                ON MILinkObject_Personal.MovementItemId = Movement.MovementItemId
-                                               AND MILinkObject_Personal.DescId = zc_MILinkObject_Personal()
-                      LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = MILinkObject_Personal.ObjectId
-             
+                      LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = Movement.PersonalId
+                      LEFT JOIN Object AS Object_StaffHoursDay ON Object_StaffHoursDay.Id = Movement.StaffHoursDayId
+                      LEFT JOIN Object AS Object_StaffHours ON Object_StaffHours.Id = Movement.StaffHoursId
+
                       LEFT JOIN ObjectLink AS ObjectLink_Position_PositionProperty
                                            ON ObjectLink_Position_PositionProperty.ObjectId = Object_Position.Id
                                           AND ObjectLink_Position_PositionProperty.DescId = zc_ObjectLink_Position_PositionProperty()
                       LEFT JOIN Object AS Object_PositionProperty ON Object_PositionProperty.Id = ObjectLink_Position_PositionProperty.ChildObjectId
              
-                      LEFT JOIN tmpMIFloat AS MIFloat_AmountReport                                                                                    
-                                           ON MIFloat_AmountReport.MovementItemId = Movement.MovementItemId
-                                          AND MIFloat_AmountReport.DescId = zc_MIFloat_AmountReport()   
                       LEFT JOIN tmpFact ON tmpFact.UnitId = Movement.UnitId
                                        AND tmpFact.PositionId = Movement.PositionId
                                        AND COALESCE (tmpFact.PositionLevelId,0) = COALESCE (Movement.PositionLevelId,0)
-                                       AND Movement.Ord = 1
+                                       --AND Movement.Ord = 1
                  ORDER BY Object_Department.ValueData
                         , Object_Unit.ValueData  
                         , Object_Position.ValueData

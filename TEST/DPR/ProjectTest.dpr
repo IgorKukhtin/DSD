@@ -1619,7 +1619,8 @@ uses
   StaffListCloseJournal in '..\..\Forms\Document\StaffListCloseJournal.pas' {StaffListCloseJournalForm: TParentForm},
   StaffListCloseEdit in '..\..\Forms\Document\StaffListCloseEdit.pas' {StaffListCloseEditForm: TParentForm},
   StaffListMemberJournal in '..\..\Forms\Document\StaffListMemberJournal.pas' {StaffListMemberJournalForm: TParentForm},
-  StaffListMemberJournalChoice in '..\..\Forms\Document\StaffListMemberJournalChoice.pas' {StaffListMemberJournalChoiceForm: TParentForm};
+  StaffListMemberJournalChoice in '..\..\Forms\Document\StaffListMemberJournalChoice.pas' {StaffListMemberJournalChoiceForm: TParentForm},
+  Report_ProfitLoss_by in '..\..\Forms\Report\Report_ProfitLoss_by.pas' {Report_ProfitLoss_byForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
