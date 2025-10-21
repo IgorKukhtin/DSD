@@ -469,7 +469,7 @@ BEGIN
                 , SUM (tmpContainer.AmountOut * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END) AS AmountOut_Weight
                 , SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpContainer.AmountOut ELSE 0 END) AS AmountOut_sh
 
-                , CASE WHEN vbIsNotSumm = TRUE THEN 0 ELSE SUM (CASE WHEN tmpContainer.AnalyzerId <> zc_Enum_AccountGroup_60000() AND COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.Summ ELSE 0 END) END AS Summ
+                , CASE WHEN vbIsNotSumm = TRUE THEN 0 ELSE SUM (CASE WHEN 1=1 OR vbUserId <> 5 OR (tmpContainer.AnalyzerId <> zc_Enum_AccountGroup_60000() AND COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200()) THEN tmpContainer.Summ ELSE 0 END) END AS Summ
                 
                 , CASE WHEN vbIsNotSumm = TRUE THEN 0 ELSE SUM (CASE WHEN tmpContainer.AnalyzerId <> zc_Enum_AccountGroup_60000() THEN tmpContainer.SummIn  ELSE 0 END) END AS SummIn_zavod
                 , CASE WHEN vbIsNotSumm = TRUE THEN 0 ELSE SUM (CASE WHEN tmpContainer.AnalyzerId <> zc_Enum_AccountGroup_60000() THEN tmpContainer.SummOut ELSE 0 END) END AS SummOut_zavod

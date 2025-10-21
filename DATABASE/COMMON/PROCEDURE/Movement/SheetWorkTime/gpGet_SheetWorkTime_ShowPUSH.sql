@@ -95,6 +95,7 @@ BEGIN
                                             AND ObjectLink_Unit_PersonalHead.DescId        = zc_ObjectLink_Unit_PersonalHead()
                         JOIN Movement AS Movement_SheetWorkTime
                                       ON Movement_SheetWorkTime.OperDate BETWEEN DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 MONTH' AND DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 DAY'
+                                     AND Movement_SheetWorkTime.DescId   = zc_Movement_SheetWorkTime()
                                      AND Movement_SheetWorkTime.StatusId <> zc_Enum_Status_Erased()
 
                         JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -113,7 +114,7 @@ BEGIN
         THEN
             outText:= 'Внимание!!!!'
            ||CHR(13)||'Вы не подтвердили проверку'
-           ||CHR(13)||'табеля для <' || lfGet_Object_ValueData_sh ((SELECT MovementLinkObject_Unit.ObjectId
+           ||CHR(13)||'Табель для <' || lfGet_Object_ValueData_sh ((SELECT MovementLinkObject_Unit.ObjectId
                                                                     FROM ObjectLink AS ObjectLink_User_Member
                                                                          LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
                                                                                               ON ObjectLink_Personal_Member.ChildObjectId = ObjectLink_User_Member.ChildObjectId
@@ -123,6 +124,7 @@ BEGIN
                                                                                              AND ObjectLink_Unit_PersonalHead.DescId        = zc_ObjectLink_Unit_PersonalHead()
                                                                          JOIN Movement AS Movement_SheetWorkTime
                                                                                        ON Movement_SheetWorkTime.OperDate BETWEEN DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 MONTH' AND DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 DAY'
+                                                                                      AND Movement_SheetWorkTime.DescId   = zc_Movement_SheetWorkTime()
                                                                                       AND Movement_SheetWorkTime.StatusId <> zc_Enum_Status_Erased()
                                                  
                                                                          JOIN MovementLinkObject AS MovementLinkObject_Unit
