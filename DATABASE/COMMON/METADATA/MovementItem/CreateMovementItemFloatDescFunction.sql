@@ -1150,7 +1150,16 @@ INSERT INTO MovementItemFloatDesc (Code, ItemName)
 
  CREATE OR REPLACE FUNCTION zc_MIFloat_Staff_Summ_MK() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Staff_Summ_MK'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
-  SELECT 'zc_MIFloat_Staff_Summ_MK', 'ÌÊ' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Staff_Summ_MK');
+  SELECT 'zc_MIFloat_Staff_Summ_MK', 'ÌÊ-ì³ñÿöü' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Staff_Summ_MK');
+
+ CREATE OR REPLACE FUNCTION zc_MIFloat_Staff_Summ_MK_3() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Staff_Summ_MK_3'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_Staff_Summ_MK_3', 'ÌÊ-êâàðòàë' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Staff_Summ_MK_3');
+
+ CREATE OR REPLACE FUNCTION zc_MIFloat_Staff_Summ_MK_6() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Staff_Summ_MK_6'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_Staff_Summ_MK_6', 'ÌÊ-ï³âð³÷÷à' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Staff_Summ_MK_6');
+
 
  CREATE OR REPLACE FUNCTION zc_MIFloat_Staff_Summ_real() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Staff_Summ_real'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
