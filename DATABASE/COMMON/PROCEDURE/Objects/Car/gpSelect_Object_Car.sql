@@ -220,9 +220,9 @@ BEGIN
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Car_Juridical.ChildObjectId    
            -- информативно
             LEFT JOIN tmpOL_Asset AS ObjectLink_Asset_Car
-                                 ON ObjectLink_Asset_Car.ChildObjectId = Object_Car.Id
-                                AND ObjectLink_Asset_Car.DescId = zc_ObjectLink_Asset_Car()
-                                AND ObjectLink_Asset_Car.Ord = 1
+                                  ON ObjectLink_Asset_Car.ChildObjectId = Object_Car.Id
+                                 AND ObjectLink_Asset_Car.DescId = zc_ObjectLink_Asset_Car()
+                                 AND ObjectLink_Asset_Car.Ord = 1
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = ObjectLink_Asset_Car.ObjectId        
 
             LEFT JOIN ObjectString AS ObjectString_InvNumber
