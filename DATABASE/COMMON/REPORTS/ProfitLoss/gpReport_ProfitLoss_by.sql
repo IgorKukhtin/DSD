@@ -8,8 +8,9 @@ CREATE OR REPLACE FUNCTION gpReport_ProfitLoss_by(
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (OperDate           TDateTime
+            , Month               TDateTime
             , MovementId          Integer
-            , MovementDesName     TVarChar
+            , MovementDescName    TVarChar
             , InvNumber           Integer
             , Comment             TVarChar
             , ProfitLossId        Integer
@@ -22,6 +23,7 @@ RETURNS TABLE (OperDate           TDateTime
             , BranchName_pl       TVarChar
             , UnitId_pl           Integer
             , UnitName_pl         TVarChar
+            , Unit_plDescName     TVarChar
             , InfoMoneyId               Integer     
             , InfoMoneyGroupCode        Integer
             , InfoMoneyDestinationCode  Integer
@@ -163,10 +165,12 @@ BEGIN
 
        SELECT -- Дата             
               tmp.OperDate            ::TDateTime
+            -- месяц
+            , DATE_TRUNC ('MONTH', tmp.OperDate) ::TDateTime  AS Month
             -- Id документа
             , tmp.MovementId          ::Integer
             -- Вид документа
-            , MovementDesc.ItemName    ::TVarChar AS MovementDesName
+            , MovementDesc.ItemName    ::TVarChar AS MovementDescName
             -- № документа      
             , tmp.InvNumber           ::Integer
             -- Примечание документ
@@ -185,6 +189,7 @@ BEGIN
             -- Подразделение затрат (Підрозділ)
             , tmp.UnitId_pl            ::Integer  AS UnitId_pl
             , Object_Unit_pl.ValueData ::TVarChar AS UnitName_pl
+            , ObjectDesc_Unit_pl.ItemName ::TVarChar AS Unit_plDescName
             -- Статья УП        
             , tmp.InfoMoneyId                          ::Integer     
             , View_InfoMoney.InfoMoneyGroupCode        ::Integer
@@ -246,7 +251,10 @@ BEGIN
             LEFT JOIN Object_ProfitLoss_View AS View_ProfitLoss ON View_ProfitLoss.ProfitLossId = tmp.ProfitLossId
             LEFT JOIN Object AS Object_Business ON Object_Business.Id = tmp.BusinessId
             LEFT JOIN Object AS Object_Branch_pl ON Object_Branch_pl.Id = tmp.BranchId_pl
+
             LEFT JOIN Object AS Object_Unit_pl ON Object_Unit_pl.Id = tmp.UnitId_pl
+            LEFT JOIN ObjectDesc AS ObjectDesc_Unit_pl ON ObjectDesc_Unit_pl.Id = Object_Unit_pl.DescId
+
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmp.InfoMoneyId
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmp.UnitId
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = tmp.AssetId
