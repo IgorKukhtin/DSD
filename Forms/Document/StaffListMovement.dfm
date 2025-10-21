@@ -1896,6 +1896,24 @@ inherited StaffListMovementForm: TStaffListMovementForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inStaff_Summ_MK3'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Staff_Summ_MK3'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStaff_Summ_MK6'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Staff_Summ_MK6'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inStaff_Summ_real'
         Value = Null
         Component = MasterCDS
