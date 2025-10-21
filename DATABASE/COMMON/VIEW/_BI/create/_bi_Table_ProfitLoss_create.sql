@@ -20,22 +20,25 @@ TRUNCATE TABLE _bi_Table_ProfitLoss;
               OperDate            TDateTime,
               -- Id документа
               MovementId          Integer,
-              -- Примечание документ
-              MovementId_comment  Integer,
               -- Вид документа
               MovementDescId      Integer,
               -- № документа      
               InvNumber           Integer,
+              -- Примечание документ
+              MovementId_comment  Integer,
                                   
               -- Статья ОПиУ      
-              ProdtLossId         Integer,
-              -- Статья УП        
-              InfoMoneyId         Integer,
+              ProfitLossId        Integer,
+              -- Бизнес
+              BusinessId         Integer,
 
               -- Филиал затрат (Філія)
               BranchId_pl         Integer,
               -- Подразделение затрат (Підрозділ)
               UnitId_pl           Integer,
+
+              -- Статья УП        
+              InfoMoneyId         Integer,
 
               -- Подразделение учета (Місце обліку)
               UnitId              Integer,
@@ -43,6 +46,8 @@ TRUNCATE TABLE _bi_Table_ProfitLoss;
               AssetId             Integer,
               -- Автомобиль (Направление затрат, место учета)
               CarId               Integer,
+              -- Физ лицо
+              MemberId            Integer,
               -- Статья списания (Стаття списання, Направление затрат)
               ArticleLossId       Integer,
               
