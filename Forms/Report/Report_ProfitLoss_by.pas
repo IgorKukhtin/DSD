@@ -1,4 +1,4 @@
-unit Report_ProfitLoss;
+unit Report_ProfitLoss_by;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   cxDBPivotGrid, cxLabel, dxBarExtItems, ChoicePeriod, cxCheckBox, dsdCommon;
 
 type
-  TReport_ProfitLossForm = class(TParentForm)
+  TReport_ProfitLoss_byForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -46,18 +46,15 @@ type
     clProfitLossGroupName: TcxDBPivotGridField;
     clProfitLossDirectionName: TcxDBPivotGridField;
     clProfitLossName: TcxDBPivotGridField;
-    clOnComplete: TcxDBPivotGridField;
     clInfoMoneyName: TcxDBPivotGridField;
-    clDirectionObjectName: TcxDBPivotGridField;
-    clDestinationObjectName: TcxDBPivotGridField;
-    clAmount: TcxDBPivotGridField;
+    clDirectionName: TcxDBPivotGridField;
+    clDestinationName: TcxDBPivotGridField;
     clBusiness: TcxDBPivotGridField;
-    clJuridicalBasis: TcxDBPivotGridField;
     clMovementDescName: TcxDBPivotGridField;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
-    clBranchName_ProfitLoss: TcxDBPivotGridField;
-    clUnitName_ProfitLoss: TcxDBPivotGridField;
+    clBranchName_pl: TcxDBPivotGridField;
+    clUnitName_pl: TcxDBPivotGridField;
     clInfoMoneyCode: TcxDBPivotGridField;
     clInfoMoneyGroupName: TcxDBPivotGridField;
     clInfoMoneyDestinationName: TcxDBPivotGridField;
@@ -71,20 +68,13 @@ type
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     actPrint: TdsdPrintAction;
-    bbPrint: TdxBarButton;
-    cbTotal: TcxCheckBox;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
-    PL_GroupName_original: TcxDBPivotGridField;
-    PL_DirectionName_original: TcxDBPivotGridField;
-    PL_Name_original: TcxDBPivotGridField;
-    bbReport_Account: TdxBarButton;
+    clInvNumber: TcxDBPivotGridField;
+    clOperDate: TcxDBPivotGridField;
+    clComment: TcxDBPivotGridField;
     actOpenReport_AccountMotion: TdsdOpenForm;
     macReport_AccountMotion: TMultiAction;
-    bbReport_AccountMotion: TdxBarButton;
     actPrintBranch: TdsdPrintAction;
-    bbPrintBranch: TdxBarButton;
-    actOpenReport_ProfitLoss_by: TdsdOpenForm;
-    dxBarButton1: TdxBarButton;
   private
   public
   end;
@@ -94,6 +84,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_ProfitLossForm);
+  RegisterClass(TReport_ProfitLoss_byForm);
 
 end.
