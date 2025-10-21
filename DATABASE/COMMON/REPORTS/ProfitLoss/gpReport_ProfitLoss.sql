@@ -62,11 +62,11 @@ BEGIN
      END IF;
 
      -- Блокируем ему просмотр
-     IF vbUserId = 9457 -- Климентьев К.И.
-     THEN
-         vbUserId:= NULL;
-         RETURN;
-     END IF;
+     --IF vbUserId = 9457 -- Климентьев К.И.
+     --THEN
+     --    vbUserId:= NULL;
+     --    RETURN;
+     --END IF;
 
 
      --
@@ -163,8 +163,13 @@ BEGIN
                                                   END
                                         WHEN MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut(), zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_SendOnPrice(), zc_Movement_Loss(), zc_Movement_Send(), zc_Movement_Inventory())
                                              THEN MIContainer.ObjectId_Analyzer
-                                        WHEN MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_Service(), zc_Movement_ProfitLossService(), zc_Movement_MobileBills())
+
+                                        WHEN MIContainer.MovementDescId IN (zc_Movement_MobileBills())
+                                             THEN MILinkObject_Employee.ObjectId
+
+                                        WHEN MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_Service(), zc_Movement_ProfitLossService()) -- , zc_Movement_MobileBills()
                                              THEN MovementItem_1.ObjectId -- MIContainer.ObjectId_Analyzer
+
                                         ELSE 0
                                    END AS ObjectId_inf
 
@@ -196,6 +201,10 @@ BEGIN
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                                   ON MILinkObject_InfoMoney.MovementItemId = MovementItem_1.Id
                                                                  AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+                                 -- К кому привязан телефон
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Employee
+                                                                  ON MILinkObject_Employee.MovementItemId = MovementItem_1.Id
+                                                                 AND MILinkObject_Employee.DescId         = zc_MILinkObject_Employee()
                                  /*LEFT JOIN MovementItemLinkObject AS MILinkObject_Route
                                                                   ON MILinkObject_Route.MovementItemId = MIContainer .MovementItemId
                                                                  AND MILinkObject_Route.DescId = zc_MILinkObject_Route()
@@ -265,7 +274,11 @@ BEGIN
                                                     END
                                           WHEN MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut(), zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_SendOnPrice(), zc_Movement_Loss(), zc_Movement_Send(), zc_Movement_Inventory())
                                                THEN MIContainer.ObjectId_Analyzer
-                                          WHEN MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_Service(), zc_Movement_ProfitLossService(), zc_Movement_MobileBills())
+
+                                          WHEN MIContainer.MovementDescId IN (zc_Movement_MobileBills())
+                                               THEN MILinkObject_Employee.ObjectId
+
+                                          WHEN MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_Service(), zc_Movement_ProfitLossService()) -- , zc_Movement_MobileBills()
                                                THEN MovementItem_1.ObjectId -- MIContainer.ObjectId_Analyzer
                                           ELSE 0
                                      END
@@ -498,7 +511,7 @@ BEGIN
                                                                    -- AND zc_isHistoryCost_byInfoMoneyDetail() = TRUE
            LEFT JOIN Object AS Object_Direction   ON Object_Direction.Id = tmpReport.DirectionId
            LEFT JOIN Object AS Object_Destination_calc ON Object_Destination_calc.Id = tmpReport.ObjectId_inf
-           LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = CASE WHEN vbIsUserRole_8813637 = TRUE AND Object_Destination_calc.DescId IN (zc_Object_Personal(), zc_Object_Member()) THEN NULL ELSE tmpReport.ObjectId_inf END
+           LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = CASE WHEN (vbIsUserRole_8813637 = TRUE OR vbUserId IN (9457 , 4467766)) AND Object_Destination_calc.DescId IN (zc_Object_Personal(), zc_Object_Member()) THEN NULL ELSE tmpReport.ObjectId_inf END
 
            LEFT JOIN MovementDesc ON MovementDesc.Id = tmpReport.MovementDescId
 
@@ -598,7 +611,7 @@ BEGIN
                                                                    -- AND zc_isHistoryCost_byInfoMoneyDetail() = TRUE
            LEFT JOIN Object AS Object_Direction   ON Object_Direction.Id = tmpReport.DirectionId
            LEFT JOIN Object AS Object_Destination_calc ON Object_Destination_calc.Id = tmpReport.ObjectId_inf
-           LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = CASE WHEN vbIsUserRole_8813637 = TRUE AND Object_Destination_calc.DescId IN (zc_Object_Personal(), zc_Object_Member()) THEN NULL ELSE tmpReport.ObjectId_inf END
+           LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = CASE WHEN (vbIsUserRole_8813637 = TRUE OR vbUserId IN (9457 , 4467766)) AND Object_Destination_calc.DescId IN (zc_Object_Personal(), zc_Object_Member()) THEN NULL ELSE tmpReport.ObjectId_inf END
 
            LEFT JOIN MovementDesc ON MovementDesc.Id = tmpReport.MovementDescId
 

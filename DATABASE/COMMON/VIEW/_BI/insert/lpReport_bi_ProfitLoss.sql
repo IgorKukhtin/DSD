@@ -14,6 +14,8 @@ RETURNS TABLE (ContainerId_pl      Integer,
                MovementId          Integer,
                -- Вид документа
                MovementDescId      Integer,
+               MovementDescName    TVarChar,
+               MovementDescCode    TVarChar,
 
                -- № документа
                -- InvNumber           Integer,
@@ -27,6 +29,7 @@ RETURNS TABLE (ContainerId_pl      Integer,
                ProfitLossGroupName     TVarChar,
                ProfitLossDirectionName TVarChar,
                ProfitLossName          TVarChar,
+               ProfitLossName_all      TVarChar,
 
                -- Бизнес
                BusinessId         Integer,
@@ -53,6 +56,9 @@ RETURNS TABLE (ContainerId_pl      Integer,
                CarId               Integer,
                -- Сотрудник (Направление затрат, место учета)
                MemberId            Integer,
+               MemberDescId        Integer,
+               MemberCode          Integer,
+               MemberName          TVarChar,
                -- Статья списания (Стаття списання, Направление затрат)
                ArticleLossId       Integer,
 
@@ -101,6 +107,10 @@ BEGIN
 
                                    -- Подраделение (ОПиУ)
                                  , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Transport(), zc_Movement_TransportService())
+                                             -- Подраделение (ОПиУ), а могло быть UnitId_Route
+                                             THEN MIContainer.ObjectIntId_Analyzer
+
+                                        WHEN MIContainer.MovementDescId IN (zc_Movement_Income())
                                              -- Подраделение (ОПиУ), а могло быть UnitId_Route
                                              THEN MIContainer.ObjectIntId_Analyzer
 
@@ -184,7 +194,8 @@ BEGIN
 
                                    -- Сотрудник (Направление затрат, место учета)
                                  , COALESCE (MILO_Employee_01.ObjectId
-                                           , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_PersonalReport()) THEN MovementItem_01.ObjectId END
+                                           , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_PersonalService()) THEN MovementItem_01.ObjectId END
+                                           , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_PersonalReport())  THEN MovementItem_01.ObjectId END
                                            , CASE WHEN Object_To.DescId   IN (zc_Object_Personal(), zc_Object_Member()) THEN Object_To.Id   END
                                            , CASE WHEN Object_From.DescId IN (zc_Object_Personal(), zc_Object_Member()) THEN Object_From.Id END
                                             ) AS MemberId
@@ -354,6 +365,8 @@ BEGIN
                    , Operation.OperDate :: TDateTime
                    , Operation.MovementId
                    , Operation.MovementDescId
+                   , MovementDesc.ItemName AS MovementDescName
+                   , MovementDesc.Code     AS MovementDescCode
 
                    , MS_Comment.MovementId AS MovementId_comment
 
@@ -363,6 +376,7 @@ BEGIN
                    , View_ProfitLoss.ProfitLossGroupName
                    , View_ProfitLoss.ProfitLossDirectionName
                    , View_ProfitLoss.ProfitLossName
+                   , View_ProfitLoss.ProfitLossName_all
 
                      -- Бизнес
                    , CLO_Business.ObjectId AS BusinessId
@@ -392,18 +406,21 @@ BEGIN
                      -- Автомобиль (Направление затрат, место учета)
                    , Operation.CarId
                      -- Сотрудник (Направление затрат, место учета)
-                   , Operation.MemberId
+                   , Object_Member.Id         AS MemberId
+                   , Object_Member.DescId     AS MemberDescId
+                   , Object_Member.ObjectCode AS MemberCode
+                   , Object_Member.ValueData  AS MemberName
                      -- Статья списания
                    , Operation.ArticleLossId
 
                      -- Направление (ОПиУ)
-                   , Object_Direction.Id         AS DirectionId
-                   , Object_Direction.ObjectCode AS DirectionCode
-                   , Object_Direction.ValueData  AS DirectionName
+                   , Object_Direction.Id           AS DirectionId
+                   , Object_Direction.ObjectCode   AS DirectionCode
+                   , Object_Direction.ValueData    AS DirectionName
                      -- Назначение (ОПиУ)
-                   , Object_Direction.Id         AS DestinationId
-                   , Object_Direction.ObjectCode AS DestinationCode
-                   , Object_Direction.ValueData  AS DestinationName
+                   , Object_Destination.Id         AS DestinationId
+                   , Object_Destination.ObjectCode AS DestinationCode
+                   , Object_Destination.ValueData  AS DestinationName
 
                      -- От кого
                    , Operation.FromId
@@ -618,8 +635,16 @@ BEGIN
                   LEFT JOIN ContainerLinkObject AS CLO_Business
                                                 ON CLO_Business.ContainerId = Operation.ContainerId
                                                AND CLO_Business.DescId      =  zc_ContainerLinkObject_Business()
-                  -- св-ва
+
+                  -- замена
+                  LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                       ON ObjectLink_Personal_Member.ObjectId = Operation.MemberId
+                                      AND ObjectLink_Personal_Member.DescId   = zc_ObjectLink_Personal_Member()
+
+                  -- временно INNER
                   INNER JOIN Object_ProfitLoss_View AS View_ProfitLoss        ON View_ProfitLoss.ProfitLossId     = CLO_ProfitLoss.ObjectId
+                  
+                  -- св-ва
                   LEFT JOIN Object                 AS Object_Branch          ON Object_Branch.Id                  = CLO_Branch.ObjectId
 
                   LEFT JOIN Object                 AS Object_Direction        ON Object_Direction.Id              = Operation.DirectionId
@@ -627,6 +652,7 @@ BEGIN
 
                   LEFT JOIN Object                 AS Object_Unit_pl         ON Object_Unit_pl.Id                 = Operation.UnitId_pl
                   LEFT JOIN Object_InfoMoney_View  AS Object_InfoMoney_View  ON Object_InfoMoney_View.InfoMoneyId = Operation.InfoMoneyId
+                  LEFT JOIN Object                 AS Object_Member          ON Object_Member.Id                  = COALESCE (ObjectLink_Personal_Member.ChildObjectId, Operation.MemberId)
 
                   LEFT JOIN Object                 AS Object_Goods           ON Object_Goods.Id                   = Operation.GoodsId
                   LEFT JOIN Object                 AS Object_GoodsKind       ON Object_GoodsKind.Id               = Operation.GoodsKindId
@@ -645,8 +671,12 @@ BEGIN
                                           AND MS_Comment.DescId     = zc_MovementString_Comment()
                                           AND MS_Comment.ValueData  <> ''
 
-            -- WHERE (Operation.StartAmount <> 0 OR Operation.EndAmount <> 0
-               --  OR Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0)
+                  LEFT JOIN MovementDesc ON MovementDesc.Id = Operation.MovementDescId
+
+where (COALESCE (Object_Direction.ValueData, '') not ilike 'Кліментьєв%'
+   AND COALESCE (Object_Destination.ValueData, '') not ilike 'Кліментьєв%'
+   AND COALESCE (Object_Member.ValueData, '') not ilike 'Кліментьєв%'
+   ) or inUserId = 0
            ;
 
 END;
@@ -660,4 +690,5 @@ $BODY$
 */
 
 -- тест
--- SELECT sum (OperCount) as OperCount, sum (OperSumm) as OperSumm, ProfitLossGroupName || ' ' || ProfitLossName FROM lpReport_bi_ProfitLoss (inStartDate:= '01.09.2025', inEndDate:= '01.09.2025', inUserId:= zfCalc_UserAdmin() :: Integer) group by ProfitLossGroupName, ProfitLossName ORDER BY ProfitLossName
+-- where DirectionName ilike 'Кліментьєв%' or DestinationName ilike 'Кліментьєв%' or MemberName ilike  'Кліментьєв%'
+-- SELECT sum (OperCount) as OperCount, sum (OperSumm) as OperSumm, ProfitLossName_all FROM lpReport_bi_ProfitLoss (inStartDate:= '01.09.2025', inEndDate:= '01.09.2025', inUserId:= zfCalc_UserAdmin() :: Integer) group by ProfitLossName_all ORDER BY ProfitLossName_all

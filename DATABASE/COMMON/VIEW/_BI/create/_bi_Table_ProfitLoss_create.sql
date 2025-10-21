@@ -20,52 +20,52 @@ TRUNCATE TABLE _bi_Table_ProfitLoss;
               OperDate            TDateTime,
               -- Id документа
               MovementId          Integer,
-              -- Вид документа
+              -- Вид документа - _bi_Guide_MovementDesc_View
               MovementDescId      Integer,
               -- № документа      
               InvNumber           Integer,
-              -- Примечание документ
+              -- Примечание документ - _bi_Guide_MovementComment_View
               MovementId_comment  Integer,
                                   
-              -- Статья ОПиУ      
+              -- Статья ОПиУ - _bi_Guide_ProfitLoss_View
               ProfitLossId        Integer,
-              -- Бизнес
+              -- Бизнес - _bi_Guide_Object_View
               BusinessId         Integer,
 
-              -- Филиал затрат (Філія)
+              -- Филиал затрат (Філія) - _bi_Guide_Branch_View
               BranchId_pl         Integer,
-              -- Подразделение затрат (Підрозділ)
+              -- Подразделение затрат (Підрозділ) - _bi_Guide_Unit_View
               UnitId_pl           Integer,
 
-              -- Статья УП        
+              -- Статья УП - _bi_Guide_InfoMoney_View
               InfoMoneyId         Integer,
 
-              -- Подразделение учета (Місце обліку)
+              -- Подразделение учета (Місце обліку) - _bi_Guide_Unit_View
               UnitId              Integer,
-              -- Оборудование (Направление затрат)
+              -- Оборудование (Направление затрат) - _bi_Guide_Asset_View
               AssetId             Integer,
-              -- Автомобиль (Направление затрат, место учета)
+              -- Автомобиль (Направление затрат, место учета) - _bi_Guide_Car_View
               CarId               Integer,
-              -- Физ лицо
+              -- Физ лицо - _bi_Guide_Member_View
               MemberId            Integer,
-              -- Статья списания (Стаття списання, Направление затрат)
+              -- Статья списания (Стаття списання, Направление затрат) - _bi_Guide_ArticleLoss_View
               ArticleLossId       Integer,
               
-              -- Об'єкт напрявлення
+              -- Об'єкт напрявлення - _bi_Guide_Object_View
               DirectionId         Integer,
-              -- Об'єкт призначення
+              -- Об'єкт призначення - _bi_Guide_Object_View
               DestinationId       Integer,
 
-              -- От кого (место учета) - информативно
+              -- От кого (место учета) - информативно - _bi_Guide_Object_View
               FromId              Integer,
-              -- Кому (место учета, Направление затрат) - информативно
+              -- Кому (место учета, Направление затрат) - информативно - _bi_Guide_Object_View
               ToId                Integer,
 
-              -- Товар
-              GoodsId    Integer,
-              -- Вид Товара
+              -- Товар - _bi_Guide_Goods_View
+              GoodsId             Integer,
+              -- Вид Товара - _bi_Guide_GoodsKind_View
               GoodsKindId         Integer,
-              -- Вид Товара (только при производстве сырой ПФ)
+              -- Вид Товара (только при производстве сырой ПФ) - _bi_Guide_GoodsKind_View
               GoodsKindId_gp      Integer,
 
               -- Кол-во (вес)
