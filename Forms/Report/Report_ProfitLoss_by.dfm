@@ -125,7 +125,7 @@ object Report_ProfitLoss_byForm: TReport_ProfitLoss_byForm
       UniqueName = #1057#1090#1072#1090#1100#1103
     end
     object clBusiness: TcxDBPivotGridField
-      AreaIndex = 0
+      AreaIndex = 19
       IsCaptionAssigned = True
       Caption = #1041#1080#1079#1085#1077#1089
       DataBinding.FieldName = 'BusinessName'
@@ -133,8 +133,7 @@ object Report_ProfitLoss_byForm: TReport_ProfitLoss_byForm
       UniqueName = #1041#1080#1079#1085#1077#1089
     end
     object clBranchName_pl: TcxDBPivotGridField
-      Area = faColumn
-      AreaIndex = 0
+      AreaIndex = 20
       IsCaptionAssigned = True
       Caption = #1060#1080#1083#1080#1072#1083
       DataBinding.FieldName = 'BranchName_pl'
@@ -142,7 +141,7 @@ object Report_ProfitLoss_byForm: TReport_ProfitLoss_byForm
       UniqueName = #1060#1080#1083#1080#1072#1083
     end
     object clUnitName_pl: TcxDBPivotGridField
-      AreaIndex = 1
+      AreaIndex = 0
       IsCaptionAssigned = True
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1079#1072#1090#1088#1072#1090
       DataBinding.FieldName = 'UnitName_pl'
@@ -150,7 +149,7 @@ object Report_ProfitLoss_byForm: TReport_ProfitLoss_byForm
       UniqueName = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object clUnit_plDescName: TcxDBPivotGridField
-      AreaIndex = 11
+      AreaIndex = 29
       IsCaptionAssigned = True
       Caption = #1069#1083#1077#1084#1077#1085#1090' '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1079#1072#1090#1088#1072#1090
       DataBinding.FieldName = 'Unit_plDescName'
@@ -158,7 +157,7 @@ object Report_ProfitLoss_byForm: TReport_ProfitLoss_byForm
       UniqueName = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object clUnitName: TcxDBPivotGridField
-      AreaIndex = 2
+      AreaIndex = 18
       IsCaptionAssigned = True
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1091#1095#1077#1090#1072
       DataBinding.FieldName = 'UnitName'
@@ -166,7 +165,7 @@ object Report_ProfitLoss_byForm: TReport_ProfitLoss_byForm
       UniqueName = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object clAssetName: TcxDBPivotGridField
-      AreaIndex = 3
+      AreaIndex = 7
       IsCaptionAssigned = True
       Caption = #1054#1073#1086#1088#1091#1076#1086#1074#1072#1085#1080#1077
       DataBinding.FieldName = 'AssetName'
@@ -174,7 +173,7 @@ object Report_ProfitLoss_byForm: TReport_ProfitLoss_byForm
       UniqueName = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object clCarName: TcxDBPivotGridField
-      AreaIndex = 4
+      AreaIndex = 5
       IsCaptionAssigned = True
       Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
       DataBinding.FieldName = 'CarName'
@@ -182,7 +181,7 @@ object Report_ProfitLoss_byForm: TReport_ProfitLoss_byForm
       UniqueName = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object clMemberName: TcxDBPivotGridField
-      AreaIndex = 5
+      AreaIndex = 6
       IsCaptionAssigned = True
       Caption = #1060#1080#1079' '#1083#1080#1094#1086
       DataBinding.FieldName = 'MemberName'
@@ -190,7 +189,7 @@ object Report_ProfitLoss_byForm: TReport_ProfitLoss_byForm
       UniqueName = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object clArticleLossName: TcxDBPivotGridField
-      AreaIndex = 6
+      AreaIndex = 4
       IsCaptionAssigned = True
       Caption = #1057#1090#1072#1090#1100#1103' '#1089#1087#1080#1089#1072#1085#1080#1103
       DataBinding.FieldName = 'ArticleLossName'
@@ -198,7 +197,7 @@ object Report_ProfitLoss_byForm: TReport_ProfitLoss_byForm
       UniqueName = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object clMovementDescName: TcxDBPivotGridField
-      AreaIndex = 12
+      AreaIndex = 1
       IsCaptionAssigned = True
       Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       DataBinding.FieldName = 'MovementDescName'
@@ -208,7 +207,7 @@ object Report_ProfitLoss_byForm: TReport_ProfitLoss_byForm
     object clInfoMoneyCode: TcxDBPivotGridField
       AreaIndex = 21
       IsCaptionAssigned = True
-      Caption = #1050#1086#1076' '#1059#1055' '#1089#1090'.'
+      Caption = #1050#1086#1076' '#1059#1055
       DataBinding.FieldName = 'InfoMoneyCode'
       Visible = True
       UniqueName = #1050#1086#1076' '#1059#1055' '#1089#1090'.'
@@ -238,7 +237,7 @@ object Report_ProfitLoss_byForm: TReport_ProfitLoss_byForm
       UniqueName = #1059#1055' '#1089#1090#1072#1090#1100#1103
     end
     object clDirectionName: TcxDBPivotGridField
-      AreaIndex = 13
+      AreaIndex = 2
       IsCaptionAssigned = True
       Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
       DataBinding.FieldName = 'DirectionName'
@@ -246,14 +245,14 @@ object Report_ProfitLoss_byForm: TReport_ProfitLoss_byForm
       UniqueName = 'ByObjectName'
     end
     object clDirectionDescName: TcxDBPivotGridField
-      AreaIndex = 16
+      AreaIndex = 14
       IsCaptionAssigned = True
       Caption = #1069#1083#1077#1084#1077#1085#1090' '#1054#1073#1098#1077#1082#1090#1072' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
       DataBinding.FieldName = 'DirectionDescName'
       UniqueName = 'ByObjectName'
     end
     object clDestinationName: TcxDBPivotGridField
-      AreaIndex = 20
+      AreaIndex = 3
       IsCaptionAssigned = True
       Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
       DataBinding.FieldName = 'DestinationName'
@@ -261,44 +260,44 @@ object Report_ProfitLoss_byForm: TReport_ProfitLoss_byForm
       UniqueName = #1058#1086#1074#1072#1088
     end
     object clDestinationDescName: TcxDBPivotGridField
-      AreaIndex = 19
+      AreaIndex = 17
       IsCaptionAssigned = True
       Caption = #1069#1083#1077#1084#1077#1085#1090' '#1054#1073#1098#1077#1082#1090#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
       DataBinding.FieldName = 'DestinationDescName'
       UniqueName = 'ByObjectName'
     end
     object clFromName: TcxDBPivotGridField
-      AreaIndex = 14
+      AreaIndex = 12
       IsCaptionAssigned = True
-      Caption = #1054#1090' '#1082#1086#1075#1086' ('#1084#1077#1089#1090#1086' '#1091#1095#1077#1090#1072')'
+      Caption = #1054#1090' '#1082#1086#1075#1086
       DataBinding.FieldName = 'FromName'
       Visible = True
       UniqueName = 'ByObjectName'
     end
     object clFromDescName: TcxDBPivotGridField
-      AreaIndex = 17
+      AreaIndex = 15
       IsCaptionAssigned = True
       Caption = #1069#1083#1077#1084#1077#1085#1090' '#1054#1090' '#1082#1086#1075#1086
       DataBinding.FieldName = 'FromDescName'
       UniqueName = 'ByObjectName'
     end
     object clToName: TcxDBPivotGridField
-      AreaIndex = 15
+      AreaIndex = 13
       IsCaptionAssigned = True
-      Caption = #1050#1086#1084#1091' ('#1084#1077#1089#1090#1086' '#1091#1095#1077#1090#1072', '#1053#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077' '#1079#1072#1090#1088#1072#1090')'
+      Caption = #1050#1086#1084#1091
       DataBinding.FieldName = 'ToName'
       Visible = True
       UniqueName = 'ByObjectName'
     end
     object clToDescName: TcxDBPivotGridField
-      AreaIndex = 18
+      AreaIndex = 16
       IsCaptionAssigned = True
       Caption = #1069#1083#1077#1084#1077#1085#1090' '#1050#1086#1084#1091
       DataBinding.FieldName = 'ToDescName'
       UniqueName = 'ByObjectName'
     end
     object clGoodsCode: TcxDBPivotGridField
-      AreaIndex = 7
+      AreaIndex = 8
       IsCaptionAssigned = True
       Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
       DataBinding.FieldName = 'GoodsCode'
@@ -306,7 +305,7 @@ object Report_ProfitLoss_byForm: TReport_ProfitLoss_byForm
       UniqueName = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object clGoodsName: TcxDBPivotGridField
-      AreaIndex = 8
+      AreaIndex = 9
       IsCaptionAssigned = True
       Caption = #1058#1086#1074#1072#1088
       DataBinding.FieldName = 'GoodsName'
@@ -314,7 +313,7 @@ object Report_ProfitLoss_byForm: TReport_ProfitLoss_byForm
       UniqueName = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object clGoodsKindName: TcxDBPivotGridField
-      AreaIndex = 9
+      AreaIndex = 10
       IsCaptionAssigned = True
       Caption = #1042#1080#1076' '#1058#1086#1074#1072#1088#1072
       DataBinding.FieldName = 'GoodsKindName'
@@ -322,7 +321,7 @@ object Report_ProfitLoss_byForm: TReport_ProfitLoss_byForm
       UniqueName = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object clGoodsKindName_gp: TcxDBPivotGridField
-      AreaIndex = 10
+      AreaIndex = 11
       IsCaptionAssigned = True
       Caption = #1042#1080#1076' '#1058#1086#1074#1072#1088#1072' ('#1055#1060')'
       DataBinding.FieldName = 'GoodsKindName_gp'
@@ -331,7 +330,7 @@ object Report_ProfitLoss_byForm: TReport_ProfitLoss_byForm
     end
     object clOperCount: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 1
+      AreaIndex = 0
       AllowedAreas = [faData]
       IsCaptionAssigned = True
       Caption = #1050#1086#1083'-'#1074#1086' ('#1074#1077#1089')'
@@ -343,7 +342,7 @@ object Report_ProfitLoss_byForm: TReport_ProfitLoss_byForm
     end
     object clOperCount_sh: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 2
+      AreaIndex = 1
       AllowedAreas = [faData]
       IsCaptionAssigned = True
       Caption = #1050#1086#1083'-'#1074#1086' ('#1096#1090'.)'
@@ -355,7 +354,7 @@ object Report_ProfitLoss_byForm: TReport_ProfitLoss_byForm
     end
     object clOperSumm: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 0
+      AreaIndex = 2
       AllowedAreas = [faData]
       IsCaptionAssigned = True
       Caption = #1057#1091#1084#1084#1072
@@ -1487,7 +1486,7 @@ object Report_ProfitLoss_byForm: TReport_ProfitLoss_byForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 360
-    Top = 72
+    Left = 352
+    Top = 168
   end
 end
