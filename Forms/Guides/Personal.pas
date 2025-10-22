@@ -140,6 +140,8 @@ type
     macUpdate_PersonalServiceListCardSecond_list: TMultiAction;
     macUpdate_PersonalServiceListCardSecond: TMultiAction;
     bbUpdate_PersonalServiceListCardSecond: TdxBarButton;
+    actOpenFormPersonalByStorageLine: TdsdOpenForm;
+    bbOpenFormPersonalByStorageLine: TdxBarButton;
   private
     { Private declarations }
   public
