@@ -1623,7 +1623,9 @@ uses
   Report_ProfitLoss_by in '..\..\Forms\Report\Report_ProfitLoss_by.pas' {Report_ProfitLoss_byForm: TParentForm},
   PersonalByStorageLine in '..\..\Forms\Guides\PersonalByStorageLine.pas' {PersonalByStorageLineForm: TParentForm},
   PersonalByStorageLineEdit in '..\..\Forms\Guides\PersonalByStorageLineEdit.pas' {PersonalByStorageLineEditForm: TParentForm},
-  PersonalEdit_ByStorageLine in '..\..\Forms\Guides\PersonalEdit_ByStorageLine.pas' {PersonalEdit_ByStorageLineForm: TParentForm};
+  PersonalEdit_ByStorageLine in '..\..\Forms\Guides\PersonalEdit_ByStorageLine.pas' {PersonalEdit_ByStorageLineForm: TParentForm},
+  CFO in '..\..\Forms\Guides\CFO.pas' {CFOForm: TParentForm},
+  CFOEdit in '..\..\Forms\Guides\CFOEdit.pas' {CFOEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

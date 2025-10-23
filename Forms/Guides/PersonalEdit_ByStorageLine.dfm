@@ -26,10 +26,6 @@ object PersonalEdit_ByStorageLineForm: TPersonalEdit_ByStorageLineForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = 72
-    ExplicitTop = 136
-    ExplicitWidth = 870
-    ExplicitHeight = 166
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -103,8 +99,7 @@ object PersonalEdit_ByStorageLineForm: TPersonalEdit_ByStorageLineForm
     Width = 775
     Height = 63
     Align = alTop
-    TabOrder = 5
-    ExplicitWidth = 905
+    TabOrder = 4
     object cxLabel6: TcxLabel
       Left = 7
       Top = 8
@@ -196,7 +191,6 @@ object PersonalEdit_ByStorageLineForm: TPersonalEdit_ByStorageLineForm
     Height = 38
     Align = alBottom
     TabOrder = 6
-    ExplicitWidth = 726
     object cxButton1: TcxButton
       Left = 40
       Top = 6

@@ -1148,6 +1148,10 @@ INSERT INTO ObjectDesc (Code, ItemName)
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_PersonalByStorageLine', 'Сотрудники по линиям производства' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_PersonalByStorageLine');
 
+  CREATE OR REPLACE FUNCTION zc_Object_CFO() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_CFO'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_CFO', 'Центр финансовой ответственности' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_CFO');
+
 
 
 
@@ -1789,6 +1793,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 23.10.25         * zc_Object_CFO
  23.09.25         * zc_Object_PromoSchemaKind
                     zc_Object_PromoDiscountKind
  15.09.25         * zc_Object_StaffListKind

@@ -43,6 +43,7 @@ type
     procedure LoadCarExternalFormTest;
     procedure LoadCarInfoFormTest;
     procedure LoadCarModelFormTest;
+    procedure LoadCFOFormTest;
     procedure LoadChoiceCellFormTest;
     procedure LoadChoiceCellMovementFormTest;
     procedure LoadClientKindFormTest;
@@ -5083,6 +5084,14 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCardFuelKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCardFuelKindForm');
+end;
+
+procedure TLoadFormTest.LoadCFOFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCFOForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCFOForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCFOEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCFOEditForm');
 end;
 
 procedure TLoadFormTest.LoadCarModelFormTest;
