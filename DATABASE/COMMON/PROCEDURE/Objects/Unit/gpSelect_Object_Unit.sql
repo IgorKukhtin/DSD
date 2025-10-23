@@ -42,7 +42,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                Comment TVarChar,
                isPersonalService Boolean, PersonalServiceDate TDateTime,
                GLN TVarChar, KATOTTG TVarChar,
-               AddressEDIN TVarChar
+               AddressEDIN TVarChar,
+               CFOId Integer, CFOName TVarChar
 
 ) AS
 $BODY$
@@ -88,8 +89,6 @@ BEGIN
                                )
                     AND vbObjectId_Constraint <> 3080683 -- филиал Ћьвов
                    ;
-
-
 
    -- –езультат
    RETURN QUERY
@@ -203,6 +202,9 @@ BEGIN
            , ObjectString_Unit_GLN.ValueData         :: TVarChar AS GLN
            , ObjectString_Unit_KATOTTG.ValueData     :: TVarChar AS KATOTTG
            , ObjectString_Unit_AddressEDIN.ValueData :: TVarChar AS AddressEDIN
+           
+           , Object_CFO.Id                           ::Integer   AS CFOId
+           , Object_CFO.ValueData                    ::TVarChar   AS CFOName
        FROM Object_Unit_View
             LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = Object_Unit_View.Id
             LEFT JOIN Object_AccountDirection AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = Object_Unit_View.AccountDirectionId
@@ -320,6 +322,10 @@ BEGIN
                                 AND ObjectLink_Unit_SheetWorkTime.DescId = zc_ObjectLink_Unit_SheetWorkTime()
             LEFT JOIN Object AS Object_SheetWorkTime ON Object_SheetWorkTime.Id = ObjectLink_Unit_SheetWorkTime.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_CFO
+                                 ON ObjectLink_Unit_CFO.ObjectId = Object_Unit_View.Id
+                                AND ObjectLink_Unit_CFO.DescId = zc_ObjectLink_Unit_CFO()
+            LEFT JOIN Object AS Object_CFO ON Object_CFO.Id = ObjectLink_Unit_CFO.ChildObjectId
 
        -- WHERE vbAccessKeyAll = TRUE
        WHERE (Object_Unit_View.BranchId = vbObjectId_Constraint
@@ -371,7 +377,7 @@ BEGIN
            , 0 :: Integer   AS ProfitLossGroupCode
            , '' :: TVarChar AS ProfitLossGroupName
            , 0 :: Integer   AS ProfitLossDirectionCode
-           , '' :: TVarChar AS ProfitLossDirectionName
+           , '' :: TVarChar AS ProfitLossDirectionName  --25
 
            , CAST (0 as Integer)    AS RouteId
            , CAST ('' as TVarChar)  AS RouteName
@@ -389,7 +395,7 @@ BEGIN
            , CAST (0 as Integer)    AS RegionId
            , CAST ('' as TVarChar)  AS RegionName
            , CAST (0 as Integer)    AS ProvinceId
-           , CAST ('' as TVarChar)  AS ProvinceName
+           , CAST ('' as TVarChar)  AS ProvinceName    --39
 
            , CAST (0 as Integer)    AS PersonalHeadId
            , CAST (0 as Integer)    AS PersonalHeadCode
@@ -408,12 +414,12 @@ BEGIN
            , CAST ('' as TVarChar)  AS FounderName
 
            , CAST (0 as Integer)    AS DepartmentId
-           , CAST ('' as TVarChar)  AS DepartmentName
+           , CAST ('' as TVarChar)  AS DepartmentName   --53
            , CAST (0 as Integer)    AS Department_twoId
            , CAST ('' as TVarChar)  AS Department_twoName
 
            , CAST (0 as Integer)    AS SheetWorkTimeId
-           , CAST ('' as TVarChar)  AS SheetWorkTimeName
+           , CAST ('' as TVarChar)  AS SheetWorkTimeName        --57
 
            , TRUE  AS isLeaf
            , FALSE AS isPartionDate
@@ -428,11 +434,14 @@ BEGIN
            , CAST ('' as TVarChar)  AS Comment
 
            , FALSE     ::Boolean   AS isPersonalService
-           , Null      ::TDateTime AS PersonalServiceDate
+           , Null      ::TDateTime AS PersonalServiceDate     --70
 
            , CAST ('' as TVarChar)  AS GLN
            , CAST ('' as TVarChar)  AS KATOTTG
-           , CAST ('' as TVarChar)  AS AddressEDIN
+           , CAST ('' as TVarChar)  AS AddressEDIN              --73
+
+           , CAST (0 as Integer)    AS CFOId
+           , CAST ('' as TVarChar)  AS CFOName
        FROM Object as Object_Partner
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                                  ON ObjectLink_Unit_Branch.ObjectId = Object_Partner.Id
@@ -476,7 +485,7 @@ BEGIN
            , 0 :: Integer   AS ProfitLossGroupCode
            , '' :: TVarChar AS ProfitLossGroupName
            , 0 :: Integer   AS ProfitLossDirectionCode
-           , '' :: TVarChar AS ProfitLossDirectionName
+           , '' :: TVarChar AS ProfitLossDirectionName     --25
 
            , CAST (0 as Integer)    AS RouteId
            , CAST ('' as TVarChar)  AS RouteName
@@ -495,7 +504,7 @@ BEGIN
            , CAST (0 as Integer)    AS RegionId
            , CAST ('' as TVarChar)  AS RegionName
            , CAST (0 as Integer)    AS ProvinceId
-           , CAST ('' as TVarChar)  AS ProvinceName
+           , CAST ('' as TVarChar)  AS ProvinceName         --39
 
            , CAST (0 as Integer)    AS PersonalHeadId
            , CAST (0 as Integer)    AS PersonalHeadCode
@@ -514,12 +523,12 @@ BEGIN
            , CAST ('' as TVarChar)  AS FounderName
 
            , CAST (0 as Integer)    AS DepartmentId
-           , CAST ('' as TVarChar)  AS DepartmentName
+           , CAST ('' as TVarChar)  AS DepartmentName      --53
            , CAST (0 as Integer)    AS Department_twoId
            , CAST ('' as TVarChar)  AS Department_twoName
 
            , CAST (0 as Integer)    AS SheetWorkTimeId
-           , CAST ('' as TVarChar)  AS SheetWorkTimeName
+           , CAST ('' as TVarChar)  AS SheetWorkTimeName   --57
 
            , TRUE  AS isLeaf
            , FALSE AS isPartionDate
@@ -532,12 +541,25 @@ BEGIN
            , FALSE AS isErased
            , CAST ('' as TVarChar)  AS Address
            , CAST ('' as TVarChar)  AS Comment
-           , FALSE     ::Boolean    AS isPersonalService
-           , Null      ::TDateTime  AS PersonalServiceDate
+           , FALSE     ::Boolean    AS isPersonalService       
+           , Null      ::TDateTime  AS PersonalServiceDate    --70
            , CAST ('' as TVarChar)  AS GLN
            , CAST ('' as TVarChar)  AS KATOTTG
            , CAST ('' as TVarChar)  AS AddressEDIN
+ 
+           , CAST (0 as Integer)    AS CFOId
+           , CAST ('' as TVarChar)  AS CFOName
       ;
+
+
+
+
+
+
+        
+
+
+
 
 END;
 $BODY$

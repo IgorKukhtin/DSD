@@ -102,6 +102,7 @@ type
     macUpdate_notBirthDay: TMultiAction;
     bbUpdate_notBirthDay: TdxBarButton;
     isnotBirthDay: TcxGridDBColumn;
+    CFOName: TcxGridDBColumn;
   private
     { Private declarations }
   public

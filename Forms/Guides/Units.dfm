@@ -455,6 +455,15 @@ object UnitForm: TUnitForm
         Options.Editing = False
         Width = 70
       end
+      object CFOName: TcxGridDBColumn
+        Caption = #1062#1060#1054
+        DataBinding.FieldName = 'CFOName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = ' '#9#1062#1077#1085#1090#1088' '#1092#1080#1085#1072#1085#1089#1086#1074#1086#1081' '#1086#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1086#1089#1090#1080
+        Options.Editing = False
+        Width = 131
+      end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
