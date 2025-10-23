@@ -1367,7 +1367,11 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     Top = 224
   end
   object FormParams: TdsdFormParams
-    Params = <>
+    Params = <
+      item
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
     Left = 576
     Top = 224
   end

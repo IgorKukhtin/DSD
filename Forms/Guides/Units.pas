@@ -21,7 +21,7 @@ uses
   dxSkinsdxBarPainter, dsdAddOn, dsdDB, Datasnap.DBClient, dsdAction,
   Vcl.ActnList, dxBarExtItems, dxBar, cxClasses, cxPropertiesStore, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
-  cxGrid, cxSplitter, cxButtonEdit, cxCalendar, dsdCommon;
+  cxGrid, cxSplitter, cxButtonEdit, cxCalendar, dsdCommon, ExternalLoad;
 
 type
   TUnitForm = class(TParentForm)
@@ -103,6 +103,12 @@ type
     bbUpdate_notBirthDay: TdxBarButton;
     isnotBirthDay: TcxGridDBColumn;
     CFOName: TcxGridDBColumn;
+    spGetImportSettingId: TdsdStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actGetImportSetting_CFO: TdsdExecStoredProc;
+    macStartLoad_CFO: TMultiAction;
+    FormParams: TdsdFormParams;
+    bbStartLoad_CFO: TdxBarButton;
   private
     { Private declarations }
   public

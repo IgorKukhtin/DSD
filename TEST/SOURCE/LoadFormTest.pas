@@ -3861,7 +3861,7 @@ begin
   }
 end;
 
-  procedure TLoadFormTest.LoadUnitPeresortFormTest;
+procedure TLoadFormTest.LoadUnitPeresortFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitPeresortForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitPeresortForm');

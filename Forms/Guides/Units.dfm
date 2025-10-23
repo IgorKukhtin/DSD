@@ -597,6 +597,14 @@ object UnitForm: TUnitForm
         end
         item
           Visible = True
+          ItemName = 'bbStartLoad_CFO'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -666,6 +674,10 @@ object UnitForm: TUnitForm
     end
     object bbUpdate_notBirthDay: TdxBarButton
       Action = macUpdate_notBirthDay
+      Category = 0
+    end
+    object bbStartLoad_CFO: TdxBarButton
+      Action = macStartLoad_CFO
       Category = 0
     end
   end
@@ -876,6 +888,15 @@ object UnitForm: TUnitForm
         end>
       isShowModal = False
     end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = '0'
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <>
+    end
     object macUpdate_isIrna_list: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -942,6 +963,38 @@ object UnitForm: TUnitForm
         end>
       Caption = 'actUpdate_notBirthDay'
       ImageIndex = 77
+    end
+    object actGetImportSetting_CFO: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSetting_CFO'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' CFO '#1080#1079' '#1092#1072#1081#1083#1072
+    end
+    object macStartLoad_CFO: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_CFO
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1062#1060#1054' '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1079#1072#1074#1077#1088#1096#1077#1085#1072
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1062#1060#1054' '#1080#1079' '#1092#1072#1081#1083#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1062#1060#1054' '#1080#1079' '#1092#1072#1081#1083#1072
+      ImageIndex = 41
+      WithoutNext = True
     end
   end
   object ClientDS: TDataSource
@@ -1099,5 +1152,46 @@ object UnitForm: TUnitForm
     PackSize = 1
     Left = 608
     Top = 152
+  end
+  object spGetImportSettingId: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TUnitForm;zc_Object_ImportSetting_Unit_CFO'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 896
+    Top = 144
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
+    Left = 760
+    Top = 160
   end
 end
