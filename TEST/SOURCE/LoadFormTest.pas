@@ -4972,6 +4972,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPersonalByStorageLineForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalByStorageLineEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalByStorageLineEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalEdit_ByStorageLineForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalEdit_ByStorageLineForm');
   exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalEditForm'));

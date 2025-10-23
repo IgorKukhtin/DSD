@@ -136,8 +136,8 @@ object PersonalByStorageLineEditForm: TPersonalByStorageLineEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 293
-    Top = 61
+    Left = 237
+    Top = 69
   end
   object dsdFormParams: TdsdFormParams
     Params = <

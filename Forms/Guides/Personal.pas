@@ -142,6 +142,8 @@ type
     bbUpdate_PersonalServiceListCardSecond: TdxBarButton;
     actOpenFormPersonalByStorageLine: TdsdOpenForm;
     bbOpenFormPersonalByStorageLine: TdxBarButton;
+    actOpenPersonalEdit_ByStorageLine: TdsdOpenForm;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

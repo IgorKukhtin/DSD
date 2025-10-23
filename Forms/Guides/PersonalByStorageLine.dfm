@@ -25,6 +25,8 @@ object PersonalByStorageLineForm: TPersonalByStorageLineForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = 8
+    ExplicitTop = 74
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
