@@ -200,7 +200,8 @@ BEGIN
                      , GoodsKindId
                        -- Вид Товара (только при производстве сырой ПФ)
                      , GoodsKindId_gp
-                      ;
+                 HAVING SUM (OperCount) <> 0 OR SUM (OperSumm) <> 0
+                ;
 
 END;
 $BODY$

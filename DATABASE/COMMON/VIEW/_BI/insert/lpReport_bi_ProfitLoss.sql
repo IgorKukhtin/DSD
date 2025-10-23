@@ -105,27 +105,59 @@ BEGIN
 
                                  , -1 * (MIContainer.Amount) AS Amount
 
-                                   -- Подраделение (ОПиУ)
+                                   -- 1.1. Подраделение (ОПиУ)
                                  , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Transport(), zc_Movement_TransportService())
                                              -- Подраделение (ОПиУ), а могло быть UnitId_Route
                                              THEN MIContainer.ObjectIntId_Analyzer
 
-                                        WHEN MIContainer.MovementDescId IN (zc_Movement_Income())
+                                        WHEN MIContainer.MovementDescId IN (zc_Movement_Income()) AND MIContainer.ObjectIntId_Analyzer > 0
                                              -- Подраделение (ОПиУ), а могло быть UnitId_Route
                                              THEN MIContainer.ObjectIntId_Analyzer
+                                        WHEN MIContainer.MovementDescId IN (zc_Movement_Income())
+                                             -- Учредитель
+                                             THEN MIContainer.WhereObjectId_Analyzer
+
+                                        WHEN MIContainer.MovementDescId IN (zc_Movement_Loss()) AND MLO_ArticleLoss.ObjectId = MIContainer.ObjectExtId_Analyzer
+                                             -- НЕ Статья списания
+                                             THEN COALESCE (CASE WHEN Object_To.DescId   = zc_Object_Unit() THEN Object_To.Id   END
+                                                          , CASE WHEN Object_From.DescId = zc_Object_Unit() THEN Object_From.Id END
+                                                           )
 
                                         WHEN MIContainer.MovementDescId IN (zc_Movement_Loss(), zc_Movement_Send())
-                                             -- Подраделение кому или...
+                                             -- Подраделение кому и НЕ Статья списания или ...
                                              THEN MIContainer.ObjectExtId_Analyzer
 
                                         ELSE MIContainer.WhereObjectId_Analyzer
 
                                    END AS UnitId_pl
 
-                                   -- Назначение (ОПиУ)
+                                   -- 1.2. Направление (ОПиУ)
+                                 , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Loss())
+                                             -- Статья списания
+                                             THEN MLO_ArticleLoss.ObjectId
+
+                                        WHEN MIContainer.MovementDescId IN (zc_Movement_Transport())
+                                             THEN -- название UnitId_ProfitLoss
+                                                  MIContainer.ObjectIntId_Analyzer
+
+                                        WHEN MIContainer.MovementDescId IN (zc_Movement_TransportService())
+                                             -- Маршрут
+                                             THEN MILO_Route_01.ObjectId
+
+                                        WHEN MIContainer.ObjectExtId_Analyzer > 0
+                                             -- Прочее
+                                             THEN MIContainer.ObjectExtId_Analyzer
+
+                                        -- Прочее
+                                        ELSE MIContainer.WhereObjectId_Analyzer
+
+                                   END AS DirectionId
+                               --, MIContainer.WhereObjectId_Analyzer AS DirectionId
+
+                                   -- 1.3. Назначение (ОПиУ)
                                  , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Transport())
                                              -- название ГСМ
-                                             THEN MIContainer.ObjectIntId_Analyzer
+                                             THEN MIContainer.ObjectId_Analyzer
 
                                         WHEN MIContainer.MovementDescId IN (zc_Movement_TransportService())
                                              -- Кто оказал транспорт-услуги
@@ -159,64 +191,66 @@ BEGIN
 
                                    END AS DestinationId
 
-                                   -- Направление (ОПиУ)
-                                 , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Loss())
-                                             -- Статья списания
-                                             THEN MLO_ArticleLoss.ObjectId
+                                   -- 1.4. УП статья
+                                 , COALESCE (MILO_InfoMoney_01.ObjectId
+                                           , ObjectLink_ArticleLoss_InfoMoney.ChildObjectId
+                                           , ObjectLink_Goods_InfoMoney.ChildObjectId
+                                           , CASE WHEN ObjectId_Analyzer.DescId = zc_Object_InfoMoney() THEN ObjectId_Analyzer.Id END
+                                             -- Для Transport - ЗП + ГСМ
+                                           , CASE WHEN MIContainer.MovementDescId = zc_Movement_Transport()
+                                                       THEN CASE WHEN ObjectId_Analyzer.DescId IN (zc_Object_Personal(), zc_Object_Member())
+                                                                      -- Для Transport - ЗП
+                                                                      THEN zc_Enum_InfoMoney_60101()
+                                                                 -- Для Transport - ГСМ
+                                                                 ELSE  zc_Enum_InfoMoney_20401()
+                                                            END
+                                             END
+                                            ) AS InfoMoneyId
 
-                                        WHEN MIContainer.MovementDescId IN (zc_Movement_Transport())
-                                             THEN 0
-
-                                        WHEN MIContainer.MovementDescId IN (zc_Movement_TransportService())
-                                             -- Маршрут
-                                             THEN MILO_Route_01.ObjectId
-
-                                        -- Прочее
-                                        ELSE MIContainer.ObjectExtId_Analyzer
-
-                                   END AS DirectionId
-                               --, MIContainer.WhereObjectId_Analyzer AS DirectionId
-
-                                   -- УП статья
-                                 , MILO_InfoMoney_01.ObjectId AS InfoMoneyId
-
-                                   -- Подразделение учета
+                                   -- 2.1. Подразделение учета
                                  , MLO_From.ObjectId         AS UnitId
 
-                                   -- Оборудование (Направление затрат)
+                                   -- 2.2. Оборудование (Направление затрат)
                                  , COALESCE (MILO_Asset_1.ObjectId, MLO_Asset_2.ObjectId) AS AssetId
 
-                                   -- Автомобиль (Направление затрат, место учета)
+                                   -- 2.3. Автомобиль (Направление затрат, место учета)
                                  , COALESCE (MILO_Car_1.ObjectId, MLO_Car_2.ObjectId
                                            , CASE WHEN Object_To.DescId   = zc_Object_Car() THEN Object_To.Id   END
                                            , CASE WHEN Object_From.DescId = zc_Object_Car() THEN Object_From.Id END
                                             ) AS CarId
 
-                                   -- Сотрудник (Направление затрат, место учета)
+                                   -- 2.4. Сотрудник (Направление затрат, место учета)
                                  , COALESCE (MILO_Employee_01.ObjectId
                                            , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_PersonalService()) THEN MovementItem_01.ObjectId END
                                            , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_PersonalReport())  THEN MovementItem_01.ObjectId END
                                            , CASE WHEN Object_To.DescId   IN (zc_Object_Personal(), zc_Object_Member()) THEN Object_To.Id   END
                                            , CASE WHEN Object_From.DescId IN (zc_Object_Personal(), zc_Object_Member()) THEN Object_From.Id END
+                                           , CASE WHEN ObjectId_Analyzer.DescId IN (zc_Object_Personal(), zc_Object_Member()) THEN ObjectId_Analyzer.Id END
                                             ) AS MemberId
 
-                                   -- Статья списания
+                                   -- 2.5. Статья списания
                                  , MLO_ArticleLoss.ObjectId  AS ArticleLossId
 
-                                   -- не ошибка, распределяется по строкам продажи
+                                   -- 3. не ошибка, распределяется по строкам продажи
                                  , MIContainer.ContainerIntId_analyzer AS MovementItemId_sale_transport
 
-                                 -- От кого
+                                 -- 4.1. От кого
                                  , MLO_From.ObjectId AS FromId
-                                 -- Кому
+                                 -- 4.2. Кому
                                  , MLO_To.ObjectId   AS ToId
 
-                                 , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut(), zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_SendOnPrice(), zc_Movement_Loss(), zc_Movement_Send(), zc_Movement_Inventory())
+                                 -- 5.1.
+                                 , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Transport()) AND ObjectId_Analyzer.DescId IN (zc_Object_Fuel(), zc_Object_Goods())
+                                             -- название ГСМ
+                                             THEN MIContainer.ObjectId_Analyzer
+
+                                        WHEN MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut(), zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_SendOnPrice(), zc_Movement_Loss(), zc_Movement_Send(), zc_Movement_Inventory())
                                              -- Товар
                                              THEN MIContainer.ObjectId_Analyzer
                                         ELSE 0
                                    END AS GoodsId
 
+                                 -- 5.2.
                                  , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut(), zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_SendOnPrice(), zc_Movement_Loss(), zc_Movement_Send(), zc_Movement_Inventory())
                                              -- Товар
                                              THEN MIContainer.ObjectIntId_Analyzer
@@ -288,6 +322,15 @@ BEGIN
                                  LEFT JOIN MovementLinkObject AS MLO_ArticleLoss
                                                               ON MLO_ArticleLoss.MovementId = MIContainer.MovementId
                                                              AND MLO_ArticleLoss.DescId     = zc_MovementLinkObject_ArticleLoss()
+                                 LEFT JOIN ObjectLink AS ObjectLink_ArticleLoss_InfoMoney
+                                                      ON ObjectLink_ArticleLoss_InfoMoney.ObjectId = MLO_ArticleLoss.ObjectId
+                                                     AND ObjectLink_ArticleLoss_InfoMoney.DescId = zc_ObjectLink_ArticleLoss_InfoMoney()
+                                                     -- AND 1=0
+                                 LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                      ON ObjectLink_Goods_InfoMoney.ObjectId = MIContainer.ObjectId_Analyzer
+                                                     AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                                                     AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut(), zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_SendOnPrice(), zc_Movement_Loss(), zc_Movement_Send(), zc_Movement_Inventory())
+                                                     -- AND 1=0
 
                                  -- От кого
                                  LEFT JOIN MovementLinkObject AS MLO_From
@@ -299,6 +342,9 @@ BEGIN
                                                               ON MLO_To.MovementId = MIContainer.MovementId
                                                              AND MLO_To.DescId     = zc_MovementLinkObject_To()
                                  LEFT JOIN Object AS Object_To ON Object_To.Id = MLO_To.ObjectId
+
+                                 -- ObjectId_Analyzer
+                                 LEFT JOIN Object AS ObjectId_Analyzer ON ObjectId_Analyzer.Id = MIContainer.ObjectId_Analyzer
 
                             WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                               AND MIContainer.AccountId = zc_Enum_Account_100301()
@@ -640,6 +686,10 @@ BEGIN
                   LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
                                        ON ObjectLink_Personal_Member.ObjectId = Operation.MemberId
                                       AND ObjectLink_Personal_Member.DescId   = zc_ObjectLink_Personal_Member()
+                  -- Goods_InfoMoney
+                  /*LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                       ON ObjectLink_Goods_InfoMoney.ObjectId = Operation.GoodsId
+                                      AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()*/
 
                   -- временно INNER
                   INNER JOIN Object_ProfitLoss_View AS View_ProfitLoss        ON View_ProfitLoss.ProfitLossId     = CLO_ProfitLoss.ObjectId
@@ -673,10 +723,10 @@ BEGIN
 
                   LEFT JOIN MovementDesc ON MovementDesc.Id = Operation.MovementDescId
 
-where (COALESCE (Object_Direction.ValueData, '') not ilike 'Кліментьєв%'
-   AND COALESCE (Object_Destination.ValueData, '') not ilike 'Кліментьєв%'
-   AND COALESCE (Object_Member.ValueData, '') not ilike 'Кліментьєв%'
-   ) or inUserId = 0
+-- where (COALESCE (Object_Direction.ValueData, '') not ilike 'Кліментьєв%'
+--   AND COALESCE (Object_Destination.ValueData, '') not ilike 'Кліментьєв%'
+--   AND COALESCE (Object_Member.ValueData, '') not ilike 'Кліментьєв%'
+--   ) or inUserId = 0
            ;
 
 END;
