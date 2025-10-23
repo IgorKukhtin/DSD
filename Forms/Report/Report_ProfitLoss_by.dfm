@@ -14,6 +14,7 @@ object Report_ProfitLoss_byForm: TReport_ProfitLoss_byForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.isSingle = False
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
@@ -153,6 +154,30 @@ object Report_ProfitLoss_byForm: TReport_ProfitLoss_byForm
       IsCaptionAssigned = True
       Caption = #1069#1083#1077#1084#1077#1085#1090' '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1079#1072#1090#1088#1072#1090
       DataBinding.FieldName = 'Unit_plDescName'
+      Visible = True
+      UniqueName = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+    end
+    object clCFOName: TcxDBPivotGridField
+      AreaIndex = 30
+      IsCaptionAssigned = True
+      Caption = #1062#1060#1054' ('#1087#1086#1076#1088#1072#1079#1076'. '#1079#1072#1090#1088#1072#1090')'
+      DataBinding.FieldName = 'CFOName'
+      Visible = True
+      UniqueName = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+    end
+    object clDepartmentName: TcxDBPivotGridField
+      AreaIndex = 31
+      IsCaptionAssigned = True
+      Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' 1 '#1088#1110#1074#1085#1103' ('#1087#1086#1076#1088#1072#1079#1076'. '#1079#1072#1090#1088#1072#1090')'
+      DataBinding.FieldName = 'DepartmentName'
+      Visible = True
+      UniqueName = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+    end
+    object clDepartment_twoName: TcxDBPivotGridField
+      AreaIndex = 32
+      IsCaptionAssigned = True
+      Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' 2 '#1088#1110#1074#1085#1103' ('#1087#1086#1076#1088#1072#1079#1076', '#1079#1072#1090#1088#1072#1090')'
+      DataBinding.FieldName = 'Department_twoName'
       Visible = True
       UniqueName = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end

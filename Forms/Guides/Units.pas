@@ -109,6 +109,11 @@ type
     macStartLoad_CFO: TMultiAction;
     FormParams: TdsdFormParams;
     bbStartLoad_CFO: TdxBarButton;
+    isnotStaffList: TcxGridDBColumn;
+    spUpdate_notStaffList: TdsdStoredProc;
+    actUpdate_notStaffList: TdsdExecStoredProc;
+    macUpdate_notStaffList: TMultiAction;
+    bbUpdate_notStaffList: TdxBarButton;
   private
     { Private declarations }
   public

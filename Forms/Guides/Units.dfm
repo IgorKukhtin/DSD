@@ -371,6 +371,14 @@ object UnitForm: TUnitForm
         Options.Editing = False
         Width = 93
       end
+      object isnotStaffList: TcxGridDBColumn
+        Caption = #1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1064#1056
+        DataBinding.FieldName = 'isnotStaffList'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object UnitCode_HistoryCost: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1087#1086#1076#1088'. ('#1089'/'#1089' '#1074#1086#1079#1074#1088#1072#1090')'
         DataBinding.FieldName = 'UnitCode_HistoryCost'
@@ -597,6 +605,14 @@ object UnitForm: TUnitForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_notStaffList'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbStartLoad_CFO'
         end
         item
@@ -678,6 +694,10 @@ object UnitForm: TUnitForm
     end
     object bbStartLoad_CFO: TdxBarButton
       Action = macStartLoad_CFO
+      Category = 0
+    end
+    object bbUpdate_notStaffList: TdxBarButton
+      Action = macUpdate_notStaffList
       Category = 0
     end
   end
@@ -938,6 +958,32 @@ object UnitForm: TUnitForm
       Caption = 'actUpdate_isIrna'
       ImageIndex = 66
     end
+    object macUpdate_notStaffList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_notStaffList
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1064#1056'> '#1076#1072'/'#1085#1077#1090
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1064#1056'> '#1076#1072'/'#1085#1077#1090
+      ImageIndex = 79
+    end
+    object actUpdate_notStaffList: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_notStaffList
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_notStaffList
+        end>
+      Caption = 'actUpdate_notStaffList'
+      ImageIndex = 79
+    end
     object macUpdate_notBirthDay: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1193,5 +1239,31 @@ object UnitForm: TUnitForm
       end>
     Left = 760
     Top = 160
+  end
+  object spUpdate_notStaffList: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Unit_notStaffList'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisnotStaffList'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isnotStaffList'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 536
+    Top = 216
   end
 end

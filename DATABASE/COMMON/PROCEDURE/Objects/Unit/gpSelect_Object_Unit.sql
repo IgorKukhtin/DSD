@@ -37,6 +37,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isIrna Boolean,
                isAvance Boolean,
                isnotBirthDay Boolean,
+               isnotStaffList Boolean,
                isErased Boolean,
                Address TVarChar,
                Comment TVarChar,
@@ -191,6 +192,7 @@ BEGIN
            , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)       :: Boolean AS isIrna
            , COALESCE (ObjectBoolean_Avance.ValueData, FALSE)           :: Boolean AS isAvance
            , COALESCE (ObjectBoolean_notBirthDay.ValueData, FALSE)      :: Boolean AS isnotBirthDay
+           , COALESCE (ObjectBoolean_notStaffList.ValueData, FALSE)     :: Boolean AS isnotStaffList
            , Object_Unit_View.isErased
 
            , ObjectString_Unit_Address.ValueData   AS Address
@@ -204,7 +206,7 @@ BEGIN
            , ObjectString_Unit_AddressEDIN.ValueData :: TVarChar AS AddressEDIN
            
            , Object_CFO.Id                           ::Integer   AS CFOId
-           , Object_CFO.ValueData                    ::TVarChar   AS CFOName
+           , Object_CFO.ValueData                    ::TVarChar  AS CFOName
        FROM Object_Unit_View
             LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = Object_Unit_View.Id
             LEFT JOIN Object_AccountDirection AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = Object_Unit_View.AccountDirectionId
@@ -310,6 +312,9 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_notBirthDay
                                     ON ObjectBoolean_notBirthDay.ObjectId = Object_Unit_View.Id
                                    AND ObjectBoolean_notBirthDay.DescId = zc_ObjectBoolean_Unit_notBirthDay()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_notStaffList
+                                    ON ObjectBoolean_notStaffList.ObjectId = Object_Unit_View.Id
+                                   AND ObjectBoolean_notStaffList.DescId = zc_ObjectBoolean_Unit_notStaffList()
 
             LEFT JOIN ObjectDate AS ObjectDate_PersonalService
                                  ON ObjectDate_PersonalService.ObjectId = Object_Unit_View.Id
@@ -429,6 +434,7 @@ BEGIN
            , FALSE AS isIrna
            , CAST (FALSE AS Boolean) AS isAvance
            , CAST (FALSE AS Boolean) AS isnotBirthDay
+           , CAST (FALSE AS Boolean) AS isnotStaffList
            , FALSE AS isErased
            , CAST ('' as TVarChar)  AS Address
            , CAST ('' as TVarChar)  AS Comment
@@ -538,6 +544,7 @@ BEGIN
            , FALSE AS isIrna
            , CAST (FALSE AS Boolean) AS isAvance
            , CAST (FALSE AS Boolean) AS isnotBirthDay
+           , CAST (FALSE AS Boolean) AS isnotStaffList
            , FALSE AS isErased
            , CAST ('' as TVarChar)  AS Address
            , CAST ('' as TVarChar)  AS Comment
@@ -551,16 +558,6 @@ BEGIN
            , CAST ('' as TVarChar)  AS CFOName
       ;
 
-
-
-
-
-
-        
-
-
-
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -570,6 +567,7 @@ ALTER FUNCTION gpSelect_Object_Unit (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 23.10.25         *
  14.08.25         * isnotBirthDay
  11.07.23         * AddressEDIN
  28.06.23         *

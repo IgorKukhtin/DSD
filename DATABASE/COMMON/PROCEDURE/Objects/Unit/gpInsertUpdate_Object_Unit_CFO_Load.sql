@@ -1,10 +1,9 @@
  -- Function: gpInsertUpdate_Object_Unit_CFO_Load()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit_CFO_Load (Integer, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit_CFO_Load (TVarChar, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit_CFO_Load(
-    IN inUnitCode      Integer   , -- Код объекта <Товар>
     IN inUnitName      TVarChar    , -- 
     IN inCFOName  TVarChar    , -- 
     IN inSession        TVarChar    -- сессия пользователя
@@ -39,7 +38,7 @@ BEGIN
                 );
      -- Проверка
      IF COALESCE (vbUnitId, 0) = 0 THEN
-        RETURN;
+       -- RETURN;
         RAISE EXCEPTION 'Ошибка.Не найдено Подразделение <%> .', inUnitName;
      END IF;
 
@@ -67,8 +66,7 @@ BEGIN
      
      
      PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_CFO(), vbUnitId, vbCFOId);
-    
-     RAISE EXCEPTION 'Тест. Ок. <%> / <%>', vbUnitId, vbCFOId;
+
   
      IF vbUserId = 9457 OR vbUserId = 5
      THEN

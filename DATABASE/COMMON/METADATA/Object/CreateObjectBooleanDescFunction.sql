@@ -378,6 +378,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_notBirthDay() RETURNS Integer A
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_notBirthDay', 'Исключить из списка именинников' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_notBirthDay');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_notStaffList() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_notStaffList'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_notStaffList', 'Исключить из ШР' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_notStaffList');
+
+
 
 
 
@@ -1566,6 +1571,7 @@ INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 23.10.25         * zc_ObjectBoolean_Unit_notStaffList
  16.07.25         * zc_ObjectBoolean_Sticker_notInfoComment
  24.06.25         * zc_ObjectBoolean_Sticker_DatStart
                     zc_ObjectBoolean_Sticker_DatEnd              
