@@ -1620,7 +1620,9 @@ uses
   StaffListCloseEdit in '..\..\Forms\Document\StaffListCloseEdit.pas' {StaffListCloseEditForm: TParentForm},
   StaffListMemberJournal in '..\..\Forms\Document\StaffListMemberJournal.pas' {StaffListMemberJournalForm: TParentForm},
   StaffListMemberJournalChoice in '..\..\Forms\Document\StaffListMemberJournalChoice.pas' {StaffListMemberJournalChoiceForm: TParentForm},
-  Report_ProfitLoss_by in '..\..\Forms\Report\Report_ProfitLoss_by.pas' {Report_ProfitLoss_byForm: TParentForm};
+  Report_ProfitLoss_by in '..\..\Forms\Report\Report_ProfitLoss_by.pas' {Report_ProfitLoss_byForm: TParentForm},
+  PersonalByStorageLine in '..\..\Forms\Guides\PersonalByStorageLine.pas' {PersonalByStorageLineForm: TParentForm},
+  PersonalByStorageLineEdit in '..\..\Forms\Guides\PersonalByStorageLineEdit.pas' {PersonalByStorageLineEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

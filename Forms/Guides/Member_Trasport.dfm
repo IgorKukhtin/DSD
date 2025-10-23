@@ -483,7 +483,7 @@ object Member_TrasportForm: TMember_TrasportForm
       GuiParams = <
         item
           Name = 'SummerFuel'
-          Value = '0'
+          Value = 0.000000000000000000
           Component = FormParams
           ComponentItem = 'SummerFuel'
           DataType = ftFloat
@@ -492,7 +492,7 @@ object Member_TrasportForm: TMember_TrasportForm
         end
         item
           Name = 'WinterFuel'
-          Value = '0'
+          Value = 0.000000000000000000
           Component = FormParams
           ComponentItem = 'WinterFuel'
           DataType = ftFloat
@@ -501,7 +501,7 @@ object Member_TrasportForm: TMember_TrasportForm
         end
         item
           Name = 'Reparation'
-          Value = '0'
+          Value = 0.000000000000000000
           Component = FormParams
           ComponentItem = 'Reparation'
           DataType = ftFloat
@@ -510,7 +510,7 @@ object Member_TrasportForm: TMember_TrasportForm
         end
         item
           Name = 'LimitMoney'
-          Value = '0'
+          Value = 0.000000000000000000
           Component = FormParams
           ComponentItem = 'LimitMoney'
           DataType = ftFloat
@@ -519,7 +519,7 @@ object Member_TrasportForm: TMember_TrasportForm
         end
         item
           Name = 'LimitDistance'
-          Value = '0'
+          Value = 0.000000000000000000
           Component = FormParams
           ComponentItem = 'LimitDistance'
           DataType = ftFloat
@@ -715,10 +715,14 @@ object Member_TrasportForm: TMember_TrasportForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
     Left = 328
     Top = 264
   end
@@ -746,7 +750,7 @@ object Member_TrasportForm: TMember_TrasportForm
       end
       item
         Name = 'inStartSummerDate'
-        Value = 'NULL'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'StartSummerDate'
         DataType = ftDateTime
@@ -755,7 +759,7 @@ object Member_TrasportForm: TMember_TrasportForm
       end
       item
         Name = 'inEndSummerDate'
-        Value = 'NULL'
+        Value = Null
         Component = ClientDataSet
         ComponentItem = 'EndSummerDate'
         DataType = ftDateTime
@@ -826,7 +830,7 @@ object Member_TrasportForm: TMember_TrasportForm
       end
       item
         Name = 'inisDate'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -851,7 +855,7 @@ object Member_TrasportForm: TMember_TrasportForm
       end
       item
         Name = 'inSummerFuel'
-        Value = '1'
+        Value = 1.000000000000000000
         Component = FormParams
         ComponentItem = 'SummerFuel'
         DataType = ftFloat
@@ -860,7 +864,7 @@ object Member_TrasportForm: TMember_TrasportForm
       end
       item
         Name = 'inWinterFuel'
-        Value = '1'
+        Value = 1.000000000000000000
         Component = FormParams
         ComponentItem = 'WinterFuel'
         DataType = ftFloat
@@ -869,7 +873,7 @@ object Member_TrasportForm: TMember_TrasportForm
       end
       item
         Name = 'inReparation'
-        Value = '1'
+        Value = 1.000000000000000000
         Component = FormParams
         ComponentItem = 'Reparation'
         DataType = ftFloat
@@ -878,7 +882,7 @@ object Member_TrasportForm: TMember_TrasportForm
       end
       item
         Name = 'inLimit'
-        Value = '1'
+        Value = 1.000000000000000000
         Component = FormParams
         ComponentItem = 'LimitMoney'
         DataType = ftFloat
@@ -887,7 +891,7 @@ object Member_TrasportForm: TMember_TrasportForm
       end
       item
         Name = 'inLimitDistance'
-        Value = '1'
+        Value = 1.000000000000000000
         Component = FormParams
         ComponentItem = 'LimitDistance'
         DataType = ftFloat
@@ -924,35 +928,35 @@ object Member_TrasportForm: TMember_TrasportForm
       end
       item
         Name = 'SummerFuel'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'WinterFuel'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'Reparation'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'LimitMoney'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'LimitDistance'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -975,7 +979,7 @@ object Member_TrasportForm: TMember_TrasportForm
       end
       item
         Name = 'inisDate'
-        Value = 'True'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1000,7 +1004,7 @@ object Member_TrasportForm: TMember_TrasportForm
       end
       item
         Name = 'inSummerFuel'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = FormParams
         ComponentItem = 'SummerFuel'
         DataType = ftFloat
@@ -1009,7 +1013,7 @@ object Member_TrasportForm: TMember_TrasportForm
       end
       item
         Name = 'inWinterFuel'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = FormParams
         ComponentItem = 'WinterFuel'
         DataType = ftFloat
@@ -1018,7 +1022,7 @@ object Member_TrasportForm: TMember_TrasportForm
       end
       item
         Name = 'inReparation'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = FormParams
         ComponentItem = 'Reparation'
         DataType = ftFloat
@@ -1027,7 +1031,7 @@ object Member_TrasportForm: TMember_TrasportForm
       end
       item
         Name = 'inLimit'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = FormParams
         ComponentItem = 'LimitMoney'
         DataType = ftFloat
@@ -1036,7 +1040,7 @@ object Member_TrasportForm: TMember_TrasportForm
       end
       item
         Name = 'inLimitFuel'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = FormParams
         ComponentItem = 'LimitFuel'
         DataType = ftFloat
