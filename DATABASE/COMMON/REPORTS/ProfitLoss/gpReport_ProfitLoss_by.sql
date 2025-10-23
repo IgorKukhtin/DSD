@@ -85,9 +85,11 @@ BEGIN
 
      -- Ограниченние - нет доступа к ОПиУ
      IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 10657330)
+        OR vbIsUserRole_8813637 = TRUE
      THEN
-         RAISE EXCEPTION 'Ошибка.Нет прав к отчету ОПиУ.';
+         RAISE EXCEPTION 'Ошибка.Нет прав к отчету ОПиУ-BI.';
      END IF;
+
      /*
      -- Блокируем ему просмотр
      IF vbUserId = 9457 -- Климентьев К.И.
