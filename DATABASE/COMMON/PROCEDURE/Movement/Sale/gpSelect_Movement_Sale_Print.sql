@@ -716,7 +716,7 @@ END IF;
 
 
            , Object_From.ValueData             		AS FromName
-           , CASE WHEN vbIsKiev = TRUE OR OH_JuridicalDetails_To.OKPO IN ('43536406') THEN TRUE ELSE FALSE END AS isPrintPageBarCode
+           , CASE WHEN vbIsKiev = TRUE OR OH_JuridicalDetails_To.OKPO IN ('43536406', '13315521') THEN TRUE ELSE FALSE END AS isPrintPageBarCode
 
           -- , COALESCE (Object_Partner.ValueData, Object_To.ValueData) AS ToName
            , CASE -- WHEN vbUserId = 5 THEN Object_Juridical_curr.Id :: TvarChar -- OH_JuridicalDetails_To.Name --  ||' '|| ObjectString_ToAddress.ValueData)

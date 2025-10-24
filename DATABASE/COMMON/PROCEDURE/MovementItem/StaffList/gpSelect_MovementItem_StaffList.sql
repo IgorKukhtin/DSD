@@ -327,7 +327,13 @@ BEGIN
               END ::TFloat AS NormHours
 
               -- ФОП за місяць Staff_Price *  TotalStaffCount +Staff_Summ_MK+ Staff_Summ_real	+ Staff_Summ_add
-            , CASE WHEN COALESCE (MovementItem.AmountReport, 0) < 0.5
+             , CASE WHEN COALESCE (MovementItem.Amount, 0) < 0.5 AND vbUserId = 5
+                        THEN 1
+                   
+                   WHEN  vbUserId = 5
+                        THEN 100
+                   
+                   WHEN COALESCE (MovementItem.Amount, 0) < 0.5
                         THEN 0
                    
                    WHEN Object_StaffPaidKind.ValueData ILIKE '%Зміни%'
@@ -361,6 +367,9 @@ BEGIN
                            + COALESCE (MovementItem.Staff_Summ_real, 0)
                            + COALESCE (MovementItem.Staff_Summ_add, 0)
 
+                   WHEN 1=1
+                        THEN COALESCE (MovementItem.Staff_Summ_add, 0)
+
                    ELSE 0
              /*COALESCE (MovementItem.Staff_Price, 0) * COALESCE (MovementItem.TotalStaffCount, 0)
              + COALESCE (MovementItem.Staff_Summ_MK, 0)
@@ -370,7 +379,7 @@ BEGIN
 
 
               -- ЗП для 1-єї шт.од до оподаткуання   WageFund / AmountReport
-            ,(CASE WHEN COALESCE (MovementItem.AmountReport, 0) < 0.5
+            ,(CASE WHEN COALESCE (MovementItem.Amount, 0) < 0.5
                         THEN 0
                    
                    WHEN Object_StaffPaidKind.ValueData ILIKE '%Зміни%'
@@ -403,6 +412,9 @@ BEGIN
                         THEN (COALESCE (MovementItem.Staff_Price, 0) + COALESCE (MovementItem.Staff_Summ_MK, 0) + (COALESCE (MovementItem.Staff_Summ_MK3, 0)/3) + (COALESCE (MovementItem.Staff_Summ_MK6, 0)/6)) * COALESCE (MovementItem.AmountReport, 0)
                            + COALESCE (MovementItem.Staff_Summ_real, 0)
                            + COALESCE (MovementItem.Staff_Summ_add, 0)
+
+                   WHEN 1=1
+                        THEN COALESCE (MovementItem.Staff_Summ_add, 0)
 
                    ELSE 0
                END
