@@ -43,6 +43,7 @@ BEGIN
                            , zc_Movement_Promo()
                            , zc_Movement_SheetWorkTimeClose()
                            , zc_Movement_PersonalGroupSummAdd()
+                           , zc_Movement_StaffList()
                             )
      THEN
           RETURN; -- !!!выход!!!
