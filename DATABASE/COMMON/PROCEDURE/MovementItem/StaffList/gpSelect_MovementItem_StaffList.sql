@@ -327,7 +327,18 @@ BEGIN
               END ::TFloat AS NormHours
 
               -- ФОП за місяць Staff_Price *  TotalStaffCount +Staff_Summ_MK+ Staff_Summ_real	+ Staff_Summ_add
-            , CASE WHEN COALESCE (MovementItem.AmountReport, 0) < 0.5
+            , CASE 
+                   WHEN Object_StaffPaidKind.ValueData ILIKE 'Тариф/год'
+                        THEN ( COALESCE  (MovementItem.Staff_Price, 0) 
+                              * (CASE WHEN COALESCE (MovementItem.Amount, 0) <> 0
+                                      THEN (MovementItem.TotalStaffCount * zfConvert_StringToNumber (Object_StaffHoursLength.ValueData)) / MovementItem.Amount    -- Норма часу для 1-єї шт.од
+                                         ELSE 0
+                                 END ) 
+
+                           * COALESCE (MovementItem.Amount, 0)                                                                   -- ШР для справочника
+                             )                                                                                                   
+
+                   WHEN COALESCE (MovementItem.AmountReport, 0) < 0.5
                         THEN 0
                    
                    WHEN Object_StaffPaidKind.ValueData ILIKE '%Зміни%'
@@ -370,7 +381,20 @@ BEGIN
 
 
               -- ЗП для 1-єї шт.од до оподаткуання   WageFund / AmountReport
-            ,(CASE WHEN COALESCE (MovementItem.AmountReport, 0) < 0.5
+            , CASE WHEN Object_StaffPaidKind.ValueData ILIKE 'Тариф/год'
+                   THEN CASE WHEN COALESCE (MovementItem.Amount, 0) <> 0
+                             THEN ( COALESCE  (MovementItem.Staff_Price, 0) 
+                                   * (CASE WHEN COALESCE (MovementItem.Amount, 0) <> 0
+                                           THEN (MovementItem.TotalStaffCount * zfConvert_StringToNumber (Object_StaffHoursLength.ValueData)) / MovementItem.Amount    -- Норма часу для 1-єї шт.од
+                                              ELSE 0
+                                      END ) 
+                                   * COALESCE (MovementItem.Amount, 0)                                                                   -- ШР для справочника
+                                  )
+                                 / COALESCE (MovementItem.Amount, 0)
+                             ELSE 0
+                        END
+                   ELSE
+             (CASE WHEN COALESCE (MovementItem.AmountReport, 0) < 0.5
                         THEN 0
                    
                    WHEN Object_StaffPaidKind.ValueData ILIKE '%Зміни%'
@@ -411,8 +435,8 @@ BEGIN
                         THEN 1
                     ELSE MovementItem.AmountReport
                END
-               
-              ):: TFloat AS WageFund_byOne
+              ) 
+              END:: TFloat AS WageFund_byOne
 
        FROM tmpData AS MovementItem
             LEFT JOIN Object AS Object_Position ON Object_Position.Id = MovementItem.ObjectId

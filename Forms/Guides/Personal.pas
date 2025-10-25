@@ -144,6 +144,7 @@ type
     bbOpenFormPersonalByStorageLine: TdxBarButton;
     actOpenPersonalEdit_ByStorageLine: TdsdOpenForm;
     dxBarButton1: TdxBarButton;
+    StorageLineName_all: TcxGridDBColumn;
   private
     { Private declarations }
   public

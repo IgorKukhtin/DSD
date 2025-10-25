@@ -1183,7 +1183,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
   end
   inherited BarManager: TdxBarManager
     Left = 80
-    Top = 207
+    Top = 303
     DockControlHeights = (
       0
       0

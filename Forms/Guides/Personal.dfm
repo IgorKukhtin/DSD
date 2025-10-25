@@ -365,6 +365,14 @@ object PersonalForm: TPersonalForm
         HeaderAlignmentVert = vaCenter
         Width = 90
       end
+      object StorageLineName_all: TcxGridDBColumn
+        Caption = '***'#1051#1080#1085#1080#1103' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
+        DataBinding.FieldName = 'StorageLineName_all'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 125
+      end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -512,7 +520,7 @@ object PersonalForm: TPersonalForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 8
+    TabOrder = 7
     Width = 161
   end
   object ceServiceListCardSecond: TcxButtonEdit

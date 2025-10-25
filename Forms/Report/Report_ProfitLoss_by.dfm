@@ -12,6 +12,7 @@ object Report_ProfitLoss_byForm: TReport_ProfitLoss_byForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  Position = poDesigned
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
@@ -389,6 +390,13 @@ object Report_ProfitLoss_byForm: TReport_ProfitLoss_byForm
       Visible = True
       UniqueName = #1057#1091#1084#1084#1072
     end
+    object MovementId: TcxDBPivotGridField
+      AreaIndex = 33
+      IsCaptionAssigned = True
+      Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088' '#1076#1086#1082'.'
+      DataBinding.FieldName = 'MovementId'
+      UniqueName = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088' '#1076#1086#1082'.'
+    end
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -488,6 +496,14 @@ object Report_ProfitLoss_byForm: TReport_ProfitLoss_byForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenDocument'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbToExcel'
         end
         item
@@ -524,6 +540,11 @@ object Report_ProfitLoss_byForm: TReport_ProfitLoss_byForm
       Category = 0
       Hint = 'New Item'
       Visible = ivAlways
+    end
+    object bbOpenDocument: TdxBarButton
+      Action = macOpenDocument
+      Category = 0
+      Visible = ivNever
     end
   end
   object ActionList: TActionList
@@ -1121,6 +1142,68 @@ object Report_ProfitLoss_byForm: TReport_ProfitLoss_byForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      FormName = 'NULL'
+      FormNameParam.Value = ''
+      FormNameParam.Component = FormParams
+      FormNameParam.ComponentItem = 'FormName'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId_Value'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MovementId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object macOpenDocument: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetForm
+        end
+        item
+          Action = actOpenForm
+        end>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 28
+    end
+    object actGetForm: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = getMovementForm
+      StoredProcList = <
+        item
+          StoredProc = getMovementForm
+        end>
+      Caption = 'actGetForm'
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpReport_ProfitLoss_by'
@@ -1331,13 +1414,16 @@ object Report_ProfitLoss_byForm: TReport_ProfitLoss_byForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 240
-    Top = 304
+    Left = 224
+    Top = 288
   end
   object PivotAddOn: TPivotAddOn
     ErasedFieldName = 'isErased'
     PivotGrid = cxDBPivotGrid
-    OnDblClickActionList = <>
+    OnDblClickActionList = <
+      item
+        Action = macOpenDocument
+      end>
     ActionItemList = <
       item
         Action = macReport_AccountMotion
@@ -1506,12 +1592,41 @@ object Report_ProfitLoss_byForm: TReport_ProfitLoss_byForm
         MultiSelectSeparator = ','
       end>
     Left = 360
-    Top = 184
+    Top = 224
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 352
-    Top = 168
+    Left = 296
+    Top = 192
+  end
+  object getMovementForm: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Form'
+    DataSet = ClientDataSet
+    DataSets = <
+      item
+        DataSet = ClientDataSet
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FormName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 736
+    Top = 208
   end
 end

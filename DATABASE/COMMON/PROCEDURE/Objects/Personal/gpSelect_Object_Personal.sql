@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar, INN TVarChar
              , Department_twoId Integer, Department_twoName TVarChar    
              , PersonalGroupId Integer, PersonalGroupCode Integer, PersonalGroupName TVarChar
              , StorageLineId Integer, StorageLineCode Integer, StorageLineName TVarChar
+             , StorageLineName_all Text
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , PersonalServiceListOfficialId Integer, PersonalServiceListOfficialName TVarChar
              , ServiceListId_AvanceF2 Integer, ServiceListName_AvanceF2 TVarChar
@@ -128,6 +129,22 @@ BEGIN
                                     , ObjectLink_User_Member.ChildObjectId
                             )
 
+        , tmpStorageLine AS (SELECT ObjectLink_PersonalByStorageLine_Personal.ChildObjectId AS PersonalId
+                                  , String_AGG (Object_StorageLine.ValueData, '; ')  AS StorageLineName
+                             FROM Object AS Object_PersonalByStorageLine
+                                  LEFT JOIN ObjectLink AS ObjectLink_PersonalByStorageLine_Personal
+                                                       ON ObjectLink_PersonalByStorageLine_Personal.ObjectId = Object_PersonalByStorageLine.Id
+                                                      AND ObjectLink_PersonalByStorageLine_Personal.DescId = zc_ObjectLink_PersonalByStorageLine_Personal()
+                                                        
+                                  LEFT JOIN ObjectLink AS ObjectLink_PersonalByStorageLine_StorageLine
+                                                       ON ObjectLink_PersonalByStorageLine_StorageLine.ObjectId = Object_PersonalByStorageLine.Id
+                                                      AND ObjectLink_PersonalByStorageLine_StorageLine.DescId = zc_ObjectLink_PersonalByStorageLine_StorageLine()
+                                  LEFT JOIN Object AS Object_StorageLine ON Object_StorageLine.Id = ObjectLink_PersonalByStorageLine_StorageLine.ChildObjectId
+                             WHERE Object_PersonalByStorageLine.DescId = zc_Object_PersonalByStorageLine()
+                               AND Object_PersonalByStorageLine.isErased = False
+                             GROUP BY ObjectLink_PersonalByStorageLine_Personal.ChildObjectId
+                             )
+
      SELECT
            Object_Personal_View.PersonalId   AS Id
          , Object_Personal_View.PersonalCode AS MemberCode
@@ -167,7 +184,8 @@ BEGIN
 
          , Object_Personal_View.StorageLineId
          , Object_Personal_View.StorageLineCode
-         , Object_Personal_View.StorageLineName
+         , Object_Personal_View.StorageLineName 
+         , tmpStorageLine.StorageLineName ::Text AS StorageLineName_all
 
          , Object_PersonalServiceList.Id           AS PersonalServiceListId
          , Object_PersonalServiceList.ValueData    AS PersonalServiceListName
@@ -333,6 +351,8 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Guide_Irna
                                   ON ObjectBoolean_Guide_Irna.ObjectId = Object_Personal_View.PersonalId
                                  AND ObjectBoolean_Guide_Irna.DescId = zc_ObjectBoolean_Guide_Irna()
+
+          LEFT JOIN tmpStorageLine ON tmpStorageLine.PersonalId = Object_Personal_View.PersonalId
      WHERE (tmpRoleAccessKey.AccessKeyId IS NOT NULL
          OR vbAccessKeyAll = TRUE
          OR Object_Personal_View.BranchId = vbObjectId_Constraint
@@ -400,7 +420,8 @@ BEGIN
          , CAST ('' as TVarChar) AS PersonalGroupName
          , 0                     AS StorageLineId
          , 0                     AS StorageLineCode
-         , CAST ('' as TVarChar) AS StorageLineName
+         , CAST ('' as TVarChar) AS StorageLineName 
+         , CAST ('' as Text)     AS StorageLineName_all
          , 0                     AS PersonalServiceListId
          , CAST ('' as TVarChar) AS PersonalServiceListName
          , 0                     AS PersonalServiceListOfficialId
@@ -453,6 +474,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 25.10.25         *
  31.10.23         *
  19.04.23         *
  04.05.22         *

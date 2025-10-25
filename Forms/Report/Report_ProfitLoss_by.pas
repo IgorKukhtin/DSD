@@ -75,6 +75,12 @@ type
     actOpenReport_AccountMotion: TdsdOpenForm;
     macReport_AccountMotion: TMultiAction;
     actPrintBranch: TdsdPrintAction;
+    getMovementForm: TdsdStoredProc;
+    actOpenForm: TdsdOpenForm;
+    actGetForm: TdsdExecStoredProc;
+    macOpenDocument: TMultiAction;
+    bbOpenDocument: TdxBarButton;
+    MovementId: TcxDBPivotGridField;
   private
   public
   end;
