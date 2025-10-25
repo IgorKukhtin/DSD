@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION lpUpate_Object_Personal_Old (
     IN inMovementId          Integer   , -- Ключ объекта <Документ, который отменяем>
     IN inSession             TVarChar      -- Пользователь
 )                              
-RETURNS Integer
+RETURNS VOID
 AS
 $BODY$
    DECLARE vbUserId     Integer;
@@ -21,6 +21,9 @@ BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
+     
+     --чтоб пока ничего не поломать
+     RETURN;
      
      --данные из вх. документа
      SELECT tmp.OperDate
