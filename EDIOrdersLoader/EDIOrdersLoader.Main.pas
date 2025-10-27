@@ -138,6 +138,10 @@ type
     spGet_Email_report: TdsdStoredProc;
     actSMTPFile_Email_report: TdsdSMTPFileAction;
     spUpdateEdiSent_Email_report: TdsdStoredProc;
+    actVchasnoEDISignCondra: TdsdVchasnoEDIAction;
+    mactVchasnoEDISignCondra: TMultiAction;
+    actUpdateEdiCONDRASignTrue: TdsdExecStoredProc;
+    spUpdateEdiCondraSign: TdsdStoredProc;
     procedure TrayIconClick(Sender: TObject);
     procedure AppMinimize(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -749,6 +753,25 @@ begin
                              end;
                             //
                             MyDelay_two(3000);
+                            //
+                            //
+                            // если нет Ошибки
+                            if (FormParams.ParamByName('Err_str_toEDI').Value = '')
+                            then
+                              // а теперь еще подписать Декларация
+                              if mactVchasnoEDISignCondra.Execute
+                              then actUpdateEdiCONDRASignTrue.Execute
+                              else begin
+                                    // Ошибку записать в базе
+                                    FormParams.ParamByName('Err_str_toEDI').Value := 'Ошибка при Подписании Декларации';
+                                    // Ошибку показать в логе
+                                    AddToLog_Vchasno(true, 'Ошибка при Подписании CONDRA Вчасно № :  <' + FieldByName('InvNumber_Parent').AsString + '> от' + DateToStr(FieldByName('OperDate_Parent').AsDateTime) + '>', true);
+                                    AddToLog_Vchasno(true, actVchasnoEDISignCondra.ErrorText.Value, true);
+                                    AddToLog_Vchasno(true, '', true);
+                               end;
+                            //
+                            MyDelay_two(3000);
+
                        end;
               end;
 
