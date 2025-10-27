@@ -374,6 +374,9 @@ BEGIN
                            + COALESCE (MovementItem.Staff_Summ_real, 0)
                            + COALESCE (MovementItem.Staff_Summ_add, 0)
 
+                   WHEN 1=1
+                        THEN COALESCE (MovementItem.Staff_Summ_add, 0)
+
                    ELSE 0
              /*COALESCE (MovementItem.Staff_Price, 0) * COALESCE (MovementItem.TotalStaffCount, 0)
              + COALESCE (MovementItem.Staff_Summ_MK, 0)
@@ -434,6 +437,9 @@ BEGIN
                                      + COALESCE (MovementItem.Staff_Summ_real, 0)
                                      + COALESCE (MovementItem.Staff_Summ_add, 0)
 
+                             WHEN 1=1
+                                  THEN COALESCE (MovementItem.Staff_Summ_add, 0)
+
                              ELSE 0
                          END
 
@@ -490,5 +496,4 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpSelect_MovementItem_StaffList (inMovementId:= 14521952, inIsErased:= TRUE, inSession:= '9457')
---SELECT * FROM gpSelect_MovementItem_StaffList (inMovementId:= 14521952, inShowAll:= true, inIsErased:= FALSE, inSession:= '9457')
+-- SELECT * FROM gpSelect_MovementItem_StaffList (inMovementId:= 14521952, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '9457')
