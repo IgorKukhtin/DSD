@@ -46,6 +46,9 @@ type
     actPersonalServiceErased: TdsdExecStoredProc;
     cbErased: TcxCheckBox;
     MemberCode: TcxGridDBColumn;
+    ceUnit: TcxButtonEdit;
+    cxLabel7: TcxLabel;
+    GuidesUnit: TdsdGuides;
   private
     { Private declarations }
   public

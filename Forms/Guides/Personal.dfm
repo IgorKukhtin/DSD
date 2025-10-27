@@ -520,7 +520,7 @@ object PersonalForm: TPersonalForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 7
+    TabOrder = 6
     Width = 161
   end
   object ceServiceListCardSecond: TcxButtonEdit
@@ -666,6 +666,18 @@ object PersonalForm: TPersonalForm
         item
           Visible = True
           ItemName = 'bbChoiceGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDelete_PersonalByStorageLine'
         end
         item
           Visible = True
@@ -868,6 +880,14 @@ object PersonalForm: TPersonalForm
     end
     object dxBarButton1: TdxBarButton
       Action = actOpenPersonalEdit_ByStorageLine
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = macInsert_PersonalByStorageLine
+      Category = 0
+    end
+    object bbDelete_PersonalByStorageLine: TdxBarButton
+      Action = macDelete_PersonalByStorageLine
       Category = 0
     end
   end
@@ -1573,6 +1593,18 @@ object PersonalForm: TPersonalForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1086#1074'. '#1079#1085#1072#1095#1077#1085#1080#1077' '#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'('#1082#1072#1088#1090#1072' '#1092'2)'
       ImageIndex = 82
     end
+    object actInsert_PersonalByStorageLine: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_PersonalByStorageLine
+      StoredProcList = <
+        item
+          StoredProc = spInsert_PersonalByStorageLine
+        end>
+      Caption = 'actUpdate_PersonalServiceList'
+      ImageIndex = 30
+    end
     object actUpdate_PersonalServiceList: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1717,6 +1749,73 @@ object PersonalForm: TPersonalForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object macInsert_PersonalByStorageLine_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsert_PersonalByStorageLine
+        end>
+      View = cxGridDBTableView
+      Caption = 'macInsert_PersonalByStorageLine_list'
+      ImageIndex = 30
+    end
+    object macInsert_PersonalByStorageLine: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macInsert_PersonalByStorageLine_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080' '#1087#1086' '#1051#1080#1085#1080#1080' '#1087#1088#1086#1080#1074#1086#1076#1089#1090 +
+        #1074#1072'>  '#1087#1086' '#1042#1057#1045#1052' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1087#1077#1088#1077#1085#1077#1089#1077#1085#1099
+      Caption = 
+        #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080' '#1087#1086' '#1051#1080#1085#1080#1080' '#1087#1088#1086#1080#1074#1086#1076#1089#1090#1074#1072'> '#1087#1086' '#1042#1057#1045#1052' '#1089#1086 +
+        #1090#1088#1091#1076#1085#1080#1082#1072#1084
+      Hint = 
+        #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080' '#1087#1086' '#1051#1080#1085#1080#1080' '#1087#1088#1086#1080#1074#1086#1076#1089#1090#1074#1072'>  '#1087#1086' '#1042#1057#1045#1052' '#1089 +
+        #1086#1090#1088#1091#1076#1085#1080#1082#1072#1084
+      ImageIndex = 30
+    end
+    object actDelete_PersonalByStorageLine: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spDelete_PersonalByStorageLine
+      StoredProcList = <
+        item
+          StoredProc = spDelete_PersonalByStorageLine
+        end>
+      Caption = 'Delete_PersonalByStorageLine'
+      ImageIndex = 58
+    end
+    object macDelete_PersonalByStorageLine: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actDelete_PersonalByStorageLine
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080' '#1087#1086' '#1051#1080#1085#1080#1080' '#1087#1088#1086#1080#1074#1086#1076#1089#1090#1074#1072'> '#1087 +
+        #1086' '#1042#1057#1045#1052' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1087#1077#1088#1077#1085#1077#1089#1077#1085#1099
+      Caption = 
+        #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080' '#1087#1086' '#1051#1080#1085#1080#1080' '#1087#1088#1086#1080#1074#1086#1076#1089#1090#1074#1072'> '#1087#1086' '#1042#1057#1045#1052' '#1089#1086#1090#1088#1091#1076#1085 +
+        #1080#1082#1072#1084
+      Hint = 
+        #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080' '#1087#1086' '#1051#1080#1085#1080#1080' '#1087#1088#1086#1080#1074#1086#1076#1089#1090#1074#1072'> '#1087#1086' '#1042#1057#1045#1052' '#1089#1086#1090#1088#1091#1076#1085 +
+        #1080#1082#1072#1084
+      ImageIndex = 58
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -2077,5 +2176,31 @@ object PersonalForm: TPersonalForm
     PackSize = 1
     Left = 952
     Top = 152
+  end
+  object spInsert_PersonalByStorageLine: TdsdStoredProc
+    StoredProcName = 'gpInsert_Object_PersonalByStorageLine_FromMember'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMemberId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'MemberId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 619
+    Top = 246
+  end
+  object spDelete_PersonalByStorageLine: TdsdStoredProc
+    StoredProcName = 'gpDelete_Object_PersonalByStorageLine'
+    DataSets = <>
+    OutputType = otResult
+    Params = <>
+    PackSize = 1
+    Left = 691
+    Top = 230
   end
 end
