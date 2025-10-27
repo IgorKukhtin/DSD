@@ -86,41 +86,23 @@ BEGIN
 
      -- Выбираем остаток на дату по юр. лицам в разрезе договоров.
      -- Так же выбираем продажи и возвраты за период
-      vbLenght := 7;
+     vbLenght := 7;
 
+
+     -- !!!Замена!!!
+     /*IF COALESCE (inAccountId, 0) = 0 
+        AND (vbObjectId_Constraint_Branch > 0
+          -- Отчет продажа/возврат - все филиалы
+          OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = inUserId AND ObjectLink_UserRole_View.RoleId = 7376335)
+            )
+     THEN
+         inAccountId:= zc_Enum_Account_30101();
+     END IF;*/
 
      -- Результат
      RETURN QUERY
-     WITH tmpReport AS (SELECT tmpReport.BranchId, tmpReport.InfoMoneyId, SUM (tmpReport.Sale_Summ) AS Sale_Summ
-                        FROM gpReport_GoodsMI_SaleReturnIn (inStartDate    := inStartDate_sale
-                                                          , inEndDate      := inEndDate_sale
-                                                          , inBranchId     := 0
-                                                          , inAreaId       := 0
-                                                          , inRetailId     := 0
-                                                          , inJuridicalId  := 0
-                                                          , inPaidKindId   := zc_Enum_PaidKind_FirstForm()
-                                                          , inTradeMarkId  := 0
-                                                          , inGoodsGroupId := 0
-                                                          , inInfoMoneyId  := 0
-                                                          , inIsPartner    := FALSE
-                                                          , inIsTradeMark  := FALSE
-                                                          , inIsGoods      := FALSE
-                                                          , inIsGoodsKind  := FALSE
-                                                          , inIsContract   := FALSE
-                                                          , inIsOLAP       := TRUE
-                                                          , inSession      := inUserId ::TVarChar
-                                                           ) AS tmpReport
-                        WHERE 1=0
-                        GROUP BY tmpReport.BranchId, tmpReport.InfoMoneyId
-                       )
-        , tmpReport_sum AS (SELECT tmpReport.InfoMoneyId, SUM (tmpReport.Sale_Summ) AS Sale_Summ
-                            FROM tmpReport
-                            GROUP BY tmpReport.InfoMoneyId
-                           )
-        , tmpReport_res AS (SELECT tmpReport.BranchId, tmpReport.InfoMoneyId
-                                 , CASE WHEN tmpReport_sum.Sale_Summ > 0 THEN tmpReport.Sale_Summ / tmpReport_sum.Sale_Summ ELSE 1 END AS Koeff
-                            FROM tmpReport
-                                 LEFT JOIN tmpReport_sum ON tmpReport_sum.InfoMoneyId = tmpReport.InfoMoneyId
+     WITH tmpReport_res AS (SELECT 0 AS BranchId, 0 AS InfoMoneyId
+                                 , 0 AS Koeff
                            )
         , tmpAccount AS (SELECT inAccountId AS AccountId UNION SELECT zc_Enum_Account_30151() AS AccountId WHERE inAccountId = zc_Enum_Account_30101()
                    UNION SELECT Object_Account_View.AccountId FROM Object_Account_View WHERE COALESCE (inAccountId, 0) = 0 AND AccountGroupId = zc_Enum_AccountGroup_30000() -- Дебиторы
@@ -175,35 +157,49 @@ BEGIN
        , tmpContract AS (SELECT * FROM Object_Contract_ContractKey_View)
 
 
-   , tmpConainer_all AS (SELECT Container.Id           AS ContainerId
-                              , Container.ObjectId     AS AccountId
-                              , View_Contract_ContractKey.ContractId_Key AS ContractId -- CLO_Contract.ObjectId AS ContractId
-                              , CLO_Juridical.ObjectId AS JuridicalId
-                              , Container.Amount
-                              , ContractCondition_DefermentPayment.ContractConditionKindId
-                              , COALESCE (ContractCondition_DefermentPayment.DayCount, 0) AS DayCount
-                              , COALESCE (ContractCondition_DefermentPayment.ContractDate, inOperDate) :: Date AS ContractDate
-                          FROM ContainerLinkObject AS CLO_Juridical
-                               INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId AND Container.DescId = zc_Container_Summ()
-                               INNER JOIN tmpAccount ON tmpAccount.AccountId = Container.ObjectId
-                               LEFT JOIN ContainerLinkObject AS CLO_Contract
-                                                             ON CLO_Contract.ContainerId = Container.Id
-                                                            AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
-                               -- !!!Группируем Договора!!!
-                               LEFT JOIN tmpContract AS View_Contract_ContractKey ON View_Contract_ContractKey.ContractId = CLO_Contract.ObjectId
-
-                               LEFT JOIN tmpContractCondition AS ContractCondition_DefermentPayment
-                                                              ON ContractCondition_DefermentPayment.ContractId = View_Contract_ContractKey.ContractId_Key -- CLO_Contract.ObjectId
-
-                          WHERE CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
-                             -- AND (Container.ObjectId = inAccountId OR inAccountId = 0)
-                             AND (tmpAccount.AccountId > 0 OR inAccountId = 0)
-                        )
+   , tmpConainer_all_0 AS (SELECT Container.Id           AS ContainerId
+                                , Container.ObjectId     AS AccountId
+                                , View_Contract_ContractKey.ContractId_Key AS ContractId -- CLO_Contract.ObjectId AS ContractId
+                                , CLO_Juridical.ObjectId AS JuridicalId
+                                , Container.Amount
+                                , ContractCondition_DefermentPayment.ContractConditionKindId
+                                , COALESCE (ContractCondition_DefermentPayment.DayCount, 0) AS DayCount
+                                , COALESCE (ContractCondition_DefermentPayment.ContractDate, inOperDate) :: Date                AS ContractDate
+                                , COALESCE (ContractCondition_DefermentPayment.ContractDate, inOperDate) :: Date - 4 * vbLenght AS ContractDate_calc
+                            FROM ContainerLinkObject AS CLO_Juridical
+                                 INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId AND Container.DescId = zc_Container_Summ()
+                                 INNER JOIN tmpAccount ON tmpAccount.AccountId = Container.ObjectId
+                                 LEFT JOIN ContainerLinkObject AS CLO_Contract
+                                                               ON CLO_Contract.ContainerId = Container.Id
+                                                              AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
+                                 -- !!!Группируем Договора!!!
+                                 LEFT JOIN tmpContract AS View_Contract_ContractKey ON View_Contract_ContractKey.ContractId = CLO_Contract.ObjectId
+  
+                                 LEFT JOIN tmpContractCondition AS ContractCondition_DefermentPayment
+                                                                ON ContractCondition_DefermentPayment.ContractId = View_Contract_ContractKey.ContractId_Key -- CLO_Contract.ObjectId
+  
+                            WHERE CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
+                               -- AND (Container.ObjectId = inAccountId OR inAccountId = 0)
+                               AND (tmpAccount.AccountId > 0 OR inAccountId = 0)
+                          )
+     , tmpConainer_all AS (SELECT tmpConainer_all_0.ContainerId
+                                , tmpConainer_all_0.AccountId
+                                , tmpConainer_all_0.ContractId
+                                , tmpConainer_all_0.JuridicalId
+                                , tmpConainer_all_0.Amount
+                                , tmpConainer_all_0.ContractConditionKindId
+                                , tmpConainer_all_0.DayCount
+                                , tmpConainer_all_0.ContractDate
+                                , tmpConainer_all_0.ContractDate_calc
+                            FROM tmpConainer_all_0
+                            -- !!!оптимизация!!!
+                            WHERE tmpConainer_all_0.ContractDate >= inOperDate - INTERVAL '4 MONTH'
+                          )
    , tmpMIConainer_all AS (SELECT MIContainer.*
                            FROM tmpConainer_all
                                 INNER JOIN MovementItemContainer AS MIContainer
                                                                  ON MIContainer.Containerid = tmpConainer_all.ContainerId
-                                                                AND MIContainer.OperDate >= COALESCE (tmpConainer_all.ContractDate :: Date - 4 * vbLenght, inOperDate)
+                                                                AND MIContainer.OperDate    >= tmpConainer_all.ContractDate_calc
                          )
 
 , RESULT_all AS (SELECT Container.ContainerId
