@@ -11,7 +11,7 @@ type
 
   TEDIDocType = (ediOrder, ediComDoc, ediDesadv, ediDeclar, ediComDocSave, ediDelnotSave,
     ediReceipt, ediReturnComDoc, ediDeclarReturn, ediOrdrsp, ediInvoice, ediError,
-    ediRecadv, ediTTN, ediComDocSign, ediComDocSendSign, ediSendCondra);
+    ediRecadv, ediTTN, ediComDocSign, ediComDocSendSign, ediSendCondra, ediSignCondra);
   TSignType = (stDeclar, stComDoc);
 
   TConnectionParams = class(TPersistent)
@@ -36,7 +36,7 @@ type
     FIdFTP: TIdFTP;
     FConnectionParams: TConnectionParams;
     FInsertEDIEvents: TdsdStoredProc;
-    FInsertEDIEventsDoc: TdsdStoredProc;
+    FInsertVchasnoEventsDoc: TdsdStoredProc;
     FExistsOrder: TdsdStoredProc;
     FUpdateDeclarAmount: TdsdStoredProc;
     FInsertEDIFile: TdsdStoredProc;
@@ -73,6 +73,8 @@ type
     procedure UpdateOrderCOMDOCSaveVchasnoEDI(AEDIId, Id_send: Integer; DocumentId, VchasnoId: String; isError : Boolean);
 
     procedure UpdateOrderDELNOTSignVchasnoEDI(AEDIId, Id_send: Integer; isError : Boolean);
+
+    procedure UpdateDesadvCondraSignVchasnoEDI(AEDIId, Id_send: Integer; isError : Boolean);
 
   public
     constructor Create(AOwner: TComponent); override;
@@ -221,6 +223,7 @@ type
     function DoSignComDoc: Boolean;
     function DoSendSignComDoc: Boolean;
     function DoSendCondra: Boolean;
+    function DoSignCondra: Boolean;
 
     procedure ShowMessages(AMessage: String);
   public
@@ -543,20 +546,20 @@ begin
   FInsertEDIEvents.OutputType := otResult;
 
   // для Vachsno
-  FInsertEDIEventsDoc := TdsdStoredProc.Create(nil);
-  FInsertEDIEventsDoc.Params.AddParam('inMovementId', ftInteger, ptInput, 0);
-  FInsertEDIEventsDoc.Params.AddParam('inMovementId_send', ftInteger, ptInput, 0);
+  FInsertVchasnoEventsDoc := TdsdStoredProc.Create(nil);
+  FInsertVchasnoEventsDoc.Params.AddParam('inMovementId', ftInteger, ptInput, 0);
+  FInsertVchasnoEventsDoc.Params.AddParam('inMovementId_send', ftInteger, ptInput, 0);
   //DocumentId
-  FInsertEDIEventsDoc.Params.AddParam('inDocumentId', ftString, ptInput, '');
+  FInsertVchasnoEventsDoc.Params.AddParam('inDocumentId', ftString, ptInput, '');
   //VchasnoId
-  FInsertEDIEventsDoc.Params.AddParam('inVchasnoId', ftString, ptInput, '');
+  FInsertVchasnoEventsDoc.Params.AddParam('inVchasnoId', ftString, ptInput, '');
   //Id_doc - Desadv
-  FInsertEDIEventsDoc.Params.AddParam('inId_doc', ftString, ptInput, '');
+  FInsertVchasnoEventsDoc.Params.AddParam('inId_doc', ftString, ptInput, '');
   //Описание события
-  FInsertEDIEventsDoc.Params.AddParam('inEDIEvent', ftString, ptInput, '');
+  FInsertVchasnoEventsDoc.Params.AddParam('inEDIEvent', ftString, ptInput, '');
   //
-  FInsertEDIEventsDoc.StoredProcName := 'gpInsert_Movement_EDIEvents';
-  FInsertEDIEventsDoc.OutputType := otResult;
+  FInsertVchasnoEventsDoc.StoredProcName := 'gpInsert_Movement_EDIEvents';
+  FInsertVchasnoEventsDoc.OutputType := otResult;
 
   FExistsOrder := TdsdStoredProc.Create(nil);
   FExistsOrder.Params.AddParam('inFileName', ftString, ptInput, '');
@@ -3343,7 +3346,7 @@ begin
   FreeAndNil(FUpdateDeclarFileName);
   FreeAndNil(FUpdateEDIVchasnoEDI);
   FreeAndNil(FInsertEDIEvents);
-  FreeAndNil(FInsertEDIEventsDoc);
+  FreeAndNil(FInsertVchasnoEventsDoc);
   inherited;
 end;
 
@@ -5037,19 +5040,19 @@ begin
     end;
 
     try
-      FInsertEDIEventsDoc.ParamByName('inMovementId').Value := AEDIId;
-      FInsertEDIEventsDoc.ParamByName('inMovementId_send').Value := Id_send;
-      FInsertEDIEventsDoc.ParamByName('inDocumentId').Value :='';
-      FInsertEDIEventsDoc.ParamByName('inVchasnoId').Value :='';
-      FInsertEDIEventsDoc.ParamByName('inId_doc').Value :=AId_doc;
+      FInsertVchasnoEventsDoc.ParamByName('inMovementId').Value := AEDIId;
+      FInsertVchasnoEventsDoc.ParamByName('inMovementId_send').Value := Id_send;
+      FInsertVchasnoEventsDoc.ParamByName('inDocumentId').Value :='';
+      FInsertVchasnoEventsDoc.ParamByName('inVchasnoId').Value :='';
+      FInsertVchasnoEventsDoc.ParamByName('inId_doc').Value :=AId_doc;
       //
       if isError = TRUE
-      then FInsertEDIEventsDoc.ParamByName('inEDIEvent').Value := 'Ошибка Отправка Вчасно Уведомление об отгрузке'
-      else FInsertEDIEventsDoc.ParamByName('inEDIEvent').Value := 'Отправка Вчасно Уведомление об отгрузке';
-      FInsertEDIEventsDoc.Execute;
+      then FInsertVchasnoEventsDoc.ParamByName('inEDIEvent').Value := 'Ошибка Отправка Вчасно Уведомление об отгрузке'
+      else FInsertVchasnoEventsDoc.ParamByName('inEDIEvent').Value := 'Отправка Вчасно Уведомление об отгрузке';
+      FInsertVchasnoEventsDoc.Execute;
     finally
-      FInsertEDIEventsDoc.ParamByName('inMovementId_send').Value := 0;
-      FInsertEDIEventsDoc.ParamByName('inId_doc').Value := '';
+      FInsertVchasnoEventsDoc.ParamByName('inMovementId_send').Value := 0;
+      FInsertVchasnoEventsDoc.ParamByName('inId_doc').Value := '';
     end;
   end;
 end;
@@ -5095,16 +5098,16 @@ begin
     end;
 
     try
-      FInsertEDIEventsDoc.ParamByName('inMovementId').Value :=AEDIId;
-      FInsertEDIEventsDoc.ParamByName('inMovementId_send').Value := Id_send;
-      FInsertEDIEventsDoc.ParamByName('inDocumentId').Value :=DocumentId;
-      FInsertEDIEventsDoc.ParamByName('inVchasnoId').Value :=VchasnoId;
+      FInsertVchasnoEventsDoc.ParamByName('inMovementId').Value :=AEDIId;
+      FInsertVchasnoEventsDoc.ParamByName('inMovementId_send').Value := Id_send;
+      FInsertVchasnoEventsDoc.ParamByName('inDocumentId').Value :=DocumentId;
+      FInsertVchasnoEventsDoc.ParamByName('inVchasnoId').Value :=VchasnoId;
       if isError = TRUE
-      then FInsertEDIEventsDoc.ParamByName('inEDIEvent').Value := 'Ошибка Отправка Вчасно COMDOC-Расходная накладная'
-      else FInsertEDIEventsDoc.ParamByName('inEDIEvent').Value := 'Отправка Вчасно COMDOC-Расходная накладная';
-      FInsertEDIEventsDoc.Execute;
+      then FInsertVchasnoEventsDoc.ParamByName('inEDIEvent').Value := 'Ошибка Отправка Вчасно COMDOC-Расходная накладная'
+      else FInsertVchasnoEventsDoc.ParamByName('inEDIEvent').Value := 'Отправка Вчасно COMDOC-Расходная накладная';
+      FInsertVchasnoEventsDoc.Execute;
     finally
-      FInsertEDIEventsDoc.ParamByName('inMovementId_send').Value := 0;
+      FInsertVchasnoEventsDoc.ParamByName('inMovementId_send').Value := 0;
     end;
   end;
 end;
@@ -5123,20 +5126,47 @@ begin
     end;
 
     try
-      FInsertEDIEventsDoc.ParamByName('inMovementId').Value :=AEDIId;
-      FInsertEDIEventsDoc.ParamByName('inMovementId_send').Value := Id_send;
-      FInsertEDIEventsDoc.ParamByName('inDocumentId').Value :=DocumentId;
-      FInsertEDIEventsDoc.ParamByName('inVchasnoId').Value :=VchasnoId;
+      FInsertVchasnoEventsDoc.ParamByName('inMovementId').Value :=AEDIId;
+      FInsertVchasnoEventsDoc.ParamByName('inMovementId_send').Value := Id_send;
+      FInsertVchasnoEventsDoc.ParamByName('inDocumentId').Value :=DocumentId;
+      FInsertVchasnoEventsDoc.ParamByName('inVchasnoId').Value :=VchasnoId;
       if isError = TRUE
-      then FInsertEDIEventsDoc.ParamByName('inEDIEvent').Value := 'Ошибка Отправка Вчасно DELNOT-Расходная накладная'
-      else FInsertEDIEventsDoc.ParamByName('inEDIEvent').Value := 'Отправка Вчасно DELNOT-Расходная накладная';
-      FInsertEDIEventsDoc.Execute;
+      then FInsertVchasnoEventsDoc.ParamByName('inEDIEvent').Value := 'Ошибка Отправка Вчасно DELNOT-Расходная накладная'
+      else FInsertVchasnoEventsDoc.ParamByName('inEDIEvent').Value := 'Отправка Вчасно DELNOT-Расходная накладная';
+      FInsertVchasnoEventsDoc.Execute;
     finally
-      FInsertEDIEventsDoc.ParamByName('inMovementId_send').Value := 0;
+      FInsertVchasnoEventsDoc.ParamByName('inMovementId_send').Value := 0;
     end;
   end;
 end;
 
+procedure TEDI.UpdateDesadvCondraSignVchasnoEDI(AEDIId, Id_send: Integer; isError : Boolean);
+begin
+  if AEDIId <> 0 then
+  begin
+
+    try
+      FUpdateEDIErrorState.ParamByName('inMovementId').Value := AEDIId;
+      FUpdateEDIErrorState.ParamByName('inMovementId_send').Value := Id_send;
+      FUpdateEDIErrorState.ParamByName('inIsError').Value := isError;
+      FUpdateEDIErrorState.Execute;
+    finally
+      FUpdateEDIErrorState.ParamByName('inMovementId_send').Value := 0;
+    end;
+
+    try
+      FInsertEDIEvents.ParamByName('inMovementId').Value :=AEDIId;
+      FInsertEDIEvents.ParamByName('inMovementId_send').Value := Id_send;
+      if isError = TRUE
+      then FInsertEDIEvents.ParamByName('inEDIEvent').Value := 'Ошибка Подписи Вчасно Декларация'
+      else FInsertEDIEvents.ParamByName('inEDIEvent').Value := 'Подпись Вчасно Расходная Декларация';
+      FInsertEDIEvents.Execute;
+    finally
+      FInsertEDIEvents.ParamByName('inMovementId_send').Value := 0;
+    end;
+  end;
+    //
+end;
 
 procedure TEDI.UpdateOrderDELNOTSignVchasnoEDI(AEDIId, Id_send: Integer; isError : Boolean);
 begin
@@ -6023,7 +6053,14 @@ begin
 
     end else if ATypeExchange in [4, 5] then
     begin
-      Params := '/' + FDocumentIdParam.Value + '/original';
+
+      //comdoc+delnot
+      if FEDIDocType = ediSignCondra
+      then Params := '/condra/' + FDocumentIdParam.Value + '/attachments'
+      else Params := '/' + FDocumentIdParam.Value + '/original';
+
+      //condra
+      //Params := '/condra/' + FDocumentIdParam.Value + '/attachments';
 
     end else
     begin
@@ -6059,8 +6096,14 @@ begin
     //
     try
       try
+        //comdoc+delnot
         IdHTTP.Get(TIdURI.URLEncode(FHostParam.Value + Params), Stream);
-      except on E:EIdHTTPProtocolException  do ShowMessages(e.ErrorMessage);
+
+        //condra
+        //IdHTTP.Get(TIdURI.URLEncode('https://edi.vchasno.ua/api/v2/additional-documents' + Params), Stream);
+
+      except on E:EIdHTTPProtocolException
+            do ShowMessages(e.ErrorMessage);
       end;
 
       if IdHTTP.ResponseCode = 200 then
@@ -6394,6 +6437,7 @@ begin
     begin
       jsonObj := TJSONObject.ParseJSONValue(S) as TJSONObject;
       try
+        // ?для Condra не так?
         if (jsonObj.Get('deal_status') <> nil) and (jsonObj.Get('deal_status').JsonValue.Value = 'in_work') and
          (jsonObj.Get('document_id') <> nil)  then
         begin
@@ -6401,7 +6445,18 @@ begin
           if jsonObj.Get('vchasno_id') <> nil then
             FVchasnoIdParam.Value := jsonObj.Get('vchasno_id').JsonValue.Value
           else FVchasnoIdParam.Value := '';
-        end;
+        end
+        else
+        // Так для Condra
+        if (jsonObj.Get('vchasno_status') <> nil) and (jsonObj.Get('vchasno_status').JsonValue.Value = 'ready_to_be_signed') and
+         (jsonObj.Get('id') <> nil)  then
+        begin
+          FDocumentIdParam.Value := jsonObj.Get('id').JsonValue.Value;
+          //if jsonObj.Get('vchasno_id') <> nil then
+          //  FVchasnoIdParam.Value := jsonObj.Get('vchasno_id').JsonValue.Value
+          //else FVchasnoIdParam.Value := '';
+        end
+
       finally
         FreeAndNil(jsonObj);
       end;
@@ -6570,15 +6625,20 @@ begin
     Stream.Position := 0;
     try
       try
+        //comdoc+delnot
         S := IdHTTP.Post(TIdURI.URLEncode(FHostParam.Value + Params), Stream);
+
+        //condra
+        //S := IdHTTP.Post(TIdURI.URLEncode('https://edi.vchasno.ua/api/v2/additional-documents' + Params), Stream);
+
       except on E:EIdHTTPProtocolException  do
-                  ShowMessages('Ошибка: ' + e.ErrorMessage);
+                ShowMessages('Ошибка: ' + e.ErrorMessage);
       end;
     finally
       FreeAndNil(Stream);
     end;
 
-    if IdHTTP.ResponseCode = 200 then
+    if (IdHTTP.ResponseCode = 200) or (IdHTTP.ResponseCode = 201) then
     begin
       Result := True;
     end;
@@ -7151,9 +7211,68 @@ begin
   end;
 end;
 
+function TdsdVchasnoEDIAction.DoSignCondra: Boolean;
+begin
+  Result := False;
+
+  if HeaderDataSet.FieldByName('DocId_vch_Condra').AsString = '' then Exit;
+//  if HeaderDataSet.FieldByName('VchasnoId').AsString = '' then Exit;
+
+  FOrderParam.Value := HeaderDataSet.FieldByName('DealId').AsString;
+  //Это ІД Condra
+  FDocumentIdParam.Value := HeaderDataSet.FieldByName('DocId_vch_Condra').AsString;
+  //
+  FVchasnoIdParam.Value := HeaderDataSet.FieldByName('VchasnoId').AsString;
+  try
+
+    // Получим файл документа
+    Result := GetVchasnoEDI(5);
+    //Result := GetDocETTN('4823036500001', '32d2bc90-577e-4e4c-af17-722b49cf1c86');
+
+    if FileExists(FFileNameParam.Value + '.p7s') then DeleteFile(FFileNameParam.Value + '.p7s');
+    if FileExists(FFileNameParam.Value + '_sign.p7s') then DeleteFile(FFileNameParam.Value + '_sign.p7s');
+    if FileExists(FFileNameParam.Value + '_stamp.p7s') then DeleteFile(FFileNameParam.Value + '_stamp.p7s');
+
+    // Подпись файла 1
+    if Result and (HeaderDataSet.FieldByName('UserSign').asString <> '') then
+    begin
+      if Result then Result := SignData(HeaderDataSet.FieldByName('UserSign').asString);
+      if FileExists(FFileNameParam.Value + '.p7s') then
+        RenameFile(FFileNameParam.Value + '.p7s', FFileNameParam.Value + '_sign.p7s');
+    end;
+
+    // Подпись файла 2
+    if Result and (HeaderDataSet.FieldByName('UserSeal').asString <> '') then
+    begin
+      if Result then Result := SignData(HeaderDataSet.FieldByName('UserSeal').asString);
+      if FileExists(FFileNameParam.Value + '.p7s') then
+        RenameFile(FFileNameParam.Value + '.p7s', FFileNameParam.Value + '_stamp.p7s');
+    end;
+
+    // Отправка подписанных файлов
+    if Result then Result := POSTSignVchasnoEDI;
+
+    // Запишем в базу чей ключ и дату
+    EDI.UpdateDesadvCondraSignVchasnoEDI(HeaderDataSet.FieldByName('EDIId').asInteger
+                                       , HeaderDataSet.FieldByName('MovementId_EDI_send').asInteger
+                                       , not Result
+                                        );
+
+  finally
+    // удалим временные файлы
+    if FileExists(FFileNameParam.Value) then DeleteFile(FFileNameParam.Value);
+    if FileExists(FFileNameParam.Value + '.p7s') then DeleteFile(FFileNameParam.Value + '.p7s');
+    if FileExists(FFileNameParam.Value + '_sign.p7s') then DeleteFile(FFileNameParam.Value + '_sign.p7s');
+    if FileExists(FFileNameParam.Value + '_stamp.p7s') then DeleteFile(FFileNameParam.Value + '_stamp.p7s');
+  end;
+
+end;
+
+
 function TdsdVchasnoEDIAction.DoSendCondra: Boolean;
 begin
   Result := False;
+  //Это ІД Desadv
   if HeaderDataSet.FieldByName('DocId_vch').AsString = '' then Exit;
 
   FFileNameParam.Value := HeaderDataSet.FieldByName('FileName').AsString;
@@ -7174,12 +7293,24 @@ begin
     Result := POSTCondraEDI(0);
 
     // Запишем в базу что сделали
-    EDI.FInsertEDIEvents.ParamByName('inMovementId').Value :=HeaderDataSet.FieldByName('MovementId_edi').asInteger;
-    EDI.FInsertEDIEvents.ParamByName('inMovementId_send').Value := 0;
-    if Result = FALSE
-    then EDI.FInsertEDIEvents.ParamByName('inEDIEvent').Value := 'Ошибка Отправки Вчасно Декларация'
-    else EDI.FInsertEDIEvents.ParamByName('inEDIEvent').Value := 'Отправка Вчасно Декларация';
-    EDI.FInsertEDIEvents.Execute;
+    try
+      EDI.FInsertVchasnoEventsDoc.ParamByName('inMovementId').Value := HeaderDataSet.FieldByName('MovementId_edi').asInteger;
+      EDI.FInsertVchasnoEventsDoc.ParamByName('inMovementId_send').Value := 0;
+      // ІД Condra
+      EDI.FInsertVchasnoEventsDoc.ParamByName('inDocumentId').Value :=FDocumentIdParam.Value;
+      //
+      EDI.FInsertVchasnoEventsDoc.ParamByName('inVchasnoId').Value :='';
+      // ІД Desadv
+      EDI.FInsertVchasnoEventsDoc.ParamByName('inId_doc').Value :=HeaderDataSet.FieldByName('DocId_vch').AsString;
+      //
+      if not Result = TRUE
+      then EDI.FInsertVchasnoEventsDoc.ParamByName('inEDIEvent').Value := 'Ошибка Отправки Вчасно Декларация'
+      else EDI.FInsertVchasnoEventsDoc.ParamByName('inEDIEvent').Value := 'Отправка Вчасно Декларация';
+      EDI.FInsertVchasnoEventsDoc.Execute;
+    finally
+      EDI.FInsertVchasnoEventsDoc.ParamByName('inMovementId_send').Value := 0;
+      EDI.FInsertVchasnoEventsDoc.ParamByName('inId_doc').Value := '';
+    end;
 
   finally
   end;
@@ -7209,6 +7340,7 @@ begin
     ediComDocSendSign : Result := DoSendSignComDoc;
 
     ediSendCondra : Result := DoSendCondra;
+    ediSignCondra : Result := DoSignCondra;
 
   else raise Exception.Create('Не описано метод обработки типа документов.');
   end;
