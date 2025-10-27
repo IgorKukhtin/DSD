@@ -108,6 +108,9 @@ type
     cxLabel25: TcxLabel;
     deDepartment_two: TcxButtonEdit;
     GuidesDepartment_two: TdsdGuides;
+    edCFO: TcxButtonEdit;
+    cxLabel26: TcxLabel;
+    GuidesCFO: TdsdGuides;
   private
     { Private declarations }
   public

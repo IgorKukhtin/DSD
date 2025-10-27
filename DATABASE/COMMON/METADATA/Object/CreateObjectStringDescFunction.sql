@@ -1134,8 +1134,15 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_StaffListKind_Comment', zc_Object_StaffListKind(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_StaffListKind_Comment');
  
+  CREATE OR REPLACE FUNCTION zc_ObjectString_CFO_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_CFO_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_CFO_Comment', zc_Object_CFO(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_CFO_Comment');
 
 
+                  
+                  
+                  
+                  
                           
                           
                           
@@ -1743,6 +1750,7 @@ INSERT INTO ObjectStringDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 23.10.25         * zc_ObjectString_CFO_Comment
  27.09.25         * zc_ObjectString_GoodsQuality_Value21
  19.02.25         * zc_ObjectString_MessagePersonalService_Comment
  21.01.25         * zc_ObjectString_GoodsGroupProperty_QualityINN

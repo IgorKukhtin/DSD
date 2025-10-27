@@ -371,6 +371,14 @@ object UnitForm: TUnitForm
         Options.Editing = False
         Width = 93
       end
+      object isnotStaffList: TcxGridDBColumn
+        Caption = #1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1064#1056
+        DataBinding.FieldName = 'isnotStaffList'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object UnitCode_HistoryCost: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1087#1086#1076#1088'. ('#1089'/'#1089' '#1074#1086#1079#1074#1088#1072#1090')'
         DataBinding.FieldName = 'UnitCode_HistoryCost'
@@ -454,6 +462,15 @@ object UnitForm: TUnitForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 70
+      end
+      object CFOName: TcxGridDBColumn
+        Caption = #1062#1060#1054
+        DataBinding.FieldName = 'CFOName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = ' '#9#1062#1077#1085#1090#1088' '#1092#1080#1085#1072#1085#1089#1086#1074#1086#1081' '#1086#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1086#1089#1090#1080
+        Options.Editing = False
+        Width = 131
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -588,6 +605,22 @@ object UnitForm: TUnitForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_notStaffList'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoad_CFO'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -657,6 +690,14 @@ object UnitForm: TUnitForm
     end
     object bbUpdate_notBirthDay: TdxBarButton
       Action = macUpdate_notBirthDay
+      Category = 0
+    end
+    object bbStartLoad_CFO: TdxBarButton
+      Action = macStartLoad_CFO
+      Category = 0
+    end
+    object bbUpdate_notStaffList: TdxBarButton
+      Action = macUpdate_notStaffList
       Category = 0
     end
   end
@@ -867,6 +908,15 @@ object UnitForm: TUnitForm
         end>
       isShowModal = False
     end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = '0'
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <>
+    end
     object macUpdate_isIrna_list: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -908,6 +958,32 @@ object UnitForm: TUnitForm
       Caption = 'actUpdate_isIrna'
       ImageIndex = 66
     end
+    object macUpdate_notStaffList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_notStaffList
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1064#1056'> '#1076#1072'/'#1085#1077#1090
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1064#1056'> '#1076#1072'/'#1085#1077#1090
+      ImageIndex = 79
+    end
+    object actUpdate_notStaffList: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_notStaffList
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_notStaffList
+        end>
+      Caption = 'actUpdate_notStaffList'
+      ImageIndex = 79
+    end
     object macUpdate_notBirthDay: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -933,6 +1009,38 @@ object UnitForm: TUnitForm
         end>
       Caption = 'actUpdate_notBirthDay'
       ImageIndex = 77
+    end
+    object actGetImportSetting_CFO: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSetting_CFO'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' CFO '#1080#1079' '#1092#1072#1081#1083#1072
+    end
+    object macStartLoad_CFO: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_CFO
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1062#1060#1054' '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1079#1072#1074#1077#1088#1096#1077#1085#1072
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1062#1060#1054' '#1080#1079' '#1092#1072#1081#1083#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1062#1060#1054' '#1080#1079' '#1092#1072#1081#1083#1072
+      ImageIndex = 41
+      WithoutNext = True
     end
   end
   object ClientDS: TDataSource
@@ -1090,5 +1198,72 @@ object UnitForm: TUnitForm
     PackSize = 1
     Left = 608
     Top = 152
+  end
+  object spGetImportSettingId: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TUnitForm;zc_Object_ImportSetting_Unit_CFO'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 896
+    Top = 144
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
+    Left = 760
+    Top = 160
+  end
+  object spUpdate_notStaffList: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Unit_notStaffList'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisnotStaffList'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isnotStaffList'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 536
+    Top = 216
   end
 end

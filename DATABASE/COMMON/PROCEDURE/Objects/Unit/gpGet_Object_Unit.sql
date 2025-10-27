@@ -36,7 +36,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                Address TVarChar,
                Comment TVarChar,
                GLN TVarChar, KATOTTG TVarChar,
-               AddressEDIN TVarChar
+               AddressEDIN TVarChar,
+               CFOId Integer, CFOName TVarChar
 ) AS
 $BODY$
 BEGIN
@@ -123,6 +124,8 @@ BEGIN
            , CAST ('' as TVarChar)  AS GLN
            , CAST ('' as TVarChar)  AS KATOTTG
            , CAST ('' as TVarChar)  AS AddressEDIN
+           , CAST (0 as Integer)    AS CFOId
+           , CAST ('' as TVarChar)  AS CFOName
 ;
    ELSE
        RETURN QUERY
@@ -207,6 +210,9 @@ BEGIN
            , ObjectString_Unit_GLN.ValueData         :: TVarChar AS GLN
            , ObjectString_Unit_KATOTTG.ValueData     :: TVarChar AS KATOTTG
            , ObjectString_Unit_AddressEDIN.ValueData :: TVarChar AS AddressEDIN
+ 
+           , Object_CFO.Id                           ::Integer   AS CFOId
+           , Object_CFO.ValueData                    ::TVarChar   AS CFOName
        FROM Object_Unit_View
             LEFT JOIN Object_AccountDirection_View AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = Object_Unit_View.AccountDirectionId
 
@@ -321,6 +327,10 @@ BEGIN
                                 AND ObjectLink_Unit_SheetWorkTime.DescId = zc_ObjectLink_Unit_SheetWorkTime()
             LEFT JOIN Object AS Object_SheetWorkTime ON Object_SheetWorkTime.Id = ObjectLink_Unit_SheetWorkTime.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_CFO
+                                 ON ObjectLink_Unit_CFO.ObjectId = Object_Unit_View.Id
+                                AND ObjectLink_Unit_CFO.DescId = zc_ObjectLink_Unit_CFO()
+            LEFT JOIN Object AS Object_CFO ON Object_CFO.Id = ObjectLink_Unit_CFO.ChildObjectId
       WHERE Object_Unit_View.Id = inId;
    END IF;
 

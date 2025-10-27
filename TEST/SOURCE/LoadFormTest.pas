@@ -43,6 +43,7 @@ type
     procedure LoadCarExternalFormTest;
     procedure LoadCarInfoFormTest;
     procedure LoadCarModelFormTest;
+    procedure LoadCFOFormTest;
     procedure LoadChoiceCellFormTest;
     procedure LoadChoiceCellMovementFormTest;
     procedure LoadClientKindFormTest;
@@ -1339,7 +1340,7 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalForm');
-  ///exit;
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalForm');
@@ -3842,24 +3843,25 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_PersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_PersonalForm');
    // exit;
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitForm');
-   exit;
+  // exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitEditForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitTreeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitTreeForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_ObjectForm');
    exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_SheetWorkTimeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_SheetWorkTimeForm');
+  }
 end;
 
-  procedure TLoadFormTest.LoadUnitPeresortFormTest;
+procedure TLoadFormTest.LoadUnitPeresortFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitPeresortForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitPeresortForm');
@@ -4972,6 +4974,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPersonalByStorageLineForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalByStorageLineEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalByStorageLineEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalEdit_ByStorageLineForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalEdit_ByStorageLineForm');
   exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalEditForm'));
@@ -5080,6 +5085,14 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCardFuelKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCardFuelKindForm');
+end;
+
+procedure TLoadFormTest.LoadCFOFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCFOForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCFOForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCFOEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCFOEditForm');
 end;
 
 procedure TLoadFormTest.LoadCarModelFormTest;

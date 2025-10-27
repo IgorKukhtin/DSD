@@ -1,4 +1,4 @@
-unit PersonalEdit_ByStorageLine;
+unit CFO;
 
 interface
 
@@ -9,7 +9,8 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, cxGridLevel, cxClasses,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, Datasnap.DBClient, cxPropertiesStore, dxBar,
-  Vcl.ActnList, DataModul, ParentForm, dsdDB, dsdAction, dxSkinsCore,
+  Vcl.ActnList, DataModul, ParentForm, dsdDB, dsdAction, dsdAddOn, dxBarExtItems,
+  cxGridBandedTableView, cxGridDBBandedTableView, cxCheckBox, dxSkinsCore,
   dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
   dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
   dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
@@ -21,13 +22,10 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dsdAddOn, dxBarExtItems, cxButtonEdit, dsdCommon, cxContainer, Vcl.Menus,
-  Vcl.ComCtrls, dxCore, cxDateUtils, cxDropDownEdit, cxCalendar, Vcl.StdCtrls,
-  cxButtons, dsdGuides, cxTextEdit, cxMaskEdit, cxLabel, Vcl.ExtCtrls;
+  cxBlobEdit, dsdCommon;
 
 type
-  TPersonalEdit_ByStorageLineForm = class(TParentForm)
-    cxGridDBTableView: TcxGridDBTableView;
+  TCFOForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -38,53 +36,29 @@ type
     ActionList: TActionList;
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
-    actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
     spSelect: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
-    isErased: TcxGridDBColumn;
-    bbErased: TdxBarButton;
-    bbUnErased: TdxBarButton;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
+    bbSetErased: TdxBarButton;
+    bbSetUnErased: TdxBarButton;
     dsdGridToExcel: TdsdGridToExcel;
+    bbToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
-    bbGridToExcel: TdxBarButton;
-    bbChoiceGuides: TdxBarButton;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     spErasedUnErased: TdsdStoredProc;
+    bbChoice: TdxBarButton;
+    cxGridDBTableView: TcxGridDBTableView;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    ProtocolOpenForm: TdsdOpenForm;
-    bbProtocolOpenForm: TdxBarButton;
-    spInsertUpdate: TdsdStoredProc;
-    actUpdateObject: TdsdUpdateDataSet;
-    actStorageLineChoice: TOpenChoiceForm;
-    bbOpenFormTTN: TdxBarButton;
-    actShowAll: TBooleanStoredProcAction;
-    bbShowAll: TdxBarButton;
-    Panel1: TPanel;
-    cxLabel6: TcxLabel;
-    cePersonal: TcxButtonEdit;
-    GuidesPersonal: TdsdGuides;
-    cxLabel7: TcxLabel;
-    ceUnit: TcxButtonEdit;
-    GuidesUnit: TdsdGuides;
-    cxLabel5: TcxLabel;
-    cePosition: TcxButtonEdit;
-    cxLabel4: TcxLabel;
-    cePositionLevel: TcxButtonEdit;
-    Panel2: TPanel;
-    cxButton1: TcxButton;
-    dsdFormClose1: TdsdFormClose;
-    GuidesPosition: TdsdGuides;
-    GuidesPositionLevel: TdsdGuides;
-    edDateIn: TcxDateEdit;
-    cxLabel3: TcxLabel;
-    InsertRecord: TInsertRecord;
-    Ord: TcxGridDBColumn;
-    FormParams: TdsdFormParams;
+    actInsert: TdsdInsertUpdateAction;
+    dsdSetErased: TdsdUpdateErased;
+    dsdSetUnErased: TdsdUpdateErased;
+    Comment: TcxGridDBColumn;
+    MemberName: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -96,6 +70,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TPersonalEdit_ByStorageLineForm);
+  RegisterClass(TCFOForm);
 
 end.

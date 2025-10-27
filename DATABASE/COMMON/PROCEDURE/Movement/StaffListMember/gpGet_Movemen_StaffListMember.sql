@@ -77,10 +77,10 @@ BEGIN
              , CAST ('' as TVarChar)    AS PersonalServiceListName
              , CAST (0 as Integer)      AS PersonalServiceListOfficialId 
              , CAST ('' as TVarChar)    AS PersonalServiceListOfficialName
-             , CAST (0 as Integer)      AS PersonalServiceListCardSecondId 
-             , CAST ('' as TVarChar)    AS PersonalServiceListCardSecondName
              , 0                        AS ServiceListId_AvanceF2
              , CAST ('' as TVarChar)    AS ServiceListName_AvanceF2
+             , CAST (0 as Integer)      AS ServiceListCardSecondId 
+             , CAST ('' as TVarChar)    AS ServiceListCardSecondName
              , CAST (0 as Integer)      AS SheetWorkTimeId 
              , CAST ('' as TVarChar)    AS SheetWorkTimeName
              , CAST (0 as Integer)      AS StorageLineId
@@ -168,10 +168,11 @@ BEGIN
            , Object_PersonalServiceList.ValueData             AS PersonalServiceListName
            , Object_PersonalServiceListOfficial.Id            AS PersonalServiceListOfficialId
            , Object_PersonalServiceListOfficial.ValueData     AS PersonalServiceListOfficialName
-           , Object_PersonalServiceListCardSecond.Id          AS PersonalServiceListCardSecondId
-           , Object_PersonalServiceListCardSecond.ValueData   AS PersonalServiceListCardSecondName
            , Object_PersonalServiceListAvance_F2.Id           AS ServiceListId_AvanceF2
            , Object_PersonalServiceListAvance_F2.ValueData    AS ServiceListName_AvanceF2
+           , Object_PersonalServiceListCardSecond.Id          AS ServiceListCardSecondId
+           , Object_PersonalServiceListCardSecond.ValueData   AS ServiceListCardSecondName
+
 
            , Object_SheetWorkTime.Id                          AS SheetWorkTimeId
            , Object_SheetWorkTime.ValueData                   AS SheetWorkTimeName

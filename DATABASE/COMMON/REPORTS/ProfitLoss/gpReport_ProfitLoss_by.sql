@@ -23,7 +23,10 @@ RETURNS TABLE (OperDate           TDateTime
             , BranchName_pl       TVarChar
             , UnitId_pl           Integer
             , UnitName_pl         TVarChar
-            , Unit_plDescName     TVarChar
+            , Unit_plDescName     TVarChar                 
+            , CFOId Integer, CFOName TVarChar
+            , DepartmentId Integer, DepartmentName TVarChar
+            , Department_twoId Integer, Department_twoName TVarChar
             , InfoMoneyId               Integer     
             , InfoMoneyGroupCode        Integer
             , InfoMoneyDestinationCode  Integer
@@ -165,6 +168,15 @@ BEGIN
                              AND MovementString.MovementId IN (SELECT DISTINCT tmpData.MovementId_comment FROM tmpData)
                            )
 
+   , tmpObjectLink AS (SELECT ObjectLink.*
+                       FROM ObjectLink
+                       WHERE ObjectLink.ObjectId IN (SELECT DISTINCT tmpData.UnitId_pl FROM tmpData) 
+                         AND ObjectLink.DescId IN (zc_ObjectLink_Unit_CFO()
+                                                 , zc_ObjectLink_Unit_Department()
+                                                 , zc_ObjectLink_Unit_Department_two()
+                                                 )
+                       )
+
        SELECT -- Дата             
               tmp.OperDate            ::TDateTime
             -- месяц
@@ -192,6 +204,13 @@ BEGIN
             , tmp.UnitId_pl            ::Integer  AS UnitId_pl
             , Object_Unit_pl.ValueData ::TVarChar AS UnitName_pl
             , ObjectDesc_Unit_pl.ItemName ::TVarChar AS Unit_plDescName
+            , Object_CFO.Id              ::Integer   AS CFOId
+            , Object_CFO.ValueData       ::TVarChar  AS CFOName
+            , Object_Department.Id                   AS DepartmentId
+            , Object_Department.ValueData            AS DepartmentName
+            , Object_Department_two.Id               AS Department_twoId
+            , Object_Department_two.ValueData        AS Department_twoName
+
             -- Статья УП        
             , tmp.InfoMoneyId                          ::Integer     
             , View_InfoMoney.InfoMoneyGroupCode        ::Integer
@@ -248,6 +267,7 @@ BEGIN
             , tmp.OperCount_sh        ::TFloat
             -- Сумма
             , tmp.OperSumm            ::TFloat
+
        FROM tmpData AS tmp
             LEFT JOIN MovementDesc ON MovementDesc.Id = tmp.MovementDescId
             LEFT JOIN Object_ProfitLoss_View AS View_ProfitLoss ON View_ProfitLoss.ProfitLossId = tmp.ProfitLossId
@@ -283,6 +303,21 @@ BEGIN
             LEFT JOIN tmpMovementString AS MovementString_Commet
                                         ON MovementString_Commet.MovementId = tmp.MovementId_comment
                                        AND MovementString_Commet.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN tmpObjectLink AS ObjectLink_Unit_CFO
+                                 ON ObjectLink_Unit_CFO.ObjectId = Object_Unit_pl.Id
+                                AND ObjectLink_Unit_CFO.DescId = zc_ObjectLink_Unit_CFO()
+            LEFT JOIN Object AS Object_CFO ON Object_CFO.Id = ObjectLink_Unit_CFO.ChildObjectId
+            
+            LEFT JOIN tmpObjectLink AS ObjectLink_Unit_Department
+                                 ON ObjectLink_Unit_Department.ObjectId = Object_Unit_pl.Id
+                                AND ObjectLink_Unit_Department.DescId = zc_ObjectLink_Unit_Department()
+            LEFT JOIN Object AS Object_Department ON Object_Department.Id = ObjectLink_Unit_Department.ChildObjectId
+
+            LEFT JOIN tmpObjectLink AS ObjectLink_Unit_Department_two
+                                 ON ObjectLink_Unit_Department_two.ObjectId = Object_Unit_pl.Id
+                                AND ObjectLink_Unit_Department_two.DescId = zc_ObjectLink_Unit_Department_two()
+            LEFT JOIN Object AS Object_Department_two ON Object_Department_two.Id = ObjectLink_Unit_Department_two.ChildObjectId
        ;
 END;
 $BODY$

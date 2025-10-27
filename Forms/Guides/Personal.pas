@@ -142,6 +142,9 @@ type
     bbUpdate_PersonalServiceListCardSecond: TdxBarButton;
     actOpenFormPersonalByStorageLine: TdsdOpenForm;
     bbOpenFormPersonalByStorageLine: TdxBarButton;
+    actOpenPersonalEdit_ByStorageLine: TdsdOpenForm;
+    dxBarButton1: TdxBarButton;
+    StorageLineName_all: TcxGridDBColumn;
   private
     { Private declarations }
   public
