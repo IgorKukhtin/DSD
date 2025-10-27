@@ -258,6 +258,9 @@ type
     actSelectData_Condra: TdsdExecStoredProc;
     DocId_vch: TcxGridDBColumn;
     DocId_vch_Condra: TcxGridDBColumn;
+    mactVchasnoEDISignCondra: TMultiAction;
+    actVchasnoEDISignCondra: TdsdVchasnoEDIAction;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

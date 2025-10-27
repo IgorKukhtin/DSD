@@ -4,7 +4,6 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
   ClientWidth = 1368
   AddOnFormData.OnLoadAction = actSetDefaults
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -474
   ExplicitWidth = 1384
   ExplicitHeight = 492
   PixelsPerInch = 96
@@ -2580,6 +2579,64 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       ErrorText.MultiSelectSeparator = ','
       HeaderDataSet = DataCondraCDS
     end
+    object mactVchasnoEDISignCondra: TMultiAction
+      Category = 'VchasnoEDI'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecPrintStoredProc
+        end
+        item
+          Action = actVchasnoEDISignCondra
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1086#1076#1087#1080#1089#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077'> '#1042#1095 +
+        #1072#1089#1085#1086' EDI?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077'> '#1087#1086#1076#1087#1080#1089#1072#1085' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1055#1086#1076#1087#1080#1089#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077'>'
+      Hint = #1055#1086#1076#1087#1080#1089#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077'> '#1042#1095#1072#1089#1085#1086' EDI'
+      ImageIndex = 84
+    end
+    object actVchasnoEDISignCondra: TdsdVchasnoEDIAction
+      Category = 'VchasnoEDI'
+      MoveParams = <>
+      Caption = 'actVchasnoEDISignDelnot'
+      Host.Value = 'https://edi.vchasno.ua/api/v2/additional-documents'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Token.Value = 'VgNbifqqRwQrl0csYoiEGGo66xFvVs-WDWWytda8gSGtubbj7eKcZWl_XzkWbEmk'
+      Token.DataType = ftString
+      Token.MultiSelectSeparator = ','
+      DateFrom.Value = 43313d
+      DateFrom.DataType = ftDateTime
+      DateFrom.MultiSelectSeparator = ','
+      DateTo.Value = 43313d
+      DateTo.DataType = ftDateTime
+      DateTo.MultiSelectSeparator = ','
+      EDI = EDI
+      EDIDocType = ediSignCondra
+      KeyFileName.Value = ''
+      KeyFileName.Component = FormParams
+      KeyFileName.ComponentItem = 'FileNameKey'
+      KeyFileName.DataType = ftString
+      KeyFileName.MultiSelectSeparator = ','
+      KeyUserName.Value = ''
+      KeyUserName.Component = FormParams
+      KeyUserName.ComponentItem = 'UserNameKey'
+      KeyUserName.DataType = ftString
+      KeyUserName.MultiSelectSeparator = ','
+      ShowErrorMessages.Value = True
+      ShowErrorMessages.DataType = ftBoolean
+      ShowErrorMessages.MultiSelectSeparator = ','
+      ErrorText.Value = ''
+      ErrorText.DataType = ftString
+      ErrorText.MultiSelectSeparator = ','
+      HeaderDataSet = PrintHeaderCDS
+      ListDataSet = PrintItemsCDS
+    end
   end
   inherited MasterDS: TDataSource
     Top = 56
@@ -2937,6 +2994,10 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
         item
           Visible = True
           ItemName = 'bbVchasnoEDICONDRA'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
         end>
     end
     object dxBarSeparator1: TdxBarSeparator
@@ -2986,6 +3047,10 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
     end
     object bbVchasnoEDICONDRA: TdxBarButton
       Action = mactVchasnoEDICONDRA
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = mactVchasnoEDISignCondra
       Category = 0
     end
   end

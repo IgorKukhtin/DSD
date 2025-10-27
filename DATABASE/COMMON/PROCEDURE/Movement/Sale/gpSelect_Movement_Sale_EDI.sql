@@ -495,10 +495,9 @@ END IF;
 
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
            , MovementString_DealId.ValueData            AS DealId
-           , CASE WHEN MovementString_DocId_vch_Condra.ValueData <> '' AND vbUserId = 5
-                       THEN MovementString_DocId_vch_Condra.ValueData
-                  ELSE MovementString_DocumentId_vch.ValueData
-             END :: TVarChar AS DocumentId_vch
+
+           , MovementString_DocumentId_vch.ValueData :: TVarChar AS DocumentId_vch
+
            , MovementString_VchasnoId.ValueData         AS VchasnoId
            , MovementString_DocId_vch_Condra.ValueData  AS DocId_vch_Condra
 

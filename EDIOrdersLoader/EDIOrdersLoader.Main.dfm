@@ -11676,6 +11676,68 @@ object MainForm: TMainForm
         end>
       Caption = 'actUpdateEdiCONDRATrue'
     end
+    object mactVchasnoEDISignCondra: TMultiAction
+      Category = 'QualityDoc'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecPrintStoredProc
+        end
+        item
+          Action = actVchasnoEDISignCondra
+        end>
+      Caption = #1055#1086#1076#1087#1080#1089#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077'>'
+      Hint = #1055#1086#1076#1087#1080#1089#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077'> '#1042#1095#1072#1089#1085#1086' EDI'
+      ImageIndex = 84
+    end
+    object actVchasnoEDISignCondra: TdsdVchasnoEDIAction
+      Category = 'QualityDoc'
+      MoveParams = <>
+      Caption = 'actVchasnoEDISignDelnot'
+      Host.Value = 'https://edi.vchasno.ua/api/v2/additional-documents'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Token.Value = 'VgNbifqqRwQrl0csYoiEGGo66xFvVs-WDWWytda8gSGtubbj7eKcZWl_XzkWbEmk'
+      Token.DataType = ftString
+      Token.MultiSelectSeparator = ','
+      DateFrom.Value = 43313d
+      DateFrom.DataType = ftDateTime
+      DateFrom.MultiSelectSeparator = ','
+      DateTo.Value = 43313d
+      DateTo.DataType = ftDateTime
+      DateTo.MultiSelectSeparator = ','
+      EDI = EDI
+      EDIDocType = ediSignCondra
+      KeyFileName.Value = ''
+      KeyFileName.Component = FormParams
+      KeyFileName.ComponentItem = 'FileNameKey'
+      KeyFileName.DataType = ftString
+      KeyFileName.MultiSelectSeparator = ','
+      KeyUserName.Value = ''
+      KeyUserName.Component = FormParams
+      KeyUserName.ComponentItem = 'UserNameKey'
+      KeyUserName.DataType = ftString
+      KeyUserName.MultiSelectSeparator = ','
+      ShowErrorMessages.Value = True
+      ShowErrorMessages.DataType = ftBoolean
+      ShowErrorMessages.MultiSelectSeparator = ','
+      ErrorText.Value = ''
+      ErrorText.DataType = ftString
+      ErrorText.MultiSelectSeparator = ','
+      HeaderDataSet = PrintHeaderCDS
+      ListDataSet = PrintItemsCDS
+    end
+    object actUpdateEdiCONDRASignTrue: TdsdExecStoredProc
+      Category = 'QualityDoc'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateEdiCondra
+      StoredProcList = <
+        item
+          StoredProc = spUpdateEdiCondra
+        end>
+      Caption = 'actUpdateEdiCONDRATrue'
+    end
   end
   object spHeaderOrder: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_EDIOrder'
@@ -12528,5 +12590,29 @@ object MainForm: TMainForm
     PackSize = 1
     Left = 176
     Top = 464
+  end
+  object spUpdateEdiCondraSign: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Edi'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_toEDI'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_MovementBoolean_EdiCONDRA_Sign'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 112
+    Top = 268
   end
 end

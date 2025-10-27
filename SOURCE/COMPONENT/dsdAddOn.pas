@@ -6390,10 +6390,11 @@ begin
   if not Assigned(FDataSet) then Exit;
   if not FDataSet.Active then Exit;
   if not Assigned(Column) and not Assigned(FCheckColumn) then Exit;
-  if (not FDataSet.Filtered) then
+  if (not FDataSet.Filtered) and (1=1) then
   begin
       fExit:= true;
       for Item in FColumnList do if TColumnFieldFilterItem(Item).FOldStr <> '' then fExit:= false;
+      if fExit then if (FOldStr <> '') or not CheckSelected then fExit:= false;
       if fExit then Exit;
   end;
 

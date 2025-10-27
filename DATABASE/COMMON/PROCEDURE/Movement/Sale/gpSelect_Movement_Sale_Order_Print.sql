@@ -695,9 +695,9 @@ BEGIN
                   , CASE WHEN COALESCE (tmpObject_GoodsPropertyValue.BoxCount, 0) > 1 THEN tmpResult1.AmountBox_Weighing_scan ELSE 0 END  AS AmountBox_Weighing_scan
                     -- Заказ ящики
                   , CAST (CASE WHEN COALESCE (tmpObject_GoodsPropertyValue.BoxCount, 0) > 1   ---было >0
-                                    THEN CAST ((tmpResult1.Amount_Order) / COALESCE (tmpObject_GoodsPropertyValue.BoxCount, 0) AS NUMERIC (16, 0))
+                                    THEN CAST ((tmpResult1.Amount_Order) / COALESCE (tmpObject_GoodsPropertyValue.BoxCount, 0) AS NUMERIC (16, 1))
                                ELSE 0
-                          END AS NUMERIC(16,0)) :: TFloat AS AmountBox_order
+                          END AS NUMERIC(16,1)) :: TFloat AS AmountBox_order
              FROM ( SELECT tmpResult.GoodsId
                          , tmpResult.GoodsKindId
 
