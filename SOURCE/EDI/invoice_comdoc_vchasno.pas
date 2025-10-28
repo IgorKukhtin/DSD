@@ -284,6 +284,7 @@ type
     function Get_ОдиницяВиміру: UnicodeString;
     function Get_ПДВ: UnicodeString;
     function Get_Ціна: UnicodeString;
+    function Get_СтавкаПДВ: UnicodeString;
     function Get_ВсьогоПоРядку: IXMLВсьогоПоРядкуType;
     procedure Set_НомПоз(Value: Integer);
     procedure Set_Штрихкод(Value: UnicodeString);
@@ -295,6 +296,7 @@ type
     procedure Set_ОдиницяВиміру(Value: UnicodeString);
     procedure Set_ПДВ(Value: UnicodeString);
     procedure Set_Ціна(Value: UnicodeString);
+    procedure Set_СтавкаПДВ(Value: UnicodeString);
     { Methods & Properties }
     property НомПоз: Integer read Get_НомПоз write Set_НомПоз;
     property Штрихкод: UnicodeString read Get_Штрихкод write Set_Штрихкод;
@@ -306,6 +308,7 @@ type
     property ОдиницяВиміру: UnicodeString read Get_ОдиницяВиміру write Set_ОдиницяВиміру;
     property ПДВ: UnicodeString read Get_ПДВ write Set_ПДВ;
     property Ціна: UnicodeString read Get_Ціна write Set_Ціна;
+    property СтавкаПДВ: UnicodeString read Get_СтавкаПДВ write Set_СтавкаПДВ;
     property ВсьогоПоРядку: IXMLВсьогоПоРядкуType read Get_ВсьогоПоРядку;
   end;
 
@@ -504,6 +507,7 @@ type
     function Get_ОдиницяВиміру: UnicodeString;
     function Get_ПДВ: UnicodeString;
     function Get_Ціна: UnicodeString;
+    function Get_СтавкаПДВ: UnicodeString;
     function Get_ВсьогоПоРядку: IXMLВсьогоПоРядкуType;
     procedure Set_НомПоз(Value: Integer);
     procedure Set_Штрихкод(Value: UnicodeString);
@@ -515,6 +519,7 @@ type
     procedure Set_ОдиницяВиміру(Value: UnicodeString);
     procedure Set_ПДВ(Value: UnicodeString);
     procedure Set_Ціна(Value: UnicodeString);
+    procedure Set_СтавкаПДВ(Value: UnicodeString);
   public
     procedure AfterConstruction; override;
   end;
@@ -1024,6 +1029,16 @@ end;
 procedure TXMLРядокType.Set_Ціна(Value: UnicodeString);
 begin
   ChildNodes['Ціна'].NodeValue := Value;
+end;
+
+function TXMLРядокType.Get_СтавкаПДВ: UnicodeString;
+begin
+  Result := ChildNodes['СтавкаПДВ'].Text;
+end;
+
+procedure TXMLРядокType.Set_СтавкаПДВ(Value: UnicodeString);
+begin
+  ChildNodes['ПДВ'].NodeValue := Value;
 end;
 
 function TXMLРядокType.Get_ВсьогоПоРядку: IXMLВсьогоПоРядкуType;
