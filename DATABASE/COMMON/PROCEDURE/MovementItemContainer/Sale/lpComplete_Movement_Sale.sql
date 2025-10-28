@@ -596,15 +596,18 @@ END IF;*/
 
 
      -- Если учет по ячейкам - РАСХОД - Учет будет для От КОГО
-     vbIsPartionCell_from:= lfGet_Object_Unit_isPartionCell (vbOperDate, vbUnitId_From)
-                         OR (inUserId IN (5, zc_Enum_Process_Auto_PrimeCost() :: Integer)
-                         AND vbUnitId_From = zc_Unit_RK()
-                         AND vbOperDate >= lfGet_Object_Unit_PartionDate_isPartionCell()
-                            )
-                         OR (vbOperDate >= lfGet_Object_Unit_PartionDate_isPartionCell()
-                         AND vbUnitId_From = zc_Unit_RK()
-                            )
-                           ;
+     IF vbMovementDescId = zc_Movement_SaleAsset()
+     THEN vbIsPartionCell_from:= FALSE;
+     ELSE vbIsPartionCell_from:= lfGet_Object_Unit_isPartionCell (vbOperDate, vbUnitId_From)
+                              OR (inUserId IN (5, zc_Enum_Process_Auto_PrimeCost() :: Integer)
+                              AND vbUnitId_From = zc_Unit_RK()
+                              AND vbOperDate >= lfGet_Object_Unit_PartionDate_isPartionCell()
+                                 )
+                              OR (vbOperDate >= lfGet_Object_Unit_PartionDate_isPartionCell()
+                              AND vbUnitId_From = zc_Unit_RK()
+                                 )
+                                ;
+     END IF;
 
      -- проверка
      IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.StatusId = zc_Enum_Status_Complete())
@@ -2210,7 +2213,7 @@ end if;
                        OR COALESCE (tmpItem_start.OperCount_Partner_start, 0)        <> COALESCE (tmpItem.OperCount_Partner, 0)
                    )
         AND inUserId IN (5, zc_Enum_Process_Auto_PrimeCost() :: Integer)
-        AND inUserId <> 5
+        --AND inUserId <> 5
         --AND 1=0
      THEN
          RAISE EXCEPTION 'Ошибка.Подбор партий.% % № <%> от <%> %Товар = <%> %Вид = <%> %Кол-во = <%> %Кол-во по партиям = <%> %Кол.Пок = <%> %Кол.Пок по партиям = <%> %Id = <%>'
@@ -2513,6 +2516,7 @@ end if;
 
      -- Проверка - RK + Склад Неликвид
      IF vbUnitId_From IN (zc_Unit_RK(), 9558031) AND COALESCE (vbMovementId_Order, 0) = 0
+    AND vbMovementDescId <> zc_Movement_SaleAsset()
     AND inUserId <> zc_Enum_Process_Auto_PrimeCost()
     AND inUserId <> 5
     AND vbUserId_save > 0
