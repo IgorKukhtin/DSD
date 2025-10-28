@@ -7,21 +7,20 @@ inherited Report_StaffListMember_byPersonalForm: TReport_StaffListMember_byPerso
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 79
     Width = 998
-    Height = 322
+    Height = 344
     TabOrder = 3
     ExplicitTop = 79
     ExplicitWidth = 998
     ExplicitHeight = 322
-    ClientRectBottom = 322
+    ClientRectBottom = 344
     ClientRectRight = 998
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 998
       ExplicitHeight = 322
       inherited cxGrid: TcxGrid
         Width = 998
-        Height = 322
+        Height = 344
         ExplicitWidth = 998
         ExplicitHeight = 322
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -185,9 +184,7 @@ inherited Report_StaffListMember_byPersonalForm: TReport_StaffListMember_byPerso
   end
   inherited Panel: TPanel
     Width = 998
-    Height = 53
     ExplicitWidth = 998
-    ExplicitHeight = 53
     inherited deStart: TcxDateEdit
       Left = 893
       Top = 17
@@ -219,13 +216,13 @@ inherited Report_StaffListMember_byPersonalForm: TReport_StaffListMember_byPerso
       ExplicitLeft = 939
     end
     object cxLabel3: TcxLabel
-      Left = 25
-      Top = 0
-      Caption = #1060#1080#1079'.'#1051#1080#1094#1086
+      Left = 339
+      Top = 5
+      Caption = #1060#1080#1079'.'#1051#1080#1094#1086':'
     end
     object ceMember: TcxButtonEdit
-      Left = 25
-      Top = 17
+      Left = 397
+      Top = 4
       Properties.Buttons = <
         item
           Default = True
@@ -236,8 +233,8 @@ inherited Report_StaffListMember_byPersonalForm: TReport_StaffListMember_byPerso
       Width = 256
     end
     object cbErased: TcxCheckBox
-      Left = 303
-      Top = 17
+      Left = 665
+      Top = 4
       Caption = #1059#1095#1080#1090#1099#1074#1072#1090#1100' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       ParentShowHint = False
       ShowHint = False
@@ -245,6 +242,23 @@ inherited Report_StaffListMember_byPersonalForm: TReport_StaffListMember_byPerso
       TabOrder = 6
       Visible = False
       Width = 140
+    end
+    object ceUnit: TcxButtonEdit
+      Left = 92
+      Top = 4
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 233
+    end
+    object cxLabel7: TcxLabel
+      Left = 3
+      Top = 5
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -488,6 +502,14 @@ inherited Report_StaffListMember_byPersonalForm: TReport_StaffListMember_byPerso
     StoredProcName = 'gpReport_StaffListMember_byPersonal'
     Params = <
       item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inMemberId'
         Value = Null
         Component = GuidesMember
@@ -657,5 +679,36 @@ inherited Report_StaffListMember_byPersonalForm: TReport_StaffListMember_byPerso
     PackSize = 1
     Left = 304
     Top = 288
+  end
+  object GuidesUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceUnit
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 480
+    Top = 65535
   end
 end

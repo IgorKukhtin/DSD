@@ -145,6 +145,15 @@ type
     actOpenPersonalEdit_ByStorageLine: TdsdOpenForm;
     dxBarButton1: TdxBarButton;
     StorageLineName_all: TcxGridDBColumn;
+    spInsert_PersonalByStorageLine: TdsdStoredProc;
+    bb: TdxBarButton;
+    actInsert_PersonalByStorageLine: TdsdExecStoredProc;
+    macInsert_PersonalByStorageLine: TMultiAction;
+    macInsert_PersonalByStorageLine_list: TMultiAction;
+    spDelete_PersonalByStorageLine: TdsdStoredProc;
+    actDelete_PersonalByStorageLine: TdsdExecStoredProc;
+    macDelete_PersonalByStorageLine: TMultiAction;
+    bbDelete_PersonalByStorageLine: TdxBarButton;
   private
     { Private declarations }
   public

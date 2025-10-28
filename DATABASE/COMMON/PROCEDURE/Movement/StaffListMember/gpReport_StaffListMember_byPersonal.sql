@@ -1,8 +1,10 @@
 -- Function: gpSelect_StaffListMember_byPersonal()
 
 DROP FUNCTION IF EXISTS gpReport_StaffListMember_byPersonal (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_StaffListMember_byPersonal (Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_StaffListMember_byPersonal(
+    IN inUnitId            Integer ,
     IN inMemberId          Integer ,
     IN inIsErased          Boolean ,
     IN inSession           TVarChar    -- сессия пользователя
@@ -37,9 +39,15 @@ BEGIN
      RETURN QUERY
      WITH
            tmpViewPersonal AS (SELECT *
-                               FROM Object_Personal_View
-                               WHERE (Object_Personal_View.isERased = inIsErased OR inIsErased = TRUE)
-                                 AND (Object_Personal_View.MemberId = inMemberId OR inMemberId = 0)
+                               FROM (SELECT *
+                                          -- есть задвоенные сотрудники для разных StorageLine для них не нужно дублировать документ приема
+                                          , ROW_NUMBER() OVER (PARTITION BY tmp.MemberId, tmp.PositionId, COALESCE (tmp.PositionLevelId,0), tmp.UnitId/*, tmp.DateIn*/ ORDER BY tmp.isMain DESC, tmp.DateIn, tmp.PersonalId ASC) AS Ord_sl -- 
+                                     FROM Object_Personal_View AS tmp
+                                     WHERE (tmp.isERased = inIsErased OR inIsErased = TRUE)
+                                       AND (tmp.MemberId = inMemberId OR inMemberId = 0)
+                                       AND (tmp.UnitId = inUnitId OR inUnitId = 0)
+                                     ) AS tmp
+                               WHERE tmp.Ord_sl = 1
                                )
            --вспомогательная, если есть перевод но нет второй записи с переводом - берем сотр. с большим Id 
          , tmp_PersonalDop AS (SELECT tmpViewPersonal.*
@@ -562,11 +570,13 @@ $BODY$
 -- SELECT * FROM gpReport_StaffListMember_byPersonal (inMemberId:= 0, inIsErased:=true, inSession:= zfCalc_UserAdmin())
 
  /*  
-      заполнение документов ШР сотрудники
+      заполнение документов ШР сотрудники    
+      
+      -- inUnitId = 8439    -- "Участок мясного сырья"
  WITH 
  tmpData AS (
             SELECT tmp.*
-            FROM gpReport_StaffListMember_byPersonal (inMemberId:= 0 , inIsErased:=true, inSession:= zfCalc_UserAdmin())  AS tmp
+            FROM gpReport_StaffListMember_byPersonal (inUnitId := 0, inMemberId:= 0 , inIsErased:=true, inSession:= zfCalc_UserAdmin())  AS tmp
            -- WHERE tmp.MemberId <> 11121446 
             )
 
