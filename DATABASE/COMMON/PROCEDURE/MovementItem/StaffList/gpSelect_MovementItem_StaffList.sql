@@ -329,7 +329,7 @@ BEGIN
               -- ФОП за місяць Staff_Price * TotalStaffCount + Staff_Summ_MK + Staff_Summ_real + Staff_Summ_add
             , CASE
                    WHEN COALESCE (MovementItem.Amount, 0) < 0.5
-                        THEN 0
+                        THEN COALESCE (MovementItem.Staff_Summ_add, 0)
 
                    WHEN Object_StaffPaidKind.ValueData ILIKE '%Тариф%' AND Object_StaffPaidKind.ValueData ILIKE '%год%'
                         THEN ( COALESCE  (MovementItem.Staff_Price, 0)
@@ -388,7 +388,7 @@ BEGIN
               -- ЗП для 1-єї шт.од до оподаткуання   WageFund / AmountReport
             , CASE WHEN Object_StaffPaidKind.ValueData ILIKE '%Тариф%' AND Object_StaffPaidKind.ValueData ILIKE '%год%'
                    THEN CASE WHEN COALESCE (MovementItem.Amount, 0) < 0.5
-                                  THEN 0
+                                  THEN COALESCE (MovementItem.Staff_Summ_add, 0)
 
                              ELSE ( COALESCE  (MovementItem.Staff_Price, 0)
                                   * (CASE WHEN COALESCE (MovementItem.Amount, 0) <> 0
@@ -404,7 +404,7 @@ BEGIN
                         END
                    ELSE
                         CASE WHEN COALESCE (MovementItem.Amount, 0) < 0.5
-                                  THEN 0
+                                  THEN COALESCE (MovementItem.Staff_Summ_add, 0)
 
                              WHEN Object_StaffPaidKind.ValueData ILIKE '%Зміни%'
                                   THEN COALESCE (MovementItem.TotalStaffCount, 0) * COALESCE (MovementItem.Staff_Price, 0)
