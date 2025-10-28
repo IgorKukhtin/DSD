@@ -7,33 +7,16 @@ CREATE OR REPLACE FUNCTION gpMovementItem_LossAsset_SetErased(
    OUT outIsErased           Boolean              , -- новое значение
     IN inSession             TVarChar               -- текущий пользователь
 )
-  RETURNS Boolean
+RETURNS Boolean
 AS
 $BODY$
-   DECLARE vbMovementId Integer;
-   DECLARE vbStatusId Integer;
    DECLARE vbUserId Integer;
 BEGIN
+  -- проверка прав пользователя на вызов процедуры
   vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_MI_LossAsset());
 
   -- устанавливаем новое значение
-  outIsErased := TRUE;
-
-  -- Обязательно меняем
-  UPDATE MovementItem SET isErased = TRUE WHERE Id = inMovementItemId
-         RETURNING MovementId INTO vbMovementId;
-
-  -- определяем <Статус>
-  vbStatusId := (SELECT CASE WHEN StatusId_next = zc_Enum_Status_UnComplete() THEN StatusId_next ELSE StatusId END FROM Movement WHERE Id = vbMovementId);
-  -- проверка - проведенные/удаленные документы Изменять нельзя
-  IF vbStatusId <> zc_Enum_Status_UnComplete() AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
-  THEN
-      RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
-  END IF;
-
-  -- пересчитали Итоговые суммы по накладной
-  PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
-
+  outIsErased:= lpSetErased_MovementItem (inMovementItemId:= inMovementItemId, inUserId:= vbUserId);
 
 END;
 $BODY$
