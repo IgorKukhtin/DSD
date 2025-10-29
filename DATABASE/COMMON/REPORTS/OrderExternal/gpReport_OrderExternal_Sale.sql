@@ -103,7 +103,17 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbDiffTax TFloat;
+
+   DECLARE vbOperDate_Begin1 TDateTime;
+   DECLARE vbScript   TEXT;
+   DECLARE vb1        TEXT;
+   DECLARE vbValue1   Integer;
+   DECLARE vbTime1    INTERVAL;
 BEGIN
+     -- сразу запомнили время начала выполнения Проц.
+     vbOperDate_Begin1:= CLOCK_TIMESTAMP();
+
+
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
@@ -257,7 +267,8 @@ BEGIN
                                , CASE WHEN EXTRACT (HOUR FROM MovementDate_CarInfo.ValueData) < 8 THEN DATE_TRUNC ('DAY', MovementDate_CarInfo.ValueData) - INTERVAL '1 DAY'
                                       ELSE DATE_TRUNC ('DAY', MovementDate_CarInfo.ValueData)
                                  END  AS OperDate_CarInfo_date
-                               , COALESCE (MovementBoolean_Manual.ValueData, FALSE) ::Boolean AS isManual_Order
+                               -- врменно отключил
+                               -- , COALESCE (MovementBoolean_Manual.ValueData, FALSE) ::Boolean AS isManual_Order
                            FROM Movement
 
                                LEFT JOIN MovementDate AS MovementDate_OperDatePartner
@@ -294,9 +305,9 @@ BEGIN
                                                             ON MovementLinkObject_Route.MovementId = Movement_Order.Id
                                                            AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
 
-                               LEFT JOIN MovementBoolean AS MovementBoolean_Manual
+                               /*LEFT JOIN MovementBoolean AS MovementBoolean_Manual
                                                          ON MovementBoolean_Manual.MovementId = Movement_Order.Id
-                                                        AND MovementBoolean_Manual.DescId = zc_MovementBoolean_Manual()
+                                                        AND MovementBoolean_Manual.DescId = zc_MovementBoolean_Manual()*/
 
                            WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                          --WHERE MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
@@ -305,6 +316,7 @@ BEGIN
                              AND (COALESCE (MovementLinkObject_To.ObjectId,0) = CASE WHEN inToId <> 0 THEN inToId ELSE COALESCE (MovementLinkObject_To.ObjectId,0) END)
                              AND (COALESCE (MovementLinkObject_From.ObjectId,0) = CASE WHEN inFromId <> 0 THEN inFromId ELSE COALESCE (MovementLinkObject_From.ObjectId,0) END)
                              AND (COALESCE (MovementLinkObject_Route.ObjectId,0) = CASE WHEN inRouteId <> 0 THEN inRouteId ELSE COALESCE (MovementLinkObject_Route.ObjectId,0) END)
+-- and  vbUserId <> 5
                            )
       -- Заявки - По Дате Склад
     , tmpMovementOrder AS (SELECT Movement.Id                                         AS MovementId_Order
@@ -341,11 +353,20 @@ BEGIN
                                 , CASE WHEN EXTRACT (HOUR FROM MovementDate_CarInfo.ValueData) < 8 THEN DATE_TRUNC ('DAY', MovementDate_CarInfo.ValueData) - INTERVAL '1 DAY'
                                        ELSE DATE_TRUNC ('DAY', MovementDate_CarInfo.ValueData)
                                   END  AS OperDate_CarInfo_date
-                                , COALESCE (MovementBoolean_Manual.ValueData, FALSE) ::Boolean AS isManual_Order
+
+                                -- врменно отключил
+                                -- , COALESCE (MovementBoolean_Manual.ValueData, FALSE) ::Boolean AS isManual_Order
+
+                                -- !!! без отгрузки!!!
+                                --, COALESCE (Movement_sale.Id, 0) AS MovementId_sale
+
                             FROM Movement
                                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
                                                                ON MovementLinkMovement_Order.MovementChildId = Movement.Id  --  заявка
                                                               AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+                                /*LEFT JOIN Movement AS Movement_sale
+                                                   ON Movement_sale.Id     = MovementLinkMovement_Order.MovementId
+                                                  AND Movement_sale.DescId <> zc_Movement_WeighingPartner()*/
 
                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                              ON MovementLinkObject_From.MovementId = Movement.Id
@@ -376,9 +397,9 @@ BEGIN
                                                          ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                                         AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
-                                LEFT JOIN MovementBoolean AS MovementBoolean_Manual
+                                /*LEFT JOIN MovementBoolean AS MovementBoolean_Manual
                                                           ON MovementBoolean_Manual.MovementId = Movement.Id
-                                                         AND MovementBoolean_Manual.DescId = zc_MovementBoolean_Manual()
+                                                         AND MovementBoolean_Manual.DescId = zc_MovementBoolean_Manual()*/
 
                             WHERE MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
                           --WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -387,7 +408,11 @@ BEGIN
                               AND (COALESCE (MovementLinkObject_To.ObjectId,0) = CASE WHEN inToId <> 0 THEN inToId ELSE COALESCE (MovementLinkObject_To.ObjectId,0) END)
                               AND (COALESCE (MovementLinkObject_From.ObjectId,0) = CASE WHEN inFromId <> 0 THEN inFromId ELSE COALESCE (MovementLinkObject_From.ObjectId,0) END)
                               AND (COALESCE (MovementLinkObject_Route.ObjectId,0) = CASE WHEN inRouteId <> 0 THEN inRouteId ELSE COALESCE (MovementLinkObject_Route.ObjectId,0) END)
+                              -- !!! без отгрузки!!!
                               AND COALESCE (MovementLinkMovement_Order.MovementId, 0) = 0
+                              -- !!! без отгрузки!!!
+                              -- AND Movement_sale.Id IS NULL
+-- and (vbUserId <> 5 or Movement.Id = 32628322)
                             )
       -- продажи + заявки
     , tmpMovementAll AS (SELECT *
@@ -419,7 +444,7 @@ BEGIN
                                     , tmp.FromId
                                     , tmp.RouteId
                                     , tmp.PaidKindId
-                                    , tmp.isManual_Order
+                                    --, tmp.isManual_Order
                                FROM tmpMovementSale AS tmp
 
                               UNION
@@ -450,8 +475,10 @@ BEGIN
                                     , tmp.FromId
                                     , tmp.RouteId
                                     , tmp.PaidKindId
-                                    , tmp.isManual_Order
+                                    -- , tmp.isManual_Order
                                FROM tmpMovementOrder AS tmp
+                               -- !!! без отгрузки!!!
+                               --WHERE tmp.MovementId_sale = 0
                               ) AS tmpMovementAll
                         )
 
@@ -471,7 +498,7 @@ BEGIN
 
                               , tmpSale.InvNumber_Order
                               , tmpSale.InvNumberPartner_Order
-                              , tmpSale.isManual_Order
+                              -- , tmpSale.isManual_Order
 
                               , tmpSale.FromId
                               , tmpSale.RouteId
@@ -528,7 +555,7 @@ BEGIN
                             , tmpSale.OperDate_CarInfo_date
                             , tmpSale.InvNumber_Order
                             , tmpSale.InvNumberPartner_Order
-                            , tmpsale.isManual_Order
+                            -- , tmpsale.isManual_Order
                             , tmpSale.FromId
                             , tmpSale.RouteId
                             , tmpSale.PaidKindId
@@ -606,8 +633,12 @@ BEGIN
                     , tmpMI AS (SELECT tmpOrder.*
                                      , MovementItem.Id       AS MovementItemId
                                      , MovementItem.ObjectId
-                                     , CASE WHEN tmpOrder.isManual_Order = TRUE THEN COALESCE (MIFloat_AmountManual.ValueData, MovementItem.Amount,0) ELSE MovementItem.Amount END AS Amount
-                                     , MovementItem.Amount AS Amount_inf
+                                       -- Если есть Заказ-0
+                                     , CASE WHEN /*tmpOrder.isManual_Order = TRUE AND*/ MIFloat_AmountManual.ValueData > MovementItem.Amount THEN MIFloat_AmountManual.ValueData ELSE MovementItem.Amount END AS Amount
+                                       -- Если есть Заказ-0
+                                     , CASE WHEN MIFloat_AmountManual.ValueData > MovementItem.Amount THEN TRUE ELSE FALSE END AS isManual_Order
+                                       -- Если есть Заказ-0
+                                     , CASE WHEN MIFloat_AmountManual.ValueData > MovementItem.Amount THEN MovementItem.Amount ELSE 0 END AS Amount_inf
                                 FROM  tmpOrder
                                        -- строки
                                         INNER JOIN tmpMI_All AS MovementItem
@@ -821,7 +852,8 @@ BEGIN
                               --
                             , tmpMovementOrder.InvNumber_Order
                             , tmpMovementOrder.InvNumberPartner_Order
-                            , tmpMovementOrder.isManual_Order
+                              -- переводится в число
+                            , CASE WHEN tmpMovementOrder.isManual_Order = TRUE THEN 1 ELSE 0 END AS isManual_Order_value
 
                             , tmpMovementOrder.FromId
                             , tmpMovementOrder.RouteId
@@ -879,7 +911,10 @@ BEGIN
                               --
                             , tmpMovementSale.InvNumber_Order
                             , tmpMovementSale.InvNumberPartner_Order
-                            , tmpMovementSale.isManual_Order
+
+                          --, tmpMovementSale.isManual_Order
+                              -- всегда число
+                            , 0 AS isManual_Order_value
 
                             , tmpMovementSale.FromId
                             , tmpMovementSale.RouteId
@@ -936,7 +971,7 @@ BEGIN
                          --
                        , tmpDataUnion.InvNumber_Order
                        , tmpDataUnion.InvNumberPartner_Order
-                       , CASE WHEN inIsByDoc = TRUE THEN tmpDataUnion.isManual_Order ELSE FALSE END ::Boolean AS isManual_Order
+                       , MAX (CASE WHEN inIsByDoc = TRUE THEN tmpDataUnion.isManual_Order_value ELSE 0 END) AS isManual_Order_value
 
                        , tmpDataUnion.FromId
                        , tmpDataUnion.RouteId
@@ -995,7 +1030,7 @@ BEGIN
                            --
                          , tmpDataUnion.InvNumber_Order
                          , tmpDataUnion.InvNumberPartner_Order
-                         , CASE WHEN inIsByDoc = TRUE THEN tmpDataUnion.isManual_Order ELSE FALSE END
+                         --, CASE WHEN inIsByDoc = TRUE THEN tmpDataUnion.isManual_Order ELSE FALSE END
                          , tmpDataUnion.FromId
                          , tmpDataUnion.RouteId
                          , tmpDataUnion.PaidKindId
@@ -1018,7 +1053,8 @@ BEGIN
                          --
                        , tmpDataUnion.InvNumber_Order
                        , tmpDataUnion.InvNumberPartner_Order
-                       , tmpDataUnion.isManual_Order
+                         -- переводится обратно
+                       , CASE WHEN tmpDataUnion.isManual_Order_value = 1 THEN TRUE ELSE FALSE END :: Boolean AS isManual_Order
 
                        , tmpDataUnion.FromId
                        , tmpDataUnion.RouteId
@@ -1425,6 +1461,51 @@ BEGIN
 
 
          ;
+
+
+      vbValue1:= (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active');
+      -- сколько всего выполнялась проц;
+      vbTime1:= CLOCK_TIMESTAMP() - vbOperDate_Begin1;
+
+
+      vbScript:= 'INSERT INTO ResourseProtocol (UserId
+                                              , OperDate
+                                              , Value1
+                                              , Time1
+                                              , Time5
+                                              , ProcName
+                                              , ProtocolData
+                                               )
+
+                       SELECT ' || vbUserId :: TVarChar ||'
+                            , ' || CHR (39) || zfConvert_DateTimeToString (CURRENT_TIMESTAMP) || CHR (39) || ' AS OperDate'
+                         ||', ' || vbValue1 :: TVarChar  || ' AS Value1'
+                         ||', ' || CHR (39) || vbTime1 :: TvarChar || CHR (39) || ' :: INTERVAL AS Time1'
+                         ||', ' || CHR (39) || zfConvert_DateTimeToString (CLOCK_TIMESTAMP()) || CHR (39) || ' AS Time5'
+                         ||', ' || CHR (39) || 'gpReport_OrderExternal_Sale (' || CASE WHEN inToId > 0 THEN lfGet_Object_ValueData_sh (inToId) ELSE 'inToId = 0' END || ')' || CHR (39)
+
+                              -- ProtocolData
+                         ||', ' || CHR (39)
+                                || zfConvert_DateToString (inStartDate)
+                        || ', ' || zfConvert_DateToString (inEndDate)
+                        || ', ' || inFromId           :: TVarChar
+                        || ', ' || inToId             :: TVarChar
+                        || ', ' || inRouteId          :: TVarChar
+                        || ', ' || inRouteSortingId   :: TVarChar
+                        || ', ' || inGoodsGroupId     :: TVarChar
+                        || ', ' || CASE WHEN inIsByDoc   = TRUE THEN 'TRUE' ELSE 'FALSE' END
+                        || ', ' || CASE WHEN inIsByPromo = TRUE THEN 'TRUE' ELSE 'FALSE' END
+                        || ', ' || inSession
+                                || CHR (39)
+                           ;
+
+         --RAISE INFO vbScript;
+
+         -- Результат
+         vb1:= (SELECT *
+                FROM dblink_exec ('host=192.168.0.219 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'
+                                   -- Результат
+                                , vbScript));
 
 END;
 $BODY$
