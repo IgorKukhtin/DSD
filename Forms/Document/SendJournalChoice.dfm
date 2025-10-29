@@ -5,6 +5,7 @@ inherited SendJournalChoiceForm: TSendJournalChoiceForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 791
   ExplicitHeight = 574
   PixelsPerInch = 96
@@ -600,6 +601,22 @@ inherited SendJournalChoiceForm: TSendJournalChoiceForm
         Name = 'ReportNameSendTax'
         Value = Null
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'startdate'
+        Value = Null
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'enddate'
+        Value = Null
+        Component = deEnd
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

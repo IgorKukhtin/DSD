@@ -256,6 +256,11 @@ type
     spSelectPrint_Pack: TdsdStoredProc;
     actPrintPackGross: TdsdPrintAction;
     bbPrintPackGross: TdxBarButton;
+    spUpdate_MI_Send_Movement: TdsdStoredProc;
+    actSendJournalChoice: TOpenChoiceForm;
+    macSendJournalChoice: TMultiAction;
+    actUpdate_MI_Send_Movement: TdsdExecStoredProc;
+    bbSendJournalChoice: TdxBarButton;
   private
     { Private declarations }
   public
