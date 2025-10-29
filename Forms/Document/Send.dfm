@@ -502,9 +502,6 @@ inherited SendForm: TSendForm
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 0
@@ -730,9 +727,6 @@ inherited SendForm: TSendForm
     object cxTabSheetChild: TcxTabSheet
       Caption = #1056#1072#1089#1093#1086#1076' '#1085#1072' '#1087#1088#1086#1080#1079#1074'.'
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridChild: TcxGrid
         Left = 0
         Top = 0
@@ -2153,6 +2147,7 @@ inherited SendForm: TSendForm
     end
     inherited edOperDate: TcxDateEdit
       Left = 89
+      EditValue = 45959d
       Properties.SaveTime = False
       Properties.ShowTime = False
       ExplicitLeft = 89
@@ -2445,7 +2440,18 @@ inherited SendForm: TSendForm
         end>
       RefreshOnTabSetChanges = True
     end
-    object actGetImportSetting2: TdsdExecStoredProc [2]
+    object actUpdate_MI_Send_Movement: TdsdExecStoredProc [2]
+      Category = 'NewMov'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MI_Send_Movement
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MI_Send_Movement
+        end>
+      Caption = 'Update_MI_Send_Movement'
+    end
+    object actGetImportSetting2: TdsdExecStoredProc [3]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2456,7 +2462,7 @@ inherited SendForm: TSendForm
         end>
       Caption = 'actGetImportSetting'
     end
-    object actMISetErasedPC: TdsdUpdateErased [3]
+    object actMISetErasedPC: TdsdUpdateErased [4]
       Category = 'DSDLib'
       TabSheet = cxTabSheet_PartionCell
       MoveParams = <>
@@ -2480,7 +2486,7 @@ inherited SendForm: TSendForm
     inherited actGridToExcel: TdsdGridToExcel
       ShortCut = 16433
     end
-    object actGridDetailToExcel: TdsdGridToExcel [5]
+    object actGridDetailToExcel: TdsdGridToExcel [6]
       Category = 'DSDLib'
       TabSheet = cxTabSheetDetail
       MoveParams = <>
@@ -2491,7 +2497,7 @@ inherited SendForm: TSendForm
       ImageIndex = 6
       ShortCut = 16434
     end
-    object actGridChildlToExcel: TdsdGridToExcel [6]
+    object actGridChildlToExcel: TdsdGridToExcel [7]
       Category = 'DSDLib'
       TabSheet = cxTabSheetChild
       MoveParams = <>
@@ -2502,7 +2508,7 @@ inherited SendForm: TSendForm
       ImageIndex = 6
       ShortCut = 16435
     end
-    object actGrid_PartionCelllToExcel: TdsdGridToExcel [7]
+    object actGrid_PartionCelllToExcel: TdsdGridToExcel [8]
       Category = 'DSDLib'
       TabSheet = cxTabSheet_PartionCell
       MoveParams = <>
@@ -2513,7 +2519,7 @@ inherited SendForm: TSendForm
       ImageIndex = 6
       ShortCut = 16436
     end
-    object macLoadExcel2: TMultiAction [8]
+    object macLoadExcel2: TMultiAction [9]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ActionList = <
@@ -2532,7 +2538,7 @@ inherited SendForm: TSendForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' Excel ('#1040'/B/C/D)'
       ImageIndex = 41
     end
-    object actMISetUnErasedPC: TdsdUpdateErased [9]
+    object actMISetUnErasedPC: TdsdUpdateErased [10]
       Category = 'DSDLib'
       TabSheet = cxTabSheet_PartionCell
       MoveParams = <>
@@ -2553,7 +2559,7 @@ inherited SendForm: TSendForm
       isSetErased = False
       DataSource = PartionCellDS
     end
-    object actMISetErasedDetail: TdsdUpdateErased [10]
+    object actMISetErasedDetail: TdsdUpdateErased [11]
       Category = 'DSDLib'
       TabSheet = cxTabSheetDetail
       MoveParams = <>
@@ -2577,7 +2583,7 @@ inherited SendForm: TSendForm
     inherited actMISetErased: TdsdUpdateErased
       TabSheet = tsMain
     end
-    object actMISetUnErasedDetail: TdsdUpdateErased [12]
+    object actMISetUnErasedDetail: TdsdUpdateErased [13]
       Category = 'DSDLib'
       TabSheet = cxTabSheetDetail
       MoveParams = <>
@@ -2598,7 +2604,7 @@ inherited SendForm: TSendForm
       isSetErased = False
       DataSource = DetailDS
     end
-    object actShowErasedPC: TBooleanStoredProcAction [13]
+    object actShowErasedPC: TBooleanStoredProcAction [14]
       Category = 'DSDLib'
       TabSheet = cxTabSheet_PartionCell
       MoveParams = <>
@@ -2640,7 +2646,7 @@ inherited SendForm: TSendForm
           StoredProc = spInsertUpdateMovement_order
         end>
     end
-    object actShowErasedDetail: TBooleanStoredProcAction [16]
+    object actShowErasedDetail: TBooleanStoredProcAction [17]
       Category = 'DSDLib'
       TabSheet = cxTabSheetDetail
       MoveParams = <>
@@ -2664,7 +2670,7 @@ inherited SendForm: TSendForm
     inherited actShowErased: TBooleanStoredProcAction
       TabSheet = tsMain
     end
-    object actShowAllDetail: TBooleanStoredProcAction [18]
+    object actShowAllDetail: TBooleanStoredProcAction [19]
       Category = 'DSDLib'
       TabSheet = cxTabSheetDetail
       MoveParams = <>
@@ -2688,7 +2694,7 @@ inherited SendForm: TSendForm
     inherited actShowAll: TBooleanStoredProcAction
       TabSheet = tsMain
     end
-    object actUpdatePartionCellDS: TdsdUpdateDataSet [20]
+    object actUpdatePartionCellDS: TdsdUpdateDataSet [21]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2703,7 +2709,7 @@ inherited SendForm: TSendForm
       Caption = 'actUpdatePartionCellDS'
       DataSource = PartionCellDS
     end
-    object actPrintNoGroup: TdsdPrintAction [21]
+    object actPrintNoGroup: TdsdPrintAction [22]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintNoGroup
@@ -2740,7 +2746,7 @@ inherited SendForm: TSendForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    inherited actPrint: TdsdPrintAction [22]
+    inherited actPrint: TdsdPrintAction [23]
       StoredProc = spSelectPrint
       StoredProcList = <
         item
@@ -2766,7 +2772,7 @@ inherited SendForm: TSendForm
       ReportName = 'PrintMovement_Send'
       ReportNameParam.Value = 'PrintMovement_Send'
     end
-    object actUpdateDetailDS: TdsdUpdateDataSet [23]
+    object actUpdateDetailDS: TdsdUpdateDataSet [24]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2781,9 +2787,9 @@ inherited SendForm: TSendForm
       Caption = 'actUpdateDetailDS'
       DataSource = DetailDS
     end
-    inherited actUpdateMainDS: TdsdUpdateDataSet [24]
+    inherited actUpdateMainDS: TdsdUpdateDataSet [25]
     end
-    object actOpenPartionCellForm1: TOpenChoiceForm [25]
+    object actOpenPartionCellForm1: TOpenChoiceForm [26]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2810,7 +2816,7 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actOpenPartionCellForm2: TOpenChoiceForm [26]
+    object actOpenPartionCellForm2: TOpenChoiceForm [27]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2837,7 +2843,7 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actOpenPartionCellForm3: TOpenChoiceForm [27]
+    object actOpenPartionCellForm3: TOpenChoiceForm [28]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2864,7 +2870,7 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actOpenPartionCellForm4: TOpenChoiceForm [28]
+    object actOpenPartionCellForm4: TOpenChoiceForm [29]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2891,7 +2897,7 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actOpenPartionCellForm5: TOpenChoiceForm [29]
+    object actOpenPartionCellForm5: TOpenChoiceForm [30]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2937,7 +2943,7 @@ inherited SendForm: TSendForm
     inherited actMovementItemContainer: TdsdOpenForm
       TabSheet = tsMain
     end
-    object actGoodsKindChoicePC: TOpenChoiceForm [34]
+    object actGoodsKindChoicePC: TOpenChoiceForm [35]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2964,7 +2970,7 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actReturnKindOpenForm: TOpenChoiceForm [35]
+    object actReturnKindOpenForm: TOpenChoiceForm [36]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2991,7 +2997,7 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actSubjectDocOpenForm: TOpenChoiceForm [36]
+    object actSubjectDocOpenForm: TOpenChoiceForm [37]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3018,7 +3024,7 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actMICellProtocolOpenForm: TdsdOpenForm [37]
+    object actMICellProtocolOpenForm: TdsdOpenForm [38]
       Category = 'DSDLib'
       TabSheet = cxTabSheet_PartionCell
       MoveParams = <>
@@ -3050,7 +3056,7 @@ inherited SendForm: TSendForm
         end>
       isShowModal = False
     end
-    object actAssetChoiceForm: TOpenChoiceForm [38]
+    object actAssetChoiceForm: TOpenChoiceForm [39]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3077,7 +3083,7 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actGoodsKindChoice: TOpenChoiceForm [39]
+    object actGoodsKindChoice: TOpenChoiceForm [40]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3104,7 +3110,7 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actAsset_twoChoiceForm: TOpenChoiceForm [40]
+    object actAsset_twoChoiceForm: TOpenChoiceForm [41]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3134,7 +3140,7 @@ inherited SendForm: TSendForm
     inherited MovementItemProtocolOpenForm: TdsdOpenForm
       TabSheet = tsMain
     end
-    object actAddMaskDetail: TdsdExecStoredProc [44]
+    object actAddMaskDetail: TdsdExecStoredProc [45]
       Category = 'DSDLib'
       TabSheet = cxTabSheetDetail
       MoveParams = <>
@@ -4526,6 +4532,63 @@ inherited SendForm: TSendForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1055#1077#1088#1077#1087#1072#1082' ('#1044#1072'/'#1053#1077#1090')'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1055#1077#1088#1077#1087#1072#1082' ('#1044#1072'/'#1053#1077#1090')'
     end
+    object actSendJournalChoice: TOpenChoiceForm
+      Category = 'NewMov'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'SendJournalChoice'
+      FormName = 'TSendJournalChoiceForm'
+      FormNameParam.Value = 'TSendJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'MaskId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'startdate'
+          Value = Null
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'enddate'
+          Value = Null
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object macSendJournalChoice: TMultiAction
+      Category = 'NewMov'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSendJournalChoice
+        end
+        item
+          Action = actUpdate_MI_Send_Movement
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1090#1077#1082#1091#1097#1091#1102' '#1089#1090#1088#1086#1082#1091' '#1074' '#1076#1088#1091#1075#1086#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077 +
+        #1097#1077#1085#1080#1077'>?'
+      InfoAfterExecute = #1057#1090#1088#1086#1082#1072' '#1087#1077#1088#1077#1085#1077#1089#1077#1085#1072
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1090#1077#1082#1091#1097#1091#1102' '#1089#1090#1088#1086#1082#1091' '#1074' '#1076#1088#1091#1075#1086#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1090#1077#1082#1091#1097#1091#1102' '#1089#1090#1088#1086#1082#1091' '#1074' '#1076#1088#1091#1075#1086#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
+      ImageIndex = 58
+    end
     object actPrintPackGross: TdsdPrintAction
       Category = 'Print'
       MoveParams = <>
@@ -4745,6 +4808,14 @@ inherited SendForm: TSendForm
         item
           Visible = True
           ItemName = 'bbUpdateMaskReturnOut'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSendJournalChoice'
         end
         item
           Visible = True
@@ -5006,6 +5077,10 @@ inherited SendForm: TSendForm
       Action = actPrintPackGross
       Category = 0
     end
+    object bbSendJournalChoice: TdxBarButton
+      Action = macSendJournalChoice
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
@@ -5077,6 +5152,12 @@ inherited SendForm: TSendForm
       item
         Name = 'ImportSettingId'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MaskId'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 280
@@ -5896,8 +5977,8 @@ inherited SendForm: TSendForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 764
-    Top = 64
+    Left = 780
+    Top = 32
   end
   object GuidesInvNumberOrder: TdsdGuides
     KeyField = 'Id'
@@ -6124,8 +6205,8 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 290
-    Top = 344
+    Left = 338
+    Top = 336
   end
   object HeaderSaver1: THeaderSaver
     IdParam.Value = Null
@@ -7087,5 +7168,37 @@ inherited SendForm: TSendForm
     PackSize = 1
     Left = 847
     Top = 178
+  end
+  object spUpdate_MI_Send_Movement: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Send_Movement'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_new'
+        Component = FormParams
+        ComponentItem = 'MaskId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 266
+    Top = 312
   end
 end

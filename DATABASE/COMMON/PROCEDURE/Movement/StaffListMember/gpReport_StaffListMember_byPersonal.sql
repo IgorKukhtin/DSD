@@ -576,7 +576,7 @@ $BODY$
  WITH 
  tmpData AS (
             SELECT tmp.*
-            FROM gpReport_StaffListMember_byPersonal (inUnitId := 0, inMemberId:= 0 , inIsErased:=true, inSession:= zfCalc_UserAdmin())  AS tmp
+            FROM gpReport_StaffListMember_byPersonal (inUnitId := 8439, inMemberId:= 0 , inIsErased:=true, inSession:= zfCalc_UserAdmin())  AS tmp
            -- WHERE tmp.MemberId <> 11121446 
             )
 
