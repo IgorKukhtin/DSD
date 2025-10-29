@@ -85,13 +85,13 @@ BEGIN
               -- Результат
               SELECT ContainerId_pl
                      -- Дата
-                   , tmpReport.OperDate
+                   , CASE WHEN ProfitLossCode < 11100 AND 1=0 THEN inEndDate ELSE tmpReport.OperDate END AS OperDate
                      -- Id документа
-                   , MovementId
+                   , CASE WHEN ProfitLossCode < 11100 AND 1=0 THEN 0 ELSE MovementId END AS MovementId
                      -- Вид документа
                    , tmpReport.MovementDescId
                      -- № документа
-                   , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
+                   , CASE WHEN ProfitLossCode < 11100 AND 1=0 THEN 0 ELSE zfConvert_StringToNumber (Movement.InvNumber) END AS InvNumber
                      -- Примечание документ
                    , MovementId_comment
 
@@ -130,11 +130,11 @@ BEGIN
                    , ToId
 
                      -- Товар
-                   , GoodsId
+                   , CASE WHEN ProfitLossCode < 11100 AND 1=0 THEN 0 ELSE GoodsId END AS GoodsId
                      -- Вид Товара
-                   , GoodsKindId
+                   , CASE WHEN ProfitLossCode < 11100 AND 1=0 THEN 0 ELSE GoodsKindId END AS GoodsKindId
                      -- Вид Товара (только при производстве сырой ПФ)
-                   , GoodsKindId_gp
+                   , CASE WHEN ProfitLossCode < 11100 AND 1=0 THEN 0 ELSE GoodsKindId_gp END AS GoodsKindId_gp
 
                      -- Кол-во (вес)
                    , SUM (OperCount)
@@ -150,29 +150,29 @@ BEGIN
                    LEFT JOIN Movement ON Movement.Id = MovementId
               GROUP BY ContainerId_pl
                        -- Дата
-                     , tmpReport.OperDate
+                     , CASE WHEN ProfitLossCode < 11100 AND 1=0 THEN inEndDate ELSE tmpReport.OperDate END
                        -- Id документа
-                     , MovementId
+                     , CASE WHEN ProfitLossCode < 11100 AND 1=0 THEN 0 ELSE MovementId END
                        -- Вид документа
                      , tmpReport.MovementDescId
                        -- № документа
-                     , Movement.InvNumber
+                     , CASE WHEN ProfitLossCode < 11100 AND 1=0 THEN 0 ELSE zfConvert_StringToNumber (Movement.InvNumber) END
                        -- Примечание документ
                      , MovementId_comment
-
+  
                        -- Статья ОПиУ
                      , ProfitLossId
                        -- Бизнес
                      , BusinessId
-
+  
                        -- Филиал затрат (Філія)
                      , BranchId_pl
                        -- Подразделение затрат (Підрозділ)
                      , UnitId_pl
-
+  
                        -- Статья УП
                      , InfoMoneyId
-
+  
                        -- Подразделение учета (Місце обліку)
                      , UnitId
                        -- Оборудование (Направление затрат)
@@ -183,23 +183,24 @@ BEGIN
                      , MemberId
                        -- Статья списания (Стаття списання, Направление затрат)
                      , ArticleLossId
-
+  
                        -- Об'єкт напрявлення
                      , DirectionId
                        -- Об'єкт призначення
                      , DestinationId
-
+  
                        -- От кого (место учета) - информативно
                      , FromId
                        -- Кому (место учета, Направление затрат) - информативно
                      , ToId
-
+  
                        -- Товар
-                     , GoodsId
+                     , CASE WHEN ProfitLossCode < 11100 AND 1=0 THEN 0 ELSE GoodsId END
                        -- Вид Товара
-                     , GoodsKindId
+                     , CASE WHEN ProfitLossCode < 11100 AND 1=0 THEN 0 ELSE GoodsKindId END
                        -- Вид Товара (только при производстве сырой ПФ)
-                     , GoodsKindId_gp
+                     , CASE WHEN ProfitLossCode < 11100 AND 1=0 THEN 0 ELSE GoodsKindId_gp END
+
                  HAVING SUM (OperCount) <> 0 OR SUM (OperSumm) <> 0
                 ;
 
