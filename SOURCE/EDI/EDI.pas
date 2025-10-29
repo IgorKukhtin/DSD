@@ -5692,6 +5692,8 @@ begin
       БазоваЦіна:= gfFloatToStr(ItemsDataSet.FieldByName('PriceNoVAT').AsFloat);
       //Ціна за одиницю з ПДВ
       Ціна := gfFloatToStr(ItemsDataSet.FieldByName('PriceWVAT').AsFloat);
+      //СтавкаПДВ
+      СтавкаПДВ := gfFloatToStr(ItemsDataSet.FieldByName('VATPercent').AsFloat);
 
       //ВсьогоПоРядку - Сума Без ПДВ
       ВсьогоПоРядку.СумаБезПДВ:= gfFloatToStr(ItemsDataSet.FieldByName('AmountSummNoVAT').AsFloat);

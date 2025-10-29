@@ -6399,6 +6399,11 @@ begin
     try
       S := FIdHTTP.Post(FHostParam.Value + '/idp/oauth2/token', tmpStream);
     except
+      on E:Exception do
+      begin
+         ShowMessage(e.Message);
+         raise Exception.Create(e.Message);
+      end;
     end;
   finally
     tmpStream.Free;

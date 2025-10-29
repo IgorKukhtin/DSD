@@ -64,6 +64,9 @@ BEGIN
      outDistanceDiff:= outEndOdometre_calc - outStartOdometre_calc;
 
 
+  -- сохранили протокол
+  PERFORM lpInsert_MovementItemProtocol (inMovementItemId:= inMovementItemId, inUserId:= vbUserId, inIsInsert:= FALSE, inIsErased:= TRUE);
+
   -- пересчитали Итоговые суммы по накладной
   PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
 
