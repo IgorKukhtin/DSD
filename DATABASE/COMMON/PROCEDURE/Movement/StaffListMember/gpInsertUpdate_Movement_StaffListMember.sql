@@ -25,7 +25,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_StaffListMember(
     IN inPersonalServiceListCardSecondId   Integer   , -- Ведомость начисления(Карта Ф2) 
     IN inPersonalServiceListId_AvanceF2    Integer   , --  Ведомость начисления(аванс Карта Ф2)
     IN inSheetWorkTimeId                   Integer   , -- Режим работы (Шаблон табеля р.вр.)
-    IN inStorageLineId                     Integer   , -- ссылка на линию производства
+    IN inStorageLineId_1                   Integer   , -- ссылка на линию производства
+    IN inStorageLineId_2                   Integer   , -- ссылка на линию производства
+    IN inStorageLineId_3                   Integer   , -- ссылка на линию производства
+    IN inStorageLineId_4                   Integer   , -- ссылка на линию производства
+    IN inStorageLineId_5                   Integer   , -- ссылка на линию производства
     IN inMember_ReferId                    Integer   , -- Фамилия рекомендателя
     IN inMember_MentorId                   Integer   , -- Фамилия наставника 	
 
@@ -190,7 +194,7 @@ BEGIN
                                           , inPersonalServiceListCardSecondId := inPersonalServiceListCardSecondId ::Integer    -- Ведомость начисления(Карта Ф2) 
                                           , inPersonalServiceListId_AvanceF2  := inPersonalServiceListId_AvanceF2  ::Integer    --  Ведомость начисления(аванс Карта Ф2)
                                           , inSheetWorkTimeId                 := inSheetWorkTimeId                 ::Integer    -- Режим работы (Шаблон табеля р.вр.)
-                                          , inStorageLineId                   := inStorageLineId                   ::Integer    -- ссылка на линию производства
+                                          , inStorageLineId                   := inStorageLineId_1                 ::Integer    -- ссылка на линию производства
                                           
                                           , inMember_ReferId                  := inMember_ReferId                  ::Integer    -- Фамилия рекомендателя
                                           , inMember_MentorId                 := inMember_MentorId                 ::Integer    -- Фамилия наставника 	
@@ -226,8 +230,72 @@ BEGIN
                                                     , inUserId              := vbUserId
                                                      );  
  
- 
- 
+   /* пока ничего не записываем
+     --находим сотрудника
+     vbPersonalId := (SELECT tmp.PersonalId
+                      FROM (SELECT Object_Personal.Id AS PersonalId
+                                 , ROW_NUMBER() OVER(PARTITION BY Object_Personal.Id, ObjectLink_Personal_Unit.ChildObjectId, ObjectLink_Personal_Position.ChildObjectId, COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId,0), COALESCE (ObjectBoolean_Main.ValueData, FALSE) ) AS Ord
+                            FROM Object AS Object_Personal
+                                 INNER JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                       ON ObjectLink_Personal_Member.ObjectId = Object_Personal.Id
+                                                      AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+                                                      AND ObjectLink_Personal_Member.ChildObjectId = inMemberId
+                                 INNER JOIN ObjectLink AS ObjectLink_Personal_Position
+                                                       ON ObjectLink_Personal_Position.ObjectId = Object_Personal.Id
+                                                      AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+                                                      AND ObjectLink_Personal_Position.ChildObjectId = inPositionId
+                                 INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                                       ON ObjectLink_Personal_Unit.ObjectId = Object_Personal.Id
+                                                      AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                                                      AND ObjectLink_Personal_Unit.ChildObjectId = inUnitId
+                                 LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
+                                                      ON ObjectLink_Personal_PositionLevel.ObjectId = Object_Personal.Id
+                                                     AND ObjectLink_Personal_PositionLevel.DescId = zc_ObjectLink_Personal_PositionLevel()
+     
+                                 LEFT JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                         ON ObjectBoolean_Main.ObjectId = Object_Personal.Id
+                                                        AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Personal_Main()                            
+                            WHERE Object_Personal.DescId = zc_Object_Personal()
+                              AND Object_Personal.isErased = FALSE
+                              AND ObjectLink_Personal_PositionLevel.ChildObjectId = COALESCE (inPositionLevelId,0)
+                            ) AS tmp
+                      WHERE tmp.Ord = 1
+                      );
+
+     -- сохранить линии производства
+     PERFORM gpInsertUpdate_Object_PersonalByStorageLine (0::Integer, vbPersonalId::Integer, tmp.StorageLineId::Integer, inSession::TVarChar)
+     FROM (
+           WITH
+             --уже сохраненные линии производства
+             tmpSave AS (SELECT tmp.*
+                         FROM gpSelect_Object_PersonalByStorageLine (False, inSession) AS tmp
+                         WHERE tmp.PersonalId = vbPersonalId
+                         )
+           , tmpStorageLine AS (SELECT inStorageLineId_1 AS StorageLineId
+                                WHERE COALESCE (inStorageLineId_1,0) <> 0
+                              UNION
+                                SELECT inStorageLineId_2 AS StorageLineId
+                                WHERE COALESCE (inStorageLineId_2,0) <> 0
+                              UNION
+                                SELECT inStorageLineId_3 AS StorageLineId
+                                WHERE COALESCE (inStorageLineId_3,0) <> 0
+                              UNION
+                                SELECT inStorageLineId_4 AS StorageLineId
+                                WHERE COALESCE (inStorageLineId_4,0) <> 0
+                              UNION
+                                SELECT inStorageLineId_5 AS StorageLineId
+                                WHERE COALESCE (inStorageLineId_5,0) <> 0
+                                )
+
+         SELECT tmpStorageLine.StorageLineId
+         FROM tmpStorageLine
+              LEFT JOIN tmpSave ON tmpSave.StorageLineId = tmpStorageLine.StorageLineId
+         WHERE COALESCE (tmpStorageLine.StorageLineId,0) <> 0 
+           AND tmpSave.PersonalId IS NULL
+        ) AS tmp
+        ;
+
+        */
  
      -- !!! ВРЕМЕННО !!!
    -- IF  vbUserId = 9457 THEN RAISE EXCEPTION 'Admin - Test = OK'; END IF;

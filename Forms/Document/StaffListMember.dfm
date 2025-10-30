@@ -1,26 +1,26 @@
 inherited StaffListMemberForm: TStaffListMemberForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1064#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082#1080')>'
-  ClientHeight = 527
+  ClientHeight = 589
   ClientWidth = 718
   AddOnFormData.isSingle = False
   ExplicitWidth = 724
-  ExplicitHeight = 556
+  ExplicitHeight = 618
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 486
-    Top = 493
+    Left = 438
+    Top = 541
     Height = 26
-    ExplicitLeft = 486
-    ExplicitTop = 493
+    ExplicitLeft = 438
+    ExplicitTop = 541
     ExplicitHeight = 26
   end
   inherited bbCancel: TcxButton
-    Left = 608
-    Top = 493
+    Left = 560
+    Top = 541
     Height = 26
-    ExplicitLeft = 608
-    ExplicitTop = 493
+    ExplicitLeft = 560
+    ExplicitTop = 541
     ExplicitHeight = 26
   end
   object cxLabel1: TcxLabel [2]
@@ -396,11 +396,11 @@ inherited StaffListMemberForm: TStaffListMemberForm
   object cxLabel21: TcxLabel [47]
     Left = 8
     Top = 468
-    Caption = #1051#1080#1085#1080#1103' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
+    Caption = #1051#1080#1085#1080#1103' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072' 1'
   end
-  object ceStorageLine: TcxButtonEdit [48]
+  object ceStorageLine1: TcxButtonEdit [48]
     Left = 8
-    Top = 484
+    Top = 485
     Properties.Buttons = <
       item
         Default = True
@@ -408,7 +408,7 @@ inherited StaffListMemberForm: TStaffListMemberForm
       end>
     Properties.ReadOnly = True
     TabOrder = 48
-    Width = 331
+    Width = 160
   end
   object cxLabel22: TcxLabel [49]
     Left = 8
@@ -470,6 +470,74 @@ inherited StaffListMemberForm: TStaffListMemberForm
     Default = True
     ModalResult = 1
     TabOrder = 55
+  end
+  object ceStorageLine2: TcxButtonEdit [56]
+    Left = 179
+    Top = 485
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 56
+    Width = 160
+  end
+  object cxLabel25: TcxLabel [57]
+    Left = 179
+    Top = 468
+    Caption = #1051#1080#1085#1080#1103' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072' 2'
+  end
+  object ceStorageLine3: TcxButtonEdit [58]
+    Left = 10
+    Top = 522
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 58
+    Width = 160
+  end
+  object cxLabel26: TcxLabel [59]
+    Left = 9
+    Top = 506
+    Caption = #1051#1080#1085#1080#1103' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072' 3'
+  end
+  object ceStorageLine4: TcxButtonEdit [60]
+    Left = 179
+    Top = 522
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 60
+    Width = 160
+  end
+  object cxLabel27: TcxLabel [61]
+    Left = 179
+    Top = 506
+    Caption = #1051#1080#1085#1080#1103' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072' 4'
+  end
+  object ceStorageLine5: TcxButtonEdit [62]
+    Left = 10
+    Top = 560
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 62
+    Width = 160
+  end
+  object cxLabel28: TcxLabel [63]
+    Left = 10
+    Top = 544
+    Caption = #1051#1080#1085#1080#1103' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072' 5'
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 291
@@ -659,14 +727,14 @@ inherited StaffListMemberForm: TStaffListMemberForm
         item
           Name = 'StorageLineId'
           Value = ''
-          Component = GuidesStorageLine
+          Component = GuidesStorageLine1
           ComponentItem = 'Key'
           MultiSelectSeparator = ','
         end
         item
           Name = 'StorageLineName'
           Value = ''
-          Component = GuidesStorageLine
+          Component = GuidesStorageLine1
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -873,14 +941,14 @@ inherited StaffListMemberForm: TStaffListMemberForm
         item
           Name = 'StorageLineId'
           Value = Null
-          Component = GuidesStorageLine
+          Component = GuidesStorageLine1
           ComponentItem = 'Key'
           MultiSelectSeparator = ','
         end
         item
           Name = 'StorageLineName'
           Value = Null
-          Component = GuidesStorageLine
+          Component = GuidesStorageLine1
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -1092,9 +1160,41 @@ inherited StaffListMemberForm: TStaffListMemberForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inStorageLineId'
+        Name = 'inStorageLineId_1'
         Value = Null
-        Component = GuidesStorageLine
+        Component = GuidesStorageLine1
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStorageLineId_2'
+        Value = Null
+        Component = GuidesStorageLine2
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStorageLineId_3'
+        Value = Null
+        Component = GuidesStorageLine3
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStorageLineId_4'
+        Value = Null
+        Component = GuidesStorageLine4
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStorageLineId_5'
+        Value = Null
+        Component = GuidesStorageLine5
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1139,8 +1239,8 @@ inherited StaffListMemberForm: TStaffListMemberForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 663
-    Top = 443
+    Left = 655
+    Top = 483
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_StaffListMember'
@@ -1474,16 +1574,76 @@ inherited StaffListMemberForm: TStaffListMemberForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'StorageLineId'
+        Name = 'StorageLineId_1'
         Value = Null
-        Component = GuidesStorageLine
+        Component = GuidesStorageLine1
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'StorageLineName'
+        Name = 'StorageLineName_1'
         Value = Null
-        Component = GuidesStorageLine
+        Component = GuidesStorageLine1
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StorageLineId_2'
+        Value = Null
+        Component = GuidesStorageLine2
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StorageLineName_2'
+        Value = Null
+        Component = GuidesStorageLine2
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StorageLineId_3'
+        Value = Null
+        Component = GuidesStorageLine3
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StorageLineName_3'
+        Value = Null
+        Component = GuidesStorageLine3
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StorageLineId_4'
+        Value = Null
+        Component = GuidesStorageLine4
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StorageLineName_4'
+        Value = Null
+        Component = GuidesStorageLine4
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StorageLineId_5'
+        Value = Null
+        Component = GuidesStorageLine5
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StorageLineName_5'
+        Value = Null
+        Component = GuidesStorageLine5
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1982,8 +2142,8 @@ inherited StaffListMemberForm: TStaffListMemberForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 574
-    Top = 239
+    Left = 622
+    Top = 175
   end
   object GuidesPosition_old: TdsdGuides
     KeyField = 'Id'
@@ -2044,8 +2204,8 @@ inherited StaffListMemberForm: TStaffListMemberForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 551
-    Top = 165
+    Left = 535
+    Top = 181
   end
   object GuidesStaffListKind: TdsdGuides
     KeyField = 'Id'
@@ -2234,9 +2394,9 @@ inherited StaffListMemberForm: TStaffListMemberForm
     Left = 542
     Top = 336
   end
-  object GuidesStorageLine: TdsdGuides
+  object GuidesStorageLine1: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceStorageLine
+    LookupControl = ceStorageLine1
     FormNameParam.Value = 'TStorageLineForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -2246,7 +2406,7 @@ inherited StaffListMemberForm: TStaffListMemberForm
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesStorageLine
+        Component = GuidesStorageLine1
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -2255,13 +2415,13 @@ inherited StaffListMemberForm: TStaffListMemberForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesStorageLine
+        Component = GuidesStorageLine1
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 207
+    Left = 84
     Top = 479
   end
   object GuidesPersonalServiceListAvanceF2: TdsdGuides
@@ -2365,5 +2525,125 @@ inherited StaffListMemberForm: TStaffListMemberForm
       end>
     Left = 500
     Top = 405
+  end
+  object GuidesStorageLine2: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceStorageLine2
+    FormNameParam.Value = 'TStorageLineForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TStorageLineForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesStorageLine2
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesStorageLine2
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 236
+    Top = 479
+  end
+  object GuidesStorageLine3: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceStorageLine3
+    FormNameParam.Value = 'TStorageLineForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TStorageLineForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesStorageLine3
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesStorageLine3
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 79
+    Top = 517
+  end
+  object GuidesStorageLine4: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceStorageLine4
+    FormNameParam.Value = 'TStorageLineForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TStorageLineForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesStorageLine4
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesStorageLine4
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 247
+    Top = 511
+  end
+  object GuidesStorageLine5: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceStorageLine5
+    FormNameParam.Value = 'TStorageLineForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TStorageLineForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesStorageLine5
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesStorageLine5
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 107
+    Top = 547
   end
 end

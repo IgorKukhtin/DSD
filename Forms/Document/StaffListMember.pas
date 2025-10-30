@@ -87,8 +87,8 @@ type
     cxLabel20: TcxLabel;
     GuidesPersonalGroup: TdsdGuides;
     cxLabel21: TcxLabel;
-    ceStorageLine: TcxButtonEdit;
-    GuidesStorageLine: TdsdGuides;
+    ceStorageLine1: TcxButtonEdit;
+    GuidesStorageLine1: TdsdGuides;
     cxLabel22: TcxLabel;
     cePersonalServiceListAvanceF2: TcxButtonEdit;
     GuidesPersonalServiceListAvanceF2: TdsdGuides;
@@ -100,6 +100,18 @@ type
     GuidesMember_Mentor: TdsdGuides;
     cxButton2: TcxButton;
     actOpenChoiceMemberDel: TOpenChoiceForm;
+    ceStorageLine2: TcxButtonEdit;
+    cxLabel25: TcxLabel;
+    GuidesStorageLine2: TdsdGuides;
+    GuidesStorageLine3: TdsdGuides;
+    ceStorageLine3: TcxButtonEdit;
+    cxLabel26: TcxLabel;
+    GuidesStorageLine4: TdsdGuides;
+    ceStorageLine4: TcxButtonEdit;
+    cxLabel27: TcxLabel;
+    GuidesStorageLine5: TdsdGuides;
+    ceStorageLine5: TcxButtonEdit;
+    cxLabel28: TcxLabel;
   private
     { Private declarations }
   public
