@@ -18,10 +18,28 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
 
+     --проверка что оба документа не проведены  
+    IF (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId) <> zc_Enum_Status_UnComplete() 
+    THEN
+        RAISE EXCEPTION 'Ошибка.Документ № <%> от <%> должен быть не проведен.', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), (SELECT DATE (OperDate) FROM Movement WHERE Id = inMovementId);
+    END IF;
+    
+    IF (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId_new) <> zc_Enum_Status_UnComplete() 
+    THEN
+        RAISE EXCEPTION 'Ошибка.Документ № <%> от <%> должен быть не проведен.', (SELECT InvNumber FROM Movement WHERE Id = inMovementId_new), (SELECT DATE (OperDate) FROM Movement WHERE Id = inMovementId_new);
+    END IF;
+
+
+
      --перезаписываем привязку к документу
      UPDATE MovementItem SET MovementId = inMovementId_new
      WHERE MovementItem.Id = inId
      ;
+
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId_new);
 
 
     -- сохранили протокол

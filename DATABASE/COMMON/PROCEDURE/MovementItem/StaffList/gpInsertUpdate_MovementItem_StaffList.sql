@@ -101,7 +101,7 @@ BEGIN
      vbSumm_total_add_old  := (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_Staff_Summ_total_add())  ::TFloat;
 
  
-     --Могут внести или "для 1-єї шт.од" или "загальну сума"   
+     --Могут внести или "для 1-єї шт.од" или "загальну сума"    сохраняем только 1 параметр - тот что внесли, второй обнуляем
      --1, если внесли  Відрядна оплата(для 1-єї шт.од)
      IF COALESCE(inStaff_Summ_real,0) <> COALESCE(vbSumm_real_old,0)
     AND COALESCE(inStaff_Summ_real,0) <> 0

@@ -325,7 +325,7 @@ BEGIN
                                                -- ШР для справочника
                                                * COALESCE (MovementItem.Amount, 0)
                                                )
-                  
+
                                      WHEN Object_StaffPaidKind.ValueData ILIKE '%Зміни%'
                                           THEN COALESCE (MovementItem.TotalStaffCount, 0) * COALESCE (MovementItem.Staff_Price, 0)
                                              + COALESCE (MovementItem.Staff_Summ_MK, 0) * COALESCE (MovementItem.Amount, 0)                       --MovementItem.AmountReport
