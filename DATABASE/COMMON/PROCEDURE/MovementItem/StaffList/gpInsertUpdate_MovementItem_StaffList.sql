@@ -105,35 +105,35 @@ BEGIN
      --1, если внесли  Відрядна оплата(для 1-єї шт.од)
      IF COALESCE(inStaff_Summ_real,0) <> COALESCE(vbSumm_real_old,0)
     AND COALESCE(inStaff_Summ_real,0) <> 0
-    AND COALESCE(inStaff_Summ_total_real,0) = COALESCE(vbSumm_total_real_old,0)
+    --AND COALESCE(vbSumm_total_real_old,0) = 0
      THEN
           -- розрахунок Відрядна оплата(загальна сума)
-          inStaff_Summ_total_real := (inStaff_Summ_real * inAmount) ::TFloat;
+          inStaff_Summ_total_real := 0 ::TFloat;
      END IF; 
      --2. если внесли  Відрядна оплата(загальна сума)
      IF COALESCE(inStaff_Summ_total_real,0) <> COALESCE(vbSumm_total_real_old,0)
     AND COALESCE(inStaff_Summ_total_real,0) <> 0
-    AND COALESCE(inStaff_Summ_real,0) = COALESCE(vbSumm_real_old,0)
+    --AND COALESCE(vbSumm_real_old,0) = 0
      THEN
           -- розрахунок Відрядна оплата(для 1-єї шт.од)
-          inStaff_Summ_real := CASE WHEN COALESCE (inAmount,0) <> 0 THEN inStaff_Summ_total_real / inAmount ELSE 0 END ::TFloat;
+          inStaff_Summ_real := 0 ::TFloat;
      END IF;
 
      --3. если внесли  Преміальний фонд(для 1-єї шт.од)
      IF COALESCE(inStaff_Summ_add,0) <> COALESCE(vbSumm_add_old,0)
     AND COALESCE(inStaff_Summ_add,0) <> 0
-    AND COALESCE(inStaff_Summ_total_add,0) = COALESCE(vbSumm_total_add_old,0)
+    --AND COALESCE(vbSumm_total_add_old,0) = 0
      THEN
           -- розрахунок Преміальний фонд(загальна сума)
-          inStaff_Summ_total_add := (inStaff_Summ_add * inAmount) ::TFloat;
+          inStaff_Summ_total_add := 0 ::TFloat;
      END IF; 
      --4. если внесли Преміальний фонд(загальна сума)
      IF COALESCE(inStaff_Summ_total_add,0) <> COALESCE(vbSumm_total_add_old,0)
     AND COALESCE(inStaff_Summ_total_add,0) <> 0
-    AND COALESCE(inStaff_Summ_add,0) = COALESCE(vbSumm_add_old,0)
+   -- AND COALESCE(vbSumm_add_old,0) = 0
      THEN
           -- розрахунок Преміальний фонд(для 1-єї шт.од)
-          inStaff_Summ_add := CASE WHEN COALESCE (inAmount,0) <> 0 THEN inStaff_Summ_total_add / inAmount ELSE 0 END ::TFloat;
+          inStaff_Summ_add := 0 ::TFloat;
      END IF;
 
                             

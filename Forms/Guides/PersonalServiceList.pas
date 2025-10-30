@@ -22,7 +22,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, cxCurrencyEdit, dsdCommon;
+  dxSkinXmas2008Blue, cxCurrencyEdit, dsdCommon, ExternalLoad;
 
 type
   TPersonalServiceListForm = class(TParentForm)
@@ -93,6 +93,14 @@ type
     macUpdate_PersonalOut: TMultiAction;
     actShowAll: TBooleanStoredProcAction;
     bbinIsErased: TdxBarButton;
+    MemberName_view: TcxGridDBColumn;
+    MemberName_choice: TcxGridDBColumn;
+    FormParams: TdsdFormParams;
+    spGetImportSettingId: TdsdStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actGetImportSetting: TdsdExecStoredProc;
+    macStartLoad: TMultiAction;
+    bbStartLoad: TdxBarButton;
   private
     { Private declarations }
   public
