@@ -2,6 +2,8 @@
   
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_StaffList (Integer, Integer, Integer,Integer, Integer, Integer,Integer, Integer, Integer, TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_StaffList (Integer, Integer, Integer,Integer, Integer, Integer,Integer, Integer, Integer, TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_StaffList (Integer, Integer, Integer,Integer, Integer, Integer,Integer, Integer, Integer, TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat, TVarChar, Integer);
+
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_StaffList(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -29,6 +31,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_StaffList(
     IN inStaff_Summ_MK6        TFloat    , --
     IN inStaff_Summ_real       TFloat    , --
     IN inStaff_Summ_add        TFloat    , --
+    IN inStaff_Summ_total_real  TFloat    , --
+    IN inStaff_Summ_total_add   TFloat    , --
     IN inComment               TVarChar  , -- 
     IN inUserId                Integer     -- пользователь
 )                               
@@ -87,6 +91,10 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Staff_Summ_add(), ioId, inStaff_Summ_add);
 
+     -- Преміальний фонд(для 1-єї шт.од)
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Staff_Summ_total_real(), ioId, inStaff_Summ_total_real);
+     -- Преміальний фонд(загальна сума)
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Staff_Summ_total_add(), ioId, inStaff_Summ_total_add);
 
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PositionLevel(), ioId, inPositionLevelId);
