@@ -125,34 +125,35 @@ AND (NOT EXISTS (SELECT 1
                              , (SELECT lfGet_Object_ValueData_sh (MLO.ObjectId) FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
                               ;
          END IF;
+
      END IF;
 
-     IF vbUserId = 9457
+     -- Схема ЗАКАЗ-0
+     IF vbUserId IN (9457, 5) OR 1=0
      THEN
-         IF COALESCE (inAmountManual,0) = 0 AND COALESCE (ioAmountManual_old,0) <> 0
+         IF COALESCE (inAmountManual, 0) = 0 AND COALESCE (ioAmountManual_old, 0) <> 0 AND COALESCE (ioAmount, 0) = COALESCE (ioAmount_old, 0)
          THEN
-              --обнуляем все
+              -- обнуляем все, т.к. inAmountManual ввели = 0 + ioAmount не менялся, inAmountManual - в приоритете
               ioAmount := 0;
               ioAmount_old := 0;
               ioAmountManual_old := 0;
-         END IF;
-         IF COALESCE (inAmountManual,0) <> 0 AND COALESCE (inAmountManual,0) <> COALESCE (ioAmountManual_old,0)
+
+         -- если ввели inAmountManual + ioAmount не менялся
+         ELSEIF COALESCE (inAmountManual,0) <> 0 AND COALESCE (inAmountManual,0) <> COALESCE (ioAmountManual_old,0) AND COALESCE (ioAmount, 0) = COALESCE (ioAmount_old, 0)
          THEN
-             IF COALESCE (ioAmount,0) <> COALESCE (ioAmount_old,0)
-             THEN
-                 ioAmount_old := ioAmount;
-                 ioAmountManual_old := inAmountManual;
-             ELSE
-                 ioAmount := inAmountManual;
-                 ioAmount_old := inAmountManual;
-                 ioAmountManual_old := inAmountManual;
-             END IF;
+             -- перенесли в ioAmount
+             ioAmount := inAmountManual;
+             ioAmount_old := inAmountManual;
+             -- сохранили новое
+             ioAmountManual_old := inAmountManual;
+
          ELSE
-             IF COALESCE (ioAmount,0) <> COALESCE (ioAmount_old,0)
-             THEN
-                 ioAmount_old := ioAmount;
-             END IF;
+             -- сохранили новое
+             ioAmount_old := ioAmount;
+             -- сохранили новое
+             ioAmountManual_old := inAmountManual;
          END IF;
+
      END IF;
 
      -- сохранили

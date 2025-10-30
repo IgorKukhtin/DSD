@@ -23,32 +23,32 @@ RETURNS TABLE (OperDate           TDateTime
             , BranchName_pl       TVarChar
             , UnitId_pl           Integer
             , UnitName_pl         TVarChar
-            , Unit_plDescName     TVarChar                 
+            , Unit_plDescName     TVarChar
             , CFOId Integer, CFOName TVarChar
             , DepartmentId Integer, DepartmentName TVarChar
             , Department_twoId Integer, Department_twoName TVarChar
-            , InfoMoneyId               Integer     
+            , InfoMoneyId               Integer
             , InfoMoneyGroupCode        Integer
             , InfoMoneyDestinationCode  Integer
             , InfoMoneyCode             Integer
             , InfoMoneyGroupName        TVarChar
             , InfoMoneyDestinationName  TVarChar
             , InfoMoneyName             TVarChar
-            , UnitId              Integer 
+            , UnitId              Integer
             , UnitName            TVarChar
-            , AssetId             Integer 
+            , AssetId             Integer
             , AssetName           TVarChar
-            , CarId               Integer 
+            , CarId               Integer
             , CarName             TVarChar
-            , MemberId            Integer 
-            , MemberCode          Integer 
+            , MemberId            Integer
+            , MemberCode          Integer
             , MemberName          TVarChar
-            , ArticleLossId       Integer 
+            , ArticleLossId       Integer
             , ArticleLossName     TVarChar
             , DirectionId         Integer
             , DirectionName       TVarChar
             , DirectionDescName   TVarChar
-            , DestinationId       Integer 
+            , DestinationId       Integer
             , DestinationName     TVarChar
             , DestinationDescName TVarChar
             , FromId              Integer
@@ -106,20 +106,20 @@ BEGIN
      RETURN QUERY
      WITH
      tmpData AS (
-                 SELECT                   
-                       -- Id партии        
-                         tmp.ContainerId_pl      ::Integer
-                       -- Дата             
-                       , tmp.OperDate            ::TDateTime
+                 SELECT
+                       -- Id партии
+                         CASE WHEN ProfitLossCode < 11100 THEN 0 ELSE tmp.ContainerId_pl END ::Integer
+                       -- Дата
+                       , CASE WHEN ProfitLossCode < 11100 THEN DATE_TRUNC ('MONTH', tmp.OperDate) ELSE tmp.OperDate END ::TDateTime
                        -- Id документа
-                       , tmp.MovementId          ::Integer
+                       , CASE WHEN ProfitLossCode < 11100 THEN 0 ELSE tmp.MovementId END ::Integer
                        -- Вид документа
                        , tmp.MovementDescId      ::Integer
-                       -- № документа      
+                       -- № документа
                        , tmp.InvNumber           ::Integer
                        -- Примечание документ
                        , tmp.MovementId_comment  ::Integer
-                       -- Статья ОПиУ      
+                       -- Статья ОПиУ
                        , tmp.ProfitLossId        ::Integer
                        -- Бизнес
                        , tmp.BusinessId         ::Integer
@@ -127,7 +127,7 @@ BEGIN
                        , tmp.BranchId_pl         ::Integer
                        -- Подразделение затрат (Підрозділ)
                        , tmp.UnitId_pl           ::Integer
-                       -- Статья УП        
+                       -- Статья УП
                        , tmp.InfoMoneyId         ::Integer
                        -- Подразделение учета (Місце обліку)
                        , tmp.UnitId              ::Integer
@@ -147,18 +147,21 @@ BEGIN
                        , tmp.FromId              ::Integer
                        -- Кому (место учета, Направление затрат) - информативно
                        , tmp.ToId                ::Integer
+
                        -- Товар
-                       , tmp.GoodsId             ::Integer
+                       , CASE WHEN ProfitLossCode < 11100 THEN 0 ELSE tmp.GoodsId END ::Integer
                        -- Вид Товара
-                       , tmp.GoodsKindId         ::Integer
+                       , CASE WHEN ProfitLossCode < 11100 THEN 0 ELSE tmp.GoodsKindId END ::Integer
                        -- Вид Товара (только при производстве сырой ПФ)
-                       , tmp.GoodsKindId_gp      ::Integer
+                       , CASE WHEN ProfitLossCode < 11100 THEN 0 ELSE tmp.GoodsKindId_gp END ::Integer
+
                        -- Кол-во (вес)
                        , tmp.OperCount           ::TFloat
                        -- Кол-во (шт.)
                        , tmp.OperCount_sh        ::TFloat
                        -- Сумма
                        , tmp.OperSumm            ::TFloat
+
                  FROM _bi_Table_ProfitLoss AS tmp
                  WHERE tmp.OperDate BETWEEN inStartDate AND inEndDate
                  )
@@ -170,14 +173,14 @@ BEGIN
 
    , tmpObjectLink AS (SELECT ObjectLink.*
                        FROM ObjectLink
-                       WHERE ObjectLink.ObjectId IN (SELECT DISTINCT tmpData.UnitId_pl FROM tmpData) 
+                       WHERE ObjectLink.ObjectId IN (SELECT DISTINCT tmpData.UnitId_pl FROM tmpData)
                          AND ObjectLink.DescId IN (zc_ObjectLink_Unit_CFO()
                                                  , zc_ObjectLink_Unit_Department()
                                                  , zc_ObjectLink_Unit_Department_two()
                                                  )
                        )
 
-       SELECT -- Дата             
+       SELECT -- Дата
               tmp.OperDate            ::TDateTime
             -- месяц
             , DATE_TRUNC ('MONTH', tmp.OperDate) ::TDateTime  AS Month
@@ -185,11 +188,11 @@ BEGIN
             , tmp.MovementId          ::Integer
             -- Вид документа
             , MovementDesc.ItemName    ::TVarChar AS MovementDescName
-            -- № документа      
+            -- № документа
             , tmp.InvNumber           ::Integer
             -- Примечание документ
             , MovementString_Commet.ValueData  ::TVarChar AS Comment
-            -- Статья ОПиУ      
+            -- Статья ОПиУ
             , tmp.ProfitLossId            ::Integer  AS ProfitLossId
             , View_ProfitLoss.ProfitLossGroupName     ::TVarChar
             , View_ProfitLoss.ProfitLossDirectionName ::TVarChar
@@ -211,8 +214,8 @@ BEGIN
             , Object_Department_two.Id               AS Department_twoId
             , Object_Department_two.ValueData        AS Department_twoName
 
-            -- Статья УП        
-            , tmp.InfoMoneyId                          ::Integer     
+            -- Статья УП
+            , tmp.InfoMoneyId                          ::Integer
             , View_InfoMoney.InfoMoneyGroupCode        ::Integer
             , View_InfoMoney.InfoMoneyDestinationCode  ::Integer
             , View_InfoMoney.InfoMoneyCode             ::Integer
@@ -245,7 +248,7 @@ BEGIN
             , ObjectDesc_Destination.ItemName ::TVarChar AS DestinationDescName
             -- От кого (место учета) - информативно
             , tmp.FromId               ::Integer  AS FromId
-            , Object_From.ValueData    ::TVarChar AS FromName 
+            , Object_From.ValueData    ::TVarChar AS FromName
             , ObjectDesc_From.ItemName ::TVarChar AS DescName_From
             -- Кому (место учета, Направление затрат) - информативно
             , tmp.ToId               ::Integer  AS ToId
@@ -261,6 +264,7 @@ BEGIN
             -- Вид Товара (только при производстве сырой ПФ)
             , tmp.GoodsKindId_gp            ::Integer  AS GoodsKindId_gp
             , Object_GoodsKind_gp.ValueData ::TVarChar AS GoodsKindName_gp
+
             -- Кол-во (вес)
             , tmp.OperCount           ::TFloat
             -- Кол-во (шт.)
@@ -299,7 +303,7 @@ BEGIN
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmp.GoodsKindId
             LEFT JOIN Object AS Object_GoodsKind_gp ON Object_GoodsKind_gp.Id = tmp.GoodsKindId_gp
-            
+
             LEFT JOIN tmpMovementString AS MovementString_Commet
                                         ON MovementString_Commet.MovementId = tmp.MovementId_comment
                                        AND MovementString_Commet.DescId = zc_MovementString_Comment()
@@ -308,7 +312,7 @@ BEGIN
                                  ON ObjectLink_Unit_CFO.ObjectId = Object_Unit_pl.Id
                                 AND ObjectLink_Unit_CFO.DescId = zc_ObjectLink_Unit_CFO()
             LEFT JOIN Object AS Object_CFO ON Object_CFO.Id = ObjectLink_Unit_CFO.ChildObjectId
-            
+
             LEFT JOIN tmpObjectLink AS ObjectLink_Unit_Department
                                  ON ObjectLink_Unit_Department.ObjectId = Object_Unit_pl.Id
                                 AND ObjectLink_Unit_Department.DescId = zc_ObjectLink_Unit_Department()
@@ -330,4 +334,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_ProfitLoss_by (inStartDate:= '04.09.2025', inEndDate:= '04.09.2025', inSession:= '5') 
+-- SELECT * FROM gpReport_ProfitLoss_by (inStartDate:= '04.09.2025', inEndDate:= '04.09.2025', inSession:= '5')
