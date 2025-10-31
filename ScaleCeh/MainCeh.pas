@@ -960,6 +960,22 @@ begin
                    ParamsMI.ParamByName('RealWeight').AsFloat:=Value_EnterCount;
                    ParamsMI.ParamByName('RealWeight_Get').AsFloat:=ParamsMI.ParamByName('RealWeight').AsFloat;
                    //
+                   // доопределили параметр
+                   if (PanelGoodsKind_all.Visible) and (rgGoodsKind.ItemIndex>=0) and (ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger > 0)
+                   then ParamsMI.ParamByName('GoodsKindId').AsInteger:= GoodsKind_Array[GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex)].Id
+                   else ParamsMI.ParamByName('GoodsKindId').AsInteger:= 0;
+                   //
+                   //обновили для GoodsKindId
+                   if ParamsMI.ParamByName('GoodsKindId').AsInteger > 0
+                   then
+                       if not DMMainScaleCehForm.gpGet_Scale_Goods_gk(ParamsMI) then
+                       begin
+                           ShowMessage ('Ошибка.Вес упаковки не найден.');
+                           Result:= false;
+                           exit;
+                       end;
+                   //
+                   //
                    Value_EnterCount:= ROUND ((Value_EnterCount
                                              -ParamsMI.ParamByName('WeightTare').AsFloat
                                              -ParamsMI.ParamByName('WeightOther').AsFloat
