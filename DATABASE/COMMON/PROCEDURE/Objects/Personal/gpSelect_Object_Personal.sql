@@ -9,14 +9,14 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Personal(
     IN inIsShowAll   Boolean,    --
     IN inSession     TVarChar    -- ÒÂÒÒËˇ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ
 )
-RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar, INN TVarChar
+RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar, MemberName_FIO TVarChar, INN TVarChar
              , Code1C TVarChar
              , DriverCertificate TVarChar, Card TVarChar, CardSecond TVarChar, BankName TVarChar, BankSecondName TVarChar
              , PositionId Integer, PositionCode Integer, PositionName TVarChar
              , PositionLevelId Integer, PositionLevelCode Integer, PositionLevelName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar, BranchCode Integer, BranchName TVarChar
              , DepartmentId Integer, DepartmentName TVarChar
-             , Department_twoId Integer, Department_twoName TVarChar    
+             , Department_twoId Integer, Department_twoName TVarChar
              , PersonalGroupId Integer, PersonalGroupCode Integer, PersonalGroupName TVarChar
              , StorageLineId Integer, StorageLineCode Integer, StorageLineName TVarChar
              , StorageLineName_all Text
@@ -135,7 +135,7 @@ BEGIN
                                   LEFT JOIN ObjectLink AS ObjectLink_PersonalByStorageLine_Personal
                                                        ON ObjectLink_PersonalByStorageLine_Personal.ObjectId = Object_PersonalByStorageLine.Id
                                                       AND ObjectLink_PersonalByStorageLine_Personal.DescId = zc_ObjectLink_PersonalByStorageLine_Personal()
-                                                        
+
                                   LEFT JOIN ObjectLink AS ObjectLink_PersonalByStorageLine_StorageLine
                                                        ON ObjectLink_PersonalByStorageLine_StorageLine.ObjectId = Object_PersonalByStorageLine.Id
                                                       AND ObjectLink_PersonalByStorageLine_StorageLine.DescId = zc_ObjectLink_PersonalByStorageLine_StorageLine()
@@ -148,7 +148,8 @@ BEGIN
      SELECT
            Object_Personal_View.PersonalId   AS Id
          , Object_Personal_View.PersonalCode AS MemberCode
-         , Object_Personal_View.PersonalName AS MemberName  
+         , Object_Personal_View.PersonalName AS MemberName
+         , zfConvert_FIO (Object_Personal_View.PersonalName, 2, TRUE) AS MemberName_FIO
          , ObjectString_INN.ValueData               AS INN
          , ObjectString_Code1C.ValueData ::TVarChar AS Code1C
 
@@ -184,7 +185,7 @@ BEGIN
 
          , Object_Personal_View.StorageLineId
          , Object_Personal_View.StorageLineCode
-         , Object_Personal_View.StorageLineName 
+         , Object_Personal_View.StorageLineName
          , tmpStorageLine.StorageLineName ::Text AS StorageLineName_all
 
          , Object_PersonalServiceList.Id           AS PersonalServiceListId
@@ -195,7 +196,7 @@ BEGIN
 
          , Object_PersonalServiceListAvance_F2.Id                  AS ServiceListId_AvanceF2
          , Object_PersonalServiceListAvance_F2.ValueData           AS ServiceListName_AvanceF2
-         
+
          , COALESCE (Object_PersonalServiceListCardSecond.Id, CAST (0 as Integer))          AS PersonalServiceListCardSecondId
          , COALESCE (Object_PersonalServiceListCardSecond.ValueData, CAST ('' as TVarChar)) AS PersonalServiceListCardSecondName
 
@@ -213,8 +214,8 @@ BEGIN
          , Object_Personal_View.isDateSend
          , Object_Personal_View.isMain
          , Object_Personal_View.isOfficial
-         
-         , Object_Personal_View.MemberId                                                    AS MemberId  
+
+         , Object_Personal_View.MemberId                                                    AS MemberId
          , ObjectLink_User_Member.ObjectId                                                  AS UserId
          , REPEAT ('*', LENGTH (CASE WHEN COALESCE (ObjectFloat_ScalePSW.ValueData, 0) = 0 THEN '' ELSE '12345' /*(ObjectFloat_ScalePSW.ValueData :: Integer) :: TVarChar*/ END)) :: TVarChar AS ScalePSW
          , COALESCE (ObjectFloat_ScalePSW.ValueData, 0) ::TFloat                            AS ScalePSW_forPrint
@@ -224,12 +225,12 @@ BEGIN
                 ELSE CASE WHEN (SELECT 1 FROM lfSelect_Object_Member_Personal_PastMain (inStartDate := Object_Personal_View.DateIn - INTERVAL '1 YEAR'
                                                                                       , inEndDate   := Object_Personal_View.DateIn - INTERVAL '1 DAY'
                                                                                       , inMemberId  := Object_Personal_View.MemberId
-                                                                                      , inSession   := inSession)) IS NOT NULL 
-                          THEN TRUE 
+                                                                                      , inSession   := inSession)) IS NOT NULL
+                          THEN TRUE
                           ELSE FALSE
                      END
            END AS isPastMain
-           
+
          , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)   :: Boolean AS isIrna
 
          , Object_Personal_View.Member_ReferId
@@ -278,7 +279,7 @@ BEGIN
           LEFT JOIN tmpUser_Member AS ObjectLink_User_Member
                                    ON ObjectLink_User_Member.ChildObjectId = Object_Personal_View.MemberId          --ObjectLink_User_Member.ObjectId
                                   AND ObjectLink_User_Member.DescId        = zc_ObjectLink_User_Member()
-        
+
           LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                                ON ObjectLink_Unit_Branch.ObjectId = Object_Personal_View.UnitId
                               AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
@@ -308,7 +309,7 @@ BEGIN
                                ON ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId = Object_Personal_View.PersonalId
                               AND ObjectLink_Personal_PersonalServiceListCardSecond.DescId = zc_ObjectLink_Personal_PersonalServiceListCardSecond()
           LEFT JOIN Object AS Object_PersonalServiceListCardSecond ON Object_PersonalServiceListCardSecond.Id = ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId
-          
+
           LEFT JOIN ObjectLink AS ObjectLink_Personal_SheetWorkTime
                                ON ObjectLink_Personal_SheetWorkTime.ObjectId = Object_Personal_View.PersonalId
                               AND ObjectLink_Personal_SheetWorkTime.DescId = zc_ObjectLink_Personal_SheetWorkTime()
@@ -335,14 +336,14 @@ BEGIN
 
           LEFT JOIN ObjectString AS ObjectString_INN
                                  ON ObjectString_INN.ObjectId = Object_Personal_View.MemberId
-                                AND ObjectString_INN.DescId = zc_ObjectString_Member_INN() 
+                                AND ObjectString_INN.DescId = zc_ObjectString_Member_INN()
 
           LEFT JOIN ObjectDate AS ObjectDate_Birthday
                                ON ObjectDate_Birthday.ObjectId = Object_Personal_View.MemberId
                               AND ObjectDate_Birthday.DescId = zc_ObjectDate_Member_Birthday()
 
           LEFT JOIN ObjectString AS ObjectString_CardBank
-                                 ON ObjectString_CardBank.ObjectId = Object_Personal_View.MemberId 
+                                 ON ObjectString_CardBank.ObjectId = Object_Personal_View.MemberId
                                 AND ObjectString_CardBank.DescId = zc_ObjectString_Member_CardBank()
           LEFT JOIN ObjectString AS ObjectString_CardBankSecond
                                  ON ObjectString_CardBankSecond.ObjectId = Object_Personal_View.MemberId
@@ -392,7 +393,8 @@ BEGIN
         SELECT
            0   AS Id
          , 0 AS MemberCode
-         , CAST ('”ƒ¿À»“‹' as TVarChar)  AS MemberName   
+         , CAST ('”ƒ¿À»“‹' as TVarChar)  AS MemberName
+         , CAST ('' as TVarChar)  AS MemberName_FIO
          , CAST ('' as TVarChar) AS INN
          , CAST ('' as TVarChar) AS Code1C
          , CAST ('' as TVarChar) AS DriverCertificate
@@ -420,7 +422,7 @@ BEGIN
          , CAST ('' as TVarChar) AS PersonalGroupName
          , 0                     AS StorageLineId
          , 0                     AS StorageLineCode
-         , CAST ('' as TVarChar) AS StorageLineName 
+         , CAST ('' as TVarChar) AS StorageLineName
          , CAST ('' as Text)     AS StorageLineName_all
          , 0                     AS PersonalServiceListId
          , CAST ('' as TVarChar) AS PersonalServiceListName
@@ -442,12 +444,12 @@ BEGIN
          , FALSE                    AS isDateSend
          , FALSE                    AS isMain
          , FALSE                    AS isOfficial
-         , 0                        AS MemberId  
+         , 0                        AS MemberId
          , 0                        AS UserId
          , CAST ('' as TVarChar)    AS ScalePSW
          , CAST (Null as TFloat)    AS ScalePSW_forPrint
          , FALSE                    AS isErased
-         , FALSE                    AS isPastMain 
+         , FALSE                    AS isPastMain
          , FALSE         :: Boolean AS isIrna
 
          , 0                        AS Member_ReferId
@@ -460,7 +462,7 @@ BEGIN
          , 0                        AS ReasonOutCode
          , CAST ('' as TVarChar)    AS ReasonOutName
          , CAST ('' as TVarChar)    AS Comment
-         , CAST (NULL as TVarChar)  AS Birthday_Date 
+         , CAST (NULL as TVarChar)  AS Birthday_Date
          , CAST ('' as TVarChar)    AS CardBank
          , CAST ('' as TVarChar)    AS CardBankSecond
     ;
@@ -468,7 +470,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
---ALTER FUNCTION gpSelect_Object_Personal (TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
