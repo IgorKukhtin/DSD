@@ -130,10 +130,10 @@ BEGIN
                                  LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId
                                  
                                  LEFT JOIN ObjectFloat AS ObjectFloat_GoodsByGoodsKind_WeightPackageSticker
-                                                       ON ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.ObjectId  = ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId
+                                                       ON ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.ObjectId  = Object_GoodsByGoodsKind.Id
                                                       AND ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.DescId    = zc_ObjectFloat_GoodsByGoodsKind_WeightPackageSticker()
                                  LEFT JOIN ObjectFloat AS ObjectFloat_GoodsByGoodsKind_WeightPackageKorob
-                                                       ON ObjectFloat_GoodsByGoodsKind_WeightPackageKorob.ObjectId  = ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId
+                                                       ON ObjectFloat_GoodsByGoodsKind_WeightPackageKorob.ObjectId  = Object_GoodsByGoodsKind.Id
                                                       AND ObjectFloat_GoodsByGoodsKind_WeightPackageKorob.DescId    = zc_ObjectFloat_GoodsByGoodsKind_WeightPackageKorob()
                                  
                                  -- для SORT.ini - ограничиваем
@@ -156,6 +156,7 @@ BEGIN
                                  INNER JOIN Object AS Object_GoodsByGoodsKind
                                                    ON Object_GoodsByGoodsKind.Id       = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
                                                   AND Object_GoodsByGoodsKind.isErased = FALSE
+
                                  LEFT JOIN ObjectFloat AS ObjectFloat_GoodsByGoodsKind_WeightPackageSticker
                                                        ON ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.ObjectId  = Object_GoodsByGoodsKind.Id
                                                       AND ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.DescId    = zc_ObjectFloat_GoodsByGoodsKind_WeightPackageSticker()
@@ -235,6 +236,7 @@ BEGIN
               END                        :: TFloat AS Weight_gd
             , ObjectFloat_WeightTare.ValueData     AS WeightTare_gd
             , ObjectFloat_CountForWeight.ValueData AS CountForWeight_gd
+
             , CASE WHEN tmpWeightPackageSticker.WeightPackageSticker_Korob > 0
                         THEN tmpWeightPackageSticker.WeightPackageSticker_Korob
                    ELSE tmpWeightPackageSticker.WeightPackageSticker
