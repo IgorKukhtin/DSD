@@ -3,7 +3,7 @@ object PersonalForm: TPersonalForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080'>'
   ClientHeight = 469
-  ClientWidth = 1711
+  ClientWidth = 1540
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object PersonalForm: TPersonalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 1711
+    Width = 1540
     Height = 443
     Align = alClient
     TabOrder = 0
@@ -83,6 +83,14 @@ object PersonalForm: TPersonalForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 155
+      end
+      object MemberName_FIO: TcxGridDBColumn
+        Caption = '***'#1060#1048#1054
+        DataBinding.FieldName = 'MemberName_FIO'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
       end
       object Birthday_Month: TcxGridDBColumn
         Caption = #1052#1077#1089#1103#1094' '#1088#1086#1078#1076#1077#1085#1080#1103
