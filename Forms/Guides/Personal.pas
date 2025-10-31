@@ -154,6 +154,7 @@ type
     actDelete_PersonalByStorageLine: TdsdExecStoredProc;
     macDelete_PersonalByStorageLine: TMultiAction;
     bbDelete_PersonalByStorageLine: TdxBarButton;
+    MemberName_FIO: TcxGridDBColumn;
   private
     { Private declarations }
   public

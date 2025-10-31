@@ -285,9 +285,9 @@ BEGIN
                                 -- МК-піврічча
                               , MovementItem.Staff_Summ_MK6    ::TFloat AS Staff_Summ_MK6
                                 -- Відрядна оплата(для 1-єї шт.од)
-                              , (COALESCE (MovementItem.Staff_Summ_real, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)    ::TFloat AS Staff_Summ_real
+                              , (COALESCE (MovementItem.Staff_Summ_real, 0) + CASE WHEN MovementItem.Amount > 0 THEN COALESCE (MovementItem.Staff_Summ_total_real, 0) / MovementItem.Amount ELSE 0 END)    ::TFloat AS Staff_Summ_real
                                 -- Преміальний фонд(для 1-єї шт.од)
-                              , (COALESCE (MovementItem.Staff_Summ_add, 0) + COALESCE (MovementItem.Staff_Summ_total_add, 0)/ MovementItem.Amount)      ::TFloat AS Staff_Summ_add
+                              , (COALESCE (MovementItem.Staff_Summ_add, 0) + CASE WHEN MovementItem.Amount > 0 THEN COALESCE (MovementItem.Staff_Summ_total_add, 0)/ MovementItem.Amount ELSE 0 END)      ::TFloat AS Staff_Summ_add
                   
                                 -- Відрядна оплата(загальна сума)
                               , (COALESCE (MovementItem.Staff_Summ_real, 0) * MovementItem.Amount + COALESCE (MovementItem.Staff_Summ_total_real, 0))   ::TFloat AS Staff_Summ_total_real
@@ -303,7 +303,7 @@ BEGIN
                               , (MovementItem.TotalStaffCount * zfConvert_StringToNumber (Object_StaffHoursLength.ValueData)) ::TFloat AS TotalStaffHoursLength
                   
                                 -- Норма змін для 1-єї шт.од   TotalStaffCount / Amount
-                              , CASE WHEN COALESCE (MovementItem.Amount, 0) <> 0 THEN MovementItem.TotalStaffCount / MovementItem.Amount ELSE 0 END ::TFloat AS NormCount
+                              , CASE WHEN MovementItem.Amount > 0 THEN MovementItem.TotalStaffCount / MovementItem.Amount ELSE 0 END ::TFloat AS NormCount
                   
                                 -- Норма часу для 1-єї шт.од   TotalStaffHoursLength / Amount
                               , CASE WHEN COALESCE (MovementItem.Amount, 0) <> 0

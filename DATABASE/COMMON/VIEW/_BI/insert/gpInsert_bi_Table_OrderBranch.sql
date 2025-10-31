@@ -77,7 +77,7 @@ BEGIN
               -- Результат
               SELECT -- Id Документа
                      Movement.Id                            AS MovementId
-                     -- Дата Филиал - Продажа = ???Дата Склад???
+                     -- Дата Филиал
                    , MovementDate_OperDatePartner.ValueData AS OperDate
                      -- Дата Склад
                    , MovementDate_OperDatePartner.ValueData AS OperDate_sklad
@@ -241,6 +241,48 @@ BEGIN
                 -- !!! только Филиалы
                 AND Object_From.DescId = zc_Object_Unit()
              ;
+
+
+  -- Протокол
+  INSERT INTO ResourseProtocol (UserId
+                                 , OperDate
+                                 , Value1
+                                 , Value2
+                                 , Value3
+                                 , Value4
+                                 , Value5
+                                 , Time1
+                                 , Time2
+                                 , Time3
+                                 , Time4
+                                 , Time5
+                                 , ProcName
+                                 , ProtocolData
+                                  )
+        SELECT inSession :: Integer AS UserId
+               -- во сколько началась
+             , CURRENT_TIMESTAMP
+             , 0 AS Value1
+             , 0 AS Value2
+             , NULL AS Value3
+             , NULL AS Value4
+             , NULL AS Value5
+               -- сколько всего выполнялась проц
+             , (CLOCK_TIMESTAMP() - CURRENT_TIMESTAMP) :: INTERVAL AS Time1
+               -- сколько всего выполнялась проц ДО 
+             , NULL AS Time2
+               -- сколько всего выполнялась проц 
+             , NULL AS Time3
+               -- сколько всего выполнялась проц ПОСЛЕ 
+             , NULL AS Time4
+               -- во сколько закончилась
+             , CLOCK_TIMESTAMP() AS Time5
+               -- ProcName
+             , 'gpInsert_bi_Table_OrderBranch'
+               -- ProtocolData
+             , zfConvert_DateToString (inStartDate)
+   || ' - ' || zfConvert_DateToString (inEndDate)
+              ;
 
 
 END;
