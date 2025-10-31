@@ -946,6 +946,14 @@ RAISE INFO '_end tmpContainerList on ContainerId_count = .<%>  <%>'
                , tmpContainer.isZavod
        ;
 
+
+     -- ошибка - прибыль текущего периода
+     IF inBranchId <= 0
+     THEN
+         DELETE FROM _tmpMaster WHERE _tmpMaster.InfoMoneyId_Detail = zc_Enum_InfoMoney_80401() AND _tmpMaster.isZavod = TRUE;
+     END IF;
+
+
 -- INSERT INTO _tmpMaster (ContainerId, UnitId, isInfoMoney_80401, StartCount, StartSumm, IncomeCount, IncomeSumm, calcCount, calcSumm, calcCount_external, calcSumm_external, OutCount, OutSumm)
 --    RAISE EXCEPTION 'ќшибка.<%>  <%>'
 --    , (select _tmpMaster.calcCount from _tmpMaster where _tmpMaster.ContainerId = 11000222)
@@ -2613,8 +2621,8 @@ END IF;
      -- проверка 1.1.
      IF EXISTS (SELECT _tmpMaster.ContainerId FROM _tmpMaster WHERE _tmpMaster.ContainerId > 0 GROUP BY _tmpMaster.ContainerId HAVING COUNT(*) > 1)
      THEN
-RAISE INFO 'проверка 1.1.';
-return;
+-- RAISE INFO 'проверка 1.1.';
+-- return;
 
          RAISE EXCEPTION 'проверка 1.1. - SELECT ContainerId FROM _tmpMaster GROUP BY ContainerId HAVING COUNT(*) > 1 ContainerId = % + count = %'
                        , (SELECT _tmpMaster.ContainerId FROM _tmpMaster WHERE _tmpMaster.ContainerId > 0 GROUP BY _tmpMaster.ContainerId HAVING COUNT(*) > 1 LIMIT 1)
@@ -2625,8 +2633,8 @@ return;
      -- проверка 1.2.
      IF EXISTS (SELECT _tmpChild.MasterContainerId, _tmpChild.ContainerId FROM _tmpChild WHERE _tmpChild.MasterContainerId > 0 AND _tmpChild.ContainerId > 0 GROUP BY _tmpChild.MasterContainerId, _tmpChild.ContainerId HAVING COUNT(*) > 1)
      THEN
-RAISE INFO 'проверка 1.2.';
-return;
+-- RAISE INFO 'проверка 1.2.';
+-- return;
          RAISE EXCEPTION 'проверка 1.2. - SELECT MasterContainerId, ContainerId FROM _tmpChild GROUP BY MasterContainerId, ContainerId HAVING COUNT(*) > 1 :  MasterContainerId = % and ContainerId = %'
                        , (SELECT _tmpChild.MasterContainerId FROM _tmpChild WHERE _tmpChild.MasterContainerId > 0 AND _tmpChild.ContainerId > 0 GROUP BY _tmpChild.MasterContainerId, _tmpChild.ContainerId HAVING COUNT(*) > 1 ORDER BY _tmpChild.MasterContainerId, _tmpChild.ContainerId LIMIT 1)
                        , (SELECT _tmpChild.ContainerId FROM _tmpChild WHERE _tmpChild.MasterContainerId > 0 AND _tmpChild.ContainerId > 0 GROUP BY _tmpChild.MasterContainerId, _tmpChild.ContainerId HAVING COUNT(*) > 1 ORDER BY _tmpChild.MasterContainerId, _tmpChild.ContainerId LIMIT 1)
@@ -2641,19 +2649,28 @@ return;
                 GROUP BY _tmpMaster.UnitId, _tmpMaster.AccountId, _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.JuridicalId_basis
                 HAVING COUNT(*) > 1)
      THEN
+           -- дл€ “еста
+           /*truncate table _tmpMaster_2024_07_;
+           -- дл€ “еста
+           INSERT INTO _tmpMaster_2024_07_ (ContainerId, UnitId, isInfoMoney_80401, StartCount, StartSumm, IncomeCount, IncomeSumm, calcCount, calcSumm, calcCount_external, calcSumm_external, OutCount, OutSumm
+                                 , AccountId, GoodsId, GoodsKindId, InfoMoneyId, InfoMoneyId_Detail, JuridicalId_basis
+                                 , isZavod
+                                  )
+              SELECT * FROM _tmpMaster;
+
          RAISE INFO 'проверка 2.1.';
-         return;
+         return;*/
+
          --
          RAISE EXCEPTION 'проверка 2.1. - SELECT all keys FROM _tmpMaster GROUP BY all keys HAVING COUNT(*) > 1 UnitId = % AccountId = % GoodsId = % GoodsKindId = % InfoMoneyId = % InfoMoneyId_Detail = % JuridicalId_basis = %  + count = %'
                        , (SELECT _tmpMaster.UnitId FROM _tmpMaster WHERE _tmpMaster.ContainerId = 0 GROUP BY _tmpMaster.UnitId, _tmpMaster.AccountId, _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.JuridicalId_basis HAVING COUNT(*) > 1 ORDER BY _tmpMaster.UnitId, _tmpMaster.AccountId, _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.JuridicalId_basis LIMIT 1)
                        , (SELECT _tmpMaster.AccountId FROM _tmpMaster WHERE _tmpMaster.ContainerId = 0 GROUP BY _tmpMaster.UnitId, _tmpMaster.AccountId, _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.JuridicalId_basis HAVING COUNT(*) > 1 ORDER BY _tmpMaster.UnitId, _tmpMaster.AccountId, _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.JuridicalId_basis LIMIT 1)
                        , (SELECT _tmpMaster.GoodsId FROM _tmpMaster WHERE _tmpMaster.ContainerId = 0 GROUP BY _tmpMaster.UnitId, _tmpMaster.AccountId, _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.JuridicalId_basis HAVING COUNT(*) > 1 ORDER BY _tmpMaster.UnitId, _tmpMaster.AccountId, _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.JuridicalId_basis LIMIT 1)
                        , (SELECT _tmpMaster.GoodsKindId FROM _tmpMaster WHERE _tmpMaster.ContainerId = 0 GROUP BY _tmpMaster.UnitId, _tmpMaster.AccountId, _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.JuridicalId_basis HAVING COUNT(*) > 1 ORDER BY _tmpMaster.UnitId, _tmpMaster.AccountId, _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.JuridicalId_basis LIMIT 1)
-                       , (SELECT _tmpMaster.GoodsKindId FROM _tmpMaster WHERE _tmpMaster.ContainerId = 0 GROUP BY _tmpMaster.UnitId, _tmpMaster.AccountId, _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.JuridicalId_basis HAVING COUNT(*) > 1 ORDER BY _tmpMaster.UnitId, _tmpMaster.AccountId, _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.JuridicalId_basis LIMIT 1)
                        , (SELECT _tmpMaster.InfoMoneyId FROM _tmpMaster WHERE _tmpMaster.ContainerId = 0 GROUP BY _tmpMaster.UnitId, _tmpMaster.AccountId, _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.JuridicalId_basis HAVING COUNT(*) > 1 ORDER BY _tmpMaster.UnitId, _tmpMaster.AccountId, _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.JuridicalId_basis LIMIT 1)
                        , (SELECT _tmpMaster.InfoMoneyId_Detail FROM _tmpMaster WHERE _tmpMaster.ContainerId = 0 GROUP BY _tmpMaster.UnitId, _tmpMaster.AccountId, _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.JuridicalId_basis HAVING COUNT(*) > 1 ORDER BY _tmpMaster.UnitId, _tmpMaster.AccountId, _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.JuridicalId_basis LIMIT 1)
                        , (SELECT _tmpMaster.JuridicalId_basis FROM _tmpMaster WHERE _tmpMaster.ContainerId = 0 GROUP BY _tmpMaster.UnitId, _tmpMaster.AccountId, _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.JuridicalId_basis HAVING COUNT(*) > 1 ORDER BY _tmpMaster.UnitId, _tmpMaster.AccountId, _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.JuridicalId_basis LIMIT 1)
-                       --, (SELECT COUNT(*) FROM (SELECT _tmpMaster.UnitId, _tmpMaster.AccountId, _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.JuridicalId_basis FROM _tmpMaster WHERE _tmpMaster.ContainerId = 0 GROUP BY _tmpMaster.UnitId, _tmpMaster.AccountId, _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.JuridicalId_basis HAVING COUNT(*) > 1) AS tmpSelect)
+                       , (SELECT COUNT(*) FROM (SELECT _tmpMaster.UnitId, _tmpMaster.AccountId, _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.JuridicalId_basis FROM _tmpMaster WHERE _tmpMaster.ContainerId = 0 GROUP BY _tmpMaster.UnitId, _tmpMaster.AccountId, _tmpMaster.GoodsId, _tmpMaster.GoodsKindId, _tmpMaster.InfoMoneyId, _tmpMaster.InfoMoneyId_Detail, _tmpMaster.JuridicalId_basis HAVING COUNT(*) > 1) AS tmpSelect)
                         ;
      END IF;
 
@@ -2667,8 +2684,8 @@ return;
                 HAVING COUNT(*) > 1)
      THEN
 
-         RAISE INFO 'проверка 2.2.';
-         return;
+         -- RAISE INFO 'проверка 2.2.';
+         -- return;
          --
          RAISE EXCEPTION 'проверка 2.2. - SELECT all keys FROM _tmpChild GROUP BY all keys HAVING COUNT(*) > 1 :  Master_Keys = % and Keys = %'
                        , (SELECT COALESCE (_tmpChild.AccountId, 0) :: TVarChar || ' ' || COALESCE (_tmpChild.UnitId, 0) :: TVarChar || ' ' || COALESCE (_tmpChild.GoodsId, 0) :: TVarChar || '' || COALESCE (_tmpChild.GoodsKindId, 0) :: TVarChar || '' || COALESCE (_tmpChild.JuridicalId_basis, 0) :: TVarChar || '' || COALESCE (_tmpChild.InfoMoneyId, 0) :: TVarChar || '' || COALESCE (_tmpChild.InfoMoneyId_Detail, 0) :: TVarChar
