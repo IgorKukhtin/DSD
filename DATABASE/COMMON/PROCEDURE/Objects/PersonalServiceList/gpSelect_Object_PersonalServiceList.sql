@@ -96,7 +96,7 @@ BEGIN
            , Object_Member.Id                     AS MemberId
            , Object_Member.ValueData              AS MemberName
            , tmpMemberPersonalServiceList.MemberName_view ::Text AS MemberName_view
-           , (Object_Member.ValueData ||'; ' || tmpMemberPersonalServiceList.MemberName_view) ::Text AS MemberName_choice
+           , (COALESCE (Object_Member.ValueData,'') ||'; ' || COALESCE (tmpMemberPersonalServiceList.MemberName_view,'')) ::Text AS MemberName_choice
 
            , Object_MemberHeadManager.Id          AS MemberHeadManagerId
            , Object_MemberHeadManager.ValueData   AS MemberHeadManagerName
