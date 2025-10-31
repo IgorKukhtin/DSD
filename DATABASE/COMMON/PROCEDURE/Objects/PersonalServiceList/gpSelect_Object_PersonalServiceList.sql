@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , BranchId Integer, BranchName TVarChar
              , BankId Integer, BankName TVarChar
-             , MemberId Integer, MemberName TVarChar
+             , MemberId Integer, MemberName TVarChar, MemberName_view Text, MemberName_choice Text
              , MemberHeadManagerId Integer, MemberHeadManagerName TVarChar
              , MemberManagerId Integer, MemberManagerName TVarChar
              , MemberBookkeeperId Integer, MemberBookkeeperName TVarChar
@@ -55,7 +55,30 @@ BEGIN
                             GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
 
    -- –ÂÁÛÎ¸Ú‡Ú
-   RETURN QUERY 
+   RETURN QUERY
+   WITH
+   tmpMemberPersonalServiceList AS (SELECT ObjectLink_MemberPersonalServiceList_PersonalServiceList.ChildObjectId  AS PersonalServiceListId
+                                         , STRING_AGG (DISTINCT Object_Member.ValueData, '; ' ORDER BY Object_Member.ValueData) ::Text AS MemberName_view
+                                         FROM Object AS Object_MemberPersonalServiceList
+                                   
+                                              LEFT JOIN ObjectLink AS ObjectLink_MemberPersonalServiceList_PersonalServiceList
+                                                                   ON ObjectLink_MemberPersonalServiceList_PersonalServiceList.ObjectId = Object_MemberPersonalServiceList.Id
+                                                                  AND ObjectLink_MemberPersonalServiceList_PersonalServiceList.DescId = zc_ObjectLink_MemberPersonalServiceList_PersonalServiceList()
+                                   
+                                              LEFT JOIN ObjectLink AS ObjectLink_MemberPersonalServiceList_Member
+                                                                   ON ObjectLink_MemberPersonalServiceList_Member.ObjectId = Object_MemberPersonalServiceList.Id
+                                                                  AND ObjectLink_MemberPersonalServiceList_Member.DescId = zc_ObjectLink_MemberPersonalServiceList_Member()
+                                              LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_MemberPersonalServiceList_Member.ChildObjectId 
+                                         WHERE Object_MemberPersonalServiceList.DescId = zc_Object_MemberPersonalServiceList()
+                                           AND Object_MemberPersonalServiceList.isErased = FALSE
+                                         GROUP BY ObjectLink_MemberPersonalServiceList_PersonalServiceList.ChildObjectId
+                                        )
+ , tmpPersonalServiceList AS (SELECT Object_PersonalServiceList.* 
+                              FROM Object AS Object_PersonalServiceList
+                              WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
+                                AND (Object_PersonalServiceList.isErased = inIsErased OR inIsErased = TRUE)
+                             )
+
        SELECT
              Object_PersonalServiceList.Id         AS Id
            , Object_PersonalServiceList.ObjectCode AS Code
@@ -72,6 +95,8 @@ BEGIN
 
            , Object_Member.Id                     AS MemberId
            , Object_Member.ValueData              AS MemberName
+           , tmpMemberPersonalServiceList.MemberName_view ::Text AS MemberName_view
+           , (Object_Member.ValueData ||'; ' || tmpMemberPersonalServiceList.MemberName_view) ::Text AS MemberName_choice
 
            , Object_MemberHeadManager.Id          AS MemberHeadManagerId
            , Object_MemberHeadManager.ValueData   AS MemberHeadManagerName
@@ -134,7 +159,7 @@ BEGIN
 
            , Object_PersonalServiceList.isErased  AS isErased
 
-       FROM Object AS Object_PersonalServiceList
+       FROM tmpPersonalServiceList AS Object_PersonalServiceList
            LEFT JOIN ObjectBoolean AS ObjectBoolean_CompensationNot
                                    ON ObjectBoolean_CompensationNot.ObjectId  = Object_PersonalServiceList.Id
                                   AND ObjectBoolean_CompensationNot.DescId    = zc_ObjectBoolean_PersonalServiceList_CompensationNot()
@@ -266,14 +291,13 @@ BEGIN
                                   ON ObjectString_OnFlowType.ObjectId = Object_PersonalServiceList.Id 
                                  AND ObjectString_OnFlowType.DescId = zc_ObjectString_PersonalServiceList_OnFlowType()
 
-   WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
-      AND ((ObjectLink_PersonalServiceList_Branch.ChildObjectId = vbBranchId_Constraint
+           LEFT JOIN tmpMemberPersonalServiceList ON tmpMemberPersonalServiceList.PersonalServiceListId = Object_PersonalServiceList.Id
+
+   WHERE  ((ObjectLink_PersonalServiceList_Branch.ChildObjectId = vbBranchId_Constraint
            OR vbBranchId_Constraint IS NULL)
            --OR (Object_PersonalServiceList.Id = 4409489
              -- AND vbUserId = 9457)
-              ) 
-      AND (Object_PersonalServiceList.isErased = inIsErased OR inIsErased = TRUE)
-
+              )
   UNION ALL
      SELECT 
              0 :: Integer AS Id
@@ -291,6 +315,8 @@ BEGIN
 
            , 0   :: Integer AS MemberId
            , '' :: TVarChar AS MemberName
+           , '' ::Text      AS MemberName_view
+           , '' ::Text      AS MemberName_choice
 
            , 0   :: Integer AS MemberHeadManagerId
            , '' :: TVarChar AS MemberHeadManagerName
@@ -348,6 +374,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                 ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 30.10.25          *
  26.06.25          * 
  02.03.25          * isNotRound
  21.03.25          * isNotAuto

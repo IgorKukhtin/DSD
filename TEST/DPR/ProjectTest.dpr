@@ -1601,7 +1601,6 @@ uses
   StaffHoursDay in '..\..\Forms\Guides\StaffHoursDay.pas' {StaffHoursDayForm: TParentForm},
   StaffHoursLength in '..\..\Forms\Guides\StaffHoursLength.pas' {StaffHoursLengthForm: TParentForm},
   StaffPaidKindEdit in '..\..\Forms\Guides\StaffPaidKindEdit.pas' {StaffPaidKindEditForm: TParentForm},
-  StaffListMovement in '..\..\Forms\Document\StaffListMovement.pas' {StaffListMovementForm: TParentForm},
   ClientKindEdit in '..\..\Forms\Kind\ClientKindEdit.pas' {ClientKindEditForm: TParentForm},
   StaffListJournalChoice in '..\..\Forms\Document\StaffListJournalChoice.pas' {StaffListJournalChoiceForm: TParentForm},
   Report_StaffListMovementDialog in '..\..\Forms\Report\Report_StaffListMovementDialog.pas' {Report_StaffListMovementDialogForm: TParentForm},
@@ -1625,7 +1624,8 @@ uses
   PersonalByStorageLineEdit in '..\..\Forms\Guides\PersonalByStorageLineEdit.pas' {PersonalByStorageLineEditForm: TParentForm},
   PersonalEdit_ByStorageLine in '..\..\Forms\Guides\PersonalEdit_ByStorageLine.pas' {PersonalEdit_ByStorageLineForm: TParentForm},
   CFO in '..\..\Forms\Guides\CFO.pas' {CFOForm: TParentForm},
-  CFOEdit in '..\..\Forms\Guides\CFOEdit.pas' {CFOEditForm: TParentForm};
+  CFOEdit in '..\..\Forms\Guides\CFOEdit.pas' {CFOEditForm: TParentForm},
+  StaffListMovement in '..\..\Forms\Document\StaffListMovement.pas' {StaffListMovementForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

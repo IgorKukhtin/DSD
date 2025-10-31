@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_StaffList (Integer, Integer, Integer,Integer, Integer, Integer,Integer, Integer,  Integer,  TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_StaffList (Integer, Integer, Integer,Integer, Integer, Integer,TVarChar, TVarChar,  TVarChar,  TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_StaffList (Integer, Integer, Integer,Integer, Integer, Integer,TVarChar, TVarChar,  TVarChar,  TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_StaffList (Integer, Integer, Integer,Integer, Integer, Integer,TVarChar, TVarChar,  TVarChar,  TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_StaffList (Integer, Integer, Integer,Integer, Integer, Integer,TVarChar, TVarChar,  TVarChar, TFloat,TFloat, TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_StaffList(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -30,6 +31,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_StaffList(
     IN inStaff_Summ_MK6        TFloat    , --
     IN inStaff_Summ_real       TFloat    , --
     IN inStaff_Summ_add        TFloat    , --
+    IN inStaff_Summ_total_real  TFloat    , --
+    IN inStaff_Summ_total_add   TFloat    , --
     IN inComment               TVarChar  , -- 
     IN inSession               TVarChar    -- сессия пользователя
 )
@@ -38,7 +41,11 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbStaffHoursDayId Integer;
            vbStaffHoursId Integer;
-           vbStaffHoursLengthId Integer;
+           vbStaffHoursLengthId Integer; 
+           vbSumm_real_old TFloat;
+           vbSumm_add_old TFloat;
+           vbSumm_total_real_old TFloat;
+           vbSumm_total_add_old TFloat;
            
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -88,7 +95,48 @@ BEGIN
                                                                          );
      END IF;  
 
+     vbSumm_real_old       := (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_Staff_Summ_real())       ::TFloat;
+     vbSumm_add_old        := (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_Staff_Summ_add())        ::TFloat;
+     vbSumm_total_real_old := (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_Staff_Summ_total_real()) ::TFloat;
+     vbSumm_total_add_old  := (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_Staff_Summ_total_add())  ::TFloat;
 
+ 
+     --Могут внести или "для 1-єї шт.од" или "загальну сума"    сохраняем только 1 параметр - тот что внесли, второй обнуляем
+     --1, если внесли  Відрядна оплата(для 1-єї шт.од)
+     IF COALESCE(inStaff_Summ_real,0) <> COALESCE(vbSumm_real_old,0)
+    AND COALESCE(inStaff_Summ_real,0) <> 0
+    --AND COALESCE(vbSumm_total_real_old,0) = 0
+     THEN
+          -- розрахунок Відрядна оплата(загальна сума)
+          inStaff_Summ_total_real := 0 ::TFloat;
+     END IF; 
+     --2. если внесли  Відрядна оплата(загальна сума)
+     IF COALESCE(inStaff_Summ_total_real,0) <> COALESCE(vbSumm_total_real_old,0)
+    AND COALESCE(inStaff_Summ_total_real,0) <> 0
+    --AND COALESCE(vbSumm_real_old,0) = 0
+     THEN
+          -- розрахунок Відрядна оплата(для 1-єї шт.од)
+          inStaff_Summ_real := 0 ::TFloat;
+     END IF;
+
+     --3. если внесли  Преміальний фонд(для 1-єї шт.од)
+     IF COALESCE(inStaff_Summ_add,0) <> COALESCE(vbSumm_add_old,0)
+    AND COALESCE(inStaff_Summ_add,0) <> 0
+    --AND COALESCE(vbSumm_total_add_old,0) = 0
+     THEN
+          -- розрахунок Преміальний фонд(загальна сума)
+          inStaff_Summ_total_add := 0 ::TFloat;
+     END IF; 
+     --4. если внесли Преміальний фонд(загальна сума)
+     IF COALESCE(inStaff_Summ_total_add,0) <> COALESCE(vbSumm_total_add_old,0)
+    AND COALESCE(inStaff_Summ_total_add,0) <> 0
+   -- AND COALESCE(vbSumm_add_old,0) = 0
+     THEN
+          -- розрахунок Преміальний фонд(для 1-єї шт.од)
+          inStaff_Summ_add := 0 ::TFloat;
+     END IF;
+
+                            
      -- сохранили
      ioId := lpInsertUpdate_MovementItem_StaffList (ioId                  := ioId
                                                   , inMovementId          := inMovementId
@@ -115,6 +163,8 @@ BEGIN
                                                   , inStaff_Summ_MK6      := inStaff_Summ_MK6
                                                   , inStaff_Summ_real     := inStaff_Summ_real    
                                                   , inStaff_Summ_add      := inStaff_Summ_add
+                                                  , inStaff_Summ_total_real := inStaff_Summ_total_real    
+                                                  , inStaff_Summ_total_add  := inStaff_Summ_total_add
                                                   , inComment             := inComment
                                                   , inUserId              := vbUserId
                                                   );

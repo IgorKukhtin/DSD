@@ -25,7 +25,11 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , ServiceListId_AvanceF2 Integer, ServiceListName_AvanceF2 TVarChar
              , ServiceListCardSecondId Integer, ServiceListCardSecondName TVarChar
              , SheetWorkTimeId Integer, SheetWorkTimeName TVarChar
-             , StorageLineId Integer, StorageLineName TVarChar
+             , StorageLineId_1 Integer, StorageLineName_1 TVarChar
+             , StorageLineId_2 Integer, StorageLineName_2 TVarChar
+             , StorageLineId_3 Integer, StorageLineName_3 TVarChar
+             , StorageLineId_4 Integer, StorageLineName_4 TVarChar
+             , StorageLineId_5 Integer, StorageLineName_5 TVarChar
              , Member_ReferId Integer, Member_ReferName TVarChar
              , Member_MentorId Integer, Member_MentorName TVarChar            
              
@@ -83,8 +87,16 @@ BEGIN
              , CAST ('' as TVarChar)    AS ServiceListCardSecondName
              , CAST (0 as Integer)      AS SheetWorkTimeId 
              , CAST ('' as TVarChar)    AS SheetWorkTimeName
-             , CAST (0 as Integer)      AS StorageLineId
-             , CAST ('' as TVarChar)    AS StorageLineName
+             , CAST (0 as Integer)      AS StorageLineId_1
+             , CAST ('' as TVarChar)    AS StorageLineName_1
+             , CAST (0 as Integer)      AS StorageLineId_2
+             , CAST ('' as TVarChar)    AS StorageLineName_2
+             , CAST (0 as Integer)      AS StorageLineId_3
+             , CAST ('' as TVarChar)    AS StorageLineName_3
+             , CAST (0 as Integer)      AS StorageLineId_4
+             , CAST ('' as TVarChar)    AS StorageLineName_4
+             , CAST (0 as Integer)      AS StorageLineId_5
+             , CAST ('' as TVarChar)    AS StorageLineName_5
              , 0                        AS Member_ReferId
              , CAST ('' as TVarChar)    AS Member_ReferName
              , 0                        AS Member_MentorId
@@ -134,6 +146,41 @@ BEGIN
                       WHERE Object_Personal.DescId = zc_Object_Personal()
                         AND Object_Personal.isErased = FALSE 
                        ) 
+
+        , tmpStorageLine AS (WITH
+                             tmp AS(SELECT ObjectLink_PersonalByStorageLine_Personal.ChildObjectId     AS PersonalId
+                                         , ObjectLink_PersonalByStorageLine_StorageLine.ChildObjectId  AS StorageLineId
+                                         , ROW_NUMBER() OVER (PARTITION BY ObjectLink_PersonalByStorageLine_Personal.ChildObjectId ORDER BY Object_PersonalByStorageLine) AS Ord
+                                    FROM Object AS Object_PersonalByStorageLine
+                                         INNER JOIN ObjectLink AS ObjectLink_PersonalByStorageLine_Personal
+                                                               ON ObjectLink_PersonalByStorageLine_Personal.ObjectId = Object_PersonalByStorageLine.Id
+                                                              AND ObjectLink_PersonalByStorageLine_Personal.DescId = zc_ObjectLink_PersonalByStorageLine_Personal()
+                                                              AND ObjectLink_PersonalByStorageLine_Personal.ChildObjectId IN (SELECT DISTINCT tmpPersonal.PersonalId FROM tmpPersonal)
+                                                               
+                                         LEFT JOIN ObjectLink AS ObjectLink_PersonalByStorageLine_StorageLine
+                                                              ON ObjectLink_PersonalByStorageLine_StorageLine.ObjectId = Object_PersonalByStorageLine.Id
+                                                             AND ObjectLink_PersonalByStorageLine_StorageLine.DescId = zc_ObjectLink_PersonalByStorageLine_StorageLine()
+                                    WHERE Object_PersonalByStorageLine.DescId = zc_Object_PersonalByStorageLine()
+                                      AND Object_PersonalByStorageLine.isErased = False
+                                    ) 
+                           , tmpOrd AS (SELECT tmp.PersonalId
+                                             , CASE WHEN tmp.Ord = 1 THEN tmp.StorageLineId ELSE 0 END AS StorageLineId_1
+                                             , CASE WHEN tmp.Ord = 2 THEN tmp.StorageLineId ELSE 0 END AS StorageLineId_2
+                                             , CASE WHEN tmp.Ord = 3 THEN tmp.StorageLineId ELSE 0 END AS StorageLineId_3
+                                             , CASE WHEN tmp.Ord = 4 THEN tmp.StorageLineId ELSE 0 END AS StorageLineId_4
+                                             , CASE WHEN tmp.Ord = 5 THEN tmp.StorageLineId ELSE 0 END AS StorageLineId_5
+                                        FROM tmp 
+                                        )
+                             SELECT tmp.PersonalId
+                                  , MAX (tmp.StorageLineId_1) AS StorageLineId_1
+                                  , MAX (tmp.StorageLineId_2) AS StorageLineId_2
+                                  , MAX (tmp.StorageLineId_3) AS StorageLineId_3
+                                  , MAX (tmp.StorageLineId_4) AS StorageLineId_4
+                                  , MAX (tmp.StorageLineId_5) AS StorageLineId_5
+                             FROM tmpOrd AS tmp
+                             GROUP BY tmp.PersonalId 
+                             )
+
        SELECT
              Movement.Id
            , Movement.InvNumber
@@ -176,8 +223,18 @@ BEGIN
 
            , Object_SheetWorkTime.Id                          AS SheetWorkTimeId
            , Object_SheetWorkTime.ValueData                   AS SheetWorkTimeName
-           , Object_StorageLine.Id                            AS StorageLineId
-           , Object_StorageLine.ValueData                     AS StorageLineName
+
+           , Object_StorageLine1.Id                           AS StorageLineId_1
+           , Object_StorageLine1.ValueData                    AS StorageLineName_1
+           , Object_StorageLine2.Id                           AS StorageLineId_2
+           , Object_StorageLine2.ValueData                    AS StorageLineName_2
+           , Object_StorageLine3.Id                           AS StorageLineId_3
+           , Object_StorageLine3.ValueData                    AS StorageLineName_3
+           , Object_StorageLine4.Id                           AS StorageLineId_4
+           , Object_StorageLine4.ValueData                    AS StorageLineName_4
+           , Object_StorageLine5.Id                           AS StorageLineId_5
+           , Object_StorageLine5.ValueData                    AS StorageLineName_5
+
            , Object_Member_Refer.Id                           AS Member_ReferId
            , Object_Member_Refer.ValueData                    AS Member_ReferName
            , Object_Member_Mentor.Id                          AS Member_MentorId
@@ -309,7 +366,15 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Personal_StorageLine
                                ON ObjectLink_Personal_StorageLine.ObjectId = tmpPersonal.PersonalId
                               AND ObjectLink_Personal_StorageLine.DescId = zc_ObjectLink_Personal_StorageLine()
-          LEFT JOIN Object AS Object_StorageLine ON Object_StorageLine.Id = ObjectLink_Personal_StorageLine.ChildObjectId
+
+          LEFT JOIN tmpStorageLine ON tmpStorageLine.PersonalId = tmpPersonal.PersonalId                              
+          LEFT JOIN Object AS Object_StorageLine1 ON Object_StorageLine1.Id = COALESCE (tmpStorageLine.StorageLineId_1, ObjectLink_Personal_StorageLine.ChildObjectId)
+          LEFT JOIN Object AS Object_StorageLine2 ON Object_StorageLine2.Id = tmpStorageLine.StorageLineId_2
+          LEFT JOIN Object AS Object_StorageLine3 ON Object_StorageLine3.Id = tmpStorageLine.StorageLineId_3
+          LEFT JOIN Object AS Object_StorageLine4 ON Object_StorageLine4.Id = tmpStorageLine.StorageLineId_4
+          LEFT JOIN Object AS Object_StorageLine5 ON Object_StorageLine5.Id = tmpStorageLine.StorageLineId_5
+
+
           LEFT JOIN ObjectLink AS ObjectLink_Personal_Member_Refer
                                ON ObjectLink_Personal_Member_Refer.ObjectId = tmpPersonal.PersonalId
                               AND ObjectLink_Personal_Member_Refer.DescId = zc_ObjectLink_Personal_Member_Refer()
@@ -334,4 +399,4 @@ $BODY$
 */
 
 -- тест
---  select * from gpGet_Movement_StaffListMember(inMovementId := 32266687 , inOperDate := ('16.09.2025')::TDateTime ,  inSession := '9457');
+-- select * from gpGet_Movement_StaffListMember(inMovementId := 32266687 , inOperDate := ('16.09.2025')::TDateTime ,  inSession := '9457');
