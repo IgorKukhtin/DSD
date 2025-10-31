@@ -168,6 +168,7 @@ BEGIN
                   , Object_Quality.ObjectCode   AS QualityCode
                   , Object_Quality.ValueData    AS QualityName
                   , OS_QualityComment.ValueData AS QualityComment
+                  , ObjectFloat_Quality_NumberPrint.ValueData AS NumberPrint
 
                   , Object_GoodsQuality.ValueData AS Value17
                   , ObjectString_Value1.ValueData AS Value1
@@ -557,7 +558,7 @@ BEGIN
                   ELSE COALESCE (tmpGoodsQuality.Value17, tmpObject_GoodsPropertyValueGroup.Quality, tmpObject_GoodsPropertyValue.Quality, tmpGoodsQuality.Value17)  
              END :: TVarChar AS Value17
              -- для вида товара - Вид оболонки, №4 
-           , CASE WHEN tmpMIGoodsByGoodsKind.Value1_gk <> '' THEN tmpMIGoodsByGoodsKind.Value1_gk ELSE tmpGoodsQuality.Value1 END :: TVarChar AS Value1
+           , CASE WHEN tmpMIGoodsByGoodsKind.Value1_gk <> '' AND tmpGoodsQuality.NumberPrint <> 4 THEN tmpMIGoodsByGoodsKind.Value1_gk ELSE tmpGoodsQuality.Value1 END :: TVarChar AS Value1
 
            , tmpGoodsQuality.Value2
            , tmpGoodsQuality.Value3
@@ -1095,7 +1096,7 @@ BEGIN
              END :: TVarChar AS Value17
 
              -- для вида товара - Вид оболонки, №4 
-           , CASE WHEN tmpMIGoodsByGoodsKind.Value1_gk <> '' THEN tmpMIGoodsByGoodsKind.Value1_gk ELSE tmpGoodsQuality.Value1 END :: TVarChar AS Value1
+           , CASE WHEN tmpMIGoodsByGoodsKind.Value1_gk <> ''  AND tmpGoodsQuality.NumberPrint <> 4 THEN tmpMIGoodsByGoodsKind.Value1_gk ELSE tmpGoodsQuality.Value1 END :: TVarChar AS Value1
 
            , tmpGoodsQuality.Value2
            , tmpGoodsQuality.Value3
