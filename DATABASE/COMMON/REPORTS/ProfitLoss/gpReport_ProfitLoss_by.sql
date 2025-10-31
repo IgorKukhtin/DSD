@@ -16,6 +16,7 @@ RETURNS TABLE (OperDate           TDateTime
             , ProfitLossId        Integer
             , ProfitLossGroupName     TVarChar
             , ProfitLossDirectionName TVarChar
+            , ProfitLossCode          Integer
             , ProfitLossName          TVarChar
             , BusinessId          Integer
             , BusinessName        TVarChar
@@ -108,11 +109,11 @@ BEGIN
      tmpData AS (
                  SELECT
                        -- Id партии
-                         CASE WHEN ProfitLossCode < 11100 THEN 0 ELSE tmp.ContainerId_pl END ::Integer
+                         CASE WHEN Object_ProfitLoss.ObjectCode < 11100 THEN 0 ELSE tmp.ContainerId_pl END ::Integer AS ContainerId_pl
                        -- Дата
-                       , CASE WHEN ProfitLossCode < 11100 THEN DATE_TRUNC ('MONTH', tmp.OperDate) ELSE tmp.OperDate END ::TDateTime
+                       , CASE WHEN Object_ProfitLoss.ObjectCode < 11100 THEN DATE_TRUNC ('MONTH', tmp.OperDate) ELSE tmp.OperDate END ::TDateTime AS OperDate
                        -- Id документа
-                       , CASE WHEN ProfitLossCode < 11100 THEN 0 ELSE tmp.MovementId END ::Integer
+                       , CASE WHEN Object_ProfitLoss.ObjectCode < 11100 THEN 0 ELSE tmp.MovementId END ::Integer AS MovementId
                        -- Вид документа
                        , tmp.MovementDescId      ::Integer
                        -- № документа
@@ -142,28 +143,76 @@ BEGIN
                        -- Об'єкт напрявлення
                        , tmp.DirectionId         ::Integer
                        -- Об'єкт призначення
-                       , tmp.DestinationId       ::Integer
+                       , CASE WHEN Object_ProfitLoss.ObjectCode < 11100 THEN 0 ELSE tmp.DestinationId END ::Integer AS DestinationId
                        -- От кого (место учета) - информативно
                        , tmp.FromId              ::Integer
                        -- Кому (место учета, Направление затрат) - информативно
                        , tmp.ToId                ::Integer
 
                        -- Товар
-                       , CASE WHEN ProfitLossCode < 11100 THEN 0 ELSE tmp.GoodsId END ::Integer
+                       , CASE WHEN Object_ProfitLoss.ObjectCode < 11100 THEN 0 ELSE tmp.GoodsId END        ::Integer AS GoodsId
                        -- Вид Товара
-                       , CASE WHEN ProfitLossCode < 11100 THEN 0 ELSE tmp.GoodsKindId END ::Integer
+                       , CASE WHEN Object_ProfitLoss.ObjectCode < 11100 THEN 0 ELSE tmp.GoodsKindId END    ::Integer AS GoodsKindId
                        -- Вид Товара (только при производстве сырой ПФ)
-                       , CASE WHEN ProfitLossCode < 11100 THEN 0 ELSE tmp.GoodsKindId_gp END ::Integer
+                       , CASE WHEN Object_ProfitLoss.ObjectCode < 11100 THEN 0 ELSE tmp.GoodsKindId_gp END ::Integer AS GoodsKindId_gp
 
                        -- Кол-во (вес)
-                       , tmp.OperCount           ::TFloat
+                       , SUM (tmp.OperCount)           ::TFloat AS OperCount
                        -- Кол-во (шт.)
-                       , tmp.OperCount_sh        ::TFloat
+                       , SUM (tmp.OperCount_sh)        ::TFloat AS OperCount_sh
                        -- Сумма
-                       , tmp.OperSumm            ::TFloat
+                       , SUM (tmp.OperSumm)            ::TFloat AS OperSumm
 
                  FROM _bi_Table_ProfitLoss AS tmp
+                      LEFT JOIN Object AS Object_ProfitLoss ON Object_ProfitLoss.Id     = tmp.ProfitLossId
                  WHERE tmp.OperDate BETWEEN inStartDate AND inEndDate
+                 GROUP BY -- Id партии
+                           CASE WHEN Object_ProfitLoss.ObjectCode < 11100 THEN 0 ELSE tmp.ContainerId_pl END
+                         -- Дата
+                         , CASE WHEN Object_ProfitLoss.ObjectCode < 11100 THEN DATE_TRUNC ('MONTH', tmp.OperDate) ELSE tmp.OperDate END
+                         -- Id документа
+                         , CASE WHEN Object_ProfitLoss.ObjectCode < 11100 THEN 0 ELSE tmp.MovementId END
+                         -- Вид документа
+                         , tmp.MovementDescId
+                         -- № документа
+                         , tmp.InvNumber
+                         -- Примечание документ
+                         , tmp.MovementId_comment
+                         -- Статья ОПиУ
+                         , tmp.ProfitLossId
+                         -- Бизнес
+                         , tmp.BusinessId
+                         -- Филиал затрат (Філія)
+                         , tmp.BranchId_pl
+                         -- Подразделение затрат (Підрозділ)
+                         , tmp.UnitId_pl
+                         -- Статья УП
+                         , tmp.InfoMoneyId
+                         -- Подразделение учета (Місце обліку)
+                         , tmp.UnitId
+                         -- Оборудование (Направление затрат)
+                         , tmp.AssetId
+                         -- Автомобиль (Направление затрат, место учета)
+                         , tmp.CarId
+                         -- Физ лицо
+                         , tmp.MemberId
+                         -- Статья списания (Стаття списання, Направление затрат)
+                         , tmp.ArticleLossId
+                          -- Об'єкт напрявлення
+                         , tmp.DirectionId
+                         -- Об'єкт призначення
+                         , CASE WHEN Object_ProfitLoss.ObjectCode < 11100 THEN 0 ELSE tmp.DestinationId END
+                         -- От кого (место учета) - информативно
+                         , tmp.FromId
+                         -- Кому (место учета, Направление затрат) - информативно
+                         , tmp.ToId
+
+                         -- Товар
+                         , CASE WHEN Object_ProfitLoss.ObjectCode < 11100 THEN 0 ELSE tmp.GoodsId END
+                         -- Вид Товара
+                         , CASE WHEN Object_ProfitLoss.ObjectCode < 11100 THEN 0 ELSE tmp.GoodsKindId END
+                         -- Вид Товара (только при производстве сырой ПФ)
+                         , CASE WHEN Object_ProfitLoss.ObjectCode < 11100 THEN 0 ELSE tmp.GoodsKindId_gp END
                  )
    , tmpMovementString AS (SELECT MovementString.*
                            FROM MovementString
@@ -193,9 +242,10 @@ BEGIN
             -- Примечание документ
             , MovementString_Commet.ValueData  ::TVarChar AS Comment
             -- Статья ОПиУ
-            , tmp.ProfitLossId            ::Integer  AS ProfitLossId
+            , tmp.ProfitLossId                        ::Integer  AS ProfitLossId
             , View_ProfitLoss.ProfitLossGroupName     ::TVarChar
             , View_ProfitLoss.ProfitLossDirectionName ::TVarChar
+            , View_ProfitLoss.ProfitLossCode          ::Integer
             , View_ProfitLoss.ProfitLossName          ::TVarChar
             -- Бизнес
             , tmp.BusinessId            ::Integer  AS BusinessId
