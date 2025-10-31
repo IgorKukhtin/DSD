@@ -122,7 +122,7 @@ BEGIN
                      -- Об'єкт напрявлення
                    , DirectionId
                      -- Об'єкт призначення
-                   , DestinationId
+                   , CASE WHEN ProfitLossCode < 11100 AND 1=0 THEN 0 ELSE DestinationId END AS DestinationId
 
                      -- От кого (место учета) - информативно
                    , FromId
