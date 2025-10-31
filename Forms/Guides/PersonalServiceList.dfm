@@ -20,15 +20,15 @@ object PersonalServiceListForm: TPersonalServiceListForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 56
     Width = 986
-    Height = 294
+    Height = 264
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitLeft = -120
-    ExplicitTop = -6
+    ExplicitTop = 26
+    ExplicitHeight = 294
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -423,6 +423,57 @@ object PersonalServiceListForm: TPersonalServiceListForm
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
     end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Top = 0
+    Width = 986
+    Height = 30
+    Align = alTop
+    TabOrder = 5
+    ExplicitTop = -14
+    object lbSearchName: TcxLabel
+      Left = 10
+      Top = 3
+      Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchName: TcxTextEdit
+      Left = 98
+      Top = 4
+      TabOrder = 1
+      DesignSize = (
+        141
+        21)
+      Width = 141
+    end
+  end
+  object cxLabel1: TcxLabel
+    Left = 266
+    Top = 4
+    Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' : '
+    ParentFont = False
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -13
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
+  end
+  object edSearcMemberName: TcxTextEdit
+    Left = 378
+    Top = 4
+    TabOrder = 7
+    DesignSize = (
+      168
+      21)
+    Width = 168
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -1275,5 +1326,23 @@ object PersonalServiceListForm: TPersonalServiceListForm
     PackSize = 1
     Left = 856
     Top = 128
+  end
+  object FieldFilter: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = ClientDataSet
+    Column = Name
+    ColumnList = <
+      item
+        Column = Name
+        TextEdit = edSearchName
+      end
+      item
+        Column = MemberName_choice
+        TextEdit = edSearcMemberName
+      end>
+    ActionNumber1 = dsdChoiceGuides
+    CheckBoxList = <>
+    Left = 384
+    Top = 96
   end
 end

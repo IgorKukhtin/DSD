@@ -22,7 +22,8 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, cxCurrencyEdit, dsdCommon, ExternalLoad;
+  dxSkinXmas2008Blue, cxCurrencyEdit, dsdCommon, ExternalLoad, cxContainer,
+  cxTextEdit, cxLabel, Vcl.ExtCtrls;
 
 type
   TPersonalServiceListForm = class(TParentForm)
@@ -101,6 +102,12 @@ type
     actGetImportSetting: TdsdExecStoredProc;
     macStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
+    Panel2: TPanel;
+    lbSearchName: TcxLabel;
+    edSearchName: TcxTextEdit;
+    cxLabel1: TcxLabel;
+    edSearcMemberName: TcxTextEdit;
+    FieldFilter: TdsdFieldFilter;
   private
     { Private declarations }
   public
