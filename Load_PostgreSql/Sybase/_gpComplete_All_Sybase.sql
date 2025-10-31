@@ -31,7 +31,7 @@ THEN RETURN; END IF;
      
 
 
-if CURRENT_TIMESTAMP between '01.10.2025 7:55' and '01.10.2025 10:00' AND 1=0
+if CURRENT_TIMESTAMP between '01.11.2025 7:55' and '01.11.2025 10:00' AND 1=0
 then
     RAISE EXCEPTION 'Ошибка.ok-pause';
 end if;
@@ -44,8 +44,8 @@ END IF;
 
 
      -- Склад Возвратов
-     IF EXISTS (SELECT 1  FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId IN (8461 ))
-      THEN RETURN; END IF;
+     --IF EXISTS (SELECT 1  FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId IN (8461 ))
+     --THEN RETURN; END IF;
 
      -- Розподільчий комплекс + Склад Брак + Склад Возвратов + Склад УТИЛЬ + Склад Утиль-сроки
      /*IF EXISTS (SELECT 1  FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId IN (zc_Unit_RK()))

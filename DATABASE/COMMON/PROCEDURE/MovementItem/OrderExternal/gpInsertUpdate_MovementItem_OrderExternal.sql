@@ -129,7 +129,7 @@ AND (NOT EXISTS (SELECT 1
      END IF;
 
      -- —ıÂÏ‡ «¿ ¿«-0
-     IF vbUserId IN (9457, 5) OR 1=0
+     IF vbUserId IN (9457, 5) OR 1=1
      THEN
          IF COALESCE (inAmountManual, 0) = 0 AND COALESCE (ioAmountManual_old, 0) <> 0 AND COALESCE (ioAmount, 0) = COALESCE (ioAmount_old, 0)
          THEN

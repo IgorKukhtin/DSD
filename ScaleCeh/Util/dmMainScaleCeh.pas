@@ -126,12 +126,23 @@ begin
               ShowMessage('Ошибка.'+#10+#13+'Данные для GoodsId = <'+execParams.ParamByName('GoodsId').AsString+'> + GoodsKindId = <'+execParams.ParamByName('GoodsKindId').AsString+'> не определены.');
               exit;
          end;
-       with execParams do
-       begin
-         ParamByName('NamePack').AsString := DataSet.FieldByName('GoodsKindName').AsString;
-         ParamByName('WeightPack').AsFloat:= DataSet.FieldByName('WeightTare_gd').asFloat;
-         ParamByName('Weight_gd').AsFloat := DataSet.FieldByName('Weight_gd').asFloat;
-       end;
+
+       if SettingMain.isCeh = TRUE
+       then
+           // для Scale
+           with execParams do
+           begin
+             ParamByName('Weight_gd').AsFloat := DataSet.FieldByName('Weight_gd').asFloat;
+             ParamByName('WeightPackageSticker_gd').AsFloat:= DataSet.FieldByName('WeightTare_gd').asFloat;
+           end
+       else
+           // для Scale
+           with execParams do
+           begin
+             ParamByName('NamePack').AsString := DataSet.FieldByName('GoodsKindName').AsString;
+             ParamByName('WeightPack').AsFloat:= DataSet.FieldByName('WeightTare_gd').asFloat;
+             ParamByName('Weight_gd').AsFloat := DataSet.FieldByName('Weight_gd').asFloat;
+           end;
 
     end;
 end;
