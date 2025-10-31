@@ -26,11 +26,42 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
         ExplicitWidth = 998
         ExplicitHeight = 322
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountPlan
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountFact
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Amount_diff
+            end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = PositionName
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountPlan
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountFact
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Amount_diff
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -42,6 +73,15 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object isVacancy: TcxGridDBColumn
+            Caption = #1042#1072#1082#1072#1085#1089#1080#1103' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isVacancy'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taRightJustify
+            Options.Editing = False
+            Width = 60
+          end
           object DepartmentName: TcxGridDBColumn
             Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' 1 '#1088#1110#1074#1085#1103
             DataBinding.FieldName = 'DepartmentName'
@@ -96,15 +136,6 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1083#1072#1085' '#1064#1056' ('#1087#1086' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088#1091')'
             Width = 99
-          end
-          object AmountFact: TcxGridDBColumn
-            Caption = #1060#1072#1082#1090' '#1064#1056
-            DataBinding.FieldName = 'AmountFact'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 85
           end
           object AmountFact_add: TcxGridDBColumn
             Caption = #1060#1072#1082#1090' '#1064#1056' ('#1089#1086#1074#1084'.)'
@@ -162,6 +193,15 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
             Options.Editing = False
             Width = 79
           end
+          object AmountFact: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090' '#1064#1056
+            DataBinding.FieldName = 'AmountFact'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+          end
           object StaffHoursName: TcxGridDBColumn
             Caption = #1063#1072#1089#1099' '#1088#1072#1073#1086#1090#1099
             DataBinding.FieldName = 'StaffHoursName'
@@ -169,6 +209,18 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 83
+          end
+          object Color_vacancy: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_vacancy'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 60
+          end
+          object Color_diff: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_diff'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 60
           end
         end
       end
@@ -598,6 +650,19 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
       Category = 0
     end
   end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        ColorColumn = MemberName
+        ValueColumn = Color_vacancy
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Amount_diff
+        ValueColumn = Color_diff
+        ColorValueList = <>
+      end>
+  end
   inherited PeriodChoice: TPeriodChoice
     DateStart = nil
     DateEnd = nil
@@ -859,8 +924,8 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 216
-    Top = 304
+    Left = 184
+    Top = 296
   end
   object spPersonalServiceErased: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_PersonalService_Child_Erased'

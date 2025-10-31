@@ -37,8 +37,8 @@ object Report_StaffListRankingDialogForm: TReport_StaffListRankingDialogForm
     TabOrder = 1
   end
   object edUnit: TcxButtonEdit
-    Left = 11
-    Top = 75
+    Left = 13
+    Top = 76
     Properties.Buttons = <
       item
         Default = True
@@ -46,17 +46,17 @@ object Report_StaffListRankingDialogForm: TReport_StaffListRankingDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 2
-    Width = 288
+    Width = 286
   end
   object cxLabel3: TcxLabel
-    Left = 11
+    Left = 13
     Top = 55
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
   end
   object cxLabel2: TcxLabel
     Left = 13
-    Top = 6
-    Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
+    Top = 5
+    Caption = #1053#1072' '#1076#1072#1090#1091':'
   end
   object deStart: TcxDateEdit
     Left = 13
@@ -67,26 +67,28 @@ object Report_StaffListRankingDialogForm: TReport_StaffListRankingDialogForm
     Width = 91
   end
   object deEnd: TcxDateEdit
-    Left = 127
+    Left = 189
     Top = 23
     EditValue = 42370d
     Properties.ShowTime = False
     TabOrder = 6
+    Visible = False
     Width = 110
   end
   object cxLabel4: TcxLabel
-    Left = 127
-    Top = 6
+    Left = 189
+    Top = 8
     Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
+    Visible = False
   end
   object cxLabel5: TcxLabel
-    Left = 11
+    Left = 13
     Top = 105
     Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' 1 '#1088#1110#1074#1085#1103':'
   end
   object ceDepartment: TcxButtonEdit
     Left = 13
-    Top = 124
+    Top = 128
     Properties.Buttons = <
       item
         Default = True
@@ -165,8 +167,8 @@ object Report_StaffListRankingDialogForm: TReport_StaffListRankingDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 147
-    Top = 161
+    Left = 171
+    Top = 169
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'

@@ -54,6 +54,9 @@ type
     actPersonalServiceErased: TdsdExecStoredProc;
     Persent_diff: TcxGridDBColumn;
     MemberName: TcxGridDBColumn;
+    isVacancy: TcxGridDBColumn;
+    Color_vacancy: TcxGridDBColumn;
+    Color_diff: TcxGridDBColumn;
   private
     { Private declarations }
   public
