@@ -91,6 +91,7 @@ BEGIN
                    )
   --факт шт.ед по спр. Сотрудников
   /*, tmpFact AS (SELECT COUNT (*) AS Amount
+                   
                    , ObjectLink_Personal_Unit.ChildObjectId           AS UnitId
                    , ObjectLink_Personal_Position.ChildObjectId       AS PositionId
                    , COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId, 0) AS PositionLevelId
@@ -100,6 +101,8 @@ BEGIN
                                          ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Personal_Member.ObjectId
                                         AND ObjectLink_Personal_Unit.DescId   = zc_ObjectLink_Personal_Unit()
                                         AND ObjectLink_Personal_Unit.ChildObjectId IN (SELECT DISTINCT tmpMovement.UnitId FROM tmpMovement)
+
+                   
                                    
                    LEFT JOIN ObjectDate AS ObjectDate_DateIn
                                         ON ObjectDate_DateIn.ObjectId = ObjectLink_Personal_Member.ObjectId
@@ -133,6 +136,7 @@ BEGIN
                 
   , tmpFact AS (WITH
                 tmp AS (SELECT MovementLinkObject_Unit.ObjectId          AS UnitId
+                             , ObjectLink_Unit_Department.ChildObjectId  AS DepartmentId
                              , MovementLinkObject_Position.ObjectId      AS PositionId
                              , MovementLinkObject_PositionLevel.ObjectId AS PositionLevelId
                              , MovementBoolean_Main.ValueData            AS isMain
@@ -151,7 +155,12 @@ BEGIN
                            INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                                        AND MovementLinkObject_Unit.ObjectId IN (SELECT DISTINCT tmpMovement.UnitId FROM tmpMovement)
+                                                        AND (MovementLinkObject_Unit.ObjectId IN (SELECT DISTINCT tmpMovement.UnitId FROM tmpMovement)
+                                                            OR inUnitId = 0)
+                           INNER JOIN ObjectLink AS ObjectLink_Unit_Department
+                                                 ON ObjectLink_Unit_Department.ObjectId = MovementLinkObject_Unit.ObjectId
+                                                AND ObjectLink_Unit_Department.DescId = zc_ObjectLink_Unit_Department() 
+                                                AND (ObjectLink_Unit_Department.ChildObjectId = inDepartmentId OR inDepartmentId = 0)
 
                            INNER JOIN MovementLinkObject AS MovementLinkObject_StaffListKind
                                                          ON MovementLinkObject_StaffListKind.MovementId = Movement.Id
@@ -222,6 +231,7 @@ BEGIN
 
                 SELECT SUM (tmp.Amount)         AS Amount
                      , COALESCE(tmp_add.Amount_add,0) AS Amount_add --совместительство   
+                     , tmp.DepartmentId
                      , tmp.UnitId
                      , tmp.PositionId
                      , tmp.PositionLevelId
@@ -249,6 +259,7 @@ BEGIN
                                       AND tmp_add.PositionId = tmp.PositionId
                                       AND tmp_add.PositionLevelId = tmp.PositionLevelId
                 GROUP BY tmp.UnitId
+                       , tmp.DepartmentId
                        , tmp.PositionId
                        , tmp.PositionLevelId 
                        , COALESCE(tmp_add.Amount_add,0)
@@ -301,54 +312,101 @@ BEGIN
                        , MILinkObject_StaffHoursDay.ObjectId  
                        , MILinkObject_StaffHours.ObjectId
                      )
-  , tmpResult AS(SELECT Object_Department.Id                          AS DepartmentId
-                      , Object_Department.ValueData       ::TVarChar  AS DepartmentName      
-                      , Object_Unit.Id                    ::Integer   AS UnitId              
-                      , Object_Unit.ValueData             ::TVarChar  AS UnitName            
-                      , Object_Position.Id                ::Integer   AS PositionId          
-                      , Object_Position.ValueData         ::TVarChar  AS PositionName        
-                      , Object_PositionLevel.Id           ::Integer   AS PositionLevelId     
-                      , Object_PositionLevel.ValueData    ::TVarChar  AS PositionLevelName   
-                      , Object_PositionProperty.ValueData ::TVarChar  AS PositionPropertyName
-                      , Object_Personal.Id                ::Integer   AS PersonalId
-                      , Object_Personal.ValueData         ::TVarChar  AS PersonalName        
-                      , Object_StaffHoursDay.ValueData    ::TVarChar  AS StaffHoursDayName   
-                      , Object_StaffHours.ValueData       ::TVarChar  AS StaffHoursName      
-                      , COALESCE (Movement.AmountPlan, 0) ::TFloat AS AmountPlan         -- ШР для отчета из документа     
-                      , tmpFact.Amount      ::TFloat    AS AmountFact         -- шт.ед. из спр. Сотрудники - основное место работы = Да, дата приема/увольнения считаем как раб. день, т.е. эту шт. ед. считаем в кол.факт 
-                      , tmpFact.Amount_add  ::TFloat    AS AmountFact_add     -- совместительство информационно
-                      , (COALESCE (tmpFact.Amount,0) - COALESCE (Movement.AmountPlan, 0))  ::TFloat    AS Amount_diff
-                      , CAST (CASE WHEN COALESCE (Movement.AmountPlan, 0) <> 0 
-                                   THEN (COALESCE (tmpFact.Amount,0)/COALESCE (Movement.AmountPlan, 0) * 100)
-                                   ELSE 0
-                              END
-                              AS NUMERIC (16,0))   ::TFloat    AS Persent_diff
-                      , tmpFact.MemberName
-                      , tmpFact.MemberName_add 
-                 FROM tmpData AS Movement
-                      LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Movement.UnitId
-                      LEFT JOIN Object AS Object_Department ON Object_Department.Id = Movement.DepartmentId
-                      LEFT JOIN Object AS Object_Position ON Object_Position.Id = Movement.PositionId
-                      LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = Movement.PositionLevelId
-                      LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = Movement.PersonalId
-                      LEFT JOIN Object AS Object_StaffHoursDay ON Object_StaffHoursDay.Id = Movement.StaffHoursDayId
-                      LEFT JOIN Object AS Object_StaffHours ON Object_StaffHours.Id = Movement.StaffHoursId
-
-                      LEFT JOIN ObjectLink AS ObjectLink_Position_PositionProperty
-                                           ON ObjectLink_Position_PositionProperty.ObjectId = Object_Position.Id
-                                          AND ObjectLink_Position_PositionProperty.DescId = zc_ObjectLink_Position_PositionProperty()
-                      LEFT JOIN Object AS Object_PositionProperty ON Object_PositionProperty.Id = ObjectLink_Position_PositionProperty.ChildObjectId
-             
-                      LEFT JOIN tmpFact ON tmpFact.UnitId = Movement.UnitId
-                                       AND tmpFact.PositionId = Movement.PositionId
-                                       AND COALESCE (tmpFact.PositionLevelId,0) = COALESCE (Movement.PositionLevelId,0)
-                                       --AND Movement.Ord = 1
-                 ORDER BY Object_Department.ValueData
-                        , Object_Unit.ValueData  
-                        , Object_Position.ValueData
-                        , Object_PositionLevel.ValueData 
-                        , tmpFact.MemberName
-                        , tmpFact.MemberName_add
+  , tmpResult AS (SELECT Object_Department.Id                          AS DepartmentId
+                       , Object_Department.ValueData       ::TVarChar  AS DepartmentName      
+                       , Object_Unit.Id                    ::Integer   AS UnitId              
+                       , Object_Unit.ValueData             ::TVarChar  AS UnitName            
+                       , Object_Position.Id                ::Integer   AS PositionId          
+                       , Object_Position.ValueData         ::TVarChar  AS PositionName        
+                       , Object_PositionLevel.Id           ::Integer   AS PositionLevelId     
+                       , Object_PositionLevel.ValueData    ::TVarChar  AS PositionLevelName   
+                       , Object_PositionProperty.ValueData ::TVarChar  AS PositionPropertyName
+                       , Object_Personal.Id                ::Integer   AS PersonalId
+                       , Object_Personal.ValueData         ::TVarChar  AS PersonalName        
+                       , Object_StaffHoursDay.ValueData    ::TVarChar  AS StaffHoursDayName   
+                       , Object_StaffHours.ValueData       ::TVarChar  AS StaffHoursName      
+                       , COALESCE (Movement.AmountPlan, 0) ::TFloat AS AmountPlan         -- ШР для отчета из документа     
+                       , tmpFact.Amount      ::TFloat    AS AmountFact         -- шт.ед. из спр. Сотрудники - основное место работы = Да, дата приема/увольнения считаем как раб. день, т.е. эту шт. ед. считаем в кол.факт 
+                       , tmpFact.Amount_add  ::TFloat    AS AmountFact_add     -- совместительство информационно
+                       , (COALESCE (tmpFact.Amount,0) - COALESCE (Movement.AmountPlan, 0))  ::TFloat    AS Amount_diff
+                       , CAST (CASE WHEN COALESCE (Movement.AmountPlan, 0) <> 0 
+                                    THEN (COALESCE (tmpFact.Amount,0)/COALESCE (Movement.AmountPlan, 0) * 100)
+                                    ELSE 0
+                               END
+                               AS NUMERIC (16,0))   ::TFloat    AS Persent_diff
+                       , tmpFact.MemberName
+                       , tmpFact.MemberName_add 
+                  FROM tmpData AS Movement
+                       LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Movement.UnitId
+                       LEFT JOIN Object AS Object_Department ON Object_Department.Id = Movement.DepartmentId
+                       LEFT JOIN Object AS Object_Position ON Object_Position.Id = Movement.PositionId
+                       LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = Movement.PositionLevelId
+                       LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = Movement.PersonalId
+                       LEFT JOIN Object AS Object_StaffHoursDay ON Object_StaffHoursDay.Id = Movement.StaffHoursDayId
+                       LEFT JOIN Object AS Object_StaffHours ON Object_StaffHours.Id = Movement.StaffHoursId
+ 
+                       LEFT JOIN ObjectLink AS ObjectLink_Position_PositionProperty
+                                            ON ObjectLink_Position_PositionProperty.ObjectId = Object_Position.Id
+                                           AND ObjectLink_Position_PositionProperty.DescId = zc_ObjectLink_Position_PositionProperty()
+                       LEFT JOIN Object AS Object_PositionProperty ON Object_PositionProperty.Id = ObjectLink_Position_PositionProperty.ChildObjectId
+              
+                       LEFT JOIN tmpFact ON tmpFact.UnitId = Movement.UnitId
+                                        AND tmpFact.PositionId = Movement.PositionId
+                                        AND COALESCE (tmpFact.PositionLevelId,0) = COALESCE (Movement.PositionLevelId,0)
+                                        --AND Movement.Ord = 1
+                 /* ORDER BY Object_Department.ValueData
+                         , Object_Unit.ValueData  
+                         , Object_Position.ValueData
+                         , Object_PositionLevel.ValueData 
+                         , tmpFact.MemberName
+                         , tmpFact.MemberName_add    */
+                -- Факт для которого нет плана
+                 UNION 
+                  SELECT Object_Department.Id                          AS DepartmentId
+                       , Object_Department.ValueData       ::TVarChar  AS DepartmentName      
+                       , Object_Unit.Id                    ::Integer   AS UnitId              
+                       , Object_Unit.ValueData             ::TVarChar  AS UnitName            
+                       , Object_Position.Id                ::Integer   AS PositionId          
+                       , Object_Position.ValueData         ::TVarChar  AS PositionName        
+                       , Object_PositionLevel.Id           ::Integer   AS PositionLevelId     
+                       , Object_PositionLevel.ValueData    ::TVarChar  AS PositionLevelName   
+                       , Object_PositionProperty.ValueData ::TVarChar  AS PositionPropertyName
+                       , 0                                 ::Integer   AS PersonalId
+                       , ''                                ::TVarChar  AS PersonalName        
+                       , ''                                ::TVarChar  AS StaffHoursDayName   
+                       , ''                                ::TVarChar  AS StaffHoursName      
+                       , 0                                 ::TFloat    AS AmountPlan         -- ШР для отчета из документа     
+                       , tmpFact.Amount                    ::TFloat    AS AmountFact         -- шт.ед. из спр. Сотрудники - основное место работы = Да, дата приема/увольнения считаем как раб. день, т.е. эту шт. ед. считаем в кол.факт 
+                       , tmpFact.Amount_add                ::TFloat    AS AmountFact_add     -- совместительство информационно
+                       , (COALESCE (tmpFact.Amount,0))     ::TFloat    AS Amount_diff
+                       , 0                                 ::TFloat    AS Persent_diff
+                       , tmpFact.MemberName
+                       , tmpFact.MemberName_add 
+                  FROM tmpFact
+                       LEFT JOIN tmpData AS Movement
+                                         ON Movement.UnitId = tmpFact.UnitId
+                                        AND Movement.PositionId = tmpFact.PositionId
+                                        AND COALESCE (Movement.PositionLevelId,0) = COALESCE (tmpFact.PositionLevelId,0) 
+                       
+                       LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpFact.UnitId
+                       LEFT JOIN Object AS Object_Department ON Object_Department.Id = tmpFact.DepartmentId
+                       LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpFact.PositionId
+                       LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = tmpFact.PositionLevelId
+                       LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = Movement.PersonalId
+                       LEFT JOIN Object AS Object_StaffHoursDay ON Object_StaffHoursDay.Id = Movement.StaffHoursDayId
+                       LEFT JOIN Object AS Object_StaffHours ON Object_StaffHours.Id = Movement.StaffHoursId
+ 
+                       LEFT JOIN ObjectLink AS ObjectLink_Position_PositionProperty
+                                            ON ObjectLink_Position_PositionProperty.ObjectId = Object_Position.Id
+                                           AND ObjectLink_Position_PositionProperty.DescId = zc_ObjectLink_Position_PositionProperty()
+                       LEFT JOIN Object AS Object_PositionProperty ON Object_PositionProperty.Id = ObjectLink_Position_PositionProperty.ChildObjectId
+                  WHERE Movement.PositionId IS NULL
+                /*  ORDER BY Object_Department.ValueData
+                         , Object_Unit.ValueData  
+                         , Object_Position.ValueData
+                         , Object_PositionLevel.ValueData 
+                         , tmpFact.MemberName
+                         , tmpFact.MemberName_add     */
            )
            
            
