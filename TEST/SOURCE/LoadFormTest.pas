@@ -2647,7 +2647,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-{
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Personal_Cash_smsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Personal_Cash_smsForm');
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Inventory_WeighingFactForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Inventory_WeighingFactForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Inventory_WeighingFactDialogForm'));
