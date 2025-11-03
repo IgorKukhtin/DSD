@@ -124,6 +124,8 @@ type
     Summ_diff_F2: TcxGridDBColumn;
     SummRemains_diff_F2_tmp: TcxGridDBColumn;
     Amount_LossPersonal: TcxGridDBColumn;
+    Date_SMS: TcxGridDBColumn;
+    isSms: TcxGridDBColumn;
   private
     { Private declarations }
   public

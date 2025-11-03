@@ -36,6 +36,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isUser Boolean  
              , isNotAuto Boolean
              , isNotRound Boolean
+             , isSms Boolean
              , isErased Boolean
               )
 AS
@@ -155,7 +156,8 @@ BEGIN
            , COALESCE (ObjectBoolean_Compensation.ValueData, FALSE)    ::Boolean AS isCompensation
            , COALESCE (ObjectBoolean_User.ValueData, FALSE)            ::Boolean AS isUser
            , COALESCE (ObjectBoolean_NotAuto.ValueData, FALSE)         ::Boolean AS isNotAuto
-           , COALESCE (ObjectBoolean_NotRound.ValueData, FALSE)        ::Boolean AS isNotRound
+           , COALESCE (ObjectBoolean_NotRound.ValueData, FALSE)        ::Boolean AS isNotRound 
+           , COALESCE (ObjectBoolean_Sms.ValueData, FALSE)             ::Boolean AS isSms
 
            , Object_PersonalServiceList.isErased  AS isErased
 
@@ -203,6 +205,10 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_NotRound
                                    ON ObjectBoolean_NotRound.ObjectId  = Object_PersonalServiceList.Id
                                   AND ObjectBoolean_NotRound.DescId    = zc_ObjectBoolean_PersonalServiceList_NotRound()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_Sms
+                                   ON ObjectBoolean_Sms.ObjectId  = Object_PersonalServiceList.Id
+                                  AND ObjectBoolean_Sms.DescId    = zc_ObjectBoolean_PersonalServiceList_Sms()
 
            LEFT JOIN ObjectFloat AS ObjectFloat_Compensation
                                  ON ObjectFloat_Compensation.ObjectId = Object_PersonalServiceList.Id 
@@ -362,6 +368,7 @@ BEGIN
            , FALSE ::Boolean AS isUser
            , FALSE ::Boolean AS isNotAuto
            , FALSE ::Boolean AS isNotRound
+           , FALSE ::Boolean AS isSms
            , TRUE :: Boolean AS isErased
 
    ;
@@ -374,6 +381,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                 ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 02.11.25          *
  30.10.25          *
  26.06.25          * 
  02.03.25          * isNotRound

@@ -60,6 +60,8 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , PersonalServiceListId Integer
            --, PersonalServiceListId_calc Integer
              , MovementId_find Integer, ContainerId_find Integer
+             , Date_SMS TDateTime --zc_MIDate_SMS
+             , isSms Boolean
              , isErased Boolean
               )
 AS
@@ -210,6 +212,7 @@ end if;
                            , MILinkObject_InfoMoney.ObjectId          AS InfoMoneyId
                            , MILinkObject_MoneyPlace.ObjectId         AS MoneyPlaceId
                            , MIDate_ServiceDate.ValueData             AS ServiceDate_mp
+                           
                              -- Факт Выплата по ведомости (округление) - 2ф.
                            , COALESCE (MIF_Summ_diff_F2.ValueData, 0) AS Summ_diff_F2
                              --
@@ -1105,6 +1108,22 @@ end if;
                                AND Movement.StatusId = zc_Enum_Status_Complete()
                              GROUP BY MovementItem.ObjectId
                             )
+        , tmpMIBoolean AS (SELECT MovementItemBoolean.*
+                           FROM MovementItemBoolean
+                           WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpData.MovementItemId FROM tmpData)
+                             AND MovementItemBoolean.DescId IN (zc_MIBoolean_Calculated()
+                                                              , zc_MIBoolean_SMS())
+                           )
+        , tmpMIString AS (SELECT MovementItemString.*
+                          FROM MovementItemString
+                          WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpData.MovementItemId FROM tmpData)
+                            AND MovementItemString.DescId IN (zc_MIString_Comment())
+                           )
+        , tmpMIDate AS (SELECT MovementItemDate.*
+                        FROM MovementItemDate
+                        WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpData.MovementItemId FROM tmpData)
+                          AND MovementItemDate.DescId IN (zc_MIDate_SMS())
+                        )
 
           -- Сначала Элементы - Результат
         , tmpData_res AS (SELECT tmpData.MovementItemId                  AS Id
@@ -1134,7 +1153,6 @@ end if;
                                , Object_MoneyPlace.Id                      AS MoneyPlaceId
                                , Object_MoneyPlace.ValueData               AS MoneyPlaceName
                                , tmpData.ServiceDate_mp                    AS ServiceDate_mp
-
 
                                , tmpData.Amount           :: TFloat AS Amount
                                , tmpData.SummService      :: TFloat AS SummService
@@ -1264,7 +1282,10 @@ end if;
                              --, tmpData.PersonalServiceListId_calc :: Integer AS PersonalServiceListId_calc
                                , tmpData.MovementId_find  :: Integer AS MovementId_find
                                , tmpData.ContainerId_find :: Integer AS ContainerId_find
-                               , tmpData.isErased
+                               , tmpData.isErased 
+                               
+                               , MIDate_SMS.ValueData      ::TDateTime     AS Date_SMS
+                               , MIBoolean_SMS.ValueData   ::Boolean       AS isSms
 
                                  -- № п/п, очередность, округление показать только в одной записи
                                , ROW_NUMBER() OVER (PARTITION BY COALESCE (ObjectLink_Personal_Member.ChildObjectId, Object_Personal.Id)
@@ -1293,12 +1314,19 @@ end if;
                                -- !!!аванс - факт (другой алгоритм)!!!
                                LEFT JOIN tmpAvance_find ON tmpAvance_find.PersonalId = tmpData.PersonalId
 
-                               LEFT JOIN MovementItemString AS MIString_Comment
-                                                            ON MIString_Comment.MovementItemId = tmpData.MovementItemId
-                                                           AND MIString_Comment.DescId         = zc_MIString_Comment()
-                               LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
-                                                             ON MIBoolean_Calculated.MovementItemId = tmpData.MovementItemId
-                                                            AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
+                               LEFT JOIN tmpMIString AS MIString_Comment
+                                                     ON MIString_Comment.MovementItemId = tmpData.MovementItemId
+                                                    AND MIString_Comment.DescId         = zc_MIString_Comment()
+                               LEFT JOIN tmpMIBoolean AS MIBoolean_Calculated
+                                                      ON MIBoolean_Calculated.MovementItemId = tmpData.MovementItemId
+                                                     AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
+
+                               LEFT JOIN tmpMIDate AS MIDate_SMS
+                                                   ON MIDate_SMS.MovementItemId = tmpData.MovementItemId
+                                                  AND MIDate_SMS.DescId         = zc_MIDate_SMS()
+                               LEFT JOIN tmpMIBoolean AS MIBoolean_SMS
+                                                      ON MIBoolean_SMS.MovementItemId = tmpData.MovementItemId
+                                                     AND MIBoolean_SMS.DescId         = zc_MIBoolean_SMS()
 
                                LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmpData.PersonalId
                                LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpData.UnitId
@@ -1447,6 +1475,8 @@ end if;
           --, tmpData_res.PersonalServiceListId_calc
             , tmpData_res.MovementId_find
             , tmpData_res.ContainerId_find
+            , tmpData_res.Date_SMS ::TDateTime
+            , COALESCE (tmpData_res.isSms, FALSE) ::Boolean AS isSms
             , tmpData_res.isErased
 
        FROM tmpData_res
@@ -1481,6 +1511,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 03.11.25         * 
  15.02.21         * SummCompensation
  20.06.17         * add SummCardSecondCash
  04.04.15                                        * all

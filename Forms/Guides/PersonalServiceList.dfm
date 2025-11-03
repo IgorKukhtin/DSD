@@ -27,8 +27,6 @@ object PersonalServiceListForm: TPersonalServiceListForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 26
-    ExplicitHeight = 294
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -320,6 +318,15 @@ object PersonalServiceListForm: TPersonalServiceListForm
         Options.Editing = False
         Width = 60
       end
+      object isSms: TcxGridDBColumn
+        Caption = #1054#1090#1087#1088#1072#1074#1082#1072' '#1089#1084#1089' ('#1047#1055')'
+        DataBinding.FieldName = 'isSms'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1090#1087#1088#1072#1074#1082#1072' '#1089#1084#1089' ('#1074#1099#1087#1083#1072#1090#1072' '#1047#1055') ('#1044#1072' / '#1053#1077#1090')'
+        Options.Editing = False
+        Width = 75
+      end
       object KoeffSummCardSecond: TcxGridDBColumn
         Caption = #1050#1086#1101#1092#1092'. '#1074#1099#1075#1088'. 2'#1092'.'
         DataBinding.FieldName = 'KoeffSummCardSecond'
@@ -430,8 +437,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
     Width = 986
     Height = 30
     Align = alTop
-    TabOrder = 5
-    ExplicitTop = -14
+    TabOrder = 4
     object lbSearchName: TcxLabel
       Left = 10
       Top = 3
@@ -593,6 +599,14 @@ object PersonalServiceListForm: TPersonalServiceListForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_Sms'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoice'
         end
         item
@@ -681,6 +695,10 @@ object PersonalServiceListForm: TPersonalServiceListForm
     end
     object bbStartLoad: TdxBarButton
       Action = macStartLoad
+      Category = 0
+    end
+    object bbUpdate_Sms: TdxBarButton
+      Action = macUpdate_Sms
       Category = 0
     end
   end
@@ -992,6 +1010,33 @@ object PersonalServiceListForm: TPersonalServiceListForm
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
+    end
+    object actUpdate_Sms: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Sms
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Sms
+        end>
+      Caption = #1054#1090#1087#1088#1072#1074#1082#1072' '#1089#1084#1089' ('#1074#1099#1087#1083#1072#1090#1072' '#1047#1055') ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1054#1090#1087#1088#1072#1074#1082#1072' '#1089#1084#1089' ('#1074#1099#1087#1083#1072#1090#1072' '#1047#1055') ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 58
+    end
+    object macUpdate_Sms: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Sms
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1054#1090#1087#1088#1072#1074#1082#1072' '#1089#1084#1089' ('#1074#1099#1087#1083#1072#1090#1072' '#1047#1055') ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1054#1090#1087#1088#1072#1074#1082#1072' '#1089#1084#1089' ('#1074#1099#1087#1083#1072#1090#1072' '#1047#1055') ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 58
     end
     object actUpdate_PersonalOut: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1344,5 +1389,31 @@ object PersonalServiceListForm: TPersonalServiceListForm
     CheckBoxList = <>
     Left = 384
     Top = 96
+  end
+  object spUpdate_Sms: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_PersonalServiceList_Sms'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSms'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isSms'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 483
+    Top = 182
   end
 end
