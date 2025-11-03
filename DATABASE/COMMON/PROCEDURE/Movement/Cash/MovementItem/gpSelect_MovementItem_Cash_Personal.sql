@@ -1108,6 +1108,22 @@ end if;
                                AND Movement.StatusId = zc_Enum_Status_Complete()
                              GROUP BY MovementItem.ObjectId
                             )
+        , tmpMIBoolean AS (SELECT MovementItemBoolean.*
+                           FROM MovementItemBoolean
+                           WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpData.MovementItemId FROM tmpData)
+                             AND MovementItemBoolean.DescId IN (zc_MIBoolean_Calculated()
+                                                              , zc_MIBoolean_SMS())
+                           )
+        , tmpMIString AS (SELECT MovementItemString.*
+                          FROM MovementItemString
+                          WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpData.MovementItemId FROM tmpData)
+                            AND MovementItemString.DescId IN (zc_MIString_Comment())
+                           )
+        , tmpMIDate AS (SELECT MovementItemDate.*
+                        FROM MovementItemDate
+                        WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpData.MovementItemId FROM tmpData)
+                          AND MovementItemDate.DescId IN (zc_MIDate_SMS())
+                        )
 
           -- —начала Ёлементы - –езультат
         , tmpData_res AS (SELECT tmpData.MovementItemId                  AS Id
@@ -1298,19 +1314,19 @@ end if;
                                -- !!!аванс - факт (другой алгоритм)!!!
                                LEFT JOIN tmpAvance_find ON tmpAvance_find.PersonalId = tmpData.PersonalId
 
-                               LEFT JOIN MovementItemString AS MIString_Comment
-                                                            ON MIString_Comment.MovementItemId = tmpData.MovementItemId
-                                                           AND MIString_Comment.DescId         = zc_MIString_Comment()
-                               LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
-                                                             ON MIBoolean_Calculated.MovementItemId = tmpData.MovementItemId
-                                                            AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
+                               LEFT JOIN tmpMIString AS MIString_Comment
+                                                     ON MIString_Comment.MovementItemId = tmpData.MovementItemId
+                                                    AND MIString_Comment.DescId         = zc_MIString_Comment()
+                               LEFT JOIN tmpMIBoolean AS MIBoolean_Calculated
+                                                      ON MIBoolean_Calculated.MovementItemId = tmpData.MovementItemId
+                                                     AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
 
-                               LEFT JOIN MovementItemDate AS MIDate_SMS
-                                                          ON MIDate_SMS.MovementItemId = tmpData.MovementItemId
-                                                         AND MIDate_SMS.DescId         = zc_MIDate_SMS()
-                               LEFT JOIN MovementItemBoolean AS MIBoolean_SMS
-                                                             ON MIBoolean_SMS.MovementItemId = tmpData.MovementItemId
-                                                            AND MIBoolean_SMS.DescId         = zc_MIBoolean_SMS()
+                               LEFT JOIN tmpMIDate AS MIDate_SMS
+                                                   ON MIDate_SMS.MovementItemId = tmpData.MovementItemId
+                                                  AND MIDate_SMS.DescId         = zc_MIDate_SMS()
+                               LEFT JOIN tmpMIBoolean AS MIBoolean_SMS
+                                                      ON MIBoolean_SMS.MovementItemId = tmpData.MovementItemId
+                                                     AND MIBoolean_SMS.DescId         = zc_MIBoolean_SMS()
 
                                LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmpData.PersonalId
                                LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpData.UnitId
