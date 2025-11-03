@@ -1088,11 +1088,12 @@ end;
 
 procedure TLoadFormTest.LoadImportSettingsFormTest;
 begin
-{
+
   //Настройки импорта
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportSettingsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TImportSettingsForm');
- }
+  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TImportGroupForm');
   exit;
@@ -1103,8 +1104,10 @@ end;
 
 procedure TLoadFormTest.LoadImportTypeFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TFileTypeKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TFileTypeKindForm');
+  }
   //Типы импорта
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportTypeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TImportTypeForm');

@@ -5,22 +5,23 @@ inherited ImportSettingsForm: TImportSettingsForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 1200
-  ExplicitHeight = 377
+  ExplicitHeight = 378
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 56
     Width = 1184
-    Height = 313
+    Height = 283
     ExplicitWidth = 1184
     ExplicitHeight = 313
-    ClientRectBottom = 313
+    ClientRectBottom = 283
     ClientRectRight = 1184
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1184
       ExplicitHeight = 313
       inherited cxGrid: TcxGrid
         Width = 697
-        Height = 313
+        Height = 283
         Align = alLeft
         ExplicitWidth = 697
         ExplicitHeight = 313
@@ -220,10 +221,11 @@ inherited ImportSettingsForm: TImportSettingsForm
         Left = 700
         Top = 0
         Width = 484
-        Height = 313
+        Height = 283
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitHeight = 313
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -302,10 +304,43 @@ inherited ImportSettingsForm: TImportSettingsForm
         Left = 697
         Top = 0
         Width = 3
-        Height = 313
+        Height = 283
         AutoPosition = False
         Control = cxGrid
+        ExplicitHeight = 313
       end
+    end
+  end
+  object Panel2: TPanel [1]
+    Left = 0
+    Top = 26
+    Width = 1184
+    Height = 30
+    Align = alTop
+    TabOrder = 5
+    ExplicitLeft = 8
+    ExplicitTop = 34
+    ExplicitWidth = 874
+    object lbSearchName: TcxLabel
+      Left = 10
+      Top = 3
+      Caption = #1053#1072#1079#1074#1072#1085#1080#1077' : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchName: TcxTextEdit
+      Left = 89
+      Top = 4
+      TabOrder = 1
+      DesignSize = (
+        140
+        21)
+      Width = 140
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1094,10 +1129,14 @@ inherited ImportSettingsForm: TImportSettingsForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
     Left = 648
     Top = 192
   end
@@ -1134,5 +1173,19 @@ inherited ImportSettingsForm: TImportSettingsForm
     PackSize = 1
     Left = 632
     Top = 136
+  end
+  object FieldFilter: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = MasterCDS
+    Column = clName
+    ColumnList = <
+      item
+        Column = clName
+        TextEdit = edSearchName
+      end>
+    ActionNumber1 = dsdChoiceGuides
+    CheckBoxList = <>
+    Left = 472
+    Top = 112
   end
 end

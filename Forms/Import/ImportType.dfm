@@ -5,28 +5,26 @@ inherited ImportTypeForm: TImportTypeForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 955
-  ExplicitHeight = 377
+  ExplicitHeight = 378
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 56
     Width = 939
-    Height = 311
-    ExplicitTop = 28
+    Height = 283
     ExplicitWidth = 939
-    ExplicitHeight = 311
-    ClientRectBottom = 307
-    ClientRectRight = 935
+    ExplicitHeight = 313
+    ClientRectBottom = 283
+    ClientRectRight = 939
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 4
-      ExplicitWidth = 931
-      ExplicitHeight = 303
+      ExplicitWidth = 939
+      ExplicitHeight = 313
       inherited cxGrid: TcxGrid
         Width = 465
-        Height = 303
+        Height = 283
         Align = alLeft
         ExplicitWidth = 465
-        ExplicitHeight = 303
+        ExplicitHeight = 313
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -87,11 +85,12 @@ inherited ImportTypeForm: TImportTypeForm
       object cxGrid1: TcxGrid
         Left = 468
         Top = 0
-        Width = 463
-        Height = 303
+        Width = 471
+        Height = 283
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitHeight = 313
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -155,9 +154,41 @@ inherited ImportTypeForm: TImportTypeForm
         Left = 465
         Top = 0
         Width = 3
-        Height = 303
+        Height = 283
         Control = cxGrid
+        ExplicitHeight = 313
       end
+    end
+  end
+  object Panel2: TPanel [1]
+    Left = 0
+    Top = 26
+    Width = 939
+    Height = 30
+    Align = alTop
+    TabOrder = 5
+    ExplicitLeft = 8
+    ExplicitTop = 32
+    object lbSearchName: TcxLabel
+      Left = 10
+      Top = 3
+      Caption = #1053#1072#1079#1074#1072#1085#1080#1077' : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchName: TcxTextEdit
+      Left = 89
+      Top = 4
+      TabOrder = 1
+      DesignSize = (
+        140
+        21)
+      Width = 140
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -329,7 +360,7 @@ inherited ImportTypeForm: TImportTypeForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -456,6 +487,7 @@ inherited ImportTypeForm: TImportTypeForm
       end
       item
         Name = 'inJSONParamName'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'JSONParamName'
         DataType = ftString
@@ -560,10 +592,14 @@ inherited ImportTypeForm: TImportTypeForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
     Left = 512
     Top = 192
   end
@@ -600,5 +636,19 @@ inherited ImportTypeForm: TImportTypeForm
     PackSize = 1
     Left = 456
     Top = 136
+  end
+  object FieldFilter: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = MasterCDS
+    Column = clIName
+    ColumnList = <
+      item
+        Column = clIName
+        TextEdit = edSearchName
+      end>
+    ActionNumber1 = dsdChoiceGuides
+    CheckBoxList = <>
+    Left = 784
+    Top = 112
   end
 end

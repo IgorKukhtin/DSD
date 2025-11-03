@@ -5,12 +5,12 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalServiceFine_Load (Integer, TVa
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_PersonalServiceFine_Load(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inFIO                 TVarChar  , -- ФИО
-    IN inPositionName        TVarChar  , --
+    IN inPositionName        TVarChar  , -- Должность
     IN inUnitName            TVarChar  , -- Подразделение 
-    IN inFineSubjectName     TVarChar  , 
-    IN inPersonalServiceListName TVarChar,
-    IN inUnitFineSubjectName TVarChar  , 
-    IN inComment             TVarChar  ,
+    IN inFineSubjectName     TVarChar  , -- вид нарушений
+    IN inPersonalServiceListName TVarChar, -- ведомость
+    IN inUnitFineSubjectName TVarChar  , -- Кем налагается взыскание
+    IN inComment             TVarChar  , -- примечание
     IN inAmount              TFloat    , -- штраф 
     IN inSession             TVarChar    -- сессия пользователя
 )
