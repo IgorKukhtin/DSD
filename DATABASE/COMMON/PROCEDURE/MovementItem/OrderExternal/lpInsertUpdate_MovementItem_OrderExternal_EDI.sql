@@ -30,11 +30,21 @@ BEGIN
                                                    , inGoodsId            := inGoodsId
                                                    , inAmount             := inAmount
                                                    , inAmountSecond       := inAmountSecond
+                                                   , inAmountManual       := CASE WHEN -- Дільниця обліку і реалізації м`ясної сировини
+                                                                                       EXISTS (SELECT 1 FROM MovementLinkObject AS MLO
+                                                                                               WHERE MLO.MovementId = inMovementId
+                                                                                                 AND MLO.DescId = zc_MovementLinkObject_To()
+                                                                                                 AND MLO.ObjectId = 133049
+                                                                                              )
+                                                                                  THEN inAmount
+                                                                                  ELSE 0
+                                                                             END
                                                    , inGoodsKindId        := inGoodsKindId
                                                    , ioPrice              := inPrice
                                                    , ioCountForPrice      := inCountForPrice
                                                    , inUserId             := inUserId
                                                     ) AS tmp;
+
      -- сохранили
      -- PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), inMovementItemId_EDI, vbPrice);
      -- сохранили
