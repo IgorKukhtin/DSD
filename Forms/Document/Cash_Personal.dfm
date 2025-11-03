@@ -1035,6 +1035,24 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 70
           end
+          object Date_SMS: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1089#1084#1089
+            DataBinding.FieldName = 'Date_SMS'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1089#1084#1089
+            Options.Editing = False
+            Width = 80
+          end
+          object isSms: TcxGridDBColumn
+            Caption = #1054#1090#1087#1088#1072#1074#1083#1077#1085#1086' '#1089#1084#1089
+            DataBinding.FieldName = 'isSms'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1087#1088#1072#1074#1083#1077#1085#1086' '#1089#1084#1089' ('#1044#1072'/'#1053#1077#1090')'
+            Options.Editing = False
+            Width = 80
+          end
         end
       end
     end

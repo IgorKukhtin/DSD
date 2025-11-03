@@ -108,6 +108,11 @@ type
     cxLabel1: TcxLabel;
     edSearcMemberName: TcxTextEdit;
     FieldFilter: TdsdFieldFilter;
+    spUpdate_Sms: TdsdStoredProc;
+    actUpdate_Sms: TdsdExecStoredProc;
+    macUpdate_Sms: TMultiAction;
+    isSms: TcxGridDBColumn;
+    bbUpdate_Sms: TdxBarButton;
   private
     { Private declarations }
   public

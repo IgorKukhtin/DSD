@@ -405,11 +405,17 @@ INSERT INTO MovementItemBooleanDesc (Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_MIBoolean_PartionCell_Many_22() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_PartionCell_Many_22'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemBooleanDesc (Code, ItemName)
   SELECT 'zc_MIBoolean_PartionCell_Many_22', 'Несколько партий в Ячейка-22(да/нет)' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_PartionCell_Many_22'); 
+
+CREATE OR REPLACE FUNCTION zc_MIBoolean_SMS() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_SMS'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemBooleanDesc (Code, ItemName)
+  SELECT 'zc_MIBoolean_SMS', 'Отправлено смс' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_SMS'); 
+
  
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.   Шаблий О.В.
+ 03.11.25         * zc_MIBoolean_SMS
  15.05.25         * zc_MIBoolean_PartionCell_Many_1 ...  zc_MIBoolean_PartionCell_Many_22
  21.03.25         * zc_ObjectBoolean_PersonalServiceList_NotAuto
  21.10.24         * zc_MIBoolean_AmountPartnerSecond
