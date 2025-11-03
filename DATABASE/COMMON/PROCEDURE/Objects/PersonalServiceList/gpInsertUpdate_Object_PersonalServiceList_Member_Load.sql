@@ -29,6 +29,9 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
+     -- надо отключить
+     RAISE EXCEPTION 'Ошибка.Нет прав.';
+
      -- !!!Пустое Подразделение  - Пропустили!!!
      IF COALESCE (inPersonalServiceListCode, 0) = 0 THEN
         RETURN; -- !!!ВЫХОД!!!
