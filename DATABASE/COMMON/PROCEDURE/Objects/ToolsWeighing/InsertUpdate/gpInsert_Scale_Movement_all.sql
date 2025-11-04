@@ -2458,7 +2458,7 @@ BEGIN
 end if;*/
 
 -- !!! ВРЕМЕННО !!!
- IF vbUserId = 5 AND 1=0 THEN
+ IF vbUserId = 5 AND 1=1 THEN
 -- IF inSession = '1162887' AND 1=1 THEN
     RAISE EXCEPTION 'Admin - Test = OK  %vbIsDocMany = % %MovementId_begin = %  %OperDate = % %OperDatePartner = % %InvNumber = % %TotalCount = % %TotalCountPartner = % %Amount = % %AmountPartner = % %OperDate_scale = % %ContractGoods = %'
   , CHR (13)
@@ -2724,5 +2724,5 @@ order by OperDate
 */
 
 -- тест
--- SELECT * FROM gpInsert_Scale_Movement_all (inBranchCode:= 2, inMovementId:= 8351040, inOperDate:= CURRENT_DATE, inSession:= '992376') -- Калугин С.В.
 -- SELECT * FROM gpInsert_Scale_Movement_all (inBranchCode:= 18, inMovementId:= 31430956 , inMovementDescId_next:= 0,  inOperDate:= CURRENT_DATE, inOperDatePartner:= CURRENT_DATE, inIsDocInsert         := TRUE ,    inIsOldPeriod         := FALSE ,     inIsDocPartner        := FALSE ,     inIP  :='', inSession:= '539736') -- Чёрный А.А.
+-- SELECT * FROM gpInsert_Scale_Movement_all(inBranchCode := 2 , inMovementId := 32717702 , inMovementDescId_next := 0 , inOperDate := ('03.11.2025')::TDateTime , inOperDatePartner := ('03.11.2025')::TDateTime , inIsDocInsert := 'False' , inIsOldPeriod := 'False' , inIsDocPartner := 'False' , inIP := '192.168.20.39' ,  inSession := '5'); -- 539721
