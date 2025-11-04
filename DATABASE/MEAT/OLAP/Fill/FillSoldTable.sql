@@ -11,6 +11,7 @@ RETURNS VOId
 -- RETURNS SETOF refcursor
 AS
 $BODY$
+    DECLARE vbEndDate_calc TDateTime;
 BEGIN
     -- inStartDate:='01.06.2014';
     --
@@ -927,7 +928,7 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
 
 
             -- 1.1.Sale
-            PERFORM gpInsert_bi_Table_Sale (inStartDate, CASE WHEN vbEndDate_calc, zfCalc_UserAdmin());
+            PERFORM gpInsert_bi_Table_Sale (inStartDate, vbEndDate_calc, zfCalc_UserAdmin());
 
             -- 1.2.Branch
             PERFORM gpInsert_bi_Table_SendBranch (inStartDate, vbEndDate_calc, zfCalc_UserAdmin());

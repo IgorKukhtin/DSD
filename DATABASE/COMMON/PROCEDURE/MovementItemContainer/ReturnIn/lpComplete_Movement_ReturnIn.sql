@@ -3103,7 +3103,8 @@ end if;
   END IF;
 
 
-END;$BODY$
+END;
+$BODY$
   LANGUAGE plpgsql VOLATILE;
 
 /*
