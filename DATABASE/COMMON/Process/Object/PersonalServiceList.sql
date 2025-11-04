@@ -3,6 +3,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_PersonalServiceList_Mem
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_PersonalServiceList_PersonalOut() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_PersonalServiceList_PersonalOut' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_PersonalServiceList_User() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_PersonalServiceList_User' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_PersonalServiceList_Sms() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_PersonalServiceList_Sms' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Report_Personal_Cash_sms() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Report_Personal_Cash_sms' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_isErased_PersonalServiceList() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_isErased_PersonalServiceList' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
@@ -22,8 +23,7 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_Persona
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 2
                                   , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_PersonalServiceList())||'> - сохранение данных.'
-                                  , inEnumName:= 'zc_Enum_Process_Update_Object_PersonalServiceList_Member');
-
+                                  , inEnumName:= 'zc_Enum_Process_Update_Object_PersonalServiceList_Member');                                                                         
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_PersonalServiceList_PersonalOut()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 3
@@ -46,6 +46,11 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_Persona
                                   , inCode:= 6
                                   , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_PersonalServiceList())||'> - сохранение данных.'
                                   , inEnumName:= 'zc_Enum_Process_Update_Object_PersonalServiceList_Sms');
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Report_Personal_Cash_sms()
+                                  , inDescId:= zc_Object_Process()
+                                  , inCode:= 6
+                                  , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_PersonalServiceList())||'> - просмотр данных.'
+                                  , inEnumName:= 'zc_Enum_Process_Report_Personal_Cash_sms');
 END $$;
 
 

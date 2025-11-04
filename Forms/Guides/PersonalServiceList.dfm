@@ -437,7 +437,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
     Width = 986
     Height = 30
     Align = alTop
-    TabOrder = 4
+    TabOrder = 2
     object lbSearchName: TcxLabel
       Left = 10
       Top = 3
@@ -623,6 +623,14 @@ object PersonalServiceListForm: TPersonalServiceListForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenReport_sms'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbToExcel'
         end
         item
@@ -699,6 +707,10 @@ object PersonalServiceListForm: TPersonalServiceListForm
     end
     object bbUpdate_Sms: TdxBarButton
       Action = macUpdate_Sms
+      Category = 0
+    end
+    object bbOpenReport_sms: TdxBarButton
+      Action = actOpenReport_sms
       Category = 0
     end
   end
@@ -1153,6 +1165,19 @@ object PersonalServiceListForm: TPersonalServiceListForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' "'#1060#1080#1079'.'#1083#1080#1094#1086' ('#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100')" '#1080' '#1076#1086#1089#1090#1091#1087#1099' '#1080#1079' '#1092#1072#1081#1083#1072
       ImageIndex = 41
       WithoutNext = True
+    end
+    object actOpenReport_sms: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1054#1090#1087#1088#1072#1074#1082#1072' '#1089#1084#1089'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1054#1090#1087#1088#1072#1074#1082#1072' '#1089#1084#1089'>'
+      ImageIndex = 53
+      FormName = 'TReport_Personal_Cash_smsForm'
+      FormNameParam.Value = 'TReport_Personal_Cash_smsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
     end
   end
   object dsdStoredProc: TdsdStoredProc

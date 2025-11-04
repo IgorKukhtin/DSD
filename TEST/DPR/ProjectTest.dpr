@@ -1625,7 +1625,8 @@ uses
   PersonalEdit_ByStorageLine in '..\..\Forms\Guides\PersonalEdit_ByStorageLine.pas' {PersonalEdit_ByStorageLineForm: TParentForm},
   CFO in '..\..\Forms\Guides\CFO.pas' {CFOForm: TParentForm},
   CFOEdit in '..\..\Forms\Guides\CFOEdit.pas' {CFOEditForm: TParentForm},
-  StaffListMovement in '..\..\Forms\Document\StaffListMovement.pas' {StaffListMovementForm: TParentForm};
+  StaffListMovement in '..\..\Forms\Document\StaffListMovement.pas' {StaffListMovementForm: TParentForm},
+  Report_Personal_Cash_sms in '..\..\Forms\Report\Report_Personal_Cash_sms.pas' {Report_Personal_Cash_smsForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

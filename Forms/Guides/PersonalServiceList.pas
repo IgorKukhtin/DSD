@@ -113,6 +113,8 @@ type
     macUpdate_Sms: TMultiAction;
     isSms: TcxGridDBColumn;
     bbUpdate_Sms: TdxBarButton;
+    actOpenReport_sms: TdsdOpenForm;
+    bbOpenReport_sms: TdxBarButton;
   private
     { Private declarations }
   public

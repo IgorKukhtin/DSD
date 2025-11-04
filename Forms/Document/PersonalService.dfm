@@ -2756,6 +2756,9 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -2849,6 +2852,9 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridChild_all: TcxGrid
         Left = 0
         Top = 0
@@ -6539,6 +6545,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
     object bbStartLoad_fine: TdxBarButton
       Action = macStartLoad_fine
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1064#1090#1088#1072#1092#1099'  '#1080#1079' '#1092#1072#1081#1083#1072' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082
       Category = 0
       ImageIndex = 85
     end
