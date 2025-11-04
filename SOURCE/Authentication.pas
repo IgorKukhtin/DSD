@@ -141,7 +141,6 @@ begin
                SendSMSAction_ks.Version.Value    := N.GetAttribute(AnsiLowerCase('Version_Sms'));
                SendSMSAction_ks.ClientId.Value   := N.GetAttribute(AnsiLowerCase('ClientId'));
                SendSMSAction_ks.ClientSecret.Value:= N.GetAttribute(AnsiLowerCase('ClientSecret'));
-               SendSMSAction_ks.ClientSecret.Value:= N.GetAttribute(AnsiLowerCase('ClientSecret'));
                SendSMSAction_ks.Message.Value := N.GetAttribute(AnsiLowerCase('Message_sms'));
                SendSMSAction_ks.Phones.Value  := N.GetAttribute(AnsiLowerCase('PhoneNum_sms'));
                //Result:= SendSMSAction_ks.Authentication;
