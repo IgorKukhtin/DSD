@@ -38,6 +38,13 @@ BEGIN
     vbUserId:= lpGetUserBySession (inSession);
 
 
+    -- оптимизация
+    IF NOT EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Child())
+    THEN
+        RETURN;
+    END IF;
+
+
     -- Контрагент
     vbPartnerId:= (SELECT CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN MLO.ObjectId ELSE MLO_Partner.ObjectId END FROM Movement LEFT JOIN MovementLinkObject AS MLO ON MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() LEFT JOIN MovementLinkObject AS MLO_Partner ON MLO_Partner.MovementId = inMovementId AND MLO_Partner.DescId = zc_MovementLinkObject_PartnerFrom() WHERE Movement.Id = inMovementId);
     -- Договор

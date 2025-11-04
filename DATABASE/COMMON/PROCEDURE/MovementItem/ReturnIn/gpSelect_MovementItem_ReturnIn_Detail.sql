@@ -29,6 +29,16 @@ BEGIN
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_ReturnIn());
      vbUserId:= lpGetUserBySession (inSession);
      
+    -- оптимизация
+    IF NOT EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Detail())
+       -- !!!
+       OR 1=1
+    THEN
+        RETURN;
+    END IF;
+
+
+     
      vbOperDatePartner := (SELECT MovementDate_OperDatePartner.ValueData
                            FROM MovementDate AS MovementDate_OperDatePartner
                            WHERE MovementDate_OperDatePartner.MovementId = inMovementId
