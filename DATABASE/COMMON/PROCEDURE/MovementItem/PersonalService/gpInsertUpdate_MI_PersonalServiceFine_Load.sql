@@ -200,7 +200,55 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Ведомость <%> не найдена для Сотрудника <%> должность = <%> и суммой <%> .', inPersonalServiceListName, inFIO, inPositionName, inAmount;
      END IF;
 
+     -- всегда Insert
+     PERFORM lpInsertUpdate_MovementItem_PersonalService (ioId                 := 0
+                                                        , inMovementId         := inMovementId
+                                                        , inPersonalId         := tmpPersonal.PersonalId
+                                                        , inIsMain             := tmpPersonal.IsMain
+                                                        , inSummService        := 0
+                                                        , inSummCardRecalc     := 0
+                                                        , inSummCardSecondRecalc:= 0
+                                                        , inSummCardSecondCash := 0
+                                                        , inSummNalogRecalc    := 0
+                                                        , inSummNalogRetRecalc := 0
+                                                        , inSummMinus          := 0
+                                                        , inSummAdd            := 0
+                                                        , inSummAddOthRecalc   := 0
+                                                        , inSummHoliday        := 0
+                                                        , inSummSocialIn       := 0
+                                                        , inSummSocialAdd      := 0
+                                                        , inSummChildRecalc    := 0
+                                                        , inSummMinusExtRecalc := 0
+                                                        , inSummFine           := 0
+                                                        , inSummFineOthRecalc  := inAmount ::TFloat
+                                                        , inSummHosp           := 0
+                                                        , inSummHospOthRecalc  := 0
+                                                        , inSummCompensationRecalc := 0
+                                                        , inSummAuditAdd       := 0
+                                                        , inSummHouseAdd       := 0
+                                                        , inSummAvanceRecalc   := 0
+                                                        , inNumber             := '' ::TVarChar
+                                                        , inComment            := COALESCE (inComment, '') ::TVarChar
+                                                        , inInfoMoneyId        := zc_Enum_InfoMoney_60101()  -- 60101 Заработная плата + Заработная плата
+                                                        , inUnitId             := tmpPersonal.UnitId
+                                                        , inPositionId         := tmpPersonal.PositionId
+                                                        , inMemberId               := tmpPersonal.MemberId                                   
+                                                        , inPersonalServiceListId  := vbPersonalServiceListId ::Integer
+                                                        , inFineSubjectId          := vbFineSubjectId     ::Integer
+                                                        , inUnitFineSubjectId      := vbUnitFineSubjectId ::Integer
+                                                        , inUserId             :=vbUserId
+                                                         )
+      FROM (SELECT View_Personal.PersonalId
+                 , View_Personal.UnitId                 
+                 , View_Personal.MemberId
+                 , View_Personal.PositionId
+                 , View_Personal.IsMain
+            FROM Object_Personal_View AS View_Personal
+            WHERE View_Personal.PersonalId = vbPersonalId
+           ) AS tmpPersonal
+           ;
 
+/*
      -- сохранили , в случае если сотрудника не было в ведомости сохраним его
      PERFORM lpInsertUpdate_MovementItem_PersonalService (ioId                 := COALESCE (gpSelect.Id,0)
                                                         , inMovementId         := inMovementId
@@ -252,7 +300,7 @@ BEGIN
                                                                                                   AND gpSelect.UnitFineSubjectId = vbUnitFineSubjectId
                                                                                                   AND COALESCE (gpSelect.Comment, '') = COALESCE (inComment, '')
       LIMIT 1;      
-
+    */
 
 END;
 $BODY$
@@ -261,6 +309,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  
+ 04.11.25         * Insert только штраф 
  06.06.23         *
 */
 
