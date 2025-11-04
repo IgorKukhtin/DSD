@@ -915,25 +915,36 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
         THEN
             -- RAISE EXCEPTION 'ќшибка-1. <%>  <%>', inStartDate, CURRENT_DATE - INTERVAL '1 DAY';
 
+            -- если период один = текущий мес€ц
+            IF DATE_TRUNC ('MONTH', CURRENT_TIMESTAMP) = DATE_TRUNC ('MONTH', inEndDate)
+               -- если ночной пересчет
+               AND EXTRACT (HOUR FROM CURRENT_TIMESTAMP) <= 5
+            THEN
+                vbEndDate_calc:= CURRENT_DATE;
+            ELSE
+                vbEndDate_calc:= inEndDate;
+            END IF;
+
+
             -- 1.1.Sale
-            PERFORM gpInsert_bi_Table_Sale (inStartDate, inEndDate, zfCalc_UserAdmin());
+            PERFORM gpInsert_bi_Table_Sale (inStartDate, CASE WHEN vbEndDate_calc, zfCalc_UserAdmin());
 
             -- 1.2.Branch
-            PERFORM gpInsert_bi_Table_SendBranch (inStartDate, inEndDate, zfCalc_UserAdmin());
+            PERFORM gpInsert_bi_Table_SendBranch (inStartDate, vbEndDate_calc, zfCalc_UserAdmin());
             --
             IF EXTRACT (DAY FROM CURRENT_TIMESTAMP) <= 5
             THEN
-                PERFORM gpInsert_bi_Table_OrderBranch (inStartDate, inEndDate, zfCalc_UserAdmin());
+                PERFORM gpInsert_bi_Table_OrderBranch (inStartDate, vbEndDate_calc, zfCalc_UserAdmin());
             END IF;
 
             -- 1.3.OrderClient
             IF EXTRACT (DAY FROM CURRENT_TIMESTAMP) <= 5
             THEN
-                PERFORM gpInsert_bi_Table_OrderClient (inStartDate, inEndDate, zfCalc_UserAdmin());
+                PERFORM gpInsert_bi_Table_OrderClient (inStartDate, vbEndDate_calc, zfCalc_UserAdmin());
             END IF;
 
             -- 1.4.JuridicalSold
-            PERFORM gpInsert_bi_Table_JuridicalSold (inStartDate, inEndDate, zfCalc_UserAdmin());
+            PERFORM gpInsert_bi_Table_JuridicalSold (inStartDate, vbEndDate_calc, zfCalc_UserAdmin());
 
         END IF;
 
