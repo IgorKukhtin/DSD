@@ -56,8 +56,9 @@ $BODY$
 */
 
 -- тест
--- UPDATE Object SET ValueData = '' WHERE DescId = zc_Object_ReportExternal() AND ValueData ilike 'gpSelect_MovementItem_ReturnIn';
--- UPDATE Object SET ValueData = '' WHERE DescId = zc_Object_ReportExternal() AND ValueData ilike 'gpSelect_MovementItemChild_ReturnIn';
+-- !!!! -- UPDATE Object SET ValueData = '' WHERE DescId = zc_Object_ReportExternal() AND ValueData ilike 'gpSelect_MovementItem_ReturnIn';
+-- !!!! -- UPDATE Object SET ValueData = '' WHERE DescId = zc_Object_ReportExternal() AND ValueData ilike 'gpSelect_MovementItemChild_ReturnIn';
+
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpSelect_MovementItemChild_ReturnIn',   inSession:= zfCalc_UserAdmin()); -- +
 
 -- SELECT * FROM Object WHERE DescId = zc_Object_ReportExternal() AND ValueData ilike 'gpSelectMobile_Object_GoodsListSale' ORDER BY Id DESC;
@@ -90,6 +91,8 @@ $BODY$
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_Check_ReturnInToSale',         inSession:= zfCalc_UserAdmin()); -- +
 --
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_Branch_App1',           inSession:= zfCalc_UserAdmin()); -- +
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_Branch_App1_New',       inSession:= zfCalc_UserAdmin()); -- +
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_Branch_App1_Full',      inSession:= zfCalc_UserAdmin()); -- +
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_Branch_App7',           inSession:= zfCalc_UserAdmin()); -- +
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_Branch_App7_New',       inSession:= zfCalc_UserAdmin()); -- +
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_Branch_Cash',           inSession:= zfCalc_UserAdmin()); -- +
