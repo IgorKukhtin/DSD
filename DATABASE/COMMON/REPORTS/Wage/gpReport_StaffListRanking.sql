@@ -32,7 +32,7 @@ RETURNS TABLE(
             , Persent_diff         TFloat    -- % комлектації
             , MemberName           Text
             , MemberName_add       Text
-            , isVacancy            Boolean   --произнак есть ли вакансия  на должности
+            , Vacancy              TVarChar   --произнак есть ли вакансия  на должности
             , Color_vacancy        Integer
             , Color_diff           Integer
 )
@@ -432,7 +432,7 @@ BEGIN
          , tmpResult.Persent_diff         ::TFloat
          , tmpResult.MemberName           ::Text
          , tmpResult.MemberName_add       ::Text
-         , CASE WHEN COALESCE (tmpResult.Amount_diff,0) < 0 THEN TRUE ELSE FALSE END ::Boolean AS isVacancy 
+         , CASE WHEN COALESCE (tmpResult.Amount_diff,0) < 0 THEN 'Вакансія' ELSE '' END ::TVarChar AS Vacancy 
          , zc_Color_Black()  ::Integer AS Color_vacancy
          , CASE WHEN COALESCE (tmpResult.Amount_diff,0) < 0 THEN zc_Color_Red() ELSE zc_Color_Black() END ::Integer AS Color_diff
     FROM tmpResult
@@ -458,9 +458,9 @@ BEGIN
          , CASE WHEN tmpMember.MemberName IS NULL THEN tmpResult.Persent_diff ELSE 0 END   ::TFloat AS Persent_diff
          , 'Вакансія'   ::Text       AS MemberName
          , ''           ::Text       AS MemberName_add
-         , TRUE             ::Boolean AS isVacancy
-         , zc_Color_Red()   ::Integer AS Color_vacancy
-         , zc_Color_Red() ::Integer AS Color_diff
+         , 'Вакансія'    ::TVarChar   AS Vacancy
+         , zc_Color_Red()  ::Integer AS Color_vacancy
+         , zc_Color_Red()  ::Integer AS Color_diff
     FROM tmpResult
          LEFT JOIN tmpResult AS tmpMember
                              ON tmpMember.MemberName IS NOT NULL
@@ -468,6 +468,7 @@ BEGIN
                             AND tmpMember.PositionId = tmpResult.PositionId
                             AND COALESCE (tmpMember.PositionLevelId,0) = COALESCE (tmpResult.PositionLevelId,0) 
     WHERE COALESCE (tmpResult.Amount_diff, 0) < 0
+      AND tmpMember.MemberName IS NULL
 
 
    --- добавить строки Вакансия, если кол-во факт меньше штатного

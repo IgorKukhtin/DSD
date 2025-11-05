@@ -21,13 +21,13 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  DataModul, cxButtonEdit, cxCurrencyEdit;
+  DataModul, cxButtonEdit, cxCurrencyEdit, dsdCommon;
 
 type
   TSmsSettingsForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    Code: TcxGridDBColumn;
+    Nom: TcxGridDBColumn;
     Name: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
@@ -58,9 +58,11 @@ type
     spErasedUnErased: TdsdStoredProc;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
-    Login: TcxGridDBColumn;
+    Value: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    spInsertUpdate: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

@@ -73,14 +73,14 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object isVacancy: TcxGridDBColumn
-            Caption = #1042#1072#1082#1072#1085#1089#1080#1103' ('#1076#1072'/'#1085#1077#1090')'
-            DataBinding.FieldName = 'isVacancy'
+          object Vacancy: TcxGridDBColumn
+            Caption = #1042#1072#1082#1072#1085#1089#1080#1103
+            DataBinding.FieldName = 'Vacancy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taRightJustify
             Options.Editing = False
-            Width = 60
+            Width = 72
           end
           object DepartmentName: TcxGridDBColumn
             Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' 1 '#1088#1110#1074#1085#1103
@@ -659,6 +659,11 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
       end
       item
         ColorColumn = Amount_diff
+        ValueColumn = Color_diff
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Vacancy
         ValueColumn = Color_diff
         ColorValueList = <>
       end>

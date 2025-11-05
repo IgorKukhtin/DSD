@@ -2,8 +2,8 @@ object SmsSettingsForm: TSmsSettingsForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1059#1089#1090#1072#1085#1086#1074#1082#1080' '#1076#1083#1103' '#1057#1052#1057'>'
-  ClientHeight = 367
-  ClientWidth = 716
+  ClientHeight = 322
+  ClientWidth = 598
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,15 @@ object SmsSettingsForm: TSmsSettingsForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 716
-    Height = 341
+    Width = 598
+    Height = 296
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 716
+    ExplicitHeight = 341
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -42,46 +44,32 @@ object SmsSettingsForm: TSmsSettingsForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object Code: TcxGridDBColumn
-        Caption = #1050#1086#1076
-        DataBinding.FieldName = 'Code'
+      object Nom: TcxGridDBColumn
+        Caption = #8470' '#1087'.'#1087'.'
+        DataBinding.FieldName = 'Nom'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 52
+        Options.Editing = False
+        Width = 95
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 203
       end
-      object Login: TcxGridDBColumn
-        DataBinding.FieldName = 'Login'
+      object Value: TcxGridDBColumn
+        Caption = #1047#1085#1072#1095#1077#1085#1080#1077
+        DataBinding.FieldName = 'Value'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 161
-      end
-      object Password: TcxGridDBColumn
-        DataBinding.FieldName = 'Password'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 74
-      end
-      object Message: TcxGridDBColumn
-        DataBinding.FieldName = 'Message'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
+        Width = 192
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -91,6 +79,7 @@ object SmsSettingsForm: TSmsSettingsForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 72
       end
     end
@@ -161,23 +150,6 @@ object SmsSettingsForm: TSmsSettingsForm
       FloatClientHeight = 0
       ItemLinks = <
         item
-          Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
-        end
-        item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -292,7 +264,6 @@ object SmsSettingsForm: TSmsSettingsForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      ShortCut = 45
       ImageIndex = 0
       FormName = 'TSmsSettingsEditForm'
       FormNameParam.Value = 'TSmsSettingsEditForm'
@@ -313,7 +284,6 @@ object SmsSettingsForm: TSmsSettingsForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      ShortCut = 115
       ImageIndex = 1
       FormName = 'TSmsSettingsEditForm'
       FormNameParam.Value = 'TSmsSettingsEditForm'
@@ -345,7 +315,6 @@ object SmsSettingsForm: TSmsSettingsForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
@@ -360,7 +329,6 @@ object SmsSettingsForm: TSmsSettingsForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 32776
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
@@ -448,6 +416,21 @@ object SmsSettingsForm: TSmsSettingsForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = 'actInsertUpdate'
+      DataSource = DataSource
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_SmsSettings'
@@ -500,6 +483,7 @@ object SmsSettingsForm: TSmsSettingsForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 168
     Top = 216
@@ -520,5 +504,39 @@ object SmsSettingsForm: TSmsSettingsForm
     PackSize = 1
     Left = 288
     Top = 208
+  end
+  object spInsertUpdate: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_SmsSettings'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'DescId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Value'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 408
+    Top = 144
   end
 end
