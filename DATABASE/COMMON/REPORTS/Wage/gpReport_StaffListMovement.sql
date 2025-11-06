@@ -12,24 +12,28 @@ CREATE OR REPLACE FUNCTION gpReport_StaffListMovement(
     IN inSession        TVarChar   --сессия пользователя
 )
 RETURNS TABLE(
-              DepartmentId                   Integer
-            , DepartmentName                 TVarChar
-            , UnitId                         Integer
-            , UnitName                       TVarChar
-            , PositionId                     Integer
-            , PositionName                   TVarChar
-            , PositionLevelId                Integer
-            , PositionLevelName              TVarChar
-            , PositionPropertyName           TVarChar  --Классификатор должности 
-            , PersonalId                     Integer   --Менеджер по персоналу 
-            , PersonalName                   TVarChar  -- 
-            , StaffHoursDayName              TVarChar  -- График работы
-            , StaffHoursName                 TVarChar  --Години роботи
-            , AmountPlan                     TFloat    --План ШР (по классификатору)
-            , AmountFact                     TFloat    --Факт ШР 
-            , AmountFact_add                 TFloat    --факт совместительство
-            , Amount_diff                    TFloat    --Дельта 
-            , Persent_diff                   TFloat    -- % комлектації
+              DepartmentId         Integer
+            , DepartmentName       TVarChar
+            , UnitId               Integer
+            , UnitName             TVarChar
+            , PositionId           Integer
+            , PositionName         TVarChar
+            , PositionLevelId      Integer
+            , PositionLevelName    TVarChar
+            , PositionPropertyName TVarChar  --Классификатор должности 
+            , PersonalId           Integer   --Менеджер по персоналу 
+            , PersonalName         TVarChar  -- 
+            , StaffHoursDayName    TVarChar  -- График работы
+            , StaffHoursName       TVarChar  --Години роботи
+            , AmountPlan           TFloat    --План ШР (по классификатору)
+            , AmountFact           TFloat    --Факт ШР 
+            , AmountFact_add       TFloat    --факт совместительство
+            , Amount_diff          TFloat    --Дельта 
+            , Persent_diff         TFloat    -- % комлектації
+            , TotalPlan            TFloat 
+            , TotalFact            TFloat 
+            , Total_diff           TFloat 
+            , Color_unit           Integer
 )
 AS
 $BODY$
@@ -269,7 +273,12 @@ BEGIN
                       THEN (COALESCE (tmpFact.Amount,0)/COALESCE (Movement.AmountPlan, 0) * 100)
                       ELSE 0
                  END
-                 AS NUMERIC (16,0))   ::TFloat    AS Persent_diff 
+                 AS NUMERIC (16,0))   ::TFloat    AS Persent_diff
+          
+         , 0    :: TFloat AS TotalPlan
+         , 0    :: TFloat AS TotalFact
+         , 0    :: TFloat AS Total_diff
+         , zc_Color_Black()  ::Integer AS Color_unit 
     FROM tmpData AS Movement
          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Movement.UnitId
          LEFT JOIN Object AS Object_Department ON Object_Department.Id = Movement.DepartmentId
@@ -288,10 +297,46 @@ BEGIN
                           AND tmpFact.PositionId = Movement.PositionId
                           AND COALESCE (tmpFact.PositionLevelId,0) = COALESCE (Movement.PositionLevelId,0)
                           --AND Movement.Ord = 1
-    ORDER BY Object_Department.ValueData
+    /*ORDER BY Object_Department.ValueData
            , Object_Unit.ValueData  
            , Object_Position.ValueData
-           , Object_PositionLevel.ValueData
+           , Object_PositionLevel.ValueData*/
+  UNION
+    SELECT Object_Department.Id                          AS DepartmentId
+         , Object_Department.ValueData       ::TVarChar  AS DepartmentName      
+         , Object_Unit.Id                    ::Integer   AS UnitId              
+         , Object_Unit.ValueData             ::TVarChar  AS UnitName            
+         , 0                ::Integer   AS PositionId          
+         , ''               ::TVarChar  AS PositionName        
+         , 0                ::Integer   AS PositionLevelId     
+         , ''               ::TVarChar  AS PositionLevelName   
+         , ''               ::TVarChar  AS PositionPropertyName
+         , 0                ::Integer   AS PersonalId
+         , ''               ::TVarChar  AS PersonalName        
+         , ''               ::TVarChar  AS StaffHoursDayName   
+         , ''               ::TVarChar  AS StaffHoursName      
+         , 0                ::TFloat    AS AmountPlan         -- ШР для отчета из документа     
+         , 0                ::TFloat    AS AmountFact         -- шт.ед. из спр. Сотрудники - основное место работы = Да, дата приема/увольнения считаем как раб. день, т.е. эту шт. ед. считаем в кол.факт 
+         , 0                ::TFloat    AS AmountFact_add     -- шт.ед. по совместительству
+         , 0                ::TFloat    AS Amount_diff
+         , 0                ::TFloat    AS Persent_diff
+          
+         , SUM (COALESCE (Movement.AmountPlan, 0))    :: TFloat AS TotalPlan
+         , SUM (COALESCE (tmpFact.Amount,0))          :: TFloat AS TotalFact
+         , (SUM (COALESCE (tmpFact.Amount,0)) - SUM (COALESCE (Movement.AmountPlan, 0))) :: TFloat AS Total_diff
+         , zc_Color_Blue()  ::Integer AS Color_unit  
+    FROM tmpData AS Movement
+         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Movement.UnitId
+         LEFT JOIN Object AS Object_Department ON Object_Department.Id = Movement.DepartmentId
+
+         LEFT JOIN tmpFact ON tmpFact.UnitId = Movement.UnitId
+                          AND tmpFact.PositionId = Movement.PositionId
+                          AND COALESCE (tmpFact.PositionLevelId,0) = COALESCE (Movement.PositionLevelId,0)
+                          --AND Movement.Ord = 1
+    GROUP BY Object_Department.ValueData
+           , Object_Unit.ValueData 
+           , Object_Department.Id
+           , Object_Unit.Id
     ;
 END;
 $BODY$

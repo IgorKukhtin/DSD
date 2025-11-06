@@ -57,6 +57,7 @@ type
     Vacancy: TcxGridDBColumn;
     Color_vacancy: TcxGridDBColumn;
     Color_diff: TcxGridDBColumn;
+    Color_unit: TcxGridDBColumn;
   private
     { Private declarations }
   public

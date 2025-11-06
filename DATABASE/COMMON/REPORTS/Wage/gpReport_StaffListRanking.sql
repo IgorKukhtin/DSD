@@ -11,30 +11,34 @@ CREATE OR REPLACE FUNCTION gpReport_StaffListRanking(
     IN inSession        TVarChar   --сессия пользователя
 )
 RETURNS TABLE(
-              DepartmentId                   Integer
-            , DepartmentName                 TVarChar
-            , UnitId                         Integer
-            , UnitName                       TVarChar
-            , PositionId                     Integer
-            , PositionName                   TVarChar
-            , PositionLevelId                Integer
-            , PositionLevelName              TVarChar
-            , PositionPropertyName           TVarChar  --Классификатор должности 
-            , PersonalId                     Integer   --Менеджер по персоналу 
-            , PersonalName                   TVarChar  -- 
+              DepartmentId         Integer
+            , DepartmentName       TVarChar
+            , UnitId               Integer
+            , UnitName             TVarChar
+            , PositionId           Integer
+            , PositionName         TVarChar
+            , PositionLevelId      Integer
+            , PositionLevelName    TVarChar
+            , PositionPropertyName TVarChar  --Классификатор должности 
+            , PersonalId           Integer   --Менеджер по персоналу 
+            , PersonalName         TVarChar  -- 
            
-            , StaffHoursDayName    TVarChar  -- График работы
+            , StaffHoursDayName    TVarChar  --График работы
             , StaffHoursName       TVarChar  --Години роботи
             , AmountPlan           TFloat    --План ШР (по классификатору)
             , AmountFact           TFloat    --Факт ШР 
-            , AmountFact_add       TFloat    -- факт совместительство
+            , AmountFact_add       TFloat    --факт совместительство
             , Amount_diff          TFloat    --Дельта 
-            , Persent_diff         TFloat    -- % комлектації
+            , Persent_diff         TFloat    --% комлектації
             , MemberName           Text
             , MemberName_add       Text
-            , Vacancy              TVarChar   --произнак есть ли вакансия  на должности
+            , Vacancy              TVarChar  --произнак есть ли вакансия  на должности
             , Color_vacancy        Integer
             , Color_diff           Integer
+            , Color_unit           Integer
+            , TotalPlan            TFloat 
+            , TotalFact            TFloat 
+            , Total_diff           TFloat 
 )
 AS
 $BODY$
@@ -435,6 +439,10 @@ BEGIN
          , CASE WHEN COALESCE (tmpResult.Amount_diff,0) < 0 THEN 'Вакансія' ELSE '' END ::TVarChar AS Vacancy 
          , zc_Color_Black()  ::Integer AS Color_vacancy
          , CASE WHEN COALESCE (tmpResult.Amount_diff,0) < 0 THEN zc_Color_Red() ELSE zc_Color_Black() END ::Integer AS Color_diff
+         , zc_Color_Black()  ::Integer AS Color_unit 
+         , 0    :: TFloat AS TotalPlan
+         , 0    :: TFloat AS TotalFact
+         , 0    :: TFloat AS Total_diff
     FROM tmpResult
     WHERE tmpResult.MemberName IS NOT NULL
   UNION
@@ -459,8 +467,12 @@ BEGIN
          , 'Вакансія'   ::Text       AS MemberName
          , ''           ::Text       AS MemberName_add
          , 'Вакансія'    ::TVarChar   AS Vacancy
-         , zc_Color_Red()  ::Integer AS Color_vacancy
-         , zc_Color_Red()  ::Integer AS Color_diff
+         , zc_Color_Red()    ::Integer AS Color_vacancy
+         , zc_Color_Red()    ::Integer AS Color_diff
+         , zc_Color_Black()  ::Integer AS Color_unit 
+         , 0               :: TFloat AS TotalPlan
+         , 0               :: TFloat AS TotalFact
+         , 0               :: TFloat AS Total_diff
     FROM tmpResult
          LEFT JOIN tmpResult AS tmpMember
                              ON tmpMember.MemberName IS NOT NULL
@@ -469,7 +481,40 @@ BEGIN
                             AND COALESCE (tmpMember.PositionLevelId,0) = COALESCE (tmpResult.PositionLevelId,0) 
     WHERE COALESCE (tmpResult.Amount_diff, 0) < 0
       AND tmpMember.MemberName IS NULL
-
+  UNION
+--1) итого план 2) итого факт 3)итого дельта
+    SELECT tmpResult.DepartmentId
+         , tmpResult.DepartmentName       ::TVarChar
+         , tmpResult.UnitId               ::Integer 
+         , tmpResult.UnitName             ::TVarChar
+         , 0      ::Integer  AS PositionId
+         , ''     ::TVarChar AS PositionName
+         , 0      ::Integer  AS PositionLevelId
+         , ''     ::TVarChar AS PositionLevelName    
+         , ''     ::TVarChar AS PositionPropertyName 
+         , 0      ::Integer  AS PersonalId           
+         , ''     ::TVarChar AS PersonalName         
+         , ''     ::TVarChar AS StaffHoursDayName    
+         , ''     ::TVarChar AS StaffHoursName       
+         , 0      ::TFloat   AS AmountPlan                -- ШР для отчета из документа     
+         , 0      ::TFloat   AS AmountFact               -- шт.ед. из спр. Сотрудники - основное место работы = Да, дата приема/увольнения считаем как раб. день, т.е. эту шт. ед. считаем в кол.факт 
+         , 0      ::TFloat   AS AmountFact_add       
+         , 0      ::TFloat   AS Amount_diff          
+         , 0      ::TFloat   AS Persent_diff         
+         , ''     ::Text     AS MemberName
+         , ''     ::Text     AS MemberName_add
+         , ''     ::TVarChar AS Vacancy 
+         , zc_Color_Black()  ::Integer AS Color_vacancy
+         , CASE WHEN SUM (COALESCE (tmpResult.AmountFact,0)) - SUM (COALESCE (tmpResult.AmountPlan,0)) < 0 THEN zc_Color_Red() ELSE zc_Color_Black() END ::Integer AS Color_diff
+         , zc_Color_Blue()  ::Integer AS Color_unit 
+         , SUM (COALESCE (tmpResult.AmountPlan,0))    :: TFloat AS TotalPlan
+         , SUM (COALESCE (tmpResult.AmountFact,0))    :: TFloat AS TotalFact
+         , (SUM (COALESCE (tmpResult.AmountFact,0)) - SUM (COALESCE (tmpResult.AmountPlan,0))) :: TFloat AS Total_diff
+    FROM tmpResult
+    GROUP BY tmpResult.DepartmentId
+           , tmpResult.DepartmentName
+           , tmpResult.UnitId
+           , tmpResult.UnitName
 
    --- добавить строки Вакансия, если кол-во факт меньше штатного
    

@@ -26,11 +26,72 @@ inherited Report_StaffListMovementForm: TReport_StaffListMovementForm
         ExplicitWidth = 998
         ExplicitHeight = 322
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountPlan
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountFact
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Amount_diff
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = TotalPlan
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = TotalFact
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Total_diff
+            end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = PositionName
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountPlan
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountFact
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Amount_diff
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = TotalPlan
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = TotalFact
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Total_diff
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -140,6 +201,39 @@ inherited Report_StaffListMovementForm: TReport_StaffListMovementForm
             Options.Editing = False
             Width = 83
           end
+          object TotalPlan: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1087#1083#1072#1085
+            DataBinding.FieldName = 'TotalPlan'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+          end
+          object TotalFact: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1092#1072#1082#1090
+            DataBinding.FieldName = 'TotalFact'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+          end
+          object Total_diff: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1076#1077#1083#1100#1090#1072
+            DataBinding.FieldName = 'Total_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+          end
+          object Color_unit: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_unit'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 70
+          end
         end
       end
     end
@@ -147,8 +241,6 @@ inherited Report_StaffListMovementForm: TReport_StaffListMovementForm
   inherited Panel: TPanel
     Width = 998
     Height = 53
-    ExplicitLeft = -8
-    ExplicitTop = -8
     ExplicitWidth = 998
     ExplicitHeight = 53
     inherited deStart: TcxDateEdit
@@ -570,6 +662,34 @@ inherited Report_StaffListMovementForm: TReport_StaffListMovementForm
       Action = macPersonalServiceAll
       Category = 0
     end
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        ColorColumn = DepartmentName
+        ValueColumn = Color_unit
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = UnitName
+        ValueColumn = Color_unit
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Total_diff
+        ValueColumn = Color_unit
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = TotalFact
+        ValueColumn = Color_unit
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = TotalPlan
+        ValueColumn = Color_unit
+        ColorValueList = <>
+      end>
   end
   inherited PeriodChoice: TPeriodChoice
     DateStart = nil
