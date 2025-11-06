@@ -430,7 +430,7 @@ BEGIN
          , tmpResult.AmountFact_add       ::TFloat
          , tmpResult.Amount_diff          ::TFloat
          , tmpResult.Persent_diff         ::TFloat
-         , tmpResult.MemberName           ::Text
+         , (tmpResult.MemberName || CASE WHEN COALESCE (tmpResult.Amount_diff,0) < 0 THEN CHR (13)||'Вакансія'  ELSE '' END ) ::Text AS MemberName
          , tmpResult.MemberName_add       ::Text
          , CASE WHEN COALESCE (tmpResult.Amount_diff,0) < 0 THEN 'Вакансія' ELSE '' END ::TVarChar AS Vacancy 
          , zc_Color_Black()  ::Integer AS Color_vacancy
