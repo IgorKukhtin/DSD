@@ -250,7 +250,7 @@ inherited StaffListMemberForm: TStaffListMemberForm
   end
   object cxLabel12: TcxLabel [29]
     Left = 367
-    Top = 202
+    Top = 196
     Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1076#1086' '#1087#1077#1088#1077#1074#1086#1076#1072')'
   end
   object ceUnit_old: TcxButtonEdit [30]
@@ -615,7 +615,7 @@ inherited StaffListMemberForm: TStaffListMemberForm
           Name = 'PositionName'
           Value = ''
           Component = GuidesPosition
-          ComponentItem = 'Key'
+          ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -1850,8 +1850,8 @@ inherited StaffListMemberForm: TStaffListMemberForm
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
-    Left = 118
-    Top = 102
+    Left = 150
+    Top = 86
   end
   object GuideUpdate: TdsdGuides
     KeyField = 'Id'
@@ -2241,8 +2241,8 @@ inherited StaffListMemberForm: TStaffListMemberForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 214
-    Top = 106
+    Left = 278
+    Top = 138
   end
   object GuidesPersonalServiceListOfficial: TdsdGuides
     KeyField = 'Id'

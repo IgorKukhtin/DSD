@@ -1,9 +1,12 @@
 -- Function: gpInsertUpdate_Movement_StaffListMember ()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_StaffListMember (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_StaffListMember (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_StaffListMember (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                               , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_StaffListMember (Integer, TVarChar, TDateTime, Integer, Integer, Integer
+                                                               , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                                , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar, TVarChar);
-
+                                                               
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_StaffListMember(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
     IN inInvNumber           TVarChar  , -- Номер документа
@@ -266,35 +269,38 @@ BEGIN
                       );
      */
      -- сохранить линии производства
-     PERFORM gpInsertUpdate_Object_PersonalByStorageLine (0::Integer, vbPersonalId::Integer, tmp.StorageLineId::Integer, inSession::TVarChar)
+     PERFORM gpInsertUpdate_Object_PersonalByStorageLine (COALESCE (tmp.PersonalByStorageLineId,0)::Integer, vbPersonalId::Integer, tmp.StorageLineId::Integer, inSession::TVarChar)
      FROM (
            WITH
              --уже сохраненные линии производства
              tmpSave AS (SELECT tmp.*
+                              , ROW_NUMBER() OVER (Order by tmp.Id) AS Ord
                          FROM gpSelect_Object_PersonalByStorageLine (False, inSession) AS tmp
                          WHERE tmp.PersonalId = vbPersonalId
                          )
+            --новые
            , tmpStorageLine AS (SELECT inStorageLineId_1 AS StorageLineId
-                                WHERE COALESCE (inStorageLineId_1,0) <> 0
-                              UNION
+                                --WHERE COALESCE (inStorageLineId_1,0) <> 0
+                              UNION ALL
                                 SELECT inStorageLineId_2 AS StorageLineId
-                                WHERE COALESCE (inStorageLineId_2,0) <> 0
-                              UNION
+                                --WHERE COALESCE (inStorageLineId_2,0) <> 0
+                              UNION ALL
                                 SELECT inStorageLineId_3 AS StorageLineId
-                                WHERE COALESCE (inStorageLineId_3,0) <> 0
-                              UNION
+                                --WHERE COALESCE (inStorageLineId_3,0) <> 0
+                              UNION ALL
                                 SELECT inStorageLineId_4 AS StorageLineId
-                                WHERE COALESCE (inStorageLineId_4,0) <> 0
-                              UNION
+                                --WHERE COALESCE (inStorageLineId_4,0) <> 0
+                              UNION ALL
                                 SELECT inStorageLineId_5 AS StorageLineId
-                                WHERE COALESCE (inStorageLineId_5,0) <> 0
+                                --WHERE COALESCE (inStorageLineId_5,0) <> 0
                                 )
 
          SELECT tmpStorageLine.StorageLineId
+              , tmpSave.Id AS PersonalByStorageLineId
          FROM tmpStorageLine
               LEFT JOIN tmpSave ON tmpSave.StorageLineId = tmpStorageLine.StorageLineId
-         WHERE COALESCE (tmpStorageLine.StorageLineId,0) <> 0 
-           AND tmpSave.PersonalId IS NULL
+        -- WHERE COALESCE (tmpStorageLine.StorageLineId,0) <> 0 
+        --   AND tmpSave.PersonalId IS NULL
         ) AS tmp
         ;
 

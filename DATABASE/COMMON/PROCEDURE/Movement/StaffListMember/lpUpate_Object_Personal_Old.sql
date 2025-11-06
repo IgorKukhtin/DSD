@@ -23,8 +23,11 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
      
      --чтоб пока ничего не поломать
-     RETURN;
-     
+     IF vbUserId NOT IN (5, 9457)
+     THEN
+         RETURN;
+     END IF;
+
      --данные из вх. документа
      SELECT tmp.OperDate
           , tmp.Id 
@@ -33,6 +36,9 @@ BEGIN
           , tmp.StaffListKindId
     INTO vbOperDate, vbMovementId, vbPersonalId, vbMemberId, vbStaffListKindId
      FROM gpGet_Movement_StaffListMember (inMovementId := inMovementId, inOperDate := CURRENT_DATE ::TDateTime, inSession := inSession ::TVarChar) AS tmp;
+ 
+ 
+ --RAISE EXCEPTION 'Ошибка.<%>', vbPersonalId; 
      
     --получаем предыдущий документа
     SELECT tmp.MovementId
@@ -72,7 +78,7 @@ BEGIN
                                          , inPersonalServiceListCardSecondId := tmp.ServiceListCardSecondId         ::Integer    -- Ведомость начисления(Карта Ф2) 
                                          , inPersonalServiceListId_AvanceF2  := tmp.ServiceListId_AvanceF2  ::Integer    --  Ведомость начисления(аванс Карта Ф2)
                                          , inSheetWorkTimeId                 := tmp.SheetWorkTimeId                 ::Integer    -- Режим работы (Шаблон табеля р.вр.)
-                                         , inStorageLineId                   := tmp.StorageLineId                   ::Integer    -- ссылка на линию производства
+                                         , inStorageLineId                   := tmp.StorageLineId_1                   ::Integer    -- ссылка на линию производства
                                          
                                          , inMember_ReferId                  := tmp.Member_ReferId                  ::Integer    -- Фамилия рекомендателя
                                          , inMember_MentorId                 := tmp.Member_MentorId                 ::Integer    -- Фамилия наставника 	
@@ -94,7 +100,7 @@ BEGIN
                             AND ObjectDate_DateIn.DescId = zc_ObjectDate_Personal_In()
     ;    
     
-    IF  vbUserId = 9457 THEN RAISE EXCEPTION 'Admin - Test = OK'; END IF;
+  --  IF  vbUserId = 9457 THEN RAISE EXCEPTION 'Admin - Test = OK'; END IF;
 
 END;
 $BODY$
