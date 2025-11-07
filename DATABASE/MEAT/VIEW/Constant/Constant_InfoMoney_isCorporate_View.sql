@@ -13,6 +13,8 @@ AS
    SELECT zc_Enum_InfoMoney_21101() AS InfoMoneyId -- Дворкин
   UNION ALL 
    SELECT zc_Enum_InfoMoney_21151() AS InfoMoneyId -- ЕКСПЕРТ-АГРОТРЕЙД
+  UNION ALL 
+   SELECT zc_Enum_InfoMoney_21152() AS InfoMoneyId -- Алан АЗИЯ
   ;
 
 ALTER TABLE Constant_InfoMoney_isCorporate_View OWNER TO postgres;
