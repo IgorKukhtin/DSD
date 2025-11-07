@@ -23,12 +23,14 @@ BEGIN
        RAISE EXCEPTION 'Ошибка. Сотрудник не выбран.';
    END IF;
 
+   /*
     -- проверка
    IF COALESCE (inStorageLineId, 0) = 0
    THEN
        RAISE EXCEPTION 'Ошибка. Линия производства не выбрана.';
    END IF;
-
+   */
+   
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_PersonalByStorageLine(), 0, '');
    

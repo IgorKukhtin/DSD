@@ -79,6 +79,7 @@ BEGIN
       , tmpGoods AS (SELECT tmpContainerList.BranchId
                           , tmpContainerList.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) AS AmountStart
                           , tmpContainerList.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS AmountEnd
+                         -- , DATE_TRUNC ('MONTH', MIContainer.OperDate) ELSE NULL END  ::TDateTime AS Month
                           , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = TRUE THEN MIContainer.Amount
                                     ELSE 0 END) AS SummIn
                           , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = FALSE THEN -1 * MIContainer.Amount
@@ -103,12 +104,12 @@ BEGIN
                               INNER JOIN Container ON Container.Id = CLO_Branch.ContainerId
                                                   AND Container.DescId = zc_Container_Summ()
                               LEFT JOIN MovementItemContainer AS MIContainer
-                                                       ON MIContainer.Containerid = Container.Id
-                                                      AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                              ON MIContainer.Containerid = Container.Id
+                                                             AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                               INNER JOIN ContainerLinkObject AS CLO_PaidKind
-                                                        ON CLO_PaidKind.ContainerId = CLO_Branch.ContainerId
-                                                       AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
-                                                       AND CLO_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm()
+                                                             ON CLO_PaidKind.ContainerId = CLO_Branch.ContainerId
+                                                            AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
+                                                            AND CLO_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm()
                         GROUP BY CLO_Branch.ContainerId, Container.Amount, _tmpBranch.BranchId
            )
 

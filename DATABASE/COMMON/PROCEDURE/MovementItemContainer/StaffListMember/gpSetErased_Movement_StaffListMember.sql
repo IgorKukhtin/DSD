@@ -12,6 +12,7 @@ $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbMemberId Integer;
   DECLARE vbMovementId_last Integer;
+  DECLARE vbOperDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_StaffListMember());
@@ -28,7 +29,7 @@ BEGIN
      ;
 
      vbMovementId_last := (--проверка на наличие хоть одного документа после текущего
-                           SELECT Movement.*
+                           SELECT Movement.Id
                            FROM Movement 
                                 INNER JOIN MovementLinkObject AS MovementLinkObject_Member
                                                               ON MovementLinkObject_Member.MovementId = Movement.Id
@@ -58,7 +59,7 @@ BEGIN
 
      END IF;
 
-     if vbUserId = 9457 then RAISE EXCEPTION 'Админ.Test Ok.';  end if;
+     --if vbUserId = 9457 then RAISE EXCEPTION 'Админ.Test Ok.';  end if;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

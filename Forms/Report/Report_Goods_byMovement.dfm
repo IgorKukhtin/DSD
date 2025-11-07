@@ -2523,6 +2523,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 680
     Top = 232
@@ -2557,8 +2558,9 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 809
-    Top = 192
+    Top = 160
   end
 end

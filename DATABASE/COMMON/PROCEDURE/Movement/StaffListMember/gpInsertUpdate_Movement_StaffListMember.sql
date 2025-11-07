@@ -1,9 +1,12 @@
 -- Function: gpInsertUpdate_Movement_StaffListMember ()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_StaffListMember (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_StaffListMember (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_StaffListMember (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                               , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_StaffListMember (Integer, TVarChar, TDateTime, Integer, Integer, Integer
+                                                               , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                                , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar, TVarChar);
-
+                                                               
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_StaffListMember(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
     IN inInvNumber           TVarChar  , -- Номер документа
@@ -182,35 +185,7 @@ BEGIN
                                                                       , vbDateOut,  CHR (13)
                                                                       , vbDateSend,  CHR (13) ;     
   */
-     --сохранение обновлени сотрудника
-  /*   PERFORM gpInsertUpdate_Object_Personal(ioId                              := COALESCE (vbPersonalId,0)         ::Integer    -- ключ объекта <Сотрудники>
-                                          , inMemberId                        := inMemberId                        ::Integer    -- ссылка на Физ.лица
-                                          , inPositionId                      := inPositionId                      ::Integer    -- ссылка на Должность
-                                          , inPositionLevelId                 := inPositionLevelId                 ::Integer    -- ссылка на Разряд должности
-                                          , inUnitId                          := inUnitId                          ::Integer    -- ссылка на Подразделение
-                                          , inPersonalGroupId                 := inPersonalGroupId                 ::Integer    -- Группировки Сотрудников
-                                          , inPersonalServiceListId           := inPersonalServiceListId           ::Integer    -- Ведомость начисления(главная)
-                                          , inPersonalServiceListOfficialId   := inPersonalServiceListOfficialId   ::Integer    -- Ведомость начисления(БН)
-                                          , inPersonalServiceListCardSecondId := inPersonalServiceListCardSecondId ::Integer    -- Ведомость начисления(Карта Ф2) 
-                                          , inPersonalServiceListId_AvanceF2  := inPersonalServiceListId_AvanceF2  ::Integer    --  Ведомость начисления(аванс Карта Ф2)
-                                          , inSheetWorkTimeId                 := inSheetWorkTimeId                 ::Integer    -- Режим работы (Шаблон табеля р.вр.)
-                                          , inStorageLineId                   := inStorageLineId_1                 ::Integer    -- ссылка на линию производства
-                                          
-                                          , inMember_ReferId                  := inMember_ReferId                  ::Integer    -- Фамилия рекомендателя
-                                          , inMember_MentorId                 := inMember_MentorId                 ::Integer    -- Фамилия наставника 	
-                                          , inReasonOutId                     := inReasonOutId                     ::Integer    -- Причина увольнения 	
-                                          
-                                          , inDateIn                          := vbDateIn                          ::TDateTime  -- Дата принятия
-                                          , inDateOut                         := vbDateOut                         ::TDateTime  -- Дата увольнения 
-                                          , inDateSend                        := vbDateSend                        ::TDateTime  -- Дата перевода
-                                          , inIsDateOut                       := vbIsDateOut                       ::Boolean    -- Уволен
-                                          , inIsDateSend                      := vbIsDateSend                      ::Boolean    -- переведен
-                                          , inIsMain                          := inIsMain                          ::Boolean    -- Основное место работы
-                                          , inComment                         := inComment                         ::TVarChar  
-                                          , inSession                         := inSession                         ::TVarChar   -- сессия пользователя 
-                                          ) ;
-    
-      */
+
      -- сохранили <Документ>
      ioId:= lpInsertUpdate_Movement_StaffListMember ( ioId                  := ioId
                                                     , inInvNumber           := inInvNumber
@@ -229,8 +204,39 @@ BEGIN
                                                     , inComment             := inComment            
                                                     , inUserId              := vbUserId
                                                      );  
- 
-   /* пока ничего не записываем
+ --  записываем только админ (5, 9457)
+        --сохранение обновлени сотрудника
+   IF vbUserId IN (5, 9457)
+   THEN
+     vbPersonalId := gpInsertUpdate_Object_Personal(ioId                              := COALESCE (vbPersonalId,0)         ::Integer    -- ключ объекта <Сотрудники>
+                                                  , inMemberId                        := inMemberId                        ::Integer    -- ссылка на Физ.лица
+                                                  , inPositionId                      := inPositionId                      ::Integer    -- ссылка на Должность
+                                                  , inPositionLevelId                 := inPositionLevelId                 ::Integer    -- ссылка на Разряд должности
+                                                  , inUnitId                          := inUnitId                          ::Integer    -- ссылка на Подразделение
+                                                  , inPersonalGroupId                 := inPersonalGroupId                 ::Integer    -- Группировки Сотрудников
+                                                  , inPersonalServiceListId           := inPersonalServiceListId           ::Integer    -- Ведомость начисления(главная)
+                                                  , inPersonalServiceListOfficialId   := inPersonalServiceListOfficialId   ::Integer    -- Ведомость начисления(БН)
+                                                  , inPersonalServiceListCardSecondId := inPersonalServiceListCardSecondId ::Integer    -- Ведомость начисления(Карта Ф2) 
+                                                  , inPersonalServiceListId_AvanceF2  := inPersonalServiceListId_AvanceF2  ::Integer    --  Ведомость начисления(аванс Карта Ф2)
+                                                  , inSheetWorkTimeId                 := inSheetWorkTimeId                 ::Integer    -- Режим работы (Шаблон табеля р.вр.)
+                                                  , inStorageLineId                   := inStorageLineId_1                 ::Integer    -- ссылка на линию производства
+                                                  
+                                                  , inMember_ReferId                  := inMember_ReferId                  ::Integer    -- Фамилия рекомендателя
+                                                  , inMember_MentorId                 := inMember_MentorId                 ::Integer    -- Фамилия наставника 	
+                                                  , inReasonOutId                     := inReasonOutId                     ::Integer    -- Причина увольнения 	
+                                                  
+                                                  , inDateIn                          := vbDateIn                          ::TDateTime  -- Дата принятия
+                                                  , inDateOut                         := vbDateOut                         ::TDateTime  -- Дата увольнения 
+                                                  , inDateSend                        := vbDateSend                        ::TDateTime  -- Дата перевода
+                                                  , inIsDateOut                       := vbIsDateOut                       ::Boolean    -- Уволен
+                                                  , inIsDateSend                      := vbIsDateSend                      ::Boolean    -- переведен
+                                                  , inIsMain                          := inIsMain                          ::Boolean    -- Основное место работы
+                                                  , inComment                         := inComment                         ::TVarChar  
+                                                  , inSession                         := inSession                         ::TVarChar   -- сессия пользователя 
+                                                  ) ;
+    
+  
+     /*
      --находим сотрудника
      vbPersonalId := (SELECT tmp.PersonalId
                       FROM (SELECT Object_Personal.Id AS PersonalId
@@ -261,41 +267,44 @@ BEGIN
                             ) AS tmp
                       WHERE tmp.Ord = 1
                       );
-
+     */
      -- сохранить линии производства
-     PERFORM gpInsertUpdate_Object_PersonalByStorageLine (0::Integer, vbPersonalId::Integer, tmp.StorageLineId::Integer, inSession::TVarChar)
+     PERFORM gpInsertUpdate_Object_PersonalByStorageLine (COALESCE (tmp.PersonalByStorageLineId,0)::Integer, vbPersonalId::Integer, tmp.StorageLineId::Integer, inSession::TVarChar)
      FROM (
            WITH
              --уже сохраненные линии производства
              tmpSave AS (SELECT tmp.*
+                              , ROW_NUMBER() OVER (Order by tmp.Id) AS Ord
                          FROM gpSelect_Object_PersonalByStorageLine (False, inSession) AS tmp
                          WHERE tmp.PersonalId = vbPersonalId
                          )
+            --новые
            , tmpStorageLine AS (SELECT inStorageLineId_1 AS StorageLineId
-                                WHERE COALESCE (inStorageLineId_1,0) <> 0
-                              UNION
+                                --WHERE COALESCE (inStorageLineId_1,0) <> 0
+                              UNION ALL
                                 SELECT inStorageLineId_2 AS StorageLineId
-                                WHERE COALESCE (inStorageLineId_2,0) <> 0
-                              UNION
+                                --WHERE COALESCE (inStorageLineId_2,0) <> 0
+                              UNION ALL
                                 SELECT inStorageLineId_3 AS StorageLineId
-                                WHERE COALESCE (inStorageLineId_3,0) <> 0
-                              UNION
+                                --WHERE COALESCE (inStorageLineId_3,0) <> 0
+                              UNION ALL
                                 SELECT inStorageLineId_4 AS StorageLineId
-                                WHERE COALESCE (inStorageLineId_4,0) <> 0
-                              UNION
+                                --WHERE COALESCE (inStorageLineId_4,0) <> 0
+                              UNION ALL
                                 SELECT inStorageLineId_5 AS StorageLineId
-                                WHERE COALESCE (inStorageLineId_5,0) <> 0
+                                --WHERE COALESCE (inStorageLineId_5,0) <> 0
                                 )
 
          SELECT tmpStorageLine.StorageLineId
+              , tmpSave.Id AS PersonalByStorageLineId
          FROM tmpStorageLine
               LEFT JOIN tmpSave ON tmpSave.StorageLineId = tmpStorageLine.StorageLineId
-         WHERE COALESCE (tmpStorageLine.StorageLineId,0) <> 0 
-           AND tmpSave.PersonalId IS NULL
+        -- WHERE COALESCE (tmpStorageLine.StorageLineId,0) <> 0 
+        --   AND tmpSave.PersonalId IS NULL
         ) AS tmp
         ;
 
-        */
+     END IF;    
  
      -- !!! ВРЕМЕННО !!!
    -- IF  vbUserId = 9457 THEN RAISE EXCEPTION 'Admin - Test = OK'; END IF;

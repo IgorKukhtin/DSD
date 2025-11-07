@@ -41,6 +41,21 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
               Format = ',0.##'
               Kind = skSum
               Column = Amount_diff
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = TotalPlan
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = TotalFact
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Total_diff
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -62,6 +77,21 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
               Format = ',0.##'
               Kind = skSum
               Column = Amount_diff
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = TotalPlan
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = TotalFact
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Total_diff
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -73,14 +103,14 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object isVacancy: TcxGridDBColumn
-            Caption = #1042#1072#1082#1072#1085#1089#1080#1103' ('#1076#1072'/'#1085#1077#1090')'
-            DataBinding.FieldName = 'isVacancy'
+          object Vacancy: TcxGridDBColumn
+            Caption = #1042#1072#1082#1072#1085#1089#1080#1103
+            DataBinding.FieldName = 'Vacancy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taRightJustify
             Options.Editing = False
-            Width = 60
+            Width = 72
           end
           object DepartmentName: TcxGridDBColumn
             Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' 1 '#1088#1110#1074#1085#1103
@@ -136,6 +166,15 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1083#1072#1085' '#1064#1056' ('#1087#1086' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088#1091')'
             Width = 99
+          end
+          object AmountFact: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090' '#1064#1056
+            DataBinding.FieldName = 'AmountFact'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
           end
           object AmountFact_add: TcxGridDBColumn
             Caption = #1060#1072#1082#1090' '#1064#1056' ('#1089#1086#1074#1084'.)'
@@ -193,15 +232,6 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
             Options.Editing = False
             Width = 79
           end
-          object AmountFact: TcxGridDBColumn
-            Caption = #1060#1072#1082#1090' '#1064#1056
-            DataBinding.FieldName = 'AmountFact'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 85
-          end
           object StaffHoursName: TcxGridDBColumn
             Caption = #1063#1072#1089#1099' '#1088#1072#1073#1086#1090#1099
             DataBinding.FieldName = 'StaffHoursName'
@@ -209,6 +239,33 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 83
+          end
+          object TotalPlan: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1087#1083#1072#1085
+            DataBinding.FieldName = 'TotalPlan'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+          end
+          object TotalFact: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1092#1072#1082#1090
+            DataBinding.FieldName = 'TotalFact'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+          end
+          object Total_diff: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1076#1077#1083#1100#1090#1072
+            DataBinding.FieldName = 'Total_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
           end
           object Color_vacancy: TcxGridDBColumn
             DataBinding.FieldName = 'Color_vacancy'
@@ -221,6 +278,19 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
             Visible = False
             VisibleForCustomization = False
             Width = 60
+          end
+          object Color_unit: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_unit'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 70
+          end
+          object BoldRecord_unit: TcxGridDBColumn
+            DataBinding.FieldName = 'BoldRecord_unit'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 70
           end
         end
       end
@@ -661,7 +731,19 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
         ColorColumn = Amount_diff
         ValueColumn = Color_diff
         ColorValueList = <>
+      end
+      item
+        ColorColumn = Vacancy
+        ValueColumn = Color_diff
+        ColorValueList = <>
+      end
+      item
+        ValueColumn = Color_unit
+        ColorValueList = <>
+        ValueBoldColumn = BoldRecord_unit
       end>
+    Left = 488
+    Top = 272
   end
   inherited PeriodChoice: TPeriodChoice
     DateStart = nil
