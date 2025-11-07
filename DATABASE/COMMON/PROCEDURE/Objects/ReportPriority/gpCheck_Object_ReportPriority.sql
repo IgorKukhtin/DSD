@@ -60,6 +60,19 @@ BEGIN
                                              AND (inProcName ILIKE 'gpReport_MotionGoods'
                                                OR inProcName ILIKE 'gpUpdate_Movement_ReturnIn_Auto'
                                                  )
+                                             -- Голота К.О.
+                                             AND vbUserId <> 6604558
+                                             --
+                                             THEN 25
+
+                                        -- разрешено 2 - Голота К.О.
+                                        WHEN 1 < (SELECT tmpCount.Res FROM tmpCount)
+                                             AND (inProcName ILIKE 'gpReport_MotionGoods'
+                                               OR inProcName ILIKE 'gpUpdate_Movement_ReturnIn_Auto'
+                                                 )
+                                              -- Голота К.О.
+                                             AND vbUserId = 6604558
+                                             --
                                              THEN 25
 
                                         -- разрешено 2
