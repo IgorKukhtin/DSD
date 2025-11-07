@@ -285,6 +285,13 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
             VisibleForCustomization = False
             Width = 70
           end
+          object BoldRecord_unit: TcxGridDBColumn
+            DataBinding.FieldName = 'BoldRecord_unit'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 70
+          end
         end
       end
     end
@@ -731,14 +738,9 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
         ColorValueList = <>
       end
       item
-        ColorColumn = UnitName
         ValueColumn = Color_unit
         ColorValueList = <>
-      end
-      item
-        ColorColumn = DepartmentName
-        ValueColumn = Color_unit
-        ColorValueList = <>
+        ValueBoldColumn = BoldRecord_unit
       end>
     Left = 488
     Top = 272

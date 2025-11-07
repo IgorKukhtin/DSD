@@ -34,6 +34,7 @@ RETURNS TABLE(
             , TotalFact            TFloat 
             , Total_diff           TFloat 
             , Color_unit           Integer
+            , BoldRecord_unit      Boolean
 )
 AS
 $BODY$
@@ -279,6 +280,7 @@ BEGIN
          , 0    :: TFloat AS TotalFact
          , 0    :: TFloat AS Total_diff
          , zc_Color_Black()  ::Integer AS Color_unit 
+         , FALSE ::Boolean AS BoldRecord_unit
     FROM tmpData AS Movement
          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Movement.UnitId
          LEFT JOIN Object AS Object_Department ON Object_Department.Id = Movement.DepartmentId
@@ -324,7 +326,8 @@ BEGIN
          , SUM (COALESCE (Movement.AmountPlan, 0))    :: TFloat AS TotalPlan
          , SUM (COALESCE (tmpFact.Amount,0))          :: TFloat AS TotalFact
          , (SUM (COALESCE (tmpFact.Amount,0)) - SUM (COALESCE (Movement.AmountPlan, 0))) :: TFloat AS Total_diff
-         , zc_Color_Blue()  ::Integer AS Color_unit  
+         , zc_Color_Blue()  ::Integer AS Color_unit 
+         , TRUE ::Boolean AS BoldRecord_unit 
     FROM tmpData AS Movement
          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Movement.UnitId
          LEFT JOIN Object AS Object_Department ON Object_Department.Id = Movement.DepartmentId

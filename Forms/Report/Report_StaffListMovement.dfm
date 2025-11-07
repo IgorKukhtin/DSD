@@ -234,6 +234,13 @@ inherited Report_StaffListMovementForm: TReport_StaffListMovementForm
             VisibleForCustomization = False
             Width = 70
           end
+          object BoldRecord_unit: TcxGridDBColumn
+            DataBinding.FieldName = 'BoldRecord_unit'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 70
+          end
         end
       end
     end
@@ -666,29 +673,9 @@ inherited Report_StaffListMovementForm: TReport_StaffListMovementForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColorRuleList = <
       item
-        ColorColumn = DepartmentName
         ValueColumn = Color_unit
         ColorValueList = <>
-      end
-      item
-        ColorColumn = UnitName
-        ValueColumn = Color_unit
-        ColorValueList = <>
-      end
-      item
-        ColorColumn = Total_diff
-        ValueColumn = Color_unit
-        ColorValueList = <>
-      end
-      item
-        ColorColumn = TotalFact
-        ValueColumn = Color_unit
-        ColorValueList = <>
-      end
-      item
-        ColorColumn = TotalPlan
-        ValueColumn = Color_unit
-        ColorValueList = <>
+        ValueBoldColumn = BoldRecord_unit
       end>
   end
   inherited PeriodChoice: TPeriodChoice

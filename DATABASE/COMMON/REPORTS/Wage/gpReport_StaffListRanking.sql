@@ -36,6 +36,7 @@ RETURNS TABLE(
             , Color_vacancy        Integer
             , Color_diff           Integer
             , Color_unit           Integer
+            , BoldRecord_unit      Boolean
             , TotalPlan            TFloat 
             , TotalFact            TFloat 
             , Total_diff           TFloat 
@@ -439,7 +440,8 @@ BEGIN
          , CASE WHEN COALESCE (tmpResult.Amount_diff,0) < 0 THEN 'Вакансія' ELSE '' END ::TVarChar AS Vacancy 
          , zc_Color_Black()  ::Integer AS Color_vacancy
          , CASE WHEN COALESCE (tmpResult.Amount_diff,0) < 0 THEN zc_Color_Red() ELSE zc_Color_Black() END ::Integer AS Color_diff
-         , zc_Color_Black()  ::Integer AS Color_unit 
+         , zc_Color_Black()  ::Integer AS Color_unit
+         , FALSE ::Boolean AS BoldRecord_unit
          , 0    :: TFloat AS TotalPlan
          , 0    :: TFloat AS TotalFact
          , 0    :: TFloat AS Total_diff
@@ -469,7 +471,8 @@ BEGIN
          , 'Вакансія'    ::TVarChar   AS Vacancy
          , zc_Color_Red()    ::Integer AS Color_vacancy
          , zc_Color_Red()    ::Integer AS Color_diff
-         , zc_Color_Black()  ::Integer AS Color_unit 
+         , zc_Color_Black()  ::Integer AS Color_unit
+         , FALSE ::Boolean AS BoldRecord_unit 
          , 0               :: TFloat AS TotalPlan
          , 0               :: TFloat AS TotalFact
          , 0               :: TFloat AS Total_diff
@@ -506,7 +509,8 @@ BEGIN
          , ''     ::TVarChar AS Vacancy 
          , zc_Color_Black()  ::Integer AS Color_vacancy
          , CASE WHEN SUM (COALESCE (tmpResult.AmountFact,0)) - SUM (COALESCE (tmpResult.AmountPlan,0)) < 0 THEN zc_Color_Red() ELSE zc_Color_Black() END ::Integer AS Color_diff
-         , zc_Color_Blue()  ::Integer AS Color_unit 
+         , zc_Color_Blue()  ::Integer AS Color_unit
+         , TRUE ::Boolean AS BoldRecord_unit
          , SUM (COALESCE (tmpResult.AmountPlan,0))    :: TFloat AS TotalPlan
          , SUM (COALESCE (tmpResult.AmountFact,0))    :: TFloat AS TotalFact
          , (SUM (COALESCE (tmpResult.AmountFact,0)) - SUM (COALESCE (tmpResult.AmountPlan,0))) :: TFloat AS Total_diff
