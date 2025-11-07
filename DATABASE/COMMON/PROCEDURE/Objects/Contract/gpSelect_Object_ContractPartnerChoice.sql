@@ -61,8 +61,10 @@ BEGIN
    -- !!!Ирна!!!
    vbIsIrna:= zfCalc_User_isIrna (vbUserId);
 
-   -- определяется уровень доступа
-   vbIsUserOrder:= vbUserId <> 6950843 AND EXISTS (SELECT Object_RoleAccessKeyGuide_View.AccessKeyId_UserOrder FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.AccessKeyId_UserOrder > 0);
+   -- определяется уровень доступа - "Кабат М.С."
+   vbIsUserOrder:= vbUserId <> 6950843 AND EXISTS (SELECT Object_RoleAccessKeyGuide_View.AccessKeyId_UserOrder FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.AccessKeyId_UserOrder > 0)
+               -- Комісарова О.О
+               AND vbUserId <> 11750040;
    -- Группа Юр.Лиц
    vbObjectId_Constraint:= COALESCE ((SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.JuridicalGroupId), 0 );
    -- Филиал
