@@ -310,7 +310,10 @@ AS
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
         AND (OH_JuridicalDetails.OKPO IN ('35275230','25288083','35231874') -- '39143745' перенесли в др.группу ритейл
              OR (ObjectLink_Retail.ChildObjectId IN (310862) -- Рост Харьков
-                  AND OH_JuridicalDetails.OKPO <> '43094673')      --другая печать   ДЛК "ПІЛОТ"
+                 AND OH_JuridicalDetails.OKPO NOT IN ('43094673'  -- другая печать - ДЛК "ПІЛОТ"
+                                                    , '44993075'  -- другая печать - ТОВ ОПТІМАР
+                                                     )
+                )
             )
 
      UNION
@@ -524,7 +527,7 @@ AS
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
 
      UNION
-      --   ДЛК "ПІЛОТ"
+      --   ДЛК "ПІЛОТ" + ТОВ ОПТІМАР
       SELECT
              zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
@@ -536,7 +539,9 @@ AS
            , CAST ('Видаткова накладна' AS TVarChar)                     AS DocHeadeName
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO IN ('43094673')
+       AND OH_JuridicalDetails.OKPO IN ('43094673'
+                                      , '44993075' -- ТОВ ОПТІМАР
+                                       ) 
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
 
 
