@@ -1567,7 +1567,10 @@ begin
          Result:=DataSet.RecordCount<>0;
          if not Result then
          begin
-              ShowMessage('Ошибка.'+#10+#13+'Данные для <'+execParamsMovement.ParamByName('GoodsPropertyName').AsString+'> по штих коду <'+inBarCode+'> не определены.');
+              DialogMsgForm.Execute ('Ошибка.'
+                                    ,'Данные для <'+execParamsMovement.ParamByName('GoodsPropertyName').AsString+'>'
+                                    ,'по штих коду <'+inBarCode+'> не определены.'
+                                    );
               exit;
          end;
 

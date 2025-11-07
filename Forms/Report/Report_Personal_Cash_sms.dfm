@@ -1,72 +1,48 @@
 inherited Report_Personal_Cash_smsForm: TReport_Personal_Cash_smsForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1090#1087#1088#1072#1074#1082#1072' '#1089#1084#1089'>'
   ClientHeight = 483
-  ClientWidth = 813
+  ClientWidth = 984
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 829
+  ExplicitWidth = 1000
   ExplicitHeight = 522
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 64
-    Width = 813
+    Width = 984
     Height = 419
     TabOrder = 3
-    ExplicitTop = 91
-    ExplicitWidth = 1094
-    ExplicitHeight = 392
+    ExplicitTop = 64
+    ExplicitWidth = 984
+    ExplicitHeight = 419
     ClientRectBottom = 419
-    ClientRectRight = 813
+    ClientRectRight = 984
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1094
-      ExplicitHeight = 392
+      ExplicitWidth = 984
+      ExplicitHeight = 419
       inherited cxGrid: TcxGrid
-        Width = 813
+        Width = 984
         Height = 419
-        ExplicitLeft = -104
-        ExplicitTop = -20
-        ExplicitWidth = 813
+        ExplicitWidth = 984
         ExplicitHeight = 419
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
+              Column = Amount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount
+            end
+            item
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = PositionName
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
+              Column = PersonalName
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -153,45 +129,55 @@ inherited Report_Personal_Cash_smsForm: TReport_Personal_Cash_smsForm
           object PositionLevelName: TcxGridDBColumn
             Caption = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
             DataBinding.FieldName = 'PositionLevelName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 113
           end
-          object isSms: TcxGridDBColumn
-            Caption = #1054#1090#1087#1088#1072#1074#1083#1077#1085#1086' '#1089#1084#1089' ('#1044#1072'/'#1053#1077#1090')'
-            DataBinding.FieldName = 'isSms'
-            Visible = False
+          object Amount: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 80
+          end
+          object isSms: TcxGridDBColumn
+            Caption = #1054#1090#1087#1088#1072#1074#1083#1077#1085#1086' '#1089#1084#1089' ('#1044#1072'/'#1053#1077#1090')'
+            DataBinding.FieldName = 'isSms'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object Date_SMS: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1089#1084#1089
             DataBinding.FieldName = 'Date_SMS'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 100
           end
           object Phone: TcxGridDBColumn
-            Caption = #1058#1077#1083#1077#1092#1086#1085
+            Caption = #8470' '#1058#1077#1083#1077#1092#1086#1085#1072
             DataBinding.FieldName = 'Phone'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 100
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 813
+    Width = 984
     Height = 38
-    ExplicitWidth = 1094
+    ExplicitWidth = 984
     ExplicitHeight = 38
     inherited deStart: TcxDateEdit
       Top = 7

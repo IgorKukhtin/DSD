@@ -38,6 +38,7 @@ type
     actGetForm: TdsdExecStoredProc;
     mactOpenDocument: TMultiAction;
     Phone: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
   private
     { Private declarations }
   public

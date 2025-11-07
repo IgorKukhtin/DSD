@@ -35,7 +35,7 @@ begin
      if inMsg2 <> '' then MemoMsg.Lines.Add(inMsg2);
      if inMsg3 <> '' then MemoMsg.Lines.Add(inMsg3);
      //
-     if Pos('Дублирование взвешивания', inMsg1) > 0
+     if (Pos('Дублирование взвешивания', inMsg1) > 0)or(Pos('по штих коду', inMsg3) > 0)
      then begin bbOK.Default:= false; bbCancel.Default:= false;  ActiveControl:= nil; ActiveControl:= MemoMsg; end
      else ActiveControl:= bbCancel;
      result:=(ShowModal=mrOk);

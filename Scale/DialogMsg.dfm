@@ -49,7 +49,6 @@ inherited DialogMsgForm: TDialogMsgForm
         'MemoMsg')
       ReadOnly = True
       TabOrder = 0
-      ExplicitTop = 6
     end
   end
 end
