@@ -331,6 +331,17 @@ BEGIN
      CLOSE curPartionCell; -- закрыли курсор
 
 
+     -- убрали удаленные
+     DELETE FROM _tmpPartionCell
+     WHERE _tmpPartionCell.MovementItemId IN (SELECT tmpList.MovementItemId
+                                              FROM (SELECT DISTINCT _tmpPartionCell.MovementItemId FROM _tmpPartionCell) AS tmpList
+                                                   JOIN MovementItem ON MovementItem.Id = tmpList.MovementItemId
+                                                                    AND MovementItem.isErased = FALSE
+                                                   JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                              WHERE (Movement.DescId = zc_Movement_Send()               AND Movement.StatusId =  zc_Enum_Status_Erased())
+                                                 OR (Movement.DescId = zc_Movement_WeighingProduction() AND Movement.StatusId <> zc_Enum_Status_UnComplete())
+                                             );
+
      -- Результат
      RETURN QUERY
      WITH
@@ -2021,6 +2032,21 @@ BEGIN
 
      END LOOP; -- финиш цикла по курсору
      CLOSE curPartionCell; -- закрыли курсор
+
+
+     -- убрали удаленные
+     DELETE FROM _tmpPartionCell
+     WHERE _tmpPartionCell.MovementItemId IN (SELECT tmpList.MovementItemId
+                                              FROM (SELECT DISTINCT _tmpPartionCell.MovementItemId FROM _tmpPartionCell) AS tmpList
+                                                   JOIN MovementItem ON MovementItem.Id = tmpList.MovementItemId
+                                                                    AND MovementItem.isErased = FALSE
+                                                   JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                              WHERE (Movement.DescId = zc_Movement_Send()               AND Movement.StatusId =  zc_Enum_Status_Erased())
+                                                 OR (Movement.DescId = zc_Movement_WeighingProduction() AND Movement.StatusId <> zc_Enum_Status_UnComplete())
+                                             );
+
+
+    -- RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from _tmpPartionCell where MovementItemId = 339307632);
 
 
     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpMI_Date'))

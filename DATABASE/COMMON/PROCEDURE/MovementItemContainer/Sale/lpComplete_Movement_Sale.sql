@@ -3214,6 +3214,9 @@ end if;
                                   THEN zc_Enum_Account_30204() -- Дворкин
                              WHEN zc_Enum_InfoMoney_21151() = vbInfoMoneyId_CorporateTo
                                   THEN zc_Enum_Account_30205() -- ЕКСПЕРТ-АГРОТРЕЙД
+                             WHEN zc_Enum_InfoMoney_21152() = vbInfoMoneyId_CorporateTo
+                                  THEN zc_Enum_Account_30206() -- Алан АЗИЯ
+
                         END AS AccountId_Corporate
                  FROM _tmpItem
                  WHERE _tmpItem.isTareReturning = FALSE -- !!!Возвратная тара не учавствует!!!
