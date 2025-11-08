@@ -226,15 +226,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object JuridicalCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1102#1088'.'#1083#1080#1094#1086
-            DataBinding.FieldName = 'JuridicalCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 45
-          end
           object OKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO'
@@ -250,6 +241,15 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 58
+          end
+          object ContractCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
           end
           object ContractName: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088
@@ -277,12 +277,11 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
           object EndDate: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088' '#1076#1086
             DataBinding.FieldName = 'EndDate'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1086#1075#1086#1074#1086#1088' '#1076#1086
             Options.Editing = False
-            Width = 60
+            Width = 79
           end
           object EndDate_real: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088' '#1076#1086' ('#1080#1085#1092'.)'
@@ -293,6 +292,22 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             HeaderHint = #1044#1086#1075#1086#1074#1086#1088' '#1076#1086' ('#1080#1085#1092'.)'
             Options.Editing = False
             Width = 60
+          end
+          object Condition: TcxGridDBColumn
+            Caption = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
+            DataBinding.FieldName = 'Condition'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            Options.Editing = False
+          end
+          object JuridicalCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1102#1088'.'#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
           end
           object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088'. '#1083#1080#1094#1086
@@ -309,15 +324,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
-          object ContractCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1076#1086#1075'.'
-            DataBinding.FieldName = 'ContractCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 50
-          end
           object InfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
@@ -329,6 +335,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
           object BankName: TcxGridDBColumn
             Caption = #1041#1072#1085#1082
             DataBinding.FieldName = 'BankName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -345,6 +352,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 114
@@ -496,6 +504,9 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1070#1088'.'#1083#1080#1094#1072
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -2003,7 +2014,20 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'Export_file'
       MoveParams = <>
       dsdStoredProcName = spSelect_Export
+      FilePathParam.Value = ''
+      FilePathParam.DataType = ftString
+      FilePathParam.MultiSelectSeparator = ','
+      FileNameParam.Value = ''
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
       FileExt = '.xml'
+      FileExtParam.Value = ''
+      FileExtParam.DataType = ftString
+      FileExtParam.MultiSelectSeparator = ','
+      FileNamePrefixParam.Value = ''
+      FileNamePrefixParam.DataType = ftString
+      FileNamePrefixParam.MultiSelectSeparator = ','
+      FieldDefs = <>
       Left = 1208
       Top = 168
     end
@@ -2243,6 +2267,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         DataSummaryItemIndex = 6
       end>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 355
     Top = 369
@@ -2817,6 +2842,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         DataSummaryItemIndex = 6
       end>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 819
     Top = 265

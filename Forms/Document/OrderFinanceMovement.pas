@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox, dsdInternetAction;
+  cxImageComboBox, dsdInternetAction, dsdCommon;
 
 type
   TOrderFinanceMovementForm = class(TParentForm)
@@ -180,6 +180,7 @@ type
     bbInsert_byMovBankAccount: TdxBarButton;
     actRefreshOFJ: TdsdDataSetRefresh;
     spInsertMaskMIMaster2: TdsdStoredProc;
+    Condition: TcxGridDBColumn;
   private
   public
   end;

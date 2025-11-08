@@ -450,6 +450,9 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_PromoSchemaKind', 'Промо-механика' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PromoSchemaKind');
 
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_Update_report() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Update_report'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_Update_report', 'Пользователь - заполнения данных из отчета' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Update_report');
 
 
 
@@ -677,6 +680,15 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_BankSecondDiff_num() RETURNS In
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_BankSecondDiff_num', 'Банк - 2ф.(личный)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_BankSecondDiff_num');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_Member_1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Member_1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_Member_1', 'ФИО - на контроле-1' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Member_1');
+
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_Member_2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Member_2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_Member_2', 'ФИО - на контроле-2' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Member_2');
+
+
 
 
 /*-------------------------------------------------------------------------------
@@ -685,6 +697,9 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 07.11.25         * zc_MovementLinkObject_Update_report
+                    zc_MovementLinkObject_Member_1
+                    zc_MovementLinkObject_Member_2
  23.09.25         * zc_MovementLinkObject_PromoSchemaKind
  20.08.25         * zc_MovementLinkObject_PersonalHead
  02.12.24         * zc_MovementLinkObject_SiteTag
