@@ -53,7 +53,7 @@ type
     ContractName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     AmountRemains: TcxGridDBColumn;
-    AmountPlan: TcxGridDBColumn;
+    AmountSumm: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     actUpdateMasterDS: TdsdUpdateDataSet;
     spInsertUpdateMIMaster: TdsdStoredProc;
@@ -136,7 +136,6 @@ type
     cxLabel3: TcxLabel;
     edBankAccount: TcxButtonEdit;
     GuidesBankAccount: TdsdGuides;
-    BankAccountName: TcxGridDBColumn;
     actBankAccountChoiceForm: TOpenChoiceForm;
     actShowAllJur: TBooleanStoredProcAction;
     bbShowAllJur: TdxBarButton;
@@ -181,6 +180,35 @@ type
     actRefreshOFJ: TdsdDataSetRefresh;
     spInsertMaskMIMaster2: TdsdStoredProc;
     Condition: TcxGridDBColumn;
+    GuidesInsert: TdsdGuides;
+    edInsertUser: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    cxLabel6: TcxLabel;
+    edUpdate: TcxButtonEdit;
+    GuidesUpdate: TdsdGuides;
+    GuidesUnit: TdsdGuides;
+    cxLabel7: TcxLabel;
+    ceUnit: TcxButtonEdit;
+    cxLabel8: TcxLabel;
+    cePosition: TcxButtonEdit;
+    GuidesPosition: TdsdGuides;
+    cxLabel9: TcxLabel;
+    edWeekNumber: TcxCurrencyEdit;
+    cxLabel10: TcxLabel;
+    ceMember_1: TcxButtonEdit;
+    GuidesMember1: TdsdGuides;
+    GuidesMember2: TdsdGuides;
+    ceMember_2: TcxButtonEdit;
+    cxLabel12: TcxLabel;
+    cxLabel13: TcxLabel;
+    edInsertDate: TcxDateEdit;
+    cxLabel14: TcxLabel;
+    edUpdatetDate: TcxDateEdit;
+    edUpdatetDate_report: TcxDateEdit;
+    cxLabel15: TcxLabel;
+    edUserUpdate_report: TcxButtonEdit;
+    cxLabel17: TcxLabel;
+    Guides_Update_report: TdsdGuides;
   private
   public
   end;

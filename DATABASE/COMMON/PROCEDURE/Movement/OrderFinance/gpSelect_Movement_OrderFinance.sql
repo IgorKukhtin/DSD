@@ -92,8 +92,8 @@ BEGIN
 
 
             LEFT JOIN MovementFloat AS MovementFloat_WeekNumber
-                                     ON MovementFloat_WeekNumber.MovementId = Movement.Id
-                                    AND MovementFloat_WeekNumber.DescId = zc_MovementFloat_WeekNumber()
+                                    ON MovementFloat_WeekNumber.MovementId = Movement.Id
+                                   AND MovementFloat_WeekNumber.DescId = zc_MovementFloat_WeekNumber()
 
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
@@ -168,4 +168,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderFinance (inStartDate:= '30.11.2017', inEndDate:= '30.11.2017', inJuridicalBasisId:=0, inIsErased := FALSE, inSession:= '2')
+-- -- SELECT * FROM gpSelect_Movement_OrderFinance (inStartDate:= '01.11.2021', inEndDate:= '30.11.2021', inJuridicalBasisId:=0, inIsErased := FALSE, inSession:= '2')
