@@ -67,8 +67,10 @@ BEGIN
              , tmpMember.ObjectToId, tmpMember.ObjectToName, tmpMember.DescName
              , tmpMember.isDateOut, tmpMember.PersonalId
              , tmpMember.isErased
-       FROM tmpContainer
-            INNER JOIN tmpMember ON tmpMember.Id = tmpContainer.MemberId
+       FROM tmpMember
+            LEFT JOIN tmpContainer ON tmpContainer.MemberId = tmpMember.Id
+       WHERE tmpContainer.MemberId > 0
+          OR tmpMember.Id IN (11121316) -- Михайлюк Юрій Станіславович
       ;
   
 END;
