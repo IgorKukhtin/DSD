@@ -43,7 +43,7 @@ BEGIN
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
              , 0                                                AS OrderFinanceId
-             , CAST ('' AS TVarChar) 		                AS OrderFinanceName
+             , CAST ('' AS TVarChar) 		                    AS OrderFinanceName
 
              , 0                                                AS BankAccountId
              , CAST ('' AS TVarChar)                            AS BankAccountName
@@ -51,7 +51,7 @@ BEGIN
              , CAST ('' AS TVarChar)                            AS BankName
              , CAST ('' AS TVarChar)                            AS BankAccountNameAll
 
-             , 0   ::TFloat    AS WeekNumber
+             , (EXTRACT (Week FROM inOperDate) +1)  ::TFloat    AS WeekNumber
              , CAST (NULL AS TDateTime)                         AS DateUpdate_report
              , ''                                   ::TVarChar  AS UserUpdate_report
              , 0                                    ::Integer   AS UserMemberId_1

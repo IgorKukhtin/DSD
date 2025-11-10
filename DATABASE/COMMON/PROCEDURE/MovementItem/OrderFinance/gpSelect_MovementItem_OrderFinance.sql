@@ -63,44 +63,7 @@ BEGIN
      
      RETURN QUERY
      WITH
-/*        tmpOrderFinanceProperty AS (SELECT DISTINCT OrderFinanceProperty_Object.ChildObjectId AS Id
-                                    FROM ObjectLink AS OrderFinanceProperty_OrderFinance
-                                         INNER JOIN ObjectLink AS OrderFinanceProperty_Object
-                                                               ON OrderFinanceProperty_Object.ObjectId = OrderFinanceProperty_OrderFinance.ObjectId
-                                                              AND OrderFinanceProperty_Object.DescId = zc_ObjectLink_OrderFinanceProperty_Object()
-                                                              AND COALESCE (OrderFinanceProperty_Object.ChildObjectId,0) <> 0
-   
-                                    WHERE OrderFinanceProperty_OrderFinance.ChildObjectId = vbOrderFinanceId
-                                      AND OrderFinanceProperty_OrderFinance.DescId = zc_ObjectLink_OrderFinanceProperty_OrderFinance()
-                                   )
-      , tmpInfoMoney AS (SELECT DISTINCT Object_InfoMoney_View.InfoMoneyId
-                         FROM Object_InfoMoney_View
-                              INNER JOIN tmpOrderFinanceProperty ON (tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyId
-                                                                  OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyDestinationId
-                                                                  OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyGroupId)
-                         )
-
-      , tmpJuridicalOrderFinance AS (SELECT OL_JuridicalOrderFinance_Juridical.ChildObjectId   AS JuridicalId
-                                          , OL_JuridicalOrderFinance_BankAccount.ChildObjectId AS BankAccountId
-                                          , OL_JuridicalOrderFinance_InfoMoney.ChildObjectId   AS InfoMoneyId
-                                     FROM Object AS Object_JuridicalOrderFinance
-                                         LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_Juridical
-                                                              ON OL_JuridicalOrderFinance_Juridical.ObjectId = Object_JuridicalOrderFinance.Id
-                                                             AND OL_JuridicalOrderFinance_Juridical.DescId = zc_ObjectLink_JuridicalOrderFinance_Juridical()
-                              
-                                         LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccount
-                                                              ON OL_JuridicalOrderFinance_BankAccount.ObjectId = Object_JuridicalOrderFinance.Id
-                                                             AND OL_JuridicalOrderFinance_BankAccount.DescId = zc_ObjectLink_JuridicalOrderFinance_BankAccount()
-                                        
-                                         LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_InfoMoney
-                                                              ON OL_JuridicalOrderFinance_InfoMoney.ObjectId = Object_JuridicalOrderFinance.Id
-                                                             AND OL_JuridicalOrderFinance_InfoMoney.DescId = zc_ObjectLink_JuridicalOrderFinance_InfoMoney()
-                              
-                                     WHERE Object_JuridicalOrderFinance.DescId = zc_Object_JuridicalOrderFinance()
-                                       AND Object_JuridicalOrderFinance.isErased = FALSE
-                                     )
-                                     */
-                                     
+                                    
           -- если в справ. назначение платежа пусто, надо для таких договоров на показать все делать поиск последнего из банковской выписки, за последний месяц
           tmp_Comment AS (SELECT *
                           FROM (SELECT DISTINCT
@@ -192,7 +155,7 @@ BEGIN
                                        FROM MovementItemDate
                                        WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                          AND MovementItemDate.DescId IN (zc_MIDate_Insert()
-                                                                        , zc_MIDate_Update())
+                                                                       , zc_MIDate_Update())
                                         )
              , tmpMovementItemLinkObject AS (SELECT *
                                              FROM MovementItemLinkObject
@@ -233,7 +196,7 @@ BEGIN
                     LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountRemains
                                                    ON MIFloat_AmountRemains.MovementItemId = MovementItem.Id
                                                   AND MIFloat_AmountRemains.DescId = zc_MIFloat_AmountRemains()
-        
+
                     LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPartner
                                                    ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                   AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()

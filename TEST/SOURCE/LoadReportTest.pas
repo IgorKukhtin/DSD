@@ -139,6 +139,9 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+
+ LoadReportFromFile('PrintMovement_OrderFinance', ReportPath + '\Финансовый Учет\PrintMovement_OrderFinance.fr3');
+ exit;
 {
   LoadReportFromFile('PrintMovement_Inventory_Scale_Security', ReportPath + '\Товарный Учет\PrintMovement_Inventory_Scale_Security.fr3');
   exit;

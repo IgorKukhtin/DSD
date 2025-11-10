@@ -184,7 +184,7 @@ type
     edInsertUser: TcxButtonEdit;
     cxLabel5: TcxLabel;
     cxLabel6: TcxLabel;
-    edUpdate: TcxButtonEdit;
+    edUpdateUser: TcxButtonEdit;
     GuidesUpdate: TdsdGuides;
     GuidesUnit: TdsdGuides;
     cxLabel7: TcxLabel;
@@ -209,6 +209,19 @@ type
     edUserUpdate_report: TcxButtonEdit;
     cxLabel17: TcxLabel;
     Guides_Update_report: TdsdGuides;
+    spGet_Export_Email_xls: TdsdStoredProc;
+    actGet_Export_Email_xls: TdsdExecStoredProc;
+    actGet_Export_FileName_xls: TdsdExecStoredProc;
+    spSelectOrderFinance_XLS: TdsdStoredProc;
+    actSelect_Export_xls: TdsdExecStoredProc;
+    mactExport_xls: TMultiAction;
+    actExport_Grid_xls: TExportGrid;
+    dxBarButton1: TdxBarButton;
+    bbOut: TdxBarSubItem;
+    ExportEmailCDS: TClientDataSet;
+    ExportEmailDS: TDataSource;
+    actSMTPFile_xls: TdsdSMTPFileAction;
+    spGetFileName_xls: TdsdStoredProc;
   private
   public
   end;
