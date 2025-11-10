@@ -421,6 +421,7 @@ type
     mactSendSMSKyivstar: TMultiAction;
     actGetSMSKyivstar: TdsdExecStoredProc;
     bbSendSMSKyivstar: TdxBarButton;
+    actUnitChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
