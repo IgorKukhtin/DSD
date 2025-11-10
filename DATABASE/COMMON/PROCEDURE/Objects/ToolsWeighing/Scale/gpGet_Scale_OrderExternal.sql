@@ -78,7 +78,8 @@ BEGIN
     END IF;
 
     -- определяется
-    vbBranchId:= CASE WHEN inBranchCode > 100 THEN zc_Branch_Basis()
+    vbBranchId:= CASE WHEN inBranchCode = 0   THEN zc_Branch_Basis()
+                      WHEN inBranchCode > 100 THEN zc_Branch_Basis()
                       ELSE (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inBranchCode and Object.DescId = zc_Object_Branch())
                  END;
     -- определяется
