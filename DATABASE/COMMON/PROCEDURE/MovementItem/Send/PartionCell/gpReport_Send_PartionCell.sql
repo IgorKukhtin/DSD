@@ -340,7 +340,9 @@ BEGIN
                                                    JOIN Movement ON Movement.Id = MovementItem.MovementId
                                               WHERE (Movement.DescId = zc_Movement_Send()               AND Movement.StatusId =  zc_Enum_Status_Erased())
                                                  OR (Movement.DescId = zc_Movement_WeighingProduction() AND Movement.StatusId <> zc_Enum_Status_UnComplete())
-                                             );
+                                             )
+     --AND vbUserId <> 5
+      ;
 
      -- Результат
      RETURN QUERY
@@ -2043,7 +2045,9 @@ BEGIN
                                                    JOIN Movement ON Movement.Id = MovementItem.MovementId
                                               WHERE (Movement.DescId = zc_Movement_Send()               AND Movement.StatusId =  zc_Enum_Status_Erased())
                                                  OR (Movement.DescId = zc_Movement_WeighingProduction() AND Movement.StatusId <> zc_Enum_Status_UnComplete())
-                                             );
+                                             )
+     --AND vbUserId <> 5
+      ;
 
 
     -- RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from _tmpPartionCell where MovementItemId = 339307632);
