@@ -2874,7 +2874,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Value = Null
         Component = deStart
         DataType = ftDateTime
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
