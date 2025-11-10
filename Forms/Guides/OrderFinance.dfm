@@ -5,7 +5,7 @@ inherited OrderFinanceForm: TOrderFinanceForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 919
-  ExplicitHeight = 383
+  ExplicitHeight = 384
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -93,6 +93,33 @@ inherited OrderFinanceForm: TOrderFinanceForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 98
+          end
+          object MemberName_insert: TcxGridDBColumn
+            Caption = #1060#1048#1054' - '#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080
+            DataBinding.FieldName = 'MemberName_insert'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 110
+          end
+          object MemberName_1: TcxGridDBColumn
+            Caption = #1060#1048#1054' - '#1085#1072' '#1082#1086#1085#1090#1088#1086#1083#1077'-1'
+            DataBinding.FieldName = 'MemberName_1'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 110
+          end
+          object MemberName_2: TcxGridDBColumn
+            Caption = #1060#1048#1054' - '#1085#1072' '#1082#1086#1085#1090#1088#1086#1083#1077'-2'
+            DataBinding.FieldName = 'MemberName_2'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 110
           end
         end
       end
@@ -356,6 +383,51 @@ inherited OrderFinanceForm: TOrderFinanceForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'BankAccountNameAll'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberId_insert'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberId_insert'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberName_insert'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberName_insert'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberId_1'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberId_1'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberName_1'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberName_1'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberId_2'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberId_2'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberName_2'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberName_2'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -884,10 +956,13 @@ inherited OrderFinanceForm: TOrderFinanceForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 528
     Top = 208

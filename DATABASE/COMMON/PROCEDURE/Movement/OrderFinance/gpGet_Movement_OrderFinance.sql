@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , OrderFinanceId Integer, OrderFinanceName TVarChar
              , BankAccountId Integer, BankAccountName TVarChar
              , BankId Integer, BankName TVarChar, BankAccountNameAll TVarChar
-             , WeekNumber        TFloat   
+             , WeekNumber TFloat, StartDate_WeekNumber TDateTime, EndDate_WeekNumber TDateTime   
              , DateUpdate_report TDateTime
              , UserUpdate_report TVarChar 
              , UserMemberId_1 Integer, UserMember_1 TVarChar 
@@ -52,6 +52,8 @@ BEGIN
              , CAST ('' AS TVarChar)                            AS BankAccountNameAll
 
              , (EXTRACT (Week FROM inOperDate) +1)  ::TFloat    AS WeekNumber
+             , DATE_TRUNC('week', inOperDate + INTERVAL'7 days')                     ::TDateTime AS StartDate_WeekNumber
+             , (DATE_TRUNC('week', inOperDate + INTERVAL'7 days') + INTERVAL '6 days') ::TDateTime AS EndDate_WeekNumber
              , CAST (NULL AS TDateTime)                         AS DateUpdate_report
              , ''                                   ::TVarChar  AS UserUpdate_report
              , 0                                    ::Integer   AS UserMemberId_1
@@ -93,6 +95,9 @@ BEGIN
            , (Object_BankAccount_View.BankName || '' || Object_BankAccount_View.Name) :: TVarChar AS BankAccountNameAll
 
            , MovementFloat_WeekNumber.ValueData   ::TFloat    AS WeekNumber
+           , DATE_TRUNC('week', Movement.OperDate + INTERVAL'7 days')                     ::TDateTime AS StartDate_WeekNumber
+           , (DATE_TRUNC('week', Movement.OperDate + INTERVAL'7 days') + INTERVAL '6 days') ::TDateTime AS EndDate_WeekNumber
+
            , MovementDate_Update_report.ValueData ::TDateTime AS DateUpdate_report
            , Object_Update_report.ValueData       ::TVarChar  AS UserUpdate_report
            , Object_Member_1.Id                   ::Integer   AS UserMemberId_1

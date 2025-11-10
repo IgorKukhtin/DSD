@@ -26,6 +26,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitTop = 7
     object edInvNumber: TcxTextEdit
       Left = 170
       Top = 18
@@ -80,15 +81,15 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Width = 155
     end
     object cxLabel16: TcxLabel
-      Left = 568
+      Left = 780
       Top = 78
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 568
+      Left = 780
       Top = 93
       TabOrder = 7
-      Width = 489
+      Width = 277
     end
     object cxLabel4: TcxLabel
       Left = 408
@@ -258,6 +259,36 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1086#1090#1095#1077#1090')'
       ParentShowHint = False
       ShowHint = True
+    end
+    object deStart: TcxDateEdit
+      Left = 498
+      Top = 93
+      EditValue = 43831d
+      Properties.ReadOnly = True
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 28
+      Width = 79
+    end
+    object deEnd: TcxDateEdit
+      Left = 591
+      Top = 93
+      EditValue = 43831d
+      Properties.ReadOnly = True
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 29
+      Width = 85
+    end
+    object cxLabel18: TcxLabel
+      Left = 498
+      Top = 78
+      Caption = #1057' :'
+    end
+    object cxLabel19: TcxLabel
+      Left = 591
+      Top = 78
+      Caption = #1055#1086' :'
     end
   end
   object cxPageControl: TcxPageControl
@@ -763,9 +794,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1070#1088'.'#1083#1080#1094#1072
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 990
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -773,7 +801,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Height = 416
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 990
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = JuridicalDS
@@ -2843,6 +2870,14 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inStartData_WeekNumber'
+        Value = Null
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = ceComment
@@ -2851,7 +2886,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 402
+    Left = 346
     Top = 232
   end
   object HeaderSaver: THeaderSaver
@@ -3072,6 +3107,20 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Value = Null
         Component = ceUnit
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartData_WeekNumber'
+        Value = Null
+        Component = deStart
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndData_WeekNumber'
+        Value = Null
+        Component = deEnd
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -3412,6 +3461,40 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Name = 'BankAccountNameAll'
         Value = Null
         Component = GuidesBankAccount
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberId_1'
+        Value = Null
+        Component = GuidesMember1
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberName_1'
+        Value = Null
+        Component = GuidesMember1
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberId_2'
+        Value = Null
+        Component = GuidesMember2
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberName_2'
+        Value = Null
+        Component = GuidesMember2
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -3900,8 +3983,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Value = 8466
         MultiSelectSeparator = ','
       end>
-    Left = 768
-    Top = 48
+    Left = 904
+    Top = 24
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -3998,8 +4081,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         ComponentItem = 'Code'
         MultiSelectSeparator = ','
       end>
-    Left = 469
-    Top = 80
+    Left = 437
+    Top = 96
   end
   object GuidesMember2: TdsdGuides
     KeyField = 'Id'
@@ -4034,7 +4117,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         ComponentItem = 'Code'
         MultiSelectSeparator = ','
       end>
-    Left = 629
+    Left = 269
     Top = 80
   end
   object Guides_Update_report: TdsdGuides
@@ -4182,5 +4265,11 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     PackSize = 1
     Left = 440
     Top = 464
+  end
+  object PeriodChoice: TPeriodChoice
+    DateStart = deStart
+    DateEnd = deEnd
+    Left = 576
+    Top = 144
   end
 end

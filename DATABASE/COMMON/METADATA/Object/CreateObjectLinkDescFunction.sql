@@ -2020,6 +2020,22 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_OrderFinance_BankAccount() RETURNS Inte
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_OrderFinance_BankAccount', 'расч.счет', zc_Object_OrderFinance(), zc_Object_BankAccount() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderFinance_BankAccount');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_OrderFinance_Member_insert() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderFinance_Member_insert'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_OrderFinance_Member_insert', 'ФИО - Автор заявки', zc_Object_OrderFinance(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderFinance_Member_insert');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_OrderFinance_Member_1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderFinance_Member_1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_OrderFinance_Member_1', 'ФИО - на контроле-1', zc_Object_OrderFinance(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderFinance_Member_1');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_OrderFinance_Member_2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderFinance_Member_2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_OrderFinance_Member_2', 'ФИО - на контроле-2', zc_Object_OrderFinance(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderFinance_Member_2');
+
+ 
+
+
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_OrderFinanceProperty_OrderFinance() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderFinanceProperty_OrderFinance'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)

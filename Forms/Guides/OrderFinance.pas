@@ -23,7 +23,8 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxContainer, cxLabel, cxTextEdit, cxMaskEdit, dsdGuides, cxCurrencyEdit;
+  cxContainer, cxLabel, cxTextEdit, cxMaskEdit, dsdGuides, cxCurrencyEdit,
+  dsdCommon;
 
 type
   TOrderFinanceForm = class(TAncestorDBGridForm)
@@ -73,6 +74,9 @@ type
     InfoMoneyGroupChoiceForm: TOpenChoiceForm;
     actShowErased: TBooleanStoredProcAction;
     bb: TdxBarButton;
+    MemberName_insert: TcxGridDBColumn;
+    MemberName_1: TcxGridDBColumn;
+    MemberName_2: TcxGridDBColumn;
   private
     { Private declarations }
   public

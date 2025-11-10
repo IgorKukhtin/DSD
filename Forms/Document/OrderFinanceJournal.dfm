@@ -26,7 +26,7 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
     Align = alTop
     TabOrder = 1
     object deStart: TcxDateEdit
-      Left = 101
+      Left = 107
       Top = 5
       EditValue = 43831d
       Properties.ReadOnly = True

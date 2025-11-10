@@ -11,6 +11,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , BankAccountId Integer, BankAccountName TVarChar
              , BankId Integer, BankName TVarChar, BankAccountNameAll TVarChar
+             , MemberId_insert Integer, MemberCode_insert Integer, MemberName_insert TVarChar
+             , MemberId_1 Integer, MemberCode_1 Integer, MemberName_1 TVarChar
+             , MemberId_2 Integer, MemberCode_2 Integer, MemberName_2 TVarChar
              , Comment TVarChar
              , isErased Boolean
              )
@@ -34,6 +37,18 @@ BEGIN
             , Object_BankAccount_View.BankName AS BankName
             , (Object_BankAccount_View.BankName || '' || Object_BankAccount_View.Name) :: TVarChar AS BankAccountNameAll
 
+            , Object_Member_insert.Id          AS MemberId_insert
+            , Object_Member_insert.ObjectCode  AS MemberCode_insert
+            , Object_Member_insert.ValueData   AS MemberName_insert   
+
+            , Object_Member_1.Id               AS MemberId_1
+            , Object_Member_1.ObjectCode       AS MemberCode_1
+            , Object_Member_1.ValueData        AS MemberName_1
+
+            , Object_Member_2.Id               AS MemberId_2
+            , Object_Member_2.ObjectCode       AS MemberCode_2
+            , Object_Member_2.ValueData        AS MemberName_2
+
             , ObjectString_Comment.ValueData   AS Comment
 
             , Object_OrderFinance.isErased     AS isErased
@@ -47,6 +62,21 @@ BEGIN
                                 ON OrderFinance_PaidKind.ObjectId = Object_OrderFinance.Id
                                AND OrderFinance_PaidKind.DescId = zc_ObjectLink_OrderFinance_PaidKind()
            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = OrderFinance_PaidKind.ChildObjectId
+
+           LEFT JOIN ObjectLink AS OrderFinance_Member_insert
+                                ON OrderFinance_Member_insert.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_Member_insert.DescId = zc_ObjectLink_OrderFinance_Member_insert()
+           LEFT JOIN Object AS Object_Member_insert ON Object_Member_insert.Id = OrderFinance_Member_insert.ChildObjectId
+
+           LEFT JOIN ObjectLink AS OrderFinance_Member_1
+                                ON OrderFinance_Member_1.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_Member_1.DescId = zc_ObjectLink_OrderFinance_Member_1()
+           LEFT JOIN Object AS Object_Member_1 ON Object_Member_1.Id = OrderFinance_Member_1.ChildObjectId
+
+           LEFT JOIN ObjectLink AS OrderFinance_Member_2
+                                ON OrderFinance_Member_2.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_Member_2.DescId = zc_ObjectLink_OrderFinance_Member_2()
+           LEFT JOIN Object AS Object_Member_2 ON Object_Member_2.Id = OrderFinance_Member_2.ChildObjectId
 
            LEFT JOIN ObjectLink AS OrderFinance_BankAccount
                                 ON OrderFinance_BankAccount.ObjectId = Object_OrderFinance.Id

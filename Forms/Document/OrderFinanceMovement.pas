@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox, dsdInternetAction, dsdCommon;
+  cxImageComboBox, dsdInternetAction, dsdCommon, ChoicePeriod;
 
 type
   TOrderFinanceMovementForm = class(TParentForm)
@@ -221,11 +221,19 @@ type
     ExportEmailCDS: TClientDataSet;
     ExportEmailDS: TDataSource;
     actSMTPFile_xls: TdsdSMTPFileAction;
-    spGetFileName_xls: TdsdStoredProc;mplementation
+    spGetFileName_xls: TdsdStoredProc;
+    deStart: TcxDateEdit;
+    deEnd: TcxDateEdit;
+    cxLabel18: TcxLabel;
+    cxLabel19: TcxLabel;
+    PeriodChoice: TPeriodChoice;
+  private
+  public
+  end;
 
+implementation
 {$R *.dfm}
 
 initialization
   RegisterClass(TOrderFinanceMovementForm);
-
 end.

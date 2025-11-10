@@ -738,6 +738,31 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
         ColorValueList = <>
       end
       item
+        ColorColumn = UnitName
+        ValueColumn = Color_unit
+        ColorValueList = <>
+        ValueBoldColumn = BoldRecord_unit
+      end
+      item
+        ColorColumn = DepartmentName
+        ValueColumn = Color_unit
+        ColorValueList = <>
+        ValueBoldColumn = BoldRecord_unit
+      end
+      item
+        ColorColumn = Total_diff
+        ValueColumn = Color_unit
+        ColorValueList = <>
+        ValueBoldColumn = BoldRecord_unit
+      end
+      item
+        ColorColumn = TotalFact
+        ValueColumn = Color_unit
+        ColorValueList = <>
+        ValueBoldColumn = BoldRecord_unit
+      end
+      item
+        ColorColumn = TotalPlan
         ValueColumn = Color_unit
         ColorValueList = <>
         ValueBoldColumn = BoldRecord_unit
