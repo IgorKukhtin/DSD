@@ -26,7 +26,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 990
     object edInvNumber: TcxTextEdit
       Left = 170
       Top = 18
@@ -270,14 +269,12 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 990
     ClientRectBottom = 440
     ClientRectRight = 1060
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 990
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -285,7 +282,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Height = 331
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 990
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -737,7 +733,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Align = alBottom
         TabOrder = 1
         Visible = False
-        ExplicitWidth = 990
         object ExportXmlGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ExportDS
@@ -768,7 +763,9 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1070#1088'.'#1083#1080#1094#1072
       ImageIndex = 1
+      ExplicitTop = 0
       ExplicitWidth = 990
+      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0

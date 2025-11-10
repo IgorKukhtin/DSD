@@ -221,12 +221,7 @@ type
     ExportEmailCDS: TClientDataSet;
     ExportEmailDS: TDataSource;
     actSMTPFile_xls: TdsdSMTPFileAction;
-    spGetFileName_xls: TdsdStoredProc;
-  private
-  public
-  end;
-
-implementation
+    spGetFileName_xls: TdsdStoredProc;mplementation
 
 {$R *.dfm}
 
