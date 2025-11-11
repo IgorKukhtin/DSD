@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , BankAccountId Integer, BankAccountName TVarChar
              , BankId Integer, BankName TVarChar, BankAccountNameAll TVarChar
              , MemberId_insert Integer, MemberCode_insert Integer, MemberName_insert TVarChar
+             , UnitName_insert TVarChar, PositionName_insert TVarChar
              , MemberId_1 Integer, MemberCode_1 Integer, MemberName_1 TVarChar
              , MemberId_2 Integer, MemberCode_2 Integer, MemberName_2 TVarChar
              , Comment TVarChar
@@ -23,7 +24,15 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_OrderFinance());
 
-   RETURN QUERY 
+   RETURN QUERY
+   WITH tmpPersonal AS (SELECT lfSelect.MemberId
+                             , lfSelect.UnitId
+                             , lfSelect.PositionId
+                             , lfSelect.isDateOut
+                             , lfSelect.DateOut
+                        FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                       ) 
+
        SELECT Object_OrderFinance.Id           AS Id
             , Object_OrderFinance.ObjectCode   AS Code
             , Object_OrderFinance.ValueData    AS Name
@@ -40,6 +49,8 @@ BEGIN
             , Object_Member_insert.Id          AS MemberId_insert
             , Object_Member_insert.ObjectCode  AS MemberCode_insert
             , Object_Member_insert.ValueData   AS MemberName_insert   
+            , Object_Unit.ValueData      ::TVarChar AS UnitName_insert
+            , Object_Position.ValueData  ::TVarChar AS PositionName_insert
 
             , Object_Member_1.Id               AS MemberId_1
             , Object_Member_1.ObjectCode       AS MemberCode_1
@@ -68,6 +79,10 @@ BEGIN
                                AND OrderFinance_Member_insert.DescId = zc_ObjectLink_OrderFinance_Member_insert()
            LEFT JOIN Object AS Object_Member_insert ON Object_Member_insert.Id = OrderFinance_Member_insert.ChildObjectId
 
+           LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = Object_Member_insert.Id
+           LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
+           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
+
            LEFT JOIN ObjectLink AS OrderFinance_Member_1
                                 ON OrderFinance_Member_1.ObjectId = Object_OrderFinance.Id
                                AND OrderFinance_Member_1.DescId = zc_ObjectLink_OrderFinance_Member_1()
@@ -82,6 +97,7 @@ BEGIN
                                 ON OrderFinance_BankAccount.ObjectId = Object_OrderFinance.Id
                                AND OrderFinance_BankAccount.DescId = zc_ObjectLink_OrderFinance_BankAccount()
            LEFT JOIN Object_BankAccount_View ON Object_BankAccount_View.Id = OrderFinance_BankAccount.ChildObjectId
+
        WHERE Object_OrderFinance.DescId = zc_Object_OrderFinance()
          AND (Object_OrderFinance.isErased = FALSE OR inisErased = TRUE);
   
@@ -99,4 +115,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_OrderFinance ('2')
+-- SELECT * FROM gpSelect_Object_OrderFinance (true, '2')
