@@ -105,7 +105,7 @@ BEGIN
                                                                        AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
                                                                        AND MovementLinkObject_To.ObjectId   = zc_Unit_RK()
                                      WHERE inIsShowFree = FALSE
-                                        AND (Movement.DescId = zc_Movement_Send()
+                                        AND ((Movement.DescId = zc_Movement_Send() AND Movement.StatusId <> zc_Enum_Status_Erased())
                                           OR (Movement.DescId   = zc_Movement_WeighingProduction()
                                           AND Movement.StatusId = zc_Enum_Status_UnComplete()
                                              )
@@ -126,7 +126,7 @@ BEGIN
                                                                        AND MovementLinkObject_To.ObjectId   = zc_Unit_RK()
                                      WHERE inIsShowFree = TRUE
                                        AND _tmpPartionCell_mi.ObjectId <> zc_PartionCell_RK()
-                                        AND (Movement.DescId = zc_Movement_Send()
+                                        AND ((Movement.DescId = zc_Movement_Send() AND Movement.StatusId <> zc_Enum_Status_Erased())
                                           OR (Movement.DescId   = zc_Movement_WeighingProduction()
                                           AND Movement.StatusId = zc_Enum_Status_UnComplete()
                                              )

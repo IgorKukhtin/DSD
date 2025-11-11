@@ -306,6 +306,9 @@ type
     spListComDoc: TdsdStoredProc;
     actVchasnoEDIComDocLoad: TdsdVchasnoEDIAction;
     EDI: TEDI;
+    actSendSMSKyivstar: TdsdSendSMSKyivstarAction;
+    spSelect_SMSKyivstar: TdsdStoredProc;
+    actSelectSMSKyivstar: TdsdExecStoredProc;
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure StopButtonClick(Sender: TObject);
@@ -456,6 +459,7 @@ type
 
     procedure pExportBirthDay_xls;
     procedure pLoadVchasno_ComDoc;
+    procedure pSend_ZP_SMS_ks;
 
     // Print
     function PrintForm_Sale_PageCount_calc (MovementId:Integer):Integer;
@@ -2715,6 +2719,25 @@ begin
          mactExport_xls.Execute;
          //
          myLogMemo_add('!!! end Export - BirthDay - xls !!!');
+     end
+     else
+         myLogMemo_add('not Export - BirthDay - xls');
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pSend_ZP_SMS_ks;
+begin
+     myLogMemo_add('start ZP - _SMS - ks');
+     //
+     DBGrid.Visible:= false;
+     ExportXmlGrid.Visible:= true;
+     ExportXmlGrid.Align:= alClient;
+     actSelect_Export_xls.Execute;
+     //
+     if (ExportCDS.FieldByName('isUnload').AsBoolean = true) or not (cbExportBirthDay_xls.Checked) then
+     begin
+         mactExport_xls.Execute;
+         //
+         myLogMemo_add('!!! end ZP - _SMS - ks !!!');
      end
      else
          myLogMemo_add('not Export - BirthDay - xls');

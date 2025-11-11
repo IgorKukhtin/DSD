@@ -707,7 +707,7 @@ begin
             then EditTareWeightCode.Text:=    IntToStr(TareWeight_Array[GetArrayList_Index_byNumber(TareWeight_Array,StrToInt(GetArrayList_Value_byName(Default_Array,'TareWeightNumber')))].Code)
             else ShowMessage ('Not Value Default_Array - TareWeightNumber');
             //
-            if (execParamsMovement.ParamByName('ChangePercentAmount').AsString = '') or (execParamsMovement.ParamByName('ChangePercentAmount').AsString = '0')
+            if (execParamsMovement.ParamByName('ChangePercentAmount').AsString = '') // or (execParamsMovement.ParamByName('ChangePercentAmount').AsString = '0')
             then ShowMessage ('Not Value Default_Array - ChangePercentAmount')
             else EditChangePercentAmountCode.Text:= IntToStr(ChangePercentAmount_Array[GetArrayList_Index_byValue(ChangePercentAmount_Array,execParamsMovement.ParamByName('ChangePercentAmount').AsString)].Code); //IntToStr(ChangePercent_Array[GetArrayList_Index_byNumber(ChangePercent_Array,StrToInt(GetArrayList_Value_byName(Default_Array,'ChangePercentNumber')))].Code);
             //

@@ -416,10 +416,6 @@ type
     spInsertMaskMIMaster_Personal: TdsdStoredProc;
     actAddMask_Personal: TdsdExecStoredProc;
     bb: TdxBarButton;
-    actSendSMSKyivstar: TdsdSendSMSKyivstarAction;
-    spGet_SMSKyivstar: TdsdStoredProc;
-    mactSendSMSKyivstar: TMultiAction;
-    actGetSMSKyivstar: TdsdExecStoredProc;
     bbSendSMSKyivstar: TdxBarButton;
     actUnitChoiceForm: TOpenChoiceForm;
   private
