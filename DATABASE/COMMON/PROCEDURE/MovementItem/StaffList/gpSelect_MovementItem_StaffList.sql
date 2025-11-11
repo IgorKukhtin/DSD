@@ -1,4 +1,4 @@
--- Function: gpSelect_MovementItem_StaffList (Integer, Boolean, Boolean, TVarChar)
+ -- Function: gpSelect_MovementItem_StaffList (Integer, Boolean, Boolean, TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_StaffList (Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_StaffList (Integer, Boolean, Boolean, TVarChar);
@@ -314,6 +314,7 @@ BEGIN
                                 -- ФОП за місяць Staff_Price * TotalStaffCount + Staff_Summ_MK + Staff_Summ_real + Staff_Summ_add
                               , CASE
                                      WHEN COALESCE (MovementItem.Amount, 0) < 0.5
+                                          -- Преміальний Фонд 
                                           THEN COALESCE (MovementItem.Staff_Summ_add, 0)
                   
                                      WHEN Object_StaffPaidKind.ValueData ILIKE '%Тариф%' AND Object_StaffPaidKind.ValueData ILIKE '%год%'
@@ -326,6 +327,8 @@ BEGIN
                                                  )
                                                -- ШР для справочника
                                                * COALESCE (MovementItem.Amount, 0)
+                                                -- Преміальний Фонд 
+                                               + COALESCE (MovementItem.Staff_Summ_add, 0)
                                                )
 
                                      WHEN Object_StaffPaidKind.ValueData ILIKE '%Зміни%'
@@ -355,6 +358,7 @@ BEGIN
                                           THEN COALESCE (MovementItem.Staff_Summ_real, 0)
                   
                                      WHEN Object_StaffPaidKind.ValueData ILIKE '%Оклад%'
+                                       OR Object_StaffPaidKind.ValueData ILIKE '%Фіксована%'
                                           THEN (COALESCE (MovementItem.Staff_Price, 0) + COALESCE (MovementItem.Staff_Summ_MK, 0) + (COALESCE (MovementItem.Staff_Summ_MK3, 0)/3) + (COALESCE (MovementItem.Staff_Summ_MK6, 0)/6)) * COALESCE (MovementItem.AmountReport, 0)
                                              + (COALESCE (MovementItem.Staff_Summ_real, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
                                              + (COALESCE (MovementItem.Staff_Summ_add, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
@@ -369,6 +373,7 @@ BEGIN
                                 -- ЗП для 1-єї шт.од до оподаткуання   WageFund / AmountReport
                               , CASE WHEN Object_StaffPaidKind.ValueData ILIKE '%Тариф%' AND Object_StaffPaidKind.ValueData ILIKE '%год%'
                                      THEN CASE WHEN COALESCE (MovementItem.Amount, 0) < 0.5
+                                                    -- Преміальний Фонд 
                                                     THEN COALESCE (MovementItem.Staff_Summ_add, 0)
                   
                                                ELSE ( COALESCE  (MovementItem.Staff_Price, 0)
@@ -380,6 +385,8 @@ BEGIN
                                                       )
                                                        -- ШР для справочника
                                                     * COALESCE (MovementItem.Amount, 0)
+                                                      -- Преміальний Фонд 
+                                                    + COALESCE (MovementItem.Staff_Summ_add, 0)
                                                     )
                                                   / COALESCE (MovementItem.Amount, 0)
                                           END
@@ -414,6 +421,7 @@ BEGIN
                                                     THEN COALESCE (MovementItem.Staff_Summ_real, 0)
                   
                                                WHEN Object_StaffPaidKind.ValueData ILIKE '%Оклад%'
+                                                 OR Object_StaffPaidKind.ValueData ILIKE '%Фіксована%'
                                                     THEN (COALESCE (MovementItem.Staff_Price, 0) + COALESCE (MovementItem.Staff_Summ_MK, 0) + (COALESCE (MovementItem.Staff_Summ_MK3, 0)/3) + (COALESCE (MovementItem.Staff_Summ_MK6, 0)/6)) * COALESCE (MovementItem.AmountReport, 0)
                                                        + (COALESCE (MovementItem.Staff_Summ_real, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
                                                        + (COALESCE (MovementItem.Staff_Summ_add, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
