@@ -14,6 +14,7 @@ $BODY$
    DECLARE vbPaidKindId Integer;
    DECLARE vbBankAccountMainId Integer;
    DECLARE vbOperDate TDateTime;
+           vbWeekNumber TFloat;
 BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderFinance());
@@ -29,7 +30,8 @@ BEGIN
           , COALESCE (MovementLinkObject.ObjectId,0)              AS OrderFinanceId
           , OrderFinance_PaidKind.ChildObjectId                   AS PaidKindId
           , COALESCE (MovementLinkObject_BankAccount.ObjectId,0)  AS BankAccountId
-     INTO vbOperDate, vbOrderFinanceId, vbPaidKindId, vbBankAccountMainId
+          , MovementFloat_WeekNumber.ValueData                    AS WeekNumber
+     INTO vbOperDate, vbOrderFinanceId, vbPaidKindId, vbBankAccountMainId, vbWeekNumber
      FROM Movement
           LEFT JOIN MovementLinkObject ON MovementLinkObject.MovementId = inMovementId
                                       AND MovementLinkObject.DescId = zc_MovementLinkObject_OrderFinance()
@@ -40,22 +42,52 @@ BEGIN
          LEFT JOIN MovementLinkObject AS MovementLinkObject_BankAccount
                                       ON MovementLinkObject_BankAccount.MovementId = inMovementId
                                      AND MovementLinkObject_BankAccount.DescId = zc_MovementLinkObject_BankAccount()
+
+         LEFT JOIN MovementFloat AS MovementFloat_WeekNumber
+                                 ON MovementFloat_WeekNumber.MovementId = Movement.Id
+                                AND MovementFloat_WeekNumber.DescId = zc_MovementFloat_WeekNumber()
      WHERE Movement.Id = inMovementId;
-       
+
+     -- переопредел€ем  - заливка данных на дату - конец недели WeekNumber
+     vbOperDate := (WITH
+                    --берем от от даты документа + 300 дней, 
+                    tmpDataWeek AS ( SELECT GENERATE_SERIES (vbOperDate :: TDateTime , vbOperDate + INTERVAL '300 DAY', '1 week' :: INTERVAL) AS OperDate)
+                    
+                    SELECT (DATE_TRUNC ('WEEK', tmp.OperDate)+ INTERVAL '6 DAY') :: TDateTime AS Sunday
+                    FROM tmpDataWeek AS tmp
+                    WHERE (EXTRACT (Week FROM tmp.OperDate) ) = vbWeekNumber
+                    );       
 
     -- данные из отчета
     CREATE TEMP TABLE _tmpReport (JuridicalId Integer, PaidKindId Integer, ContractId Integer, InfomoneyId Integer
                                 , DebetRemains TFloat, KreditRemains TFloat
                                 , DefermentPaymentRemains TFloat   --ƒолг с отсрочкой
-                                , Remains TFloat) ON COMMIT DROP;
+                                , Remains TFloat
+                                , SaleSumm  TFloat  --приход
+                                , SaleSumm1 TFloat  --  7 дней
+                                , SaleSumm2 TFloat  -- 14 дней
+                                , SaleSumm3 TFloat  -- 21 дней
+                                , SaleSumm4 TFloat  -- 28 дней
+                                ) ON COMMIT DROP;
     INSERT INTO _tmpReport (JuridicalId, PaidKindId, ContractId, InfomoneyId
                           , DebetRemains, KreditRemains
                           , DefermentPaymentRemains   --ƒолг с отсрочкой
-                          , Remains)
+                          , Remains
+                          , SaleSumm    --приход
+                          , SaleSumm1   --  7 дней
+                          , SaleSumm2   -- 14 дней
+                          , SaleSumm3   -- 21 дней
+                          , SaleSumm4   -- 28 дней
+                                )
 	    SELECT tmp.JuridicalId, tmp.PaidKindId, tmp.ContractId, tmp.InfomoneyId 
                  , tmp.DebetRemains, tmp.KreditRemains
                  , tmp.DefermentPaymentRemains   --ƒолг с отсрочкой
-                 , tmp.Remains 
+                 , tmp.Remains
+                 , tmp.SaleSumm    --приход
+                 , tmp.SaleSumm1   --  7 дней
+                 , tmp.SaleSumm2   -- 14 дней
+                 , tmp.SaleSumm3   -- 21 дней
+                 , tmp.SaleSumm4   -- 28 дней 
             FROM gpReport_JuridicalDefermentIncome(inOperDate      := vbOperDate 
                                                  , inEmptyParam    := NULL        ::TDateTime
                                                  , inAccountId     := 0
@@ -169,14 +201,19 @@ BEGIN
                            AND tmpMI.BankAccountId = tmpData.BankAccountId;
             
     -- сохран€ем данные
-    PERFORM lpUpdate_MI_OrderFinance_ByReport (inId            := COALESCE (_tmpData.Id, 0)                       ::Integer
+    PERFORM lpUpdate_MI_OrderFinance_ByReport (inId            := COALESCE (_tmpData.Id, 0) ::Integer
                                              , inMovementId    := inMovementId 
                                              , inJuridicalId   := _tmpData.JuridicalId
                                              , inContractId    := _tmpData.ContractId
                                              , inBankAccountId := _tmpData.BankAccountId
                                              , inAmountRemains := (COALESCE (_tmpReport.KreditRemains,0) - COALESCE (_tmpReport.DebetRemains,0)) ::TFloat
                                              , inAmountPartner := CASE WHEN COALESCE (_tmpReport.DefermentPaymentRemains,0) < 0 THEN 0 ELSE COALESCE (_tmpReport.DefermentPaymentRemains,0) END ::TFloat
-                                             , inComment       := _tmpData.Comment                                ::TVarChar
+                                             , inSaleSumm      := COALESCE (_tmpReport.SaleSumm,0)   ::TFloat
+                                             , inSaleSumm1     := COALESCE (_tmpReport.SaleSumm1,0)  ::TFloat
+                                             , inSaleSumm2     := COALESCE (_tmpReport.SaleSumm2,0)  ::TFloat
+                                             , inSaleSumm3     := COALESCE (_tmpReport.SaleSumm3,0)  ::TFloat
+                                             , inSaleSumm4     := COALESCE (_tmpReport.SaleSumm4,0)  ::TFloat
+                                             , inComment       := _tmpData.Comment      ::TVarChar
                                              , inUserId        := vbUserId
                                               )
     FROM _tmpData

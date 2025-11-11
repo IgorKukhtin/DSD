@@ -27,10 +27,13 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
 AS
 $BODY$
   DECLARE vbUserId Integer;
+          vbOperDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_OrderFinance());
      vbUserId:= lpGetUserBySession (inSession);
+
+     vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
 
 
      IF COALESCE (inMovementId, 0) = 0
@@ -78,6 +81,18 @@ BEGIN
      ELSE
 
      RETURN QUERY
+     WITH
+     tmpWeekNumber AS (WITH
+                       --берем от от даты документа + 300 дней, 
+                       tmpDataWeek AS ( vbOperDate :: TDateTime , vbOperDate + INTERVAL '300 DAY', '1 week' :: INTERVAL) AS OperDate)
+                       --(SELECT GENERATE_SERIES (DATE_TRUNC ('YEAR', vbOperDate) :: TDateTime , CURRENT_DATE + INTERVAL '100 DAY', '1 week' :: INTERVAL) AS OperDate)
+                       
+                       SELECT DATE_TRUNC ('WEEK', tmp.OperDate)                     :: TDateTime AS Monday
+                            , (DATE_TRUNC ('WEEK', tmp.OperDate)+ INTERVAL '6 DAY') :: TDateTime AS Sunday
+                            , (EXTRACT (Week FROM tmp.OperDate) )                   :: Integer   AS WeekNumber
+                       FROM tmpDataWeek AS tmp
+                       )
+
        SELECT
              Movement.Id                                        AS Id
            , Movement.InvNumber                                 AS InvNumber
@@ -94,9 +109,9 @@ BEGIN
            , Object_BankAccount_View.BankName
            , (Object_BankAccount_View.BankName || '' || Object_BankAccount_View.Name) :: TVarChar AS BankAccountNameAll
 
-           , MovementFloat_WeekNumber.ValueData   ::TFloat    AS WeekNumber
-           , DATE_TRUNC('week', Movement.OperDate + INTERVAL'7 days')                     ::TDateTime AS StartDate_WeekNumber
-           , (DATE_TRUNC('week', Movement.OperDate + INTERVAL'7 days') + INTERVAL '6 days') ::TDateTime AS EndDate_WeekNumber
+           , COALESCE (MovementFloat_WeekNumber.ValueData, (EXTRACT (Week FROM vbOperDate) +1)) ::TFloat    AS WeekNumber
+           , tmpWeekNumber.Monday                 ::TDateTime AS StartDate_WeekNumber
+           , tmpWeekNumber.Sunday                 ::TDateTime AS EndDate_WeekNumber
 
            , MovementDate_Update_report.ValueData ::TDateTime AS DateUpdate_report
            , Object_Update_report.ValueData       ::TVarChar  AS UserUpdate_report
@@ -180,7 +195,9 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Position
                                          ON MovementLinkObject_Position.MovementId = Movement.Id
                                         AND MovementLinkObject_Position.DescId = zc_MovementLinkObject_Position()
-            LEFT JOIN Object AS Object_Position_insert ON Object_Position_insert.Id = MovementLinkObject_Position.ObjectId
+            LEFT JOIN Object AS Object_Position_insert ON Object_Position_insert.Id = MovementLinkObject_Position.ObjectId 
+            
+            LEFT JOIN tmpWeekNumber ON tmpWeekNumber.WeekNumber = COALESCE (MovementFloat_WeekNumber.ValueData, (EXTRACT (Week FROM vbOperDate) +1))
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_OrderFinance();
 

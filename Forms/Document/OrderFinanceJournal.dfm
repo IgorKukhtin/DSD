@@ -728,7 +728,8 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         item
           Name = 'inOperDate'
           Value = Null
-          Component = deEnd
+          Component = ClientDataSet
+          ComponentItem = 'OperDate'
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>

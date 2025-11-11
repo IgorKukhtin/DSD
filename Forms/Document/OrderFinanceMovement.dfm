@@ -26,7 +26,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 7
     object edInvNumber: TcxTextEdit
       Left = 170
       Top = 18
@@ -263,7 +262,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object deStart: TcxDateEdit
       Left = 498
       Top = 93
-      EditValue = 43831d
+      EditValue = 45971d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -273,7 +272,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object deEnd: TcxDateEdit
       Left = 591
       Top = 93
-      EditValue = 43831d
+      EditValue = '10.11.2025'
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -378,6 +377,11 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountPlan_5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPartner_4
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -448,6 +452,11 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountPlan_5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPartner_4
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -614,6 +623,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 97
           end
           object AmountPartner_2: TcxGridDBColumn
@@ -625,6 +635,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 97
           end
           object AmountPartner_3: TcxGridDBColumn
@@ -636,6 +647,19 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
+          end
+          object AmountPartner_4: TcxGridDBColumn
+            Caption = '28 '#1076#1085#1077#1081
+            DataBinding.FieldName = 'AmountPartner_4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 97
           end
           object AmountPlan_1: TcxGridDBColumn
@@ -2683,27 +2707,10 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inBankAccountId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'BankAccountId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inAmount'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountStart'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountStart'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2760,6 +2767,14 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountStart'
+        DataType = ftFloat
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -3110,14 +3125,14 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'StartData_WeekNumber'
+        Name = 'StartDate_WeekNumber'
         Value = Null
         Component = deStart
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
-        Name = 'EndData_WeekNumber'
+        Name = 'EndDate_WeekNumber'
         Value = Null
         Component = deEnd
         DataType = ftDateTime
@@ -4082,7 +4097,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     Left = 437
-    Top = 96
+    Top = 64
   end
   object GuidesMember2: TdsdGuides
     KeyField = 'Id'
