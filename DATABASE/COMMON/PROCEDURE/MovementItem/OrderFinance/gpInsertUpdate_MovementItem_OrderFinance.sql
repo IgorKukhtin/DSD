@@ -2,7 +2,9 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinance(
  INOUT ioId                    Integer   , --  люч объекта <Ёлемент документа>
@@ -12,6 +14,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinance(
     IN inBankAccountId         Integer   , --
     IN inAmount                TFloat    , -- 
     IN inAmountStart           TFloat    , -- 
+    IN inAmountPlan_1          TFloat    , --
+    IN inAmountPlan_2          TFloat    , --
+    IN inAmountPlan_3          TFloat    , --
+    IN inAmountPlan_4          TFloat    , --
+    IN inAmountPlan_5          TFloat    , --
     IN inComment               TVarChar  , -- 
     IN inSession               TVarChar    -- сесси€ пользовател€
 )
@@ -26,15 +33,20 @@ BEGIN
      -- сохранили
      SELECT tmp.ioId
             INTO ioId
-     FROM lpInsertUpdate_MovementItem_OrderFinance (ioId                  := ioId
-                                                  , inMovementId          := inMovementId
-                                                  , inJuridicalId         := inJuridicalId
-                                                  , inContractId          := inContractId
-                                                  , inBankAccountId       := inBankAccountId
-                                                  , inAmount              := inAmount
-                                                  , inAmountStart         := inAmountStart
-                                                  , inComment             := inComment
-                                                  , inUserId              := vbUserId
+     FROM lpInsertUpdate_MovementItem_OrderFinance (ioId            := ioId
+                                                  , inMovementId    := inMovementId
+                                                  , inJuridicalId   := inJuridicalId
+                                                  , inContractId    := inContractId
+                                                  , inBankAccountId := inBankAccountId
+                                                  , inAmount        := inAmount
+                                                  , inAmountStart   := inAmountStart
+                                                  , inAmountPlan_1  := inAmountPlan_1
+                                                  , inAmountPlan_2  := inAmountPlan_2
+                                                  , inAmountPlan_3  := inAmountPlan_3
+                                                  , inAmountPlan_4  := inAmountPlan_4
+                                                  , inAmountPlan_5  := inAmountPlan_5
+                                                  , inComment       := inComment
+                                                  , inUserId        := vbUserId
                                                    ) AS tmp;
 
 END;

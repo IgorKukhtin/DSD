@@ -10,6 +10,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , BankAccountId Integer, BankAccountName TVarChar
              , BankId Integer, BankName TVarChar
+             , MemberId_insert Integer, MemberName_insert TVarChar
+             , MemberId_1 Integer, MemberName_1 TVarChar
+             , MemberId_2 Integer, MemberName_2 TVarChar
              , Comment TVarChar
              , isErased Boolean
              )
@@ -36,6 +39,15 @@ BEGIN
            , 0                      AS BankId
            , CAST ('' as TVarChar)  AS BankName
 
+           , 0                      AS MemberId_insert
+           , CAST ('' as TVarChar)  AS MemberName_insert   
+
+           , 0                      AS MemberId_1
+           , CAST ('' as TVarChar)  AS MemberName_1
+
+           , 0                      AS MemberId_2
+           , CAST ('' as TVarChar)  AS MemberName_2
+
            , CAST ('' as TVarChar)  AS Comment     
        
            , CAST (NULL AS Boolean) AS isErased;
@@ -54,6 +66,15 @@ BEGIN
 
             , Object_Bank.Id                   AS BankId
             , Object_Bank.ValueData            AS BankName
+
+            , Object_Member_insert.Id          AS MemberId_insert
+            , Object_Member_insert.ValueData   AS MemberName_insert   
+
+            , Object_Member_1.Id               AS MemberId_1
+            , Object_Member_1.ValueData        AS MemberName_1
+
+            , Object_Member_2.Id               AS MemberId_2
+            , Object_Member_2.ValueData        AS MemberName_2
 
             , ObjectString_Comment.ValueData   AS Comment
            
@@ -78,6 +99,21 @@ BEGIN
                                 ON ObjectLink_BankAccount_Bank.ObjectId = OrderFinance_BankAccount.ChildObjectId
                                AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
            LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
+
+           LEFT JOIN ObjectLink AS OrderFinance_Member_insert
+                                ON OrderFinance_Member_insert.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_Member_insert.DescId = zc_ObjectLink_OrderFinance_Member_insert()
+           LEFT JOIN Object AS Object_Member_insert ON Object_Member_insert.Id = OrderFinance_Member_insert.ChildObjectId
+
+           LEFT JOIN ObjectLink AS OrderFinance_Member_1
+                                ON OrderFinance_Member_1.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_Member_1.DescId = zc_ObjectLink_OrderFinance_Member_1()
+           LEFT JOIN Object AS Object_Member_1 ON Object_Member_1.Id = OrderFinance_Member_1.ChildObjectId
+
+           LEFT JOIN ObjectLink AS OrderFinance_Member_2
+                                ON OrderFinance_Member_2.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_Member_2.DescId = zc_ObjectLink_OrderFinance_Member_2()
+           LEFT JOIN Object AS Object_Member_2 ON Object_Member_2.Id = OrderFinance_Member_2.ChildObjectId
 
        WHERE Object_OrderFinance.Id = inId;
    END IF;

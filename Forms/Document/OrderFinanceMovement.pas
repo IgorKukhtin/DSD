@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox, dsdInternetAction;
+  cxImageComboBox, dsdInternetAction, dsdCommon, ChoicePeriod;
 
 type
   TOrderFinanceMovementForm = class(TParentForm)
@@ -53,7 +53,7 @@ type
     ContractName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     AmountRemains: TcxGridDBColumn;
-    AmountPlan: TcxGridDBColumn;
+    AmountSumm: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     actUpdateMasterDS: TdsdUpdateDataSet;
     spInsertUpdateMIMaster: TdsdStoredProc;
@@ -136,7 +136,6 @@ type
     cxLabel3: TcxLabel;
     edBankAccount: TcxButtonEdit;
     GuidesBankAccount: TdsdGuides;
-    BankAccountName: TcxGridDBColumn;
     actBankAccountChoiceForm: TOpenChoiceForm;
     actShowAllJur: TBooleanStoredProcAction;
     bbShowAllJur: TdxBarButton;
@@ -180,15 +179,61 @@ type
     bbInsert_byMovBankAccount: TdxBarButton;
     actRefreshOFJ: TdsdDataSetRefresh;
     spInsertMaskMIMaster2: TdsdStoredProc;
+    Condition: TcxGridDBColumn;
+    GuidesInsert: TdsdGuides;
+    edInsertUser: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    cxLabel6: TcxLabel;
+    edUpdateUser: TcxButtonEdit;
+    GuidesUpdate: TdsdGuides;
+    GuidesUnit: TdsdGuides;
+    cxLabel7: TcxLabel;
+    ceUnit: TcxButtonEdit;
+    cxLabel8: TcxLabel;
+    cePosition: TcxButtonEdit;
+    GuidesPosition: TdsdGuides;
+    cxLabel9: TcxLabel;
+    edWeekNumber: TcxCurrencyEdit;
+    cxLabel10: TcxLabel;
+    ceMember_1: TcxButtonEdit;
+    GuidesMember1: TdsdGuides;
+    GuidesMember2: TdsdGuides;
+    ceMember_2: TcxButtonEdit;
+    cxLabel12: TcxLabel;
+    cxLabel13: TcxLabel;
+    edInsertDate: TcxDateEdit;
+    cxLabel14: TcxLabel;
+    edUpdatetDate: TcxDateEdit;
+    edUpdatetDate_report: TcxDateEdit;
+    cxLabel15: TcxLabel;
+    edUserUpdate_report: TcxButtonEdit;
+    cxLabel17: TcxLabel;
+    Guides_Update_report: TdsdGuides;
+    spGet_Export_Email_xls: TdsdStoredProc;
+    actGet_Export_Email_xls: TdsdExecStoredProc;
+    actGet_Export_FileName_xls: TdsdExecStoredProc;
+    spSelectOrderFinance_XLS: TdsdStoredProc;
+    actSelect_Export_xls: TdsdExecStoredProc;
+    mactExport_xls: TMultiAction;
+    actExport_Grid_xls: TExportGrid;
+    dxBarButton1: TdxBarButton;
+    bbOut: TdxBarSubItem;
+    ExportEmailCDS: TClientDataSet;
+    ExportEmailDS: TDataSource;
+    actSMTPFile_xls: TdsdSMTPFileAction;
+    spGetFileName_xls: TdsdStoredProc;
+    deStart: TcxDateEdit;
+    deEnd: TcxDateEdit;
+    cxLabel18: TcxLabel;
+    cxLabel19: TcxLabel;
+    PeriodChoice: TPeriodChoice;
   private
   public
   end;
 
 implementation
-
 {$R *.dfm}
 
 initialization
   RegisterClass(TOrderFinanceMovementForm);
-
 end.

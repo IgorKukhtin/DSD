@@ -59,6 +59,7 @@ type
     Color_diff: TcxGridDBColumn;
     Color_unit: TcxGridDBColumn;
     BoldRecord_unit: TcxGridDBColumn;
+    isTotal: TcxGridDBColumn;
   private
     { Private declarations }
   public

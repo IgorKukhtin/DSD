@@ -100,6 +100,13 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    WeekNumber: TcxGridDBColumn;
+    DateUpdate_report: TcxGridDBColumn;
+    UserUpdate_report: TcxGridDBColumn;
+    UserMember_1: TcxGridDBColumn;
+    UserMember_2: TcxGridDBColumn;
+    UnitName_insert: TcxGridDBColumn;
+    PositionName_insert: TcxGridDBColumn;
   private
   public
   end;

@@ -103,6 +103,12 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object isTotal: TcxGridDBColumn
+            Caption = '***'
+            DataBinding.FieldName = 'isTotal'
+            HeaderHint = #1057#1090#1088#1086#1082#1080' '#1080#1090#1086#1075#1086#1074' ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+          end
           object Vacancy: TcxGridDBColumn
             Caption = #1042#1072#1082#1072#1085#1089#1080#1103
             DataBinding.FieldName = 'Vacancy'
@@ -738,6 +744,31 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
         ColorValueList = <>
       end
       item
+        ColorColumn = UnitName
+        ValueColumn = Color_unit
+        ColorValueList = <>
+        ValueBoldColumn = BoldRecord_unit
+      end
+      item
+        ColorColumn = DepartmentName
+        ValueColumn = Color_unit
+        ColorValueList = <>
+        ValueBoldColumn = BoldRecord_unit
+      end
+      item
+        ColorColumn = Total_diff
+        ValueColumn = Color_unit
+        ColorValueList = <>
+        ValueBoldColumn = BoldRecord_unit
+      end
+      item
+        ColorColumn = TotalFact
+        ValueColumn = Color_unit
+        ColorValueList = <>
+        ValueBoldColumn = BoldRecord_unit
+      end
+      item
+        ColorColumn = TotalPlan
         ValueColumn = Color_unit
         ColorValueList = <>
         ValueBoldColumn = BoldRecord_unit

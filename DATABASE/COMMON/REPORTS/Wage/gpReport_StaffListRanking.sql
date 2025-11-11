@@ -39,7 +39,8 @@ RETURNS TABLE(
             , BoldRecord_unit      Boolean
             , TotalPlan            TFloat 
             , TotalFact            TFloat 
-            , Total_diff           TFloat 
+            , Total_diff           TFloat
+            , isTotal              Boolean  --строки с итогами 
 )
 AS
 $BODY$
@@ -445,6 +446,7 @@ BEGIN
          , 0    :: TFloat AS TotalPlan
          , 0    :: TFloat AS TotalFact
          , 0    :: TFloat AS Total_diff
+         , FALSE ::Boolean AS isTotal
     FROM tmpResult
     WHERE tmpResult.MemberName IS NOT NULL
   UNION
@@ -476,6 +478,7 @@ BEGIN
          , 0               :: TFloat AS TotalPlan
          , 0               :: TFloat AS TotalFact
          , 0               :: TFloat AS Total_diff
+         , FALSE ::Boolean AS isTotal
     FROM tmpResult
          LEFT JOIN tmpResult AS tmpMember
                              ON tmpMember.MemberName IS NOT NULL
@@ -514,6 +517,7 @@ BEGIN
          , SUM (COALESCE (tmpResult.AmountPlan,0))    :: TFloat AS TotalPlan
          , SUM (COALESCE (tmpResult.AmountFact,0))    :: TFloat AS TotalFact
          , (SUM (COALESCE (tmpResult.AmountFact,0)) - SUM (COALESCE (tmpResult.AmountPlan,0))) :: TFloat AS Total_diff
+         , TRUE ::Boolean AS isTotal
     FROM tmpResult
     GROUP BY tmpResult.DepartmentId
            , tmpResult.DepartmentName

@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1042#1080#1076' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1087#1083#1072#1090#1077#1078#1077#1081
-  ClientHeight = 323
-  ClientWidth = 296
+  ClientHeight = 256
+  ClientWidth = 564
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -24,12 +24,12 @@
   end
   object cxLabel1: TcxLabel
     Left = 11
-    Top = 54
+    Top = 56
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 36
-    Top = 274
+    Top = 219
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@
   end
   object cxButton2: TcxButton
     Left = 180
-    Top = 274
+    Top = 218
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -60,15 +60,15 @@
     Width = 142
   end
   object cxLabel7: TcxLabel
-    Left = 11
-    Top = 105
+    Left = 309
+    Top = 156
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit
-    Left = 11
-    Top = 125
+    Left = 309
+    Top = 177
     TabOrder = 7
-    Width = 273
+    Width = 247
   end
   object cxLabel10: TcxLabel
     Left = 181
@@ -89,12 +89,12 @@
   end
   object cxLabel2: TcxLabel
     Left = 11
-    Top = 168
+    Top = 105
     Caption = #1056'/'#1057#1095#1077#1090' ('#1087#1083#1072#1090#1077#1083#1100#1097#1080#1082#1072')'
   end
   object edBankAccount: TcxButtonEdit
     Left = 11
-    Top = 189
+    Top = 125
     Properties.Buttons = <
       item
         Default = True
@@ -106,12 +106,12 @@
   end
   object cxLabel3: TcxLabel
     Left = 11
-    Top = 217
+    Top = 156
     Caption = #1041#1072#1085#1082' ('#1087#1083#1072#1090#1077#1083#1100#1097#1080#1082#1072')'
   end
   object edBank: TcxButtonEdit
     Left = 11
-    Top = 238
+    Top = 177
     Properties.Buttons = <
       item
         Default = True
@@ -121,6 +121,57 @@
     Properties.ReadOnly = True
     TabOrder = 13
     Width = 273
+  end
+  object cxLabel4: TcxLabel
+    Left = 309
+    Top = 56
+    Caption = #1060#1048#1054' - '#1085#1072' '#1082#1086#1085#1090#1088#1086#1083#1077'-1'
+  end
+  object ceMember_1: TcxButtonEdit
+    Left = 309
+    Top = 76
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 15
+    Width = 247
+  end
+  object cxLabel12: TcxLabel
+    Left = 309
+    Top = 105
+    Caption = #1060#1048#1054' - '#1085#1072' '#1082#1086#1085#1090#1088#1086#1083#1077'-2'
+  end
+  object ceMember_2: TcxButtonEdit
+    Left = 309
+    Top = 125
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 17
+    Width = 247
+  end
+  object cxLabel5: TcxLabel
+    Left = 309
+    Top = 6
+    Caption = #1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080
+  end
+  object edInsertUser: TcxButtonEdit
+    Left = 309
+    Top = 26
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 19
+    Width = 247
   end
   object ActionList: TActionList
     Left = 192
@@ -205,10 +256,34 @@
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberId_insert'
+        Value = Null
+        Component = GuidesMember1
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberId_1'
+        Value = Null
+        Component = GuidesMember1
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberId_2'
+        Value = Null
+        Component = GuidesMember2
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 39
-    Top = 122
+    Left = 71
+    Top = 34
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -218,8 +293,8 @@
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 152
-    Top = 122
+    Left = 328
+    Top = 202
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_OrderFinance'
@@ -298,6 +373,51 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberId_insert'
+        Value = Null
+        Component = GuidesInsert
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberName_insert'
+        Value = Null
+        Component = GuidesInsert
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberId_1'
+        Value = Null
+        Component = GuidesMember1
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberName_1'
+        Value = Null
+        Component = GuidesMember1
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberId_2'
+        Value = Null
+        Component = GuidesMember2
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberName_2'
+        Value = Null
+        Component = GuidesMember2
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 239
@@ -315,8 +435,8 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 120
-    Top = 122
+    Left = 144
+    Top = 66
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 232
@@ -396,8 +516,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 152
-    Top = 168
+    Left = 40
+    Top = 124
   end
   object GuidesBank: TdsdGuides
     KeyField = 'Id'
@@ -426,7 +546,115 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 136
-    Top = 233
+    Left = 64
+    Top = 173
+  end
+  object GuidesMember1: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceMember_1
+    FormNameParam.Value = 'TMemberForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMemberForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesMember1
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesMember1
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Code'
+        Value = 0.000000000000000000
+        ComponentItem = 'Code'
+        MultiSelectSeparator = ','
+      end>
+    Left = 445
+    Top = 96
+  end
+  object GuidesMember2: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceMember_2
+    FormNameParam.Value = 'TMemberForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMemberForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesMember2
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesMember2
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Code'
+        Value = 0.000000000000000000
+        ComponentItem = 'Code'
+        MultiSelectSeparator = ','
+      end>
+    Left = 437
+    Top = 176
+  end
+  object GuidesInsert: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInsertUser
+    DisableGuidesOpen = True
+    Key = '0'
+    FormNameParam.Value = 'TMemberPosition_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMemberPosition_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesInsert
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesInsert
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPositionId'
+        Value = 8466
+        MultiSelectSeparator = ','
+      end>
+    Left = 411
+    Top = 67
   end
 end

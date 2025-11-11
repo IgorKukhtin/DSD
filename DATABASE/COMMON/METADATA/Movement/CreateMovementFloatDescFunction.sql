@@ -895,12 +895,15 @@ INSERT INTO MovementFloatDesc(Code, ItemName)
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_SummPF', 'Начисления ПФ' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummPF');  
 
-
+  CREATE OR REPLACE FUNCTION zc_MovementFloat_WeekNumber() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_WeekNumber'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_WeekNumber', 'Номер недели' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_WeekNumber');  
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 07.11.25         * zc_MovementFloat_WeekNumber
  21.07.07         * zc_MovementFloat_SummStart
                     zc_MovementFloat_SummPF
  06.06.25         * zc_MovementFloat_CorrSumm

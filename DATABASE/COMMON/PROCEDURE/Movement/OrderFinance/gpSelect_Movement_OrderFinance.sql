@@ -14,9 +14,16 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , OrderFinanceId Integer, OrderFinanceName TVarChar
              , BankAccountId Integer, BankAccountName TVarChar
              , BankId Integer, BankName TVarChar, BankAccountNameAll TVarChar
+             , WeekNumber        TFloat   
+             , DateUpdate_report TDateTime
+             , UserUpdate_report TVarChar 
+             , UserMember_1      TVarChar 
+             , UserMember_2      TVarChar 
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
+             , UnitName_insert     TVarChar
+             , PositionName_insert TVarChar
               )
 AS
 $BODY$
@@ -57,12 +64,21 @@ BEGIN
            , Object_BankAccount_View.BankName
            , (Object_BankAccount_View.BankName || '' || Object_BankAccount_View.Name) :: TVarChar AS BankAccountNameAll
 
+           , MovementFloat_WeekNumber.ValueData   ::TFloat    AS WeekNumber
+           , MovementDate_Update_report.ValueData ::TDateTime AS DateUpdate_report
+           , Object_Update_report.ValueData       ::TVarChar  AS UserUpdate_report
+           , Object_Member_1.ValueData            ::TVarChar  AS UserMember_1
+           , Object_Member_2.ValueData            ::TVarChar  AS UserMember_2
+
            , MovementString_Comment.ValueData       AS Comment
 
            , Object_Insert.ValueData                AS InsertName
            , MovementDate_Insert.ValueData          AS InsertDate
            , Object_Update.ValueData                AS UpdateName
            , MovementDate_Update.ValueData          AS UpdateDate
+           
+           , Object_Unit_insert.ValueData      ::TVarChar AS UnitName_insert
+           , Object_Position_insert.ValueData  ::TVarChar AS PositionName_insert
            
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -73,6 +89,11 @@ BEGIN
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+
+            LEFT JOIN MovementFloat AS MovementFloat_WeekNumber
+                                    ON MovementFloat_WeekNumber.MovementId = Movement.Id
+                                   AND MovementFloat_WeekNumber.DescId = zc_MovementFloat_WeekNumber()
 
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
@@ -87,6 +108,35 @@ BEGIN
                                          ON MovementLinkObject_BankAccount.MovementId = Movement.Id
                                         AND MovementLinkObject_BankAccount.DescId = zc_MovementLinkObject_BankAccount()
             LEFT JOIN Object_BankAccount_View ON Object_BankAccount_View.Id = MovementLinkObject_BankAccount.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Update_report
+                                         ON MovementLinkObject_Update_report.MovementId = Movement.Id
+                                        AND MovementLinkObject_Update_report.DescId = zc_MovementLinkObject_Update_report()
+            LEFT JOIN Object AS Object_Update_report ON Object_Update_report.Id = MovementLinkObject_Update_report.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Member_1
+                                         ON MovementLinkObject_Member_1.MovementId = Movement.Id
+                                        AND MovementLinkObject_Member_1.DescId = zc_MovementLinkObject_Member_1()
+            LEFT JOIN Object AS Object_Member_1 ON Object_Member_1.Id = MovementLinkObject_Member_1.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Member_2
+                                         ON MovementLinkObject_Member_2.MovementId = Movement.Id
+                                        AND MovementLinkObject_Member_2.DescId = zc_MovementLinkObject_Member_2()
+            LEFT JOIN Object AS Object_Member_2 ON Object_Member_2.Id = MovementLinkObject_Member_2.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+            LEFT JOIN Object AS Object_Unit_insert ON Object_Unit_insert.Id = MovementLinkObject_Member_2.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Position
+                                         ON MovementLinkObject_Position.MovementId = Movement.Id
+                                        AND MovementLinkObject_Position.DescId = zc_MovementLinkObject_Position()
+            LEFT JOIN Object AS Object_Position_insert ON Object_Position_insert.Id = MovementLinkObject_Position.ObjectId
+
+            LEFT JOIN MovementDate AS MovementDate_Update_report
+                                   ON MovementDate_Update_report.MovementId = Movement.Id
+                                  AND MovementDate_Update_report.DescId = zc_MovementDate_Update_report()
 
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id
@@ -113,8 +163,9 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 08.11.25         *
  29.07.19         * 
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Movement_OrderFinance (inStartDate:= '30.11.2017', inEndDate:= '30.11.2017', inJuridicalBasisId:=0, inIsErased := FALSE, inSession:= '2')
+-- -- SELECT * FROM gpSelect_Movement_OrderFinance (inStartDate:= '01.11.2021', inEndDate:= '30.11.2021', inJuridicalBasisId:=0, inIsErased := FALSE, inSession:= '2')

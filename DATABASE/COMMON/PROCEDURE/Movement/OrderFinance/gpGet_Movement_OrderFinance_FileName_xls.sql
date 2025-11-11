@@ -1,8 +1,8 @@
--- Function: gpGet_Movement_OrderFinance_FileName(Integer, TVarChar)
+-- Function: gpGet_Movement_OrderFinance_FileName_xls(Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpGet_Movement_OrderFinance_FileName (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_OrderFinance_FileName_xls (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpGet_Movement_OrderFinance_FileName(
+CREATE OR REPLACE FUNCTION gpGet_Movement_OrderFinance_FileName_xls(
    OUT outFileName            TVarChar  ,
    OUT outDefaultFileExt      TVarChar  ,
    OUT outEncodingANSI        Boolean   ,
@@ -21,8 +21,8 @@ BEGIN
      SELECT COALESCE (Object_BankAccount_View.Name, '')
             || '_' || REPLACE (zfConvert_DateShortToString (Movement.OperDate), '.', '')
             || '_' || Movement.InvNumber  AS outFileName
-          , 'xml'                         AS outDefaultFileExt
-          , FALSE                         AS outEncodingANSI
+          , 'xls'                         AS outDefaultFileExt
+          , TRUE                          AS outEncodingANSI
    INTO outFileName, outDefaultFileExt, outEncodingANSI
      FROM Movement
          LEFT JOIN MovementLinkObject AS MovementLinkObject_BankAccount
@@ -39,9 +39,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 23.03.16                                        *
+ 09.11.25         *
 */
 
 
 -- тест
--- SELECT * FROM gpGet_Movement_OrderFinance_FileName (inMovementId:= 14022564, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Mida35273055()
+-- SELECT * FROM gpGet_Movement_OrderFinance_FileName_xls (inMovementId:= 14022564, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Mida35273055()

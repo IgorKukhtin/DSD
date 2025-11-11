@@ -1,7 +1,8 @@
 -- Function: lpInsertUpdate_Movement_OrderFinance()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderFinance (Integer, TVarChar, TDateTime, Integer, TVarChar, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderFinance (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderFinance (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderFinance (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderFinance(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -9,6 +10,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderFinance(
     IN inOperDate            TDateTime , -- Дата документа
     IN inOrderFinanceId      Integer   , --
     IN inBankAccountId       Integer   , --
+    IN inMemberId_1          Integer   , --
+    IN inMemberId_2          Integer   , --
+    IN inWeekNumber          TFloat    , --
     IN inComment             TVarChar  , -- Примечание
     IN inUserId              Integer     -- пользователь
 )
@@ -36,7 +40,14 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_OrderFinance(), ioId, inOrderFinanceId);
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_BankAccount(), ioId, inBankAccountId);
-     
+     -- сохранили связь с <>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Member_1(), ioId, inMemberId_1);
+     -- сохранили связь с <>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Member_2(), ioId, inMemberId_2);
+
+     --сохранили связь с <> 
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_WeekNumber(), ioId, inWeekNumber);
+
      -- Комментарий
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
@@ -67,6 +78,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.11.25         *
  29.07.19         *
 */
 

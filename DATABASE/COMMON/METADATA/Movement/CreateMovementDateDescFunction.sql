@@ -287,12 +287,16 @@ CREATE OR REPLACE FUNCTION zc_MovementDate_Return_2() RETURNS Integer AS $BODY$B
 INSERT INTO MovementDateDesc (Code, ItemName)
   SELECT 'zc_MovementDate_Return_2', 'Месяц возврат-2' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Return_2');
 
+CREATE OR REPLACE FUNCTION zc_MovementDate_Update_report() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Update_report'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_Update_report', 'Дата/время заполнения данных из отчета' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Update_report');
 
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д. А.    Воробкало А.А.   Ярошенко Р.Ф.   Шаблий О.В.
+ 07.11.25         * zc_MovementDate_Update_report
  23.09.24         * zc_MovementDate_Pay_1
                     zc_MovementDate_Pay_2  
                     zc_MovementDate_Return_1
