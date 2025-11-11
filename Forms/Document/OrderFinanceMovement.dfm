@@ -2885,19 +2885,25 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inStartData_WeekNumber'
-        Value = Null
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inComment'
         Value = Null
         Component = ceComment
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outStartDate'
+        Value = Null
+        Component = deStart
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outEndtDate'
+        Value = Null
+        Component = deEnd
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -4066,10 +4072,10 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
   object GuidesMember1: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceMember_1
-    FormNameParam.Value = 'TMemberForm'
+    FormNameParam.Value = 'TMember_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMemberForm'
+    FormName = 'TMember_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -4096,16 +4102,16 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         ComponentItem = 'Code'
         MultiSelectSeparator = ','
       end>
-    Left = 437
-    Top = 64
+    Left = 125
+    Top = 72
   end
   object GuidesMember2: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceMember_2
-    FormNameParam.Value = 'TMemberForm'
+    FormNameParam.Value = 'TMember_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMemberForm'
+    FormName = 'TMember_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -4132,8 +4138,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         ComponentItem = 'Code'
         MultiSelectSeparator = ','
       end>
-    Left = 269
-    Top = 80
+    Left = 229
+    Top = 88
   end
   object Guides_Update_report: TdsdGuides
     KeyField = 'Id'

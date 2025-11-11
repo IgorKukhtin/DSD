@@ -223,6 +223,12 @@ BEGIN
                               AND _tmpReport.PaidKindId  = _tmpData.PaidKindId --OR COALESCE (vbPaidKindId,0) = 0)
                               ;
 
+
+    -- сохранили свойство <Дата/время заполнения данных из отчета>
+    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Update_report(), inMovementId, CURRENT_TIMESTAMP);
+    -- сохранили свойство <Пользователь - заполнения данных из отчета>
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Update_report(), inMovementId, vbUserId);
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

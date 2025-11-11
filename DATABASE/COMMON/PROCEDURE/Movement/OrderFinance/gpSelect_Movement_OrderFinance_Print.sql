@@ -17,7 +17,7 @@ $BODY$
     DECLARE vbDescId Integer;
     DECLARE vbStatusId Integer;
     DECLARE vbOperDate TDateTime;
-    DECLARE vbvbInvNumber TVarChar;
+    DECLARE vbInvNumber TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income_Print());
@@ -79,12 +79,6 @@ BEGIN
            , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement.Id) AS IdBarCode
            , Movement.InvNumber InvNumber
            , Movement.OperDate
-           , Object_Status.ObjectCode          AS StatusCode
-           , Object_Status.ValueData           AS StatusName
-
-           Movement.Id                         AS Id
-           , Movement.InvNumber                AS InvNumber
-           , Movement.OperDate                 AS OperDate
            , Object_Status.ObjectCode          AS StatusCode
            , Object_Status.ValueData           AS StatusName
 
@@ -153,14 +147,13 @@ BEGIN
 WITH
        tmpMI AS (SELECT MovementItem.*
                       , MILinkObject_Contract.ObjectId AS ContractId
-                 FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-                      JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                                       AND MovementItem.DescId     = zc_MI_Master()
-                                       AND MovementItem.isErased   = tmpIsErased.isErased
-
+                 FROM MovementItem
                       LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                                        ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                                       AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                 WHERE MovementItem.MovementId = inMovementId
+                   AND MovementItem.DescId     = zc_MI_Master()
+                   AND MovementItem.isErased   = FALSE                
                  ) 
 
      , tmpContractCondition AS (SELECT Object_ContractCondition_View.ContractId
@@ -238,15 +231,6 @@ WITH
            , MIFloat_AmountPlan_4.ValueData    :: TFloat AS AmountPlan_4
            , MIFloat_AmountPlan_5.ValueData    :: TFloat AS AmountPlan_5
 
-           , MIString_Comment.ValueData       AS Comment
-
-           , Object_Insert.ValueData          AS InsertName
-           , Object_Update.ValueData          AS UpdateName
-           , MIDate_Insert.ValueData          AS InsertDate
-           , MIDate_Update.ValueData          AS UpdateDate
-
-           , MovementItem.isErased            AS isErased
-
        FROM tmpMI AS MovementItem
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId
 
@@ -291,7 +275,6 @@ WITH
                                            AND MIString_Comment.DescId = zc_MIString_Comment()
 
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementItem.ContractId     --MILinkObject_Contract.ObjectId
-
 
             LEFT JOIN tmpJuridicalDetails_View ON tmpJuridicalDetails_View.JuridicalId = Object_Juridical.Id
 

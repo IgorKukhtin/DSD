@@ -494,6 +494,14 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -627,19 +635,29 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'InfoMoneyName;JuridicalName'
         end>
       Params = <
         item
-          Name = 'Id'
+          Name = 'InvNumber'
           Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
+          Component = ClientDataSet
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Income'
-      ReportNameParam.Value = 'PrintMovement_Income'
+      ReportName = 'PrintMovement_OrderFinance'
+      ReportNameParam.Value = 'PrintMovement_OrderFinance'
       ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString

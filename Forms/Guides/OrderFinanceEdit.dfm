@@ -163,7 +163,7 @@
   end
   object edInsertUser: TcxButtonEdit
     Left = 309
-    Top = 26
+    Top = 29
     Properties.Buttons = <
       item
         Default = True
@@ -583,7 +583,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 445
-    Top = 96
+    Top = 72
   end
   object GuidesMember2: TdsdGuides
     KeyField = 'Id'
@@ -618,13 +618,12 @@
         ComponentItem = 'Code'
         MultiSelectSeparator = ','
       end>
-    Left = 437
-    Top = 176
+    Left = 445
+    Top = 160
   end
   object GuidesInsert: TdsdGuides
     KeyField = 'Id'
     LookupControl = edInsertUser
-    DisableGuidesOpen = True
     Key = '0'
     FormNameParam.Value = 'TMemberPosition_ObjectForm'
     FormNameParam.DataType = ftString
@@ -654,7 +653,7 @@
         Value = 8466
         MultiSelectSeparator = ','
       end>
-    Left = 411
-    Top = 67
+    Left = 443
+    Top = 11
   end
 end
