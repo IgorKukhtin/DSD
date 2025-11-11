@@ -2932,10 +2932,13 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Control = edBankAccount
       end
       item
+        Control = edWeekNumber
       end
       item
+        Control = ceMember_1
       end
       item
+        Control = ceMember_2
       end
       item
       end
@@ -4288,9 +4291,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Top = 464
   end
   object PeriodChoice: TPeriodChoice
-    DateStart = deStart
-    DateEnd = deEnd
-    Left = 576
-    Top = 144
+    Left = 696
+    Top = 56
   end
 end

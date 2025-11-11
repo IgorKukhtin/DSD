@@ -14,7 +14,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , OrderFinanceId Integer, OrderFinanceName TVarChar
              , BankAccountId Integer, BankAccountName TVarChar
              , BankId Integer, BankName TVarChar, BankAccountNameAll TVarChar
-             , WeekNumber        TFloat   
+             , WeekNumber        TFloat
+             , StartDate_WeekNumber TDateTime, EndDate_WeekNumber TDateTime   
              , DateUpdate_report TDateTime
              , UserUpdate_report TVarChar 
              , UserMember_1      TVarChar 
@@ -48,6 +49,17 @@ BEGIN
                          UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
                               )*/
 
+   , tmpWeekNumber AS (WITH
+                       --берем от от даты документа + 300 дней, 
+                       tmpDataWeek AS (SELECT GENERATE_SERIES (inStartDate :: TDateTime , inEndDate + INTERVAL '60 DAY', '1 week' :: INTERVAL) AS OperDate)
+                       --(SELECT GENERATE_SERIES (DATE_TRUNC ('YEAR', vbOperDate) :: TDateTime , CURRENT_DATE + INTERVAL '100 DAY', '1 week' :: INTERVAL) AS OperDate)
+                       
+                       SELECT DATE_TRUNC ('WEEK', tmp.OperDate)                     :: TDateTime AS Monday
+                            , (DATE_TRUNC ('WEEK', tmp.OperDate)+ INTERVAL '6 DAY') :: TDateTime AS Sunday
+                            , (EXTRACT (Week FROM tmp.OperDate) )                   :: Integer   AS WeekNumber
+                       FROM tmpDataWeek AS tmp
+                       )
+                       
        SELECT
              Movement.Id                            AS Id
            , Movement.InvNumber                     AS InvNumber
@@ -65,6 +77,9 @@ BEGIN
            , (Object_BankAccount_View.BankName || '' || Object_BankAccount_View.Name) :: TVarChar AS BankAccountNameAll
 
            , MovementFloat_WeekNumber.ValueData   ::TFloat    AS WeekNumber
+           , tmpWeekNumber.Monday                 ::TDateTime AS StartDate_WeekNumber
+           , tmpWeekNumber.Sunday                 ::TDateTime AS EndDate_WeekNumber
+
            , MovementDate_Update_report.ValueData ::TDateTime AS DateUpdate_report
            , Object_Update_report.ValueData       ::TVarChar  AS UserUpdate_report
            , Object_Member_1.ValueData            ::TVarChar  AS UserMember_1
@@ -154,6 +169,9 @@ BEGIN
                                          ON MovementLinkObject_Update.MovementId = Movement.Id
                                         AND MovementLinkObject_Update.DescId = zc_MovementLinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MovementLinkObject_Update.ObjectId
+            
+            LEFT JOIN tmpWeekNumber ON tmpWeekNumber.WeekNumber = MovementFloat_WeekNumber.ValueData
+                                   AND Movement.OperDate BETWEEN tmpWeekNumber.Monday - INTERVAL '14 DAY' AND tmpWeekNumber.Sunday 
       ;
 
 END;

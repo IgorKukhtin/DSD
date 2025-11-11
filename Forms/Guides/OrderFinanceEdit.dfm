@@ -552,10 +552,10 @@
   object GuidesMember1: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceMember_1
-    FormNameParam.Value = 'TMemberForm'
+    FormNameParam.Value = 'TMember_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMemberForm'
+    FormName = 'TMember_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -588,10 +588,10 @@
   object GuidesMember2: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceMember_2
-    FormNameParam.Value = 'TMemberForm'
+    FormNameParam.Value = 'TMember_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMemberForm'
+    FormName = 'TMember_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -625,10 +625,10 @@
     KeyField = 'Id'
     LookupControl = edInsertUser
     Key = '0'
-    FormNameParam.Value = 'TMemberPosition_ObjectForm'
+    FormNameParam.Value = 'TMember_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMemberPosition_ObjectForm'
+    FormName = 'TMember_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
