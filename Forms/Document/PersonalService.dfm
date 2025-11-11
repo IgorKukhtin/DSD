@@ -5970,68 +5970,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072
       ImageIndex = 54
     end
-    object mactSendSMSKyivstar: TMultiAction
-      Category = 'Export'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actGetSMSKyivstar
-        end
-        item
-          Action = actSendSMSKyivstar
-        end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1057#1052#1057'?'
-      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1057#1052#1057
-      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1057#1052#1057
-      ImageIndex = 53
-    end
-    object actGetSMSKyivstar: TdsdExecStoredProc
-      Category = 'Export'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGet_SMSKyivstar
-      StoredProcList = <
-        item
-          StoredProc = spGet_SMSKyivstar
-        end>
-      Caption = 'actGetSMSKyivstar'
-    end
-    object actSendSMSKyivstar: TdsdSendSMSKyivstarAction
-      Category = 'Export'
-      MoveParams = <>
-      Caption = 'actSendSMSKyivstar'
-      AlphaName.Value = 'messagedesk'
-      AlphaName.DataType = ftString
-      AlphaName.MultiSelectSeparator = ','
-      Host.Value = 'https://api-gateway.kyivstar.ua'
-      Host.DataType = ftString
-      Host.MultiSelectSeparator = ','
-      Environment.Value = 'sandbox'
-      Environment.DataType = ftString
-      Environment.MultiSelectSeparator = ','
-      ClientId.Value = '6dbb1a32-ee90-43b8-9cae-adf28d8351a6'
-      ClientId.DataType = ftString
-      ClientId.MultiSelectSeparator = ','
-      ClientSecret.Value = '3dXC~bFRKjjpZK82QeU7iEErxi'
-      ClientSecret.DataType = ftString
-      ClientSecret.MultiSelectSeparator = ','
-      Token.Value = ''
-      Token.DataType = ftString
-      Token.MultiSelectSeparator = ','
-      Phones.Value = ''
-      Phones.Component = FormParams
-      Phones.ComponentItem = 'SMS_PhoneNumber'
-      Phones.DataType = ftString
-      Phones.MultiSelectSeparator = ','
-      Message.Value = ''
-      Message.Component = FormParams
-      Message.ComponentItem = 'SMS_Message'
-      Message.DataType = ftString
-      Message.MultiSelectSeparator = ','
-      Version.Value = 'v1beta'
-      Version.DataType = ftString
-      Version.MultiSelectSeparator = ','
-    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -6651,8 +6589,11 @@ inherited PersonalServiceForm: TPersonalServiceForm
       UnclickAfterDoing = False
     end
     object bbSendSMSKyivstar: TdxBarButton
-      Action = mactSendSMSKyivstar
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1057#1052#1057
       Category = 0
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1057#1052#1057
+      Visible = ivAlways
+      ImageIndex = 53
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -10263,54 +10204,5 @@ inherited PersonalServiceForm: TPersonalServiceForm
     PackSize = 1
     Left = 288
     Top = 312
-  end
-  object spGet_SMSKyivstar: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_PersonalService_SMS'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementItemId'
-        Value = ''
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPersonalId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PersonalId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'SMS_PhoneNumber'
-        Value = ''
-        Component = FormParams
-        ComponentItem = 'SMS_PhoneNumber'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'SMS_Message'
-        Value = ''
-        Component = FormParams
-        ComponentItem = 'SMS_Message'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 192
-    Top = 152
   end
 end

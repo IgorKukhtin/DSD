@@ -3514,6 +3514,53 @@ object MainForm: TMainForm
       spHeader = spHeaderComDoc
       spList = spListComDoc
     end
+    object actSendSMSKyivstar: TdsdSendSMSKyivstarAction
+      Category = 'Export'
+      MoveParams = <>
+      Caption = 'actSendSMSKyivstar'
+      AlphaName.Value = 'messagedesk'
+      AlphaName.DataType = ftString
+      AlphaName.MultiSelectSeparator = ','
+      Host.Value = 'https://api-gateway.kyivstar.ua'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Environment.Value = 'sandbox'
+      Environment.DataType = ftString
+      Environment.MultiSelectSeparator = ','
+      ClientId.Value = '6dbb1a32-ee90-43b8-9cae-adf28d8351a6'
+      ClientId.DataType = ftString
+      ClientId.MultiSelectSeparator = ','
+      ClientSecret.Value = '3dXC~bFRKjjpZK82QeU7iEErxi'
+      ClientSecret.DataType = ftString
+      ClientSecret.MultiSelectSeparator = ','
+      Token.Value = ''
+      Token.DataType = ftString
+      Token.MultiSelectSeparator = ','
+      Phones.Value = ''
+      Phones.Component = FormParams
+      Phones.ComponentItem = 'SMS_PhoneNumber'
+      Phones.DataType = ftString
+      Phones.MultiSelectSeparator = ','
+      Message.Value = ''
+      Message.Component = FormParams
+      Message.ComponentItem = 'SMS_Message'
+      Message.DataType = ftString
+      Message.MultiSelectSeparator = ','
+      Version.Value = 'v1beta'
+      Version.DataType = ftString
+      Version.MultiSelectSeparator = ','
+    end
+    object actSelectSMSKyivstar: TdsdExecStoredProc
+      Category = 'Export'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelect_SMSKyivstar
+      StoredProcList = <
+        item
+          StoredProc = spSelect_SMSKyivstar
+        end>
+      Caption = 'actSelectSMSKyivstar'
+    end
   end
   object toSqlQuery_three: TZQuery
     Connection = toZConnection
@@ -3872,5 +3919,56 @@ object MainForm: TMainForm
     ConnectionParams.Password.MultiSelectSeparator = ','
     Left = 656
     Top = 304
+  end
+  object spSelect_SMSKyivstar: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_PersonalService_SMS'
+    DataSet = ExportCDS
+    DataSets = <
+      item
+        DataSet = ExportCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalId'
+        Value = Null
+        ComponentItem = 'PersonalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SMS_PhoneNumber'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SMS_PhoneNumber'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SMS_Message'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SMS_Message'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 184
+    Top = 120
   end
 end
