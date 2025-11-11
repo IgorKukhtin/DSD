@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS lpUpdate_MI_OrderFinance_ByReport (Integer, Integer, Integer, Integer, TFloat, TFloat, Integer);
 --DROP FUNCTION IF EXISTS lpUpdate_MI_OrderFinance_ByReport (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer);
-DROP FUNCTION IF EXISTS lpUpdate_MI_OrderFinance_ByReport (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, Integer);
+--DROP FUNCTION IF EXISTS lpUpdate_MI_OrderFinance_ByReport (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpUpdate_MI_OrderFinance_ByReport (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpUpdate_MI_OrderFinance_ByReport(
     IN inId               Integer   , -- Ключ объекта <Элемент документа>
@@ -11,8 +12,13 @@ CREATE OR REPLACE FUNCTION lpUpdate_MI_OrderFinance_ByReport(
     IN inContractId       Integer   ,
     IN inBankAccountId    Integer   , --
     IN inAmountRemains    TFloat    , -- 
-    IN inAmountPartner    TFloat    , -- 
-    IN inComment          TVarChar ,
+    IN inAmountPartner    TFloat    , --
+    IN inSaleSumm         TFloat    ,
+    IN inSaleSumm1        TFloat    ,
+    IN inSaleSumm2        TFloat    ,
+    IN inSaleSumm3        TFloat    ,
+    IN inSaleSumm4        TFloat    ,
+    IN inComment          TVarChar  ,
     IN inUserId           Integer     -- пользователь
 )
 RETURNS VOID
@@ -38,6 +44,16 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountRemains(), inId, inAmountRemains);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), inId, inAmountPartner);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSumm(), inId, inSaleSumm);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner_1(), inId, inSaleSumm1);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner_2(), inId, inSaleSumm2);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner_3(), inId, inSaleSumm3);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner_4(), inId, inSaleSumm4);
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), inId, inComment);
@@ -70,6 +86,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.11.25         *
  09.09.20         *
  31.07.19         *
 */

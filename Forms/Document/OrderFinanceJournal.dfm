@@ -305,6 +305,24 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         Options.Editing = False
         Width = 80
       end
+      object StartDate_WeekNumber: TcxGridDBColumn
+        Caption = #1053#1077#1076#1077#1083#1103' '#1089
+        DataBinding.FieldName = 'StartDate_WeekNumber'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072' '#1089' ('#1085#1077#1076#1077#1083#1103')'
+        Options.Editing = False
+        Width = 93
+      end
+      object EndDate_WeekNumber: TcxGridDBColumn
+        Caption = #1053#1077#1076#1077#1083#1103' '#1087#1086
+        DataBinding.FieldName = 'EndDate_WeekNumber'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072' '#1087#1086' ('#1085#1077#1076#1077#1083#1103')'
+        Options.Editing = False
+        Width = 81
+      end
       object DateUpdate_report: TcxGridDBColumn
         Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1079#1072#1087'-'#1080#1103' '#1076#1072#1085#1085#1099#1093')'
         DataBinding.FieldName = 'DateUpdate_report'
@@ -494,6 +512,14 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -627,19 +653,29 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'InfoMoneyName;JuridicalName'
         end>
       Params = <
         item
-          Name = 'Id'
+          Name = 'InvNumber'
           Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
+          Component = ClientDataSet
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Income'
-      ReportNameParam.Value = 'PrintMovement_Income'
+      ReportName = 'PrintMovement_OrderFinance'
+      ReportNameParam.Value = 'PrintMovement_OrderFinance'
       ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
@@ -728,7 +764,8 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         item
           Name = 'inOperDate'
           Value = Null
-          Component = deEnd
+          Component = ClientDataSet
+          ComponentItem = 'OperDate'
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>

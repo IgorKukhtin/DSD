@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integ
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinance(
@@ -11,9 +12,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinance(
     IN inMovementId            Integer   , -- Ключ объекта <Документ>
     IN inJuridicalId           Integer   , -- 
     IN inContractId            Integer   , -- 
-    IN inBankAccountId         Integer   , --
+    --IN inBankAccountId         Integer   , --
     IN inAmount                TFloat    , -- 
-    IN inAmountStart           TFloat    , -- 
+    ---IN inAmountStart           TFloat    , -- 
     IN inAmountPlan_1          TFloat    , --
     IN inAmountPlan_2          TFloat    , --
     IN inAmountPlan_3          TFloat    , --
@@ -37,9 +38,9 @@ BEGIN
                                                   , inMovementId    := inMovementId
                                                   , inJuridicalId   := inJuridicalId
                                                   , inContractId    := inContractId
-                                                  , inBankAccountId := inBankAccountId
+                                                  --, inBankAccountId := inBankAccountId
                                                   , inAmount        := inAmount
-                                                  , inAmountStart   := inAmountStart
+                                                  --, inAmountStart   := inAmountStart
                                                   , inAmountPlan_1  := inAmountPlan_1
                                                   , inAmountPlan_2  := inAmountPlan_2
                                                   , inAmountPlan_3  := inAmountPlan_3

@@ -2044,8 +2044,8 @@ inherited Report_JuridicalDefermentIncomeForm: TReport_JuridicalDefermentIncomeF
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 344
-    Top = 112
+    Left = 296
+    Top = 152
   end
   object spReport_JuridicalSaleDocument: TdsdStoredProc
     StoredProcName = 'gpReport_JuridicalSaleDocument'

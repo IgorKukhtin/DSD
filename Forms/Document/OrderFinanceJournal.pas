@@ -107,6 +107,8 @@ type
     UserMember_2: TcxGridDBColumn;
     UnitName_insert: TcxGridDBColumn;
     PositionName_insert: TcxGridDBColumn;
+    StartDate_WeekNumber: TcxGridDBColumn;
+    EndDate_WeekNumber: TcxGridDBColumn;
   private
   public
   end;

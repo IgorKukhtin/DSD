@@ -163,7 +163,7 @@
   end
   object edInsertUser: TcxButtonEdit
     Left = 309
-    Top = 26
+    Top = 29
     Properties.Buttons = <
       item
         Default = True
@@ -552,10 +552,10 @@
   object GuidesMember1: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceMember_1
-    FormNameParam.Value = 'TMemberForm'
+    FormNameParam.Value = 'TMember_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMemberForm'
+    FormName = 'TMember_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -583,15 +583,15 @@
         MultiSelectSeparator = ','
       end>
     Left = 445
-    Top = 96
+    Top = 72
   end
   object GuidesMember2: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceMember_2
-    FormNameParam.Value = 'TMemberForm'
+    FormNameParam.Value = 'TMember_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMemberForm'
+    FormName = 'TMember_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -618,18 +618,17 @@
         ComponentItem = 'Code'
         MultiSelectSeparator = ','
       end>
-    Left = 437
-    Top = 176
+    Left = 445
+    Top = 160
   end
   object GuidesInsert: TdsdGuides
     KeyField = 'Id'
     LookupControl = edInsertUser
-    DisableGuidesOpen = True
     Key = '0'
-    FormNameParam.Value = 'TMemberPosition_ObjectForm'
+    FormNameParam.Value = 'TMember_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMemberPosition_ObjectForm'
+    FormName = 'TMember_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -654,7 +653,7 @@
         Value = 8466
         MultiSelectSeparator = ','
       end>
-    Left = 411
-    Top = 67
+    Left = 443
+    Top = 11
   end
 end

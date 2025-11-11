@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer
              , AmountPartner_1 TFloat
              , AmountPartner_2 TFloat
              , AmountPartner_3 TFloat
+             , AmountPartner_4 TFloat
              , AmountPlan_1    TFloat
              , AmountPlan_2    TFloat
              , AmountPlan_3    TFloat
@@ -178,6 +179,7 @@ BEGIN
                     , MIFloat_AmountPartner_1.ValueData AS AmountPartner_1
                     , MIFloat_AmountPartner_2.ValueData AS AmountPartner_2
                     , MIFloat_AmountPartner_3.ValueData AS AmountPartner_3
+                    , MIFloat_AmountPartner_4.ValueData AS AmountPartner_4
                     , MIFloat_AmountPlan_1.ValueData    AS AmountPlan_1
                     , MIFloat_AmountPlan_2.ValueData    AS AmountPlan_2
                     , MIFloat_AmountPlan_3.ValueData    AS AmountPlan_3
@@ -213,6 +215,10 @@ BEGIN
                     LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPartner_3
                                                    ON MIFloat_AmountPartner_3.MovementItemId = MovementItem.Id
                                                   AND MIFloat_AmountPartner_3.DescId = zc_MIFloat_AmountPartner_3()
+                    LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPartner_4
+                                                   ON MIFloat_AmountPartner_4.MovementItemId = MovementItem.Id
+                                                  AND MIFloat_AmountPartner_4.DescId = zc_MIFloat_AmountPartner_4()
+
                     LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_1
                                                    ON MIFloat_AmountPlan_1.MovementItemId = MovementItem.Id
                                                   AND MIFloat_AmountPlan_1.DescId = zc_MIFloat_AmountPlan_1()
@@ -271,12 +277,12 @@ BEGIN
                                    FROM Object_ContractCondition_View
                                    WHERE Object_ContractCondition_View.ContractConditionKindId IN (zc_Enum_ContractConditionKind_DelayDayCalendar(), zc_Enum_ContractConditionKind_DelayDayBank())
                                      AND Object_ContractCondition_View.Value <> 0
-                                     AND Object_ContractCondition_View.ContractId IN (SELECT DISTINCT tmpMI.ContractId FROM tmpMI)
+                                     --AND Object_ContractCondition_View.ContractId IN (SELECT DISTINCT tmpMI.ContractId FROM tmpMI)
                                      AND vbOperDate BETWEEN Object_ContractCondition_View.StartDate AND Object_ContractCondition_View.EndDate
                                    )
 
-     , tmpContract_View AS (SELECT * FROM Object_Contract_View WHERE Object_Contract_View.ContractId IN (SELECT DISTINCT tmpMI.ContractId FROM tmpMI))                              
-     , tmpJuridicalDetails_View AS (SELECT * FROM ObjectHistory_JuridicalDetails_View WHERE ObjectHistory_JuridicalDetails_View.JuridicalId IN (SELECT DISTINCT tmpMI.JuridicalId FROM tmpMI))
+     , tmpContract_View AS (SELECT * FROM Object_Contract_View)                              
+     , tmpJuridicalDetails_View AS (SELECT * FROM ObjectHistory_JuridicalDetails_View /*WHERE ObjectHistory_JuridicalDetails_View.JuridicalId IN (SELECT DISTINCT tmpMI.JuridicalId FROM tmpMI)*/)
 
        -- Результат
        SELECT
@@ -306,6 +312,7 @@ BEGIN
            , tmpMI.AmountPartner_1  ::TFloat
            , tmpMI.AmountPartner_2  ::TFloat
            , tmpMI.AmountPartner_3  ::TFloat
+           , tmpMI.AmountPartner_4  ::TFloat
            , tmpMI.AmountPlan_1     ::TFloat
            , tmpMI.AmountPlan_2     ::TFloat
            , tmpMI.AmountPlan_3     ::TFloat
@@ -437,6 +444,7 @@ BEGIN
            , MIFloat_AmountPartner_1.ValueData :: TFloat AS AmountPartner_1
            , MIFloat_AmountPartner_2.ValueData :: TFloat AS AmountPartner_2
            , MIFloat_AmountPartner_3.ValueData :: TFloat AS AmountPartner_3
+           , MIFloat_AmountPartner_4.ValueData :: TFloat AS AmountPartner_4
            , MIFloat_AmountPlan_1.ValueData    :: TFloat AS AmountPlan_1
            , MIFloat_AmountPlan_2.ValueData    :: TFloat AS AmountPlan_2
            , MIFloat_AmountPlan_3.ValueData    :: TFloat AS AmountPlan_3
@@ -475,6 +483,10 @@ BEGIN
             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPartner_3
                                            ON MIFloat_AmountPartner_3.MovementItemId = MovementItem.Id
                                           AND MIFloat_AmountPartner_3.DescId = zc_MIFloat_AmountPartner_3()
+            LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPartner_4
+                                           ON MIFloat_AmountPartner_4.MovementItemId = MovementItem.Id
+                                          AND MIFloat_AmountPartner_4.DescId = zc_MIFloat_AmountPartner_4()
+
             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_1
                                            ON MIFloat_AmountPlan_1.MovementItemId = MovementItem.Id
                                           AND MIFloat_AmountPlan_1.DescId = zc_MIFloat_AmountPlan_1()

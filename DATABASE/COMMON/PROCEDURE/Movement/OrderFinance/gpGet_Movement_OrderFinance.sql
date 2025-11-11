@@ -27,39 +27,103 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
 AS
 $BODY$
   DECLARE vbUserId Integer;
+          vbOperDate TDateTime;
+          vbMemberId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_OrderFinance());
      vbUserId:= lpGetUserBySession (inSession);
 
+     vbMemberId:= (SELECT ObjectLink_User_Member.ChildObjectId AS MemberId
+                   FROm ObjectLink AS ObjectLink_User_Member
+                   WHERE ObjectLink_User_Member.ObjectId = vbUserId
+                     AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                   );
+
+     vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
      RETURN QUERY
+     WITH 
+     tmpPersonal AS (SELECT lfSelect.MemberId
+                          , lfSelect.UnitId
+                          , lfSelect.PositionId
+                     FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                     WHERE lfSelect.MemberId = vbMemberId
+                     )
+
+   , tmpOrderFinance AS (SELECT Object_OrderFinance.Id           AS OrderFinanceId
+                              , Object_OrderFinance.ValueData    AS OrderFinanceName
+
+                              , Object_BankAccount_View.Id       AS BankAccountId
+                              , Object_BankAccount_View.Name     AS BankAccountName
+                              , Object_BankAccount_View.BankId   AS BankId
+                              , Object_BankAccount_View.BankName AS BankName
+                              , (Object_BankAccount_View.BankName || '' || Object_BankAccount_View.Name) :: TVarChar AS BankAccountNameAll
+                              
+                              , Object_Member_1.Id               AS MemberId_1
+                              , Object_Member_1.ValueData        AS MemberName_1
+                              , Object_Member_2.Id               AS MemberId_2
+                              , Object_Member_2.ValueData        AS MemberName_2
+                         FROM Object AS Object_OrderFinance
+                  
+                             INNER JOIN ObjectLink AS OrderFinance_Member_insert
+                                                   ON OrderFinance_Member_insert.ObjectId = Object_OrderFinance.Id
+                                                  AND OrderFinance_Member_insert.DescId = zc_ObjectLink_OrderFinance_Member_insert()
+                                                  AND OrderFinance_Member_insert.ChildObjectId = vbMemberId
+
+                             LEFT JOIN ObjectLink AS OrderFinance_Member_1
+                                                  ON OrderFinance_Member_1.ObjectId = Object_OrderFinance.Id
+                                                 AND OrderFinance_Member_1.DescId = zc_ObjectLink_OrderFinance_Member_1()
+                             LEFT JOIN Object AS Object_Member_1 ON Object_Member_1.Id = OrderFinance_Member_1.ChildObjectId
+
+                             LEFT JOIN ObjectLink AS OrderFinance_Member_2
+                                                  ON OrderFinance_Member_2.ObjectId = Object_OrderFinance.Id
+                                                 AND OrderFinance_Member_2.DescId = zc_ObjectLink_OrderFinance_Member_2()
+                             LEFT JOIN Object AS Object_Member_2 ON Object_Member_2.Id = OrderFinance_Member_2.ChildObjectId
+
+                             LEFT JOIN ObjectLink AS OrderFinance_BankAccount
+                                                  ON OrderFinance_BankAccount.ObjectId = Object_OrderFinance.Id
+                                                 AND OrderFinance_BankAccount.DescId = zc_ObjectLink_OrderFinance_BankAccount()
+                             LEFT JOIN Object_BankAccount_View ON Object_BankAccount_View.Id = OrderFinance_BankAccount.ChildObjectId
+                         WHERE Object_OrderFinance.DescId = zc_Object_OrderFinance()
+                           AND Object_OrderFinance.isErased = FALSE
+                         LIMIT 1  --про всяк випадок 
+                         )
+   
+   
+--и на гете определять по zc_ObjectLink_OrderFinance_Member_insert - какой подставить zc_MovementLinkObject_OrderFinance
+--если не нашелся тогда уже вызывать справ. OrderFinance
+
+
          SELECT
                0 AS Id
              , CAST (NEXTVAL ('Movement_OrderFinance_seq') AS TVarChar) AS InvNumber
              , inOperDate                                       AS OperDate
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
-             , 0                                                AS OrderFinanceId
-             , CAST ('' AS TVarChar) 		                    AS OrderFinanceName
+             , COALESCE (tmpOrderFinance.OrderFinanceId,0)    ::Integer AS OrderFinanceId
+             , COALESCE (tmpOrderFinance.OrderFinanceName,'') ::TVarChar AS OrderFinanceName
 
-             , 0                                                AS BankAccountId
-             , CAST ('' AS TVarChar)                            AS BankAccountName
-             , 0                                                AS BankId
-             , CAST ('' AS TVarChar)                            AS BankName
-             , CAST ('' AS TVarChar)                            AS BankAccountNameAll
+             , COALESCE (tmpOrderFinance.BankAccountId,0)     ::Integer  AS BankAccountId
+             , COALESCE (tmpOrderFinance.BankAccountName,'')  ::TVarChar AS BankAccountName
+             , COALESCE (tmpOrderFinance.BankId,0)            ::Integer  AS BankId
+             , COALESCE (tmpOrderFinance.BankName,'')         ::TVarChar AS BankName
+             , COALESCE (tmpOrderFinance.BankAccountNameAll,'') ::TVarChar AS BankAccountNameAll
 
              , (EXTRACT (Week FROM inOperDate) +1)  ::TFloat    AS WeekNumber
              , DATE_TRUNC('week', inOperDate + INTERVAL'7 days')                     ::TDateTime AS StartDate_WeekNumber
              , (DATE_TRUNC('week', inOperDate + INTERVAL'7 days') + INTERVAL '6 days') ::TDateTime AS EndDate_WeekNumber
              , CAST (NULL AS TDateTime)                         AS DateUpdate_report
              , ''                                   ::TVarChar  AS UserUpdate_report
-             , 0                                    ::Integer   AS UserMemberId_1
-             , ''                                   ::TVarChar  AS UserMember_1
-             , 0                                    ::Integer   AS UserMemberId_2
-             , ''                                   ::TVarChar  AS UserMember_2
+
+             , COALESCE (tmpOrderFinance.MemberId_1,0)     ::Integer   AS UserMemberId_1
+             , COALESCE (tmpOrderFinance.MemberName_1,'' ) ::TVarChar  AS UserMember_1
+             , COALESCE (tmpOrderFinance.MemberId_2,0)     ::Integer   AS UserMemberId_2
+             , COALESCE (tmpOrderFinance.MemberName_2,'')  ::TVarChar  AS UserMember_2
+
              , CAST ('' AS TVarChar) 	                        AS Comment
 
              , Object_Insert.ValueData                          AS InsertName
@@ -67,17 +131,34 @@ BEGIN
 
              , CAST ('' AS TVarChar)                            AS UpdateName
              , CAST (NULL AS TDateTime)                         AS UpdateDate
-           
-             , ''                                   ::TVarChar AS UnitName_insert
-             , ''                                   ::TVarChar AS PositionName_insert
+
+             , Object_Unit.ValueData                 ::TVarChar AS UnitName_insert
+             , Object_Position.ValueData             ::TVarChar AS PositionName_insert
            
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
               LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
+             
+              LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = vbMemberId
+              LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
+              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
+              LEFT JOIN tmpOrderFinance ON 1 = 1
           ;
 
      ELSE
 
      RETURN QUERY
+     WITH
+     tmpWeekNumber AS (WITH
+                       --берем от от даты документа + 300 дней, 
+                       tmpDataWeek AS (SELECT GENERATE_SERIES (vbOperDate :: TDateTime , vbOperDate + INTERVAL '300 DAY', '1 week' :: INTERVAL) AS OperDate)
+                       --(SELECT GENERATE_SERIES (DATE_TRUNC ('YEAR', vbOperDate) :: TDateTime , CURRENT_DATE + INTERVAL '100 DAY', '1 week' :: INTERVAL) AS OperDate)
+                       
+                       SELECT DATE_TRUNC ('WEEK', tmp.OperDate)                     :: TDateTime AS Monday
+                            , (DATE_TRUNC ('WEEK', tmp.OperDate)+ INTERVAL '6 DAY') :: TDateTime AS Sunday
+                            , (EXTRACT (Week FROM tmp.OperDate) )                   :: Integer   AS WeekNumber
+                       FROM tmpDataWeek AS tmp
+                       )
+
        SELECT
              Movement.Id                                        AS Id
            , Movement.InvNumber                                 AS InvNumber
@@ -94,9 +175,9 @@ BEGIN
            , Object_BankAccount_View.BankName
            , (Object_BankAccount_View.BankName || '' || Object_BankAccount_View.Name) :: TVarChar AS BankAccountNameAll
 
-           , MovementFloat_WeekNumber.ValueData   ::TFloat    AS WeekNumber
-           , DATE_TRUNC('week', Movement.OperDate + INTERVAL'7 days')                     ::TDateTime AS StartDate_WeekNumber
-           , (DATE_TRUNC('week', Movement.OperDate + INTERVAL'7 days') + INTERVAL '6 days') ::TDateTime AS EndDate_WeekNumber
+           , COALESCE (MovementFloat_WeekNumber.ValueData, (EXTRACT (Week FROM vbOperDate) +1)) ::TFloat    AS WeekNumber
+           , tmpWeekNumber.Monday                 ::TDateTime AS StartDate_WeekNumber
+           , tmpWeekNumber.Sunday                 ::TDateTime AS EndDate_WeekNumber
 
            , MovementDate_Update_report.ValueData ::TDateTime AS DateUpdate_report
            , Object_Update_report.ValueData       ::TVarChar  AS UserUpdate_report
@@ -180,7 +261,10 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Position
                                          ON MovementLinkObject_Position.MovementId = Movement.Id
                                         AND MovementLinkObject_Position.DescId = zc_MovementLinkObject_Position()
-            LEFT JOIN Object AS Object_Position_insert ON Object_Position_insert.Id = MovementLinkObject_Position.ObjectId
+            LEFT JOIN Object AS Object_Position_insert ON Object_Position_insert.Id = MovementLinkObject_Position.ObjectId 
+            
+            LEFT JOIN tmpWeekNumber ON tmpWeekNumber.WeekNumber = COALESCE (MovementFloat_WeekNumber.ValueData, (EXTRACT (Week FROM vbOperDate) +1))
+                                   AND Movement.OperDate BETWEEN tmpWeekNumber.Monday - INTERVAL '14 DAY' AND tmpWeekNumber.Sunday
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_OrderFinance();
 
