@@ -22,7 +22,7 @@ BEGIN
             || '_' || REPLACE (zfConvert_DateShortToString (Movement.OperDate), '.', '')
             || '_' || Movement.InvNumber  AS outFileName
           , 'xls'                         AS outDefaultFileExt
-          , TRUE                          AS outEncodingANSI
+          , FALSE                          AS outEncodingANSI
    INTO outFileName, outDefaultFileExt, outEncodingANSI
      FROM Movement
          LEFT JOIN MovementLinkObject AS MovementLinkObject_BankAccount

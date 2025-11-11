@@ -113,23 +113,6 @@ BEGIN
                                                                                    , inSession           := inSession) AS tmp
                                   )
 
-/*     tmpOrderFinanceProperty AS (SELECT DISTINCT OrderFinanceProperty_Object.ChildObjectId AS Id
-                                 FROM ObjectLink AS OrderFinanceProperty_OrderFinance
-                                      INNER JOIN ObjectLink AS OrderFinanceProperty_Object
-                                                            ON OrderFinanceProperty_Object.ObjectId = OrderFinanceProperty_OrderFinance.ObjectId
-                                                           AND OrderFinanceProperty_Object.DescId = zc_ObjectLink_OrderFinanceProperty_Object()
-                                                           AND COALESCE (OrderFinanceProperty_Object.ChildObjectId,0) <> 0
-
-                                 WHERE OrderFinanceProperty_OrderFinance.ChildObjectId = vbOrderFinanceId
-                                   AND OrderFinanceProperty_OrderFinance.DescId = zc_ObjectLink_OrderFinanceProperty_OrderFinance()
-                                )
-   , tmpInfoMoney AS (SELECT DISTINCT Object_InfoMoney_View.InfoMoneyId
-                      FROM Object_InfoMoney_View
-                           INNER JOIN tmpOrderFinanceProperty ON (tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyId
-                                                               OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyDestinationId
-                                                               OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyGroupId)
-                      )
-*/
    , tmpData AS (SELECT DISTINCT 
                         ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId
                       , ObjectLink_Contract_InfoMoney.ObjectId      AS ContractId
@@ -186,7 +169,7 @@ BEGIN
 
        -- Результат
        SELECT
-             COALESCE (tmpMI.Id, 0)                            AS MI_Id
+             COALESCE (tmpMI.Id, 0)                            AS Id
            , COALESCE (tmpData.JuridicalId, tmpMI.JuridicalId) AS JuridicalId
            , COALESCE (tmpData.ContractId, tmpMI.ContractId)   AS ContractId
            , COALESCE (tmpData.PaidKindId, tmpMI.PaidKindId)   AS PaidKindId
@@ -199,6 +182,8 @@ BEGIN
                            AND tmpMI.PaidKindId    = tmpData.PaidKindId
                            AND tmpMI.InfoMoneyId   = tmpData.InfoMoneyId
                            AND tmpMI.BankAccountId = tmpData.BankAccountId;
+                           
+          RAISE EXCEPTION 'Ошибка.TEST. <%>' SELECT SUM(COALESCE (_tmpReport.SaleSumm1,0) ) FROM _tmpReport;
             
     -- сохраняем данные
     PERFORM lpUpdate_MI_OrderFinance_ByReport (inId            := COALESCE (_tmpData.Id, 0) ::Integer

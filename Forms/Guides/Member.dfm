@@ -723,7 +723,7 @@ object MemberForm: TMemberForm
     Width = 1056
     Height = 70
     Align = alTop
-    TabOrder = 6
+    TabOrder = 4
     object cxLabel13: TcxLabel
       Left = 193
       Top = 9
@@ -863,7 +863,7 @@ object MemberForm: TMemberForm
     Height = 80
     Align = alBottom
     Caption = 'Panel1'
-    TabOrder = 8
+    TabOrder = 7
     Visible = False
     object ExportXmlGrid: TcxGrid
       Left = 599

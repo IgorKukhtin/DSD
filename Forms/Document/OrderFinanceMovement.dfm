@@ -786,6 +786,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Width = 1060
         Height = 85
         Align = alBottom
+        Anchors = [akTop, akRight, akBottom]
         TabOrder = 1
         Visible = False
         object ExportXmlGridDBTableView: TcxGridDBTableView
@@ -1616,6 +1617,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Caption = 'actExport_Grid_xls'
       OpenAfterCreate = False
       DefaultFileName = 'Report_'
+      Separator = ';'
       DefaultFileExt = 'XLS'
     end
     object actInsertUpdateMovement: TdsdExecStoredProc
@@ -4202,7 +4204,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Top = 520
   end
   object spSelectOrderFinance_XLS: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_OrderFinance_XML'
+    StoredProcName = 'gpSelect_Movement_OrderFinance_XLS'
     DataSet = ExportCDS
     DataSets = <
       item
@@ -4275,14 +4277,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Value = Null
         Component = actSMTPFile_xls
         ComponentItem = 'FileName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outExportType'
-        Value = Null
-        Component = actExport_Grid_xls
-        ComponentItem = 'ExportType'
         DataType = ftString
         MultiSelectSeparator = ','
       end>

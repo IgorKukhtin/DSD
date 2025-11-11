@@ -264,7 +264,7 @@ BEGIN
             LEFT JOIN Object AS Object_Position_insert ON Object_Position_insert.Id = MovementLinkObject_Position.ObjectId 
             
             LEFT JOIN tmpWeekNumber ON tmpWeekNumber.WeekNumber = COALESCE (MovementFloat_WeekNumber.ValueData, (EXTRACT (Week FROM vbOperDate) +1))
-                                   AND Movement.OperDate BETWEEN tmpWeekNumber.Monday - INTERVAL '14 DAY' AND tmpWeekNumber.Sunday
+                                   AND Movement.OperDate BETWEEN tmpWeekNumber.Monday - INTERVAL '14 DAY' AND tmpWeekNumber.Sunday + INTERVAL '14 DAY'
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_OrderFinance();
 
