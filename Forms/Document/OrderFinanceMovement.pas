@@ -227,6 +227,20 @@ type
     cxLabel18: TcxLabel;
     cxLabel19: TcxLabel;
     PeriodChoice: TPeriodChoice;
+    edTotalSumm: TcxCurrencyEdit;
+    cxLabel20: TcxLabel;
+    AmountPlan_total: TcxGridDBColumn;
+    mactExportMail_xls_1: TMultiAction;
+    mactExportMail_xls_2: TMultiAction;
+    mactExportMail_xls_3: TMultiAction;
+    mactExportMail_xls_4: TMultiAction;
+    mactExportMail_xls_5: TMultiAction;
+    dxBarSeparator: TdxBarSeparator;
+    bbExportMail_xls_1: TdxBarButton;
+    bbExportMail_xls_2: TdxBarButton;
+    bbExportMail_xls_3: TdxBarButton;
+    bbExportMail_xls_4: TdxBarButton;
+    bbExportMail_xls_5: TdxBarButton;
   private
   public
   end;

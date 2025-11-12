@@ -22,33 +22,33 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Left = 0
     Top = 0
     Width = 1060
-    Height = 119
+    Height = 127
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
     object edInvNumber: TcxTextEdit
-      Left = 170
-      Top = 18
+      Left = 232
+      Top = 19
       Properties.ReadOnly = True
       TabOrder = 0
-      Width = 128
+      Width = 85
     end
     object cxLabel1: TcxLabel
-      Left = 170
+      Left = 232
       Top = 2
       Caption = #8470' '#1076#1086#1082'.'
     end
     object edOperDate: TcxDateEdit
-      Left = 306
-      Top = 18
+      Left = 323
+      Top = 19
       EditValue = 42160d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
-      Width = 94
+      Width = 85
     end
     object cxLabel2: TcxLabel
-      Left = 306
+      Left = 323
       Top = 2
       Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
     end
@@ -59,7 +59,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     end
     object ceStatus: TcxButtonEdit
       Left = 9
-      Top = 18
+      Top = 19
       Properties.Buttons = <
         item
           Action = CompleteMovement
@@ -77,27 +77,27 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Properties.Images = dmMain.ImageList
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 155
+      Width = 214
     end
     object cxLabel16: TcxLabel
-      Left = 780
-      Top = 78
+      Left = 599
+      Top = 82
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 780
-      Top = 93
+      Left = 599
+      Top = 99
       TabOrder = 7
-      Width = 277
+      Width = 175
     end
     object cxLabel4: TcxLabel
-      Left = 408
+      Left = 418
       Top = 2
-      Caption = #1042#1080#1076' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1087#1083#1072#1090#1077#1078#1077#1081
+      Caption = #1042#1080#1076' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103
     end
     object edOrderFinance: TcxButtonEdit
-      Left = 408
-      Top = 18
+      Left = 418
+      Top = 19
       Properties.Buttons = <
         item
           Default = True
@@ -105,16 +105,16 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end>
       Properties.ReadOnly = True
       TabOrder = 9
-      Width = 152
+      Width = 175
     end
     object cxLabel3: TcxLabel
-      Left = 568
-      Top = 2
+      Left = 780
+      Top = 82
       Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090' ('#1086#1087#1083#1072#1090#1072')'
     end
     object edBankAccount: TcxButtonEdit
-      Left = 568
-      Top = 18
+      Left = 780
+      Top = 99
       Properties.Buttons = <
         item
           Default = True
@@ -122,11 +122,11 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end>
       Properties.ReadOnly = True
       TabOrder = 11
-      Width = 205
+      Width = 277
     end
     object edInsertUser: TcxButtonEdit
       Left = 9
-      Top = 57
+      Top = 59
       Properties.Buttons = <
         item
           Default = True
@@ -134,21 +134,21 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end>
       Properties.ReadOnly = True
       TabOrder = 12
-      Width = 189
+      Width = 144
     end
     object cxLabel5: TcxLabel
       Left = 9
-      Top = 41
+      Top = 42
       Caption = #1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080
     end
     object cxLabel7: TcxLabel
-      Left = 408
-      Top = 41
+      Left = 9
+      Top = 82
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object ceUnit: TcxButtonEdit
-      Left = 408
-      Top = 57
+      Left = 9
+      Top = 99
       Properties.Buttons = <
         item
           Default = True
@@ -156,16 +156,16 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end>
       Properties.ReadOnly = True
       TabOrder = 15
-      Width = 152
+      Width = 214
     end
     object cxLabel8: TcxLabel
-      Left = 204
-      Top = 41
+      Left = 232
+      Top = 82
       Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
     end
     object cePosition: TcxButtonEdit
-      Left = 204
-      Top = 57
+      Left = 232
+      Top = 99
       Properties.Buttons = <
         item
           Default = True
@@ -173,32 +173,46 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end>
       Properties.ReadOnly = True
       TabOrder = 17
-      Width = 196
+      Width = 176
     end
     object cxLabel9: TcxLabel
-      Left = 408
-      Top = 78
+      Left = 159
+      Top = 42
       Caption = #8470' '#1085#1077#1076#1077#1083#1080
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -11
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
     end
     object edWeekNumber: TcxCurrencyEdit
-      Left = 408
-      Top = 93
+      Left = 159
+      Top = 59
+      ParentFont = False
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
       Properties.ReadOnly = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -11
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
       TabOrder = 19
-      Width = 76
+      Width = 64
     end
     object cxLabel10: TcxLabel
-      Left = 9
-      Top = 78
+      Left = 599
+      Top = 2
       Caption = #1060#1048#1054' - '#1085#1072' '#1082#1086#1085#1090#1088#1086#1083#1077'-1'
     end
     object ceMember_1: TcxButtonEdit
-      Left = 9
-      Top = 93
+      Left = 599
+      Top = 19
       Properties.Buttons = <
         item
           Default = True
@@ -206,32 +220,32 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end>
       Properties.ReadOnly = True
       TabOrder = 21
-      Width = 189
+      Width = 170
     end
     object cxLabel13: TcxLabel
       Left = 780
-      Top = 41
+      Top = 42
       Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088'.)'
     end
     object edInsertDate: TcxDateEdit
-      Left = 568
-      Top = 57
+      Left = 418
+      Top = 99
       EditValue = 42132d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
       Properties.EditFormat = 'dd.mm.yyyy hh:mm'
       Properties.Kind = ckDateTime
       Properties.ReadOnly = True
       TabOrder = 23
-      Width = 108
+      Width = 175
     end
     object cxLabel14: TcxLabel
-      Left = 568
-      Top = 41
+      Left = 418
+      Top = 82
       Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
     end
     object edUpdatetDate: TcxDateEdit
       Left = 780
-      Top = 57
+      Top = 59
       EditValue = 42132d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
       Properties.EditFormat = 'dd.mm.yyyy hh:mm'
@@ -242,7 +256,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     end
     object edUpdatetDate_report: TcxDateEdit
       Left = 780
-      Top = 18
+      Top = 19
       EditValue = 42132d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
       Properties.EditFormat = 'dd.mm.yyyy hh:mm'
@@ -260,18 +274,18 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       ShowHint = True
     end
     object deStart: TcxDateEdit
-      Left = 498
-      Top = 93
+      Left = 232
+      Top = 59
       EditValue = 45971d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 28
-      Width = 79
+      Width = 85
     end
     object deEnd: TcxDateEdit
-      Left = 591
-      Top = 93
+      Left = 323
+      Top = 59
       EditValue = '10.11.2025'
       Properties.ReadOnly = True
       Properties.SaveTime = False
@@ -280,26 +294,56 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Width = 85
     end
     object cxLabel18: TcxLabel
-      Left = 498
-      Top = 78
-      Caption = #1057' :'
+      Left = 232
+      Top = 42
+      Caption = #1085#1077#1076#1077#1083#1103' '#1089
     end
     object cxLabel19: TcxLabel
-      Left = 591
-      Top = 78
-      Caption = #1055#1086' :'
+      Left = 323
+      Top = 42
+      Caption = #1085#1077#1076#1077#1083#1103' '#1076#1086
+    end
+    object edTotalSumm: TcxCurrencyEdit
+      Left = 418
+      Top = 59
+      ParentFont = False
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 2
+      Properties.DisplayFormat = ',0.##'
+      Properties.ReadOnly = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -11
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+      TabOrder = 32
+      Width = 175
+    end
+    object cxLabel20: TcxLabel
+      Left = 418
+      Top = 42
+      Caption = #1056#1072#1079#1088#1077#1096#1077#1085#1072' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -11
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
     end
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 145
+    Top = 153
     Width = 1060
-    Height = 440
+    Height = 432
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 440
+    ClientRectBottom = 432
     ClientRectRight = 1060
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
@@ -382,6 +426,11 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountPartner_4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPlan_total
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -457,6 +506,11 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountPartner_4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPlan_total
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -477,7 +531,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 80
           end
           object PaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
@@ -497,7 +551,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             Width = 50
           end
           object ContractName: TcxGridDBColumn
-            Caption = #1044#1086#1075#1086#1074#1086#1088
+            Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -509,13 +563,14 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 120
+            Width = 100
           end
           object StartDate: TcxGridDBColumn
-            Caption = #1044#1077#1081#1089#1090#1074'. '#1089
+            Caption = #1044#1086#1075#1086#1074#1086#1088' '#1089
             DataBinding.FieldName = 'StartDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1075#1086#1074#1086#1088' '#1089
             Options.Editing = False
             Width = 78
           end
@@ -539,13 +594,14 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             Width = 60
           end
           object Condition: TcxGridDBColumn
-            Caption = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
+            Caption = #1059#1089#1083#1086#1074#1080#1077
             DataBinding.FieldName = 'Condition'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
             Options.Editing = False
-            Width = 97
+            Width = 100
           end
           object JuridicalCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1102#1088'.'#1083#1080#1094#1086
@@ -577,7 +633,18 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 90
+            Width = 100
+          end
+          object Amount: TcxGridDBColumn
+            Caption = '***'#1055#1083#1072#1085' '#1085#1072' '#1085#1077#1076#1077#1083#1102
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1055#1083#1072#1085' '#1085#1072' '#1085#1077#1076#1077#1083#1102
+            Width = 80
           end
           object AmountRemains: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1076#1086#1083#1075
@@ -588,19 +655,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
-          end
-          object AmountPartner: TcxGridDBColumn
-            Caption = #1044#1086#1083#1075' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081
-            DataBinding.FieldName = 'AmountPartner'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 84
+            Width = 80
           end
           object AmountSumm: TcxGridDBColumn
             Caption = #1055#1088#1080#1093#1086#1076
@@ -612,7 +667,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 97
+            Width = 80
           end
           object AmountPartner_1: TcxGridDBColumn
             Caption = '7 '#1076#1085#1077#1081
@@ -624,7 +679,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 97
+            Width = 80
           end
           object AmountPartner_2: TcxGridDBColumn
             Caption = '14 '#1076#1085#1077#1081
@@ -636,7 +691,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 97
+            Width = 80
           end
           object AmountPartner_3: TcxGridDBColumn
             Caption = '21 '#1076#1085#1077#1081
@@ -645,10 +700,11 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Properties.ReadOnly = False
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 97
+            Width = 80
           end
           object AmountPartner_4: TcxGridDBColumn
             Caption = '28 '#1076#1085#1077#1081
@@ -657,13 +713,37 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Properties.ReadOnly = False
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 97
+            Width = 80
+          end
+          object AmountPartner: TcxGridDBColumn
+            Caption = #1044#1086#1083#1075' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081
+            DataBinding.FieldName = 'AmountPartner'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object AmountPlan_total: TcxGridDBColumn
+            Caption = #1055#1083#1072#1085' '#1048#1058#1054#1043#1054
+            DataBinding.FieldName = 'AmountPlan_total'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090' '#1048#1058#1054#1043#1054
+            Options.Editing = False
+            Width = 80
           end
           object AmountPlan_1: TcxGridDBColumn
-            Caption = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090#1099' '#1085#1072' 1.'#1087#1085'.'
+            Caption = #1055#1083#1072#1085' 1.'#1087#1085'.'
             DataBinding.FieldName = 'AmountPlan_1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -671,43 +751,49 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 97
+            HeaderHint = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090' '#1085#1072' 1.'#1087#1085'.'
+            Width = 70
           end
           object AmountPlan_2: TcxGridDBColumn
-            Caption = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090#1099' '#1085#1072' 2.'#1074#1090'.'
+            Caption = #1055#1083#1072#1085' 2.'#1074#1090'.'
             DataBinding.FieldName = 'AmountPlan_2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Properties.ReadOnly = False
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 97
+            HeaderHint = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090' '#1085#1072' 2.'#1074#1090'.'
+            Width = 70
           end
           object AmountPlan_3: TcxGridDBColumn
-            Caption = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090#1099' '#1085#1072' 3.'#1089#1088'.'
-            DataBinding.FieldName = 'AmountPartner_1'
+            Caption = #1055#1083#1072#1085' 3.'#1089#1088'.'
+            DataBinding.FieldName = 'AmountPlan_3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 97
+            HeaderHint = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090' '#1085#1072' 3.'#1089#1088'.'
+            Width = 70
           end
           object AmountPlan_4: TcxGridDBColumn
-            Caption = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090#1099' '#1085#1072' 4.'#1095#1090'.'
+            Caption = #1055#1083#1072#1085' 4.'#1095#1090'.'
             DataBinding.FieldName = 'AmountPlan_4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Properties.ReadOnly = False
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 97
+            HeaderHint = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090' '#1085#1072' 4.'#1095#1090'.'
+            Width = 70
           end
           object AmountPlan_5: TcxGridDBColumn
-            Caption = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090#1099' '#1085#1072' 5.'#1087#1090'.'
+            Caption = #1055#1083#1072#1085' 5.'#1087#1090'.'
             DataBinding.FieldName = 'AmountPlan_5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -715,17 +801,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 97
-          end
-          object Amount: TcxGridDBColumn
-            Caption = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090
-            DataBinding.FieldName = 'Amount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 69
+            HeaderHint = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090' '#1085#1072' 5.'#1087#1090'.'
+            Width = 70
           end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -737,34 +814,38 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
           object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertDate'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 100
           end
           object InsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 92
+            Width = 100
           end
           object UpdateDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088'.)'
             DataBinding.FieldName = 'UpdateDate'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 67
+            Width = 100
           end
           object UpdateName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
             DataBinding.FieldName = 'UpdateName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 97
+            Width = 100
           end
           object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
@@ -784,7 +865,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Left = 0
         Top = 331
         Width = 1060
-        Height = 85
+        Height = 77
         Align = alBottom
         Anchors = [akTop, akRight, akBottom]
         TabOrder = 1
@@ -823,7 +904,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Left = 0
         Top = 0
         Width = 1060
-        Height = 416
+        Height = 408
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView1: TcxGridDBTableView
@@ -1171,12 +1252,12 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
   end
   object cxLabel6: TcxLabel
     Left = 898
-    Top = 41
+    Top = 42
     Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
   end
   object edUpdateUser: TcxButtonEdit
     Left = 898
-    Top = 57
+    Top = 59
     Properties.Buttons = <
       item
         Default = True
@@ -1187,8 +1268,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Width = 159
   end
   object ceMember_2: TcxButtonEdit
-    Left = 204
-    Top = 93
+    Left = 599
+    Top = 59
     Properties.Buttons = <
       item
         Default = True
@@ -1196,16 +1277,16 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       end>
     Properties.ReadOnly = True
     TabOrder = 5
-    Width = 196
+    Width = 170
   end
   object cxLabel12: TcxLabel
-    Left = 204
-    Top = 78
+    Left = 600
+    Top = 42
     Caption = #1060#1048#1054' - '#1085#1072' '#1082#1086#1085#1090#1088#1086#1083#1077'-2'
   end
   object edUserUpdate_report: TcxButtonEdit
     Left = 898
-    Top = 18
+    Top = 19
     Properties.Buttons = <
       item
         Default = True
@@ -1443,7 +1524,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       WholeRow = False
     end
     object bbStatic: TdxBarStatic
-      Caption = '     '
       Category = 0
       Visible = ivAlways
       ShowCaption = False
@@ -1537,7 +1617,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object bbUpdate_AmountByReport: TdxBarButton
       Action = actUpdate_AmountByReport
       Category = 0
-      ImageIndex = 41
     end
     object bbShowAllJur: TdxBarButton
       Action = actShowAllJur
@@ -1588,7 +1667,58 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         item
           Visible = True
           ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExportMail_xls_1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExportMail_xls_2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExportMail_xls_3'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExportMail_xls_4'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExportMail_xls_5'
         end>
+    end
+    object dxBarSeparator: TdxBarSeparator
+      Caption = 'dxBarSeparator'
+      Category = 0
+      Hint = 'dxBarSeparator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbExportMail_xls_1: TdxBarButton
+      Action = mactExportMail_xls_1
+      Category = 0
+    end
+    object bbExportMail_xls_2: TdxBarButton
+      Action = mactExportMail_xls_2
+      Category = 0
+    end
+    object bbExportMail_xls_3: TdxBarButton
+      Action = mactExportMail_xls_3
+      Category = 0
+    end
+    object bbExportMail_xls_4: TdxBarButton
+      Action = mactExportMail_xls_4
+      Category = 0
+    end
+    object bbExportMail_xls_5: TdxBarButton
+      Action = mactExportMail_xls_5
+      Category = 0
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -1699,7 +1829,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1075#1088#1091#1079#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090'?'
       InfoAfterExecute = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1091#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085
-      Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083
+      Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1087#1083#1072#1085' '#1074' '#1092#1072#1081#1083
       Hint = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083
       ImageIndex = 53
     end
@@ -2320,8 +2450,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         item
           StoredProc = spSelectMI
         end>
-      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077
-      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1086#1090#1095#1077#1090
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1086#1090#1095#1077#1090
     end
     object actGet_Export_FileName: TdsdExecStoredProc
       Category = 'Export_file'
@@ -2603,8 +2733,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1087#1086#1095#1090#1077'?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1099' '#1087#1086' '#1087#1086#1095#1090#1077
-      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1087#1086' '#1087#1086#1095#1090#1077' (XLS)'
-      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1087#1086' '#1087#1086#1095#1090#1077' (XLS)'
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1087#1083#1072#1085' '#1087#1086' '#1087#1086#1095#1090#1077
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1087#1083#1072#1085' '#1087#1086' '#1087#1086#1095#1090#1077' (XLS)'
       ImageIndex = 53
     end
     object actSMTPFile_xls: TdsdSMTPFileAction
@@ -2650,6 +2780,56 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       ToAddress.ComponentItem = 'AddressTo'
       ToAddress.DataType = ftString
       ToAddress.MultiSelectSeparator = ','
+    end
+    object mactExportMail_xls_1: TMultiAction
+      Category = 'Export_mail_ok'
+      MoveParams = <>
+      ActionList = <>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1087#1086#1095#1090#1077'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1099' '#1087#1086' '#1087#1086#1095#1090#1077
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1087#1083#1072#1085' 1.'#1087#1085'. '#1087#1086' '#1087#1086#1095#1090#1077
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1087#1083#1072#1085' 1.'#1087#1085'. '#1087#1086' '#1087#1086#1095#1090#1077' (XLS)'
+      ImageIndex = 53
+    end
+    object mactExportMail_xls_2: TMultiAction
+      Category = 'Export_mail_ok'
+      MoveParams = <>
+      ActionList = <>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1087#1086#1095#1090#1077'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1099' '#1087#1086' '#1087#1086#1095#1090#1077
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1087#1083#1072#1085' 2.'#1074#1090'. '#1087#1086' '#1087#1086#1095#1090#1077
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1087#1083#1072#1085' 2.'#1074#1090'. '#1087#1086' '#1087#1086#1095#1090#1077' (XLS)'
+      ImageIndex = 53
+    end
+    object mactExportMail_xls_3: TMultiAction
+      Category = 'Export_mail_ok'
+      MoveParams = <>
+      ActionList = <>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1087#1086#1095#1090#1077'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1099' '#1087#1086' '#1087#1086#1095#1090#1077
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1087#1083#1072#1085' 3.'#1089#1088'. '#1087#1086' '#1087#1086#1095#1090#1077
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1087#1083#1072#1085' 3.'#1089#1088'. '#1087#1086' '#1087#1086#1095#1090#1077' (XLS)'
+      ImageIndex = 53
+    end
+    object mactExportMail_xls_4: TMultiAction
+      Category = 'Export_mail_ok'
+      MoveParams = <>
+      ActionList = <>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1087#1086#1095#1090#1077'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1099' '#1087#1086' '#1087#1086#1095#1090#1077
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1087#1083#1072#1085' 4.'#1095#1090'. '#1087#1086' '#1087#1086#1095#1090#1077
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1087#1083#1072#1085' 4.'#1095#1090'. '#1087#1086' '#1087#1086#1095#1090#1077' (XLS)'
+      ImageIndex = 53
+    end
+    object mactExportMail_xls_5: TMultiAction
+      Category = 'Export_mail_ok'
+      MoveParams = <>
+      ActionList = <>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1087#1086#1095#1090#1077'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1099' '#1087#1086' '#1087#1086#1095#1090#1077
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1087#1083#1072#1085' 5.'#1087#1090'. '#1087#1086' '#1087#1086#1095#1090#1077
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1087#1083#1072#1085' 5.'#1087#1090'. '#1087#1086' '#1087#1086#1095#1090#1077' (XLS)'
+      ImageIndex = 53
     end
   end
   object MasterDS: TDataSource
@@ -2763,20 +2943,20 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'outAmountPlan_total'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountPlan_total'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountStart'
-        DataType = ftFloat
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -2887,6 +3067,14 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inTotalSumm'
+        Value = Null
+        Component = edTotalSumm
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = ceComment
@@ -2926,15 +3114,13 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Control = edOperDate
       end
       item
-      end
-      item
         Control = edOrderFinance
       end
       item
-        Control = edBankAccount
+        Control = edWeekNumber
       end
       item
-        Control = edWeekNumber
+        Control = edTotalSumm
       end
       item
         Control = ceMember_1
@@ -2943,13 +3129,10 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Control = ceMember_2
       end
       item
-      end
-      item
-      end
-      item
-      end
-      item
         Control = ceComment
+      end
+      item
+        Control = edBankAccount
       end>
     GetStoredProc = spGet
     Left = 264
@@ -3059,6 +3242,13 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Name = 'WeekNumber'
         Value = Null
         Component = edWeekNumber
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSumm'
+        Value = Null
+        Component = edTotalSumm
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
@@ -3725,8 +3915,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 640
-    Top = 65528
+    Left = 872
+    Top = 88
   end
   object spSelect_Export: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_OrderFinance_XML'
@@ -3973,8 +4163,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Value = 8466
         MultiSelectSeparator = ','
       end>
-    Left = 99
-    Top = 35
+    Left = 67
+    Top = 51
   end
   object GuidesUpdate: TdsdGuides
     KeyField = 'Id'
@@ -4009,8 +4199,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Value = 8466
         MultiSelectSeparator = ','
       end>
-    Left = 904
-    Top = 24
+    Left = 984
+    Top = 48
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -4040,8 +4230,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 512
-    Top = 65535
+    Left = 120
+    Top = 87
   end
   object GuidesPosition: TdsdGuides
     KeyField = 'Id'
@@ -4071,8 +4261,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 335
-    Top = 40
+    Left = 319
+    Top = 72
   end
   object GuidesMember1: TdsdGuides
     KeyField = 'Id'
@@ -4107,8 +4297,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         ComponentItem = 'Code'
         MultiSelectSeparator = ','
       end>
-    Left = 125
-    Top = 72
+    Left = 717
+    Top = 16
   end
   object GuidesMember2: TdsdGuides
     KeyField = 'Id'
@@ -4143,8 +4333,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         ComponentItem = 'Code'
         MultiSelectSeparator = ','
       end>
-    Left = 229
-    Top = 88
+    Left = 717
+    Top = 56
   end
   object Guides_Update_report: TdsdGuides
     KeyField = 'Id'
@@ -4180,8 +4370,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         ComponentItem = 'Code'
         MultiSelectSeparator = ','
       end>
-    Left = 350
-    Top = 80
+    Left = 934
   end
   object spGet_Export_Email_xls: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_OrderFinance_Email_send'
@@ -4285,7 +4474,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Top = 464
   end
   object PeriodChoice: TPeriodChoice
-    Left = 696
-    Top = 56
+    Left = 232
+    Top = 16
   end
 end

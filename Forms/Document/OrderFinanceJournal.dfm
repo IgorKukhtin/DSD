@@ -3,7 +3,7 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
   Top = 0
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081'>'
   ClientHeight = 381
-  ClientWidth = 809
+  ClientWidth = 984
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,14 +21,14 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 809
+    Width = 984
     Height = 31
     Align = alTop
     TabOrder = 1
     object deStart: TcxDateEdit
       Left = 107
       Top = 5
-      EditValue = 43831d
+      EditValue = 45658d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -38,7 +38,7 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 43831d
+      EditValue = 45658d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -59,7 +59,7 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 57
-    Width = 809
+    Width = 984
     Height = 324
     Align = alClient
     PopupMenu = PopupMenu
@@ -76,112 +76,18 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
+          Column = TotalSumm
         end>
       DataController.Summary.FooterSummaryItems = <
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
         item
           Format = #1057#1090#1088#1086#1082': ,0'
           Kind = skCount
           Column = OrderFinanceName
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSumm
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -235,29 +141,92 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 68
       end
+      object WeekNumber: TcxGridDBColumn
+        Caption = #1053#1086#1084#1077#1088' '#1085#1077#1076#1077#1083#1080
+        DataBinding.FieldName = 'WeekNumber'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
+      object StartDate_WeekNumber: TcxGridDBColumn
+        Caption = #1053#1077#1076#1077#1083#1103' '#1089
+        DataBinding.FieldName = 'StartDate_WeekNumber'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072' '#1076#1083#1103' '#1053#1086#1084#1077#1088' '#1085#1077#1076#1077#1083#1080
+        Options.Editing = False
+        Width = 80
+      end
+      object EndDate_WeekNumber: TcxGridDBColumn
+        Caption = #1053#1077#1076#1077#1083#1103' '#1087#1086
+        DataBinding.FieldName = 'EndDate_WeekNumber'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072' '#1076#1083#1103' '#1053#1086#1084#1077#1088' '#1085#1077#1076#1077#1083#1080
+        Options.Editing = False
+        Width = 80
+      end
       object OrderFinanceName: TcxGridDBColumn
-        Caption = #1042#1080#1076' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1087#1083#1072#1090#1077#1078#1077#1081
+        Caption = #1042#1080#1076' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103
         DataBinding.FieldName = 'OrderFinanceName'
         DateTimeGrouping = dtgRelativeToToday
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 154
       end
-      object BankName: TcxGridDBColumn
-        Caption = #1041#1072#1085#1082
-        DataBinding.FieldName = 'BankName'
+      object TotalSumm: TcxGridDBColumn
+        Caption = #1056#1072#1079#1088#1077#1096#1077#1085#1072' '#1057#1091#1084#1084#1072
+        DataBinding.FieldName = 'TotalSumm'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1056#1072#1079#1088#1077#1096#1077#1085#1072' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102
         Options.Editing = False
-        Width = 133
+        Width = 80
       end
-      object BankAccountName: TcxGridDBColumn
-        Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
-        DataBinding.FieldName = 'BankAccountName'
+      object InsertName: TcxGridDBColumn
+        Caption = #1040#1074#1090#1086#1088' ('#1079#1072#1103#1074#1082#1080')'
+        DataBinding.FieldName = 'InsertName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 98
+      end
+      object UnitName_insert: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1040#1074#1090#1086#1088')'
+        DataBinding.FieldName = 'UnitName_insert'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080')'
+        Options.Editing = False
+        Width = 110
+      end
+      object PositionName_insert: TcxGridDBColumn
+        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1040#1074#1090#1086#1088')'
+        DataBinding.FieldName = 'PositionName_insert'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080')'
+        Options.Editing = False
+        Width = 80
+      end
+      object UserMember_1: TcxGridDBColumn
+        Caption = #1060#1048#1054' - '#1085#1072' '#1082#1086#1085#1090#1088#1086#1083#1077'-1'
+        DataBinding.FieldName = 'UserMember_1'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 172
+        Width = 120
+      end
+      object UserMember_2: TcxGridDBColumn
+        Caption = #1060#1048#1054' - '#1085#1072' '#1082#1086#1085#1090#1088#1086#1083#1077'-2'
+        DataBinding.FieldName = 'UserMember_2'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 120
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -267,111 +236,68 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         Options.Editing = False
         Width = 163
       end
-      object InsertDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103
-        DataBinding.FieldName = 'InsertDate'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 68
-      end
-      object InsertName: TcxGridDBColumn
-        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076'.'
-        DataBinding.FieldName = 'InsertName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 98
-      end
-      object UpdateName: TcxGridDBColumn
-        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
-        DataBinding.FieldName = 'UpdateName'
+      object BankName: TcxGridDBColumn
+        Caption = #1041#1072#1085#1082
+        DataBinding.FieldName = 'BankName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        Width = 133
+      end
+      object BankAccountName: TcxGridDBColumn
+        Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
+        DataBinding.FieldName = 'BankAccountName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 172
+      end
+      object UserUpdate_report: TcxGridDBColumn
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1086#1090#1095#1077#1090')'
+        DataBinding.FieldName = 'UserUpdate_report'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' - '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1072#1085#1085#1099#1093' '#1080#1079' '#1086#1090#1095#1077#1090#1072
+        Options.Editing = False
+        Width = 96
+      end
+      object DateUpdate_report: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1086#1090#1095#1077#1090')'
+        DataBinding.FieldName = 'DateUpdate_report'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1072#1085#1085#1099#1093' '#1080#1079' '#1086#1090#1095#1077#1090#1072
+        Options.Editing = False
         Width = 101
       end
+      object InsertDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076#1072#1085#1080#1077')'
+        DataBinding.FieldName = 'InsertDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
       object UpdateDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
+        Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072')'
         DataBinding.FieldName = 'UpdateDate'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 78
       end
-      object WeekNumber: TcxGridDBColumn
-        Caption = #1053#1086#1084#1077#1088' '#1085#1077#1076#1077#1083#1080
-        DataBinding.FieldName = 'WeekNumber'
+      object UpdateName: TcxGridDBColumn
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
+        DataBinding.FieldName = 'UpdateName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
-      end
-      object StartDate_WeekNumber: TcxGridDBColumn
-        Caption = #1053#1077#1076#1077#1083#1103' '#1089
-        DataBinding.FieldName = 'StartDate_WeekNumber'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1044#1072#1090#1072' '#1089' ('#1085#1077#1076#1077#1083#1103')'
-        Options.Editing = False
-        Width = 93
-      end
-      object EndDate_WeekNumber: TcxGridDBColumn
-        Caption = #1053#1077#1076#1077#1083#1103' '#1087#1086
-        DataBinding.FieldName = 'EndDate_WeekNumber'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1044#1072#1090#1072' '#1087#1086' ('#1085#1077#1076#1077#1083#1103')'
-        Options.Editing = False
-        Width = 81
-      end
-      object DateUpdate_report: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1079#1072#1087'-'#1080#1103' '#1076#1072#1085#1085#1099#1093')'
-        DataBinding.FieldName = 'DateUpdate_report'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1103' '#1076#1072#1085#1085#1099#1093' '#1080#1079' '#1086#1090#1095#1077#1090#1072
         Options.Editing = False
         Width = 101
-      end
-      object UserUpdate_report: TcxGridDBColumn
-        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1079#1072#1087'-'#1080#1103' '#1076#1072#1085#1085#1099#1093')'
-        DataBinding.FieldName = 'UserUpdate_report'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' - '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1103' '#1076#1072#1085#1085#1099#1093' '#1080#1079' '#1086#1090#1095#1077#1090#1072
-        Options.Editing = False
-        Width = 96
-      end
-      object UserMember_1: TcxGridDBColumn
-        Caption = #1060#1048#1054' - '#1085#1072' '#1082#1086#1085#1090#1088#1086#1083#1077'-1'
-        DataBinding.FieldName = 'UserMember_1'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 98
-      end
-      object UserMember_2: TcxGridDBColumn
-        Caption = #1060#1048#1054' - '#1085#1072' '#1082#1086#1085#1090#1088#1086#1083#1077'-2'
-        DataBinding.FieldName = 'UserMember_2'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
-      end
-      object UnitName_insert: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080')'
-        DataBinding.FieldName = 'UnitName_insert'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
-      end
-      object PositionName_insert: TcxGridDBColumn
-        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080')'
-        DataBinding.FieldName = 'PositionName_insert'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -567,9 +493,9 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
       Category = 0
     end
     object bbStatic: TdxBarStatic
-      Caption = '     '
       Category = 0
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel
