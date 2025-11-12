@@ -33,14 +33,14 @@ BEGIN
           , MovementFloat_WeekNumber.ValueData                    AS WeekNumber
             INTO vbOperDate, vbOrderFinanceId, vbPaidKindId, vbBankAccountMainId, vbWeekNumber
      FROM Movement
-          LEFT JOIN MovementLinkObject ON MovementLinkObject.MovementId = inMovementId
+          LEFT JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id
                                       AND MovementLinkObject.DescId = zc_MovementLinkObject_OrderFinance()
           LEFT JOIN ObjectLink AS OrderFinance_PaidKind
                                ON OrderFinance_PaidKind.ObjectId = MovementLinkObject.ObjectId
                               AND OrderFinance_PaidKind.DescId = zc_ObjectLink_OrderFinance_PaidKind()
 
          LEFT JOIN MovementLinkObject AS MovementLinkObject_BankAccount
-                                      ON MovementLinkObject_BankAccount.MovementId = inMovementId
+                                      ON MovementLinkObject_BankAccount.MovementId = Movement.Id
                                      AND MovementLinkObject_BankAccount.DescId = zc_MovementLinkObject_BankAccount()
 
          LEFT JOIN MovementFloat AS MovementFloat_WeekNumber
@@ -49,7 +49,7 @@ BEGIN
      WHERE Movement.Id = inMovementId;
 
      -- переопределяем  - заливка данных на дату - конец недели WeekNumber
-     vbOperDate := DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', vbOperDate) + ((((7 * (vbWeekNumber-1)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL);
+     vbOperDate := DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', vbOperDate) + ((((7 * (vbWeekNumber-1)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL) + INTERVAL'6 DAY' ;
      
 
     -- данные из отчета
@@ -72,25 +72,60 @@ BEGIN
                           , SaleSumm2   -- 14 дней
                           , SaleSumm3   -- 21 дней
                           , SaleSumm4   -- 28 дней
+                                ) 
+    WITH
+    -- статьи по ка=оторым нужно получить данные отчета
+    tmpOrderFinanceProperty AS (SELECT DISTINCT OrderFinanceProperty_Object.ChildObjectId AS Id
+                                FROM ObjectLink AS OrderFinanceProperty_OrderFinance
+                                     INNER JOIN ObjectLink AS OrderFinanceProperty_Object
+                                                           ON OrderFinanceProperty_Object.ObjectId = OrderFinanceProperty_OrderFinance.ObjectId
+                                                          AND OrderFinanceProperty_Object.DescId = zc_ObjectLink_OrderFinanceProperty_Object()
+                                                          AND COALESCE (OrderFinanceProperty_Object.ChildObjectId,0) <> 0
+                                     INNER JOIN Object ON Object.Id = OrderFinanceProperty_Object.ObjectId
+                                                      AND Object.isErased = False
+                                WHERE OrderFinanceProperty_OrderFinance.ChildObjectId = vbOrderFinanceId
+                                  AND OrderFinanceProperty_OrderFinance.DescId = zc_ObjectLink_OrderFinanceProperty_OrderFinance()
                                 )
-	    SELECT tmp.JuridicalId, tmp.PaidKindId, tmp.ContractId, tmp.InfomoneyId 
-                 , tmp.DebetRemains, tmp.KreditRemains
-                 , tmp.DefermentPaymentRemains   --Долг с отсрочкой
-                 , tmp.Remains
-                 , tmp.SaleSumm    --приход
-                 , tmp.SaleSumm1   --  7 дней
-                 , tmp.SaleSumm2   -- 14 дней
-                 , tmp.SaleSumm3   -- 21 дней
-                 , tmp.SaleSumm4   -- 28 дней 
-            FROM gpReport_JuridicalDefermentIncome(inOperDate      := vbOperDate 
-                                                 , inEmptyParam    := NULL        ::TDateTime
-                                                 , inAccountId     := 0
-                                                 , inPaidKindId    := COALESCE (vbPaidKindId,0)
-                                                 , inBranchId      := 0
-                                                 , inJuridicalGroupId := 0
-                                                 , inSession       := inSession) AS tmp
-            WHERE COALESCE (tmp.DefermentPaymentRemains, 0) <> 0
-               OR COALESCE (tmp.Remains, 0) <> 0;
+
+      , tmpInfoMoney AS (SELECT DISTINCT Object_InfoMoney_View.InfoMoneyId
+                         FROM Object_InfoMoney_View
+                              INNER JOIN tmpOrderFinanceProperty ON (tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyId
+                                                                  OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyDestinationId
+                                                                  OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyGroupId)
+                         )
+
+	  , tmpReport AS (SELECT tmp.JuridicalId, tmp.PaidKindId, tmp.ContractId, tmp.InfomoneyId 
+                           , tmp.DebetRemains, tmp.KreditRemains
+                           , tmp.DefermentPaymentRemains   --Долг с отсрочкой
+                           , tmp.Remains
+                           , tmp.SaleSumm    --приход
+                           , tmp.SaleSumm1   --  7 дней
+                           , tmp.SaleSumm2   -- 14 дней
+                           , tmp.SaleSumm3   -- 21 дней
+                           , tmp.SaleSumm4   -- 28 дней 
+                      FROM gpReport_JuridicalDefermentIncome(inOperDate      := vbOperDate 
+                                                           , inEmptyParam    := NULL        ::TDateTime
+                                                           , inAccountId     := 0
+                                                           , inPaidKindId    := COALESCE (vbPaidKindId,0)
+                                                           , inBranchId      := 0
+                                                           , inJuridicalGroupId := 0
+                                                           , inSession       := inSession) AS tmp
+                      WHERE COALESCE (tmp.DefermentPaymentRemains, 0) <> 0
+                         OR COALESCE (tmp.Remains, 0) <> 0
+                      )
+      --ограничили статьями
+     SELECT tmp.JuridicalId, tmp.PaidKindId, tmp.ContractId, tmp.InfomoneyId 
+          , tmp.DebetRemains, tmp.KreditRemains
+          , tmp.DefermentPaymentRemains   --Долг с отсрочкой
+          , tmp.Remains
+          , tmp.SaleSumm    --приход
+          , tmp.SaleSumm1   --  7 дней
+          , tmp.SaleSumm2   -- 14 дней
+          , tmp.SaleSumm3   -- 21 дней
+          , tmp.SaleSumm4   -- 28 дней 
+     FROM tmpReport AS tmp
+          INNER JOIN tmpInfoMoney ON tmpInfoMoney.InfoMoneyId = tmp.InfomoneyId 
+     ;
 
     -- строки документа
     CREATE TEMP TABLE _tmpData (Id Integer, JuridicalId Integer, ContractId Integer, PaidKindId Integer, InfoMoneyId Integer, BankAccountId Integer, Comment TVarChar) ON COMMIT DROP;
@@ -161,7 +196,7 @@ BEGIN
                  AND MovementItem.isErased   = FALSE
                )
 
-       -- Результат
+      /* -- Результат
        SELECT
              COALESCE (tmpMI.Id, 0)                            AS Id
            , COALESCE (tmpData.JuridicalId, tmpMI.JuridicalId) AS JuridicalId
@@ -176,16 +211,28 @@ BEGIN
                            AND tmpMI.PaidKindId    = tmpData.PaidKindId
                            AND tmpMI.InfoMoneyId   = tmpData.InfoMoneyId
                            AND tmpMI.BankAccountId = tmpData.BankAccountId;
-                           
+        */                                                                 
+
+       SELECT
+             COALESCE (tmpMI.Id, 0)            AS Id
+           , COALESCE (tmpMI.JuridicalId, 0)   AS JuridicalId
+           , COALESCE (tmpMI.ContractId, 0)    AS ContractId
+           , COALESCE (tmpMI.PaidKindId, 0)    AS PaidKindId
+           , COALESCE (tmpMI.InfoMoneyId, 0)   AS InfoMoneyId
+           , COALESCE (tmpMI.BankAccountId, 0) AS BankAccountId
+           , COALESCE (tmpMI.Comment)          AS Comment
+       FROM tmpMI 
+       ;
+
     -- TEST
     --RAISE EXCEPTION 'Ошибка.TEST. <%>', (SELECT SUM(COALESCE (_tmpReport.SaleSumm1,0) ) FROM _tmpReport;
             
     -- сохраняем данные
     PERFORM lpUpdate_MI_OrderFinance_ByReport (inId            := COALESCE (_tmpData.Id, 0) ::Integer
                                              , inMovementId    := inMovementId 
-                                             , inJuridicalId   := _tmpData.JuridicalId
-                                             , inContractId    := _tmpData.ContractId
-                                             , inBankAccountId := _tmpData.BankAccountId
+                                             , inJuridicalId   := _tmpReport.JuridicalId
+                                             , inContractId    := _tmpReport.ContractId
+                                             --, inBankAccountId := _tmpData.BankAccountId
                                              , inAmountRemains := (COALESCE (_tmpReport.KreditRemains,0) - COALESCE (_tmpReport.DebetRemains,0)) ::TFloat
                                              , inAmountPartner := CASE WHEN COALESCE (_tmpReport.DefermentPaymentRemains,0) < 0 THEN 0 ELSE COALESCE (_tmpReport.DefermentPaymentRemains,0) END ::TFloat
                                              , inSaleSumm      := COALESCE (_tmpReport.SaleSumm,0)   ::TFloat
@@ -196,11 +243,11 @@ BEGIN
                                              , inComment       := _tmpData.Comment      ::TVarChar
                                              , inUserId        := vbUserId
                                               )
-    FROM _tmpData
-         INNER JOIN _tmpReport ON _tmpReport.JuridicalId = _tmpData.JuridicalId
-                              AND _tmpReport.ContractId  = _tmpData.ContractId
-                              AND _tmpReport.InfoMoneyId = _tmpData.InfoMoneyId
-                              AND _tmpReport.PaidKindId  = _tmpData.PaidKindId --OR COALESCE (vbPaidKindId,0) = 0)
+    FROM _tmpReport
+         LEFT JOIN _tmpData ON _tmpData.JuridicalId = _tmpReport.JuridicalId
+                           AND _tmpData.ContractId  = _tmpReport.ContractId
+                           AND _tmpData.InfoMoneyId = _tmpReport.InfoMoneyId
+                           AND _tmpData.PaidKindId  = _tmpReport.PaidKindId --OR COALESCE (vbPaidKindId,0) = 0)
                               ;
 
 

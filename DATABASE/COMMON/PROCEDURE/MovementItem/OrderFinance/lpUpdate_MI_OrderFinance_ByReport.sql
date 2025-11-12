@@ -4,13 +4,14 @@ DROP FUNCTION IF EXISTS lpUpdate_MI_OrderFinance_ByReport (Integer, Integer, Int
 --DROP FUNCTION IF EXISTS lpUpdate_MI_OrderFinance_ByReport (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer);
 --DROP FUNCTION IF EXISTS lpUpdate_MI_OrderFinance_ByReport (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpUpdate_MI_OrderFinance_ByReport (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpUpdate_MI_OrderFinance_ByReport (Integer, Integer,  Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpUpdate_MI_OrderFinance_ByReport(
     IN inId               Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId       Integer   ,
     IN inJuridicalId      Integer   ,
     IN inContractId       Integer   ,
-    IN inBankAccountId    Integer   , --
+    --IN inBankAccountId    Integer   , --
     IN inAmountRemains    TFloat    , -- 
     IN inAmountPartner    TFloat    , --
     IN inSaleSumm         TFloat    ,
@@ -37,7 +38,7 @@ BEGIN
          -- сохранили связь с <>
          PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), inId, inContractId);
          -- сохранили связь с <>
-         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_BankAccount(), inId, inBankAccountId);
+        -- PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_BankAccount(), inId, inBankAccountId);
      END IF;
 
      -- сохранили свойство <>
