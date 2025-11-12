@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdate_Object_ImportTypeItems()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinanceProperty (Integer, Integer, Integer, Tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinanceProperty (Integer, Integer, Integer, TFloat, Tvarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_OrderFinanceProperty(
  INOUT ioId                      Integer   ,   	-- ключ объекта <>
     IN inOrderFinanceId          Integer   ,    -- 
     IN inObjectId                Integer   ,    -- 
+    IN inNumGroup                TFloat    ,
     IN inSession                 TVarChar       -- сессия пользователя
 )
   RETURNS Integer AS
@@ -26,6 +28,8 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OrderFinanceProperty_Object(), ioId, inObjectId);   
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_OrderFinanceProperty_Group(), ioId, inNumGroup);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

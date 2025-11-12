@@ -18,6 +18,7 @@ $BODY$
     DECLARE vbStatusId Integer;
     DECLARE vbOperDate TDateTime;
     DECLARE vbInvNumber TVarChar;
+            vbOrderFinanceId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income_Print());
@@ -28,11 +29,14 @@ BEGIN
      SELECT Movement.DescId
           , Movement.StatusId
           , Movement.OperDate
-          , Movement.InvNumber ::TVarChar AS InvNumber
+          , Movement.InvNumber         ::TVarChar AS InvNumber 
+          , MLO_OrderFinance.ObjectId  ::Integer  AS OrderFinanceId
 
-            INTO vbDescId, vbStatusId, vbOperDate, vbInvNumber
+            INTO vbDescId, vbStatusId, vbOperDate, vbInvNumber, vbOrderFinanceId
      FROM Movement
-   
+           LEFT JOIN MovementLinkObject AS MLO_OrderFinance
+                                        ON MLO_OrderFinance.MovementId = Movement.Id
+                                       AND MLO_OrderFinance.DescId = zc_MovementLinkObject_OrderFinance()   
      WHERE Movement.Id = inMovementId
        -- AND Movement.StatusId = zc_Enum_Status_Complete()
     ;
@@ -144,7 +148,7 @@ BEGIN
 
 
     OPEN Cursor2 FOR
-WITH
+    WITH
        tmpMI AS (SELECT MovementItem.*
                       , MILinkObject_Contract.ObjectId AS ContractId
                  FROM MovementItem
@@ -197,6 +201,35 @@ WITH
                                  WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                    AND MovementItemString.DescId = zc_MIString_Comment()
                                  )
+                                 
+
+     -- статьи для группировки
+     , tmpOrderFinanceProperty AS (SELECT DISTINCT OrderFinanceProperty_Object.ChildObjectId AS Id
+                                        , ObjectFloat_Group.ValueData                        AS NumGroup
+                                   FROM ObjectLink AS OrderFinanceProperty_OrderFinance
+                                        INNER JOIN ObjectLink AS OrderFinanceProperty_Object
+                                                              ON OrderFinanceProperty_Object.ObjectId = OrderFinanceProperty_OrderFinance.ObjectId
+                                                             AND OrderFinanceProperty_Object.DescId = zc_ObjectLink_OrderFinanceProperty_Object()
+                                                             AND COALESCE (OrderFinanceProperty_Object.ChildObjectId,0) <> 0
+ 
+                                        INNER JOIN Object ON Object.Id = OrderFinanceProperty_Object.ObjectId
+                                                         AND Object.isErased = False
+ 
+                                        LEFT JOIN ObjectFloat AS ObjectFloat_Group 
+                                                              ON ObjectFloat_Group.ObjectId = OrderFinanceProperty_Object.ObjectId
+                                                             AND ObjectFloat_Group.DescId = zc_ObjectFloat_OrderFinanceProperty_Group()
+
+                                   WHERE OrderFinanceProperty_OrderFinance.ChildObjectId = vbOrderFinanceId
+                                     AND OrderFinanceProperty_OrderFinance.DescId = zc_ObjectLink_OrderFinanceProperty_OrderFinance()
+                                   )
+
+      , tmpInfoMoney_OFP AS (SELECT DISTINCT Object_InfoMoney_View.InfoMoneyId, tmpOrderFinanceProperty.NumGroup
+                             FROM Object_InfoMoney_View
+                                  INNER JOIN tmpOrderFinanceProperty ON (tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyId
+                                                                      OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyDestinationId
+                                                                      OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyGroupId)
+                             )
+
        SELECT
              MovementItem.Id                  AS Id
            , Object_Juridical.Id              AS JuridicalId
@@ -231,10 +264,7 @@ WITH
            , MIFloat_AmountPlan_4.ValueData    :: TFloat AS AmountPlan_4
            , MIFloat_AmountPlan_5.ValueData    :: TFloat AS AmountPlan_5
            --
-           , CASE WHEN Object_InfoMoney.Id = 8908 /*Говядина*/ THEN 1 
-                  WHEN Object_InfoMoney.Id = 8906 /*Живой вес*/ THEN 2
-                  ELSE 3
-             END ::Integer AS NumGroup
+           , COALESCE (tmpInfoMoney_OFP.NumGroup, 999) ::Integer AS NumGroup
 
        FROM tmpMI AS MovementItem
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId
@@ -290,7 +320,9 @@ WITH
 
             LEFT JOIN tmpContract_View AS View_Contract ON View_Contract.ContractId = Object_Contract.Id
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = View_Contract.PaidKindId 
-            LEFT JOIN tmpContractCondition ON tmpContractCondition.ContractId = Object_Contract.Id
+            LEFT JOIN tmpContractCondition ON tmpContractCondition.ContractId = Object_Contract.Id 
+            
+            LEFT JOIN tmpInfoMoney_OFP ON tmpInfoMoney_OFP.InfoMoneyId = Object_InfoMoney.Id
             ;
     RETURN NEXT Cursor2;
 

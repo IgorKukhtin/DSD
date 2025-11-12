@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, ObjectId Integer
              , InfoMoneyId Integer
              , InfoMoneyCode Integer
              , InfoMoneyName TVarChar
+             , NumGroup TFloat 
              , isErased Boolean
              ) AS
 $BODY$
@@ -68,10 +69,16 @@ BEGIN
             , Object_InfoMoney.Id                    AS InfoMoneyId
             , Object_InfoMoney.ObjectCode            AS InfoMoneyCode
             , Object_InfoMoney.ValueData             AS InfoMoneyName
-            
-            , Object_OrderFinanceProperty.isErased AS isErased
+             
+            , ObjectFloat_Group.ValueData ::TFloat   AS NumGroup
+
+            , Object_OrderFinanceProperty.isErased   AS isErased
 
        FROM Object AS Object_OrderFinanceProperty
+           LEFT JOIN ObjectFloat AS ObjectFloat_Group 
+                                 ON ObjectFloat_Group.ObjectId = Object_OrderFinanceProperty.Id
+                                AND ObjectFloat_Group.DescId = zc_ObjectFloat_OrderFinanceProperty_Group()
+
            LEFT JOIN ObjectLink AS OrderFinanceProperty_OrderFinance
                                 ON OrderFinanceProperty_OrderFinance.ObjectId = Object_OrderFinanceProperty.Id
                                AND OrderFinanceProperty_OrderFinance.DescId = zc_ObjectLink_OrderFinanceProperty_OrderFinance()

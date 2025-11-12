@@ -1390,6 +1390,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_GoodsNormDiff_ValueGP() RETURNS Intege
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Bank(), 'zc_ObjectFloat_GoodsNormDiff_ValueGP', 'Норма отклонения ГП, кг' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_GoodsNormDiff_ValueGP');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_OrderFinanceProperty_Group() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_OrderFinanceProperty_Group'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_OrderFinanceProperty(), 'zc_ObjectFloat_OrderFinanceProperty_Group', 'Норма отклонения ГП, кг' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_OrderFinanceProperty_Group');
+
+
+
+
+
+
 
 
 
@@ -2595,6 +2604,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 12.11.25         * zc_Object_OrderFinanceProperty
  21.03.25         * zc_ObjectFloat_GoodsByGoodsKind_WeightPackageKorob
  11.03.24         * zc_ObjectFloat_Bank_SummMax
  16.02.24         * zc_ObjectFloat_GoodsByGoodsKind_PackLimit
