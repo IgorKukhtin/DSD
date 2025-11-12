@@ -14,12 +14,12 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , OrderFinanceId Integer, OrderFinanceName TVarChar
              , BankAccountId Integer, BankAccountName TVarChar
              , BankId Integer, BankName TVarChar, BankAccountNameAll TVarChar
-             , WeekNumber        TFloat
-             , StartDate_WeekNumber TDateTime, EndDate_WeekNumber TDateTime   
+             , WeekNumber TFloat, TotalSumm TFloat
+             , StartDate_WeekNumber TDateTime, EndDate_WeekNumber TDateTime
              , DateUpdate_report TDateTime
-             , UserUpdate_report TVarChar 
-             , UserMember_1      TVarChar 
-             , UserMember_2      TVarChar 
+             , UserUpdate_report TVarChar
+             , UserMember_1      TVarChar
+             , UserMember_2      TVarChar
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
@@ -49,17 +49,7 @@ BEGIN
                          UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
                               )*/
 
-   , tmpWeekNumber AS (WITH
-                       --берем от от даты документа + 300 дней, 
-                       tmpDataWeek AS (SELECT GENERATE_SERIES (inStartDate :: TDateTime , inEndDate + INTERVAL '60 DAY', '1 week' :: INTERVAL) AS OperDate)
-                       --(SELECT GENERATE_SERIES (DATE_TRUNC ('YEAR', vbOperDate) :: TDateTime , CURRENT_DATE + INTERVAL '100 DAY', '1 week' :: INTERVAL) AS OperDate)
-                       
-                       SELECT DATE_TRUNC ('WEEK', tmp.OperDate)                     :: TDateTime AS Monday
-                            , (DATE_TRUNC ('WEEK', tmp.OperDate)+ INTERVAL '6 DAY') :: TDateTime AS Sunday
-                            , (EXTRACT (Week FROM tmp.OperDate) )                   :: Integer   AS WeekNumber
-                       FROM tmpDataWeek AS tmp
-                       )
-                       
+       --
        SELECT
              Movement.Id                            AS Id
            , Movement.InvNumber                     AS InvNumber
@@ -76,9 +66,11 @@ BEGIN
            , Object_BankAccount_View.BankName
            , (Object_BankAccount_View.BankName || '' || Object_BankAccount_View.Name) :: TVarChar AS BankAccountNameAll
 
-           , MovementFloat_WeekNumber.ValueData   ::TFloat    AS WeekNumber
-           , tmpWeekNumber.Monday                 ::TDateTime AS StartDate_WeekNumber
-           , tmpWeekNumber.Sunday                 ::TDateTime AS EndDate_WeekNumber
+           , MovementFloat_WeekNumber.ValueData                        AS WeekNumber
+           , COALESCE (MovementFloat_TotalSumm.Valuedata, 0) :: TFloat AS TotalSumm
+
+           , DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', Movement.OperDate) + ((((7 * COALESCE (MovementFloat_WeekNumber.ValueData - 1, 0)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL) ::TDateTime AS StartDate_WeekNumber
+           , (DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', Movement.OperDate) + ((((7 * COALESCE (MovementFloat_WeekNumber.ValueData - 1, 0)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL) + INTERVAL '6 DAY') ::TDateTime AS EndDate_WeekNumber
 
            , MovementDate_Update_report.ValueData ::TDateTime AS DateUpdate_report
            , Object_Update_report.ValueData       ::TVarChar  AS UserUpdate_report
@@ -91,10 +83,10 @@ BEGIN
            , MovementDate_Insert.ValueData          AS InsertDate
            , Object_Update.ValueData                AS UpdateName
            , MovementDate_Update.ValueData          AS UpdateDate
-           
+
            , Object_Unit_insert.ValueData      ::TVarChar AS UnitName_insert
            , Object_Position_insert.ValueData  ::TVarChar AS PositionName_insert
-           
+
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_OrderFinance() AND Movement.StatusId = tmpStatus.StatusId
@@ -109,6 +101,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_WeekNumber
                                     ON MovementFloat_WeekNumber.MovementId = Movement.Id
                                    AND MovementFloat_WeekNumber.DescId = zc_MovementFloat_WeekNumber()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                    ON MovementFloat_TotalSumm.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
@@ -169,9 +164,6 @@ BEGIN
                                          ON MovementLinkObject_Update.MovementId = Movement.Id
                                         AND MovementLinkObject_Update.DescId = zc_MovementLinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MovementLinkObject_Update.ObjectId
-            
-            LEFT JOIN tmpWeekNumber ON tmpWeekNumber.WeekNumber = MovementFloat_WeekNumber.ValueData
-                                   AND Movement.OperDate BETWEEN tmpWeekNumber.Monday - INTERVAL '14 DAY' AND tmpWeekNumber.Sunday 
       ;
 
 END;
@@ -182,8 +174,8 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  08.11.25         *
- 29.07.19         * 
+ 29.07.19         *
 */
 
 -- тест
--- -- SELECT * FROM gpSelect_Movement_OrderFinance (inStartDate:= '01.11.2021', inEndDate:= '30.11.2021', inJuridicalBasisId:=0, inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_OrderFinance (inStartDate:= '01.11.2021', inEndDate:= '30.11.2021', inJuridicalBasisId:=0, inIsErased := FALSE, inSession:= '2')

@@ -1,29 +1,25 @@
 -- Function: gpInsertUpdate_MovementItem_OrderFinance()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
---DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
---DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinance(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId            Integer   , -- Ключ объекта <Документ>
-    IN inJuridicalId           Integer   , -- 
-    IN inContractId            Integer   , -- 
+    IN inJuridicalId           Integer   , --
+    IN inContractId            Integer   , --
     --IN inBankAccountId         Integer   , --
-    IN inAmount                TFloat    , -- 
-    ---IN inAmountStart           TFloat    , -- 
+    IN inAmount                TFloat    , --
+    ---IN inAmountStart           TFloat    , --
     IN inAmountPlan_1          TFloat    , --
     IN inAmountPlan_2          TFloat    , --
     IN inAmountPlan_3          TFloat    , --
     IN inAmountPlan_4          TFloat    , --
     IN inAmountPlan_5          TFloat    , --
-    IN inComment               TVarChar  , -- 
+   OUT outAmountPlan_total     TFloat    , --
+    IN inComment               TVarChar  , --
     IN inSession               TVarChar    -- сессия пользователя
 )
-RETURNS Integer
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -49,6 +45,15 @@ BEGIN
                                                   , inComment       := inComment
                                                   , inUserId        := vbUserId
                                                    ) AS tmp;
+
+    --
+    outAmountPlan_total:= COALESCE (inAmountPlan_1, 0)
+                        + COALESCE (inAmountPlan_2, 0)
+                        + COALESCE (inAmountPlan_3, 0)
+                        + COALESCE (inAmountPlan_4, 0)
+                        + COALESCE (inAmountPlan_5, 0)
+                       ;
+
 
 END;
 $BODY$

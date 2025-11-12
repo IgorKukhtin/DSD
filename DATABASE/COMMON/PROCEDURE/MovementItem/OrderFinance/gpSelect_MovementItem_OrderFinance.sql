@@ -16,17 +16,18 @@ RETURNS TABLE (Id Integer
              , Condition TVarChar
              , StartDate TDateTime, EndDate_real TDateTime, EndDate TVarChar
              , Amount TFloat, AmountRemains TFloat, AmountPartner TFloat
-             , AmountSumm      TFloat
-             , AmountPartner_1 TFloat
-             , AmountPartner_2 TFloat
-             , AmountPartner_3 TFloat
-             , AmountPartner_4 TFloat
-             , AmountPlan_1    TFloat
-             , AmountPlan_2    TFloat
-             , AmountPlan_3    TFloat
-             , AmountPlan_4    TFloat
-             , AmountPlan_5    TFloat
-             , Comment TVarChar
+             , AmountSumm         TFloat
+             , AmountPartner_1    TFloat
+             , AmountPartner_2    TFloat
+             , AmountPartner_3    TFloat
+             , AmountPartner_4    TFloat
+             , AmountPlan_1       TFloat
+             , AmountPlan_2       TFloat
+             , AmountPlan_3       TFloat
+             , AmountPlan_4       TFloat
+             , AmountPlan_5       TFloat
+             , AmountPlan_total   TFloat
+             , Comment            TVarChar
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
              , isErased Boolean
@@ -48,7 +49,7 @@ BEGIN
                     );
 
      IF inShowAll THEN
-     
+
      vbOrderFinanceId := (SELECT MovementLinkObject.ObjectId AS Id
                           FROM MovementLinkObject
                           WHERE MovementLinkObject.MovementId = inMovementId
@@ -61,10 +62,10 @@ BEGIN
                             );
 
 --   select DISCTINCT zc_ObjectLink_Contract_Juridical если zc_ObjectLink_Contract_InfoMoney соответсвует соотвю списку полученному из zc_ObjectLink_OrderFinanceProperty_Object
-     
+
      RETURN QUERY
      WITH
-                                    
+
           -- если в справ. назначение платежа пусто, надо для таких договоров на показать все делать поиск последнего из банковской выписки, за последний месяц
           tmp_Comment AS (SELECT *
                           FROM (SELECT DISTINCT
@@ -75,7 +76,7 @@ BEGIN
                                      , MIString_Comment.ValueData         AS Comment
                                      , ROW_NUMBER() OVER (Partition by  Object_MoneyPlace.Id, MILinkObject_InfoMoney.ObjectId, MovementItem.ObjectId ORDER BY Movement.Id DESC ) AS Ord_byComment   -- комментарий последнего документа
                                 FROM Movement
-                                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id 
+                                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                             AND MovementItem.DescId = zc_MI_Master()
                                                             AND COALESCE (MovementItem.Amount,0) < 0
 
@@ -95,7 +96,7 @@ BEGIN
                                      LEFT JOIN MovementItemString AS MIString_Comment
                                                                   ON MIString_Comment.MovementItemId = MovementItem.Id
                                                                  AND MIString_Comment.DescId = zc_MIString_Comment()
-                
+
                                 WHERE Movement.DescId = zc_Movement_BankAccount()
                                   AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '1 MONTH' AND vbOperDate
                                   AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -111,7 +112,7 @@ BEGIN
                                        , tmp.Comment
                                   FROM gpSelect_Object_JuridicalOrderFinance_choice (inBankAccountMainId:= vbBankAccountMainId
                                                                                    , inOrderFinanceId := COALESCE (vbOrderFinanceId,0)
-                                                                                   , inisShowAll      := FALSE 
+                                                                                   , inisShowAll      := FALSE
                                                                                    , inisErased       := FALSE
                                                                                    , inSession        := inSession) AS tmp
                                   )
@@ -146,7 +147,7 @@ BEGIN
                               JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                AND MovementItem.DescId     = zc_MI_Master()
                                                AND MovementItem.isErased   = tmpIsErased.isErased
-                         ) 
+                         )
 
              , tmpMovementItemFloat AS (SELECT *
                                         FROM MovementItemFloat
@@ -176,15 +177,25 @@ BEGIN
                     , MIFloat_AmountRemains.ValueData   AS AmountRemains
                     , MIFloat_AmountPartner.ValueData   AS AmountPartner
                     , MIFloat_AmountSumm.ValueData      AS AmountSumm
+
                     , MIFloat_AmountPartner_1.ValueData AS AmountPartner_1
                     , MIFloat_AmountPartner_2.ValueData AS AmountPartner_2
                     , MIFloat_AmountPartner_3.ValueData AS AmountPartner_3
                     , MIFloat_AmountPartner_4.ValueData AS AmountPartner_4
+
                     , MIFloat_AmountPlan_1.ValueData    AS AmountPlan_1
                     , MIFloat_AmountPlan_2.ValueData    AS AmountPlan_2
                     , MIFloat_AmountPlan_3.ValueData    AS AmountPlan_3
                     , MIFloat_AmountPlan_4.ValueData    AS AmountPlan_4
                     , MIFloat_AmountPlan_5.ValueData    AS AmountPlan_5
+
+                    , (COALESCE (MIFloat_AmountPlan_1.ValueData, 0)
+                     + COALESCE (MIFloat_AmountPlan_2.ValueData, 0)
+                     + COALESCE (MIFloat_AmountPlan_3.ValueData, 0)
+                     + COALESCE (MIFloat_AmountPlan_4.ValueData, 0)
+                     + COALESCE (MIFloat_AmountPlan_5.ValueData, 0)
+                      ) :: TFloat AS AmountPlan_total
+
                     --, MILinkObject_BankAccount.ObjectId AS BankAccountId
                     , MIString_Comment.ValueData        AS Comment
                     , Object_Insert.ValueData           AS InsertName
@@ -192,9 +203,9 @@ BEGIN
                     , MIDate_Insert.ValueData           AS InsertDate
                     , MIDate_Update.ValueData           AS UpdateDate
                     , MovementItem.isErased             AS isErased
-        
-               FROM tmpMI AS MovementItem 
-        
+
+               FROM tmpMI AS MovementItem
+
                     LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountRemains
                                                    ON MIFloat_AmountRemains.MovementItemId = MovementItem.Id
                                                   AND MIFloat_AmountRemains.DescId = zc_MIFloat_AmountRemains()
@@ -238,7 +249,7 @@ BEGIN
                     LEFT JOIN tmpMovementItemString AS MIString_Comment
                                                     ON MIString_Comment.MovementItemId = MovementItem.Id
                                                    AND MIString_Comment.DescId = zc_MIString_Comment()
-        
+
                     LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_Contract
                                                         ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                                        AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
@@ -281,7 +292,7 @@ BEGIN
                                      AND vbOperDate BETWEEN Object_ContractCondition_View.StartDate AND Object_ContractCondition_View.EndDate
                                    )
 
-     , tmpContract_View AS (SELECT * FROM Object_Contract_View)                              
+     , tmpContract_View AS (SELECT * FROM Object_Contract_View)
      , tmpJuridicalDetails_View AS (SELECT * FROM ObjectHistory_JuridicalDetails_View /*WHERE ObjectHistory_JuridicalDetails_View.JuridicalId IN (SELECT DISTINCT tmpMI.JuridicalId FROM tmpMI)*/)
 
        -- Результат
@@ -304,21 +315,24 @@ BEGIN
            , (''|| CASE WHEN View_Contract.ContractTermKindId = zc_Enum_ContractTermKind_Long() THEN '* ' ELSE '' END
                 || (LPAD (EXTRACT (Day FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||LPAD (EXTRACT (Month FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||EXTRACT (YEAR FROM View_Contract.EndDate_term) :: TVarChar)
              ) ::TVarChar AS EndDate
-                             
+
            , tmpMI.Amount        ::TFloat
            , tmpMI.AmountRemains ::TFloat
            , tmpMI.AmountPartner ::TFloat
            , tmpMI.AmountSumm       ::TFloat
+
            , tmpMI.AmountPartner_1  ::TFloat
            , tmpMI.AmountPartner_2  ::TFloat
            , tmpMI.AmountPartner_3  ::TFloat
            , tmpMI.AmountPartner_4  ::TFloat
+
            , tmpMI.AmountPlan_1     ::TFloat
            , tmpMI.AmountPlan_2     ::TFloat
            , tmpMI.AmountPlan_3     ::TFloat
            , tmpMI.AmountPlan_4     ::TFloat
            , tmpMI.AmountPlan_5     ::TFloat
-             
+           , tmpMI.AmountPlan_total ::TFloat
+
            --, COALESCE (tmpMI.Comment, tmpData.Comment) ::TVarChar AS Comment
            , CASE WHEN COALESCE (tmpMI.Comment,'') = '' THEN COALESCE (tmpData.Comment,'') ELSE COALESCE (tmpMI.Comment,'') END ::TVarChar AS Comment
 
@@ -332,15 +346,15 @@ BEGIN
        FROM tmpData
             FULL JOIN tmpMI ON tmpMI.JuridicalId = tmpData.JuridicalId
                            AND tmpMI.ContractId  = tmpData.ContractId
-            
+
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (tmpData.JuridicalId, tmpMI.JuridicalId)
             LEFT JOIN Object AS Object_Contract  ON Object_Contract.Id  = COALESCE (tmpData.ContractId, tmpMI.ContractId)
-            
+
             LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
                                  ON ObjectLink_Contract_InfoMoney.ObjectId = Object_Contract.Id
                                 AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
             LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_Contract_InfoMoney.ChildObjectId
-            
+
             LEFT JOIN tmpJuridicalDetails_View ON tmpJuridicalDetails_View.JuridicalId = Object_Juridical.Id
 
            /* LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
@@ -355,7 +369,7 @@ BEGIN
            */
             LEFT JOIN tmpContract_View AS View_Contract ON View_Contract.ContractId = tmpData.ContractId
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = View_Contract.PaidKindId
-            
+
             LEFT JOIN tmpContractCondition ON tmpContractCondition.ContractId = Object_Contract.Id
             ;
        ELSE
@@ -373,7 +387,7 @@ BEGIN
                       LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                                        ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                                       AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-                 ) 
+                 )
 
      , tmpContractCondition AS (SELECT Object_ContractCondition_View.ContractId
                               --, Object_ContractCondition_View.ContractConditionId
@@ -393,9 +407,9 @@ BEGIN
                            AND Object_ContractCondition_View.ContractId IN (SELECT DISTINCT tmpMI.ContractId FROM tmpMI)
                            AND vbOperDate BETWEEN Object_ContractCondition_View.StartDate AND Object_ContractCondition_View.EndDate
                          )
-     , tmpContract_View AS (SELECT * FROM Object_Contract_View WHERE Object_Contract_View.ContractId IN (SELECT DISTINCT tmpMI.ContractId FROM tmpMI)) 
-     , tmpJuridicalDetails_View AS (SELECT * FROM ObjectHistory_JuridicalDetails_View WHERE ObjectHistory_JuridicalDetails_View.JuridicalId IN (SELECT DISTINCT tmpMI.ObjectId FROM tmpMI))                              
-      
+     , tmpContract_View AS (SELECT * FROM Object_Contract_View WHERE Object_Contract_View.ContractId IN (SELECT DISTINCT tmpMI.ContractId FROM tmpMI))
+     , tmpJuridicalDetails_View AS (SELECT * FROM ObjectHistory_JuridicalDetails_View WHERE ObjectHistory_JuridicalDetails_View.JuridicalId IN (SELECT DISTINCT tmpMI.ObjectId FROM tmpMI))
+
      , tmpMovementItemFloat AS (SELECT *
                                 FROM MovementItemFloat
                                 WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
@@ -445,11 +459,18 @@ BEGIN
            , MIFloat_AmountPartner_2.ValueData :: TFloat AS AmountPartner_2
            , MIFloat_AmountPartner_3.ValueData :: TFloat AS AmountPartner_3
            , MIFloat_AmountPartner_4.ValueData :: TFloat AS AmountPartner_4
+
            , MIFloat_AmountPlan_1.ValueData    :: TFloat AS AmountPlan_1
            , MIFloat_AmountPlan_2.ValueData    :: TFloat AS AmountPlan_2
            , MIFloat_AmountPlan_3.ValueData    :: TFloat AS AmountPlan_3
            , MIFloat_AmountPlan_4.ValueData    :: TFloat AS AmountPlan_4
            , MIFloat_AmountPlan_5.ValueData    :: TFloat AS AmountPlan_5
+           , (COALESCE (MIFloat_AmountPlan_1.ValueData, 0)
+            + COALESCE (MIFloat_AmountPlan_2.ValueData, 0)
+            + COALESCE (MIFloat_AmountPlan_3.ValueData, 0)
+            + COALESCE (MIFloat_AmountPlan_4.ValueData, 0)
+            + COALESCE (MIFloat_AmountPlan_5.ValueData, 0)
+             ) :: TFloat AS AmountPlan_total
 
            , MIString_Comment.ValueData       AS Comment
 
@@ -548,7 +569,7 @@ BEGIN
                                 AND Object_Contract.ValueData <> '-'
              */
             LEFT JOIN tmpContract_View AS View_Contract ON View_Contract.ContractId = Object_Contract.Id
-            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = View_Contract.PaidKindId 
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = View_Contract.PaidKindId
             LEFT JOIN tmpContractCondition ON tmpContractCondition.ContractId = Object_Contract.Id
             ;
      END IF;

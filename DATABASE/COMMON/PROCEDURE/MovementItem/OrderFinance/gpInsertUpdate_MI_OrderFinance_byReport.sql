@@ -31,7 +31,7 @@ BEGIN
           , OrderFinance_PaidKind.ChildObjectId                   AS PaidKindId
           , COALESCE (MovementLinkObject_BankAccount.ObjectId,0)  AS BankAccountId
           , MovementFloat_WeekNumber.ValueData                    AS WeekNumber
-     INTO vbOperDate, vbOrderFinanceId, vbPaidKindId, vbBankAccountMainId, vbWeekNumber
+            INTO vbOperDate, vbOrderFinanceId, vbPaidKindId, vbBankAccountMainId, vbWeekNumber
      FROM Movement
           LEFT JOIN MovementLinkObject ON MovementLinkObject.MovementId = inMovementId
                                       AND MovementLinkObject.DescId = zc_MovementLinkObject_OrderFinance()
@@ -49,14 +49,8 @@ BEGIN
      WHERE Movement.Id = inMovementId;
 
      -- переопределяем  - заливка данных на дату - конец недели WeekNumber
-     vbOperDate := (WITH
-                    --берем от от даты документа + 300 дней, 
-                    tmpDataWeek AS ( SELECT GENERATE_SERIES (vbOperDate :: TDateTime , vbOperDate + INTERVAL '300 DAY', '1 week' :: INTERVAL) AS OperDate)
-                    
-                    SELECT (DATE_TRUNC ('WEEK', tmp.OperDate)+ INTERVAL '6 DAY') :: TDateTime AS Sunday
-                    FROM tmpDataWeek AS tmp
-                    WHERE (EXTRACT (Week FROM tmp.OperDate) ) = vbWeekNumber
-                    );       
+     vbOperDate := DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', vbOperDate) + ((((7 * (vbWeekNumber-1)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL);
+     
 
     -- данные из отчета
     CREATE TEMP TABLE _tmpReport (JuridicalId Integer, PaidKindId Integer, ContractId Integer, InfomoneyId Integer
@@ -183,7 +177,8 @@ BEGIN
                            AND tmpMI.InfoMoneyId   = tmpData.InfoMoneyId
                            AND tmpMI.BankAccountId = tmpData.BankAccountId;
                            
-          RAISE EXCEPTION 'Ошибка.TEST. <%>' SELECT SUM(COALESCE (_tmpReport.SaleSumm1,0) ) FROM _tmpReport;
+    -- TEST
+    --RAISE EXCEPTION 'Ошибка.TEST. <%>', (SELECT SUM(COALESCE (_tmpReport.SaleSumm1,0) ) FROM _tmpReport;
             
     -- сохраняем данные
     PERFORM lpUpdate_MI_OrderFinance_ByReport (inId            := COALESCE (_tmpData.Id, 0) ::Integer
