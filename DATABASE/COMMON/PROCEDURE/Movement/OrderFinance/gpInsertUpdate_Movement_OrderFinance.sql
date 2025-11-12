@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_Movement_OrderFinance()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderFinance (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderFinance (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderFinance (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderFinance(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -11,7 +13,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderFinance(
     IN inMemberId_1          Integer   , --
     IN inMemberId_2          Integer   , --
     IN inWeekNumber          TFloat    , --
-    IN inTotalSumm           TFloat    , --
+    IN inTotalSumm_1         TFloat    , --
+    IN inTotalSumm_2         TFloat    , --
+    IN inTotalSumm_3         TFloat    , --
     IN inComment             TVarChar   , -- Примечание
    OUT outStartDate          TDateTime,
    OUT outEndDate            TDateTime,
@@ -40,7 +44,9 @@ BEGIN
                                                  , inMemberId_1       := inMemberId_1
                                                  , inMemberId_2       := inMemberId_2
                                                  , inWeekNumber       := inWeekNumber
-                                                 , inTotalSumm        := inTotalSumm
+                                                 , inTotalSumm_1      := inTotalSumm_1
+                                                 , inTotalSumm_2      := inTotalSumm_2
+                                                 , inTotalSumm_3      := inTotalSumm_3
                                                  , inComment          := inComment
                                                  , inUserId           := vbUserId
                                                   );

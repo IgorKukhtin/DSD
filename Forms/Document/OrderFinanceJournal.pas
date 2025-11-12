@@ -109,7 +109,6 @@ type
     PositionName_insert: TcxGridDBColumn;
     StartDate_WeekNumber: TcxGridDBColumn;
     EndDate_WeekNumber: TcxGridDBColumn;
-    TotalSumm: TcxGridDBColumn;
   private
   public
   end;

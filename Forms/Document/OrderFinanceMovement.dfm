@@ -22,7 +22,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Left = 0
     Top = 0
     Width = 1060
-    Height = 127
+    Height = 167
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
@@ -305,9 +305,9 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Top = 42
       Caption = #1085#1077#1076#1077#1083#1103' '#1076#1086
     end
-    object edTotalSumm: TcxCurrencyEdit
+    object edTotalSumm_1: TcxCurrencyEdit
       Left = 418
-      Top = 59
+      Top = 139
       ParentFont = False
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
@@ -321,12 +321,12 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
       TabOrder = 32
-      Width = 175
+      Width = 201
     end
     object cxLabel20: TcxLabel
       Left = 418
-      Top = 42
-      Caption = #1056#1072#1079#1088#1077#1096#1077#1085#1072' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102
+      Top = 122
+      Caption = #1056#1072#1079#1088#1077#1096#1077#1085#1072' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102' '#1075#1088'.1'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clWindowText
@@ -335,17 +335,59 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
     end
+    object cxLabel23: TcxLabel
+      Left = 9
+      Top = 120
+      Caption = #1055#1086#1080#1089#1082' '#1087#1086' '#1054#1050#1055#1054':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edOKPO_search: TcxTextEdit
+      Left = 9
+      Top = 139
+      TabOrder = 35
+      DesignSize = (
+        132
+        21)
+      Width = 132
+    end
+    object cxLabel24: TcxLabel
+      Left = 159
+      Top = 120
+      Caption = #1055#1086#1080#1089#1082' '#1087#1086' '#1070#1088'. '#1083#1080#1094#1091':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edJuridicalName_search: TcxTextEdit
+      Left = 159
+      Top = 139
+      TabOrder = 37
+      DesignSize = (
+        145
+        21)
+      Width = 145
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 153
+    Top = 193
     Width = 1060
-    Height = 432
+    Height = 392
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 432
+    ClientRectBottom = 392
     ClientRectRight = 1060
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
@@ -538,6 +580,39 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 58
+          end
+          object ContractStateKindCode_Send: TcxGridDBColumn
+            Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractStateKindCode'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Alignment.Horz = taLeftJustify
+            Properties.Alignment.Vert = taVCenter
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = #1055#1086#1076#1087#1080#1089#1072#1085
+                ImageIndex = 12
+                Value = 1
+              end
+              item
+                Description = #1053#1077' '#1087#1086#1076#1087#1080#1089#1072#1085
+                ImageIndex = 11
+                Value = 2
+              end
+              item
+                Description = #1047#1072#1074#1077#1088#1096#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end
+              item
+                Description = #1059' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+                ImageIndex = 66
+                Value = 4
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
           end
           object ContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
@@ -863,7 +938,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Left = 0
         Top = 331
         Width = 1060
-        Height = 77
+        Height = 37
         Align = alBottom
         Anchors = [akTop, akRight, akBottom]
         TabOrder = 1
@@ -898,13 +973,17 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1070#1088'.'#1083#1080#1094#1072
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 408
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
         Width = 1060
-        Height = 408
+        Height = 368
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 408
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = JuridicalDS
@@ -1293,7 +1372,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 10
+    TabOrder = 8
     Width = 159
   end
   object cxLabel17: TcxLabel
@@ -1303,6 +1382,66 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1086#1090#1095#1077#1090')'
     ParentShowHint = False
     ShowHint = True
+  end
+  object edTotalSumm_2: TcxCurrencyEdit
+    Left = 628
+    Top = 139
+    ParentFont = False
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.##'
+    Properties.ReadOnly = False
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -11
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
+    TabOrder = 11
+    Width = 201
+  end
+  object cxLabel21: TcxLabel
+    Left = 628
+    Top = 122
+    Caption = #1056#1072#1079#1088#1077#1096#1077#1085#1072' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102' '#1075#1088'.2'
+    ParentFont = False
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clWindowText
+    Style.Font.Height = -11
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
+  end
+  object edTotalSumm_3: TcxCurrencyEdit
+    Left = 839
+    Top = 139
+    ParentFont = False
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.##'
+    Properties.ReadOnly = False
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -11
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
+    TabOrder = 14
+    Width = 202
+  end
+  object cxLabel22: TcxLabel
+    Left = 839
+    Top = 122
+    Caption = #1056#1072#1079#1088#1077#1096#1077#1085#1072' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102' '#1075#1088'.3'
+    ParentFont = False
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clWindowText
+    Style.Font.Height = -11
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1355,7 +1494,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 256
+    Left = 264
     Top = 263
   end
   object dxBarManager: TdxBarManager
@@ -2831,6 +2970,35 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1087#1083#1072#1085' 5.'#1087#1090'. '#1087#1086' '#1087#1086#1095#1090#1077' (XLS)'
       ImageIndex = 53
     end
+    object actChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      Params = <
+        item
+          Name = 'Key'
+          Value = Null
+          ComponentItem = 'Id'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          ComponentItem = 'Code'
+          MultiSelectSeparator = ','
+        end>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ImageIndex = 7
+      DataSource = MasterDS
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -3067,9 +3235,25 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inTotalSumm'
+        Name = 'inTotalSumm_1'
         Value = Null
-        Component = edTotalSumm
+        Component = edTotalSumm_1
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTotalSumm_2'
+        Value = Null
+        Component = edTotalSumm_2
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTotalSumm_3'
+        Value = Null
+        Component = edTotalSumm_3
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3120,7 +3304,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Control = edWeekNumber
       end
       item
-        Control = edTotalSumm
+        Control = edTotalSumm_1
       end
       item
         Control = ceMember_1
@@ -3245,9 +3429,23 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TotalSumm'
+        Name = 'TotalSumm_1'
         Value = Null
-        Component = edTotalSumm
+        Component = edTotalSumm_1
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSumm_2'
+        Value = Null
+        Component = edTotalSumm_2
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSumm_3'
+        Value = Null
+        Component = edTotalSumm_3
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -3340,8 +3538,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 200
-    Top = 240
+    Left = 216
+    Top = 256
   end
   object RefreshAddOn: TRefreshAddOn
     DataSet = 'ClientDataSet'
@@ -3364,8 +3562,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       item
         Action = actInsertUpdateMovement
       end>
-    Left = 160
-    Top = 160
+    Left = 208
+    Top = 392
   end
   object spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem'
@@ -3450,8 +3648,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 148
-    Top = 112
+    Left = 188
+    Top = 40
   end
   object spGetTotalSumm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_TotalSumm'
@@ -3905,8 +4103,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 872
-    Top = 88
+    Left = 856
+    Top = 56
   end
   object spSelect_Export: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_OrderFinance_XML'
@@ -4220,8 +4418,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 120
-    Top = 87
+    Left = 128
+    Top = 47
   end
   object GuidesPosition: TdsdGuides
     KeyField = 'Id'
@@ -4466,5 +4664,23 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
   object PeriodChoice: TPeriodChoice
     Left = 232
     Top = 16
+  end
+  object FieldFilter: TdsdFieldFilter
+    TextEdit = edOKPO_search
+    DataSet = MasterCDS
+    Column = chOKPO
+    ColumnList = <
+      item
+        Column = chOKPO
+        TextEdit = edOKPO_search
+      end
+      item
+        Column = chJuridicalName
+        TextEdit = edJuridicalName_search
+      end>
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 320
+    Top = 120
   end
 end

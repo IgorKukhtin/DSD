@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_MovementItem_OrderFinance()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer);
@@ -31,6 +31,17 @@ BEGIN
 
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
+
+     --проверка что договор не закрыт
+     IF (SELECT ObjectLink_Contract_ContractStateKind.ChildObjectId
+         FROM ObjectLink AS ObjectLink_Contract_ContractStateKind
+         WHERE ObjectLink_Contract_ContractStateKind.ObjectId = inContractId
+            AND ObjectLink_Contract_ContractStateKind.DescId = zc_ObjectLink_Contract_ContractStateKind()
+        ) = zc_Enum_ContractStateKind_Close()
+     THEN
+         RAISE EXCEPTION 'Ошибка.Контракт <%> уже Завершен.', (SELECT '(' ||Object.ObjectCode||') '|| Object.ValueData FROM Object WHERE Object.Id = inContractId);
+     END IF;
+      
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inJuridicalId, inMovementId, inAmount, NULL);

@@ -899,6 +899,41 @@ INSERT INTO MovementFloatDesc(Code, ItemName)
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_WeekNumber', 'Номер недели' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_WeekNumber');  
 
+  CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSumm_1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSumm_1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_TotalSumm_1', 'Итого сумма на неделю Для группы=1' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSumm_1');  
+
+  CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSumm_2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSumm_2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_TotalSumm_2', 'Итого сумма на неделю Для группы=2' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSumm_2');  
+
+  CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSumm_3() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSumm_3'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_TotalSumm_3', 'Итого сумма на неделю Для группы=3' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSumm_3');  
+
+
+
+  CREATE OR REPLACE FUNCTION zc_MovementFloat_AmountPlan_1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_AmountPlan_1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_AmountPlan_1', 'Итого План оплаты на 1.пн.' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_AmountPlan_1');  
+
+  CREATE OR REPLACE FUNCTION zc_MovementFloat_AmountPlan_2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_AmountPlan_2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_AmountPlan_2', 'Итого План оплаты на 2.вт.' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_AmountPlan_2');  
+
+  CREATE OR REPLACE FUNCTION zc_MovementFloat_AmountPlan_3() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_AmountPlan_3'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_AmountPlan_3', 'Итого План оплаты на 3.ср.' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_AmountPlan_3');  
+
+  CREATE OR REPLACE FUNCTION zc_MovementFloat_AmountPlan_4() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_AmountPlan_4'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_AmountPlan_4', 'Итого План оплаты на 4.чт.' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_AmountPlan_4');  
+
+  CREATE OR REPLACE FUNCTION zc_MovementFloat_AmountPlan_5() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_AmountPlan_5'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_AmountPlan_5', 'Итого План оплаты на 5.пт.' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_AmountPlan_5');  
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

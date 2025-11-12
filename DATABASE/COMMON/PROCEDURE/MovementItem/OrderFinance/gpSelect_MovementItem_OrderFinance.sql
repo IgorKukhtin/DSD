@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer
              , OKPO TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
              , PaidKindName TVarChar, InfoMoneyName TVarChar
-             , Condition TVarChar
+             , Condition TVarChar, ContractStateKindCode Integer
              , StartDate TDateTime, EndDate_real TDateTime, EndDate TVarChar
              , Amount TFloat, AmountRemains TFloat, AmountPartner TFloat
              , AmountSumm         TFloat
@@ -308,7 +308,8 @@ BEGIN
            , Object_Contract.ValueData        AS ContractName
            , Object_PaidKind.ValueData        AS PaidKindName
            , Object_InfoMoney.ValueData       AS InfoMoneyName
-           , tmpContractCondition.Condition ::TVarChar AS Condition
+           , tmpContractCondition.Condition       ::TVarChar AS Condition
+           , View_Contract.ContractStateKindCode  ::Integer  AS ContractStateKindCode
            --, ObjectDate_Start.ValueData       AS StartDate
            , View_Contract.StartDate
            , View_Contract.EndDate_real
@@ -442,7 +443,8 @@ BEGIN
            , Object_Contract.ValueData        AS ContractName
            , Object_PaidKind.ValueData        AS PaidKindName
            , Object_InfoMoney.ValueData       AS InfoMoneyName
-           , tmpContractCondition.Condition ::TVarChar AS Condition
+           , tmpContractCondition.Condition       ::TVarChar AS Condition
+           , View_Contract.ContractStateKindCode  ::Integer  AS ContractStateKindCode
            --, ObjectDate_Start.ValueData       AS StartDate
            , View_Contract.StartDate
            , View_Contract.EndDate_real

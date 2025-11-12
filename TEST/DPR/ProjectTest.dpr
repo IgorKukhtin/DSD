@@ -1211,7 +1211,6 @@ uses
   PartionGoods20202Choice in '..\..\Forms\Guides\PartionGoods20202Choice.pas' {PartionGoods20202ChoiceForm: TParentForm},
   TaxCorrectiveJournalChoice in '..\..\Forms\Document\TaxCorrectiveJournalChoice.pas' {TaxCorrectiveJournalChoiceForm: TParentForm},
   Report_GoodsMI_ProductionUnion_diff in '..\..\Forms\Report\Report_GoodsMI_ProductionUnion_diff.pas' {Report_GoodsMI_ProductionUnion_diffForm: TParentForm},
-  OrderFinanceMovement in '..\..\Forms\Document\OrderFinanceMovement.pas' {OrderFinanceMovementForm: TParentForm},
   Medoc_J1201011 in '..\..\SOURCE\MeDOC\Medoc_J1201011.pas',
   Medoc_J1201211 in '..\..\SOURCE\MeDOC\Medoc_J1201211.pas',
   Report_Account_noBalance in '..\..\Forms\Report\Report_Account_noBalance.pas' {Report_Account_noBalanceForm: TParentForm},
@@ -1626,7 +1625,8 @@ uses
   CFO in '..\..\Forms\Guides\CFO.pas' {CFOForm: TParentForm},
   CFOEdit in '..\..\Forms\Guides\CFOEdit.pas' {CFOEditForm: TParentForm},
   StaffListMovement in '..\..\Forms\Document\StaffListMovement.pas' {StaffListMovementForm: TParentForm},
-  Report_Personal_Cash_sms in '..\..\Forms\Report\Report_Personal_Cash_sms.pas' {Report_Personal_Cash_smsForm: TParentForm};
+  Report_Personal_Cash_sms in '..\..\Forms\Report\Report_Personal_Cash_sms.pas' {Report_Personal_Cash_smsForm: TParentForm},
+  OrderFinanceMovement in '..\..\Forms\Document\OrderFinanceMovement.pas' {OrderFinanceMovementForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_Movement_OrderFinance()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderFinance (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderFinance (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderFinance (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderFinance(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -11,7 +12,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderFinance(
     IN inMemberId_1          Integer   , --
     IN inMemberId_2          Integer   , --
     IN inWeekNumber          TFloat    , --
-    IN inTotalSumm           TFloat    , --
+    IN inTotalSumm_1         TFloat    , --
+    IN inTotalSumm_2         TFloat    , --
+    IN inTotalSumm_3         TFloat    , --
     IN inComment             TVarChar  , -- Примечание
     IN inUserId              Integer     -- пользователь
 )
@@ -48,7 +51,11 @@ BEGIN
      --сохранили
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_WeekNumber(), ioId, inWeekNumber);
      --сохранили
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), ioId, inTotalSumm);
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm_1(), ioId, inTotalSumm_1);
+     --сохранили
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm_2(), ioId, inTotalSumm_2);
+     --сохранили
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm_3(), ioId, inTotalSumm_3);
 
      -- Комментарий
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);

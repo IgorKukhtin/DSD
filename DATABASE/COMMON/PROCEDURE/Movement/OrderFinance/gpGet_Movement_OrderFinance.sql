@@ -12,7 +12,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , OrderFinanceId Integer, OrderFinanceName TVarChar
              , BankAccountId Integer, BankAccountName TVarChar
              , BankId Integer, BankName TVarChar, BankAccountNameAll TVarChar
-             , WeekNumber TFloat, TotalSumm TFloat
+             , WeekNumber TFloat
+             , TotalSumm_1 TFloat, TotalSumm_2 TFloat, TotalSumm_3 TFloat
              , StartDate_WeekNumber TDateTime, EndDate_WeekNumber TDateTime
              , DateUpdate_report TDateTime
              , UserUpdate_report TVarChar
@@ -114,7 +115,9 @@ BEGIN
              , COALESCE (tmpOrderFinance.BankAccountNameAll,'') ::TVarChar AS BankAccountNameAll
 
              , (EXTRACT (WEEK FROM CURRENT_DATE) +1)  ::TFloat    AS WeekNumber
-             , 0                                    :: TFloat   AS TotalSumm
+             , 0                                      :: TFloat   AS TotalSumm_1
+             , 0                                      :: TFloat   AS TotalSumm_2
+             , 0                                      :: TFloat   AS TotalSumm_3
 
              , DATE_TRUNC('WEEK', CURRENT_DATE + INTERVAL'7 DAY')                     ::TDateTime AS StartDate_WeekNumber
              , (DATE_TRUNC('WEEK', CURRENT_DATE + INTERVAL'7 DAY') + INTERVAL '6 DAY') ::TDateTime AS EndDate_WeekNumber
@@ -165,8 +168,10 @@ BEGIN
            , Object_BankAccount_View.BankName
            , (Object_BankAccount_View.BankName || '' || Object_BankAccount_View.Name) :: TVarChar AS BankAccountNameAll
 
-           , COALESCE (MovementFloat_WeekNumber.ValueData, (EXTRACT (Week FROM vbOperDate) +1)) ::TFloat    AS WeekNumber
-           , COALESCE (MovementFloat_TotalSumm.Valuedata, 0)                                    :: TFloat   AS TotalSumm
+           , COALESCE (MovementFloat_WeekNumber.ValueData, (EXTRACT (Week FROM vbOperDate) +1)) ::TFloat   AS WeekNumber
+           , COALESCE (MovementFloat_TotalSumm_1.Valuedata, 0)                                  ::TFloat   AS TotalSumm_1
+           , COALESCE (MovementFloat_TotalSumm_2.Valuedata, 0)                                  ::TFloat   AS TotalSumm_2
+           , COALESCE (MovementFloat_TotalSumm_3.Valuedata, 0)                                  ::TFloat   AS TotalSumm_3
 
            , DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', Movement.OperDate) + ((((7 * COALESCE (MovementFloat_WeekNumber.ValueData - 1, 0)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL) ::TDateTime AS StartDate_WeekNumber
            , (DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', Movement.OperDate) + ((((7 * COALESCE (MovementFloat_WeekNumber.ValueData - 1, 0)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL) + INTERVAL '6 DAY') ::TDateTime AS EndDate_WeekNumber
@@ -199,9 +204,15 @@ BEGIN
                                     ON MovementFloat_WeekNumber.MovementId = Movement.Id
                                    AND MovementFloat_WeekNumber.DescId = zc_MovementFloat_WeekNumber()
 
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId = Movement.Id
-                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm_1
+                                    ON MovementFloat_TotalSumm_1.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSumm_1.DescId = zc_MovementFloat_TotalSumm_1()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm_2
+                                    ON MovementFloat_TotalSumm_2.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSumm_2.DescId = zc_MovementFloat_TotalSumm_2()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm_3
+                                    ON MovementFloat_TotalSumm_3.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSumm_3.DescId = zc_MovementFloat_TotalSumm_3()
 
             LEFT JOIN MovementDate AS MovementDate_Update_report
                                    ON MovementDate_Update_report.MovementId = Movement.Id

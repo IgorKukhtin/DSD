@@ -76,7 +76,46 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = TotalSumm
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSumm_1
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSumm_2
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSumm_3
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountPlan_1
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountPlan_2
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountPlan_3
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountPlan_4
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountPlan_5
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -87,7 +126,46 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = TotalSumm
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSumm_1
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSumm_2
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSumm_3
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountPlan_1
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountPlan_2
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountPlan_3
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountPlan_4
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountPlan_5
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -175,15 +253,99 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 154
       end
-      object TotalSumm: TcxGridDBColumn
-        Caption = #1056#1072#1079#1088#1077#1096#1077#1085#1072' '#1057#1091#1084#1084#1072
-        DataBinding.FieldName = 'TotalSumm'
+      object TotalSumm_1: TcxGridDBColumn
+        Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1075#1088'.1'
+        DataBinding.FieldName = 'TotalSumm_1'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1056#1072#1079#1088#1077#1096#1077#1085#1072' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102
+        HeaderHint = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102' '#1044#1083#1103' '#1075#1088#1091#1087#1087#1099'=1'
+        Options.Editing = False
+        Width = 80
+      end
+      object TotalSumm_2: TcxGridDBColumn
+        Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1075#1088'.2'
+        DataBinding.FieldName = 'TotalSumm_2'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102' '#1044#1083#1103' '#1075#1088#1091#1087#1087#1099'=2'
+        Options.Editing = False
+        Width = 80
+      end
+      object TotalSumm_3: TcxGridDBColumn
+        Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1075#1088'.3'
+        DataBinding.FieldName = 'TotalSumm_3'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102' '#1044#1083#1103' '#1075#1088#1091#1087#1087#1099'=3'
+        Options.Editing = False
+        Width = 80
+      end
+      object AmountPlan_1: TcxGridDBColumn
+        Caption = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090#1099' '#1085#1072' 1.'#1087#1085'.'
+        DataBinding.FieldName = 'AmountPlan_1'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1055#1083#1072#1085' '#1086#1087#1083#1072#1090#1099' '#1085#1072' 1.'#1087#1085'.'
+        Options.Editing = False
+        Width = 80
+      end
+      object AmountPlan_2: TcxGridDBColumn
+        Caption = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090#1099' '#1085#1072' 2.'#1074#1090'.'
+        DataBinding.FieldName = 'AmountPlan_2'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1055#1083#1072#1085' '#1086#1087#1083#1072#1090#1099' '#1085#1072' 2.'#1074#1090'.'
+        Options.Editing = False
+        Width = 80
+      end
+      object AmountPlan_3: TcxGridDBColumn
+        Caption = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090#1099' '#1085#1072' 3.'#1089#1088'.'
+        DataBinding.FieldName = 'AmountPlan_3'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1055#1083#1072#1085' '#1086#1087#1083#1072#1090#1099' '#1085#1072' 3.'#1089#1088'.'
+        Options.Editing = False
+        Width = 80
+      end
+      object AmountPlan_4: TcxGridDBColumn
+        Caption = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090#1099' '#1085#1072' 4.'#1095#1090'.'
+        DataBinding.FieldName = 'AmountPlan_4'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1055#1083#1072#1085' '#1086#1087#1083#1072#1090#1099' '#1085#1072' 4.'#1095#1090'.'
+        Options.Editing = False
+        Width = 80
+      end
+      object AmountPlan_5: TcxGridDBColumn
+        Caption = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090#1099' '#1085#1072' 5.'#1087#1090'.'
+        DataBinding.FieldName = 'AmountPlan_5'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1055#1083#1072#1085' '#1086#1087#1083#1072#1090#1099' '#1085#1072' 5.'#1087#1090'.'
         Options.Editing = False
         Width = 80
       end
