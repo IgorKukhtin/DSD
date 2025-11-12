@@ -286,7 +286,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object deEnd: TcxDateEdit
       Left = 323
       Top = 59
-      EditValue = '10.11.2025'
+      EditValue = 45971d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -3090,7 +3090,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outEndtDate'
+        Name = 'outEndDate'
         Value = Null
         Component = deEnd
         DataType = ftDateTime
@@ -3358,9 +3358,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     IdParam.MultiSelectSeparator = ','
     GuidesList = <
       item
-        Guides = GuidesBankAccount
-      end
-      item
+        Guides = GuidesOrderFinance
       end>
     ActionItemList = <
       item
