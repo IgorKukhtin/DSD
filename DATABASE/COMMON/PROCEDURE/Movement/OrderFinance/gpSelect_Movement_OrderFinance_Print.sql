@@ -38,7 +38,7 @@ BEGIN
     ;
 
      -- очень важная проверка
-    IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete() OR vbUserId <> 9457 --OR vbUserId = 5
+    IF 1=0 -- COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete() OR vbUserId <> 9457 --OR vbUserId = 5
     THEN
         IF vbStatusId = zc_Enum_Status_Erased() OR vbUserId = 5
         THEN
