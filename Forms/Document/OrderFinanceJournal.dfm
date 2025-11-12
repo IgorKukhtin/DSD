@@ -579,7 +579,7 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'InfoMoneyName;JuridicalName'
+          IndexFieldNames = 'NumGroup;InfoMoneyName;JuridicalName'
         end>
       Params = <
         item

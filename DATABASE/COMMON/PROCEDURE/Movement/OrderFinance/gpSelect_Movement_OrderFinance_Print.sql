@@ -230,6 +230,11 @@ WITH
            , MIFloat_AmountPlan_3.ValueData    :: TFloat AS AmountPlan_3
            , MIFloat_AmountPlan_4.ValueData    :: TFloat AS AmountPlan_4
            , MIFloat_AmountPlan_5.ValueData    :: TFloat AS AmountPlan_5
+           --
+           , CASE WHEN Object_InfoMoney.Id = 8908 /*Говядина*/ THEN 1 
+                  WHEN Object_InfoMoney.Id = 8906 /*Живой вес*/ THEN 2
+                  ELSE 3
+             END ::Integer AS NumGroup
 
        FROM tmpMI AS MovementItem
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId

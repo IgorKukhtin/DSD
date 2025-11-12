@@ -1937,7 +1937,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'InfoMoneyName;JuridicalName'
+          IndexFieldNames = 'NumGroup;InfoMoneyName;JuridicalName'
         end>
       Params = <
         item
