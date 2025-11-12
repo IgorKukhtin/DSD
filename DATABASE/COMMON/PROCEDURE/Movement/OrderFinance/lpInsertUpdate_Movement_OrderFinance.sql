@@ -72,8 +72,7 @@ BEGIN
                  -- сохранили свойство <Должность (Автор заявки)>  
                , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Position(), ioId, lfSelect.PositionId)  
          FROM lfSelect_Object_Member_findPersonal (inUserId ::TVarChar) AS lfSelect
-         WHERE lfSelect.MemberId = vbMemberId;
-                             
+         WHERE lfSelect.MemberId = vbMemberId;                
          
      ELSE
          -- сохранили свойство <>
