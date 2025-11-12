@@ -226,6 +226,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Left = 780
       Top = 42
       Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088'.)'
+      Visible = False
     end
     object edInsertDate: TcxDateEdit
       Left = 418
@@ -252,6 +253,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Properties.Kind = ckDateTime
       Properties.ReadOnly = True
       TabOrder = 25
+      Visible = False
       Width = 109
     end
     object edUpdatetDate_report: TcxDateEdit
@@ -1254,6 +1256,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Left = 898
     Top = 42
     Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
+    Visible = False
   end
   object edUpdateUser: TcxButtonEdit
     Left = 898
@@ -1265,6 +1268,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       end>
     Properties.ReadOnly = True
     TabOrder = 3
+    Visible = False
     Width = 159
   end
   object ceMember_2: TcxButtonEdit
