@@ -70,7 +70,7 @@ BEGIN
      END IF;
 
      -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+     -- PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
      -- сохранили протокол
      -- !!! времнно откл.!!!
