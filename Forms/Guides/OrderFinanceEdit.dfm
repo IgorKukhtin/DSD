@@ -260,7 +260,7 @@
       item
         Name = 'inMemberId_insert'
         Value = Null
-        Component = GuidesMember1
+        Component = GuidesInsert
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -282,8 +282,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 71
-    Top = 34
+    Left = 471
+    Top = 202
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -293,7 +293,7 @@
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 328
+    Left = 304
     Top = 202
   end
   object spGet: TdsdStoredProc
@@ -420,7 +420,7 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 239
+    Left = 383
     Top = 202
   end
   object cxPropertiesStore: TcxPropertiesStore
