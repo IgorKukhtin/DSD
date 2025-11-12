@@ -19,6 +19,7 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;
+           vbMemberId Integer;
 BEGIN
      -- проверка
      IF inOperDate <> DATE_TRUNC ('DAY', inOperDate)
@@ -59,6 +60,21 @@ BEGIN
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), ioId, CURRENT_TIMESTAMP);
          -- сохранили свойство <ѕользователь (создание)>
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
+ 
+         vbMemberId:= (SELECT ObjectLink_User_Member.ChildObjectId AS MemberId
+                       FROm ObjectLink AS ObjectLink_User_Member
+                       WHERE ObjectLink_User_Member.ObjectId = inUserId
+                         AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                      );
+         --
+         PERFORM -- сохранили свойство <Unit (јвтор за€вки)>
+                 lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, lfSelect.UnitId)
+                 -- сохранили свойство <ƒолжность (јвтор за€вки)>  
+               , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Position(), ioId, lfSelect.PositionId)  
+         FROM lfSelect_Object_Member_findPersonal (inUserId ::TVarChar) AS lfSelect
+         WHERE lfSelect.MemberId = vbMemberId;
+                             
+         
      ELSE
          -- сохранили свойство <>
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Update(), ioId, CURRENT_TIMESTAMP);
