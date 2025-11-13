@@ -77,6 +77,7 @@ type
     MemberName_insert: TcxGridDBColumn;
     MemberName_1: TcxGridDBColumn;
     MemberName_2: TcxGridDBColumn;
+    NumGroup: TcxGridDBColumn;
   private
     { Private declarations }
   public

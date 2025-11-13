@@ -219,6 +219,15 @@ inherited OrderFinanceForm: TOrderFinanceForm
             HeaderAlignmentVert = vaCenter
             Width = 71
           end
+          object NumGroup: TcxGridDBColumn
+            Caption = #8470' '#1075#1088#1091#1087#1087#1099
+            DataBinding.FieldName = 'NumGroup'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
           object clIisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
@@ -958,6 +967,15 @@ inherited OrderFinanceForm: TOrderFinanceForm
         Value = Null
         Component = ChildCDS
         ComponentItem = 'ObjectId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNumGroup'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'NumGroup'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

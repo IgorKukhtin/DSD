@@ -227,7 +227,7 @@ type
     cxLabel18: TcxLabel;
     cxLabel19: TcxLabel;
     PeriodChoice: TPeriodChoice;
-    edTotalSumm: TcxCurrencyEdit;
+    edTotalSumm_1: TcxCurrencyEdit;
     cxLabel20: TcxLabel;
     AmountPlan_total: TcxGridDBColumn;
     mactExportMail_xls_1: TMultiAction;
@@ -241,6 +241,16 @@ type
     bbExportMail_xls_3: TdxBarButton;
     bbExportMail_xls_4: TdxBarButton;
     bbExportMail_xls_5: TdxBarButton;
+    edTotalSumm_2: TcxCurrencyEdit;
+    cxLabel21: TcxLabel;
+    edTotalSumm_3: TcxCurrencyEdit;
+    cxLabel22: TcxLabel;
+    cxLabel23: TcxLabel;
+    edOKPO_search: TcxTextEdit;
+    cxLabel24: TcxLabel;
+    edJuridicalName_search: TcxTextEdit;
+    FieldFilter: TdsdFieldFilter;
+    actChoiceGuides: TdsdChoiceGuides;
   private
   public
   end;

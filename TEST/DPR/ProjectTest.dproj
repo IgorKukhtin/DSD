@@ -4137,10 +4137,6 @@
 				<Form>Report_GoodsMI_ProductionUnion_diffForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\OrderFinanceMovement.pas">
-				<Form>OrderFinanceMovementForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201011.pas"/>
 			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201211.pas"/>
 			<DCCReference Include="..\..\Forms\Report\Report_Account_noBalance.pas">
@@ -5732,6 +5728,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_Personal_Cash_sms.pas">
 				<Form>Report_Personal_Cash_smsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\OrderFinanceMovement.pas">
+				<Form>OrderFinanceMovementForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_Movement_OrderFinance()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderFinance (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderFinance (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderFinance (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderFinance(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -11,7 +12,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderFinance(
     IN inMemberId_1          Integer   , --
     IN inMemberId_2          Integer   , --
     IN inWeekNumber          TFloat    , --
-    IN inTotalSumm           TFloat    , --
+    IN inTotalSumm_1         TFloat    , --
+    IN inTotalSumm_2         TFloat    , --
+    IN inTotalSumm_3         TFloat    , --
     IN inComment             TVarChar  , -- Примечание
     IN inUserId              Integer     -- пользователь
 )
@@ -19,6 +22,7 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;
+           vbMemberId Integer;
 BEGIN
      -- проверка
      IF inOperDate <> DATE_TRUNC ('DAY', inOperDate)
@@ -47,7 +51,11 @@ BEGIN
      --сохранили
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_WeekNumber(), ioId, inWeekNumber);
      --сохранили
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), ioId, inTotalSumm);
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm_1(), ioId, inTotalSumm_1);
+     --сохранили
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm_2(), ioId, inTotalSumm_2);
+     --сохранили
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm_3(), ioId, inTotalSumm_3);
 
      -- Комментарий
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
@@ -59,6 +67,20 @@ BEGIN
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), ioId, CURRENT_TIMESTAMP);
          -- сохранили свойство <Пользователь (создание)>
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
+ 
+         vbMemberId:= (SELECT ObjectLink_User_Member.ChildObjectId AS MemberId
+                       FROm ObjectLink AS ObjectLink_User_Member
+                       WHERE ObjectLink_User_Member.ObjectId = inUserId
+                         AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                      );
+         --
+         PERFORM -- сохранили свойство <Unit (Автор заявки)>
+                 lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, lfSelect.UnitId)
+                 -- сохранили свойство <Должность (Автор заявки)>  
+               , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Position(), ioId, lfSelect.PositionId)  
+         FROM lfSelect_Object_Member_findPersonal (inUserId ::TVarChar) AS lfSelect
+         WHERE lfSelect.MemberId = vbMemberId;                
+         
      ELSE
          -- сохранили свойство <>
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Update(), ioId, CURRENT_TIMESTAMP);
@@ -67,7 +89,7 @@ BEGIN
      END IF;
 
      -- пересчитали Итоговые суммы по накладной
-     -- PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
+     PERFORM lpInsertUpdate_MovementFloat_TotalSummOrderFinance (ioId);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
