@@ -50,8 +50,9 @@ tmpMI AS (SELECT DISTINCT tmp.Id
                                             AND MovementItem.isErased = FALSE 
                                             AND MovementItem.ObjectId = inGoodsId
                                            -- AND MovementItem.MovementId = 28742039
-                     INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
-                                        AND Movement.DescId = zc_Movement_Send()
+                     INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                        AND Movement.DescId   = zc_Movement_Send()
+                                        AND Movement.StatusId = zc_Enum_Status_Complete()
                                       --  AND Movement.Id = 28742039 
 
                      INNER JOIN MovementLinkObject AS MovementLinkObject_To
@@ -120,8 +121,9 @@ tmpMI AS (SELECT DISTINCT tmp.Id
                                             LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                                                           ON CLO_GoodsKind.ContainerId = CLO_PartionGoods.ContainerId
                                                                          AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
-                                            INNER JOIN Movement ON Movement.Id = MIContainer.MovementId
-                                                               AND Movement.DescId = zc_Movement_Send()
+                                            INNER JOIN Movement ON Movement.Id       = MIContainer.MovementId
+                                                               AND Movement.DescId   = zc_Movement_Send()
+                                                               AND Movement.StatusId = zc_Enum_Status_Complete()
                                                              --  AND Movement.Id = 28742039
                        
                                             LEFT JOIN MovementBoolean AS MovementBoolean_isRePack
