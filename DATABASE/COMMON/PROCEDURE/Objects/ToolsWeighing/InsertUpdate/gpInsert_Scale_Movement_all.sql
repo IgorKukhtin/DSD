@@ -993,7 +993,22 @@ BEGIN
                                                   , inInvNumber             := CAST (NEXTVAL ('movement_ReturnOut_seq') AS TVarChar)
                                                   , inOperDate              := inOperDate
                                                   , inOperDatePartner       := inOperDate
-                                                  , inPriceWithVAT          := PriceWithVAT
+                                                  , inPriceWithVAT          := CASE WHEN inBranchCode BETWEEN 201 AND 210
+                                                                                         THEN COALESCE ((SELECT MIB.ValueData
+                                                                                                         FROM MovementItem AS MI
+                                                                                                              INNER JOIN MovementItemBoolean AS MIB 
+                                                                                                                                             ON MIB.MovementItemId = MI.Id
+                                                                                                                                            AND MIB.DescId         = zc_MIBoolean_PriceWithVAT()
+                                                                                                                                            AND MIB.ValueData      = TRUE
+                                                                                                         WHERE MI.MovementId = inMovementId
+                                                                                                           AND MI.DescId     = zc_MI_Master()
+                                                                                                           AND MI.isErased   = FALSE
+                                                                                                         LIMIT 1
+                                                                                                        )
+                                                                                                      , PriceWithVAT)
+
+                                                                                         ELSE PriceWithVAT
+                                                                               END
                                                   , inVATPercent            := VATPercent
                                                   , inChangePercent         := ChangePercent
                                                   , inFromId                := FromId
