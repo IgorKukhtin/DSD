@@ -1372,7 +1372,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 8
+    TabOrder = 7
     Width = 159
   end
   object cxLabel17: TcxLabel
@@ -1398,7 +1398,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Style.Font.Name = 'Tahoma'
     Style.Font.Style = [fsBold]
     Style.IsFontAssigned = True
-    TabOrder = 11
+    TabOrder = 10
     Width = 201
   end
   object cxLabel21: TcxLabel

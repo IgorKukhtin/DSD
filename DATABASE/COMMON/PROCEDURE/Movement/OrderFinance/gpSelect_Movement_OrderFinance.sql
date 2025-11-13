@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , BankAccountId Integer, BankAccountName TVarChar
              , BankId Integer, BankName TVarChar, BankAccountNameAll TVarChar
              , WeekNumber TFloat
-             , TotalSumm_1 TFloat, TotalSumm_2 TFloat, TotalSumm_3 TFloat
+             , TotalSumm TFloat, TotalSumm_1 TFloat, TotalSumm_2 TFloat, TotalSumm_3 TFloat
              , AmountPlan_1 TFloat, AmountPlan_2 TFloat, AmountPlan_3 TFloat, AmountPlan_4 TFloat, AmountPlan_5 TFloat
              , StartDate_WeekNumber TDateTime, EndDate_WeekNumber TDateTime
              , DateUpdate_report TDateTime
@@ -69,6 +69,7 @@ BEGIN
            , (Object_BankAccount_View.BankName || '' || Object_BankAccount_View.Name) :: TVarChar AS BankAccountNameAll
 
            , MovementFloat_WeekNumber.ValueData                            AS WeekNumber
+           , COALESCE (MovementFloat_TotalSumm.Valuedata, 0)    ::TFloat   AS TotalSumm
            , COALESCE (MovementFloat_TotalSumm_1.Valuedata, 0)  ::TFloat   AS TotalSumm_1
            , COALESCE (MovementFloat_TotalSumm_2.Valuedata, 0)  ::TFloat   AS TotalSumm_2
            , COALESCE (MovementFloat_TotalSumm_3.Valuedata, 0)  ::TFloat   AS TotalSumm_3 
@@ -128,6 +129,9 @@ BEGIN
                                     ON MovementFloat_AmountPlan_5.MovementId = Movement.Id
                                    AND MovementFloat_AmountPlan_5.DescId = zc_MovementFloat_AmountPlan_5()
 
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                    ON MovementFloat_TotalSumm.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm_1
                                     ON MovementFloat_TotalSumm_1.MovementId = Movement.Id
                                    AND MovementFloat_TotalSumm_1.DescId = zc_MovementFloat_TotalSumm_1()

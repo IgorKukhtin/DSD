@@ -253,6 +253,18 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 154
       end
+      object TotalSumm: TcxGridDBColumn
+        Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072
+        DataBinding.FieldName = 'TotalSumm'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102
+        Options.Editing = False
+        Width = 80
+      end
       object TotalSumm_1: TcxGridDBColumn
         Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1075#1088'.1'
         DataBinding.FieldName = 'TotalSumm_1'
