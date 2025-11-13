@@ -170,7 +170,11 @@ BEGIN
                                           LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Juridical
                                                                         ON ContainerLinkObject_Juridical.ContainerId  = ContainerLinkObject_Currency.ContainerId
                                                                        AND ContainerLinkObject_Juridical.DescId       = zc_ContainerLinkObject_Juridical()
-                                                                       AND vbPaidKindId                               = zc_Enum_PaidKind_FirstForm()
+                                                                       AND (vbPaidKindId                               = zc_Enum_PaidKind_FirstForm()
+                                                                         OR (ContainerLinkObject_PaidKind.ObjectId = vbPaidKindId
+                                                                             AND COALESCE (ContainerLinkObject_Partner.ObjectId, 0) = 0
+                                                                            )
+                                                                           )
                                           LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
                                                                         ON ContainerLinkObject_InfoMoney.ContainerId  = ContainerLinkObject_Currency.ContainerId
                                                                        AND ContainerLinkObject_InfoMoney.DescId       = zc_ContainerLinkObject_InfoMoney()
@@ -248,7 +252,11 @@ BEGIN
                                           LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Juridical
                                                                         ON ContainerLinkObject_Juridical.ContainerId  = ContainerLinkObject_Currency.ContainerId
                                                                        AND ContainerLinkObject_Juridical.DescId       = zc_ContainerLinkObject_Juridical()
-                                                                       AND vbPaidKindId                               = zc_Enum_PaidKind_FirstForm()
+                                                                       AND (vbPaidKindId                               = zc_Enum_PaidKind_FirstForm()
+                                                                         OR (ContainerLinkObject_PaidKind.ObjectId = vbPaidKindId
+                                                                             AND COALESCE (ContainerLinkObject_Partner.ObjectId, 0) = 0
+                                                                            )
+                                                                           )
                                           LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
                                                                         ON ContainerLinkObject_InfoMoney.ContainerId  = ContainerLinkObject_Currency.ContainerId
                                                                        AND ContainerLinkObject_InfoMoney.DescId       = zc_ContainerLinkObject_InfoMoney()
