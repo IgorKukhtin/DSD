@@ -729,7 +729,7 @@ begin
                                                            ,FieldByName('RetailName').AsString
                                                            ,'Desadv'
                                                            ,lFileName_save
-                                                           ,actVchasnoEDIOrdrsp.ErrorText.Value
+                                                           ,actVchasnoEDIDesadv.ErrorText.Value
                                                             );
                        end;
                        MyDelay_two(3000);
