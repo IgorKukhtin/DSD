@@ -291,11 +291,21 @@ CREATE OR REPLACE FUNCTION zc_MovementDate_Update_report() RETURNS Integer AS $B
 INSERT INTO MovementDateDesc (Code, ItemName)
   SELECT 'zc_MovementDate_Update_report', 'Дата/время заполнения данных из отчета' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Update_report');
 
+CREATE OR REPLACE FUNCTION zc_MovementDate_SignWait_1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_SignWait_1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_SignWait_1', 'Дата/время когда переведен в Состояние Ожидание Согласования' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_SignWait_1');
+
+CREATE OR REPLACE FUNCTION zc_MovementDate_Sign_1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Sign_1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_Sign_1', 'Дата/время Согласован-1' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Sign_1');
+
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д. А.    Воробкало А.А.   Ярошенко Р.Ф.   Шаблий О.В.
+ 13.11.25         * zc_MovementDate_Sign_1
+                    zc_MovementDate_SignWait_1 
  07.11.25         * zc_MovementDate_Update_report
  23.09.24         * zc_MovementDate_Pay_1
                     zc_MovementDate_Pay_2  
