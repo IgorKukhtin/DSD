@@ -424,26 +424,47 @@ BEGIN
          vbPrice_301:= inPriceIncome;
          
          -- поиск цена по спецификации - для проверки
-         SELECT CASE WHEN inIsPriceWithVAT = TRUE
-                     -- цена с НДС
+         SELECT CASE WHEN inIsPriceWithVAT = TRUE AND vbMovementDescId = zc_Movement_Income()
+                     -- 1.1. цена с НДС
                      THEN lpGet.ValuePrice_addVat
 
-                     WHEN inIsPriceWithVAT = FALSE
-                     -- цена без НДС
+                     WHEN inIsPriceWithVAT = FALSE AND vbMovementDescId = zc_Movement_Income()
+                     -- 1.1. цена без НДС
+                     THEN lpGet.ValuePrice_notVat
+
+                     WHEN lpGet.isPriceWithVAT = TRUE AND vbMovementDescId = zc_Movement_ReturnOut()
+                     -- 2.1. цена с НДС
+                     THEN lpGet.ValuePrice_addVat
+
+                     WHEN lpGet.isPriceWithVAT = FALSE AND vbMovementDescId = zc_Movement_ReturnOut()
+                     -- 2.1. цена без НДС
                      THEN lpGet.ValuePrice_notVat
 
                      WHEN FALSE = COALESCE ((SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_PriceWithVAT()), FALSE)
-                     -- цена без НДС
+                     -- 3.цена без НДС
                      THEN lpGet.ValuePrice_notVat
-                     -- цена с НДС
+                     -- 4.цена с НДС
                      ELSE lpGet.ValuePrice_addVat
                 END
+
               , lpGet.ValuePrice_notVat
               , lpGet.ValuePrice_addVat
+                --
+              , CASE WHEN vbMovementDescId = zc_Movement_ReturnOut()
+                      -- замена
+                      THEN lpGet.isPriceWithVAT
+                      -- нет замены
+                      ELSE inIsPriceWithVAT
+                END
+
+
                 INTO vbPrice_301_check
                    , vbPrice_301_notVat_check
                    , vbPrice_301_addVat_check
-         FROM lpGet_MovementItem_ContractGoods (inOperDate    := vbOperDate
+                     -- замена или нет
+                   , inIsPriceWithVAT
+
+         FROM lpGet_MovementItem_ContractGoods (inOperDate    := CASE WHEN vbMovementDescId = zc_Movement_ReturnOut() THEN inOperDate_ReturnOut ELSE vbOperDate END
                                               , inJuridicalId := 0
                                               , inPartnerId   := 0
                                               , inContractId  := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
@@ -1184,6 +1205,13 @@ BEGIN
              -- сохранили протокол
              PERFORM lpInsert_MovementItemProtocol (vbId, vbUserId, FALSE);
 
+         -- дописали св-во для OBV
+         ELSEIF vbMovementDescId IN (zc_Movement_ReturnOut())
+            AND (inBranchCode BETWEEN 201 AND 210 -- Dnepr-OBV
+                )
+         THEN
+             -- Цена с НДС да/нет - для цена поставщика
+             PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PriceWithVAT(), vbId, inIsPriceWithVAT);
          END IF;
 
 

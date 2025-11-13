@@ -291,15 +291,16 @@ BEGIN
                      WHERE inGroupNum = 3
                      AND tmp.GroupNumber NOT IN (1,2,3,4,5,6,7)
                     )
-       -- Результат - пр-во расход - строчная часть
+       -- Результат - _tmpRes_cur2  - пр-во расход - строчная часть
        SELECT tmpData.GoodsId
             , tmpData.GoodsCode
             , tmpData.GoodsName
             , tmpData.GoodsKindId
             , tmpData.GoodsKindCode
             , tmpData.GoodsKindName
-            , _tmpRes_cur1.GoodsId AS GoodsId_master 
-            , 0                    AS GoodsKindId_Complete_master
+            , _tmpRes_cur1.GoodsId AS GoodsId_master
+          --, 0 AS GoodsKindId_Complete_master
+            , _tmpRes_cur1.GoodsKindId_Complete AS GoodsKindId_Complete_master
             , _tmpRes_cur1.OperDate
               -- итого - Кол-во факт
             , SUM (COALESCE (tmpData.Amount, 0)) AS Amount
@@ -322,6 +323,8 @@ BEGIN
               , _tmpRes_cur1.OperDate
               , _tmpRes_cur1.CountReceipt_goods
               , _tmpRes_cur1.GoodsGroupName
+                --
+              , _tmpRes_cur1.GoodsKindId_Complete
     UNION
        SELECT tmpData.GoodsId
             , tmpData.GoodsCode
@@ -364,9 +367,9 @@ BEGIN
          , tmp_Res.GoodsCode
          , tmp_Res.GoodsName
          , tmp_Res.GoodsGroupName 
-         , tmp_Res.GoodsKindName  :: TVarChar
-         , tmp_Res.GoodsKindName_Complete :: TVarChar
-         , '' :: TVarChar AS GoodsKind_group  
+         , tmp_Res.GoodsKindName          :: TVarChar AS GoodsKindName
+         , tmp_Res.GoodsKindName_Complete :: TVarChar AS GoodsKindName_Complete
+         , tmp_Res.GoodsKindName_Complete :: TVarChar AS GoodsKind_group
          , tmp_Res.MeasureName
 
          , tmp_Res.GoodsId_child
@@ -432,8 +435,10 @@ BEGIN
                      , _tmpRes_cur1.GoodsCode
                      , _tmpRes_cur1.GoodsName   
                      , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.GoodsKindName ELSE '' END          AS GoodsKindName
-                     , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.GoodsKindId_Complete ELSE 0 END    AS GoodsKindId_Complete
-                     , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.GoodsKindName_Complete ELSE '' END AS GoodsKindName_Complete
+                       --
+                     , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.GoodsKindId_Complete   ELSE _tmpRes_cur1.GoodsKindId_Complete   END AS GoodsKindId_Complete
+                     , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.GoodsKindName_Complete ELSE _tmpRes_cur1.GoodsKindName_Complete END AS GoodsKindName_Complete
+                       --
                      , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.MeasureName ELSE '' END            AS MeasureName
                      , _tmpRes_cur1.CountReceipt_goods
                      , _tmpRes_cur1.GoodsGroupName
@@ -447,8 +452,10 @@ BEGIN
                        , _tmpRes_cur1.CountReceipt_goods
                        , _tmpRes_cur1.GoodsGroupName  
                        , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.GoodsKindName ELSE '' END
-                       , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.GoodsKindId_Complete ELSE 0 END
-                       , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.GoodsKindName_Complete ELSE '' END
+                         --
+                       , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.GoodsKindId_Complete   ELSE GoodsKindId_Complete                END
+                       , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.GoodsKindName_Complete ELSE _tmpRes_cur1.GoodsKindName_Complete END
+                         --
                        , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.MeasureName ELSE '' END
                 HAVING SUM (_tmpRes_cur1.CuterCount) > 0
                ) AS tmpRes_cur1

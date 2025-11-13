@@ -223,12 +223,26 @@ $BODY$
 +2025-11-10+ SELECT * FROM gpInsert_bi_Table_ProfitLoss (inStartDate:= '01.07.2025', inEndDate:= '31.07.2025', inSession:= zfCalc_UserAdmin())
 
 
-SELECT * FROM gpInsert_bi_Table_ProfitLoss (inStartDate:= '01.01.2025', inEndDate:= '31.01.2025', inSession:= zfCalc_UserAdmin())
-SELECT * FROM gpInsert_bi_Table_ProfitLoss (inStartDate:= '01.02.2025', inEndDate:= '28.02.2025', inSession:= zfCalc_UserAdmin())
-SELECT * FROM gpInsert_bi_Table_ProfitLoss (inStartDate:= '01.03.2025', inEndDate:= '31.03.2025', inSession:= zfCalc_UserAdmin())
-SELECT * FROM gpInsert_bi_Table_ProfitLoss (inStartDate:= '01.04.2025', inEndDate:= '30.04.2025', inSession:= zfCalc_UserAdmin())
++2025-11-10+ SELECT * FROM gpInsert_bi_Table_ProfitLoss (inStartDate:= '01.01.2025', inEndDate:= '31.01.2025', inSession:= zfCalc_UserAdmin())
++2025-11-10+ SELECT * FROM gpInsert_bi_Table_ProfitLoss (inStartDate:= '01.02.2025', inEndDate:= '28.02.2025', inSession:= zfCalc_UserAdmin())
++2025-11-10+ SELECT * FROM gpInsert_bi_Table_ProfitLoss (inStartDate:= '01.03.2025', inEndDate:= '31.03.2025', inSession:= zfCalc_UserAdmin())
++2025-11-10+ SELECT * FROM gpInsert_bi_Table_ProfitLoss (inStartDate:= '01.04.2025', inEndDate:= '30.04.2025', inSession:= zfCalc_UserAdmin())
 +2025-11-10+ SELECT * FROM gpInsert_bi_Table_ProfitLoss (inStartDate:= '01.05.2025', inEndDate:= '31.05.2025', inSession:= zfCalc_UserAdmin())
 +2025-11-10+ SELECT * FROM gpInsert_bi_Table_ProfitLoss (inStartDate:= '01.06.2025', inEndDate:= '30.06.2025', inSession:= zfCalc_UserAdmin())
+
+SELECT * FROM gpInsert_bi_Table_ProfitLoss (inStartDate:= '01.12.2024', inEndDate:= '31.12.2024', inSession:= zfCalc_UserAdmin())
+SELECT * FROM gpInsert_bi_Table_ProfitLoss (inStartDate:= '01.11.2024', inEndDate:= '30.11.2024', inSession:= zfCalc_UserAdmin())
+SELECT * FROM gpInsert_bi_Table_ProfitLoss (inStartDate:= '01.10.2024', inEndDate:= '31.10.2024', inSession:= zfCalc_UserAdmin())
+SELECT * FROM gpInsert_bi_Table_ProfitLoss (inStartDate:= '01.09.2024', inEndDate:= '30.09.2024', inSession:= zfCalc_UserAdmin())
+SELECT * FROM gpInsert_bi_Table_ProfitLoss (inStartDate:= '01.08.2024', inEndDate:= '31.08.2024', inSession:= zfCalc_UserAdmin())
+SELECT * FROM gpInsert_bi_Table_ProfitLoss (inStartDate:= '01.07.2024', inEndDate:= '31.07.2024', inSession:= zfCalc_UserAdmin())
+SELECT * FROM gpInsert_bi_Table_ProfitLoss (inStartDate:= '01.06.2024', inEndDate:= '30.06.2024', inSession:= zfCalc_UserAdmin())
+SELECT * FROM gpInsert_bi_Table_ProfitLoss (inStartDate:= '01.05.2024', inEndDate:= '31.05.2024', inSession:= zfCalc_UserAdmin())
+SELECT * FROM gpInsert_bi_Table_ProfitLoss (inStartDate:= '01.04.2024', inEndDate:= '30.04.2024', inSession:= zfCalc_UserAdmin())
+SELECT * FROM gpInsert_bi_Table_ProfitLoss (inStartDate:= '01.03.2024', inEndDate:= '31.03.2024', inSession:= zfCalc_UserAdmin())
+SELECT * FROM gpInsert_bi_Table_ProfitLoss (inStartDate:= '01.02.2024', inEndDate:= '29.02.2024', inSession:= zfCalc_UserAdmin())
+SELECT * FROM gpInsert_bi_Table_ProfitLoss (inStartDate:= '01.01.2024', inEndDate:= '31.01.2024', inSession:= zfCalc_UserAdmin())
+
 */
 -- тест
 -- DELETE FROM  _bi_Table_ProfitLoss WHERE OperDate between '20.07.2025' and '20.07.2025'
