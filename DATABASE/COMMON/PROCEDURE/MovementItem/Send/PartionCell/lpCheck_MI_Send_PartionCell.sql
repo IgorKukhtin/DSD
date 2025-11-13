@@ -97,7 +97,7 @@ BEGIN
                                         )
                    AND MILO.ObjectId = inPartionCellId
                    -- Перемещение + Взвешивание
-                   AND (Movement.DescId = zc_Movement_Send()
+                   AND ((Movement.DescId = zc_Movement_Send() AND Movement.StatusId <> zc_Enum_Status_Erased())
                      OR (Movement.DescId = zc_Movement_WeighingProduction() AND Movement.StatusId = zc_Enum_Status_UnComplete())
                        )
                    -- партия открыта
