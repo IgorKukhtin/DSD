@@ -3972,10 +3972,10 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
   object GuidesOrderFinance: TdsdGuides
     KeyField = 'Id'
     LookupControl = edOrderFinance
-    FormNameParam.Value = 'TOrderFinanceForm'
+    FormNameParam.Value = 'TOrderFinance_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TOrderFinanceForm'
+    FormName = 'TOrderFinance_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item

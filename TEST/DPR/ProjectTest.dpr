@@ -1626,7 +1626,8 @@ uses
   CFOEdit in '..\..\Forms\Guides\CFOEdit.pas' {CFOEditForm: TParentForm},
   StaffListMovement in '..\..\Forms\Document\StaffListMovement.pas' {StaffListMovementForm: TParentForm},
   Report_Personal_Cash_sms in '..\..\Forms\Report\Report_Personal_Cash_sms.pas' {Report_Personal_Cash_smsForm: TParentForm},
-  OrderFinanceMovement in '..\..\Forms\Document\OrderFinanceMovement.pas' {OrderFinanceMovementForm: TParentForm};
+  OrderFinanceMovement in '..\..\Forms\Document\OrderFinanceMovement.pas' {OrderFinanceMovementForm: TParentForm},
+  OrderFinance_Object in '..\..\Forms\Guides\OrderFinance_Object.pas' {OrderFinance_ObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
