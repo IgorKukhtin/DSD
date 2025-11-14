@@ -26,7 +26,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 2
     object edInvNumber: TcxTextEdit
       Left = 232
       Top = 19
@@ -423,15 +422,12 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 193
-    ExplicitHeight = 392
     ClientRectBottom = 363
     ClientRectRight = 1060
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 368
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -982,7 +978,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Anchors = [akTop, akRight, akBottom]
         TabOrder = 1
         Visible = False
-        ExplicitHeight = 37
         object ExportXmlGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ExportDS
@@ -1013,7 +1008,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1070#1088'.'#1083#1080#1094#1072
       ImageIndex = 1
-      ExplicitHeight = 368
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -1021,7 +1015,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Height = 339
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 368
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = JuridicalDS
@@ -1436,7 +1429,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Style.Font.Name = 'Tahoma'
     Style.Font.Style = [fsBold]
     Style.IsFontAssigned = True
-    TabOrder = 10
+    TabOrder = 9
     Width = 183
   end
   object cxLabel21: TcxLabel
@@ -1466,7 +1459,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Style.Font.Name = 'Tahoma'
     Style.Font.Style = [fsBold]
     Style.IsFontAssigned = True
-    TabOrder = 14
+    TabOrder = 13
     Width = 183
   end
   object cxLabel22: TcxLabel
@@ -2049,6 +2042,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefreshOFJ: TdsdDataSetRefresh

@@ -3,16 +3,21 @@
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech_Print (TDateTime, TDateTime, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech_Print (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech_Print (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech_Print (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech_Print (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech_Print (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech_Print (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnionTech_Print(
     IN inStartDate         TDateTime,
     IN inEndDate           TDateTime,
     IN inFromId            Integer,
     IN inToId              Integer,
+    IN inGoodsId           Integer,
     IN inGoodsId_child     Integer,
     IN inGroupNum          Integer,
     IN inisCuterCount      Boolean,
+    IN inisOne             Boolean,
     IN inSession           TVarChar       -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -35,6 +40,12 @@ BEGIN
           RAISE EXCEPTION 'Ошибка. Данная печать предусматривает выбор 1 дня.'; 
      END IF;
      
+     --
+     IF COALESCE (inisOne, FALSE) = FALSE
+     THEN
+         inGoodsId := 0;
+     END IF;     
+
      -- определяется
      vbFromId_group:= (SELECT ObjectLink_Parent.ChildObjectId FROM ObjectLink AS ObjectLink_Parent WHERE ObjectLink_Parent.ObjectId = inFromId AND ObjectLink_Parent.DescId = zc_ObjectLink_Unit_Parent());
      --
@@ -64,6 +75,7 @@ BEGIN
                                INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                       AND MovementItem.isErased   = FALSE
                                                       AND MovementItem.DescId     = zc_MI_Master()
+                                                      AND (MovementItem.ObjectId = inGoodsId OR inGoodsId = 0)
                                LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
                                                            ON MIFloat_CuterCount.MovementItemId = MovementItem.Id
                                                           AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
@@ -493,6 +505,7 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
 
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.11.25         *
  15.05.20         *
  14.04.20         *
 */
@@ -500,5 +513,5 @@ $BODY$
 -- тест
 --
 --
---select * from gpSelect_Movement_ProductionUnionTech_Print(inStartDate := ('23.03.2020')::TDateTime , inEndDate := ('24.03.2020')::TDateTime , inFromId := 8447 , inToId := 8447 , inGroupNum:=1, inisCuterCount:=true, inSession := '5'::TVarChar);
+--select * from gpSelect_Movement_ProductionUnionTech_Print(inStartDate := ('23.03.2020')::TDateTime , inEndDate := ('24.03.2020')::TDateTime , inFromId := 8447 , inToId := 8447 , inGoodsId :=0, inGoodsId_child:=0, inGroupNum:=1, inisCuterCount:=true, inisOne:= FALSE, inSession := '5'::TVarChar);
 --FETCH ALL "<unnamed portal 6>";

@@ -980,6 +980,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         ExplicitTop = 292
         ExplicitWidth = 1076
       end
+      object cbPrintOne: TcxCheckBox
+        Left = 660
+        Top = 66
+        Caption = #1076#1083#1103' 1 '#1090#1086#1074#1072#1088#1072
+        Properties.ReadOnly = False
+        TabOrder = 3
+        Width = 93
+      end
     end
   end
   inherited DataPanel: TPanel
@@ -4018,6 +4026,10 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintOne'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -4336,6 +4348,13 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Category = 0
       ImageIndex = 17
     end
+    object bbPrintOne: TdxBarControlContainerItem
+      Caption = #1076#1083#1103' '#1086#1076#1080#1085#1086#1075#1086' '#1090#1086#1074#1072#1088#1072
+      Category = 0
+      Hint = #1076#1083#1103' '#1086#1076#1080#1085#1086#1075#1086' '#1090#1086#1074#1072#1088#1072
+      Visible = ivAlways
+      Control = cbPrintOne
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
@@ -4571,8 +4590,8 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 288
-    Top = 168
+    Left = 328
+    Top = 184
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
     Left = 442
@@ -5358,6 +5377,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsId'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId_child'
         Value = '0'
         ParamType = ptInput
@@ -5372,6 +5399,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       item
         Name = 'inisCuterCount'
         Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOne'
+        Value = Null
+        Component = cbPrintOne
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5422,6 +5457,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsId'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId_child'
         Value = '0'
         ParamType = ptInput
@@ -5436,6 +5479,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       item
         Name = 'inisCuterCount'
         Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOne'
+        Value = Null
+        Component = cbPrintOne
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5486,6 +5537,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsId'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId_child'
         Value = '0'
         ParamType = ptInput
@@ -5500,6 +5559,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       item
         Name = 'inisCuterCount'
         Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOne'
+        Value = Null
+        Component = cbPrintOne
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5550,6 +5617,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsId'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId_child'
         Value = '0'
         ParamType = ptInput
@@ -5564,6 +5639,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       item
         Name = 'inisCuterCount'
         Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOne'
+        Value = Null
+        Component = cbPrintOne
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5614,6 +5697,20 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsId'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId_child'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGroupNum'
         Value = '1'
         ParamType = ptInput
@@ -5622,6 +5719,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       item
         Name = 'inisCuterCount'
         Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOne'
+        Value = Null
+        Component = cbPrintOne
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5838,6 +5943,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsId'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId_child'
         Value = '0'
         Component = ChildCDS
@@ -5853,6 +5966,13 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       end
       item
         Name = 'inisCuterCount'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOne'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
