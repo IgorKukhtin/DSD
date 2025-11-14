@@ -550,18 +550,20 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_Main() RETURNS integer AS $BODY$BE
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_Main', 'Основное место работы'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_Main');
 
-CREATE OR REPLACE FUNCTION zc_MovementBoolean_Main() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_Main'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
-INSERT INTO MovementBooleanDesc (Code, ItemName)
-  SELECT 'zc_MovementBoolean_Main', 'Основное место работы'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_Main');
 
-CREATE OR REPLACE FUNCTION zc_MovementBoolean_Main() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_Main'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_Sign_1() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_Sign_1'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
 INSERT INTO MovementBooleanDesc (Code, ItemName)
-  SELECT 'zc_MovementBoolean_Main', 'Основное место работы'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_Main');
+  SELECT 'zc_MovementBoolean_Sign_1', 'Согласован-1'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_Sign_1');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_SignWait_1() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_SignWait_1'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_SignWait_1', ' 	Состояние Ожидание Согласования-1'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_SignWait_1');
     
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 14.11.25         * zc_MovementBoolean_SignWait_1
+                    zc_MovementBoolean_Sign_1
  15.09.25         * zc_MovementBoolean_Main
                     zc_MovementBoolean_Official
  28.07.25         * zc_MovementBoolean_Gofro

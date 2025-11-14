@@ -251,6 +251,18 @@ type
     edJuridicalName_search: TcxTextEdit;
     FieldFilter: TdsdFieldFilter;
     actChoiceGuides: TdsdChoiceGuides;
+    spUpdate_SignWait_1: TdsdStoredProc;
+    actUpdate_SignWait_1: TdsdExecStoredProc;
+    actRefreshGet: TdsdDataSetRefresh;
+    cxLabel25: TcxLabel;
+    ceDateSignWait_1: TcxDateEdit;
+    cxLabel26: TcxLabel;
+    ceDateSign_1: TcxDateEdit;
+    cbSignWait_1: TcxCheckBox;
+    cbSign_1: TcxCheckBox;
+    spUpdate_Sign_1: TdsdStoredProc;
+    actUpdate_Sign_1: TdsdExecStoredProc;
+    bbUpdate_Sign_1: TdxBarButton;
   private
   public
   end;

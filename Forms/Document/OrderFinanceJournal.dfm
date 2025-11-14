@@ -473,6 +473,42 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         Options.Editing = False
         Width = 101
       end
+      object Date_SignWait_1: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1054#1078#1080#1076#1072#1085#1080#1077' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1103
+        DataBinding.FieldName = 'Date_SignWait_1'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1082#1086#1075#1076#1072' '#1087#1077#1088#1077#1074#1077#1076#1077#1085' '#1074' '#1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1054#1078#1080#1076#1072#1085#1080#1077' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1103
+        Options.Editing = False
+        Width = 97
+      end
+      object isSignWait_1: TcxGridDBColumn
+        Caption = #1054#1078#1080#1076#1072#1085#1080#1077' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1103'-1'
+        DataBinding.FieldName = 'isSignWait_1'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1054#1078#1080#1076#1072#1085#1080#1077' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1103'-1'
+        Options.Editing = False
+        Width = 80
+      end
+      object Date_Sign_1: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085'-1'
+        DataBinding.FieldName = 'Date_Sign_1'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085'-1'
+        Options.Editing = False
+        Width = 90
+      end
+      object isSign_1: TcxGridDBColumn
+        Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085'-1'
+        DataBinding.FieldName = 'isSign_1'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085'-1'
+        Options.Editing = False
+        Width = 57
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

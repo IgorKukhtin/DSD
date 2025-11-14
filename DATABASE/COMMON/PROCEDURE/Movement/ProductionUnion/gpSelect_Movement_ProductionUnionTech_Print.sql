@@ -360,6 +360,42 @@ BEGIN
 
     -- Результат - 1
     OPEN Cursor1 FOR
+    WITH
+    -- собрали пр-во приход - строчная часть
+    tmpRes_cur1 AS (SELECT tmp.*
+                         , COUNT (*) OVER (PARTITION BY tmp.GoodsId) AS Count_GoodsKind_Complete
+                    FROM (
+                          SELECT _tmpRes_cur1.OperDate
+                               , _tmpRes_cur1.GoodsId
+                               , _tmpRes_cur1.GoodsCode
+                               , _tmpRes_cur1.GoodsName   
+                               , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.GoodsKindName ELSE '' END          AS GoodsKindName
+                                 --
+                               , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.GoodsKindId_Complete   ELSE _tmpRes_cur1.GoodsKindId_Complete   END AS GoodsKindId_Complete
+                               , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.GoodsKindName_Complete ELSE _tmpRes_cur1.GoodsKindName_Complete END AS GoodsKindName_Complete
+                                 --
+                               , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.MeasureName ELSE '' END            AS MeasureName
+                               , _tmpRes_cur1.CountReceipt_goods
+                               , _tmpRes_cur1.GoodsGroupName
+                               , SUM (_tmpRes_cur1.Amount)     AS Amount
+                               , SUM (_tmpRes_cur1.CuterCount) AS CuterCount
+                          FROM _tmpRes_cur1
+                          GROUP BY _tmpRes_cur1.OperDate
+                                 , _tmpRes_cur1.GoodsId
+                                 , _tmpRes_cur1.GoodsCode
+                                 , _tmpRes_cur1.GoodsName
+                                 , _tmpRes_cur1.CountReceipt_goods
+                                 , _tmpRes_cur1.GoodsGroupName  
+                                 , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.GoodsKindName ELSE '' END
+                                   --
+                                 , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.GoodsKindId_Complete   ELSE GoodsKindId_Complete                END
+                                 , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.GoodsKindName_Complete ELSE _tmpRes_cur1.GoodsKindName_Complete END
+                                   --
+                                 , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.MeasureName ELSE '' END
+                          HAVING SUM (_tmpRes_cur1.CuterCount) > 0
+                          ) AS tmp
+                   )
+
 
     SELECT tmpWeekDay.DayOfWeekName_Full :: TVarChar AS DayOfWeekName
          , tmp_Res.OperDate
@@ -398,6 +434,8 @@ BEGIN
          , tmp_Res.CuterCount_1 :: TFloat AS CuterCount_1
            -- Хвост от Целых замесов
          , tmp_Res.CuterCount_0 :: TFloat AS CuterCount_0
+         
+         , tmp_Res.GroupNum_KindComplete  :: Integer AS GroupNum_KindComplete
 
     FROM (
           SELECT tmpRes_cur1.OperDate
@@ -427,38 +465,12 @@ BEGIN
                  -- факт - итого Кол-во пр-во расход
                , tmpRes_cur2.Amount
                  -- по рецептуре - итого Кол-во пр-во расход
-               , tmpRes_cur2.AmountReceipt_sum
+               , tmpRes_cur2.AmountReceipt_sum 
+               
+               , CASE WHEN tmpRes_cur1.Count_GoodsKind_Complete = 1 THEN 1 ELSE 2 END  :: Integer AS GroupNum_KindComplete
 
           FROM -- собрали пр-во приход - строчная часть
-               (SELECT _tmpRes_cur1.OperDate
-                     , _tmpRes_cur1.GoodsId
-                     , _tmpRes_cur1.GoodsCode
-                     , _tmpRes_cur1.GoodsName   
-                     , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.GoodsKindName ELSE '' END          AS GoodsKindName
-                       --
-                     , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.GoodsKindId_Complete   ELSE _tmpRes_cur1.GoodsKindId_Complete   END AS GoodsKindId_Complete
-                     , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.GoodsKindName_Complete ELSE _tmpRes_cur1.GoodsKindName_Complete END AS GoodsKindName_Complete
-                       --
-                     , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.MeasureName ELSE '' END            AS MeasureName
-                     , _tmpRes_cur1.CountReceipt_goods
-                     , _tmpRes_cur1.GoodsGroupName
-                     , SUM (_tmpRes_cur1.Amount)     AS Amount
-                     , SUM (_tmpRes_cur1.CuterCount) AS CuterCount
-                FROM _tmpRes_cur1
-                GROUP BY _tmpRes_cur1.OperDate
-                       , _tmpRes_cur1.GoodsId
-                       , _tmpRes_cur1.GoodsCode
-                       , _tmpRes_cur1.GoodsName
-                       , _tmpRes_cur1.CountReceipt_goods
-                       , _tmpRes_cur1.GoodsGroupName  
-                       , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.GoodsKindName ELSE '' END
-                         --
-                       , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.GoodsKindId_Complete   ELSE GoodsKindId_Complete                END
-                       , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.GoodsKindName_Complete ELSE _tmpRes_cur1.GoodsKindName_Complete END
-                         --
-                       , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.MeasureName ELSE '' END
-                HAVING SUM (_tmpRes_cur1.CuterCount) > 0
-               ) AS tmpRes_cur1
+               tmpRes_cur1
                -- пр-во расход - строчная часть - уже собрана
                INNER JOIN _tmpRes_cur2 AS tmpRes_cur2
                                        ON tmpRes_cur2.GoodsId_master = tmpRes_cur1.GoodsId 
