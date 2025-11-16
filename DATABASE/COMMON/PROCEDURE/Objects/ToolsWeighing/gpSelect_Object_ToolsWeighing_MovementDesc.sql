@@ -423,7 +423,11 @@ BEGIN
            , _tmpToolsWeighing.ColorGridValue                AS ColorGridValue
 
            , ('(' || _tmpToolsWeighing.Number :: TVarChar ||') '
-          || CASE WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut())
+          || CASE WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_Sale()) AND _tmpToolsWeighing.MovementDescId_next > 0
+                       THEN COALESCE (Object_From.ValueData, '') || ' => ' || COALESCE (Object_PaidKind.ValueData, '')
+                         || ' (' || COALESCE (Object_From_next.ValueData, '') || '  => ะส' || ')'
+
+                  WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut())
                        THEN COALESCE (Object_From.ValueData, '') || ' => ' || COALESCE (Object_PaidKind.ValueData, '')
 
                   WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_Income()) AND _tmpToolsWeighing.isDocPartner = TRUE
@@ -487,7 +491,11 @@ BEGIN
            , ('(' || _tmpToolsWeighing.Number :: TVarChar ||') '
           || _tmpToolsWeighing.ItemName -- MovementDesc.ItemName
           || ': '
-          || CASE WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut())
+          || CASE WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_Sale()) AND _tmpToolsWeighing.MovementDescId_next > 0
+                       THEN COALESCE (Object_From.ValueData, '') || ' => ' || COALESCE (Object_PaidKind.ValueData, '')
+                         || ' (' || COALESCE (Object_From_next.ValueData, '') || '  => ะส' || ')'
+
+                  WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut())
                        THEN COALESCE (Object_From.ValueData, '') || ' => ' || COALESCE (Object_PaidKind.ValueData, '')
 
                   WHEN _tmpToolsWeighing.MovementDescId IN (zc_Movement_ReturnIn(), zc_Movement_Income())
