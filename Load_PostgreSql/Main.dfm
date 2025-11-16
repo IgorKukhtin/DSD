@@ -883,8 +883,8 @@ object MainForm: TMainForm
     end
     object cbSendUnitBranch: TCheckBox
       Tag = 20
-      Left = 3
-      Top = 203
+      Left = 6
+      Top = 186
       Width = 235
       Height = 17
       Caption = '2.2. '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1089' '#1092#1080#1083#1080#1072#1083#1072#1084#1080
@@ -980,7 +980,7 @@ object MainForm: TMainForm
     object cbLoss: TCheckBox
       Tag = 20
       Left = 6
-      Top = 196
+      Top = 182
       Width = 155
       Height = 17
       Caption = '5.2. '#1057#1087#1080#1089#1072#1085#1080#1077
@@ -995,8 +995,8 @@ object MainForm: TMainForm
     end
     object cbInventory: TCheckBox
       Tag = 20
-      Left = -4
-      Top = 212
+      Left = 60
+      Top = 182
       Width = 235
       Height = 17
       Caption = '6. '#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
@@ -1406,8 +1406,8 @@ object MainForm: TMainForm
     end
     object cbLossGuide: TCheckBox
       Tag = 20
-      Left = 105
-      Top = 205
+      Left = 97
+      Top = 192
       Width = 108
       Height = 24
       Caption = '5.1. !!!'#1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1089#1087#1080#1089#1072#1085#1080#1103'!!!'
@@ -1709,6 +1709,30 @@ object MainForm: TMainForm
       Caption = 'OK'
       TabOrder = 62
       OnClick = bbLoadVchasno_ComDocClick
+    end
+    object cbSendSMS_zp: TCheckBox
+      Left = 6
+      Top = 206
+      Width = 97
+      Height = 30
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1057#1052#1057' - '#1047#1055
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 63
+      WordWrap = True
+    end
+    object bbSendSMS_zp: TButton
+      Left = 98
+      Top = 211
+      Width = 37
+      Height = 25
+      Caption = 'OK'
+      TabOrder = 64
+      OnClick = bbSendSMS_zpClick
     end
   end
   object CompleteDocumentPanel: TPanel
@@ -3561,6 +3585,28 @@ object MainForm: TMainForm
         end>
       Caption = 'actSelectSMSKyivstar'
     end
+    object actUpdateSMSKyivstar_true: TdsdExecStoredProc
+      Category = 'Export'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateSMSKyivstar_true
+      StoredProcList = <
+        item
+          StoredProc = spUpdateSMSKyivstar_true
+        end>
+      Caption = 'actUpdateSMSKyivstar_true'
+    end
+    object actUpdateSMSKyivstar_false: TdsdExecStoredProc
+      Category = 'Export'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateSMSKyivstar_false
+      StoredProcList = <
+        item
+          StoredProc = spUpdateSMSKyivstar_false
+        end>
+      Caption = 'actUpdateSMSKyivstar_false'
+    end
   end
   object toSqlQuery_three: TZQuery
     Connection = toZConnection
@@ -3704,6 +3750,28 @@ object MainForm: TMainForm
         Name = 'DateTo'
         Value = Null
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SMS_PhoneNumber'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SMS_Message'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_sms'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementItemId_sms'
+        Value = Null
         MultiSelectSeparator = ','
       end>
     Left = 456
@@ -3921,54 +3989,95 @@ object MainForm: TMainForm
     Top = 304
   end
   object spSelect_SMSKyivstar: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_PersonalService_SMS'
+    StoredProcName = 'gpReport_Personal_Cash_sms'
     DataSet = ExportCDS
     DataSets = <
       item
         DataSet = ExportCDS
       end>
-    OutputType = otResult
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DateFrom'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DateTo'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 184
+    Top = 120
+  end
+  object spUpdateSMSKyivstar_true: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Cash_Personal_SMS'
+    DataSets = <>
     Params = <
       item
         Name = 'inMovementId'
         Value = Null
         Component = FormParams
-        ComponentItem = 'Id'
+        ComponentItem = 'MovementId_sms'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementItemId'
         Value = Null
-        ComponentItem = 'Id'
+        Component = FormParams
+        ComponentItem = 'MovementItemId_sms'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPersonalId'
-        Value = Null
-        ComponentItem = 'PersonalId'
+        Name = 'inIsSMS'
+        Value = True
+        DataType = ftBoolean
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'SMS_PhoneNumber'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'SMS_PhoneNumber'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'SMS_Message'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'SMS_Message'
-        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 184
-    Top = 120
+    Left = 248
+    Top = 121
+  end
+  object spUpdateSMSKyivstar_false: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Cash_Personal_SMS'
+    DataSets = <>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_sms'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementItemId_sms'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsSMS'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 256
+    Top = 169
   end
 end
