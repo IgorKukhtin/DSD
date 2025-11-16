@@ -307,14 +307,18 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Caption = #1085#1077#1076#1077#1083#1103' '#1076#1086
     end
     object edTotalSumm_1: TcxCurrencyEdit
-      Left = 493
-      Top = 138
+      Left = 458
+      Top = 146
+      Hint = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102
       ParentFont = False
+      ParentShowHint = False
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.##'
       Properties.ReadOnly = False
+      ShowHint = True
+      Style.Color = clWindow
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
       Style.Font.Height = -11
@@ -322,23 +326,11 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
       TabOrder = 32
-      Width = 183
-    end
-    object cxLabel20: TcxLabel
-      Left = 493
-      Top = 121
-      Caption = #1056#1072#1079#1088#1077#1096'. '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102' '#1075#1088'.1'
-      ParentFont = False
-      Style.Font.Charset = DEFAULT_CHARSET
-      Style.Font.Color = clWindowText
-      Style.Font.Height = -11
-      Style.Font.Name = 'Tahoma'
-      Style.Font.Style = [fsBold]
-      Style.IsFontAssigned = True
+      Width = 135
     end
     object cxLabel23: TcxLabel
       Left = 9
-      Top = 172
+      Top = 173
       Caption = #1055#1086#1080#1089#1082' '#1087#1086' '#1054#1050#1055#1054':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
@@ -349,18 +341,18 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Style.IsFontAssigned = True
     end
     object edOKPO_search: TcxTextEdit
-      Left = 119
+      Left = 120
       Top = 173
-      TabOrder = 35
+      TabOrder = 34
       DesignSize = (
-        114
+        103
         21)
-      Width = 114
+      Width = 103
     end
     object cxLabel24: TcxLabel
-      Left = 239
-      Top = 172
-      Caption = #1055#1086#1080#1089#1082' '#1087#1086' '#1070#1088'. '#1083#1080#1094#1091':'
+      Left = 232
+      Top = 173
+      Caption = #1070#1088'. '#1083#1080#1094#1086':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -370,47 +362,95 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Style.IsFontAssigned = True
     end
     object edJuridicalName_search: TcxTextEdit
-      Left = 376
+      Left = 310
       Top = 173
-      TabOrder = 37
+      TabOrder = 36
       DesignSize = (
-        136
+        103
         21)
-      Width = 136
-    end
-    object cxLabel25: TcxLabel
-      Left = 9
-      Top = 121
-      Hint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1103' '#1076#1072#1085#1085#1099#1093' '#1080#1079' '#1086#1090#1095#1077#1090#1072
-      Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1086#1078#1080#1076'.'#1089#1086#1075#1083#1072#1089'.1)'
-      ParentShowHint = False
-      ShowHint = True
+      Width = 103
     end
     object ceDateSignWait_1: TcxDateEdit
       Left = 9
-      Top = 138
+      Top = 123
       EditValue = 42132d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
       Properties.EditFormat = 'dd.mm.yyyy hh:mm'
       Properties.Kind = ckDateTime
       Properties.ReadOnly = True
       Properties.ValidateOnEnter = False
-      TabOrder = 39
-      Width = 112
+      TabOrder = 37
+      Width = 116
     end
     object cbSignWait_1: TcxCheckBox
-      Left = 127
-      Top = 138
+      Left = 131
+      Top = 125
+      Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1090#1072#1088#1090' '#1089#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1077')'
       Properties.ReadOnly = True
-      TabOrder = 40
-      Width = 27
+      TabOrder = 38
+      Width = 214
     end
     object cbSign_1: TcxCheckBox
-      Left = 348
-      Top = 138
+      Left = 131
+      Top = 146
+      Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086')'
       Properties.ReadOnly = True
+      TabOrder = 39
+      Width = 198
+    end
+    object edTotalText_1: TcxTextEdit
+      Left = 458
+      Top = 125
+      Hint = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102
+      TabStop = False
+      ParentFont = False
+      Style.Color = clBtnFace
+      Style.Edges = []
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -11
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+      TabOrder = 40
+      Text = 'edTotalText_1'
+      Width = 134
+    end
+    object edTotalText_2: TcxTextEdit
+      Left = 599
+      Top = 125
+      Hint = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102
+      TabStop = False
+      ParentFont = False
+      Style.Color = clBtnFace
+      Style.Edges = []
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -11
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
       TabOrder = 41
-      Width = 27
+      Text = 'edTotalText_2'
+      Width = 140
+    end
+    object edTotalText_3: TcxTextEdit
+      Left = 745
+      Top = 125
+      Hint = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102
+      TabStop = False
+      ParentFont = False
+      Style.Color = clBtnFace
+      Style.Edges = []
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -11
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+      TabOrder = 42
+      Text = 'edTotalText_3'
+      Width = 134
     end
   end
   object cxPageControl: TcxPageControl
@@ -1415,14 +1455,40 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     ShowHint = True
   end
   object edTotalSumm_2: TcxCurrencyEdit
-    Left = 683
-    Top = 138
+    Left = 599
+    Top = 146
+    Hint = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102
     ParentFont = False
+    ParentShowHint = False
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.##'
     Properties.ReadOnly = False
+    ShowHint = True
+    Style.Color = clWindow
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -11
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
+    TabOrder = 8
+    Width = 135
+  end
+  object edTotalSumm_3: TcxCurrencyEdit
+    Left = 745
+    Top = 146
+    Hint = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102
+    ParentFont = False
+    ParentShowHint = False
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.##'
+    Properties.ReadOnly = False
+    ShowHint = True
+    Style.Color = clWindow
     Style.Font.Charset = DEFAULT_CHARSET
     Style.Font.Color = clBlue
     Style.Font.Height = -11
@@ -1430,69 +1496,19 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Style.Font.Style = [fsBold]
     Style.IsFontAssigned = True
     TabOrder = 9
-    Width = 183
-  end
-  object cxLabel21: TcxLabel
-    Left = 683
-    Top = 121
-    Caption = #1056#1072#1079#1088#1077#1096'. '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102' '#1075#1088'.2'
-    ParentFont = False
-    Style.Font.Charset = DEFAULT_CHARSET
-    Style.Font.Color = clWindowText
-    Style.Font.Height = -11
-    Style.Font.Name = 'Tahoma'
-    Style.Font.Style = [fsBold]
-    Style.IsFontAssigned = True
-  end
-  object edTotalSumm_3: TcxCurrencyEdit
-    Left = 872
-    Top = 138
-    ParentFont = False
-    Properties.Alignment.Horz = taRightJustify
-    Properties.Alignment.Vert = taVCenter
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.##'
-    Properties.ReadOnly = False
-    Style.Font.Charset = DEFAULT_CHARSET
-    Style.Font.Color = clBlue
-    Style.Font.Height = -11
-    Style.Font.Name = 'Tahoma'
-    Style.Font.Style = [fsBold]
-    Style.IsFontAssigned = True
-    TabOrder = 13
-    Width = 183
-  end
-  object cxLabel22: TcxLabel
-    Left = 872
-    Top = 121
-    Caption = #1056#1072#1079#1088#1077#1096'. '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102' '#1075#1088'.3'
-    ParentFont = False
-    Style.Font.Charset = DEFAULT_CHARSET
-    Style.Font.Color = clWindowText
-    Style.Font.Height = -11
-    Style.Font.Name = 'Tahoma'
-    Style.Font.Style = [fsBold]
-    Style.IsFontAssigned = True
-  end
-  object cxLabel26: TcxLabel
-    Left = 232
-    Top = 121
-    Hint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1103' '#1076#1072#1085#1085#1099#1093' '#1080#1079' '#1086#1090#1095#1077#1090#1072
-    Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085'-1)'
-    ParentShowHint = False
-    ShowHint = True
+    Width = 135
   end
   object ceDateSign_1: TcxDateEdit
-    Left = 232
-    Top = 138
+    Left = 9
+    Top = 146
     EditValue = 42132d
     Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
     Properties.EditFormat = 'dd.mm.yyyy hh:mm'
     Properties.Kind = ckDateTime
     Properties.ReadOnly = True
     Properties.ValidateOnEnter = False
-    TabOrder = 17
-    Width = 110
+    TabOrder = 14
+    Width = 116
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -3102,9 +3118,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         item
           StoredProc = spGet
         end>
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085'-1>'
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085'-1>'
-      ImageIndex = 79
+      Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1090#1100
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086'>'
     end
   end
   object MasterDS: TDataSource
@@ -3671,6 +3686,27 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Component = cbSignWait_1
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalText_1'
+        Value = Null
+        Component = edTotalText_1
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalText_2'
+        Value = Null
+        Component = edTotalText_2
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalText_3'
+        Value = Null
+        Component = edTotalText_3
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216
@@ -3809,7 +3845,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       end>
     PackSize = 1
     Left = 540
-    Top = 108
+    Top = 172
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -3844,8 +3880,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 607
-    Top = 104
+    Left = 591
+    Top = 160
   end
   object spIDEL: TdsdStoredProc
     DataSets = <>
@@ -4376,7 +4412,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       end>
     PackSize = 1
     Left = 688
-    Top = 120
+    Top = 184
   end
   object spInsertMaskMIMaster2: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_OrderFinance'
@@ -4797,7 +4833,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Top = 464
   end
   object PeriodChoice: TPeriodChoice
-    Left = 232
+    Left = 256
     Top = 16
   end
   object FieldFilter: TdsdFieldFilter
