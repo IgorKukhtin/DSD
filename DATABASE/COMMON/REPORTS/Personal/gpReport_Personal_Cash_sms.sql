@@ -24,10 +24,11 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar
              , PositionLevelId Integer, PositionLevelCode Integer, PositionLevelName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
-             , Amount   TFloat
-             , Date_SMS TDateTime
-             , isSms    Boolean
-             , Phone    TVarChar
+             , Amount      TFloat
+             , Date_SMS    TDateTime
+             , isSms       Boolean
+             , Phone       TVarChar
+             , SMS_Message TVarChar
               )
 AS
 $BODY$
@@ -39,6 +40,9 @@ BEGIN
 
      -- !!!Только просмотр Аудитор!!!
     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+    
+    
+--    inStartDate:= '01.11.2025';
 
     -- Результат
     RETURN QUERY
@@ -147,6 +151,7 @@ BEGIN
          , tmpMI_Child.Date_SMS              ::TDateTime AS Date_SMS
          , COALESCE (tmpMI_Child.isSms,FALSE)::Boolean   AS isSms
          , ObjectString_Phone.ValueData      :: TVarChar AS Phone
+         , zfConvert_FloatToString (tmpMI_Child.Amount) AS SMS_Message
 
     FROM tmpMovement AS Movement
          LEFT JOIN tmpMI_Child ON tmpMI_Child.MovementId = Movement.Id
