@@ -36,7 +36,7 @@ BEGIN
                       AND ObjectString_PhoneAuthent.DescId    = zc_ObjectString_User_PhoneAuthent()
                       AND ObjectString_PhoneAuthent.ValueData = inPhoneAuthent
                    )
-        AND inPhoneAuthent <> '0674464560'
+      --AND inPhoneAuthent <> '0674464560'
      THEN
          RAISE EXCEPTION 'Ошибка.№ телефона <%> не соответсвует <%>.', inPhoneAuthent
                        , (SELECT ObjectString_PhoneAuthent.ValueData
@@ -90,25 +90,25 @@ BEGIN
     -- Результат
      RETURN QUERY 
       SELECT --'http://193.41.60.77:17070/api/contents' :: TVarChar AS HostName_Sms
-             --'https://api-gateway.kyivstar.ua' :: TVarChar AS HostName_Sms
-             'https://smsc.ua/sys/send.php' :: TVarChar AS HostName_Sms
+             'https://api-gateway.kyivstar.ua' :: TVarChar AS HostName_Sms
+           --'https://smsc.ua/sys/send.php' :: TVarChar AS HostName_Sms
            , 'sandbox' :: TVarChar AS Environment_Sms
            , 'v1beta'  :: TVarChar AS Version_Sms
 
          --, 'TEST2B2BCUSTOMER' :: TVarChar AS Login_sms
          --, 'nuKxk2n6mJwyBvJx' :: TVarChar AS Password_sms
            
-           , 'admin@alan.ua' :: TVarChar AS Login_sms
-           , 'vas6ok'        :: TVarChar AS Password_sms
+           , 'project@alan.ua' :: TVarChar AS Login_sms
+           , 'vas6okVAS6OK'    :: TVarChar AS Password_sms
 
            , 'messagedesk'                          :: TVarChar AS AlphaName_Sms
-           , '679c4113-0848-471a-8745-844c38ec9eeb' :: TVarChar AS ClientId
-           , 'UmLVhAlbIMpF7EPNhaS7vBzR9T'           :: TVarChar AS ClientSecret
+           , '6dbb1a32-ee90-43b8-9cae-adf28d8351a6' :: TVarChar AS ClientId
+           , '3dXC~bFRKjjpZK82QeU7iEErxi'           :: TVarChar AS ClientSecret
 
            , FALSE              :: Boolean  AS ShowCost_sms
-           , vbKeySMS           :: TVarChar AS Message_sms
+           , 'test_sms'         :: TVarChar AS Message_sms
            , inPhoneAuthent                 AS PhoneNum_sms
-           , FALSE              :: Boolean  AS isKS
+           , TRUE               :: Boolean  AS isKS
             ;
    
 END;
@@ -124,3 +124,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Object_User_bySMS ('380674464560', '5')
+-- SELECT * FROM gpSelect_Object_User_bySMS ('380673343350', '5')
