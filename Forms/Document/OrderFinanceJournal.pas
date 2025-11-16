@@ -113,6 +113,7 @@ type
     Date_Sign_1: TcxGridDBColumn;
     isSign_1: TcxGridDBColumn;
     isSignWait_1: TcxGridDBColumn;
+    TotalSumm_all: TcxGridDBColumn;
   private
   public
   end;

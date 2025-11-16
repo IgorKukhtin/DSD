@@ -111,6 +111,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Left = 780
       Top = 82
       Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090' ('#1086#1087#1083#1072#1090#1072')'
+      Visible = False
     end
     object edBankAccount: TcxButtonEdit
       Left = 780
@@ -122,6 +123,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end>
       Properties.ReadOnly = True
       TabOrder = 11
+      Visible = False
       Width = 277
     end
     object edInsertUser: TcxButtonEdit
@@ -225,33 +227,45 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object cxLabel13: TcxLabel
       Left = 780
       Top = 42
-      Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088'.)'
+      Hint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080')'
+      Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
+      ParentShowHint = False
+      ShowHint = True
       Visible = False
     end
     object edInsertDate: TcxDateEdit
       Left = 418
       Top = 99
+      Hint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076#1072#1085#1080#1077' '#1079#1072#1103#1074#1082#1080')'
       EditValue = 42132d
+      ParentShowHint = False
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
       Properties.EditFormat = 'dd.mm.yyyy hh:mm'
       Properties.Kind = ckDateTime
       Properties.ReadOnly = True
+      ShowHint = True
       TabOrder = 23
       Width = 175
     end
     object cxLabel14: TcxLabel
       Left = 418
       Top = 82
-      Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
+      Hint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076#1072#1085#1080#1077' '#1079#1072#1103#1074#1082#1080')'
+      Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076#1072#1085#1080#1077')'
+      ParentShowHint = False
+      ShowHint = True
     end
     object edUpdatetDate: TcxDateEdit
       Left = 780
       Top = 59
+      Hint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080')'
       EditValue = 42132d
+      ParentShowHint = False
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
       Properties.EditFormat = 'dd.mm.yyyy hh:mm'
       Properties.Kind = ckDateTime
       Properties.ReadOnly = True
+      ShowHint = True
       TabOrder = 25
       Visible = False
       Width = 109
@@ -259,12 +273,15 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object edUpdatetDate_report: TcxDateEdit
       Left = 780
       Top = 19
+      Hint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1103' '#1076#1072#1085#1085#1099#1093' '#1080#1079' '#1086#1090#1095#1077#1090#1072
       EditValue = 42132d
+      ParentShowHint = False
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
       Properties.EditFormat = 'dd.mm.yyyy hh:mm'
       Properties.Kind = ckDateTime
       Properties.ReadOnly = True
       Properties.ValidateOnEnter = False
+      ShowHint = True
       TabOrder = 26
       Width = 109
     end
@@ -272,7 +289,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Left = 780
       Top = 2
       Hint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1103' '#1076#1072#1085#1085#1099#1093' '#1080#1079' '#1086#1090#1095#1077#1090#1072
-      Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1086#1090#1095#1077#1090')'
+      Caption = #1044#1072#1090#1072' ('#1086#1090#1095#1077#1090')'
       ParentShowHint = False
       ShowHint = True
     end
@@ -372,7 +389,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     end
     object ceDateSignWait_1: TcxDateEdit
       Left = 9
-      Top = 123
+      Top = 124
       EditValue = 42132d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
       Properties.EditFormat = 'dd.mm.yyyy hh:mm'
@@ -384,8 +401,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     end
     object cbSignWait_1: TcxCheckBox
       Left = 131
-      Top = 125
-      Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1090#1072#1088#1090' '#1089#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1077')'
+      Top = 124
+      Caption = #1044#1072#1090#1072' ('#1057#1090#1072#1088#1090' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1103')'
       Properties.ReadOnly = True
       TabOrder = 38
       Width = 214
@@ -393,14 +410,14 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object cbSign_1: TcxCheckBox
       Left = 131
       Top = 146
-      Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086')'
+      Caption = #1044#1072#1090#1072' ('#1047#1072#1103#1074#1082#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072')'
       Properties.ReadOnly = True
       TabOrder = 39
       Width = 198
     end
     object edTotalText_1: TcxTextEdit
       Left = 458
-      Top = 125
+      Top = 124
       Hint = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102
       TabStop = False
       ParentFont = False
@@ -418,7 +435,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     end
     object edTotalText_2: TcxTextEdit
       Left = 599
-      Top = 125
+      Top = 124
       Hint = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102
       TabStop = False
       ParentFont = False
@@ -436,7 +453,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     end
     object edTotalText_3: TcxTextEdit
       Left = 745
-      Top = 125
+      Top = 124
       Hint = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102
       TabStop = False
       ParentFont = False
@@ -783,17 +800,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             Options.Editing = False
             Width = 100
           end
-          object Amount: TcxGridDBColumn
-            Caption = '***'#1055#1083#1072#1085' '#1085#1072' '#1085#1077#1076#1077#1083#1102
-            DataBinding.FieldName = 'Amount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1055#1083#1072#1085' '#1085#1072' '#1085#1077#1076#1077#1083#1102
-            Width = 80
-          end
           object AmountRemains: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1076#1086#1083#1075
             DataBinding.FieldName = 'AmountRemains'
@@ -877,6 +883,17 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
+          end
+          object Amount: TcxGridDBColumn
+            Caption = '***'#1055#1083#1072#1085' '#1085#1072' '#1085#1077#1076#1077#1083#1102
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1055#1083#1072#1085' '#1085#1072' '#1085#1077#1076#1077#1083#1102
+            Width = 80
           end
           object AmountPlan_total: TcxGridDBColumn
             Caption = #1055#1083#1072#1085' '#1048#1058#1054#1043#1054
@@ -1437,19 +1454,22 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
   object edUserUpdate_report: TcxButtonEdit
     Left = 898
     Top = 19
+    Hint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1103' '#1076#1072#1085#1085#1099#1093' '#1080#1079' '#1086#1090#1095#1077#1090#1072
+    ParentShowHint = False
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
+    ShowHint = True
     TabOrder = 7
     Width = 159
   end
   object cxLabel17: TcxLabel
     Left = 898
     Top = 2
-    Hint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' - '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1103' '#1076#1072#1085#1085#1099#1093' '#1080#1079' '#1086#1090#1095#1077#1090#1072
+    Hint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1103' '#1076#1072#1085#1085#1099#1093' '#1080#1079' '#1086#1090#1095#1077#1090#1072
     Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1086#1090#1095#1077#1090')'
     ParentShowHint = False
     ShowHint = True
@@ -3845,7 +3865,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       end>
     PackSize = 1
     Left = 540
-    Top = 172
+    Top = 148
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -3880,8 +3900,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 591
-    Top = 160
+    Left = 607
+    Top = 128
   end
   object spIDEL: TdsdStoredProc
     DataSets = <>
