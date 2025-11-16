@@ -23,7 +23,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              , UnitName_insert     TVarChar
-             , PositionName_insert TVarChar
+             , PositionName_insert TVarChar          
+             , Date_SignWait_1 TDateTime, Date_Sign_1 TDateTime
+             , isSignWait_1 Boolean, isSign_1 Boolean
              )
 AS
 $BODY$
@@ -139,7 +141,11 @@ BEGIN
 
              , Object_Unit.ValueData                 ::TVarChar AS UnitName_insert
              , Object_Position.ValueData             ::TVarChar AS PositionName_insert
-
+             
+             , CAST (NULL AS TDateTime)                         AS Date_SignWait_1
+             , CAST (NULL AS TDateTime)                         AS Date_Sign_1
+             , FALSE                                 ::Boolean  AS isSignWait_1 
+             , FALSE                                 ::Boolean  AS isSign_1
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
               LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
 
@@ -193,6 +199,10 @@ BEGIN
            , Object_Unit_insert.ValueData      ::TVarChar AS UnitName_insert
            , Object_Position_insert.ValueData  ::TVarChar AS PositionName_insert
 
+           , MovementDate_SignWait_1.ValueData                      ::TDateTime AS Date_SignWait_1
+           , MovementDate_Sign_1.ValueData                          ::TDateTime AS Date_Sign_1
+           , COALESCE (MovementBoolean_SignWait_1.ValueData, FALSE) ::Boolean   AS isSignWait_1 
+           , COALESCE (MovementBoolean_Sign_1.ValueData, FALSE)     ::Boolean   AS isSign_1
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -224,6 +234,19 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_Update
                                    ON MovementDate_Update.MovementId = Movement.Id
                                   AND MovementDate_Update.DescId = zc_MovementDate_Update()
+
+            LEFT JOIN MovementDate AS MovementDate_SignWait_1
+                                   ON MovementDate_SignWait_1.MovementId = Movement.Id
+                                  AND MovementDate_SignWait_1.DescId = zc_MovementDate_SignWait_1()
+            LEFT JOIN MovementDate AS MovementDate_Sign_1
+                                   ON MovementDate_Sign_1.MovementId = Movement.Id
+                                  AND MovementDate_Sign_1.DescId = zc_MovementDate_Sign_1()
+            LEFT JOIN MovementBoolean AS MovementBoolean_SignWait_1
+                                      ON MovementBoolean_SignWait_1.MovementId = Movement.Id
+                                     AND MovementBoolean_SignWait_1.DescId = zc_MovementBoolean_SignWait_1()
+            LEFT JOIN MovementBoolean AS MovementBoolean_Sign_1
+                                      ON MovementBoolean_Sign_1.MovementId = Movement.Id
+                                     AND MovementBoolean_Sign_1.DescId = zc_MovementBoolean_Sign_1()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
                                          ON MovementLinkObject_Insert.MovementId = Movement.Id

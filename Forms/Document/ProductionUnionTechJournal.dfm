@@ -980,6 +980,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         ExplicitTop = 292
         ExplicitWidth = 1076
       end
+      object cbPrintOne: TcxCheckBox
+        Left = 660
+        Top = 66
+        Caption = #1076#1083#1103' 1 '#1090#1086#1074#1072#1088#1072
+        Properties.ReadOnly = False
+        TabOrder = 3
+        Width = 93
+      end
     end
   end
   inherited DataPanel: TPanel
@@ -1135,7 +1143,109 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       end>
   end
   inherited ActionList: TActionList
-    object actRefresh_lak: TdsdDataSetRefresh [0]
+    object actPrintLak: TdsdPrintAction [0]
+      Category = 'PrintDays'
+      MoveParams = <
+        item
+          FromParam.Name = 'isDetail'
+          FromParam.Value = False
+          FromParam.DataType = ftBoolean
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'isDetail'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'isDetail'
+          ToParam.DataType = ftBoolean
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spPrintLak
+      StoredProcList = <
+        item
+          StoredProc = spPrintLak
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1051#1072#1082#1080#1088#1086#1074#1072#1085#1080#1077
+      Hint = #1055#1077#1095#1072#1090#1100' '#1051#1072#1082#1080#1088#1086#1074#1072#1085#1080#1077
+      ImageIndex = 18
+      DataSets = <
+        item
+          DataSet = PrintMasterCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 
+            'OperDate;GoodsName;GoodsKindName_Complete;OperDate;OperDate_part' +
+            'ion;InvNumber_partion'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 43831d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 43831d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToId'
+          Value = ''
+          Component = GuidesTo
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToName'
+          Value = ''
+          Component = GuidesTo
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDetail'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isLoss'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isCalc'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1083#1072#1082#1080#1088#1086#1074#1072#1085#1080#1077
+      ReportNameParam.Value = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1083#1072#1082#1080#1088#1086#1074#1072#1085#1080#1077
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actRefresh_lak: TdsdDataSetRefresh [1]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -1149,7 +1259,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = True
     end
-    object actPrintCEH_rep_grid: TdsdPrintAction [1]
+    object actPrintCEH_rep_grid: TdsdPrintAction [2]
       Category = 'Print_rep'
       MoveParams = <>
       StoredProc = spPrint_TaxExitUpdate_grid
@@ -1216,7 +1326,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object ExecuteDialog_operdate: TExecuteDialog [2]
+    object ExecuteDialog_operdate: TExecuteDialog [3]
       Category = 'Update_OperDate'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1241,7 +1351,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       isShowModal = True
       OpenBeforeShow = True
     end
-    object actPrintOUT_rep_grid: TdsdPrintAction [3]
+    object actPrintOUT_rep_grid: TdsdPrintAction [4]
       Category = 'Print_rep'
       MoveParams = <>
       StoredProc = spPrint_TaxExitUpdate_grid
@@ -1302,7 +1412,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintDays5: TdsdPrintAction [4]
+    object actPrintDays5: TdsdPrintAction [5]
       Category = 'PrintDays'
       MoveParams = <
         item
@@ -1404,7 +1514,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintTRM_rep_grid: TdsdPrintAction [5]
+    object actPrintTRM_rep_grid: TdsdPrintAction [6]
       Category = 'Print_rep'
       MoveParams = <>
       StoredProc = spPrint_TaxExitUpdate_grid_term
@@ -1465,108 +1575,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end>
       ReportName = #1054#1090#1095#1077#1090'_'#1087#1086'_'#1074#1099#1093#1086#1076#1072#1084'('#1090#1077#1088#1084#1080#1095#1082#1072')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090'_'#1087#1086'_'#1074#1099#1093#1086#1076#1072#1084'('#1090#1077#1088#1084#1080#1095#1082#1072')'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object actPrintLak: TdsdPrintAction [6]
-      Category = 'PrintDays'
-      MoveParams = <
-        item
-          FromParam.Name = 'isDetail'
-          FromParam.Value = False
-          FromParam.DataType = ftBoolean
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Name = 'isDetail'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'isDetail'
-          ToParam.DataType = ftBoolean
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProc = spPrintLak
-      StoredProcList = <
-        item
-          StoredProc = spPrintLak
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1051#1072#1082#1080#1088#1086#1074#1072#1085#1080#1077
-      Hint = #1055#1077#1095#1072#1090#1100' '#1051#1072#1082#1080#1088#1086#1074#1072#1085#1080#1077
-      ImageIndex = 18
-      DataSets = <
-        item
-          DataSet = PrintMasterCDS
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 
-            'OperDate;GoodsName;GoodsKindName_Complete;OperDate;OperDate_part' +
-            'ion;InvNumber_partion'
-        end>
-      Params = <
-        item
-          Name = 'StartDate'
-          Value = 43831d
-          Component = deStart
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndDate'
-          Value = 43831d
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'FromId'
-          Value = ''
-          Component = GuidesFrom
-          ComponentItem = 'Key'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'FromName'
-          Value = ''
-          Component = GuidesFrom
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ToId'
-          Value = ''
-          Component = GuidesTo
-          ComponentItem = 'Key'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ToName'
-          Value = ''
-          Component = GuidesTo
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isDetail'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isLoss'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isCalc'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end>
-      ReportName = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1083#1072#1082#1080#1088#1086#1074#1072#1085#1080#1077
-      ReportNameParam.Value = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1083#1072#1082#1080#1088#1086#1074#1072#1085#1080#1077
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -1681,8 +1689,8 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           DataSet = PrintMasterCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'OperDate;Goodsgroupname;GoodsName;GoodsKind_group;GoodsName_chil' +
-            'd;GoodsKindName_Complete'
+            'GroupNum_KindComplete;OperDate;Goodsgroupname;GoodsName;GoodsKin' +
+            'd_group;GoodsName_child;GoodsKindName_Complete'
         end>
       Params = <
         item
@@ -1850,8 +1858,8 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           DataSet = PrintMasterCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'OperDate;GoodsName;GoodsKind_group;GoodsName_child;GoodsKindName' +
-            '_Complete'
+            'GroupNum_KindComplete;OperDate;GoodsName;GoodsKind_group;GoodsNa' +
+            'me_child;GoodsKindName_Complete'
         end>
       Params = <
         item
@@ -2011,8 +2019,8 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           DataSet = PrintMasterCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'OperDate;GoodsName;GoodsKind_group;GoodsName_child;GoodsKindName' +
-            '_Complete'
+            'GroupNum_KindComplete;OperDate;GoodsName;GoodsKind_group;GoodsNa' +
+            'me_child;GoodsKindName_Complete'
         end>
       Params = <
         item
@@ -2113,8 +2121,8 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           DataSet = PrintMasterCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'OperDate;GoodsName;GoodsKind_group;GoodsName_child;GoodsKindName' +
-            '_Complete'
+            'GroupNum_KindComplete;OperDate;GoodsName;GoodsKind_group;GoodsNa' +
+            'me_child;GoodsKindName_Complete'
         end>
       Params = <
         item
@@ -2229,8 +2237,8 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           DataSet = PrintMasterCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'OperDate;GoodsName;GoodsKind_group;GoodsName_child;GoodsKindName' +
-            '_Complete'
+            'GroupNum_KindComplete;OperDate;GoodsName;GoodsKind_group;GoodsNa' +
+            'me_child;GoodsKindName_Complete'
         end>
       Params = <
         item
@@ -3293,8 +3301,8 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           DataSet = PrintMasterCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'OperDate;goodsgroupname;GoodsName;GoodsKind_group;GoodsName_chil' +
-            'd;GoodsKindName_Complete'
+            'GroupNum_KindComplete;OperDate;goodsgroupname;GoodsName;GoodsKin' +
+            'd_group;GoodsName_child;GoodsKindName_Complete'
         end>
       Params = <
         item
@@ -4018,6 +4026,10 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintOne'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -4336,6 +4348,13 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Category = 0
       ImageIndex = 17
     end
+    object bbPrintOne: TdxBarControlContainerItem
+      Caption = #1076#1083#1103' '#1086#1076#1080#1085#1086#1075#1086' '#1090#1086#1074#1072#1088#1072
+      Category = 0
+      Hint = #1076#1083#1103' '#1086#1076#1080#1085#1086#1075#1086' '#1090#1086#1074#1072#1088#1072
+      Visible = ivAlways
+      Control = cbPrintOne
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
@@ -4571,8 +4590,8 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 288
-    Top = 168
+    Left = 328
+    Top = 184
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
     Left = 442
@@ -5358,6 +5377,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsId'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId_child'
         Value = '0'
         ParamType = ptInput
@@ -5372,6 +5399,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       item
         Name = 'inisCuterCount'
         Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOne'
+        Value = Null
+        Component = cbPrintOne
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5422,6 +5457,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsId'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId_child'
         Value = '0'
         ParamType = ptInput
@@ -5436,6 +5479,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       item
         Name = 'inisCuterCount'
         Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOne'
+        Value = Null
+        Component = cbPrintOne
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5486,6 +5537,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsId'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId_child'
         Value = '0'
         ParamType = ptInput
@@ -5500,6 +5559,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       item
         Name = 'inisCuterCount'
         Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOne'
+        Value = Null
+        Component = cbPrintOne
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5550,6 +5617,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsId'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId_child'
         Value = '0'
         ParamType = ptInput
@@ -5564,6 +5639,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       item
         Name = 'inisCuterCount'
         Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOne'
+        Value = Null
+        Component = cbPrintOne
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5614,6 +5697,20 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsId'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId_child'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGroupNum'
         Value = '1'
         ParamType = ptInput
@@ -5622,6 +5719,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       item
         Name = 'inisCuterCount'
         Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOne'
+        Value = Null
+        Component = cbPrintOne
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5838,6 +5943,14 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsId'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId_child'
         Value = '0'
         Component = ChildCDS
@@ -5853,6 +5966,13 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       end
       item
         Name = 'inisCuterCount'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOne'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput

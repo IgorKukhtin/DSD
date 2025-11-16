@@ -233,6 +233,8 @@ type
     spPrint_TaxExitUpdate_groupCeh: TdsdStoredProc;
     spPrint_TaxExitUpdate_term: TdsdStoredProc;
     spPrint_TaxExitUpdate_grid_term: TdsdStoredProc;
+    cbPrintOne: TcxCheckBox;
+    bbPrintOne: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

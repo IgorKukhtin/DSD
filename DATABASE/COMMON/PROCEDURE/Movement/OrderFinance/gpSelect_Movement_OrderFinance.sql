@@ -27,6 +27,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              , UnitName_insert     TVarChar
              , PositionName_insert TVarChar
+             , Date_SignWait_1 TDateTime, Date_Sign_1 TDateTime
+             , isSignWait_1 Boolean, isSign_1 Boolean
               )
 AS
 $BODY$
@@ -98,6 +100,10 @@ BEGIN
            , Object_Unit_insert.ValueData      ::TVarChar AS UnitName_insert
            , Object_Position_insert.ValueData  ::TVarChar AS PositionName_insert
 
+           , COALESCE (MovementDate_SignWait_1.ValueData, NULL)     ::TDateTime AS Date_SignWait_1
+           , COALESCE (MovementDate_Sign_1.ValueData, NULL)         ::TDateTime AS Date_Sign_1
+           , COALESCE (MovementBoolean_SignWait_1.ValueData, FALSE) ::Boolean   AS isSignWait_1 
+           , COALESCE (MovementBoolean_Sign_1.ValueData, FALSE)     ::Boolean   AS isSign_1
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_OrderFinance() AND Movement.StatusId = tmpStatus.StatusId
@@ -201,6 +207,19 @@ BEGIN
                                          ON MovementLinkObject_Update.MovementId = Movement.Id
                                         AND MovementLinkObject_Update.DescId = zc_MovementLinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MovementLinkObject_Update.ObjectId
+
+            LEFT JOIN MovementDate AS MovementDate_SignWait_1
+                                   ON MovementDate_SignWait_1.MovementId = Movement.Id
+                                  AND MovementDate_SignWait_1.DescId = zc_MovementDate_SignWait_1()
+            LEFT JOIN MovementDate AS MovementDate_Sign_1
+                                   ON MovementDate_Sign_1.MovementId = Movement.Id
+                                  AND MovementDate_Sign_1.DescId = zc_MovementDate_Sign_1()
+            LEFT JOIN MovementBoolean AS MovementBoolean_SignWait_1
+                                      ON MovementBoolean_SignWait_1.MovementId = Movement.Id
+                                     AND MovementBoolean_SignWait_1.DescId = zc_MovementBoolean_SignWait_1()
+            LEFT JOIN MovementBoolean AS MovementBoolean_Sign_1
+                                      ON MovementBoolean_Sign_1.MovementId = Movement.Id
+                                     AND MovementBoolean_Sign_1.DescId = zc_MovementBoolean_Sign_1()
       ;
 
 END;

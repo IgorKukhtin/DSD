@@ -109,6 +109,10 @@ type
     PositionName_insert: TcxGridDBColumn;
     StartDate_WeekNumber: TcxGridDBColumn;
     EndDate_WeekNumber: TcxGridDBColumn;
+    Date_SignWait_1: TcxGridDBColumn;
+    Date_Sign_1: TcxGridDBColumn;
+    isSign_1: TcxGridDBColumn;
+    isSignWait_1: TcxGridDBColumn;
   private
   public
   end;

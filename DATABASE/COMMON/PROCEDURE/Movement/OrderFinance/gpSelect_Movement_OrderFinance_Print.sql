@@ -184,6 +184,18 @@ BEGIN
      , tmpMovementItemFloat AS (SELECT *
                                 FROM MovementItemFloat
                                 WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                  AND MovementItemFloat.DescId IN (zc_MIFloat_AmountRemains()
+                                                                 , zc_MIFloat_AmountPartner()
+                                                                 , zc_MIFloat_AmountSumm()
+                                                                 , zc_MIFloat_AmountPartner_1()
+                                                                 , zc_MIFloat_AmountPartner_2()
+                                                                 , zc_MIFloat_AmountPartner_3()
+                                                                 , zc_MIFloat_AmountPlan_1()
+                                                                 , zc_MIFloat_AmountPlan_2()
+                                                                 , zc_MIFloat_AmountPlan_3()
+                                                                 , zc_MIFloat_AmountPlan_4()
+                                                                 , zc_MIFloat_AmountPlan_5()
+                                                                 )
                                 )
 
      , tmpMovementItemDate AS (SELECT *

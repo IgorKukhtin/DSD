@@ -22,7 +22,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Left = 0
     Top = 0
     Width = 1060
-    Height = 167
+    Height = 196
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
@@ -160,7 +160,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     end
     object cxLabel8: TcxLabel
       Left = 232
-      Top = 82
+      Top = 83
       Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
     end
     object cePosition: TcxButtonEdit
@@ -264,6 +264,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Properties.EditFormat = 'dd.mm.yyyy hh:mm'
       Properties.Kind = ckDateTime
       Properties.ReadOnly = True
+      Properties.ValidateOnEnter = False
       TabOrder = 26
       Width = 109
     end
@@ -306,8 +307,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Caption = #1085#1077#1076#1077#1083#1103' '#1076#1086
     end
     object edTotalSumm_1: TcxCurrencyEdit
-      Left = 418
-      Top = 139
+      Left = 493
+      Top = 138
       ParentFont = False
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
@@ -321,12 +322,12 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
       TabOrder = 32
-      Width = 201
+      Width = 183
     end
     object cxLabel20: TcxLabel
-      Left = 418
-      Top = 122
-      Caption = #1056#1072#1079#1088#1077#1096#1077#1085#1072' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102' '#1075#1088'.1'
+      Left = 493
+      Top = 121
+      Caption = #1056#1072#1079#1088#1077#1096'. '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102' '#1075#1088'.1'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clWindowText
@@ -337,7 +338,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     end
     object cxLabel23: TcxLabel
       Left = 9
-      Top = 120
+      Top = 172
       Caption = #1055#1086#1080#1089#1082' '#1087#1086' '#1054#1050#1055#1054':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
@@ -348,17 +349,17 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Style.IsFontAssigned = True
     end
     object edOKPO_search: TcxTextEdit
-      Left = 9
-      Top = 139
+      Left = 119
+      Top = 173
       TabOrder = 35
       DesignSize = (
-        132
+        114
         21)
-      Width = 132
+      Width = 114
     end
     object cxLabel24: TcxLabel
-      Left = 159
-      Top = 120
+      Left = 239
+      Top = 172
       Caption = #1055#1086#1080#1089#1082' '#1087#1086' '#1070#1088'. '#1083#1080#1094#1091':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
@@ -369,25 +370,59 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Style.IsFontAssigned = True
     end
     object edJuridicalName_search: TcxTextEdit
-      Left = 159
-      Top = 139
+      Left = 376
+      Top = 173
       TabOrder = 37
       DesignSize = (
-        145
+        136
         21)
-      Width = 145
+      Width = 136
+    end
+    object cxLabel25: TcxLabel
+      Left = 9
+      Top = 121
+      Hint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1103' '#1076#1072#1085#1085#1099#1093' '#1080#1079' '#1086#1090#1095#1077#1090#1072
+      Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1086#1078#1080#1076'.'#1089#1086#1075#1083#1072#1089'.1)'
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object ceDateSignWait_1: TcxDateEdit
+      Left = 9
+      Top = 138
+      EditValue = 42132d
+      Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+      Properties.EditFormat = 'dd.mm.yyyy hh:mm'
+      Properties.Kind = ckDateTime
+      Properties.ReadOnly = True
+      Properties.ValidateOnEnter = False
+      TabOrder = 39
+      Width = 112
+    end
+    object cbSignWait_1: TcxCheckBox
+      Left = 127
+      Top = 138
+      Properties.ReadOnly = True
+      TabOrder = 40
+      Width = 27
+    end
+    object cbSign_1: TcxCheckBox
+      Left = 348
+      Top = 138
+      Properties.ReadOnly = True
+      TabOrder = 41
+      Width = 27
     end
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 193
+    Top = 222
     Width = 1060
-    Height = 392
+    Height = 363
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 392
+    ClientRectBottom = 363
     ClientRectRight = 1060
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
@@ -938,7 +973,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Left = 0
         Top = 331
         Width = 1060
-        Height = 37
+        Height = 8
         Align = alBottom
         Anchors = [akTop, akRight, akBottom]
         TabOrder = 1
@@ -973,17 +1008,13 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1070#1088'.'#1083#1080#1094#1072
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 408
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
         Width = 1060
-        Height = 368
+        Height = 339
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 408
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = JuridicalDS
@@ -1384,8 +1415,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     ShowHint = True
   end
   object edTotalSumm_2: TcxCurrencyEdit
-    Left = 628
-    Top = 139
+    Left = 683
+    Top = 138
     ParentFont = False
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -1398,13 +1429,13 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Style.Font.Name = 'Tahoma'
     Style.Font.Style = [fsBold]
     Style.IsFontAssigned = True
-    TabOrder = 10
-    Width = 201
+    TabOrder = 9
+    Width = 183
   end
   object cxLabel21: TcxLabel
-    Left = 628
-    Top = 122
-    Caption = #1056#1072#1079#1088#1077#1096#1077#1085#1072' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102' '#1075#1088'.2'
+    Left = 683
+    Top = 121
+    Caption = #1056#1072#1079#1088#1077#1096'. '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102' '#1075#1088'.2'
     ParentFont = False
     Style.Font.Charset = DEFAULT_CHARSET
     Style.Font.Color = clWindowText
@@ -1414,8 +1445,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Style.IsFontAssigned = True
   end
   object edTotalSumm_3: TcxCurrencyEdit
-    Left = 839
-    Top = 139
+    Left = 872
+    Top = 138
     ParentFont = False
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -1428,13 +1459,13 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Style.Font.Name = 'Tahoma'
     Style.Font.Style = [fsBold]
     Style.IsFontAssigned = True
-    TabOrder = 14
-    Width = 202
+    TabOrder = 13
+    Width = 183
   end
   object cxLabel22: TcxLabel
-    Left = 839
-    Top = 122
-    Caption = #1056#1072#1079#1088#1077#1096#1077#1085#1072' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102' '#1075#1088'.3'
+    Left = 872
+    Top = 121
+    Caption = #1056#1072#1079#1088#1077#1096'. '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102' '#1075#1088'.3'
     ParentFont = False
     Style.Font.Charset = DEFAULT_CHARSET
     Style.Font.Color = clWindowText
@@ -1442,6 +1473,26 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Style.Font.Name = 'Tahoma'
     Style.Font.Style = [fsBold]
     Style.IsFontAssigned = True
+  end
+  object cxLabel26: TcxLabel
+    Left = 232
+    Top = 121
+    Hint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1103' '#1076#1072#1085#1085#1099#1093' '#1080#1079' '#1086#1090#1095#1077#1090#1072
+    Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085'-1)'
+    ParentShowHint = False
+    ShowHint = True
+  end
+  object ceDateSign_1: TcxDateEdit
+    Left = 232
+    Top = 138
+    EditValue = 42132d
+    Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+    Properties.EditFormat = 'dd.mm.yyyy hh:mm'
+    Properties.Kind = ckDateTime
+    Properties.ReadOnly = True
+    Properties.ValidateOnEnter = False
+    TabOrder = 17
+    Width = 110
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1607,6 +1658,10 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         item
           Visible = True
           ItemName = 'bbInsert_byMovBankAccount'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Sign_1'
         end
         item
           Visible = True
@@ -1859,6 +1914,10 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Action = mactExportMail_xls_5
       Category = 0
     end
+    object bbUpdate_Sign_1: TdxBarButton
+      Action = actUpdate_Sign_1
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1971,6 +2030,20 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1087#1083#1072#1085' '#1074' '#1092#1072#1081#1083
       Hint = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083
       ImageIndex = 53
+    end
+    object actRefreshGet: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actRefreshOFJ: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -2869,6 +2942,12 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end
         item
           Action = actSMTPFile_xls
+        end
+        item
+          Action = actUpdate_SignWait_1
+        end
+        item
+          Action = actRefreshGet
         end>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1087#1086#1095#1090#1077'?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1099' '#1087#1086' '#1087#1086#1095#1090#1077
@@ -2999,6 +3078,34 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       ImageIndex = 7
       DataSource = MasterDS
     end
+    object actUpdate_SignWait_1: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SignWait_1
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SignWait_1
+        end>
+      Caption = #1054#1078#1080#1076#1072#1085#1080#1077' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1103'-1'
+      Hint = #1054#1078#1080#1076#1072#1085#1080#1077' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1103'-1'
+    end
+    object actUpdate_Sign_1: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Sign_1
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Sign_1
+        end
+        item
+          StoredProc = spGet
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085'-1>'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085'-1>'
+      ImageIndex = 79
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -3013,8 +3120,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
-    Left = 456
-    Top = 200
+    Left = 400
+    Top = 256
     object N1: TMenuItem
       Action = actRefresh
     end
@@ -3319,8 +3426,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Control = edBankAccount
       end>
     GetStoredProc = spGet
-    Left = 264
-    Top = 201
+    Left = 224
+    Top = 249
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_OrderFinance'
@@ -3536,6 +3643,34 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Component = deEnd
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Date_Sign_1'
+        Value = Null
+        Component = ceDateSign_1
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Date_SignWait_1'
+        Value = Null
+        Component = ceDateSignWait_1
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isSign_1'
+        Value = Null
+        Component = cbSign_1
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isSignWait_1'
+        Value = Null
+        Component = cbSignWait_1
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216
@@ -3673,8 +3808,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 524
-    Top = 180
+    Left = 540
+    Top = 108
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -3710,7 +3845,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       end>
     PackSize = 1
     Left = 607
-    Top = 184
+    Top = 104
   end
   object spIDEL: TdsdStoredProc
     DataSets = <>
@@ -4073,8 +4208,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 360
-    Top = 160
+    Left = 952
+    Top = 168
   end
   object GuidesBankAccount: TdsdGuides
     KeyField = 'Id'
@@ -4240,8 +4375,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 712
-    Top = 176
+    Left = 688
+    Top = 120
   end
   object spInsertMaskMIMaster2: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_OrderFinance'
@@ -4680,7 +4815,41 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
-    Left = 320
-    Top = 120
+    Left = 440
+    Top = 48
+  end
+  object spUpdate_SignWait_1: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_OrderFinance_SignWait_1'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 968
+    Top = 272
+  end
+  object spUpdate_Sign_1: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_OrderFinance_Sign_1'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 968
+    Top = 312
   end
 end
