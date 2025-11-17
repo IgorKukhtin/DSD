@@ -11,19 +11,19 @@ inherited OrderFinance_ObjectForm: TOrderFinance_ObjectForm
   inherited PageControl: TcxPageControl
     Width = 819
     Height = 319
-    ExplicitWidth = 903
+    ExplicitWidth = 819
     ExplicitHeight = 319
     ClientRectBottom = 319
     ClientRectRight = 819
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 903
+      ExplicitWidth = 819
       ExplicitHeight = 319
       inherited cxGrid: TcxGrid
         Left = 3
         Width = 816
         Height = 319
-        ExplicitLeft = -6
-        ExplicitWidth = 569
+        ExplicitLeft = 3
+        ExplicitWidth = 816
         ExplicitHeight = 319
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -148,7 +148,6 @@ inherited OrderFinance_ObjectForm: TOrderFinance_ObjectForm
         Height = 319
         AutoPosition = False
         Control = cxGrid
-        ExplicitLeft = 569
       end
     end
   end
@@ -507,7 +506,17 @@ inherited OrderFinance_ObjectForm: TOrderFinance_ObjectForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
       item
+        Action = dsdChoiceGuides
       end>
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        ShortCut = 13
+      end>
+    SortImages = nil
     Left = 280
     Top = 192
   end

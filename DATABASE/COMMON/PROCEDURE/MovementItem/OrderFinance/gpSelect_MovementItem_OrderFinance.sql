@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , OKPO TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
-             , PaidKindName TVarChar, InfoMoneyName TVarChar
+             , PaidKindName TVarChar, InfoMoneyName TVarChar, NumGroup Integer
              , Condition TVarChar, ContractStateKindCode Integer
              , StartDate TDateTime, EndDate_real TDateTime, EndDate TVarChar
              , Amount TFloat, AmountRemains TFloat, AmountPartner TFloat
@@ -48,13 +48,15 @@ BEGIN
                     WHERE Movement.Id = inMovementId
                     );
 
-     IF inShowAll THEN
-
      vbOrderFinanceId := (SELECT MovementLinkObject.ObjectId AS Id
                           FROM MovementLinkObject
                           WHERE MovementLinkObject.MovementId = inMovementId
                             AND MovementLinkObject.DescId = zc_MovementLinkObject_OrderFinance()
                          );
+
+
+     IF inShowAll THEN
+
      vbBankAccountMainId := (SELECT MovementLinkObject.ObjectId AS Id
                              FROM MovementLinkObject
                              WHERE MovementLinkObject.MovementId = inMovementId
@@ -182,7 +184,6 @@ BEGIN
                                            AND MovementItemString.DescId = zc_MIString_Comment()
                                          )
 
-
                SELECT MovementItem.Id                   AS Id
                     , MovementItem.ObjectId             AS JuridicalId
                     , MILinkObject_Contract.ObjectId    AS ContractId
@@ -308,6 +309,34 @@ BEGIN
      , tmpContract_View AS (SELECT * FROM Object_Contract_View)
      , tmpJuridicalDetails_View AS (SELECT * FROM ObjectHistory_JuridicalDetails_View /*WHERE ObjectHistory_JuridicalDetails_View.JuridicalId IN (SELECT DISTINCT tmpMI.JuridicalId FROM tmpMI)*/)
 
+     -- статьи для группировки
+     , tmpOrderFinanceProperty AS (SELECT DISTINCT OrderFinanceProperty_Object.ChildObjectId AS Id
+                                        , ObjectFloat_Group.ValueData                        AS NumGroup
+                                   FROM ObjectLink AS OrderFinanceProperty_OrderFinance
+                                        INNER JOIN ObjectLink AS OrderFinanceProperty_Object
+                                                              ON OrderFinanceProperty_Object.ObjectId = OrderFinanceProperty_OrderFinance.ObjectId
+                                                             AND OrderFinanceProperty_Object.DescId = zc_ObjectLink_OrderFinanceProperty_Object()
+                                                             AND COALESCE (OrderFinanceProperty_Object.ChildObjectId,0) <> 0
+
+                                        INNER JOIN Object ON Object.Id = OrderFinanceProperty_Object.ObjectId
+                                                         AND Object.isErased = False
+ 
+                                        LEFT JOIN ObjectFloat AS ObjectFloat_Group 
+                                                              ON ObjectFloat_Group.ObjectId = OrderFinanceProperty_Object.ObjectId
+                                                             AND ObjectFloat_Group.DescId = zc_ObjectFloat_OrderFinanceProperty_Group()
+
+                                   WHERE OrderFinanceProperty_OrderFinance.ChildObjectId = vbOrderFinanceId
+                                     AND OrderFinanceProperty_OrderFinance.DescId = zc_ObjectLink_OrderFinanceProperty_OrderFinance()
+                                   )
+
+      , tmpInfoMoney_OFP AS (SELECT DISTINCT Object_InfoMoney_View.InfoMoneyId, tmpOrderFinanceProperty.NumGroup
+                             FROM Object_InfoMoney_View
+                                  INNER JOIN tmpOrderFinanceProperty ON (tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyId
+                                                                      OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyDestinationId
+                                                                      OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyGroupId)
+                             )
+
+
        -- Результат
        SELECT
              tmpMI.Id                         AS Id
@@ -321,6 +350,7 @@ BEGIN
            , Object_Contract.ValueData        AS ContractName
            , Object_PaidKind.ValueData        AS PaidKindName
            , Object_InfoMoney.ValueData       AS InfoMoneyName
+           , COALESCE (tmpInfoMoney_OFP.NumGroup, Null) ::Integer AS NumGroup
            , tmpContractCondition.Condition       ::TVarChar AS Condition
            , View_Contract.ContractStateKindCode  ::Integer  AS ContractStateKindCode
            --, ObjectDate_Start.ValueData       AS StartDate
@@ -385,6 +415,8 @@ BEGIN
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = View_Contract.PaidKindId
 
             LEFT JOIN tmpContractCondition ON tmpContractCondition.ContractId = Object_Contract.Id
+
+            LEFT JOIN tmpInfoMoney_OFP ON tmpInfoMoney_OFP.InfoMoneyId = Object_InfoMoney.Id
             ;
        ELSE
      -- Результат такой
@@ -457,6 +489,35 @@ BEGIN
                                  WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                    AND MovementItemString.DescId = zc_MIString_Comment()
                                  )
+
+     -- статьи для группировки
+     , tmpOrderFinanceProperty AS (SELECT DISTINCT OrderFinanceProperty_Object.ChildObjectId AS Id
+                                        , ObjectFloat_Group.ValueData                        AS NumGroup
+                                   FROM ObjectLink AS OrderFinanceProperty_OrderFinance
+                                        INNER JOIN ObjectLink AS OrderFinanceProperty_Object
+                                                              ON OrderFinanceProperty_Object.ObjectId = OrderFinanceProperty_OrderFinance.ObjectId
+                                                             AND OrderFinanceProperty_Object.DescId = zc_ObjectLink_OrderFinanceProperty_Object()
+                                                             AND COALESCE (OrderFinanceProperty_Object.ChildObjectId,0) <> 0
+
+                                        INNER JOIN Object ON Object.Id = OrderFinanceProperty_Object.ObjectId
+                                                         AND Object.isErased = False
+ 
+                                        LEFT JOIN ObjectFloat AS ObjectFloat_Group 
+                                                              ON ObjectFloat_Group.ObjectId = OrderFinanceProperty_Object.ObjectId
+                                                             AND ObjectFloat_Group.DescId = zc_ObjectFloat_OrderFinanceProperty_Group()
+
+                                   WHERE OrderFinanceProperty_OrderFinance.ChildObjectId = vbOrderFinanceId
+                                     AND OrderFinanceProperty_OrderFinance.DescId = zc_ObjectLink_OrderFinanceProperty_OrderFinance()
+                                   )
+
+      , tmpInfoMoney_OFP AS (SELECT DISTINCT Object_InfoMoney_View.InfoMoneyId, tmpOrderFinanceProperty.NumGroup
+                             FROM Object_InfoMoney_View
+                                  INNER JOIN tmpOrderFinanceProperty ON (tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyId
+                                                                      OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyDestinationId
+                                                                      OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyGroupId)
+                             )
+
+
        SELECT
              MovementItem.Id                  AS Id
            , Object_Juridical.Id              AS JuridicalId
@@ -469,6 +530,7 @@ BEGIN
            , Object_Contract.ValueData        AS ContractName
            , Object_PaidKind.ValueData        AS PaidKindName
            , Object_InfoMoney.ValueData       AS InfoMoneyName
+           , COALESCE (tmpInfoMoney_OFP.NumGroup, Null) ::Integer AS NumGroup
            , tmpContractCondition.Condition       ::TVarChar AS Condition
            , View_Contract.ContractStateKindCode  ::Integer  AS ContractStateKindCode
            --, ObjectDate_Start.ValueData       AS StartDate
@@ -599,6 +661,8 @@ BEGIN
             LEFT JOIN tmpContract_View AS View_Contract ON View_Contract.ContractId = Object_Contract.Id
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = View_Contract.PaidKindId
             LEFT JOIN tmpContractCondition ON tmpContractCondition.ContractId = Object_Contract.Id
+
+            LEFT JOIN tmpInfoMoney_OFP ON tmpInfoMoney_OFP.InfoMoneyId = Object_InfoMoney.Id
             ;
      END IF;
 END;

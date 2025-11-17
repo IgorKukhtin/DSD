@@ -25,7 +25,6 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   cxContainer, cxLabel, cxTextEdit, cxMaskEdit, dsdGuides, cxCurrencyEdit,
   dsdCommon;
-
 type
   TOrderFinance_ObjectForm = class(TAncestorDBGridForm)
     clName: TcxGridDBColumn;

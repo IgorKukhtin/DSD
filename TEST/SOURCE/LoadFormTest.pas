@@ -3590,7 +3590,10 @@ end;
 
 procedure TLoadFormTest.LoadReportBranchFormTest;
 begin
-{
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Branch_App1_MonthForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Branch_App1_MonthForm');
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Branch_App1_FullForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Branch_App1_FullForm');
 

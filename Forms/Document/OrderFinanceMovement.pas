@@ -248,19 +248,29 @@ type
     edJuridicalName_search: TcxTextEdit;
     FieldFilter: TdsdFieldFilter;
     actChoiceGuides: TdsdChoiceGuides;
-    spUpdate_SignWait_1: TdsdStoredProc;
-    actUpdate_SignWait_1: TdsdExecStoredProc;
+    spUpdate_SignWait_1_Yes: TdsdStoredProc;
+    actUpdate_SignWait_1_Yes: TdsdExecStoredProc;
     actRefreshGet: TdsdDataSetRefresh;
     ceDateSignWait_1: TcxDateEdit;
     ceDateSign_1: TcxDateEdit;
     cbSignWait_1: TcxCheckBox;
     cbSign_1: TcxCheckBox;
-    spUpdate_Sign_1: TdsdStoredProc;
-    actUpdate_Sign_1: TdsdExecStoredProc;
-    bbUpdate_Sign_1: TdxBarButton;
+    spUpdate_Sign_1_Yes: TdsdStoredProc;
+    actUpdate_Sign_1_Yes: TdsdExecStoredProc;
+    bbUpdate_Sign_1_Yes: TdxBarButton;
     edTotalText_1: TcxTextEdit;
     edTotalText_2: TcxTextEdit;
     edTotalText_3: TcxTextEdit;
+    spUpdate_SignWait_1_No: TdsdStoredProc;
+    spUpdate_Sign_1_No: TdsdStoredProc;
+    actUpdate_Sign_1_No: TdsdExecStoredProc;
+    actUpdate_SignWait_1_No: TdsdExecStoredProc;
+    bbUpdate_Sign_1_No: TdxBarButton;
+    bbSign: TdxBarSubItem;
+    bbUpdate_SignWait_1_Yes: TdxBarButton;
+    bbUpdate_SignWait_1_No: TdxBarButton;
+    dxBarSeparator1: TdxBarSeparator;
+    NumGroup: TcxGridDBColumn;
   private
   public
   end;

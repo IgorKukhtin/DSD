@@ -1,9 +1,11 @@
 -- Function: gpUpdateMovement_OrderFinance_Sign_1()
 
 DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Sign_1 (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Sign_1 (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdateMovement_OrderFinance_Sign_1(
-    IN inMovementId          Integer   , -- Ключ объекта <Документ> 
+    IN inMovementId          Integer   , -- Ключ объекта <Документ>
+    IN inisSign_1            Boolean   , 
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID 
@@ -30,17 +32,23 @@ BEGIN
                         AND MovementLinkObject_Member_1.DescId = zc_MovementLinkObject_Member_1()
                      );
      
-     IF COALESCE (vbMemberId,0) <> COALESCE (vbMemberId_1,0)
+   /*  IF COALESCE (vbMemberId,0) <> COALESCE (vbMemberId_1,0)
      THEN
          RAISE EXCEPTION 'Ошибка.У пользователя нет доступа изменять значения <Согласован-1>.';
      END IF;
-
+     */
 
      -- сохранили свойство  <Согласован-1>
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Sign_1(), inMovementId, TRUE);
- 
-     -- сохранили свойство <Дата/время Согласован-1>
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Sign_1(), inMovementId, CURRENT_TIMESTAMP);
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Sign_1(), inMovementId, inisSign_1);
+
+     IF COALESCE (inisSign_1, FALSE) = TRUE
+     THEN 
+         -- сохранили свойство <Дата/время Согласован-1>
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Sign_1(), inMovementId, CURRENT_TIMESTAMP);
+     ELSE
+         -- сохранили свойство <Дата/время Согласован-1>
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Sign_1(), inMovementId, NULL ::TDateTime);
+     END IF;
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
