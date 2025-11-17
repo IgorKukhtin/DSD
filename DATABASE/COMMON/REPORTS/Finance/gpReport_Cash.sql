@@ -37,7 +37,16 @@ RETURNS TABLE (ContainerId Integer, CashCode Integer, CashName TVarChar, Currenc
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbOperDate_Begin1 TDateTime;
+   DECLARE vbScript   TEXT;
+   DECLARE vb1        TEXT;
+   DECLARE vbValue1   Integer;
+   DECLARE vbTime1    INTERVAL;
 BEGIN
+     -- сразу запомнили время начала выполнения Проц.
+     vbOperDate_Begin1:= CLOCK_TIMESTAMP();
+
+
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
      vbUserId:= lpGetUserBySession (inSession);
@@ -543,6 +552,51 @@ BEGIN
 
      LEFT JOIN tmpContract ON tmpContract.ContractId = Operation.ContractId
      ;
+
+
+      vbValue1:= (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active');
+      -- сколько всего выполнялась проц;
+      vbTime1:= CLOCK_TIMESTAMP() - vbOperDate_Begin1;
+
+   -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
+   vbScript:= 'INSERT INTO ResourseProtocol (UserId
+                                           , OperDate
+                                           , Value1
+                                           , Time1
+                                           , Time5
+                                           , ProcName
+                                           , ProtocolData
+                                            )
+        SELECT ' || vbUserId :: TVarChar ||'
+               -- во сколько началась
+             , ' || CHR (39) || zfConvert_DateTimeToString (CURRENT_TIMESTAMP) || CHR (39) || ' AS OperDate'
+          ||', ' || vbValue1 :: TVarChar  || ' AS Value1'
+          ||', ' || CHR (39) || vbTime1 :: TvarChar || CHR (39) || ' :: INTERVAL AS Time1'
+          ||', ' || CHR (39) || zfConvert_DateTimeToString (CLOCK_TIMESTAMP()) || CHR (39) || ' AS Time5'
+               -- ProcName
+          ||', ' || CHR (39) || 'gpReport_Cash (' || CASE WHEN inCashId > 0 THEN lfGet_Object_ValueData_sh (inCashId) ELSE 'inCashId = 0' END  || ')'|| CHR (39)
+               -- ProtocolData
+          ||', ' || CHR (39)
+                 || zfConvert_DateToString (inStartDate)
+          ||', ' || zfConvert_DateToString (inEndDate)
+          ||', ' || inAccountId           :: TVarChar
+          ||', ' || inCashId      :: TVarChar
+          ||', ' || inCurrencyId   :: TVarChar
+          ||', ' || CASE WHEN inisDate = TRUE THEN 'TRUE' ELSE 'FALSE' END :: TVarChar
+          ||', ' || inSession
+          || CHR (39)
+            ;
+
+         -- Результат
+         vb1:= (SELECT *
+                FROM dblink_exec ('host=192.168.0.219 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'
+                                   -- Результат
+                                , vbScript));
+
+    -- информативно
+    --RAISE INFO  '%',vbScript;
+
+    --RAISE EXCEPTION 'ok = %', vb1;
 
 
 END;
