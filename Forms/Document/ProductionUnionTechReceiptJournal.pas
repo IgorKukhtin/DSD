@@ -229,6 +229,8 @@ type
     actUpdate_isWeightMain: TdsdUpdateDataSet;
     macUpdate_isWeightMain: TMultiAction;
     bbUpdate_isWeightMain: TdxBarButton;
+    cbPrintOne: TcxCheckBox;
+    bbPrintOne: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

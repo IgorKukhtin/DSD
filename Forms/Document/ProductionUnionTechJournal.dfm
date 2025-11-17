@@ -993,6 +993,8 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   inherited DataPanel: TPanel
     Width = 1076
     Height = 35
+    ExplicitLeft = 112
+    ExplicitTop = 20
     ExplicitWidth = 1076
     ExplicitHeight = 35
     inherited edInvNumber: TcxTextEdit

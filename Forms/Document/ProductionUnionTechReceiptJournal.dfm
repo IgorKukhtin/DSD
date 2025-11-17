@@ -963,6 +963,14 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         ExplicitTop = 292
         ExplicitWidth = 1203
       end
+      object cbPrintOne: TcxCheckBox
+        Left = 628
+        Top = 66
+        Caption = #1076#1083#1103' 1 '#1090#1086#1074#1072#1088#1072
+        Properties.ReadOnly = False
+        TabOrder = 3
+        Width = 93
+      end
     end
   end
   inherited DataPanel: TPanel
@@ -1183,8 +1191,8 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
           DataSet = PrintMasterCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'OperDate;GoodsName;GoodsKind_group;GoodsName_child;GoodsKindName' +
-            '_Complete'
+            'GroupNum_KindComplete;OperDate;GoodsName;GoodsKind_group;GoodsNa' +
+            'me_child;GoodsKindName_Complete'
         end>
       Params = <
         item
@@ -2299,8 +2307,8 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
           DataSet = PrintMasterCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'OperDate;GoodsName;GoodsKind_group;GoodsName_child;GoodsKindName' +
-            '_Complete'
+            'GroupNum_KindComplete;OperDate;GoodsName;GoodsKind_group;GoodsNa' +
+            'me_child;GoodsKindName_Complete'
         end>
       Params = <
         item
@@ -2401,8 +2409,8 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
           DataSet = PrintMasterCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'OperDate;GoodsName;GoodsKind_group;GoodsName_child;GoodsKindName' +
-            '_Complete'
+            'GroupNum_KindComplete;OperDate;GoodsName;GoodsKind_group;GoodsNa' +
+            'me_child;GoodsKindName_Complete'
         end>
       Params = <
         item
@@ -2503,8 +2511,8 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
           DataSet = PrintMasterCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'OperDate;GoodsName;GoodsKind_group;GoodsName_child;GoodsKindName' +
-            '_Complete'
+            'GroupNum_KindComplete;OperDate;GoodsName;GoodsKind_group;GoodsNa' +
+            'me_child;GoodsKindName_Complete'
         end>
       Params = <
         item
@@ -2605,8 +2613,8 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
           DataSet = PrintMasterCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'OperDate;GoodsName;GoodsKind_group;GoodsName_child;GoodsKindName' +
-            '_Complete'
+            'GroupNum_KindComplete;OperDate;GoodsName;GoodsKind_group;GoodsNa' +
+            'me_child;GoodsKindName_Complete'
         end>
       Params = <
         item
@@ -2707,8 +2715,8 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
           DataSet = PrintMasterCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'OperDate;GoodsName;GoodsKind_group;GoodsName_child;GoodsKindName' +
-            '_Complete'
+            'GroupNum_KindComplete;OperDate;GoodsName;GoodsKind_group;GoodsNa' +
+            'me_child;GoodsKindName_Complete'
         end>
       Params = <
         item
@@ -3980,6 +3988,10 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         end
         item
           Visible = True
+          ItemName = 'bbPrintOne'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -4297,6 +4309,13 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
       Action = macUpdate_isWeightMain
       Category = 0
     end
+    object bbPrintOne: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cbPrintOne
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
@@ -4532,8 +4551,8 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 288
-    Top = 168
+    Left = 328
+    Top = 184
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
     Left = 442
@@ -5320,6 +5339,14 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId_child'
         Value = '0'
         ParamType = ptInput
@@ -5334,6 +5361,14 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
       item
         Name = 'inisCuterCount'
         Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOne'
+        Value = Null
+        Component = cbPrintOne
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5384,6 +5419,14 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId_child'
         Value = '0'
         ParamType = ptInput
@@ -5398,6 +5441,14 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
       item
         Name = 'inisCuterCount'
         Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOne'
+        Value = Null
+        Component = cbPrintOne
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5448,6 +5499,14 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId_child'
         Value = '0'
         ParamType = ptInput
@@ -5462,6 +5521,14 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
       item
         Name = 'inisCuterCount'
         Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOne'
+        Value = Null
+        Component = cbPrintOne
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5512,6 +5579,14 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId_child'
         Value = '0'
         ParamType = ptInput
@@ -5526,6 +5601,14 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
       item
         Name = 'inisCuterCount'
         Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOne'
+        Value = Null
+        Component = cbPrintOne
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5576,6 +5659,20 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId_child'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGroupNum'
         Value = '1'
         ParamType = ptInput
@@ -5584,6 +5681,14 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
       item
         Name = 'inisCuterCount'
         Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOne'
+        Value = Null
+        Component = cbPrintOne
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5800,6 +5905,14 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId_child'
         Value = Null
         Component = ChildCDS
@@ -5815,6 +5928,13 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
       end
       item
         Name = 'inisCuterCount'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOne'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
