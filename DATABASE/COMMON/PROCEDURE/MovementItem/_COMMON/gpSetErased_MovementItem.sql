@@ -1,4 +1,4 @@
--- Function: gpSetErased_MovementItem (Integer, TVarChar)
+ -- Function: gpSetErased_MovementItem (Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpSetErased_MovementItem (Integer, TVarChar);
 
@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSetErased_MovementItem(
     IN inMovementItemId      Integer              , -- ключ объекта <Элемент документа>
    OUT outIsErased           Boolean              , -- новое значение
     IN inSession             TVarChar               -- текущий пользователь
-)                              
+)
   RETURNS Boolean
 AS
 $BODY$
@@ -20,15 +20,16 @@ BEGIN
 
   -- устанавливаем новое значение
   outIsErased:= lpSetErased_MovementItem (inMovementItemId:= inMovementItemId, inUserId:= vbUserId);
-  
+
   IF EXISTS (SELECT 1 FROM MovementItem JOIN Movement ON Movement.Id = MovementItem.MovementId AND Movement.DescId = zc_Movement_WeighingPartner() WHERE MovementItem.Id= inMovementItemId)
   THEN
+      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_MI_WeighingPartner());
       --
       vbMovementId:= (SELECT MovementItem.MovementId FROM MovementItem WHERE MovementItem.Id= inMovementItemId);
       --
       vbBoxNumber:= (SELECT MIF.ValueData :: Integer FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = inMovementItemId AND MIF.DescId = zc_MIFloat_BoxNumber());
       --
-       
+
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_BoxNumber(), tmp.MovementItemId, BoxNumber - 1)
       FROM (SELECT MovementItem.Id             AS MovementItemId
                  , MIFloat_BoxNumber.ValueData AS BoxNumber
@@ -43,12 +44,15 @@ BEGIN
               AND vbBoxNumber             > 0
            ) AS tmp;
 
+  ELSEIF EXISTS (SELECT 1 FROM MovementItem JOIN Movement ON Movement.Id = MovementItem.MovementId AND Movement.DescId = zc_Movement_WeighingProduction() WHERE MovementItem.Id= inMovementItemId)
+  THEN
+      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_MI_WeighingProduction());
   END IF;
+
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSetErased_MovementItem (Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
