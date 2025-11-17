@@ -228,7 +228,6 @@ type
     cxLabel19: TcxLabel;
     PeriodChoice: TPeriodChoice;
     edTotalSumm_1: TcxCurrencyEdit;
-    cxLabel20: TcxLabel;
     AmountPlan_total: TcxGridDBColumn;
     mactExportMail_xls_1: TMultiAction;
     mactExportMail_xls_2: TMultiAction;
@@ -242,9 +241,7 @@ type
     bbExportMail_xls_4: TdxBarButton;
     bbExportMail_xls_5: TdxBarButton;
     edTotalSumm_2: TcxCurrencyEdit;
-    cxLabel21: TcxLabel;
     edTotalSumm_3: TcxCurrencyEdit;
-    cxLabel22: TcxLabel;
     cxLabel23: TcxLabel;
     edOKPO_search: TcxTextEdit;
     cxLabel24: TcxLabel;
@@ -254,15 +251,16 @@ type
     spUpdate_SignWait_1: TdsdStoredProc;
     actUpdate_SignWait_1: TdsdExecStoredProc;
     actRefreshGet: TdsdDataSetRefresh;
-    cxLabel25: TcxLabel;
     ceDateSignWait_1: TcxDateEdit;
-    cxLabel26: TcxLabel;
     ceDateSign_1: TcxDateEdit;
     cbSignWait_1: TcxCheckBox;
     cbSign_1: TcxCheckBox;
     spUpdate_Sign_1: TdsdStoredProc;
     actUpdate_Sign_1: TdsdExecStoredProc;
     bbUpdate_Sign_1: TdxBarButton;
+    edTotalText_1: TcxTextEdit;
+    edTotalText_2: TcxTextEdit;
+    edTotalText_3: TcxTextEdit;
   private
   public
   end;

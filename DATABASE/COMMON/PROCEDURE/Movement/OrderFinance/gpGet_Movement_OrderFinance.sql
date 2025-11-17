@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , PositionName_insert TVarChar          
              , Date_SignWait_1 TDateTime, Date_Sign_1 TDateTime
              , isSignWait_1 Boolean, isSign_1 Boolean
+             , TotalText_1 TVarChar, TotalText_2 TVarChar, TotalText_3 TVarChar
              )
 AS
 $BODY$
@@ -146,6 +147,11 @@ BEGIN
              , CAST (NULL AS TDateTime)                         AS Date_Sign_1
              , FALSE                                 ::Boolean  AS isSignWait_1 
              , FALSE                                 ::Boolean  AS isSign_1
+
+             , 'Говядина на неделю:'   :: TVarChar AS TotalText_1
+             , 'Живой вес на неделю :' :: TVarChar AS TotalText_2
+             , 'Прочее на неделю :'    :: TVarChar AS TotalText_3
+
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
               LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
 
@@ -203,6 +209,11 @@ BEGIN
            , MovementDate_Sign_1.ValueData                          ::TDateTime AS Date_Sign_1
            , COALESCE (MovementBoolean_SignWait_1.ValueData, FALSE) ::Boolean   AS isSignWait_1 
            , COALESCE (MovementBoolean_Sign_1.ValueData, FALSE)     ::Boolean   AS isSign_1
+
+           , 'Говядина на неделю:'   :: TVarChar AS TotalText_1
+           , 'Живой вес на неделю :' :: TVarChar AS TotalText_2
+           , 'Прочее на неделю :'    :: TVarChar AS TotalText_3
+
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 

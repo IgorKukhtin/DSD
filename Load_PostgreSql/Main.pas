@@ -309,6 +309,12 @@ type
     actSendSMSKyivstar: TdsdSendSMSKyivstarAction;
     spSelect_SMSKyivstar: TdsdStoredProc;
     actSelectSMSKyivstar: TdsdExecStoredProc;
+    cbSendSMS_zp: TCheckBox;
+    bbSendSMS_zp: TButton;
+    spUpdateSMSKyivstar_true: TdsdStoredProc;
+    spUpdateSMSKyivstar_false: TdsdStoredProc;
+    actUpdateSMSKyivstar_true: TdsdExecStoredProc;
+    actUpdateSMSKyivstar_false: TdsdExecStoredProc;
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure StopButtonClick(Sender: TObject);
@@ -330,6 +336,7 @@ type
     procedure bbPrintForm_calcClick(Sender: TObject);
     procedure bbExportBirthDay_xlsClick(Sender: TObject);
     procedure bbLoadVchasno_ComDocClick(Sender: TObject);
+    procedure bbSendSMS_zpClick(Sender: TObject);
   private
     fStop:Boolean;
     isGlobalLoad,zc_rvYes,zc_rvNo:Integer;
@@ -2155,6 +2162,13 @@ begin
                                    ;
      if cbExportBirthDay_xls.Checked then pExportBirthDay_xls;
      //
+     // start Export BirthDay xls
+     cbSendSMS_zp.Checked:= (ParamStr(1) = 'auto_SMS_zp')
+                          or(ParamStr(2) = 'auto_SMS_zp')
+                          or(ParamStr(3) = 'auto_SMS_zp')
+                            ;
+     if cbSendSMS_zp.Checked then pSend_ZP_SMS_ks;
+     //
      //start Vchasno ComDoc
      cbLoadVchasno_ComDoc.Checked:= (ParamStr(1) = 'auto_LoadVchasno')
                                   or(ParamStr(2) = 'auto_LoadVchasno')
@@ -2728,19 +2742,42 @@ procedure TMainForm.pSend_ZP_SMS_ks;
 begin
      myLogMemo_add('start ZP - _SMS - ks');
      //
-     DBGrid.Visible:= false;
-     ExportXmlGrid.Visible:= true;
-     ExportXmlGrid.Align:= alClient;
-     actSelect_Export_xls.Execute;
+     //DBGrid.Visible:= false;
+     //ExportXmlGrid.Visible:= true;
+     //ExportXmlGrid.Align:= alClient;
+     DBGrid.DataSource.DataSet:= ExportCDS;
      //
-     if (ExportCDS.FieldByName('isUnload').AsBoolean = true) or not (cbExportBirthDay_xls.Checked) then
-     begin
-         mactExport_xls.Execute;
-         //
-         myLogMemo_add('!!! end ZP - _SMS - ks !!!');
-     end
-     else
-         myLogMemo_add('not Export - BirthDay - xls');
+     FormParams.ParamByName('DateFrom').Value:= Date;
+     FormParams.ParamByName('DateTo').Value:= Date;
+     spSelect_SMSKyivstar.Execute;
+     //
+     with DBGrid.DataSource.DataSet do
+       while not EOF do
+       begin
+           FormParams.ParamByName('SMS_PhoneNumber').Value:= FieldByName('Phone').AsString;
+           FormParams.ParamByName('SMS_Message').Value:= FieldByName('SMS_Message').AsString;
+           FormParams.ParamByName('MovementId_sms').Value:= FieldByName('MovementId').AsInteger;
+           FormParams.ParamByName('MovementItemId_sms').Value:= FieldByName('MovementItemId').AsInteger;
+           //
+           try
+           if actSendSMSKyivstar.Execute
+           then actUpdateSMSKyivstar_true.Execute;
+           except
+                 on E:Exception do
+                 begin
+                      myLogMemo_add('!!! ERROR ZP - _SMS - ks!!!');
+                      myLogMemo_add(FieldByName('Phone').AsString);
+                      myLogMemo_add(FieldByName('SMS_Message').AsString);
+                      myLogMemo_add(FieldByName('PersonalName').AsString);
+                      myLogMemo_add(E.Message);
+                      //
+                      actUpdateSMSKyivstar_false.Execute
+                 end;
+           end;
+           Next;
+       end;
+     //
+     myLogMemo_add('end ZP - _SMS - ks');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadVchasno_ComDoc;
@@ -2794,6 +2831,22 @@ begin
        then begin
                 //cbExportBirthDay_xls.Checked:= true;
                 pExportBirthDay_xls;
+            end;
+     end;
+end;
+//------------------------------------------------------------------------------------------------
+procedure TMainForm.bbSendSMS_zpClick(Sender: TObject);
+begin
+     // autoSMS
+     if cbSendSMS_zp.Checked
+     then
+         pSend_ZP_SMS_ks
+     else
+     begin
+       if MessageDlg('Действительно Send_ZP_SMS_ks?',mtConfirmation,[mbYes,mbNo],0)=mrYes
+       then begin
+                //cbSendSMS_zp.Checked:= true;
+                pSend_ZP_SMS_ks;
             end;
      end;
 end;

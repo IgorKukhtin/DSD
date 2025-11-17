@@ -3,7 +3,8 @@
 -- DROP FUNCTION IF EXISTS gpCheckLogin (TVarChar, TVarChar, TVarChar);
 -- DROP FUNCTION IF EXISTS gpCheckLogin (TVarChar, TVarChar, TVarChar, TVarChar);
 -- DROP FUNCTION IF EXISTS gpCheckLogin (TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpCheckLogin (TVarChar, TVarChar, TVarChar, Boolean, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpCheckLogin (TVarChar, TVarChar, TVarChar, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpCheckLogin (TVarChar, TVarChar, TVarChar, Boolean, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpCheckLogin(
     IN inUserLogin      TVarChar,
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpCheckLogin(
     IN inIP             TVarChar,
  INOUT ioIsGoogleOTP    Boolean,
  INOUT ioGoogleSecret   TVarChar,
+ INOUT ioPhoneAuthent   TVarChar,
  INOUT Session          TVarChar
 )
 RETURNS RECORD
@@ -41,9 +43,16 @@ BEGIN
                 WHEN Object_User.ObjectCode IN (2596, 2790, 20, 19, 2727) THEN COALESCE(ObjectBoolean_ProjectAuthent.ValueData, FALSE)
                 ELSE FALSE
            END AS isGoogleOTP
+
+           -- для Google Authenticator
          , COALESCE(ObjectString_GoogleSecret.ValueData, '')
 
-           INTO vbIsCreate, vbUserId, ioIsGoogleOTP, ioGoogleSecret
+           -- параметр - PhoneAuthent
+         , CASE WHEN Object_User.Id = 5 AND 1=0 THEN '380673343350'
+                ELSE ''
+           END AS PhoneAuthent
+
+           INTO vbIsCreate, vbUserId, ioIsGoogleOTP, ioGoogleSecret, ioPhoneAuthent
 
     FROM Object AS Object_User
          JOIN ObjectString AS UserPassword
@@ -133,4 +142,4 @@ END;$BODY$
 
 -- тест
 -- SELECT * FROM LoginProtocol order by 1 desc
--- SELECT * FROM gpCheckLogin(inUserLogin := 'Админ' , inUserPassword := 'qsxqsxw1' , inIP := '192.168.43.29' , ioIsGoogleOTP := 'False' , ioGoogleSecret := '' ,  Session := '');
+-- SELECT * FROM gpCheckLogin(inUserLogin := 'Админ' , inUserPassword := 'qsxqsxw1' , inIP := '192.168.43.29' , ioIsGoogleOTP := 'False' , ioGoogleSecret := '',  ioPhoneAuthent:= '', Session := '');
