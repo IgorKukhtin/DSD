@@ -183,7 +183,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-            LEFT JOIN Object AS Object_Unit_insert ON Object_Unit_insert.Id = MovementLinkObject_Member_2.ObjectId
+            LEFT JOIN Object AS Object_Unit_insert ON Object_Unit_insert.Id = MovementLinkObject_Unit.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Position
                                          ON MovementLinkObject_Position.MovementId = Movement.Id

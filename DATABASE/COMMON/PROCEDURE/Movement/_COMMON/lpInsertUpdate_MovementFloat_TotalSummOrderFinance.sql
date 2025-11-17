@@ -21,7 +21,7 @@ BEGIN
     END IF;
 
     --
-    SELECT (SUM (COALESCE (MovementFloat_TotalSumm_1.Valuedata, 0))
+    /*SELECT (SUM (COALESCE (MovementFloat_TotalSumm_1.Valuedata, 0))
           + SUM (COALESCE (MovementFloat_TotalSumm_2.Valuedata, 0))
           + SUM (COALESCE (MovementFloat_TotalSumm_3.Valuedata, 0))) ::TFloat AS TotalSumm
 
@@ -39,18 +39,21 @@ BEGIN
 
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_OrderFinance();
+     */
     --
     SELECT SUM (COALESCE (MIFloat_AmountPlan_1.ValueData,0)) ::TFloat AS AmountPlan_1
          , SUM (COALESCE (MIFloat_AmountPlan_2.ValueData,0)) ::TFloat AS AmountPlan_2
          , SUM (COALESCE (MIFloat_AmountPlan_3.ValueData,0)) ::TFloat AS AmountPlan_3
          , SUM (COALESCE (MIFloat_AmountPlan_4.ValueData,0)) ::TFloat AS AmountPlan_4
          , SUM (COALESCE (MIFloat_AmountPlan_5.ValueData,0)) ::TFloat AS AmountPlan_5
+         , SUM (COALESCE (MovementItem.Amount,0))            ::TFloat AS TotalSumm
 
      INTO vbAmountPlan_1
         , vbAmountPlan_2
         , vbAmountPlan_3
         , vbAmountPlan_4
         , vbAmountPlan_5
+        , vbTotalSumm
     FROM MovementItem
          LEFT JOIN MovementItemFloat AS MIFloat_AmountPlan_1
                                         ON MIFloat_AmountPlan_1.MovementItemId = MovementItem.Id
