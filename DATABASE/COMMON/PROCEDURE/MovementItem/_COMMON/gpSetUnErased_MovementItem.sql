@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSetUnErased_MovementItem(
     IN inMovementItemId      Integer              , -- ключ объекта <Элемент документа>
    OUT outIsErased           Boolean              , -- новое значение
     IN inSession             TVarChar               -- текущий пользователь
-)                              
+)
   RETURNS Boolean
 AS
 $BODY$
@@ -19,10 +19,19 @@ BEGIN
   -- устанавливаем новое значение
   outIsErased:= lpSetUnErased_MovementItem (inMovementItemId:= inMovementItemId, inUserId:= vbUserId);
 
+  IF EXISTS (SELECT 1 FROM MovementItem JOIN Movement ON Movement.Id = MovementItem.MovementId AND Movement.DescId = zc_Movement_WeighingPartner() WHERE MovementItem.Id= inMovementItemId)
+  THEN
+      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_MI_WeighingPartner());
+
+  ELSEIF EXISTS (SELECT 1 FROM MovementItem JOIN Movement ON Movement.Id = MovementItem.MovementId AND Movement.DescId = zc_Movement_WeighingProduction() WHERE MovementItem.Id= inMovementItemId)
+  THEN
+      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetUnErased_MI_WeighingProduction());
+
+  END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSetUnErased_MovementItem (Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

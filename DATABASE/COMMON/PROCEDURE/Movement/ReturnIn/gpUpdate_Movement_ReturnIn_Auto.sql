@@ -63,7 +63,7 @@ BEGIN
                -- во сколько закончилась
              , CLOCK_TIMESTAMP() AS Time5
                -- ProcName
-             , ('gpUpdate_Movement_ReturnIn_Auto - ' || outMessageText) :: TVarChar
+             , ('gpUpdate_Movement_ReturnIn_Auto - ' || COALESCE (outMessageText, '')) :: TVarChar
                -- ProtocolData
              , inMovementId :: TVarChar
     || ', ' || CHR (39) || zfConvert_DateToString (inStartDateSale) || CHR (39)
