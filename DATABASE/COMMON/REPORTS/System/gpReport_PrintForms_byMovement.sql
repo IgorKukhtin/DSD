@@ -45,9 +45,10 @@ BEGIN
     tmpMovementDesc AS (
                         SELECT MovementDesc.*
                         FROM MovementDesc
-                        WHERE MovementDesc.Id IN (/*zc_Movement_Sale()
+                        WHERE MovementDesc.Id IN (zc_Movement_Sale()
                                                 , zc_Movement_SendOnPrice()
-                                                , zc_Movement_Send()
+                                                  --
+                                             /* , zc_Movement_Send()
                                                 , zc_Movement_Loss()
                                               --, zc_Movement_ReturnIn()
 
@@ -58,7 +59,8 @@ BEGIN
                                               */
                                                   --
                                                 , zc_Movement_TransportGoods()
-                                                --, zc_Movement_QualityDoc()
+                                                  --
+                                              --, zc_Movement_QualityDoc()
                                                  )
                         )
 
@@ -754,12 +756,12 @@ BEGIN
                              , lfSelect.DateOut
                         FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
                        )
-
-        --–≈«”À‹“¿“
+        -- –≈«”À‹“¿“
         SELECT tmpData.Id                             ::Integer   AS Id
              , zfConvert_StringToNumber (tmpData.InvNumber)       AS InvNumber
              , tmpData.OperDate                       ::TDateTime AS OperDate
              , DATE_TRUNC ('MONTH', tmpData.OperDate) ::TDateTime AS OperDate_m
+
              , tmpData.MovementDescId      ::Integer
              , tmpData.MovementDescName    ::TVarChar
 
@@ -820,10 +822,12 @@ BEGIN
                                  AND tmpData.DescId_From             = zc_Object_Unit()
              LEFT JOIN Object AS Object_Branch    ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
 
-             LEFT JOIN Object AS Object_Insert    ON Object_Insert.Id = tmpData.UserId_insert
+             LEFT JOIN Object AS Object_Insert    ON Object_Insert.Id    = tmpData.UserId_insert
              LEFT JOIN Object AS Object_PrintKind ON Object_PrintKind.Id = tmpData.PrintKindId
              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpData.JuridicalId
-             LEFT JOIN Object AS Object_Retail    ON Object_Retail.Id = tmpData.RetailId
+             LEFT JOIN Object AS Object_Retail    ON Object_Retail.Id    = tmpData.RetailId
+             LEFT JOIN Object AS Object_To        ON Object_To.Id        = tmpData.ToId
+
              --
              LEFT JOIN ObjectLink AS ObjectLink_User_Member
                                   ON ObjectLink_User_Member.ObjectId = Object_Insert.Id
@@ -869,10 +873,11 @@ BEGIN
                                         ON MovementFloat_TotalPage_8.MovementId = tmpData.Id
                                        AND MovementFloat_TotalPage_8.DescId     = zc_MovementFloat_TotalPage_8()
 
-        -- WHERE tmpData.MovementDescId = zc_Movement_Sale()
-        -- WHERE tmpData.Id IN (30907282, 30907283)
-
-        order by 1, 4, 5
+      -- WHERE tmpData.MovementDescId = zc_Movement_Sale()
+         WHERE tmpData.FromId = zc_Unit_RK() -- 133049
+        -- AND Object_To.DescId = zc_Object_Unit()
+           AND tmpData.MovementDescId = zc_Movement_TransportGoods()
+        ORDER BY 1, 4, 5
         -- LIMIT 1
    ;
 
