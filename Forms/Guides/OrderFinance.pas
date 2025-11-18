@@ -78,6 +78,7 @@ type
     MemberName_1: TcxGridDBColumn;
     MemberName_2: TcxGridDBColumn;
     NumGroup: TcxGridDBColumn;
+    isGroup: TcxGridDBColumn;
   private
     { Private declarations }
   public

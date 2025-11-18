@@ -410,11 +410,31 @@ CREATE OR REPLACE FUNCTION zc_MIBoolean_SMS() RETURNS Integer AS $BODY$BEGIN RET
 INSERT INTO MovementItemBooleanDesc (Code, ItemName)
   SELECT 'zc_MIBoolean_SMS', 'Отправлено смс' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_SMS'); 
 
- 
+CREATE OR REPLACE FUNCTION zc_MIBoolean_AmountPlan_1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_AmountPlan_1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemBooleanDesc (Code, ItemName)
+  SELECT 'zc_MIBoolean_AmountPlan_1', 'Платим (да/нет) 1.пн.' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_AmountPlan_1'); 
+
+CREATE OR REPLACE FUNCTION zc_MIBoolean_AmountPlan_2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_AmountPlan_2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemBooleanDesc (Code, ItemName)
+  SELECT 'zc_MIBoolean_AmountPlan_2', 'Платим (да/нет) 2.вт.' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_AmountPlan_2'); 
+
+CREATE OR REPLACE FUNCTION zc_MIBoolean_AmountPlan_3() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_AmountPlan_3'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemBooleanDesc (Code, ItemName)
+  SELECT 'zc_MIBoolean_AmountPlan_3', 'Платим (да/нет) 3.ср.' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_AmountPlan_3'); 
+
+CREATE OR REPLACE FUNCTION zc_MIBoolean_AmountPlan_4() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_AmountPlan_4'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemBooleanDesc (Code, ItemName)
+  SELECT 'zc_MIBoolean_AmountPlan_4', 'Платим (да/нет) 4.чт.' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_AmountPlan_4'); 
+
+CREATE OR REPLACE FUNCTION zc_MIBoolean_AmountPlan_5() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_AmountPlan_5'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemBooleanDesc (Code, ItemName)
+  SELECT 'zc_MIBoolean_AmountPlan_5', 'Платим (да/нет) 5.пт.' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_AmountPlan_5'); 
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.   Шаблий О.В.
+ 17.11.25         * zc_MIBoolean_AmountPlan_1...5
  03.11.25         * zc_MIBoolean_SMS
  15.05.25         * zc_MIBoolean_PartionCell_Many_1 ...  zc_MIBoolean_PartionCell_Many_22
  21.03.25         * zc_ObjectBoolean_PersonalServiceList_NotAuto

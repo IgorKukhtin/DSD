@@ -966,7 +966,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
       object cbPrintOne: TcxCheckBox
         Left = 628
         Top = 66
-        Caption = #1076#1083#1103' 1 '#1090#1086#1074#1072#1088#1072
+        Caption = #1076#1083#1103' "1 '#1082#1086#1076#1072'"'
         Properties.ReadOnly = False
         TabOrder = 3
         Width = 93

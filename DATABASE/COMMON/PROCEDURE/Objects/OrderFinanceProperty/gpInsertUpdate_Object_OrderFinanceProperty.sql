@@ -1,13 +1,15 @@
 -- Function: gpInsertUpdate_Object_ImportTypeItems()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinanceProperty (Integer, Integer, Integer, Tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinanceProperty (Integer, Integer, Integer, TFloat, Tvarchar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinanceProperty (Integer, Integer, Integer, TFloat, Tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinanceProperty (Integer, Integer, Integer, TFloat, Boolean, Tvarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_OrderFinanceProperty(
  INOUT ioId                      Integer   ,   	-- ключ объекта <>
     IN inOrderFinanceId          Integer   ,    -- 
     IN inObjectId                Integer   ,    -- 
     IN inNumGroup                TFloat    ,
+    IN inisGroup                 Boolean   ,
     IN inSession                 TVarChar       -- сессия пользователя
 )
   RETURNS Integer AS
@@ -30,6 +32,9 @@ BEGIN
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_OrderFinanceProperty_Group(), ioId, inNumGroup);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_OrderFinanceProperty_Group(), ioId, inisGroup);
+
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -41,6 +46,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.11.25         *
  29.07.19         * 
 
 */

@@ -1,9 +1,11 @@
 -- Function: gpUpdateMovement_OrderFinance_SignWait_1()
 
 DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_SignWait_1 (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_SignWait_1 (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdateMovement_OrderFinance_SignWait_1(
     IN inMovementId          Integer   , -- Ключ объекта <Документ> 
+    IN inisSignWait_1        Boolean   ,
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID 
@@ -17,10 +19,16 @@ BEGIN
 
 
      -- сохранили свойство  <Состояние Ожидание Согласования-1>
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_SignWait_1(), inMovementId, TRUE);
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_SignWait_1(), inMovementId, inisSignWait_1);
  
-     -- сохранили свойство <Дата/время когда переведен в Состояние Ожидание Согласования>
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_SignWait_1(), inMovementId, CURRENT_TIMESTAMP);
+     IF COALESCE (inisSignWait_1, FALSE) = TRUE
+     THEN
+         -- сохранили свойство <Дата/время когда переведен в Состояние Ожидание Согласования>
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_SignWait_1(), inMovementId, CURRENT_TIMESTAMP);
+     ELSE
+         -- сохранили свойство <Дата/время когда переведен в Состояние Ожидание Согласования>
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_SignWait_1(), inMovementId, NULL ::TDateTime);     
+     END IF;
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);

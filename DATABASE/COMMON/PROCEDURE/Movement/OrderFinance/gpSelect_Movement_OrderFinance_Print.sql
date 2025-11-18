@@ -96,13 +96,28 @@ BEGIN
            , (Object_BankAccount_View.BankName || '' || Object_BankAccount_View.Name) :: TVarChar AS BankAccountNameAll
 
            , MovementFloat_WeekNumber.ValueData   ::TFloat    AS WeekNumber
+           , DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', Movement.OperDate) + ((((7 * COALESCE (MovementFloat_WeekNumber.ValueData - 1, 0)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL) ::TDateTime AS StartDate_WeekNumber
+           , (DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', Movement.OperDate) + ((((7 * COALESCE (MovementFloat_WeekNumber.ValueData - 1, 0)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL) + INTERVAL '6 DAY') ::TDateTime AS EndDate_WeekNumber
+
            --, MovementDate_Update_report.ValueData ::TDateTime AS DateUpdate_report
            , Object_Update_report.ValueData       ::TVarChar  AS UserUpdate_report
            , Object_Member_1.ValueData            ::TVarChar  AS UserMember_1
            , Object_Member_2.ValueData            ::TVarChar  AS UserMember_2
 
-           , MovementString_Comment.ValueData       AS Comment
-       
+           , MovementString_Comment.ValueData       AS Comment 
+
+           , Object_Insert.ValueData                AS InsertName
+           , MovementDate_Insert.ValueData          AS InsertDate
+           , Object_Unit_insert.ValueData      ::TVarChar AS UnitName_insert
+           , Object_Position_insert.ValueData  ::TVarChar AS PositionName_insert          
+           
+           , CASE WHEN COALESCE (MovementBoolean_Sign_1.ValueData, FALSE) = FALSE THEN '' 
+                  ELSE zfConvert_DateToString (MovementDate_Sign_1.ValueData)
+             END  ::TVarChar AS Date_Sign_1
+
+           , CASE WHEN COALESCE (MovementBoolean_Sign_1.ValueData, FALSE) = FALSE THEN 'Не согласовано' 
+                  ELSE 'Согласовано'
+             END  ::TVarChar AS Text_Sign_1       
        FROM Movement
           --  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
 
@@ -113,8 +128,8 @@ BEGIN
                                    AND MovementFloat_WeekNumber.DescId = zc_MovementFloat_WeekNumber()
 
             LEFT JOIN tmpMovementString AS MovementString_Comment
-                                     ON MovementString_Comment.MovementId = Movement.Id
-                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
+                                        ON MovementString_Comment.MovementId = Movement.Id
+                                       AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
             LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_OrderFinance
                                             ON MovementLinkObject_OrderFinance.MovementId = Movement.Id
@@ -140,7 +155,33 @@ BEGIN
                                             ON MovementLinkObject_Member_2.MovementId = Movement.Id
                                            AND MovementLinkObject_Member_2.DescId = zc_MovementLinkObject_Member_2()
             LEFT JOIN Object AS Object_Member_2 ON Object_Member_2.Id = MovementLinkObject_Member_2.ObjectId
-                           
+
+            LEFT JOIN MovementDate AS MovementDate_Insert
+                                   ON MovementDate_Insert.MovementId = Movement.Id
+                                  AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
+                                         ON MovementLinkObject_Insert.MovementId = Movement.Id
+                                        AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MovementLinkObject_Insert.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+            LEFT JOIN Object AS Object_Unit_insert ON Object_Unit_insert.Id = MovementLinkObject_Unit.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Position
+                                         ON MovementLinkObject_Position.MovementId = Movement.Id
+                                        AND MovementLinkObject_Position.DescId = zc_MovementLinkObject_Position()
+            LEFT JOIN Object AS Object_Position_insert ON Object_Position_insert.Id = MovementLinkObject_Position.ObjectId                           
+
+            LEFT JOIN MovementDate AS MovementDate_Sign_1
+                                   ON MovementDate_Sign_1.MovementId = Movement.Id
+                                  AND MovementDate_Sign_1.DescId = zc_MovementDate_Sign_1()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Sign_1
+                                      ON MovementBoolean_Sign_1.MovementId = Movement.Id
+                                     AND MovementBoolean_Sign_1.DescId = zc_MovementBoolean_Sign_1()
       WHERE Movement.Id = inMovementId
         AND Movement.DescId = zc_Movement_OrderFinance();
      

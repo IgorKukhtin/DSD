@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_OrderFinance()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinance(
  INOUT ioId                    Integer   , --  люч объекта <Ёлемент документа>
@@ -16,6 +17,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinance(
     IN inAmountPlan_4          TFloat    , --
     IN inAmountPlan_5          TFloat    , --
    OUT outAmountPlan_total     TFloat    , --
+    IN inisAmountPlan_1        Boolean    , --
+    IN inisAmountPlan_2        Boolean    , --
+    IN inisAmountPlan_3        Boolean    , --
+    IN inisAmountPlan_4        Boolean    , --
+    IN inisAmountPlan_5        Boolean    , --
     IN inComment               TVarChar  , --
     IN inSession               TVarChar    -- сесси€ пользовател€
 )
@@ -30,20 +36,23 @@ BEGIN
      -- сохранили
      SELECT tmp.ioId
             INTO ioId
-     FROM lpInsertUpdate_MovementItem_OrderFinance (ioId            := ioId
-                                                  , inMovementId    := inMovementId
-                                                  , inJuridicalId   := inJuridicalId
-                                                  , inContractId    := inContractId
-                                                  --, inBankAccountId := inBankAccountId
-                                                  , inAmount        := inAmount
-                                                  --, inAmountStart   := inAmountStart
-                                                  , inAmountPlan_1  := inAmountPlan_1
-                                                  , inAmountPlan_2  := inAmountPlan_2
-                                                  , inAmountPlan_3  := inAmountPlan_3
-                                                  , inAmountPlan_4  := inAmountPlan_4
-                                                  , inAmountPlan_5  := inAmountPlan_5
-                                                  , inComment       := inComment
-                                                  , inUserId        := vbUserId
+     FROM lpInsertUpdate_MovementItem_OrderFinance (ioId              := ioId
+                                                  , inMovementId      := inMovementId
+                                                  , inJuridicalId     := inJuridicalId
+                                                  , inContractId      := inContractId
+                                                  , inAmount          := inAmount
+                                                  , inAmountPlan_1    := inAmountPlan_1
+                                                  , inAmountPlan_2    := inAmountPlan_2
+                                                  , inAmountPlan_3    := inAmountPlan_3
+                                                  , inAmountPlan_4    := inAmountPlan_4
+                                                  , inAmountPlan_5    := inAmountPlan_5
+                                                  , inisAmountPlan_1  := inisAmountPlan_1
+                                                  , inisAmountPlan_2  := inisAmountPlan_2
+                                                  , inisAmountPlan_3  := inisAmountPlan_3
+                                                  , inisAmountPlan_4  := inisAmountPlan_4
+                                                  , inisAmountPlan_5  := inisAmountPlan_5
+                                                  , inComment         := inComment
+                                                  , inUserId          := vbUserId
                                                    ) AS tmp;
 
     --

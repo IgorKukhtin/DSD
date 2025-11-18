@@ -1627,7 +1627,8 @@ uses
   StaffListMovement in '..\..\Forms\Document\StaffListMovement.pas' {StaffListMovementForm: TParentForm},
   Report_Personal_Cash_sms in '..\..\Forms\Report\Report_Personal_Cash_sms.pas' {Report_Personal_Cash_smsForm: TParentForm},
   OrderFinanceMovement in '..\..\Forms\Document\OrderFinanceMovement.pas' {OrderFinanceMovementForm: TParentForm},
-  OrderFinance_Object in '..\..\Forms\Guides\OrderFinance_Object.pas' {OrderFinance_ObjectForm: TParentForm};
+  OrderFinance_Object in '..\..\Forms\Guides\OrderFinance_Object.pas' {OrderFinance_ObjectForm: TParentForm},
+  Report_Branch_App1_Month in '..\..\Forms\Report\Report_Branch_App1_Month.pas' {Report_Branch_App1_MonthForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
