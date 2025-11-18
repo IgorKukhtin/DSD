@@ -195,7 +195,7 @@ inherited Report_PrintForms_byMovementForm: TReport_PrintForms_byMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 80
           end
           object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
