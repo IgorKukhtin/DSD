@@ -49,9 +49,13 @@ BEGIN
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
      -- !!!Проверка прав роль - Ограничение - нет вообще доступа к просмотру данных ЗП!!!
-     vbIsUserRole_8813637:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 8813637)
+     vbIsUserRole_8813637:= /*EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 8813637)
                          -- или если Ограничение - нет доступа к просмотру ведомость Админ ЗП
                          OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 11026035)
+                         */
+                         -- Разрешение ОПиУ - есть доступ к просмотру ведомость Админ ЗП
+                         NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 12966257)
+                         AND vbUserId NOT IN (5)
                            ;
 
 
@@ -511,7 +515,7 @@ BEGIN
                                                                    -- AND zc_isHistoryCost_byInfoMoneyDetail() = TRUE
            LEFT JOIN Object AS Object_Direction   ON Object_Direction.Id = tmpReport.DirectionId
            LEFT JOIN Object AS Object_Destination_calc ON Object_Destination_calc.Id = tmpReport.ObjectId_inf
-           LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = CASE WHEN (vbIsUserRole_8813637 = TRUE OR vbUserId IN (9457 , 4467766)) AND Object_Destination_calc.DescId IN (zc_Object_Personal(), zc_Object_Member()) THEN NULL ELSE tmpReport.ObjectId_inf END
+           LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = CASE WHEN (vbIsUserRole_8813637 = TRUE OR vbUserId IN (9457, 4467766)) AND Object_Destination_calc.DescId IN (zc_Object_Personal(), zc_Object_Member()) THEN NULL ELSE tmpReport.ObjectId_inf END
 
            LEFT JOIN MovementDesc ON MovementDesc.Id = tmpReport.MovementDescId
 

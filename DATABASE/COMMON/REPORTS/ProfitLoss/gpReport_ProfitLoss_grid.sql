@@ -55,12 +55,6 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Нет прав к отчету ОПиУ.';
      END IF;
 
-     -- Блокируем ему просмотр
-     IF vbUserId = 9457 -- Климентьев К.И.
-     THEN
-         vbUserId:= NULL;
-         RETURN;
-     END IF;
 
      -- Результат
      RETURN QUERY
