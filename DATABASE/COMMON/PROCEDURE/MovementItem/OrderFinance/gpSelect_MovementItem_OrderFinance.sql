@@ -354,6 +354,7 @@ BEGIN
      -- статьи для группировки
      , tmpOrderFinanceProperty AS (SELECT DISTINCT OrderFinanceProperty_Object.ChildObjectId AS Id
                                         , ObjectFloat_Group.ValueData                        AS NumGroup
+                                        , COALESCE (ObjectBoolean_Group.ValueData,FALSE) ::Boolean AS isGroup
                                    FROM ObjectLink AS OrderFinanceProperty_OrderFinance
                                         INNER JOIN ObjectLink AS OrderFinanceProperty_Object
                                                               ON OrderFinanceProperty_Object.ObjectId = OrderFinanceProperty_OrderFinance.ObjectId
@@ -366,6 +367,10 @@ BEGIN
                                         LEFT JOIN ObjectFloat AS ObjectFloat_Group 
                                                               ON ObjectFloat_Group.ObjectId = OrderFinanceProperty_Object.ObjectId
                                                              AND ObjectFloat_Group.DescId = zc_ObjectFloat_OrderFinanceProperty_Group()
+
+                                        LEFT JOIN ObjectBoolean AS ObjectBoolean_Group 
+                                                                ON ObjectBoolean_Group.ObjectId = OrderFinanceProperty_Object.ObjectId
+                                                               AND ObjectBoolean_Group.DescId = zc_ObjectBoolean_OrderFinanceProperty_Group()
 
                                    WHERE OrderFinanceProperty_OrderFinance.ChildObjectId = vbOrderFinanceId
                                      AND OrderFinanceProperty_OrderFinance.DescId = zc_ObjectLink_OrderFinanceProperty_OrderFinance()
@@ -553,6 +558,7 @@ BEGIN
      -- статьи для группировки
      , tmpOrderFinanceProperty AS (SELECT DISTINCT OrderFinanceProperty_Object.ChildObjectId AS Id
                                         , ObjectFloat_Group.ValueData                        AS NumGroup
+                                        , COALESCE (ObjectBoolean_Group.ValueData,FALSE) ::Boolean AS isGroup                                        
                                    FROM ObjectLink AS OrderFinanceProperty_OrderFinance
                                         INNER JOIN ObjectLink AS OrderFinanceProperty_Object
                                                               ON OrderFinanceProperty_Object.ObjectId = OrderFinanceProperty_OrderFinance.ObjectId
@@ -566,15 +572,20 @@ BEGIN
                                                               ON ObjectFloat_Group.ObjectId = OrderFinanceProperty_Object.ObjectId
                                                              AND ObjectFloat_Group.DescId = zc_ObjectFloat_OrderFinanceProperty_Group()
 
+                                        LEFT JOIN ObjectBoolean AS ObjectBoolean_Group 
+                                                                ON ObjectBoolean_Group.ObjectId = OrderFinanceProperty_Object.ObjectId
+                                                               AND ObjectBoolean_Group.DescId = zc_ObjectBoolean_OrderFinanceProperty_Group()
                                    WHERE OrderFinanceProperty_OrderFinance.ChildObjectId = vbOrderFinanceId
                                      AND OrderFinanceProperty_OrderFinance.DescId = zc_ObjectLink_OrderFinanceProperty_OrderFinance()
                                    )
 
-      , tmpInfoMoney_OFP AS (SELECT DISTINCT Object_InfoMoney_View.InfoMoneyId, tmpOrderFinanceProperty.NumGroup
+      , tmpInfoMoney_OFP AS (SELECT DISTINCT Object_InfoMoney_View.InfoMoneyId
+                                  , tmpOrderFinanceProperty.NumGroup
+                                  , tmpOrderFinanceProperty.isGroup
                              FROM Object_InfoMoney_View
                                   INNER JOIN tmpOrderFinanceProperty ON (tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyId
-                                                                      OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyDestinationId
-                                                                      OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyGroupId)
+                                                                     OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyDestinationId
+                                                                     OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyGroupId)
                              )
 
 
@@ -745,6 +756,9 @@ BEGIN
             LEFT JOIN tmpContractCondition ON tmpContractCondition.ContractId = Object_Contract.Id
 
             LEFT JOIN tmpInfoMoney_OFP ON tmpInfoMoney_OFP.InfoMoneyId = Object_InfoMoney.Id
+
+
+
             ;
      END IF;
 END;

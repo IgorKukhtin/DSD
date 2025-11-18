@@ -19,7 +19,8 @@ RETURNS TABLE (Id Integer, ObjectId Integer
              , InfoMoneyId Integer
              , InfoMoneyCode Integer
              , InfoMoneyName TVarChar
-             , NumGroup TFloat 
+             , NumGroup TFloat
+             , isGroup Boolean 
              , isErased Boolean
              ) AS
 $BODY$
@@ -71,6 +72,7 @@ BEGIN
             , Object_InfoMoney.ValueData             AS InfoMoneyName
              
             , ObjectFloat_Group.ValueData ::TFloat   AS NumGroup
+            , COALESCE (ObjectBoolean_Group.ValueData,FALSE) ::Boolean AS isGroup
 
             , Object_OrderFinanceProperty.isErased   AS isErased
 
@@ -78,6 +80,10 @@ BEGIN
            LEFT JOIN ObjectFloat AS ObjectFloat_Group 
                                  ON ObjectFloat_Group.ObjectId = Object_OrderFinanceProperty.Id
                                 AND ObjectFloat_Group.DescId = zc_ObjectFloat_OrderFinanceProperty_Group()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_Group 
+                                   ON ObjectBoolean_Group.ObjectId = Object_OrderFinanceProperty.Id
+                                  AND ObjectBoolean_Group.DescId = zc_ObjectBoolean_OrderFinanceProperty_Group()
 
            LEFT JOIN ObjectLink AS OrderFinanceProperty_OrderFinance
                                 ON OrderFinanceProperty_OrderFinance.ObjectId = Object_OrderFinanceProperty.Id
@@ -102,6 +108,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 18.11.25         *
  02.11.20         * add inisErased
  29.07.19         *
 */

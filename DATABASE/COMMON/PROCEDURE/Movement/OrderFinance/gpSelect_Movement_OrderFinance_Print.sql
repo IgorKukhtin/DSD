@@ -114,7 +114,10 @@ BEGIN
            , CASE WHEN COALESCE (MovementBoolean_Sign_1.ValueData, FALSE) = FALSE THEN '' 
                   ELSE zfConvert_DateToString (MovementDate_Sign_1.ValueData)
              END  ::TVarChar AS Date_Sign_1
-       
+
+           , CASE WHEN COALESCE (MovementBoolean_Sign_1.ValueData, FALSE) = FALSE THEN 'Не согласовано' 
+                  ELSE 'Согласовано'
+             END  ::TVarChar AS Text_Sign_1       
        FROM Movement
           --  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
 

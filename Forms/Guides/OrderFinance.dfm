@@ -1,20 +1,20 @@
 inherited OrderFinanceForm: TOrderFinanceForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1042#1080#1076#1099' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1087#1083#1072#1090#1077#1078#1077#1081'>'
   ClientHeight = 345
-  ClientWidth = 903
+  ClientWidth = 950
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 919
+  ExplicitWidth = 966
   ExplicitHeight = 384
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 903
+    Width = 950
     Height = 319
     ExplicitWidth = 903
     ExplicitHeight = 319
     ClientRectBottom = 319
-    ClientRectRight = 903
+    ClientRectRight = 950
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 903
       ExplicitHeight = 319
@@ -142,11 +142,12 @@ inherited OrderFinanceForm: TOrderFinanceForm
       object cxGrid1: TcxGrid
         Left = 572
         Top = 0
-        Width = 331
+        Width = 378
         Height = 319
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 331
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -161,7 +162,6 @@ inherited OrderFinanceForm: TOrderFinanceForm
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsCustomize.DataRowSizing = True
           OptionsData.CancelOnExit = False
-          OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
@@ -180,7 +180,7 @@ inherited OrderFinanceForm: TOrderFinanceForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Width = 75
+            Width = 60
           end
           object InfoMoneyDestinationName: TcxGridDBColumn
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
@@ -194,7 +194,7 @@ inherited OrderFinanceForm: TOrderFinanceForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Width = 90
+            Width = 83
           end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -203,7 +203,7 @@ inherited OrderFinanceForm: TOrderFinanceForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 33
+            Width = 35
           end
           object InfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -217,7 +217,7 @@ inherited OrderFinanceForm: TOrderFinanceForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Width = 71
+            Width = 101
           end
           object NumGroup: TcxGridDBColumn
             Caption = #8470' '#1075#1088#1091#1087#1087#1099
@@ -226,7 +226,15 @@ inherited OrderFinanceForm: TOrderFinanceForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 50
+            Width = 34
+          end
+          object isGroup: TcxGridDBColumn
+            Caption = #1055#1083#1072#1085' '#1087#1086' '#1075#1088#1091#1087#1087#1077
+            DataBinding.FieldName = 'isGroup'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085' '#1087#1086' '#1075#1088#1091#1087#1087#1077' ('#1076#1072'/'#1085#1077#1090')'
+            Width = 60
           end
           object clIisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -976,6 +984,15 @@ inherited OrderFinanceForm: TOrderFinanceForm
         Component = ChildCDS
         ComponentItem = 'NumGroup'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisGroup'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'isGroup'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
