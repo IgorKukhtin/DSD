@@ -645,11 +645,14 @@ begin
           // Попробовали отправить
           try
               // EDIN
-              if (FieldByName('isEdiOrdspr').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = false) then mactOrdspr.Execute;
+              if (FieldByName('isEdiOrdspr').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = false)
+              then mactOrdspr.Execute;
               // EDIN
-              if (FieldByName('isEdiDesadv').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = false) then mactDesadv.Execute;
+              if (FieldByName('isEdiDesadv').AsBoolean  = true) and (FieldByName('isVchasnoEDI').AsBoolean  = false)
+              then mactDesadv.Execute;
               // EDIN
-              if (FieldByName('isEdiInvoice').AsBoolean = true) and (FieldByName('isVchasnoEDI').AsBoolean  = false) then mactInvoice.Execute;
+              if (FieldByName('isEdiInvoice').AsBoolean = true) and (FieldByName('isVchasnoEDI').AsBoolean  = false)
+              then mactInvoice.Execute;
               // Ошибки по EDIN нет
               FormParams.ParamByName('Err_str_toEDI').Value := '';
 

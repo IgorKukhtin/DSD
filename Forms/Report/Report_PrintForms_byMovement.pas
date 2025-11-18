@@ -74,6 +74,7 @@ type
     MovementId_sale: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
     BranchName: TcxGridDBColumn;
+    OperDate_m: TcxGridDBColumn;
   private
     { Private declarations }
   public

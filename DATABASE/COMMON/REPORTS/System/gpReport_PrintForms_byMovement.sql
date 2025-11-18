@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpReport_PrintForms_byMovement(
     IN inMovementDescId Integer,
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
+RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, OperDate_m TDateTime
              , MovementDescId Integer, MovementDescName TVarChar
              , TotalLines TFloat
              , TotalPage_1 TFloat, TotalPage_2 TFloat, TotalPage_3 TFloat, TotalPage_4 TFloat
@@ -45,7 +45,7 @@ BEGIN
     tmpMovementDesc AS (
                         SELECT MovementDesc.*
                         FROM MovementDesc
-                        WHERE MovementDesc.Id IN (zc_Movement_Sale()
+                        WHERE MovementDesc.Id IN (/*zc_Movement_Sale()
                                                 , zc_Movement_SendOnPrice()
                                                 , zc_Movement_Send()
                                                 , zc_Movement_Loss()
@@ -55,9 +55,10 @@ BEGIN
 
                                               --, zc_Movement_Income()
                                               --, zc_Movement_ReturnOut()
+                                              */
                                                   --
                                                 , zc_Movement_TransportGoods()
-                                                , zc_Movement_QualityDoc()
+                                                --, zc_Movement_QualityDoc()
                                                  )
                         )
 
@@ -755,9 +756,10 @@ BEGIN
                        )
 
         --РЕЗУЛЬТАТ
-        SELECT tmpData.Id                  ::Integer
-             , zfConvert_StringToNumber (tmpData.InvNumber) AS InvNumber
-             , tmpData.OperDate            ::TDateTime
+        SELECT tmpData.Id                             ::Integer   AS Id
+             , zfConvert_StringToNumber (tmpData.InvNumber)       AS InvNumber
+             , tmpData.OperDate                       ::TDateTime AS OperDate
+             , DATE_TRUNC ('MONTH', tmpData.OperDate) ::TDateTime AS OperDate_m
              , tmpData.MovementDescId      ::Integer
              , tmpData.MovementDescName    ::TVarChar
 
