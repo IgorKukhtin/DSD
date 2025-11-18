@@ -977,6 +977,48 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             HeaderHint = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090' '#1085#1072' 5.'#1087#1090'.'
             Width = 70
           end
+          object isAmountPlan_1: TcxGridDBColumn
+            Caption = #1055#1083#1072#1090#1080#1084' ('#1076#1072'/'#1085#1077#1090') 1.'#1087#1085'.'
+            DataBinding.FieldName = 'isAmountPlan_1'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1090#1080#1084' ('#1076#1072'/'#1085#1077#1090') 1.'#1087#1085'.'
+            Width = 70
+          end
+          object isAmountPlan_2: TcxGridDBColumn
+            Caption = #1055#1083#1072#1090#1080#1084' ('#1076#1072'/'#1085#1077#1090') 2.'#1074#1090'.'
+            DataBinding.FieldName = 'isAmountPlan_2'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1090#1080#1084' ('#1076#1072'/'#1085#1077#1090') 2.'#1074#1090'.'
+            Width = 70
+          end
+          object isAmountPlan_3: TcxGridDBColumn
+            Caption = #1055#1083#1072#1090#1080#1084' ('#1076#1072'/'#1085#1077#1090') 3.'#1089#1088'.'
+            DataBinding.FieldName = 'isAmountPlan_3'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1090#1080#1084' ('#1076#1072'/'#1085#1077#1090') 3.'#1089#1088'.'
+            Width = 70
+          end
+          object isAmountPlan_4: TcxGridDBColumn
+            Caption = #1055#1083#1072#1090#1080#1084' ('#1076#1072'/'#1085#1077#1090') 4.'#1095#1090'.'
+            DataBinding.FieldName = 'isAmountPlan_4'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1090#1080#1084' ('#1076#1072'/'#1085#1077#1090') 4.'#1095#1090'.'
+            Width = 70
+          end
+          object isAmountPlan_5: TcxGridDBColumn
+            Caption = #1055#1083#1072#1090#1080#1084' ('#1076#1072'/'#1085#1077#1090') 5.'#1087#1090'.'
+            DataBinding.FieldName = 'isAmountPlan_5'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1090#1080#1084' ('#1076#1072'/'#1085#1077#1090') 5.'#1087#1090'.'
+            Width = 70
+          end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
@@ -3349,6 +3391,51 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisAmountPlan_1'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isAmountPlan_1'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAmountPlan_2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isAmountPlan_2'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAmountPlan_3'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isAmountPlan_3'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAmountPlan_4'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isAmountPlan_4'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAmountPlan_5'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isAmountPlan_5'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = MasterCDS
@@ -3358,8 +3445,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 150
-    Top = 263
+    Left = 54
+    Top = 367
   end
   object MasterViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -3549,7 +3636,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Control = edBankAccount
       end>
     GetStoredProc = spGet
-    Left = 184
+    Left = 168
     Top = 313
   end
   object spGet: TdsdStoredProc
@@ -3826,7 +3913,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
     Left = 446
-    Top = 338
+    Top = 354
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null
@@ -4451,20 +4538,20 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 112
-    Top = 440
+    Left = 136
+    Top = 432
   end
   object ExportDS: TDataSource
     DataSet = ExportCDS
-    Left = 88
-    Top = 456
+    Left = 80
+    Top = 480
   end
   object ExportCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 40
-    Top = 464
+    Left = 24
+    Top = 488
   end
   object spErasedUnErased_JurOrdFin: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
@@ -4565,23 +4652,80 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inBankAccountId'
+        Name = 'inAmount'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'BankAccountId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmount'
-        Value = 0.000000000000000000
+        ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmountStart'
-        Value = 0.000000000000000000
+        Name = 'inAmountPlan_1'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountPlan_2'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountPlan_3'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountPlan_4'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountPlan_5'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAmountPlan_1'
+        Value = 'false'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAmountPlan_2'
+        Value = 'false'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAmountPlan_3'
+        Value = 'false'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAmountPlan_4'
+        Value = 'false'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAmountPlan_5'
+        Value = 'false'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4594,8 +4738,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 174
-    Top = 319
+    Left = 70
+    Top = 407
   end
   object GuidesInsert: TdsdGuides
     KeyField = 'Id'

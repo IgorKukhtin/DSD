@@ -5,6 +5,7 @@
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean,Boolean,Boolean,Boolean,Boolean, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_OrderFinance(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -19,6 +20,11 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_OrderFinance(
     IN inAmountPlan_3          TFloat    , --
     IN inAmountPlan_4          TFloat    , --
     IN inAmountPlan_5          TFloat    , --
+    IN inisAmountPlan_1        Boolean    , --
+    IN inisAmountPlan_2        Boolean    , --
+    IN inisAmountPlan_3        Boolean    , --
+    IN inisAmountPlan_4        Boolean    , --
+    IN inisAmountPlan_5        Boolean    , --
     IN inComment               TVarChar  , -- 
     IN inUserId                Integer     -- пользователь
 )
@@ -60,12 +66,24 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_1(), ioId, inAmountPlan_1);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_2(), ioId, inAmountPlan_2);
--- сохранили свойство <>
+     -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_3(), ioId, inAmountPlan_3);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_4(), ioId, inAmountPlan_4);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_5(), ioId, inAmountPlan_5);
+
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_1(), ioId, inisAmountPlan_1);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_2(), ioId, inisAmountPlan_2);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_3(), ioId, inisAmountPlan_3);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_4(), ioId, inisAmountPlan_4);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_5(), ioId, inisAmountPlan_5);
+
 
      IF vbIsInsert = TRUE
      THEN

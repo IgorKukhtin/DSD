@@ -27,6 +27,11 @@ RETURNS TABLE (Id Integer
              , AmountPlan_4       TFloat
              , AmountPlan_5       TFloat
              , AmountPlan_total   TFloat
+             , isAmountPlan_1     Boolean
+             , isAmountPlan_2     Boolean
+             , isAmountPlan_3     Boolean
+             , isAmountPlan_4     Boolean
+             , isAmountPlan_5     Boolean
              , Comment            TVarChar
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
@@ -182,7 +187,19 @@ BEGIN
                                          FROM MovementItemString
                                          WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                            AND MovementItemString.DescId = zc_MIString_Comment()
-                                         )
+                                         )  
+
+             , tmpMovementItemBoolean AS (SELECT *
+                                          FROM MovementItemBoolean
+                                          WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                            AND MovementItemBoolean.DescId IN (zc_MIBoolean_AmountPlan_1()
+                                                                             , zc_MIBoolean_AmountPlan_2()
+                                                                             , zc_MIBoolean_AmountPlan_3()
+                                                                             , zc_MIBoolean_AmountPlan_4()
+                                                                             , zc_MIBoolean_AmountPlan_5()
+                                                                             )
+                                          )
+
 
                SELECT MovementItem.Id                   AS Id
                     , MovementItem.ObjectId             AS JuridicalId
@@ -210,12 +227,21 @@ BEGIN
                      + COALESCE (MIFloat_AmountPlan_5.ValueData, 0)
                       ) :: TFloat AS AmountPlan_total
 
+                    , MIBoolean_AmountPlan_1.ValueData    AS isAmountPlan_1
+                    , MIBoolean_AmountPlan_2.ValueData    AS isAmountPlan_2
+                    , MIBoolean_AmountPlan_3.ValueData    AS isAmountPlan_3
+                    , MIBoolean_AmountPlan_4.ValueData    AS isAmountPlan_4
+                    , MIBoolean_AmountPlan_5.ValueData    AS isAmountPlan_5
+
                     --, MILinkObject_BankAccount.ObjectId AS BankAccountId
                     , MIString_Comment.ValueData        AS Comment
                     , Object_Insert.ValueData           AS InsertName
                     , Object_Update.ValueData           AS UpdateName
                     , MIDate_Insert.ValueData           AS InsertDate
                     , MIDate_Update.ValueData           AS UpdateDate
+
+
+
                     , MovementItem.isErased             AS isErased
 
                FROM tmpMI AS MovementItem
@@ -259,6 +285,22 @@ BEGIN
                     LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_5
                                                    ON MIFloat_AmountPlan_5.MovementItemId = MovementItem.Id
                                                   AND MIFloat_AmountPlan_5.DescId = zc_MIFloat_AmountPlan_5()
+
+                    LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_1
+                                                     ON MIBoolean_AmountPlan_1.MovementItemId = MovementItem.Id
+                                                    AND MIBoolean_AmountPlan_1.DescId = zc_MIBoolean_AmountPlan_1()
+                    LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_2
+                                                     ON MIBoolean_AmountPlan_2.MovementItemId = MovementItem.Id
+                                                    AND MIBoolean_AmountPlan_2.DescId = zc_MIBoolean_AmountPlan_2()
+                    LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_3
+                                                     ON MIBoolean_AmountPlan_3.MovementItemId = MovementItem.Id
+                                                    AND MIBoolean_AmountPlan_3.DescId = zc_MIBoolean_AmountPlan_3()
+                    LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_4
+                                                     ON MIBoolean_AmountPlan_4.MovementItemId = MovementItem.Id
+                                                    AND MIBoolean_AmountPlan_4.DescId = zc_MIBoolean_AmountPlan_4()
+                    LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_5
+                                                     ON MIBoolean_AmountPlan_5.MovementItemId = MovementItem.Id
+                                                    AND MIBoolean_AmountPlan_5.DescId = zc_MIBoolean_AmountPlan_5()
 
                     LEFT JOIN tmpMovementItemString AS MIString_Comment
                                                     ON MIString_Comment.MovementItemId = MovementItem.Id
@@ -376,6 +418,12 @@ BEGIN
            , tmpMI.AmountPlan_4     ::TFloat
            , tmpMI.AmountPlan_5     ::TFloat
            , tmpMI.AmountPlan_total ::TFloat
+           
+           , COALESCE (tmpMI.isAmountPlan_1, False)  ::Boolean  AS isAmountPlan_1
+           , COALESCE (tmpMI.isAmountPlan_2, False)  ::Boolean  AS isAmountPlan_2
+           , COALESCE (tmpMI.isAmountPlan_3, False)  ::Boolean  AS isAmountPlan_3
+           , COALESCE (tmpMI.isAmountPlan_4, False)  ::Boolean  AS isAmountPlan_4
+           , COALESCE (tmpMI.isAmountPlan_5, False)  ::Boolean  AS isAmountPlan_5
 
            --, COALESCE (tmpMI.Comment, tmpData.Comment) ::TVarChar AS Comment
            , CASE WHEN COALESCE (tmpMI.Comment,'') = '' THEN COALESCE (tmpData.Comment,'') ELSE COALESCE (tmpMI.Comment,'') END ::TVarChar AS Comment
@@ -490,6 +538,18 @@ BEGIN
                                    AND MovementItemString.DescId = zc_MIString_Comment()
                                  )
 
+     , tmpMovementItemBoolean AS (SELECT *
+                                  FROM MovementItemBoolean
+                                  WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                    AND MovementItemBoolean.DescId IN (zc_MIBoolean_AmountPlan_1()
+                                                                     , zc_MIBoolean_AmountPlan_2()
+                                                                     , zc_MIBoolean_AmountPlan_3()
+                                                                     , zc_MIBoolean_AmountPlan_4()
+                                                                     , zc_MIBoolean_AmountPlan_5()
+                                                                     )
+                                  )
+
+
      -- ÒÚ‡Ú¸Ë ‰Îˇ „ÛÔÔËÓ‚ÍË
      , tmpOrderFinanceProperty AS (SELECT DISTINCT OrderFinanceProperty_Object.ChildObjectId AS Id
                                         , ObjectFloat_Group.ValueData                        AS NumGroup
@@ -562,6 +622,12 @@ BEGIN
             + COALESCE (MIFloat_AmountPlan_5.ValueData, 0)
              ) :: TFloat AS AmountPlan_total
 
+           , COALESCE (MIBoolean_AmountPlan_1.ValueData, False) ::Boolean AS isAmountPlan_1
+           , COALESCE (MIBoolean_AmountPlan_2.ValueData, False) ::Boolean AS isAmountPlan_2
+           , COALESCE (MIBoolean_AmountPlan_3.ValueData, False) ::Boolean AS isAmountPlan_3
+           , COALESCE (MIBoolean_AmountPlan_4.ValueData, False) ::Boolean AS isAmountPlan_4
+           , COALESCE (MIBoolean_AmountPlan_5.ValueData, False) ::Boolean AS isAmountPlan_5
+
            , MIString_Comment.ValueData       AS Comment
 
            , Object_Insert.ValueData          AS InsertName
@@ -614,6 +680,22 @@ BEGIN
                                            ON MIFloat_AmountPlan_5.MovementItemId = MovementItem.Id
                                           AND MIFloat_AmountPlan_5.DescId = zc_MIFloat_AmountPlan_5()
 
+            LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_1
+                                             ON MIBoolean_AmountPlan_1.MovementItemId = MovementItem.Id
+                                            AND MIBoolean_AmountPlan_1.DescId = zc_MIBoolean_AmountPlan_1()
+            LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_2
+                                             ON MIBoolean_AmountPlan_2.MovementItemId = MovementItem.Id
+                                            AND MIBoolean_AmountPlan_2.DescId = zc_MIBoolean_AmountPlan_2()
+            LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_3
+                                             ON MIBoolean_AmountPlan_3.MovementItemId = MovementItem.Id
+                                            AND MIBoolean_AmountPlan_3.DescId = zc_MIBoolean_AmountPlan_3()
+            LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_4
+                                             ON MIBoolean_AmountPlan_4.MovementItemId = MovementItem.Id
+                                            AND MIBoolean_AmountPlan_4.DescId = zc_MIBoolean_AmountPlan_4()
+            LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_5
+                                             ON MIBoolean_AmountPlan_5.MovementItemId = MovementItem.Id
+                                            AND MIBoolean_AmountPlan_5.DescId = zc_MIBoolean_AmountPlan_5()
+
             LEFT JOIN tmpMovementItemString AS MIString_Comment
                                             ON MIString_Comment.MovementItemId = MovementItem.Id
                                            AND MIString_Comment.DescId = zc_MIString_Comment()
@@ -649,8 +731,8 @@ BEGIN
 
 
             /*LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
-                                 ON ObjectLink_Contract_PaidKind.ObjectId = Object_Contract.Id
-                                AND ObjectLink_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
+                                   ON ObjectLink_Contract_PaidKind.ObjectId = Object_Contract.Id
+                                  AND ObjectLink_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = ObjectLink_Contract_PaidKind.ChildObjectId
 
             LEFT JOIN ObjectDate AS ObjectDate_Start
@@ -672,6 +754,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 17.11.25         *
  18.02.21         * AmountStart
  29.07.19         *
 */
