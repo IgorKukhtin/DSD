@@ -40,11 +40,11 @@ BEGIN
 
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItemPeresort_new'))
      THEN
-         DELETE FROM _tmpItemPeresort_new;
-     ELSE
-         -- таблица - элементы
-         CREATE TEMP TABLE _tmpItemPeresort_new (MovementItemId_to Integer, MovementItemId_from Integer, GoodsId_to Integer, GoodsKindId_to Integer, PartionGoods TVarChar, GoodsId_from Integer, GoodsKindId_from Integer, ReceipId_to Integer, Amount_to TFloat) ON COMMIT DROP;
+         DROP TABLE _tmpItemPeresort_new;
      END IF;
+
+     -- таблица - элементы
+     CREATE TEMP TABLE _tmpItemPeresort_new (MovementItemId_to Integer, MovementItemId_from Integer, GoodsId_to Integer, GoodsKindId_to Integer, PartionGoods TVarChar, GoodsId_from Integer, GoodsKindId_from Integer, ReceipId_to Integer, Amount_to TFloat) ON COMMIT DROP;
 
 
      -- элементы
