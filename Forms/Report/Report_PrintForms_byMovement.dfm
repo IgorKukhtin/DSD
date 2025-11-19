@@ -189,6 +189,14 @@ inherited Report_PrintForms_byMovementForm: TReport_PrintForms_byMovementForm
             Options.Editing = False
             Width = 104
           end
+          object OperDate_m: TcxGridDBColumn
+            Caption = #1052#1077#1089#1103#1094' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'OperDate_m'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'InvNumber'

@@ -82,9 +82,13 @@ BEGIN
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
      -- !!!Проверка прав роль - Ограничение - нет вообще доступа к просмотру данных ЗП!!!
-     vbIsUserRole_8813637:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 8813637)
+     vbIsUserRole_8813637:= /*EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 8813637)
                          -- или если Ограничение - нет доступа к просмотру ведомость Админ ЗП
                          OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 11026035)
+                            */
+                         -- Разрешение ОПиУ - есть доступ к просмотру ведомость Админ ЗП14:50 18.11.2025
+                         NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 12966257)
+                         AND vbUserId NOT IN (5)
                            ;
 
      -- Ограниченние - нет доступа к ОПиУ
@@ -137,13 +141,13 @@ BEGIN
                        -- Автомобиль (Направление затрат, место учета)
                        , tmp.CarId               ::Integer
                        -- Физ лицо
-                       , tmp.MemberId            ::Integer
+                       , CASE WHEN vbUserId IN (5, 9457, 6604558, 2573318) THEN tmp.MemberId ELSE 0 END ::Integer AS MemberId 
                        -- Статья списания (Стаття списання, Направление затрат)
                        , tmp.ArticleLossId       ::Integer
                        -- Об'єкт напрявлення
                        , tmp.DirectionId         ::Integer
                        -- Об'єкт призначення
-                       , CASE WHEN Object_ProfitLoss.ObjectCode < 11100 THEN 0 ELSE tmp.DestinationId END ::Integer AS DestinationId
+                       , CASE WHEN Object_ProfitLoss.ObjectCode < 11100 THEN 0 WHEN vbUserId IN (5, 9457, 6604558, 2573318) THEN tmp.DestinationId ELSE 0 END ::Integer AS DestinationId
                        -- От кого (место учета) - информативно
                        , tmp.FromId              ::Integer
                        -- Кому (место учета, Направление затрат) - информативно
@@ -195,13 +199,13 @@ BEGIN
                          -- Автомобиль (Направление затрат, место учета)
                          , tmp.CarId
                          -- Физ лицо
-                         , tmp.MemberId
+                         , CASE WHEN vbUserId IN (5, 9457, 6604558, 2573318) THEN tmp.MemberId ELSE 0 END
                          -- Статья списания (Стаття списання, Направление затрат)
                          , tmp.ArticleLossId
                           -- Об'єкт напрявлення
                          , tmp.DirectionId
                          -- Об'єкт призначення
-                         , CASE WHEN Object_ProfitLoss.ObjectCode < 11100 THEN 0 ELSE tmp.DestinationId END
+                         , CASE WHEN Object_ProfitLoss.ObjectCode < 11100 THEN 0 WHEN vbUserId IN (5, 9457, 6604558, 2573318) THEN tmp.DestinationId ELSE 0 END
                          -- От кого (место учета) - информативно
                          , tmp.FromId
                          -- Кому (место учета, Направление затрат) - информативно

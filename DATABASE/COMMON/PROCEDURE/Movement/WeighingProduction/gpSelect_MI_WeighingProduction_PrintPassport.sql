@@ -94,7 +94,8 @@ BEGIN
                               )
 
   , tmpMI AS (SELECT MovementItem.Id              AS MovementItemId
-                   , zfFormat_BarCode (zc_BarCodePref_MI(), MovementItem.Id )  AS BarCode
+                   , zfFormat_BarCode (zc_BarCodePref_MI(), MovementItem.Id) AS BarCode
+                   , Object_From.ValueData        AS FromName
                    , MovementItem.ObjectId        AS GoodsId
                    , Object_Goods.ObjectCode      AS GoodsCode
                    , Object_Goods.ValueData       AS GoodsName
@@ -239,6 +240,11 @@ BEGIN
                                                     ON MILinkObject_PartionCell.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_PartionCell.DescId = zc_MILinkObject_PartionCell()
                    LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = MILinkObject_PartionCell.ObjectId
+
+                   LEFT JOIN MovementLinkObject AS MLO_From
+                                                ON MLO_From.MovementId = MovementItem.MovementId
+                                               AND MLO_From.DescId = zc_MovementLinkObject_From()
+                   LEFT JOIN Object AS Object_From ON Object_From.Id = MLO_From.ObjectId
 
                    LEFT JOIN tmpBox ON 1 = 1
 
