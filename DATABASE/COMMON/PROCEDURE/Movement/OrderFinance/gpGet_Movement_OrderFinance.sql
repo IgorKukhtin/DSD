@@ -150,7 +150,7 @@ BEGIN
 
              , 'Говядина на неделю:'   :: TVarChar AS TotalText_1
              , 'Живой вес на неделю :' :: TVarChar AS TotalText_2
-             , 'Прочее на неделю :'    :: TVarChar AS TotalText_3
+             , 'Прочее мясн.с. на неделю :'    :: TVarChar AS TotalText_3
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
               LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
@@ -212,7 +212,7 @@ BEGIN
 
            , 'Говядина на неделю:'   :: TVarChar AS TotalText_1
            , 'Живой вес на неделю :' :: TVarChar AS TotalText_2
-           , 'Прочее на неделю :'    :: TVarChar AS TotalText_3
+           , 'Прочее мясн.с. на неделю :'    :: TVarChar AS TotalText_3
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
