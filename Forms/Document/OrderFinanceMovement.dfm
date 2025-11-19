@@ -4323,10 +4323,10 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       end>
     Params = <
       item
-        Name = 'inBankAccountMainId'
+        Name = 'inMovementId'
         Value = Null
-        Component = GuidesBankAccount
-        ComponentItem = 'Key'
+        Component = FormParams
+        ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
