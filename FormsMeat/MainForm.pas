@@ -1590,6 +1590,10 @@ type
     miReport_ProfitLoss_by: TMenuItem;
     actReport_Branch_App1_Month: TdsdOpenForm;
     miReport_Branch_App1_Month: TMenuItem;
+    actWeighingPartnerJournal_protocol: TdsdOpenForm;
+    actWeighingProductionJournal_protocol: TdsdOpenForm;
+    N270: TMenuItem;
+    N271: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

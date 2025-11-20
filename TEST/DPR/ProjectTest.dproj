@@ -5742,6 +5742,14 @@
 				<Form>Report_Branch_App1_MonthForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\WeighingProductionJournal_protocol.pas">
+				<Form>WeighingProductionJournal_protocolForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\WeighingPartnerJournal_protocol.pas">
+				<Form>WeighingPartnerJournal_protocolForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
