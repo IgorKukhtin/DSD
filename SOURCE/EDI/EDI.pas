@@ -6594,7 +6594,7 @@ begin
           JSONObject.AddPair('signature',  base64encode(ByteArray));
           if Assigned(fileStreamStamp) then
           begin
-            ByteArray := MemoryToBytes(fileStreamStamp.Memory, fileStreamSing.Size);
+            ByteArray := MemoryToBytes(fileStreamStamp.Memory, fileStreamStamp.Size);
             JSONObject.AddPair('stamp', base64encode(ByteArray));
           end;
           Body := JSONObject.ToString;
@@ -6627,7 +6627,7 @@ begin
     Stream.Position := 0;
     try
       try
-        //comdoc+delnot
+        //comdoc+delnot+condra
         S := IdHTTP.Post(TIdURI.URLEncode(FHostParam.Value + Params), Stream);
 
         //condra
