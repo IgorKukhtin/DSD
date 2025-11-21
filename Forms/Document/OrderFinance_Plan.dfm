@@ -22,8 +22,6 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 247
-        ExplicitLeft = -3
-        ExplicitTop = 24
         ExplicitWidth = 1020
         ExplicitHeight = 247
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1269,10 +1267,34 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inOrderFinanceId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OrderFinanceId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inJuridicalOrderFinanceId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'JuridicalOrderFinanceId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InfoMoneyId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
