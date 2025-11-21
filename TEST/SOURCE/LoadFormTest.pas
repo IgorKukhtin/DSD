@@ -1076,6 +1076,12 @@ end;
 
 procedure TLoadFormTest.LoadOrderFinanceMovementFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeek_DateForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWeek_DateForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinance_PlanForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderFinance_PlanForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceMovementForm');
 

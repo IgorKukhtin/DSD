@@ -24,6 +24,7 @@ object WeighingPartnerJournal_protocolForm: TWeighingPartnerJournal_protocolForm
     Height = 31
     Align = alTop
     TabOrder = 1
+    ExplicitTop = -1
     object deStart: TcxDateEdit
       Left = 107
       Top = 5

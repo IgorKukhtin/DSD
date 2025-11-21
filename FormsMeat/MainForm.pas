@@ -1594,6 +1594,8 @@ type
     actWeighingProductionJournal_protocol: TdsdOpenForm;
     N270: TMenuItem;
     N271: TMenuItem;
+    actOrderFinance_Plan: TdsdOpenForm;
+    miOrderFinance_Plan: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
