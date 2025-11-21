@@ -221,7 +221,7 @@ BEGIN
              , tmpJuridicalOrderFinance.BankAccountName
 
                -- № п/п группы
-             , tmpData.NumGroup
+             , tmpData.NumGroup :: Integer AS NumGroup
                --
              , Object_InfoMoney_View.InfoMoneyGroupName
              , Object_InfoMoney_View.InfoMoneyDestinationName

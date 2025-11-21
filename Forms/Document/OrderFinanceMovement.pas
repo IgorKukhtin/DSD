@@ -169,7 +169,7 @@ type
     InsertRecord_JurOrdFin: TInsertRecord;
     actContractChoiceForm_JurOrdFin: TOpenChoiceForm;
     bbInsertRecord_JurOrdFin: TdxBarButton;
-    chComment: TcxGridDBColumn;
+    chComment_pay: TcxGridDBColumn;
     ProtocolOpenFormJOF: TdsdOpenForm;
     bbProtocolOpenFormJOF: TdxBarButton;
     ExecuteDialogPeriod: TExecuteDialog;
@@ -271,6 +271,7 @@ type
     bbUpdate_SignWait_1_No: TdxBarButton;
     dxBarSeparator1: TdxBarSeparator;
     NumGroup: TcxGridDBColumn;
+    chNumGroup: TcxGridDBColumn;
   private
   public
   end;

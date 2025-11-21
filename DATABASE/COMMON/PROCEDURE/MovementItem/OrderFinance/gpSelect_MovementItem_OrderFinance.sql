@@ -112,6 +112,8 @@ BEGIN
                                   AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '1 MONTH' AND vbOperDate
                                   AND Movement.StatusId = zc_Enum_Status_Complete()
                                   AND MovementItem.ObjectId = vbBankAccountMainId   --4529011   --  р/сч. ОТП банк
+                                  -- убрали
+                                  AND 1=0
                                 ) AS tmp
                           WHERE tmp.Ord_byComment = 1
                           )
@@ -120,12 +122,14 @@ BEGIN
                                          tmp.BankAccountId
                                        , tmp.JuridicalId
                                        , tmp.InfoMoneyId
-                                       , tmp.Comment
+                                       , '' :: TVarChar AS Comment
+                                       , tmp.Comment_pay AS Comment_pay
                                   FROM gpSelect_Object_JuridicalOrderFinance_choice (inMovementId     := inMovementId
                                                                                    , inOrderFinanceId := COALESCE (vbOrderFinanceId,0)
                                                                                    , inisShowAll      := FALSE
                                                                                    , inisErased       := FALSE
-                                                                                   , inSession        := inSession) AS tmp
+                                                                                   , inSession        := inSession
+                                                                                    ) AS tmp
                                  )
    , tmpData AS (SELECT DISTINCT
                         ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId
