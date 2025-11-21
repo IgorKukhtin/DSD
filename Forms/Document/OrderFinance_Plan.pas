@@ -42,6 +42,7 @@ type
     BankName_jof: TcxGridDBColumn;
     actTBankAccount_ObjectForm: TOpenChoiceForm;
     spUpdate_OrderFinance_Plan: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

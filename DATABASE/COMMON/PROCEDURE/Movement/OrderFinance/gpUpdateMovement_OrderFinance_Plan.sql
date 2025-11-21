@@ -57,13 +57,13 @@ BEGIN
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
      -- сохранили протокол
-     PERFORM lpInsert_MovementItemProtocol (inMovementItemId, inUserId, FALSE);
+     PERFORM lpInsert_MovementItemProtocol (inMovementItemId, vbUserId, FALSE);
 
 
      -- BankAccount
      IF COALESCE (inBankAccountName_jof,'') <> ''
      THEN
-         IF COALESCE (inBankName, '') = '' AND 1=0
+         IF COALESCE (inBankId_jof, 0) = 0
          THEN
            RAISE EXCEPTION 'Ошибка.Банк не выбран для <%> ', inBankAccountName_jof;
          END IF; 

@@ -754,6 +754,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1089#1090#1088#1086#1082#1072')'
             Options.Editing = False
             Width = 200
           end
@@ -771,7 +772,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 97
           end
           object BankName_jof: TcxGridDBColumn
             Caption = #1041#1072#1085#1082' ('#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103')'
@@ -786,6 +787,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 84
           end
           object BankAccountName_jof: TcxGridDBColumn
             Caption = #1056'/'#1057#1095#1077#1090' ('#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103')'
@@ -991,6 +993,21 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBankId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankId_jof'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBankName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankName_jof'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1022,6 +1039,18 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_OrderFinance_Plan
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_OrderFinance_Plan
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = MasterDS
     end
   end
   inherited MasterDS: TDataSource
@@ -1202,6 +1231,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
     Top = 24
   end
   object spUpdate_OrderFinance_Plan: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_OrderFinance_Plan'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1334,7 +1364,6 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    ParamKeyField = 'gpUpdateMovement_OrderFinance_Plan'
     Left = 640
     Top = 176
   end

@@ -34,7 +34,8 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , OKPO TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
-             , PaidKindName TVarChar, InfoMoneyName TVarChar, NumGroup Integer
+             , PaidKindName TVarChar
+             , InfoMoneyId Integer, InfoMoneyName TVarChar, NumGroup Integer
              , Condition TVarChar, ContractStateKindCode Integer
              , StartDate TDateTime, EndDate_real TDateTime, EndDate TVarChar
              , Amount TFloat, AmountRemains TFloat, AmountPartner TFloat
@@ -59,6 +60,9 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , JuridicalOrderFinanceId Integer    -- JuridicalOrderFinance
              , Comment_jof             TVarChar   -- JuridicalOrderFinance
              , BankAccountId_jof Integer, BankAccountName_jof     TVarChar   -- JuridicalOrderFinance
+
+             , BankId_jof Integer
+             , BankName_jof TVarChar
               )
 AS
 $BODY$
@@ -642,6 +646,7 @@ BEGIN
         , tmpMI.ContractCode
         , tmpMI.ContractName
         , tmpMI.PaidKindName
+        , tmpMI.InfoMoneyId
         , tmpMI.InfoMoneyName
         --, tmpMI.NumGroup
         --, tmpMI.Condition              ::TVarChar   

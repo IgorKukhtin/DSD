@@ -69,7 +69,7 @@
   end
   object cxLabel2: TcxLabel
     Left = 40
-    Top = 147
+    Top = 153
     Caption = #1041#1072#1085#1082
   end
   object cxLabel4: TcxLabel
@@ -90,7 +90,7 @@
   end
   object edBank: TcxButtonEdit
     Left = 40
-    Top = 170
+    Top = 176
     Properties.Buttons = <
       item
         Default = True

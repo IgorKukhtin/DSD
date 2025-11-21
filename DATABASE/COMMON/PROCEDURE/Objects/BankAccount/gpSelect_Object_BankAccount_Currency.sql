@@ -2,13 +2,14 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Object_BankAccount_Currency (TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_BankAccount_Currency (TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_BankAccount_Currency (TDateTime, Boolean, TVarChar);
-
+--DROP FUNCTION IF EXISTS gpSelect_Object_BankAccount_Currency (TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_BankAccount_Currency (TDateTime, Integer, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_BankAccount_Currency(
-    IN inOperDate    TDateTime ,    -- 
-    IN inIsShowAll   Boolean,    --
+    IN inOperDate    TDateTime , 
+    IN inBankId      Integer   ,    -- 
+    IN inIsShowAll   Boolean   ,    --
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameAll TVarChar, isErased Boolean
@@ -102,8 +103,10 @@ BEGIN
                                     OR Object_BankAccount_View.isCorporate = TRUE
                                       )
           LEFT JOIN tmpCurrency ON tmpCurrency.CurrencyToId = Object_BankAccount_View.CurrencyId
-     WHERE Object_BankAccount_View.isErased = FALSE
-        OR (Object_BankAccount_View.isErased = TRUE AND inIsShowAll = TRUE)
+     WHERE (Object_BankAccount_View.isErased = FALSE
+        OR (Object_BankAccount_View.isErased = TRUE AND inIsShowAll = TRUE))
+        AND (Object_BankAccount_View.BankId = inBankId OR inBankId = 0)
+        
 
     ;
 END;
@@ -114,6 +117,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 21.11.25         * inBankId
  13.11.14                                        *
 */
 
