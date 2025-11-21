@@ -24,6 +24,8 @@ program ProjectTest;
 
 
 
+
+
 uses
   DUnitTestRunner,
   VKDBFDataSet in '..\..\SOURCE\DBF\VKDBFDataSet.pas',
@@ -1628,7 +1630,9 @@ uses
   Report_Personal_Cash_sms in '..\..\Forms\Report\Report_Personal_Cash_sms.pas' {Report_Personal_Cash_smsForm: TParentForm},
   OrderFinanceMovement in '..\..\Forms\Document\OrderFinanceMovement.pas' {OrderFinanceMovementForm: TParentForm},
   OrderFinance_Object in '..\..\Forms\Guides\OrderFinance_Object.pas' {OrderFinance_ObjectForm: TParentForm},
-  Report_Branch_App1_Month in '..\..\Forms\Report\Report_Branch_App1_Month.pas' {Report_Branch_App1_MonthForm: TParentForm};
+  Report_Branch_App1_Month in '..\..\Forms\Report\Report_Branch_App1_Month.pas' {Report_Branch_App1_MonthForm: TParentForm},
+  WeighingProductionJournal_protocol in '..\..\Forms\Document\WeighingProductionJournal_protocol.pas' {WeighingProductionJournal_protocolForm: TParentForm},
+  WeighingPartnerJournal_protocol in '..\..\Forms\Document\WeighingPartnerJournal_protocol.pas' {WeighingPartnerJournal_protocolForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

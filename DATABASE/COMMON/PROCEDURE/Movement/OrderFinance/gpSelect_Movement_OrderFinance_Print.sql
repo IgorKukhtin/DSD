@@ -321,6 +321,7 @@ BEGIN
 
        FROM tmpMI AS MovementItem
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId
+                                                AND Object_Juridical.DescId = zc_Object_Juridical()
 
             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountRemains
                                            ON MIFloat_AmountRemains.MovementItemId = MovementItem.Id
@@ -369,7 +370,8 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
                                  ON ObjectLink_Contract_InfoMoney.ObjectId = Object_Contract.Id
                                 AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
-            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_Contract_InfoMoney.ChildObjectId
+            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = COALESCE (ObjectLink_Contract_InfoMoney.ChildObjectId, MovementItem.ObjectId)
+                                                AND Object_InfoMoney.DescId = zc_Object_InfoMoney()
 
             LEFT JOIN tmpContract_View AS View_Contract ON View_Contract.ContractId = Object_Contract.Id
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = View_Contract.PaidKindId 
