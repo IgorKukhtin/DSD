@@ -3,7 +3,7 @@ object BankAccount_ObjectForm: TBankAccount_ObjectForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1056#1072#1089#1095#1077#1090#1085#1099#1077' '#1089#1095#1077#1090#1072'>'
   ClientHeight = 644
-  ClientWidth = 710
+  ClientWidth = 672
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,9 +20,9 @@ object BankAccount_ObjectForm: TBankAccount_ObjectForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
-    Width = 710
-    Height = 618
+    Top = 56
+    Width = 672
+    Height = 588
     Align = alClient
     TabOrder = 0
     object cxGridDBTableView: TcxGridDBTableView
@@ -114,6 +114,52 @@ object BankAccount_ObjectForm: TBankAccount_ObjectForm
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Top = 26
+    Width = 672
+    Height = 30
+    Align = alTop
+    TabOrder = 5
+    object lbSearchName: TcxLabel
+      Left = 10
+      Top = 4
+      Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090' : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchName: TcxTextEdit
+      Left = 131
+      Top = 5
+      TabOrder = 1
+      DesignSize = (
+        140
+        21)
+      Width = 140
+    end
+    object edBank: TcxButtonEdit
+      Left = 378
+      Top = 3
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 2
+      Width = 289
+    end
+    object cxLabel2: TcxLabel
+      Left = 344
+      Top = 6
+      Caption = #1041#1072#1085#1082':'
     end
   end
   object DataSource: TDataSource
@@ -415,10 +461,18 @@ object BankAccount_ObjectForm: TBankAccount_ObjectForm
     Params = <
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankId'
+        Value = Null
+        Component = GuidesBank
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -457,10 +511,13 @@ object BankAccount_ObjectForm: TBankAccount_ObjectForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 216
     Top = 240
@@ -469,12 +526,93 @@ object BankAccount_ObjectForm: TBankAccount_ObjectForm
     Params = <
       item
         Name = 'inOperDate'
-        Value = '0'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankId'
+        Value = '0'
+        Component = GuidesBank
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankName'
+        Value = Null
+        Component = GuidesBank
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 416
-    Top = 152
+    Left = 320
+    Top = 168
+  end
+  object FieldFilter: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = MasterCDS
+    Column = Name
+    ColumnList = <
+      item
+        Column = Name
+      end>
+    ActionNumber1 = dsdChoiceGuides
+    CheckBoxList = <>
+    Left = 328
+    Top = 96
+  end
+  object GuidesBank: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBank
+    Key = '0'
+    FormNameParam.Value = 'TBankForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBankForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesBank
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBank
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 472
+    Top = 97
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = GuidesBank
+      end
+      item
+      end
+      item
+      end
+      item
+      end
+      item
+      end
+      item
+      end
+      item
+      end>
+    Left = 424
+    Top = 176
   end
 end

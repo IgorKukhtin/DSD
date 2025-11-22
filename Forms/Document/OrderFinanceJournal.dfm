@@ -548,8 +548,8 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
     end
   end
   object cxLabel27: TcxLabel
-    Left = 522
-    Top = 6
+    Left = 518
+    Top = 8
     Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
   end
   object edJuridicalBasis: TcxButtonEdit

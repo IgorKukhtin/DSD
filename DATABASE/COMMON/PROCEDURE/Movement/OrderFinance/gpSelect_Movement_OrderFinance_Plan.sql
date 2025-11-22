@@ -1,0 +1,717 @@
+-- Function: gpSelect_Movement_OrderFinance_Plan()
+
+DROP FUNCTION IF EXISTS gpSelect_Movement_OrderFinance_Plan (TDateTime, TDateTime, Integer, Integer, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderFinance_Plan(
+    IN inStartDate         TDateTime , --
+    IN inEndDate           TDateTime , --
+    IN inStartWeekNumber   Integer , --
+    IN inEndWeekNumber     Integer , --
+    IN inSession           TVarChar    -- сессия пользователя
+)
+RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
+             , StatusCode Integer, StatusName TVarChar
+             , OrderFinanceId Integer, OrderFinanceName TVarChar
+             , BankAccountId Integer, BankAccountName TVarChar
+             , BankId Integer, BankName TVarChar, BankAccountNameAll TVarChar
+             , WeekNumber TFloat
+             , TotalSumm TFloat, TotalSumm_all TFloat, TotalSumm_1 TFloat, TotalSumm_2 TFloat, TotalSumm_3 TFloat
+             , TotalPlan_1 TFloat, TotalPlan_2 TFloat, TotalPlan_3 TFloat, TotalPlan_4 TFloat, TotalPlan_5 TFloat
+             , StartDate_WeekNumber TDateTime, EndDate_WeekNumber TDateTime
+             , DateUpdate_report TDateTime
+             , UserUpdate_report TVarChar
+             , UserMember_1      TVarChar
+             , UserMember_2      TVarChar
+             , Comment_mov TVarChar
+             , InsertName TVarChar, InsertDate TDateTime
+             , UpdateName TVarChar, UpdateDate TDateTime
+             , UnitName_insert     TVarChar
+             , PositionName_insert TVarChar
+             , Date_SignWait_1 TDateTime, Date_Sign_1 TDateTime
+             , isSignWait_1 Boolean, isSign_1 Boolean
+             --
+             , MovementItemId Integer
+             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
+             , OKPO TVarChar
+             , ContractId Integer, ContractCode Integer, ContractName TVarChar
+             , PaidKindName TVarChar
+             , InfoMoneyId Integer, InfoMoneyName TVarChar, NumGroup Integer
+             , Condition TVarChar, ContractStateKindCode Integer
+             , StartDate TDateTime, EndDate_real TDateTime, EndDate TVarChar
+             , Amount TFloat, AmountRemains TFloat, AmountPartner TFloat
+             , AmountSumm         TFloat
+             , AmountPartner_1    TFloat
+             , AmountPartner_2    TFloat
+             , AmountPartner_3    TFloat
+             , AmountPartner_4    TFloat
+             , AmountPlan_1       TFloat
+             , AmountPlan_2       TFloat
+             , AmountPlan_3       TFloat
+             , AmountPlan_4       TFloat
+             , AmountPlan_5       TFloat
+             , AmountPlan_total   TFloat
+             , isAmountPlan_1     Boolean
+             , isAmountPlan_2     Boolean
+             , isAmountPlan_3     Boolean
+             , isAmountPlan_4     Boolean
+             , isAmountPlan_5     Boolean
+             , Comment            TVarChar
+             , Comment_pay        TVarChar
+             , JuridicalOrderFinanceId Integer    -- JuridicalOrderFinance
+             , Comment_jof             TVarChar   -- JuridicalOrderFinance
+             , BankAccountId_jof Integer, BankAccountName_jof     TVarChar   -- JuridicalOrderFinance
+
+             , BankId_jof Integer
+             , BankName_jof TVarChar
+              )
+AS
+$BODY$
+   DECLARE vbUserId         Integer;
+   DECLARE vbIsDocumentUser Boolean;
+BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderFinance());
+     vbUserId:= lpGetUserBySession (inSession);
+
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
+     -- Результат
+     RETURN QUERY
+     WITH 
+       tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
+               UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
+                    )
+     , tmpMovement AS (
+                       SELECT Movement.*
+                            , MovementFloat_WeekNumber.ValueData AS WeekNumber
+                       FROM Movement
+                            INNER JOIN MovementFloat AS MovementFloat_WeekNumber
+                                                     ON MovementFloat_WeekNumber.MovementId = Movement.Id
+                                                    AND MovementFloat_WeekNumber.DescId = zc_MovementFloat_WeekNumber()
+                                                    AND MovementFloat_WeekNumber.ValueData BETWEEN inStartWeekNumber AND inEndWeekNumber 
+                       WHERE Movement.DescId = zc_Movement_OrderFinance()
+                         AND Movement.StatusId IN (SELECT tmpStatus.StatusId FROM tmpStatus)
+                         AND Movement.OperDate BETWEEN inStartDate - INTERVAL '14 DAY' AND inEndDate
+                       )
+  
+     , tmpMI AS ( SELECT MovementItem.*
+                 FROM MovementItem
+                 WHERE MovementItem.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)
+                   AND MovementItem.DescId = zc_MI_Master()
+                   AND MovementItem.isErased = FALSE
+                 )  
+
+     , tmpMILO_Contract AS (SELECT *
+                            FROM MovementItemLinkObject
+                            WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                              AND MovementItemLinkObject.DescId IN (zc_MILinkObject_Contract()
+                                                          )
+                            )
+
+     , tmpContractCondition AS (SELECT Object_ContractCondition_View.ContractId
+                                     , (Object_ContractCondition_View.Value::Integer
+                                       ||' '|| CASE WHEN Object_ContractCondition_View.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayDayCalendar()
+                                                        THEN 'К.дн.'
+                                                    WHEN Object_ContractCondition_View.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayDayBank()
+                                                            THEN 'Б.дн.'
+                                                    ELSE ''
+                                               END
+                                        ) AS Condition
+                                     , Object_ContractCondition_View.StartDate
+                                     , Object_ContractCondition_View.EndDate
+                                FROM Object_ContractCondition_View
+                                WHERE Object_ContractCondition_View.ContractConditionKindId IN (zc_Enum_ContractConditionKind_DelayDayCalendar(), zc_Enum_ContractConditionKind_DelayDayBank())
+                                  AND Object_ContractCondition_View.Value <> 0
+                                  AND Object_ContractCondition_View.ContractId IN (SELECT DISTINCT tmpMILO_Contract.ObjectId FROM tmpMILO_Contract)
+                                  --AND vbOperDate BETWEEN Object_ContractCondition_View.StartDate AND Object_ContractCondition_View.EndDate
+                                )
+     , tmpContract_View AS (SELECT * FROM Object_Contract_View WHERE Object_Contract_View.ContractId IN (SELECT DISTINCT tmpMILO_Contract.ObjectId FROM tmpMILO_Contract))
+     , tmpJuridicalDetails_View AS (SELECT * FROM ObjectHistory_JuridicalDetails_View WHERE ObjectHistory_JuridicalDetails_View.JuridicalId IN (SELECT DISTINCT tmpMI.ObjectId FROM tmpMI))
+
+     , tmpMovementItemFloat AS (SELECT *
+                                FROM MovementItemFloat
+                                WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                  AND MovementItemFloat.DescId IN (zc_MIFloat_AmountRemains()
+                                                                 , zc_MIFloat_AmountPartner()
+                                                                 , zc_MIFloat_AmountSumm()
+                                                                 , zc_MIFloat_AmountPartner_1()
+                                                                 , zc_MIFloat_AmountPartner_2()
+                                                                 , zc_MIFloat_AmountPartner_3()
+                                                                 , zc_MIFloat_AmountPartner_4()
+                                                                 , zc_MIFloat_AmountPlan_1()
+                                                                 , zc_MIFloat_AmountPlan_2()
+                                                                 , zc_MIFloat_AmountPlan_3()
+                                                                 , zc_MIFloat_AmountPlan_4()
+                                                                 , zc_MIFloat_AmountPlan_5()
+                                                                 )
+                                )
+
+     , tmpMovementItemDate AS (SELECT *
+                               FROM MovementItemDate
+                               WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                 AND MovementItemDate.DescId IN (zc_MIDate_Insert()
+                                                                , zc_MIDate_Update())
+                                )
+     , tmpMovementItemLinkObject AS (SELECT *
+                                     FROM MovementItemLinkObject
+                                     WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                       AND MovementItemLinkObject.DescId IN (zc_MILinkObject_Insert()
+                                                                  , zc_MILinkObject_Update()
+                                                                   )
+                                     )
+     , tmpMovementItemString AS (SELECT *
+                                 FROM MovementItemString
+                                 WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                   AND MovementItemString.DescId IN (zc_MIString_Comment()
+                                                                   , zc_MIString_Comment_pay()
+                                                                   )
+                                 )
+
+     , tmpMovementItemBoolean AS (SELECT *
+                                  FROM MovementItemBoolean
+                                  WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                    AND MovementItemBoolean.DescId IN (zc_MIBoolean_AmountPlan_1()
+                                                                     , zc_MIBoolean_AmountPlan_2()
+                                                                     , zc_MIBoolean_AmountPlan_3()
+                                                                     , zc_MIBoolean_AmountPlan_4()
+                                                                     , zc_MIBoolean_AmountPlan_5()
+                                                                     )
+                                  )
+
+
+     -- статьи для группировки
+     , tmpOrderFinanceProperty AS (SELECT DISTINCT
+                                          OrderFinanceProperty_OrderFinance.ChildObjectId AS OrderFinanceId
+                                        , OrderFinanceProperty_Object.ChildObjectId AS Id
+                                        , ObjectFloat_Group.ValueData                        AS NumGroup
+                                        , COALESCE (ObjectBoolean_Group.ValueData,FALSE) ::Boolean AS isGroup                                        
+                                   FROM ObjectLink AS OrderFinanceProperty_OrderFinance
+                                        INNER JOIN ObjectLink AS OrderFinanceProperty_Object
+                                                              ON OrderFinanceProperty_Object.ObjectId = OrderFinanceProperty_OrderFinance.ObjectId
+                                                             AND OrderFinanceProperty_Object.DescId = zc_ObjectLink_OrderFinanceProperty_Object()
+                                                             AND COALESCE (OrderFinanceProperty_Object.ChildObjectId,0) <> 0
+
+                                        INNER JOIN Object ON Object.Id = OrderFinanceProperty_Object.ObjectId
+                                                         AND Object.isErased = False
+ 
+                                        LEFT JOIN ObjectFloat AS ObjectFloat_Group 
+                                                              ON ObjectFloat_Group.ObjectId = OrderFinanceProperty_Object.ObjectId
+                                                             AND ObjectFloat_Group.DescId = zc_ObjectFloat_OrderFinanceProperty_Group()
+
+                                        LEFT JOIN ObjectBoolean AS ObjectBoolean_Group 
+                                                                ON ObjectBoolean_Group.ObjectId = OrderFinanceProperty_Object.ObjectId
+                                                               AND ObjectBoolean_Group.DescId = zc_ObjectBoolean_OrderFinanceProperty_Group()
+                                   WHERE OrderFinanceProperty_OrderFinance.DescId = zc_ObjectLink_OrderFinanceProperty_OrderFinance()
+                                   )
+
+      , tmpInfoMoney_OFP AS (SELECT DISTINCT Object_InfoMoney_View.InfoMoneyId
+                                  , tmpOrderFinanceProperty.NumGroup
+                                  , tmpOrderFinanceProperty.isGroup 
+                                  , tmpOrderFinanceProperty.OrderFinanceId
+                             FROM Object_InfoMoney_View
+                                  INNER JOIN tmpOrderFinanceProperty ON (tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyId
+                                                                     OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyDestinationId
+                                                                     OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyGroupId)
+                             )
+
+
+      , tmpMI_Data AS (SELECT MovementItem.MovementId
+                            , MovementItem.Id                  AS Id
+                            , Object_Juridical.Id              AS JuridicalId
+                            , Object_Juridical.ObjectCode      AS JuridicalCode
+                            , Object_Juridical.ValueData       AS JuridicalName
+                            , tmpJuridicalDetails_View.OKPO
+                            , Object_Contract.Id               AS ContractId
+                            , Object_Contract.ObjectCode       AS ContractCode
+                            , Object_Contract.ValueData        AS ContractName
+                            , Object_PaidKind.ValueData        AS PaidKindName
+                            , Object_InfoMoney.Id              AS InfoMoneyId
+                            , Object_InfoMoney.ValueData       AS InfoMoneyName
+                            
+                            
+                            , View_Contract.ContractStateKindCode  ::Integer  AS ContractStateKindCode
+                            , View_Contract.StartDate
+                            , View_Contract.EndDate_real
+                            , (''|| CASE WHEN View_Contract.ContractTermKindId = zc_Enum_ContractTermKind_Long() THEN '* ' ELSE '' END
+                                 || (LPAD (EXTRACT (Day FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||LPAD (EXTRACT (Month FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||EXTRACT (YEAR FROM View_Contract.EndDate_term) :: TVarChar)
+                              ) ::TVarChar AS EndDate
+                 
+                            , MovementItem.Amount               :: TFloat AS Amount
+                            , MIFloat_AmountRemains.ValueData   :: TFloat AS AmountRemains
+                            , MIFloat_AmountPartner.ValueData   :: TFloat AS AmountPartner
+                            , MIFloat_AmountSumm.ValueData      :: TFloat AS AmountSumm
+                            , MIFloat_AmountPartner_1.ValueData :: TFloat AS AmountPartner_1
+                            , MIFloat_AmountPartner_2.ValueData :: TFloat AS AmountPartner_2
+                            , MIFloat_AmountPartner_3.ValueData :: TFloat AS AmountPartner_3
+                            , MIFloat_AmountPartner_4.ValueData :: TFloat AS AmountPartner_4
+                 
+                            , MIFloat_AmountPlan_1.ValueData    :: TFloat AS AmountPlan_1
+                            , MIFloat_AmountPlan_2.ValueData    :: TFloat AS AmountPlan_2
+                            , MIFloat_AmountPlan_3.ValueData    :: TFloat AS AmountPlan_3
+                            , MIFloat_AmountPlan_4.ValueData    :: TFloat AS AmountPlan_4
+                            , MIFloat_AmountPlan_5.ValueData    :: TFloat AS AmountPlan_5
+                            , (COALESCE (MIFloat_AmountPlan_1.ValueData, 0)
+                             + COALESCE (MIFloat_AmountPlan_2.ValueData, 0)
+                             + COALESCE (MIFloat_AmountPlan_3.ValueData, 0)
+                             + COALESCE (MIFloat_AmountPlan_4.ValueData, 0)
+                             + COALESCE (MIFloat_AmountPlan_5.ValueData, 0)
+                              ) :: TFloat AS AmountPlan_total
+                 
+                            , COALESCE (MIBoolean_AmountPlan_1.ValueData, False) ::Boolean AS isAmountPlan_1
+                            , COALESCE (MIBoolean_AmountPlan_2.ValueData, False) ::Boolean AS isAmountPlan_2
+                            , COALESCE (MIBoolean_AmountPlan_3.ValueData, False) ::Boolean AS isAmountPlan_3
+                            , COALESCE (MIBoolean_AmountPlan_4.ValueData, False) ::Boolean AS isAmountPlan_4
+                            , COALESCE (MIBoolean_AmountPlan_5.ValueData, False) ::Boolean AS isAmountPlan_5
+                 
+                            , MIString_Comment.ValueData       AS Comment
+                            , MIString_Comment_pay.ValueData   AS Comment_pay
+                 
+                            , Object_Insert.ValueData          AS InsertName
+                            , Object_Update.ValueData          AS UpdateName
+                            , MIDate_Insert.ValueData          AS InsertDate
+                            , MIDate_Update.ValueData          AS UpdateDate
+                 
+                        FROM tmpMI AS MovementItem
+                             INNER JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId
+                                                                  AND Object_Juridical.DescId = zc_Object_Juridical()
+                 
+                             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountRemains
+                                                            ON MIFloat_AmountRemains.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_AmountRemains.DescId = zc_MIFloat_AmountRemains()
+                 
+                             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPartner
+                                                            ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                 
+                             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountSumm
+                                                            ON MIFloat_AmountSumm.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_AmountSumm.DescId = zc_MIFloat_AmountSumm()
+                             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPartner_1
+                                                            ON MIFloat_AmountPartner_1.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_AmountPartner_1.DescId = zc_MIFloat_AmountPartner_1()
+                             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPartner_2
+                                                            ON MIFloat_AmountPartner_2.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_AmountPartner_2.DescId = zc_MIFloat_AmountPartner_2()
+                             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPartner_3
+                                                            ON MIFloat_AmountPartner_3.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_AmountPartner_3.DescId = zc_MIFloat_AmountPartner_3()
+                             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPartner_4
+                                                            ON MIFloat_AmountPartner_4.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_AmountPartner_4.DescId = zc_MIFloat_AmountPartner_4()
+                 
+                             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_1
+                                                            ON MIFloat_AmountPlan_1.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_AmountPlan_1.DescId = zc_MIFloat_AmountPlan_1()
+                             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_2
+                                                            ON MIFloat_AmountPlan_2.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_AmountPlan_2.DescId = zc_MIFloat_AmountPlan_2()
+                             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_3
+                                                            ON MIFloat_AmountPlan_3.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_AmountPlan_3.DescId = zc_MIFloat_AmountPlan_3()
+                             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_4
+                                                            ON MIFloat_AmountPlan_4.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_AmountPlan_4.DescId = zc_MIFloat_AmountPlan_4()
+                             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_5
+                                                            ON MIFloat_AmountPlan_5.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_AmountPlan_5.DescId = zc_MIFloat_AmountPlan_5()
+                 
+                             LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_1
+                                                              ON MIBoolean_AmountPlan_1.MovementItemId = MovementItem.Id
+                                                             AND MIBoolean_AmountPlan_1.DescId = zc_MIBoolean_AmountPlan_1()
+                             LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_2
+                                                              ON MIBoolean_AmountPlan_2.MovementItemId = MovementItem.Id
+                                                             AND MIBoolean_AmountPlan_2.DescId = zc_MIBoolean_AmountPlan_2()
+                             LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_3
+                                                              ON MIBoolean_AmountPlan_3.MovementItemId = MovementItem.Id
+                                                             AND MIBoolean_AmountPlan_3.DescId = zc_MIBoolean_AmountPlan_3()
+                             LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_4
+                                                              ON MIBoolean_AmountPlan_4.MovementItemId = MovementItem.Id
+                                                             AND MIBoolean_AmountPlan_4.DescId = zc_MIBoolean_AmountPlan_4()
+                             LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_5
+                                                              ON MIBoolean_AmountPlan_5.MovementItemId = MovementItem.Id
+                                                             AND MIBoolean_AmountPlan_5.DescId = zc_MIBoolean_AmountPlan_5()
+                 
+                             LEFT JOIN tmpMovementItemString AS MIString_Comment
+                                                             ON MIString_Comment.MovementItemId = MovementItem.Id
+                                                            AND MIString_Comment.DescId = zc_MIString_Comment()
+                             LEFT JOIN tmpMovementItemString AS MIString_Comment_pay
+                                                             ON MIString_Comment_pay.MovementItemId = MovementItem.Id
+                                                            AND MIString_Comment_pay.DescId = zc_MIString_Comment_pay()
+                                                                             
+                             LEFT JOIN tmpMILO_Contract AS MILinkObject_Contract
+                                                        ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                                       AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MILinkObject_Contract.ObjectId
+                 
+                             LEFT JOIN tmpMovementItemDate AS MIDate_Insert
+                                                           ON MIDate_Insert.MovementItemId = MovementItem.Id
+                                                          AND MIDate_Insert.DescId = zc_MIDate_Insert()
+                             LEFT JOIN tmpMovementItemDate AS MIDate_Update
+                                                           ON MIDate_Update.MovementItemId = MovementItem.Id
+                                                          AND MIDate_Update.DescId = zc_MIDate_Update()
+                 
+                             LEFT JOIN tmpMovementItemLinkObject AS MILO_Insert
+                                                                 ON MILO_Insert.MovementItemId = MovementItem.Id
+                                                                AND MILO_Insert.DescId = zc_MILinkObject_Insert()
+                             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MILO_Insert.ObjectId
+                 
+                             LEFT JOIN tmpMovementItemLinkObject AS MILO_Update
+                                                                 ON MILO_Update.MovementItemId = MovementItem.Id
+                                                                AND MILO_Update.DescId = zc_MILinkObject_Update()
+                             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
+                 
+                             LEFT JOIN tmpJuridicalDetails_View ON tmpJuridicalDetails_View.JuridicalId = Object_Juridical.Id
+                 
+                             LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                                                  ON ObjectLink_Contract_InfoMoney.ObjectId = Object_Contract.Id
+                                                 AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+                             LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_Contract_InfoMoney.ChildObjectId
+                 
+                             LEFT JOIN tmpContract_View AS View_Contract ON View_Contract.ContractId = Object_Contract.Id
+                             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = View_Contract.PaidKindId
+                             --LEFT JOIN tmpContractCondition ON tmpContractCondition.ContractId = Object_Contract.Id
+                 
+
+                     )
+
+       --
+     , tmpMovement_Data AS (SELECT
+                            Movement.Id                            AS MovementId
+                          , Movement.InvNumber                     AS InvNumber
+                          , Movement.OperDate                      AS OperDate
+                          , Object_Status.ObjectCode               AS StatusCode
+                          , Object_Status.ValueData                AS StatusName
+               
+                          , Object_OrderFinance.Id                 AS OrderFinanceId
+                          , Object_OrderFinance.ValueData          AS OrderFinanceName
+               
+                          , Object_BankAccount_View.Id             AS BankAccountId
+                          , Object_BankAccount_View.Name           AS BankAccountName
+                          , Object_BankAccount_View.BankId
+                          , Object_BankAccount_View.BankName
+                          , (Object_BankAccount_View.BankName || '' || Object_BankAccount_View.Name) :: TVarChar AS BankAccountNameAll
+                          , Movement.WeekNumber              ::TFloat    AS WeekNumber
+                            -- Предварительный План на неделю
+                          , COALESCE (MovementFloat_TotalSumm.Valuedata, 0)    ::TFloat   AS TotalSumm
+                            -- Согласована сумма на неделю
+                          , (COALESCE (MovementFloat_TotalSumm_1.Valuedata, 0) + COALESCE (MovementFloat_TotalSumm_2.Valuedata, 0) + COALESCE (MovementFloat_TotalSumm_3.Valuedata, 0)) ::TFloat AS TotalSumm_all
+                          , COALESCE (MovementFloat_TotalSumm_1.Valuedata, 0)  ::TFloat   AS TotalSumm_1
+                          , COALESCE (MovementFloat_TotalSumm_2.Valuedata, 0)  ::TFloat   AS TotalSumm_2
+                          , COALESCE (MovementFloat_TotalSumm_3.Valuedata, 0)  ::TFloat   AS TotalSumm_3 
+                          
+                          , COALESCE (MovementFloat_AmountPlan_1.Valuedata, 0) ::TFloat   AS AmountPlan_1
+                          , COALESCE (MovementFloat_AmountPlan_2.Valuedata, 0) ::TFloat   AS AmountPlan_2
+                          , COALESCE (MovementFloat_AmountPlan_3.Valuedata, 0) ::TFloat   AS AmountPlan_3
+                          , COALESCE (MovementFloat_AmountPlan_4.Valuedata, 0) ::TFloat   AS AmountPlan_4
+                          , COALESCE (MovementFloat_AmountPlan_5.Valuedata, 0) ::TFloat   AS AmountPlan_5
+               
+                          , DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', Movement.OperDate) + ((((7 * COALESCE (MovementFloat_WeekNumber.ValueData - 1, 0)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL) ::TDateTime AS StartDate_WeekNumber
+                          , (DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', Movement.OperDate) + ((((7 * COALESCE (MovementFloat_WeekNumber.ValueData - 1, 0)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL) + INTERVAL '6 DAY') ::TDateTime AS EndDate_WeekNumber
+               
+                          , MovementDate_Update_report.ValueData ::TDateTime AS DateUpdate_report
+                          , Object_Update_report.ValueData       ::TVarChar  AS UserUpdate_report
+                          , Object_Member_1.ValueData            ::TVarChar  AS UserMember_1
+                          , Object_Member_2.ValueData            ::TVarChar  AS UserMember_2
+               
+                          , MovementString_Comment.ValueData       AS Comment
+               
+                          , Object_Insert.ValueData                AS InsertName
+                          , MovementDate_Insert.ValueData          AS InsertDate
+                          , Object_Update.ValueData                AS UpdateName
+                          , MovementDate_Update.ValueData          AS UpdateDate
+               
+                          , Object_Unit_insert.ValueData      ::TVarChar AS UnitName_insert
+                          , Object_Position_insert.ValueData  ::TVarChar AS PositionName_insert
+               
+                          , COALESCE (MovementDate_SignWait_1.ValueData, NULL)     ::TDateTime AS Date_SignWait_1
+                          , COALESCE (MovementDate_Sign_1.ValueData, NULL)         ::TDateTime AS Date_Sign_1
+                          , COALESCE (MovementBoolean_SignWait_1.ValueData, FALSE) ::Boolean   AS isSignWait_1 
+                          , COALESCE (MovementBoolean_Sign_1.ValueData, FALSE)     ::Boolean   AS isSign_1
+                      FROM tmpMovement AS Movement
+               
+                           LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+               
+                           LEFT JOIN MovementFloat AS MovementFloat_WeekNumber
+                                                   ON MovementFloat_WeekNumber.MovementId = Movement.Id
+                                                  AND MovementFloat_WeekNumber.DescId = zc_MovementFloat_WeekNumber()
+               
+                           LEFT JOIN MovementFloat AS MovementFloat_AmountPlan_1
+                                                   ON MovementFloat_AmountPlan_1.MovementId = Movement.Id
+                                                  AND MovementFloat_AmountPlan_1.DescId = zc_MovementFloat_AmountPlan_1()
+                           LEFT JOIN MovementFloat AS MovementFloat_AmountPlan_2
+                                                   ON MovementFloat_AmountPlan_2.MovementId = Movement.Id
+                                                  AND MovementFloat_AmountPlan_2.DescId = zc_MovementFloat_AmountPlan_2()
+                           LEFT JOIN MovementFloat AS MovementFloat_AmountPlan_3
+                                                   ON MovementFloat_AmountPlan_3.MovementId = Movement.Id
+                                                  AND MovementFloat_AmountPlan_3.DescId = zc_MovementFloat_AmountPlan_3()
+                           LEFT JOIN MovementFloat AS MovementFloat_AmountPlan_4
+                                                   ON MovementFloat_AmountPlan_4.MovementId = Movement.Id
+                                                  AND MovementFloat_AmountPlan_4.DescId = zc_MovementFloat_AmountPlan_4()
+                           LEFT JOIN MovementFloat AS MovementFloat_AmountPlan_5
+                                                   ON MovementFloat_AmountPlan_5.MovementId = Movement.Id
+                                                  AND MovementFloat_AmountPlan_5.DescId = zc_MovementFloat_AmountPlan_5()
+               
+                           LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                   ON MovementFloat_TotalSumm.MovementId = Movement.Id
+                                                  AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+                           LEFT JOIN MovementFloat AS MovementFloat_TotalSumm_1
+                                                   ON MovementFloat_TotalSumm_1.MovementId = Movement.Id
+                                                  AND MovementFloat_TotalSumm_1.DescId = zc_MovementFloat_TotalSumm_1()
+                           LEFT JOIN MovementFloat AS MovementFloat_TotalSumm_2
+                                                   ON MovementFloat_TotalSumm_2.MovementId = Movement.Id
+                                                  AND MovementFloat_TotalSumm_2.DescId = zc_MovementFloat_TotalSumm_2()
+                           LEFT JOIN MovementFloat AS MovementFloat_TotalSumm_3
+                                                   ON MovementFloat_TotalSumm_3.MovementId = Movement.Id
+                                                  AND MovementFloat_TotalSumm_3.DescId = zc_MovementFloat_TotalSumm_3()
+               
+                           LEFT JOIN MovementString AS MovementString_Comment
+                                                    ON MovementString_Comment.MovementId = Movement.Id
+                                                   AND MovementString_Comment.DescId = zc_MovementString_Comment()
+               
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_OrderFinance
+                                                        ON MovementLinkObject_OrderFinance.MovementId = Movement.Id
+                                                       AND MovementLinkObject_OrderFinance.DescId = zc_MovementLinkObject_OrderFinance()
+                           LEFT JOIN Object AS Object_OrderFinance ON Object_OrderFinance.Id = MovementLinkObject_OrderFinance.ObjectId
+               
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_BankAccount
+                                                        ON MovementLinkObject_BankAccount.MovementId = Movement.Id
+                                                       AND MovementLinkObject_BankAccount.DescId = zc_MovementLinkObject_BankAccount()
+                           LEFT JOIN Object_BankAccount_View ON Object_BankAccount_View.Id = MovementLinkObject_BankAccount.ObjectId
+               
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_Update_report
+                                                        ON MovementLinkObject_Update_report.MovementId = Movement.Id
+                                                       AND MovementLinkObject_Update_report.DescId = zc_MovementLinkObject_Update_report()
+                           LEFT JOIN Object AS Object_Update_report ON Object_Update_report.Id = MovementLinkObject_Update_report.ObjectId
+               
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_Member_1
+                                                        ON MovementLinkObject_Member_1.MovementId = Movement.Id
+                                                       AND MovementLinkObject_Member_1.DescId = zc_MovementLinkObject_Member_1()
+                           LEFT JOIN Object AS Object_Member_1 ON Object_Member_1.Id = MovementLinkObject_Member_1.ObjectId
+               
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_Member_2
+                                                        ON MovementLinkObject_Member_2.MovementId = Movement.Id
+                                                       AND MovementLinkObject_Member_2.DescId = zc_MovementLinkObject_Member_2()
+                           LEFT JOIN Object AS Object_Member_2 ON Object_Member_2.Id = MovementLinkObject_Member_2.ObjectId
+               
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                        ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                       AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                           LEFT JOIN Object AS Object_Unit_insert ON Object_Unit_insert.Id = MovementLinkObject_Unit.ObjectId
+               
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_Position
+                                                        ON MovementLinkObject_Position.MovementId = Movement.Id
+                                                       AND MovementLinkObject_Position.DescId = zc_MovementLinkObject_Position()
+                           LEFT JOIN Object AS Object_Position_insert ON Object_Position_insert.Id = MovementLinkObject_Position.ObjectId
+               
+                           LEFT JOIN MovementDate AS MovementDate_Update_report
+                                                  ON MovementDate_Update_report.MovementId = Movement.Id
+                                                 AND MovementDate_Update_report.DescId = zc_MovementDate_Update_report()
+               
+                           LEFT JOIN MovementDate AS MovementDate_Insert
+                                                  ON MovementDate_Insert.MovementId = Movement.Id
+                                                 AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+                           LEFT JOIN MovementDate AS MovementDate_Update
+                                                  ON MovementDate_Update.MovementId = Movement.Id
+                                                 AND MovementDate_Update.DescId = zc_MovementDate_Update()
+               
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
+                                                        ON MovementLinkObject_Insert.MovementId = Movement.Id
+                                                       AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
+                           LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MovementLinkObject_Insert.ObjectId
+               
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_Update
+                                                        ON MovementLinkObject_Update.MovementId = Movement.Id
+                                                       AND MovementLinkObject_Update.DescId = zc_MovementLinkObject_Update()
+                           LEFT JOIN Object AS Object_Update ON Object_Update.Id = MovementLinkObject_Update.ObjectId
+               
+                           LEFT JOIN MovementDate AS MovementDate_SignWait_1
+                                                  ON MovementDate_SignWait_1.MovementId = Movement.Id
+                                                 AND MovementDate_SignWait_1.DescId = zc_MovementDate_SignWait_1()
+                           LEFT JOIN MovementDate AS MovementDate_Sign_1
+                                                  ON MovementDate_Sign_1.MovementId = Movement.Id
+                                                 AND MovementDate_Sign_1.DescId = zc_MovementDate_Sign_1()
+                           LEFT JOIN MovementBoolean AS MovementBoolean_SignWait_1
+                                                     ON MovementBoolean_SignWait_1.MovementId = Movement.Id
+                                                    AND MovementBoolean_SignWait_1.DescId = zc_MovementBoolean_SignWait_1()
+                           LEFT JOIN MovementBoolean AS MovementBoolean_Sign_1
+                                                     ON MovementBoolean_Sign_1.MovementId = Movement.Id
+                                                    AND MovementBoolean_Sign_1.DescId = zc_MovementBoolean_Sign_1() 
+                    )
+
+   , tmpJuridicalOrderFinance AS (SELECT Object_JuridicalOrderFinance.Id  AS JuridicalOrderFinanceId
+                                       , OL_JuridicalOrderFinance_Juridical.ChildObjectId       AS JuridicalId
+
+                                       , Main_BankAccount_View.BankName   AS BankAccountName_main
+                                       , Main_BankAccount_View.MFO        AS MFO_main
+                                       , Main_BankAccount_View.Id         AS BankAccountId_main
+                                       , Main_BankAccount_View.Name       AS BankAccountName_main
+                                       , Partner_BankAccount_View.BankId
+                                       , Partner_BankAccount_View.BankName
+                                       , Partner_BankAccount_View.MFO
+                                       , Partner_BankAccount_View.Id      AS BankAccountId
+                                       , Partner_BankAccount_View.Name    AS BankAccountName
+                                       , OL_JuridicalOrderFinance_InfoMoney.ChildObjectId AS InfoMoneyId
+                                       , ObjectFloat_SummOrderFinance.ValueData :: TFloat AS SummOrderFinance
+                                       , ObjectString_Comment.ValueData         :: TVarChar AS Comment
+                                       , Object_JuridicalOrderFinance.isErased  AS isErased
+                                  FROM Object AS Object_JuridicalOrderFinance
+                                       LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_Juridical
+                                                            ON OL_JuridicalOrderFinance_Juridical.ObjectId = Object_JuridicalOrderFinance.Id
+                                                           AND OL_JuridicalOrderFinance_Juridical.DescId = zc_ObjectLink_JuridicalOrderFinance_Juridical()
+                            
+                                       LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccountMain
+                                                            ON OL_JuridicalOrderFinance_BankAccountMain.ObjectId = Object_JuridicalOrderFinance.Id
+                                                           AND OL_JuridicalOrderFinance_BankAccountMain.DescId = zc_ObjectLink_JuridicalOrderFinance_BankAccountMain()
+                                       LEFT JOIN Object_BankAccount_View AS Main_BankAccount_View ON Main_BankAccount_View.Id = OL_JuridicalOrderFinance_BankAccountMain.ChildObjectId
+                          
+                                       LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccount
+                                                            ON OL_JuridicalOrderFinance_BankAccount.ObjectId = Object_JuridicalOrderFinance.Id
+                                                           AND OL_JuridicalOrderFinance_BankAccount.DescId = zc_ObjectLink_JuridicalOrderFinance_BankAccount()
+                                       LEFT JOIN Object_BankAccount_View AS Partner_BankAccount_View ON Partner_BankAccount_View.Id = OL_JuridicalOrderFinance_BankAccount.ChildObjectId
+                                      
+                                       LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_InfoMoney
+                                                            ON OL_JuridicalOrderFinance_InfoMoney.ObjectId = Object_JuridicalOrderFinance.Id
+                                                           AND OL_JuridicalOrderFinance_InfoMoney.DescId = zc_ObjectLink_JuridicalOrderFinance_InfoMoney()
+                            
+                                       LEFT JOIN ObjectFloat AS ObjectFloat_SummOrderFinance
+                                                             ON ObjectFloat_SummOrderFinance.ObjectId = Object_JuridicalOrderFinance.Id
+                                                            AND ObjectFloat_SummOrderFinance.DescId = zc_ObjectFloat_JuridicalOrderFinance_SummOrderFinance()
+                            
+                                       LEFT JOIN ObjectString AS ObjectString_Comment
+                                                              ON ObjectString_Comment.ObjectId = Object_JuridicalOrderFinance.Id
+                                                             AND ObjectString_Comment.DescId = zc_ObjectString_JuridicalOrderFinance_Comment()
+                          
+                                  WHERE Object_JuridicalOrderFinance.DescId = zc_Object_JuridicalOrderFinance()
+                                   AND Object_JuridicalOrderFinance.isErased = FALSE
+                                   )           
+   --
+   SELECT tmpMovement.MovementId
+        , tmpMovement.InvNumber
+        , tmpMovement.OperDate
+        , tmpMovement.StatusCode
+        , tmpMovement.StatusName
+        , tmpMovement.OrderFinanceId
+        , tmpMovement.OrderFinanceName
+        , tmpMovement.BankAccountId
+        , tmpMovement.BankAccountName
+        , tmpMovement.BankId
+        , tmpMovement.BankName
+        , tmpMovement.BankAccountNameAll
+        , tmpMovement.WeekNumber
+          -- Предварительный План на неделю
+        , tmpMovement.TotalSumm  ::TFloat
+          -- Согласована сумма на неделю
+        , tmpMovement.TotalSumm_all ::TFloat
+        , tmpMovement.TotalSumm_1   ::TFloat
+        , tmpMovement.TotalSumm_2   ::TFloat
+        , tmpMovement.TotalSumm_3   ::TFloat
+
+        , tmpMovement.AmountPlan_1    ::TFloat  AS TotalPlan_1
+        , tmpMovement.AmountPlan_2    ::TFloat  AS TotalPlan_2
+        , tmpMovement.AmountPlan_3    ::TFloat  AS TotalPlan_3
+        , tmpMovement.AmountPlan_4    ::TFloat  AS TotalPlan_4
+        , tmpMovement.AmountPlan_5    ::TFloat  AS TotalPlan_5
+
+        , tmpMovement.StartDate_WeekNumber ::TDateTime
+        , tmpMovement.EndDate_WeekNumber   ::TDateTime  --20
+
+        , tmpMovement.DateUpdate_report ::TDateTime 
+        , tmpMovement.UserUpdate_report ::TVarChar 
+        , tmpMovement.UserMember_1      ::TVarChar
+        , tmpMovement.UserMember_2      ::TVarChar
+
+        , tmpMovement.Comment           ::TVarChar  AS Comment_mov
+
+        , tmpMovement.InsertName
+        , tmpMovement.InsertDate
+        , tmpMovement.UpdateName
+        , tmpMovement.UpdateDate
+
+        , tmpMovement.UnitName_insert      ::TVarChar 
+        , tmpMovement.PositionName_insert  ::TVarChar 
+
+        , tmpMovement.Date_SignWait_1 ::TDateTime
+        , tmpMovement.Date_Sign_1     ::TDateTime
+        , tmpMovement.isSignWait_1    ::Boolean
+        , tmpMovement.isSign_1        ::Boolean  --35
+
+        --
+        , tmpMI.Id AS MovementItemId
+        , tmpMI.JuridicalId
+        , tmpMI.JuridicalCode
+        , tmpMI.JuridicalName
+        , tmpMI.OKPO
+        , tmpMI.ContractId
+        , tmpMI.ContractCode
+        , tmpMI.ContractName
+        , tmpMI.PaidKindName
+        , tmpMI.InfoMoneyId
+        , tmpMI.InfoMoneyName
+        --, tmpMI.NumGroup
+        --, tmpMI.Condition              ::TVarChar   
+        , COALESCE (tmpInfoMoney_OFP.NumGroup, Null) ::Integer AS NumGroup
+        , tmpContractCondition.Condition       ::TVarChar AS Condition
+        , tmpMI.ContractStateKindCode  ::Integer
+        , tmpMI.StartDate              ::TDateTime
+        , tmpMI.EndDate_real           ::TDateTime
+        , tmpMI.EndDate                ::TVarChar 
+
+        , tmpMI.Amount          :: TFloat AS Amount
+        , tmpMI.AmountRemains   :: TFloat AS AmountRemains
+        , tmpMI.AmountPartner   :: TFloat AS AmountPartner
+        , tmpMI.AmountSumm      :: TFloat AS AmountSumm
+        , tmpMI.AmountPartner_1 :: TFloat AS AmountPartner_1
+        , tmpMI.AmountPartner_2 :: TFloat AS AmountPartner_2
+        , tmpMI.AmountPartner_3 :: TFloat AS AmountPartner_3
+        , tmpMI.AmountPartner_4 :: TFloat AS AmountPartner_4
+
+        , tmpMI.AmountPlan_1    :: TFloat AS AmountPlan_1
+        , tmpMI.AmountPlan_2    :: TFloat AS AmountPlan_2
+        , tmpMI.AmountPlan_3    :: TFloat AS AmountPlan_3
+        , tmpMI.AmountPlan_4    :: TFloat AS AmountPlan_4
+        , tmpMI.AmountPlan_5    :: TFloat AS AmountPlan_5
+        , tmpMI.AmountPlan_total :: TFloat AS AmountPlan_total
+
+        , tmpMI.isAmountPlan_1 ::Boolean
+        , tmpMI.isAmountPlan_2 ::Boolean
+        , tmpMI.isAmountPlan_3 ::Boolean
+        , tmpMI.isAmountPlan_4 ::Boolean
+        , tmpMI.isAmountPlan_5 ::Boolean
+
+        , tmpMI.Comment        ::TVarChar AS Comment
+        , tmpMI.Comment_pay    ::TVarChar AS Comment_pay
+        
+        , tmpJuridicalOrderFinance.JuridicalOrderFinanceId ::Integer
+        , tmpJuridicalOrderFinance.Comment         ::TVarChar AS Comment_jof          -- JuridicalOrderFinance
+        , tmpJuridicalOrderFinance.BankAccountId   ::Integer  AS BankAccountId_jof  -- JuridicalOrderFinance
+        , tmpJuridicalOrderFinance.BankAccountName ::TVarChar AS BankAccountName_jof  -- JuridicalOrderFinance
+        , tmpJuridicalOrderFinance.BankId    ::Integer  AS BankId_jof
+        , tmpJuridicalOrderFinance.BankName  ::TVarChar AS BankName_jof
+   FROM tmpMovement_Data AS tmpMovement
+        LEFT JOIN tmpMI_Data AS tmpMI ON tmpMI.MovementId = tmpMovement.MovementId
+        
+        LEFT JOIN tmpContractCondition ON tmpContractCondition.ContractId = tmpMI.ContractId
+                                      AND tmpMovement.OperDate BETWEEN tmpContractCondition.StartDate AND tmpContractCondition.EndDate
+        
+        LEFT JOIN tmpInfoMoney_OFP ON tmpInfoMoney_OFP.InfoMoneyId = tmpMI.InfoMoneyId
+                                  AND tmpInfoMoney_OFP.OrderFinanceId = tmpMovement.OrderFinanceId
+
+        LEFT JOIN tmpJuridicalOrderFinance ON tmpJuridicalOrderFinance.JuridicalId = tmpMI.JuridicalId
+                                          AND tmpJuridicalOrderFinance.InfoMoneyId = tmpMI.InfoMoneyId
+
+      ;
+
+END;
+$BODY$
+  LANGUAGE PLPGSQL VOLATILE;
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.                                     
+ 20.11.25         *
+*/
+
+-- тест
+-- SELECT * FROM gpSelect_Movement_OrderFinance_Plan (inStartDate:= '01.11.2021', inEndDate:= '30.11.2021', inJuridicalBasisId:=0, inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_OrderFinance_Plan (inStartDate:= '01.11.2025', inEndDate:= '30.12.2025', inStartWeekNumber:=47, inEndWeekNumber := 48, inSession:= '2')

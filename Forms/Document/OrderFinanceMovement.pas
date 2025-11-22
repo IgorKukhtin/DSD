@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox, dsdInternetAction, dsdCommon, ChoicePeriod;
+  cxImageComboBox, dsdInternetAction, dsdCommon, ChoicePeriod, cxBlobEdit;
 
 type
   TOrderFinanceMovementForm = class(TParentForm)
@@ -272,6 +272,7 @@ type
     dxBarSeparator1: TdxBarSeparator;
     NumGroup: TcxGridDBColumn;
     chNumGroup: TcxGridDBColumn;
+    Color_Group: TcxGridDBColumn;
   private
   public
   end;

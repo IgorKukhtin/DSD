@@ -21,7 +21,8 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, dsdCommon, cxContainer, cxTextEdit, cxLabel, Vcl.ExtCtrls,
+  dsdGuides, cxMaskEdit, cxButtonEdit;
 
 type
   TBankAccount_ObjectForm = class(TParentForm)
@@ -60,6 +61,14 @@ type
     JuridicalName: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbactShowAll: TdxBarButton;
+    Panel2: TPanel;
+    lbSearchName: TcxLabel;
+    edSearchName: TcxTextEdit;
+    FieldFilter: TdsdFieldFilter;
+    edBank: TcxButtonEdit;
+    cxLabel2: TcxLabel;
+    GuidesBank: TdsdGuides;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public

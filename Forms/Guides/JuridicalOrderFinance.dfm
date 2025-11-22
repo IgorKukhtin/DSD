@@ -7,7 +7,7 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 936
-  ExplicitHeight = 461
+  ExplicitHeight = 462
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -541,8 +541,7 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 144
-    Top = 88
+    Top = 64
   end
   inherited BarManager: TdxBarManager
     Left = 272

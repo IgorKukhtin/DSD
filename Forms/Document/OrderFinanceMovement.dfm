@@ -2,7 +2,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081'>'
-  ClientHeight = 585
+  ClientHeight = 595
   ClientWidth = 1060
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -474,12 +474,12 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Left = 0
     Top = 222
     Width = 1060
-    Height = 363
+    Height = 373
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 363
+    ClientRectBottom = 373
     ClientRectRight = 1060
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
@@ -1026,6 +1026,13 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 200
           end
+          object Comment_pay: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1083#1072#1090#1077#1078#1072
+            DataBinding.FieldName = 'Comment_pay'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 200
+          end
           object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertDate'
@@ -1071,6 +1078,13 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             Options.Editing = False
             Width = 70
           end
+          object Color_Group: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_Group'
+            PropertiesClassName = 'TcxBlobEditProperties'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 80
+          end
         end
         object cxGridLevel: TcxGridLevel
           GridView = cxGridDBTableView
@@ -1080,7 +1094,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Left = 0
         Top = 331
         Width = 1060
-        Height = 8
+        Height = 18
         Align = alBottom
         Anchors = [akTop, akRight, akBottom]
         TabOrder = 1
@@ -1119,7 +1133,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Left = 0
         Top = 0
         Width = 1060
-        Height = 339
+        Height = 349
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView1: TcxGridDBTableView
@@ -3401,6 +3415,15 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment_pay'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Comment_pay'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 54
@@ -3418,7 +3441,11 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ChartList = <>
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = Color_Group
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <
@@ -4501,8 +4528,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
   end
   object ExportDS: TDataSource
     DataSet = ExportCDS
-    Left = 80
-    Top = 480
+    Left = 88
+    Top = 488
   end
   object ExportCDS: TClientDataSet
     Aggregates = <>
@@ -4985,13 +5012,13 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 472
-    Top = 545
+    Left = 456
+    Top = 521
   end
   object ExportEmailDS: TDataSource
     DataSet = ExportEmailCDS
-    Left = 536
-    Top = 546
+    Left = 504
+    Top = 522
   end
   object spGetFileName_xls: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_OrderFinance_FileName_xls'
