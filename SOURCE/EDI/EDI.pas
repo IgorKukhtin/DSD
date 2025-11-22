@@ -6833,7 +6833,7 @@ begin
     end;
 
     try
-      // 2.Неарспедственно подпись
+      // 2.Непосредственно подпись
       FileName := FFileNameParam.Value;
       // проверка
       if not FileExists(String(FileName)) then
