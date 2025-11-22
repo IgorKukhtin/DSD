@@ -1634,7 +1634,8 @@ uses
   WeighingProductionJournal_protocol in '..\..\Forms\Document\WeighingProductionJournal_protocol.pas' {WeighingProductionJournal_protocolForm: TParentForm},
   WeighingPartnerJournal_protocol in '..\..\Forms\Document\WeighingPartnerJournal_protocol.pas' {WeighingPartnerJournal_protocolForm: TParentForm},
   Week_Date in '..\..\Forms\Document\Week_Date.pas' {Week_DateForm: TParentForm},
-  OrderFinance_Plan in '..\..\Forms\Document\OrderFinance_Plan.pas' {OrderFinance_PlanForm: TParentForm};
+  OrderFinance_Plan in '..\..\Forms\Document\OrderFinance_Plan.pas' {OrderFinance_PlanForm: TParentForm},
+  WeekPeriodDialog in '..\..\Forms\Guides\WeekPeriodDialog.pas' {WeekPeriodDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

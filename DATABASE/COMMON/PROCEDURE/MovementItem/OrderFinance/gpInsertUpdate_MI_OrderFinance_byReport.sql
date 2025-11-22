@@ -248,8 +248,7 @@ BEGIN
                            AND _tmpData.ContractId  = _tmpReport.ContractId
                            AND _tmpData.InfoMoneyId = _tmpReport.InfoMoneyId
                            AND _tmpData.PaidKindId  = _tmpReport.PaidKindId --OR COALESCE (vbPaidKindId,0) = 0)
-                              ;
-
+    ;
 
     -- сохранили свойство <Дата/время заполнения данных из отчета>
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Update_report(), inMovementId, CURRENT_TIMESTAMP);

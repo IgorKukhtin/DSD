@@ -43,6 +43,8 @@ type
     actTBankAccount_ObjectForm: TOpenChoiceForm;
     spUpdate_OrderFinance_Plan: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

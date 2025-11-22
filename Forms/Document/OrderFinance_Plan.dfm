@@ -2,6 +2,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081'> ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')'
   ClientHeight = 324
   ClientWidth = 1020
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1036
   ExplicitHeight = 363
   PixelsPerInch = 96
@@ -893,7 +894,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
   end
   object deStart2: TcxDateEdit [3]
     Left = 169
-    Top = 28
+    Top = 29
     EditValue = 41640d
     Properties.ReadOnly = True
     Properties.SaveTime = False
@@ -1052,6 +1053,71 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TWeekPeriodDialogForm'
+      FormNameParam.Value = 'TWeekPeriodDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inStartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inEndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inStartDate2'
+          Value = Null
+          Component = deStart2
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inEndDate2'
+          Value = Null
+          Component = deEnd2
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'WeekNumber1'
+          Value = ''
+          Component = GuidesWeek_Date1
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'WeekNumber2'
+          Value = ''
+          Component = GuidesWeek_Date2
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -1105,6 +1171,41 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 208
@@ -1182,8 +1283,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 103
-    Top = 65528
+    Left = 87
   end
   object GuidesWeek_Date2: TdsdGuides
     KeyField = 'WeekNumber'
@@ -1227,8 +1327,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 95
-    Top = 24
+    Left = 119
   end
   object spUpdate_OrderFinance_Plan: TdsdStoredProc
     StoredProcName = 'gpUpdateMovement_OrderFinance_Plan'

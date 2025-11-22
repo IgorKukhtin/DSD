@@ -33,6 +33,7 @@ RETURNS TABLE (Id Integer
              , isAmountPlan_4     Boolean
              , isAmountPlan_5     Boolean
              , Comment            TVarChar
+             , Comment_pay        TVarChar
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
              , isErased Boolean
@@ -95,14 +96,14 @@ BEGIN
                                                                       ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
                                                                      AND MILinkObject_MoneyPlace.DescId         = zc_MILinkObject_MoneyPlace()
                                      INNER JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = MILinkObject_MoneyPlace.ObjectId
-                                                                        AND Object_MoneyPlace.DescId = zc_Object_Juridical()
+                                                                           AND Object_MoneyPlace.DescId = zc_Object_Juridical()
 
                                      LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                                       ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                                                      AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
                                      INNER JOIN MovementItemLinkObject AS MILinkObject_BankAccount
-                                                                      ON MILinkObject_BankAccount.MovementItemId = MovementItem.Id
-                                                                     AND MILinkObject_BankAccount.DescId = zc_MILinkObject_BankAccount()
+                                                                       ON MILinkObject_BankAccount.MovementItemId = MovementItem.Id
+                                                                      AND MILinkObject_BankAccount.DescId = zc_MILinkObject_BankAccount()
 
                                      LEFT JOIN MovementItemString AS MIString_Comment
                                                                   ON MIString_Comment.MovementItemId = MovementItem.Id
@@ -131,6 +132,7 @@ BEGIN
                                                                                    , inSession        := inSession
                                                                                     ) AS tmp
                                  )
+
    , tmpData AS (SELECT DISTINCT
                         ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId
                       , ObjectLink_Contract_InfoMoney.ObjectId      AS ContractId
@@ -193,7 +195,9 @@ BEGIN
              , tmpMovementItemString AS (SELECT *
                                          FROM MovementItemString
                                          WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
-                                           AND MovementItemString.DescId = zc_MIString_Comment()
+                                           AND MovementItemString.DescId IN (zc_MIString_Comment()
+                                                                           , zc_MIString_Comment_pay()
+                                                                           )
                                          )
 
              , tmpMovementItemBoolean AS (SELECT *
@@ -242,12 +246,11 @@ BEGIN
 
                     --, MILinkObject_BankAccount.ObjectId AS BankAccountId
                     , MIString_Comment.ValueData        AS Comment
+                    , MIString_Comment_pay.ValueData    AS Comment_pay
                     , Object_Insert.ValueData           AS InsertName
                     , Object_Update.ValueData           AS UpdateName
                     , MIDate_Insert.ValueData           AS InsertDate
                     , MIDate_Update.ValueData           AS UpdateDate
-
-
 
                     , MovementItem.isErased             AS isErased
 
@@ -312,6 +315,9 @@ BEGIN
                     LEFT JOIN tmpMovementItemString AS MIString_Comment
                                                     ON MIString_Comment.MovementItemId = MovementItem.Id
                                                    AND MIString_Comment.DescId = zc_MIString_Comment()
+                    LEFT JOIN tmpMovementItemString AS MIString_Comment_pay
+                                                    ON MIString_Comment_pay.MovementItemId = MovementItem.Id
+                                                   AND MIString_Comment_pay.DescId = zc_MIString_Comment_pay()
 
                     LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_Contract
                                                         ON MILinkObject_Contract.MovementItemId = MovementItem.Id
@@ -441,6 +447,7 @@ BEGIN
 
            --, COALESCE (tmpMI.Comment, tmpData.Comment) ::TVarChar AS Comment
            , CASE WHEN COALESCE (tmpMI.Comment,'') = '' THEN COALESCE (tmpData.Comment,'') ELSE COALESCE (tmpMI.Comment,'') END ::TVarChar AS Comment
+           , COALESCE (tmpMI.Comment_pay,'') ::TVarChar AS Comment_pay
 
            , tmpMI.InsertName
            , tmpMI.UpdateName
@@ -523,6 +530,7 @@ BEGIN
            , FALSE ::Boolean  AS isAmountPlan_5
 
            , ''   ::TVarChar  AS Comment
+           , ''   ::TVarChar  AS Comment_pay
 
            , tmpMI.InsertName  ::TVarChar
            , tmpMI.UpdateName  ::TVarChar
@@ -616,7 +624,9 @@ BEGIN
      , tmpMovementItemString AS (SELECT *
                                  FROM MovementItemString
                                  WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
-                                   AND MovementItemString.DescId = zc_MIString_Comment()
+                                   AND MovementItemString.DescId IN (zc_MIString_Comment()
+                                                                   , zc_MIString_Comment_pay()
+                                                                   )
                                 )
        -- св-ва
      , tmpMovementItemBoolean AS (SELECT *
@@ -731,7 +741,8 @@ BEGIN
            , COALESCE (MIBoolean_AmountPlan_4.ValueData, FALSE) ::Boolean AS isAmountPlan_4
            , COALESCE (MIBoolean_AmountPlan_5.ValueData, FALSE) ::Boolean AS isAmountPlan_5
 
-           , MIString_Comment.ValueData       AS Comment
+           , MIString_Comment.ValueData     ::TVarChar AS Comment
+           , MIString_Comment_pay.ValueData ::TVarChar AS Comment_pay
 
            , Object_Insert.ValueData          AS InsertName
            , Object_Update.ValueData          AS UpdateName
@@ -804,6 +815,9 @@ BEGIN
             LEFT JOIN tmpMovementItemString AS MIString_Comment
                                             ON MIString_Comment.MovementItemId = MovementItem.Id
                                            AND MIString_Comment.DescId = zc_MIString_Comment()
+            LEFT JOIN tmpMovementItemString AS MIString_Comment_pay
+                                            ON MIString_Comment_pay.MovementItemId = MovementItem.Id
+                                           AND MIString_Comment_pay.DescId = zc_MIString_Comment_pay()
 
             LEFT JOIN tmpMovementItemDate AS MIDate_Insert
                                           ON MIDate_Insert.MovementItemId = MovementItem.Id
@@ -880,6 +894,7 @@ BEGIN
            , FALSE ::Boolean  AS isAmountPlan_5
 
            , ''   ::TVarChar  AS Comment
+           , ''   ::TVarChar  AS Comment_pay
 
            , Object_Insert.ValueData          AS InsertName
            , Object_Update.ValueData          AS UpdateName

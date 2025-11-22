@@ -1076,6 +1076,8 @@ end;
 
 procedure TLoadFormTest.LoadOrderFinanceMovementFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeekPeriodDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWeekPeriodDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeek_DateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeek_DateForm');
