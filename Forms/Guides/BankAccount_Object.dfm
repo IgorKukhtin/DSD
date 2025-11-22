@@ -25,9 +25,6 @@ object BankAccount_ObjectForm: TBankAccount_ObjectForm
     Height = 588
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 26
-    ExplicitWidth = 710
-    ExplicitHeight = 618
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -126,8 +123,6 @@ object BankAccount_ObjectForm: TBankAccount_ObjectForm
     Height = 30
     Align = alTop
     TabOrder = 5
-    ExplicitTop = 20
-    ExplicitWidth = 710
     object lbSearchName: TcxLabel
       Left = 10
       Top = 4
@@ -150,13 +145,14 @@ object BankAccount_ObjectForm: TBankAccount_ObjectForm
       Width = 140
     end
     object edBank: TcxButtonEdit
-      Left = 377
+      Left = 378
       Top = 3
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 2
       Width = 289
     end

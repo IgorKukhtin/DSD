@@ -37,6 +37,7 @@ RETURNS TABLE (Id Integer
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
              , isErased Boolean
+             , Color_Group Integer
               )
 AS
 $BODY$
@@ -455,6 +456,8 @@ BEGIN
            , tmpMI.UpdateDate
 
            , COALESCE (tmpMI.isErased, FALSE) AS isErased
+           
+           , zc_Color_White() ::Integer AS Color_Group
 
        FROM tmpData
             FULL JOIN tmpMI ON tmpMI.JuridicalId = tmpData.JuridicalId
@@ -538,6 +541,8 @@ BEGIN
            , tmpMI.UpdateDate  ::TDateTime
 
            , COALESCE (tmpMI.isErased, FALSE) AS isErased
+           
+           , zc_Color_Yelow() ::Integer AS Color_Group
 
        FROM tmpInfoMoney_OrderF
             LEFT JOIN tmpMI ON tmpMI.JuridicalId = tmpInfoMoney_OrderF.InfoMoneyId --для итогового значения статью записываем в ObjectId
@@ -749,7 +754,9 @@ BEGIN
            , MIDate_Insert.ValueData          AS InsertDate
            , MIDate_Update.ValueData          AS UpdateDate
 
-           , MovementItem.isErased            AS isErased
+           , MovementItem.isErased            AS isErased 
+           
+           , zc_Color_White() ::Integer AS Color_Group
 
        FROM tmpMI AS MovementItem
             INNER JOIN Object AS Object_Juridical ON Object_Juridical.Id     = MovementItem.ObjectId
@@ -903,6 +910,7 @@ BEGIN
 
            , COALESCE (tmpMI.isErased, FALSE) AS isErased
 
+           , zc_Color_Yelow() ::Integer AS Color_Group
        FROM tmpInfoMoney_OrderF
             -- для итогов статья в ObjectId
             LEFT JOIN tmpMI ON tmpMI.ObjectId = tmpInfoMoney_OrderF.InfoMoneyId

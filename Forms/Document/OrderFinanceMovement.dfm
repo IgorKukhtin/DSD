@@ -479,14 +479,12 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 363
     ClientRectBottom = 373
     ClientRectRight = 1060
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 339
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -1080,6 +1078,13 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             Options.Editing = False
             Width = 70
           end
+          object Color_Group: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_Group'
+            PropertiesClassName = 'TcxBlobEditProperties'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 80
+          end
         end
         object cxGridLevel: TcxGridLevel
           GridView = cxGridDBTableView
@@ -1094,7 +1099,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Anchors = [akTop, akRight, akBottom]
         TabOrder = 1
         Visible = False
-        ExplicitHeight = 8
         object ExportXmlGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ExportDS
@@ -1125,7 +1129,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1070#1088'.'#1083#1080#1094#1072
       ImageIndex = 1
-      ExplicitHeight = 339
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -1133,7 +1136,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Height = 349
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 339
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = JuridicalDS
@@ -3439,7 +3441,11 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ChartList = <>
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = Color_Group
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <
