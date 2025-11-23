@@ -59,6 +59,7 @@ type
     Comment: TcxGridDBColumn;
     OperDate: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
+    NumGroup: TcxGridDBColumn;
   private
     { Private declarations }
   public
