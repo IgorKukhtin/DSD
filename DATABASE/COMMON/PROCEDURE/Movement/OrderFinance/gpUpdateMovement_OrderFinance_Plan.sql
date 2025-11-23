@@ -69,7 +69,21 @@ BEGIN
          END IF; 
           
          --пробуем найти
-         vbBankAccountId_jof:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_BankAccount() AND UPPER (TRIM (Object.VAlueData)) = UPPER (TRIM (inBankAccountName_jof)));   
+         vbBankAccountId_jof:= (SELECT Object_BankAccount_View.Id
+                                FROM Object_BankAccount_View 
+                                     -- Покажем счета только по внутренним фирмам
+                                     INNER JOIN ObjectBoolean AS ObjectBoolean_isCorporate
+                                                              ON ObjectBoolean_isCorporate.ObjectId = Object_BankAccount_View.JuridicalId
+                                                             AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
+                                                             AND (ObjectBoolean_isCorporate.ValueData = TRUE
+                                                               OR Object_BankAccount_View.JuridicalId = 15505 -- ДУКО ТОВ 
+                                                               OR Object_BankAccount_View.JuridicalId = 15512 -- Ірна-1 Фірма ТОВ
+                                                               OR Object_BankAccount_View.isCorporate = TRUE
+                                                                 )
+                                WHERE UPPER (TRIM (Object_BankAccount_View.Name)) = UPPER (TRIM (inBankAccountName_jof))
+                                  AND Object_BankAccount_View.isErased = FALSE
+                                  AND Object_BankAccount_View.BankId = inBankId_jof
+                                ); 
          
          IF COALESCE (vbBankAccountId_jof, 0) = 0
          THEN
