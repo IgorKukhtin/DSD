@@ -1394,7 +1394,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_OrderFinanceProperty_Group() RETURNS I
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_OrderFinanceProperty(), 'zc_ObjectFloat_OrderFinanceProperty_Group', 'Норма отклонения ГП, кг' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_OrderFinanceProperty_Group');
 
-
+  
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_JuridicalOrderFinance_Amount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_JuridicalOrderFinance_Amount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_JuridicalOrderFinance(), 'zc_ObjectFloat_JuridicalOrderFinance_Amount', 'Cумма платежа' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_JuridicalOrderFinance_Amount');
 
 
 

@@ -57,6 +57,8 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     bbInsert_byMovBankAccount: TdxBarButton;
     Comment: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
   private
     { Private declarations }
   public

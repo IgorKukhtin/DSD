@@ -304,6 +304,9 @@ INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_GoodsByGoodsKind(), 'zc_ObjectDate_GoodsByGoodsKind_GoodsKindSub_SendCEH_start', 'Дата с которой работает (перемещ.пересортица ЦЕХ - расход)' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_GoodsByGoodsKind_GoodsKindSub_SendCEH_start');
 
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_JuridicalOrderFinance_OperDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_JuridicalOrderFinance_OperDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_JuridicalOrderFinance(), 'zc_ObjectDate_JuridicalOrderFinance_OperDate', 'Дата платежа' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_JuridicalOrderFinance_OperDate');
 
 
 
@@ -342,7 +345,6 @@ INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_ObjectDate_Price_CheckPrice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Price_CheckPrice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Price(), 'zc_ObjectDate_Price_CheckPrice', 'дата/время когда Появился на рынке - и высветился признак исправить НТЗ (да/нет)' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Price_CheckPrice');
-
 
 
 

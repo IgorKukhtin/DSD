@@ -34,7 +34,6 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
               Kind = skCount
               Column = BankAccountName_main
             end>
-          OptionsBehavior.IncSearch = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
@@ -142,6 +141,24 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 73
+          end
+          object Amount: TcxGridDBColumn
+            Caption = 'C'#1091#1084#1084#1072' '#1087#1083#1072#1090#1077#1078#1072
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object OperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1083#1072#1090#1077#1078#1072
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object Comment: TcxGridDBColumn
             Caption = #1053#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1072
@@ -652,7 +669,6 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
         Action = actUpdate
         ShortCut = 13
       end>
-    SearchAsFilter = False
   end
   object spInsertUpdate: TdsdStoredProc
     DataSets = <>
