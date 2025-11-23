@@ -60,6 +60,7 @@ type
     Color_unit: TcxGridDBColumn;
     BoldRecord_unit: TcxGridDBColumn;
     isTotal: TcxGridDBColumn;
+    ColorFon_unit: TcxGridDBColumn;
   private
     { Private declarations }
   public
