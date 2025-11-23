@@ -19,7 +19,7 @@ CREATE OR REPLACE FUNCTION lpUpdate_MI_OrderFinance_ByReport(
     IN inSaleSumm2        TFloat    ,
     IN inSaleSumm3        TFloat    ,
     IN inSaleSumm4        TFloat    ,
-    IN inComment          TVarChar  ,
+    IN inComment_pay      TVarChar  ,
     IN inUserId           Integer     -- пользователь
 )
 RETURNS VOID
@@ -57,7 +57,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner_4(), inId, inSaleSumm4);
 
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), inId, inComment);
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment_pay(), inId, inComment);
      
      
      IF vbIsInsert = TRUE

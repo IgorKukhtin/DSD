@@ -240,7 +240,7 @@ BEGIN
                                              , inSaleSumm2     := COALESCE (_tmpReport.SaleSumm2,0)  ::TFloat
                                              , inSaleSumm3     := COALESCE (_tmpReport.SaleSumm3,0)  ::TFloat
                                              , inSaleSumm4     := COALESCE (_tmpReport.SaleSumm4,0)  ::TFloat
-                                             , inComment       := _tmpData.Comment      ::TVarChar
+                                             , inComment_pay   := _tmpData.Comment      ::TVarChar
                                              , inUserId        := vbUserId
                                               )
     FROM _tmpReport

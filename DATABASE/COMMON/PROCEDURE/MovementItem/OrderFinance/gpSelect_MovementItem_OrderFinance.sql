@@ -139,7 +139,7 @@ BEGIN
                       , ObjectLink_Contract_InfoMoney.ObjectId      AS ContractId
                       , ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
                       --, tmpJuridicalOrderFinance.BankAccountId      AS BankAccountId
-                      , COALESCE (tmpJuridicalOrderFinance.Comment, tmp_Comment.Comment) ::TVarChar AS Comment
+                      , CASE WHEN COALESCE (tmpJuridicalOrderFinance.Comment, '') = '' THEN COALESCE (tmp_Comment.Comment,'') ELSE COALESCE (tmpJuridicalOrderFinance.Comment, '') END ::TVarChar AS Comment
                  FROM ObjectLink AS ObjectLink_Contract_InfoMoney
                       LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
                                            ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_Contract_InfoMoney.ObjectId

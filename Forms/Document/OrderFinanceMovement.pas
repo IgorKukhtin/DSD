@@ -273,6 +273,8 @@ type
     NumGroup: TcxGridDBColumn;
     chNumGroup: TcxGridDBColumn;
     Color_Group: TcxGridDBColumn;
+    actBankChoiceForm_JurMain: TOpenChoiceForm;
+    actBankChoiceForm_Jur: TOpenChoiceForm;
   private
   public
   end;
