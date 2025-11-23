@@ -115,7 +115,7 @@ BEGIN
          );
 
    -- удаляем сохраненные элементы справочника, которых нет в выборке по документам
-   UPDATE Object SET isErased = CASE WHEN tmpData.JuridicalId > 0 OR tmpJuridical.Ord = 1 THEN FALSE ELSE TRUE END
+   UPDATE Object SET isErased = CASE WHEN tmpData.JuridicalId > 0 AND tmpJuridical.Ord = 1 THEN FALSE ELSE TRUE END
    FROM tmpJuridicalOrderFinance AS tmpJuridical
         LEFT JOIN tmpData ON tmpData.BankAccountId_main = tmpJuridical.BankAccountId_main
                          AND tmpData.JuridicalId        = tmpJuridical.JuridicalId

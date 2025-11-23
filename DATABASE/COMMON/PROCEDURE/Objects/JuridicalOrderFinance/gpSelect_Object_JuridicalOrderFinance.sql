@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer
              , InfoMoneyCode Integer
              , InfoMoneyName TVarChar
              , InfoMoneyName_all TVarChar
+             , NumGroup Integer
              , OperDate TDateTime
              , SummOrderFinance TFloat
              , Amount           TFloat
@@ -118,6 +119,7 @@ BEGIN
              , Object_InfoMoney_View.InfoMoneyCode
              , Object_InfoMoney_View.InfoMoneyName
              , Object_InfoMoney_View.InfoMoneyName_all
+             , 0 :: Integer AS NumGroup
 
              , tmpJuridicalOrderFinance.OperDate                                 AS OperDate
              , COALESCE (tmpJuridicalOrderFinance.SummOrderFinance,0) :: TFloat  AS SummOrderFinance
@@ -155,6 +157,48 @@ BEGIN
     ELSE
         RETURN QUERY
 
+       -- УП-Статья или Группа или ...
+     WITH tmpOrderFinanceProperty AS (SELECT DISTINCT
+                                          -- УП - Статья или Группа или ...
+                                          OL_OrderFinanceProperty_Object.ChildObjectId               AS ObjectId
+                                          -- Форма оплаты
+                                        , OL_OrderFinance_PaidKind.ChildObjectId                     AS PaidKindId
+                                          -- № п/п группы
+                                        , ObjectFloat_Group.ValueData                                AS NumGroup
+                                   FROM ObjectLink AS OL_OrderFinanceProperty_OrderFinance
+                                        INNER JOIN Object ON Object.Id       = OL_OrderFinanceProperty_OrderFinance.ObjectId
+                                                         -- не удален
+                                                         AND Object.isErased = FALSE
+                                        -- Форма оплаты
+                                        INNER JOIN ObjectLink AS OL_OrderFinance_PaidKind
+                                                              ON OL_OrderFinance_PaidKind.ObjectId      = OL_OrderFinanceProperty_OrderFinance.ChildObjectId
+                                                             AND OL_OrderFinance_PaidKind.DescId        = zc_ObjectLink_OrderFinance_PaidKind()
+                                                             AND OL_OrderFinance_PaidKind.ChildObjectId > 0
+                                        -- УП - Статья или Группа или ...
+                                        INNER JOIN ObjectLink AS OL_OrderFinanceProperty_Object
+                                                              ON OL_OrderFinanceProperty_Object.ObjectId      = OL_OrderFinanceProperty_OrderFinance.ObjectId
+                                                             AND OL_OrderFinanceProperty_Object.DescId        = zc_ObjectLink_OrderFinanceProperty_Object()
+                                                             AND OL_OrderFinanceProperty_Object.ChildObjectId > 0
+                                        -- № п/п группы
+                                        LEFT JOIN ObjectFloat AS ObjectFloat_Group
+                                                              ON ObjectFloat_Group.ObjectId = OL_OrderFinanceProperty_OrderFinance.ObjectId
+                                                             AND ObjectFloat_Group.DescId   = zc_ObjectFloat_OrderFinanceProperty_Group()
+
+                                   WHERE OL_OrderFinanceProperty_OrderFinance.ChildObjectId = 3988049 -- inOrderFinanceId
+                                     AND OL_OrderFinanceProperty_OrderFinance.DescId        = zc_ObjectLink_OrderFinanceProperty_OrderFinance()
+                                  )
+       -- разворачивается по УП-статьям + № группы
+     , tmpInfoMoney AS (SELECT DISTINCT
+                               Object_InfoMoney_View.InfoMoneyId
+                             , tmpOrderFinanceProperty.PaidKindId
+                             , tmpOrderFinanceProperty.NumGroup
+                        FROM Object_InfoMoney_View
+                             INNER JOIN tmpOrderFinanceProperty ON (tmpOrderFinanceProperty.ObjectId = Object_InfoMoney_View.InfoMoneyId
+                                                                 OR tmpOrderFinanceProperty.ObjectId = Object_InfoMoney_View.InfoMoneyDestinationId
+                                                                 OR tmpOrderFinanceProperty.ObjectId = Object_InfoMoney_View.InfoMoneyGroupId
+                                                                   )
+                       )
+        -- Результат
         SELECT Object_JuridicalOrderFinance.Id  AS Id
 
              , Object_Juridical.Id              AS JuridicalId
@@ -184,6 +228,7 @@ BEGIN
              , Object_InfoMoney_View.InfoMoneyCode
              , Object_InfoMoney_View.InfoMoneyName
              , Object_InfoMoney_View.InfoMoneyName_all
+             , tmpInfoMoney.NumGroup :: Integer AS NumGroup
 
              , ObjectDate_OperDate.ValueData                AS OperDate
              , ObjectFloat_SummOrderFinance.ValueData       AS SummOrderFinance
@@ -244,6 +289,8 @@ BEGIN
              LEFT JOIN ObjectBoolean AS ObjectBoolean_isCorporate
                                      ON ObjectBoolean_isCorporate.ObjectId = Object_Juridical.Id
                                     AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
+
+             INNER JOIN tmpInfoMoney ON tmpInfoMoney.InfoMoneyId = OL_JuridicalOrderFinance_InfoMoney.ChildObjectId
 
         WHERE Object_JuridicalOrderFinance.DescId = zc_Object_JuridicalOrderFinance()
          AND (Object_JuridicalOrderFinance.isErased = inIsErased OR inIsErased = TRUE)
