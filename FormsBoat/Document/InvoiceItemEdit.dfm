@@ -205,7 +205,7 @@
   end
   object ceRemains: TcxCurrencyEdit
     Left = 279
-    Top = 137
+    Top = 140
     ParentFont = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'

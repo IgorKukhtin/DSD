@@ -24,7 +24,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon,
-  cxImageComboBox;
+  cxImageComboBox, cxCheckBox;
 
 type
   TOrderFinance_PlanForm = class(TAncestorReportForm)
@@ -32,12 +32,7 @@ type
     cxLabel4: TcxLabel;
     GuidesWeek_Date1: TdsdGuides;
     edWeekNumber1: TcxButtonEdit;
-    GuidesWeek_Date2: TdsdGuides;
     edWeekNumber2: TcxButtonEdit;
-    cxLabel5: TcxLabel;
-    deStart2: TcxDateEdit;
-    cxLabel6: TcxLabel;
-    deEnd2: TcxDateEdit;
     actBankChoiceForm: TOpenChoiceForm;
     BankName_jof: TcxGridDBColumn;
     actTBankAccount_ObjectForm: TOpenChoiceForm;
@@ -45,6 +40,15 @@ type
     actUpdateDataSet: TdsdUpdateDataSet;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    cbPlan_1: TcxCheckBox;
+    cbPlan_2: TcxCheckBox;
+    cbPlan_3: TcxCheckBox;
+    cbPlan_4: TcxCheckBox;
+    cbPlan_5: TcxCheckBox;
+    RefreshDispatcherPeriod: TRefreshDispatcher;
+    spGet_WeekNumber_byPeriod: TdsdStoredProc;
+    actGet_Period_byWeekNumber: TdsdDataSetRefresh;
+    actGet_WeekNumber_byPeriod: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

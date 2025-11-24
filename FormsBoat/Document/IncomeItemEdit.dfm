@@ -1339,8 +1339,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Control = ceSummIn
       end>
     Action = actRefresh_Price
-    Left = 296
-    Top = 180
+    Left = 336
+    Top = 172
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null
@@ -1383,8 +1383,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
       item
         Control = cxButtonOK
       end>
-    Left = 336
-    Top = 120
+    Left = 344
+    Top = 136
   end
   object GuidesPartionCell: TdsdGuides
     KeyField = 'Id'
