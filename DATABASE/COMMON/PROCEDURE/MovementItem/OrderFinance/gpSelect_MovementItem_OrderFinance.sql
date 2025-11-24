@@ -139,7 +139,7 @@ BEGIN
                       , ObjectLink_Contract_InfoMoney.ObjectId      AS ContractId
                       , ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
                       --, tmpJuridicalOrderFinance.BankAccountId      AS BankAccountId
-                      , CASE WHEN COALESCE (tmpJuridicalOrderFinance.Comment_pay, '') = '' THEN COALESCE (tmp_Comment.Comment,'') ELSE COALESCE (tmpJuridicalOrderFinance.Comment_pay, '') END ::TVarChar AS Comment
+                      , CASE WHEN COALESCE (tmpJuridicalOrderFinance.Comment_pay, '') = '' THEN COALESCE (tmp_Comment.Comment,'') ELSE COALESCE (tmpJuridicalOrderFinance.Comment_pay, '') END ::TVarChar AS Comment_pay
                  FROM ObjectLink AS ObjectLink_Contract_InfoMoney
                       LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
                                            ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_Contract_InfoMoney.ObjectId
@@ -446,9 +446,9 @@ BEGIN
            , COALESCE (tmpMI.isAmountPlan_4, FALSE)  ::Boolean  AS isAmountPlan_4
            , COALESCE (tmpMI.isAmountPlan_5, FALSE)  ::Boolean  AS isAmountPlan_5
 
-           --, COALESCE (tmpMI.Comment, tmpData.Comment) ::TVarChar AS Comment
-           , CASE WHEN COALESCE (tmpMI.Comment,'') = '' THEN COALESCE (tmpData.Comment,'') ELSE COALESCE (tmpMI.Comment,'') END ::TVarChar AS Comment
-           , COALESCE (tmpMI.Comment_pay,'') ::TVarChar AS Comment_pay
+           , COALESCE (tmpMI.Comment, '') ::TVarChar AS Comment
+           , CASE WHEN COALESCE (tmpMI.Comment_pay,'') = '' THEN COALESCE (tmpData.Comment_pay,'') ELSE COALESCE (tmpMI.Comment_pay,'') END ::TVarChar AS Comment_pay
+           --, COALESCE (tmpMI.Comment_pay,'') ::TVarChar AS Comment_pay
 
            , tmpMI.InsertName
            , tmpMI.UpdateName
