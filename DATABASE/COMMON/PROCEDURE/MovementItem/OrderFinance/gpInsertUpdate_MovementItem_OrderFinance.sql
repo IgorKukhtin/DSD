@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinance(
  INOUT ioId                    Integer   , --  люч объекта <Ёлемент документа>
@@ -24,7 +25,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinance(
     IN inisAmountPlan_4        Boolean    , --
     IN inisAmountPlan_5        Boolean    , --
     IN inComment               TVarChar  , --
-    IN inComment_pay           TVarChar  , --
     IN inSession               TVarChar    -- сесси€ пользовател€
 )
 RETURNS RECORD
@@ -54,7 +54,6 @@ BEGIN
                                                   , inisAmountPlan_4  := inisAmountPlan_4
                                                   , inisAmountPlan_5  := inisAmountPlan_5
                                                   , inComment         := inComment
-                                                  , inComment_pay     := inComment_pay
                                                   , inUserId          := vbUserId
                                                    ) AS tmp;
 

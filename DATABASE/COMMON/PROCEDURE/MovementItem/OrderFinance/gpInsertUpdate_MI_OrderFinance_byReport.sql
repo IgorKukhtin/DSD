@@ -9,29 +9,31 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_OrderFinance_byReport(
 RETURNS VOID
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId         Integer;
    DECLARE vbOrderFinanceId Integer;
-   DECLARE vbPaidKindId Integer;
-   DECLARE vbBankAccountMainId Integer;
-   DECLARE vbOperDate TDateTime;
-           vbWeekNumber TFloat;
+   DECLARE vbPaidKindId     Integer;
+   DECLARE vbOperDate       TDateTime;
+   DECLARE vbWeekNumber     TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderFinance());
 
+
      -- проверка
-   /*  IF EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE)
+     /*IF EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE)
      THEN
          RAISE EXCEPTION 'Ошибка.Документ уже заполнен.';
-     END IF;
-   */  
+     END IF;*/
+
+
      -- из шапки документа
      SELECT Movement.OperDate
           , COALESCE (MovementLinkObject.ObjectId,0)              AS OrderFinanceId
+            -- Форма оплаты
           , OrderFinance_PaidKind.ChildObjectId                   AS PaidKindId
-          , COALESCE (MovementLinkObject_BankAccount.ObjectId,0)  AS BankAccountId
+            --
           , MovementFloat_WeekNumber.ValueData                    AS WeekNumber
-            INTO vbOperDate, vbOrderFinanceId, vbPaidKindId, vbBankAccountMainId, vbWeekNumber
+            INTO vbOperDate, vbOrderFinanceId, vbPaidKindId, vbWeekNumber
      FROM Movement
           LEFT JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id
                                       AND MovementLinkObject.DescId = zc_MovementLinkObject_OrderFinance()
@@ -50,51 +52,99 @@ BEGIN
 
      -- переопределяем  - заливка данных на дату - конец недели WeekNumber
      vbOperDate := DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', vbOperDate) + ((((7 * (vbWeekNumber-1)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL) + INTERVAL'6 DAY' ;
-     
+
 
     -- данные из отчета
     CREATE TEMP TABLE _tmpReport (JuridicalId Integer, PaidKindId Integer, ContractId Integer, InfomoneyId Integer
                                 , DebetRemains TFloat, KreditRemains TFloat
-                                , DefermentPaymentRemains TFloat   --Долг с отсрочкой
-                                , Remains TFloat
-                                , SaleSumm  TFloat  --приход
-                                , SaleSumm1 TFloat  --  7 дней
-                                , SaleSumm2 TFloat  -- 14 дней
-                                , SaleSumm3 TFloat  -- 21 дней
-                                , SaleSumm4 TFloat  -- 28 дней
-                                ) ON COMMIT DROP;
+                                  -- Долг с отсрочкой
+                                , DefermentPaymentRemains  TFloat
+                                , Remains                  TFloat
+                                , SaleSumm                 TFloat    --приход
+                                , SaleSumm1                TFloat    --  7 дней
+                                , SaleSumm2                TFloat    -- 14 дней
+                                , SaleSumm3                TFloat    -- 21 дней
+                                , SaleSumm4                TFloat    -- 28 дней
+                                , Comment_pay              TVarChar  -- Назначение платежа
+                                 ) ON COMMIT DROP;
     INSERT INTO _tmpReport (JuridicalId, PaidKindId, ContractId, InfomoneyId
                           , DebetRemains, KreditRemains
-                          , DefermentPaymentRemains   --Долг с отсрочкой
+                          , DefermentPaymentRemains
                           , Remains
-                          , SaleSumm    --приход
-                          , SaleSumm1   --  7 дней
-                          , SaleSumm2   -- 14 дней
-                          , SaleSumm3   -- 21 дней
-                          , SaleSumm4   -- 28 дней
-                                ) 
-    WITH
-    -- статьи по ка=оторым нужно получить данные отчета
-    tmpOrderFinanceProperty AS (SELECT DISTINCT OrderFinanceProperty_Object.ChildObjectId AS Id
+                          , SaleSumm
+                          , SaleSumm1
+                          , SaleSumm2
+                          , SaleSumm3
+                          , SaleSumm4
+                          , Comment_pay
+                           )
+     WITH
+       -- Параметры Юр.лица в планировании
+       tmpJuridicalOrderFinance AS (SELECT Object_JuridicalOrderFinance.Id
+                                         , OL_JuridicalOrderFinance_InfoMoney.ChildObjectId AS InfoMoneyId
+                                         , OL_JuridicalOrderFinance_Juridical.ChildObjectId AS JuridicalId
+                                          -- найти Назначение платежа
+                                         , ObjectString_Comment.ValueData                   AS Comment_pay
+                                           -- № п/п
+                                         , ROW_NUMBER() OVER (PARTITION BY OL_JuridicalOrderFinance_InfoMoney.ChildObjectId
+                                                                         , OL_JuridicalOrderFinance_Juridical.ChildObjectId
+                                                              ORDER BY CASE WHEN TRIM (Object_Bank.ValueData) <> '' THEN 0 ELSE 1 END ASC
+                                                                     , Object_Bank.ValueData ASC
+                                                             ) AS Ord
+
+                                    FROM Object AS Object_JuridicalOrderFinance
+
+                                         LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_InfoMoney
+                                                              ON OL_JuridicalOrderFinance_InfoMoney.ObjectId = Object_JuridicalOrderFinance.Id
+                                                             AND OL_JuridicalOrderFinance_InfoMoney.DescId   = zc_ObjectLink_JuridicalOrderFinance_InfoMoney()
+                                         LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_Juridical
+                                                              ON OL_JuridicalOrderFinance_Juridical.ObjectId = Object_JuridicalOrderFinance.Id
+                                                             AND OL_JuridicalOrderFinance_Juridical.DescId   = zc_ObjectLink_JuridicalOrderFinance_Juridical()
+
+                                         LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccount
+                                                              ON OL_JuridicalOrderFinance_BankAccount.ObjectId = Object_JuridicalOrderFinance.Id
+                                                             AND OL_JuridicalOrderFinance_BankAccount.DescId   = zc_ObjectLink_JuridicalOrderFinance_BankAccount()
+                                         LEFT JOIN ObjectLink AS OL_BankAccount_Bank
+                                                              ON OL_BankAccount_Bank.ObjectId = OL_JuridicalOrderFinance_BankAccount.ChildObjectId
+                                                             AND OL_BankAccount_Bank.DescId   = zc_ObjectLink_BankAccount_Bank()
+                                         LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = OL_BankAccount_Bank.ChildObjectId
+
+
+                                         -- Назначение платежа
+                                         LEFT JOIN ObjectString AS ObjectString_Comment
+                                                                ON ObjectString_Comment.ObjectId = Object_JuridicalOrderFinance.Id
+                                                               AND ObjectString_Comment.DescId = zc_ObjectString_JuridicalOrderFinance_Comment()
+
+                                    WHERE Object_JuridicalOrderFinance.DescId   = zc_Object_JuridicalOrderFinance()
+                                      AND Object_JuridicalOrderFinance.isErased = FALSE
+                                      -- найти Назначение платежа
+                                      AND TRIM (ObjectString_Comment.ValueData) <> ''
+                                   )
+    -- УП-Статья или Группа или ...
+  , tmpOrderFinanceProperty AS (SELECT DISTINCT
+                                       -- УП - Статья или Группа или ...
+                                       OrderFinanceProperty_Object.ChildObjectId AS ObjectId
                                 FROM ObjectLink AS OrderFinanceProperty_OrderFinance
                                      INNER JOIN ObjectLink AS OrderFinanceProperty_Object
                                                            ON OrderFinanceProperty_Object.ObjectId = OrderFinanceProperty_OrderFinance.ObjectId
                                                           AND OrderFinanceProperty_Object.DescId = zc_ObjectLink_OrderFinanceProperty_Object()
                                                           AND COALESCE (OrderFinanceProperty_Object.ChildObjectId,0) <> 0
                                      INNER JOIN Object ON Object.Id = OrderFinanceProperty_Object.ObjectId
-                                                      AND Object.isErased = False
+                                                       -- не удален
+                                                      AND Object.isErased = FALSE
+
                                 WHERE OrderFinanceProperty_OrderFinance.ChildObjectId = vbOrderFinanceId
                                   AND OrderFinanceProperty_OrderFinance.DescId = zc_ObjectLink_OrderFinanceProperty_OrderFinance()
-                                )
-
+                               )
+        -- разворачивается по УП-статьям
       , tmpInfoMoney AS (SELECT DISTINCT Object_InfoMoney_View.InfoMoneyId
                          FROM Object_InfoMoney_View
-                              INNER JOIN tmpOrderFinanceProperty ON (tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyId
-                                                                  OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyDestinationId
-                                                                  OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyGroupId)
+                              INNER JOIN tmpOrderFinanceProperty ON (tmpOrderFinanceProperty.ObjectId = Object_InfoMoney_View.InfoMoneyId
+                                                                  OR tmpOrderFinanceProperty.ObjectId = Object_InfoMoney_View.InfoMoneyDestinationId
+                                                                  OR tmpOrderFinanceProperty.ObjectId = Object_InfoMoney_View.InfoMoneyGroupId)
                          )
 
-	  , tmpReport AS (SELECT tmp.JuridicalId, tmp.PaidKindId, tmp.ContractId, tmp.InfomoneyId 
+	  , tmpReport AS (SELECT tmp.JuridicalId, tmp.PaidKindId, tmp.ContractId, tmp.InfomoneyId
                            , tmp.DebetRemains, tmp.KreditRemains
                            , tmp.DefermentPaymentRemains   --Долг с отсрочкой
                            , tmp.Remains
@@ -102,8 +152,8 @@ BEGIN
                            , tmp.SaleSumm1   --  7 дней
                            , tmp.SaleSumm2   -- 14 дней
                            , tmp.SaleSumm3   -- 21 дней
-                           , tmp.SaleSumm4   -- 28 дней 
-                      FROM gpReport_JuridicalDefermentIncome(inOperDate      := vbOperDate 
+                           , tmp.SaleSumm4   -- 28 дней
+                      FROM gpReport_JuridicalDefermentIncome(inOperDate      := vbOperDate
                                                            , inEmptyParam    := NULL        ::TDateTime
                                                            , inAccountId     := 0
                                                            , inPaidKindId    := COALESCE (vbPaidKindId,0)
@@ -113,8 +163,8 @@ BEGIN
                       WHERE COALESCE (tmp.DefermentPaymentRemains, 0) <> 0
                          OR COALESCE (tmp.Remains, 0) <> 0
                       )
-      --ограничили статьями
-     SELECT tmp.JuridicalId, tmp.PaidKindId, tmp.ContractId, tmp.InfomoneyId 
+      -- ограничили статьями
+     SELECT tmp.JuridicalId, tmp.PaidKindId, tmp.ContractId, tmp.InfomoneyId
           , tmp.DebetRemains, tmp.KreditRemains
           , tmp.DefermentPaymentRemains   --Долг с отсрочкой
           , tmp.Remains
@@ -122,114 +172,59 @@ BEGIN
           , tmp.SaleSumm1   --  7 дней
           , tmp.SaleSumm2   -- 14 дней
           , tmp.SaleSumm3   -- 21 дней
-          , tmp.SaleSumm4   -- 28 дней 
+          , tmp.SaleSumm4   -- 28 дней
+          , COALESCE (tmpJuridicalOrderFinance.Comment_pay, '') AS Comment_pay
      FROM tmpReport AS tmp
-          INNER JOIN tmpInfoMoney ON tmpInfoMoney.InfoMoneyId = tmp.InfomoneyId 
+          -- УП-Статья в планировании
+          INNER JOIN tmpInfoMoney ON tmpInfoMoney.InfoMoneyId = tmp.InfomoneyId
+          -- Параметры Юр.лица в планировании
+          LEFT JOIN tmpJuridicalOrderFinance ON tmpJuridicalOrderFinance.JuridicalId = tmp.JuridicalId
+                                            AND tmpJuridicalOrderFinance.InfoMoneyId = tmp.InfoMoneyId
+                                            AND tmpJuridicalOrderFinance.Ord         = 1
      ;
 
+    -- TEST
+    -- RAISE EXCEPTION 'Ошибка.TEST. <%>', (SELECT _tmpReport.Comment_pay FROM _tmpReport WHERE _tmpReport.JuridicalId = 521158);
+
+
     -- строки документа
-    CREATE TEMP TABLE _tmpData (Id Integer, JuridicalId Integer, ContractId Integer, PaidKindId Integer, InfoMoneyId Integer, BankAccountId Integer, Comment TVarChar) ON COMMIT DROP;
-    INSERT INTO _tmpData (Id, JuridicalId, ContractId, PaidKindId, InfoMoneyId, BankAccountId, Comment)
-     WITH
-     tmpJuridicalOrderFinance AS (SELECT tmp.BankAccountId
-                                       , tmp.JuridicalId
-                                       , tmp.InfoMoneyId
-                                       , tmp.Comment
-                                  FROM gpSelect_Object_JuridicalOrderFinance_choice (inBankAccountMainId := vbBankAccountMainId
-                                                                                   , inOrderFinanceId    := vbOrderFinanceId
-                                                                                   , inisShowAll         := FALSE
-                                                                                   , inisErased          := FALSE
-                                                                                   , inSession           := inSession) AS tmp
-                                  )
+    CREATE TEMP TABLE _tmpData (Id Integer, JuridicalId Integer, ContractId Integer, PaidKindId Integer, InfoMoneyId Integer) ON COMMIT DROP;
+    INSERT INTO _tmpData (Id, JuridicalId, ContractId, PaidKindId, InfoMoneyId)
+       WITH tmpMI AS (SELECT MovementItem.Id                     AS Id
+                           , MovementItem.ObjectId               AS JuridicalId
+                           , MILinkObject_Contract.ObjectId      AS ContractId
+                           , OL_Contract_PaidKind.ChildObjectId  AS PaidKindId
+                           , OL_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
+                      FROM MovementItem
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                                            ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
 
-   , tmpData AS (SELECT DISTINCT 
-                        ObjectLink_Contract_Juridical.ChildObjectId AS JuridicalId
-                      , ObjectLink_Contract_InfoMoney.ObjectId      AS ContractId
-                      , ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
-                      , OL_Contract_PaidKind.ChildObjectId          AS PaidKindId
-                      , tmpJuridicalOrderFinance.BankAccountId      AS BankAccountId
-                      , tmpJuridicalOrderFinance.Comment            AS Comment
-                 FROM ObjectLink AS ObjectLink_Contract_InfoMoney
-                      
-                      INNER JOIN ObjectLink AS ObjectLink_Contract_Juridical
-                                            ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_Contract_InfoMoney.ObjectId
-                                           AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
-
-                      INNER JOIN tmpJuridicalOrderFinance ON tmpJuridicalOrderFinance.JuridicalId = ObjectLink_Contract_Juridical.ChildObjectId
-                                                         AND tmpJuridicalOrderFinance.InfoMoneyId = ObjectLink_Contract_InfoMoney.ChildObjectId                                   
-
-                      INNER JOIN ObjectLink AS OL_Contract_PaidKind
-                                            ON OL_Contract_PaidKind.ObjectId = ObjectLink_Contract_InfoMoney.ObjectId
-                                           AND OL_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
-                                           AND (OL_Contract_PaidKind.ChildObjectId = vbPaidKindId OR COALESCE (vbPaidKindId,0) = 0)
-                 WHERE ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
-                )
-
-   , tmpMI AS (SELECT MovementItem.Id                     AS Id
-                    , MovementItem.ObjectId               AS JuridicalId
-                    , MILinkObject_Contract.ObjectId      AS ContractId
-                    , OL_Contract_PaidKind.ChildObjectId  AS PaidKindId
-                    , OL_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
-                    , MILinkObject_BankAccount.ObjectId   AS BankAccountId
-                    , MIString_Comment.ValueData          AS Comment
-               FROM MovementItem
-                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
-                                                    ON MILinkObject_Contract.MovementItemId = MovementItem.Id
-                                                   AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-                   LEFT JOIN MovementItemLinkObject AS MILinkObject_BankAccount
-                                                    ON MILinkObject_BankAccount.MovementItemId = MovementItem.Id
-                                                   AND MILinkObject_BankAccount.DescId = zc_MILinkObject_BankAccount()
-
-                   LEFT JOIN MovementItemString AS MIString_Comment
-                                                ON MIString_Comment.MovementItemId = MovementItem.Id
-                                               AND MIString_Comment.DescId = zc_MIString_Comment()
-
-                   INNER JOIN ObjectLink AS OL_Contract_PaidKind
-                                         ON OL_Contract_PaidKind.ObjectId = MILinkObject_Contract.ObjectId
-                                        AND OL_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
-                                        AND (OL_Contract_PaidKind.ChildObjectId = vbPaidKindId OR COALESCE (vbPaidKindId,0) = 0)
-                   LEFT JOIN ObjectLink AS OL_Contract_InfoMoney
-                                        ON OL_Contract_InfoMoney.ObjectId = MILinkObject_Contract.ObjectId
-                                       AND OL_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
-               WHERE MovementItem.MovementId = inMovementId
-                 AND MovementItem.DescId     = zc_MI_Master()
-                 AND MovementItem.isErased   = FALSE
-               )
-
-      /* -- Результат
-       SELECT
-             COALESCE (tmpMI.Id, 0)                            AS Id
-           , COALESCE (tmpData.JuridicalId, tmpMI.JuridicalId) AS JuridicalId
-           , COALESCE (tmpData.ContractId, tmpMI.ContractId)   AS ContractId
-           , COALESCE (tmpData.PaidKindId, tmpMI.PaidKindId)   AS PaidKindId
-           , COALESCE (tmpData.InfoMoneyId, tmpMI.InfoMoneyId) AS InfoMoneyId
-           , COALESCE (tmpData.BankAccountId, tmpMI.BankAccountId) AS BankAccountId
-           , COALESCE (tmpData.Comment, tmpMI.Comment)         AS Comment
-       FROM tmpData
-            FULL JOIN tmpMI ON tmpMI.JuridicalId   = tmpData.JuridicalId
-                           AND tmpMI.ContractId    = tmpData.ContractId
-                           AND tmpMI.PaidKindId    = tmpData.PaidKindId
-                           AND tmpMI.InfoMoneyId   = tmpData.InfoMoneyId
-                           AND tmpMI.BankAccountId = tmpData.BankAccountId;
-        */                                                                 
-
+                           INNER JOIN ObjectLink AS OL_Contract_PaidKind
+                                                 ON OL_Contract_PaidKind.ObjectId = MILinkObject_Contract.ObjectId
+                                                AND OL_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
+                                                AND (OL_Contract_PaidKind.ChildObjectId = vbPaidKindId OR COALESCE (vbPaidKindId,0) = 0)
+                           LEFT JOIN ObjectLink AS OL_Contract_InfoMoney
+                                                ON OL_Contract_InfoMoney.ObjectId = MILinkObject_Contract.ObjectId
+                                               AND OL_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+                       WHERE MovementItem.MovementId = inMovementId
+                         AND MovementItem.DescId     = zc_MI_Master()
+                         AND MovementItem.isErased   = FALSE
+                      )
+       -- Результат
        SELECT
              COALESCE (tmpMI.Id, 0)            AS Id
            , COALESCE (tmpMI.JuridicalId, 0)   AS JuridicalId
            , COALESCE (tmpMI.ContractId, 0)    AS ContractId
            , COALESCE (tmpMI.PaidKindId, 0)    AS PaidKindId
            , COALESCE (tmpMI.InfoMoneyId, 0)   AS InfoMoneyId
-           , COALESCE (tmpMI.BankAccountId, 0) AS BankAccountId
-           , COALESCE (tmpMI.Comment)          AS Comment
-       FROM tmpMI 
+       FROM tmpMI
        ;
 
-    -- TEST
-    --RAISE EXCEPTION 'Ошибка.TEST. <%>', (SELECT SUM(COALESCE (_tmpReport.SaleSumm1,0) ) FROM _tmpReport;
-            
+
     -- сохраняем данные
     PERFORM lpUpdate_MI_OrderFinance_ByReport (inId            := COALESCE (_tmpData.Id, 0) ::Integer
-                                             , inMovementId    := inMovementId 
+                                             , inMovementId    := inMovementId
                                              , inJuridicalId   := _tmpReport.JuridicalId
                                              , inContractId    := _tmpReport.ContractId
                                              --, inBankAccountId := _tmpData.BankAccountId
@@ -240,7 +235,8 @@ BEGIN
                                              , inSaleSumm2     := COALESCE (_tmpReport.SaleSumm2,0)  ::TFloat
                                              , inSaleSumm3     := COALESCE (_tmpReport.SaleSumm3,0)  ::TFloat
                                              , inSaleSumm4     := COALESCE (_tmpReport.SaleSumm4,0)  ::TFloat
-                                             , inComment_pay   := _tmpData.Comment      ::TVarChar
+                                           --, inComment       := COALESCE ((SELECT MIS.ValueData FROM MovementItemString AS MIS WHERE MIS.MovementItemId = _tmpData.Id AND MIS.DescId = zc_MIString_Comment()), '')
+                                             , inComment_pay   := _tmpReport.Comment_pay
                                              , inUserId        := vbUserId
                                               )
     FROM _tmpReport
@@ -266,14 +262,4 @@ $BODY$
 */
 
 -- тест
---select * from gpInsertUpdate_MI_OrderFinance_byReport(inMovementId := 14022564 ,  inSession := '5');
-
-/*SELECT *
-            FROM gpReport_JuridicalDefermentIncome(inOperDate      := '30.07.2019' 
-                                                 , inEmptyParam    := '30.07.2019'
-                                                 , inAccountId     := 0
-                                                 , inPaidKindId    := 3
-                                                 , inBranchId      := 0
-                                                 , inJuridicalGroupId := 0
-                                                 , inSession       := '5'::TVarchar);
-*/
+-- SELECT * FROM gpInsertUpdate_MI_OrderFinance_byReport (inMovementId := 32907306, inSession:= '5');
