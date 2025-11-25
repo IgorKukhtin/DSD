@@ -59,7 +59,7 @@ BEGIN
                         );
       --Если дата проводимого док = макс, т.е. это последний   документ, следовательно сохраняем примечание в справочник
      
-      IF vbOperDate >= vbOperDate_max
+      /*IF vbOperDate >= vbOperDate_max
       THEN
       -- RAISE EXCEPTION 'Ошибка.Тест.';
           CREATE TEMP TABLE _tmpJuridicalOrderFinance (Id Integer, BankAccountId Integer, JuridicalId Integer, InfoMoneyId Integer) ON COMMIT DROP;
@@ -69,7 +69,7 @@ BEGIN
                    , tmp.BankAccountId
                    , tmp.JuridicalId
                    , tmp.InfoMoneyId
-              FROM gpSelect_Object_JuridicalOrderFinance_choice (inBankAccountMainId := vbBankAccountId
+              FROM gpSelect_Object_JuridicalOrderFinance_choice (inMovementId        := inMovementId
                                                                , inOrderFinanceId    := COALESCE (vbOrderFinanceId,0)
                                                                , inisShowAll         := FALSE
                                                                , inisErased          := FALSE
@@ -101,7 +101,7 @@ BEGIN
                           ) AS tmp ON tmp.JuridicalId = _tmpJuridicalOrderFinance.JuridicalId
                                   AND tmp.InfoMoneyId = _tmpJuridicalOrderFinance.InfoMoneyId
           ;
-      END IF;
+      END IF;*/
       
 END;
 $BODY$

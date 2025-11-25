@@ -57,7 +57,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner_4(), inId, inSaleSumm4);
 
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment_pay(), inId, inComment);
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment_pay(), inId, inComment_pay);
      
      
      IF vbIsInsert = TRUE
