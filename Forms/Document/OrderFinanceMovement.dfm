@@ -477,7 +477,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Height = 373
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheet1
+    Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 373
     ClientRectRight = 1060
@@ -673,7 +673,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             Options.Editing = False
             Width = 58
           end
-          object ContractStateKindCode_Send: TcxGridDBColumn
+          object ContractStateKindCode: TcxGridDBColumn
             Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractStateKindCode'
             PropertiesClassName = 'TcxImageComboBoxProperties'
@@ -1027,10 +1027,12 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             Width = 200
           end
           object Comment_pay: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1083#1072#1090#1077#1078#1072
+            Caption = #1053#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1072
             DataBinding.FieldName = 'Comment_pay'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 200
           end
           object InsertDate: TcxGridDBColumn
@@ -1069,6 +1071,13 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             Options.Editing = False
             Width = 100
           end
+          object Color_Group: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_Group'
+            PropertiesClassName = 'TcxBlobEditProperties'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 80
+          end
           object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
@@ -1077,13 +1086,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
-          end
-          object Color_Group: TcxGridDBColumn
-            DataBinding.FieldName = 'Color_Group'
-            PropertiesClassName = 'TcxBlobEditProperties'
-            Visible = False
-            VisibleForCustomization = False
-            Width = 80
           end
         end
         object cxGridLevel: TcxGridLevel
@@ -1382,6 +1384,39 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
+          end
+          object chContractStateKindCode_Send: TcxGridDBColumn
+            Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractStateKindCode'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Alignment.Horz = taLeftJustify
+            Properties.Alignment.Vert = taVCenter
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = #1055#1086#1076#1087#1080#1089#1072#1085
+                ImageIndex = 12
+                Value = 1
+              end
+              item
+                Description = #1053#1077' '#1087#1086#1076#1087#1080#1089#1072#1085
+                ImageIndex = 11
+                Value = 2
+              end
+              item
+                Description = #1047#1072#1074#1077#1088#1096#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end
+              item
+                Description = #1059' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+                ImageIndex = 66
+                Value = 4
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
           end
           object chContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
@@ -2084,6 +2119,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'DSDLib'
       TabSheet = cxTabSheet1
       MoveParams = <>
+      Enabled = False
       StoredProc = spSelectJuridicalOrderFinance
       StoredProcList = <
         item
@@ -2104,7 +2140,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -2181,6 +2216,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = #1055#1088#1086#1090#1086#1082#1086#1083
       TabSheet = cxTabSheet1
       MoveParams = <>
+      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
       ImageIndex = 34
@@ -2304,7 +2340,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -2315,7 +2350,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spErasedMIMaster
       StoredProcList = <
         item
@@ -2335,7 +2369,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spUnErasedMIMaster
       StoredProcList = <
         item
@@ -2431,7 +2464,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       ImageIndex = 34
@@ -2705,7 +2737,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
       StoredProc = spInsertMaskMIMaster2
       StoredProcList = <
@@ -2735,6 +2766,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'DSDLib'
       TabSheet = cxTabSheet1
       MoveParams = <>
+      Enabled = False
       StoredProc = spSelectJuridicalOrderFinance
       StoredProcList = <
         item
@@ -2755,7 +2787,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -2902,6 +2933,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'JuridicalOrderFinance'
       TabSheet = cxTabSheet1
       MoveParams = <>
+      Enabled = False
       StoredProc = spErasedUnErased_JurOrdFin
       StoredProcList = <
         item
@@ -2918,6 +2950,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'JuridicalOrderFinance'
       TabSheet = cxTabSheet1
       MoveParams = <>
+      Enabled = False
       StoredProc = spErasedUnErased_JurOrdFin
       StoredProcList = <
         item
@@ -2935,6 +2968,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'JuridicalOrderFinance'
       TabSheet = cxTabSheet1
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView1
       Action = actContractChoiceForm_JurOrdFin
@@ -2987,6 +3021,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'JuridicalOrderFinance'
       TabSheet = cxTabSheet1
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = ExecuteDialogPeriod
@@ -3483,15 +3518,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Comment'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inComment_pay'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Comment_pay'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
