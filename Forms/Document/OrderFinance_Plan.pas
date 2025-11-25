@@ -24,7 +24,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon,
-  cxImageComboBox, cxCheckBox;
+  cxImageComboBox, cxCheckBox, dsdInternetAction;
 
 type
   TOrderFinance_PlanForm = class(TAncestorReportForm)
@@ -51,6 +51,21 @@ type
     actGet_WeekNumber_byPeriod: TdsdDataSetRefresh;
     spGet_CurrentWeekDay: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    spSelect_Export: TdsdStoredProc;
+    actExport_New_OTP: TMultiAction;
+    ExportXmlGrid: TcxGrid;
+    ExportXmlGridDBTableView: TcxGridDBTableView;
+    RowData: TcxGridDBColumn;
+    ExportXmlGridLevel: TcxGridLevel;
+    actExport_Grid: TExportGrid;
+    FormParams: TdsdFormParams;
+    ExportCDS: TClientDataSet;
+    ExportDS: TDataSource;
+    actSMTPFile: TdsdSMTPFileAction;
+    spGet_Export_FileName: TdsdStoredProc;
+    actGet_Export_FileName: TdsdExecStoredProc;
+    actExport_file: TdsdStoredProcExportToFile;
+    bbExport_New_OTP: TdxBarButton;
   private
     { Private declarations }
   public
