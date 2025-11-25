@@ -13,7 +13,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , OrderFinanceId Integer, OrderFinanceName TVarChar
              , BankAccountId Integer, BankAccountName TVarChar
-             , BankId Integer, BankName TVarChar, BankAccountNameAll TVarChar
+             , BankId Integer, BankName TVarChar, BankAccountNameAll TVarChar, MFO TVarChar
              , WeekNumber TFloat
              --, TotalSumm TFloat, TotalSumm_all TFloat, TotalSumm_1 TFloat, TotalSumm_2 TFloat, TotalSumm_3 TFloat
              --, TotalPlan_1 TFloat, TotalPlan_2 TFloat, TotalPlan_3 TFloat, TotalPlan_4 TFloat, TotalPlan_5 TFloat
@@ -65,9 +65,6 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , BankId_jof Integer
              , BankName_jof TVarChar
              , MFO_jof      TVarChar
-             , BankId_Main_jof   Integer 
-             , BankName_Main_jof TVarChar
-             , MFO_Main_jof      TVarChar
               )
 AS
 $BODY$
@@ -394,6 +391,7 @@ BEGIN
                           , Object_BankAccount_View.BankId
                           , Object_BankAccount_View.BankName
                           , (Object_BankAccount_View.BankName || '' || Object_BankAccount_View.Name) :: TVarChar AS BankAccountNameAll
+                          , Object_BankAccount_View.MFO            AS MFO
                           , Movement.WeekNumber              ::TFloat    AS WeekNumber
                             -- Предварительный План на неделю
                           , COALESCE (MovementFloat_TotalSumm.Valuedata, 0)    ::TFloat   AS TotalSumm
@@ -605,6 +603,7 @@ BEGIN
         , tmpMovement.BankId
         , tmpMovement.BankName
         , tmpMovement.BankAccountNameAll
+        , tmpMovement.MFO
         , tmpMovement.WeekNumber
        /*   -- Предварительный План на неделю
         , tmpMovement.TotalSumm  ::TFloat
@@ -698,10 +697,6 @@ BEGIN
         , tmpJuridicalOrderFinance.BankName  ::TVarChar AS BankName_jof 
         , tmpJuridicalOrderFinance.MFO       ::TVarChar AS MFO_jof
 
-        , tmpJuridicalOrderFinance.BankId_main    ::Integer  AS BankId_Main_jof
-        , tmpJuridicalOrderFinance.BankName_main  ::TVarChar AS BankName_Main_jof 
-        , tmpJuridicalOrderFinance.MFO_main       ::TVarChar AS MFO_Main_jof
-        
    FROM tmpMovement_Data AS tmpMovement
         LEFT JOIN tmpMI_Data AS tmpMI ON tmpMI.MovementId = tmpMovement.MovementId
         
@@ -713,7 +708,7 @@ BEGIN
 
         LEFT JOIN tmpJuridicalOrderFinance ON tmpJuridicalOrderFinance.JuridicalId = tmpMI.JuridicalId
                                           AND tmpJuridicalOrderFinance.InfoMoneyId = tmpMI.InfoMoneyId
-                                          AND tmpJuridicalOrderFinance.BankAccountId = tmpMovement.BankAccountId
+                                          AND tmpJuridicalOrderFinance.BankAccountId_main = tmpMovement.BankAccountId
                                           AND tmpJuridicalOrderFinance.Ord = 1
 
       ;

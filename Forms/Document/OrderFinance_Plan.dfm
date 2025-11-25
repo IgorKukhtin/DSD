@@ -1,29 +1,31 @@
 inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081'> ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')'
-  ClientHeight = 324
+  ClientHeight = 355
   ClientWidth = 1020
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1036
-  ExplicitHeight = 363
+  ExplicitHeight = 394
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
     Width = 1020
-    Height = 265
+    Height = 277
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 1020
     ExplicitHeight = 265
-    ClientRectBottom = 265
+    ClientRectBottom = 277
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 265
       inherited cxGrid: TcxGrid
         Width = 1020
-        Height = 265
+        Height = 277
+        ExplicitLeft = 73
+        ExplicitTop = -20
         ExplicitWidth = 1020
         ExplicitHeight = 265
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -340,8 +342,17 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             Options.Editing = False
             Width = 70
           end
+          object MFO_Main_jof: TcxGridDBColumn
+            Caption = #1052#1060#1054' '#1041#1072#1085#1082' ('#1055#1083#1072#1090#1077#1083#1100#1097#1080#1082')'
+            DataBinding.FieldName = 'MFO'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
+          end
           object BankName: TcxGridDBColumn
-            Caption = #1041#1072#1085#1082
+            Caption = #1041#1072#1085#1082' ('#1055#1083#1072#1090#1077#1083#1100#1097#1080#1082')'
             DataBinding.FieldName = 'BankName'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -350,7 +361,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             Width = 133
           end
           object BankAccountName: TcxGridDBColumn
-            Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
+            Caption = #1056'/'#1057#1095#1077#1090' ('#1055#1083#1072#1090#1077#1083#1100#1097#1080#1082')'
             DataBinding.FieldName = 'BankAccountName'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -764,24 +775,6 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             HeaderAlignmentVert = vaCenter
             Width = 97
           end
-          object BankName_Main_jof: TcxGridDBColumn
-            Caption = #1041#1072#1085#1082' ('#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103')'
-            DataBinding.FieldName = 'BankName_Main_jof'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 97
-          end
-          object MFO_Main_jof: TcxGridDBColumn
-            Caption = #1052#1060#1054' '#1041#1072#1085#1082' ('#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103')'
-            DataBinding.FieldName = 'MFO_Main_jof'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 97
-          end
           object MFO_jof: TcxGridDBColumn
             Caption = #1052#1060#1054' '#1041#1072#1085#1082' ('#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103')'
             DataBinding.FieldName = 'MFO_jof'
@@ -934,6 +927,43 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       Properties.ReadOnly = False
       TabOrder = 12
       Width = 49
+    end
+  end
+  object ExportXmlGrid: TcxGrid [2]
+    Left = 0
+    Top = 336
+    Width = 1020
+    Height = 19
+    Align = alBottom
+    Anchors = [akTop, akRight, akBottom]
+    TabOrder = 6
+    Visible = False
+    ExplicitTop = 342
+    ExplicitHeight = 52
+    object ExportXmlGridDBTableView: TcxGridDBTableView
+      Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = ExportDS
+      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.SummaryGroups = <>
+      OptionsBehavior.IncSearch = True
+      OptionsData.CancelOnExit = False
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Inserting = False
+      OptionsView.CellAutoHeight = True
+      OptionsView.ColumnAutoWidth = True
+      OptionsView.GroupByBox = False
+      OptionsView.Header = False
+      object RowData: TcxGridDBColumn
+        DataBinding.FieldName = 'RowData'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
+    end
+    object ExportXmlGridLevel: TcxGridLevel
+      GridView = ExportXmlGridDBTableView
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -1161,6 +1191,101 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actExport_New_OTP: TMultiAction
+      Category = 'Export_file'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Export_FileName
+        end
+        item
+          Action = actExport_file
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1075#1088#1091#1079#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090'?'
+      InfoAfterExecute = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1091#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1083#1103' OTP Bank'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1083#1103' OTP Bank'
+      ImageIndex = 53
+    end
+    object actExport_Grid: TExportGrid
+      Category = 'Export_file'
+      MoveParams = <>
+      ExportType = cxegExportToText
+      Grid = ExportXmlGrid
+      Caption = 'actExport_Grid'
+      OpenAfterCreate = False
+      DefaultFileName = 'Report_'
+      DefaultFileExt = 'XML'
+      EncodingANSI = True
+    end
+    object actSMTPFile: TdsdSMTPFileAction
+      Category = 'Export_file'
+      MoveParams = <>
+      Host.Value = Null
+      Host.ComponentItem = 'Host'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Port.Value = 25
+      Port.ComponentItem = 'Port'
+      Port.DataType = ftString
+      Port.MultiSelectSeparator = ','
+      UserName.Value = Null
+      UserName.ComponentItem = 'UserName'
+      UserName.DataType = ftString
+      UserName.MultiSelectSeparator = ','
+      Password.Value = Null
+      Password.ComponentItem = 'Password'
+      Password.DataType = ftString
+      Password.MultiSelectSeparator = ','
+      Body.Value = Null
+      Body.ComponentItem = 'Body'
+      Body.DataType = ftString
+      Body.MultiSelectSeparator = ','
+      Subject.Value = Null
+      Subject.ComponentItem = 'Subject'
+      Subject.DataType = ftString
+      Subject.MultiSelectSeparator = ','
+      FromAddress.Value = Null
+      FromAddress.ComponentItem = 'AddressFrom'
+      FromAddress.DataType = ftString
+      FromAddress.MultiSelectSeparator = ','
+      ToAddress.Value = Null
+      ToAddress.ComponentItem = 'AddressTo'
+      ToAddress.DataType = ftString
+      ToAddress.MultiSelectSeparator = ','
+    end
+    object actGet_Export_FileName: TdsdExecStoredProc
+      Category = 'Export_file'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Export_FileName
+      StoredProcList = <
+        item
+          StoredProc = spGet_Export_FileName
+        end>
+      Caption = 'actGet_Export_FileName'
+    end
+    object actExport_file: TdsdStoredProcExportToFile
+      Category = 'Export_file'
+      MoveParams = <>
+      dsdStoredProcName = spSelect_Export
+      FilePathParam.Value = ''
+      FilePathParam.DataType = ftString
+      FilePathParam.MultiSelectSeparator = ','
+      FileNameParam.Value = ''
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      FileExt = '.xml'
+      FileExtParam.Value = ''
+      FileExtParam.DataType = ftString
+      FileExtParam.MultiSelectSeparator = ','
+      FileNamePrefixParam.Value = ''
+      FileNamePrefixParam.DataType = ftString
+      FileNamePrefixParam.MultiSelectSeparator = ','
+      FieldDefs = <>
+      Left = 1208
+      Top = 168
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -1218,10 +1343,6 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbExecuteDialog'
         end
         item
@@ -1238,6 +1359,18 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExport_New_OTP'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1247,6 +1380,10 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object bbExport_New_OTP: TdxBarButton
+      Action = actExport_New_OTP
       Category = 0
     end
   end
@@ -1606,5 +1743,157 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
     PackSize = 1
     Left = 312
     Top = 192
+  end
+  object spSelect_Export: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_OrderFinancePlan_XML'
+    DataSet = ExportCDS
+    DataSets = <
+      item
+        DataSet = ExportCDS
+      end>
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeekNumber'
+        Value = Null
+        Component = edWeekNumber1
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankId'
+        Value = '76970'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPlan_1'
+        Value = Null
+        Component = cbPlan_1
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPlan_2'
+        Value = Null
+        Component = cbPlan_2
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPlan_3'
+        Value = Null
+        Component = cbPlan_3
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPlan_4'
+        Value = Null
+        Component = cbPlan_4
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPlan_5'
+        Value = Null
+        Component = cbPlan_5
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 488
+    Top = 144
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ShowAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    Left = 390
+    Top = 159
+  end
+  object ExportCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 336
+    Top = 288
+  end
+  object ExportDS: TDataSource
+    DataSet = ExportCDS
+    Left = 400
+    Top = 288
+  end
+  object spGet_Export_FileName: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_OrderFinance_FileName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = actExport_Grid
+        ComponentItem = 'DefaultFileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDefaultFileExt'
+        Value = Null
+        Component = actExport_Grid
+        ComponentItem = 'DefaultFileExt'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outEncodingANSI'
+        Value = Null
+        Component = actExport_Grid
+        ComponentItem = 'EncodingANSI'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = actSMTPFile
+        ComponentItem = 'FileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 456
+    Top = 200
   end
 end
