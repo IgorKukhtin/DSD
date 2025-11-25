@@ -15,8 +15,8 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , BankAccountId Integer, BankAccountName TVarChar
              , BankId Integer, BankName TVarChar, BankAccountNameAll TVarChar
              , WeekNumber TFloat
-             , TotalSumm TFloat, TotalSumm_all TFloat, TotalSumm_1 TFloat, TotalSumm_2 TFloat, TotalSumm_3 TFloat
-             , TotalPlan_1 TFloat, TotalPlan_2 TFloat, TotalPlan_3 TFloat, TotalPlan_4 TFloat, TotalPlan_5 TFloat
+             --, TotalSumm TFloat, TotalSumm_all TFloat, TotalSumm_1 TFloat, TotalSumm_2 TFloat, TotalSumm_3 TFloat
+             --, TotalPlan_1 TFloat, TotalPlan_2 TFloat, TotalPlan_3 TFloat, TotalPlan_4 TFloat, TotalPlan_5 TFloat
              , StartDate_WeekNumber TDateTime, EndDate_WeekNumber TDateTime
              , DateUpdate_report TDateTime
              , UserUpdate_report TVarChar
@@ -55,6 +55,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , isAmountPlan_3     Boolean
              , isAmountPlan_4     Boolean
              , isAmountPlan_5     Boolean
+             , isAmountPlan       Boolean
              , Comment            TVarChar
              , Comment_pay        TVarChar
              , JuridicalOrderFinanceId Integer    -- JuridicalOrderFinance
@@ -258,11 +259,11 @@ BEGIN
                              + COALESCE (MIFloat_AmountPlan_5.ValueData, 0)
                               ) :: TFloat AS AmountPlan_total
                  
-                            , COALESCE (MIBoolean_AmountPlan_1.ValueData, False) ::Boolean AS isAmountPlan_1
-                            , COALESCE (MIBoolean_AmountPlan_2.ValueData, False) ::Boolean AS isAmountPlan_2
-                            , COALESCE (MIBoolean_AmountPlan_3.ValueData, False) ::Boolean AS isAmountPlan_3
-                            , COALESCE (MIBoolean_AmountPlan_4.ValueData, False) ::Boolean AS isAmountPlan_4
-                            , COALESCE (MIBoolean_AmountPlan_5.ValueData, False) ::Boolean AS isAmountPlan_5
+                            , COALESCE (MIBoolean_AmountPlan_1.ValueData, True) ::Boolean AS isAmountPlan_1
+                            , COALESCE (MIBoolean_AmountPlan_2.ValueData, True) ::Boolean AS isAmountPlan_2
+                            , COALESCE (MIBoolean_AmountPlan_3.ValueData, True) ::Boolean AS isAmountPlan_3
+                            , COALESCE (MIBoolean_AmountPlan_4.ValueData, True) ::Boolean AS isAmountPlan_4
+                            , COALESCE (MIBoolean_AmountPlan_5.ValueData, True) ::Boolean AS isAmountPlan_5
                  
                             , MIString_Comment.ValueData       AS Comment
                             , MIString_Comment_pay.ValueData   AS Comment_pay
@@ -599,20 +600,20 @@ BEGIN
         , tmpMovement.BankName
         , tmpMovement.BankAccountNameAll
         , tmpMovement.WeekNumber
-          -- ѕредварительный ѕлан на неделю
+       /*   -- ѕредварительный ѕлан на неделю
         , tmpMovement.TotalSumm  ::TFloat
           -- —огласована сумма на неделю
         , tmpMovement.TotalSumm_all ::TFloat
         , tmpMovement.TotalSumm_1   ::TFloat
         , tmpMovement.TotalSumm_2   ::TFloat
         , tmpMovement.TotalSumm_3   ::TFloat
-
+        
         , tmpMovement.AmountPlan_1    ::TFloat  AS TotalPlan_1
         , tmpMovement.AmountPlan_2    ::TFloat  AS TotalPlan_2
         , tmpMovement.AmountPlan_3    ::TFloat  AS TotalPlan_3
         , tmpMovement.AmountPlan_4    ::TFloat  AS TotalPlan_4
         , tmpMovement.AmountPlan_5    ::TFloat  AS TotalPlan_5
-
+        */
         , tmpMovement.StartDate_WeekNumber ::TDateTime
         , tmpMovement.EndDate_WeekNumber   ::TDateTime  --20
 
@@ -678,6 +679,7 @@ BEGIN
         , tmpMI.isAmountPlan_3 ::Boolean
         , tmpMI.isAmountPlan_4 ::Boolean
         , tmpMI.isAmountPlan_5 ::Boolean
+        , True ::Boolean  AS isAmountPlan --по умолчанию платим , если нет снимают галку  -- надо еще колонку одну, где будут ставить  да/нет, а в шапке вывести 5 дней недели и там где галку постав€т, тогда и будем понимать в какой это день
 
         , tmpMI.Comment        ::TVarChar AS Comment
         , tmpMI.Comment_pay    ::TVarChar AS Comment_pay

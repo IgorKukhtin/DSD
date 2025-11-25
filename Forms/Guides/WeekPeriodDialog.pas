@@ -19,7 +19,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon,
+  dsdAction, Vcl.ActnList, cxCurrencyEdit;
 
 type
   TWeekPeriodDialogForm = class(TParentForm)
@@ -33,16 +34,23 @@ type
     FormParams: TdsdFormParams;
     cxLabel6: TcxLabel;
     cxLabel7: TcxLabel;
-    cxLabel5: TcxLabel;
-    deStart2: TcxDateEdit;
-    cxLabel1: TcxLabel;
-    deEnd2: TcxDateEdit;
     cxLabel4: TcxLabel;
     edWeekNumber1: TcxButtonEdit;
     GuidesWeek_Date1: TdsdGuides;
     cxLabel3: TcxLabel;
-    edWeekNumber2: TcxButtonEdit;
-    GuidesWeek_Date2: TdsdGuides;
+    ActionList: TActionList;
+    actRefresh: TdsdDataSetRefresh;
+    actInsertUpdate: TdsdInsertUpdateGuides;
+    actFormClose: TdsdFormClose;
+    actGet_WeekNumber_byPeriod: TdsdDataSetRefresh;
+    spGet_WeekNumber_byPeriod: TdsdStoredProc;
+    spGet_Period_byWeekNumber: TdsdStoredProc;
+    actGet_Period_byWeekNumber: TdsdDataSetRefresh;
+    RefreshDispatcher: TRefreshDispatcher;
+    actRefreshWeek: TdsdDataSetRefresh;
+    edWeekNumber2: TcxCurrencyEdit;
+    RefreshDispatcherWeek: TRefreshDispatcher;
+    HeaderExit: THeaderExit;
   private
     { Private declarations }
   public

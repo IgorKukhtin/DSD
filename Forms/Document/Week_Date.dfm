@@ -154,6 +154,13 @@ inherited Week_DateForm: TWeek_DateForm
           ComponentItem = 'EndDate_WeekNumber'
           DataType = ftDateTime
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'WeekNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'WeekNumber'
+          MultiSelectSeparator = ','
         end>
     end
     object actUpdateDataSet: TdsdUpdateDataSet

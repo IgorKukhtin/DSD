@@ -1,16 +1,23 @@
 -- Function: gpUpdateMovement_OrderFinance_Plan()
 
 DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer, Boolean,Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdateMovement_OrderFinance_Plan(
     IN inMovementId              Integer   , -- Ключ объекта <Документ>
     IN inMovementItemId          Integer   , -- Ключ строки
-    IN inisAmountPlan_1          Boolean    , --
-    IN inisAmountPlan_2          Boolean    , --
-    IN inisAmountPlan_3          Boolean    , --
-    IN inisAmountPlan_4          Boolean    , --
-    IN inisAmountPlan_5          Boolean    , -- 
+    IN inisAmountPlan            Boolean    , --
+    IN inisPlan_1                Boolean    , --
+    IN inisPlan_2                Boolean    , --
+    IN inisPlan_3                Boolean    , --
+    IN inisPlan_4                Boolean    , --
+    IN inisPlan_5                Boolean    , --
+   OUT outisAmountPlan_1         Boolean    , --
+   OUT outisAmountPlan_2         Boolean    , --
+   OUT outisAmountPlan_3         Boolean    , --
+   OUT outisAmountPlan_4         Boolean    , --
+   OUT outisAmountPlan_5         Boolean    , -- 
     IN inOrderFinanceId          Integer    ,
     IN inJuridicalOrderFinanceId Integer    ,
     IN inJuridicalId             Integer    ,
@@ -21,7 +28,7 @@ CREATE OR REPLACE FUNCTION gpUpdateMovement_OrderFinance_Plan(
     IN inComment_pay             TVarChar   ,  
     IN inSession                 TVarChar    -- сессия пользователя
 )
-RETURNS VOID 
+RETURNS RECORD 
 AS
 $BODY$
     DECLARE vbUserId     Integer;
@@ -39,17 +46,38 @@ BEGIN
      END IF;
      */
 
-     ---строки документа
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_1(), inMovementItemId, inisAmountPlan_1);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_2(), inMovementItemId, inisAmountPlan_2);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_3(), inMovementItemId, inisAmountPlan_3);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_4(), inMovementItemId, inisAmountPlan_4);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_5(), inMovementItemId, inisAmountPlan_5);
+     --строки документа 
+     IF COALESCE (inisPlan_1, FALSE) = TRUE
+      THEN
+        -- сохранили свойство <>
+        PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_1(), inMovementItemId, inisAmountPlan);
+        outisAmountPlan_1 := inisAmountPlan;
+     END IF;
+     IF COALESCE (inisPlan_2, FALSE) = TRUE
+      THEN
+        -- сохранили свойство <>
+        PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_2(), inMovementItemId, inisAmountPlan);
+        outisAmountPlan_2 := inisAmountPlan;
+     END IF;
+     IF COALESCE (inisPlan_3, FALSE) = TRUE
+      THEN
+        -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_3(), inMovementItemId, inisAmountPlan);
+        outisAmountPlan_3 := inisAmountPlan;
+     END IF;
+     IF COALESCE (inisPlan_4, FALSE) = TRUE
+      THEN
+        -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_4(), inMovementItemId, inisAmountPlan);
+        outisAmountPlan_4 := inisAmountPlan;
+     END IF;
+     IF COALESCE (inisPlan_5, FALSE) = TRUE
+      THEN
+        -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_5(), inMovementItemId, inisAmountPlan);
+        outisAmountPlan_5 := inisAmountPlan;
+     END IF;
+
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment_pay(), inMovementItemId, inComment_pay);
 
@@ -126,7 +154,7 @@ BEGIN
          PERFORM lpInsert_ObjectProtocol (inJuridicalOrderFinanceId, vbUserId);
      END IF;
 
-     if vbUserId = 9457 then RAISE EXCEPTION 'Админ.Test Ok.'; end if;
+    -- if vbUserId = 9457 then RAISE EXCEPTION 'Админ.Test Ok.'; end if;
   
 END;
 $BODY$
