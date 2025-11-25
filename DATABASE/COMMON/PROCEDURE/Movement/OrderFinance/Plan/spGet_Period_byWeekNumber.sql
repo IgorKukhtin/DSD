@@ -11,7 +11,7 @@ RETURNS TABLE (WeekNumber2 Integer
               )
 AS
 $BODY$
-   DECLARE vbUserId         Integer;                                                                                     111
+   DECLARE vbUserId         Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);

@@ -2,6 +2,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081'> ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')'
   ClientHeight = 324
   ClientWidth = 1020
+  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1036
   ExplicitHeight = 363
@@ -26,11 +27,72 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         ExplicitWidth = 1020
         ExplicitHeight = 265
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountPlan_total
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountPlan_1
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountPlan_2
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountPlan_3
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountPlan_4
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountPlan_5
+            end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = InvNumber
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountPlan_total
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountPlan_1
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountPlan_2
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountPlan_3
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountPlan_4
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = AmountPlan_5
             end>
           OptionsData.Deleting = False
           OptionsView.GroupByBox = True
@@ -872,6 +934,25 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       end>
   end
   inherited ActionList: TActionList
+    object actRefreshStart: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_CurrentWeekDay
+      StoredProcList = <
+        item
+          StoredProc = spGet_CurrentWeekDay
+        end
+        item
+          StoredProc = spGet_WeekNumber_byPeriod
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
     inherited actRefresh: TdsdDataSetRefresh
       StoredProc = spGet_WeekNumber_byPeriod
       StoredProcList = <
@@ -1454,5 +1535,49 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
     PackSize = 1
     Left = 472
     Top = 48
+  end
+  object spGet_CurrentWeekDay: TdsdStoredProc
+    StoredProcName = 'spGet_CurrentWeekDay'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'isPlan_1'
+        Value = 41640d
+        Component = cbPlan_1
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPlan_2'
+        Value = 41640d
+        Component = cbPlan_2
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPlan_3'
+        Value = ''
+        Component = cbPlan_3
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPlan_4'
+        Value = ''
+        Component = cbPlan_4
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPlan_5'
+        Value = Null
+        Component = cbPlan_5
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 312
+    Top = 192
   end
 end

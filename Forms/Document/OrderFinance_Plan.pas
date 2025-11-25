@@ -49,6 +49,8 @@ type
     spGet_WeekNumber_byPeriod: TdsdStoredProc;
     actGet_Period_byWeekNumber: TdsdDataSetRefresh;
     actGet_WeekNumber_byPeriod: TdsdDataSetRefresh;
+    spGet_CurrentWeekDay: TdsdStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
