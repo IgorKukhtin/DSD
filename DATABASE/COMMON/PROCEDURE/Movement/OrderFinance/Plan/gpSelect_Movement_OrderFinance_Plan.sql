@@ -64,6 +64,10 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
 
              , BankId_jof Integer
              , BankName_jof TVarChar
+             , MFO_jof      TVarChar
+             , BankId_Main_jof   Integer 
+             , BankName_Main_jof TVarChar
+             , MFO_Main_jof      TVarChar
               )
 AS
 $BODY$
@@ -274,7 +278,7 @@ BEGIN
                             , MIDate_Update.ValueData          AS UpdateDate
                  
                         FROM tmpMI AS MovementItem
-                             INNER JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId
+                             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId
                                                                   AND Object_Juridical.DescId = zc_Object_Juridical()
                  
                              LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountRemains
@@ -367,13 +371,11 @@ BEGIN
                              LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
                                                   ON ObjectLink_Contract_InfoMoney.ObjectId = Object_Contract.Id
                                                  AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
-                             LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_Contract_InfoMoney.ChildObjectId
+                             LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = CASE WHEN Object_Juridical.DescId = zc_Object_Juridical() THEN ObjectLink_Contract_InfoMoney.ChildObjectId ELSE MovementItem.ObjectId END
                  
                              LEFT JOIN tmpContract_View AS View_Contract ON View_Contract.ContractId = Object_Contract.Id
                              LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = View_Contract.PaidKindId
                              --LEFT JOIN tmpContractCondition ON tmpContractCondition.ContractId = Object_Contract.Id
-                 
-
                      )
 
        --
@@ -543,7 +545,8 @@ BEGIN
    , tmpJuridicalOrderFinance AS (SELECT Object_JuridicalOrderFinance.Id  AS JuridicalOrderFinanceId
                                        , OL_JuridicalOrderFinance_Juridical.ChildObjectId       AS JuridicalId
 
-                                       , Main_BankAccount_View.BankName   AS BankAccountName_main
+                                       , Main_BankAccount_View.BankId     AS BankId_main
+                                       , Main_BankAccount_View.BankName   AS BankName_main
                                        , Main_BankAccount_View.MFO        AS MFO_main
                                        , Main_BankAccount_View.Id         AS BankAccountId_main
                                        , Main_BankAccount_View.Name       AS BankAccountName_main
@@ -555,7 +558,7 @@ BEGIN
                                        , OL_JuridicalOrderFinance_InfoMoney.ChildObjectId AS InfoMoneyId
                                        , ObjectFloat_SummOrderFinance.ValueData :: TFloat AS SummOrderFinance
                                        , ObjectString_Comment.ValueData         :: TVarChar AS Comment
-                                       , Object_JuridicalOrderFinance.isErased  AS isErased
+                                       , ROW_NUMBER() OVER (PARTITION BY OL_JuridicalOrderFinance_Juridical.ChildObjectId, Main_BankAccount_View.Id, OL_JuridicalOrderFinance_InfoMoney.ChildObjectId ORDER BY ObjectDate_OperDate.ValueData DESC) AS Ord
                                   FROM Object AS Object_JuridicalOrderFinance
                                        LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_Juridical
                                                             ON OL_JuridicalOrderFinance_Juridical.ObjectId = Object_JuridicalOrderFinance.Id
@@ -582,10 +585,13 @@ BEGIN
                                        LEFT JOIN ObjectString AS ObjectString_Comment
                                                               ON ObjectString_Comment.ObjectId = Object_JuridicalOrderFinance.Id
                                                              AND ObjectString_Comment.DescId = zc_ObjectString_JuridicalOrderFinance_Comment()
-                          
+ 
+                                       LEFT JOIN ObjectDate AS ObjectDate_OperDate
+                                                            ON ObjectDate_OperDate.ObjectId = Object_JuridicalOrderFinance.Id
+                                                           AND ObjectDate_OperDate.DescId = zc_ObjectDate_JuridicalOrderFinance_OperDate()                          
                                   WHERE Object_JuridicalOrderFinance.DescId = zc_Object_JuridicalOrderFinance()
                                    AND Object_JuridicalOrderFinance.isErased = FALSE
-                                   )           
+                                   )
    --
    SELECT tmpMovement.MovementId
         , tmpMovement.InvNumber
@@ -686,10 +692,16 @@ BEGIN
         
         , tmpJuridicalOrderFinance.JuridicalOrderFinanceId ::Integer
         , tmpJuridicalOrderFinance.Comment         ::TVarChar AS Comment_jof          -- JuridicalOrderFinance
-        , tmpJuridicalOrderFinance.BankAccountId   ::Integer  AS BankAccountId_jof  -- JuridicalOrderFinance
+        , tmpJuridicalOrderFinance.BankAccountId   ::Integer  AS BankAccountId_jof    -- JuridicalOrderFinance
         , tmpJuridicalOrderFinance.BankAccountName ::TVarChar AS BankAccountName_jof  -- JuridicalOrderFinance
         , tmpJuridicalOrderFinance.BankId    ::Integer  AS BankId_jof
-        , tmpJuridicalOrderFinance.BankName  ::TVarChar AS BankName_jof
+        , tmpJuridicalOrderFinance.BankName  ::TVarChar AS BankName_jof 
+        , tmpJuridicalOrderFinance.MFO       ::TVarChar AS MFO_jof
+
+        , tmpJuridicalOrderFinance.BankId_main    ::Integer  AS BankId_Main_jof
+        , tmpJuridicalOrderFinance.BankName_main  ::TVarChar AS BankName_Main_jof 
+        , tmpJuridicalOrderFinance.MFO_main       ::TVarChar AS MFO_Main_jof
+        
    FROM tmpMovement_Data AS tmpMovement
         LEFT JOIN tmpMI_Data AS tmpMI ON tmpMI.MovementId = tmpMovement.MovementId
         
@@ -701,6 +713,8 @@ BEGIN
 
         LEFT JOIN tmpJuridicalOrderFinance ON tmpJuridicalOrderFinance.JuridicalId = tmpMI.JuridicalId
                                           AND tmpJuridicalOrderFinance.InfoMoneyId = tmpMI.InfoMoneyId
+                                          AND tmpJuridicalOrderFinance.BankAccountId = tmpMovement.BankAccountId
+                                          AND tmpJuridicalOrderFinance.Ord = 1
 
       ;
 
