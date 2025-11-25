@@ -20,14 +20,14 @@ BEGIN
    -- данные из документов zc_Movement_BankAccount за выбранный период
    CREATE TEMP TABLE tmpData ON COMMIT DROP AS (
           WITH
-          tmpBankAccount AS (SELECT DISTINCT
-                                    Object_MoneyPlace.Id               AS JuridicalId
-                                  , Movement.OperDate                  AS OperDate
-                                  , MILinkObject_InfoMoney.ObjectId    AS InfoMoneyId
-                                  , MovementItem.ObjectId              AS BankAccountId_main
-                                  , MILinkObject_BankAccount.ObjectId  AS BankAccountId
-                                  , -1 * MovementItem.Amount           AS Amount
-                                  , MIString_Comment.ValueData         AS Comment
+          tmpBankAccount AS (SELECT Object_MoneyPlace.Id                                    AS JuridicalId
+                                  , Movement.OperDate                                       AS OperDate
+                                  , MILinkObject_InfoMoney.ObjectId                         AS InfoMoneyId
+                                  , MovementItem.ObjectId                                   AS BankAccountId_main
+                                  , MILinkObject_BankAccount.ObjectId                       AS BankAccountId
+                                  , COALESCE (Object_Bank.Id, 0)                            AS BankId
+                                  , -1 * MovementItem.Amount                                AS Amount
+                                  , MIString_Comment.ValueData                              AS Comment
                                     -- № п/п
                                   , ROW_NUMBER() OVER (PARTITION BY Object_MoneyPlace.Id, MILinkObject_InfoMoney.ObjectId, MovementItem.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
                                     -- № п/п - комментарий последнего документа
@@ -35,21 +35,33 @@ BEGIN
                              FROM Movement
                                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                          AND MovementItem.DescId     = zc_MI_Master()
+                                                         -- Только Мы платим
                                                          AND MovementItem.Amount     < 0
 
+                                  -- Кому оплата
                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
                                                                    ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
                                                                   AND MILinkObject_MoneyPlace.DescId         = zc_MILinkObject_MoneyPlace()
-                                  INNER JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = MILinkObject_MoneyPlace.ObjectId
+                                  -- Только Юр.Лица
+                                  INNER JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id     = MILinkObject_MoneyPlace.ObjectId
                                                                         AND Object_MoneyPlace.DescId = zc_Object_Juridical()
 
                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                                    ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                                                   AND MILinkObject_InfoMoney.DescId         = zc_MILinkObject_InfoMoney()
+                                  -- на какой Р/сч
                                   INNER JOIN MovementItemLinkObject AS MILinkObject_BankAccount
-                                                                   ON MILinkObject_BankAccount.MovementItemId = MovementItem.Id
-                                                                  AND MILinkObject_BankAccount.DescId         = zc_MILinkObject_BankAccount()
+                                                                    ON MILinkObject_BankAccount.MovementItemId = MovementItem.Id
+                                                                   AND MILinkObject_BankAccount.DescId         = zc_MILinkObject_BankAccount()
+                                  -- найдем банк
+                                  LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank
+                                                       ON ObjectLink_BankAccount_Bank.ObjectId = MILinkObject_BankAccount.ObjectId
+                                                      AND ObjectLink_BankAccount_Bank.DescId   = zc_ObjectLink_BankAccount_Bank()
+                                  LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
+                                                                 -- !!!есть значение!!!
+                                                                 AND TRIM (Object_Bank.ValueData) <> ''
 
+                                  -- Назначение платежа
                                   LEFT JOIN MovementItemString AS MIString_Comment
                                                                ON MIString_Comment.MovementItemId = MovementItem.Id
                                                               AND MIString_Comment.DescId = zc_MIString_Comment()
@@ -58,14 +70,45 @@ BEGIN
                                AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                                AND Movement.StatusId = zc_Enum_Status_Complete()
                                AND (MovementItem.ObjectId = inBankAccountId_main OR inBankAccountId_main = 0)
-                             ORDER BY 2
-                             )
+                            )
+            -- Замена на другой р.сч, если не нашли Банк
+          , tmpBank_find AS (SELECT tmpBankAccount.JuridicalId
+                                  , tmpBankAccount.InfoMoneyId
+                                  , tmpBankAccount.BankAccountId_main
+                                  , tmpBankAccount.BankAccountId
+                                  , Object_BankAccount_find.Id AS BankAccountId_find
+                                    -- № п/п
+                                  , ROW_NUMBER() OVER (PARTITION BY tmpBankAccount.JuridicalId
+                                                                  , tmpBankAccount.InfoMoneyId
+                                                                  , tmpBankAccount.BankAccountId_main
+                                                                  , tmpBankAccount.BankAccountId
+                                                       ORDER BY Object_BankAccount_find.Id ASC
+                                                      ) AS Ord
+                             FROM tmpBankAccount
+                                  LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = tmpBankAccount.BankAccountId
+                                  INNER JOIN Object AS Object_BankAccount_find ON TRIM (Object_BankAccount_find.ValueData) ILIKE TRIM (Object_BankAccount.ValueData)
+                                                                              AND Object_BankAccount_find.DescId    = zc_Object_BankAccount()
+                                                                              AND Object_BankAccount_find.isErased  = FALSE
+                                  -- найдем банк
+                                  INNER JOIN ObjectLink AS ObjectLink_BankAccount_Bank
+                                                        ON ObjectLink_BankAccount_Bank.ObjectId      = Object_BankAccount_find.Id
+                                                       AND ObjectLink_BankAccount_Bank.DescId        = zc_ObjectLink_BankAccount_Bank()
+                                  INNER JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
+                                                                  -- !!!есть значение!!!
+                                                                  AND TRIM (Object_Bank.ValueData) <> ''
+
+                             WHERE tmpBankAccount.Ord = 1
+                               -- не нашли банк
+                               AND tmpBankAccount.BankId = 0
+                            )
           -- Результат
           SELECT tmpBankAccount.OperDate
                , tmpBankAccount.JuridicalId
                , tmpBankAccount.InfoMoneyId
                , tmpBankAccount.BankAccountId_main
-               , tmpBankAccount.BankAccountId
+                 -- Замена на другой р.сч
+               , COALESCE (tmpBank_find.BankAccountId_find, tmpBankAccount.BankAccountId) AS BankAccountId
+                 --
                , tmpBankAccount.Amount
                , tmp.Comment
           FROM tmpBankAccount
@@ -76,6 +119,11 @@ BEGIN
                                  AND tmp.InfoMoneyId        = tmpBankAccount.InfoMoneyId
                                  AND tmp.BankAccountId_main = tmpBankAccount.BankAccountId_main
                                  AND tmp.BankAccountId      = tmpBankAccount.BankAccountId
+               -- Замена на другой р.сч
+               LEFT JOIN tmpBank_find ON tmpBank_find.JuridicalId        = tmpBankAccount.JuridicalId
+                                     AND tmpBank_find.InfoMoneyId        = tmpBankAccount.InfoMoneyId
+                                     AND tmpBank_find.BankAccountId_main = tmpBankAccount.BankAccountId_main
+                                     AND tmpBank_find.BankAccountId      = tmpBankAccount.BankAccountId
           -- берется только ОДИН
           WHERE tmpBankAccount.ord = 1
          );
@@ -166,4 +214,4 @@ END;$BODY$
 */
 
 -- тест
---
+-- SELECT * FROM gpInsert_Object_JuridicalOrderFinance_byBankAccount (inStartDate:= '01.09.2025', inEndDate:= '24.11.2025', inBankAccountId_main:= 0, inSession := '5');
