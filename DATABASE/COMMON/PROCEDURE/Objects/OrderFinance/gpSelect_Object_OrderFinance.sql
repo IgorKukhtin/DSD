@@ -20,9 +20,11 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              )
 AS
 $BODY$
+  DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_OrderFinance());
+   -- vbUserId:= PERFORM lpCheckRight(inSession, zc_Enum_Process_OrderFinance());
+   vbUserId:= lpGetUserBySession (inSession);
 
    RETURN QUERY
    WITH tmpPersonal AS (SELECT lfSelect.MemberId
@@ -48,13 +50,13 @@ BEGIN
 
             , Object_Member_insert.Id          AS MemberId_insert
             , Object_Member_insert.ObjectCode  AS MemberCode_insert
-            , Object_Member_insert.ValueData   AS MemberName_insert   
+            , CASE WHEN vbUserId = 5 THEN 'ФИО' ELSE Object_Member_insert.ValueData END :: TVarChar   AS MemberName_insert   
             , Object_Unit.ValueData      ::TVarChar AS UnitName_insert
             , Object_Position.ValueData  ::TVarChar AS PositionName_insert
 
             , Object_Member_1.Id               AS MemberId_1
             , Object_Member_1.ObjectCode       AS MemberCode_1
-            , Object_Member_1.ValueData        AS MemberName_1
+            , CASE WHEN vbUserId = 5 THEN 'ФИО-1' ELSE Object_Member_1.ValueData END :: TVarChar AS MemberName_1
 
             , Object_Member_2.Id               AS MemberId_2
             , Object_Member_2.ObjectCode       AS MemberCode_2

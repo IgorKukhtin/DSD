@@ -5,10 +5,10 @@ DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Sign_1 (Integer, Boolean, 
 
 CREATE OR REPLACE FUNCTION gpUpdateMovement_OrderFinance_Sign_1(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inisSign_1            Boolean   , 
+    IN inisSign_1            Boolean   ,
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS VOID 
+RETURNS VOID
 AS
 $BODY$
     DECLARE vbUserId     Integer;
@@ -25,13 +25,13 @@ BEGIN
                    WHERE ObjectLink_User_Member.ObjectId = vbUserId
                      AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
                   );
-                  
+
      vbMemberId_1 := (SELECT MovementLinkObject_Member_1.ObjectId
                       FROM MovementLinkObject AS MovementLinkObject_Member_1
                       WHERE MovementLinkObject_Member_1.MovementId = inMovementId
                         AND MovementLinkObject_Member_1.DescId = zc_MovementLinkObject_Member_1()
                      );
-     
+
    /*  IF COALESCE (vbMemberId,0) <> COALESCE (vbMemberId_1,0)
      THEN
          RAISE EXCEPTION 'Ошибка.У пользователя нет доступа изменять значения <Согласован-1>.';
@@ -42,7 +42,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Sign_1(), inMovementId, inisSign_1);
 
      IF COALESCE (inisSign_1, FALSE) = TRUE
-     THEN 
+     THEN
          -- сохранили свойство <Дата/время Согласован-1>
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Sign_1(), inMovementId, CURRENT_TIMESTAMP);
      ELSE
@@ -54,7 +54,6 @@ BEGIN
      PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
 
 
-  
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

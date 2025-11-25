@@ -92,10 +92,13 @@ BEGIN
            , Object_Update_report.ValueData       ::TVarChar  AS UserUpdate_report
            , Object_Member_1.ValueData            ::TVarChar  AS UserMember_1
            , Object_Member_2.ValueData            ::TVarChar  AS UserMember_2
+         --, '‘»Œ-1' :: TVarChar                AS UserMember_1
+         --, '‘»Œ-2' :: TVarChar                AS UserMember_2
 
            , MovementString_Comment.ValueData       AS Comment
 
            , Object_Insert.ValueData                AS InsertName
+         --, '‘»Œ' :: TVarChar                AS InsertName
            , MovementDate_Insert.ValueData          AS InsertDate
            , Object_Update.ValueData                AS UpdateName
            , MovementDate_Update.ValueData          AS UpdateDate
@@ -105,7 +108,7 @@ BEGIN
 
            , COALESCE (MovementDate_SignWait_1.ValueData, NULL)     ::TDateTime AS Date_SignWait_1
            , COALESCE (MovementDate_Sign_1.ValueData, NULL)         ::TDateTime AS Date_Sign_1
-           , COALESCE (MovementBoolean_SignWait_1.ValueData, FALSE) ::Boolean   AS isSignWait_1 
+           , CASE WHEN MovementBoolean_Sign_1.ValueData = TRUE THEN FALSE ELSE COALESCE (MovementBoolean_SignWait_1.ValueData, FALSE) END ::Boolean AS isSignWait_1 
            , COALESCE (MovementBoolean_Sign_1.ValueData, FALSE)     ::Boolean   AS isSign_1
        FROM (SELECT Movement.id
              FROM tmpStatus

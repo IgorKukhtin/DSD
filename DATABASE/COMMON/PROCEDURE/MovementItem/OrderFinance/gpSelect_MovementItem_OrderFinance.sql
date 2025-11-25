@@ -239,11 +239,11 @@ BEGIN
                      + COALESCE (MIFloat_AmountPlan_5.ValueData, 0)
                       ) :: TFloat AS AmountPlan_total
 
-                    , MIBoolean_AmountPlan_1.ValueData    AS isAmountPlan_1
-                    , MIBoolean_AmountPlan_2.ValueData    AS isAmountPlan_2
-                    , MIBoolean_AmountPlan_3.ValueData    AS isAmountPlan_3
-                    , MIBoolean_AmountPlan_4.ValueData    AS isAmountPlan_4
-                    , MIBoolean_AmountPlan_5.ValueData    AS isAmountPlan_5
+                    , COALESCE (MIBoolean_AmountPlan_1.ValueData, TRUE) :: Boolean    AS isAmountPlan_1
+                    , COALESCE (MIBoolean_AmountPlan_2.ValueData, TRUE) :: Boolean    AS isAmountPlan_2
+                    , COALESCE (MIBoolean_AmountPlan_3.ValueData, TRUE) :: Boolean    AS isAmountPlan_3
+                    , COALESCE (MIBoolean_AmountPlan_4.ValueData, TRUE) :: Boolean    AS isAmountPlan_4
+                    , COALESCE (MIBoolean_AmountPlan_5.ValueData, TRUE) :: Boolean    AS isAmountPlan_5
 
                     --, MILinkObject_BankAccount.ObjectId AS BankAccountId
                     , MIString_Comment.ValueData        AS Comment
@@ -440,11 +440,11 @@ BEGIN
            , tmpMI.AmountPlan_5     ::TFloat
            , tmpMI.AmountPlan_total ::TFloat
 
-           , COALESCE (tmpMI.isAmountPlan_1, FALSE)  ::Boolean  AS isAmountPlan_1
-           , COALESCE (tmpMI.isAmountPlan_2, FALSE)  ::Boolean  AS isAmountPlan_2
-           , COALESCE (tmpMI.isAmountPlan_3, FALSE)  ::Boolean  AS isAmountPlan_3
-           , COALESCE (tmpMI.isAmountPlan_4, FALSE)  ::Boolean  AS isAmountPlan_4
-           , COALESCE (tmpMI.isAmountPlan_5, FALSE)  ::Boolean  AS isAmountPlan_5
+           , COALESCE (tmpMI.isAmountPlan_1, TRUE)  ::Boolean  AS isAmountPlan_1
+           , COALESCE (tmpMI.isAmountPlan_2, TRUE)  ::Boolean  AS isAmountPlan_2
+           , COALESCE (tmpMI.isAmountPlan_3, TRUE)  ::Boolean  AS isAmountPlan_3
+           , COALESCE (tmpMI.isAmountPlan_4, TRUE)  ::Boolean  AS isAmountPlan_4
+           , COALESCE (tmpMI.isAmountPlan_5, TRUE)  ::Boolean  AS isAmountPlan_5
 
            , COALESCE (tmpMI.Comment, '') ::TVarChar AS Comment
            , CASE WHEN COALESCE (tmpMI.Comment_pay,'') = '' THEN COALESCE (tmpData.Comment_pay,'') ELSE COALESCE (tmpMI.Comment_pay,'') END ::TVarChar AS Comment_pay
@@ -456,7 +456,7 @@ BEGIN
            , tmpMI.UpdateDate
 
            , COALESCE (tmpMI.isErased, FALSE) AS isErased
-           
+
            , zc_Color_White() ::Integer AS Color_Group
 
        FROM tmpData
@@ -541,7 +541,7 @@ BEGIN
            , tmpMI.UpdateDate  ::TDateTime
 
            , COALESCE (tmpMI.isErased, FALSE) AS isErased
-           
+
            , zc_Color_Yelow() ::Integer AS Color_Group
 
        FROM tmpInfoMoney_OrderF
@@ -740,11 +740,11 @@ BEGIN
             + COALESCE (MIFloat_AmountPlan_5.ValueData, 0)
              ) :: TFloat AS AmountPlan_total
 
-           , COALESCE (MIBoolean_AmountPlan_1.ValueData, FALSE) ::Boolean AS isAmountPlan_1
-           , COALESCE (MIBoolean_AmountPlan_2.ValueData, FALSE) ::Boolean AS isAmountPlan_2
-           , COALESCE (MIBoolean_AmountPlan_3.ValueData, FALSE) ::Boolean AS isAmountPlan_3
-           , COALESCE (MIBoolean_AmountPlan_4.ValueData, FALSE) ::Boolean AS isAmountPlan_4
-           , COALESCE (MIBoolean_AmountPlan_5.ValueData, FALSE) ::Boolean AS isAmountPlan_5
+           , COALESCE (MIBoolean_AmountPlan_1.ValueData, TRUE) ::Boolean AS isAmountPlan_1
+           , COALESCE (MIBoolean_AmountPlan_2.ValueData, TRUE) ::Boolean AS isAmountPlan_2
+           , COALESCE (MIBoolean_AmountPlan_3.ValueData, TRUE) ::Boolean AS isAmountPlan_3
+           , COALESCE (MIBoolean_AmountPlan_4.ValueData, TRUE) ::Boolean AS isAmountPlan_4
+           , COALESCE (MIBoolean_AmountPlan_5.ValueData, TRUE) ::Boolean AS isAmountPlan_5
 
            , MIString_Comment.ValueData     ::TVarChar AS Comment
            , MIString_Comment_pay.ValueData ::TVarChar AS Comment_pay
@@ -754,8 +754,8 @@ BEGIN
            , MIDate_Insert.ValueData          AS InsertDate
            , MIDate_Update.ValueData          AS UpdateDate
 
-           , MovementItem.isErased            AS isErased 
-           
+           , MovementItem.isErased            AS isErased
+
            , zc_Color_White() ::Integer AS Color_Group
 
        FROM tmpMI AS MovementItem
@@ -933,7 +933,7 @@ BEGIN
                                                AND MILO_Update.DescId = zc_MILinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
 
-       WHERE tmpInfoMoney_OrderF.isGroup = TRUE 
+       WHERE tmpInfoMoney_OrderF.isGroup = TRUE
           OR (Object_InfoMoney.DescId = zc_Object_InfoMoney() AND tmpMI.Id IS NOT NULL)   --сохраненные строки итого , даже если с н х сняли признак группы
        ;
      END IF;
