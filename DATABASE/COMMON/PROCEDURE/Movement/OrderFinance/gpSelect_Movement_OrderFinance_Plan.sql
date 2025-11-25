@@ -274,7 +274,7 @@ BEGIN
                             , MIDate_Update.ValueData          AS UpdateDate
                  
                         FROM tmpMI AS MovementItem
-                             INNER JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId
+                             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId
                                                                   AND Object_Juridical.DescId = zc_Object_Juridical()
                  
                              LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountRemains
@@ -367,13 +367,11 @@ BEGIN
                              LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
                                                   ON ObjectLink_Contract_InfoMoney.ObjectId = Object_Contract.Id
                                                  AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
-                             LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_Contract_InfoMoney.ChildObjectId
+                             LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = CASE WHEN Object_Juridical.DescId = zc_Object_Juridical() THEN ObjectLink_Contract_InfoMoney.ChildObjectId ELSE MovementItem.ObjectId END
                  
                              LEFT JOIN tmpContract_View AS View_Contract ON View_Contract.ContractId = Object_Contract.Id
                              LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = View_Contract.PaidKindId
                              --LEFT JOIN tmpContractCondition ON tmpContractCondition.ContractId = Object_Contract.Id
-                 
-
                      )
 
        --
@@ -555,7 +553,7 @@ BEGIN
                                        , OL_JuridicalOrderFinance_InfoMoney.ChildObjectId AS InfoMoneyId
                                        , ObjectFloat_SummOrderFinance.ValueData :: TFloat AS SummOrderFinance
                                        , ObjectString_Comment.ValueData         :: TVarChar AS Comment
-                                       , Object_JuridicalOrderFinance.isErased  AS isErased
+                                       , ROW_NUMBER() OVER (PARTITION BY OL_JuridicalOrderFinance_Juridical.ChildObjectId, Main_BankAccount_View.Id, OL_JuridicalOrderFinance_InfoMoney.ChildObjectId ORDER BY ObjectDate_OperDate.ValueData DESC) AS Ord
                                   FROM Object AS Object_JuridicalOrderFinance
                                        LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_Juridical
                                                             ON OL_JuridicalOrderFinance_Juridical.ObjectId = Object_JuridicalOrderFinance.Id
@@ -582,10 +580,13 @@ BEGIN
                                        LEFT JOIN ObjectString AS ObjectString_Comment
                                                               ON ObjectString_Comment.ObjectId = Object_JuridicalOrderFinance.Id
                                                              AND ObjectString_Comment.DescId = zc_ObjectString_JuridicalOrderFinance_Comment()
-                          
+ 
+                                       LEFT JOIN ObjectDate AS ObjectDate_OperDate
+                                                            ON ObjectDate_OperDate.ObjectId = Object_JuridicalOrderFinance.Id
+                                                           AND ObjectDate_OperDate.DescId = zc_ObjectDate_JuridicalOrderFinance_OperDate()                          
                                   WHERE Object_JuridicalOrderFinance.DescId = zc_Object_JuridicalOrderFinance()
                                    AND Object_JuridicalOrderFinance.isErased = FALSE
-                                   )           
+                                   )
    --
    SELECT tmpMovement.MovementId
         , tmpMovement.InvNumber
@@ -701,6 +702,8 @@ BEGIN
 
         LEFT JOIN tmpJuridicalOrderFinance ON tmpJuridicalOrderFinance.JuridicalId = tmpMI.JuridicalId
                                           AND tmpJuridicalOrderFinance.InfoMoneyId = tmpMI.InfoMoneyId
+                                          AND tmpJuridicalOrderFinance.BankAccountId = tmpMovement.BankAccountId
+                                          AND tmpJuridicalOrderFinance.Ord = 1
 
       ;
 

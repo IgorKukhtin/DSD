@@ -12,22 +12,26 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
     Width = 1020
     Height = 265
     TabOrder = 3
-    ExplicitTop = 77
+    ExplicitTop = 59
     ExplicitWidth = 1020
-    ExplicitHeight = 247
+    ExplicitHeight = 265
     ClientRectBottom = 265
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
-      ExplicitHeight = 247
+      ExplicitHeight = 265
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 265
-        ExplicitLeft = 13
-        ExplicitTop = 32
         ExplicitWidth = 1020
         ExplicitHeight = 265
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = InvNumber
+            end>
           OptionsData.Deleting = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
@@ -67,7 +71,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 54
+            Width = 79
           end
           object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072

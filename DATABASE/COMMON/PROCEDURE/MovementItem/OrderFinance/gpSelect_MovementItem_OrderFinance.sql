@@ -933,7 +933,8 @@ BEGIN
                                                AND MILO_Update.DescId = zc_MILinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
 
-       WHERE tmpInfoMoney_OrderF.isGroup = TRUE
+       WHERE tmpInfoMoney_OrderF.isGroup = TRUE 
+          OR (Object_InfoMoney.DescId = zc_Object_InfoMoney() AND tmpMI.Id IS NOT NULL)   --сохраненные строки итого , даже если с н х сняли признак группы
        ;
      END IF;
 END;
