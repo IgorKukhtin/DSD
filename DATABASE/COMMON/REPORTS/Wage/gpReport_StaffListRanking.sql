@@ -58,6 +58,7 @@ BEGIN
     RETURN QUERY
 
     WITH
+    -- Штатное план
     tmpMovement AS (SELECT tmp.*
                     FROM (SELECT Movement.*
                                , MovementLinkObject_Unit.ObjectId AS UnitId
@@ -70,14 +71,23 @@ BEGIN
                                LEFT JOIN ObjectLink AS ObjectLink_Unit_Department
                                                     ON ObjectLink_Unit_Department.ObjectId = MovementLinkObject_Unit.ObjectId
                                                    AND ObjectLink_Unit_Department.DescId = zc_ObjectLink_Unit_Department()
+                               -- Исключить из ШР
+                               LEFT JOIN ObjectBoolean AS ObjectBoolean_Unit_notStaffList
+                                                       ON ObjectBoolean_Unit_notStaffList.ObjectId  = MovementLinkObject_Unit.ObjectId
+                                                      AND ObjectBoolean_Unit_notStaffList.DescId    = zc_ObjectBoolean_Unit_notStaffList()
+                                                      AND ObjectBoolean_Unit_notStaffList.ValueData = TRUE
+                                                   
                           WHERE Movement.DescId = zc_Movement_StaffList()
                             AND Movement.OperDate <= inStartDate --AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                             AND Movement.StatusId <> zc_Enum_Status_Erased()
                             AND (MovementLinkObject_Unit.ObjectId = inUnitId OR inUnitId = 0)
                             AND (ObjectLink_Unit_Department.ChildObjectId = inDepartmentId OR inDepartmentId = 0)
+                            -- Исключить из ШР
+                            AND ObjectBoolean_Unit_notStaffList.ObjectId IS NULL
                          ) AS tmp
                     WHERE tmp.Ord = 1
                     )
+    -- Штатное строки план
   , tmpMI AS (SELECT MovementItem.*
               FROM MovementItem
               WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
@@ -145,6 +155,7 @@ BEGIN
                        , COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId,0)
                 )*/
 
+    -- Штатное факт
   , tmpFact AS (WITH
                 tmp AS (SELECT MovementLinkObject_Unit.ObjectId          AS UnitId
                              , ObjectLink_Unit_Department.ChildObjectId  AS DepartmentId
@@ -167,11 +178,18 @@ BEGIN
                                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                                                         AND (MovementLinkObject_Unit.ObjectId IN (SELECT DISTINCT tmpMovement.UnitId FROM tmpMovement)
-                                                            OR inUnitId = 0)
+                                                          OR inUnitId = 0
+                                                            )
                            INNER JOIN ObjectLink AS ObjectLink_Unit_Department
                                                  ON ObjectLink_Unit_Department.ObjectId = MovementLinkObject_Unit.ObjectId
                                                 AND ObjectLink_Unit_Department.DescId = zc_ObjectLink_Unit_Department()
                                                 AND (ObjectLink_Unit_Department.ChildObjectId = inDepartmentId OR inDepartmentId = 0)
+
+                           -- Исключить из ШР
+                           LEFT JOIN ObjectBoolean AS ObjectBoolean_Unit_notStaffList
+                                                   ON ObjectBoolean_Unit_notStaffList.ObjectId  = MovementLinkObject_Unit.ObjectId
+                                                  AND ObjectBoolean_Unit_notStaffList.DescId    = zc_ObjectBoolean_Unit_notStaffList()
+                                                  AND ObjectBoolean_Unit_notStaffList.ValueData = TRUE
 
                            INNER JOIN MovementLinkObject AS MovementLinkObject_StaffListKind
                                                          ON MovementLinkObject_StaffListKind.MovementId = Movement.Id
@@ -199,6 +217,8 @@ BEGIN
                         WHERE Movement.DescId = zc_Movement_StaffListMember()
                           AND Movement.OperDate <= inStartDate
                           AND Movement.StatusId = zc_Enum_Status_Complete()
+                          -- Исключить из ШР
+                          AND ObjectBoolean_Unit_notStaffList.ObjectId IS NULL
                         )
                 --определяем уволенных
               , tmp_Out AS (SELECT tmp.*
@@ -523,7 +543,12 @@ BEGIN
 --       , 0      ::TFloat   AS Amount_diff
          , (SUM (COALESCE (tmpResult.AmountFact,0)) - SUM (COALESCE (tmpResult.AmountPlan,0))) :: TFloat AS Amount_diff
 
-         , 0      ::TFloat   AS Persent_diff
+         , CAST (CASE WHEN SUM (COALESCE (tmpResult.AmountPlan, 0)) <> 0
+                      THEN (SUM (COALESCE (tmpResult.AmountFact,0)) / SUM (COALESCE (tmpResult.AmountPlan, 0)) * 100)
+                      ELSE 0
+                 END
+                 AS NUMERIC (16,0))   ::TFloat    AS Persent_diff
+
          , ''     ::Text     AS MemberName
          , ''     ::Text     AS MemberName_add
          , ''     ::TVarChar AS Vacancy

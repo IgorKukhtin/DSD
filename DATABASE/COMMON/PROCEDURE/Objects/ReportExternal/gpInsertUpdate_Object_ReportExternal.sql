@@ -55,6 +55,10 @@ $BODY$
  25.04.17                                                        *
 */
 
+-- 24.11.2025
+-- !!!! -- UPDATE Object SET ValueData = '' WHERE DescId = zc_Object_ReportExternal() AND ValueData ilike 'gpSelect_ObjectHistory_PriceListItem';
+-- !!!! -- UPDATE Object SET ValueData = '' WHERE DescId = zc_Object_ReportExternal() AND ValueData ilike 'gpReport_Cash';
+
 -- тест
 -- !!!! -- UPDATE Object SET ValueData = '' WHERE DescId = zc_Object_ReportExternal() AND ValueData ilike 'gpSelect_MovementItem_ReturnIn';
 -- !!!! -- UPDATE Object SET ValueData = '' WHERE DescId = zc_Object_ReportExternal() AND ValueData ilike 'gpSelect_MovementItemChild_ReturnIn';

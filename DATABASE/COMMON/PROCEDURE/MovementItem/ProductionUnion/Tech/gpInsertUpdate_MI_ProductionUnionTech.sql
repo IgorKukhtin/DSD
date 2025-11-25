@@ -52,6 +52,7 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ProductionUnionTech());
    
+
    -- !!!Проверка!!!
    IF inCountReal <> 0 AND inFromId <> 2790412  -- ЦЕХ Тушенка
                        AND inFromId <> 8449     -- Цех сирокопчених ковбас
@@ -442,6 +443,12 @@ BEGIN
    PERFORM lpComplete_Movement_ProductionUnion (inMovementId    := ioMovementId
                                               , inIsHistoryCost := TRUE
                                               , inUserId        := vbUserId);
+
+   -- Проверка Admin
+   IF vbUserId = 5
+   THEN
+       RAISE EXCEPTION 'Ошибка.Admin test.';
+   END IF;
 
 END;
 $BODY$
