@@ -316,7 +316,7 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         Width = 85
       end
       object TotalSumm_1: TcxGridDBColumn
-        Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' '#1043#1088'.-1'
+        Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' '#1043#1088'.1'
         DataBinding.FieldName = 'TotalSumm_1'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -328,7 +328,7 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         Width = 85
       end
       object TotalSumm_2: TcxGridDBColumn
-        Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' '#1043#1088'.-2'
+        Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' '#1043#1088'.2'
         DataBinding.FieldName = 'TotalSumm_2'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -340,7 +340,7 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         Width = 85
       end
       object TotalSumm_3: TcxGridDBColumn
-        Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' '#1043#1088'.-3'
+        Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' '#1043#1088'.3'
         DataBinding.FieldName = 'TotalSumm_3'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4

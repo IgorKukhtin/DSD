@@ -3706,6 +3706,12 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Control = edTotalSumm_1
       end
       item
+        Control = edTotalSumm_2
+      end
+      item
+        Control = edTotalSumm_3
+      end
+      item
         Control = ceMember_1
       end
       item
