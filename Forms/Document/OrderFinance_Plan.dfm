@@ -764,6 +764,32 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             HeaderAlignmentVert = vaCenter
             Width = 97
           end
+          object BankName_Main_jof: TcxGridDBColumn
+            Caption = #1041#1072#1085#1082' ('#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103')'
+            DataBinding.FieldName = 'BankName_Main_jof'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
+          end
+          object MFO_Main_jof: TcxGridDBColumn
+            Caption = #1052#1060#1054' '#1041#1072#1085#1082' ('#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103')'
+            DataBinding.FieldName = 'MFO_Main_jof'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
+          end
+          object MFO_jof: TcxGridDBColumn
+            Caption = #1052#1060#1054' '#1041#1072#1085#1082' ('#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103')'
+            DataBinding.FieldName = 'MFO_jof'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 97
+          end
           object BankName_jof: TcxGridDBColumn
             Caption = #1041#1072#1085#1082' ('#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103')'
             DataBinding.FieldName = 'BankName_jof'
@@ -951,6 +977,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     inherited actRefresh: TdsdDataSetRefresh

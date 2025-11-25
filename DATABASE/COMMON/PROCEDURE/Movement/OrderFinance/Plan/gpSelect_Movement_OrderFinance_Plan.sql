@@ -64,6 +64,10 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
 
              , BankId_jof Integer
              , BankName_jof TVarChar
+             , MFO_jof      TVarChar
+             , BankId_Main_jof   Integer 
+             , BankName_Main_jof TVarChar
+             , MFO_Main_jof      TVarChar
               )
 AS
 $BODY$
@@ -541,7 +545,8 @@ BEGIN
    , tmpJuridicalOrderFinance AS (SELECT Object_JuridicalOrderFinance.Id  AS JuridicalOrderFinanceId
                                        , OL_JuridicalOrderFinance_Juridical.ChildObjectId       AS JuridicalId
 
-                                       , Main_BankAccount_View.BankName   AS BankAccountName_main
+                                       , Main_BankAccount_View.BankId     AS BankId_main
+                                       , Main_BankAccount_View.BankName   AS BankName_main
                                        , Main_BankAccount_View.MFO        AS MFO_main
                                        , Main_BankAccount_View.Id         AS BankAccountId_main
                                        , Main_BankAccount_View.Name       AS BankAccountName_main
@@ -687,10 +692,16 @@ BEGIN
         
         , tmpJuridicalOrderFinance.JuridicalOrderFinanceId ::Integer
         , tmpJuridicalOrderFinance.Comment         ::TVarChar AS Comment_jof          -- JuridicalOrderFinance
-        , tmpJuridicalOrderFinance.BankAccountId   ::Integer  AS BankAccountId_jof  -- JuridicalOrderFinance
+        , tmpJuridicalOrderFinance.BankAccountId   ::Integer  AS BankAccountId_jof    -- JuridicalOrderFinance
         , tmpJuridicalOrderFinance.BankAccountName ::TVarChar AS BankAccountName_jof  -- JuridicalOrderFinance
         , tmpJuridicalOrderFinance.BankId    ::Integer  AS BankId_jof
-        , tmpJuridicalOrderFinance.BankName  ::TVarChar AS BankName_jof
+        , tmpJuridicalOrderFinance.BankName  ::TVarChar AS BankName_jof 
+        , tmpJuridicalOrderFinance.MFO       ::TVarChar AS MFO_jof
+
+        , tmpJuridicalOrderFinance.BankId_main    ::Integer  AS BankId_Main_jof
+        , tmpJuridicalOrderFinance.BankName_main  ::TVarChar AS BankName_Main_jof 
+        , tmpJuridicalOrderFinance.MFO_main       ::TVarChar AS MFO_Main_jof
+        
    FROM tmpMovement_Data AS tmpMovement
         LEFT JOIN tmpMI_Data AS tmpMI ON tmpMI.MovementId = tmpMovement.MovementId
         
