@@ -128,20 +128,21 @@ BEGIN
              , ''                                   ::TVarChar  AS UserUpdate_report
 
              , COALESCE (tmpOrderFinance.MemberId_1,0)     ::Integer   AS UserMemberId_1
-             , COALESCE (tmpOrderFinance.MemberName_1,'' ) ::TVarChar  AS UserMember_1
+             , CASE WHEN vbUserId = 5 THEN '' ELSE COALESCE (tmpOrderFinance.MemberName_1,'' ) END ::TVarChar  AS UserMember_1
+
              , COALESCE (tmpOrderFinance.MemberId_2,0)     ::Integer   AS UserMemberId_2
-             , COALESCE (tmpOrderFinance.MemberName_2,'')  ::TVarChar  AS UserMember_2
+             , CASE WHEN vbUserId = 5 THEN '' ELSE COALESCE (tmpOrderFinance.MemberName_2,'')  END ::TVarChar  AS UserMember_2
 
              , CAST ('' AS TVarChar) 	                        AS Comment
 
-             , Object_Insert.ValueData                          AS InsertName
+             , CASE WHEN vbUserId = 5 THEN 'ФИО' ELSE Object_Insert.ValueData END ::TVarChar AS InsertName
              , CURRENT_TIMESTAMP ::TDateTime                    AS InsertDate
 
              , CAST ('' AS TVarChar)                            AS UpdateName
              , CAST (NULL AS TDateTime)                         AS UpdateDate
 
-             , Object_Unit.ValueData                 ::TVarChar AS UnitName_insert
-             , Object_Position.ValueData             ::TVarChar AS PositionName_insert
+             , CASE WHEN vbUserId = 5 THEN 'Подразделение' ELSE Object_Unit.ValueData     END ::TVarChar AS UnitName_insert
+             , CASE WHEN vbUserId = 5 THEN 'Должность'     ELSE Object_Position.ValueData END ::TVarChar AS PositionName_insert
              
              , CAST (NULL AS TDateTime)                         AS Date_SignWait_1
              , CAST (NULL AS TDateTime)                         AS Date_Sign_1
@@ -159,9 +160,7 @@ BEGIN
               LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
               LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
               LEFT JOIN tmpOrderFinance ON 1 = 1
-          ;                                                                                                , DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', Movement.OperDate) + ((((7 * COALESCE (MovementFloat_WeekNumber.ValueData - 1, 0)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL) ::TDateTime AS StartDate_WeekNumber
-           , (DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', Movement.OperDate) + ((((7 * COALESCE (MovementFloat_WeekNumber.ValueData - 1, 0)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL) + INTERVAL '6 DAY') ::TDateTime AS EndDate_WeekNumber
-
+          ;
 
      ELSE
 
@@ -187,23 +186,28 @@ BEGIN
            , COALESCE (MovementFloat_TotalSumm_2.Valuedata, 0)                                  ::TFloat   AS TotalSumm_2
            , COALESCE (MovementFloat_TotalSumm_3.Valuedata, 0)                                  ::TFloat   AS TotalSumm_3
 
+           , DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', Movement.OperDate) + ((((7 * COALESCE (MovementFloat_WeekNumber.ValueData - 1, 0)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL) ::TDateTime AS StartDate_WeekNumber
+           , (DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', Movement.OperDate) + ((((7 * COALESCE (MovementFloat_WeekNumber.ValueData - 1, 0)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL) + INTERVAL '6 DAY') ::TDateTime AS EndDate_WeekNumber
 
-           , MovementDate_Update_report.ValueData ::TDateTime AS DateUpdate_report
-           , Object_Update_report.ValueData       ::TVarChar  AS UserUpdate_report
+           , CASE WHEN vbUserId = 5 THEN MovementDate_Update_report.ValueData - INTERVAL '12 HOUR' ELSE MovementDate_Update_report.ValueData END ::TDateTime AS DateUpdate_report
+           , CASE WHEN vbUserId = 5 THEN 'ФИО' ELSE Object_Update_report.ValueData END       ::TVarChar  AS UserUpdate_report
+
            , Object_Member_1.Id                   ::Integer   AS UserMemberId_1
-           , Object_Member_1.ValueData            ::TVarChar  AS UserMember_1
+           , CASE WHEN vbUserId = 5 THEN 'ФИО-1' ELSE COALESCE (Object_Member_1.ValueData,'' ) END ::TVarChar  AS UserMember_1
+
            , Object_Member_2.Id                   ::Integer   AS UserMemberId_2
-           , Object_Member_2.ValueData            ::TVarChar  AS UserMember_2
+           , CASE WHEN vbUserId = 5 THEN 'ФИО-2' ELSE COALESCE (Object_Member_2.ValueData,'' ) END ::TVarChar  AS UserMember_2
 
            , MovementString_Comment.ValueData       AS Comment
 
-           , Object_Insert.ValueData                AS InsertName
-           , MovementDate_Insert.ValueData          AS InsertDate
+           , CASE WHEN vbUserId = 5 THEN 'ФИО' ELSE COALESCE (Object_Insert.ValueData,'' ) END ::TVarChar  AS InsertName
+
+           , CASE WHEN vbUserId = 5 THEN MovementDate_Insert.ValueData - INTERVAL '12 HOUR' ELSE MovementDate_Insert.ValueData END :: TDateTime          AS InsertDate
            , Object_Update.ValueData                AS UpdateName
            , MovementDate_Update.ValueData          AS UpdateDate
 
-           , Object_Unit_insert.ValueData      ::TVarChar AS UnitName_insert
-           , Object_Position_insert.ValueData  ::TVarChar AS PositionName_insert
+           , CASE WHEN vbUserId = 5 THEN 'Подразделение' ELSE Object_Unit_insert.ValueData     END ::TVarChar AS UnitName_insert
+           , CASE WHEN vbUserId = 5 THEN 'Должность'     ELSE Object_Position_insert.ValueData END ::TVarChar AS PositionName_insert
 
            , MovementDate_SignWait_1.ValueData                      ::TDateTime AS Date_SignWait_1
            , MovementDate_Sign_1.ValueData                          ::TDateTime AS Date_Sign_1
