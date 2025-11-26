@@ -422,14 +422,12 @@ object WeighingPartnerForm: TWeighingPartnerForm
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 307
     ClientRectBottom = 305
     ClientRectRight = 1366
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 283
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -437,7 +435,6 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Height = 281
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 283
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1135,6 +1132,16 @@ object WeighingPartnerForm: TWeighingPartnerForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object PartionGoodsDate_q: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080' ('#1076#1083#1103' '#1044#1077#1082#1083#1072#1088#1072#1094#1080#1080')'
+            DataBinding.FieldName = 'PartionGoodsDate_q'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080' ('#1076#1083#1103' '#1044#1077#1082#1083#1072#1088#1072#1094#1080#1080')'
+            Options.Editing = False
             Width = 45
           end
           object PartionGoods: TcxGridDBColumn

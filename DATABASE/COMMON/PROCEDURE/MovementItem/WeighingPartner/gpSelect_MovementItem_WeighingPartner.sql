@@ -30,7 +30,7 @@ RETURNS TABLE (Id Integer, GoodsCode Integer, GoodsName TVarChar
              , ChangePercentAmount TFloat, AmountChangePercent TFloat, ChangePercent TFloat
              , Price TFloat, CountForPrice TFloat
              , PricePartner TFloat
-             , PartionGoodsDate TDateTime, PartionGoods TVarChar
+             , PartionGoodsDate TDateTime, PartionGoodsDate_q TDateTime, PartionGoods TVarChar
              , PartionNum TFloat
              , GoodsKindName TVarChar, MeasureName TVarChar
              , BoxName TVarChar
@@ -156,7 +156,8 @@ end if;*/
                   , COALESCE (MIFloat_CountForPrice.ValueData, 0)         AS CountForPrice
                   , COALESCE (MIFloat_PricePartner.ValueData, 0)          AS PricePartner
 
-                  , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart()) AS PartionGoodsDate
+                  , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())  ::TDateTime AS PartionGoodsDate
+                  , COALESCE (MIDate_PartionGoods_q.ValueData, zc_DateStart())::TDateTime AS PartionGoodsDate_q
                   , COALESCE (MIString_PartionGoods.ValueData, '')           AS PartionGoods
                   
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -216,6 +217,10 @@ end if;*/
                   LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                              ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                             AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                  LEFT JOIN MovementItemDate AS MIDate_PartionGoods_q
+                                             ON MIDate_PartionGoods_q.MovementItemId = MovementItem.Id
+                                            AND MIDate_PartionGoods_q.DescId = zc_MIDate_PartionGoods_q()
+
                   LEFT JOIN MovementItemDate AS MIDate_PriceRetOut
                                              ON MIDate_PriceRetOut.MovementItemId = MovementItem.Id
                                             AND MIDate_PriceRetOut.DescId = zc_MIDate_PriceRetOut()
@@ -409,7 +414,8 @@ end if;*/
                   , COALESCE (MIFloat_CountForPrice.ValueData, 0) 	    AS CountForPrice
                   , COALESCE (MIFloat_PricePartner.ValueData, 0)        AS PricePartner
                   
-                  , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart()) AS PartionGoodsDate
+                  , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())   ::TDateTime AS PartionGoodsDate
+                  , COALESCE (MIDate_PartionGoods_q.ValueData, zc_DateStart()) ::TDateTime AS PartionGoodsDate
                   , COALESCE (MIString_PartionGoods.ValueData, '')           AS PartionGoods
 
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -466,6 +472,9 @@ end if;*/
                   LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                              ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                             AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                  LEFT JOIN MovementItemDate AS MIDate_PartionGoods_q
+                                             ON MIDate_PartionGoods_q.MovementItemId = MovementItem.Id
+                                            AND MIDate_PartionGoods_q.DescId = zc_MIDate_PartionGoods_q()
 
                   LEFT JOIN MovementItemDate AS MIDate_PriceRetOut
                                              ON MIDate_PriceRetOut.MovementItemId = MovementItem.Id
@@ -608,7 +617,8 @@ end if;*/
            , CASE WHEN tmpMI.CountForPrice = 0 THEN NULL ELSE tmpMI.CountForPrice END :: TFloat AS CountForPrice
            , CASE WHEN tmpMI.PricePartner = 0 THEN NULL ELSE tmpMI.PricePartner END   :: TFloat AS PricePartner
            
-           , CASE WHEN tmpMI.PartionGoodsDate = zc_DateStart() THEN NULL ELSE tmpMI.PartionGoodsDate END :: TDateTime AS PartionGoodsDate
+           , CASE WHEN tmpMI.PartionGoodsDate   = zc_DateStart() THEN NULL ELSE tmpMI.PartionGoodsDate   END :: TDateTime AS PartionGoodsDate
+           , CASE WHEN tmpMI.PartionGoodsDate_q = zc_DateStart() THEN NULL ELSE tmpMI.PartionGoodsDate_q END :: TDateTime AS PartionGoodsDate_q
            , tmpMI.PartionGoods :: TVarChar AS PartionGoods
            , tmpMI.PartionNum   ::TFloat    AS PartionNum
 
@@ -695,6 +705,7 @@ end if;*/
                   , tmpMI.PricePartner
 
                   , tmpMI.PartionGoodsDate
+                  , tmpMI.PartionGoodsDate_q
                   , tmpMI.PartionGoods
                   , tmpMI.GoodsKindId
                   , tmpMI.BoxId
@@ -732,6 +743,7 @@ end if;*/
                    , tmpMI.CountForPrice 
                    , tmpMI.PricePartner
                    , tmpMI.PartionGoodsDate
+                   , tmpMI.PartionGoodsDate_q
                    , tmpMI.PartionGoods
                    , tmpMI.GoodsKindId
                    , tmpMI.BoxId
