@@ -66,6 +66,7 @@ type
     actGet_Export_FileName: TdsdExecStoredProc;
     actExport_file: TdsdStoredProcExportToFile;
     bbExport_New_OTP: TdxBarButton;
+    AmountPlan_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public
