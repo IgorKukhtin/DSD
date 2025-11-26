@@ -1,11 +1,11 @@
 inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
   Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')'
-  ClientHeight = 355
+  ClientHeight = 365
   ClientWidth = 1020
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1036
-  ExplicitHeight = 394
+  ExplicitHeight = 404
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -119,6 +119,16 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 58
+          end
+          object Condition: TcxGridDBColumn
+            Caption = #1059#1089#1083#1086#1074#1080#1077
+            DataBinding.FieldName = 'Condition'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
+            Options.Editing = False
+            Width = 100
           end
           object StatusCode: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1091#1089
@@ -310,16 +320,6 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 100
-          end
-          object Condition: TcxGridDBColumn
-            Caption = #1059#1089#1083#1086#1074#1080#1077
-            DataBinding.FieldName = 'Condition'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
             Options.Editing = False
             Width = 100
           end
@@ -610,6 +610,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             DataBinding.FieldName = 'Comment_pay'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 200
           end
           object Comment_jof: TcxGridDBColumn
@@ -633,19 +634,32 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
           object BankName: TcxGridDBColumn
             Caption = #1041#1072#1085#1082' ('#1055#1083#1072#1090#1077#1083#1100#1097#1080#1082')'
             DataBinding.FieldName = 'BankName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actBankChoiceFormMain
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 133
           end
           object BankAccountName: TcxGridDBColumn
             Caption = #1056'/'#1057#1095#1077#1090' ('#1055#1083#1072#1090#1077#1083#1100#1097#1080#1082')'
             DataBinding.FieldName = 'BankAccountName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actBankAccountChoicetFormMain
+                Default = True
+                Kind = bkEllipsis
+              end>
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 172
           end
           object MFO_jof: TcxGridDBColumn
@@ -677,7 +691,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actTBankAccount_ObjectForm
+                Action = actBankAccountChoicetForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -732,50 +746,50 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
     ExplicitWidth = 1020
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
-      Left = 169
+      Left = 133
       EditValue = 45658d
       Enabled = False
       Properties.ReadOnly = True
       Properties.SaveTime = False
-      ExplicitLeft = 169
+      ExplicitLeft = 133
       ExplicitWidth = 82
       Width = 82
     end
     inherited deEnd: TcxDateEdit
-      Left = 280
+      Left = 241
       EditValue = 45658d
       Enabled = False
       Properties.ReadOnly = True
       Properties.SaveTime = False
-      ExplicitLeft = 280
-      ExplicitWidth = 81
-      Width = 81
+      ExplicitLeft = 241
+      ExplicitWidth = 79
+      Width = 79
     end
     inherited cxLabel1: TcxLabel
-      Left = 150
+      Left = 121
       Caption = #1089':'
-      ExplicitLeft = 150
+      ExplicitLeft = 121
       ExplicitWidth = 13
     end
     inherited cxLabel2: TcxLabel
-      Left = 257
+      Left = 219
       Caption = #1087#1086':'
-      ExplicitLeft = 257
+      ExplicitLeft = 219
       ExplicitWidth = 20
     end
     object cxLabel3: TcxLabel
-      Left = 367
-      Top = 6
+      Left = 174
+      Top = 29
       Caption = #1053#1077#1076#1077#1083#1103' '#1087#1086':'
       Visible = False
     end
     object cxLabel4: TcxLabel
-      Left = 13
+      Left = 3
       Top = 6
       Caption = #1053#1077#1076#1077#1083#1103':'
     end
     object edWeekNumber1: TcxButtonEdit
-      Left = 61
+      Left = 49
       Top = 5
       Properties.Buttons = <
         item
@@ -784,11 +798,11 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         end>
       Properties.ReadOnly = True
       TabOrder = 6
-      Width = 76
+      Width = 64
     end
     object edWeekNumber2: TcxButtonEdit
-      Left = 429
-      Top = 5
+      Left = 221
+      Top = 28
       Properties.Buttons = <
         item
           Default = True
@@ -797,54 +811,71 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       Properties.ReadOnly = True
       TabOrder = 7
       Visible = False
-      Width = 61
+      Width = 31
     end
     object cbPlan_1: TcxCheckBox
-      Left = 593
-      Top = 2
+      Left = 354
+      Top = 6
       Caption = '1.'#1087#1085'.'
       Properties.ReadOnly = False
       TabOrder = 8
       Width = 49
     end
     object cbPlan_2: TcxCheckBox
-      Left = 648
-      Top = 2
+      Left = 409
+      Top = 5
       Caption = '2.'#1074#1090'.'
       Properties.ReadOnly = False
       TabOrder = 9
       Width = 49
     end
     object cbPlan_3: TcxCheckBox
-      Left = 698
-      Top = 2
+      Left = 459
+      Top = 5
       Caption = '3.'#1089#1088'.'
       Properties.ReadOnly = False
       TabOrder = 10
       Width = 49
     end
     object cbPlan_4: TcxCheckBox
-      Left = 748
-      Top = 2
+      Left = 509
+      Top = 5
       Caption = '4.'#1095#1090'.'
       Properties.ReadOnly = False
       TabOrder = 11
       Width = 49
     end
     object cbPlan_5: TcxCheckBox
-      Left = 798
-      Top = 2
+      Left = 564
+      Top = 5
       Caption = '5.'#1087#1090'.'
       Properties.ReadOnly = False
       TabOrder = 12
       Width = 49
+    end
+    object cxLabel12: TcxLabel
+      Left = 648
+      Top = 6
+      Caption = #1041#1072#1085#1082' ('#1055#1083#1072#1090#1077#1083#1100#1097#1080#1082'):'
+    end
+    object edBankMain: TcxButtonEdit
+      Left = 753
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 2
+      Width = 247
     end
   end
   object ExportXmlGrid: TcxGrid [2]
     Left = 0
     Top = 336
     Width = 1020
-    Height = 19
+    Height = 29
     Align = alBottom
     Anchors = [akTop, akRight, akBottom]
     TabOrder = 6
@@ -929,7 +960,68 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
           StoredProc = spSelect
         end>
     end
-    object actTBankAccount_ObjectForm: TOpenChoiceForm
+    object actBankAccountChoicetFormMain: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TBankAccount_ObjectForm'
+      FormName = 'TBankAccount_ObjectForm'
+      FormNameParam.Value = 'TBankAccount_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankAccountId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankAccountName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BankId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BankName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBankId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBankName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actBankAccountChoicetForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -986,6 +1078,35 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
           Component = MasterCDS
           ComponentItem = 'BankName_jof'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actBankChoiceFormMain: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TBankForm'
+      FormName = 'TBankForm'
+      FormNameParam.Value = 'TBankForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankName'
+          DataType = ftString
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -1224,6 +1345,14 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inBankMainId'
+        Value = Null
+        Component = GuidesBankMain
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inStartWeekNumber'
         Value = Null
         Component = edWeekNumber1
@@ -1277,8 +1406,8 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 208
-    Top = 192
+    Left = 200
+    Top = 160
   end
   inherited BarManager: TdxBarManager
     Left = 144
@@ -1339,6 +1468,20 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       Action = actExport_New_OTP
       Category = 0
     end
+    object bbBank: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = edBankMain
+    end
+    object bbText: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxLabel12
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColorRuleList = <
@@ -1372,7 +1515,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         BackGroundValueColumn = FonColor_AmountPlan_5
         ColorValueList = <>
       end>
-    Left = 208
+    Left = 240
     Top = 248
   end
   inherited PeriodChoice: TPeriodChoice
@@ -1394,6 +1537,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         Component = GuidesWeek_Date1
       end
       item
+        Component = GuidesBankMain
       end
       item
       end
@@ -1590,10 +1734,27 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inBankId_main'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BankId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inBankId_jof'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'BankId_jof'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankAccountName_main'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BankAccountName'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1662,7 +1823,8 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 480
+    Left = 384
+    Top = 48
   end
   object spGet_CurrentWeekDay: TdsdStoredProc
     StoredProcName = 'spGet_CurrentWeekDay'
@@ -1732,8 +1894,10 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inBankId'
+        Name = 'inBankMainId'
         Value = '76970'
+        Component = GuidesBankMain
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1893,6 +2057,37 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 448
+    Left = 288
+    Top = 40
+  end
+  object GuidesBankMain: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBankMain
+    FormNameParam.Value = 'TBankForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBankForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesBankMain
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBankMain
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 832
+    Top = 21
   end
 end

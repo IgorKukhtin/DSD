@@ -2,7 +2,9 @@
 
 DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer, Boolean,Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpUpdateMovement_OrderFinance_Plan(
     IN inMovementId              Integer   , -- Ключ объекта <Документ>
@@ -21,8 +23,10 @@ CREATE OR REPLACE FUNCTION gpUpdateMovement_OrderFinance_Plan(
     IN inOrderFinanceId          Integer    ,
     IN inJuridicalOrderFinanceId Integer    ,
     IN inJuridicalId             Integer    ,
-    IN inInfoMoneyId             Integer    , 
+    IN inInfoMoneyId             Integer    ,
+    IN inBankId_main             Integer    , 
     IN inBankId_jof              Integer    ,
+    IN inBankAccountName_main     TVarChar   ,
     IN inBankAccountName_jof     TVarChar   ,  --zc_ObjectLink_JuridicalOrderFinance_BankAccount
     IN inComment_jof             TVarChar   ,
     IN inComment_pay             TVarChar   ,  
@@ -88,14 +92,62 @@ BEGIN
      PERFORM lpInsert_MovementItemProtocol (inMovementItemId, vbUserId, FALSE);
 
 
+     -- BankAccount  main
+     IF COALESCE (inBankAccountName_main,'') <> ''
+     THEN
+         IF COALESCE (inBankId_main, 0) = 0
+         THEN
+           RAISE EXCEPTION 'Ошибка.Банк (Плательщик) не выбран для <%> ', inBankAccountName_main;
+         END IF; 
+          
+         --пробуем найти
+         vbBankAccountId_main:= (SELECT Object_BankAccount_View.Id
+                                 FROM Object_BankAccount_View 
+                                      -- Покажем счета только по внутренним фирмам
+                                      INNER JOIN ObjectBoolean AS ObjectBoolean_isCorporate
+                                                               ON ObjectBoolean_isCorporate.ObjectId = Object_BankAccount_View.JuridicalId
+                                                              AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
+                                                              AND (ObjectBoolean_isCorporate.ValueData = TRUE
+                                                                OR Object_BankAccount_View.JuridicalId = 15505 -- ДУКО ТОВ 
+                                                                OR Object_BankAccount_View.JuridicalId = 15512 -- Ірна-1 Фірма ТОВ
+                                                                OR Object_BankAccount_View.isCorporate = TRUE
+                                                                  )
+                                 WHERE UPPER (TRIM (Object_BankAccount_View.Name)) = UPPER (TRIM (inBankAccountName_main))
+                                   AND Object_BankAccount_View.isErased = FALSE
+                                   AND Object_BankAccount_View.BankId = inBankId_main
+                                 ); 
+         
+         IF COALESCE (vbBankAccountId_main, 0) = 0
+         THEN
+             -- сохранили <Объект>
+             vbBankAccountId_main := lpInsertUpdate_Object(vbBankAccountId_main, zc_Object_BankAccount(), 0, TRIM (inBankAccountName_main));
+
+             PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_BankAccount_Juridical(), vbBankAccountId_main, 9399);      --9399   "АЛАН ТОВ"
+             PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_BankAccount_Bank(), vbBankAccountId_main, inBankId_main);
+
+             -- сохранили протокол
+             PERFORM lpInsert_ObjectProtocol (vbBankAccountId_main, vbUserId);
+         END IF;
+     END IF;
+
      -- BankAccount
      IF COALESCE (inBankAccountName_jof,'') <> ''
      THEN
          IF COALESCE (inBankId_jof, 0) = 0
          THEN
            RAISE EXCEPTION 'Ошибка.Банк не выбран для <%> ', inBankAccountName_jof;
-         END IF; 
-          
+         END IF;  
+         
+         IF COALESCE (inBankId_main, 0) = 0
+         THEN
+           RAISE EXCEPTION 'Ошибка.Банк (Плательщик) не выбран для <%> ', inBankAccountName_jof;
+         END IF;
+
+         IF COALESCE (inBankAccountName_main, '') = 0
+         THEN
+           RAISE EXCEPTION 'Ошибка.Р/счет (Плательщик) не выбран для <%> ', inBankAccountName_jof;
+         END IF;
+                   
          --пробуем найти
          vbBankAccountId_jof:= (SELECT Object_BankAccount_View.Id
                                 FROM Object_BankAccount_View 
@@ -127,24 +179,18 @@ BEGIN
          
          --- zc_ObjectLink_JuridicalOrderFinance_BankAccount
          -- если inJuridicalOrderFinanceId = 0 создаем объект
-         IF COALESCE (inJuridicalOrderFinanceId,0) = 0
+         IF COALESCE (inJuridicalOrderFinanceId,0) = 0 
          THEN 
              --сохранили <Объект>
              inJuridicalOrderFinanceId := lpInsertUpdate_Object (0, zc_Object_JuridicalOrderFinance(), 0, '');
-
-             vbBankAccountId_main := (SELECT ObjectLink.ChildObjectId
-                                      FROM ObjectLink
-                                      WHERE ObjectLink.DescId = zc_ObjectLink_OrderFinance_BankAccount()
-                                        AND ObjectLink.ObjectId = inOrderFinanceId
-                                      );
-             -- сохранили связь с <>
-             PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_JuridicalOrderFinance_Juridical(), inJuridicalOrderFinanceId, inJuridicalId);
-             -- сохранили связь с <>
-             PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_JuridicalOrderFinance_BankAccountMain(), inJuridicalOrderFinanceId, vbBankAccountId_main);              
-             -- сохранили связь с <>
-             PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_JuridicalOrderFinance_InfoMoney(), inJuridicalOrderFinanceId, inInfoMoneyId);
          END IF;
-             
+                
+         -- сохранили связь с <>
+         PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_JuridicalOrderFinance_Juridical(), inJuridicalOrderFinanceId, inJuridicalId);
+         -- сохранили связь с <>
+         PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_JuridicalOrderFinance_BankAccountMain(), inJuridicalOrderFinanceId, vbBankAccountId_main);              
+         -- сохранили связь с <>
+         PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_JuridicalOrderFinance_InfoMoney(), inJuridicalOrderFinanceId, inInfoMoneyId);
          -- сохранили связь с <>
          PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_JuridicalOrderFinance_BankAccount(), inJuridicalOrderFinanceId, vbBankAccountId_jof);
          -- сохранили св-во <>
@@ -154,7 +200,7 @@ BEGIN
          PERFORM lpInsert_ObjectProtocol (inJuridicalOrderFinanceId, vbUserId);
      END IF;
 
-    -- if vbUserId = 9457 then RAISE EXCEPTION 'Админ.Test Ok.'; end if;
+     if vbUserId = 9457 then RAISE EXCEPTION 'Админ.Test Ok.'; end if;
   
 END;
 $BODY$

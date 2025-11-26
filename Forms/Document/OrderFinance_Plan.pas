@@ -35,7 +35,7 @@ type
     edWeekNumber2: TcxButtonEdit;
     actBankChoiceForm: TOpenChoiceForm;
     BankName_jof: TcxGridDBColumn;
-    actTBankAccount_ObjectForm: TOpenChoiceForm;
+    actBankAccountChoicetForm: TOpenChoiceForm;
     spUpdate_OrderFinance_Plan: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     ExecuteDialog: TExecuteDialog;
@@ -73,6 +73,13 @@ type
     FonColor_AmountPlan_5: TcxGridDBColumn;
     FonColor_AmountPlan_calc: TcxGridDBColumn;
     spGet_Period: TdsdStoredProc;
+    cxLabel12: TcxLabel;
+    GuidesBankMain: TdsdGuides;
+    edBankMain: TcxButtonEdit;
+    bbBank: TdxBarControlContainerItem;
+    bbText: TdxBarControlContainerItem;
+    actBankChoiceFormMain: TOpenChoiceForm;
+    actBankAccountChoicetFormMain: TOpenChoiceForm;
   private
     { Private declarations }
   public
