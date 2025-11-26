@@ -45,7 +45,6 @@ type
     cbPlan_3: TcxCheckBox;
     cbPlan_4: TcxCheckBox;
     cbPlan_5: TcxCheckBox;
-    RefreshDispatcherPeriod: TRefreshDispatcher;
     spGet_WeekNumber_byPeriod: TdsdStoredProc;
     actGet_Period_byWeekNumber: TdsdDataSetRefresh;
     actGet_WeekNumber_byPeriod: TdsdDataSetRefresh;
@@ -73,6 +72,7 @@ type
     FonColor_AmountPlan_4: TcxGridDBColumn;
     FonColor_AmountPlan_5: TcxGridDBColumn;
     FonColor_AmountPlan_calc: TcxGridDBColumn;
+    spGet_Period: TdsdStoredProc;
   private
     { Private declarations }
   public

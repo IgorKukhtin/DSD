@@ -920,10 +920,10 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       RefreshOnTabSetChanges = False
     end
     inherited actRefresh: TdsdDataSetRefresh
-      StoredProc = spGet_WeekNumber_byPeriod
+      StoredProc = spGet_Period
       StoredProcList = <
         item
-          StoredProc = spGet_WeekNumber_byPeriod
+          StoredProc = spGet_Period
         end
         item
           StoredProc = spSelect
@@ -1233,7 +1233,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       item
         Name = 'inEndWeekNumber'
         Value = Null
-        Component = edWeekNumber2
+        Component = edWeekNumber1
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1382,22 +1382,20 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
       item
-        Component = PeriodChoice
-      end
-      item
         Component = edWeekNumber1
-      end
-      item
-        Component = edWeekNumber2
-      end
-      item
-        Component = GuidesWeek_Date1
       end
       item
         Component = deStart
       end
       item
-        Component = deEnd
+        Component = PeriodChoice
+      end
+      item
+        Component = GuidesWeek_Date1
+      end
+      item
+      end
+      item
       end
       item
       end>
@@ -1445,15 +1443,9 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'WeekNumber'
-        Value = Null
-        Component = edWeekNumber2
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
-    Left = 135
+    Left = 79
+    Top = 24
   end
   object spUpdate_OrderFinance_Plan: TdsdStoredProc
     StoredProcName = 'gpUpdateMovement_OrderFinance_Plan'
@@ -1636,17 +1628,6 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
     Left = 640
     Top = 176
   end
-  object RefreshDispatcherPeriod: TRefreshDispatcher
-    IdParam.Value = Null
-    IdParam.MultiSelectSeparator = ','
-    RefreshAction = actRefresh
-    ComponentList = <
-      item
-        Component = PeriodChoice
-      end>
-    Left = 248
-    Top = 40
-  end
   object spGet_WeekNumber_byPeriod: TdsdStoredProc
     StoredProcName = 'gpGet_WeekNumber_byPeriod'
     DataSets = <>
@@ -1681,8 +1662,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 472
-    Top = 48
+    Left = 480
   end
   object spGet_CurrentWeekDay: TdsdStoredProc
     StoredProcName = 'spGet_CurrentWeekDay'
@@ -1879,5 +1859,40 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
     PackSize = 1
     Left = 456
     Top = 200
+  end
+  object spGet_Period: TdsdStoredProc
+    StoredProcName = 'spGet_Period_byWeekNumber'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inWeekNumber1'
+        Value = ''
+        Component = edWeekNumber1
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartDate_WeekNumber'
+        Value = 45658d
+        Component = deStart
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDate_WeekNumber'
+        Value = 45658d
+        Component = deEnd
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'WeekNumber2'
+        Value = ''
+        Component = edWeekNumber2
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 448
   end
 end
