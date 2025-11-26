@@ -49,6 +49,13 @@ BEGIN
                      WHEN COALESCE (inisPlan_4,FALSE) = TRUE THEN 'Четверг'    
                      WHEN COALESCE (inisPlan_5,FALSE) = TRUE THEN 'Пятница'    
                 END ::TVarChar AS DayOfWeek
+              , (inOperDate 
+                + (''|| CASE WHEN COALESCE (inisPlan_1,FALSE) = TRUE THEN 0
+                             WHEN COALESCE (inisPlan_2,FALSE) = TRUE THEN 1
+                             WHEN COALESCE (inisPlan_3,FALSE) = TRUE THEN 2
+                             WHEN COALESCE (inisPlan_4,FALSE) = TRUE THEN 3
+                             WHEN COALESCE (inisPlan_5,FALSE) = TRUE THEN 4
+                        END ||' DAY') ::Interval ) ::TDateTime AS OperDate
          ;
     RETURN NEXT Cursor1;
      
