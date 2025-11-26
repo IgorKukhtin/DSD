@@ -80,6 +80,11 @@ type
     bbText: TdxBarControlContainerItem;
     actBankChoiceFormMain: TOpenChoiceForm;
     actBankAccountChoicetFormMain: TOpenChoiceForm;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    spSelectPrint: TdsdStoredProc;
+    actPrintPlan: TdsdPrintAction;
+    bbPrintPlan: TdxBarButton;
   private
     { Private declarations }
   public

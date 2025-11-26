@@ -24,6 +24,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 277
+        ExplicitTop = -4
         ExplicitWidth = 1020
         ExplicitHeight = 277
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1316,6 +1317,60 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       Left = 1208
       Top = 168
     end
+    object actPrintPlan: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'NumGroup;InfoMoneyName;JuridicalName'
+        end>
+      Params = <
+        item
+          Name = 'WeekNumber'
+          Value = ''
+          Component = edWeekNumber1
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartDate'
+          Value = Null
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42160d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_OrderFinancePlan'
+      ReportNameParam.Value = 'PrintMovement_OrderFinancePlan'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -1453,6 +1508,18 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintPlan'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1481,6 +1548,10 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       Hint = 'New Item'
       Visible = ivAlways
       Control = cxLabel12
+    end
+    object bbPrintPlan: TdxBarButton
+      Action = actPrintPlan
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1588,8 +1659,8 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 79
-    Top = 24
+    Left = 47
+    Top = 88
   end
   object spUpdate_OrderFinance_Plan: TdsdStoredProc
     StoredProcName = 'gpUpdateMovement_OrderFinance_Plan'
@@ -2089,5 +2160,89 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       end>
     Left = 832
     Top = 21
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 868
+    Top = 153
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 844
+    Top = 158
+  end
+  object spSelectPrint: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_OrderFinancePlan_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeekNumber'
+        Value = Null
+        Component = edWeekNumber1
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPlan_1'
+        Value = Null
+        Component = cbPlan_1
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPlan_2'
+        Value = Null
+        Component = cbPlan_2
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPlan_3'
+        Value = Null
+        Component = cbPlan_3
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPlan_4'
+        Value = Null
+        Component = cbPlan_4
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPlan_5'
+        Value = Null
+        Component = cbPlan_5
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 751
+    Top = 144
   end
 end
