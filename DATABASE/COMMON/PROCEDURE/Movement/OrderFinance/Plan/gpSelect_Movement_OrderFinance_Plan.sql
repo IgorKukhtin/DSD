@@ -710,6 +710,11 @@ BEGIN
                                           AND tmpJuridicalOrderFinance.InfoMoneyId = tmpMI.InfoMoneyId
                                           AND tmpJuridicalOrderFinance.BankAccountId_main = tmpMovement.BankAccountId
                                           AND tmpJuridicalOrderFinance.Ord = 1
+   WHERE tmpMI.AmountPlan_1 <> 0
+      OR tmpMI.AmountPlan_2 <> 0
+      OR tmpMI.AmountPlan_3 <> 0
+      OR tmpMI.AmountPlan_4 <> 0
+      OR tmpMI.AmountPlan_5 <> 0
 
       ;
 
