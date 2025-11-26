@@ -2,7 +2,7 @@ object WeekPeriodDialogForm: TWeekPeriodDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = #1042#1099#1073#1086#1088' '#1087#1077#1088#1080#1086#1076#1072' '#1076#1083#1103' '#1087#1086#1083#1091#1095#1077#1085#1080#1103' '#1076#1072#1085#1085#1099#1093
+  Caption = #1042#1099#1073#1086#1088' '#1087#1077#1088#1080#1086#1076' '#1087#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103
   ClientHeight = 137
   ClientWidth = 519
   Color = clBtnFace
@@ -40,7 +40,7 @@ object WeekPeriodDialogForm: TWeekPeriodDialogForm
   object deEnd: TcxDateEdit
     Left = 280
     Top = 17
-    EditValue = 43374d
+    EditValue = 45931d
     Properties.ReadOnly = False
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -50,7 +50,7 @@ object WeekPeriodDialogForm: TWeekPeriodDialogForm
   object deStart: TcxDateEdit
     Left = 170
     Top = 17
-    EditValue = 43374d
+    EditValue = 45931d
     Properties.ReadOnly = False
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -68,9 +68,9 @@ object WeekPeriodDialogForm: TWeekPeriodDialogForm
     Caption = #1087#1086':'
   end
   object cxLabel4: TcxLabel
-    Left = 13
+    Left = 26
     Top = 18
-    Caption = #1053#1077#1076#1077#1083#1103' '#1089':'
+    Caption = #1053#1077#1076#1077#1083#1103':'
     ParentFont = False
     Style.Font.Charset = DEFAULT_CHARSET
     Style.Font.Color = clNavy
@@ -101,6 +101,7 @@ object WeekPeriodDialogForm: TWeekPeriodDialogForm
     Style.Font.Name = 'Tahoma'
     Style.Font.Style = [fsBold]
     Style.IsFontAssigned = True
+    Visible = False
   end
   object edWeekNumber2: TcxCurrencyEdit
     Left = 447
@@ -118,6 +119,7 @@ object WeekPeriodDialogForm: TWeekPeriodDialogForm
     Style.TextColor = clBlue
     Style.IsFontAssigned = True
     TabOrder = 9
+    Visible = False
     Width = 60
   end
   object PeriodChoice: TPeriodChoice
@@ -246,6 +248,7 @@ object WeekPeriodDialogForm: TWeekPeriodDialogForm
         end>
       Caption = 'actRefresh'
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefresh: TdsdDataSetRefresh
@@ -259,6 +262,7 @@ object WeekPeriodDialogForm: TWeekPeriodDialogForm
         end>
       Caption = 'actRefresh'
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actInsertUpdate: TdsdInsertUpdateGuides
@@ -284,6 +288,7 @@ object WeekPeriodDialogForm: TWeekPeriodDialogForm
         end>
       Caption = 'actGet_WeekNumber_byPeriod'
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actFormClose: TdsdFormClose
@@ -335,6 +340,7 @@ object WeekPeriodDialogForm: TWeekPeriodDialogForm
       end
       item
         Name = 'WeekNumber2'
+        Value = Null
         Component = edWeekNumber2
         MultiSelectSeparator = ','
       end>

@@ -67,6 +67,12 @@ type
     actExport_file: TdsdStoredProcExportToFile;
     bbExport_New_OTP: TdxBarButton;
     AmountPlan_calc: TcxGridDBColumn;
+    FonColor_AmountPlan_1: TcxGridDBColumn;
+    FonColor_AmountPlan_2: TcxGridDBColumn;
+    FonColor_AmountPlan_3: TcxGridDBColumn;
+    FonColor_AmountPlan_4: TcxGridDBColumn;
+    FonColor_AmountPlan_5: TcxGridDBColumn;
+    FonColor_AmountPlan_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -686,6 +686,42 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             HeaderHint = #1088'/'#1089#1095#1077#1090', '#1085#1072' '#1082#1086#1090#1086#1088#1099#1081' '#1084#1099' '#1087#1083#1072#1090#1080#1084
             Width = 171
           end
+          object FonColor_AmountPlan_1: TcxGridDBColumn
+            DataBinding.FieldName = 'FonColor_AmountPlan_1'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object FonColor_AmountPlan_2: TcxGridDBColumn
+            DataBinding.FieldName = 'FonColor_AmountPlan_2'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object FonColor_AmountPlan_3: TcxGridDBColumn
+            DataBinding.FieldName = 'FonColor_AmountPlan_3'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object FonColor_AmountPlan_4: TcxGridDBColumn
+            DataBinding.FieldName = 'FonColor_AmountPlan_4'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object FonColor_AmountPlan_5: TcxGridDBColumn
+            DataBinding.FieldName = 'FonColor_AmountPlan_5'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object FonColor_AmountPlan_calc: TcxGridDBColumn
+            DataBinding.FieldName = 'FonColor_AmountPlan_calc'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 55
+          end
         end
       end
     end
@@ -1256,6 +1292,10 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbExecuteDialog'
         end
         item
@@ -1301,6 +1341,37 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        ColorColumn = AmountPlan_calc
+        BackGroundValueColumn = FonColor_AmountPlan_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountPlan_1
+        BackGroundValueColumn = FonColor_AmountPlan_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountPlan_2
+        BackGroundValueColumn = FonColor_AmountPlan_2
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountPlan_3
+        BackGroundValueColumn = FonColor_AmountPlan_3
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountPlan_4
+        BackGroundValueColumn = FonColor_AmountPlan_4
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountPlan_5
+        BackGroundValueColumn = FonColor_AmountPlan_5
+        ColorValueList = <>
+      end>
     Left = 208
     Top = 248
   end
