@@ -1200,6 +1200,46 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         Component = edWeekNumber2
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsAmountPlan_1'
+        Value = Null
+        Component = cbPlan_1
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsAmountPlan_2'
+        Value = Null
+        Component = cbPlan_2
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsAmountPlan_3'
+        Value = Null
+        Component = cbPlan_3
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsAmountPlan_4'
+        Value = Null
+        Component = cbPlan_4
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsAmountPlan_5'
+        Value = Null
+        Component = cbPlan_5
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 208
     Top = 192

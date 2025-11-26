@@ -1,12 +1,18 @@
 -- Function: gpSelect_Movement_OrderFinance_Plan()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_OrderFinance_Plan (TDateTime, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_OrderFinance_Plan (TDateTime, TDateTime, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderFinance_Plan(
     IN inStartDate         TDateTime , --
     IN inEndDate           TDateTime , --
     IN inStartWeekNumber   Integer , --
     IN inEndWeekNumber     Integer , --
+    IN inIsAmountPlan_1    Boolean    , --
+    IN inIsAmountPlan_2    Boolean    , --
+    IN inIsAmountPlan_3    Boolean    , --
+    IN inIsAmountPlan_4    Boolean    , --
+    IN inIsAmountPlan_5    Boolean    , --
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
@@ -15,8 +21,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , BankAccountId Integer, BankAccountName TVarChar
              , BankId Integer, BankName TVarChar, BankAccountNameAll TVarChar, MFO TVarChar
              , WeekNumber TFloat
-             --, TotalSumm TFloat, TotalSumm_all TFloat, TotalSumm_1 TFloat, TotalSumm_2 TFloat, TotalSumm_3 TFloat
-             --, TotalPlan_1 TFloat, TotalPlan_2 TFloat, TotalPlan_3 TFloat, TotalPlan_4 TFloat, TotalPlan_5 TFloat
+
              , StartDate_WeekNumber TDateTime, EndDate_WeekNumber TDateTime
              , DateUpdate_report TDateTime
              , UserUpdate_report TVarChar
@@ -44,18 +49,22 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , AmountPartner_2    TFloat
              , AmountPartner_3    TFloat
              , AmountPartner_4    TFloat
+
              , AmountPlan_1       TFloat
              , AmountPlan_2       TFloat
              , AmountPlan_3       TFloat
              , AmountPlan_4       TFloat
              , AmountPlan_5       TFloat
              , AmountPlan_total   TFloat
+             , AmountPlan_calc    TFloat
+
              , isAmountPlan_1     Boolean
              , isAmountPlan_2     Boolean
              , isAmountPlan_3     Boolean
              , isAmountPlan_4     Boolean
              , isAmountPlan_5     Boolean
              , isAmountPlan       Boolean
+
              , Comment            TVarChar
              , Comment_pay        TVarChar
              , JuridicalOrderFinanceId Integer    -- JuridicalOrderFinance
@@ -77,6 +86,7 @@ BEGIN
 
      -- !!!Только просмотр Аудитор!!!
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
 
      -- Результат
      RETURN QUERY
@@ -679,12 +689,38 @@ BEGIN
         , tmpMI.AmountPlan_5    :: TFloat AS AmountPlan_5
         , tmpMI.AmountPlan_total :: TFloat AS AmountPlan_total
 
+        , CASE WHEN inIsAmountPlan_1 = TRUE AND COALESCE (tmpMI.isAmountPlan_1, TRUE) = TRUE
+                    THEN tmpMI.AmountPlan_1
+               WHEN inIsAmountPlan_2 = TRUE AND COALESCE (tmpMI.isAmountPlan_2, TRUE) = TRUE
+                    THEN tmpMI.AmountPlan_2
+               WHEN inIsAmountPlan_3 = TRUE AND COALESCE (tmpMI.isAmountPlan_3, TRUE) = TRUE
+                    THEN tmpMI.AmountPlan_3
+               WHEN inIsAmountPlan_4 = TRUE AND COALESCE (tmpMI.isAmountPlan_4, TRUE) = TRUE
+                    THEN tmpMI.AmountPlan_4
+               WHEN inIsAmountPlan_5 = TRUE AND COALESCE (tmpMI.isAmountPlan_5, TRUE) = TRUE
+                    THEN tmpMI.AmountPlan_5
+               ELSE 0
+          END ::TFloat AS AmountPlan_calc
+
         , tmpMI.isAmountPlan_1 ::Boolean
         , tmpMI.isAmountPlan_2 ::Boolean
         , tmpMI.isAmountPlan_3 ::Boolean
         , tmpMI.isAmountPlan_4 ::Boolean
         , tmpMI.isAmountPlan_5 ::Boolean
-        , True ::Boolean  AS isAmountPlan --по умолчанию платим , если нет снимают галку  -- надо еще колонку одну, где будут ставить  да/нет, а в шапке вывести 5 дней недели и там где галку поставят, тогда и будем понимать в какой это день
+
+          --по умолчанию платим , если нет снимают галку  -- надо еще колонку одну, где будут ставить  да/нет, а в шапке вывести 5 дней недели и там где галку поставят, тогда и будем понимать в какой это день
+        , CASE WHEN inIsAmountPlan_1 = TRUE AND COALESCE (tmpMI.isAmountPlan_1, TRUE) = TRUE
+                    THEN TRUE
+               WHEN inIsAmountPlan_2 = TRUE AND COALESCE (tmpMI.isAmountPlan_2, TRUE) = TRUE
+                    THEN TRUE
+               WHEN inIsAmountPlan_3 = TRUE AND COALESCE (tmpMI.isAmountPlan_3, TRUE) = TRUE
+                    THEN TRUE
+               WHEN inIsAmountPlan_4 = TRUE AND COALESCE (tmpMI.isAmountPlan_4, TRUE) = TRUE
+                    THEN TRUE
+               WHEN inIsAmountPlan_5 = TRUE AND COALESCE (tmpMI.isAmountPlan_5, TRUE) = TRUE
+                    THEN TRUE
+               ELSE FALSE
+          END ::Boolean  AS isAmountPlan
 
         , tmpMI.Comment        ::TVarChar AS Comment
         , tmpMI.Comment_pay    ::TVarChar AS Comment_pay
@@ -729,5 +765,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderFinance_Plan (inStartDate:= '01.11.2021', inEndDate:= '30.11.2021', inJuridicalBasisId:=0, inIsErased := FALSE, inSession:= '2')
--- SELECT * FROM gpSelect_Movement_OrderFinance_Plan (inStartDate:= '01.11.2025', inEndDate:= '30.12.2025', inStartWeekNumber:=47, inEndWeekNumber := 48, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_OrderFinance_Plan (inStartDate:= '01.11.2025', inEndDate:= '30.12.2025', inStartWeekNumber:=47, inEndWeekNumber := 48, inIsAmountPlan_1:=FALSE, inIsAmountPlan_2:=FALSE, inIsAmountPlan_3:=FALSE, inIsAmountPlan_4:=FALSE, inIsAmountPlan_5:=FALSE, inSession:= '2')
