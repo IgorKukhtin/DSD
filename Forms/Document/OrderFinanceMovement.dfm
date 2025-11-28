@@ -4133,8 +4133,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 780
-    Top = 313
+    Left = 572
+    Top = 345
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
@@ -4377,8 +4377,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
   end
   object JuridicalDS: TDataSource
     DataSet = JuridicalCDS
-    Left = 878
-    Top = 207
+    Left = 886
+    Top = 239
   end
   object dsdDBViewAddOnJuridical: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -4554,7 +4554,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       end>
     PackSize = 1
     Left = 952
-    Top = 168
+    Top = 128
   end
   object GuidesBankAccount: TdsdGuides
     KeyField = 'Id'

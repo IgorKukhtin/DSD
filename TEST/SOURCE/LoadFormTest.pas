@@ -5193,10 +5193,14 @@ end;
 
  procedure TLoadFormTest.LoadWeighingPartnerFormTest;
  begin
-   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerJournal_protocolForm'));
+
+   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartner_PartionQEditForm'));
+   TdsdFormStorageFactory.GetStorage.Load('TWeighingPartner_PartionQEditForm');
+  // exit;
+  { TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerJournal_protocolForm'));
    TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerJournal_protocolForm');
    exit;
-    {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartner_ActDiffForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingPartner_ActDiffForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartner_ActDiffEditForm'));
@@ -5208,7 +5212,7 @@ end;
    }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerForm');
-
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerJournalForm');

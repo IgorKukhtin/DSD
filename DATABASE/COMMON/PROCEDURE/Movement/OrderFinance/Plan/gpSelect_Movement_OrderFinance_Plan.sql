@@ -1,11 +1,13 @@
 -- Function: gpSelect_Movement_OrderFinance_Plan()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_OrderFinance_Plan (TDateTime, TDateTime, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_OrderFinance_Plan (TDateTime, TDateTime, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_OrderFinance_Plan (TDateTime, TDateTime, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_OrderFinance_Plan (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderFinance_Plan(
     IN inStartDate         TDateTime , --
     IN inEndDate           TDateTime , --
+    IN inBankMainId        Integer , -- банк  Плательщик
     IN inStartWeekNumber   Integer , --
     IN inEndWeekNumber     Integer , --
     IN inIsAmountPlan_1    Boolean    , --
@@ -402,12 +404,13 @@ BEGIN
                           , Object_OrderFinance.Id                 AS OrderFinanceId
                           , Object_OrderFinance.ValueData          AS OrderFinanceName
 
-                          , Object_BankAccount_View.Id             AS BankAccountId
-                          , Object_BankAccount_View.Name           AS BankAccountName
-                          , Object_BankAccount_View.BankId
-                          , Object_BankAccount_View.BankName
-                          , (Object_BankAccount_View.BankName || '' || Object_BankAccount_View.Name) :: TVarChar AS BankAccountNameAll
-                          , Object_BankAccount_View.MFO            AS MFO
+                          --Банк плательщик брать из справочника JuridicalOrderFinance
+                          --, Object_BankAccount_View.Id             AS BankAccountId            
+                          --, Object_BankAccount_View.Name           AS BankAccountName
+                          --, Object_BankAccount_View.BankId
+                          --, Object_BankAccount_View.BankName
+                          --, (Object_BankAccount_View.BankName || '' || Object_BankAccount_View.Name) :: TVarChar AS BankAccountNameAll
+                          --, Object_BankAccount_View.MFO            AS MFO
                           , Movement.WeekNumber              ::TFloat    AS WeekNumber
                             -- Предварительный План на неделю
                           , COALESCE (MovementFloat_TotalSumm.Valuedata, 0)    ::TFloat   AS TotalSumm
@@ -564,6 +567,7 @@ BEGIN
                                        , Main_BankAccount_View.MFO        AS MFO_main
                                        , Main_BankAccount_View.Id         AS BankAccountId_main
                                        , Main_BankAccount_View.Name       AS BankAccountName_main
+                                       , (Main_BankAccount_View.BankName || '' || Main_BankAccount_View.Name) :: TVarChar AS BankAccountNameAll_main
                                        , Partner_BankAccount_View.BankId
                                        , Partner_BankAccount_View.BankName
                                        , Partner_BankAccount_View.MFO
@@ -572,7 +576,7 @@ BEGIN
                                        , OL_JuridicalOrderFinance_InfoMoney.ChildObjectId AS InfoMoneyId
                                        , ObjectFloat_SummOrderFinance.ValueData :: TFloat AS SummOrderFinance
                                        , ObjectString_Comment.ValueData         :: TVarChar AS Comment
-                                       , ROW_NUMBER() OVER (PARTITION BY OL_JuridicalOrderFinance_Juridical.ChildObjectId, Main_BankAccount_View.Id, OL_JuridicalOrderFinance_InfoMoney.ChildObjectId ORDER BY ObjectDate_OperDate.ValueData DESC) AS Ord
+                                       , ROW_NUMBER() OVER (PARTITION BY OL_JuridicalOrderFinance_Juridical.ChildObjectId, Main_BankAccount_View.BankId, OL_JuridicalOrderFinance_InfoMoney.ChildObjectId ORDER BY ObjectDate_OperDate.ValueData DESC) AS Ord
                                   FROM Object AS Object_JuridicalOrderFinance
                                        LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_Juridical
                                                             ON OL_JuridicalOrderFinance_Juridical.ObjectId = Object_JuridicalOrderFinance.Id
@@ -605,8 +609,66 @@ BEGIN
                                                            AND ObjectDate_OperDate.DescId = zc_ObjectDate_JuridicalOrderFinance_OperDate()
                                   WHERE Object_JuridicalOrderFinance.DescId = zc_Object_JuridicalOrderFinance()
                                    AND Object_JuridicalOrderFinance.isErased = FALSE
+                                   AND Main_BankAccount_View.BankId = inBankMainId
+                                   AND inBankMainId <> 0
                                    )
-   --
+
+   , tmpJuridicalOrderFinance_last AS (SELECT Object_JuridicalOrderFinance.Id  AS JuridicalOrderFinanceId
+                                            , OL_JuridicalOrderFinance_Juridical.ChildObjectId       AS JuridicalId
+     
+                                            , Main_BankAccount_View.BankId     AS BankId_main
+                                            , Main_BankAccount_View.BankName   AS BankName_main
+                                            , Main_BankAccount_View.MFO        AS MFO_main
+                                            , Main_BankAccount_View.Id         AS BankAccountId_main
+                                            , Main_BankAccount_View.Name       AS BankAccountName_main
+                                            , (Main_BankAccount_View.BankName || '' || Main_BankAccount_View.Name) :: TVarChar AS BankAccountNameAll_main
+                                            , Partner_BankAccount_View.BankId
+                                            , Partner_BankAccount_View.BankName
+                                            , Partner_BankAccount_View.MFO
+                                            , Partner_BankAccount_View.Id      AS BankAccountId
+                                            , Partner_BankAccount_View.Name    AS BankAccountName
+                                            , OL_JuridicalOrderFinance_InfoMoney.ChildObjectId AS InfoMoneyId
+                                            , ObjectFloat_SummOrderFinance.ValueData :: TFloat AS SummOrderFinance
+                                            , ObjectString_Comment.ValueData         :: TVarChar AS Comment
+                                            , ROW_NUMBER() OVER (PARTITION BY OL_JuridicalOrderFinance_Juridical.ChildObjectId, OL_JuridicalOrderFinance_InfoMoney.ChildObjectId ORDER BY ObjectDate_OperDate.ValueData DESC) AS Ord
+                                       FROM Object AS Object_JuridicalOrderFinance
+                                            LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_Juridical
+                                                                 ON OL_JuridicalOrderFinance_Juridical.ObjectId = Object_JuridicalOrderFinance.Id
+                                                                AND OL_JuridicalOrderFinance_Juridical.DescId = zc_ObjectLink_JuridicalOrderFinance_Juridical()
+     
+                                            LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccountMain
+                                                                 ON OL_JuridicalOrderFinance_BankAccountMain.ObjectId = Object_JuridicalOrderFinance.Id
+                                                                AND OL_JuridicalOrderFinance_BankAccountMain.DescId = zc_ObjectLink_JuridicalOrderFinance_BankAccountMain()
+                                            LEFT JOIN Object_BankAccount_View AS Main_BankAccount_View ON Main_BankAccount_View.Id = OL_JuridicalOrderFinance_BankAccountMain.ChildObjectId
+     
+                                            LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccount
+                                                                 ON OL_JuridicalOrderFinance_BankAccount.ObjectId = Object_JuridicalOrderFinance.Id
+                                                                AND OL_JuridicalOrderFinance_BankAccount.DescId = zc_ObjectLink_JuridicalOrderFinance_BankAccount()
+                                            LEFT JOIN Object_BankAccount_View AS Partner_BankAccount_View ON Partner_BankAccount_View.Id = OL_JuridicalOrderFinance_BankAccount.ChildObjectId
+     
+                                            LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_InfoMoney
+                                                                 ON OL_JuridicalOrderFinance_InfoMoney.ObjectId = Object_JuridicalOrderFinance.Id
+                                                                AND OL_JuridicalOrderFinance_InfoMoney.DescId = zc_ObjectLink_JuridicalOrderFinance_InfoMoney()
+     
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_SummOrderFinance
+                                                                  ON ObjectFloat_SummOrderFinance.ObjectId = Object_JuridicalOrderFinance.Id
+                                                                 AND ObjectFloat_SummOrderFinance.DescId = zc_ObjectFloat_JuridicalOrderFinance_SummOrderFinance()
+     
+                                            LEFT JOIN ObjectString AS ObjectString_Comment
+                                                                   ON ObjectString_Comment.ObjectId = Object_JuridicalOrderFinance.Id
+                                                                  AND ObjectString_Comment.DescId = zc_ObjectString_JuridicalOrderFinance_Comment()
+     
+                                            LEFT JOIN ObjectDate AS ObjectDate_OperDate
+                                                                 ON ObjectDate_OperDate.ObjectId = Object_JuridicalOrderFinance.Id
+                                                                AND ObjectDate_OperDate.DescId = zc_ObjectDate_JuridicalOrderFinance_OperDate()
+                                       WHERE Object_JuridicalOrderFinance.DescId = zc_Object_JuridicalOrderFinance()
+                                        AND Object_JuridicalOrderFinance.isErased = FALSE
+                                       -- AND inBankMainId = 0
+                                        )
+
+
+
+
    SELECT tmpMovement.MovementId
         , tmpMovement.InvNumber
         , tmpMovement.OperDate
@@ -614,12 +676,19 @@ BEGIN
         , tmpMovement.StatusName
         , tmpMovement.OrderFinanceId
         , tmpMovement.OrderFinanceName
-        , tmpMovement.BankAccountId
-        , tmpMovement.BankAccountName
-        , tmpMovement.BankId
-        , tmpMovement.BankName
-        , tmpMovement.BankAccountNameAll
-        , tmpMovement.MFO
+        --, tmpMovement.BankAccountId
+        --, tmpMovement.BankAccountName
+        --, tmpMovement.BankId
+        --, tmpMovement.BankName
+        --, tmpMovement.BankAccountNameAll
+        --, tmpMovement.MFO 
+        , COALESCE (tmpJuridicalOrderFinance.BankAccountId_main, tmpJuridicalOrderFinance_last.BankAccountId_main)          ::Integer  AS BankAccountId      
+        , COALESCE (tmpJuridicalOrderFinance.BankAccountName_main, tmpJuridicalOrderFinance_last.BankAccountName_main)      ::TVarChar AS BankAccountName    
+        , COALESCE (tmpJuridicalOrderFinance.BankId_main, tmpJuridicalOrderFinance_last.BankId_main)                        ::Integer  AS BankId             
+        , COALESCE (tmpJuridicalOrderFinance.BankName_main, tmpJuridicalOrderFinance_last.BankName_main)                    ::TVarChar AS BankName           
+        , COALESCE (tmpJuridicalOrderFinance.BankAccountNameAll_main, tmpJuridicalOrderFinance_last.BankAccountNameAll_main)::TVarChar AS BankAccountNameAll 
+        , COALESCE (tmpJuridicalOrderFinance.MFO_main, tmpJuridicalOrderFinance_last.MFO_main)                              ::TVarChar AS MFO                
+
         , tmpMovement.WeekNumber
        /*   -- Предварительный План на неделю
         , tmpMovement.TotalSumm  ::TFloat
@@ -770,7 +839,8 @@ BEGIN
                     THEN REPLACE 
                         (REPLACE 
                         (REPLACE 
-                        (REPLACE (tmpJuridicalOrderFinance.Comment, 'NOM_DOG', COALESCE (tmpMI.ContractName, ''))
+                        (REPLACE (COALESCE (tmpJuridicalOrderFinance.Comment, tmpJuridicalOrderFinance_last.Comment)
+                                                                  , 'NOM_DOG', COALESCE (tmpMI.ContractName, ''))
                                                                   , 'DATA_DOG', zfConvert_DateToString (COALESCE (tmpMI.StartDate, zc_DateStart())))
                                                                   , 'PDV', '20')
                                                                   , 'SUMMA', zfConvert_FloatToString (ROUND(tmpMI.AmountPlan_1/6, 2)))
@@ -779,7 +849,8 @@ BEGIN
                     THEN REPLACE 
                         (REPLACE 
                         (REPLACE 
-                        (REPLACE (tmpJuridicalOrderFinance.Comment, 'NOM_DOG', COALESCE (tmpMI.ContractName, ''))
+                        (REPLACE (COALESCE (tmpJuridicalOrderFinance.Comment, tmpJuridicalOrderFinance_last.Comment)
+                                                                  , 'NOM_DOG', COALESCE (tmpMI.ContractName, ''))
                                                                   , 'DATA_DOG', zfConvert_DateToString (COALESCE (tmpMI.StartDate, zc_DateStart())))
                                                                   , 'PDV', '20')
                                                                   , 'SUMMA', zfConvert_FloatToString (ROUND(tmpMI.AmountPlan_2/6, 2)))
@@ -788,7 +859,8 @@ BEGIN
                     THEN REPLACE 
                         (REPLACE 
                         (REPLACE 
-                        (REPLACE (tmpJuridicalOrderFinance.Comment, 'NOM_DOG', COALESCE (tmpMI.ContractName, ''))
+                        (REPLACE (COALESCE (tmpJuridicalOrderFinance.Comment, tmpJuridicalOrderFinance_last.Comment)
+                                                                  , 'NOM_DOG', COALESCE (tmpMI.ContractName, ''))
                                                                   , 'DATA_DOG', zfConvert_DateToString (COALESCE (tmpMI.StartDate, zc_DateStart())))
                                                                   , 'PDV', '20')
                                                                   , 'SUMMA', zfConvert_FloatToString (ROUND(tmpMI.AmountPlan_3/6, 2)))
@@ -797,7 +869,8 @@ BEGIN
                     THEN REPLACE 
                         (REPLACE 
                         (REPLACE 
-                        (REPLACE (tmpJuridicalOrderFinance.Comment, 'NOM_DOG', COALESCE (tmpMI.ContractName, ''))
+                        (REPLACE (COALESCE (tmpJuridicalOrderFinance.Comment, tmpJuridicalOrderFinance_last.Comment)
+                                                                  , 'NOM_DOG', COALESCE (tmpMI.ContractName, ''))
                                                                   , 'DATA_DOG', zfConvert_DateToString (COALESCE (tmpMI.StartDate, zc_DateStart())))
                                                                   , 'PDV', '20')
                                                                   , 'SUMMA', zfConvert_FloatToString (ROUND(tmpMI.AmountPlan_4/6, 2)))
@@ -806,7 +879,8 @@ BEGIN
                     THEN REPLACE 
                         (REPLACE 
                         (REPLACE 
-                        (REPLACE (tmpJuridicalOrderFinance.Comment, 'NOM_DOG', COALESCE (tmpMI.ContractName, ''))
+                        (REPLACE (COALESCE (tmpJuridicalOrderFinance.Comment, tmpJuridicalOrderFinance_last.Comment)
+                                                                  , 'NOM_DOG', COALESCE (tmpMI.ContractName, ''))
                                                                   , 'DATA_DOG', zfConvert_DateToString (COALESCE (tmpMI.StartDate, zc_DateStart())))
                                                                   , 'PDV', '20')
                                                                   , 'SUMMA', zfConvert_FloatToString (ROUND(tmpMI.AmountPlan_5/6, 2)))
@@ -816,13 +890,13 @@ BEGIN
 
      -- , tmpMI.Comment_pay    ::TVarChar AS Comment_pay
 
-        , tmpJuridicalOrderFinance.JuridicalOrderFinanceId ::Integer
-        , tmpJuridicalOrderFinance.Comment         ::TVarChar AS Comment_jof          -- JuridicalOrderFinance
-        , tmpJuridicalOrderFinance.BankAccountId   ::Integer  AS BankAccountId_jof    -- JuridicalOrderFinance
-        , tmpJuridicalOrderFinance.BankAccountName ::TVarChar AS BankAccountName_jof  -- JuridicalOrderFinance
-        , tmpJuridicalOrderFinance.BankId    ::Integer  AS BankId_jof
-        , tmpJuridicalOrderFinance.BankName  ::TVarChar AS BankName_jof
-        , tmpJuridicalOrderFinance.MFO       ::TVarChar AS MFO_jof
+        , COALESCE (tmpJuridicalOrderFinance.JuridicalOrderFinanceId, tmpJuridicalOrderFinance_last.JuridicalOrderFinanceId)  ::Integer  AS JuridicalOrderFinanceId
+        , COALESCE (tmpJuridicalOrderFinance.Comment, tmpJuridicalOrderFinance_last.Comment)                                  ::TVarChar AS Comment_jof          -- JuridicalOrderFinance
+        , COALESCE (tmpJuridicalOrderFinance.BankAccountId, tmpJuridicalOrderFinance_last.BankAccountId)                      ::Integer  AS BankAccountId_jof    -- JuridicalOrderFinance
+        , COALESCE (tmpJuridicalOrderFinance.BankAccountName, tmpJuridicalOrderFinance_last.BankAccountName)                  ::TVarChar AS BankAccountName_jof  -- JuridicalOrderFinance
+        , COALESCE (tmpJuridicalOrderFinance.BankId, tmpJuridicalOrderFinance_last.BankId )                                   ::Integer  AS BankId_jof
+        , COALESCE (tmpJuridicalOrderFinance.BankName, tmpJuridicalOrderFinance_last.BankName)                                ::TVarChar AS BankName_jof
+        , COALESCE (tmpJuridicalOrderFinance.MFO, tmpJuridicalOrderFinance_last.MFO)                                          ::TVarChar AS MFO_jof
 
    FROM tmpMovement_Data AS tmpMovement
         LEFT JOIN tmpMI_Data AS tmpMI ON tmpMI.MovementId = tmpMovement.MovementId
@@ -832,11 +906,16 @@ BEGIN
 
         LEFT JOIN tmpInfoMoney_OFP ON tmpInfoMoney_OFP.InfoMoneyId = tmpMI.InfoMoneyId
                                   AND tmpInfoMoney_OFP.OrderFinanceId = tmpMovement.OrderFinanceId
-
+        --привязка  юр.лицо + статья + выбранный банк (плательщик)
         LEFT JOIN tmpJuridicalOrderFinance ON tmpJuridicalOrderFinance.JuridicalId = tmpMI.JuridicalId
                                           AND tmpJuridicalOrderFinance.InfoMoneyId = tmpMI.InfoMoneyId
-                                          AND tmpJuridicalOrderFinance.BankAccountId_main = tmpMovement.BankAccountId
+                                          AND inBankMainId <> 0
                                           AND tmpJuridicalOrderFinance.Ord = 1
+
+        --привязка  юр.лицо + статья + последний платеж
+        LEFT JOIN tmpJuridicalOrderFinance_last ON tmpJuridicalOrderFinance_last.JuridicalId = tmpMI.JuridicalId
+                                               AND tmpJuridicalOrderFinance_last.InfoMoneyId = tmpMI.InfoMoneyId
+                                               AND tmpJuridicalOrderFinance_last.Ord = 1
    WHERE tmpMI.AmountPlan_1 <> 0
       OR tmpMI.AmountPlan_2 <> 0
       OR tmpMI.AmountPlan_3 <> 0
@@ -857,3 +936,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_OrderFinance_Plan (inStartDate:= '01.11.2025', inEndDate:= '30.12.2025', inStartWeekNumber:=47, inEndWeekNumber := 48, inIsAmountPlan_1:=FALSE, inIsAmountPlan_2:=FALSE, inIsAmountPlan_3:=FALSE, inIsAmountPlan_4:=FALSE, inIsAmountPlan_5:=FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_OrderFinance_Plan (inStartDate:= '01.11.2025', inEndDate:= '30.12.2025', inBankMainId:=76970, inStartWeekNumber:=47, inEndWeekNumber := 48, inIsAmountPlan_1:=FALSE, inIsAmountPlan_2:=FALSE, inIsAmountPlan_3:=FALSE, inIsAmountPlan_4:=FALSE, inIsAmountPlan_5:=FALSE, inSession:= '2')
+

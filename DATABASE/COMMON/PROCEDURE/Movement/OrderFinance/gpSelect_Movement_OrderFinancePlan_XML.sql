@@ -10,7 +10,7 @@ DROP FUNCTION IF EXISTS gpSelect_Movement_OrderFinancePlan_XML (TDateTime, Integ
 CREATE OR REPLACE FUNCTION  gpSelect_Movement_OrderFinancePlan_XML(
     IN inOperDate         TDateTime , -- Дата начю недели (для определения года)
     IN inWeekNumber       Integer   , -- Номер недели
-    IN inBankId           Integer   , --    76970  ОТП банк
+    IN inBankMainId       Integer   , --    76970  ОТП банк
     IN inisPlan_1         Boolean    , --
     IN inisPlan_2         Boolean    , --
     IN inisPlan_3         Boolean    , --
@@ -26,7 +26,13 @@ $BODY$
            vbPlan     TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    vbUserId:= lpGetUserBySession (inSession);  
+    vbUserId:= lpGetUserBySession (inSession); 
+    
+    IF COALESCE (inBankMainId, 0) = 0 
+    THEN
+        RAISE EXCEPTION 'Ошибка.Банк не выбран.';
+    END IF;
+     
     
     --проверка только 1 день должен быть выбран
     vbPlan := (CASE WHEN COALESCE (inisPlan_1,FALSE) = TRUE THEN 1 ELSE 0 END
@@ -57,18 +63,11 @@ BEGIN
                        SELECT Movement.Id
                             , Movement.Invnumber
                             , Movement.OperDate
-                            , Object_BankAccount_View.MFO
-                            , Object_BankAccount_View.Name   AS BankAccountName
                        FROM Movement
                             INNER JOIN MovementFloat AS MovementFloat_WeekNumber
                                                      ON MovementFloat_WeekNumber.MovementId = Movement.Id
                                                     AND MovementFloat_WeekNumber.DescId = zc_MovementFloat_WeekNumber()
                                                     AND MovementFloat_WeekNumber.ValueData = inWeekNumber
-                            LEFT JOIN MovementLinkObject AS MovementLinkObject_BankAccount
-                                                            ON MovementLinkObject_BankAccount.MovementId = Movement.Id
-                                                           AND MovementLinkObject_BankAccount.DescId = zc_MovementLinkObject_BankAccount()
-                            INNER JOIN Object_BankAccount_View ON Object_BankAccount_View.Id = MovementLinkObject_BankAccount.ObjectId
-                                                              AND Object_BankAccount_View.BankId = inBankId
                        WHERE Movement.DescId = zc_Movement_OrderFinance()
                          AND Movement.StatusId IN (SELECT tmpStatus.StatusId FROM tmpStatus)
                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '14 DAY' AND inOperDate + INTERVAL '14 DAY'
@@ -123,6 +122,13 @@ BEGIN
 
    , tmpJuridicalOrderFinance AS (SELECT Object_JuridicalOrderFinance.Id                   AS JuridicalOrderFinanceId
                                        , OL_JuridicalOrderFinance_Juridical.ChildObjectId  AS JuridicalId
+                                       
+                                       , Main_BankAccount_View.BankId     AS BankId_main
+                                       , Main_BankAccount_View.BankName   AS BankName_main
+                                       , Main_BankAccount_View.MFO        AS MFO_main
+                                       , Main_BankAccount_View.Id         AS BankAccountId_main
+                                       , Main_BankAccount_View.Name       AS BankAccountName_main
+                                       
                                        , Partner_BankAccount_View.BankId
                                        , Partner_BankAccount_View.BankName
                                        , Partner_BankAccount_View.MFO
@@ -141,7 +147,7 @@ BEGIN
                                                            AND OL_JuridicalOrderFinance_BankAccountMain.DescId = zc_ObjectLink_JuridicalOrderFinance_BankAccountMain()
                                        INNER JOIN Object_BankAccount_View AS Main_BankAccount_View 
                                                                           ON Main_BankAccount_View.Id = OL_JuridicalOrderFinance_BankAccountMain.ChildObjectId
-                                                                         AND Main_BankAccount_View.BankId = inBankId
+                                                                         AND Main_BankAccount_View.BankId = inBankMainId
                           
                                        LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccount
                                                             ON OL_JuridicalOrderFinance_BankAccount.ObjectId = Object_JuridicalOrderFinance.Id
@@ -198,12 +204,12 @@ BEGIN
                      )
 
         SELECT (lpad (EXTRACT (YEAR FROM tmpMovement.OperDate)::tvarchar ,4, '0')||lpad (EXTRACT (MONTH FROM tmpMovement.OperDate)::tvarchar ,2, '0') ||lpad (EXTRACT (DAY FROM tmpMovement.OperDate)::tvarchar ,2, '0')) ::TVarchar AS DOCUMENTDATE     --Дата документа
-             , tmpMovement.Invnumber            AS DOCUMENTNO
-             , tmpMovement.MFO                  AS BANKID
-             , tmpMovement.BankAccountName      AS IBAN
-             , tmpJuridicalOrderFinance.MFO      AS CORRBANKID
-             , tmpJuridicalOrderFinance.BankAccountName   AS CORRIBAN
-             , tmpMI.JuridicalName              AS CORRSNAME
+             , tmpMovement.Invnumber                              AS DOCUMENTNO
+             , tmpJuridicalOrderFinance.MFO_main                  AS BANKID
+             , tmpJuridicalOrderFinance.BankAccountName_main      AS IBAN
+             , tmpJuridicalOrderFinance.MFO                       AS CORRBANKID
+             , tmpJuridicalOrderFinance.BankAccountName           AS CORRIBAN
+             , tmpMI.JuridicalName                                AS CORRSNAME
              , COALESCE (tmpMI.OKPO,'') :: TVarChar AS CORRIDENTIFYCODE
              --, Object_InfoMoney.ValueData       AS DETAILSOFPAYMENT
              , COALESCE (tmpMI.Comment_pay, tmpMI.InfoMoneyName) ::TVarChar AS DETAILSOFPAYMENT
@@ -217,9 +223,9 @@ BEGIN
         FROM tmpMovement
              LEFT JOIN tmpMI_Data AS tmpMI ON tmpMI.MovementId = tmpMovement.Id
              
-             LEFT JOIN tmpJuridicalOrderFinance ON tmpJuridicalOrderFinance.JuridicalId = tmpMI.JuridicalId
-                                               AND tmpJuridicalOrderFinance.InfoMoneyId = tmpMI.InfoMoneyId
-                                               AND tmpJuridicalOrderFinance.Ord = 1
+             INNER JOIN tmpJuridicalOrderFinance ON tmpJuridicalOrderFinance.JuridicalId = tmpMI.JuridicalId
+                                                AND tmpJuridicalOrderFinance.InfoMoneyId = tmpMI.InfoMoneyId
+                                                AND tmpJuridicalOrderFinance.Ord = 1
         ;
 
  
@@ -274,4 +280,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderFinancePlan_XML(inOperDate :='17.11.2025'::TDateTime , inWeekNumber:= 47, inBankId := 76970, inisPlan_1 := TRUE, inisPlan_2 := FAlSE, inisPlan_3 := FAlSE, inisPlan_4 := FAlSE, inisPlan_5 := FAlSE, inSession := '3');
+-- SELECT * FROM gpSelect_Movement_OrderFinancePlan_XML(inOperDate :='17.11.2025'::TDateTime , inWeekNumber:= 47, inBankMainId := 76970, inisPlan_1 := TRUE, inisPlan_2 := FAlSE, inisPlan_3 := FAlSE, inisPlan_4 := FAlSE, inisPlan_5 := FAlSE, inSession := '3');

@@ -35,7 +35,7 @@ type
     edWeekNumber2: TcxButtonEdit;
     actBankChoiceForm: TOpenChoiceForm;
     BankName_jof: TcxGridDBColumn;
-    actTBankAccount_ObjectForm: TOpenChoiceForm;
+    actBankAccountChoicetForm: TOpenChoiceForm;
     spUpdate_OrderFinance_Plan: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     ExecuteDialog: TExecuteDialog;
@@ -45,7 +45,6 @@ type
     cbPlan_3: TcxCheckBox;
     cbPlan_4: TcxCheckBox;
     cbPlan_5: TcxCheckBox;
-    RefreshDispatcherPeriod: TRefreshDispatcher;
     spGet_WeekNumber_byPeriod: TdsdStoredProc;
     actGet_Period_byWeekNumber: TdsdDataSetRefresh;
     actGet_WeekNumber_byPeriod: TdsdDataSetRefresh;
@@ -73,6 +72,19 @@ type
     FonColor_AmountPlan_4: TcxGridDBColumn;
     FonColor_AmountPlan_5: TcxGridDBColumn;
     FonColor_AmountPlan_calc: TcxGridDBColumn;
+    spGet_Period: TdsdStoredProc;
+    cxLabel12: TcxLabel;
+    GuidesBankMain: TdsdGuides;
+    edBankMain: TcxButtonEdit;
+    bbBank: TdxBarControlContainerItem;
+    bbText: TdxBarControlContainerItem;
+    actBankChoiceFormMain: TOpenChoiceForm;
+    actBankAccountChoicetFormMain: TOpenChoiceForm;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    spSelectPrint: TdsdStoredProc;
+    actPrintPlan: TdsdPrintAction;
+    bbPrintPlan: TdxBarButton;
   private
     { Private declarations }
   public
