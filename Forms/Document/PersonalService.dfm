@@ -3860,7 +3860,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ImageIndex = 74
       WithoutNext = True
     end
-    object actExportToFileZpDate: TdsdStoredProcExportToFile [25]
+    object actExportToFileZp_onDate: TdsdStoredProcExportToFile [25]
       Category = 'Export'
       MoveParams = <>
       dsdStoredProcName = spSelectExportDate
@@ -3946,15 +3946,15 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ImageIndex = 81
       WithoutNext = True
     end
-    object actExportZPDate: TMultiAction [30]
+    object actExportZP_onDate: TMultiAction [30]
       Category = 'Export'
       MoveParams = <>
       ActionList = <
         item
-          Action = actGet_Export_FileNameZp
+          Action = actGet_Export_FileNameZp_onDate
         end
         item
-          Action = actExportToFileZpDate
+          Action = actExportToFileZp_onDate
         end>
       Caption = 
         #1069#1082#1089#1087#1086#1088#1090' '#1085#1072' '#1076#1072#1090#1091' '#1042#1099#1075#1088#1091#1079#1082#1080' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1047#1055' '#1085#1072' '#1082#1072#1088#1090#1086#1095#1082#1091' '#1076#1083#1103 +
@@ -5970,6 +5970,21 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072
       ImageIndex = 54
     end
+    object Action1: TAction
+      Category = 'Export'
+      Caption = 'Action1'
+    end
+    object actGet_Export_FileNameZp_onDate: TdsdExecStoredProc
+      Category = 'Export'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Export_FileNameZP_onDate
+      StoredProcList = <
+        item
+          StoredProc = spGet_Export_FileNameZP_onDate
+        end>
+      Caption = 'actGet_Export_Email'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -6269,7 +6284,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ImageIndex = 43
     end
     object bbExportZPDate: TdxBarButton
-      Action = actExportZPDate
+      Action = actExportZP_onDate
       Category = 0
     end
     object bbGridToExcel_Child_all: TdxBarButton
@@ -8590,7 +8605,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 482
+    Left = 474
     Top = 634
   end
   object spGet_Export_FileName: TdsdStoredProc
@@ -10204,5 +10219,38 @@ inherited PersonalServiceForm: TPersonalServiceForm
     PackSize = 1
     Left = 288
     Top = 312
+  end
+  object spGet_Export_FileNameZP_onDate: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Export_FileName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileNamePrefix'
+        Value = Null
+        Component = actExportToFileZp_onDate
+        ComponentItem = 'FileNamePrefix'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileExt'
+        Value = Null
+        Component = actExportToFileZp_onDate
+        ComponentItem = 'FileExt'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 490
+    Top = 658
   end
 end
