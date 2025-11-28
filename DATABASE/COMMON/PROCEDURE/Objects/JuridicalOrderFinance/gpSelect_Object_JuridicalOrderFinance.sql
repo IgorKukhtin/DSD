@@ -1,9 +1,11 @@
 -- Function: gpSelect_Object_JuridicalOrderFinance()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_JuridicalOrderFinance(Integer, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Object_JuridicalOrderFinance(Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_JuridicalOrderFinance(Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_JuridicalOrderFinance(
-    IN inBankAccountId_main  Integer,       --
+    IN inBankAccountId_main  Integer,       -- 
+    IN inOrderFinanceId      Integer,
     IN inIsShowAll           Boolean,       -- True - показать все, False - показать только сохраненные
     IN inIsErased            Boolean,       -- True - показать так же удаленные, False - показать только рабочие
     IN inSession             TVarChar       -- сесси€ пользовател€
@@ -186,7 +188,7 @@ BEGIN
                                                               ON ObjectFloat_Group.ObjectId = OL_OrderFinanceProperty_OrderFinance.ObjectId
                                                              AND ObjectFloat_Group.DescId   = zc_ObjectFloat_OrderFinanceProperty_Group()
 
-                                   WHERE OL_OrderFinanceProperty_OrderFinance.ChildObjectId = 3988049 -- inOrderFinanceId
+                                   WHERE OL_OrderFinanceProperty_OrderFinance.ChildObjectId = inOrderFinanceId -- 3988049 -- inOrderFinanceId
                                      AND OL_OrderFinanceProperty_OrderFinance.DescId        = zc_ObjectLink_OrderFinanceProperty_OrderFinance()
                                   )
        -- разворачиваетс€ по ”ѕ-стать€м + є группы
@@ -315,4 +317,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_JuridicalOrderFinance (0, FALSE , FALSE ,'2')
+-- SELECT * FROM gpSelect_Object_JuridicalOrderFinance (0, 0, FALSE , FALSE ,'2')

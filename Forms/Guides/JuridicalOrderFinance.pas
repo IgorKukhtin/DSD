@@ -66,6 +66,18 @@ type
     actBankAccountChoicetForm: TOpenChoiceForm;
     MFO: TcxGridDBColumn;
     MFO_main: TcxGridDBColumn;
+    cxLabel4: TcxLabel;
+    edOrderFinance: TcxButtonEdit;
+    GuidesOrderFinance: TdsdGuides;
+    lbSearchName: TcxLabel;
+    edSearchJuridicalName: TcxTextEdit;
+    FieldFilter: TdsdFieldFilter;
+    cxLabel1: TcxLabel;
+    edSearchOKPO: TcxTextEdit;
+    cxLabel5: TcxLabel;
+    edSearchBankAccountName: TcxTextEdit;
+    cxLabel6: TcxLabel;
+    edSearchComment: TcxTextEdit;
   private
     { Private declarations }
   public
