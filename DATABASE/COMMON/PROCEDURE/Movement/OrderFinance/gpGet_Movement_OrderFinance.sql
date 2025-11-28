@@ -209,8 +209,8 @@ BEGIN
            , CASE WHEN vbUserId = 5 THEN 'Подразделение' ELSE Object_Unit_insert.ValueData     END ::TVarChar AS UnitName_insert
            , CASE WHEN vbUserId = 5 THEN 'Должность'     ELSE Object_Position_insert.ValueData END ::TVarChar AS PositionName_insert
 
-           , MovementDate_SignWait_1.ValueData                      ::TDateTime AS Date_SignWait_1
-           , MovementDate_Sign_1.ValueData                          ::TDateTime AS Date_Sign_1
+           , CASE WHEN vbUserId = 5 THEN MovementDate_SignWait_1.ValueData - INTERVAL '12 HOUR' ELSE MovementDate_SignWait_1.ValueData END ::TDateTime AS Date_SignWait_1
+           , CASE WHEN vbUserId = 5 THEN MovementDate_Sign_1.ValueData     - INTERVAL '12 HOUR' ELSE MovementDate_Sign_1.ValueData     END ::TDateTime AS Date_Sign_1
            , COALESCE (MovementBoolean_SignWait_1.ValueData, FALSE) ::Boolean   AS isSignWait_1 
            , COALESCE (MovementBoolean_Sign_1.ValueData, FALSE)     ::Boolean   AS isSign_1
 

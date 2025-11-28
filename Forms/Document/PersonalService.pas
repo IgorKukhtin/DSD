@@ -214,9 +214,9 @@ type
     bbmacInsertUpdate_byMemberMinus: TdxBarButton;
     edBankOutDate: TcxDateEdit;
     cxLabel7: TcxLabel;
-    actExportZPDate: TMultiAction;
+    actExportZP_onDate: TMultiAction;
     spSelectExportDate: TdsdStoredProc;
-    actExportToFileZpDate: TdsdStoredProcExportToFile;
+    actExportToFileZp_onDate: TdsdStoredProcExportToFile;
     bbExportZPDate: TdxBarButton;
     cbDetail: TcxCheckBox;
     FineSubjectName: TcxGridDBColumn;
@@ -418,6 +418,9 @@ type
     bb: TdxBarButton;
     bbSendSMSKyivstar: TdxBarButton;
     actUnitChoiceForm: TOpenChoiceForm;
+    spGet_Export_FileNameZP_onDate: TdsdStoredProc;
+    Action1: TAction;
+    actGet_Export_FileNameZp_onDate: TdsdExecStoredProc;
   private
     { Private declarations }
   public

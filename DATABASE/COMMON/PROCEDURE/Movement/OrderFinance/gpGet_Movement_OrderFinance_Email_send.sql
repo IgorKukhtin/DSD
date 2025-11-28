@@ -76,7 +76,7 @@ BEGIN
 
           , CASE WHEN vbUserId = 5    AND 1=1 THEN 'ashtu@ua.fm'
                  WHEN vbUserId = 9457 AND 1=1 THEN 'innafelon@gmail.com'
-                 WHEN COALESCE (tmpContactPerson.ContactPersonMail, '') = '' AND 1=1 THEN 'ashtu@ua.fm;m.sadykova@alan.ua'
+                 WHEN COALESCE (tmpContactPerson.ContactPersonMail, '') = '' AND 1=1 THEN 'ashtu@ua.fm;t.hordienko@alan.ua'
                  ELSE tmpContactPerson.ContactPersonMail
             END :: TVarChar AS AddressTo
 

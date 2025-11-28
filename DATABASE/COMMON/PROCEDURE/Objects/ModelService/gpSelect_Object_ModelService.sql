@@ -25,6 +25,13 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_ModelService);
     vbUserId := lpGetUserBySession (inSession);
 
+     -- если - ѕерсонал - нет доступа к ћодели начислени€ + Ўтатное расписание
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS Object_View WHERE Object_View.UserId = vbUserId AND Object_View.RoleId = 12996159)
+     THEN RETURN;
+     END IF;
+     
+
+
      -- определ€етс€ уровень доступа
      vbObjectId_Constraint_Branch:= COALESCE ((SELECT DISTINCT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0), 0);
      -- определ€етс€ уровень доступа

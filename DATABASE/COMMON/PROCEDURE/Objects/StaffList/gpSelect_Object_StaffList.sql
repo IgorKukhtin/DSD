@@ -20,10 +20,18 @@ RETURNS TABLE (Id Integer, Code Integer
              , UpdateName TVarChar, UpdateDate TDateTime
              ) AS
 $BODY$
+    DECLARE vbUserId Integer;
 BEGIN
+    vbUserId := lpGetUserBySession (inSession);
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_StaffList());
+
+     -- если - Персонал - нет доступа к Модели начисления + Штатное расписание
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS Object_View WHERE Object_View.UserId = vbUserId AND Object_View.RoleId = 12996159)
+     THEN RETURN;
+     END IF;
+
 
   CREATE TEMP TABLE _tmpUnit (UnitId Integer) ON COMMIT DROP;
     
