@@ -475,6 +475,14 @@ BEGIN
          ORDER BY COALESCE (lpGet.ValuePrice_notVat, 0) DESC
          LIMIT 1
          ;
+
+
+         -- замена, т.к. в гриде не считаетс€ на дату
+         IF vbMovementDescId IN (zc_Movement_ReturnOut())
+         THEN
+             vbPrice_301:= CASE WHEN inIsPriceWithVAT = TRUE THEN vbPrice_301_addVat_check ELSE vbPrice_301_notVat_check END;
+         END IF;
+
                          
 
          -- ѕроверка - 1
@@ -493,7 +501,7 @@ BEGIN
                             , lfGet_Object_ValueData ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract()))
                             , (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
                             , CHR (13)
-                            , zfConvert_DateToString (vbOperDate)
+                            , zfConvert_DateToString (CASE WHEN vbMovementDescId = zc_Movement_ReturnOut() THEN inOperDate_ReturnOut ELSE vbOperDate END)
                             , CHR (13)
                             , inIsPriceWithVAT
                             , (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_PriceWithVAT())
