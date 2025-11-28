@@ -12,8 +12,8 @@ RETURNS TABLE (Id Integer
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , OKPO TVarChar, INN TVarChar, isCorporate Boolean
              , RetailId Integer, RetailName TVarChar
-             , BankName_main TVarChar, MFO_main TVarChar, BankAccountId_main Integer, BankAccountName_main TVarChar
-             , BankName TVarChar, MFO TVarChar, BankAccountId Integer, BankAccountName TVarChar
+             , BankId_main Integer, BankName_main TVarChar, MFO_main TVarChar, BankAccountId_main Integer, BankAccountName_main TVarChar
+             , BankId Integer, BankName TVarChar, MFO TVarChar, BankAccountId Integer, BankAccountName TVarChar
              , InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationName TVarChar
              , InfoMoneyId Integer
@@ -103,11 +103,13 @@ BEGIN
              , Object_Retail.Id                 AS RetailId
              , Object_Retail.ValueData          AS RetailName
 
-             , Main_BankAccount_View.BankName   AS BankAccountName_main
+             , Main_BankAccount_View.BankId     AS BankId_main
+             , Main_BankAccount_View.BankName   AS BankName_main
              , Main_BankAccount_View.MFO        AS MFO_main
              , Main_BankAccount_View.Id         AS BankAccountId_main
              , Main_BankAccount_View.Name       AS BankAccountName_main
 
+             , Partner_BankAccount_View.BankId
              , Partner_BankAccount_View.BankName
              , Partner_BankAccount_View.MFO
              , Partner_BankAccount_View.Id      AS BankAccountId
@@ -212,11 +214,13 @@ BEGIN
              , Object_Retail.Id                 AS RetailId
              , Object_Retail.ValueData          AS RetailName
 
-             , Main_BankAccount_View.BankName   AS BankAccountName_main
+             , Main_BankAccount_View.BankId     AS BankId_main
+             , Main_BankAccount_View.BankName   AS BankName_main
              , Main_BankAccount_View.MFO        AS MFO_main
              , Main_BankAccount_View.Id         AS BankAccountId_main
              , Main_BankAccount_View.Name       AS BankAccountName_main
 
+             , Partner_BankAccount_View.BankId
              , Partner_BankAccount_View.BankName
              , Partner_BankAccount_View.MFO
              , Partner_BankAccount_View.Id      AS BankAccountId

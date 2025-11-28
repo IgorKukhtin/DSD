@@ -49,6 +49,7 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
+                Action = actBankChoiceFormMain
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -57,16 +58,24 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
             HeaderAlignmentVert = vaCenter
             Width = 114
           end
+          object MFO_main: TcxGridDBColumn
+            Caption = #1052#1060#1054' ('#1087#1083#1072#1090#1077#1083#1100#1097#1080#1082#1072')'
+            DataBinding.FieldName = 'MFO_main'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object BankAccountName_main: TcxGridDBColumn
             Caption = #1056'/'#1057#1095#1077#1090' ('#1087#1083#1072#1090#1077#1083#1100#1097#1080#1082#1072')'
             DataBinding.FieldName = 'BankAccountName_main'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
+                Action = actBankAccountChoicetFormMain
                 Default = True
                 Kind = bkEllipsis
               end>
-            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1088'/'#1089#1095#1077#1090', '#1089' '#1082#1086#1090#1086#1088#1086#1075#1086' '#1084#1099' '#1087#1083#1072#1090#1080#1084
@@ -94,6 +103,7 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 192
           end
           object OKPO: TcxGridDBColumn
@@ -108,6 +118,7 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object NumGroup: TcxGridDBColumn
@@ -156,6 +167,7 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object BankName: TcxGridDBColumn
@@ -164,6 +176,7 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
+                Action = actBankChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -172,16 +185,24 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
             HeaderAlignmentVert = vaCenter
             Width = 87
           end
+          object MFO: TcxGridDBColumn
+            Caption = #1052#1060#1054' ('#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103')'
+            DataBinding.FieldName = 'MFO'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object BankAccountName: TcxGridDBColumn
             Caption = #1056'/'#1057#1095#1077#1090' ('#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103')'
             DataBinding.FieldName = 'BankAccountName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
+                Action = actBankAccountChoicetForm
                 Default = True
                 Kind = bkEllipsis
               end>
-            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1088'/'#1089#1095#1077#1090', '#1085#1072' '#1082#1086#1090#1086#1088#1099#1081' '#1084#1099' '#1087#1083#1072#1090#1080#1084
@@ -195,6 +216,7 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 73
           end
           object Amount: TcxGridDBColumn
@@ -582,6 +604,204 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
         end>
       Caption = 'actInsert_byMovBankAccount'
     end
+    object actBankChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TBankForm'
+      FormName = 'TBankForm'
+      FormNameParam.Value = 'TBankForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actBankChoiceFormMain: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TBankForm'
+      FormName = 'TBankForm'
+      FormNameParam.Value = 'TBankForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankId_main'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankName_main'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actBankAccountChoicetFormMain: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TBankAccount_ObjectForm'
+      FormName = 'TBankAccount_ObjectForm'
+      FormNameParam.Value = 'TBankAccount_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankAccountId_main'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankAccountName_main'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BankId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankId_main'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BankName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankName_main'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MFO'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MFO_main'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBankId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankId_main'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBankName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankName_main'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actBankAccountChoicetForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TBankAccount_ObjectForm'
+      FormName = 'TBankAccount_ChoiceForm'
+      FormNameParam.Value = 'TBankAccount_ChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankAccountId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankAccountName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BankId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BankName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MFO'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MFO'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBankId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBankName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 24
@@ -619,7 +839,8 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Top = 64
+    Left = 56
+    Top = 56
   end
   inherited BarManager: TdxBarManager
     Left = 272
@@ -733,6 +954,7 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
       end>
   end
   object spInsertUpdate: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_JuridicalOrderFinance'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -745,28 +967,88 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inUnitId'
+        Name = 'inOperDate'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'UnitId'
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPrice'
+        Name = 'inJuridicalId'
         Value = ''
         Component = MasterCDS
-        ComponentItem = 'Price'
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = 0.000000000000000000
+        Component = MasterCDS
+        ComponentItem = 'InfoMoneyId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankMainId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BankId_main'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BankId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankAccountMainName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BankAccountName_main'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankAccountName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BankAccountName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummOrderFinance'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummOrderFinance'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inValue'
-        Value = 0.000000000000000000
+        Name = 'inAmount'
+        Value = Null
         Component = MasterCDS
-        ComponentItem = 'Value'
+        ComponentItem = 'Amount'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Comment'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -901,8 +1183,8 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 656
-    Top = 184
+    Left = 600
+    Top = 176
   end
   object spGetPeriod: TdsdStoredProc
     StoredProcName = 'gpGet_Period_JuridicalOrderFinance'

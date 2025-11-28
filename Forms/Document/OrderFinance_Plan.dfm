@@ -24,7 +24,6 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 277
-        ExplicitTop = -4
         ExplicitWidth = 1020
         ExplicitHeight = 277
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -622,7 +621,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             HeaderAlignmentVert = vaCenter
             Width = 97
           end
-          object MFO_Main_jof: TcxGridDBColumn
+          object MFO_Main: TcxGridDBColumn
             Caption = #1052#1060#1054' '#1041#1072#1085#1082' ('#1055#1083#1072#1090#1077#1083#1100#1097#1080#1082')'
             DataBinding.FieldName = 'MFO'
             Visible = False
@@ -1006,6 +1005,15 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'MFO'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MFO'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'inBankId'
           Value = Null
           Component = MasterCDS
@@ -1027,8 +1035,8 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'TBankAccount_ObjectForm'
-      FormName = 'TBankAccount_ObjectForm'
-      FormNameParam.Value = 'TBankAccount_ObjectForm'
+      FormName = 'TBankAccount_ChoiceForm'
+      FormNameParam.Value = 'TBankAccount_ChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1067,6 +1075,15 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'MFO'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MFO_jof'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'inBankId'
           Value = Null
           Component = MasterCDS
@@ -1079,35 +1096,6 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
           Component = MasterCDS
           ComponentItem = 'BankName_jof'
           DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actBankChoiceFormMain: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'TBankForm'
-      FormName = 'TBankForm'
-      FormNameParam.Value = 'TBankForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'BankId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'BankName'
-          DataType = ftString
-          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -1135,6 +1123,35 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'BankName_jof'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actBankChoiceFormMain: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TBankForm'
+      FormName = 'TBankForm'
+      FormNameParam.Value = 'TBankForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BankName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1659,8 +1676,8 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 47
-    Top = 88
+    Left = 87
+    Top = 128
   end
   object spUpdate_OrderFinance_Plan: TdsdStoredProc
     StoredProcName = 'gpUpdateMovement_OrderFinance_Plan'

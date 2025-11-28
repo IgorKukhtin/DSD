@@ -2642,8 +2642,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'BankAccount_ObjectChoiceForm'
-      FormName = 'TBankAccountForm'
-      FormNameParam.Value = 'TBankAccountForm'
+      FormName = 'TBankAccount_ChoiceForm'
+      FormNameParam.Value = 'TBankAccount_ChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -2671,6 +2671,13 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
           ComponentItem = 'BankName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MFO'
+          Value = Null
+          DataType = ftString
+          ParamType = ptUnknown
           MultiSelectSeparator = ','
         end>
       isShowModal = False

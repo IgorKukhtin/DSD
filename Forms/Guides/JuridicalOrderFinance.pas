@@ -60,6 +60,12 @@ type
     OperDate: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     NumGroup: TcxGridDBColumn;
+    actBankChoiceForm: TOpenChoiceForm;
+    actBankChoiceFormMain: TOpenChoiceForm;
+    actBankAccountChoicetFormMain: TOpenChoiceForm;
+    actBankAccountChoicetForm: TOpenChoiceForm;
+    MFO: TcxGridDBColumn;
+    MFO_main: TcxGridDBColumn;
   private
     { Private declarations }
   public

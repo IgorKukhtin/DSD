@@ -305,6 +305,11 @@ begin
   //exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccount_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccount_ObjectForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccount_ChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBankAccount_ChoiceForm');
+
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccountEditForm');
 end;

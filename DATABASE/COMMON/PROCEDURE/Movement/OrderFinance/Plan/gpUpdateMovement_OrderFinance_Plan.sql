@@ -151,18 +151,20 @@ BEGIN
          --пробуем найти
          vbBankAccountId_jof:= (SELECT Object_BankAccount_View.Id
                                 FROM Object_BankAccount_View 
-                                     -- Покажем счета только по внутренним фирмам
-                                     INNER JOIN ObjectBoolean AS ObjectBoolean_isCorporate
+                                     -- Покажем счета только НЕ по внутренним фирмам
+                                     LEFT JOIN ObjectBoolean AS ObjectBoolean_isCorporate
                                                               ON ObjectBoolean_isCorporate.ObjectId = Object_BankAccount_View.JuridicalId
                                                              AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
-                                                             AND (ObjectBoolean_isCorporate.ValueData = TRUE
-                                                               OR Object_BankAccount_View.JuridicalId = 15505 -- ДУКО ТОВ 
-                                                               OR Object_BankAccount_View.JuridicalId = 15512 -- Ірна-1 Фірма ТОВ
-                                                               OR Object_BankAccount_View.isCorporate = TRUE
-                                                                 )
+                                                             
                                 WHERE UPPER (TRIM (Object_BankAccount_View.Name)) = UPPER (TRIM (inBankAccountName_jof))
                                   AND Object_BankAccount_View.isErased = FALSE
-                                  AND Object_BankAccount_View.BankId = inBankId_jof
+                                  AND Object_BankAccount_View.BankId = inBankId_jof 
+                                  AND (ObjectBoolean_isCorporate.ValueData <> TRUE
+                                    OR Object_BankAccount_View.JuridicalId <> 15505 -- ДУКО ТОВ 
+                                    OR Object_BankAccount_View.JuridicalId <> 15512 -- Ірна-1 Фірма ТОВ
+                                    OR Object_BankAccount_View.isCorporate <> TRUE
+                                      ) 
+                                LIMIT 1 --на всякий случай
                                 ); 
          
          IF COALESCE (vbBankAccountId_jof, 0) = 0

@@ -1,4 +1,4 @@
-unit BankAccount_Object;
+unit BankAccount_Choice;
 
 interface
 
@@ -25,7 +25,7 @@ uses
   dsdGuides, cxMaskEdit, cxButtonEdit;
 
 type
-  TBankAccount_ObjectForm = class(TParentForm)
+  TBankAccount_ChoiceForm = class(TParentForm)
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
@@ -83,6 +83,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TBankAccount_ObjectForm);
+  RegisterClass(TBankAccount_ChoiceForm);
 
 end.
