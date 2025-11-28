@@ -5193,6 +5193,10 @@ end;
 
  procedure TLoadFormTest.LoadWeighingPartnerFormTest;
  begin
+
+   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartner_PartionQEditForm'));
+   TdsdFormStorageFactory.GetStorage.Load('TWeighingPartner_PartionQEditForm');
+  // exit;
   { TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerJournal_protocolForm'));
    TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerJournal_protocolForm');
    exit;

@@ -1,4 +1,4 @@
-unit WeighingPartner;
+unit WeighingPartner_PartionQEdit;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit, dsdCommon;
 
 type
-  TWeighingPartnerForm = class(TParentForm)
+  TWeighingPartner_PartionQEditForm = class(TParentForm)
     FormParams: TdsdFormParams;
     spSelectMI: TdsdStoredProc;
     dxBarManager: TdxBarManager;
@@ -57,17 +57,8 @@ type
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
-    PriceListName: TcxGridDBColumn;
-    ChangePercentAmount: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     actUpdateMasterDS: TdsdUpdateDataSet;
-    actPrint: TdsdPrintAction;
-    bbPrint: TdxBarButton;
-    InsertDate: TcxGridDBColumn;
-    UpdateDate: TcxGridDBColumn;
-    RealWeight: TcxGridDBColumn;
-    WeightTare: TcxGridDBColumn;
-    CountTare: TcxGridDBColumn;
     GoodsKindName: TcxGridDBColumn;
     Count: TcxGridDBColumn;
     bbShowAll: TdxBarButton;
@@ -78,7 +69,6 @@ type
     cxLabel5: TcxLabel;
     cxLabel6: TcxLabel;
     edStartWeighing: TcxDateEdit;
-    HeaderSaver: THeaderSaver;
     spGet: TdsdStoredProc;
     RefreshAddOn: TRefreshAddOn;
     GridToExcel: TdsdGridToExcel;
@@ -89,8 +79,6 @@ type
     SetErased: TdsdUpdateErased;
     SetUnErased: TdsdUpdateErased;
     actShowErased: TBooleanStoredProcAction;
-    bbErased: TdxBarButton;
-    bbUnErased: TdxBarButton;
     bbShowErased: TdxBarButton;
     cxLabel11: TcxLabel;
     spErasedMIMaster: TdsdStoredProc;
@@ -123,18 +111,10 @@ type
     edPartionGoods: TcxTextEdit;
     ContractGuides: TdsdGuides;
     edWeighingNumber: TcxCurrencyEdit;
-    BoxCount: TcxGridDBColumn;
-    BoxNumber: TcxGridDBColumn;
-    LevelNumber: TcxGridDBColumn;
-    BoxName: TcxGridDBColumn;
-    HeadCount: TcxGridDBColumn;
     Amount_mi: TcxGridDBColumn;
     AmountPartner: TcxGridDBColumn;
     AmountPartner_mi: TcxGridDBColumn;
     Count_mi: TcxGridDBColumn;
-    HeadCount_mi: TcxGridDBColumn;
-    BoxCount_mi: TcxGridDBColumn;
-    AmountChangePercent: TcxGridDBColumn;
     edContractTag: TcxButtonEdit;
     ContractTagGuides: TdsdGuides;
     edPriceWithVAT: TcxCheckBox;
@@ -145,18 +125,12 @@ type
     MeasureName: TcxGridDBColumn;
     GoodsGroupNameFull: TcxGridDBColumn;
     spUpdateMovement: TdsdStoredProc;
-    HeaderSaver2: THeaderSaver;
-    isBarCode: TcxGridDBColumn;
     cbPromo: TcxCheckBox;
     edInvNumberOrder: TcxButtonEdit;
     OrderChoiceGuides: TdsdGuides;
-    HeaderSaver3: THeaderSaver;
-    spUpdateMovement_Order: TdsdStoredProc;
-    ChangePercent: TcxGridDBColumn;
+    spUpdate_PartionGoodsQ: TdsdStoredProc;
     MovementItemProtocolOpenForm: TdsdOpenForm;
     bbProtocol: TdxBarButton;
-    bbOpenDocument: TdxBarButton;
-    actUpdateDocument: TdsdInsertUpdateAction;
     cxLabel13: TcxLabel;
     edMovementDescName: TcxButtonEdit;
     cxLabel7: TcxLabel;
@@ -165,11 +139,6 @@ type
     cxLabel21: TcxLabel;
     edMember: TcxButtonEdit;
     GuidesMember: TdsdGuides;
-    spUpdate_PersonalComlete: TdsdStoredProc;
-    ExecuteDialogPersonalComlete: TExecuteDialog;
-    actUpdatePersonalComlete: TdsdDataSetRefresh;
-    macUpdatePersonalComlete: TMultiAction;
-    bbUpdatePersonalComlete: TdxBarButton;
     cxLabel22: TcxLabel;
     edPersonalGroup: TcxButtonEdit;
     GuidesPersonalGroup: TdsdGuides;
@@ -180,46 +149,20 @@ type
     ceComment: TcxTextEdit;
     cbisList: TcxCheckBox;
     PartionGoods: TcxGridDBColumn;
-    AssetName_two: TcxGridDBColumn;
-    AssetName: TcxGridDBColumn;
     cxLabel25: TcxLabel;
     edOperDatePartner: TcxDateEdit;
     edInvNumberPartner: TcxTextEdit;
     cxLabel26: TcxLabel;
-    actWeighingPartner_ActDiffF: TdsdInsertUpdateAction;
-    bbactWeighingPartner_ActDiffF: TdxBarButton;
     cbDocPartner: TcxCheckBox;
     cbReason1: TcxCheckBox;
     cbReason2: TcxCheckBox;
     cxLabel27: TcxLabel;
     edChangePercentAmount: TcxCurrencyEdit;
-    PrintHeaderCDS: TClientDataSet;
-    PrintItemsCDS: TClientDataSet;
-    spSelectPrint_diff: TdsdStoredProc;
-    spSelectPrint_all: TdsdStoredProc;
     actPrint_all: TdsdPrintAction;
     actPrint_diff: TdsdPrintAction;
-    bbPrint_diff: TdxBarButton;
-    bbPrint_all: TdxBarButton;
-    bbsPrint: TdxBarSubItem;
-    spSelectPrint_allPartner: TdsdStoredProc;
     dsdPrintAction1: TdsdPrintAction;
-    bbPrintAction1: TdxBarButton;
-    dxBarSeparator1: TdxBarSeparator;
-    actUpdateBox: TExecuteDialog;
-    macUpdateBox: TMultiAction;
-    spSelectMIPrintPassport: TdsdStoredProc;
-    actSelectMIPrintPassport: TdsdPrintAction;
     actRefreshMI: TdsdDataSetRefresh;
-    bbSelectMIPrintPassport: TdxBarButton;
-    bbUpdateBox: TdxBarButton;
-    PartionNum: TcxGridDBColumn;
-    spSelectPrintBrutto: TdsdStoredProc;
     actPrint_Brutto: TdsdPrintAction;
-    bbPrint_Brutto: TdxBarButton;
-    actUpdatePartionDateQ: TdsdInsertUpdateAction;
-    bbUpdatePartionDateQ: TdxBarButton;
-    dxBarButton1: TdxBarButton;
   private
   public
   end;
@@ -229,6 +172,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TWeighingPartnerForm);
+  RegisterClass(TWeighingPartner_PartionQEditForm);
 
 end.
