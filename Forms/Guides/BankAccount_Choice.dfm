@@ -1,7 +1,7 @@
-object BankAccount_ObjectForm: TBankAccount_ObjectForm
+object BankAccount_ChoiceForm: TBankAccount_ChoiceForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1056#1072#1089#1095#1077#1090#1085#1099#1077' '#1089#1095#1077#1090#1072'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1056#1072#1089#1095#1077#1090#1085#1099#1077' '#1089#1095#1077#1090#1072'> ('#1087#1086#1083#1091#1095#1072#1090#1077#1083#1100')'
   ClientHeight = 644
   ClientWidth = 883
   Color = clBtnFace
@@ -25,7 +25,6 @@ object BankAccount_ObjectForm: TBankAccount_ObjectForm
     Height = 588
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 672
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -132,7 +131,6 @@ object BankAccount_ObjectForm: TBankAccount_ObjectForm
     Height = 30
     Align = alTop
     TabOrder = 5
-    ExplicitTop = 20
     object lbSearchName: TcxLabel
       Left = 2
       Top = 4
@@ -491,7 +489,7 @@ object BankAccount_ObjectForm: TBankAccount_ObjectForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_BankAccount_Currency'
+    StoredProcName = 'gpSelect_Object_BankAccount_Choice'
     DataSet = MasterCDS
     DataSets = <
       item

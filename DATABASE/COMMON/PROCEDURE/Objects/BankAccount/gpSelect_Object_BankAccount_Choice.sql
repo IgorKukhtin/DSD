@@ -1,12 +1,9 @@
--- Function: gpSelect_Object_BankAccount_Currency(TVarChar)
+-- Function: gpSelect_Object_BankAccount_Choice(TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Object_BankAccount_Currency (TDateTime, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_BankAccount_Currency (TDateTime, TVarChar);
---DROP FUNCTION IF EXISTS gpSelect_Object_BankAccount_Currency (TDateTime, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_BankAccount_Currency (TDateTime, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_BankAccount_Choice (TDateTime, Integer, Boolean, TVarChar);
 
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_BankAccount_Currency(
+CREATE OR REPLACE FUNCTION gpSelect_Object_BankAccount_Choice(
     IN inOperDate    TDateTime , 
     IN inBankId      Integer   ,    -- 
     IN inIsShowAll   Boolean   ,    --
@@ -96,18 +93,20 @@ BEGIN
            , Object_BankAccount_View.JuridicalName
      FROM Object_BankAccount_View
           -- Покажем счета только по внутренним фирмам
-          INNER JOIN ObjectBoolean AS ObjectBoolean_isCorporate
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_isCorporate
                                    ON ObjectBoolean_isCorporate.ObjectId = Object_BankAccount_View.JuridicalId
                                   AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
-                                  AND (ObjectBoolean_isCorporate.ValueData = TRUE
-                                    OR Object_BankAccount_View.JuridicalId = 15505 -- ДУКО ТОВ 
-                                    OR Object_BankAccount_View.JuridicalId = 15512 -- Ірна-1 Фірма ТОВ
-                                    OR Object_BankAccount_View.isCorporate = TRUE
-                                      )
+                                 
           LEFT JOIN tmpCurrency ON tmpCurrency.CurrencyToId = Object_BankAccount_View.CurrencyId
      WHERE (Object_BankAccount_View.isErased = FALSE
         OR (Object_BankAccount_View.isErased = TRUE AND inIsShowAll = TRUE))
-        AND (Object_BankAccount_View.BankId = inBankId OR inBankId = 0)
+        AND (Object_BankAccount_View.BankId = inBankId OR inBankId = 0) 
+
+        AND (ObjectBoolean_isCorporate.ValueData <> TRUE
+          OR Object_BankAccount_View.JuridicalId <> 15505 -- ДУКО ТОВ 
+          OR Object_BankAccount_View.JuridicalId <> 15512 -- Ірна-1 Фірма ТОВ
+          OR Object_BankAccount_View.isCorporate <> TRUE
+            )
         
 
     ;
@@ -119,9 +118,10 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 28.11.25         * 
  21.11.25         * inBankId
  13.11.14                                        *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_BankAccount_Currency (inOperDate:= CURRENT_DATE, inBankId:= 0,  inIsShowAll:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_BankAccount_Choice (inOperDate:= CURRENT_DATE, inBankId:= 0, inIsShowAll:= FALSE, inSession:= zfCalc_UserAdmin())

@@ -140,7 +140,7 @@ end if;*/
                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
 
-            UNION ALL
+         /*   UNION ALL
              SELECT CASE WHEN inShowAll = TRUE THEN MovementItem.Id ELSE 0 END :: Integer AS MovementItemId
                   , MovementItem.ObjectId AS GoodsId
 
@@ -221,7 +221,8 @@ end if;*/
 
                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                  AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                                  AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind() 
+        */
 
             ) 
 

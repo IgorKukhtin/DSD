@@ -1,9 +1,11 @@
 -- Function: gpSelect_Object_JuridicalOrderFinance()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_JuridicalOrderFinance(Integer, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Object_JuridicalOrderFinance(Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_JuridicalOrderFinance(Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_JuridicalOrderFinance(
-    IN inBankAccountId_main  Integer,       --
+    IN inBankAccountId_main  Integer,       -- 
+    IN inOrderFinanceId      Integer,
     IN inIsShowAll           Boolean,       -- True - показать все, False - показать только сохраненные
     IN inIsErased            Boolean,       -- True - показать так же удаленные, False - показать только рабочие
     IN inSession             TVarChar       -- сесси€ пользовател€
@@ -12,8 +14,8 @@ RETURNS TABLE (Id Integer
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , OKPO TVarChar, INN TVarChar, isCorporate Boolean
              , RetailId Integer, RetailName TVarChar
-             , BankName_main TVarChar, MFO_main TVarChar, BankAccountId_main Integer, BankAccountName_main TVarChar
-             , BankName TVarChar, MFO TVarChar, BankAccountId Integer, BankAccountName TVarChar
+             , BankId_main Integer, BankName_main TVarChar, MFO_main TVarChar, BankAccountId_main Integer, BankAccountName_main TVarChar
+             , BankId Integer, BankName TVarChar, MFO TVarChar, BankAccountId Integer, BankAccountName TVarChar
              , InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationName TVarChar
              , InfoMoneyId Integer
@@ -103,11 +105,13 @@ BEGIN
              , Object_Retail.Id                 AS RetailId
              , Object_Retail.ValueData          AS RetailName
 
-             , Main_BankAccount_View.BankName   AS BankAccountName_main
+             , Main_BankAccount_View.BankId     AS BankId_main
+             , Main_BankAccount_View.BankName   AS BankName_main
              , Main_BankAccount_View.MFO        AS MFO_main
              , Main_BankAccount_View.Id         AS BankAccountId_main
              , Main_BankAccount_View.Name       AS BankAccountName_main
 
+             , Partner_BankAccount_View.BankId
              , Partner_BankAccount_View.BankName
              , Partner_BankAccount_View.MFO
              , Partner_BankAccount_View.Id      AS BankAccountId
@@ -184,7 +188,7 @@ BEGIN
                                                               ON ObjectFloat_Group.ObjectId = OL_OrderFinanceProperty_OrderFinance.ObjectId
                                                              AND ObjectFloat_Group.DescId   = zc_ObjectFloat_OrderFinanceProperty_Group()
 
-                                   WHERE OL_OrderFinanceProperty_OrderFinance.ChildObjectId = 3988049 -- inOrderFinanceId
+                                   WHERE OL_OrderFinanceProperty_OrderFinance.ChildObjectId = inOrderFinanceId -- 3988049 -- inOrderFinanceId
                                      AND OL_OrderFinanceProperty_OrderFinance.DescId        = zc_ObjectLink_OrderFinanceProperty_OrderFinance()
                                   )
        -- разворачиваетс€ по ”ѕ-стать€м + є группы
@@ -212,11 +216,13 @@ BEGIN
              , Object_Retail.Id                 AS RetailId
              , Object_Retail.ValueData          AS RetailName
 
-             , Main_BankAccount_View.BankName   AS BankAccountName_main
+             , Main_BankAccount_View.BankId     AS BankId_main
+             , Main_BankAccount_View.BankName   AS BankName_main
              , Main_BankAccount_View.MFO        AS MFO_main
              , Main_BankAccount_View.Id         AS BankAccountId_main
              , Main_BankAccount_View.Name       AS BankAccountName_main
 
+             , Partner_BankAccount_View.BankId
              , Partner_BankAccount_View.BankName
              , Partner_BankAccount_View.MFO
              , Partner_BankAccount_View.Id      AS BankAccountId
@@ -311,4 +317,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_JuridicalOrderFinance (0, FALSE , FALSE ,'2')
+-- SELECT * FROM gpSelect_Object_JuridicalOrderFinance (0, 0, FALSE , FALSE ,'2')
