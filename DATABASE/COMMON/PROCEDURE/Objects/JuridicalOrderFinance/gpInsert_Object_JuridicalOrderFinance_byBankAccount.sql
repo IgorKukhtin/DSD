@@ -71,7 +71,7 @@ BEGIN
                                AND Movement.StatusId = zc_Enum_Status_Complete()
                                AND (MovementItem.ObjectId = inBankAccountId_main OR inBankAccountId_main = 0)
                             )
-            -- Замена на другой р.сч, если не нашли Банк
+            -- Замена на другой р.сч, если не нашли название Банка
           , tmpBank_find AS (SELECT tmpBankAccount.JuridicalId
                                   , tmpBankAccount.InfoMoneyId
                                   , tmpBankAccount.BankAccountId_main
@@ -170,7 +170,11 @@ BEGIN
                          AND tmpData.InfoMoneyId        = tmpJuridical.InfoMoneyId
                          AND tmpData.BankAccountId      = tmpJuridical.BankAccountId
    WHERE tmpJuridical.Id = Object.Id
-     AND Object.DescId = zc_Object_JuridicalOrderFinance()
+     AND Object.DescId   = zc_Object_JuridicalOrderFinance()
+     -- только восстановить
+     AND tmpData.JuridicalId > 0 AND tmpJuridical.Ord = 1
+     --
+     AND Object.isErased = TRUE
   ;
 
 
@@ -201,6 +205,8 @@ BEGIN
                    AND tmp.JuridicalId        = tmpData.JuridicalId
                    AND tmp.InfoMoneyId        = tmpData.InfoMoneyId
                    AND tmp.BankAccountId      = tmpData.BankAccountId
+   -- Только новые
+   WHERE tmp.JuridicalId IS NULL
   ;
 
 END;$BODY$
