@@ -20,6 +20,8 @@ $BODY$
    DECLARE e Text;
    DECLARE er Text;
 
+   DECLARE vbOperDate TDateTime;
+
    DECLARE vbPSLExportKindId Integer;
    DECLARE vbBankName TVarChar;
    DECLARE vbMFO TVarChar;
@@ -31,6 +33,10 @@ $BODY$
 BEGIN
      -- *** Временная таблица для сбора результата
      CREATE TEMP TABLE _tmpResult (NPP Integer, RowData Text, errStr TVarChar) ON COMMIT DROP;
+
+
+     -- определяется
+     vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
 
 
      -- определили данные из ведомости начисления
@@ -297,6 +303,13 @@ BEGIN
                      || ' TOTAL_SHEDULE_AMOUNT="' || REPLACE (CAST (inAmount AS NUMERIC (16, 2)) :: TVarChar, '.', ',') || '"' 
                      -- Код зарплатного проекта. Обязательно указывается только для банков, использующих ЗКП
                      ||   ' CONTRAGENT_CODEZKP="' || '1011442' || '"'                       
+
+                               -- COMMENTS
+                     ||    ' COMMENTS="Заробітна плата за 1 половину' 
+                     ||' ' || zfCalc_MonthNameUkr_export (vbOperDate)
+                     ||' ' || EXTRACT (YEAR FROM vbOperDate) :: TVarChar
+                     ||' ' ||'року. ЕСВ,ПДФО,ВВ сплачені ' || zfConvert_DateToString (vbOperDate) || '"'
+
                      || '>'
                     ;
 
