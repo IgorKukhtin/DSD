@@ -1874,8 +1874,8 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 640
-    Top = 176
+    Left = 632
+    Top = 184
   end
   object spGet_WeekNumber_byPeriod: TdsdStoredProc
     StoredProcName = 'gpGet_WeekNumber_byPeriod'
