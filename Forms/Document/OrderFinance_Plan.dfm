@@ -2088,7 +2088,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
     Top = 288
   end
   object spGet_Export_FileName: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_OrderFinance_FileName'
+    StoredProcName = 'gpGet_Movement_OrderFinance_FileNamePlan'
     DataSets = <>
     OutputType = otResult
     Params = <

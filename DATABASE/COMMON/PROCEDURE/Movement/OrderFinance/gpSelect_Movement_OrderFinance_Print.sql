@@ -232,6 +232,7 @@ BEGIN
                                                                  , zc_MIFloat_AmountPartner_1()
                                                                  , zc_MIFloat_AmountPartner_2()
                                                                  , zc_MIFloat_AmountPartner_3()
+                                                                 , zc_MIFloat_AmountPartner_4()
                                                                  , zc_MIFloat_AmountPlan_1()
                                                                  , zc_MIFloat_AmountPlan_2()
                                                                  , zc_MIFloat_AmountPlan_3()
@@ -312,6 +313,13 @@ BEGIN
            , MIFloat_AmountPartner_1.ValueData :: TFloat AS AmountPartner_1
            , MIFloat_AmountPartner_2.ValueData :: TFloat AS AmountPartner_2
            , MIFloat_AmountPartner_3.ValueData :: TFloat AS AmountPartner_3
+           , MIFloat_AmountPartner_4.ValueData :: TFloat AS AmountPartner_4
+           , (COALESCE (MIFloat_AmountPartner.ValueData,0)
+              - COALESCE (MIFloat_AmountPartner_1.ValueData,0)
+              - COALESCE (MIFloat_AmountPartner_2.ValueData,0)
+              - COALESCE (MIFloat_AmountPartner_3.ValueData,0)
+              - COALESCE (MIFloat_AmountPartner_4.ValueData,0)
+             )   :: TFloat AS AmountPartner_5                -->28дней
            , MIFloat_AmountPlan_1.ValueData    :: TFloat AS AmountPlan_1
            , MIFloat_AmountPlan_2.ValueData    :: TFloat AS AmountPlan_2
            , MIFloat_AmountPlan_3.ValueData    :: TFloat AS AmountPlan_3
@@ -344,6 +352,9 @@ BEGIN
             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPartner_3
                                            ON MIFloat_AmountPartner_3.MovementItemId = MovementItem.Id
                                           AND MIFloat_AmountPartner_3.DescId = zc_MIFloat_AmountPartner_3()
+            LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPartner_4
+                                           ON MIFloat_AmountPartner_4.MovementItemId = MovementItem.Id
+                                          AND MIFloat_AmountPartner_4.DescId = zc_MIFloat_AmountPartner_4()
             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_1
                                            ON MIFloat_AmountPlan_1.MovementItemId = MovementItem.Id
                                           AND MIFloat_AmountPlan_1.DescId = zc_MIFloat_AmountPlan_1()

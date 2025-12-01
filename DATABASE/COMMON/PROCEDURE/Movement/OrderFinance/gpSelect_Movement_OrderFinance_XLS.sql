@@ -18,6 +18,9 @@ RETURNS TABLE (OKPO             TVarChar
              , AmountSumm       TVarChar
              , AmountPartner_1  TVarChar
              , AmountPartner_2  TVarChar
+             , AmountPartner_3  TVarChar
+             , AmountPartner_4  TVarChar
+             , AmountPartner_5  TVarChar
              , AmountPartner    TVarChar
              , Amount           TVarChar
                )
@@ -167,6 +170,7 @@ BEGIN
                                                                  , zc_MIFloat_AmountPartner_1()
                                                                  , zc_MIFloat_AmountPartner_2()
                                                                  , zc_MIFloat_AmountPartner_3()
+                                                                 , zc_MIFloat_AmountPartner_4()
                                                                  , zc_MIFloat_AmountPlan_1()
                                                                  , zc_MIFloat_AmountPlan_2()
                                                                  , zc_MIFloat_AmountPlan_3()
@@ -247,6 +251,13 @@ BEGIN
                              , MIFloat_AmountPartner_1.ValueData :: TFloat AS AmountPartner_1
                              , MIFloat_AmountPartner_2.ValueData :: TFloat AS AmountPartner_2
                              , MIFloat_AmountPartner_3.ValueData :: TFloat AS AmountPartner_3
+                             , MIFloat_AmountPartner_4.ValueData :: TFloat AS AmountPartner_4 
+                             , (COALESCE (MIFloat_AmountPartner.ValueData,0)
+                                 - COALESCE (MIFloat_AmountPartner_1.ValueData,0)
+                                 - COALESCE (MIFloat_AmountPartner_2.ValueData,0)
+                                 - COALESCE (MIFloat_AmountPartner_3.ValueData,0)
+                                 - COALESCE (MIFloat_AmountPartner_4.ValueData,0)
+                                )   :: TFloat AS AmountPartner_5 
                              , MIFloat_AmountPlan_1.ValueData    :: TFloat AS AmountPlan_1
                              , MIFloat_AmountPlan_2.ValueData    :: TFloat AS AmountPlan_2
                              , MIFloat_AmountPlan_3.ValueData    :: TFloat AS AmountPlan_3
@@ -254,7 +265,7 @@ BEGIN
                              , MIFloat_AmountPlan_5.ValueData    :: TFloat AS AmountPlan_5
                              --
                              , COALESCE (tmpInfoMoney_OFP.NumGroup, 999) ::Integer AS NumGroup
-                  
+                             , ROW_NUMBER() OVER (ORDER BY COALESCE (tmpInfoMoney_OFP.NumGroup, 999), Object_InfoMoney.ValueData, Object_Juridical.ValueData) AS Ord
                          FROM tmpMI AS MovementItem
                               LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId
                                                                   AND Object_Juridical.DescId = zc_Object_Juridical()
@@ -279,6 +290,9 @@ BEGIN
                               LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPartner_3
                                                              ON MIFloat_AmountPartner_3.MovementItemId = MovementItem.Id
                                                             AND MIFloat_AmountPartner_3.DescId = zc_MIFloat_AmountPartner_3()
+                              LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPartner_4
+                                                             ON MIFloat_AmountPartner_4.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_AmountPartner_4.DescId = zc_MIFloat_AmountPartner_4()
                               LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_1
                                                              ON MIFloat_AmountPlan_1.MovementItemId = MovementItem.Id
                                                             AND MIFloat_AmountPlan_1.DescId = zc_MIFloat_AmountPlan_1()
@@ -328,6 +342,9 @@ BEGIN
              , tmp.AmountSumm       ::TVarChar
              , tmp.AmountPartner_1  ::TVarChar
              , tmp.AmountPartner_2  ::TVarChar
+             , tmp.AmountPartner_3  ::TVarChar
+             , tmp.AmountPartner_4  ::TVarChar
+             , tmp.AmountPartner_5  ::TVarChar
              , tmp.AmountPartner    ::TVarChar
              , tmp.Amount           ::TVarChar
        FROM (SELECT  ('Документ № '||tmpMovement.InvNumber||' от ' || zfConvert_DateToString (tmpMovement.OperDate) ) ::TVarChar AS OKPO
@@ -342,9 +359,13 @@ BEGIN
                     , '' ::TVarChar AS AmountSumm
                     , '' ::TVarChar AS AmountPartner_1
                     , '' ::TVarChar AS AmountPartner_2
+                    , '' ::TVarChar AS AmountPartner_3
+                    , '' ::TVarChar AS AmountPartner_4
+                    , '' ::TVarChar AS AmountPartner_5
                     , '' ::TVarChar AS AmountPartner
                     , '' ::TVarChar AS Amount 
                     , 1 AS Ord
+                    , '' AS Ord1
               FROM tmpMovement
             UNION
               SELECT  ('№ недели'||tmpMovement.WeekNumber ) ::TVarChar AS OKPO
@@ -359,9 +380,13 @@ BEGIN
                     , '' ::TVarChar AS AmountSumm
                     , '' ::TVarChar AS AmountPartner_1
                     , '' ::TVarChar AS AmountPartner_2
+                    , '' ::TVarChar AS AmountPartner_3
+                    , '' ::TVarChar AS AmountPartner_4
+                    , '' ::TVarChar AS AmountPartner_5
                     , '' ::TVarChar AS AmountPartner
                     , '' ::TVarChar AS Amount
                     , 2 AS Ord
+                    , '' AS Ord1
               FROM tmpMovement
             UNION
               SELECT  ('Автор заявки '||tmpMovement.InsertName||',' || tmpMovement.PositionName_insert ) ::TVarChar AS OKPO
@@ -376,9 +401,13 @@ BEGIN
                     , '' ::TVarChar AS AmountSumm
                     , '' ::TVarChar AS AmountPartner_1
                     , '' ::TVarChar AS AmountPartner_2
+                    , '' ::TVarChar AS AmountPartner_3
+                    , '' ::TVarChar AS AmountPartner_4
+                    , '' ::TVarChar AS AmountPartner_5
                     , '' ::TVarChar AS AmountPartner
                     , '' ::TVarChar AS Amount
                     , 3 AS Ord
+                    , '' AS Ord1
               FROM tmpMovement
             UNION
             SELECT  (''||tmpMovement.text_sign_1||', ' || tmpMovement.UserMember_1|| ' '|| tmpMovement.Date_Sign_1) ::TVarChar AS OKPO
@@ -393,9 +422,13 @@ BEGIN
                     , '' ::TVarChar AS AmountSumm
                     , '' ::TVarChar AS AmountPartner_1
                     , '' ::TVarChar AS AmountPartner_2
+                    , '' ::TVarChar AS AmountPartner_3
+                    , '' ::TVarChar AS AmountPartner_4
+                    , '' ::TVarChar AS AmountPartner_5
                     , '' ::TVarChar AS AmountPartner
                     , '' ::TVarChar AS Amount
                     , 4 AS Ord
+                    , '' AS Ord1
               FROM tmpMovement
             UNION
             SELECT  'OKPO' ::TVarChar AS OKPO
@@ -407,12 +440,16 @@ BEGIN
                     , 'Юридическое лицо' ::TVarChar AS JvuridicalName
                     , 'УП статья назначения' ::TVarChar AS InfoMoneyName
                     , 'Нач. долг (кредит)' ::TVarChar AS AmountRemains
-                    , 'Приход' ::TVarChar AS AmountSumm
-                    , '7 дней' ::TVarChar AS AmountPartner_1
-                    , '14 дней' ::TVarChar AS AmountPartner_2
+                    , 'Приход'   ::TVarChar AS AmountSumm
+                    , '7 дней'   ::TVarChar AS AmountPartner_1
+                    , '14 дней'  ::TVarChar AS AmountPartner_2
+                    , '21 день'  ::TVarChar AS AmountPartner_3
+                    , '28 дней'  ::TVarChar AS AmountPartner_4
+                    , '> 28дней' ::TVarChar AS AmountPartner_5
                     , 'Долг с отсрочкой' ::TVarChar AS AmountPartner
                     , 'Предварительно план оплаты на неделю' ::TVarChar AS Amount 
                     , 5 AS Ord
+                    , '' AS Ord1
               FROM tmpMovement
             UNION
               SELECT  tmpMI.OKPO             ::TVarChar
@@ -427,12 +464,38 @@ BEGIN
                     , CAST (tmpMI.AmountSumm AS NUMERIC (16,2))       ::TVarChar
                     , CAST (tmpMI.AmountPartner_1 AS NUMERIC (16,2))  ::TVarChar
                     , CAST (tmpMI.AmountPartner_2 AS NUMERIC (16,2))  ::TVarChar
+                    , CAST (tmpMI.AmountPartner_3 AS NUMERIC (16,2))  ::TVarChar
+                    , CAST (tmpMI.AmountPartner_4 AS NUMERIC (16,2))  ::TVarChar
+                    , CAST (tmpMI.AmountPartner_5 AS NUMERIC (16,2))  ::TVarChar
                     , CAST (tmpMI.AmountPartner AS NUMERIC (16,2))    ::TVarChar
-                    , CAST (tmpMI.Amount AS NUMERIC (16,2))           ::TVarChar 
-                    , 10 + (ROW_NUMBER() OVER (ORDER BY tmpMI.NumGroup, tmpMI.InfoMoneyName, tmpMI.JuridicalName)) AS Ord
+                    , CAST (tmpMI.Amount AS NUMERIC (16,2))           ::TVarChar
+                    , 10 + tmpMI.Ord AS Ord
+                    , tmpMI.InfoMoneyName AS Ord1
               FROM tmpMI_Data AS tmpMI
+             UNION
+              SELECT  ''     ::TVarChar
+                    , ''     ::TVarChar
+                    , ''     ::TVarChar
+                    , ''     ::TVarChar
+                    , ''     ::TVarChar
+                    , ''     ::TVarChar
+                    , ''     ::TVarChar
+                    , ('Итого '||tmpMI.InfoMoneyName)    ::TVarChar    AS InfoMoneyName
+                    , CAST (SUM (COALESCE (tmpMI.AmountRemains,0)) AS NUMERIC (16,2))    ::TVarChar
+                    , CAST (SUM (COALESCE (tmpMI.AmountSumm,0)) AS NUMERIC (16,2))       ::TVarChar
+                    , CAST (SUM (COALESCE (tmpMI.AmountPartner_1,0)) AS NUMERIC (16,2))  ::TVarChar
+                    , CAST (SUM (COALESCE (tmpMI.AmountPartner_2,0)) AS NUMERIC (16,2))  ::TVarChar
+                    , CAST (SUM (COALESCE (tmpMI.AmountPartner_3,0)) AS NUMERIC (16,2))  ::TVarChar
+                    , CAST (SUM (COALESCE (tmpMI.AmountPartner_4,0)) AS NUMERIC (16,2))  ::TVarChar
+                    , CAST (SUM (COALESCE (tmpMI.AmountPartner_5,0)) AS NUMERIC (16,2))  ::TVarChar
+                    , CAST (SUM (COALESCE (tmpMI.AmountPartner,0)) AS NUMERIC (16,2))    ::TVarChar
+                    , CAST (SUM (COALESCE (tmpMI.Amount,0)) AS NUMERIC (16,2))           ::TVarChar
+                    , 999 AS Ord
+                    , tmpMI.InfoMoneyName AS Ord1
+              FROM tmpMI_Data AS tmpMI
+              GROUP BY tmpMI.InfoMoneyName, tmpMI.NumGroup 
              ) AS tmp
-       ORDER BY tmp.Ord
+       ORDER BY tmp.Ord1, tmp.Ord
             ;
 
              
@@ -447,4 +510,6 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpSelect_Movement_OrderFinance_XLS(inMovementId :=32828998  ::Integer , inSession := '9457'::TVarChar);
+-- SELECT * FROM gpSelect_Movement_OrderFinance_XLS(inMovementId :=32828998  ::Integer , inSession := '9457'::TVarChar);
+
+
