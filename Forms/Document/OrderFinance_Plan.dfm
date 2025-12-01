@@ -2205,8 +2205,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       item
         Name = 'inOperDate'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'OperDate'
+        Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','

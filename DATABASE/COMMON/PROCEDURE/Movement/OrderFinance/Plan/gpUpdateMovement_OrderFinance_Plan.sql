@@ -143,7 +143,7 @@ BEGIN
            RAISE EXCEPTION 'Ошибка.Банк (Плательщик) не выбран для <%> ', inBankAccountName_jof;
          END IF;
 
-         IF COALESCE (inBankAccountName_main, '') = 0
+         IF COALESCE (inBankAccountName_main, '') = ''
          THEN
            RAISE EXCEPTION 'Ошибка.Р/счет (Плательщик) не выбран для <%> ', inBankAccountName_jof;
          END IF;
