@@ -7,8 +7,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Week_Date(
     IN inEndDate           TDateTime , --
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (WeekNumber TFloat
-             , StartDate_WeekNumber TDateTime, EndDate_WeekNumber TDateTime
+RETURNS TABLE (WeekNumber           Integer
+             , StartDate_WeekNumber TDateTime
+             , EndDate_WeekNumber   TDateTime
               )
 AS
 $BODY$
@@ -17,16 +18,19 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
+     inStartDate:= DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', inStartDate));
+     inEndDate  := inStartDate + INTERVAL '52 WEEK' - INTERVAL '1 DAY' ;
+
      -- Результат
      RETURN QUERY
      WITH
-     -- 
-     tmpDataWeek AS (SELECT GENERATE_SERIES (inStartDate, inEndDate, '1 week' :: INTERVAL) AS OperDate)
-     
-     SELECT (EXTRACT (Week FROM tmp.OperDate) )                   :: TFloat   AS WeekNumber
-          , DATE_TRUNC ('WEEK', tmp.OperDate)                     :: TDateTime AS StartDate_WeekNumber
-          , (DATE_TRUNC ('WEEK', tmp.OperDate)+ INTERVAL '6 DAY') :: TDateTime AS EndDate_WeekNumber
-     FROM tmpDataWeek AS tmp
+          --
+          tmpDataWeek AS (SELECT GENERATE_SERIES (inStartDate, inEndDate, '1 WEEK' :: INTERVAL) AS OperDate)
+          -- Результат
+          SELECT EXTRACT (WEEK FROM tmp.OperDate)  :: Integer   AS WeekNumber
+               , tmp.OperDate                      :: TDateTime AS StartDate_WeekNumber
+               , (tmp.OperDate + INTERVAL '6 DAY') :: TDateTime AS EndDate_WeekNumber
+          FROM tmpDataWeek AS tmp
       ;
 
 END;
@@ -35,7 +39,7 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.                                     
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  20.11.25         *
 */
 
