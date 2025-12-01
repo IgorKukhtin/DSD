@@ -626,8 +626,8 @@ inherited ContractChoiceForm: TContractChoiceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 424
-    Top = 88
+    Left = 392
+    Top = 128
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -637,7 +637,7 @@ inherited ContractChoiceForm: TContractChoiceForm
       item
         Component = JuridicalGuides
       end>
-    Left = 304
-    Top = 88
+    Left = 336
+    Top = 136
   end
 end

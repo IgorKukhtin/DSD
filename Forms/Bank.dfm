@@ -3,7 +3,7 @@ object BankForm: TBankForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1073#1072#1085#1082#1086#1074
   ClientHeight = 376
-  ClientWidth = 612
+  ClientWidth = 943
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,14 +19,16 @@ object BankForm: TBankForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
-    Width = 612
-    Height = 350
+    Top = 56
+    Width = 943
+    Height = 320
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 520
+    ExplicitTop = 26
+    ExplicitWidth = 612
+    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -100,6 +102,37 @@ object BankForm: TBankForm
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Top = 26
+    Width = 943
+    Height = 30
+    Align = alTop
+    TabOrder = 5
+    ExplicitLeft = -271
+    ExplicitWidth = 883
+    object edSearchBank: TcxTextEdit
+      Left = 44
+      Top = 3
+      TabOrder = 0
+      DesignSize = (
+        140
+        21)
+      Width = 140
+    end
+    object cxLabel1: TcxLabel
+      Left = 0
+      Top = 4
+      Caption = #1041#1072#1085#1082': '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
     end
   end
   object DataSource: TDataSource
@@ -480,5 +513,19 @@ object BankForm: TBankForm
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 328
     Top = 216
+  end
+  object FieldFilter: TdsdFieldFilter
+    TextEdit = edSearchBank
+    DataSet = ClientDataSet
+    Column = clName
+    ColumnList = <
+      item
+        Column = clName
+        TextEdit = edSearchBank
+      end>
+    ActionNumber1 = dsdChoiceGuides
+    CheckBoxList = <>
+    Left = 144
+    Top = 144
   end
 end

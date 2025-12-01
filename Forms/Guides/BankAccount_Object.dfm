@@ -25,7 +25,6 @@ object BankAccount_ObjectForm: TBankAccount_ObjectForm
     Height = 588
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 672
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource

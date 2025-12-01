@@ -21,7 +21,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCurrencyEdit;
+  cxCurrencyEdit, cxContainer, cxLabel, cxTextEdit, Vcl.ExtCtrls, dsdCommon;
 
 type
   TBankForm = class(TParentForm)
@@ -62,6 +62,10 @@ type
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     SummMax: TcxGridDBColumn;
+    Panel2: TPanel;
+    edSearchBank: TcxTextEdit;
+    cxLabel1: TcxLabel;
+    FieldFilter: TdsdFieldFilter;
   private
     { Private declarations }
   public

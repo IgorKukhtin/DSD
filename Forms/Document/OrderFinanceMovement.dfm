@@ -721,7 +721,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Caption = 'GoodsForm'
+                Action = actContractChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -1129,9 +1129,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1070#1088'.'#1083#1080#1094#1072
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -1653,7 +1650,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       end>
     PackSize = 1
     Left = 264
-    Top = 263
+    Top = 311
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -2689,8 +2686,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'ContractChoiceForm'
-      FormName = 'TContract_ObjectForm'
-      FormNameParam.Value = 'TContract_ObjectForm'
+      FormName = 'TContractChoiceForm'
+      FormNameParam.Value = 'TContractChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -2703,11 +2700,52 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractCode'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractName'
           DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterJuridicalId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterJuridicalName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'StartDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'EndDate'
+          DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -3377,8 +3415,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
-    Left = 400
-    Top = 256
+    Left = 344
+    Top = 264
     object N1: TMenuItem
       Action = actRefresh
     end
@@ -4827,77 +4865,76 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       end
       item
         Name = 'inAmountPlan_1'
-        Value = Null
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inAmountPlan_2'
-        Value = Null
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inAmountPlan_3'
-        Value = Null
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inAmountPlan_4'
-        Value = Null
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inAmountPlan_5'
-        Value = Null
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inisAmountPlan_1'
-        Value = 'false'
-        DataType = ftFloat
+        Value = False
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inisAmountPlan_2'
-        Value = 'false'
-        DataType = ftFloat
+        Value = False
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inisAmountPlan_3'
-        Value = 'false'
-        DataType = ftFloat
+        Value = False
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inisAmountPlan_4'
-        Value = 'false'
-        DataType = ftFloat
+        Value = False
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inisAmountPlan_5'
-        Value = 'false'
-        DataType = ftFloat
+        Value = False
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
-        Value = Null
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
