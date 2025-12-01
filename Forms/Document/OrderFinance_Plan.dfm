@@ -120,16 +120,6 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             Options.Editing = False
             Width = 58
           end
-          object Condition: TcxGridDBColumn
-            Caption = #1059#1089#1083#1086#1074#1080#1077
-            DataBinding.FieldName = 'Condition'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
-            Options.Editing = False
-            Width = 100
-          end
           object StatusCode: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1091#1089
             DataBinding.FieldName = 'StatusCode'
@@ -151,6 +141,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
                 ImageIndex = 13
                 Value = 3
               end>
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -180,7 +171,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 98
+            Width = 140
           end
           object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076#1072#1085#1080#1077')'
@@ -250,6 +241,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
           object StartDate_WeekNumber: TcxGridDBColumn
             Caption = #1053#1077#1076#1077#1083#1103' '#1089
             DataBinding.FieldName = 'StartDate_WeekNumber'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1072#1090#1072' '#1076#1083#1103' '#1053#1086#1084#1077#1088' '#1085#1077#1076#1077#1083#1080
@@ -259,6 +251,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
           object EndDate_WeekNumber: TcxGridDBColumn
             Caption = #1053#1077#1076#1077#1083#1103' '#1087#1086
             DataBinding.FieldName = 'EndDate_WeekNumber'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1072#1090#1072' '#1076#1083#1103' '#1053#1086#1084#1077#1088' '#1085#1077#1076#1077#1083#1080
@@ -320,6 +313,17 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object Condition: TcxGridDBColumn
+            Caption = #1059#1089#1083#1086#1074#1080#1077
+            DataBinding.FieldName = 'Condition'
+            Visible = False
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
             Options.Editing = False
             Width = 100
           end
@@ -619,17 +623,22 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 97
+            Width = 200
           end
-          object MFO_Main: TcxGridDBColumn
-            Caption = #1052#1060#1054' '#1041#1072#1085#1082' ('#1055#1083#1072#1090#1077#1083#1100#1097#1080#1082')'
-            DataBinding.FieldName = 'MFO'
-            Visible = False
-            GroupSummaryAlignment = taCenter
+          object BankAccountName: TcxGridDBColumn
+            Caption = #1056'/'#1057#1095#1077#1090' ('#1055#1083#1072#1090#1077#1083#1100#1097#1080#1082')'
+            DataBinding.FieldName = 'BankAccountName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actBankAccountChoicetFormMain
+                Default = True
+                Kind = bkEllipsis
+              end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 97
+            HeaderHint = #1086#1087#1083#1072#1090#1072' '#1089' '#1088'/'#1089#1095#1077#1090#1072
+            Width = 172
           end
           object BankName: TcxGridDBColumn
             Caption = #1041#1072#1085#1082' ('#1055#1083#1072#1090#1077#1083#1100#1097#1080#1082')'
@@ -642,36 +651,37 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 133
           end
-          object BankAccountName: TcxGridDBColumn
-            Caption = #1056'/'#1057#1095#1077#1090' ('#1055#1083#1072#1090#1077#1083#1100#1097#1080#1082')'
-            DataBinding.FieldName = 'BankAccountName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actBankAccountChoicetFormMain
-                Default = True
-                Kind = bkEllipsis
-              end>
+          object MFO_Main: TcxGridDBColumn
+            Caption = #1052#1060#1054' '#1041#1072#1085#1082' ('#1055#1083#1072#1090#1077#1083#1100#1097#1080#1082')'
+            DataBinding.FieldName = 'MFO'
             Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 172
-          end
-          object MFO_jof: TcxGridDBColumn
-            Caption = #1052#1060#1054' '#1041#1072#1085#1082' ('#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103')'
-            DataBinding.FieldName = 'MFO_jof'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 97
           end
+          object BankAccountName_jof: TcxGridDBColumn
+            Caption = #1056'/'#1057#1095#1077#1090' ('#1055#1086#1083#1091#1095#1072#1090#1077#1083#1100')'
+            DataBinding.FieldName = 'BankAccountName_jof'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actBankAccountChoicetForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1086#1087#1083#1072#1090#1072' '#1085#1072' '#1088'/'#1089#1095#1077#1090
+            Width = 171
+          end
           object BankName_jof: TcxGridDBColumn
-            Caption = #1041#1072#1085#1082' ('#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103')'
+            Caption = #1041#1072#1085#1082' ('#1055#1086#1083#1091#1095#1072#1090#1077#1083#1100')'
             DataBinding.FieldName = 'BankName_jof'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -685,20 +695,13 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             HeaderAlignmentVert = vaCenter
             Width = 84
           end
-          object BankAccountName_jof: TcxGridDBColumn
-            Caption = #1056'/'#1057#1095#1077#1090' ('#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103')'
-            DataBinding.FieldName = 'BankAccountName_jof'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actBankAccountChoicetForm
-                Default = True
-                Kind = bkEllipsis
-              end>
+          object MFO_jof: TcxGridDBColumn
+            Caption = #1052#1060#1054' '#1041#1072#1085#1082' ('#1055#1086#1083#1091#1095#1072#1090#1077#1083#1100')'
+            DataBinding.FieldName = 'MFO_jof'
+            GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1088'/'#1089#1095#1077#1090', '#1085#1072' '#1082#1086#1090#1086#1088#1099#1081' '#1084#1099' '#1087#1083#1072#1090#1080#1084
-            Width = 171
+            Width = 112
           end
           object FonColor_AmountPlan_1: TcxGridDBColumn
             DataBinding.FieldName = 'FonColor_AmountPlan_1'
@@ -815,7 +818,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
     end
     object cbPlan_1: TcxCheckBox
       Left = 354
-      Top = 6
+      Top = 5
       Caption = '1.'#1087#1085'.'
       Properties.ReadOnly = False
       TabOrder = 8
@@ -854,7 +857,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       Width = 49
     end
     object cxLabel12: TcxLabel
-      Left = 648
+      Left = 646
       Top = 6
       Caption = #1041#1072#1085#1082' ('#1055#1083#1072#1090#1077#1083#1100#1097#1080#1082'):'
     end
@@ -1249,11 +1252,10 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         item
           Action = actExport_file
         end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1075#1088#1091#1079#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090'?'
-      InfoAfterExecute = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1091#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085
-      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1083#1103' OTP Bank'
-      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1083#1103' OTP Bank'
-      ImageIndex = 53
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1080#1084#1087#1086#1088#1090' '#1087#1083#1072#1090#1077#1078#1077#1081'?'
+      InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1089#1086#1079#1076#1072#1085' '#1092#1072#1081#1083' '#1076#1083#1103' '#1080#1084#1087#1086#1088#1090#1072' '#1074' OTP Bank'
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1080#1084#1087#1086#1088#1090' '#1074' OTP Bank'
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1080#1084#1087#1086#1088#1090' '#1087#1083#1072#1090#1077#1078#1077#1081' '#1074' OTP Bank'
     end
     object actExport_Grid: TExportGrid
       Category = 'Export_file'
@@ -1321,10 +1323,14 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       FilePathParam.DataType = ftString
       FilePathParam.MultiSelectSeparator = ','
       FileNameParam.Value = ''
+      FileNameParam.Component = FormParams
+      FileNameParam.ComponentItem = 'outFileName'
       FileNameParam.DataType = ftString
       FileNameParam.MultiSelectSeparator = ','
       FileExt = '.xml'
       FileExtParam.Value = ''
+      FileExtParam.Component = FormParams
+      FileExtParam.ComponentItem = 'outDefaultFileExt'
       FileExtParam.DataType = ftString
       FileExtParam.MultiSelectSeparator = ','
       FileNamePrefixParam.Value = ''
@@ -1343,7 +1349,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
           StoredProc = spSelectPrint
         end>
       Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1083#1072#1090#1077#1078#1077#1081' '#1079#1072' 1 '#1076#1077#1085#1100
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
@@ -1676,8 +1682,8 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 87
-    Top = 128
+    Left = 135
+    Top = 120
   end
   object spUpdate_OrderFinance_Plan: TdsdStoredProc
     StoredProcName = 'gpUpdateMovement_OrderFinance_Plan'
@@ -2047,6 +2053,23 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         DataType = ftBoolean
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDefaultFileExt'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'outEncodingANSI'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 390
     Top = 159
@@ -2079,33 +2102,25 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       item
         Name = 'outFileName'
         Value = Null
-        Component = actExport_Grid
-        ComponentItem = 'DefaultFileName'
+        Component = FormParams
+        ComponentItem = 'outFileName'
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'outDefaultFileExt'
         Value = Null
-        Component = actExport_Grid
-        ComponentItem = 'DefaultFileExt'
+        Component = FormParams
+        ComponentItem = 'outDefaultFileExt'
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'outEncodingANSI'
         Value = Null
-        Component = actExport_Grid
-        ComponentItem = 'EncodingANSI'
+        Component = FormParams
+        ComponentItem = 'outEncodingANSI'
         DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outFileName'
-        Value = Null
-        Component = actSMTPFile
-        ComponentItem = 'FileName'
-        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1

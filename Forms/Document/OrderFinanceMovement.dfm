@@ -1131,6 +1131,9 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1070#1088'.'#1083#1080#1094#1072
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -1970,15 +1973,15 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbExport'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarButton1'
         end
         item
           Visible = True
           ItemName = 'dxBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExport'
         end
         item
           Visible = True
@@ -2171,6 +2174,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object actExport_New: TMultiAction
       Category = 'Export_file'
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = actGet_Export_FileName
@@ -2180,7 +2184,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1075#1088#1091#1079#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090'?'
       InfoAfterExecute = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1091#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085
-      Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1087#1083#1072#1085' '#1074' '#1092#1072#1081#1083
+      Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1087#1083#1072#1085' '#1086#1087#1083#1072#1090
       Hint = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1092#1072#1081#1083
       ImageIndex = 53
     end
@@ -3162,6 +3166,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object mactExportMail_xls_1: TMultiAction
       Category = 'Export_mail_ok'
       MoveParams = <>
+      Enabled = False
       ActionList = <>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1087#1086#1095#1090#1077'?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1099' '#1087#1086' '#1087#1086#1095#1090#1077
@@ -3172,6 +3177,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object mactExportMail_xls_2: TMultiAction
       Category = 'Export_mail_ok'
       MoveParams = <>
+      Enabled = False
       ActionList = <>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1087#1086#1095#1090#1077'?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1099' '#1087#1086' '#1087#1086#1095#1090#1077
@@ -3182,6 +3188,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object mactExportMail_xls_3: TMultiAction
       Category = 'Export_mail_ok'
       MoveParams = <>
+      Enabled = False
       ActionList = <>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1087#1086#1095#1090#1077'?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1099' '#1087#1086' '#1087#1086#1095#1090#1077
@@ -3192,6 +3199,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object mactExportMail_xls_4: TMultiAction
       Category = 'Export_mail_ok'
       MoveParams = <>
+      Enabled = False
       ActionList = <>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1087#1086#1095#1090#1077'?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1099' '#1087#1086' '#1087#1086#1095#1090#1077
@@ -3202,6 +3210,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object mactExportMail_xls_5: TMultiAction
       Category = 'Export_mail_ok'
       MoveParams = <>
+      Enabled = False
       ActionList = <>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1087#1086#1095#1090#1077'?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1099' '#1087#1086' '#1087#1086#1095#1090#1077
