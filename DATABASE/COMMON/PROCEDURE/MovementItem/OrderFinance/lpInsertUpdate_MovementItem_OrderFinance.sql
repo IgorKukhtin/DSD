@@ -75,7 +75,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_5(), ioId, inAmountPlan_5);
 
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_1(), ioId, inisAmountPlan_1);
+     /*PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_1(), ioId, inisAmountPlan_1);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_2(), ioId, inisAmountPlan_2);
      -- сохранили свойство <>
@@ -83,7 +83,7 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_4(), ioId, inisAmountPlan_4);
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_5(), ioId, inisAmountPlan_5);
+     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_5(), ioId, inisAmountPlan_5);*/
 
 
      IF vbIsInsert = TRUE
