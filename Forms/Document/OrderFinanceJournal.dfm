@@ -296,7 +296,7 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         DataBinding.FieldName = 'TotalSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1055#1083#1072#1085' '#1085#1072' '#1085#1077#1076#1077#1083#1102
@@ -308,7 +308,7 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         DataBinding.FieldName = 'TotalSumm_all'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1085#1072#1103' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102
@@ -320,7 +320,7 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         DataBinding.FieldName = 'TotalSumm_1'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1085#1072#1103' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102
@@ -332,7 +332,7 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         DataBinding.FieldName = 'TotalSumm_2'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1085#1072#1103' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102
@@ -344,7 +344,7 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         DataBinding.FieldName = 'TotalSumm_3'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1085#1072#1103' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102
@@ -356,7 +356,7 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         DataBinding.FieldName = 'AmountPlan_1'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1048#1090#1086#1075#1086' '#1055#1083#1072#1085' '#1086#1087#1083#1072#1090' '#1085#1072' 1.'#1087#1085'.'
@@ -368,7 +368,7 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         DataBinding.FieldName = 'AmountPlan_2'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1048#1090#1086#1075#1086' '#1055#1083#1072#1085' '#1086#1087#1083#1072#1090' '#1085#1072' 2.'#1074#1090'.'
@@ -380,7 +380,7 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         DataBinding.FieldName = 'AmountPlan_3'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1048#1090#1086#1075#1086' '#1055#1083#1072#1085' '#1086#1087#1083#1072#1090' '#1085#1072' 3.'#1089#1088'.'
@@ -392,7 +392,7 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         DataBinding.FieldName = 'AmountPlan_4'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1048#1090#1086#1075#1086' '#1055#1083#1072#1085' '#1086#1087#1083#1072#1090' '#1085#1072' 4.'#1095#1090'.'
@@ -404,7 +404,7 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         DataBinding.FieldName = 'AmountPlan_5'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1048#1090#1086#1075#1086' '#1055#1083#1072#1085' '#1086#1087#1083#1072#1090' '#1085#1072' 5.'#1087#1090'.'

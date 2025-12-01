@@ -330,7 +330,7 @@ BEGIN
              , tmp.AmountPartner_2  ::TVarChar
              , tmp.AmountPartner    ::TVarChar
              , tmp.Amount           ::TVarChar
-       FROM (SELECT  ('Документ № '||tmpMovement.InvNumber||' от ' || tmpMovement.OperDate ) ::TVarChar AS OKPO
+       FROM (SELECT  ('Документ № '||tmpMovement.InvNumber||' от ' || zfConvert_DateToString (tmpMovement.OperDate) ) ::TVarChar AS OKPO
                     , '' ::TVarChar AS PaidKindName
                     , '' ::TVarChar AS ContractName
                     , '' ::TVarChar AS StartDate
@@ -418,17 +418,17 @@ BEGIN
               SELECT  tmpMI.OKPO             ::TVarChar
                     , tmpMI.PaidKindName     ::TVarChar
                     , tmpMI.ContractName     ::TVarChar
-                    , tmpMI.StartDate        ::TVarChar
-                    , tmpMI.EndDate_real     ::TVarChar
+                    , zfConvert_DateToString (tmpMI.StartDate)        ::TVarChar
+                    , zfConvert_DateToString (tmpMI.EndDate_real)     ::TVarChar
                     , tmpMI.Condition        ::TVarChar
                     , tmpMI.JuridicalName    ::TVarChar
                     , tmpMI.InfoMoneyName    ::TVarChar
-                    , tmpMI.AmountRemains    ::TVarChar
-                    , tmpMI.AmountSumm       ::TVarChar
-                    , tmpMI.AmountPartner_1  ::TVarChar
-                    , tmpMI.AmountPartner_2  ::TVarChar
-                    , tmpMI.AmountPartner    ::TVarChar
-                    , tmpMI.Amount           ::TVarChar 
+                    , CAST (tmpMI.AmountRemains AS NUMERIC (16,2))    ::TVarChar
+                    , CAST (tmpMI.AmountSumm AS NUMERIC (16,2))       ::TVarChar
+                    , CAST (tmpMI.AmountPartner_1 AS NUMERIC (16,2))  ::TVarChar
+                    , CAST (tmpMI.AmountPartner_2 AS NUMERIC (16,2))  ::TVarChar
+                    , CAST (tmpMI.AmountPartner AS NUMERIC (16,2))    ::TVarChar
+                    , CAST (tmpMI.Amount AS NUMERIC (16,2))           ::TVarChar 
                     , 10 + (ROW_NUMBER() OVER (ORDER BY tmpMI.NumGroup, tmpMI.InfoMoneyName, tmpMI.JuridicalName)) AS Ord
               FROM tmpMI_Data AS tmpMI
              ) AS tmp
@@ -447,4 +447,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderFinance_XLS(inMovementId :=32828998  ::Integer , inSession := '9457'::TVarChar);
+--SELECT * FROM gpSelect_Movement_OrderFinance_XLS(inMovementId :=32828998  ::Integer , inSession := '9457'::TVarChar);
