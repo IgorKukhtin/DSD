@@ -18,12 +18,12 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- Результат
-     SELECT COALESCE (Object_BankAccount_View.Name, '')
+     SELECT 'OTP_' /*COALESCE (Object_BankAccount_View.Name, '')
             || '_' || REPLACE (zfConvert_DateShortToString (Movement.OperDate), '.', '')
-            || '_' || Movement.InvNumber  AS outFileName
+            || '_' || Movement.InvNumber*/  AS outFileName
           , 'xml'                         AS outDefaultFileExt
           , FALSE                         AS outEncodingANSI
-   INTO outFileName, outDefaultFileExt, outEncodingANSI
+            INTO outFileName, outDefaultFileExt, outEncodingANSI
      FROM Movement
          LEFT JOIN MovementLinkObject AS MovementLinkObject_BankAccount
                                       ON MovementLinkObject_BankAccount.MovementId = Movement.Id
