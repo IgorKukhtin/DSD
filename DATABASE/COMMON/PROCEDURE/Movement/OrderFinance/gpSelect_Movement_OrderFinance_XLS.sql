@@ -450,7 +450,6 @@ BEGIN
                     , 'Предварительно план оплаты на неделю' ::TVarChar AS Amount 
                     , 5 AS Ord
                     , '' AS Ord1
-              FROM tmpMovement
             UNION
               SELECT  tmpMI.OKPO             ::TVarChar
                     , tmpMI.PaidKindName     ::TVarChar
@@ -473,6 +472,46 @@ BEGIN
                     , tmpMI.InfoMoneyName AS Ord1
               FROM tmpMI_Data AS tmpMI
              UNION
+              SELECT  '' ::TVarChar AS OKPO
+                    , '' ::TVarChar AS PaidKindName
+                    , '' ::TVarChar AS ContractName
+                    , ''  ::TVarChar AS StartDate
+                    , '' ::TVarChar AS EndDate_real
+                    , '' ::TVarChar AS Condition 
+                    , '' ::TVarChar AS JvuridicalName
+                    , '' ::TVarChar AS InfoMoneyName
+                    , '' ::TVarChar AS AmountRemains
+                    , ''   ::TVarChar AS AmountSumm
+                    , ''   ::TVarChar AS AmountPartner_1
+                    , ''  ::TVarChar AS AmountPartner_2
+                    , ''  ::TVarChar AS AmountPartner_3
+                    , ''  ::TVarChar AS AmountPartner_4
+                    , '' ::TVarChar AS AmountPartner_5
+                    , '' ::TVarChar AS AmountPartner
+                    , '' ::TVarChar AS Amount 
+                    , 100 AS Ord
+                    , '' AS Ord1
+             UNION
+              SELECT  '' ::TVarChar AS OKPO
+                    , '' ::TVarChar AS PaidKindName
+                    , '' ::TVarChar AS ContractName
+                    , ''  ::TVarChar AS StartDate
+                    , '' ::TVarChar AS EndDate_real
+                    , '' ::TVarChar AS Condition 
+                    , '' ::TVarChar AS JvuridicalName
+                    , '' ::TVarChar AS InfoMoneyName
+                    , '' ::TVarChar AS AmountRemains
+                    , ''   ::TVarChar AS AmountSumm
+                    , ''   ::TVarChar AS AmountPartner_1
+                    , ''  ::TVarChar AS AmountPartner_2
+                    , ''  ::TVarChar AS AmountPartner_3
+                    , ''  ::TVarChar AS AmountPartner_4
+                    , '' ::TVarChar AS AmountPartner_5
+                    , 'В т.ч. по статьям' ::TVarChar AS AmountPartner
+                    , '' ::TVarChar AS Amount 
+                    , 101 AS Ord
+                    , '' AS Ord1 
+             UNION
               SELECT  ''     ::TVarChar
                     , ''     ::TVarChar
                     , ''     ::TVarChar
@@ -480,22 +519,43 @@ BEGIN
                     , ''     ::TVarChar
                     , ''     ::TVarChar
                     , ''     ::TVarChar
-                    , ('Итого '||tmpMI.InfoMoneyName)    ::TVarChar    AS InfoMoneyName
-                    , CAST (SUM (COALESCE (tmpMI.AmountRemains,0)) AS NUMERIC (16,2))    ::TVarChar
-                    , CAST (SUM (COALESCE (tmpMI.AmountSumm,0)) AS NUMERIC (16,2))       ::TVarChar
-                    , CAST (SUM (COALESCE (tmpMI.AmountPartner_1,0)) AS NUMERIC (16,2))  ::TVarChar
-                    , CAST (SUM (COALESCE (tmpMI.AmountPartner_2,0)) AS NUMERIC (16,2))  ::TVarChar
-                    , CAST (SUM (COALESCE (tmpMI.AmountPartner_3,0)) AS NUMERIC (16,2))  ::TVarChar
-                    , CAST (SUM (COALESCE (tmpMI.AmountPartner_4,0)) AS NUMERIC (16,2))  ::TVarChar
-                    , CAST (SUM (COALESCE (tmpMI.AmountPartner_5,0)) AS NUMERIC (16,2))  ::TVarChar
-                    , CAST (SUM (COALESCE (tmpMI.AmountPartner,0)) AS NUMERIC (16,2))    ::TVarChar
-                    , CAST (SUM (COALESCE (tmpMI.Amount,0)) AS NUMERIC (16,2))           ::TVarChar
-                    , 999 AS Ord
-                    , tmpMI.InfoMoneyName AS Ord1
+                    , ''     ::TVarChar
+                    , ''     ::TVarChar
+                    , ''     ::TVarChar
+                    , ''     ::TVarChar
+                    , ''     ::TVarChar
+                    , ''     ::TVarChar
+                    , ''     ::TVarChar
+                    , ''     ::TVarChar
+                    , tmpMI.InfoMoneyName  ::TVarChar
+                    , CAST (SUM (COALESCE (tmpMI.Amount,0)) AS NUMERIC (16,2)) ::TVarChar
+                    , 102 AS Ord
+                    , ''||tmpMI.InfoMoneyName AS Ord1
               FROM tmpMI_Data AS tmpMI
-              GROUP BY tmpMI.InfoMoneyName, tmpMI.NumGroup 
+              GROUP BY tmpMI.InfoMoneyName, tmpMI.NumGroup
+             UNION
+              SELECT  ''     ::TVarChar
+                    , ''     ::TVarChar
+                    , ''     ::TVarChar
+                    , ''     ::TVarChar
+                    , ''     ::TVarChar
+                    , ''     ::TVarChar
+                    , ''     ::TVarChar
+                    , ''     ::TVarChar
+                    , ''     ::TVarChar
+                    , ''     ::TVarChar
+                    , ''     ::TVarChar
+                    , ''     ::TVarChar
+                    , ''     ::TVarChar
+                    , ''     ::TVarChar
+                    , ''     ::TVarChar
+                    , 'Всего: '     ::TVarChar
+                    , CAST (SUM (COALESCE (tmpMI.Amount,0)) AS NUMERIC (16,2))           ::TVarChar
+                    , 103 AS Ord
+                    , ''
+              FROM tmpMI_Data AS tmpMI
              ) AS tmp
-       ORDER BY tmp.Ord1, tmp.Ord
+       ORDER BY  tmp.Ord
             ;
 
              
