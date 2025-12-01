@@ -62,6 +62,16 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
               Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_calc
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountRemains
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountPartner
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -103,6 +113,16 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
               Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_calc
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountRemains
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountPartner
             end>
           OptionsData.Deleting = False
           OptionsView.GroupByBox = True
@@ -460,6 +480,28 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             Options.Editing = False
             VisibleForCustomization = False
             Width = 80
+          end
+          object AmountRemains: TcxGridDBColumn
+            Caption = #1053#1072#1095'. '#1076#1086#1083#1075
+            DataBinding.FieldName = 'AmountRemains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object AmountPartner: TcxGridDBColumn
+            Caption = #1044#1086#1083#1075' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081
+            DataBinding.FieldName = 'AmountPartner'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
           end
           object AmountPlan_total: TcxGridDBColumn
             Caption = #1055#1083#1072#1085' '#1048#1058#1054#1043#1054
