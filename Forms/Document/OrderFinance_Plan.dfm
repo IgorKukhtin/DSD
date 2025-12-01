@@ -29,37 +29,37 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
-              Format = ',0.##'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_total
             end
             item
-              Format = ',0.##'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_1
             end
             item
-              Format = ',0.##'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_2
             end
             item
-              Format = ',0.##'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_3
             end
             item
-              Format = ',0.##'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_4
             end
             item
-              Format = ',0.##'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_5
             end
             item
-              Format = ',0.##'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_calc
             end>
@@ -70,37 +70,37 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
               Column = InvNumber
             end
             item
-              Format = ',0.##'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_total
             end
             item
-              Format = ',0.##'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_1
             end
             item
-              Format = ',0.##'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_2
             end
             item
-              Format = ',0.##'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_3
             end
             item
-              Format = ',0.##'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_4
             end
             item
-              Format = ',0.##'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_5
             end
             item
-              Format = ',0.##'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_calc
             end>
@@ -452,7 +452,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -466,7 +466,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             DataBinding.FieldName = 'AmountPlan_total'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1048#1058#1054#1043#1054' '#1055#1083#1072#1085' '#1086#1087#1083#1072#1090
@@ -478,7 +478,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             DataBinding.FieldName = 'AmountPlan_1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -491,7 +491,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             DataBinding.FieldName = 'AmountPlan_2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Properties.ReadOnly = False
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -505,7 +505,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             DataBinding.FieldName = 'AmountPlan_3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -518,7 +518,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             DataBinding.FieldName = 'AmountPlan_4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Properties.ReadOnly = False
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -532,7 +532,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             DataBinding.FieldName = 'AmountPlan_5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -545,7 +545,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             DataBinding.FieldName = 'AmountPlan_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -2064,6 +2064,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         Name = 'outDefaultFileExt'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outEncodingANSI'

@@ -498,12 +498,12 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
           DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
               Column = Amount
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountSumm
               Sorted = True
@@ -514,68 +514,68 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
               Column = AmountRemains
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPartner
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPartner_1
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPartner_2
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPartner_3
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_1
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_2
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_3
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_4
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_5
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPartner_4
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_total
             end>
           DataController.Summary.FooterSummaryItems = <
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
               Column = Amount
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountSumm
             end
@@ -585,7 +585,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
               Column = AmountRemains
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPartner
             end
@@ -595,52 +595,52 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
               Column = JuridicalName
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPartner_1
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPartner_2
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPartner_3
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_1
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_2
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_3
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_4
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_5
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPartner_4
             end
             item
-              Format = ',0.####'
+              Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_total
             end>
@@ -813,7 +813,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             DataBinding.FieldName = 'AmountRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -824,7 +824,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -836,7 +836,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             DataBinding.FieldName = 'AmountPartner_1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -848,7 +848,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             DataBinding.FieldName = 'AmountPartner_2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -860,7 +860,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             DataBinding.FieldName = 'AmountPartner_3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Properties.ReadOnly = False
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -873,7 +873,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             DataBinding.FieldName = 'AmountPartner_4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Properties.ReadOnly = False
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -886,7 +886,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             DataBinding.FieldName = 'AmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -896,8 +896,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             Caption = '***'#1055#1083#1072#1085' '#1085#1072' '#1085#1077#1076#1077#1083#1102
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1055#1083#1072#1085' '#1085#1072' '#1085#1077#1076#1077#1083#1102
@@ -908,7 +908,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             DataBinding.FieldName = 'AmountPlan_total'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090' '#1048#1058#1054#1043#1054
@@ -919,8 +919,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             Caption = #1055#1083#1072#1085' 1.'#1087#1085'.'
             DataBinding.FieldName = 'AmountPlan_1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -931,8 +931,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             Caption = #1055#1083#1072#1085' 2.'#1074#1090'.'
             DataBinding.FieldName = 'AmountPlan_2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Properties.ReadOnly = False
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -944,8 +944,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             Caption = #1055#1083#1072#1085' 3.'#1089#1088'.'
             DataBinding.FieldName = 'AmountPlan_3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -956,8 +956,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             Caption = #1055#1083#1072#1085' 4.'#1095#1090'.'
             DataBinding.FieldName = 'AmountPlan_4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Properties.ReadOnly = False
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -969,8 +969,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             Caption = #1055#1083#1072#1085' 5.'#1087#1090'.'
             DataBinding.FieldName = 'AmountPlan_5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -1131,9 +1131,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1070#1088'.'#1083#1080#1094#1072
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
