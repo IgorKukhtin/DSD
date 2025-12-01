@@ -1917,8 +1917,8 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 384
-    Top = 48
+    Left = 368
+    Top = 88
   end
   object spGet_CurrentWeekDay: TdsdStoredProc
     StoredProcName = 'spGet_CurrentWeekDay'
@@ -2093,14 +2093,6 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
     OutputType = otResult
     Params = <
       item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'MovementId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'outFileName'
         Value = Null
         Component = FormParams
@@ -2122,6 +2114,71 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         Component = FormParams
         ComponentItem = 'outEncodingANSI'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankName_Main'
+        Value = Null
+        Component = GuidesBankMain
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPlan_1'
+        Value = Null
+        Component = cbPlan_1
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPlan_2'
+        Value = Null
+        Component = cbPlan_2
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPlan_3'
+        Value = Null
+        Component = cbPlan_3
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPlan_4'
+        Value = Null
+        Component = cbPlan_4
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPlan_5'
+        Value = Null
+        Component = cbPlan_5
+        DataType = ftBoolean
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
