@@ -26,7 +26,6 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-
     -- –ÂÁÛÎ¸Ú‡Ú
      SELECT REPLACE (inBankName_Main, '"', '')
             || '_' || REPLACE ( zfConvert_DateShortToString (inOperDate 
@@ -65,7 +64,7 @@ $BODY$
 /*
 
 SELECT * FROM gpGet_Movement_OrderFinance_FileName
-(inMovementId:= 14022564,inBankName_Main :=  'œ¿“ "Œ“œ ¡¿Õ "'  ::TVarChar , inOperDAte := '17.01.2025' ::TDateTime ,
+(inMovementId:= 14022564, inBankName_Main :=  'œ¿“ "Œ“œ ¡¿Õ "'  ::TVarChar , inOperDAte := '17.01.2025' ::TDateTime ,
  inisPlan_1 :=  FAlse ::Boolean , inisPlan_2 := FAlse  ::Boolean, inisPlan_3 := FAlse ::Boolean, inisPlan_4 := True ::Boolean, inisPlan_5 := FAlse ::Boolean,
  inSession:= zfCalc_UserAdmin()) 
  

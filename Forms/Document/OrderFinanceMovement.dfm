@@ -4616,22 +4616,14 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 360
-    Top = 456
+    Left = 320
+    Top = 448
   end
   object spGet_Export_FileName: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_OrderFinance_FileName'
     DataSets = <>
     OutputType = otResult
     Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
       item
         Name = 'outFileName'
         Value = Null
@@ -4662,6 +4654,51 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Component = actSMTPFile
         ComponentItem = 'FileName'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankName_Main'
+        Value = #1055#1040#1058' "'#1054#1058#1055' '#1041#1040#1053#1050'"'
+        DataType = ftString
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     PackSize = 1
