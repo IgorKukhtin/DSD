@@ -5,6 +5,7 @@ DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer, Bo
 --DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer,Boolean, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer,Boolean, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpUpdateMovement_OrderFinance_Plan(
@@ -25,7 +26,8 @@ CREATE OR REPLACE FUNCTION gpUpdateMovement_OrderFinance_Plan(
     IN inOrderFinanceId          Integer    ,
     IN inJuridicalOrderFinanceId Integer    ,
     IN inJuridicalId             Integer    ,
-    IN inInfoMoneyId             Integer    ,
+    IN inInfoMoneyId             Integer    , 
+    IN inBankId_main_top         Integer    ,
     IN inBankId_main             Integer    ,
     IN inBankId_jof              Integer    ,
     IN inBankAccountName_main    TVarChar   ,
@@ -43,6 +45,8 @@ $BODY$
             vbBankAccountId_jof   Integer;
             vbBankAccountId_main  Integer;
             vbPlan_count  Integer;
+            vbBankId_main Integer;
+            vbCount       Integer;
 BEGIN
      -- проверка
      -- проверка прав пользователя на вызов процедуры
@@ -104,6 +108,42 @@ BEGIN
         vbPlan_count:= vbPlan_count + 1;
      END IF;
 
+     -- если не выбрано берем из  inBankId_main_top
+     IF COALESCE (inBankId_main,0) = 0
+     THEN 
+         IF COALESCE (inBankId_main_top, 0) <> 0
+         THEN 
+             --
+             inBankId_main := inBankId_main_top;
+         ELSE
+             --Если inBankId_main_top тоже пусто то пробуем найти у счета, если там больше 1 банка - тогда выдавать ошибку что надо заполнить "банк плательщика"
+              SELECT MAX (Object_BankAccount_View.BankId) AS BankId
+                   , COUNT (*) AS Count_bank
+            INTO vbBankId_main, vbCount
+              FROM Object_BankAccount_View
+                   -- Покажем счета только по внутренним фирмам
+                   INNER JOIN ObjectBoolean AS ObjectBoolean_isCorporate
+                                            ON ObjectBoolean_isCorporate.ObjectId = Object_BankAccount_View.JuridicalId
+                                           AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
+                                           AND (ObjectBoolean_isCorporate.ValueData = TRUE
+                                             OR Object_BankAccount_View.JuridicalId = 15505 -- ДУКО ТОВ
+                                             OR Object_BankAccount_View.JuridicalId = 15512 -- Ірна-1 Фірма ТОВ
+                                             OR Object_BankAccount_View.isCorporate = TRUE
+                                               )
+              WHERE TRIM (Object_BankAccount_View.Name) ILIKE TRIM (inBankAccountName_main)
+                AND Object_BankAccount_View.isErased = FALSE
+             ;
+             IF COALESCE (vbCount,0) = 1
+             THEN
+                 inBankId_main := vbBankId_main;
+             END IF;
+             IF COALESCE (vbCount,0) > 1
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Не заполнен <Банк плательщика>.';
+             END IF;             
+         END IF;
+     END IF;
+
 
      --
      IF vbPlan_count > 1
@@ -126,6 +166,8 @@ BEGIN
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (inMovementItemId, vbUserId, FALSE);
 
+
+     
 
      -- 2.1. BankAccountName_main
      IF 1=1 -- COALESCE (inBankAccountName_main,'') <> ''
@@ -347,7 +389,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment_pay(), inMovementItemId, outComment_pay);
 
 
-    -- if vbUserId = 9457 then RAISE EXCEPTION 'Админ.Test Ok.'; end if;
+     if vbUserId = 9457 then RAISE EXCEPTION 'Админ.Test Ok.'; end if;
 
 END;
 $BODY$
@@ -377,7 +419,8 @@ inOrderFinanceId := 3988049 ,
 inJuridicalOrderFinanceId := 12996023 , 
 inJuridicalId := 11057033 , 
 inInfoMoneyId := 8906 , 
-inBankId_main := 76970 , 
+inBankId_main_top := 0 ,
+inBankId_main := 76970 ,    ---76970
 inBankId_jof := 9264405 , 
 inBankAccountName_main := 'UA173005280000026000301367079' , 
 inBankAccountName_jof := 'UA583209840000026004210394845' , 

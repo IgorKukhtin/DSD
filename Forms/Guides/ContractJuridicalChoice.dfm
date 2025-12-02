@@ -11,21 +11,26 @@ inherited ContractJuridicalChoiceForm: TContractJuridicalChoiceForm
     Top = 56
     Width = 926
     Height = 440
-    ExplicitWidth = 853
-    ExplicitHeight = 470
+    ExplicitTop = 56
+    ExplicitWidth = 926
+    ExplicitHeight = 440
     ClientRectBottom = 440
     ClientRectRight = 926
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 853
-      ExplicitHeight = 470
+      ExplicitWidth = 926
+      ExplicitHeight = 440
       inherited cxGrid: TcxGrid
         Width = 926
         Height = 440
-        ExplicitLeft = 24
-        ExplicitTop = 3
-        ExplicitWidth = 853
+        ExplicitWidth = 926
         ExplicitHeight = 440
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = JuridicalName
+            end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -235,7 +240,6 @@ inherited ContractJuridicalChoiceForm: TContractJuridicalChoiceForm
     Height = 30
     Align = alTop
     TabOrder = 5
-    ExplicitTop = 20
     object lbSearchName: TcxLabel
       Left = 8
       Top = 4
@@ -514,6 +518,7 @@ inherited ContractJuridicalChoiceForm: TContractJuridicalChoiceForm
         end
         item
           Name = 'Condition'
+          Value = Null
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -545,7 +550,7 @@ inherited ContractJuridicalChoiceForm: TContractJuridicalChoiceForm
     Top = 82
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ContractChoice'
+    StoredProcName = 'gpSelect_Object_ContractJuridicalChoice'
     Params = <
       item
         Name = 'inPaidKindId'
@@ -561,12 +566,6 @@ inherited ContractJuridicalChoiceForm: TContractJuridicalChoiceForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inJuridicalId'
-        Value = '0'
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Top = 82
@@ -647,48 +646,16 @@ inherited ContractJuridicalChoiceForm: TContractJuridicalChoiceForm
       item
         Name = 'MasterJuridicalId'
         Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
         Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 424
     Top = 168
-  end
-  object JuridicalGuides: TdsdGuides
-    KeyField = 'Id'
-    FormNameParam.Value = 'TJuridical_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TJuridical_ObjectForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 840
-    Top = 120
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -696,7 +663,6 @@ inherited ContractJuridicalChoiceForm: TContractJuridicalChoiceForm
     RefreshAction = actRefresh
     ComponentList = <
       item
-        Component = JuridicalGuides
       end>
     Left = 320
     Top = 168

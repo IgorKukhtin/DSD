@@ -1870,6 +1870,14 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inBankId_main_top'
+        Value = Null
+        Component = GuidesBankMain
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inBankId_main'
         Value = Null
         Component = MasterCDS

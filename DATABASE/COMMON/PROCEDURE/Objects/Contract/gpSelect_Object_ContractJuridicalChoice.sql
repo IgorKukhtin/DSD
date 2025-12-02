@@ -148,6 +148,7 @@ BEGIN
         INNER JOIN tmpContract_View AS Object_Contract_View
                                     ON Object_Contract_View.PaidKindId = _tmpPaidKind.PaidKindId
                                    --AND Object_Contract_View.isErased = FALSE
+                                   -- AND (Object_Contract_View.JuridicalId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
         LEFT JOIN tmpListBranch_Constraint ON tmpListBranch_Constraint.JuridicalId = Object_Contract_View.JuridicalId
         LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
                              ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId

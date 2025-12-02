@@ -44,7 +44,6 @@ type
     bbShowAll: TdxBarButton;
     bbJuridicalLabel: TdxBarControlContainerItem;
     bbJuridical: TdxBarControlContainerItem;
-    JuridicalGuides: TdsdGuides;
     RefreshDispatcher: TRefreshDispatcher;
     ContractComment: TcxGridDBColumn;
     Code: TcxGridDBColumn;
