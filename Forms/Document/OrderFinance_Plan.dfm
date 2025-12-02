@@ -1402,7 +1402,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'NumGroup;InfoMoneyName;JuridicalName'
+          IndexFieldNames = 'BankName;NumGroup;InfoMoneyName;JuridicalName'
         end>
       Params = <
         item
@@ -2337,6 +2337,14 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         Value = Null
         Component = deStart
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankMainId'
+        Value = Null
+        Component = GuidesBankMain
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
