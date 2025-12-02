@@ -1637,7 +1637,8 @@ uses
   OrderFinance_Plan in '..\..\Forms\Document\OrderFinance_Plan.pas' {OrderFinance_PlanForm: TParentForm},
   WeekPeriodDialog in '..\..\Forms\Guides\WeekPeriodDialog.pas' {WeekPeriodDialogForm: TParentForm},
   WeighingPartner_PartionQEdit in '..\..\Forms\Document\WeighingPartner_PartionQEdit.pas' {WeighingPartner_PartionQEditForm: TParentForm},
-  BankAccount_Choice in '..\..\Forms\Guides\BankAccount_Choice.pas' {BankAccount_ChoiceForm: TParentForm};
+  BankAccount_Choice in '..\..\Forms\Guides\BankAccount_Choice.pas' {BankAccount_ChoiceForm: TParentForm},
+  ContractJuridicalChoice in '..\..\Forms\Guides\ContractJuridicalChoice.pas' {ContractJuridicalChoiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -24,6 +24,11 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
+     --проверка
+     IF COALESCE (inBankName_Main,'') = ''
+     THEN
+          RAISE EXCEPTION 'Ошибка.Банк не выбран.';
+     END IF;
 
     -- Результат
      SELECT REPLACE (inBankName_Main, '"', '')

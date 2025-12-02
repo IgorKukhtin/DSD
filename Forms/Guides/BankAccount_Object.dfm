@@ -25,6 +25,7 @@ object BankAccount_ObjectForm: TBankAccount_ObjectForm
     Height = 588
     Align = alClient
     TabOrder = 0
+    ExplicitTop = 55
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -131,7 +132,6 @@ object BankAccount_ObjectForm: TBankAccount_ObjectForm
     Height = 30
     Align = alTop
     TabOrder = 5
-    ExplicitTop = 20
     object lbSearchName: TcxLabel
       Left = 2
       Top = 4
@@ -604,7 +604,7 @@ object BankAccount_ObjectForm: TBankAccount_ObjectForm
     ActionNumber1 = dsdChoiceGuides
     CheckBoxList = <>
     Left = 328
-    Top = 96
+    Top = 95
   end
   object GuidesBank: TdsdGuides
     KeyField = 'Id'

@@ -12,7 +12,8 @@ RETURNS TABLE (Id Integer
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , OKPO TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
-             , PaidKindName TVarChar, InfoMoneyName TVarChar, NumGroup Integer
+             , PaidKindId Integer, PaidKindName TVarChar
+             , InfoMoneyName TVarChar, NumGroup Integer
              , Condition TVarChar, ContractStateKindCode Integer
              , StartDate TDateTime, EndDate_real TDateTime, EndDate TVarChar
              , Amount TFloat, AmountRemains TFloat, AmountPartner TFloat
@@ -411,6 +412,7 @@ BEGIN
            , Object_Contract.Id               AS ContractId
            , Object_Contract.ObjectCode       AS ContractCode
            , Object_Contract.ValueData        AS ContractName
+           , Object_PaidKind.Id               AS PaidKindId
            , Object_PaidKind.ValueData        AS PaidKindName
            , Object_InfoMoney.ValueData       AS InfoMoneyName
            , COALESCE (tmpInfoMoney_OrderF.NumGroup, NULL) ::Integer AS NumGroup
@@ -500,6 +502,7 @@ BEGIN
            , 0                                AS ContractId
            , 0                                AS ContractCode
            , '' ::TVarChar                    AS ContractName
+           , 0                                AS PaidKindId
            , '' ::TVarChar                    AS PaidKindName
            , Object_InfoMoney.ValueData       AS InfoMoneyName
            , COALESCE (tmpInfoMoney_OrderF.NumGroup, NULL) ::Integer AS NumGroup
@@ -700,7 +703,8 @@ BEGIN
 
            , View_Contract.ContractId
            , View_Contract.ContractCode
-           , View_Contract.InvNumber          AS ContractName
+           , View_Contract.InvNumber          AS ContractName 
+           , Object_PaidKind.Id               AS PaidKindId
            , Object_PaidKind.ValueData        AS PaidKindName
 
            , Object_InfoMoney.ValueData       AS InfoMoneyName
@@ -868,6 +872,7 @@ BEGIN
            , NULL ::Integer                   AS ContractId
            , NULL ::Integer                   AS ContractCode
            , '' ::TVarChar                    AS ContractName
+           , 0                                AS PaidKindId
            , '' ::TVarChar                    AS PaidKindName
            , Object_InfoMoney.ValueData       AS InfoMoneyName
            , COALESCE (tmpInfoMoney_OrderF.NumGroup, NULL) ::Integer AS NumGroup

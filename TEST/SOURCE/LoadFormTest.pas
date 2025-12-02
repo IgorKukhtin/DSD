@@ -468,6 +468,10 @@ end;
 
 procedure TLoadFormTest.LoadContractFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractJuridicalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractJuridicalChoiceForm');
+  exit;
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionPartnerValueEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionPartnerValueEditForm');
