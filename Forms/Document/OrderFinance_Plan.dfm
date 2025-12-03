@@ -1846,11 +1846,11 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inJuridicalOrderFinanceId'
+        Name = 'ioJuridicalOrderFinanceId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'JuridicalOrderFinanceId'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item

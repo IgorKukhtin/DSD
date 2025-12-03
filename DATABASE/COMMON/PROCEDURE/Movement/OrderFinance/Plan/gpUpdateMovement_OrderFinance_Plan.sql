@@ -24,7 +24,7 @@ CREATE OR REPLACE FUNCTION gpUpdateMovement_OrderFinance_Plan(
    OUT outisAmountPlan_4         Boolean    , --
    OUT outisAmountPlan_5         Boolean    , --
     IN inOrderFinanceId          Integer    ,
-    IN inJuridicalOrderFinanceId Integer    ,
+ INOUT ioJuridicalOrderFinanceId Integer    ,
     IN inJuridicalId             Integer    ,
     IN inInfoMoneyId             Integer    , 
     IN inBankId_main_top         Integer    ,
@@ -260,25 +260,25 @@ BEGIN
 
 
          -- 2.3. Справочник JuridicalOrderFinance_BankAccount
-         IF COALESCE (inJuridicalOrderFinanceId,0) = 0
+         IF COALESCE (ioJuridicalOrderFinanceId,0) = 0
          THEN
              --сохранили <Объект>
-             inJuridicalOrderFinanceId := lpInsertUpdate_Object (0, zc_Object_JuridicalOrderFinance(), 0, '');
+             ioJuridicalOrderFinanceId := lpInsertUpdate_Object (0, zc_Object_JuridicalOrderFinance(), 0, '');
          END IF;
 
          -- сохранили связь с <>
-         PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_JuridicalOrderFinance_Juridical(), inJuridicalOrderFinanceId, inJuridicalId);
+         PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_JuridicalOrderFinance_Juridical(), ioJuridicalOrderFinanceId, inJuridicalId);
          -- сохранили связь с <>
-         PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_JuridicalOrderFinance_BankAccountMain(), inJuridicalOrderFinanceId, vbBankAccountId_main);
+         PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_JuridicalOrderFinance_BankAccountMain(), ioJuridicalOrderFinanceId, vbBankAccountId_main);
          -- сохранили связь с <>
-         PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_JuridicalOrderFinance_InfoMoney(), inJuridicalOrderFinanceId, inInfoMoneyId);
+         PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_JuridicalOrderFinance_InfoMoney(), ioJuridicalOrderFinanceId, inInfoMoneyId);
          -- сохранили связь с <>
-         PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_JuridicalOrderFinance_BankAccount(), inJuridicalOrderFinanceId, vbBankAccountId_jof);
+         PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_JuridicalOrderFinance_BankAccount(), ioJuridicalOrderFinanceId, vbBankAccountId_jof);
          -- сохранили св-во <>
-         PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_JuridicalOrderFinance_Comment(), inJuridicalOrderFinanceId, inComment_jof);
+         PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_JuridicalOrderFinance_Comment(), ioJuridicalOrderFinanceId, inComment_jof);
 
          -- сохранили протокол
-         PERFORM lpInsert_ObjectProtocol (inJuridicalOrderFinanceId, vbUserId);
+         PERFORM lpInsert_ObjectProtocol (ioJuridicalOrderFinanceId, vbUserId);
 
      END IF;    
      
@@ -313,7 +313,7 @@ BEGIN
                                                            AND ObjectDate_OperDate.DescId = zc_ObjectDate_JuridicalOrderFinance_OperDate()
                                   WHERE Object_JuridicalOrderFinance.DescId = zc_Object_JuridicalOrderFinance()
                                    AND Object_JuridicalOrderFinance.isErased = FALSE
-                                   AND Object_JuridicalOrderFinance.Id = inJuridicalOrderFinanceId
+                                   AND Object_JuridicalOrderFinance.Id = ioJuridicalOrderFinanceId
                                    AND Main_BankAccount_View.BankId = inBankId_main
                                    AND inBankId_main <> 0
                                    )
@@ -342,7 +342,7 @@ BEGIN
                                                                 AND ObjectDate_OperDate.DescId = zc_ObjectDate_JuridicalOrderFinance_OperDate()
                                        WHERE Object_JuridicalOrderFinance.DescId = zc_Object_JuridicalOrderFinance()
                                         AND Object_JuridicalOrderFinance.isErased = FALSE
-                                        AND Object_JuridicalOrderFinance.Id = inJuridicalOrderFinanceId
+                                        AND Object_JuridicalOrderFinance.Id = ioJuridicalOrderFinanceId
                                         )
 
      SELECT MIFloat_AmountPlan.ValueData ::TFloat AS AmountPlan_calc
@@ -389,7 +389,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment_pay(), inMovementItemId, outComment_pay);
 
 
-     if vbUserId = 9457 then RAISE EXCEPTION 'Админ.Test Ok.'; end if;
+     if vbUserId = 9457 then RAISE EXCEPTION 'Админ.Test Ok. <%>', ioJuridicalOrderFinanceId ; end if;
 
 END;
 $BODY$
@@ -403,7 +403,7 @@ $BODY$
 
 
 -- тест
---select * from gpUpdateMovement_OrderFinance_Plan(inMovementId := 32907603 , inMovementItemId := 341774289 , inisAmountPlan := 'True' , inisPlan_1 := 'False' , inisPlan_2 := 'False' , inisPlan_3 := 'True' , inisPlan_4 := 'False' , inisPlan_5 := 'False' , inOrderFinanceId := 3988049 , inJuridicalOrderFinanceId := 12995943 , inJuridicalId := 397619 , inInfoMoneyId := 8908 , inBankId_main := 76970 , inBankId_jof := 81452 , inBankAccountName_main := 'UA173005280000026000301367079' , inBankAccountName_jof := 'UA523003350000000026005464177' , inComment_jof := 'За Яловичину, згідно Договору  NOM_DOG у т.ч. ПДВ PDV% SUMMA_P грн.' , inSession := '9457');
+--select * from gpUpdateMovement_OrderFinance_Plan(inMovementId := 32907603 , inMovementItemId := 341774289 , inisAmountPlan := 'True' , inisPlan_1 := 'False' , inisPlan_2 := 'False' , inisPlan_3 := 'True' , inisPlan_4 := 'False' , inisPlan_5 := 'False' , inOrderFinanceId := 3988049 , ioJuridicalOrderFinanceId := 12995943 , inJuridicalId := 397619 , inInfoMoneyId := 8908 , inBankId_main := 76970 , inBankId_jof := 81452 , inBankAccountName_main := 'UA173005280000026000301367079' , inBankAccountName_jof := 'UA523003350000000026005464177' , inComment_jof := 'За Яловичину, згідно Договору  NOM_DOG у т.ч. ПДВ PDV% SUMMA_P грн.' , inSession := '9457');
 
 
 /*select * from gpUpdateMovement_OrderFinance_Plan(
@@ -416,7 +416,7 @@ inisPlan_3 := 'True' ,
 inisPlan_4 := 'False' , 
 inisPlan_5 := 'False' , 
 inOrderFinanceId := 3988049 , 
-inJuridicalOrderFinanceId := 12996023 , 
+ioJuridicalOrderFinanceId := 12996023 , 
 inJuridicalId := 11057033 , 
 inInfoMoneyId := 8906 , 
 inBankId_main_top := 0 ,
