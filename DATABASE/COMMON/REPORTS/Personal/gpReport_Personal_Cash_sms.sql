@@ -42,7 +42,8 @@ BEGIN
     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
     
     
---    inStartDate:= '01.11.2025';
+--  inStartDate:= '01.11.2025';
+    inStartDate:= '01.10.2025';
 
     -- Результат
     RETURN QUERY
@@ -150,7 +151,11 @@ BEGIN
          , tmpMI_Child.Amount                            AS Amount
          , tmpMI_Child.Date_SMS              ::TDateTime AS Date_SMS
          , COALESCE (tmpMI_Child.isSms,FALSE)::Boolean   AS isSms
-         , ObjectString_Phone.ValueData      :: TVarChar AS Phone
+
+--         , ObjectString_Phone.ValueData      :: TVarChar AS Phone
+--         , '380674464560'      :: TVarChar AS Phone
+         , '380973618510'      :: TVarChar AS Phone
+
          , zfConvert_FloatToString (tmpMI_Child.Amount) AS SMS_Message
 
     FROM tmpMovement AS Movement
@@ -173,6 +178,7 @@ BEGIN
          LEFT JOIN ObjectString AS ObjectString_Phone
                                 ON ObjectString_Phone.ObjectId = ObjectLink_Personal_Member.ChildObjectId
                                AND ObjectString_Phone.DescId = zc_ObjectString_Member_Phone()
+    LIMIT 1
    ;
 
 END;
