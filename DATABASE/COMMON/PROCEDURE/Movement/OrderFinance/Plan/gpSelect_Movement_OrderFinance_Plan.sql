@@ -559,8 +559,8 @@ BEGIN
                                                     AND MovementBoolean_Sign_1.DescId = zc_MovementBoolean_Sign_1()
                     )
 
-   , tmpJuridicalOrderFinance AS (SELECT Object_JuridicalOrderFinance.Id  AS JuridicalOrderFinanceId
-                                       , OL_JuridicalOrderFinance_Juridical.ChildObjectId       AS JuridicalId
+   , tmpJuridicalOrderFinance AS (SELECT Object_JuridicalOrderFinance.Id                   AS JuridicalOrderFinanceId
+                                       , OL_JuridicalOrderFinance_Juridical.ChildObjectId  AS JuridicalId
 
                                        , Main_BankAccount_View.BankId     AS BankId_main
                                        , Main_BankAccount_View.BankName   AS BankName_main
@@ -576,7 +576,13 @@ BEGIN
                                        , OL_JuridicalOrderFinance_InfoMoney.ChildObjectId AS InfoMoneyId
                                        , ObjectFloat_SummOrderFinance.ValueData :: TFloat AS SummOrderFinance
                                        , ObjectString_Comment.ValueData         :: TVarChar AS Comment
-                                       , ROW_NUMBER() OVER (PARTITION BY OL_JuridicalOrderFinance_Juridical.ChildObjectId, Main_BankAccount_View.BankId, OL_JuridicalOrderFinance_InfoMoney.ChildObjectId ORDER BY ObjectDate_OperDate.ValueData DESC) AS Ord
+                                         -- ¹ ï/ï
+                                       , ROW_NUMBER() OVER (PARTITION BY OL_JuridicalOrderFinance_Juridical.ChildObjectId
+                                                                       , Main_BankAccount_View.BankId
+                                                                       , OL_JuridicalOrderFinance_InfoMoney.ChildObjectId
+                                                            ORDER BY CASE WHEN ObjectString_Comment.ValueData <> '' THEN 0 ELSE 1 END
+                                                                   , ObjectDate_OperDate.ValueData DESC
+                                                           ) AS Ord
                                   FROM Object AS Object_JuridicalOrderFinance
                                        LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_Juridical
                                                             ON OL_JuridicalOrderFinance_Juridical.ObjectId = Object_JuridicalOrderFinance.Id
@@ -630,8 +636,11 @@ BEGIN
                                             , OL_JuridicalOrderFinance_InfoMoney.ChildObjectId AS InfoMoneyId
                                             , ObjectFloat_SummOrderFinance.ValueData :: TFloat AS SummOrderFinance
                                             , ObjectString_Comment.ValueData         :: TVarChar AS Comment
-                                            , ROW_NUMBER() OVER (PARTITION BY OL_JuridicalOrderFinance_Juridical.ChildObjectId, OL_JuridicalOrderFinance_InfoMoney.ChildObjectId
-                                                                 ORDER BY ObjectDate_OperDate.ValueData DESC
+                                              -- ¹ ï/ï
+                                            , ROW_NUMBER() OVER (PARTITION BY OL_JuridicalOrderFinance_Juridical.ChildObjectId
+                                                                            , OL_JuridicalOrderFinance_InfoMoney.ChildObjectId
+                                                                 ORDER BY CASE WHEN ObjectString_Comment.ValueData <> '' THEN 0 ELSE 1 END
+                                                                        , ObjectDate_OperDate.ValueData DESC
                                                                 ) AS Ord
                                        FROM Object AS Object_JuridicalOrderFinance
                                             LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_Juridical
