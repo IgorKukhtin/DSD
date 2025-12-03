@@ -3,7 +3,9 @@
 DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer, Boolean,Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer,Boolean, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer,Boolean, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpUpdateMovement_OrderFinance_Plan(
@@ -14,7 +16,8 @@ CREATE OR REPLACE FUNCTION gpUpdateMovement_OrderFinance_Plan(
     IN inisPlan_2                Boolean    , --
     IN inisPlan_3                Boolean    , --
     IN inisPlan_4                Boolean    , --
-    IN inisPlan_5                Boolean    , --
+    IN inisPlan_5                Boolean    , --   
+    
    OUT outisAmountPlan_1         Boolean    , --
    OUT outisAmountPlan_2         Boolean    , --
    OUT outisAmountPlan_3         Boolean    , --
@@ -23,13 +26,16 @@ CREATE OR REPLACE FUNCTION gpUpdateMovement_OrderFinance_Plan(
     IN inOrderFinanceId          Integer    ,
     IN inJuridicalOrderFinanceId Integer    ,
     IN inJuridicalId             Integer    ,
-    IN inInfoMoneyId             Integer    ,
+    IN inInfoMoneyId             Integer    , 
+    IN inBankId_main_top         Integer    ,
     IN inBankId_main             Integer    ,
     IN inBankId_jof              Integer    ,
-    IN inBankAccountName_main     TVarChar   ,
+    IN inBankAccountName_main    TVarChar   ,
     IN inBankAccountName_jof     TVarChar   ,  --zc_ObjectLink_JuridicalOrderFinance_BankAccount
     IN inComment_jof             TVarChar   ,
-    IN inComment_pay             TVarChar   ,
+   --IN inComment_pay             TVarChar   ,
+   OUT outComment_pay            TVarChar   , 
+   OUT outAmountPlan_calc        TFloat     ,
     IN inSession                 TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -39,6 +45,8 @@ $BODY$
             vbBankAccountId_jof   Integer;
             vbBankAccountId_main  Integer;
             vbPlan_count  Integer;
+            vbBankId_main Integer;
+            vbCount       Integer;
 BEGIN
      -- проверка
      -- проверка прав пользователя на вызов процедуры
@@ -100,6 +108,42 @@ BEGIN
         vbPlan_count:= vbPlan_count + 1;
      END IF;
 
+     -- если не выбрано берем из  inBankId_main_top
+     IF COALESCE (inBankId_main,0) = 0
+     THEN 
+         IF COALESCE (inBankId_main_top, 0) <> 0
+         THEN 
+             --
+             inBankId_main := inBankId_main_top;
+         ELSE
+             --Если inBankId_main_top тоже пусто то пробуем найти у счета, если там больше 1 банка - тогда выдавать ошибку что надо заполнить "банк плательщика"
+              SELECT MAX (Object_BankAccount_View.BankId) AS BankId
+                   , COUNT (*) AS Count_bank
+            INTO vbBankId_main, vbCount
+              FROM Object_BankAccount_View
+                   -- Покажем счета только по внутренним фирмам
+                   INNER JOIN ObjectBoolean AS ObjectBoolean_isCorporate
+                                            ON ObjectBoolean_isCorporate.ObjectId = Object_BankAccount_View.JuridicalId
+                                           AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
+                                           AND (ObjectBoolean_isCorporate.ValueData = TRUE
+                                             OR Object_BankAccount_View.JuridicalId = 15505 -- ДУКО ТОВ
+                                             OR Object_BankAccount_View.JuridicalId = 15512 -- Ірна-1 Фірма ТОВ
+                                             OR Object_BankAccount_View.isCorporate = TRUE
+                                               )
+              WHERE TRIM (Object_BankAccount_View.Name) ILIKE TRIM (inBankAccountName_main)
+                AND Object_BankAccount_View.isErased = FALSE
+             ;
+             IF COALESCE (vbCount,0) = 1
+             THEN
+                 inBankId_main := vbBankId_main;
+             END IF;
+             IF COALESCE (vbCount,0) > 1
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Не заполнен <Банк плательщика>.';
+             END IF;             
+         END IF;
+     END IF;
+
 
      --
      IF vbPlan_count > 1
@@ -122,6 +166,8 @@ BEGIN
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (inMovementItemId, vbUserId, FALSE);
 
+
+     
 
      -- 2.1. BankAccountName_main
      IF 1=1 -- COALESCE (inBankAccountName_main,'') <> ''
@@ -234,7 +280,114 @@ BEGIN
          -- сохранили протокол
          PERFORM lpInsert_ObjectProtocol (inJuridicalOrderFinanceId, vbUserId);
 
-     END IF;
+     END IF;    
+     
+ 
+     WITH
+     tmpJuridicalOrderFinance AS (SELECT ObjectString_Comment.ValueData         :: TVarChar AS Comment
+                                       , ROW_NUMBER() OVER (PARTITION BY OL_JuridicalOrderFinance_Juridical.ChildObjectId, Main_BankAccount_View.BankId, OL_JuridicalOrderFinance_InfoMoney.ChildObjectId
+                                                            ORDER BY ObjectDate_OperDate.ValueData DESC
+                                                            ) AS Ord
+                                  FROM Object AS Object_JuridicalOrderFinance
+                                       INNER JOIN ObjectLink AS OL_JuridicalOrderFinance_Juridical
+                                                             ON OL_JuridicalOrderFinance_Juridical.ObjectId = Object_JuridicalOrderFinance.Id
+                                                            AND OL_JuridicalOrderFinance_Juridical.DescId = zc_ObjectLink_JuridicalOrderFinance_Juridical()
+                                                            AND OL_JuridicalOrderFinance_Juridical.ChildObjectId = inJuridicalId
+
+                                       LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccountMain
+                                                            ON OL_JuridicalOrderFinance_BankAccountMain.ObjectId = Object_JuridicalOrderFinance.Id
+                                                           AND OL_JuridicalOrderFinance_BankAccountMain.DescId = zc_ObjectLink_JuridicalOrderFinance_BankAccountMain()
+                                       LEFT JOIN Object_BankAccount_View AS Main_BankAccount_View ON Main_BankAccount_View.Id = OL_JuridicalOrderFinance_BankAccountMain.ChildObjectId
+
+                                       INNER JOIN ObjectLink AS OL_JuridicalOrderFinance_InfoMoney
+                                                             ON OL_JuridicalOrderFinance_InfoMoney.ObjectId = Object_JuridicalOrderFinance.Id
+                                                            AND OL_JuridicalOrderFinance_InfoMoney.DescId = zc_ObjectLink_JuridicalOrderFinance_InfoMoney()
+                                                            AND OL_JuridicalOrderFinance_InfoMoney.ChildObjectId = inInfoMoneyId
+
+                                       LEFT JOIN ObjectString AS ObjectString_Comment
+                                                              ON ObjectString_Comment.ObjectId = Object_JuridicalOrderFinance.Id
+                                                             AND ObjectString_Comment.DescId = zc_ObjectString_JuridicalOrderFinance_Comment()
+
+                                       LEFT JOIN ObjectDate AS ObjectDate_OperDate
+                                                            ON ObjectDate_OperDate.ObjectId = Object_JuridicalOrderFinance.Id
+                                                           AND ObjectDate_OperDate.DescId = zc_ObjectDate_JuridicalOrderFinance_OperDate()
+                                  WHERE Object_JuridicalOrderFinance.DescId = zc_Object_JuridicalOrderFinance()
+                                   AND Object_JuridicalOrderFinance.isErased = FALSE
+                                   AND Object_JuridicalOrderFinance.Id = inJuridicalOrderFinanceId
+                                   AND Main_BankAccount_View.BankId = inBankId_main
+                                   AND inBankId_main <> 0
+                                   )
+
+   , tmpJuridicalOrderFinance_last AS (SELECT ObjectString_Comment.ValueData         :: TVarChar AS Comment
+                                            , ROW_NUMBER() OVER (PARTITION BY OL_JuridicalOrderFinance_Juridical.ChildObjectId, OL_JuridicalOrderFinance_InfoMoney.ChildObjectId
+                                                                 ORDER BY ObjectDate_OperDate.ValueData DESC
+                                                                ) AS Ord
+                                       FROM Object AS Object_JuridicalOrderFinance
+                                            INNER JOIN ObjectLink AS OL_JuridicalOrderFinance_Juridical
+                                                                  ON OL_JuridicalOrderFinance_Juridical.ObjectId = Object_JuridicalOrderFinance.Id
+                                                                 AND OL_JuridicalOrderFinance_Juridical.DescId = zc_ObjectLink_JuridicalOrderFinance_Juridical()
+                                                                 AND OL_JuridicalOrderFinance_Juridical.ChildObjectId = inJuridicalId
+
+                                            INNER JOIN ObjectLink AS OL_JuridicalOrderFinance_InfoMoney
+                                                                  ON OL_JuridicalOrderFinance_InfoMoney.ObjectId = Object_JuridicalOrderFinance.Id
+                                                                 AND OL_JuridicalOrderFinance_InfoMoney.DescId = zc_ObjectLink_JuridicalOrderFinance_InfoMoney()
+                                                                 AND OL_JuridicalOrderFinance_InfoMoney.ChildObjectId = inInfoMoneyId
+
+                                            LEFT JOIN ObjectString AS ObjectString_Comment
+                                                                   ON ObjectString_Comment.ObjectId = Object_JuridicalOrderFinance.Id
+                                                                  AND ObjectString_Comment.DescId = zc_ObjectString_JuridicalOrderFinance_Comment()
+
+                                            LEFT JOIN ObjectDate AS ObjectDate_OperDate
+                                                                 ON ObjectDate_OperDate.ObjectId = Object_JuridicalOrderFinance.Id
+                                                                AND ObjectDate_OperDate.DescId = zc_ObjectDate_JuridicalOrderFinance_OperDate()
+                                       WHERE Object_JuridicalOrderFinance.DescId = zc_Object_JuridicalOrderFinance()
+                                        AND Object_JuridicalOrderFinance.isErased = FALSE
+                                        AND Object_JuridicalOrderFinance.Id = inJuridicalOrderFinanceId
+                                        )
+
+     SELECT MIFloat_AmountPlan.ValueData ::TFloat AS AmountPlan_calc
+          , CASE WHEN MIFloat_AmountPlan.ValueData > 0
+                 THEN REPLACE
+                     (REPLACE
+                     (REPLACE
+                     (REPLACE (COALESCE (tmpJuridicalOrderFinance.Comment, tmpJuridicalOrderFinance_last.Comment)
+                                , 'NOM_DOG', COALESCE (View_Contract.InvNumber, ''))
+                                , 'DATA_DOG', zfConvert_DateToString (COALESCE (View_Contract.StartDate, zc_DateStart())))
+                                , 'PDV', '20')
+                                , 'SUMMA_P', zfConvert_FloatToString (ROUND(MIFloat_AmountPlan.ValueData/6, 2))) 
+                 ELSE ''
+            END :: TVarChar AS Comment_pay 
+
+   INTO outAmountPlan_calc, outComment_pay
+     FROM MovementItem
+          LEFT JOIN MovementItemFloat AS MIFloat_AmountPlan
+                                      ON MIFloat_AmountPlan.MovementItemId = MovementItem.Id
+                                     AND MIFloat_AmountPlan.DescId = CASE WHEN outisAmountPlan_1 = TRUE THEN zc_MIFloat_AmountPlan_1()
+                                                                          WHEN outisAmountPlan_2 = TRUE THEN zc_MIFloat_AmountPlan_2()
+                                                                          WHEN outisAmountPlan_3 = TRUE THEN zc_MIFloat_AmountPlan_3()
+                                                                          WHEN outisAmountPlan_4 = TRUE THEN zc_MIFloat_AmountPlan_4()
+                                                                          WHEN outisAmountPlan_5 = TRUE THEN zc_MIFloat_AmountPlan_5()
+                                                                     END
+          LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                           ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                          AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+          LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = MILinkObject_Contract.ObjectId
+
+          --привязка  юр.лицо + статья + выбранный банк (плательщик)
+          LEFT JOIN tmpJuridicalOrderFinance ON inBankId_main <> 0
+                                            AND tmpJuridicalOrderFinance.Ord = 1
+
+          --привязка  юр.лицо + статья + последний платеж
+          LEFT JOIN tmpJuridicalOrderFinance_last ON tmpJuridicalOrderFinance_last.Ord = 1
+
+     WHERE MovementItem.MovementId = inMovementId
+       AND MovementItem.Id = inMovementItemId
+       AND MovementItem.isErased = FALSE
+     ;
+
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment_pay(), inMovementItemId, outComment_pay);
+
 
      if vbUserId = 9457 then RAISE EXCEPTION 'Админ.Test Ok.'; end if;
 
@@ -250,4 +403,29 @@ $BODY$
 
 
 -- тест
---
+--select * from gpUpdateMovement_OrderFinance_Plan(inMovementId := 32907603 , inMovementItemId := 341774289 , inisAmountPlan := 'True' , inisPlan_1 := 'False' , inisPlan_2 := 'False' , inisPlan_3 := 'True' , inisPlan_4 := 'False' , inisPlan_5 := 'False' , inOrderFinanceId := 3988049 , inJuridicalOrderFinanceId := 12995943 , inJuridicalId := 397619 , inInfoMoneyId := 8908 , inBankId_main := 76970 , inBankId_jof := 81452 , inBankAccountName_main := 'UA173005280000026000301367079' , inBankAccountName_jof := 'UA523003350000000026005464177' , inComment_jof := 'За Яловичину, згідно Договору  NOM_DOG у т.ч. ПДВ PDV% SUMMA_P грн.' , inSession := '9457');
+
+
+/*select * from gpUpdateMovement_OrderFinance_Plan(
+inMovementId := 32907603 , 
+inMovementItemId := 341774317 , 
+inisAmountPlan := 'True' , 
+inisPlan_1 := 'False' , 
+inisPlan_2 := 'False' , 
+inisPlan_3 := 'True' , 
+inisPlan_4 := 'False' , 
+inisPlan_5 := 'False' , 
+inOrderFinanceId := 3988049 , 
+inJuridicalOrderFinanceId := 12996023 , 
+inJuridicalId := 11057033 , 
+inInfoMoneyId := 8906 , 
+inBankId_main_top := 0 ,
+inBankId_main := 76970 ,    ---76970
+inBankId_jof := 9264405 , 
+inBankAccountName_main := 'UA173005280000026000301367079' , 
+inBankAccountName_jof := 'UA583209840000026004210394845' , 
+inComment_jof := 'За  свиней згідно договору № NOM_DOG у т.ч. ПДВ PDV% SUMMA_P грн.' , 
+--inComment_pay := '' ,  
+inSession := '9457');
+
+*/

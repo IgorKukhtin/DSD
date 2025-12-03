@@ -24,7 +24,6 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 277
-        ExplicitTop = -4
         ExplicitWidth = 1020
         ExplicitHeight = 277
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1403,7 +1402,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'NumGroup;InfoMoneyName;JuridicalName'
+          IndexFieldNames = 'BankName;NumGroup;InfoMoneyName;JuridicalName'
         end>
       Params = <
         item
@@ -1871,6 +1870,14 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inBankId_main_top'
+        Value = Null
+        Component = GuidesBankMain
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inBankId_main'
         Value = Null
         Component = MasterCDS
@@ -1914,12 +1921,19 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inComment_pay'
+        Name = 'outComment_pay'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Comment_pay'
         DataType = ftString
-        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountPlan_calc'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountPlan_calc'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -2303,8 +2317,8 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 844
-    Top = 158
+    Left = 828
+    Top = 166
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_OrderFinancePlan_Print'
@@ -2323,6 +2337,14 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         Value = Null
         Component = deStart
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankMainId'
+        Value = Null
+        Component = GuidesBankMain
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

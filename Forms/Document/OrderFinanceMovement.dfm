@@ -2756,13 +2756,13 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'JuridicalChoiceForm'
-      FormName = 'TJuridical_ObjectForm'
-      FormNameParam.Value = 'TJuridical_ObjectForm'
+      FormName = 'TContractJuridicalChoiceForm'
+      FormNameParam.Value = 'TContractJuridicalChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'key'
+          Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
@@ -2770,10 +2770,96 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'TextValue'
+          Name = 'JuridicalName'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractCode'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'StartDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'EndDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'EndDate'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPaidKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OKPO'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OKPO'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Condition'
+          Value = ' '
+          Component = MasterCDS
+          ComponentItem = 'Condition'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -4935,6 +5021,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       end
       item
         Name = 'inComment'
+        Value = Null
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
