@@ -14,19 +14,19 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
     Top = 99
     Width = 1086
     Height = 460
-    ExplicitTop = 57
-    ExplicitWidth = 920
-    ExplicitHeight = 366
+    ExplicitTop = 99
+    ExplicitWidth = 1086
+    ExplicitHeight = 460
     ClientRectBottom = 460
     ClientRectRight = 1086
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 920
-      ExplicitHeight = 366
+      ExplicitWidth = 1086
+      ExplicitHeight = 460
       inherited cxGrid: TcxGrid
         Width = 1086
         Height = 460
-        ExplicitWidth = 920
-        ExplicitHeight = 366
+        ExplicitWidth = 1086
+        ExplicitHeight = 460
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -266,7 +266,6 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
     Height = 73
     Align = alTop
     TabOrder = 5
-    ExplicitTop = -7
     object cxLabel3: TcxLabel
       Left = 437
       Top = 6
@@ -529,6 +528,12 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    inherited dsdSetUnErased: TdsdUpdateErased
+      ShortCut = 49220
+    end
+    inherited dsdSetErased: TdsdUpdateErased
+      ShortCut = 49220
     end
     inherited dsdChoiceGuides: TdsdChoiceGuides
       Params = <
@@ -962,6 +967,26 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
         end
         item
           Visible = True
+          ItemName = 'bbErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbShowAll'
         end
         item
@@ -1056,6 +1081,14 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
         Action = actUpdate
         ShortCut = 13
       end>
+  end
+  inherited PopupMenu: TPopupMenu
+    inherited N2: TMenuItem
+      Visible = False
+    end
+    inherited N3: TMenuItem
+      Visible = False
+    end
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_JuridicalOrderFinance'
