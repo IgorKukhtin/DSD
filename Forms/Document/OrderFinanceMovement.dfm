@@ -4158,7 +4158,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Top = 392
   end
   object spErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpSetErased_MovementItem'
+    StoredProcName = 'gpMovementItem_OrderFinance_SetErased'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -4183,7 +4183,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Top = 200
   end
   object spUnErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpSetUnErased_MovementItem'
+    StoredProcName = 'gpMovementItem_OrderFinance_SetUnErased'
     DataSets = <>
     OutputType = otResult
     Params = <
