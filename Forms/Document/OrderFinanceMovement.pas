@@ -275,6 +275,15 @@ type
     Color_Group: TcxGridDBColumn;
     actBankChoiceForm_JurMain: TOpenChoiceForm;
     actBankChoiceForm_Jur: TOpenChoiceForm;
+    mactExport_group: TMultiAction;
+    actGet_Export_FileName_gr: TdsdExecStoredProc;
+    actGet_Export_Email_gr: TdsdExecStoredProc;
+    actSelect_Export_gr: TdsdExecStoredProc;
+    spGet_Export_Email_gr: TdsdStoredProc;
+    spGetFileName_gr: TdsdStoredProc;
+    dsdDBViewAddOn_Export: TdsdDBViewAddOn;
+    bbmactExport_group: TdxBarButton;
+    actExport_Grid_groupCSV: TExportGrid;
   private
   public
   end;
