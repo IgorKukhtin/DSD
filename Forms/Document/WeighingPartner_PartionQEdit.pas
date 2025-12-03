@@ -60,7 +60,6 @@ type
     cxGridLevel: TcxGridLevel;
     actUpdateMasterDS: TdsdUpdateDataSet;
     GoodsKindName: TcxGridDBColumn;
-    Count: TcxGridDBColumn;
     bbShowAll: TdxBarButton;
     bbStatic: TdxBarStatic;
     actShowAll: TBooleanStoredProcAction;
@@ -108,10 +107,7 @@ type
     cxLabel17: TcxLabel;
     ContractGuides: TdsdGuides;
     edWeighingNumber: TcxCurrencyEdit;
-    Amount_mi: TcxGridDBColumn;
     AmountPartner: TcxGridDBColumn;
-    AmountPartner_mi: TcxGridDBColumn;
-    Count_mi: TcxGridDBColumn;
     edContractTag: TcxButtonEdit;
     ContractTagGuides: TdsdGuides;
     edPriceWithVAT: TcxCheckBox;

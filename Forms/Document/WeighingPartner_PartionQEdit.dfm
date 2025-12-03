@@ -305,17 +305,12 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 155
-    ExplicitWidth = 1366
-    ExplicitHeight = 305
     ClientRectBottom = 341
     ClientRectRight = 1142
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 1366
-      ExplicitHeight = 281
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -323,8 +318,6 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
         Height = 317
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1366
-        ExplicitHeight = 281
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -350,7 +343,6 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Count
             end
             item
               Format = ',0.####'
@@ -363,7 +355,6 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_mi
             end
             item
               Format = ',0.####'
@@ -377,12 +368,6 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountPartner_mi
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Count_mi
             end
             item
               Format = ',0.####'
@@ -399,7 +384,10 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = SummPartner
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -427,7 +415,6 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Count
             end
             item
               Format = ',0.####'
@@ -440,7 +427,6 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_mi
             end
             item
               Format = ',0.####'
@@ -454,12 +440,10 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountPartner_mi
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Count_mi
             end
             item
               Format = ',0.####'
@@ -481,7 +465,6 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = SummPartner
             end
             item
               Format = ',0.####'
@@ -550,11 +533,11 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
             Width = 45
           end
           object PartionGoodsDate_q: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080' ('#1076#1083#1103' '#1044#1077#1082#1083#1072#1088#1072#1094#1080#1080')'
+            Caption = #1044#1072#1090#1072' ('#1044#1077#1082#1083#1072#1088#1072#1094#1080#1103')'
             DataBinding.FieldName = 'PartionGoodsDate_q'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080' ('#1076#1083#1103' '#1044#1077#1082#1083#1072#1088#1072#1094#1080#1080')'
+            HeaderHint = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080' '#1076#1083#1103' '#1044#1077#1082#1083#1072#1088#1072#1094#1080#1080
             Width = 101
           end
           object PartionGoods: TcxGridDBColumn
@@ -567,6 +550,7 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -605,92 +589,23 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
-          end
-          object Amount_mi: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076' '#1076#1086#1082'.)'
-            DataBinding.FieldName = 'Amount_mi'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
+            Width = 100
           end
           object AmountPartner: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+            Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'AmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
-          end
-          object AmountPartnerSecond: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
-            DataBinding.FieldName = 'AmountPartnerSecond'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object AmountPartner_mi: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'. ('#1076#1086#1082'.)'
-            DataBinding.FieldName = 'AmountPartner_mi'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object SummPartner: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
-            DataBinding.FieldName = 'SummPartner'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object Count: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1077#1076#1080#1085#1080#1094
-            DataBinding.FieldName = 'Count'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object Count_mi: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1077#1076#1080#1085#1080#1094' ('#1076#1086#1082'.)'
-            DataBinding.FieldName = 'Count_mi'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
+            Width = 100
           end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
