@@ -143,6 +143,7 @@ type
     GuidesProductionPeresort: TdsdGuides;
     actOpenProductionPeresortForm: TdsdOpenForm;
     bbOpenProductionPeresortForm: TdxBarButton;
+    Count_protocol: TcxGridDBColumn;
   private
     { Private declarations }
   public

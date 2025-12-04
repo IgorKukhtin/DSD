@@ -550,6 +550,19 @@ BEGIN
    END IF;
 
     OPEN Cursor2 FOR
+       WITH
+       tmpMI AS (SELECT MovementItem.*
+                 FROM MovementItem
+                 WHERE MovementItem.MovementId = inMovementId
+                   AND MovementItem.DescId = zc_MI_Child()
+                 )
+
+     , tmpMI_Protocol AS (SELECT MovementItemProtocol.MovementItemId
+                               , COUNT (*) AS Count
+                          FROM MovementItemProtocol
+                          WHERE MovementItemProtocol.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                          GROUP BY MovementItemProtocol.MovementItemId
+                         )
 
        SELECT
               MovementItem.Id					AS Id
@@ -609,8 +622,8 @@ BEGIN
             , COALESCE(MIBoolean_isAuto.ValueData, False)  AS isAuto 
             , COALESCE (MIBoolean_Etiketka.ValueData, False) ::Boolean AS isEtiketka
             , MovementItem.isErased             AS isErased
-
-       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+            , COALESCE (tmpMI_Protocol.Count,0) ::Integer    AS Count_protocol
+     FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                              AND MovementItem.DescId     = zc_MI_Child()
                              AND MovementItem.isErased   = tmpIsErased.isErased
@@ -696,10 +709,11 @@ BEGIN
                                  AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
              LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
-            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
-                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
-                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
+             LEFT JOIN tmpMI_Protocol ON tmpMI_Protocol.MovementItemId = MovementItem.Id
        ORDER BY MovementItem.Id
             ;
     RETURN NEXT Cursor2;
@@ -712,6 +726,7 @@ ALTER FUNCTION gpSelect_MI_ProductionUnion (Integer, Boolean, Boolean, TVarChar)
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 04.12.25         * Count_protocol
  27.03.25         * AmountForm_two
  13.08.24         * AmountNext_out
  30.07.24         * AmountForm
@@ -726,4 +741,5 @@ ALTER FUNCTION gpSelect_MI_ProductionUnion (Integer, Boolean, Boolean, TVarChar)
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_MI_ProductionUnion (inMovementId:= 1, inShowAll:= TRUE, inisErased:= FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_MI_ProductionUnion (inMovementId:= 30718798 , inShowAll:= TRUE, inisErased:= FALSE, inSession:= '2') ;
+--FETCH ALL "<unnamed portal 34>"
