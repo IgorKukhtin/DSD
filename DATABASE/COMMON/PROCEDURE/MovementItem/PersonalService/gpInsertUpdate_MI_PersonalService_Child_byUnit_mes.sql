@@ -29,9 +29,9 @@ BEGIN
      if vbUserId IN (9457) then RETURN; end if; 
      
      
-     IF EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 8 AND 12
+     IF EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 8 AND 11
      THEN
-         RAISE EXCEPTION 'Ошибка.Повторите действие через 45 мин.';
+         RAISE EXCEPTION 'Ошибка.Повторите действие после 12:00.';
      END IF;
 
 

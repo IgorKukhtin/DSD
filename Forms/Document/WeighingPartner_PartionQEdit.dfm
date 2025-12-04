@@ -393,6 +393,11 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
               Format = ',0.####'
               Kind = skSum
               Column = CountPack
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = BoxCount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -470,6 +475,11 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
               Format = ',0.####'
               Kind = skSum
               Column = CountPack
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = BoxCount
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -555,6 +565,17 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 179
+          end
+          object BoxCount: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1075#1086#1092#1088#1086
+            DataBinding.FieldName = 'BoxCount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
           object CountPack: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1091#1087#1072#1082#1086#1074#1086#1082
@@ -692,7 +713,7 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
       end>
     Params = <
       item
-        Name = 'inMovementId'
+        Name = 'inMovementId_sale'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'

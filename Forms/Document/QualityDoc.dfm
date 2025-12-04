@@ -4,22 +4,22 @@ inherited QualityDocForm: TQualityDocForm
   ClientWidth = 561
   AddOnFormData.isSingle = False
   ExplicitWidth = 567
-  ExplicitHeight = 332
+  ExplicitHeight = 333
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 165
+    Left = 39
     Top = 268
     Height = 26
-    ExplicitLeft = 165
+    ExplicitLeft = 39
     ExplicitTop = 268
     ExplicitHeight = 26
   end
   inherited bbCancel: TcxButton
-    Left = 306
+    Left = 140
     Top = 268
     Height = 26
-    ExplicitLeft = 306
+    ExplicitLeft = 140
     ExplicitTop = 268
     ExplicitHeight = 26
   end
@@ -215,6 +215,14 @@ inherited QualityDocForm: TQualityDocForm
     TabOrder = 27
     Width = 100
   end
+  object bbUpdate_PartionDateQ: TcxButton [28]
+    Left = 291
+    Top = 268
+    Width = 208
+    Height = 26
+    Action = mactUpdate_PartionDateQ
+    TabOrder = 28
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 78
     Top = 249
@@ -224,13 +232,76 @@ inherited QualityDocForm: TQualityDocForm
     Top = 263
   end
   inherited ActionList: TActionList
-    Left = 250
-    Top = 251
+    Left = 242
+    Top = 243
     inherited InsertUpdateGuides: TdsdInsertUpdateGuides [0]
     end
     inherited actRefresh: TdsdDataSetRefresh [1]
     end
     inherited FormClose: TdsdFormClose [2]
+    end
+    object mactUpdate_PartionDateQ: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actUpdateMI_PartionDateQ
+        end
+        item
+          Action = actUpdateForm_PartionDateQ
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1072#1090#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1072#1090#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072'>'
+    end
+    object actUpdateMI_PartionDateQ: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate
+      StoredProcList = <
+        item
+          StoredProc = spUpdate
+        end>
+      Caption = 'actUpdateMI_PartionDateQ'
+      ImageIndex = 80
+    end
+    object actUpdateForm_PartionDateQ: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actUpdateForm_PartionDateQ'
+      ImageIndex = 35
+      FormName = 'TWeighingPartner_PartionQEditForm'
+      FormNameParam.Value = 'TWeighingPartner_PartionQEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'MovementId_Sale'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      IdFieldName = 'Id'
     end
   end
   inherited FormParams: TdsdFormParams
@@ -239,11 +310,13 @@ inherited QualityDocForm: TQualityDocForm
         Name = 'Id'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MovementId_Sale'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 31
     Top = 264
@@ -257,6 +330,7 @@ inherited QualityDocForm: TQualityDocForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId_Sale'
@@ -264,6 +338,7 @@ inherited QualityDocForm: TQualityDocForm
         Component = GuideSaleJournalChoice
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDateIn'
@@ -271,6 +346,7 @@ inherited QualityDocForm: TQualityDocForm
         Component = edOperDateIn
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDateOut'
@@ -278,6 +354,7 @@ inherited QualityDocForm: TQualityDocForm
         Component = edOperDateOut
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCarId'
@@ -285,6 +362,7 @@ inherited QualityDocForm: TQualityDocForm
         Component = GuideCar
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inQualityNumber'
@@ -292,6 +370,7 @@ inherited QualityDocForm: TQualityDocForm
         Component = edQualityNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCertificateNumber'
@@ -299,6 +378,7 @@ inherited QualityDocForm: TQualityDocForm
         Component = edCertificateNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDateCertificate'
@@ -306,6 +386,7 @@ inherited QualityDocForm: TQualityDocForm
         Component = ceOperDateCertificate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCertificateSeries'
@@ -313,6 +394,7 @@ inherited QualityDocForm: TQualityDocForm
         Component = edCertificateSeries
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCertificateSeriesNumber'
@@ -320,9 +402,10 @@ inherited QualityDocForm: TQualityDocForm
         Component = edCertificateSeriesNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 395
-    Top = 258
+    Left = 307
+    Top = 98
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_QualityDoc'
@@ -333,6 +416,7 @@ inherited QualityDocForm: TQualityDocForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId_Sale'
@@ -340,18 +424,21 @@ inherited QualityDocForm: TQualityDocForm
         Component = FormParams
         ComponentItem = 'MovementId_Sale'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Id'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MovementId_Sale'
         Value = 0d
         Component = GuideSaleJournalChoice
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber_Sale'
@@ -359,36 +446,42 @@ inherited QualityDocForm: TQualityDocForm
         Component = GuideSaleJournalChoice
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate_Sale'
-        Value = ''
+        Value = Null
         Component = edOperDate_Sale
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDateIn'
         Value = 0d
         Component = edOperDateIn
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDateOut'
         Value = 0d
         Component = edOperDateOut
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromName'
         Value = 0.000000000000000000
         Component = edFrom
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToId'
         Value = Null
         Component = GuidesTo
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToName'
@@ -396,12 +489,14 @@ inherited QualityDocForm: TQualityDocForm
         Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarId'
         Value = ''
         Component = GuideCar
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarName'
@@ -409,12 +504,14 @@ inherited QualityDocForm: TQualityDocForm
         Component = GuideCar
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarModelId'
         Value = ''
         Component = GuideCarModel
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarModelName'
@@ -422,36 +519,42 @@ inherited QualityDocForm: TQualityDocForm
         Component = GuideCarModel
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'QualityNumber'
         Value = Null
         Component = edQualityNumber
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CertificateNumber'
         Value = Null
         Component = edCertificateNumber
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CertificateSeries'
         Value = Null
         Component = edCertificateSeries
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CertificateSeriesNumber'
         Value = Null
         Component = edCertificateSeriesNumber
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDateCertificate'
         Value = 42125d
         Component = ceOperDateCertificate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 499
     Top = 218
@@ -461,6 +564,7 @@ inherited QualityDocForm: TQualityDocForm
     LookupControl = edInvNumber_Sale
     FormNameParam.Value = 'TSaleJournalChoiceForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TSaleJournalChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -469,6 +573,7 @@ inherited QualityDocForm: TQualityDocForm
         Value = ''
         Component = GuideSaleJournalChoice
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -476,47 +581,55 @@ inherited QualityDocForm: TQualityDocForm
         Component = GuideSaleJournalChoice
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = Null
         Component = edOperDate_Sale
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromName'
         Value = Null
         Component = edFrom
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToId'
         Value = Null
         Component = GuidesTo
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToName'
         Value = Null
         Component = GuidesTo
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStartDate'
         Value = Null
         Component = edOperDate_Sale
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
         Value = Null
         Component = edOperDate_Sale
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerId'
         Value = Null
         Component = GuidesTo
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerName'
@@ -524,6 +637,7 @@ inherited QualityDocForm: TQualityDocForm
         Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 96
     Top = 23
@@ -533,6 +647,7 @@ inherited QualityDocForm: TQualityDocForm
     IdParam.Value = '0'
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
     GuidesList = <
       item
         Guides = GuideSaleJournalChoice
@@ -546,6 +661,7 @@ inherited QualityDocForm: TQualityDocForm
     LookupControl = edCar
     FormNameParam.Value = 'TCarForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCarForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -554,6 +670,7 @@ inherited QualityDocForm: TQualityDocForm
         Value = ''
         Component = GuideCar
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -561,6 +678,7 @@ inherited QualityDocForm: TQualityDocForm
         Component = GuideCar
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarModelName'
@@ -568,6 +686,7 @@ inherited QualityDocForm: TQualityDocForm
         Component = GuideCarModel
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 408
     Top = 106
@@ -577,6 +696,7 @@ inherited QualityDocForm: TQualityDocForm
     LookupControl = edCarModel
     FormNameParam.Value = 'TCarForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCarForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -585,6 +705,7 @@ inherited QualityDocForm: TQualityDocForm
         Value = ''
         Component = GuideCar
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -592,6 +713,7 @@ inherited QualityDocForm: TQualityDocForm
         Component = GuideCar
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarModelName'
@@ -599,6 +721,7 @@ inherited QualityDocForm: TQualityDocForm
         Component = GuideCarModel
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 344
     Top = 52
@@ -608,6 +731,7 @@ inherited QualityDocForm: TQualityDocForm
     LookupControl = edTo
     FormNameParam.Value = 'TForm_NULL'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TForm_NULL'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -616,6 +740,7 @@ inherited QualityDocForm: TQualityDocForm
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -623,6 +748,7 @@ inherited QualityDocForm: TQualityDocForm
         Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarModelName'
@@ -630,8 +756,34 @@ inherited QualityDocForm: TQualityDocForm
         Component = GuideCarModel
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 128
     Top = 90
+  end
+  object spUpdate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Sale_PartionGoods_Quality'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_Sale'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionGoods_Q'
+        Value = 'zc_MovementBoolean_EdiInvoice'
+        Component = edOperDateIn
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 370
+    Top = 189
   end
 end

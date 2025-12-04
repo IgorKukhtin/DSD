@@ -90,25 +90,23 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
     vbUserId := lpGetUserBySession (inSession);
     
+
+if EXTRACT (HOUR FROM CURRENT_TIMESTAMP) between 8 and 11
+then 
+    RAISE EXCEPTION 'Ошибка.Повторите отчет после 12:00';
+end if;
+
 if vbUserId in (5, 6561986) and coalesce (inDetailModelServiceItemChild, FALSE) = FALSE
 AND 1=0
 then 
     RAISE EXCEPTION 'Ошибка. нет детализации по товарам <%>', inDetailModelServiceItemChild;
 end if;
 
-    
-     -- !!!
-     if EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 8 AND 11
-        AND 1=1
-     then 
-         RAISE EXCEPTION 'Ошибка.Повторите дейцствие после 12:00';
-     end if;
-
      -- !!!Только просмотр Аудитор!!!
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
-     -- !!!Проверка прав роль - Ограничение - нет вообще доступа к просмотру данных ЗП!!!
-     PERFORM lpCheck_UserRole_8813637 (vbUserId);
+    -- !!!Проверка прав роль - Ограничение - нет вообще доступа к просмотру данных ЗП!!!
+    PERFORM lpCheck_UserRole_8813637 (vbUserId);
 
 
 

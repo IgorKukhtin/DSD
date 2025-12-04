@@ -131,6 +131,7 @@ type
     dsdPrintAction1: TdsdPrintAction;
     actRefreshMI: TdsdDataSetRefresh;
     actPrint_Brutto: TdsdPrintAction;
+    BoxCount: TcxGridDBColumn;
   private
   public
   end;
