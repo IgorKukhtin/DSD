@@ -351,7 +351,9 @@ BEGIN
                                         AND MovementLinkObject_PersonalGroup.DescId = zc_MovementLinkObject_PersonalGroup()
             LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = MovementLinkObject_PersonalGroup.ObjectId
        WHERE Movement.Id =  inMovementId
-         AND Movement.DescId = zc_Movement_WeighingPartner();
+         AND Movement.DescId IN (zc_Movement_WeighingPartner(), zc_Movement_Sale())
+        ;
+
      END IF;
 
 END;
