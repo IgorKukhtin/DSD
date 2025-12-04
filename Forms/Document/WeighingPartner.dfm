@@ -1458,6 +1458,11 @@ object WeighingPartnerForm: TWeighingPartnerForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_parent'
+        Value = Null
+        MultiSelectSeparator = ','
       end>
     Left = 262
     Top = 375
@@ -1660,9 +1665,9 @@ object WeighingPartnerForm: TWeighingPartnerForm
       Category = 0
     end
     object bbStatic: TdxBarStatic
-      Caption = '     '
       Category = 0
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbErased: TdxBarButton
       Action = SetErased
@@ -2071,7 +2076,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
           Name = 'Id'
           Value = Null
           Component = FormParams
-          ComponentItem = 'Id'
+          ComponentItem = 'MovementId_parent'
           MultiSelectSeparator = ','
         end
         item
@@ -2364,6 +2369,9 @@ object WeighingPartnerForm: TWeighingPartnerForm
         end>
       isShowModal = True
       OpenBeforeShow = True
+    end
+    object Action1: TAction
+      Caption = #1054#1090#1084#1077#1085#1072
     end
     object actUpdatePersonalComlete: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -2840,6 +2848,13 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Component = OrderChoiceGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_parent'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_parent'
         MultiSelectSeparator = ','
       end
       item
