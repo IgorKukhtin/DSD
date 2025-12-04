@@ -368,12 +368,12 @@ BEGIN
                     , '' AS Ord1
               FROM tmpMovement
             UNION
-              SELECT  ('№ недели'||tmpMovement.WeekNumber ) ::TVarChar AS OKPO
+              SELECT  ('№ недели   '||tmpMovement.WeekNumber ) ::TVarChar AS OKPO
                     , '' ::TVarChar AS PaidKindName
-                    , ('Вид планирования '||tmpMovement.OrderFinanceName) ::TVarChar AS ContractName
+                    , ('Период с '|| tmpMovement.StartDate_WeekNumber|| ' по ' || tmpMovement.EndDate_WeekNumber) ::TVarChar AS ContractName
                     , '' ::TVarChar AS StartDate
                     , '' ::TVarChar AS EndDate_real
-                    , '' ::TVarChar AS Condition 
+                    , ('Вид планирования '||tmpMovement.OrderFinanceName) ::TVarChar AS Condition 
                     , '' ::TVarChar AS JvuridicalName
                     , '' ::TVarChar AS InfoMoneyName
                     , '' ::TVarChar AS AmountRemains

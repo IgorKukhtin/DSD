@@ -2,7 +2,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081'>'
-  ClientHeight = 595
+  ClientHeight = 603
   ClientWidth = 1060
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -474,12 +474,12 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Left = 0
     Top = 222
     Width = 1060
-    Height = 373
+    Height = 381
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 373
+    ClientRectBottom = 381
     ClientRectRight = 1060
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
@@ -1094,7 +1094,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Left = 0
         Top = 331
         Width = 1060
-        Height = 18
+        Height = 26
         Align = alBottom
         Anchors = [akTop, akRight, akBottom]
         TabOrder = 1
@@ -1129,11 +1129,14 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1070#1088'.'#1083#1080#1094#1072
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
         Width = 1060
-        Height = 349
+        Height = 357
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView1: TcxGridDBTableView
@@ -1972,6 +1975,10 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end
         item
           Visible = True
+          ItemName = 'bbmactExport_group'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarSeparator'
         end
         item
@@ -2069,6 +2076,11 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Visible = ivAlways
       ShowCaption = False
     end
+    object bbmactExport_group: TdxBarButton
+      Action = mactExport_group
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1087#1083#1072#1085' '#1087#1086' '#1087#1086#1095#1090#1077' '#1075#1088#1091#1087#1087#1077
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -2089,6 +2101,17 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Images = dmMain.ImageList
     Left = 59
     Top = 207
+    object actExport_Grid_groupCSV: TExportGrid
+      Category = 'Export_mail_group'
+      MoveParams = <>
+      ExportType = cxegExportToText
+      Grid = ExportXmlGrid
+      Caption = 'actExport_Grid_groupCSV'
+      OpenAfterCreate = False
+      DefaultFileName = 'Report_'
+      Separator = ';'
+      DefaultFileExt = 'XLS'
+    end
     object actExport_Grid_xls: TExportGrid
       Category = 'Export_mail_ok'
       MoveParams = <>
@@ -2098,6 +2121,17 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       DefaultFileName = 'Report_'
       Separator = ';'
       DefaultFileExt = 'XLS'
+    end
+    object actGet_Export_Email_gr: TdsdExecStoredProc
+      Category = 'Export_mail_group'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Export_Email_gr
+      StoredProcList = <
+        item
+          StoredProc = spGet_Export_Email_gr
+        end>
+      Caption = 'actGet_Export_Email_xls'
     end
     object actInsertUpdateMovement: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -2112,6 +2146,17 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Hint = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 14
       ShortCut = 113
+    end
+    object actSelect_Export_gr: TdsdExecStoredProc
+      Category = 'Export_mail_group'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelectOrderFinance_XLS
+      StoredProcList = <
+        item
+          StoredProc = spSelectOrderFinance_XLS
+        end>
+      Caption = 'actSelect_Export_xls'
     end
     object actShowErasedJur: TBooleanStoredProcAction
       Category = 'DSDLib'
@@ -2153,6 +2198,31 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       ImageIndexTrue = 65
       ImageIndexFalse = 64
+    end
+    object mactExport_group: TMultiAction
+      Category = 'Export_mail_group'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Export_Email_gr
+        end
+        item
+          Action = actGet_Export_FileName_gr
+        end
+        item
+          Action = actSelect_Export_gr
+        end
+        item
+          Action = actExport_Grid_groupCSV
+        end
+        item
+          Action = actSMTPFile_xls
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1087#1086#1095#1090#1077'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1099' '#1087#1086' '#1087#1086#1095#1090#1077
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1087#1083#1072#1085' '#1087#1086' '#1087#1086#1095#1090#1077
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1087#1083#1072#1085' '#1087#1086' '#1087#1086#1095#1090#1077' (XLS)'
+      ImageIndex = 53
     end
     object actUpdateJuridicalDS: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -3487,6 +3557,17 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end>
       isShowModal = False
     end
+    object actGet_Export_FileName_gr: TdsdExecStoredProc
+      Category = 'Export_mail_group'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetFileName_gr
+      StoredProcList = <
+        item
+          StoredProc = spGetFileName_gr
+        end>
+      Caption = 'actGet_Export_FileName_xls'
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -3695,8 +3776,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     ShowFieldImageList = <>
     ViewDocumentList = <>
     PropertiesCellList = <>
-    Left = 355
-    Top = 369
+    Left = 339
+    Top = 361
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 326
@@ -4510,8 +4591,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
   object JuridicalCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 808
-    Top = 207
+    Left = 704
+    Top = 215
   end
   object JuridicalDS: TDataSource
     DataSet = JuridicalCDS
@@ -4537,8 +4618,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     ShowFieldImageList = <>
     ViewDocumentList = <>
     PropertiesCellList = <>
-    Left = 819
-    Top = 265
+    Left = 835
+    Top = 289
   end
   object spSelectJuridicalOrderFinance: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_JuridicalOrderFinance_choice'
@@ -5370,8 +5451,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 440
-    Top = 464
+    Left = 432
+    Top = 448
   end
   object PeriodChoice: TPeriodChoice
     Left = 256
@@ -5490,5 +5571,107 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     PackSize = 1
     Left = 952
     Top = 440
+  end
+  object spGet_Export_Email_gr: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_OrderFinance_Email_sendGroup'
+    DataSet = ExportEmailCDS
+    DataSets = <
+      item
+        DataSet = ExportEmailCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 712
+    Top = 512
+  end
+  object spGetFileName_gr: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_OrderFinance_FileName_group'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = actExport_Grid_groupCSV
+        ComponentItem = 'DefaultFileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDefaultFileExt'
+        Value = Null
+        Component = actExport_Grid_groupCSV
+        ComponentItem = 'DefaultFileExt'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outEncodingANSI'
+        Value = Null
+        Component = actExport_Grid_groupCSV
+        ComponentItem = 'EncodingANSI'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = actSMTPFile_xls
+        ComponentItem = 'FileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 704
+    Top = 472
+  end
+  object dsdDBViewAddOn_Export: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = ExportXmlGridDBTableView
+    OnDblClickActionList = <
+      item
+      end>
+    ActionItemList = <
+      item
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <
+      item
+        ColorValueList = <>
+      end>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <
+      item
+        Param.Value = Null
+        Param.Component = FormParams
+        Param.ComponentItem = 'TotalSumm'
+        Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
+        DataSummaryItemIndex = 6
+      end>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
+    Left = 259
+    Top = 441
   end
 end
