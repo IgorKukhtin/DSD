@@ -1,6 +1,8 @@
 inherited ProductionUnionForm: TProductionUnionForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
   ClientWidth = 1181
+  ExplicitLeft = -17
+  ExplicitTop = -58
   ExplicitWidth = 1197
   PixelsPerInch = 96
   TextHeight = 13
@@ -10,17 +12,17 @@ inherited ProductionUnionForm: TProductionUnionForm
     Height = 552
     TabOrder = 2
     ExplicitTop = 122
-    ExplicitWidth = 1128
+    ExplicitWidth = 1181
     ExplicitHeight = 552
     ClientRectBottom = 552
     ClientRectRight = 1181
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1128
+      ExplicitWidth = 1181
       ExplicitHeight = 528
       inherited cxGrid: TcxGrid
         Width = 1181
         Height = 220
-        ExplicitWidth = 1128
+        ExplicitWidth = 1181
         ExplicitHeight = 220
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -565,7 +567,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         Top = 225
         Width = 1181
         ExplicitTop = 225
-        ExplicitWidth = 1128
+        ExplicitWidth = 1181
         inherited cxGridDBTableViewChild: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -582,6 +584,11 @@ inherited ProductionUnionForm: TProductionUnionForm
               Format = ',0.####'
               Kind = skSum
               Column = colChildAmount_weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Count_protocol
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -598,6 +605,11 @@ inherited ProductionUnionForm: TProductionUnionForm
               Format = ',0.####'
               Kind = skSum
               Column = colChildAmount_weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Count_protocol
             end>
           OptionsData.CancelOnExit = False
           Styles.Content = nil
@@ -767,20 +779,30 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 80
           end
+          object Count_protocol: TcxGridDBColumn
+            Caption = #1055#1088#1086#1090#1086#1082#1086#1083
+            DataBinding.FieldName = 'Count_protocol'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
       inherited cxBottomSplitter: TcxSplitter
         Top = 220
         Width = 1181
         ExplicitTop = 220
-        ExplicitWidth = 1128
+        ExplicitWidth = 1181
       end
     end
   end
   inherited DataPanel: TPanel
     Width = 1181
     Height = 96
-    ExplicitWidth = 1128
+    ExplicitWidth = 1181
     ExplicitHeight = 96
     inherited cxLabel15: TcxLabel
       Left = 10

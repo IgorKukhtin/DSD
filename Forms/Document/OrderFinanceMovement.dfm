@@ -2,7 +2,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081'>'
-  ClientHeight = 603
+  ClientHeight = 612
   ClientWidth = 1060
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -474,12 +474,12 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Left = 0
     Top = 222
     Width = 1060
-    Height = 381
+    Height = 390
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 381
+    ClientRectBottom = 390
     ClientRectRight = 1060
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
@@ -1094,7 +1094,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Left = 0
         Top = 331
         Width = 1060
-        Height = 26
+        Height = 35
         Align = alBottom
         Anchors = [akTop, akRight, akBottom]
         TabOrder = 1
@@ -1129,14 +1129,11 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1070#1088'.'#1083#1080#1094#1072
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
         Width = 1060
-        Height = 357
+        Height = 366
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView1: TcxGridDBTableView
@@ -1615,6 +1612,13 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         DataType = ftBoolean
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReportNameSale'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 238
     Top = 343
@@ -1983,6 +1987,10 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end
         item
           Visible = True
+          ItemName = 'bbtExport_fr3'
+        end
+        item
+          Visible = True
           ItemName = 'bbExport'
         end
         item
@@ -2081,6 +2089,10 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1087#1083#1072#1085' '#1087#1086' '#1087#1086#1095#1090#1077' '#1075#1088#1091#1087#1087#1077
       Category = 0
     end
+    object bbtExport_fr3: TdxBarButton
+      Action = mactExport_fr3
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -2112,11 +2124,11 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Separator = ';'
       DefaultFileExt = 'XLS'
     end
-    object actExport_Grid_xls: TExportGrid
+    object actExport_Grid_xls1: TExportGrid
       Category = 'Export_mail_ok'
       MoveParams = <>
       Grid = ExportXmlGrid
-      Caption = 'actExport_Grid_xls'
+      Caption = 'actExport_Grid_xls1'
       OpenAfterCreate = False
       DefaultFileName = 'Report_'
       Separator = ';'
@@ -3043,18 +3055,18 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end>
       Caption = 'actSelect_Export'
     end
-    object actExport_Grid: TExportGrid
+    object actExport_Grid_file: TExportGrid
       Category = 'Export_file'
       MoveParams = <>
       ExportType = cxegExportToText
       Grid = ExportXmlGrid
-      Caption = 'actExport_Grid'
+      Caption = 'actExport_Grid_file'
       OpenAfterCreate = False
       DefaultFileName = 'Report_'
       DefaultFileExt = 'XML'
       EncodingANSI = True
     end
-    object actSMTPFile: TdsdSMTPFileAction
+    object actSMTPFile_file: TdsdSMTPFileAction
       Category = 'Export_file'
       MoveParams = <>
       Host.Value = Null
@@ -3101,7 +3113,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
           Action = actSelect_Export
         end
         item
-          Action = actExport_Grid
+          Action = actExport_Grid_file
         end
         item
         end>
@@ -3258,7 +3270,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end>
       Caption = 'actGet_Export_Email_xls'
     end
-    object actGet_Export_FileName_xls: TdsdExecStoredProc
+    object actGet_Export_FileNamexls: TdsdExecStoredProc
       Category = 'Export_mail_ok'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3267,7 +3279,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         item
           StoredProc = spGetFileName_xls
         end>
-      Caption = 'actGet_Export_FileName_xls'
+      Caption = 'actGet_Export_FileNamexls'
     end
     object actSelect_Export_xls: TdsdExecStoredProc
       Category = 'Export_mail_ok'
@@ -3288,13 +3300,13 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
           Action = actGet_Export_Email_xls
         end
         item
-          Action = actGet_Export_FileName_xls
+          Action = actGet_Export_FileNamexls
         end
         item
           Action = actSelect_Export_xls
         end
         item
-          Action = actExport_Grid_xls
+          Action = actExport_Grid_xls1
         end
         item
           Action = actSMTPFile_xls
@@ -3568,6 +3580,172 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end>
       Caption = 'actGet_Export_FileName_xls'
     end
+    object actSMTPFile: TdsdSMTPFileAction
+      Category = 'Export_Email'
+      MoveParams = <>
+      Host.Value = Null
+      Host.Component = ExportEmailCDS
+      Host.ComponentItem = 'Host'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Port.Value = 25
+      Port.Component = ExportEmailCDS
+      Port.ComponentItem = 'Port'
+      Port.DataType = ftString
+      Port.MultiSelectSeparator = ','
+      UserName.Value = Null
+      UserName.Component = ExportEmailCDS
+      UserName.ComponentItem = 'UserName'
+      UserName.DataType = ftString
+      UserName.MultiSelectSeparator = ','
+      Password.Value = Null
+      Password.Component = ExportEmailCDS
+      Password.ComponentItem = 'Password'
+      Password.DataType = ftString
+      Password.MultiSelectSeparator = ','
+      Body.Value = Null
+      Body.Component = ExportEmailCDS
+      Body.ComponentItem = 'Body'
+      Body.DataType = ftString
+      Body.MultiSelectSeparator = ','
+      Subject.Value = Null
+      Subject.Component = ExportEmailCDS
+      Subject.ComponentItem = 'Subject'
+      Subject.DataType = ftString
+      Subject.MultiSelectSeparator = ','
+      FromAddress.Value = Null
+      FromAddress.Component = ExportEmailCDS
+      FromAddress.ComponentItem = 'AddressFrom'
+      FromAddress.DataType = ftString
+      FromAddress.MultiSelectSeparator = ','
+      ToAddress.Value = Null
+      ToAddress.Component = ExportEmailCDS
+      ToAddress.ComponentItem = 'AddressTo'
+      ToAddress.DataType = ftString
+      ToAddress.MultiSelectSeparator = ','
+    end
+    object actGet_Export_Email: TdsdExecStoredProc
+      Category = 'Export_Email'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Export_Email
+      StoredProcList = <
+        item
+          StoredProc = spGet_Export_Email
+        end>
+      Caption = 'actGet_Export_Email'
+    end
+    object actExport_Grid: TExportGrid
+      Category = 'Export_Email'
+      MoveParams = <>
+      Grid = ExportXmlGrid
+      Caption = 'actExport_Grid'
+      OpenAfterCreate = False
+      DefaultFileName = 'Report_'
+      DefaultFileExt = 'XML'
+    end
+    object actGet_Export_FileName_xls: TdsdExecStoredProc
+      Category = 'Export_Email'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Export_FileName_xls
+      StoredProcList = <
+        item
+          StoredProc = spGet_Export_FileName_xls
+        end>
+      Caption = 'actGet_Export_FileName_xls'
+    end
+    object actSPPrintSaleProcName: TdsdExecStoredProc
+      Category = 'Export_Email'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReportName
+      StoredProcList = <
+        item
+          StoredProc = spGetReportName
+        end>
+      Caption = 'actSPPrintSaleProcName'
+    end
+    object actExport_fr3: TdsdPrintAction
+      Category = 'Export_Email'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = 'actExport_fr3'
+      Hint = 'actExport_fr3'
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'frxXLSExport_find'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'frxXLSExport1_ShowDialog'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FileNameExport'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'FileName_xls'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_OrderFinance'
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameSale'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object mactExport_fr3: TMultiAction
+      Category = 'Export_Email'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Export_Email
+        end
+        item
+          Action = actGet_Export_FileName_xls
+        end
+        item
+          Action = actSPPrintSaleProcName
+        end
+        item
+          Action = actExport_fr3
+        end
+        item
+          Action = actSMTPFile
+        end>
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1087#1083#1072#1085' '#1087#1086' '#1087#1086#1095#1090#1077' (fr3)'
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1087#1083#1072#1085' '#1087#1086' '#1087#1086#1095#1090#1077' (fr3)'
+      ImageIndex = 53
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -3742,8 +3920,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 54
-    Top = 367
+    Left = 65518
+    Top = 271
   end
   object MasterViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -4833,7 +5011,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       item
         Name = 'outFileName'
         Value = Null
-        Component = actExport_Grid
+        Component = actExport_Grid_file
         ComponentItem = 'DefaultFileName'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -4841,7 +5019,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       item
         Name = 'outDefaultFileExt'
         Value = Null
-        Component = actExport_Grid
+        Component = actExport_Grid_file
         ComponentItem = 'DefaultFileExt'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -4849,7 +5027,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       item
         Name = 'outEncodingANSI'
         Value = False
-        Component = actExport_Grid
+        Component = actExport_Grid_file
         ComponentItem = 'EncodingANSI'
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -4857,7 +5035,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       item
         Name = 'outFileName'
         Value = Null
-        Component = actSMTPFile
+        Component = actSMTPFile_file
         ComponentItem = 'FileName'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -5421,7 +5599,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       item
         Name = 'outFileName'
         Value = Null
-        Component = actExport_Grid_xls
+        Component = actExport_Grid_xls1
         ComponentItem = 'DefaultFileName'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -5429,7 +5607,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       item
         Name = 'outDefaultFileExt'
         Value = Null
-        Component = actExport_Grid_xls
+        Component = actExport_Grid_xls1
         ComponentItem = 'DefaultFileExt'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -5437,7 +5615,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       item
         Name = 'outEncodingANSI'
         Value = Null
-        Component = actExport_Grid_xls
+        Component = actExport_Grid_xls1
         ComponentItem = 'EncodingANSI'
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -5673,5 +5851,158 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     PropertiesCellList = <>
     Left = 259
     Top = 441
+  end
+  object spGet_Export_Email: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_OrderFinance_Email_send'
+    DataSet = ExportEmailCDS
+    DataSets = <
+      item
+        DataSet = ExportEmailCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 48
+    Top = 552
+  end
+  object spGet_Export_FileName_xls: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_OrderFinance_FileName_xls'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FileName_xls'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDefaultFileExt'
+        Value = Null
+        Component = actExport_Grid
+        ComponentItem = 'DefaultFileExt'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outEncodingANSI'
+        Value = Null
+        Component = actExport_Grid
+        ComponentItem = 'EncodingANSI'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = actSMTPFile
+        ComponentItem = 'FileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outExportType'
+        Value = Null
+        Component = actExport_Grid
+        ComponentItem = 'ExportType'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 160
+    Top = 546
+  end
+  object TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Email_FileName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        ComponentItem = 'FileName_xls'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDefaultFileExt'
+        Value = Null
+        ComponentItem = 'DefaultFileExt'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outEncodingANSI'
+        Value = Null
+        ComponentItem = 'EncodingANSI'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        ComponentItem = 'FileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outExportType'
+        Value = Null
+        ComponentItem = 'ExportType'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 96
+    Top = 522
+  end
+  object spGetReportName: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_OrderFinance_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_Movement_Sale_ReportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameSale'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 216
+    Top = 552
   end
 end

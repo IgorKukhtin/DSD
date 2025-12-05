@@ -154,8 +154,8 @@ type
     RowData: TcxGridDBColumn;
     ExportXmlGridLevel: TcxGridLevel;
     actSelect_Export: TdsdExecStoredProc;
-    actExport_Grid: TExportGrid;
-    actSMTPFile: TdsdSMTPFileAction;
+    actExport_Grid_file: TExportGrid;
+    actSMTPFile_file: TdsdSMTPFileAction;
     actExport: TMultiAction;
     bbExport: TdxBarButton;
     actBankAccountChoiceFormJurMain: TOpenChoiceForm;
@@ -211,11 +211,11 @@ type
     Guides_Update_report: TdsdGuides;
     spGet_Export_Email_xls: TdsdStoredProc;
     actGet_Export_Email_xls: TdsdExecStoredProc;
-    actGet_Export_FileName_xls: TdsdExecStoredProc;
+    actGet_Export_FileNamexls: TdsdExecStoredProc;
     spSelectOrderFinance_XLS: TdsdStoredProc;
     actSelect_Export_xls: TdsdExecStoredProc;
     mactExport_xls: TMultiAction;
-    actExport_Grid_xls: TExportGrid;
+    actExport_Grid_xls1: TExportGrid;
     dxBarButton1: TdxBarButton;
     bbOut: TdxBarSubItem;
     ExportEmailCDS: TClientDataSet;
@@ -284,6 +284,17 @@ type
     dsdDBViewAddOn_Export: TdsdDBViewAddOn;
     bbmactExport_group: TdxBarButton;
     actExport_Grid_groupCSV: TExportGrid;
+    actSMTPFile: TdsdSMTPFileAction;
+    spGet_Export_Email: TdsdStoredProc;
+    actGet_Export_Email: TdsdExecStoredProc;
+    actExport_Grid: TExportGrid;
+    spGet_Export_FileName_xls: TdsdStoredProc;
+    actGet_Export_FileName_xls: TdsdExecStoredProc;
+    spGetReportName: TdsdStoredProc;
+    actSPPrintSaleProcName: TdsdExecStoredProc;
+    actExport_fr3: TdsdPrintAction;
+    mactExport_fr3: TMultiAction;
+    bbtExport_fr3: TdxBarButton;
   private
   public
   end;
