@@ -186,9 +186,9 @@ BEGIN
            + CASE WHEN inCountTare7  > 0 THEN 1 ELSE 0 END
            + CASE WHEN inCountTare8  > 0 THEN 1 ELSE 0 END
            + CASE WHEN inCountTare9  > 0 THEN 1 ELSE 0 END
-           + CASE WHEN inCountTare10 > 0 THEN 1 ELSE 0 END) > 5
+           + CASE WHEN inCountTare10 > 0 THEN 1 ELSE 0 END) > 9
          THEN
-             RAISE EXCEPTION 'Ошибка.Заполнено более 5 значений';
+             RAISE EXCEPTION 'Ошибка.Заполнено более 9 значений';
          END IF;
          
          -- можно заполнить
@@ -214,24 +214,39 @@ BEGIN
          -- сохранили свойство <Вес 1-ой упаковки>
          PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightPack(), ioId, inWeightTare);
 
-         PERFORM CASE WHEN tmp.Ord = 1 THEN lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Box1(), ioId, tmp.BoxId)
-                      WHEN tmp.Ord = 2 THEN lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Box2(), ioId, tmp.BoxId)
-                      WHEN tmp.Ord = 3 THEN lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Box3(), ioId, tmp.BoxId)
-                      WHEN tmp.Ord = 4 THEN lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Box4(), ioId, tmp.BoxId)
-                      WHEN tmp.Ord = 5 THEN lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Box5(), ioId, tmp.BoxId)
+         PERFORM CASE WHEN tmp.Ord = 1  THEN lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Box1(),  ioId, tmp.BoxId)
+                      WHEN tmp.Ord = 2  THEN lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Box2(),  ioId, tmp.BoxId)
+                      WHEN tmp.Ord = 3  THEN lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Box3(),  ioId, tmp.BoxId)
+                      WHEN tmp.Ord = 4  THEN lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Box4(),  ioId, tmp.BoxId)
+                      WHEN tmp.Ord = 5  THEN lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Box5(),  ioId, tmp.BoxId)
+                      WHEN tmp.Ord = 6  THEN lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Box6(),  ioId, tmp.BoxId)
+                      WHEN tmp.Ord = 7  THEN lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Box7(),  ioId, tmp.BoxId)
+                      WHEN tmp.Ord = 8  THEN lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Box8(),  ioId, tmp.BoxId)
+                      WHEN tmp.Ord = 9  THEN lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Box9(),  ioId, tmp.BoxId)
+                      WHEN tmp.Ord = 10 THEN lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Box10(), ioId, tmp.BoxId)
                  END
-               , CASE WHEN tmp.Ord = 1 THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare1(), ioId, tmp.CountTare ::TFloat)
-                      WHEN tmp.Ord = 2 THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare2(), ioId, tmp.CountTare ::TFloat)
-                      WHEN tmp.Ord = 3 THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare3(), ioId, tmp.CountTare ::TFloat)
-                      WHEN tmp.Ord = 4 THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare4(), ioId, tmp.CountTare ::TFloat)
-                      WHEN tmp.Ord = 5 THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare5(), ioId, tmp.CountTare ::TFloat)
+               , CASE WHEN tmp.Ord = 1  THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare1(),  ioId, tmp.CountTare ::TFloat)
+                      WHEN tmp.Ord = 2  THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare2(),  ioId, tmp.CountTare ::TFloat)
+                      WHEN tmp.Ord = 3  THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare3(),  ioId, tmp.CountTare ::TFloat)
+                      WHEN tmp.Ord = 4  THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare4(),  ioId, tmp.CountTare ::TFloat)
+                      WHEN tmp.Ord = 5  THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare5(),  ioId, tmp.CountTare ::TFloat)
+                      WHEN tmp.Ord = 6  THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare6(),  ioId, tmp.CountTare ::TFloat)
+                      WHEN tmp.Ord = 7  THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare7(),  ioId, tmp.CountTare ::TFloat)
+                      WHEN tmp.Ord = 8  THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare8(),  ioId, tmp.CountTare ::TFloat)
+                      WHEN tmp.Ord = 9  THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare9(),  ioId, tmp.CountTare ::TFloat)
+                      WHEN tmp.Ord = 10 THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare10(), ioId, tmp.CountTare ::TFloat)
                  END
 
-               , CASE WHEN tmp.Ord = 1 THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare1(), ioId, tmp.WeightTare ::TFloat)
-                      WHEN tmp.Ord = 2 THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare2(), ioId, tmp.WeightTare ::TFloat)
-                      WHEN tmp.Ord = 3 THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare3(), ioId, tmp.WeightTare ::TFloat)
-                      WHEN tmp.Ord = 4 THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare4(), ioId, tmp.WeightTare ::TFloat)
-                      WHEN tmp.Ord = 5 THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare5(), ioId, tmp.WeightTare ::TFloat)
+               , CASE WHEN tmp.Ord = 1  THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare1(),  ioId, tmp.WeightTare ::TFloat)
+                      WHEN tmp.Ord = 2  THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare2(),  ioId, tmp.WeightTare ::TFloat)
+                      WHEN tmp.Ord = 3  THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare3(),  ioId, tmp.WeightTare ::TFloat)
+                      WHEN tmp.Ord = 4  THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare4(),  ioId, tmp.WeightTare ::TFloat)
+                      WHEN tmp.Ord = 5  THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare5(),  ioId, tmp.WeightTare ::TFloat)
+                      WHEN tmp.Ord = 6  THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare6(),  ioId, tmp.WeightTare ::TFloat)
+                      WHEN tmp.Ord = 7  THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare7(),  ioId, tmp.WeightTare ::TFloat)
+                      WHEN tmp.Ord = 8  THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare8(),  ioId, tmp.WeightTare ::TFloat)
+                      WHEN tmp.Ord = 9  THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare9(),  ioId, tmp.WeightTare ::TFloat)
+                      WHEN tmp.Ord = 10 THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare10(), ioId, tmp.WeightTare ::TFloat)
                  END
 
          FROM (WITH tmpParamAll AS (SELECT inTareId_1 AS BoxId, COALESCE (inCountTare1,0) AS CountTare, COALESCE (inWeightTare1, 0) AS WeightTare, 1 AS npp
@@ -246,6 +261,7 @@ BEGIN
                           UNION ALL SELECT inTareId_10 AS BoxId, COALESCE (inCountTare10,0) AS CountTare, COALESCE (inWeightTare10, 0) AS WeightTare, 10 AS npp
                                    )
                      , tmpParam AS (SELECT tmpParamAll.*
+                                           -- здесь только № = 1
                                          , ROW_NUMBER() OVER (ORDER BY tmpParamAll.npp) AS Ord
                                     FROM tmpParamAll
                                     WHERE tmpParamAll.CountTare <> 0 AND tmpParamAll.BoxId <> 0
@@ -254,6 +270,7 @@ BEGIN
 
                                   UNION ALL
                                     SELECT tmpParamAll.*
+                                           -- всегда с № = 2
                                          , 1 + ROW_NUMBER() OVER (ORDER BY tmpParamAll.npp) AS Ord
                                     FROM tmpParamAll
                                     WHERE tmpParamAll.CountTare <> 0 AND tmpParamAll.BoxId <> 0
@@ -261,11 +278,16 @@ BEGIN
                                       AND tmpParamAll.npp > 2
                                    )
                             -- всегда 5 параметров если вдруг нужно что-то обнулить
-                          , tmp AS (SELECT 1 AS Ord
-                          UNION ALL SELECT 2 AS Ord
-                          UNION ALL SELECT 3 AS Ord
-                          UNION ALL SELECT 4 AS Ord
-                          UNION ALL SELECT 5 AS Ord
+                          , tmp AS (SELECT 1  AS Ord
+                          UNION ALL SELECT 2  AS Ord
+                          UNION ALL SELECT 3  AS Ord
+                          UNION ALL SELECT 4  AS Ord
+                          UNION ALL SELECT 5  AS Ord
+                          UNION ALL SELECT 6  AS Ord
+                          UNION ALL SELECT 7  AS Ord
+                          UNION ALL SELECT 8  AS Ord
+                          UNION ALL SELECT 9  AS Ord
+                          UNION ALL SELECT 10 AS Ord
                                     )
                SELECT COALESCE (tmpParam.BoxId, 0)      AS BoxId
                     , COALESCE (tmpParam.CountTare, 0)  AS CountTare
