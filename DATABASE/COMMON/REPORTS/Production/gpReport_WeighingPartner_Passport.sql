@@ -231,16 +231,28 @@ BEGIN
                                                      , zc_MIFloat_CountTare3()
                                                      , zc_MIFloat_CountTare4()
                                                      , zc_MIFloat_CountTare5()
+                                                     , zc_MIFloat_CountTare6()
+                                                     , zc_MIFloat_CountTare7()
+                                                     , zc_MIFloat_CountTare8()
+                                                     , zc_MIFloat_CountTare9()
+                                                     , zc_MIFloat_CountTare10()
+
                                                      , zc_MIFloat_RealWeight()
                                                      , zc_MIFloat_PartionNum()
                                                      , zc_MIFloat_HeadCount()
                                                      , zc_MIFloat_CountPack()
                                                      , zc_MIFloat_WeightPack()
+
                                                      , zc_MIFloat_WeightTare1()
                                                      , zc_MIFloat_WeightTare2()
                                                      , zc_MIFloat_WeightTare3()
                                                      , zc_MIFloat_WeightTare4()
                                                      , zc_MIFloat_WeightTare5()
+                                                     , zc_MIFloat_WeightTare6()
+                                                     , zc_MIFloat_WeightTare7()
+                                                     , zc_MIFloat_WeightTare8()
+                                                     , zc_MIFloat_WeightTare9()
+                                                     , zc_MIFloat_WeightTare10()
                                                       )
                   )
 
@@ -252,6 +264,12 @@ BEGIN
                                                        , zc_MILinkObject_Box3()
                                                        , zc_MILinkObject_Box4()
                                                        , zc_MILinkObject_Box5()
+                                                       , zc_MILinkObject_Box6()
+                                                       , zc_MILinkObject_Box7()
+                                                       , zc_MILinkObject_Box8()
+                                                       , zc_MILinkObject_Box9()
+                                                       , zc_MILinkObject_Box10()
+
                                                        , zc_MILinkObject_GoodsKind()
                                                        , zc_MILinkObject_PartionCell()
                                                        , zc_MILinkObject_Insert()
@@ -272,126 +290,228 @@ BEGIN
                       , MILinkObject_GoodsKind.ObjectId    AS GoodsKindId
                       , MILinkObject_PartionCell.ObjectId  AS PartionCellId
 
+                        -- CountTare
                       , CASE WHEN tmpBox.BoxId_1 = MILinkObject_Box1.ObjectId THEN MIFloat_CountTare1.ValueData
                              WHEN tmpBox.BoxId_1 = MILinkObject_Box2.ObjectId THEN MIFloat_CountTare2.ValueData
                              WHEN tmpBox.BoxId_1 = MILinkObject_Box3.ObjectId THEN MIFloat_CountTare3.ValueData
                              WHEN tmpBox.BoxId_1 = MILinkObject_Box4.ObjectId THEN MIFloat_CountTare4.ValueData
                              WHEN tmpBox.BoxId_1 = MILinkObject_Box5.ObjectId THEN MIFloat_CountTare5.ValueData
+                             WHEN tmpBox.BoxId_1 = MILinkObject_Box6.ObjectId THEN MIFloat_CountTare6.ValueData
+                             WHEN tmpBox.BoxId_1 = MILinkObject_Box7.ObjectId THEN MIFloat_CountTare7.ValueData
+                             WHEN tmpBox.BoxId_1 = MILinkObject_Box8.ObjectId THEN MIFloat_CountTare8.ValueData
+                             WHEN tmpBox.BoxId_1 = MILinkObject_Box9.ObjectId THEN MIFloat_CountTare9.ValueData
+                             WHEN tmpBox.BoxId_1 = MILinkObject_Box10.ObjectId THEN MIFloat_CountTare10.ValueData
                         END   ::TFloat AS CountTare1
                       , CASE WHEN tmpBox.BoxId_2 = MILinkObject_Box1.ObjectId THEN MIFloat_CountTare1.ValueData
                              WHEN tmpBox.BoxId_2 = MILinkObject_Box2.ObjectId THEN MIFloat_CountTare2.ValueData
                              WHEN tmpBox.BoxId_2 = MILinkObject_Box3.ObjectId THEN MIFloat_CountTare3.ValueData
                              WHEN tmpBox.BoxId_2 = MILinkObject_Box4.ObjectId THEN MIFloat_CountTare4.ValueData
                              WHEN tmpBox.BoxId_2 = MILinkObject_Box5.ObjectId THEN MIFloat_CountTare5.ValueData
+                             WHEN tmpBox.BoxId_2 = MILinkObject_Box6.ObjectId THEN MIFloat_CountTare6.ValueData
+                             WHEN tmpBox.BoxId_2 = MILinkObject_Box7.ObjectId THEN MIFloat_CountTare7.ValueData
+                             WHEN tmpBox.BoxId_2 = MILinkObject_Box8.ObjectId THEN MIFloat_CountTare8.ValueData
+                             WHEN tmpBox.BoxId_2 = MILinkObject_Box9.ObjectId THEN MIFloat_CountTare9.ValueData
+                             WHEN tmpBox.BoxId_2 = MILinkObject_Box10.ObjectId THEN MIFloat_CountTare10.ValueData
                         END   ::TFloat AS CountTare2
                       , CASE WHEN tmpBox.BoxId_3 = MILinkObject_Box1.ObjectId THEN MIFloat_CountTare1.ValueData
                              WHEN tmpBox.BoxId_3 = MILinkObject_Box2.ObjectId THEN MIFloat_CountTare2.ValueData
                              WHEN tmpBox.BoxId_3 = MILinkObject_Box3.ObjectId THEN MIFloat_CountTare3.ValueData
                              WHEN tmpBox.BoxId_3 = MILinkObject_Box4.ObjectId THEN MIFloat_CountTare4.ValueData
                              WHEN tmpBox.BoxId_3 = MILinkObject_Box5.ObjectId THEN MIFloat_CountTare5.ValueData
+                             WHEN tmpBox.BoxId_3 = MILinkObject_Box6.ObjectId THEN MIFloat_CountTare6.ValueData
+                             WHEN tmpBox.BoxId_3 = MILinkObject_Box7.ObjectId THEN MIFloat_CountTare7.ValueData
+                             WHEN tmpBox.BoxId_3 = MILinkObject_Box8.ObjectId THEN MIFloat_CountTare8.ValueData
+                             WHEN tmpBox.BoxId_3 = MILinkObject_Box9.ObjectId THEN MIFloat_CountTare9.ValueData
+                             WHEN tmpBox.BoxId_3 = MILinkObject_Box10.ObjectId THEN MIFloat_CountTare10.ValueData
                         END   ::TFloat AS CountTare3
                       , CASE WHEN tmpBox.BoxId_4 = MILinkObject_Box1.ObjectId THEN MIFloat_CountTare1.ValueData
                              WHEN tmpBox.BoxId_4 = MILinkObject_Box2.ObjectId THEN MIFloat_CountTare2.ValueData
                              WHEN tmpBox.BoxId_4 = MILinkObject_Box3.ObjectId THEN MIFloat_CountTare3.ValueData
                              WHEN tmpBox.BoxId_4 = MILinkObject_Box4.ObjectId THEN MIFloat_CountTare4.ValueData
                              WHEN tmpBox.BoxId_4 = MILinkObject_Box5.ObjectId THEN MIFloat_CountTare5.ValueData
+                             WHEN tmpBox.BoxId_4 = MILinkObject_Box6.ObjectId THEN MIFloat_CountTare6.ValueData
+                             WHEN tmpBox.BoxId_4 = MILinkObject_Box7.ObjectId THEN MIFloat_CountTare7.ValueData
+                             WHEN tmpBox.BoxId_4 = MILinkObject_Box8.ObjectId THEN MIFloat_CountTare8.ValueData
+                             WHEN tmpBox.BoxId_4 = MILinkObject_Box9.ObjectId THEN MIFloat_CountTare9.ValueData
+                             WHEN tmpBox.BoxId_4 = MILinkObject_Box10.ObjectId THEN MIFloat_CountTare10.ValueData
                         END   ::TFloat AS CountTare4
                       , CASE WHEN tmpBox.BoxId_5 = MILinkObject_Box1.ObjectId THEN MIFloat_CountTare1.ValueData
                              WHEN tmpBox.BoxId_5 = MILinkObject_Box2.ObjectId THEN MIFloat_CountTare2.ValueData
                              WHEN tmpBox.BoxId_5 = MILinkObject_Box3.ObjectId THEN MIFloat_CountTare3.ValueData
                              WHEN tmpBox.BoxId_5 = MILinkObject_Box4.ObjectId THEN MIFloat_CountTare4.ValueData
                              WHEN tmpBox.BoxId_5 = MILinkObject_Box5.ObjectId THEN MIFloat_CountTare5.ValueData
+                             WHEN tmpBox.BoxId_5 = MILinkObject_Box6.ObjectId THEN MIFloat_CountTare6.ValueData
+                             WHEN tmpBox.BoxId_5 = MILinkObject_Box7.ObjectId THEN MIFloat_CountTare7.ValueData
+                             WHEN tmpBox.BoxId_5 = MILinkObject_Box8.ObjectId THEN MIFloat_CountTare8.ValueData
+                             WHEN tmpBox.BoxId_5 = MILinkObject_Box9.ObjectId THEN MIFloat_CountTare9.ValueData
+                             WHEN tmpBox.BoxId_5 = MILinkObject_Box10.ObjectId THEN MIFloat_CountTare10.ValueData
                         END   ::TFloat AS CountTare5
                       , CASE WHEN tmpBox.BoxId_6 = MILinkObject_Box1.ObjectId THEN MIFloat_CountTare1.ValueData
                              WHEN tmpBox.BoxId_6 = MILinkObject_Box2.ObjectId THEN MIFloat_CountTare2.ValueData
                              WHEN tmpBox.BoxId_6 = MILinkObject_Box3.ObjectId THEN MIFloat_CountTare3.ValueData
                              WHEN tmpBox.BoxId_6 = MILinkObject_Box4.ObjectId THEN MIFloat_CountTare4.ValueData
                              WHEN tmpBox.BoxId_6 = MILinkObject_Box5.ObjectId THEN MIFloat_CountTare5.ValueData
+                             WHEN tmpBox.BoxId_6 = MILinkObject_Box6.ObjectId THEN MIFloat_CountTare6.ValueData
+                             WHEN tmpBox.BoxId_6 = MILinkObject_Box7.ObjectId THEN MIFloat_CountTare7.ValueData
+                             WHEN tmpBox.BoxId_6 = MILinkObject_Box8.ObjectId THEN MIFloat_CountTare8.ValueData
+                             WHEN tmpBox.BoxId_6 = MILinkObject_Box9.ObjectId THEN MIFloat_CountTare9.ValueData
+                             WHEN tmpBox.BoxId_6 = MILinkObject_Box10.ObjectId THEN MIFloat_CountTare10.ValueData
                         END   ::TFloat AS CountTare6
                       , CASE WHEN tmpBox.BoxId_7 = MILinkObject_Box1.ObjectId THEN MIFloat_CountTare1.ValueData
                              WHEN tmpBox.BoxId_7 = MILinkObject_Box2.ObjectId THEN MIFloat_CountTare2.ValueData
                              WHEN tmpBox.BoxId_7 = MILinkObject_Box3.ObjectId THEN MIFloat_CountTare3.ValueData
                              WHEN tmpBox.BoxId_7 = MILinkObject_Box4.ObjectId THEN MIFloat_CountTare4.ValueData
                              WHEN tmpBox.BoxId_7 = MILinkObject_Box5.ObjectId THEN MIFloat_CountTare5.ValueData
+                             WHEN tmpBox.BoxId_7 = MILinkObject_Box6.ObjectId THEN MIFloat_CountTare6.ValueData
+                             WHEN tmpBox.BoxId_7 = MILinkObject_Box7.ObjectId THEN MIFloat_CountTare7.ValueData
+                             WHEN tmpBox.BoxId_7 = MILinkObject_Box8.ObjectId THEN MIFloat_CountTare8.ValueData
+                             WHEN tmpBox.BoxId_7 = MILinkObject_Box9.ObjectId THEN MIFloat_CountTare9.ValueData
+                             WHEN tmpBox.BoxId_7 = MILinkObject_Box10.ObjectId THEN MIFloat_CountTare10.ValueData
                         END   ::TFloat AS CountTare7
                       , CASE WHEN tmpBox.BoxId_8 = MILinkObject_Box1.ObjectId THEN MIFloat_CountTare1.ValueData
                              WHEN tmpBox.BoxId_8 = MILinkObject_Box2.ObjectId THEN MIFloat_CountTare2.ValueData
                              WHEN tmpBox.BoxId_8 = MILinkObject_Box3.ObjectId THEN MIFloat_CountTare3.ValueData
                              WHEN tmpBox.BoxId_8 = MILinkObject_Box4.ObjectId THEN MIFloat_CountTare4.ValueData
                              WHEN tmpBox.BoxId_8 = MILinkObject_Box5.ObjectId THEN MIFloat_CountTare5.ValueData
+                             WHEN tmpBox.BoxId_8 = MILinkObject_Box6.ObjectId THEN MIFloat_CountTare6.ValueData
+                             WHEN tmpBox.BoxId_8 = MILinkObject_Box7.ObjectId THEN MIFloat_CountTare7.ValueData
+                             WHEN tmpBox.BoxId_8 = MILinkObject_Box8.ObjectId THEN MIFloat_CountTare8.ValueData
+                             WHEN tmpBox.BoxId_8 = MILinkObject_Box9.ObjectId THEN MIFloat_CountTare9.ValueData
+                             WHEN tmpBox.BoxId_8 = MILinkObject_Box10.ObjectId THEN MIFloat_CountTare10.ValueData
                         END   ::TFloat AS CountTare8
                       , CASE WHEN tmpBox.BoxId_9 = MILinkObject_Box1.ObjectId THEN MIFloat_CountTare1.ValueData
                              WHEN tmpBox.BoxId_9 = MILinkObject_Box2.ObjectId THEN MIFloat_CountTare2.ValueData
                              WHEN tmpBox.BoxId_9 = MILinkObject_Box3.ObjectId THEN MIFloat_CountTare3.ValueData
                              WHEN tmpBox.BoxId_9 = MILinkObject_Box4.ObjectId THEN MIFloat_CountTare4.ValueData
                              WHEN tmpBox.BoxId_9 = MILinkObject_Box5.ObjectId THEN MIFloat_CountTare5.ValueData
+                             WHEN tmpBox.BoxId_9 = MILinkObject_Box6.ObjectId THEN MIFloat_CountTare6.ValueData
+                             WHEN tmpBox.BoxId_9 = MILinkObject_Box7.ObjectId THEN MIFloat_CountTare7.ValueData
+                             WHEN tmpBox.BoxId_9 = MILinkObject_Box8.ObjectId THEN MIFloat_CountTare8.ValueData
+                             WHEN tmpBox.BoxId_9 = MILinkObject_Box9.ObjectId THEN MIFloat_CountTare9.ValueData
+                             WHEN tmpBox.BoxId_9 = MILinkObject_Box10.ObjectId THEN MIFloat_CountTare10.ValueData
                         END   ::TFloat AS CountTare9
                       , CASE WHEN tmpBox.BoxId_10 = MILinkObject_Box1.ObjectId THEN MIFloat_CountTare1.ValueData
                              WHEN tmpBox.BoxId_10 = MILinkObject_Box2.ObjectId THEN MIFloat_CountTare2.ValueData
                              WHEN tmpBox.BoxId_10 = MILinkObject_Box3.ObjectId THEN MIFloat_CountTare3.ValueData
                              WHEN tmpBox.BoxId_10 = MILinkObject_Box4.ObjectId THEN MIFloat_CountTare4.ValueData
                              WHEN tmpBox.BoxId_10 = MILinkObject_Box5.ObjectId THEN MIFloat_CountTare5.ValueData
+                             WHEN tmpBox.BoxId_10 = MILinkObject_Box6.ObjectId THEN MIFloat_CountTare6.ValueData
+                             WHEN tmpBox.BoxId_10 = MILinkObject_Box7.ObjectId THEN MIFloat_CountTare7.ValueData
+                             WHEN tmpBox.BoxId_10 = MILinkObject_Box8.ObjectId THEN MIFloat_CountTare8.ValueData
+                             WHEN tmpBox.BoxId_10 = MILinkObject_Box9.ObjectId THEN MIFloat_CountTare9.ValueData
+                             WHEN tmpBox.BoxId_10 = MILinkObject_Box10.ObjectId THEN MIFloat_CountTare10.ValueData
                         END   ::TFloat AS CountTare10
 
+                        -- WeightTare
                       , CASE WHEN tmpBox.BoxId_1 = MILinkObject_Box1.ObjectId THEN MIFloat_WeightTare1.ValueData
                              WHEN tmpBox.BoxId_1 = MILinkObject_Box2.ObjectId THEN MIFloat_WeightTare2.ValueData
                              WHEN tmpBox.BoxId_1 = MILinkObject_Box3.ObjectId THEN MIFloat_WeightTare3.ValueData
                              WHEN tmpBox.BoxId_1 = MILinkObject_Box4.ObjectId THEN MIFloat_WeightTare4.ValueData
                              WHEN tmpBox.BoxId_1 = MILinkObject_Box5.ObjectId THEN MIFloat_WeightTare5.ValueData
+                             WHEN tmpBox.BoxId_1 = MILinkObject_Box6.ObjectId THEN MIFloat_WeightTare6.ValueData
+                             WHEN tmpBox.BoxId_1 = MILinkObject_Box7.ObjectId THEN MIFloat_WeightTare7.ValueData
+                             WHEN tmpBox.BoxId_1 = MILinkObject_Box8.ObjectId THEN MIFloat_WeightTare8.ValueData
+                             WHEN tmpBox.BoxId_1 = MILinkObject_Box9.ObjectId THEN MIFloat_WeightTare9.ValueData
+                             WHEN tmpBox.BoxId_1 = MILinkObject_Box10.ObjectId THEN MIFloat_WeightTare10.ValueData
                         END   ::TFloat AS WeightTare1
                       , CASE WHEN tmpBox.BoxId_2 = MILinkObject_Box1.ObjectId THEN MIFloat_WeightTare1.ValueData
                              WHEN tmpBox.BoxId_2 = MILinkObject_Box2.ObjectId THEN MIFloat_WeightTare2.ValueData
                              WHEN tmpBox.BoxId_2 = MILinkObject_Box3.ObjectId THEN MIFloat_WeightTare3.ValueData
                              WHEN tmpBox.BoxId_2 = MILinkObject_Box4.ObjectId THEN MIFloat_WeightTare4.ValueData
                              WHEN tmpBox.BoxId_2 = MILinkObject_Box5.ObjectId THEN MIFloat_WeightTare5.ValueData
+                             WHEN tmpBox.BoxId_2 = MILinkObject_Box6.ObjectId THEN MIFloat_WeightTare6.ValueData
+                             WHEN tmpBox.BoxId_2 = MILinkObject_Box7.ObjectId THEN MIFloat_WeightTare7.ValueData
+                             WHEN tmpBox.BoxId_2 = MILinkObject_Box8.ObjectId THEN MIFloat_WeightTare8.ValueData
+                             WHEN tmpBox.BoxId_2 = MILinkObject_Box9.ObjectId THEN MIFloat_WeightTare9.ValueData
+                             WHEN tmpBox.BoxId_2 = MILinkObject_Box10.ObjectId THEN MIFloat_WeightTare10.ValueData
                         END   ::TFloat AS WeightTare2
                       , CASE WHEN tmpBox.BoxId_3 = MILinkObject_Box1.ObjectId THEN MIFloat_WeightTare1.ValueData
                              WHEN tmpBox.BoxId_3 = MILinkObject_Box2.ObjectId THEN MIFloat_WeightTare2.ValueData
                              WHEN tmpBox.BoxId_3 = MILinkObject_Box3.ObjectId THEN MIFloat_WeightTare3.ValueData
                              WHEN tmpBox.BoxId_3 = MILinkObject_Box4.ObjectId THEN MIFloat_WeightTare4.ValueData
                              WHEN tmpBox.BoxId_3 = MILinkObject_Box5.ObjectId THEN MIFloat_WeightTare5.ValueData
+                             WHEN tmpBox.BoxId_3 = MILinkObject_Box6.ObjectId THEN MIFloat_WeightTare6.ValueData
+                             WHEN tmpBox.BoxId_3 = MILinkObject_Box7.ObjectId THEN MIFloat_WeightTare7.ValueData
+                             WHEN tmpBox.BoxId_3 = MILinkObject_Box8.ObjectId THEN MIFloat_WeightTare8.ValueData
+                             WHEN tmpBox.BoxId_3 = MILinkObject_Box9.ObjectId THEN MIFloat_WeightTare9.ValueData
+                             WHEN tmpBox.BoxId_3 = MILinkObject_Box10.ObjectId THEN MIFloat_WeightTare10.ValueData
                         END   ::TFloat AS WeightTare3
                       , CASE WHEN tmpBox.BoxId_4 = MILinkObject_Box1.ObjectId THEN MIFloat_WeightTare1.ValueData
                              WHEN tmpBox.BoxId_4 = MILinkObject_Box2.ObjectId THEN MIFloat_WeightTare2.ValueData
                              WHEN tmpBox.BoxId_4 = MILinkObject_Box3.ObjectId THEN MIFloat_WeightTare3.ValueData
                              WHEN tmpBox.BoxId_4 = MILinkObject_Box4.ObjectId THEN MIFloat_WeightTare4.ValueData
                              WHEN tmpBox.BoxId_4 = MILinkObject_Box5.ObjectId THEN MIFloat_WeightTare5.ValueData
+                             WHEN tmpBox.BoxId_4 = MILinkObject_Box6.ObjectId THEN MIFloat_WeightTare6.ValueData
+                             WHEN tmpBox.BoxId_4 = MILinkObject_Box7.ObjectId THEN MIFloat_WeightTare7.ValueData
+                             WHEN tmpBox.BoxId_4 = MILinkObject_Box8.ObjectId THEN MIFloat_WeightTare8.ValueData
+                             WHEN tmpBox.BoxId_4 = MILinkObject_Box9.ObjectId THEN MIFloat_WeightTare9.ValueData
+                             WHEN tmpBox.BoxId_4 = MILinkObject_Box10.ObjectId THEN MIFloat_WeightTare10.ValueData
                         END   ::TFloat AS WeightTare4
                       , CASE WHEN tmpBox.BoxId_5 = MILinkObject_Box1.ObjectId THEN MIFloat_WeightTare1.ValueData
                              WHEN tmpBox.BoxId_5 = MILinkObject_Box2.ObjectId THEN MIFloat_WeightTare2.ValueData
                              WHEN tmpBox.BoxId_5 = MILinkObject_Box3.ObjectId THEN MIFloat_WeightTare3.ValueData
                              WHEN tmpBox.BoxId_5 = MILinkObject_Box4.ObjectId THEN MIFloat_WeightTare4.ValueData
                              WHEN tmpBox.BoxId_5 = MILinkObject_Box5.ObjectId THEN MIFloat_WeightTare5.ValueData
+                             WHEN tmpBox.BoxId_5 = MILinkObject_Box6.ObjectId THEN MIFloat_WeightTare6.ValueData
+                             WHEN tmpBox.BoxId_5 = MILinkObject_Box7.ObjectId THEN MIFloat_WeightTare7.ValueData
+                             WHEN tmpBox.BoxId_5 = MILinkObject_Box8.ObjectId THEN MIFloat_WeightTare8.ValueData
+                             WHEN tmpBox.BoxId_5 = MILinkObject_Box9.ObjectId THEN MIFloat_WeightTare9.ValueData
+                             WHEN tmpBox.BoxId_5 = MILinkObject_Box10.ObjectId THEN MIFloat_WeightTare10.ValueData
                         END   ::TFloat AS WeightTare5
                       , CASE WHEN tmpBox.BoxId_6 = MILinkObject_Box1.ObjectId THEN MIFloat_WeightTare1.ValueData
                              WHEN tmpBox.BoxId_6 = MILinkObject_Box2.ObjectId THEN MIFloat_WeightTare2.ValueData
                              WHEN tmpBox.BoxId_6 = MILinkObject_Box3.ObjectId THEN MIFloat_WeightTare3.ValueData
                              WHEN tmpBox.BoxId_6 = MILinkObject_Box4.ObjectId THEN MIFloat_WeightTare4.ValueData
                              WHEN tmpBox.BoxId_6 = MILinkObject_Box5.ObjectId THEN MIFloat_WeightTare5.ValueData
+                             WHEN tmpBox.BoxId_6 = MILinkObject_Box6.ObjectId THEN MIFloat_WeightTare6.ValueData
+                             WHEN tmpBox.BoxId_6 = MILinkObject_Box7.ObjectId THEN MIFloat_WeightTare7.ValueData
+                             WHEN tmpBox.BoxId_6 = MILinkObject_Box8.ObjectId THEN MIFloat_WeightTare8.ValueData
+                             WHEN tmpBox.BoxId_6 = MILinkObject_Box9.ObjectId THEN MIFloat_WeightTare9.ValueData
+                             WHEN tmpBox.BoxId_6 = MILinkObject_Box10.ObjectId THEN MIFloat_WeightTare10.ValueData
                         END   ::TFloat AS WeightTare6
                       , CASE WHEN tmpBox.BoxId_7 = MILinkObject_Box1.ObjectId THEN MIFloat_WeightTare1.ValueData
                              WHEN tmpBox.BoxId_7 = MILinkObject_Box2.ObjectId THEN MIFloat_WeightTare2.ValueData
                              WHEN tmpBox.BoxId_7 = MILinkObject_Box3.ObjectId THEN MIFloat_WeightTare3.ValueData
                              WHEN tmpBox.BoxId_7 = MILinkObject_Box4.ObjectId THEN MIFloat_WeightTare4.ValueData
                              WHEN tmpBox.BoxId_7 = MILinkObject_Box5.ObjectId THEN MIFloat_WeightTare5.ValueData
+                             WHEN tmpBox.BoxId_7 = MILinkObject_Box6.ObjectId THEN MIFloat_WeightTare6.ValueData
+                             WHEN tmpBox.BoxId_7 = MILinkObject_Box7.ObjectId THEN MIFloat_WeightTare7.ValueData
+                             WHEN tmpBox.BoxId_7 = MILinkObject_Box8.ObjectId THEN MIFloat_WeightTare8.ValueData
+                             WHEN tmpBox.BoxId_7 = MILinkObject_Box9.ObjectId THEN MIFloat_WeightTare9.ValueData
+                             WHEN tmpBox.BoxId_7 = MILinkObject_Box10.ObjectId THEN MIFloat_WeightTare10.ValueData
                         END   ::TFloat AS WeightTare7
                       , CASE WHEN tmpBox.BoxId_8 = MILinkObject_Box1.ObjectId THEN MIFloat_WeightTare1.ValueData
                              WHEN tmpBox.BoxId_8 = MILinkObject_Box2.ObjectId THEN MIFloat_WeightTare2.ValueData
                              WHEN tmpBox.BoxId_8 = MILinkObject_Box3.ObjectId THEN MIFloat_WeightTare3.ValueData
                              WHEN tmpBox.BoxId_8 = MILinkObject_Box4.ObjectId THEN MIFloat_WeightTare4.ValueData
                              WHEN tmpBox.BoxId_8 = MILinkObject_Box5.ObjectId THEN MIFloat_WeightTare5.ValueData
+                             WHEN tmpBox.BoxId_8 = MILinkObject_Box6.ObjectId THEN MIFloat_WeightTare6.ValueData
+                             WHEN tmpBox.BoxId_8 = MILinkObject_Box7.ObjectId THEN MIFloat_WeightTare7.ValueData
+                             WHEN tmpBox.BoxId_8 = MILinkObject_Box8.ObjectId THEN MIFloat_WeightTare8.ValueData
+                             WHEN tmpBox.BoxId_8 = MILinkObject_Box9.ObjectId THEN MIFloat_WeightTare9.ValueData
+                             WHEN tmpBox.BoxId_8 = MILinkObject_Box10.ObjectId THEN MIFloat_WeightTare10.ValueData
                         END   ::TFloat AS WeightTare8
                       , CASE WHEN tmpBox.BoxId_9 = MILinkObject_Box1.ObjectId THEN MIFloat_WeightTare1.ValueData
                              WHEN tmpBox.BoxId_9 = MILinkObject_Box2.ObjectId THEN MIFloat_WeightTare2.ValueData
                              WHEN tmpBox.BoxId_9 = MILinkObject_Box3.ObjectId THEN MIFloat_WeightTare3.ValueData
                              WHEN tmpBox.BoxId_9 = MILinkObject_Box4.ObjectId THEN MIFloat_WeightTare4.ValueData
                              WHEN tmpBox.BoxId_9 = MILinkObject_Box5.ObjectId THEN MIFloat_WeightTare5.ValueData
+                             WHEN tmpBox.BoxId_9 = MILinkObject_Box6.ObjectId THEN MIFloat_WeightTare6.ValueData
+                             WHEN tmpBox.BoxId_9 = MILinkObject_Box7.ObjectId THEN MIFloat_WeightTare7.ValueData
+                             WHEN tmpBox.BoxId_9 = MILinkObject_Box8.ObjectId THEN MIFloat_WeightTare8.ValueData
+                             WHEN tmpBox.BoxId_9 = MILinkObject_Box9.ObjectId THEN MIFloat_WeightTare9.ValueData
+                             WHEN tmpBox.BoxId_9 = MILinkObject_Box10.ObjectId THEN MIFloat_WeightTare10.ValueData
                         END   ::TFloat AS WeightTare9
                       , CASE WHEN tmpBox.BoxId_10 = MILinkObject_Box1.ObjectId THEN MIFloat_WeightTare1.ValueData
                              WHEN tmpBox.BoxId_10 = MILinkObject_Box2.ObjectId THEN MIFloat_WeightTare2.ValueData
                              WHEN tmpBox.BoxId_10 = MILinkObject_Box3.ObjectId THEN MIFloat_WeightTare3.ValueData
                              WHEN tmpBox.BoxId_10 = MILinkObject_Box4.ObjectId THEN MIFloat_WeightTare4.ValueData
                              WHEN tmpBox.BoxId_10 = MILinkObject_Box5.ObjectId THEN MIFloat_WeightTare5.ValueData
+                             WHEN tmpBox.BoxId_10 = MILinkObject_Box6.ObjectId THEN MIFloat_WeightTare6.ValueData
+                             WHEN tmpBox.BoxId_10 = MILinkObject_Box7.ObjectId THEN MIFloat_WeightTare7.ValueData
+                             WHEN tmpBox.BoxId_10 = MILinkObject_Box8.ObjectId THEN MIFloat_WeightTare8.ValueData
+                             WHEN tmpBox.BoxId_10 = MILinkObject_Box9.ObjectId THEN MIFloat_WeightTare9.ValueData
+                             WHEN tmpBox.BoxId_10 = MILinkObject_Box10.ObjectId THEN MIFloat_WeightTare10.ValueData
                         END   ::TFloat AS WeightTare10
 
                       , tmpBox.BoxWeight1 ::TFloat, tmpBox.BoxWeight2 ::TFloat, tmpBox.BoxWeight3 ::TFloat, tmpBox.BoxWeight4 ::TFloat, tmpBox.BoxWeight5 ::TFloat
@@ -436,6 +556,21 @@ BEGIN
                      LEFT JOIN tmpMIFloat AS MIFloat_CountTare5
                                           ON MIFloat_CountTare5.MovementItemId = MovementItem.Id
                                          AND MIFloat_CountTare5.DescId = zc_MIFloat_CountTare5()
+                     LEFT JOIN tmpMIFloat AS MIFloat_CountTare6
+                                          ON MIFloat_CountTare6.MovementItemId = MovementItem.Id
+                                         AND MIFloat_CountTare6.DescId = zc_MIFloat_CountTare6()
+                     LEFT JOIN tmpMIFloat AS MIFloat_CountTare7
+                                          ON MIFloat_CountTare7.MovementItemId = MovementItem.Id
+                                         AND MIFloat_CountTare7.DescId = zc_MIFloat_CountTare7()
+                     LEFT JOIN tmpMIFloat AS MIFloat_CountTare8
+                                          ON MIFloat_CountTare8.MovementItemId = MovementItem.Id
+                                         AND MIFloat_CountTare8.DescId = zc_MIFloat_CountTare8()
+                     LEFT JOIN tmpMIFloat AS MIFloat_CountTare9
+                                          ON MIFloat_CountTare9.MovementItemId = MovementItem.Id
+                                         AND MIFloat_CountTare9.DescId = zc_MIFloat_CountTare9()
+                     LEFT JOIN tmpMIFloat AS MIFloat_CountTare10
+                                          ON MIFloat_CountTare10.MovementItemId = MovementItem.Id
+                                         AND MIFloat_CountTare10.DescId = zc_MIFloat_CountTare10()
 
                      LEFT JOIN tmpMIFloat AS MIFloat_WeightTare1
                                           ON MIFloat_WeightTare1.MovementItemId = MovementItem.Id
@@ -452,6 +587,21 @@ BEGIN
                      LEFT JOIN tmpMIFloat AS MIFloat_WeightTare5
                                           ON MIFloat_WeightTare5.MovementItemId = MovementItem.Id
                                          AND MIFloat_WeightTare5.DescId = zc_MIFloat_WeightTare5()
+                     LEFT JOIN tmpMIFloat AS MIFloat_WeightTare6
+                                          ON MIFloat_WeightTare6.MovementItemId = MovementItem.Id
+                                         AND MIFloat_WeightTare6.DescId = zc_MIFloat_WeightTare6()
+                     LEFT JOIN tmpMIFloat AS MIFloat_WeightTare7
+                                          ON MIFloat_WeightTare7.MovementItemId = MovementItem.Id
+                                         AND MIFloat_WeightTare7.DescId = zc_MIFloat_WeightTare7()
+                     LEFT JOIN tmpMIFloat AS MIFloat_WeightTare8
+                                          ON MIFloat_WeightTare8.MovementItemId = MovementItem.Id
+                                         AND MIFloat_WeightTare8.DescId = zc_MIFloat_WeightTare8()
+                     LEFT JOIN tmpMIFloat AS MIFloat_WeightTare9
+                                          ON MIFloat_WeightTare9.MovementItemId = MovementItem.Id
+                                         AND MIFloat_WeightTare9.DescId = zc_MIFloat_WeightTare9()
+                     LEFT JOIN tmpMIFloat AS MIFloat_WeightTare10
+                                          ON MIFloat_WeightTare10.MovementItemId = MovementItem.Id
+                                         AND MIFloat_WeightTare10.DescId = zc_MIFloat_WeightTare10()
 
                      -- если Инвентаризация - Подготовка = здесь сохранено в ШТ
                      LEFT JOIN tmpMIFloat AS tmpMIFloat_HeadCount
@@ -508,6 +658,21 @@ BEGIN
                      LEFT JOIN tmpMILO AS MILinkObject_Box5
                                        ON MILinkObject_Box5.MovementItemId = MovementItem.Id
                                       AND MILinkObject_Box5.DescId = zc_MILinkObject_Box5()
+                     LEFT JOIN tmpMILO AS MILinkObject_Box6
+                                       ON MILinkObject_Box6.MovementItemId = MovementItem.Id
+                                      AND MILinkObject_Box6.DescId = zc_MILinkObject_Box6()
+                     LEFT JOIN tmpMILO AS MILinkObject_Box7
+                                       ON MILinkObject_Box7.MovementItemId = MovementItem.Id
+                                      AND MILinkObject_Box7.DescId = zc_MILinkObject_Box7()
+                     LEFT JOIN tmpMILO AS MILinkObject_Box8
+                                       ON MILinkObject_Box8.MovementItemId = MovementItem.Id
+                                      AND MILinkObject_Box8.DescId = zc_MILinkObject_Box8()
+                     LEFT JOIN tmpMILO AS MILinkObject_Box9
+                                       ON MILinkObject_Box9.MovementItemId = MovementItem.Id
+                                      AND MILinkObject_Box9.DescId = zc_MILinkObject_Box9()
+                     LEFT JOIN tmpMILO AS MILinkObject_Box10
+                                       ON MILinkObject_Box10.MovementItemId = MovementItem.Id
+                                      AND MILinkObject_Box10.DescId = zc_MILinkObject_Box10()
                   )
      , tmpGoodsByGoodsKind AS (SELECT MovementItem.Id AS MovementItemId
                                     , COALESCE (ObjectFloat_GoodsByGoodsKind_WeightPackageSticker.ValueData, 0) AS WeightPackageSticker
