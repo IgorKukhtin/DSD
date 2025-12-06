@@ -286,7 +286,8 @@ BEGIN
                              )
 
        SELECT
-             MovementItem.Id                  AS Id
+             inMovementId                     AS MovementId
+           , MovementItem.Id                  AS Id
            , Object_Juridical.Id              AS JuridicalId
            , Object_Juridical.ObjectCode      AS JuridicalCode
            , Object_Juridical.ValueData       AS JuridicalName
@@ -327,6 +328,7 @@ BEGIN
            , MIFloat_AmountPlan_5.ValueData    :: TFloat AS AmountPlan_5
            --
            , COALESCE (tmpInfoMoney_OFP.NumGroup, 999) ::Integer AS NumGroup
+           , COALESCE (tmpInfoMoney_OFP.NumGroup, Object_InfoMoney.ObjectCode) ::Integer AS NumGroupRes  --для сортировки итогов
 
        FROM tmpMI AS MovementItem
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId

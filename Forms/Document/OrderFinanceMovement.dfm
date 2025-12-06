@@ -2383,7 +2383,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'NumGroup;InfoMoneyName;JuridicalName'
+          IndexFieldNames = 'NumGroup;NumGroupRes;InfoMoneyName;JuridicalName'
         end>
       Params = <
         item
@@ -3581,7 +3581,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Caption = 'actGet_Export_FileName_xls'
     end
     object actSMTPFile: TdsdSMTPFileAction
-      Category = 'Export_Email'
+      Category = 'Export_Email_fr3'
       MoveParams = <>
       Host.Value = Null
       Host.Component = ExportEmailCDS
@@ -3625,7 +3625,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       ToAddress.MultiSelectSeparator = ','
     end
     object actGet_Export_Email: TdsdExecStoredProc
-      Category = 'Export_Email'
+      Category = 'Export_Email_fr3'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spGet_Export_Email
@@ -3636,7 +3636,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Caption = 'actGet_Export_Email'
     end
     object actExport_Grid: TExportGrid
-      Category = 'Export_Email'
+      Category = 'Export_Email_fr3'
       MoveParams = <>
       Grid = ExportXmlGrid
       Caption = 'actExport_Grid'
@@ -3645,7 +3645,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       DefaultFileExt = 'XML'
     end
     object actGet_Export_FileName_xls: TdsdExecStoredProc
-      Category = 'Export_Email'
+      Category = 'Export_Email_fr3'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spGet_Export_FileName_xls
@@ -3656,7 +3656,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Caption = 'actGet_Export_FileName_xls'
     end
     object actSPPrintSaleProcName: TdsdExecStoredProc
-      Category = 'Export_Email'
+      Category = 'Export_Email_fr3'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spGetReportName
@@ -3667,7 +3667,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Caption = 'actSPPrintSaleProcName'
     end
     object actExport_fr3: TdsdPrintAction
-      Category = 'Export_Email'
+      Category = 'Export_Email_fr3'
       MoveParams = <>
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -3684,6 +3684,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'NumGroup;NumGroupRes;InfoMoneyName;JuridicalName'
         end>
       Params = <
         item
@@ -3724,7 +3725,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       PrinterNameParam.MultiSelectSeparator = ','
     end
     object mactExport_fr3: TMultiAction
-      Category = 'Export_Email'
+      Category = 'Export_Email_fr3'
       MoveParams = <>
       ActionList = <
         item

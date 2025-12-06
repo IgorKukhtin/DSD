@@ -11,15 +11,6 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_OrderFinance_FileName_xls(
     IN inSession              TVarChar
 )
 
-
-   OUT outFileName            TVarChar  ,
-   OUT outDefaultFileExt      TVarChar  ,
-   OUT outEncodingANSI        Boolean   ,
-   OUT outExportType          TVarChar  ,
-   OUT outExportKindId        Integer   ,
-
-
-
   RETURNS RECORD
 AS
 $BODY$
@@ -31,8 +22,10 @@ BEGIN
 
      -- Результат
      SELECT COALESCE (Object_OrderFinance.ValueData, '')
+            || '_' || zfConvert_FloatToString (MovementFloat_WeekNumber.ValueData )    --  , MovementFloat_WeekNumber.ValueData   ::TFloat    AS WeekNumber
+            || '_' || zfConvert_DateShortToString (DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', Movement.OperDate) + ((((7 * COALESCE (MovementFloat_WeekNumber.ValueData - 1, 0)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL)::TDateTime) ::TVarChar
+           -- || '_' || REPLACE (zfConvert_DateShortToString (Movement.OperDate), '.', '')
             || '_' || COALESCE (Object_Insert.ValueData,'' )
-            || '_' || REPLACE (zfConvert_DateShortToString (Movement.OperDate), '.', '')
           --  || '_' || Movement.InvNumber  
                            AS outFileName
           , 'xls'                         AS outDefaultFileExt
@@ -49,6 +42,11 @@ BEGIN
                                        ON MovementLinkObject_Insert.MovementId = Movement.Id
                                       AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
           LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MovementLinkObject_Insert.ObjectId
+
+          LEFT JOIN MovementFloat AS MovementFloat_WeekNumber
+                                  ON MovementFloat_WeekNumber.MovementId = Movement.Id
+                                 AND MovementFloat_WeekNumber.DescId = zc_MovementFloat_WeekNumber()
+
      WHERE Movement.Id = inMovementId;
 
 
