@@ -11,13 +11,13 @@ DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer,Boo
 CREATE OR REPLACE FUNCTION gpUpdateMovement_OrderFinance_Plan(
     IN inMovementId              Integer   , -- Ключ объекта <Документ>
     IN inMovementItemId          Integer   , -- Ключ строки
-    IN inisAmountPlan            Boolean    , --
+    IN inIsAmountPlan            Boolean    , --
     IN inisPlan_1                Boolean    , --
     IN inisPlan_2                Boolean    , --
     IN inisPlan_3                Boolean    , --
     IN inisPlan_4                Boolean    , --
-    IN inisPlan_5                Boolean    , --   
-    
+    IN inisPlan_5                Boolean    , --
+
    OUT outisAmountPlan_1         Boolean    , --
    OUT outisAmountPlan_2         Boolean    , --
    OUT outisAmountPlan_3         Boolean    , --
@@ -26,7 +26,7 @@ CREATE OR REPLACE FUNCTION gpUpdateMovement_OrderFinance_Plan(
     IN inOrderFinanceId          Integer    ,
  INOUT ioJuridicalOrderFinanceId Integer    ,
     IN inJuridicalId             Integer    ,
-    IN inInfoMoneyId             Integer    , 
+    IN inInfoMoneyId             Integer    ,
     IN inBankId_main_top         Integer    ,
     IN inBankId_main             Integer    ,
     IN inBankId_jof              Integer    ,
@@ -34,7 +34,7 @@ CREATE OR REPLACE FUNCTION gpUpdateMovement_OrderFinance_Plan(
     IN inBankAccountName_jof     TVarChar   ,  --zc_ObjectLink_JuridicalOrderFinance_BankAccount
     IN inComment_jof             TVarChar   ,
    --IN inComment_pay             TVarChar   ,
-   OUT outComment_pay            TVarChar   , 
+   OUT outComment_pay            TVarChar   ,
    OUT outAmountPlan_calc        TFloat     ,
     IN inSession                 TVarChar    -- сессия пользователя
 )
@@ -66,8 +66,8 @@ BEGIN
      IF COALESCE (inisPlan_1, FALSE) = TRUE
       THEN
         -- сохранили свойство <>
-        PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_1(), inMovementItemId, inisAmountPlan);
-        outisAmountPlan_1 := inisAmountPlan;
+        PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_1(), inMovementItemId, inIsAmountPlan);
+        outisAmountPlan_1 := inIsAmountPlan;
         --
         vbPlan_count:= vbPlan_count + 1;
      END IF;
@@ -75,8 +75,8 @@ BEGIN
      IF COALESCE (inisPlan_2, FALSE) = TRUE
       THEN
         -- сохранили свойство <>
-        PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_2(), inMovementItemId, inisAmountPlan);
-        outisAmountPlan_2 := inisAmountPlan;
+        PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_2(), inMovementItemId, inIsAmountPlan);
+        outisAmountPlan_2 := inIsAmountPlan;
         --
         vbPlan_count:= vbPlan_count + 1;
      END IF;
@@ -84,8 +84,8 @@ BEGIN
      IF COALESCE (inisPlan_3, FALSE) = TRUE
       THEN
         -- сохранили свойство <>
-        PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_3(), inMovementItemId, inisAmountPlan);
-        outisAmountPlan_3 := inisAmountPlan;
+        PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_3(), inMovementItemId, inIsAmountPlan);
+        outisAmountPlan_3 := inIsAmountPlan;
         --
         vbPlan_count:= vbPlan_count + 1;
      END IF;
@@ -93,8 +93,8 @@ BEGIN
      IF COALESCE (inisPlan_4, FALSE) = TRUE
       THEN
         -- сохранили свойство <>
-        PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_4(), inMovementItemId, inisAmountPlan);
-        outisAmountPlan_4 := inisAmountPlan;
+        PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_4(), inMovementItemId, inIsAmountPlan);
+        outisAmountPlan_4 := inIsAmountPlan;
         --
         vbPlan_count:= vbPlan_count + 1;
      END IF;
@@ -102,24 +102,26 @@ BEGIN
      IF COALESCE (inisPlan_5, FALSE) = TRUE
       THEN
         -- сохранили свойство <>
-        PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_5(), inMovementItemId, inisAmountPlan);
-        outisAmountPlan_5 := inisAmountPlan;
+        PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_5(), inMovementItemId, inIsAmountPlan);
+        outisAmountPlan_5 := inIsAmountPlan;
         --
         vbPlan_count:= vbPlan_count + 1;
      END IF;
 
      -- если не выбрано берем из  inBankId_main_top
-     IF COALESCE (inBankId_main,0) = 0
-     THEN 
-         IF COALESCE (inBankId_main_top, 0) <> 0
-         THEN 
+     IF COALESCE (inBankId_main, 0) = 0
+     THEN
+         IF inBankId_main_top > 0
+         THEN
              --
-             inBankId_main := inBankId_main_top;
-         ELSE
-             --Если inBankId_main_top тоже пусто то пробуем найти у счета, если там больше 1 банка - тогда выдавать ошибку что надо заполнить "банк плательщика"
+             inBankId_main:= inBankId_main_top;
+
+         ELSEIF TRIM (inBankAccountName_main) <> ''
+         THEN
+              -- Если inBankId_main_top тоже пусто то пробуем найти у счета, если там больше 1 банка - тогда выдавать ошибку что надо заполнить "банк плательщика"
               SELECT MAX (Object_BankAccount_View.BankId) AS BankId
                    , COUNT (*) AS Count_bank
-            INTO vbBankId_main, vbCount
+                     INTO vbBankId_main, vbCount
               FROM Object_BankAccount_View
                    -- Покажем счета только по внутренним фирмам
                    INNER JOIN ObjectBoolean AS ObjectBoolean_isCorporate
@@ -133,14 +135,21 @@ BEGIN
               WHERE TRIM (Object_BankAccount_View.Name) ILIKE TRIM (inBankAccountName_main)
                 AND Object_BankAccount_View.isErased = FALSE
              ;
-             IF COALESCE (vbCount,0) = 1
+
+             IF vbCount = 1
              THEN
+                 -- нашли Банк
                  inBankId_main := vbBankId_main;
-             END IF;
-             IF COALESCE (vbCount,0) > 1
+
+             ELSEIF COALESCE (vbCount, 0) = 0
              THEN
-                 RAISE EXCEPTION 'Ошибка.Не заполнен <Банк плательщика>.';
-             END IF;             
+                 RAISE EXCEPTION 'Ошибка.Не заполнено значение <Банк (Плательщик)>.';
+
+             ELSE
+                 RAISE EXCEPTION 'Ошибка.Не найдено значение <Банк (Плательщик)> для Р.счет = <%>.', inBankAccountName_main;
+
+             END IF;
+
          END IF;
      END IF;
 
@@ -167,10 +176,10 @@ BEGIN
      PERFORM lpInsert_MovementItemProtocol (inMovementItemId, vbUserId, FALSE);
 
 
-     
+
 
      -- 2.1. BankAccountName_main
-     IF 1=1 -- COALESCE (inBankAccountName_main,'') <> ''
+     IF inIsAmountPlan = TRUE OR TRIM (inBankAccountName_main) <> ''
      THEN
          IF TRIM (COALESCE (inBankAccountName_main,'')) = ''
          THEN
@@ -214,7 +223,7 @@ BEGIN
      END IF;
 
      -- 2.2. BankAccount
-     IF 1=1 -- COALESCE (inBankAccountName_jof,'') <> ''
+     IF inIsAmountPlan = TRUE OR TRIM (inBankAccountName_jof) <> ''
      THEN
          IF TRIM (COALESCE (inBankAccountName_jof,'')) = ''
          THEN
@@ -259,9 +268,8 @@ BEGIN
          END IF;
 
 
-         
          -- 2.3. Справочник JuridicalOrderFinance_BankAccount
-         --пробуем найти JuridicalOrderFinanceId по внесенным данным если нашли берем его
+         -- пробуем найти JuridicalOrderFinanceId по внесенным данным если нашли берем его
          ioJuridicalOrderFinanceId := (SELECT tmp.JuridicalOrderFinanceId
                                        FROM (SELECT Object_JuridicalOrderFinance.Id AS JuridicalOrderFinanceId
                                                   , ROW_NUMBER() OVER (PARTITION BY OL_JuridicalOrderFinance_Juridical.ChildObjectId, Main_BankAccount_View.BankId, OL_JuridicalOrderFinance_InfoMoney.ChildObjectId
@@ -272,17 +280,17 @@ BEGIN
                                                                         ON OL_JuridicalOrderFinance_Juridical.ObjectId = Object_JuridicalOrderFinance.Id
                                                                        AND OL_JuridicalOrderFinance_Juridical.DescId = zc_ObjectLink_JuridicalOrderFinance_Juridical()
                                                                        AND OL_JuridicalOrderFinance_Juridical.ChildObjectId = inJuridicalId
-           
+
                                                   LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccountMain
                                                                        ON OL_JuridicalOrderFinance_BankAccountMain.ObjectId = Object_JuridicalOrderFinance.Id
                                                                       AND OL_JuridicalOrderFinance_BankAccountMain.DescId = zc_ObjectLink_JuridicalOrderFinance_BankAccountMain()
                                                   LEFT JOIN Object_BankAccount_View AS Main_BankAccount_View ON Main_BankAccount_View.Id = OL_JuridicalOrderFinance_BankAccountMain.ChildObjectId
-           
+
                                                   INNER JOIN ObjectLink AS OL_JuridicalOrderFinance_InfoMoney
                                                                         ON OL_JuridicalOrderFinance_InfoMoney.ObjectId = Object_JuridicalOrderFinance.Id
                                                                        AND OL_JuridicalOrderFinance_InfoMoney.DescId = zc_ObjectLink_JuridicalOrderFinance_InfoMoney()
                                                                        AND OL_JuridicalOrderFinance_InfoMoney.ChildObjectId = inInfoMoneyId
-           
+
                                                   INNER JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccount
                                                                         ON OL_JuridicalOrderFinance_BankAccount.ObjectId = Object_JuridicalOrderFinance.Id
                                                                        AND OL_JuridicalOrderFinance_BankAccount.DescId = zc_ObjectLink_JuridicalOrderFinance_BankAccount()
@@ -300,7 +308,7 @@ BEGIN
                                              ) AS tmp
                                        WHERE tmp.Ord = 1
                                         );
-         
+
          IF COALESCE (ioJuridicalOrderFinanceId,0) = 0
          THEN
              --сохранили <Объект>
@@ -321,9 +329,9 @@ BEGIN
          -- сохранили протокол
          PERFORM lpInsert_ObjectProtocol (ioJuridicalOrderFinanceId, vbUserId);
 
-     END IF;    
-     
- 
+     END IF;
+
+
      WITH
      tmpJuridicalOrderFinance AS (SELECT ObjectString_Comment.ValueData         :: TVarChar AS Comment
                                        , ROW_NUMBER() OVER (PARTITION BY OL_JuridicalOrderFinance_Juridical.ChildObjectId, Main_BankAccount_View.BankId, OL_JuridicalOrderFinance_InfoMoney.ChildObjectId
@@ -395,9 +403,9 @@ BEGIN
                                 , 'NOM_DOG', COALESCE (View_Contract.InvNumber, ''))
                                 , 'DATA_DOG', zfConvert_DateToString (COALESCE (View_Contract.StartDate, zc_DateStart())))
                                 , 'PDV', '20')
-                                , 'SUMMA_P', zfConvert_FloatToString (ROUND(MIFloat_AmountPlan.ValueData/6, 2))) 
+                                , 'SUMMA_P', zfConvert_FloatToString (ROUND(MIFloat_AmountPlan.ValueData/6, 2)))
                  ELSE ''
-            END :: TVarChar AS Comment_pay 
+            END :: TVarChar AS Comment_pay
 
    INTO outAmountPlan_calc, outComment_pay
      FROM MovementItem
@@ -444,29 +452,29 @@ $BODY$
 
 
 -- тест
---select * from gpUpdateMovement_OrderFinance_Plan(inMovementId := 32907603 , inMovementItemId := 341774289 , inisAmountPlan := 'True' , inisPlan_1 := 'False' , inisPlan_2 := 'False' , inisPlan_3 := 'True' , inisPlan_4 := 'False' , inisPlan_5 := 'False' , inOrderFinanceId := 3988049 , ioJuridicalOrderFinanceId := 12995943 , inJuridicalId := 397619 , inInfoMoneyId := 8908 , inBankId_main := 76970 , inBankId_jof := 81452 , inBankAccountName_main := 'UA173005280000026000301367079' , inBankAccountName_jof := 'UA523003350000000026005464177' , inComment_jof := 'За Яловичину, згідно Договору  NOM_DOG у т.ч. ПДВ PDV% SUMMA_P грн.' , inSession := '9457');
+--select * from gpUpdateMovement_OrderFinance_Plan(inMovementId := 32907603 , inMovementItemId := 341774289 , inIsAmountPlan := 'True' , inisPlan_1 := 'False' , inisPlan_2 := 'False' , inisPlan_3 := 'True' , inisPlan_4 := 'False' , inisPlan_5 := 'False' , inOrderFinanceId := 3988049 , ioJuridicalOrderFinanceId := 12995943 , inJuridicalId := 397619 , inInfoMoneyId := 8908 , inBankId_main := 76970 , inBankId_jof := 81452 , inBankAccountName_main := 'UA173005280000026000301367079' , inBankAccountName_jof := 'UA523003350000000026005464177' , inComment_jof := 'За Яловичину, згідно Договору  NOM_DOG у т.ч. ПДВ PDV% SUMMA_P грн.' , inSession := '9457');
 
 
 /*select * from gpUpdateMovement_OrderFinance_Plan(
-inMovementId := 32907603 , 
-inMovementItemId := 341774317 , 
-inisAmountPlan := 'True' , 
-inisPlan_1 := 'False' , 
-inisPlan_2 := 'False' , 
-inisPlan_3 := 'True' , 
-inisPlan_4 := 'False' , 
-inisPlan_5 := 'False' , 
-inOrderFinanceId := 3988049 , 
-ioJuridicalOrderFinanceId := 12996023 , 
-inJuridicalId := 11057033 , 
-inInfoMoneyId := 8906 , 
+inMovementId := 32907603 ,
+inMovementItemId := 341774317 ,
+inIsAmountPlan := 'True' ,
+inisPlan_1 := 'False' ,
+inisPlan_2 := 'False' ,
+inisPlan_3 := 'True' ,
+inisPlan_4 := 'False' ,
+inisPlan_5 := 'False' ,
+inOrderFinanceId := 3988049 ,
+ioJuridicalOrderFinanceId := 12996023 ,
+inJuridicalId := 11057033 ,
+inInfoMoneyId := 8906 ,
 inBankId_main_top := 0 ,
 inBankId_main := 76970 ,    ---76970
-inBankId_jof := 9264405 , 
-inBankAccountName_main := 'UA173005280000026000301367079' , 
-inBankAccountName_jof := 'UA583209840000026004210394845' , 
-inComment_jof := 'За  свиней згідно договору № NOM_DOG у т.ч. ПДВ PDV% SUMMA_P грн.' , 
---inComment_pay := '' ,  
+inBankId_jof := 9264405 ,
+inBankAccountName_main := 'UA173005280000026000301367079' ,
+inBankAccountName_jof := 'UA583209840000026004210394845' ,
+inComment_jof := 'За  свиней згідно договору № NOM_DOG у т.ч. ПДВ PDV% SUMMA_P грн.' ,
+--inComment_pay := '' ,
 inSession := '9457');
 
 */
