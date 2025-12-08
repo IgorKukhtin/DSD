@@ -106,6 +106,10 @@ type
     PositionCode: TcxGridDBColumn;
     cxLabel10: TcxLabel;
     edDepartment2: TcxButtonEdit;
+    Staff_Summ_real_calc: TcxGridDBColumn;
+    Staff_Summ_add_calc: TcxGridDBColumn;
+    Staff_Summ_total_real_calc: TcxGridDBColumn;
+    Staff_Summ_total_add_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

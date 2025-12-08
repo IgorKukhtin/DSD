@@ -6428,6 +6428,8 @@ end;
 
 function TdsdSendSMSKyivstarAction.SendSMS: Boolean;
   var S, url,  Json : String; tmpStream: TStringStream;
+      jsonObj: TJSONObject;
+      jsonPair: TJSONPair;
 begin
   //   Непосредственно отправка
 
@@ -6438,7 +6440,8 @@ begin
   FIdHTTP.Request.CustomHeaders.AddValue('Authorization', 'Bearer ' + FTokenParam.Value);
   FIdHTTP.Request.ContentType := 'application/json';
   FIdHTTP.Request.Accept := '*/*';
-  FIdHTTP.Request.AcceptEncoding := 'gzip, deflate, br';
+  //FIdHTTP.Request.AcceptEncoding := 'gzip, deflate, br';
+  FIdHTTP.Request.AcceptEncoding := 'identity';
   FIdHTTP.Request.Connection := 'keep-alive';
   FIdHTTP.Request.CharSet := 'utf-8';
   FIdHTTP.Request.UserAgent:='';
@@ -6451,11 +6454,39 @@ begin
     try
       url := FHostParam.Value;
       if FEnvironmentParam.Value <> '' then url := url + '/' + FEnvironmentParam.Value;
-      url := url + '/rest/';
+      url := url + '/rest';
       if FVersionParam.Value <> '' then url := url + '/' + FVersionParam.Value;
       url := url + '/sms';
 
       S := FIdHTTP.Post(url, tmpStream);
+
+{
+      ShowMessage(FIdHTTP.ResponseText);
+
+    jsonObj := TJSONObject.ParseJSONValue(S) as TJSONObject;
+    try
+      jsonPair := jsonObj.Get('reqId');
+      if jsonPair <> nil then
+      begin
+        ShowMessage( jsonPair.JsonValue.Value);
+      end;
+
+      jsonPair := jsonObj.Get('msgId');
+      if jsonPair <> nil then
+      begin
+        ShowMessage( jsonPair.JsonValue.Value);
+      end;
+
+      jsonPair := jsonObj.Get('reservedSmsSegments');
+      if jsonPair <> nil then
+      begin
+        ShowMessage( jsonPair.JsonValue.Value);
+      end;
+
+    finally
+      FreeAndNil(jsonObj);
+    end;  }
+
     except
     end;
   finally

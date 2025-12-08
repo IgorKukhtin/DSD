@@ -2751,6 +2751,8 @@ begin
      FormParams.ParamByName('DateTo').Value:= Date;
      spSelect_SMSKyivstar.Execute;
      //
+     DBGrid.DataSource.DataSet.First;
+     //
      with DBGrid.DataSource.DataSet do
        while not EOF do
        begin
