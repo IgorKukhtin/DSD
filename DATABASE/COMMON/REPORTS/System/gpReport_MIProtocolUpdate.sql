@@ -296,7 +296,7 @@ BEGIN
                        , tmp2.isErased      AS isErased_change
                   FROM tmpProtocol AS tmp1
                        LEFT JOIN tmpProtocol AS tmp2
-				                             ON tmp2.Ord - 1 = tmp1.Ord
+				                             ON tmp2.Ord = tmp1.Ord - 1
 				                            AND tmp2.MovementItemId = tmp1.MovementItemId
                   WHERE tmp1.GoodsId <> tmp2.GoodsId
                      OR tmp1.GoodsKindName <> tmp2.GoodsKindName

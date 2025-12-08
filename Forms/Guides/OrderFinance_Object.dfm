@@ -97,7 +97,7 @@ inherited OrderFinance_ObjectForm: TOrderFinance_ObjectForm
             Width = 98
           end
           object MemberName_insert: TcxGridDBColumn
-            Caption = #1060#1048#1054' - '#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080
+            Caption = #1060#1048#1054'-1 - '#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080
             DataBinding.FieldName = 'MemberName_insert'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -106,7 +106,7 @@ inherited OrderFinance_ObjectForm: TOrderFinance_ObjectForm
             Width = 110
           end
           object UnitName_insert: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080')'
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080'-1)'
             DataBinding.FieldName = 'UnitName_insert'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -114,8 +114,33 @@ inherited OrderFinance_ObjectForm: TOrderFinance_ObjectForm
             Width = 98
           end
           object PositionName_insert: TcxGridDBColumn
-            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080')'
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080'-1)'
             DataBinding.FieldName = 'PositionName_insert'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 107
+          end
+          object MemberName_insert_2: TcxGridDBColumn
+            Caption = #1060#1048#1054'-2 - '#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080
+            DataBinding.FieldName = 'MemberName_insert_2'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 110
+          end
+          object UnitName_insert_2: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080'-2)'
+            DataBinding.FieldName = 'UnitName_insert_2'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 98
+          end
+          object PositionName_insert_2: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080'-2)'
+            DataBinding.FieldName = 'PositionName_insert_2'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -228,6 +253,21 @@ inherited OrderFinance_ObjectForm: TOrderFinance_ObjectForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MemberName_insert'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberId_insert_2'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberId_insert_2'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberName_insert_2'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberName_insert_2'
           DataType = ftString
           MultiSelectSeparator = ','
         end

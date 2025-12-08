@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , BankAccountId Integer, BankAccountName TVarChar
              , BankId Integer, BankName TVarChar
              , MemberId_insert Integer, MemberName_insert TVarChar
+             , MemberId_insert_2 Integer, MemberName_insert_2 TVarChar
              , MemberId_1 Integer, MemberName_1 TVarChar
              , MemberId_2 Integer, MemberName_2 TVarChar
              , Comment TVarChar
@@ -42,6 +43,9 @@ BEGIN
            , 0                      AS MemberId_insert
            , CAST ('' as TVarChar)  AS MemberName_insert   
 
+           , 0                      AS MemberId_insert_2
+           , CAST ('' as TVarChar)  AS MemberName_insert_2
+
            , 0                      AS MemberId_1
            , CAST ('' as TVarChar)  AS MemberName_1
 
@@ -69,6 +73,9 @@ BEGIN
 
             , Object_Member_insert.Id          AS MemberId_insert
             , Object_Member_insert.ValueData   AS MemberName_insert   
+
+            , Object_Member_insert_2.Id        AS MemberId_insert_2
+            , Object_Member_insert_2.ValueData AS MemberName_insert_2
 
             , Object_Member_1.Id               AS MemberId_1
             , Object_Member_1.ValueData        AS MemberName_1
@@ -105,6 +112,11 @@ BEGIN
                                AND OrderFinance_Member_insert.DescId = zc_ObjectLink_OrderFinance_Member_insert()
            LEFT JOIN Object AS Object_Member_insert ON Object_Member_insert.Id = OrderFinance_Member_insert.ChildObjectId
 
+           LEFT JOIN ObjectLink AS OrderFinance_Member_insert_2
+                                ON OrderFinance_Member_insert_2.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_Member_insert_2.DescId = zc_ObjectLink_OrderFinance_Member_insert_2()
+           LEFT JOIN Object AS Object_Member_insert_2 ON Object_Member_insert_2.Id = OrderFinance_Member_insert_2.ChildObjectId
+
            LEFT JOIN ObjectLink AS OrderFinance_Member_1
                                 ON OrderFinance_Member_1.ObjectId = Object_OrderFinance.Id
                                AND OrderFinance_Member_1.DescId = zc_ObjectLink_OrderFinance_Member_1()
@@ -127,6 +139,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.12.25         *
  02.11.20         * add BankName
  12.08.19         *
  29.07.19         *

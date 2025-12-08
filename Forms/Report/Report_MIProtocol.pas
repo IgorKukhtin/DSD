@@ -25,7 +25,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxImageComboBox;
+  cxImageComboBox, dsdCommon;
 
 type
   TReport_MIProtocolForm = class(TAncestorReportForm)
@@ -75,6 +75,11 @@ type
     MovementItemId: TcxGridDBColumn;
     Text_inf: TcxGridDBColumn;
     IsInsert: TcxGridDBColumn;
+    MovementProtocolOpenForm: TdsdOpenForm;
+    MovementItemProtocolOpenForm: TdsdOpenForm;
+    dxBarSubItem1: TdxBarSubItem;
+    bbMovementItemProtocolOpenF: TdxBarButton;
+    bbMovementProtocolOpen: TdxBarButton;
   private
     { Private declarations }
   public

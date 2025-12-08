@@ -118,4 +118,4 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpGet_Movement_OrderFinance_Email_send ( inMovementId := 19727298 , inSession:= '9457':: TVarChar) --  zfCalc_UserAdmin()  --zc_Enum_ExportKind_Mida35273055()
+--SELECT * FROM gpGet_Movement_OrderFinance_Email_send ( inMovementId := 32907603  , inSession:= '9457':: TVarChar) --  zfCalc_UserAdmin()  --zc_Enum_ExportKind_Mida35273055()

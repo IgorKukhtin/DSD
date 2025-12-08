@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinance (Integer, Integer, TVarChar, TVarChar, Integer, TVarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinance (Integer, Integer, TVarChar, TVarChar, Integer, Integer, TVarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinance (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarchar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinance (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinance (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_OrderFinance(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Договор>
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_OrderFinance(
     IN inPaidKindId              Integer   ,    -- ФО
     IN inBankAccountId           Integer   ,    -- р/с 
     IN inMemberId_insert         Integer   ,    -- ФИО - Автор заявки 
+    IN inMemberId_insert_2       Integer   ,    -- ФИО - Автор заявки 2
     IN inMemberId_1              Integer   ,    -- ФИО - на контроле-1
     IN inMemberId_2              Integer   ,    -- ФИО - на контроле-2
     IN inSession                 TVarChar       -- сессия пользователя
@@ -50,6 +52,9 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OrderFinance_Member_insert(), ioId, inMemberId_insert);
    -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OrderFinance_Member_insert_2(), ioId, inMemberId_insert_2);
+
+   -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OrderFinance_Member_1(), ioId, inMemberId_1);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OrderFinance_Member_2(), ioId, inMemberId_2);
@@ -66,6 +71,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.12.25         *
  10.11.25         *
  12.08.19         *
  29.07.19         * 
