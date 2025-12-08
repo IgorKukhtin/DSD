@@ -285,8 +285,14 @@ BEGIN
 
            , vbIsOrderByLine                            AS isOrderByLine
 
-             -- Розподільчий комплекс
-           , CASE WHEN Object_To.Id = 8459 THEN FALSE ELSE TRUE END :: Boolean AS isPage_1
+           , CASE -- Розподільчий комплекс
+                  WHEN Object_To.Id = zc_Unit_RK()
+                       THEN FALSE
+                  -- Дільниця обліку і реалізації м`ясної сировини
+                  WHEN Object_To.Id = 133049 AND vbJuridicalId IN (15212, 15346 ) -- ОМЕГА ТОВ + РТЦ ТОВ
+                       THEN FALSE
+                  ELSE TRUE
+             END :: Boolean AS isPage_1
 
        FROM tmpMovement_total
             LEFT JOIN Movement ON Movement.Id = tmpMovement_total.MovementId

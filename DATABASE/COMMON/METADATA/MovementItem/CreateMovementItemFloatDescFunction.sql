@@ -1197,21 +1197,21 @@ INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_Staff_Summ_MK_6', 'МК-піврічча' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Staff_Summ_MK_6');
 
 
- CREATE OR REPLACE FUNCTION zc_MIFloat_Staff_Summ_real() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Staff_Summ_real'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_MIFloat_Staff_Summ_real() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Staff_Summ_real'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
-  SELECT 'zc_MIFloat_Staff_Summ_real', 'Сдельная оплата шт.ед. (ввод)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Staff_Summ_real');
+  SELECT 'zc_MIFloat_Staff_Summ_real', 'Сдельная оплата 1 шт.ед.(ввод)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Staff_Summ_real');
 
- CREATE OR REPLACE FUNCTION zc_MIFloat_Staff_Summ_add() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Staff_Summ_add'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_MIFloat_Staff_Summ_add() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Staff_Summ_add'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
-  SELECT 'zc_MIFloat_Staff_Summ_add', 'Премиальний фонд шт.ед. (ввод)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Staff_Summ_add');
+  SELECT 'zc_MIFloat_Staff_Summ_add', 'Премиальний фонд 1 шт.ед.(ввод)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Staff_Summ_add');
 
- CREATE OR REPLACE FUNCTION zc_MIFloat_Staff_Summ_total_real() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Staff_Summ_total_real'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_MIFloat_Staff_Summ_total_real() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Staff_Summ_total_real'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
-  SELECT 'zc_MIFloat_Staff_Summ_total_real', 'Сдельная оплата шт.ед. итого (ввод)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Staff_Summ_total_real');
+  SELECT 'zc_MIFloat_Staff_Summ_total_real', 'Сдельная оплата общ.сумма(ввод)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Staff_Summ_total_real');
 
- CREATE OR REPLACE FUNCTION zc_MIFloat_Staff_Summ_total_add() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Staff_Summ_total_add'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_MIFloat_Staff_Summ_total_add() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Staff_Summ_total_add'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
-  SELECT 'zc_MIFloat_Staff_Summ_total_add', 'Премиальний фонд шт.ед. итого (ввод)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Staff_Summ_total_add');
+  SELECT 'zc_MIFloat_Staff_Summ_total_add', 'Премиальний фонд общ.сумма(ввод)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Staff_Summ_total_add');
 
 
 

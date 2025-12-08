@@ -43,7 +43,10 @@ BEGIN
     
     
 --  inStartDate:= '01.11.2025';
-    inStartDate:= '01.10.2025';
+
+--    inStartDate:= '01.10.2025';
+    inStartDate:= '08.12.2025';
+    inEndDate:=   '08.12.2025';
 
     -- Результат
     RETURN QUERY
@@ -65,7 +68,7 @@ BEGIN
                      FROM Movement
                           INNER JOIN Movement AS Movement_PersonalService
                                               ON Movement_PersonalService.Id = Movement.ParentId
-                                             AND Movement_PersonalService.StatusId = zc_Enum_Status_Complete()
+                                             AND (Movement_PersonalService.StatusId = zc_Enum_Status_Complete() OR Movement.Id = 33003250)
 
                           INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
                                                         ON MovementLinkObject_PersonalServiceList.MovementId = Movement_PersonalService.Id
@@ -74,7 +77,7 @@ BEGIN
 
                      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                        AND Movement.DescId = zc_Movement_Cash()
-                       AND Movement.StatusId = zc_Enum_Status_Complete()
+                       AND (Movement.StatusId = zc_Enum_Status_Complete() OR Movement.Id = 33003250)
                        AND Movement.ParentId > 0
                      )
 
@@ -127,8 +130,7 @@ BEGIN
                                                  ON MIBoolean_SMS.MovementItemId = MovementItem.Id
                                                 AND MIBoolean_SMS.DescId         = zc_MIBoolean_SMS()
                     )
-
-    --
+    -- Результат
     SELECT Movement.Id                     AS MovementId
          , Movement.OperDate               AS OperDate
          , Movement.InvNumber              AS InvNumber
@@ -152,11 +154,10 @@ BEGIN
          , tmpMI_Child.Date_SMS              ::TDateTime AS Date_SMS
          , COALESCE (tmpMI_Child.isSms,FALSE)::Boolean   AS isSms
 
---         , ObjectString_Phone.ValueData      :: TVarChar AS Phone
---         , '380674464560'      :: TVarChar AS Phone
-         , '380973618510'      :: TVarChar AS Phone
+         , ObjectString_Phone.ValueData      :: TVarChar AS Phone
+--       , '380674464560'      :: TVarChar AS Phone
 
-         , zfConvert_FloatToString (tmpMI_Child.Amount) AS SMS_Message
+         , ('*   ' || zfConvert_FloatToString (tmpMI_Child.Amount) || '   *') :: TVarChar AS SMS_Message
 
     FROM tmpMovement AS Movement
          LEFT JOIN tmpMI_Child ON tmpMI_Child.MovementId = Movement.Id
@@ -178,7 +179,7 @@ BEGIN
          LEFT JOIN ObjectString AS ObjectString_Phone
                                 ON ObjectString_Phone.ObjectId = ObjectLink_Personal_Member.ChildObjectId
                                AND ObjectString_Phone.DescId = zc_ObjectString_Member_Phone()
-    LIMIT 1
+    -- LIMIT 1
    ;
 
 END;

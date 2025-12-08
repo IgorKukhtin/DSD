@@ -24,7 +24,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_SMS(), inMovementItemId, CURRENT_TIMESTAMP);
 
      -- сохранили протокол
-     PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
+     PERFORM lpInsert_MovementItemProtocol (inMovementItemId, vbUserId, FALSE);
 
 END;
 $BODY$
