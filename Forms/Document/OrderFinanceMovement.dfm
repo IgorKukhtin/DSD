@@ -1975,7 +1975,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'dxBarButton1'
+          ItemName = 'bbtExport_fr3'
         end
         item
           Visible = True
@@ -1984,10 +1984,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         item
           Visible = True
           ItemName = 'dxBarSeparator'
-        end
-        item
-          Visible = True
-          ItemName = 'bbtExport_fr3'
         end
         item
           Visible = True
@@ -2085,8 +2081,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       ShowCaption = False
     end
     object bbmactExport_group: TdxBarButton
-      Action = mactExport_group
-      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1087#1083#1072#1085' '#1087#1086' '#1087#1086#1095#1090#1077' '#1075#1088#1091#1087#1087#1077
+      Action = mactExportGroup_fr3
       Category = 0
     end
     object bbtExport_fr3: TdxBarButton
@@ -2133,6 +2128,17 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       DefaultFileName = 'Report_'
       Separator = ';'
       DefaultFileExt = 'XLS'
+    end
+    object actGet_Export_EmailGroup: TdsdExecStoredProc
+      Category = 'Export_Email_fr3'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Export_EmailGroup
+      StoredProcList = <
+        item
+          StoredProc = spGet_Export_EmailGroup
+        end>
+      Caption = 'actGet_Export_Email'
     end
     object actGet_Export_Email_gr: TdsdExecStoredProc
       Category = 'Export_mail_group'
@@ -2190,6 +2196,31 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       ImageIndexTrue = 65
       ImageIndexFalse = 64
+    end
+    object mactExportGroup_fr3: TMultiAction
+      Category = 'Export_Email_fr3'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Export_EmailGroup
+        end
+        item
+          Action = actGet_Export_FileName_xls
+        end
+        item
+          Action = actSPPrintSaleProcName
+        end
+        item
+          Action = actExport_fr3
+        end
+        item
+          Action = actSMTPFile
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1087#1086#1095#1090#1077'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1099' '#1087#1086' '#1087#1086#1095#1090#1077
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1087#1083#1072#1085' '#1087#1086' '#1087#1086#1095#1090#1077' '#1075#1088#1091#1087#1087#1077
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1087#1083#1072#1085' '#1087#1086' '#1087#1086#1095#1090#1077' '#1075#1088#1091#1087#1087#1077
+      ImageIndex = 53
     end
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
@@ -3743,8 +3774,10 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         item
           Action = actSMTPFile
         end>
-      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1087#1083#1072#1085' '#1087#1086' '#1087#1086#1095#1090#1077' (fr3)'
-      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1087#1083#1072#1085' '#1087#1086' '#1087#1086#1095#1090#1077' (fr3)'
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1087#1086#1095#1090#1077'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1099' '#1087#1086' '#1087#1086#1095#1090#1077
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1087#1083#1072#1085' '#1087#1086' '#1087#1086#1095#1090#1077
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1087#1083#1072#1085' '#1087#1086' '#1087#1086#1095#1090#1077
       ImageIndex = 53
     end
   end
@@ -5928,7 +5961,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       end>
     PackSize = 1
     Left = 160
-    Top = 546
+    Top = 506
   end
   object TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Email_FileName'
@@ -6005,5 +6038,25 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     PackSize = 1
     Left = 216
     Top = 552
+  end
+  object spGet_Export_EmailGroup: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_OrderFinance_Email_sendGroup'
+    DataSet = ExportEmailCDS
+    DataSets = <
+      item
+        DataSet = ExportEmailCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 120
+    Top = 560
   end
 end

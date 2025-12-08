@@ -295,6 +295,9 @@ type
     actExport_fr3: TdsdPrintAction;
     mactExport_fr3: TMultiAction;
     bbtExport_fr3: TdxBarButton;
+    mactExportGroup_fr3: TMultiAction;
+    spGet_Export_EmailGroup: TdsdStoredProc;
+    actGet_Export_EmailGroup: TdsdExecStoredProc;
   private
   public
   end;

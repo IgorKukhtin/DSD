@@ -66,7 +66,7 @@ BEGIN
                                                                , inSession    := inSession)
                     )
                                                                         
-     SELECT (tmp.outFileName || '.csv') :: TVarChar AS Subject  
+     SELECT (tmp.outFileName || '.xls') :: TVarChar AS Subject  
 
           , ''                       :: TBlob    AS Body
           
@@ -96,7 +96,7 @@ BEGIN
                  ELSE gpGet_Password.Value
             END :: TVarChar                      AS Password
 
-     FROM gpGet_Movement_OrderFinance_FileName_group (inMovementId , inSession) AS tmp
+     FROM gpGet_Movement_OrderFinance_FileName_xls (inMovementId , inSession) AS tmp
           LEFT JOIN tmpContactPerson ON 1= 1 
           LEFT JOIN tmpEmail AS gpGet_Host      ON gpGet_Host.EmailToolsId      = zc_Enum_EmailTools_Host()
           LEFT JOIN tmpEmail AS gpGet_Port      ON gpGet_Port.EmailToolsId      = zc_Enum_EmailTools_Port()
@@ -118,4 +118,4 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpGet_Movement_OrderFinance_Email_sendGroup ( inMovementId := 19727298 , inSession:= '9457':: TVarChar) --  zfCalc_UserAdmin()  --zc_Enum_ExportKind_Mida35273055()
+--SELECT * FROM gpGet_Movement_OrderFinance_Email_sendGroup ( inMovementId := 32907603  , inSession:= '9457':: TVarChar) --  zfCalc_UserAdmin()  --zc_Enum_ExportKind_Mida35273055()
