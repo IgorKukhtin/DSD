@@ -2024,6 +2024,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_OrderFinance_Member_insert() RETURNS In
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_OrderFinance_Member_insert', 'ФИО - Автор заявки', zc_Object_OrderFinance(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderFinance_Member_insert');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_OrderFinance_Member_insert_2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderFinance_Member_insert_2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_OrderFinance_Member_insert_2', 'ФИО-2 - Автор заявки', zc_Object_OrderFinance(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderFinance_Member_insert_2');
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_OrderFinance_Member_1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderFinance_Member_1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_OrderFinance_Member_1', 'ФИО - на контроле-1', zc_Object_OrderFinance(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_OrderFinance_Member_1');

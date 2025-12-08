@@ -57,6 +57,9 @@ type
     cxLabel5: TcxLabel;
     edInsertUser: TcxButtonEdit;
     GuidesInsert: TdsdGuides;
+    cxLabel6: TcxLabel;
+    edInsertUser_2: TcxButtonEdit;
+    GuidesInsert_2: TdsdGuides;
   private
     { Private declarations }
   public

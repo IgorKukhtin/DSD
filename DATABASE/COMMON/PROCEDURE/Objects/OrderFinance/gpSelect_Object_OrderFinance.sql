@@ -13,6 +13,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , BankId Integer, BankName TVarChar, BankAccountNameAll TVarChar
              , MemberId_insert Integer, MemberCode_insert Integer, MemberName_insert TVarChar
              , UnitName_insert TVarChar, PositionName_insert TVarChar
+             , MemberId_insert_2 Integer, MemberCode_insert_2 Integer, MemberName_insert_2 TVarChar
+             , UnitName_insert_2 TVarChar, PositionName_insert_2 TVarChar
              , MemberId_1 Integer, MemberCode_1 Integer, MemberName_1 TVarChar
              , MemberId_2 Integer, MemberCode_2 Integer, MemberName_2 TVarChar
              , Comment TVarChar
@@ -54,6 +56,12 @@ BEGIN
             , Object_Unit.ValueData      ::TVarChar AS UnitName_insert
             , Object_Position.ValueData  ::TVarChar AS PositionName_insert
 
+            , Object_Member_insert_2.Id          AS MemberId_insert_2
+            , Object_Member_insert_2.ObjectCode  AS MemberCode_insert_2
+            , CASE WHEN vbUserId = 5 THEN '‘»Œ' ELSE Object_Member_insert_2.ValueData END :: TVarChar   AS MemberName_insert_2   
+            , Object_Unit_2.ValueData      ::TVarChar AS UnitName_insert_2
+            , Object_Position_2.ValueData  ::TVarChar AS PositionName_insert_2
+
             , Object_Member_1.Id               AS MemberId_1
             , Object_Member_1.ObjectCode       AS MemberCode_1
             , CASE WHEN vbUserId = 5 THEN '‘»Œ-1' ELSE Object_Member_1.ValueData END :: TVarChar AS MemberName_1
@@ -85,6 +93,15 @@ BEGIN
            LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
 
+           LEFT JOIN ObjectLink AS OrderFinance_Member_insert_2
+                                ON OrderFinance_Member_insert_2.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_Member_insert_2.DescId = zc_ObjectLink_OrderFinance_Member_insert_2()
+           LEFT JOIN Object AS Object_Member_insert_2 ON Object_Member_insert_2.Id = OrderFinance_Member_insert_2.ChildObjectId
+
+           LEFT JOIN tmpPersonal AS tmpPersonal_2 ON tmpPersonal_2.MemberId = Object_Member_insert_2.Id
+           LEFT JOIN Object AS Object_Position_2 ON Object_Position_2.Id = tmpPersonal_2.PositionId
+           LEFT JOIN Object AS Object_Unit_2 ON Object_Unit_2.Id = tmpPersonal_2.UnitId
+
            LEFT JOIN ObjectLink AS OrderFinance_Member_1
                                 ON OrderFinance_Member_1.ObjectId = Object_OrderFinance.Id
                                AND OrderFinance_Member_1.DescId = zc_ObjectLink_OrderFinance_Member_1()
@@ -111,6 +128,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 08.12.25         *
  02.11.20         * add inisErased
  12.08.19         *
  29.07.19         *
