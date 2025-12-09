@@ -45,8 +45,8 @@ BEGIN
 --  inStartDate:= '01.11.2025';
 
 --    inStartDate:= '01.10.2025';
-    inStartDate:= '08.12.2025';
-    inEndDate:=   '08.12.2025';
+--    inStartDate:= '08.12.2025';
+--    inEndDate:=   '08.12.2025';
 
     -- Результат
     RETURN QUERY
@@ -68,7 +68,8 @@ BEGIN
                      FROM Movement
                           INNER JOIN Movement AS Movement_PersonalService
                                               ON Movement_PersonalService.Id = Movement.ParentId
-                                             AND (Movement_PersonalService.StatusId = zc_Enum_Status_Complete() OR Movement.Id = 33003250)
+                                             AND Movement_PersonalService.StatusId = zc_Enum_Status_Complete()
+                                          -- AND (Movement_PersonalService.StatusId = zc_Enum_Status_Complete() OR Movement.Id = 33003250)
 
                           INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
                                                         ON MovementLinkObject_PersonalServiceList.MovementId = Movement_PersonalService.Id
@@ -77,7 +78,8 @@ BEGIN
 
                      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                        AND Movement.DescId = zc_Movement_Cash()
-                       AND (Movement.StatusId = zc_Enum_Status_Complete() OR Movement.Id = 33003250)
+                       AND Movement.StatusId = zc_Enum_Status_Complete()
+                     --AND (Movement.StatusId = zc_Enum_Status_Complete() OR Movement.Id = 33003250)
                        AND Movement.ParentId > 0
                      )
 
@@ -176,9 +178,10 @@ BEGIN
                               ON ObjectLink_Personal_Member.ObjectId = tmpMI_Child.PersonalId
                              AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
 
-         LEFT JOIN ObjectString AS ObjectString_Phone
-                                ON ObjectString_Phone.ObjectId = ObjectLink_Personal_Member.ChildObjectId
-                               AND ObjectString_Phone.DescId = zc_ObjectString_Member_Phone()
+         INNER JOIN ObjectString AS ObjectString_Phone
+                                 ON ObjectString_Phone.ObjectId = ObjectLink_Personal_Member.ChildObjectId
+                                AND ObjectString_Phone.DescId = zc_ObjectString_Member_Phone()
+                                AND LENGTH (ObjectString_Phone.ValueData) = LENGTH ('380503201234')
     -- LIMIT 1
    ;
 
