@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1042#1080#1076' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1087#1083#1072#1090#1077#1078#1077#1081
-  ClientHeight = 273
+  ClientHeight = 355
   ClientWidth = 564
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 36
-    Top = 234
+    Left = 28
+    Top = 314
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -37,8 +37,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 180
-    Top = 234
+    Left = 172
+    Top = 314
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -61,12 +61,12 @@
   end
   object cxLabel7: TcxLabel
     Left = 309
-    Top = 205
+    Top = 250
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit
     Left = 309
-    Top = 225
+    Top = 270
     TabOrder = 7
     Width = 247
   end
@@ -123,13 +123,13 @@
     Width = 273
   end
   object cxLabel4: TcxLabel
-    Left = 309
-    Top = 105
+    Left = 11
+    Top = 201
     Caption = #1060#1048#1054' - '#1085#1072' '#1082#1086#1085#1090#1088#1086#1083#1077'-1'
   end
   object ceMember_1: TcxButtonEdit
-    Left = 309
-    Top = 125
+    Left = 11
+    Top = 221
     Properties.Buttons = <
       item
         Default = True
@@ -140,13 +140,13 @@
     Width = 247
   end
   object cxLabel12: TcxLabel
-    Left = 309
-    Top = 154
+    Left = 11
+    Top = 250
     Caption = #1060#1048#1054' - '#1085#1072' '#1082#1086#1085#1090#1088#1086#1083#1077'-2'
   end
   object ceMember_2: TcxButtonEdit
-    Left = 309
-    Top = 174
+    Left = 11
+    Top = 270
     Properties.Buttons = <
       item
         Default = True
@@ -188,6 +188,57 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 21
+    Width = 247
+  end
+  object cxLabel8: TcxLabel
+    Left = 309
+    Top = 105
+    Caption = #1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080' - 3'
+  end
+  object edInsertUser_3: TcxButtonEdit
+    Left = 309
+    Top = 125
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 23
+    Width = 247
+  end
+  object cxLabel9: TcxLabel
+    Left = 309
+    Top = 152
+    Caption = #1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080' - 4'
+  end
+  object edInsertUser_4: TcxButtonEdit
+    Left = 309
+    Top = 174
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 25
+    Width = 247
+  end
+  object cxLabel11: TcxLabel
+    Left = 309
+    Top = 201
+    Caption = #1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080' - 5'
+  end
+  object edInsertUser_5: TcxButtonEdit
+    Left = 309
+    Top = 221
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 27
     Width = 247
   end
   object ActionList: TActionList
@@ -291,6 +342,30 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMemberId_insert_3'
+        Value = Null
+        Component = GuidesInsert_3
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberId_insert_4'
+        Value = Null
+        Component = GuidesInsert_4
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberId_insert_5'
+        Value = Null
+        Component = GuidesInsert_5
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inMemberId_1'
         Value = Null
         Component = GuidesMember1
@@ -318,8 +393,8 @@
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 320
-    Top = 218
+    Left = 344
+    Top = 274
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_OrderFinance'
@@ -425,6 +500,51 @@
         Name = 'MemberName_insert_2'
         Value = Null
         Component = GuidesInsert_2
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberId_insert_3'
+        Value = Null
+        Component = GuidesInsert_3
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberName_insert_3'
+        Value = Null
+        Component = GuidesInsert_3
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberId_insert_4'
+        Value = Null
+        Component = GuidesInsert_4
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberName_insert_4'
+        Value = Null
+        Component = GuidesInsert_4
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberId_insert_5'
+        Value = Null
+        Component = GuidesInsert_5
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberName_insert_5'
+        Value = Null
+        Component = GuidesInsert_5
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -730,5 +850,110 @@
       end>
     Left = 435
     Top = 52
+  end
+  object GuidesInsert_3: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInsertUser_3
+    Key = '0'
+    FormNameParam.Value = 'TMember_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMember_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesInsert_3
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesInsert_3
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPositionId'
+        Value = 8466
+        MultiSelectSeparator = ','
+      end>
+    Left = 427
+    Top = 93
+  end
+  object GuidesInsert_4: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInsertUser_4
+    Key = '0'
+    FormNameParam.Value = 'TMember_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMember_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesInsert_4
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesInsert_4
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPositionId'
+        Value = 8466
+        MultiSelectSeparator = ','
+      end>
+    Left = 427
+    Top = 142
+  end
+  object GuidesInsert_5: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInsertUser_5
+    Key = '0'
+    FormNameParam.Value = 'TMember_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMember_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesInsert_5
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesInsert_5
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPositionId'
+        Value = 8466
+        MultiSelectSeparator = ','
+      end>
+    Left = 427
+    Top = 189
   end
 end

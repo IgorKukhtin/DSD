@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinance (Integer, Integer, TV
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinance (Integer, Integer, TVarChar, TVarChar, Integer, Integer, TVarchar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinance (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinance (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinance (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_OrderFinance(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Договор>
@@ -14,6 +15,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_OrderFinance(
     IN inBankAccountId           Integer   ,    -- р/с 
     IN inMemberId_insert         Integer   ,    -- ФИО - Автор заявки 
     IN inMemberId_insert_2       Integer   ,    -- ФИО - Автор заявки 2
+    IN inMemberId_insert_3       Integer   ,    -- ФИО - Автор заявки 3
+    IN inMemberId_insert_4       Integer   ,    -- ФИО - Автор заявки 4
+    IN inMemberId_insert_5       Integer   ,    -- ФИО - Автор заявки 5
     IN inMemberId_1              Integer   ,    -- ФИО - на контроле-1
     IN inMemberId_2              Integer   ,    -- ФИО - на контроле-2
     IN inSession                 TVarChar       -- сессия пользователя
@@ -53,6 +57,12 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OrderFinance_Member_insert(), ioId, inMemberId_insert);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OrderFinance_Member_insert_2(), ioId, inMemberId_insert_2);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OrderFinance_Member_insert_3(), ioId, inMemberId_insert_3);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OrderFinance_Member_insert_4(), ioId, inMemberId_insert_4);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OrderFinance_Member_insert_5(), ioId, inMemberId_insert_5);
 
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OrderFinance_Member_1(), ioId, inMemberId_1);

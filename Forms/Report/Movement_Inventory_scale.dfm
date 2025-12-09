@@ -1280,6 +1280,75 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actUpdate_NumSecurity3: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1047#1072#1084#1077#1085#1080#1090#1100' '#1074' '#1089#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103#1093' <'#8470' '#1086#1093#1088#1072#1085#1085#1080#1082#1072'>'
+      Hint = #1047#1072#1084#1077#1085#1080#1090#1100' '#1074' '#1089#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103#1093' <'#8470' '#1086#1093#1088#1072#1085#1085#1080#1082#1072'>'
+      ImageIndex = 49
+      FormName = 'TInventory_scale_NumSecurityDialogForm'
+      FormNameParam.Value = 'TInventory_scale_NumSecurityDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isSecurity'
+          Value = False
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'NumSecurity'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'NumSecurity'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object mactUpdate_NumSecurity3: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_NumSecurity3
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1047#1072#1084#1077#1085#1080#1090#1100' '#1074' '#1089#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103#1093' <'#8470' '#1086#1093#1088#1072#1085#1085#1080#1082#1072'>'
+      Hint = #1047#1072#1084#1077#1085#1080#1090#1100' '#1074' '#1089#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103#1093' <'#8470' '#1086#1093#1088#1072#1085#1085#1080#1082#1072'>'
+      ImageIndex = 49
+    end
     object actUpdate_NumSecurity: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1525,6 +1594,10 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1635,6 +1708,10 @@ inherited Movement_Inventory_scaleForm: TMovement_Inventory_scaleForm
     end
     object bbPrint_MovGroup_Sec: TdxBarButton
       Action = actPrint_MovGroup_Sec
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = mactUpdate_NumSecurity3
       Category = 0
     end
   end
