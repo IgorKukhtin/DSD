@@ -75,10 +75,21 @@ BEGIN
                               , Object_Member_2.ValueData        AS MemberName_2
                          FROM Object AS Object_OrderFinance
 
-                             INNER JOIN ObjectLink AS OrderFinance_Member_insert
-                                                   ON OrderFinance_Member_insert.ObjectId = Object_OrderFinance.Id
-                                                  AND OrderFinance_Member_insert.DescId = zc_ObjectLink_OrderFinance_Member_insert()
-                                                  AND OrderFinance_Member_insert.ChildObjectId = vbMemberId
+                             LEFT JOIN ObjectLink AS OrderFinance_Member_insert
+                                                  ON OrderFinance_Member_insert.ObjectId = Object_OrderFinance.Id
+                                                 AND OrderFinance_Member_insert.DescId = zc_ObjectLink_OrderFinance_Member_insert()
+                             LEFT JOIN ObjectLink AS OrderFinance_Member_insert_2
+                                                  ON OrderFinance_Member_insert_2.ObjectId = Object_OrderFinance.Id
+                                                 AND OrderFinance_Member_insert_2.DescId = zc_ObjectLink_OrderFinance_Member_insert_2()
+                             LEFT JOIN ObjectLink AS OrderFinance_Member_insert_3
+                                                  ON OrderFinance_Member_insert_3.ObjectId = Object_OrderFinance.Id
+                                                 AND OrderFinance_Member_insert_3.DescId = zc_ObjectLink_OrderFinance_Member_insert_3()
+                             LEFT JOIN ObjectLink AS OrderFinance_Member_insert_4
+                                                  ON OrderFinance_Member_insert_4.ObjectId = Object_OrderFinance.Id
+                                                 AND OrderFinance_Member_insert_4.DescId = zc_ObjectLink_OrderFinance_Member_insert_4()
+                             LEFT JOIN ObjectLink AS OrderFinance_Member_insert_5
+                                                  ON OrderFinance_Member_insert_5.ObjectId = Object_OrderFinance.Id
+                                                 AND OrderFinance_Member_insert_5.DescId = zc_ObjectLink_OrderFinance_Member_insert_5()
 
                              LEFT JOIN ObjectLink AS OrderFinance_Member_1
                                                   ON OrderFinance_Member_1.ObjectId = Object_OrderFinance.Id
@@ -95,7 +106,13 @@ BEGIN
                                                  AND OrderFinance_BankAccount.DescId = zc_ObjectLink_OrderFinance_BankAccount()
                              LEFT JOIN Object_BankAccount_View ON Object_BankAccount_View.Id = OrderFinance_BankAccount.ChildObjectId
                          WHERE Object_OrderFinance.DescId = zc_Object_OrderFinance()
-                           AND Object_OrderFinance.isErased = FALSE
+                           AND Object_OrderFinance.isErased = FALSE 
+                           AND (OrderFinance_Member_insert.ChildObjectId = vbMemberId
+                             OR OrderFinance_Member_insert_2.ChildObjectId = vbMemberId
+                             OR OrderFinance_Member_insert_3.ChildObjectId = vbMemberId
+                             OR OrderFinance_Member_insert_4.ChildObjectId = vbMemberId
+                             OR OrderFinance_Member_insert_5.ChildObjectId = vbMemberId
+                               )
                          LIMIT 1  --про всяк випадок
                          )
 
