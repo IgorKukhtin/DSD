@@ -1616,11 +1616,19 @@ END IF;
 */
     -- !!!Оптимизация!!!
     --ANALYZE _tmpRemainsCount;
-/*    RAISE EXCEPTION 'ok - _tmpRemainsCount - <%>  <%>  <%>  <%> '
-, (SELECT sum (_tmpRemainsCount.OperCount) FROM _tmpRemainsCount WHERE _tmpRemainsCount.GoodsId = 2339 and _tmpRemainsCount.GoodsKindId =  8328) -- ContainerId_Goods = 9140694
-, (SELECT sum (_tmpRemainsCount.OperCount_add) FROM _tmpRemainsCount WHERE _tmpRemainsCount.GoodsId = 2339 and _tmpRemainsCount.GoodsKindId =  8328)
-, (SELECT sum (_tmpRemainsCount.OperCount_find) FROM _tmpRemainsCount WHERE _tmpRemainsCount.GoodsId = 2339 and _tmpRemainsCount.GoodsKindId =  8328)
-, (SELECT sum (_tmpRemainsCount.OperSumm_item) FROM _tmpRemainsCount WHERE _tmpRemainsCount.GoodsId = 2339 and _tmpRemainsCount.GoodsKindId =  8328)
+/*        RAISE EXCEPTION 'ok - _tmpRemainsCount - <%>  <%>  <%>  <%> '
+, (SELECT sum (_tmpRemainsCount.OperCount) FROM _tmpRemainsCount WHERE _tmpRemainsCount.GoodsId = 5341 and _tmpRemainsCount.GoodsKindId =  8349) -- ContainerId_Goods = 9140694
+, (SELECT sum (_tmpRemainsCount.OperCount_add) FROM _tmpRemainsCount WHERE _tmpRemainsCount.GoodsId = 5341 and _tmpRemainsCount.GoodsKindId =  8349)
+, (SELECT sum (_tmpRemainsCount.OperCount_find) FROM _tmpRemainsCount WHERE _tmpRemainsCount.GoodsId = 5341 and _tmpRemainsCount.GoodsKindId =  8349)
+, (SELECT sum (_tmpRemainsCount.OperSumm_item) FROM _tmpRemainsCount WHERE _tmpRemainsCount.GoodsId = 5341 and _tmpRemainsCount.GoodsKindId =  8349)
+
+-- err update inMovementId = 32931756 + 27.11.2025 - RK
+update Container set Amount = Amount + 764.4900 Where Id = 13198897
+update MovementItemContainer set Amount = Amount + 764.4900 where ContainerId =13198897 and MovementId = 32931756 and Id = 38782244792
+--  
+update Container set Amount = Amount + 25.7100 Where Id = 13198900
+update MovementItemContainer set Amount = Amount + 25.7100 where ContainerId =13198900 and MovementId = 32931756 and Id = 38782244790
+
 ;*/
 
     --RAISE EXCEPTION 'ok - _tmpRemainsSumm - % ', (SELECT COUNT(*) FROM _tmpRemainsSumm);
