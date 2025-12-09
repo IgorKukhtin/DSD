@@ -1,4 +1,4 @@
- -- Function: gpSelect_MovementItem_StaffList (Integer, Boolean, Boolean, TVarChar)
+-- Function: gpSelect_MovementItem_StaffList (Integer, Boolean, Boolean, TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_StaffList (Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_StaffList (Integer, Boolean, Boolean, TVarChar);
@@ -39,47 +39,59 @@ RETURNS TABLE (Id                   Integer
              , Staff_Summ_MK        TFloat
              , Staff_Summ_MK3       TFloat
              , Staff_Summ_MK6       TFloat
-             , Staff_Summ_real      TFloat
-             , Staff_Summ_add       TFloat
-             , Staff_Summ_total_real TFloat
-             , Staff_Summ_total_add  TFloat
-             , Comment              TVarChar
-             , isErased             Boolean
-             --
-             , TotalStaffCount  TFloat          --Всього змін за місяць для посади (кол.понед * StaffCount_1 + кол вт * StaffCount_2 и т.д.)
-             , TotalStaffHoursLength  TFloat    --ФРЧ (фонд робочого часу) для посади   TotalStaffCount * StaffHoursLength
-             , NormCount        TFloat          --Норма змін для 1-єї шт.од   TotalStaffCount / StaffHoursLength
-             , NormHours        TFloat          --Норма часу для 1-єї шт.од   TotalStaffHoursLength / StaffHoursLength
-             , WageFund         TFloat          --ФОП за місяць (формула)    Staff_Price *  TotalStaffCount +Staff_Summ_MK +(Staff_Summ_MK3 /3)  +(Staff_Summ_MK6 /6)+ Staff_Summ_real	+ Staff_Summ_add
-             , WageFund_byOne   TFloat          --ЗП для 1-єї шт.од до оподаткуання   WageFund / AmountReport
+
+             , Staff_Summ_real            TFloat
+             , Staff_Summ_add             TFloat
+             , Staff_Summ_total_real      TFloat
+             , Staff_Summ_total_add       TFloat
+
+             , Staff_Summ_real_calc       TFloat
+             , Staff_Summ_add_calc        TFloat
+             , Staff_Summ_total_real_calc TFloat
+             , Staff_Summ_total_add_calc  TFloat
+
+             , Comment                TVarChar
+             , isErased               Boolean
+
+             , TotalStaffCount        TFloat    -- Всього змін за місяць для посади (кол.понед * StaffCount_1 + кол вт * StaffCount_2 и т.д.)
+             , TotalStaffHoursLength  TFloat    -- ФРЧ (фонд робочого часу) для посади   TotalStaffCount * StaffHoursLength
+             , NormCount              TFloat    -- Норма змін для 1-єї шт.од   TotalStaffCount / StaffHoursLength
+             , NormHours              TFloat    -- Норма часу для 1-єї шт.од   TotalStaffHoursLength / StaffHoursLength
+             , WageFund               TFloat    -- ФОП за місяць (формула)    Staff_Price *  TotalStaffCount +Staff_Summ_MK +(Staff_Summ_MK3 /3)  +(Staff_Summ_MK6 /6)+ Staff_Summ_real	+ Staff_Summ_add
+             , WageFund_byOne         TFloat    -- ЗП для 1-єї шт.од до оподаткуання   WageFund / AmountReport
 
             /*
-             --расчет ЗП для 1-єї шт.од (формули різні)
-            , Summ_1  TFloat
-            , Summ_2  TFloat
-            , Summ_3  TFloat
-            , Summ_4  TFloat
-            , Summ_5  TFloat
-            , Summ_6  TFloat
-            , Summ_7  TFloat
-            , Summ_8  TFloat
-            , Summ_9  TFloat
-            , SummZP_byOne    TFloat
-            , SummControl_1   TFloat
-            , SummControl_2   TFloat
-            -- ФОП (формули різні)
-            , Summ_10 TFloat
-            , Summ_11 TFloat
-            , Summ_12 TFloat
-            , Summ_13 TFloat
-            , Summ_14 TFloat
-            , Summ_15 TFloat
-            , Summ_16 TFloat
-            , Summ_17 TFloat
-            , Summ_18 TFloat
-            , SummZP  TFloat
-            , SummControl_3   TFloat
-            , SummControl_4   TFloat 
+              R18 = Всього змін за місяць для посади
+              W18 = Тарифікація
+              E18 = ШР для справочника
+              S18 = ФРЧ (фонд робочого часу) для посади
+
+              +++++++++    -- Зміни/час
+                 =ЕСЛИ(V18=$AX$5;(ЕСЛИ(V18=$AX$5;R18*W18+(X18+Y18+Z18)*E18+AB18+AD18;0));
+
+              +++++++++++    -- Відрядно
+               ЕСЛИ(И(V18=$AY$5);(ЕСЛИ(V18=$AY$5;        (X18+Y18+Z18)*E18+AB18+AD18;0));
+
+              ++++++++    -- доплата за 1 день
+               ЕСЛИ(И(V18=$AZ$5);(ЕСЛИ(V18=$AZ$5;R18*W18+(X18+Y18+Z18)*E18+AB18+AD18;0));
+
+              +++++++    -- відрядно підробіток
+               ЕСЛИ(И(V18=$BA$5);(ЕСЛИ(V18=$BA$5;        (X18+Y18+Z18)*E18+AB18+AD18;0));
+
+              ++++++++++    -- Оклад/місяць
+               ЕСЛИ(И(V18=$BB$5);(ЕСЛИ(V18=$BB$5;    (W18+X18+Y18+Z18)*E18+AB18+AD18;0));
+
+              ++++++++++    -- Фіксована сума
+               ЕСЛИ(И(V18=$BC$5);(ЕСЛИ(V18=$BC$5;    W18+(X18+Y18+Z18)*E18+AB18+AD18;0));
+
+                  -- Преміальний Фонд
+               ЕСЛИ(И(V18=$BD$5);(ЕСЛИ(V18=$BD$5;AD18;0));
+
+              +++++++++++    -- Тариф/час
+               ЕСЛИ(И(V18=$BE$5);(ЕСЛИ(V18=$BE$5;(W18*S18)+(X18+Y18+Z18)*E18+AB18+AD18;0));
+
+              ++++++++++++    -- Оклад/місяць + премія % від ТО
+               ЕСЛИ(И(V18=$BF$5);(ЕСЛИ(V18=$BF$5; (W18+X18+Y18+Z18)*E18+AB18+AD18;0)))))))))))
             */
               )
 AS
@@ -108,51 +120,56 @@ BEGIN
 
      RETURN QUERY
        WITH
-            --кол. дней по дням недели
-            tmpDay AS (WITH
-                       tmpDate AS (SELECT GENERATE_SERIES (vbStartDate, vbEndDate, '1 DAY' :: INTERVAL) AS OperDate)
-
-                       SELECT SUM (CASE WHEN tmpWeekDay.Number = 1 THEN 1 ELSE 0 END) AS Count_1
+            -- кол. дней по дням недели
+            tmpDay AS (WITH tmpDate AS (SELECT GENERATE_SERIES (vbStartDate, vbEndDate, '1 DAY' :: INTERVAL) AS OperDate)
+                       SELECT -- Кол-во пн.
+                              SUM (CASE WHEN tmpWeekDay.Number = 1 THEN 1 ELSE 0 END) AS Count_1
+                              -- Кол-во вт.
                             , SUM (CASE WHEN tmpWeekDay.Number = 2 THEN 1 ELSE 0 END) AS Count_2
+                              -- Кол-во ср.
                             , SUM (CASE WHEN tmpWeekDay.Number = 3 THEN 1 ELSE 0 END) AS Count_3
+                              -- Кол-во чт.
                             , SUM (CASE WHEN tmpWeekDay.Number = 4 THEN 1 ELSE 0 END) AS Count_4
+                              -- Кол-во пт.
                             , SUM (CASE WHEN tmpWeekDay.Number = 5 THEN 1 ELSE 0 END) AS Count_5
+                              -- Кол-во сб.
                             , SUM (CASE WHEN tmpWeekDay.Number = 6 THEN 1 ELSE 0 END) AS Count_6
+                              -- Кол-во вс.
                             , SUM (CASE WHEN tmpWeekDay.Number = 7 THEN 1 ELSE 0 END) AS Count_7
                        FROM tmpDate
                             LEFT JOIN zfCalc_DayOfWeekName (tmpDate.OperDate) AS tmpWeekDay ON 1=1
-                       )
+                      )
+            -- Штатное расписание
           , tmpStaffList_object AS (SELECT tmp.PositionId
-                                          , tmp.PositionCode
-                                          , tmp.PositionName
-                                          , tmp.PositionLevelId
-                                          , tmp.PositionLevelName
-                                          , tmp.HoursPlan
-                                          , tmp.HoursDay
-                                          , tmp.PersonalCount
-                                    FROM gpSelect_Object_StaffList(inUnitId := vbUnitId , inisShowAll := 'False' ,  inSession := inSession) AS tmp
+                                         , tmp.PositionCode
+                                         , tmp.PositionName
+                                         , tmp.PositionLevelId
+                                         , tmp.PositionLevelName
+                                         , tmp.HoursPlan
+                                         , tmp.HoursDay
+                                         , tmp.PersonalCount
+                                    FROM gpSelect_Object_StaffList (inUnitId := vbUnitId , inisShowAll := FALSE,  inSession := inSession) AS tmp
                                     WHERE inShowAll = TRUE
-                                      AND COALESCE (vbUnitId,0) <> 0
-                                    )
-
+                                      AND vbUnitId  > 0
+                                   )
+            -- MI
           , tmpMI AS (SELECT MovementItem.*
                       FROM MovementItem
                       WHERE MovementItem.MovementId = inMovementId
                         AND MovementItem.DescId = zc_MI_Master()
                         AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
                      )
-
+            -- св-ва
           , tmpMIFloat AS (SELECT MovementItemFloat.*
                             FROM MovementItemFloat
                             WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI.Id FROM tmpMI)
-                              --AND MovementItemFloat.DescId IN zc_MIFloat_AmountReport()
                            )
-
+            -- св-ва
           , tmpMILinkObject AS (SELECT MovementItemLinkObject.*
                                 FROM MovementItemLinkObject
                                 WHERE MovementItemLinkObject.MovementItemId IN (SELECT tmpMI.Id FROM tmpMI)
                                )
-
+            -- св-ва
           , tmpMIString AS (SELECT MovementItemString.*
                             FROM MovementItemString
                             WHERE MovementItemString.MovementItemId IN (SELECT tmpMI.Id FROM tmpMI)
@@ -160,7 +177,11 @@ BEGIN
                            )
           , tmpData AS (SELECT MovementItem.*
                              , MILinkObject_PositionLevel.ObjectId                        AS PositionLevelId
+
+                               -- ШР для отчета
                              , COALESCE (MIFloat_AmountReport.ValueData, 0)      ::TFloat AS AmountReport
+
+                               -- Кількість штатних одиниць в смену пн.
                              , COALESCE (MIFloat_StaffCount_1.ValueData, 0)      ::TFloat AS StaffCount_1
                              , COALESCE (MIFloat_StaffCount_2.ValueData, 0)      ::TFloat AS StaffCount_2
                              , COALESCE (MIFloat_StaffCount_3.ValueData, 0)      ::TFloat AS StaffCount_3
@@ -168,17 +189,26 @@ BEGIN
                              , COALESCE (MIFloat_StaffCount_5.ValueData, 0)      ::TFloat AS StaffCount_5
                              , COALESCE (MIFloat_StaffCount_6.ValueData, 0)      ::TFloat AS StaffCount_6
                              , COALESCE (MIFloat_StaffCount_7.ValueData, 0)      ::TFloat AS StaffCount_7
+                               -- Кількість штатних одиниць в смену Инаентаризация
                              , COALESCE (MIFloat_StaffCount_Invent.ValueData, 0) ::TFloat AS StaffCount_Invent
+                               -- Тарификация
                              , COALESCE (MIFloat_Staff_Price.ValueData, 0)       ::TFloat AS Staff_Price
+                               -- МК-місяць
                              , COALESCE (MIFloat_Staff_Summ_MK.ValueData, 0)     ::TFloat AS Staff_Summ_MK
                              , COALESCE (MIFloat_Staff_Summ_MK3.ValueData, 0)    ::TFloat AS Staff_Summ_MK3
                              , COALESCE (MIFloat_Staff_Summ_MK6.ValueData, 0)    ::TFloat AS Staff_Summ_MK6
+
+                               -- Відрядна оплата (для 1-єї шт.од)
                              , COALESCE (MIFloat_Staff_Summ_real.ValueData, 0)   ::TFloat AS Staff_Summ_real
+                               -- Преміальний фонд (для 1-єї шт.од)
                              , COALESCE (MIFloat_Staff_Summ_add.ValueData, 0)    ::TFloat AS Staff_Summ_add
+
+                               -- Відрядна оплата (загальна сума)
                              , COALESCE (MIFloat_Staff_Summ_total_real.ValueData, 0)   ::TFloat AS Staff_Summ_total_real
+                               -- Преміальний фонд (загальна сума)
                              , COALESCE (MIFloat_Staff_Summ_total_add.ValueData, 0)    ::TFloat AS Staff_Summ_total_add
-                             --
-                             --Всього змін за місяць для посади (кол.понед * StaffCount_1 + кол вт * StaffCount_2 и т.д.)
+
+                               -- Всього змін за місяць для посади = кол.пн. * StaffCount_1 + кол.вт. * StaffCount_2 + т.д.
                              , (tmpDay.Count_1 * COALESCE (MIFloat_StaffCount_1.ValueData, 0)
                               + tmpDay.Count_2 * COALESCE (MIFloat_StaffCount_2.ValueData, 0)
                               + tmpDay.Count_3 * COALESCE (MIFloat_StaffCount_3.ValueData, 0)
@@ -260,7 +290,7 @@ BEGIN
                                 -- Продолжительность смены, часы
                               , Object_StaffHoursLength.Id                                             AS StaffHoursLengthId
                               , zfConvert_StringToFloat (Object_StaffHoursLength.ValueData) :: Integer AS StaffHoursLengthName
-                  
+
                                 -- ШР для справочника
                               , MovementItem.Amount            ::TFloat AS Amount
                                 -- ШР для отчета
@@ -275,7 +305,7 @@ BEGIN
                               , MovementItem.StaffCount_7      ::TFloat AS StaffCount_7
                                 -- Кількість штатних одиниць в смену Инаентаризация
                               , MovementItem.StaffCount_Invent ::TFloat AS StaffCount_Invent
-                  
+
                                 -- Тарифікація
                               , MovementItem.Staff_Price       ::TFloat AS Staff_Price
                                 -- МК-місяць
@@ -284,360 +314,279 @@ BEGIN
                               , MovementItem.Staff_Summ_MK3    ::TFloat AS Staff_Summ_MK3
                                 -- МК-піврічча
                               , MovementItem.Staff_Summ_MK6    ::TFloat AS Staff_Summ_MK6
-                                -- Відрядна оплата(для 1-єї шт.од)
-                              , (COALESCE (MovementItem.Staff_Summ_real, 0) + CASE WHEN MovementItem.Amount > 0 THEN COALESCE (MovementItem.Staff_Summ_total_real, 0) / MovementItem.Amount ELSE 0 END)    ::TFloat AS Staff_Summ_real
-                                -- Преміальний фонд(для 1-єї шт.од)
-                              , (COALESCE (MovementItem.Staff_Summ_add, 0) + CASE WHEN MovementItem.Amount > 0 THEN COALESCE (MovementItem.Staff_Summ_total_add, 0)/ MovementItem.Amount ELSE 0 END)      ::TFloat AS Staff_Summ_add
-                  
-                                -- Відрядна оплата(загальна сума)
-                              , (COALESCE (MovementItem.Staff_Summ_real, 0) * MovementItem.Amount + COALESCE (MovementItem.Staff_Summ_total_real, 0))   ::TFloat AS Staff_Summ_total_real
-                                --Преміальний фонд(загальна сума)
-                              , (COALESCE (MovementItem.Staff_Summ_add, 0) * MovementItem.Amount + COALESCE (MovementItem.Staff_Summ_total_add, 0))     ::TFloat AS Staff_Summ_total_add
-                  
+
+                                -- 1.1. Відрядна оплата (для 1-єї шт.од)
+                              , COALESCE (MovementItem.Staff_Summ_real, 0) ::TFloat AS Staff_Summ_real
+                                -- 2.1. Преміальний фонд (для 1-єї шт.од)
+                              , COALESCE (MovementItem.Staff_Summ_add, 0)  ::TFloat AS Staff_Summ_add
+
+                                -- 1.2. Відрядна оплата (загальна сума)
+                              , COALESCE (MovementItem.Staff_Summ_total_real, 0) ::TFloat AS Staff_Summ_total_real
+                                -- 2.2. Преміальний фонд (загальна сума)
+                              , COALESCE (MovementItem.Staff_Summ_total_add, 0)  ::TFloat AS Staff_Summ_total_add
+
+
+                                -- 3.1. ***Відрядна оплата (для 1-єї шт.од)
+                              , (COALESCE (MovementItem.Staff_Summ_real, 0) + CASE WHEN MovementItem.Amount > 0 THEN COALESCE (MovementItem.Staff_Summ_total_real, 0) / MovementItem.Amount ELSE 0 END) ::TFloat AS Staff_Summ_real_calc
+                                -- 4.1. ***Преміальний фонд (для 1-єї шт.од)
+                              , (COALESCE (MovementItem.Staff_Summ_add, 0)  + CASE WHEN MovementItem.Amount > 0 THEN COALESCE (MovementItem.Staff_Summ_total_add, 0)  / MovementItem.Amount ELSE 0 END) ::TFloat AS Staff_Summ_add_calc
+
+                                -- 3.2. ***Відрядна оплата (загальна сума)
+                              , (COALESCE (MovementItem.Amount, 0) * COALESCE (MovementItem.Staff_Summ_real, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)) ::TFloat AS Staff_Summ_total_real_calc
+                                -- 4.2. ***Преміальний фонд (загальна сума)
+                              , (COALESCE (MovementItem.Amount, 0) * COALESCE (MovementItem.Staff_Summ_add, 0)  + COALESCE (MovementItem.Staff_Summ_total_add, 0))  ::TFloat AS Staff_Summ_total_add_calc
+
+
                               , MovementItem.isErased
-                  
+
                                 -- Всього змін за місяць для посади (кол.понед * StaffCount_1 + кол вт * StaffCount_2 и т.д.)
                               , MovementItem.TotalStaffCount ::TFloat AS TotalStaffCount
-                  
-                                -- ФРЧ (фонд робочого часу) для посади   TotalStaffCount * StaffHoursLength
+
+                                -- ФРЧ (фонд робочого часу) для посади TotalStaffCount * StaffHoursLength
                               , (MovementItem.TotalStaffCount * zfConvert_StringToNumber (Object_StaffHoursLength.ValueData)) ::TFloat AS TotalStaffHoursLength
-                  
+
                                 -- Норма змін для 1-єї шт.од   TotalStaffCount / Amount
                               , CASE WHEN MovementItem.Amount > 0 THEN MovementItem.TotalStaffCount / MovementItem.Amount ELSE 0 END ::TFloat AS NormCount
-                  
+
                                 -- Норма часу для 1-єї шт.од   TotalStaffHoursLength / Amount
                               , CASE WHEN COALESCE (MovementItem.Amount, 0) <> 0
                                           THEN (MovementItem.TotalStaffCount * zfConvert_StringToNumber (Object_StaffHoursLength.ValueData)) / MovementItem.Amount
                                          ELSE 0
                                 END ::TFloat AS NormHours
-                  
+
                                 -- ФОП за місяць Staff_Price * TotalStaffCount + Staff_Summ_MK + Staff_Summ_real + Staff_Summ_add
                               , CASE
                                      WHEN COALESCE (MovementItem.Amount, 0) < 0.5
-                                          -- Преміальний Фонд 
-                                          THEN COALESCE (MovementItem.Staff_Summ_add, 0)
-                  
+                                          -- Преміальний фонд (загальна сума)
+                                          THEN COALESCE (MovementItem.Staff_Summ_add, 0) * MovementItem.Amount + COALESCE (MovementItem.Staff_Summ_total_add, 0)
+
+                                     -- +++++++++++++++++++++
                                      WHEN Object_StaffPaidKind.ValueData ILIKE '%Тариф%' AND Object_StaffPaidKind.ValueData ILIKE '%год%'
-                                          THEN ( COALESCE  (MovementItem.Staff_Price, 0)
+                                          THEN ( -- Тарифікація
+                                                 COALESCE  (MovementItem.Staff_Price, 0)
                                                * (CASE WHEN COALESCE (MovementItem.Amount, 0) <> 0
-                                                       -- Норма часу для 1-єї шт.од
-                                                       THEN (MovementItem.TotalStaffCount * zfConvert_StringToNumber (Object_StaffHoursLength.ValueData)) / MovementItem.Amount
+                                                       -- ФРЧ
+                                                       THEN MovementItem.TotalStaffCount * zfConvert_StringToNumber (Object_StaffHoursLength.ValueData)
                                                        ELSE 0
                                                   END
                                                  )
-                                               -- ШР для справочника
-                                               * COALESCE (MovementItem.Amount, 0)
-                                                -- Преміальний Фонд 
-                                               + COALESCE (MovementItem.Staff_Summ_add, 0)
+
+                                               -- МК-місяць
+                                             + (COALESCE (MovementItem.Staff_Summ_MK, 0) + COALESCE (MovementItem.Staff_Summ_MK3, 0) / 3 + COALESCE (MovementItem.Staff_Summ_MK6, 0) / 6
+                                               ) * COALESCE (MovementItem.Amount, 0)
+
+                                               -- Відрядна оплата (загальна сума)
+                                             + (COALESCE (MovementItem.Staff_Summ_real, 0) * COALESCE (MovementItem.Amount, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0))
+                                               -- Преміальний фонд (загальна сума)
+                                             + (COALESCE (MovementItem.Staff_Summ_add, 0)  * COALESCE (MovementItem.Amount, 0) + COALESCE (MovementItem.Staff_Summ_total_add, 0))
                                                )
 
+                                     -- +++++++++++++++++++
                                      WHEN Object_StaffPaidKind.ValueData ILIKE '%Зміни%'
-                                          THEN COALESCE (MovementItem.TotalStaffCount, 0) * COALESCE (MovementItem.Staff_Price, 0)
-                                             + COALESCE (MovementItem.Staff_Summ_MK, 0) * COALESCE (MovementItem.Amount, 0)                       --MovementItem.AmountReport
-                                             + (COALESCE (MovementItem.Staff_Summ_MK3, 0)/3) * COALESCE (MovementItem.Amount, 0)                  --MovementItem.AmountReport
-                                             + (COALESCE (MovementItem.Staff_Summ_MK6, 0)/6) * COALESCE (MovementItem.Amount, 0)                  --MovementItem.AmountReport
-                                             + (COALESCE (MovementItem.Staff_Summ_real, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                             + (COALESCE (MovementItem.Staff_Summ_add, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                  
+                                          THEN -- Всього змін * Тарифікація
+                                               COALESCE (MovementItem.TotalStaffCount, 0) * COALESCE (MovementItem.Staff_Price, 0)
+                                               -- МК-місяць
+                                             + (COALESCE (MovementItem.Staff_Summ_MK, 0) + COALESCE (MovementItem.Staff_Summ_MK3, 0) / 3 + COALESCE (MovementItem.Staff_Summ_MK6, 0) / 6
+                                               ) * COALESCE (MovementItem.Amount, 0)
+
+                                               -- Відрядна оплата (загальна сума)
+                                             + (COALESCE (MovementItem.Staff_Summ_real, 0) * COALESCE (MovementItem.Amount, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0))
+                                               -- Преміальний фонд (загальна сума)
+                                             + (COALESCE (MovementItem.Staff_Summ_add, 0)  * COALESCE (MovementItem.Amount, 0) + COALESCE (MovementItem.Staff_Summ_total_add, 0))
+
+                                     -- +++++++++++++++++++
                                      WHEN Object_StaffPaidKind.ValueData ILIKE 'відрядно'
-                                          THEN COALESCE (MovementItem.Staff_Summ_MK, 0) * COALESCE (MovementItem.Amount, 0)                       --MovementItem.AmountReport
-                                             + (COALESCE (MovementItem.Staff_Summ_MK3, 0)/3) * COALESCE (MovementItem.Amount, 0)                  --MovementItem.AmountReport
-                                             + (COALESCE (MovementItem.Staff_Summ_MK6, 0)/6) * COALESCE (MovementItem.Amount, 0)                  --MovementItem.AmountReport
-                                             + (COALESCE (MovementItem.Staff_Summ_real, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                             + (COALESCE (MovementItem.Staff_Summ_add, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                  
+                                       OR Object_StaffPaidKind.ValueData ILIKE 'відрядно підробіток'
+                                          THEN -- МК-місяць
+                                               (COALESCE (MovementItem.Staff_Summ_MK, 0) + COALESCE (MovementItem.Staff_Summ_MK3, 0) / 3 + COALESCE (MovementItem.Staff_Summ_MK6, 0) / 6
+                                               ) * COALESCE (MovementItem.Amount, 0)
+
+                                               -- Відрядна оплата (загальна сума)
+                                             + (COALESCE (MovementItem.Staff_Summ_real, 0) * COALESCE (MovementItem.Amount, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0))
+                                               -- Преміальний фонд (загальна сума)
+                                             + (COALESCE (MovementItem.Staff_Summ_add, 0)  * COALESCE (MovementItem.Amount, 0) + COALESCE (MovementItem.Staff_Summ_total_add, 0))
+
+                                     -- +++++++++++++++++++
                                      WHEN Object_StaffPaidKind.ValueData ILIKE '%доплата%'
-                                          THEN COALESCE (MovementItem.TotalStaffCount, 0) * COALESCE (MovementItem.Staff_Price, 0)
-                                             + COALESCE (MovementItem.Staff_Summ_MK, 0)
-                                             + (COALESCE (MovementItem.Staff_Summ_MK3, 0)/3)
-                                             + (COALESCE (MovementItem.Staff_Summ_MK6, 0)/6)
-                                             + (COALESCE (MovementItem.Staff_Summ_real, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                             + (COALESCE (MovementItem.Staff_Summ_add, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                  
-                                     WHEN Object_StaffPaidKind.ValueData ILIKE 'відрядно підробіток'
-                                          THEN COALESCE (MovementItem.Staff_Summ_real, 0)
-                  
+                                          THEN -- Всього змін * Тарифікація
+                                               COALESCE (MovementItem.TotalStaffCount, 0) * COALESCE (MovementItem.Staff_Price, 0)
+                                               -- МК-місяць
+                                             + (COALESCE (MovementItem.Staff_Summ_MK, 0) + COALESCE (MovementItem.Staff_Summ_MK3, 0) / 3 + COALESCE (MovementItem.Staff_Summ_MK6, 0) / 6
+                                               ) * COALESCE (MovementItem.Amount, 0)
+
+                                               -- Відрядна оплата (загальна сума)
+                                             + (COALESCE (MovementItem.Staff_Summ_real, 0) * COALESCE (MovementItem.Amount, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0))
+                                               -- Преміальний фонд (загальна сума)
+                                             + (COALESCE (MovementItem.Staff_Summ_add, 0)  * COALESCE (MovementItem.Amount, 0) + COALESCE (MovementItem.Staff_Summ_total_add, 0))
+
+
+                                     -- +++++++
+                                     WHEN Object_StaffPaidKind.ValueData ILIKE '%Фіксована%'
+
+                                          THEN -- тариф + (MK + MK3 + MK6) * ШР для справочника
+                                               COALESCE (MovementItem.Staff_Price, 0)
+                                               -- МК-місяць
+                                             + (COALESCE (MovementItem.Staff_Summ_MK, 0) + COALESCE (MovementItem.Staff_Summ_MK3, 0) / 3 + COALESCE (MovementItem.Staff_Summ_MK6, 0) / 6
+                                               ) * COALESCE (MovementItem.Amount, 0)
+                                               -- Відрядна оплата (загальна сума)
+                                             + (COALESCE (MovementItem.Staff_Summ_real, 0) * COALESCE (MovementItem.Amount, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0))
+                                               -- Преміальний фонд (загальна сума)
+                                             + (COALESCE (MovementItem.Staff_Summ_add, 0)  * COALESCE (MovementItem.Amount, 0) + COALESCE (MovementItem.Staff_Summ_total_add, 0))
+                                     -- +++++++
                                      WHEN Object_StaffPaidKind.ValueData ILIKE '%Оклад%'
-                                       OR Object_StaffPaidKind.ValueData ILIKE '%Фіксована%'
-                                          THEN (COALESCE (MovementItem.Staff_Price, 0) + COALESCE (MovementItem.Staff_Summ_MK, 0) + (COALESCE (MovementItem.Staff_Summ_MK3, 0)/3) + (COALESCE (MovementItem.Staff_Summ_MK6, 0)/6)) * COALESCE (MovementItem.AmountReport, 0)
-                                             + (COALESCE (MovementItem.Staff_Summ_real, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                             + (COALESCE (MovementItem.Staff_Summ_add, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                  
+                                       OR Object_StaffPaidKind.ValueData ILIKE '%Оклад/місяць + премія%'
+
+                                          THEN -- (тариф + MK + MK3 + MK6) * ШР для справочника
+                                               (COALESCE (MovementItem.Staff_Price, 0)
+                                                -- МК-місяць
+                                              + COALESCE (MovementItem.Staff_Summ_MK, 0) + COALESCE (MovementItem.Staff_Summ_MK3, 0) / 3 + COALESCE (MovementItem.Staff_Summ_MK6, 0) / 6
+                                               ) * COALESCE (MovementItem.Amount, 0)
+
+                                               -- Відрядна оплата (загальна сума)
+                                             + (COALESCE (MovementItem.Staff_Summ_real, 0) * COALESCE (MovementItem.Amount, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0))
+                                               -- Преміальний фонд (загальна сума)
+                                             + (COALESCE (MovementItem.Staff_Summ_add, 0)  * COALESCE (MovementItem.Amount, 0) + COALESCE (MovementItem.Staff_Summ_total_add, 0))
+
+
+                                     -- +++++++
                                      WHEN 1=1
-                                          THEN (COALESCE (MovementItem.Staff_Summ_add, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                  
+                                          THEN -- Преміальний фонд (загальна сума)
+                                               COALESCE (MovementItem.Staff_Summ_add, 0) * MovementItem.Amount + COALESCE (MovementItem.Staff_Summ_total_add, 0)
+
                                      ELSE 0
                                 END :: TFloat AS WageFund
-                  
-                  
-                                -- ЗП для 1-єї шт.од до оподаткуання   WageFund / AmountReport
-                              , CASE WHEN Object_StaffPaidKind.ValueData ILIKE '%Тариф%' AND Object_StaffPaidKind.ValueData ILIKE '%год%'
-                                     THEN CASE WHEN COALESCE (MovementItem.Amount, 0) < 0.5
-                                                    -- Преміальний Фонд 
-                                                    THEN COALESCE (MovementItem.Staff_Summ_add, 0)
-                  
-                                               ELSE ( COALESCE  (MovementItem.Staff_Price, 0)
-                                                    * (CASE WHEN COALESCE (MovementItem.Amount, 0) <> 0
-                                                            -- Норма часу для 1-єї шт.од
-                                                            THEN (MovementItem.TotalStaffCount * zfConvert_StringToNumber (Object_StaffHoursLength.ValueData)) / MovementItem.Amount
-                                                            ELSE 0
-                                                       END
-                                                      )
-                                                       -- ШР для справочника
-                                                    * COALESCE (MovementItem.Amount, 0)
-                                                      -- Преміальний Фонд 
-                                                    + COALESCE (MovementItem.Staff_Summ_add, 0)
-                                                    )
-                                                  / COALESCE (MovementItem.Amount, 0)
-                                          END
-                                     ELSE
-                                          CASE WHEN COALESCE (MovementItem.Amount, 0) < 0.5
-                                                    THEN COALESCE (MovementItem.Staff_Summ_add, 0)
-                  
-                                               WHEN Object_StaffPaidKind.ValueData ILIKE '%Зміни%'
-                                                    THEN COALESCE (MovementItem.TotalStaffCount, 0) * COALESCE (MovementItem.Staff_Price, 0)
-                                                       + COALESCE (MovementItem.Staff_Summ_MK, 0) * COALESCE (MovementItem.Amount, 0)                     --MovementItem.AmountReport
-                                                       + (COALESCE (MovementItem.Staff_Summ_MK3, 0)/3) * COALESCE (MovementItem.Amount, 0)                --MovementItem.AmountReport
-                                                       + (COALESCE (MovementItem.Staff_Summ_MK6, 0)/6) * COALESCE (MovementItem.Amount, 0)                --MovementItem.AmountReport
-                                                       + (COALESCE (MovementItem.Staff_Summ_real, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                                       + (COALESCE (MovementItem.Staff_Summ_add, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                  
-                                               WHEN Object_StaffPaidKind.ValueData ILIKE 'відрядно'
-                                                    THEN COALESCE (MovementItem.Staff_Summ_MK, 0) * COALESCE (MovementItem.Amount, 0)                     --MovementItem.AmountReport
-                                                       + (COALESCE (MovementItem.Staff_Summ_MK3, 0)/3) * COALESCE (MovementItem.Amount, 0)                --MovementItem.AmountReport
-                                                       + (COALESCE (MovementItem.Staff_Summ_MK6, 0)/6) * COALESCE (MovementItem.Amount, 0)                --MovementItem.AmountReport
-                                                       + (COALESCE (MovementItem.Staff_Summ_real, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                                       + (COALESCE (MovementItem.Staff_Summ_add, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                  
-                                               WHEN Object_StaffPaidKind.ValueData ILIKE '%доплата%'
-                                                    THEN COALESCE (MovementItem.TotalStaffCount, 0) * COALESCE (MovementItem.Staff_Price, 0)
-                                                       + COALESCE (MovementItem.Staff_Summ_MK, 0)
-                                                       + (COALESCE (MovementItem.Staff_Summ_MK3, 0)/3)
-                                                       + (COALESCE (MovementItem.Staff_Summ_MK6, 0)/6)
-                                                       + (COALESCE (MovementItem.Staff_Summ_real, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                                       + (COALESCE (MovementItem.Staff_Summ_add, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                  
-                                               WHEN Object_StaffPaidKind.ValueData ILIKE 'відрядно підробіток'
-                                                    THEN COALESCE (MovementItem.Staff_Summ_real, 0)
-                  
-                                               WHEN Object_StaffPaidKind.ValueData ILIKE '%Оклад%'
-                                                 OR Object_StaffPaidKind.ValueData ILIKE '%Фіксована%'
-                                                    THEN (COALESCE (MovementItem.Staff_Price, 0) + COALESCE (MovementItem.Staff_Summ_MK, 0) + (COALESCE (MovementItem.Staff_Summ_MK3, 0)/3) + (COALESCE (MovementItem.Staff_Summ_MK6, 0)/6)) * COALESCE (MovementItem.AmountReport, 0)
-                                                       + (COALESCE (MovementItem.Staff_Summ_real, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                                       + (COALESCE (MovementItem.Staff_Summ_add, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                  
-                                               WHEN 1=1
-                                                    THEN COALESCE (MovementItem.Staff_Summ_add, 0)
-                  
-                                               ELSE 0
-                                           END
-                  
-                                         / CASE WHEN COALESCE (MovementItem.Amount, 0) < 0.5                                                                --MovementItem.AmountReport
-                                                    THEN 1                                                                                                  --MovementItem.AmountReport
-                                                ELSE MovementItem.Amount
-                                           END
-                                END:: TFloat AS WageFund_byOne
-                                
-                              /*
-                               --расчет ЗП для 1-єї шт.од (формули різні)
-                               -- Зміни/час
-                              , CASE WHEN Object_StaffPaidKind.ValueData ILIKE '%Зміни%'
-                                     THEN COALESCE (MovementItem.Staff_Price, 0) * (CASE WHEN COALESCE (MovementItem.Amount, 0) <> 0 THEN MovementItem.TotalStaffCount / MovementItem.Amount ELSE 0 END)
-                                        + COALESCE (MovementItem.Staff_Summ_MK, 0)
-                                        + (COALESCE (MovementItem.Staff_Summ_MK3, 0)/3)
-                                        + (COALESCE (MovementItem.Staff_Summ_MK6, 0)/6)
-                                        + (COALESCE (MovementItem.Staff_Summ_real, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                        + (COALESCE (MovementItem.Staff_Summ_add, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
+
+
+                               -- ЗП для 1-єї шт.од до оподаткуання   WageFund / AmountReport
+                             , (CASE WHEN COALESCE (MovementItem.Amount, 0) < 0.5
+                                          -- Преміальний фонд (загальна сума)
+                                          THEN COALESCE (MovementItem.Staff_Summ_add, 0) * MovementItem.Amount + COALESCE (MovementItem.Staff_Summ_total_add, 0)
+
+                                     -- +++++++++++++++++++++
+                                     WHEN Object_StaffPaidKind.ValueData ILIKE '%Тариф%' AND Object_StaffPaidKind.ValueData ILIKE '%год%'
+                                          THEN ( -- Тарифікація
+                                                 COALESCE  (MovementItem.Staff_Price, 0)
+                                               * (CASE WHEN COALESCE (MovementItem.Amount, 0) <> 0
+                                                       -- ФРЧ
+                                                       THEN MovementItem.TotalStaffCount * zfConvert_StringToNumber (Object_StaffHoursLength.ValueData)
+                                                       ELSE 0
+                                                  END
+                                                 )
+
+                                               -- МК-місяць
+                                             + (COALESCE (MovementItem.Staff_Summ_MK, 0) + COALESCE (MovementItem.Staff_Summ_MK3, 0) / 3 + COALESCE (MovementItem.Staff_Summ_MK6, 0) / 6
+                                               ) * COALESCE (MovementItem.Amount, 0)
+
+                                               -- Відрядна оплата (загальна сума)
+                                             + (COALESCE (MovementItem.Staff_Summ_real, 0) * COALESCE (MovementItem.Amount, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0))
+                                               -- Преміальний фонд (загальна сума)
+                                             + (COALESCE (MovementItem.Staff_Summ_add, 0)  * COALESCE (MovementItem.Amount, 0) + COALESCE (MovementItem.Staff_Summ_total_add, 0))
+                                               )
+
+                                     -- +++++++++++++++++++
+                                     WHEN Object_StaffPaidKind.ValueData ILIKE '%Зміни%'
+                                          THEN -- Всього змін * Тарифікація
+                                               COALESCE (MovementItem.TotalStaffCount, 0) * COALESCE (MovementItem.Staff_Price, 0)
+                                               -- МК-місяць
+                                             + (COALESCE (MovementItem.Staff_Summ_MK, 0) + COALESCE (MovementItem.Staff_Summ_MK3, 0) / 3 + COALESCE (MovementItem.Staff_Summ_MK6, 0) / 6
+                                               ) * COALESCE (MovementItem.Amount, 0)
+
+                                               -- Відрядна оплата (загальна сума)
+                                             + (COALESCE (MovementItem.Staff_Summ_real, 0) * COALESCE (MovementItem.Amount, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0))
+                                               -- Преміальний фонд (загальна сума)
+                                             + (COALESCE (MovementItem.Staff_Summ_add, 0)  * COALESCE (MovementItem.Amount, 0) + COALESCE (MovementItem.Staff_Summ_total_add, 0))
+
+                                     -- +++++++++++++++++++
+                                     WHEN Object_StaffPaidKind.ValueData ILIKE 'відрядно'
+                                       OR Object_StaffPaidKind.ValueData ILIKE 'відрядно підробіток'
+                                          THEN -- МК-місяць
+                                               (COALESCE (MovementItem.Staff_Summ_MK, 0) + COALESCE (MovementItem.Staff_Summ_MK3, 0) / 3 + COALESCE (MovementItem.Staff_Summ_MK6, 0) / 6
+                                               ) * COALESCE (MovementItem.Amount, 0)
+
+                                               -- Відрядна оплата (загальна сума)
+                                             + (COALESCE (MovementItem.Staff_Summ_real, 0) * COALESCE (MovementItem.Amount, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0))
+                                               -- Преміальний фонд (загальна сума)
+                                             + (COALESCE (MovementItem.Staff_Summ_add, 0)  * COALESCE (MovementItem.Amount, 0) + COALESCE (MovementItem.Staff_Summ_total_add, 0))
+
+                                     -- +++++++++++++++++++
+                                     WHEN Object_StaffPaidKind.ValueData ILIKE '%доплата%'
+                                          THEN -- Всього змін * Тарифікація
+                                               COALESCE (MovementItem.TotalStaffCount, 0) * COALESCE (MovementItem.Staff_Price, 0)
+                                               -- МК-місяць
+                                             + (COALESCE (MovementItem.Staff_Summ_MK, 0) + COALESCE (MovementItem.Staff_Summ_MK3, 0) / 3 + COALESCE (MovementItem.Staff_Summ_MK6, 0) / 6
+                                               ) * COALESCE (MovementItem.Amount, 0)
+
+                                               -- Відрядна оплата (загальна сума)
+                                             + (COALESCE (MovementItem.Staff_Summ_real, 0) * COALESCE (MovementItem.Amount, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0))
+                                               -- Преміальний фонд (загальна сума)
+                                             + (COALESCE (MovementItem.Staff_Summ_add, 0)  * COALESCE (MovementItem.Amount, 0) + COALESCE (MovementItem.Staff_Summ_total_add, 0))
+
+
+                                     -- +++++++
+                                     WHEN Object_StaffPaidKind.ValueData ILIKE '%Фіксована%'
+
+                                          THEN -- тариф + (MK + MK3 + MK6) * ШР для справочника
+                                               COALESCE (MovementItem.Staff_Price, 0)
+                                               -- МК-місяць
+                                             + (COALESCE (MovementItem.Staff_Summ_MK, 0) + COALESCE (MovementItem.Staff_Summ_MK3, 0) / 3 + COALESCE (MovementItem.Staff_Summ_MK6, 0) / 6
+                                               ) * COALESCE (MovementItem.Amount, 0)
+                                               -- Відрядна оплата (загальна сума)
+                                             + (COALESCE (MovementItem.Staff_Summ_real, 0) * COALESCE (MovementItem.Amount, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0))
+                                               -- Преміальний фонд (загальна сума)
+                                             + (COALESCE (MovementItem.Staff_Summ_add, 0)  * COALESCE (MovementItem.Amount, 0) + COALESCE (MovementItem.Staff_Summ_total_add, 0))
+                                     -- +++++++
+                                     WHEN Object_StaffPaidKind.ValueData ILIKE '%Оклад%'
+                                       OR Object_StaffPaidKind.ValueData ILIKE '%Оклад/місяць + премія%'
+
+                                          THEN -- (тариф + MK + MK3 + MK6) * ШР для справочника
+                                               (COALESCE (MovementItem.Staff_Price, 0)
+                                                -- МК-місяць
+                                              + COALESCE (MovementItem.Staff_Summ_MK, 0) + COALESCE (MovementItem.Staff_Summ_MK3, 0) / 3 + COALESCE (MovementItem.Staff_Summ_MK6, 0) / 6
+                                               ) * COALESCE (MovementItem.Amount, 0)
+
+                                               -- Відрядна оплата (загальна сума)
+                                             + (COALESCE (MovementItem.Staff_Summ_real, 0) * COALESCE (MovementItem.Amount, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0))
+                                               -- Преміальний фонд (загальна сума)
+                                             + (COALESCE (MovementItem.Staff_Summ_add, 0)  * COALESCE (MovementItem.Amount, 0) + COALESCE (MovementItem.Staff_Summ_total_add, 0))
+
+
+                                     -- +++++++
+                                     WHEN 1=1
+                                          THEN -- Преміальний фонд (загальна сума)
+                                               COALESCE (MovementItem.Staff_Summ_add, 0) * MovementItem.Amount + COALESCE (MovementItem.Staff_Summ_total_add, 0)
+
                                      ELSE 0
-                                END ::TFloat AS Summ_1 
-                               -- Відрядно
-                              , CASE WHEN Object_StaffPaidKind.ValueData ILIKE 'відрядно'
-                                     THEN COALESCE (MovementItem.Staff_Price, 0) * (CASE WHEN COALESCE (MovementItem.Amount, 0) <> 0 THEN MovementItem.TotalStaffCount / MovementItem.Amount ELSE 0 END)
-                                        + COALESCE (MovementItem.Staff_Summ_MK, 0)
-                                        + (COALESCE (MovementItem.Staff_Summ_MK3, 0)/3)
-                                        + (COALESCE (MovementItem.Staff_Summ_MK6, 0)/6)
-                                        + (COALESCE (MovementItem.Staff_Summ_real, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                        + (COALESCE (MovementItem.Staff_Summ_add, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                     ELSE 0
-                                END ::TFloat AS Summ_2
-                               -- доплата за 1 день
-                              , CASE WHEN Object_StaffPaidKind.ValueData ILIKE '%доплата%'
-                                     THEN COALESCE (MovementItem.Staff_Price, 0) * (CASE WHEN COALESCE (MovementItem.Amount, 0) <> 0 THEN MovementItem.TotalStaffCount / MovementItem.Amount ELSE 0 END)
-                                        + COALESCE (MovementItem.Staff_Summ_MK, 0)
-                                        + (COALESCE (MovementItem.Staff_Summ_MK3, 0)/3)
-                                        + (COALESCE (MovementItem.Staff_Summ_MK6, 0)/6)
-                                        + (COALESCE (MovementItem.Staff_Summ_real, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                        + (COALESCE (MovementItem.Staff_Summ_add, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                     ELSE 0
-                                END ::TFloat AS Summ_3
-                               -- відрядно підробіток
-                              , CASE WHEN Object_StaffPaidKind.ValueData ILIKE 'відрядно підробіток'
-                                     THEN COALESCE (MovementItem.Staff_Price, 0) * (CASE WHEN COALESCE (MovementItem.Amount, 0) <> 0 THEN MovementItem.TotalStaffCount / MovementItem.Amount ELSE 0 END)
-                                        + COALESCE (MovementItem.Staff_Summ_MK, 0)
-                                        + (COALESCE (MovementItem.Staff_Summ_MK3, 0)/3)
-                                        + (COALESCE (MovementItem.Staff_Summ_MK6, 0)/6)
-                                        + (COALESCE (MovementItem.Staff_Summ_real, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                        + (COALESCE (MovementItem.Staff_Summ_add, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                     ELSE 0
-                                END ::TFloat AS Summ_4
-                               -- Оклад/місяць
-                              , CASE WHEN Object_StaffPaidKind.ValueData ILIKE 'Оклад/місяць'
-                                     THEN COALESCE (MovementItem.Staff_Price, 0)
-                                        + COALESCE (MovementItem.Staff_Summ_MK, 0)
-                                        + (COALESCE (MovementItem.Staff_Summ_MK3, 0)/3)
-                                        + (COALESCE (MovementItem.Staff_Summ_MK6, 0)/6)
-                                        + (COALESCE (MovementItem.Staff_Summ_real, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                        + (COALESCE (MovementItem.Staff_Summ_add, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                     ELSE 0
-                                END ::TFloat AS Summ_5
-                               -- Фіксована сума
-                              , CASE WHEN Object_StaffPaidKind.ValueData ILIKE 'Фіксована сума'
-                                     THEN COALESCE (MovementItem.Staff_Price, 0)
-                                        + COALESCE (MovementItem.Staff_Summ_MK, 0)
-                                        + (COALESCE (MovementItem.Staff_Summ_MK3, 0)/3)
-                                        + (COALESCE (MovementItem.Staff_Summ_MK6, 0)/6)
-                                        + (COALESCE (MovementItem.Staff_Summ_real, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                        + (COALESCE (MovementItem.Staff_Summ_add, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                     ELSE 0
-                                END ::TFloat AS Summ_6
-                               -- Преміальний Фонд
-                              , CASE WHEN Object_StaffPaidKind.ValueData ILIKE 'Преміальний Фонд'
-                                     THEN COALESCE (MovementItem.Staff_Summ_add, 0) 
-                                     
-                                     ELSE 0
-                                END ::TFloat AS Summ_7
-                               -- Тариф/час
-                              , CASE WHEN Object_StaffPaidKind.ValueData ILIKE 'Тариф/час'
-                                     THEN COALESCE (MovementItem.Staff_Price, 0) * (CASE WHEN COALESCE (MovementItem.Amount, 0) <> 0 THEN MovementItem.TotalStaffCount / MovementItem.Amount ELSE 0 END)
-                                        + COALESCE (MovementItem.Staff_Summ_MK, 0)
-                                        + (COALESCE (MovementItem.Staff_Summ_MK3, 0)/3)
-                                        + (COALESCE (MovementItem.Staff_Summ_MK6, 0)/6)
-                                        + (COALESCE (MovementItem.Staff_Summ_real, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                        + (COALESCE (MovementItem.Staff_Summ_add, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                     ELSE 0
-                                END ::TFloat AS Summ_8
-                               -- Оклад/місяць + премія % від ТО
-                              , CASE WHEN Object_StaffPaidKind.ValueData ILIKE 'Оклад/місяць + премія % від ТО'
-                                     THEN COALESCE (MovementItem.Staff_Price, 0) * (CASE WHEN COALESCE (MovementItem.Amount, 0) <> 0 THEN MovementItem.TotalStaffCount / MovementItem.Amount ELSE 0 END)
-                                        + COALESCE (MovementItem.Staff_Summ_MK, 0)
-                                        + (COALESCE (MovementItem.Staff_Summ_MK3, 0)/3)
-                                        + (COALESCE (MovementItem.Staff_Summ_MK6, 0)/6)
-                                        + (COALESCE (MovementItem.Staff_Summ_real, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                        + (COALESCE (MovementItem.Staff_Summ_add, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                     ELSE 0
-                                END ::TFloat AS Summ_9
-                               -- Перевірка 1
-                               -- Перевірка 2
-                  
-                              -- ФОП (формули різні)
-                               -- Зміни/час
-                              , CASE WHEN Object_StaffPaidKind.ValueData ILIKE '%Зміни%'
-                                     THEN COALESCE (MovementItem.Staff_Price, 0) * MovementItem.TotalStaffCount
-                                        + (COALESCE (MovementItem.Staff_Summ_MK, 0)
-                                         + COALESCE (MovementItem.Staff_Summ_MK3, 0)/3 
-                                         + COALESCE (MovementItem.Staff_Summ_MK6, 0)/6 ) * MovementItem.Amount  
-                                        + (COALESCE (MovementItem.Staff_Summ_real, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                        + (COALESCE (MovementItem.Staff_Summ_add, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                     ELSE 0
-                                END ::TFloat AS Summ_10 
-                               -- Відрядно
-                              , CASE WHEN Object_StaffPaidKind.ValueData ILIKE 'відрядно'
-                                     THEN (COALESCE (MovementItem.Staff_Price, 0)
-                                         + COALESCE (MovementItem.Staff_Summ_MK, 0)
-                                         + COALESCE (MovementItem.Staff_Summ_MK3, 0)/3 
-                                         + COALESCE (MovementItem.Staff_Summ_MK6, 0)/6 ) * MovementItem.Amount  
-                                        + (COALESCE (MovementItem.Staff_Summ_real, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                        + (COALESCE (MovementItem.Staff_Summ_add, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                     ELSE 0
-                                END ::TFloat AS Summ_11
-                               -- доплата за 1 день
-                              , CASE WHEN Object_StaffPaidKind.ValueData ILIKE '%доплата%'
-                                     THEN COALESCE (MovementItem.Staff_Price, 0) * MovementItem.TotalStaffCount
-                                        + (COALESCE (MovementItem.Staff_Summ_MK, 0)
-                                         + COALESCE (MovementItem.Staff_Summ_MK3, 0)/3 
-                                         + COALESCE (MovementItem.Staff_Summ_MK6, 0)/6 ) * MovementItem.Amount  
-                                        + (COALESCE (MovementItem.Staff_Summ_real, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                        + (COALESCE (MovementItem.Staff_Summ_add, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                     ELSE 0
-                                END ::TFloat AS Summ_12
-                               -- відрядно підробіток
-                              , CASE WHEN Object_StaffPaidKind.ValueData ILIKE 'відрядно підробіток'
-                                     THEN (COALESCE (MovementItem.Staff_Price, 0)
-                                         + COALESCE (MovementItem.Staff_Summ_MK, 0)
-                                         + COALESCE (MovementItem.Staff_Summ_MK3, 0)/3 
-                                         + COALESCE (MovementItem.Staff_Summ_MK6, 0)/6 ) * MovementItem.Amount  
-                                        + (COALESCE (MovementItem.Staff_Summ_real, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                        + (COALESCE (MovementItem.Staff_Summ_add, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                     ELSE 0
-                                END ::TFloat AS Summ_13
-                               -- Оклад/місяць
-                              , CASE WHEN Object_StaffPaidKind.ValueData ILIKE 'Оклад/місяць'
-                                     THEN (COALESCE (MovementItem.Staff_Price, 0)
-                                         + COALESCE (MovementItem.Staff_Summ_MK, 0)
-                                         + COALESCE (MovementItem.Staff_Summ_MK3, 0)/3 
-                                         + COALESCE (MovementItem.Staff_Summ_MK6, 0)/6 ) * MovementItem.Amount  
-                                        + (COALESCE (MovementItem.Staff_Summ_real, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                        + (COALESCE (MovementItem.Staff_Summ_add, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                     ELSE 0
-                                END ::TFloat AS Summ_14
-                               -- Фіксована сума
-                              , CASE WHEN Object_StaffPaidKind.ValueData ILIKE 'Фіксована сума'
-                                     THEN (COALESCE (MovementItem.Staff_Price, 0)
-                                         + COALESCE (MovementItem.Staff_Summ_MK, 0)
-                                         + COALESCE (MovementItem.Staff_Summ_MK3, 0)/3 
-                                         + COALESCE (MovementItem.Staff_Summ_MK6, 0)/6 ) * MovementItem.Amount  
-                                        + (COALESCE (MovementItem.Staff_Summ_real, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                        + (COALESCE (MovementItem.Staff_Summ_add, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                     ELSE 0
-                                END ::TFloat AS Summ_15
-                               -- Преміальний Фонд
-                              , CASE WHEN Object_StaffPaidKind.ValueData ILIKE 'Преміальний Фонд'
-                                     THEN COALESCE (MovementItem.Staff_Summ_total_add, 0)
-                                     ELSE 0
-                                END ::TFloat AS Summ_16
-                               -- Тариф/час
-                              , CASE WHEN Object_StaffPaidKind.ValueData ILIKE 'Тариф/час'
-                                     THEN COALESCE (MovementItem.Staff_Price, 0) * (MovementItem.TotalStaffCount * zfConvert_StringToNumber (Object_StaffHoursLength.ValueData)) 
-                                        + (COALESCE (MovementItem.Staff_Summ_MK, 0)
-                                         + COALESCE (MovementItem.Staff_Summ_MK3, 0)/3 
-                                         + COALESCE (MovementItem.Staff_Summ_MK6, 0)/6 ) * MovementItem.Amount  
-                                        + (COALESCE (MovementItem.Staff_Summ_real, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                        + (COALESCE (MovementItem.Staff_Summ_add, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                     ELSE 0
-                                END ::TFloat AS Summ_17
-                               -- Оклад/місяць + премія % від ТО
-                              , CASE WHEN Object_StaffPaidKind.ValueData ILIKE 'Оклад/місяць + премія % від ТО'
-                                     THEN (COALESCE (MovementItem.Staff_Price, 0)
-                                         + COALESCE (MovementItem.Staff_Summ_MK, 0)
-                                         + COALESCE (MovementItem.Staff_Summ_MK3, 0)/3 
-                                         + COALESCE (MovementItem.Staff_Summ_MK6, 0)/6 ) * MovementItem.Amount  
-                                        + (COALESCE (MovementItem.Staff_Summ_real, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                        + (COALESCE (MovementItem.Staff_Summ_add, 0) + COALESCE (MovementItem.Staff_Summ_total_real, 0)/ MovementItem.Amount)
-                                     ELSE 0
-                                END ::TFloat AS Summ_18
-                             */
+                                END
+
+                              / CASE WHEN COALESCE (MovementItem.Amount, 0) < 0.5
+                                         THEN 1
+                                     ELSE MovementItem.Amount
+                                END
+                               )
+                                :: TFloat AS WageFund_byOne
+
                          FROM tmpData AS MovementItem
-                  
+
                               LEFT JOIN tmpMILinkObject AS MILinkObject_StaffPaidKind
                                                         ON MILinkObject_StaffPaidKind.MovementItemId = MovementItem.Id
                                                        AND MILinkObject_StaffPaidKind.DescId = zc_MILinkObject_StaffPaidKind()
                               LEFT JOIN Object AS Object_StaffPaidKind ON Object_StaffPaidKind.Id = MILinkObject_StaffPaidKind.ObjectId
-                  
+
                               LEFT JOIN tmpMILinkObject AS MILinkObject_StaffHoursDay
                                                         ON MILinkObject_StaffHoursDay.MovementItemId = MovementItem.Id
                                                        AND MILinkObject_StaffHoursDay.DescId = zc_MILinkObject_StaffHoursDay()
                               LEFT JOIN Object AS Object_StaffHoursDay ON Object_StaffHoursDay.Id = MILinkObject_StaffHoursDay.ObjectId
-                  
+
                               LEFT JOIN tmpMILinkObject AS MILinkObject_StaffHours
                                                         ON MILinkObject_StaffHours.MovementItemId = MovementItem.Id
                                                        AND MILinkObject_StaffHours.DescId = zc_MILinkObject_StaffHours()
                               LEFT JOIN Object AS Object_StaffHours ON Object_StaffHours.Id = MILinkObject_StaffHours.ObjectId
-                  
+
                               LEFT JOIN tmpMILinkObject AS MILinkObject_StaffHoursLength
                                                         ON MILinkObject_StaffHoursLength.MovementItemId = MovementItem.Id
                                                        AND MILinkObject_StaffHoursLength.DescId = zc_MILinkObject_StaffHoursLength()
                               LEFT JOIN Object AS Object_StaffHoursLength ON Object_StaffHoursLength.Id = MILinkObject_StaffHoursLength.ObjectId
-                              )
+                        )
 
 
        -- Результат
@@ -672,10 +621,16 @@ BEGIN
             , 0    ::TFloat      AS Staff_Summ_MK
             , 0    ::TFloat      AS Staff_Summ_MK3
             , 0    ::TFloat      AS Staff_Summ_MK6
+
             , 0    ::TFloat      AS Staff_Summ_real
             , 0    ::TFloat      AS Staff_Summ_add
             , 0    ::TFloat      AS Staff_Summ_total_real
             , 0    ::TFloat      AS Staff_Summ_total_add
+
+            , 0    ::TFloat      AS Staff_Summ_real_calc
+            , 0    ::TFloat      AS Staff_Summ_add_calc
+            , 0    ::TFloat      AS Staff_Summ_total_real_calc
+            , 0    ::TFloat      AS Staff_Summ_total_add_calc
 
             , ''   ::TVarChar    AS Comment
             , FALSE ::Boolean    AS isErased
@@ -686,58 +641,7 @@ BEGIN
             , 0    ::TFloat      AS NormHours
             , 0    ::TFloat      AS WageFund
             , 0    ::TFloat      AS WageFund_byOne
-            /*
-             --расчет ЗП для 1-єї шт.од (формули різні)
-             -- Зміни/час
-            , 0 ::TFloat AS Summ_1
-             -- Відрядно
-            , 0 ::TFloat AS Summ_2
-             -- доплата за 1 день
-            , 0 ::TFloat AS Summ_3
-             -- відрядно підробіток
-            , 0 ::TFloat AS Summ_4
-             -- Оклад/місяць
-            , 0 ::TFloat AS Summ_5
-             -- Фіксована сума
-            , 0 ::TFloat AS Summ_6
-             -- Преміальний Фонд
-            , 0 ::TFloat AS Summ_7
-             -- Тариф/час
-            , 0 ::TFloat AS Summ_8
-             -- Оклад/місяць + премія % від ТО
-            , 0 ::TFloat AS Summ_9
-            --ЗП
-            , 0 ::TFloat AS SummZP_byOne
-             -- Перевірка 1
-            , 0 ::TFloat AS SummControl_1
-             -- Перевірка 2
-            , 0 ::TFloat AS SummControl_2
-            -- ФОП (формули різні)
-             -- Зміни/час
-            , 0 ::TFloat AS Summ_10 
-             -- Відрядно
-            , 0 ::TFloat AS Summ_11
-             -- доплата за 1 день
-            , 0 ::TFloat AS Summ_12
-             -- відрядно підробіток
-            , 0 ::TFloat AS Summ_13
-             -- Оклад/місяць
-            , 0 ::TFloat AS Summ_14
-             -- Фіксована сума
-            , 0 ::TFloat AS Summ_15
-             -- Преміальний Фонд
-            , 0 ::TFloat AS Summ_16
-             -- Тариф/час
-            , 0 ::TFloat AS Summ_17
-             -- Оклад/місяць + премія % від ТО
-            , 0 ::TFloat AS Summ_18
-             --ЗП
-            , 0 ::TFloat AS SummZP
-            -- Перевірка 1
-            , 0 ::TFloat AS SummControl_3
-            -- Перевірка 2 
-            , 0 ::TFloat AS SummControl_4 
-            */
+
       FROM tmpStaffList_object AS tmp
             LEFT JOIN tmpData ON tmpData.ObjectId = tmp.PositionId
                              AND COALESCE (tmpData.PositionLevelId,0) = COALESCE (tmp.PositionLevelId,0)
@@ -786,16 +690,24 @@ BEGIN
             , MovementItem.Staff_Summ_MK3    ::TFloat AS Staff_Summ_MK3
               -- МК-піврічча
             , MovementItem.Staff_Summ_MK6    ::TFloat AS Staff_Summ_MK6
-              -- Відрядна оплата(для 1-єї шт.од)
-            , MovementItem.Staff_Summ_real   ::TFloat AS Staff_Summ_real
-              -- Преміальний фонд(для 1-єї шт.од)
-            , MovementItem.Staff_Summ_add    ::TFloat AS Staff_Summ_add
 
-              -- Відрядна оплата(загальна сума)
+              -- 1.1. Відрядна оплата(для 1-єї шт.од)
+            , MovementItem.Staff_Summ_real   ::TFloat AS Staff_Summ_real
+              -- 2.1. Преміальний фонд(для 1-єї шт.од)
+            , MovementItem.Staff_Summ_add    ::TFloat AS Staff_Summ_add
+              -- 1.2. Відрядна оплата(загальна сума)
             , MovementItem.Staff_Summ_total_real   ::TFloat AS Staff_Summ_total_real
-              --Преміальний фонд(загальна сума)
+              -- 2.2. Преміальний фонд(загальна сума)
             , MovementItem.Staff_Summ_total_add    ::TFloat AS Staff_Summ_total_add
 
+              -- 3.1. ***
+            , MovementItem.Staff_Summ_real_calc       ::TFloat AS Staff_Summ_real_calc
+              -- 4.1. ***
+            , MovementItem.Staff_Summ_add_calc        ::TFloat AS Staff_Summ_add_calc
+              -- 3.2. ***
+            , MovementItem.Staff_Summ_total_real_calc ::TFloat AS Staff_Summ_total_real_calc
+              -- 4.2. ***
+            , MovementItem.Staff_Summ_total_add_calc  ::TFloat AS Staff_Summ_total_add_calc
 
             , MIString_Comment.ValueData   ::TVarChar AS Comment
             , MovementItem.isErased
@@ -817,114 +729,6 @@ BEGIN
 
               -- ЗП для 1-єї шт.од до оподаткуання   WageFund / AmountReport
             , MovementItem.WageFund_byOne   ::TFloat
-
-/*
-             --расчет ЗП для 1-єї шт.од (формули різні)
-             -- Зміни/час
-            , MovementItem.Summ_1  ::TFloat
-             -- Відрядно
-            , MovementItem.Summ_2
-             -- доплата за 1 день
-            , MovementItem.Summ_3
-             -- відрядно підробіток
-            , MovementItem.Summ_4
-             -- Оклад/місяць
-            , MovementItem.Summ_5
-             -- Фіксована сума
-            , MovementItem.Summ_6
-             -- Преміальний Фонд
-            , MovementItem.Summ_7
-             -- Тариф/час
-            , MovementItem.Summ_8
-             -- Оклад/місяць + премія % від ТО
-            , MovementItem.Summ_9
-            --ЗП
-            , (COALESCE (MovementItem.Summ_1,0)
-             + COALESCE (MovementItem.Summ_2,0)
-             + COALESCE (MovementItem.Summ_3,0)
-             + COALESCE (MovementItem.Summ_4,0)
-             + COALESCE (MovementItem.Summ_5,0)
-             + COALESCE (MovementItem.Summ_6,0)
-             + COALESCE (MovementItem.Summ_7,0)
-             + COALESCE (MovementItem.Summ_8,0)
-             + COALESCE (MovementItem.Summ_9,0)) ::TFloat AS SummZP_byOne
-             -- Перевірка 1
-            , ((COALESCE (MovementItem.Summ_1,0)
-              + COALESCE (MovementItem.Summ_2,0)
-              + COALESCE (MovementItem.Summ_3,0)
-              + COALESCE (MovementItem.Summ_4,0)
-              + COALESCE (MovementItem.Summ_5,0)
-              + COALESCE (MovementItem.Summ_6,0)
-              + COALESCE (MovementItem.Summ_7,0)
-              + COALESCE (MovementItem.Summ_8,0)
-              + COALESCE (MovementItem.Summ_9,0))
-            - COALESCE (MovementItem.WageFund_byOne,0) ) ::TFloat AS SummControl_1
-             -- Перевірка 2
-            , (((COALESCE (MovementItem.Summ_1,0)
-             + COALESCE (MovementItem.Summ_2,0)
-             + COALESCE (MovementItem.Summ_3,0)
-             + COALESCE (MovementItem.Summ_4,0)
-             + COALESCE (MovementItem.Summ_5,0)
-             + COALESCE (MovementItem.Summ_6,0)
-             + COALESCE (MovementItem.Summ_7,0)
-             + COALESCE (MovementItem.Summ_8,0)
-             + COALESCE (MovementItem.Summ_9,0)) * MovementItem.Amount)
-            - COALESCE (MovementItem.WageFund,0)) ::TFloat AS SummControl_2
-            -- ФОП (формули різні)
-             -- Зміни/час
-            , MovementItem.Summ_10 
-             -- Відрядно
-            , MovementItem.Summ_11
-             -- доплата за 1 день
-            , MovementItem.Summ_12
-             -- відрядно підробіток
-            , MovementItem.Summ_13
-             -- Оклад/місяць
-            , MovementItem.Summ_14
-             -- Фіксована сума
-            , MovementItem.Summ_15
-             -- Преміальний Фонд
-            , MovementItem.Summ_16
-             -- Тариф/час
-            , MovementItem.Summ_17
-             -- Оклад/місяць + премія % від ТО
-            , MovementItem.Summ_18
-             --ЗП
-            , (COALESCE (MovementItem.Summ_10,0)
-             + COALESCE (MovementItem.Summ_11,0)
-             + COALESCE (MovementItem.Summ_12,0)
-             + COALESCE (MovementItem.Summ_13,0)
-             + COALESCE (MovementItem.Summ_14,0)
-             + COALESCE (MovementItem.Summ_15,0)
-             + COALESCE (MovementItem.Summ_16,0)
-             + COALESCE (MovementItem.Summ_17,0)
-             + COALESCE (MovementItem.Summ_18,0)) ::TFloat AS SummZP
-            -- Перевірка 1
-            , ((COALESCE (MovementItem.Summ_10,0)
-             + COALESCE (MovementItem.Summ_11,0)
-             + COALESCE (MovementItem.Summ_12,0)
-             + COALESCE (MovementItem.Summ_13,0)
-             + COALESCE (MovementItem.Summ_14,0)
-             + COALESCE (MovementItem.Summ_15,0)
-             + COALESCE (MovementItem.Summ_16,0)
-             + COALESCE (MovementItem.Summ_17,0)
-             + COALESCE (MovementItem.Summ_18,0)) 
-             - COALESCE (MovementItem.WageFund,0)) ::TFloat AS SummControl_3
-            -- Перевірка 2 
-            , CASE WHEN COALESCE (MovementItem.Amount,0) <> 0
-                  THEN (COALESCE (MovementItem.Summ_10,0)
-                        + COALESCE (MovementItem.Summ_11,0)
-                        + COALESCE (MovementItem.Summ_12,0)
-                        + COALESCE (MovementItem.Summ_13,0)
-                        + COALESCE (MovementItem.Summ_14,0)
-                        + COALESCE (MovementItem.Summ_15,0)
-                        + COALESCE (MovementItem.Summ_16,0)
-                        + COALESCE (MovementItem.Summ_17,0)
-                        + COALESCE (MovementItem.Summ_18,0)) / MovementItem.Amount
-             - COALESCE (MovementItem.WageFund_byOne,0)
-                    ELSE  0
-              END ::TFloat AS SummControl_4
-         */
 
        FROM tmpDataCalc AS MovementItem
             LEFT JOIN Object AS Object_Position ON Object_Position.Id = MovementItem.PositionId

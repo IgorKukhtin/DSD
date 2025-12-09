@@ -3542,13 +3542,12 @@ object MainForm: TMainForm
       Category = 'Export'
       MoveParams = <>
       Caption = 'actSendSMSKyivstar'
-      AlphaName.Value = 'messagedesk'
+      AlphaName.Value = 'FT'
       AlphaName.DataType = ftString
       AlphaName.MultiSelectSeparator = ','
       Host.Value = 'https://api-gateway.kyivstar.ua'
       Host.DataType = ftString
       Host.MultiSelectSeparator = ','
-      Environment.Value = 'sandbox'
       Environment.DataType = ftString
       Environment.MultiSelectSeparator = ','
       ClientId.Value = '6dbb1a32-ee90-43b8-9cae-adf28d8351a6'
@@ -3570,7 +3569,7 @@ object MainForm: TMainForm
       Message.ComponentItem = 'SMS_Message'
       Message.DataType = ftString
       Message.MultiSelectSeparator = ','
-      Version.Value = 'v1beta'
+      Version.Value = 'v1'
       Version.DataType = ftString
       Version.MultiSelectSeparator = ','
     end
@@ -4021,6 +4020,7 @@ object MainForm: TMainForm
   object spUpdateSMSKyivstar_true: TdsdStoredProc
     StoredProcName = 'gpUpdate_MovementItem_Cash_Personal_SMS'
     DataSets = <>
+    OutputType = otResult
     Params = <
       item
         Name = 'inMovementId'
