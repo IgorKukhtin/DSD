@@ -1,9 +1,9 @@
 ﻿inherited PartnerEditForm: TPartnerEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
-  ClientHeight = 505
+  ClientHeight = 517
   ClientWidth = 1087
   ExplicitWidth = 1093
-  ExplicitHeight = 534
+  ExplicitHeight = 546
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -100,14 +100,14 @@
     Width = 195
   end
   object cxLabel7: TcxLabel [14]
-    Left = 203
-    Top = 472
+    Left = 961
+    Top = 424
     Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
     Visible = False
   end
   object ceRouteSorting: TcxButtonEdit [15]
-    Left = 253
-    Top = 476
+    Left = 1016
+    Top = 424
     Properties.Buttons = <
       item
         Default = True
@@ -163,8 +163,8 @@
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
   end
   object cxLabel10: TcxLabel [21]
-    Left = 8
-    Top = 480
+    Left = 950
+    Top = 397
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1040#1082#1094#1080#1086#1085#1085#1099#1081')'
     Visible = False
   end
@@ -181,8 +181,8 @@
     Width = 204
   end
   object cePriceListPromo: TcxButtonEdit [23]
-    Left = 103
-    Top = 476
+    Left = 995
+    Top = 397
     Properties.Buttons = <
       item
         Default = True
@@ -466,7 +466,7 @@
   end
   object cbEdiOrdspr: TcxCheckBox [60]
     Left = 15
-    Top = 29
+    Top = 30
     Caption = 'EDI - '#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
     TabOrder = 60
     Width = 134
@@ -514,7 +514,7 @@
     Width = 100
   end
   object cxLabel31: TcxLabel [68]
-    Left = 255
+    Left = 253
     Top = 54
     Caption = 'GLN - '#1087#1086#1089#1090#1072#1074#1097#1080#1082
   end
@@ -907,6 +907,38 @@
     TabOrder = 122
     Width = 195
   end
+  object cbEdiOrdspr_vch: TcxCheckBox [123]
+    Left = 15
+    Top = 472
+    Caption = #1042#1063#1040#1057#1053#1054' - '#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
+    TabOrder = 123
+    Width = 160
+  end
+  object cbEdiInvoice_vch: TcxCheckBox [124]
+    Left = 184
+    Top = 472
+    Caption = #1042#1063#1040#1057#1053#1054' - '#1057#1095#1077#1090
+    TabOrder = 124
+    Width = 102
+  end
+  object cbEdiDesadv_vch: TcxCheckBox [125]
+    Left = 15
+    Top = 493
+    Caption = #1042#1063#1040#1057#1053#1054' - '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
+    TabOrder = 125
+    Width = 154
+  end
+  object cxLabel53: TcxLabel [126]
+    Left = 15
+    Top = 448
+    Caption = #1042#1063#1040#1057#1053#1054' - '#1050#1086#1076' GLN - '#1055#1086#1089#1090#1072#1074#1097#1080#1082
+  end
+  object edGLNCodeCorporate_vch: TcxTextEdit [127]
+    Left = 182
+    Top = 447
+    TabOrder = 127
+    Width = 171
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 355
     Top = 326
@@ -1167,6 +1199,38 @@
         Value = Null
         Component = cbEdiDesadv
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEdiOrdspr_vch'
+        Value = Null
+        Component = cbEdiOrdspr_vch
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEdiInvoice_vch'
+        Value = Null
+        Component = cbEdiInvoice_vch
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEdiDesadv_vch'
+        Value = Null
+        Component = cbEdiDesadv_vch
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGLNCodeCorporate_vch'
+        Value = Null
+        Component = edGLNCodeCorporate_vch
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1458,8 +1522,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 592
-    Top = 447
+    Left = 600
+    Top = 455
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Partner'
@@ -2137,8 +2201,36 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GLNCodeCorporate_vch'
+        Value = Null
+        Component = edGLNCodeCorporate_vch
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EdiDesadv_vch'
+        Value = Null
+        Component = cbEdiDesadv_vch
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EdiInvoice_vch'
+        Value = Null
+        Component = cbEdiInvoice_vch
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EdiOrdspr_vch'
+        Value = Null
+        Component = cbEdiOrdspr_vch
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
-    Left = 536
+    Left = 520
     Top = 452
   end
   object dsdJuridicalGuides: TdsdGuides

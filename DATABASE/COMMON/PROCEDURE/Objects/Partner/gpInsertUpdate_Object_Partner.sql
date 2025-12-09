@@ -58,14 +58,20 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
                                                      , Integer, Integer
                                                      , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);*/
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                      , Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                      , Boolean, Boolean, Boolean
                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                      , Integer, Integer
                                                      , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);*/
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                     , Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
@@ -98,6 +104,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     IN inEdiOrdspr           Boolean   ,    -- EDI - Подтверждение
     IN inEdiInvoice          Boolean   ,    -- EDI - Счет
     IN inEdiDesadv           Boolean   ,    -- EDI - уведомление
+
+    IN inEdiOrdspr_vch       Boolean   ,    -- Платформа ВЧАСНО - Подтверждение
+    IN inEdiInvoice_vch      Boolean   ,    -- Платформа ВЧАСНО - Счет, Платформа ВЧАСНО
+    IN inEdiDesadv_vch       Boolean   ,    -- Платформа ВЧАСНО - уведомление, Платформа ВЧАСНО 
+    IN inGLNCodeCorporate_vch TVarChar ,    -- Платформа ВЧАСНО - Код GLN - Поставщик 
 
     IN inJuridicalId         Integer   ,    -- Юридическое лицо
     IN inRouteId             Integer   ,    -- Маршрут
@@ -231,6 +242,10 @@ BEGIN
                                         , inEdiOrdspr       := inEdiOrdspr
                                         , inEdiInvoice      := inEdiInvoice
                                         , inEdiDesadv       := inEdiDesadv
+                                        , inEdiOrdspr_vch   := inEdiOrdspr_vch
+                                        , inEdiInvoice_vch  := inEdiInvoice_vch
+                                        , inEdiDesadv_vch   := inEdiDesadv_vch
+                                        , inGLNCodeCorporate_vch := inGLNCodeCorporate_vch
                                         , inJuridicalId     := inJuridicalId
                                         , inRouteId         := inRouteId
                                         , inRouteId_30201   := inRouteId_30201
@@ -287,6 +302,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.12.25         *
  07.11.24         *
  04.07.24         *
  24.10.23         *

@@ -534,6 +534,38 @@ inherited OrderFinanceForm: TOrderFinanceForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'MemberName_insert_2'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberName_insert_2'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberName_insert_3'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberName_insert_3'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberName_insert_4'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberName_insert_4'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberName_insert_5'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberName_insert_5'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'MemberId_1'
           Value = Null
           Component = MasterCDS

@@ -44,13 +44,18 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
                                                        Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
                                                        Integer, Integer,
                                                        TDateTime, TDateTime, Integer); */
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
+/*DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
                                                        TFloat, TFloat, TFloat,TFloat, TFloat, TFloat, TFloat,
                                                        Boolean, Boolean, Boolean,
                                                        Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
                                                        Integer, Integer,
+                                                       TDateTime, TDateTime, Integer);*/
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
+                                                       TFloat, TFloat, TFloat,TFloat, TFloat, TFloat, TFloat,
+                                                       Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar
+                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                                                       Integer, Integer,
                                                        TDateTime, TDateTime, Integer);
-
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
@@ -77,6 +82,11 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
     IN inEdiOrdspr           Boolean   ,    -- EDI - Подтверждение
     IN inEdiInvoice          Boolean   ,    -- EDI - Счет
     IN inEdiDesadv           Boolean   ,    -- EDI - уведомление
+
+    IN inEdiOrdspr_vch       Boolean   ,    -- Платформа ВЧАСНО - Подтверждение
+    IN inEdiInvoice_vch      Boolean   ,    -- Платформа ВЧАСНО - Счет, Платформа ВЧАСНО
+    IN inEdiDesadv_vch       Boolean   ,    -- Платформа ВЧАСНО - уведомление, Платформа ВЧАСНО 
+    IN inGLNCodeCorporate_vch TVarChar ,    -- Платформа ВЧАСНО - Код GLN - Поставщик
 
     IN inJuridicalId         Integer   ,    -- Юридическое лицо
     IN inRouteId             Integer   ,    -- Маршрут
@@ -224,6 +234,14 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Partner_EdiDesadv(), ioId, inEdiDesadv);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Partner_EdiOrdspr_vch(), ioId, inEdiOrdspr_vch);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Partner_EdiInvoice_vch(), ioId, inEdiInvoice_vch);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Partner_EdiDesadv_vch(), ioId, inEdiDesadv_vch);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_GLNCodeCorporate_vch(), ioId, inGLNCodeCorporate_vch);
 
 END;
 $BODY$

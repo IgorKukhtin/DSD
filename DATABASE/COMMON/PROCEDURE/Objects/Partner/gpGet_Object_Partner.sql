@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar,
                TaxSale_Personal TFloat, TaxSale_PersonalTrade TFloat, TaxSale_MemberSaler1 TFloat, TaxSale_MemberSaler2 TFloat,
 
                EdiOrdspr Boolean, EdiInvoice Boolean, EdiDesadv Boolean,
+               GLNCodeCorporate_vch TVarChar, EdiOrdspr_vch Boolean, EdiInvoice_vch Boolean, EdiDesadv_vch Boolean,
 
                JuridicalId Integer, JuridicalName TVarChar, 
                RouteId Integer, RouteName TVarChar,
@@ -102,6 +103,11 @@ BEGIN
            , CAST (False AS Boolean) AS EdiOrdspr
            , CAST (False AS Boolean) AS EdiInvoice
            , CAST (False AS Boolean) AS EdiDesadv
+
+           , CAST ('' as TVarChar)   AS GLNCodeCorporate_vch
+           , CAST (False AS Boolean) AS EdiOrdspr_vch
+           , CAST (False AS Boolean) AS EdiInvoice_vch
+           , CAST (False AS Boolean) AS EdiDesadv_vch
            
            , inJuridicalId    AS JuridicalId
            , lfGet_Object_ValueData (inJuridicalId)  AS JuridicalName
@@ -229,7 +235,12 @@ BEGIN
            , COALESCE (ObjectBoolean_EdiOrdspr.ValueData, CAST (False AS Boolean))     AS EdiOrdspr
            , COALESCE (ObjectBoolean_EdiInvoice.ValueData, CAST (False AS Boolean))    AS EdiInvoice
            , COALESCE (ObjectBoolean_EdiDesadv.ValueData, CAST (False AS Boolean))     AS EdiDesadv
-           
+
+           , COALESCE (ObjectString_GLNCodeCorporate_vch.ValueData, '')::TVarChar      AS GLNCodeCorporate_vch
+           , COALESCE (ObjectBoolean_EdiOrdspr_vch.ValueData, False)   ::Boolean       AS EdiOrdspr_vch
+           , COALESCE (ObjectBoolean_EdiInvoice_vch.ValueData, False)  ::Boolean       AS EdiInvoice_vch
+           , COALESCE (ObjectBoolean_EdiDesadv_vch.ValueData, False)   ::Boolean       AS EdiDesadv_vch
+
            , Object_Juridical.Id         AS JuridicalId
            , Object_Juridical.ValueData  AS JuridicalName
            
@@ -373,6 +384,10 @@ BEGIN
                                   ON ObjectString_Terminal.ObjectId = Object_Partner.Id
                                  AND ObjectString_Terminal.DescId = zc_ObjectString_Partner_Terminal()
 
+           LEFT JOIN ObjectString AS ObjectString_GLNCodeCorporate_vch
+                                  ON ObjectString_GLNCodeCorporate_vch.ObjectId = Object_Partner.Id
+                                 AND ObjectString_GLNCodeCorporate_vch.DescId = zc_ObjectString_Partner_GLNCodeCorporate_vch()
+
            LEFT JOIN ObjectFloat AS Partner_PrepareDayCount 
                                  ON Partner_PrepareDayCount.ObjectId = Object_Partner.Id
                                 AND Partner_PrepareDayCount.DescId = zc_ObjectFloat_Partner_PrepareDayCount()                                 
@@ -417,6 +432,16 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_EdiDesadv
                                    ON ObjectBoolean_EdiDesadv.ObjectId = Object_Partner.Id 
                                   AND ObjectBoolean_EdiDesadv.DescId = zc_ObjectBoolean_Partner_EdiDesadv()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_EdiOrdspr_vch
+                                   ON ObjectBoolean_EdiOrdspr_vch.ObjectId = Object_Partner.Id
+                                  AND ObjectBoolean_EdiOrdspr_vch.DescId = zc_ObjectBoolean_Partner_EdiOrdspr_vch()
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_EdiInvoice_vch
+                                   ON ObjectBoolean_EdiInvoice_vch.ObjectId = Object_Partner.Id
+                                  AND ObjectBoolean_EdiInvoice_vch.DescId = zc_ObjectBoolean_Partner_EdiInvoice_vch()
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_EdiDesadv_vch
+                                   ON ObjectBoolean_EdiDesadv_vch.ObjectId = Object_Partner.Id
+                                  AND ObjectBoolean_EdiDesadv_vch.DescId = zc_ObjectBoolean_Partner_EdiDesadv_vch()
 
            LEFT JOIN ObjectDate AS ObjectDate_StartPromo
                                 ON ObjectDate_StartPromo.ObjectId = Object_Partner.Id
@@ -551,6 +576,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 09.12.25         * .._vch
  07.11.24         * PersonalSigning
  04.07.24         * 
  24.10.23         *

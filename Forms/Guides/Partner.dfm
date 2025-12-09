@@ -686,6 +686,38 @@ object PartnerForm: TPartnerForm
         Options.Editing = False
         Width = 62
       end
+      object EdiOrdspr_vch: TcxGridDBColumn
+        Caption = #1042#1063#1040#1057#1053#1054' - '#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
+        DataBinding.FieldName = 'EdiOrdspr_vch'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 62
+      end
+      object EdiInvoice_vch: TcxGridDBColumn
+        Caption = #1042#1063#1040#1057#1053#1054' - '#1057#1095#1077#1090
+        DataBinding.FieldName = 'EdiInvoice_vch'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 62
+      end
+      object EdiDesadv_vch: TcxGridDBColumn
+        Caption = #1042#1063#1040#1057#1053#1054' - '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'EdiDesadv_vch'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 62
+      end
+      object GLNCodeCorporate_vch: TcxGridDBColumn
+        Caption = #1042#1063#1040#1057#1053#1054' - '#1050#1086#1076' GLN - '#1055#1086#1089#1090#1072#1074#1097#1080#1082
+        DataBinding.FieldName = 'GLNCodeCorporate_vch'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 62
+      end
       object Value1: TcxGridDBColumn
         Caption = #1055#1085
         DataBinding.FieldName = 'Value1'

@@ -781,6 +781,46 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             VisibleForCustomization = False
             Width = 55
           end
+          object Number_1: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087' '#1085#1072' 1.'#1087#1085'.'
+            DataBinding.FieldName = 'Number_1'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Number_2: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087' '#1085#1072' 2.'#1074#1090'.'
+            DataBinding.FieldName = 'Number_2'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Number_3: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087' '#1085#1072' 3.'#1089#1088'.'
+            DataBinding.FieldName = 'Number_3'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Number_4: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087' '#1085#1072' 4.'#1095#1090'.'
+            DataBinding.FieldName = 'Number_4'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Number_5: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087' '#1085#1072' 5.'#1087#1090'.'
+            DataBinding.FieldName = 'Number_5'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end

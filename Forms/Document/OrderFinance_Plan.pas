@@ -85,6 +85,11 @@ type
     spSelectPrint: TdsdStoredProc;
     actPrintPlan: TdsdPrintAction;
     bbPrintPlan: TdxBarButton;
+    Number_1: TcxGridDBColumn;
+    Number_2: TcxGridDBColumn;
+    Number_3: TcxGridDBColumn;
+    Number_4: TcxGridDBColumn;
+    Number_5: TcxGridDBColumn;
   private
     { Private declarations }
   public

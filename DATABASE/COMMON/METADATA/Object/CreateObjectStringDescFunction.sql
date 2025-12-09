@@ -517,6 +517,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Partner_Terminal() RETURNS Integer AS
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Partner_Terminal', zc_Object_Partner(), 'Код терминала' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Partner_Terminal');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Partner_GLNCodeCorporate_vch() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Partner_GLNCodeCorporate_vch'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Partner_GLNCodeCorporate_vch', zc_Object_Partner(), 'Платформа ВЧАСНО - Код GLN - Поставщик' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Partner_GLNCodeCorporate_vch');
+
+
+ 
+ 
+ 
  
  
  
@@ -1778,6 +1786,7 @@ INSERT INTO ObjectStringDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 09.12.25         * zc_ObjectString_Partner_GLNCodeCorporate_vch
  23.10.25         * zc_ObjectString_CFO_Comment
  27.09.25         * zc_ObjectString_GoodsQuality_Value21
  19.02.25         * zc_ObjectString_MessagePersonalService_Comment
