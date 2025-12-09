@@ -5007,6 +5007,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalForm');
   //exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalByStorageLineForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalByStorageLineForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalByStorageLineEditForm'));
@@ -5015,10 +5016,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalEdit_ByStorageLineForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalEdit_ByStorageLineForm');
   exit;
-  {
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalEditForm');
-
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonal_ChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonal_ChoiceForm');
   exit;

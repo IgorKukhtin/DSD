@@ -168,6 +168,11 @@ type
     cxLabel52: TcxLabel;
     edPersonalSigning: TcxButtonEdit;
     GuidesPersonalSigning: TdsdGuides;
+    cbEdiOrdspr_vch: TcxCheckBox;
+    cbEdiInvoice_vch: TcxCheckBox;
+    cbEdiDesadv_vch: TcxCheckBox;
+    cxLabel53: TcxLabel;
+    edGLNCodeCorporate_vch: TcxTextEdit;
 
   private
     { Private declarations }

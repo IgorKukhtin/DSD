@@ -52,13 +52,20 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , AmountPartner_3    TFloat
              , AmountPartner_4    TFloat
 
-             , AmountPlan_1              TFloat
-             , AmountPlan_2              TFloat
-             , AmountPlan_3              TFloat
-             , AmountPlan_4              TFloat
-             , AmountPlan_5              TFloat
-             , AmountPlan_total          TFloat
-             , AmountPlan_calc           TFloat
+             , AmountPlan_1       TFloat
+             , AmountPlan_2       TFloat
+             , AmountPlan_3       TFloat
+             , AmountPlan_4       TFloat
+             , AmountPlan_5       TFloat
+             , AmountPlan_total   TFloat
+             , AmountPlan_calc    TFloat
+             
+             , Number_1           TFloat
+             , Number_2           TFloat
+             , Number_3           TFloat
+             , Number_4           TFloat
+             , Number_5           TFloat
+
              , FonColor_AmountPlan_1     Integer
              , FonColor_AmountPlan_2     Integer
              , FonColor_AmountPlan_3     Integer
@@ -164,6 +171,11 @@ BEGIN
                                                                  , zc_MIFloat_AmountPlan_3()
                                                                  , zc_MIFloat_AmountPlan_4()
                                                                  , zc_MIFloat_AmountPlan_5()
+                                                                 , zc_MIFloat_Number_1()
+                                                                 , zc_MIFloat_Number_2()
+                                                                 , zc_MIFloat_Number_3()
+                                                                 , zc_MIFloat_Number_4()
+                                                                 , zc_MIFloat_Number_5()
                                                                  )
                                 )
 
@@ -271,6 +283,13 @@ BEGIN
                             , MIFloat_AmountPlan_3.ValueData    :: TFloat AS AmountPlan_3
                             , MIFloat_AmountPlan_4.ValueData    :: TFloat AS AmountPlan_4
                             , MIFloat_AmountPlan_5.ValueData    :: TFloat AS AmountPlan_5
+                            
+                            , MIFloat_Number_1.ValueData        :: TFloat AS Number_1
+                            , MIFloat_Number_2.ValueData        :: TFloat AS Number_2
+                            , MIFloat_Number_3.ValueData        :: TFloat AS Number_3
+                            , MIFloat_Number_4.ValueData        :: TFloat AS Number_4
+                            , MIFloat_Number_5.ValueData        :: TFloat AS Number_5
+
                             , (COALESCE (MIFloat_AmountPlan_1.ValueData, 0)
                              + COALESCE (MIFloat_AmountPlan_2.ValueData, 0)
                              + COALESCE (MIFloat_AmountPlan_3.ValueData, 0)
@@ -335,6 +354,22 @@ BEGIN
                              LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_5
                                                             ON MIFloat_AmountPlan_5.MovementItemId = MovementItem.Id
                                                            AND MIFloat_AmountPlan_5.DescId = zc_MIFloat_AmountPlan_5()
+
+                             LEFT JOIN tmpMovementItemFloat AS MIFloat_Number_1
+                                                            ON MIFloat_Number_1.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_Number_1.DescId = zc_MIFloat_Number_1()
+                             LEFT JOIN tmpMovementItemFloat AS MIFloat_Number_2
+                                                            ON MIFloat_Number_2.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_Number_2.DescId = zc_MIFloat_Number_2()
+                             LEFT JOIN tmpMovementItemFloat AS MIFloat_Number_3
+                                                            ON MIFloat_Number_3.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_Number_3.DescId = zc_MIFloat_Number_3()
+                             LEFT JOIN tmpMovementItemFloat AS MIFloat_Number_4
+                                                            ON MIFloat_Number_4.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_Number_4.DescId = zc_MIFloat_Number_4()
+                             LEFT JOIN tmpMovementItemFloat AS MIFloat_Number_5
+                                                            ON MIFloat_Number_5.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_Number_5.DescId = zc_MIFloat_Number_5()
 
                              LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_1
                                                               ON MIBoolean_AmountPlan_1.MovementItemId = MovementItem.Id
@@ -788,6 +823,12 @@ BEGIN
                ELSE 0
           END ::TFloat AS AmountPlan_calc
 
+        , tmpMI.Number_1    :: TFloat AS Number_1
+        , tmpMI.Number_2    :: TFloat AS Number_2
+        , tmpMI.Number_3    :: TFloat AS Number_3
+        , tmpMI.Number_4    :: TFloat AS Number_4
+        , tmpMI.Number_5    :: TFloat AS Number_5
+
         , CASE WHEN inIsAmountPlan_1 = TRUE AND COALESCE (tmpMI.isAmountPlan_1, TRUE) = TRUE AND tmpMI.AmountPlan_1 > 0
                     THEN zc_Color_Yelow()
                ELSE zc_Color_White()
@@ -932,7 +973,6 @@ BEGIN
       OR tmpMI.AmountPlan_3 <> 0
       OR tmpMI.AmountPlan_4 <> 0
       OR tmpMI.AmountPlan_5 <> 0
-
       ;
 
 END;
@@ -942,6 +982,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.12.25         *
  20.11.25         *
 */
 

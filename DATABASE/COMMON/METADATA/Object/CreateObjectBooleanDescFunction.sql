@@ -402,6 +402,18 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Partner_GoodsBox() RETURNS Integer A
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Partner(), 'zc_ObjectBoolean_Partner_GoodsBox', 'Отгрузка в гофро' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Partner_GoodsBox');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Partner_EdiOrdspr_vch() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Partner_EdiOrdspr_vch'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Partner(), 'zc_ObjectBoolean_Partner_EdiOrdspr_vch', 'Платформа ВЧАСНО - Подтверждение' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Partner_EdiOrdspr_vch');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Partner_EdiInvoice_vch() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Partner_EdiInvoice_vch'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Partner(), 'zc_ObjectBoolean_Partner_EdiInvoice_vch', 'Платформа ВЧАСНО - Счет, Платформа ВЧАСНО' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Partner_EdiInvoice_vch');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Partner_EdiDesadv_vch() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Partner_EdiDesadv_vch'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Partner(), 'zc_ObjectBoolean_Partner_EdiDesadv_vch', 'Платформа ВЧАСНО - уведомление, Платформа ВЧАСНО' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Partner_EdiDesadv_vch');
+
 
 
 CREATE OR REPLACE FUNCTION zc_ObjectBoolean_GoodsByGoodsKind_Order() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_GoodsByGoodsKind_Order'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -1582,6 +1594,9 @@ INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 09.12.25         * zc_ObjectBoolean_Partner_EdiDesadv_vch
+                    zc_ObjectBoolean_Partner_EdiInvoice_vch
+                    zc_ObjectBoolean_Partner_EdiOrdspr_vch
  18.11.25         * zc_ObjectBoolean_OrderFinanceProperty_Group
  03.11.25         * zc_ObjectBoolean_PersonalServiceList_Sms
  23.10.25         * zc_ObjectBoolean_Unit_notStaffList
