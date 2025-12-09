@@ -15,6 +15,12 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , UnitName_insert TVarChar, PositionName_insert TVarChar
              , MemberId_insert_2 Integer, MemberCode_insert_2 Integer, MemberName_insert_2 TVarChar
              , UnitName_insert_2 TVarChar, PositionName_insert_2 TVarChar
+             , MemberId_insert_3 Integer, MemberCode_insert_3 Integer, MemberName_insert_3 TVarChar
+             , UnitName_insert_3 TVarChar, PositionName_insert_3 TVarChar
+             , MemberId_insert_4 Integer, MemberCode_insert_4 Integer, MemberName_insert_4 TVarChar
+             , UnitName_insert_4 TVarChar, PositionName_insert_4 TVarChar
+             , MemberId_insert_5 Integer, MemberCode_insert_5 Integer, MemberName_insert_5 TVarChar
+             , UnitName_insert_5 TVarChar, PositionName_insert_5 TVarChar
              , MemberId_1 Integer, MemberCode_1 Integer, MemberName_1 TVarChar
              , MemberId_2 Integer, MemberCode_2 Integer, MemberName_2 TVarChar
              , Comment TVarChar
@@ -62,6 +68,24 @@ BEGIN
             , Object_Unit_2.ValueData      ::TVarChar AS UnitName_insert_2
             , Object_Position_2.ValueData  ::TVarChar AS PositionName_insert_2
 
+            , Object_Member_insert_3.Id          AS MemberId_insert_3
+            , Object_Member_insert_3.ObjectCode  AS MemberCode_insert_3
+            , CASE WHEN vbUserId = 5 THEN '‘»Œ' ELSE Object_Member_insert_3.ValueData END :: TVarChar   AS MemberName_insert_3   
+            , Object_Unit_3.ValueData      ::TVarChar AS UnitName_insert_3
+            , Object_Position_3.ValueData  ::TVarChar AS PositionName_insert_3
+
+            , Object_Member_insert_4.Id          AS MemberId_insert_4
+            , Object_Member_insert_4.ObjectCode  AS MemberCode_insert_4
+            , CASE WHEN vbUserId = 5 THEN '‘»Œ' ELSE Object_Member_insert_4.ValueData END :: TVarChar   AS MemberName_insert_4   
+            , Object_Unit_4.ValueData      ::TVarChar AS UnitName_insert_4
+            , Object_Position_4.ValueData  ::TVarChar AS PositionName_insert_4
+
+            , Object_Member_insert_5.Id          AS MemberId_insert_5
+            , Object_Member_insert_5.ObjectCode  AS MemberCode_insert_5
+            , CASE WHEN vbUserId = 5 THEN '‘»Œ' ELSE Object_Member_insert_5.ValueData END :: TVarChar   AS MemberName_insert_5   
+            , Object_Unit_5.ValueData      ::TVarChar AS UnitName_insert_5
+            , Object_Position_5.ValueData  ::TVarChar AS PositionName_insert_5
+
             , Object_Member_1.Id               AS MemberId_1
             , Object_Member_1.ObjectCode       AS MemberCode_1
             , CASE WHEN vbUserId = 5 THEN '‘»Œ-1' ELSE Object_Member_1.ValueData END :: TVarChar AS MemberName_1
@@ -97,10 +121,37 @@ BEGIN
                                 ON OrderFinance_Member_insert_2.ObjectId = Object_OrderFinance.Id
                                AND OrderFinance_Member_insert_2.DescId = zc_ObjectLink_OrderFinance_Member_insert_2()
            LEFT JOIN Object AS Object_Member_insert_2 ON Object_Member_insert_2.Id = OrderFinance_Member_insert_2.ChildObjectId
-
+ 
            LEFT JOIN tmpPersonal AS tmpPersonal_2 ON tmpPersonal_2.MemberId = Object_Member_insert_2.Id
            LEFT JOIN Object AS Object_Position_2 ON Object_Position_2.Id = tmpPersonal_2.PositionId
            LEFT JOIN Object AS Object_Unit_2 ON Object_Unit_2.Id = tmpPersonal_2.UnitId
+
+           LEFT JOIN ObjectLink AS OrderFinance_Member_insert_3
+                                ON OrderFinance_Member_insert_3.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_Member_insert_3.DescId = zc_ObjectLink_OrderFinance_Member_insert_3()
+           LEFT JOIN Object AS Object_Member_insert_3 ON Object_Member_insert_3.Id = OrderFinance_Member_insert_3.ChildObjectId
+
+           LEFT JOIN tmpPersonal AS tmpPersonal_3 ON tmpPersonal_3.MemberId = Object_Member_insert_3.Id
+           LEFT JOIN Object AS Object_Position_3 ON Object_Position_3.Id = tmpPersonal_3.PositionId
+           LEFT JOIN Object AS Object_Unit_3 ON Object_Unit_3.Id = tmpPersonal_3.UnitId
+
+           LEFT JOIN ObjectLink AS OrderFinance_Member_insert_4
+                                ON OrderFinance_Member_insert_4.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_Member_insert_4.DescId = zc_ObjectLink_OrderFinance_Member_insert_4()
+           LEFT JOIN Object AS Object_Member_insert_4 ON Object_Member_insert_4.Id = OrderFinance_Member_insert_4.ChildObjectId
+
+           LEFT JOIN tmpPersonal AS tmpPersonal_4 ON tmpPersonal_4.MemberId = Object_Member_insert_4.Id
+           LEFT JOIN Object AS Object_Position_4 ON Object_Position_4.Id = tmpPersonal_4.PositionId
+           LEFT JOIN Object AS Object_Unit_4 ON Object_Unit_4.Id = tmpPersonal_4.UnitId
+
+           LEFT JOIN ObjectLink AS OrderFinance_Member_insert_5
+                                ON OrderFinance_Member_insert_5.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_Member_insert_5.DescId = zc_ObjectLink_OrderFinance_Member_insert_5()
+           LEFT JOIN Object AS Object_Member_insert_5 ON Object_Member_insert_5.Id = OrderFinance_Member_insert_5.ChildObjectId
+
+           LEFT JOIN tmpPersonal AS tmpPersonal_5 ON tmpPersonal_5.MemberId = Object_Member_insert_5.Id
+           LEFT JOIN Object AS Object_Position_5 ON Object_Position_5.Id = tmpPersonal_5.PositionId
+           LEFT JOIN Object AS Object_Unit_5 ON Object_Unit_5.Id = tmpPersonal_5.UnitId
 
            LEFT JOIN ObjectLink AS OrderFinance_Member_1
                                 ON OrderFinance_Member_1.ObjectId = Object_OrderFinance.Id

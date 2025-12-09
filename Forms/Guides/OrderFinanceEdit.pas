@@ -60,6 +60,15 @@ type
     cxLabel6: TcxLabel;
     edInsertUser_2: TcxButtonEdit;
     GuidesInsert_2: TdsdGuides;
+    cxLabel8: TcxLabel;
+    edInsertUser_3: TcxButtonEdit;
+    GuidesInsert_3: TdsdGuides;
+    cxLabel9: TcxLabel;
+    edInsertUser_4: TcxButtonEdit;
+    GuidesInsert_4: TdsdGuides;
+    cxLabel11: TcxLabel;
+    edInsertUser_5: TcxButtonEdit;
+    GuidesInsert_5: TdsdGuides;
   private
     { Private declarations }
   public
