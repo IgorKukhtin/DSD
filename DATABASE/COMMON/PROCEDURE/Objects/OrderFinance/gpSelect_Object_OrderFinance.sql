@@ -58,37 +58,37 @@ BEGIN
 
             , Object_Member_insert.Id          AS MemberId_insert
             , Object_Member_insert.ObjectCode  AS MemberCode_insert
-            , CASE WHEN vbUserId = 5 THEN '‘»Œ' ELSE Object_Member_insert.ValueData END :: TVarChar   AS MemberName_insert   
+            , CASE WHEN vbUserId = 5 AND 1=0 THEN '‘»Œ' ELSE Object_Member_insert.ValueData END :: TVarChar   AS MemberName_insert   
             , Object_Unit.ValueData      ::TVarChar AS UnitName_insert
             , Object_Position.ValueData  ::TVarChar AS PositionName_insert
 
             , Object_Member_insert_2.Id          AS MemberId_insert_2
             , Object_Member_insert_2.ObjectCode  AS MemberCode_insert_2
-            , CASE WHEN vbUserId = 5 THEN '‘»Œ' ELSE Object_Member_insert_2.ValueData END :: TVarChar   AS MemberName_insert_2   
+            , CASE WHEN vbUserId = 5 AND 1=0 THEN '‘»Œ' ELSE Object_Member_insert_2.ValueData END :: TVarChar   AS MemberName_insert_2   
             , Object_Unit_2.ValueData      ::TVarChar AS UnitName_insert_2
             , Object_Position_2.ValueData  ::TVarChar AS PositionName_insert_2
 
             , Object_Member_insert_3.Id          AS MemberId_insert_3
             , Object_Member_insert_3.ObjectCode  AS MemberCode_insert_3
-            , CASE WHEN vbUserId = 5 THEN '‘»Œ' ELSE Object_Member_insert_3.ValueData END :: TVarChar   AS MemberName_insert_3   
+            , CASE WHEN vbUserId = 5 AND 1=0 THEN '‘»Œ' ELSE Object_Member_insert_3.ValueData END :: TVarChar   AS MemberName_insert_3   
             , Object_Unit_3.ValueData      ::TVarChar AS UnitName_insert_3
             , Object_Position_3.ValueData  ::TVarChar AS PositionName_insert_3
 
             , Object_Member_insert_4.Id          AS MemberId_insert_4
             , Object_Member_insert_4.ObjectCode  AS MemberCode_insert_4
-            , CASE WHEN vbUserId = 5 THEN '‘»Œ' ELSE Object_Member_insert_4.ValueData END :: TVarChar   AS MemberName_insert_4   
+            , CASE WHEN vbUserId = 5 AND 1=0 THEN '‘»Œ' ELSE Object_Member_insert_4.ValueData END :: TVarChar   AS MemberName_insert_4   
             , Object_Unit_4.ValueData      ::TVarChar AS UnitName_insert_4
             , Object_Position_4.ValueData  ::TVarChar AS PositionName_insert_4
 
             , Object_Member_insert_5.Id          AS MemberId_insert_5
             , Object_Member_insert_5.ObjectCode  AS MemberCode_insert_5
-            , CASE WHEN vbUserId = 5 THEN '‘»Œ' ELSE Object_Member_insert_5.ValueData END :: TVarChar   AS MemberName_insert_5   
+            , CASE WHEN vbUserId = 5 AND 1=0 THEN '‘»Œ' ELSE Object_Member_insert_5.ValueData END :: TVarChar   AS MemberName_insert_5   
             , Object_Unit_5.ValueData      ::TVarChar AS UnitName_insert_5
             , Object_Position_5.ValueData  ::TVarChar AS PositionName_insert_5
 
             , Object_Member_1.Id               AS MemberId_1
             , Object_Member_1.ObjectCode       AS MemberCode_1
-            , CASE WHEN vbUserId = 5 THEN '‘»Œ-1' ELSE Object_Member_1.ValueData END :: TVarChar AS MemberName_1
+            , CASE WHEN vbUserId = 5 AND 1=0 THEN '‘»Œ-1' ELSE Object_Member_1.ValueData END :: TVarChar AS MemberName_1
 
             , Object_Member_2.Id               AS MemberId_2
             , Object_Member_2.ObjectCode       AS MemberCode_2

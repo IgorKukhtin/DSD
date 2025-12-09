@@ -37,42 +37,45 @@ BEGIN
                              WHERE ObjectLink_ImportSettings_ContactPerson.ChildObjectId > 0
                                AND ObjectLink_ImportSettings_ContactPerson.DescId = zc_ObjectLink_ImportSettings_ContactPerson()
                             )
-     , tmpContactPerson AS (SELECT STRING_AGG (ObjectString_Mail.ValueData, '; ')  AS ContactPersonMail 
+     , tmpContactPerson AS (SELECT -- Не НАЗНАЧЕНО
+                                   '' :: TVarChar AS ContactPersonMail
+                                 --STRING_AGG (ObjectString_Mail.ValueData, '; ')  AS ContactPersonMail
                             FROM Object AS Object_ContactPerson
                                  INNER JOIN ObjectString AS ObjectString_Mail
-                                                        ON ObjectString_Mail.ObjectId = Object_ContactPerson.Id 
+                                                        ON ObjectString_Mail.ObjectId = Object_ContactPerson.Id
                                                        AND ObjectString_Mail.DescId = zc_ObjectString_ContactPerson_Mail()
                                                        AND COALESCE (ObjectString_Mail.ValueData,'') <> ''
-                                                                                   
+
                                  INNER JOIN ObjectLink AS ObjectLink_ContactPerson_ContactPersonKind
                                                        ON ObjectLink_ContactPerson_ContactPersonKind.ObjectId = Object_ContactPerson.Id
                                                       AND ObjectLink_ContactPerson_ContactPersonKind.DescId = zc_ObjectLink_ContactPerson_ContactPersonKind()
                                                       AND ObjectLink_ContactPerson_ContactPersonKind.ChildObjectId = zc_Enum_ContactPersonKind_Member()
-                                 
+                                                      -- Не НАЗНАЧЕНО
+                                                      AND 1=0
+
                             WHERE Object_ContactPerson.DescId = zc_Object_ContactPerson()
                               AND Object_ContactPerson.isErased = FALSE
                             )
        -- ВСЕ параметры - откуда отправлять
      , tmpEmail AS (SELECT * FROM gpSelect_Object_EmailSettings (inEmailKindId:= (SELECT DISTINCT ObjectLink_EmailKind.ChildObjectId AS EmailKindId
-                                                                                  FROM ObjectLink AS ObjectLink_ExportJuridical_ExportKind           -- формат выгрузки
+                                                                                  FROM -- формат выгрузки
+                                                                                       ObjectLink AS ObjectLink_ExportJuridical_ExportKind
                                                                                        -- откуда отправлять
                                                                                        INNER JOIN ObjectLink AS ObjectLink_EmailKind
                                                                                                              ON ObjectLink_EmailKind.ObjectId = ObjectLink_ExportJuridical_ExportKind.ObjectId
                                                                                                             AND ObjectLink_EmailKind.DescId = zc_ObjectLink_ExportJuridical_EmailKind()
-                                                                                                            AND ObjectLink_EmailKind.ChildObjectId > 0   
+                                                                                                            AND ObjectLink_EmailKind.ChildObjectId > 0
                                                                                   WHERE ObjectLink_ExportJuridical_ExportKind.DescId = zc_ObjectLink_ExportJuridical_ExportKind()
+                                                                                    -- этот формат
                                                                                     AND ObjectLink_ExportJuridical_ExportKind.ChildObjectId = zc_Enum_ExportKind_PersonalService()
                                                                                   )
                                                                , inSession    := inSession)
                     )
-                                                                        
-     SELECT (tmp.outFileName || '.xls') :: TVarChar AS Subject  
 
-          , ''                       :: TBlob    AS Body
-          
-          , CASE WHEN vbUserId = 5    AND 1=0 THEN 'test@gmail.com'
-                 ELSE gpGet_Mail.Value
-            END :: TVarChar                      AS AddressFrom
+     SELECT (tmp.outFileName || '.xls') :: TVarChar AS Subject
+
+          , ''                   :: TBlob    AS Body
+          , gpGet_Mail.Value     :: TVarChar AS AddressFrom
 
           , CASE WHEN vbUserId = 5    AND 1=1 THEN 'ashtu@ua.fm'
                  WHEN vbUserId = 9457 AND 1=1 THEN 'innafelon@gmail.com'
@@ -80,31 +83,19 @@ BEGIN
                  ELSE tmpContactPerson.ContactPersonMail
             END :: TVarChar AS AddressTo
 
-          , CASE WHEN vbUserId = 5    AND 1=0 THEN 'test-smtp.gmail.com' -- 'smtp.ua.fm' 
-                 ELSE gpGet_Host.Value
-            END :: TVarChar                       AS Host
-
-          , CASE WHEN vbUserId = 5    AND 1=0 THEN 'test-587' -- 993
-                 ELSE gpGet_Port.Value
-            END :: TVarChar                       AS Port
-
-          , CASE WHEN vbUserId = 5    AND 1=0 THEN 'test@gmail.com'
-                 ELSE gpGet_User.Value
-            END :: TVarChar                      AS UserName
-
-          , CASE WHEN vbUserId = 5    AND 1=0 THEN 'test-ufhm' -- 'et' 
-                 ELSE gpGet_Password.Value
-            END :: TVarChar                      AS Password
+          , gpGet_Host.Value     :: TVarChar AS Host
+          , gpGet_Port.Value     :: TVarChar AS Port
+          , gpGet_User.Value     :: TVarChar AS UserName
+          , gpGet_Password.Value :: TVarChar AS Password
 
      FROM gpGet_Movement_OrderFinance_FileName_xls (inMovementId , inSession) AS tmp
-          LEFT JOIN tmpContactPerson ON 1= 1 
+          LEFT JOIN tmpContactPerson ON 1= 1
           LEFT JOIN tmpEmail AS gpGet_Host      ON gpGet_Host.EmailToolsId      = zc_Enum_EmailTools_Host()
           LEFT JOIN tmpEmail AS gpGet_Port      ON gpGet_Port.EmailToolsId      = zc_Enum_EmailTools_Port()
           LEFT JOIN tmpEmail AS gpGet_Mail      ON gpGet_Mail.EmailToolsId      = zc_Enum_EmailTools_Mail()
           LEFT JOIN tmpEmail AS gpGet_User      ON gpGet_User.EmailToolsId      = zc_Enum_EmailTools_User()
           LEFT JOIN tmpEmail AS gpGet_Password  ON gpGet_Password.EmailToolsId  = zc_Enum_EmailTools_Password()
     ;
-
 
 
 END;
@@ -118,4 +109,4 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpGet_Movement_OrderFinance_Email_send ( inMovementId := 32907603  , inSession:= '9457':: TVarChar) --  zfCalc_UserAdmin()  --zc_Enum_ExportKind_Mida35273055()
+-- SELECT * FROM gpGet_Movement_OrderFinance_Email_send ( inMovementId := 32907603  , inSession:= '9457':: TVarChar) --  zfCalc_UserAdmin()  --zc_Enum_ExportKind_Mida35273055()
