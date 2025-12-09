@@ -2668,19 +2668,23 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Personal_Cash_smsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Personal_Cash_smsForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Inventory_WeighingFactForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Inventory_WeighingFactForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Inventory_WeighingFactDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Inventory_WeighingFactDialogForm');
   ///exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_Inventory_scaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovement_Inventory_scaleForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInventory_scale_NumSecurityDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInventory_scale_NumSecurityDialogForm');
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_Inventory_scaleDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovement_Inventory_scaleDialogForm');
@@ -2708,7 +2712,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_ContractGoodsMovementDialogForm');
   exit;
 
- TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_Sale_TotalSumForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_Sale_TotalSumForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_Sale_TotalSumForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_Sale_TotalSumDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_Sale_TotalSumDialogForm');
@@ -2726,7 +2730,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PartionCell_historyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PartionCell_historyForm');
-  }
+
    {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSend_PartionCell_isManyEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSend_PartionCell_isManyEditForm');

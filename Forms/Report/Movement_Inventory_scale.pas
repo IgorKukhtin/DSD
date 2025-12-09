@@ -87,6 +87,9 @@ type
     actPrint_MovGroup_Sec: TdsdPrintAction;
     bbPrint_Mov_Sec: TdxBarButton;
     bbPrint_MovGroup_Sec: TdxBarButton;
+    actUpdate_NumSecurity3: TdsdOpenForm;
+    mactUpdate_NumSecurity3: TMultiAction;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public
