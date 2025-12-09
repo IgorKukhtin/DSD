@@ -23,7 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              , UnitName_insert     TVarChar
-             , PositionName_insert TVarChar          
+             , PositionName_insert TVarChar
              , Date_SignWait_1 TDateTime, Date_Sign_1 TDateTime
              , isSignWait_1 Boolean, isSign_1 Boolean
              , TotalText_1 TVarChar, TotalText_2 TVarChar, TotalText_3 TVarChar
@@ -59,7 +59,9 @@ BEGIN
                      )
 
    , tmpOrderFinance AS (SELECT Object_OrderFinance.Id           AS OrderFinanceId
+                              , Object_OrderFinance.ObjectCode   AS OrderFinanceCode
                               , Object_OrderFinance.ValueData    AS OrderFinanceName
+
 
                               , Object_BankAccount_View.Id       AS BankAccountId
                               , Object_BankAccount_View.Name     AS BankAccountName
@@ -143,15 +145,15 @@ BEGIN
 
              , CASE WHEN vbUserId = 5 AND 1=0 THEN 'Подразделение' ELSE Object_Unit.ValueData     END ::TVarChar AS UnitName_insert
              , CASE WHEN vbUserId = 5 AND 1=0 THEN 'Должность'     ELSE Object_Position.ValueData END ::TVarChar AS PositionName_insert
-             
+
              , CAST (NULL AS TDateTime)                         AS Date_SignWait_1
              , CAST (NULL AS TDateTime)                         AS Date_Sign_1
-             , FALSE                                 ::Boolean  AS isSignWait_1 
+             , FALSE                                 ::Boolean  AS isSignWait_1
              , FALSE                                 ::Boolean  AS isSign_1
 
-             , 'Говядина на неделю:'   :: TVarChar AS TotalText_1
-             , 'Живой вес на неделю :' :: TVarChar AS TotalText_2
-             , 'Прочее мясн.с. на неделю :'    :: TVarChar AS TotalText_3
+             , CASE WHEN tmpOrderFinance.OrderFinanceCode = 1 THEN 'Говядина на неделю:'        ELSE 'Группа-0:'   END :: TVarChar AS TotalText_1
+             , CASE WHEN tmpOrderFinance.OrderFinanceCode = 1 THEN 'Живой вес на неделю :'      ELSE 'нет группы:' END :: TVarChar AS TotalText_2
+             , CASE WHEN tmpOrderFinance.OrderFinanceCode = 1 THEN 'Прочее мясн.с. на неделю :' ELSE 'нет группы:' END :: TVarChar AS TotalText_3
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
               LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
@@ -211,12 +213,12 @@ BEGIN
 
            , CASE WHEN vbUserId = 5 AND 1=0 THEN MovementDate_SignWait_1.ValueData - INTERVAL '12 HOUR' ELSE MovementDate_SignWait_1.ValueData END ::TDateTime AS Date_SignWait_1
            , CASE WHEN vbUserId = 5 AND 1=0 THEN MovementDate_Sign_1.ValueData     - INTERVAL '12 HOUR' ELSE MovementDate_Sign_1.ValueData     END ::TDateTime AS Date_Sign_1
-           , COALESCE (MovementBoolean_SignWait_1.ValueData, FALSE) ::Boolean   AS isSignWait_1 
+           , COALESCE (MovementBoolean_SignWait_1.ValueData, FALSE) ::Boolean   AS isSignWait_1
            , COALESCE (MovementBoolean_Sign_1.ValueData, FALSE)     ::Boolean   AS isSign_1
 
-           , 'Говядина на неделю:'   :: TVarChar AS TotalText_1
-           , 'Живой вес на неделю :' :: TVarChar AS TotalText_2
-           , 'Прочее мясн.с. на неделю :'    :: TVarChar AS TotalText_3
+           , CASE WHEN Object_OrderFinance.ObjectCode = 1 THEN 'Говядина на неделю:'        ELSE 'Группа-0:'   END :: TVarChar AS TotalText_1
+           , CASE WHEN Object_OrderFinance.ObjectCode = 1 THEN 'Живой вес на неделю :'      ELSE 'нет группы:' END :: TVarChar AS TotalText_2
+           , CASE WHEN Object_OrderFinance.ObjectCode = 1 THEN 'Прочее мясн.с. на неделю :' ELSE 'нет группы:' END :: TVarChar AS TotalText_3
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
