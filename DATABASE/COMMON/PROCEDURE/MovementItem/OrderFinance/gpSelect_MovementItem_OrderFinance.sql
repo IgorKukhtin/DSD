@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer
              , AmountPartner_2    TFloat
              , AmountPartner_3    TFloat
              , AmountPartner_4    TFloat
+             , AmountPartner_5    TFloat
              , AmountPlan_1       TFloat
              , AmountPlan_2       TFloat
              , AmountPlan_3       TFloat
@@ -226,6 +227,12 @@ BEGIN
                     , MIFloat_AmountPartner_2.ValueData AS AmountPartner_2
                     , MIFloat_AmountPartner_3.ValueData AS AmountPartner_3
                     , MIFloat_AmountPartner_4.ValueData AS AmountPartner_4
+                    , (COALESCE (MIFloat_AmountPartner.ValueData,0)
+                       - COALESCE (MIFloat_AmountPartner_1.ValueData,0)
+                       - COALESCE (MIFloat_AmountPartner_2.ValueData,0)
+                       - COALESCE (MIFloat_AmountPartner_3.ValueData,0)
+                       - COALESCE (MIFloat_AmountPartner_4.ValueData,0)
+                      )   :: TFloat AS AmountPartner_5                -->28дней
 
                     , MIFloat_AmountPlan_1.ValueData    AS AmountPlan_1
                     , MIFloat_AmountPlan_2.ValueData    AS AmountPlan_2
@@ -434,6 +441,7 @@ BEGIN
            , tmpMI.AmountPartner_2  ::TFloat
            , tmpMI.AmountPartner_3  ::TFloat
            , tmpMI.AmountPartner_4  ::TFloat
+           , tmpMI.AmountPartner_5  ::TFloat
 
            , tmpMI.AmountPlan_1     ::TFloat
            , tmpMI.AmountPlan_2     ::TFloat
@@ -521,6 +529,7 @@ BEGIN
            , 0 ::TFloat       AS AmountPartner_2
            , 0 ::TFloat       AS AmountPartner_3
            , 0 ::TFloat       AS AmountPartner_4
+           , 0 ::TFloat       AS AmountPartner_5
 
            , 0 ::TFloat       AS AmountPlan_1
            , 0 ::TFloat       AS AmountPlan_2
@@ -731,6 +740,12 @@ BEGIN
            , MIFloat_AmountPartner_2.ValueData :: TFloat AS AmountPartner_2
            , MIFloat_AmountPartner_3.ValueData :: TFloat AS AmountPartner_3
            , MIFloat_AmountPartner_4.ValueData :: TFloat AS AmountPartner_4
+           , (COALESCE (MIFloat_AmountPartner.ValueData,0)
+               - COALESCE (MIFloat_AmountPartner_1.ValueData,0)
+               - COALESCE (MIFloat_AmountPartner_2.ValueData,0)
+               - COALESCE (MIFloat_AmountPartner_3.ValueData,0)
+               - COALESCE (MIFloat_AmountPartner_4.ValueData,0)
+              )   :: TFloat AS AmountPartner_5                -->28дней
 
            , MIFloat_AmountPlan_1.ValueData    :: TFloat AS AmountPlan_1
            , MIFloat_AmountPlan_2.ValueData    :: TFloat AS AmountPlan_2
@@ -891,6 +906,7 @@ BEGIN
            , 0 ::TFloat       AS AmountPartner_2
            , 0 ::TFloat       AS AmountPartner_3
            , 0 ::TFloat       AS AmountPartner_4
+           , 0 ::TFloat       AS AmountPartner_5
 
            , 0 ::TFloat       AS AmountPlan_1
            , 0 ::TFloat       AS AmountPlan_2
@@ -949,6 +965,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.12.25         *
  17.11.25         *
  18.02.21         * AmountStart
  29.07.19         *

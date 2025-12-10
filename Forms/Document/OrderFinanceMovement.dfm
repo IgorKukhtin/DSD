@@ -567,6 +567,11 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
               Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_total
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountPartner_5
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -643,6 +648,11 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
               Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_total
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountPartner_5
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -870,6 +880,18 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
           object AmountPartner_4: TcxGridDBColumn
             Caption = '28 '#1076#1085#1077#1081
             DataBinding.FieldName = 'AmountPartner_4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object AmountPartner_5: TcxGridDBColumn
+            Caption = '>28 '#1076#1085#1077#1081
+            DataBinding.FieldName = 'AmountPartner_5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -1129,9 +1151,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1070#1088'.'#1083#1080#1094#1072
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
