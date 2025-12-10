@@ -5,18 +5,19 @@ DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer, Bo
 --DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer,Boolean, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer,Boolean, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer,Boolean, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer,Boolean, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpUpdateMovement_OrderFinance_Plan(
     IN inMovementId              Integer   , -- Ключ объекта <Документ>
     IN inMovementItemId          Integer   , -- Ключ строки
     IN inIsAmountPlan            Boolean    , --
-    IN inisPlan_1                Boolean    , --
-    IN inisPlan_2                Boolean    , --
-    IN inisPlan_3                Boolean    , --
-    IN inisPlan_4                Boolean    , --
-    IN inisPlan_5                Boolean    , --
+    IN inisDay_1                 Boolean    , --
+    IN inisDay_2                 Boolean    , --
+    IN inisDay_3                 Boolean    , --
+    IN inisDay_4                 Boolean    , --
+    IN inisDay_5                 Boolean    , --
 
    OUT outisAmountPlan_1         Boolean    , --
    OUT outisAmountPlan_2         Boolean    , --
@@ -36,6 +37,7 @@ CREATE OR REPLACE FUNCTION gpUpdateMovement_OrderFinance_Plan(
    --IN inComment_pay             TVarChar   ,
    OUT outComment_pay            TVarChar   ,
    OUT outAmountPlan_calc        TFloat     ,
+    IN inNumber_calc             TFloat     ,
     IN inSession                 TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -63,47 +65,62 @@ BEGIN
      vbPlan_count:= 0;
 
      --строки документа
-     IF COALESCE (inisPlan_1, FALSE) = TRUE
+     IF COALESCE (inisDay_1, FALSE) = TRUE
       THEN
         -- сохранили свойство <>
         PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_1(), inMovementItemId, inIsAmountPlan);
         outisAmountPlan_1 := inIsAmountPlan;
+        
+        -- сохранили свойство <>
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Number_1(), inMovementItemId, inNumber_calc);
         --
         vbPlan_count:= vbPlan_count + 1;
      END IF;
 
-     IF COALESCE (inisPlan_2, FALSE) = TRUE
+     IF COALESCE (inisDay_2, FALSE) = TRUE
       THEN
         -- сохранили свойство <>
         PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_2(), inMovementItemId, inIsAmountPlan);
         outisAmountPlan_2 := inIsAmountPlan;
+                
+        -- сохранили свойство <>
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Number_2(), inMovementItemId, inNumber_calc);
         --
         vbPlan_count:= vbPlan_count + 1;
      END IF;
 
-     IF COALESCE (inisPlan_3, FALSE) = TRUE
+     IF COALESCE (inisDay_3, FALSE) = TRUE
       THEN
         -- сохранили свойство <>
         PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_3(), inMovementItemId, inIsAmountPlan);
         outisAmountPlan_3 := inIsAmountPlan;
+                
+        -- сохранили свойство <>
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Number_3(), inMovementItemId, inNumber_calc);
         --
         vbPlan_count:= vbPlan_count + 1;
      END IF;
 
-     IF COALESCE (inisPlan_4, FALSE) = TRUE
+     IF COALESCE (inisDay_4, FALSE) = TRUE
       THEN
         -- сохранили свойство <>
         PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_4(), inMovementItemId, inIsAmountPlan);
         outisAmountPlan_4 := inIsAmountPlan;
+                
+        -- сохранили свойство <>
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Number_4(), inMovementItemId, inNumber_calc);
         --
         vbPlan_count:= vbPlan_count + 1;
      END IF;
 
-     IF COALESCE (inisPlan_5, FALSE) = TRUE
+     IF COALESCE (inisDay_5, FALSE) = TRUE
       THEN
         -- сохранили свойство <>
         PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_5(), inMovementItemId, inIsAmountPlan);
         outisAmountPlan_5 := inIsAmountPlan;
+                
+        -- сохранили свойство <>
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Number_5(), inMovementItemId, inNumber_calc);
         --
         vbPlan_count:= vbPlan_count + 1;
      END IF;
@@ -452,18 +469,18 @@ $BODY$
 
 
 -- тест
---select * from gpUpdateMovement_OrderFinance_Plan(inMovementId := 32907603 , inMovementItemId := 341774289 , inIsAmountPlan := 'True' , inisPlan_1 := 'False' , inisPlan_2 := 'False' , inisPlan_3 := 'True' , inisPlan_4 := 'False' , inisPlan_5 := 'False' , inOrderFinanceId := 3988049 , ioJuridicalOrderFinanceId := 12995943 , inJuridicalId := 397619 , inInfoMoneyId := 8908 , inBankId_main := 76970 , inBankId_jof := 81452 , inBankAccountName_main := 'UA173005280000026000301367079' , inBankAccountName_jof := 'UA523003350000000026005464177' , inComment_jof := 'За Яловичину, згідно Договору  NOM_DOG у т.ч. ПДВ PDV% SUMMA_P грн.' , inSession := '9457');
+--select * from gpUpdateMovement_OrderFinance_Plan(inMovementId := 32907603 , inMovementItemId := 341774289 , inIsAmountPlan := 'True' , inisDay_1 := 'False' , inisDay_2 := 'False' , inisDay_3 := 'True' , inisDay_4 := 'False' , inisDay_5 := 'False' , inOrderFinanceId := 3988049 , ioJuridicalOrderFinanceId := 12995943 , inJuridicalId := 397619 , inInfoMoneyId := 8908 , inBankId_main := 76970 , inBankId_jof := 81452 , inBankAccountName_main := 'UA173005280000026000301367079' , inBankAccountName_jof := 'UA523003350000000026005464177' , inComment_jof := 'За Яловичину, згідно Договору  NOM_DOG у т.ч. ПДВ PDV% SUMMA_P грн.' , inSession := '9457');
 
 
 /*select * from gpUpdateMovement_OrderFinance_Plan(
 inMovementId := 32907603 ,
 inMovementItemId := 341774317 ,
 inIsAmountPlan := 'True' ,
-inisPlan_1 := 'False' ,
-inisPlan_2 := 'False' ,
-inisPlan_3 := 'True' ,
-inisPlan_4 := 'False' ,
-inisPlan_5 := 'False' ,
+inisDay_1 := 'False' ,
+inisDay_2 := 'False' ,
+inisDay_3 := 'True' ,
+inisDay_4 := 'False' ,
+inisDay_5 := 'False' ,
 inOrderFinanceId := 3988049 ,
 ioJuridicalOrderFinanceId := 12996023 ,
 inJuridicalId := 11057033 ,

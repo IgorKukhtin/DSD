@@ -40,11 +40,11 @@ type
     actUpdateDataSet: TdsdUpdateDataSet;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    cbPlan_1: TcxCheckBox;
-    cbPlan_2: TcxCheckBox;
-    cbPlan_3: TcxCheckBox;
-    cbPlan_4: TcxCheckBox;
-    cbPlan_5: TcxCheckBox;
+    cbDay_1: TcxCheckBox;
+    cbDay_2: TcxCheckBox;
+    cbDay_3: TcxCheckBox;
+    cbDay_4: TcxCheckBox;
+    cbDay_5: TcxCheckBox;
     spGet_WeekNumber_byPeriod: TdsdStoredProc;
     actGet_Period_byWeekNumber: TdsdDataSetRefresh;
     actGet_WeekNumber_byPeriod: TdsdDataSetRefresh;
@@ -90,6 +90,7 @@ type
     Number_3: TcxGridDBColumn;
     Number_4: TcxGridDBColumn;
     Number_5: TcxGridDBColumn;
+    Number_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public
