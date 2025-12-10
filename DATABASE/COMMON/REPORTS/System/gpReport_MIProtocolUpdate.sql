@@ -165,7 +165,7 @@ BEGIN
                                 (inIsMovement = TRUE AND Movement.OperDate >= inStartDate AND Movement.OperDate < inEndDate + INTERVAL '1 DAY')
                               )
                           AND (tmpUnit_from.UnitId > 0  OR tmpUnit_to.UnitId > 0)
-                          AND MovementItemProtocol.IsInsert = FALSE
+                         -- AND MovementItemProtocol.IsInsert = FALSE
   
                       -- пока без архива 
                       UNION ALL
@@ -283,7 +283,7 @@ BEGIN
                       )
    ------------------------
     , tmpProtocol AS (SELECT tmpMI_Protocol.*
-                           , ROW_NUMBER() OVER (PARTITION BY tmpMI_Protocol.MovementItemId) AS Ord 
+                           , ROW_NUMBER()  OVER (PARTITION BY tmpMI_Protocol.MovementItemId Order by tmpMI_Protocol.OperDate_Protocol DESC) AS Ord 
                       FROM tmpMI_Protocol
                           INNER JOIN tmpGoods ON tmpGoods.GoodsId = tmpMI_Protocol.GoodsId
                      ) 
@@ -296,8 +296,8 @@ BEGIN
                        , tmp2.isErased      AS isErased_change
                   FROM tmpProtocol AS tmp1
                        LEFT JOIN tmpProtocol AS tmp2
-				                             ON tmp2.Ord = tmp1.Ord - 1
-				                            AND tmp2.MovementItemId = tmp1.MovementItemId
+                                             ON tmp2.Ord - 1 = tmp1.Ord
+                                            AND tmp2.MovementItemId = tmp1.MovementItemId
                   WHERE tmp1.GoodsId <> tmp2.GoodsId
                      OR tmp1.GoodsKindName <> tmp2.GoodsKindName
                      OR tmp1.Amount <> tmp2.Amount
