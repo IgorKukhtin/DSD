@@ -51,7 +51,7 @@ type
     spGet_CurrentWeekDay: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     spSelect_Export: TdsdStoredProc;
-    actExport_New_OTP: TMultiAction;
+    mactExport_New_OTP: TMultiAction;
     ExportXmlGrid: TcxGrid;
     ExportXmlGridDBTableView: TcxGridDBTableView;
     RowData: TcxGridDBColumn;
@@ -91,6 +91,15 @@ type
     Number_4: TcxGridDBColumn;
     Number_5: TcxGridDBColumn;
     Number_calc: TcxGridDBColumn;
+    dxBarSubItem1: TdxBarSubItem;
+    edNPP: TcxCurrencyEdit;
+    edNPP_text: TcxLabel;
+    mactExport_New_OTP_NPP: TMultiAction;
+    spGet_Export_FileNameNPP: TdsdStoredProc;
+    actGet_Export_FileNameNPP: TdsdExecStoredProc;
+    spSelect_ExportNPP: TdsdStoredProc;
+    actExport_fileNPP: TdsdStoredProcExportToFile;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

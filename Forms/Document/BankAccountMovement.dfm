@@ -174,8 +174,8 @@
     Caption = #1050#1091#1088#1089
   end
   object ceCurrencyPartnerValue: TcxCurrencyEdit [23]
-    Left = 280
-    Top = 80
+    Left = 284
+    Top = 83
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = False

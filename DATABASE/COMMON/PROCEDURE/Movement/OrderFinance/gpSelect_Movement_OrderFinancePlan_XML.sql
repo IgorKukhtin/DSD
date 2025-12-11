@@ -1,6 +1,7 @@
 -- Function:  gpSelect_Movement_OrderFinancePlan_XML()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_OrderFinancePlan_XML (TDateTime, Integer, Integer, Boolean,Boolean,Boolean,Boolean,Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_OrderFinancePlan_XML (TDateTime, Integer, Integer, Boolean,Boolean,Boolean,Boolean,Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_OrderFinancePlan_XML (TDateTime, Integer, Integer, Boolean,Boolean,Boolean,Boolean,Boolean, Boolean,TFloat, TVarChar);
 
 /*
 номер недели + год + день недели
@@ -16,6 +17,8 @@ CREATE OR REPLACE FUNCTION  gpSelect_Movement_OrderFinancePlan_XML(
     IN inisDay_3          Boolean    , --
     IN inisDay_4          Boolean    , --
     IN inisDay_5          Boolean    , --
+    IN inisNPP            Boolean    , -- для № очереди
+    IN inNPP              TFloat     , -- № очереди
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (RowData TBlob)
@@ -97,7 +100,7 @@ BEGIN
                    AND MovementItem.isErased = FALSE
                  )
 
-     , tmpMovementItemFloat AS (SELECT *
+     , tmpMIFloat_AmountPlan AS (SELECT *
                                 FROM MovementItemFloat
                                 WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                   AND MovementItemFloat.DescId IN (CASE WHEN COALESCE (inisDay_1,FALSE) = TRUE THEN zc_MIFloat_AmountPlan_1()
@@ -109,6 +112,17 @@ BEGIN
                                                                    )
                                 )
 
+     , tmpMIFloat_Number AS (SELECT *
+                             FROM MovementItemFloat
+                             WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                               AND MovementItemFloat.DescId IN (CASE WHEN COALESCE (inNPP, 0) = 1 THEN zc_MIFloat_Number_1()
+                                                                     WHEN COALESCE (inNPP, 0) = 2 THEN zc_MIFloat_Number_2()
+                                                                     WHEN COALESCE (inNPP, 0) = 3 THEN zc_MIFloat_Number_3()
+                                                                     WHEN COALESCE (inNPP, 0) = 4 THEN zc_MIFloat_Number_4()
+                                                                     WHEN COALESCE (inNPP, 0) = 5 THEN zc_MIFloat_Number_5()
+                                                                END
+                                                                )
+                            )
      , tmpMovementItemBoolean AS (SELECT *
                                   FROM MovementItemBoolean
                                   WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
@@ -197,8 +211,11 @@ BEGIN
                                                                  AND Object_Juridical.DescId = zc_Object_Juridical()
                              LEFT JOIN ObjectHistory_JuridicalDetails_View AS tmpJuridicalDetails_View ON tmpJuridicalDetails_View.JuridicalId = Object_Juridical.Id
 
-                             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlan
-                                                            ON MIFloat_AmountPlan.MovementItemId = MovementItem.Id
+                             LEFT JOIN tmpMIFloat_AmountPlan AS MIFloat_AmountPlan
+                                                             ON MIFloat_AmountPlan.MovementItemId = MovementItem.Id
+
+                             LEFT JOIN tmpMIFloat_Number AS MIFloat_Number
+                                                         ON MIFloat_Number.MovementItemId = MovementItem.Id 
 
                              LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan
                                                               ON MIBoolean_AmountPlan.MovementItemId = MovementItem.Id
@@ -213,7 +230,8 @@ BEGIN
                              LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_Contract_InfoMoney.ChildObjectId
 
                         WHERE COALESCE (MIBoolean_AmountPlan.ValueData, True) = TRUE
-                          AND COALESCE (MIFloat_AmountPlan.ValueData,0) <> 0
+                          AND COALESCE (MIFloat_AmountPlan.ValueData,0) <> 0 
+                          AND (COALESCE (MIFloat_Number.ValueData,0) = inNPP OR COALESCE (inisNPP, FALSE) = FALSE)
                      )
      , tmpContract_View AS (SELECT * FROM Object_Contract_View WHERE Object_Contract_View.ContractId IN (SELECT DISTINCT tmpMILO_Contract.ObjectId FROM tmpMILO_Contract))
 
@@ -307,4 +325,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderFinancePlan_XML(inOperDate :='17.11.2025'::TDateTime , inWeekNumber:= 47, inBankMainId := 76970, inisDay_1 := TRUE, inisDay_2 := FAlSE, inisDay_3 := FAlSE, inisDay_4 := FAlSE, inisDay_5 := FAlSE, inSession := '3');
+-- SELECT * FROM gpSelect_Movement_OrderFinancePlan_XML(inOperDate :='17.11.2025'::TDateTime , inWeekNumber:= 47, inBankMainId := 76970, inisDay_1 := TRUE, inisDay_2 := FAlSE, inisDay_3 := FAlSE, inisDay_4 := FAlSE, inisDay_5 := FAlSE, inisNPP := true, inNPP := 1, inSession := '3');

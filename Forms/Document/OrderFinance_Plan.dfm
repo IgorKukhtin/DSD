@@ -848,6 +848,20 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
           end
         end
       end
+      object edNPP: TcxCurrencyEdit
+        Left = 588
+        Top = 83
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####'
+        Properties.ReadOnly = False
+        TabOrder = 1
+        Width = 40
+      end
+      object edNPP_text: TcxLabel
+        Left = 588
+        Top = 68
+        Caption = #8470' '#1087'/'#1087
+      end
     end
   end
   inherited Panel: TPanel
@@ -856,35 +870,35 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
     ExplicitWidth = 1020
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
-      Left = 133
+      Left = 129
       EditValue = 45658d
       Enabled = False
       Properties.ReadOnly = True
       Properties.SaveTime = False
-      ExplicitLeft = 133
+      ExplicitLeft = 129
       ExplicitWidth = 82
       Width = 82
     end
     inherited deEnd: TcxDateEdit
-      Left = 241
+      Left = 237
       EditValue = 45658d
       Enabled = False
       Properties.ReadOnly = True
       Properties.SaveTime = False
-      ExplicitLeft = 241
+      ExplicitLeft = 237
       ExplicitWidth = 79
       Width = 79
     end
     inherited cxLabel1: TcxLabel
-      Left = 121
+      Left = 115
       Caption = #1089':'
-      ExplicitLeft = 121
+      ExplicitLeft = 115
       ExplicitWidth = 13
     end
     inherited cxLabel2: TcxLabel
-      Left = 219
+      Left = 215
       Caption = #1087#1086':'
-      ExplicitLeft = 219
+      ExplicitLeft = 215
       ExplicitWidth = 20
     end
     object cxLabel3: TcxLabel
@@ -924,7 +938,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       Width = 31
     end
     object cbDay_1: TcxCheckBox
-      Left = 354
+      Left = 333
       Top = 5
       Caption = '1.'#1087#1085'.'
       Properties.ReadOnly = False
@@ -932,39 +946,39 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       Width = 49
     end
     object cbDay_2: TcxCheckBox
-      Left = 409
+      Left = 380
       Top = 5
       Caption = '2.'#1074#1090'.'
       Properties.ReadOnly = False
       TabOrder = 9
-      Width = 49
+      Width = 50
     end
     object cbDay_3: TcxCheckBox
-      Left = 459
+      Left = 428
       Top = 5
       Caption = '3.'#1089#1088'.'
       Properties.ReadOnly = False
       TabOrder = 10
-      Width = 49
+      Width = 50
     end
     object cbDay_4: TcxCheckBox
-      Left = 509
+      Left = 476
       Top = 5
       Caption = '4.'#1095#1090'.'
       Properties.ReadOnly = False
       TabOrder = 11
-      Width = 49
+      Width = 50
     end
     object cbDay_5: TcxCheckBox
-      Left = 564
+      Left = 525
       Top = 5
       Caption = '5.'#1087#1090'.'
       Properties.ReadOnly = False
       TabOrder = 12
-      Width = 49
+      Width = 50
     end
     object cxLabel12: TcxLabel
-      Left = 646
+      Left = 644
       Top = 6
       Caption = #1041#1072#1085#1082' ('#1055#1083#1072#1090#1077#1083#1100#1097#1080#1082'):'
     end
@@ -978,7 +992,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         end>
       Properties.ReadOnly = True
       TabOrder = 2
-      Width = 247
+      Width = 265
     end
   end
   object ExportXmlGrid: TcxGrid [2]
@@ -990,7 +1004,6 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
     Anchors = [akTop, akRight, akBottom]
     TabOrder = 6
     Visible = False
-    ExplicitHeight = 29
     object ExportXmlGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ExportDS
@@ -1041,7 +1054,22 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       end>
   end
   inherited ActionList: TActionList
-    object actRefreshStart: TdsdDataSetRefresh [0]
+    object mactExport_New_OTP_NPP: TMultiAction [0]
+      Category = 'Export_file'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Export_FileNameNPP
+        end
+        item
+          Action = actExport_fileNPP
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1080#1084#1087#1086#1088#1090' '#1087#1083#1072#1090#1077#1078#1077#1081' '#1076#1083#1103' '#8470' '#1086#1095#1077#1088#1077#1076#1080'?'
+      InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1089#1086#1079#1076#1072#1085' '#1092#1072#1081#1083' '#1076#1083#1103' '#1080#1084#1087#1086#1088#1090#1072' '#1074' OTP Bank '#1076#1083#1103' '#8470' '#1086#1095#1077#1088#1077#1076#1080
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1080#1084#1087#1086#1088#1090' '#1074' OTP Bank '#1076#1083#1103' '#8470' '#1086#1095#1077#1088#1077#1076#1080
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1080#1084#1087#1086#1088#1090' '#1074' OTP Bank '#1076#1083#1103' '#8470' '#1086#1095#1077#1088#1077#1076#1080
+    end
+    object actRefreshStart: TdsdDataSetRefresh [1]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spGet_CurrentWeekDay
@@ -1070,6 +1098,17 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         item
           StoredProc = spSelect
         end>
+    end
+    object actGet_Export_FileNameNPP: TdsdExecStoredProc
+      Category = 'Export_file'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Export_FileNameNPP
+      StoredProcList = <
+        item
+          StoredProc = spGet_Export_FileNameNPP
+        end>
+      Caption = 'actGet_Export_FileName'
     end
     object actBankAccountChoicetFormMain: TOpenChoiceForm
       Category = 'DSDLib'
@@ -1140,6 +1179,31 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actExport_fileNPP: TdsdStoredProcExportToFile
+      Category = 'Export_fileNPP'
+      MoveParams = <>
+      dsdStoredProcName = spSelect_ExportNPP
+      FilePathParam.Value = ''
+      FilePathParam.DataType = ftString
+      FilePathParam.MultiSelectSeparator = ','
+      FileNameParam.Value = Null
+      FileNameParam.Component = FormParams
+      FileNameParam.ComponentItem = 'outFileName'
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      FileExt = '.xml'
+      FileExtParam.Value = Null
+      FileExtParam.Component = FormParams
+      FileExtParam.ComponentItem = 'outDefaultFileExt'
+      FileExtParam.DataType = ftString
+      FileExtParam.MultiSelectSeparator = ','
+      FileNamePrefixParam.Value = ''
+      FileNamePrefixParam.DataType = ftString
+      FileNamePrefixParam.MultiSelectSeparator = ','
+      FieldDefs = <>
+      Left = 1208
+      Top = 168
     end
     object actBankAccountChoicetForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -1350,7 +1414,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actExport_New_OTP: TMultiAction
+    object mactExport_New_OTP: TMultiAction
       Category = 'Export_file'
       MoveParams = <>
       ActionList = <
@@ -1643,6 +1707,18 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBank'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrintPlan'
         end
         item
@@ -1663,7 +1739,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       Category = 0
     end
     object bbExport_New_OTP: TdxBarButton
-      Action = actExport_New_OTP
+      Action = mactExport_New_OTP
       Category = 0
     end
     object bbBank: TdxBarControlContainerItem
@@ -1671,17 +1747,27 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       Category = 0
       Hint = 'New Item'
       Visible = ivAlways
-      Control = edBankMain
+      Control = edNPP
     end
     object bbText: TdxBarControlContainerItem
       Caption = 'New Item'
       Category = 0
       Hint = 'New Item'
       Visible = ivAlways
-      Control = cxLabel12
+      Control = edNPP_text
     end
     object bbPrintPlan: TdxBarButton
       Action = actPrintPlan
+      Category = 0
+    end
+    object dxBarSubItem1: TdxBarSubItem
+      Caption = #1048#1084#1087#1086#1088#1090
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <>
+    end
+    object dxBarButton1: TdxBarButton
+      Action = mactExport_New_OTP_NPP
       Category = 0
     end
   end
@@ -2012,8 +2098,8 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 632
-    Top = 184
+    Left = 656
+    Top = 152
   end
   object spGet_WeekNumber_byPeriod: TdsdStoredProc
     StoredProcName = 'gpGet_WeekNumber_byPeriod'
@@ -2166,10 +2252,25 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNPP'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNPP'
+        Value = Null
+        Component = edNPP
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 488
-    Top = 144
+    Left = 528
+    Top = 200
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -2310,6 +2411,21 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         Value = Null
         Component = cbDay_5
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNPP'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNPP'
+        Value = Null
+        Component = edNPP
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -2473,5 +2589,208 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
     PackSize = 1
     Left = 751
     Top = 144
+  end
+  object spGet_Export_FileNameNPP: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_OrderFinance_FileNamePlan'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'outFileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDefaultFileExt'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'outDefaultFileExt'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outEncodingANSI'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'outEncodingANSI'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankName_Main'
+        Value = ''
+        Component = GuidesBankMain
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 45658d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDay_1'
+        Value = False
+        Component = cbDay_1
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDay_2'
+        Value = False
+        Component = cbDay_2
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDay_3'
+        Value = False
+        Component = cbDay_3
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDay_4'
+        Value = False
+        Component = cbDay_4
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDay_5'
+        Value = False
+        Component = cbDay_5
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNPP'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNPP'
+        Value = 0.000000000000000000
+        Component = edNPP
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 456
+    Top = 240
+  end
+  object spSelect_ExportNPP: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_OrderFinancePlan_XML'
+    DataSet = ExportCDS
+    DataSets = <
+      item
+        DataSet = ExportCDS
+      end>
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = 45658d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeekNumber'
+        Value = ''
+        Component = edWeekNumber1
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankMainId'
+        Value = ''
+        Component = GuidesBankMain
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDay_1'
+        Value = False
+        Component = cbDay_1
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDay_2'
+        Value = False
+        Component = cbDay_2
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDay_3'
+        Value = False
+        Component = cbDay_3
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDay_4'
+        Value = False
+        Component = cbDay_4
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDay_5'
+        Value = False
+        Component = cbDay_5
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNPP'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNPP'
+        Value = 0.000000000000000000
+        Component = edNPP
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 528
+    Top = 248
   end
 end
