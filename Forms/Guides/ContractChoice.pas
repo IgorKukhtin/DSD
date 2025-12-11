@@ -50,6 +50,7 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     ContractComment: TcxGridDBColumn;
     Code: TcxGridDBColumn;
+    PersonalName: TcxGridDBColumn;
   private
     { Private declarations }
   public

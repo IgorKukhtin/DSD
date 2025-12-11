@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , ContractStateKindId Integer, ContractStateKindCode Integer, ContractStateKindName TVarChar
              , ContractComment TVarChar
+             , PersonalName TVarChar
              , CurrencyId Integer, CurrencyName TVarChar
              , OKPO TVarChar
              , ChangePercent TFloat
@@ -129,6 +130,7 @@ BEGIN
        , Object_Contract_View.ContractStateKindCode
        , Object_Contract_View.ContractStateKindName
        , ObjectString_Comment.ValueData AS ContractComment
+       , Object_Personal.ValueData      AS PersonalName
 
        , Object_Currency.Id         AS CurrencyId 
        , Object_Currency.ValueData  AS CurrencyName 
@@ -203,6 +205,11 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_NotTareReturning
                                 ON ObjectBoolean_NotTareReturning.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_NotTareReturning.DescId = zc_ObjectBoolean_Contract_NotTareReturning()
+
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
+                             ON ObjectLink_Contract_Personal.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
+        LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Contract_Personal.ChildObjectId
 
     WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
                                                                , 8359 -- 04-Услуги
@@ -281,7 +288,8 @@ BEGIN
        , Object_Contract_View.ContractStateKindId
        , Object_Contract_View.ContractStateKindCode
        , Object_Contract_View.ContractStateKindName
-       , ObjectString_Comment.ValueData AS ContractComment 
+       , ObjectString_Comment.ValueData AS ContractComment
+       , Object_Personal.ValueData      AS PersonalName 
 
        , Object_Currency.Id         AS CurrencyId 
        , Object_Currency.ValueData  AS CurrencyName 
@@ -349,6 +357,11 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_NotTareReturning
                                 ON ObjectBoolean_NotTareReturning.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_NotTareReturning.DescId = zc_ObjectBoolean_Contract_NotTareReturning()
+
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
+                             ON ObjectLink_Contract_Personal.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
+        LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Contract_Personal.ChildObjectId
 
     WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
                                                                , 8359 -- 04-Услуги

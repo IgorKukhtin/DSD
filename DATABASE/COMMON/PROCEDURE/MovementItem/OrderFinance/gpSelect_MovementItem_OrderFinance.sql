@@ -13,9 +13,9 @@ RETURNS TABLE (Id Integer
              , OKPO TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
-             , InfoMoneyName TVarChar, NumGroup Integer
+             , InfoMoneyCode Integer, InfoMoneyName TVarChar, NumGroup Integer
              , Condition TVarChar, ContractStateKindCode Integer
-             , StartDate TDateTime, EndDate_real TDateTime, EndDate TVarChar
+             , StartDate TDateTime, EndDate_real TDateTime, EndDate TVarChar, PersonalName_contract TVarChar
              , Amount TFloat, AmountRemains TFloat, AmountPartner TFloat
              , AmountSumm         TFloat
              , AmountPartner_1    TFloat
@@ -421,6 +421,7 @@ BEGIN
            , Object_Contract.ValueData        AS ContractName
            , Object_PaidKind.Id               AS PaidKindId
            , Object_PaidKind.ValueData        AS PaidKindName
+           , Object_InfoMoney.ObjectCode      AS InfoMoneyCode
            , Object_InfoMoney.ValueData       AS InfoMoneyName
            , COALESCE (tmpInfoMoney_OrderF.NumGroup, NULL) ::Integer AS NumGroup
            , tmpContractCondition.Condition       ::TVarChar AS Condition
@@ -431,6 +432,7 @@ BEGIN
            , (''|| CASE WHEN View_Contract.ContractTermKindId = zc_Enum_ContractTermKind_Long() THEN '* ' ELSE '' END
                 || (LPAD (EXTRACT (Day FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||LPAD (EXTRACT (Month FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||EXTRACT (YEAR FROM View_Contract.EndDate_term) :: TVarChar)
              ) ::TVarChar AS EndDate
+           , Object_Personal.ValueData ::TVarChar AS PersonalName_contract
 
            , tmpMI.Amount        ::TFloat
            , tmpMI.AmountRemains ::TFloat
@@ -499,6 +501,11 @@ BEGIN
             LEFT JOIN tmpContractCondition ON tmpContractCondition.ContractId = Object_Contract.Id
 
             LEFT JOIN tmpInfoMoney_OrderF ON tmpInfoMoney_OrderF.InfoMoneyId = Object_InfoMoney.Id
+
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
+                                 ON ObjectLink_Contract_Personal.ObjectId = View_Contract.ContractId
+                                AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
+            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Contract_Personal.ChildObjectId
      UNION
        SELECT
              tmpMI.Id                         AS Id
@@ -512,6 +519,7 @@ BEGIN
            , '' ::TVarChar                    AS ContractName
            , 0                                AS PaidKindId
            , '' ::TVarChar                    AS PaidKindName
+           , 0                                AS InfoMoneyCode
            , Object_InfoMoney.ValueData       AS InfoMoneyName
            , COALESCE (tmpInfoMoney_OrderF.NumGroup, NULL) ::Integer AS NumGroup
            , '' ::TVarChar                    AS Condition
@@ -519,6 +527,7 @@ BEGIN
            , NULL ::TDateTime                 AS StartDate
            , NULL ::TDateTime                 AS EndDate_real
            , ''   ::TVarChar                  AS EndDate
+           , ''   ::TVarChar                  AS PersonalName_contract
 
            , COALESCE (tmpMI.Amount,0) ::TFloat AS Amount
            , 0 ::TFloat       AS AmountRemains
@@ -716,6 +725,7 @@ BEGIN
            , Object_PaidKind.Id               AS PaidKindId
            , Object_PaidKind.ValueData        AS PaidKindName
 
+           , Object_InfoMoney.ObjectCode      AS InfoMoneyCode
            , Object_InfoMoney.ValueData       AS InfoMoneyName
            , COALESCE (tmpInfoMoney_OrderF.NumGroup, NULL) ::Integer AS NumGroup
 
@@ -730,6 +740,7 @@ BEGIN
            , (''|| CASE WHEN View_Contract.ContractTermKindId = zc_Enum_ContractTermKind_Long() THEN '* ' ELSE '' END
                 || (LPAD (EXTRACT (Day FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||LPAD (EXTRACT (Month FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||EXTRACT (YEAR FROM View_Contract.EndDate_term) :: TVarChar)
              ) ::TVarChar AS EndDate
+           , Object_Personal.ValueData ::TVarChar AS PersonalName_contract
 
 
            , MovementItem.Amount               :: TFloat AS Amount
@@ -873,6 +884,11 @@ BEGIN
             LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = View_Contract.InfoMoneyId
             LEFT JOIN Object AS Object_PaidKind  ON Object_PaidKind.Id  = View_Contract.PaidKindId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
+                                 ON ObjectLink_Contract_Personal.ObjectId = View_Contract.ContractId
+                                AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
+            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Contract_Personal.ChildObjectId
+
             -- УП-статья + № группы
             LEFT JOIN tmpInfoMoney_OrderF ON tmpInfoMoney_OrderF.InfoMoneyId = Object_InfoMoney.Id
 
@@ -889,6 +905,7 @@ BEGIN
            , '' ::TVarChar                    AS ContractName
            , 0                                AS PaidKindId
            , '' ::TVarChar                    AS PaidKindName
+           , 0                                AS InfoMoneyCode
            , Object_InfoMoney.ValueData       AS InfoMoneyName
            , COALESCE (tmpInfoMoney_OrderF.NumGroup, NULL) ::Integer AS NumGroup
            , '' ::TVarChar                    AS Condition
@@ -896,6 +913,7 @@ BEGIN
            , NULL ::TDateTime                 AS StartDate
            , NULL ::TDateTime                 AS EndDate_real
            , ''   ::TVarChar                  AS EndDate
+           , ''   ::TVarChar                  AS PersonalName_contract
 
            , COALESCE (tmpMI.Amount,0) ::TFloat AS Amount
            , 0 ::TFloat       AS AmountRemains
@@ -972,4 +990,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_OrderFinance (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '9818')
+-- SELECT * FROM gpSelect_MovementItem_OrderFinance (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')

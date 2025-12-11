@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , RetailId Integer, RetailName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
+             , PersonalName TVarChar
              , InfoMoneyId Integer
              , InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
@@ -127,6 +128,7 @@ BEGIN
        , Object_Retail.ValueData       AS RetailName
        , _tmpPaidKind.PaidKindId
        , _tmpPaidKind.PaidKindName
+       , Object_Personal.ValueData     AS PersonalName
 
        , Object_InfoMoney_View.InfoMoneyId
        , Object_InfoMoney_View.InfoMoneyGroupCode
@@ -214,6 +216,11 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_NotTareReturning
                                 ON ObjectBoolean_NotTareReturning.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_NotTareReturning.DescId = zc_ObjectBoolean_Contract_NotTareReturning()
+
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
+                             ON ObjectLink_Contract_Personal.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
+        LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Contract_Personal.ChildObjectId
 
     WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
                                                                , 8359 -- 04-Услуги
@@ -303,6 +310,7 @@ BEGIN
        , Object_Retail.ValueData       AS RetailName
        , _tmpPaidKind.PaidKindId
        , _tmpPaidKind.PaidKindName
+       , Object_Personal.ValueData     AS PersonalName
 
        , Object_InfoMoney_View.InfoMoneyId
        , Object_InfoMoney_View.InfoMoneyGroupCode
@@ -395,6 +403,11 @@ BEGIN
                                 ON ObjectBoolean_NotTareReturning.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_NotTareReturning.DescId = zc_ObjectBoolean_Contract_NotTareReturning()
 
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
+                             ON ObjectLink_Contract_Personal.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
+        LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Contract_Personal.ChildObjectId
+
     WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
                                                                , 8359 -- 04-Услуги
                                                                 )
@@ -460,6 +473,7 @@ BEGIN
        , Object_Retail.ValueData       AS RetailName
        , _tmpPaidKind.PaidKindId
        , _tmpPaidKind.PaidKindName
+       , Object_Personal.ValueData     AS PersonalName
 
        , Object_InfoMoney_View.InfoMoneyId
        , Object_InfoMoney_View.InfoMoneyGroupCode
@@ -549,6 +563,11 @@ BEGIN
                                 ON ObjectBoolean_NotTareReturning.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_NotTareReturning.DescId = zc_ObjectBoolean_Contract_NotTareReturning()
 
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
+                             ON ObjectLink_Contract_Personal.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
+        LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Contract_Personal.ChildObjectId
+
     WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
                                                                , 8359 -- 04-Услуги
                                                                 )
@@ -613,6 +632,7 @@ BEGIN
        , Object_Retail.ValueData       AS RetailName
        , _tmpPaidKind.PaidKindId
        , _tmpPaidKind.PaidKindName
+       , Object_Personal.ValueData     AS PersonalName
 
        , Object_InfoMoney_View.InfoMoneyId
        , Object_InfoMoney_View.InfoMoneyGroupCode
@@ -695,6 +715,11 @@ BEGIN
                                 ON ObjectBoolean_NotTareReturning.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_NotTareReturning.DescId = zc_ObjectBoolean_Contract_NotTareReturning()
 
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
+                             ON ObjectLink_Contract_Personal.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
+        LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Contract_Personal.ChildObjectId
+
     WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
                                                                , 8359 -- 04-Услуги
                                                                 )
@@ -718,6 +743,7 @@ ALTER FUNCTION gpSelect_Object_ContractChoice (Integer, Boolean, Integer, TVarCh
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 11.12.25         *
  26.09.23         * isNotTareReturning
  21.05.17         * add Contract_Currency
  17.11.15                                                                     *
