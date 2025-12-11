@@ -567,6 +567,11 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
               Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_total
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountPartner_5
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -643,6 +648,11 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
               Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_total
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountPartner_5
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -870,6 +880,18 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
           object AmountPartner_4: TcxGridDBColumn
             Caption = '28 '#1076#1085#1077#1081
             DataBinding.FieldName = 'AmountPartner_4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object AmountPartner_5: TcxGridDBColumn
+            Caption = '>28 '#1076#1085#1077#1081
+            DataBinding.FieldName = 'AmountPartner_5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -1614,7 +1636,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ReportNameSale'
+        Name = 'ReportNameOrderFinance'
         Value = Null
         DataType = ftString
         ParamType = ptInput
@@ -1804,7 +1826,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbsPrint'
         end
         item
           Visible = True
@@ -2088,6 +2110,24 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Action = mactExport_fr3
       Category = 0
     end
+    object bbPrint_xls: TdxBarButton
+      Action = actPrint_xls
+      Category = 0
+    end
+    object bbsPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_xls'
+        end>
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -2208,7 +2248,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
           Action = actGet_Export_FileName_xls
         end
         item
-          Action = actSPPrintSaleProcName
+          Action = actSPPrintOrderFinanceProcName
         end
         item
           Action = actExport_fr3
@@ -2221,6 +2261,59 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1087#1083#1072#1085' '#1087#1086' '#1087#1086#1095#1090#1077' '#1075#1088#1091#1087#1087#1077
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1087#1083#1072#1085' '#1087#1086' '#1087#1086#1095#1090#1077' '#1075#1088#1091#1087#1087#1077
       ImageIndex = 53
+    end
+    object actPrint_xls: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' (xls)'
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'NumGroup;NumGroupRes;InfoMoneyName;JuridicalName'
+        end>
+      Params = <
+        item
+          Name = 'InvNumber'
+          Value = ''
+          Component = edInvNumber
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'From'
+          Value = ''
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = 42160d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_OrderFinance_xls'
+      ReportNameParam.Value = 'PrintMovement_OrderFinance_xls'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
@@ -3686,7 +3779,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end>
       Caption = 'actGet_Export_FileName_xls'
     end
-    object actSPPrintSaleProcName: TdsdExecStoredProc
+    object actSPPrintOrderFinanceProcName: TdsdExecStoredProc
       Category = 'Export_Email_fr3'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3695,7 +3788,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         item
           StoredProc = spGetReportName
         end>
-      Caption = 'actSPPrintSaleProcName'
+      Caption = 'actSPPrintOrderFinanceProcName'
     end
     object actExport_fr3: TdsdPrintAction
       Category = 'Export_Email_fr3'
@@ -3747,7 +3840,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       ReportName = 'PrintMovement_OrderFinance'
       ReportNameParam.Value = Null
       ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameSale'
+      ReportNameParam.ComponentItem = 'ReportNameOrderFinance'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -3766,7 +3859,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
           Action = actGet_Export_FileName_xls
         end
         item
-          Action = actSPPrintSaleProcName
+          Action = actSPPrintOrderFinanceProcName
         end
         item
           Action = actExport_fr3
@@ -6028,10 +6121,10 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'gpGet_Movement_Sale_ReportName'
+        Name = 'gpGet_Movement_OrderFinance_ReportName'
         Value = Null
         Component = FormParams
-        ComponentItem = 'ReportNameSale'
+        ComponentItem = 'ReportNameOrderFinance'
         DataType = ftString
         MultiSelectSeparator = ','
       end>

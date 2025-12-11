@@ -6,11 +6,11 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderFinancePlan_Print(
     IN inOperDate         TDateTime , -- Дата начю недели (для определения года) 
     IN inBankMainId       Integer   , --
     IN inWeekNumber       Integer   , -- Номер недели
-    IN inisPlan_1         Boolean    , --
-    IN inisPlan_2         Boolean    , --
-    IN inisPlan_3         Boolean    , --
-    IN inisPlan_4         Boolean    , --
-    IN inisPlan_5         Boolean    , --
+    IN inisDay_1         Boolean    , --
+    IN inisDay_2         Boolean    , --
+    IN inisDay_3         Boolean    , --
+    IN inisDay_4         Boolean    , --
+    IN inisDay_5         Boolean    , --
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -29,11 +29,11 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
     --проверка только 1 день должен быть выбран
-    vbPlan := (CASE WHEN COALESCE (inisPlan_1,FALSE) = TRUE THEN 1 ELSE 0 END
-             + CASE WHEN COALESCE (inisPlan_2,FALSE) = TRUE THEN 1 ELSE 0 END
-             + CASE WHEN COALESCE (inisPlan_3,FALSE) = TRUE THEN 1 ELSE 0 END
-             + CASE WHEN COALESCE (inisPlan_4,FALSE) = TRUE THEN 1 ELSE 0 END
-             + CASE WHEN COALESCE (inisPlan_5,FALSE) = TRUE THEN 1 ELSE 0 END
+    vbPlan := (CASE WHEN COALESCE (inisDay_1,FALSE) = TRUE THEN 1 ELSE 0 END
+             + CASE WHEN COALESCE (inisDay_2,FALSE) = TRUE THEN 1 ELSE 0 END
+             + CASE WHEN COALESCE (inisDay_3,FALSE) = TRUE THEN 1 ELSE 0 END
+             + CASE WHEN COALESCE (inisDay_4,FALSE) = TRUE THEN 1 ELSE 0 END
+             + CASE WHEN COALESCE (inisDay_5,FALSE) = TRUE THEN 1 ELSE 0 END
              );
 
     IF COALESCE (vbPlan, 0) > 1 
@@ -45,18 +45,18 @@ BEGIN
          SELECT inWeekNumber AS WeekNumber
               , inOperDate   AS StartDate
               , (inOperDate + INTERVAL '6 DAY')::TDateTime AS EndDate
-              , CASE WHEN COALESCE (inisPlan_1,FALSE) = TRUE THEN 'Понедельник'
-                     WHEN COALESCE (inisPlan_2,FALSE) = TRUE THEN 'Вторник'    
-                     WHEN COALESCE (inisPlan_3,FALSE) = TRUE THEN 'Среда'      
-                     WHEN COALESCE (inisPlan_4,FALSE) = TRUE THEN 'Четверг'    
-                     WHEN COALESCE (inisPlan_5,FALSE) = TRUE THEN 'Пятница'    
+              , CASE WHEN COALESCE (inisDay_1,FALSE) = TRUE THEN 'Понедельник'
+                     WHEN COALESCE (inisDay_2,FALSE) = TRUE THEN 'Вторник'    
+                     WHEN COALESCE (inisDay_3,FALSE) = TRUE THEN 'Среда'      
+                     WHEN COALESCE (inisDay_4,FALSE) = TRUE THEN 'Четверг'    
+                     WHEN COALESCE (inisDay_5,FALSE) = TRUE THEN 'Пятница'    
                 END ::TVarChar AS DayOfWeek
               , (inOperDate 
-                + (''|| CASE WHEN COALESCE (inisPlan_1,FALSE) = TRUE THEN 0
-                             WHEN COALESCE (inisPlan_2,FALSE) = TRUE THEN 1
-                             WHEN COALESCE (inisPlan_3,FALSE) = TRUE THEN 2
-                             WHEN COALESCE (inisPlan_4,FALSE) = TRUE THEN 3
-                             WHEN COALESCE (inisPlan_5,FALSE) = TRUE THEN 4
+                + (''|| CASE WHEN COALESCE (inisDay_1,FALSE) = TRUE THEN 0
+                             WHEN COALESCE (inisDay_2,FALSE) = TRUE THEN 1
+                             WHEN COALESCE (inisDay_3,FALSE) = TRUE THEN 2
+                             WHEN COALESCE (inisDay_4,FALSE) = TRUE THEN 3
+                             WHEN COALESCE (inisDay_5,FALSE) = TRUE THEN 4
                         END ||' DAY') ::Interval ) ::TDateTime AS OperDate
          ;
     RETURN NEXT Cursor1;
@@ -99,11 +99,11 @@ BEGIN
      , tmpMovementItemFloat AS (SELECT *
                                 FROM MovementItemFloat
                                 WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
-                                  AND MovementItemFloat.DescId IN (CASE WHEN COALESCE (inisPlan_1,FALSE) = TRUE THEN zc_MIFloat_AmountPlan_1()
-                                                                        WHEN COALESCE (inisPlan_2,FALSE) = TRUE THEN zc_MIFloat_AmountPlan_2()
-                                                                        WHEN COALESCE (inisPlan_3,FALSE) = TRUE THEN zc_MIFloat_AmountPlan_3()
-                                                                        WHEN COALESCE (inisPlan_4,FALSE) = TRUE THEN zc_MIFloat_AmountPlan_4()
-                                                                        WHEN COALESCE (inisPlan_5,FALSE) = TRUE THEN zc_MIFloat_AmountPlan_5()
+                                  AND MovementItemFloat.DescId IN (CASE WHEN COALESCE (inisDay_1,FALSE) = TRUE THEN zc_MIFloat_AmountPlan_1()
+                                                                        WHEN COALESCE (inisDay_2,FALSE) = TRUE THEN zc_MIFloat_AmountPlan_2()
+                                                                        WHEN COALESCE (inisDay_3,FALSE) = TRUE THEN zc_MIFloat_AmountPlan_3()
+                                                                        WHEN COALESCE (inisDay_4,FALSE) = TRUE THEN zc_MIFloat_AmountPlan_4()
+                                                                        WHEN COALESCE (inisDay_5,FALSE) = TRUE THEN zc_MIFloat_AmountPlan_5()
                                                                    END
                                                                    )
                                 )
@@ -112,11 +112,11 @@ BEGIN
                                   FROM MovementItemBoolean
                                   WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                     AND MovementItemBoolean.DescId IN (
-                                                                     CASE WHEN COALESCE (inisPlan_1,FALSE) = TRUE THEN zc_MIBoolean_AmountPlan_1()
-                                                                          WHEN COALESCE (inisPlan_2,FALSE) = TRUE THEN zc_MIBoolean_AmountPlan_2()
-                                                                          WHEN COALESCE (inisPlan_3,FALSE) = TRUE THEN zc_MIBoolean_AmountPlan_3()
-                                                                          WHEN COALESCE (inisPlan_4,FALSE) = TRUE THEN zc_MIBoolean_AmountPlan_4()
-                                                                          WHEN COALESCE (inisPlan_5,FALSE) = TRUE THEN zc_MIBoolean_AmountPlan_5()
+                                                                     CASE WHEN COALESCE (inisDay_1,FALSE) = TRUE THEN zc_MIBoolean_AmountPlan_1()
+                                                                          WHEN COALESCE (inisDay_2,FALSE) = TRUE THEN zc_MIBoolean_AmountPlan_2()
+                                                                          WHEN COALESCE (inisDay_3,FALSE) = TRUE THEN zc_MIBoolean_AmountPlan_3()
+                                                                          WHEN COALESCE (inisDay_4,FALSE) = TRUE THEN zc_MIBoolean_AmountPlan_4()
+                                                                          WHEN COALESCE (inisDay_5,FALSE) = TRUE THEN zc_MIBoolean_AmountPlan_5()
                                                                      END
                                                                      )
                                   )
@@ -338,5 +338,5 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpSelect_Movement_OrderFinancePlan_Print (inOperDate :='27.10.2025'::TDateTime , inBankMainId:= 76970, inWeekNumber:= 44,  inisPlan_1 := TRUE, inisPlan_2 := FAlSE, inisPlan_3 := FAlSE, inisPlan_4 := FAlSE, inisPlan_5 := FAlSE, inSession := '3'); 
+--SELECT * FROM gpSelect_Movement_OrderFinancePlan_Print (inOperDate :='27.10.2025'::TDateTime , inBankMainId:= 76970, inWeekNumber:= 44,  inisDay_1 := TRUE, inisDay_2 := FAlSE, inisDay_3 := FAlSE, inisDay_4 := FAlSE, inisDay_5 := FAlSE, inSession := '3'); 
 -- FETCH ALL "<unnamed portal 34>";

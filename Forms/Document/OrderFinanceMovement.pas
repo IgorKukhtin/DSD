@@ -291,13 +291,15 @@ type
     spGet_Export_FileName_xls: TdsdStoredProc;
     actGet_Export_FileName_xls: TdsdExecStoredProc;
     spGetReportName: TdsdStoredProc;
-    actSPPrintSaleProcName: TdsdExecStoredProc;
     actExport_fr3: TdsdPrintAction;
     mactExport_fr3: TMultiAction;
     bbtExport_fr3: TdxBarButton;
     mactExportGroup_fr3: TMultiAction;
     spGet_Export_EmailGroup: TdsdStoredProc;
     actGet_Export_EmailGroup: TdsdExecStoredProc;
+    actPrint_xls: TdsdPrintAction;
+    bbPrint_xls: TdxBarButton;
+    bbsPrint: TdxBarSubItem;
   private
   public
   end;

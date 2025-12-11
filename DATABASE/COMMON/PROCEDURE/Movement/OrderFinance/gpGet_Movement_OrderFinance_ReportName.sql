@@ -17,7 +17,7 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Sale());
 
      vbPrintFormName:=
-       (SELECT 'PrintMovement_OrderFinance' AS PrintFormName);
+       (SELECT 'PrintMovement_OrderFinance_xls' AS PrintFormName);
 
      RETURN (vbPrintFormName);
 

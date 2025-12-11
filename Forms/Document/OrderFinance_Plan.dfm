@@ -1,11 +1,11 @@
 inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
   Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')'
-  ClientHeight = 365
+  ClientHeight = 374
   ClientWidth = 1020
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1036
-  ExplicitHeight = 404
+  ExplicitHeight = 413
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -784,6 +784,9 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
           object Number_1: TcxGridDBColumn
             Caption = #8470' '#1087'/'#1087' '#1085#1072' 1.'#1087#1085'.'
             DataBinding.FieldName = 'Number_1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -792,6 +795,9 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
           object Number_2: TcxGridDBColumn
             Caption = #8470' '#1087'/'#1087' '#1085#1072' 2.'#1074#1090'.'
             DataBinding.FieldName = 'Number_2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -800,6 +806,9 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
           object Number_3: TcxGridDBColumn
             Caption = #8470' '#1087'/'#1087' '#1085#1072' 3.'#1089#1088'.'
             DataBinding.FieldName = 'Number_3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -808,6 +817,9 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
           object Number_4: TcxGridDBColumn
             Caption = #8470' '#1087'/'#1087' '#1085#1072' 4.'#1095#1090'.'
             DataBinding.FieldName = 'Number_4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -816,9 +828,22 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
           object Number_5: TcxGridDBColumn
             Caption = #8470' '#1087'/'#1087' '#1085#1072' 5.'#1087#1090'.'
             DataBinding.FieldName = 'Number_5'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 70
+          end
+          object Number_calc: TcxGridDBColumn
+            Caption = '***'#8470' '#1087'/'#1087' '#1088#1072#1089#1095#1077#1090
+            DataBinding.FieldName = 'Number_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
         end
@@ -898,7 +923,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       Visible = False
       Width = 31
     end
-    object cbPlan_1: TcxCheckBox
+    object cbDay_1: TcxCheckBox
       Left = 354
       Top = 5
       Caption = '1.'#1087#1085'.'
@@ -906,7 +931,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       TabOrder = 8
       Width = 49
     end
-    object cbPlan_2: TcxCheckBox
+    object cbDay_2: TcxCheckBox
       Left = 409
       Top = 5
       Caption = '2.'#1074#1090'.'
@@ -914,7 +939,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       TabOrder = 9
       Width = 49
     end
-    object cbPlan_3: TcxCheckBox
+    object cbDay_3: TcxCheckBox
       Left = 459
       Top = 5
       Caption = '3.'#1089#1088'.'
@@ -922,7 +947,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       TabOrder = 10
       Width = 49
     end
-    object cbPlan_4: TcxCheckBox
+    object cbDay_4: TcxCheckBox
       Left = 509
       Top = 5
       Caption = '4.'#1095#1090'.'
@@ -930,7 +955,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       TabOrder = 11
       Width = 49
     end
-    object cbPlan_5: TcxCheckBox
+    object cbDay_5: TcxCheckBox
       Left = 564
       Top = 5
       Caption = '5.'#1087#1090'.'
@@ -960,11 +985,12 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
     Left = 0
     Top = 336
     Width = 1020
-    Height = 29
+    Height = 38
     Align = alBottom
     Anchors = [akTop, akRight, akBottom]
     TabOrder = 6
     Visible = False
+    ExplicitHeight = 29
     object ExportXmlGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ExportDS
@@ -1527,41 +1553,41 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsAmountPlan_1'
+        Name = 'inIsDay_1'
         Value = Null
-        Component = cbPlan_1
+        Component = cbDay_1
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsAmountPlan_2'
+        Name = 'inIsDay_2'
         Value = Null
-        Component = cbPlan_2
+        Component = cbDay_2
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsAmountPlan_3'
+        Name = 'inIsDay_3'
         Value = Null
-        Component = cbPlan_3
+        Component = cbDay_3
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsAmountPlan_4'
+        Name = 'inIsDay_4'
         Value = Null
-        Component = cbPlan_4
+        Component = cbDay_4
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsAmountPlan_5'
+        Name = 'inIsDay_5'
         Value = Null
-        Component = cbPlan_5
+        Component = cbDay_5
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1798,41 +1824,41 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPlan_1'
+        Name = 'inisDay_1'
         Value = Null
-        Component = cbPlan_1
+        Component = cbDay_1
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPlan_2'
+        Name = 'inisDay_2'
         Value = Null
-        Component = cbPlan_2
+        Component = cbDay_2
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPlan_3'
+        Name = 'inisDay_3'
         Value = Null
-        Component = cbPlan_3
+        Component = cbDay_3
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPlan_4'
+        Name = 'inisDay_4'
         Value = Null
-        Component = cbPlan_4
+        Component = cbDay_4
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPlan_5'
+        Name = 'inisDay_5'
         Value = Null
-        Component = cbPlan_5
+        Component = cbDay_5
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1975,6 +2001,15 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         ComponentItem = 'AmountPlan_calc'
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNumber_calc'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Number_calc'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 632
@@ -2023,37 +2058,37 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
     OutputType = otResult
     Params = <
       item
-        Name = 'isPlan_1'
+        Name = 'isDay_1'
         Value = 41640d
-        Component = cbPlan_1
+        Component = cbDay_1
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
-        Name = 'isPlan_2'
+        Name = 'isDay_2'
         Value = 41640d
-        Component = cbPlan_2
+        Component = cbDay_2
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
-        Name = 'isPlan_3'
+        Name = 'isDay_3'
         Value = ''
-        Component = cbPlan_3
+        Component = cbDay_3
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
-        Name = 'isPlan_4'
+        Name = 'isDay_4'
         Value = ''
-        Component = cbPlan_4
+        Component = cbDay_4
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
-        Name = 'isPlan_5'
+        Name = 'isDay_5'
         Value = Null
-        Component = cbPlan_5
+        Component = cbDay_5
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
@@ -2093,41 +2128,41 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPlan_1'
+        Name = 'inisDay_1'
         Value = Null
-        Component = cbPlan_1
+        Component = cbDay_1
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPlan_2'
+        Name = 'inisDay_2'
         Value = Null
-        Component = cbPlan_2
+        Component = cbDay_2
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPlan_3'
+        Name = 'inisDay_3'
         Value = Null
-        Component = cbPlan_3
+        Component = cbDay_3
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPlan_4'
+        Name = 'inisDay_4'
         Value = Null
-        Component = cbPlan_4
+        Component = cbDay_4
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPlan_5'
+        Name = 'inisDay_5'
         Value = Null
-        Component = cbPlan_5
+        Component = cbDay_5
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2239,41 +2274,41 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPlan_1'
+        Name = 'inisDay_1'
         Value = Null
-        Component = cbPlan_1
+        Component = cbDay_1
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPlan_2'
+        Name = 'inisDay_2'
         Value = Null
-        Component = cbPlan_2
+        Component = cbDay_2
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPlan_3'
+        Name = 'inisDay_3'
         Value = Null
-        Component = cbPlan_3
+        Component = cbDay_3
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPlan_4'
+        Name = 'inisDay_4'
         Value = Null
-        Component = cbPlan_4
+        Component = cbDay_4
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPlan_5'
+        Name = 'inisDay_5'
         Value = Null
-        Component = cbPlan_5
+        Component = cbDay_5
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2316,7 +2351,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       end>
     PackSize = 1
     Left = 288
-    Top = 40
+    Top = 80
   end
   object GuidesBankMain: TdsdGuides
     KeyField = 'Id'
@@ -2396,41 +2431,41 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPlan_1'
+        Name = 'inisDay_1'
         Value = Null
-        Component = cbPlan_1
+        Component = cbDay_1
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPlan_2'
+        Name = 'inisDay_2'
         Value = Null
-        Component = cbPlan_2
+        Component = cbDay_2
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPlan_3'
+        Name = 'inisDay_3'
         Value = Null
-        Component = cbPlan_3
+        Component = cbDay_3
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPlan_4'
+        Name = 'inisDay_4'
         Value = Null
-        Component = cbPlan_4
+        Component = cbDay_4
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPlan_5'
+        Name = 'inisDay_5'
         Value = Null
-        Component = cbPlan_5
+        Component = cbDay_5
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
