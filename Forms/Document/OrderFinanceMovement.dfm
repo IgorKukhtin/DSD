@@ -3211,6 +3211,9 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
           StoredProc = spInsertUpdateMI_byReport
         end
         item
+          StoredProc = spGet
+        end
+        item
           StoredProc = spSelectMI
         end>
       Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1086#1090#1095#1077#1090
