@@ -12,12 +12,12 @@ CREATE OR REPLACE FUNCTION  gpSelect_Movement_OrderFinancePlan_XML(
     IN inOperDate         TDateTime , -- Дата начю недели (для определения года)
     IN inWeekNumber       Integer   , -- Номер недели
     IN inBankMainId       Integer   , --    76970  ОТП банк
-    IN inisDay_1          Boolean    , --
-    IN inisDay_2          Boolean    , --
-    IN inisDay_3          Boolean    , --
-    IN inisDay_4          Boolean    , --
-    IN inisDay_5          Boolean    , --
-    IN inisNPP            Boolean    , -- для № очереди
+    IN inIsDay_1          Boolean    , --
+    IN inIsDay_2          Boolean    , --
+    IN inIsDay_3          Boolean    , --
+    IN inIsDay_4          Boolean    , --
+    IN inIsDay_5          Boolean    , --
+    IN inIsNPP            Boolean    , -- для № очереди
     IN inNPP              TFloat     , -- № очереди
     IN inSession          TVarChar    -- сессия пользователя
 )
@@ -38,11 +38,11 @@ BEGIN
 
 
     --проверка только 1 день должен быть выбран
-    vbPlan := (CASE WHEN COALESCE (inisDay_1,FALSE) = TRUE THEN 1 ELSE 0 END
-             + CASE WHEN COALESCE (inisDay_2,FALSE) = TRUE THEN 1 ELSE 0 END
-             + CASE WHEN COALESCE (inisDay_3,FALSE) = TRUE THEN 1 ELSE 0 END
-             + CASE WHEN COALESCE (inisDay_4,FALSE) = TRUE THEN 1 ELSE 0 END
-             + CASE WHEN COALESCE (inisDay_5,FALSE) = TRUE THEN 1 ELSE 0 END
+    vbPlan := (CASE WHEN COALESCE (inIsDay_1,FALSE) = TRUE THEN 1 ELSE 0 END
+             + CASE WHEN COALESCE (inIsDay_2,FALSE) = TRUE THEN 1 ELSE 0 END
+             + CASE WHEN COALESCE (inIsDay_3,FALSE) = TRUE THEN 1 ELSE 0 END
+             + CASE WHEN COALESCE (inIsDay_4,FALSE) = TRUE THEN 1 ELSE 0 END
+             + CASE WHEN COALESCE (inIsDay_5,FALSE) = TRUE THEN 1 ELSE 0 END
              );
 
     IF COALESCE (vbPlan, 0) > 1
@@ -54,6 +54,12 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Ошибка.День недели не выбран.';
     END IF;
+
+    IF COALESCE (inIsNPP, FALSE) = TRUE AND COALESCE (inNPP,0) = 0
+    THEN
+        RAISE EXCEPTION 'Ошибка.№ очереди не задан.';
+    END IF;
+
 
   CREATE TEMP TABLE tmpData (DOCUMENTDATE TVarChar, DOCUMENTNO TVarChar
                            , BANKID TVarChar, IBAN TVarChar, CORRBANKID TVarChar, CORRIBAN TVarChar
@@ -235,7 +241,7 @@ BEGIN
 
                         WHERE COALESCE (MIBoolean_AmountPlan.ValueData, True) = TRUE
                           AND COALESCE (MIFloat_AmountPlan.ValueData,0) <> 0 
-                          AND (COALESCE (MIFloat_Number.ValueData,0) = inNPP OR COALESCE (inisNPP, FALSE) = FALSE)
+                          AND (COALESCE (MIFloat_Number.ValueData,0) = inNPP OR COALESCE (inIsNPP, FALSE) = FALSE)
                      )
      , tmpContract_View AS (SELECT * FROM Object_Contract_View WHERE Object_Contract_View.ContractId IN (SELECT DISTINCT tmpMILO_Contract.ObjectId FROM tmpMILO_Contract))
 
@@ -329,4 +335,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderFinancePlan_XML(inOperDate :='17.11.2025'::TDateTime , inWeekNumber:= 47, inBankMainId := 76970, inIsDay_1 := TRUE, inIsDay_2 := FAlSE, inIsDay_3 := FAlSE, inIsDay_4 := FAlSE, inIsDay_5 := FAlSE, inSession := '3');
+-- SELECT * FROM gpSelect_Movement_OrderFinancePlan_XML(inOperDate :='17.11.2025'::TDateTime , inWeekNumber:= 47, inBankMainId := 76970, inIsDay_1 := TRUE, inIsDay_2 := FAlSE, inIsDay_3 := FAlSE, inIsDay_4 := FAlSE, inIsDay_5 := FAlSE, inisNPP := true, inNPP := 2, inSession := '3');
