@@ -1623,11 +1623,22 @@ END IF;
 , (SELECT sum (_tmpRemainsCount.OperSumm_item) FROM _tmpRemainsCount WHERE _tmpRemainsCount.GoodsId = 5341 and _tmpRemainsCount.GoodsKindId =  8349)
 
 -- err update inMovementId = 32931756 + 27.11.2025 - RK - код=2161
-update Container set Amount = Amount + 764.4900 Where Id = 13198897
-update MovementItemContainer set Amount = Amount + 764.4900 where ContainerId =13198897 and MovementId = 32931756 and Id = 38782244792
---  
+--
+-- 1.1. remains =
+update Container set Amount = Amount + 764.4900 Where Id = 13198897;
+update MovementItemContainer set Amount = Amount + 764.4900 where ContainerId =13198897 and MovementId = 32931756 and Id = 38782244792;
+-- 1.2. opiu = 
+update MovementItemContainer set Amount = Amount - 764.4900 where ContainerId = 312301 and MovementId = 32931756 and MovementItemId = 342033821 ;
+--
+-- 2.1. remains =  
 update Container set Amount = Amount + 25.7100 Where Id = 13198900
 update MovementItemContainer set Amount = Amount + 25.7100 where ContainerId =13198900 and MovementId = 32931756 and Id = 38782244790
+-- 2.2. opiu =   
+update MovementItemContainer set Amount = Amount - 25.7100  where ContainerId = 312301 and MovementId = 32931756 and MovementItemId = 342033821 
+--
+--
+-- 3. opiu =   
+update Container set Amount = Amount - 764.4900 - 25.7100  Where Id = 312301
 
 ;*/
 
