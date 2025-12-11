@@ -70,7 +70,7 @@ BEGIN
            , Object_BankAccount_View.BankName
            , (Object_BankAccount_View.BankName || '' || Object_BankAccount_View.Name) :: TVarChar AS BankAccountNameAll
 
-           , MovementFloat_WeekNumber.ValueData                            AS WeekNumber
+           , tmpMovement.WeekNumber                            AS WeekNumber
              -- Предварительный План на неделю
            , COALESCE (MovementFloat_TotalSumm.Valuedata, 0)    ::TFloat   AS TotalSumm
              -- Согласована сумма на неделю
@@ -85,8 +85,8 @@ BEGIN
            , COALESCE (MovementFloat_AmountPlan_4.Valuedata, 0) ::TFloat   AS AmountPlan_4
            , COALESCE (MovementFloat_AmountPlan_5.Valuedata, 0) ::TFloat   AS AmountPlan_5
 
-           , DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', Movement.OperDate) + ((((7 * COALESCE (MovementFloat_WeekNumber.ValueData - 1, 0)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL) ::TDateTime AS StartDate_WeekNumber
-           , (DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', Movement.OperDate) + ((((7 * COALESCE (MovementFloat_WeekNumber.ValueData - 1, 0)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL) + INTERVAL '6 DAY') ::TDateTime AS EndDate_WeekNumber
+           , tmpMovement.StartDate_WeekNumber  ::TDateTime AS StartDate_WeekNumber
+           , tmpMovement.EndDate_WeekNumber    ::TDateTime AS EndDate_WeekNumber
 
            , MovementDate_Update_report.ValueData ::TDateTime AS DateUpdate_report
            , Object_Update_report.ValueData       ::TVarChar  AS UserUpdate_report
@@ -110,20 +110,25 @@ BEGIN
            , COALESCE (MovementDate_Sign_1.ValueData, NULL)         ::TDateTime AS Date_Sign_1
            , CASE WHEN MovementBoolean_Sign_1.ValueData = TRUE THEN FALSE ELSE COALESCE (MovementBoolean_SignWait_1.ValueData, FALSE) END ::Boolean AS isSignWait_1 
            , COALESCE (MovementBoolean_Sign_1.ValueData, FALSE)     ::Boolean   AS isSign_1
-       FROM (SELECT Movement.id
+       FROM (SELECT Movement.Id  
+                  , MovementFloat_WeekNumber.ValueData                            AS WeekNumber
+                  , DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', Movement.OperDate) + ((((7 * COALESCE (MovementFloat_WeekNumber.ValueData - 1, 0)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL) ::TDateTime AS StartDate_WeekNumber
+                  , (DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', Movement.OperDate) + ((((7 * COALESCE (MovementFloat_WeekNumber.ValueData - 1, 0)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL) + INTERVAL '6 DAY') ::TDateTime AS EndDate_WeekNumber
              FROM tmpStatus
-                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_OrderFinance() AND Movement.StatusId = tmpStatus.StatusId
-                  --JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+                  JOIN Movement ON Movement.DescId = zc_Movement_OrderFinance()
+                               AND Movement.StatusId = tmpStatus.StatusId
+                               --AND Movement.OperDate BETWEEN inStartDate AND inEndDate 
+                  LEFT JOIN MovementFloat AS MovementFloat_WeekNumber
+                                          ON MovementFloat_WeekNumber.MovementId = Movement.Id
+                                         AND MovementFloat_WeekNumber.DescId = zc_MovementFloat_WeekNumber()
+
+             WHERE DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', Movement.OperDate) + ((((7 * COALESCE (MovementFloat_WeekNumber.ValueData - 1, 0)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL) ::TDateTime <= inEndDate
+               AND (DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', Movement.OperDate) + ((((7 * COALESCE (MovementFloat_WeekNumber.ValueData - 1, 0)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL) + INTERVAL '6 DAY') ::TDateTime >=inStartDate
             ) AS tmpMovement
 
-            LEFT JOIN Movement ON Movement.id = tmpMovement.id
-
+            LEFT JOIN Movement ON Movement.Id = tmpMovement.Id
+            
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-
-
-            LEFT JOIN MovementFloat AS MovementFloat_WeekNumber
-                                    ON MovementFloat_WeekNumber.MovementId = Movement.Id
-                                   AND MovementFloat_WeekNumber.DescId = zc_MovementFloat_WeekNumber()
 
             LEFT JOIN MovementFloat AS MovementFloat_AmountPlan_1
                                     ON MovementFloat_AmountPlan_1.MovementId = Movement.Id
@@ -240,4 +245,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderFinance (inStartDate:= '01.11.2021', inEndDate:= '30.11.2021', inJuridicalBasisId:=0, inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_OrderFinance (inStartDate:= '12.11.2025', inEndDate:= '30.11.2025', inJuridicalBasisId:=0, inIsErased := FALSE, inSession:= '2')
