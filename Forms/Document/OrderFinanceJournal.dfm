@@ -29,21 +29,19 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
       Left = 107
       Top = 5
       EditValue = 45658d
-      Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
       Width = 85
     end
     object deEnd: TcxDateEdit
-      Left = 310
+      Left = 316
       Top = 5
       EditValue = 45658d
-      Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
-      Width = 85
+      Width = 82
     end
     object cxLabel1: TcxLabel
       Left = 10

@@ -300,6 +300,8 @@ type
     actPrint_xls: TdsdPrintAction;
     bbPrint_xls: TdxBarButton;
     bbsPrint: TdxBarSubItem;
+    InfoMoneyCode: TcxGridDBColumn;
+    PersonalName_contract: TcxGridDBColumn;
   private
   public
   end;

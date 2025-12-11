@@ -218,6 +218,13 @@ inherited ContractChoiceForm: TContractChoiceForm
             Options.Editing = False
             Width = 30
           end
+          object PersonalName: TcxGridDBColumn
+            Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
+            DataBinding.FieldName = 'PersonalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
         end
       end
     end
@@ -440,6 +447,14 @@ inherited ContractChoiceForm: TContractChoiceForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'RetailName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
