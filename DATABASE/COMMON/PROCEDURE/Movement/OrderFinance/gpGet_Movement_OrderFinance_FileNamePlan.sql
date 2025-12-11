@@ -1,6 +1,7 @@
 -- Function: gpGet_Movement_OrderFinance_FileName(Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpGet_Movement_OrderFinance_FileNamePlan (Integer,TVarChar, TDateTime, Boolean,Boolean,Boolean,Boolean,Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpGet_Movement_OrderFinance_FileNamePlan (Integer,TVarChar, TDateTime, Boolean,Boolean,Boolean,Boolean,Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_OrderFinance_FileNamePlan (Integer,TVarChar, TDateTime, Boolean,Boolean,Boolean,Boolean,Boolean, Boolean, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_OrderFinance_FileNamePlan(
    OUT outFileName            TVarChar  ,
@@ -14,6 +15,8 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_OrderFinance_FileNamePlan(
     IN inisDay_3              Boolean    , --
     IN inisDay_4              Boolean    , --
     IN inisDay_5              Boolean    , --
+    IN inisNPP                Boolean    , -- для № очереди
+    IN inNPP                  TFloat     , -- № очереди
     IN inSession              TVarChar
 )
   RETURNS RECORD
@@ -30,6 +33,11 @@ BEGIN
           RAISE EXCEPTION 'Ошибка.Банк не выбран.';
      END IF;
 
+     IF COALESCE (inisNPP, FALSE) = TRUE AND COALESCE (inNPP,0) = 0
+     THEN
+          RAISE EXCEPTION 'Ошибка.№ очереди не задан.';
+     END IF;
+
     -- Результат
      SELECT REPLACE (inBankName_Main, '"', '')
             || '_' || REPLACE ( zfConvert_DateShortToString (inOperDate 
@@ -40,6 +48,7 @@ BEGIN
                                                                           WHEN COALESCE (inisDay_5,FALSE) = TRUE THEN 4
                                                                      END ||' DAY') ::Interval 
                                                                ) , '.', '')
+            || CASE WHEN inisNPP = TRUE THEN '_'||zfConvert_IntToString (inNPP::Integer,0) ELSE '' END  --если по № очери то указать после даты
              AS outFileName
           , 'xml'                         AS outDefaultFileExt
           , FALSE                         AS outEncodingANSI
@@ -69,7 +78,6 @@ $BODY$
 
 SELECT * FROM gpGet_Movement_OrderFinance_FileNamePlan
 (inMovementId:= 14022564, inBankName_Main :=  'ПАТ "ОТП БАНК"'  ::TVarChar , inOperDAte := '17.01.2025' ::TDateTime ,
- inisDay_1 :=  FAlse ::Boolean , inisDay_2 := FAlse  ::Boolean, inisDay_3 := FAlse ::Boolean, inisDay_4 := True ::Boolean, inisDay_5 := FAlse ::Boolean,
+ inisDay_1 :=  FAlse ::Boolean , inisDay_2 := FAlse  ::Boolean, inisDay_3 := FAlse ::Boolean, inisDay_4 := True ::Boolean, inisDay_5 := FAlse ::Boolean,inisNPP := true, inNPP := 2,
  inSession:= zfCalc_UserAdmin()) 
- 
-*/
+ */
