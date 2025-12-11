@@ -48,7 +48,20 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Договор <%> уже Завершен.', (SELECT '(' ||Object.ObjectCode||') '|| Object.ValueData FROM Object WHERE Object.Id = inContractId);
      END IF;
 
-
+     IF EXISTS (SELECT 1
+                FROM MovementItem
+                     INNER JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                                       ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                                      AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                                                      AND MILinkObject_Contract.ObjectId = InContractId               
+                WHERE MovementItem.MovementId = inMovementId
+                  AND MovementItem.Id <> ioId
+                  AND MovementItem.ObjectId = inJuridicalId
+                )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Дублирование запрещено. Для <%> и договора <%> уже сохранена строка.', (SELECT '(' ||Object.ObjectCode||') '|| Object.ValueData FROM Object WHERE Object.Id = inJuridicalId)
+                                                                                                      , (SELECT '(' ||Object.ObjectCode||') '|| Object.ValueData FROM Object WHERE Object.Id = inContractId);
+     END IF;
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inJuridicalId, inMovementId, inAmount, NULL);

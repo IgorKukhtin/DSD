@@ -1761,11 +1761,11 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end
         item
           Visible = True
-          ItemName = 'bbAddMask'
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'bbInsertRecord'
         end
         item
           Visible = True
@@ -2253,6 +2253,18 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       ImageIndexTrue = 65
       ImageIndexFalse = 64
     end
+    object actUpdateJuridicalDS: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Juridical_OrderFinance
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Juridical_OrderFinance
+        end>
+      Caption = 'actUpdateJuridicalDS'
+      DataSource = JuridicalDS
+    end
     object mactExportGroup_fr3: TMultiAction
       Category = 'Export_Email_fr3'
       MoveParams = <>
@@ -2375,18 +2387,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1087#1083#1072#1085' '#1087#1086' '#1087#1086#1095#1090#1077
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1087#1083#1072#1085' '#1087#1086' '#1087#1086#1095#1090#1077' (XLS)'
       ImageIndex = 53
-    end
-    object actUpdateJuridicalDS: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Juridical_OrderFinance
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_Juridical_OrderFinance
-        end>
-      Caption = 'actUpdateJuridicalDS'
-      DataSource = JuridicalDS
     end
     object actExport_New: TMultiAction
       Category = 'Export_file'
@@ -3125,6 +3125,23 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
           Value = ' '
           Component = MasterCDS
           ComponentItem = 'Condition'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PaidKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PaidKindId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PaidKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PaidKindName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -4109,8 +4126,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 65518
-    Top = 271
+    Left = 46
+    Top = 359
   end
   object MasterViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -4266,8 +4283,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 362
-    Top = 216
+    Left = 322
+    Top = 208
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -5189,8 +5206,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 320
-    Top = 448
+    Left = 352
+    Top = 440
   end
   object spGet_Export_FileName: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_OrderFinance_FileName'
@@ -5475,8 +5492,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 70
-    Top = 407
+    Left = 46
+    Top = 415
   end
   object GuidesInsert: TdsdGuides
     KeyField = 'Id'

@@ -2090,6 +2090,14 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outNumber_calc'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Number_calc'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 656

@@ -38,6 +38,7 @@ CREATE OR REPLACE FUNCTION gpUpdateMovement_OrderFinance_Plan(
    OUT outComment_pay            TVarChar   ,
    OUT outAmountPlan_calc        TFloat     ,
     IN inNumber_calc             TFloat     ,
+   OUT outNumber_calc            TFloat     ,
     IN inSession                 TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -412,6 +413,7 @@ BEGIN
                                         )
 
      SELECT MIFloat_AmountPlan.ValueData ::TFloat AS AmountPlan_calc
+          , MIFloat_Number.ValueData     ::TFloat AS Number_calc
           , CASE WHEN MIFloat_AmountPlan.ValueData > 0
                  THEN REPLACE
                      (REPLACE
@@ -424,7 +426,7 @@ BEGIN
                  ELSE ''
             END :: TVarChar AS Comment_pay
 
-   INTO outAmountPlan_calc, outComment_pay
+   INTO outAmountPlan_calc, outNumber_calc, outComment_pay
      FROM MovementItem
           LEFT JOIN MovementItemFloat AS MIFloat_AmountPlan
                                       ON MIFloat_AmountPlan.MovementItemId = MovementItem.Id
@@ -434,6 +436,16 @@ BEGIN
                                                                           WHEN outisAmountPlan_4 = TRUE THEN zc_MIFloat_AmountPlan_4()
                                                                           WHEN outisAmountPlan_5 = TRUE THEN zc_MIFloat_AmountPlan_5()
                                                                      END
+
+          LEFT JOIN tmpMovementItemFloat AS MIFloat_Number
+                                         ON MIFloat_Number.MovementItemId = MovementItem.Id
+                                        AND MIFloat_Number.DescId = CASE WHEN outisAmountPlan_1 = TRUE THEN zc_MIFloat_Number_1()
+                                                                         WHEN outisAmountPlan_2 = TRUE THEN zc_MIFloat_Number_2()
+                                                                         WHEN outisAmountPlan_3 = TRUE THEN zc_MIFloat_Number_3()
+                                                                         WHEN outisAmountPlan_4 = TRUE THEN zc_MIFloat_Number_4()
+                                                                         WHEN outisAmountPlan_5 = TRUE THEN zc_MIFloat_Number_5()
+                                                                    END
+
           LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                            ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                           AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
