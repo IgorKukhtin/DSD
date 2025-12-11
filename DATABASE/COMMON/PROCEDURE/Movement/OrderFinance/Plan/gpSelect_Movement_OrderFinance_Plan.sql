@@ -613,9 +613,9 @@ BEGIN
                                        , ObjectString_Comment.ValueData         :: TVarChar AS Comment
                                          -- № п/п
                                        , ROW_NUMBER() OVER (PARTITION BY OL_JuridicalOrderFinance_Juridical.ChildObjectId
-                                                                       , Main_BankAccount_View.BankId
                                                                        , OL_JuridicalOrderFinance_InfoMoney.ChildObjectId
-                                                            ORDER BY CASE WHEN ObjectString_Comment.ValueData <> '' THEN 0 ELSE 1 END
+                                                            ORDER BY CASE WHEN ObjectString_Comment.ValueData ILIKE '%SUMMA_P%' THEN 0 ELSE 1 END
+                                                                   , CASE WHEN ObjectString_Comment.ValueData <>    ''          THEN 0 ELSE 1 END
                                                                    , ObjectDate_OperDate.ValueData DESC
                                                            ) AS Ord
                                   FROM Object AS Object_JuridicalOrderFinance
@@ -650,9 +650,10 @@ BEGIN
                                                            AND ObjectDate_OperDate.DescId = zc_ObjectDate_JuridicalOrderFinance_OperDate()
                                   WHERE Object_JuridicalOrderFinance.DescId = zc_Object_JuridicalOrderFinance()
                                    AND Object_JuridicalOrderFinance.isErased = FALSE
+                                   -- !!! по Этому банку
                                    AND Main_BankAccount_View.BankId = inBankMainId
                                    AND inBankMainId <> 0
-                                   )
+                                 )
 
    , tmpJuridicalOrderFinance_last AS (SELECT Object_JuridicalOrderFinance.Id  AS JuridicalOrderFinanceId
                                             , OL_JuridicalOrderFinance_Juridical.ChildObjectId       AS JuridicalId
@@ -674,7 +675,8 @@ BEGIN
                                               -- № п/п
                                             , ROW_NUMBER() OVER (PARTITION BY OL_JuridicalOrderFinance_Juridical.ChildObjectId
                                                                             , OL_JuridicalOrderFinance_InfoMoney.ChildObjectId
-                                                                 ORDER BY CASE WHEN ObjectString_Comment.ValueData <> '' THEN 0 ELSE 1 END
+                                                                 ORDER BY CASE WHEN ObjectString_Comment.ValueData ILIKE '%SUMMA_P%' THEN 0 ELSE 1 END
+                                                                        , CASE WHEN ObjectString_Comment.ValueData <>    ''          THEN 0 ELSE 1 END
                                                                         , ObjectDate_OperDate.ValueData DESC
                                                                 ) AS Ord
                                        FROM Object AS Object_JuridicalOrderFinance

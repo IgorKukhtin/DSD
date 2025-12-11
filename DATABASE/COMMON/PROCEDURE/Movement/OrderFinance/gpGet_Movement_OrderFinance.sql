@@ -113,7 +113,10 @@ BEGIN
                              OR OrderFinance_Member_insert_4.ChildObjectId = vbMemberId
                              OR OrderFinance_Member_insert_5.ChildObjectId = vbMemberId
                                )
-                         LIMIT 1  --про всяк випадок
+                         -- временно
+                         ORDER BY Object_OrderFinance.ObjectCode ASC
+                         -- обязательно ОДИН, т.к. сотруднику могут быть назначены несколько OrderFinance
+                         LIMIT 1
                          )
 
 

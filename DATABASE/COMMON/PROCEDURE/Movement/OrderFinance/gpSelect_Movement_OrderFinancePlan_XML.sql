@@ -58,8 +58,10 @@ BEGIN
                            , AMOUNT INTEGER
                            , CORRCOUNTRYID TVarChar, PRIORITY TVarChar, PURPOSEPAYMENTID TVarChar, ADDENTRIES TVarChar, VALUEDATE TVarChar
                            ) ON COMMIT DROP;
+     -- 
      INSERT INTO tmpData (DOCUMENTDATE, DOCUMENTNO, BANKID, IBAN, CORRBANKID, CORRIBAN, CORRSNAME,  CORRIDENTIFYCODE, DETAILSOFPAYMENT, AMOUNT
-                        , CORRCOUNTRYID, PRIORITY, PURPOSEPAYMENTID, ADDENTRIES, VALUEDATE)
+                        , CORRCOUNTRYID, PRIORITY, PURPOSEPAYMENTID, ADDENTRIES, VALUEDATE
+                         )
       WITH
        tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
@@ -144,9 +146,12 @@ BEGIN
                                        , Partner_BankAccount_View.Name                     AS BankAccountName
                                        , OL_JuridicalOrderFinance_InfoMoney.ChildObjectId  AS InfoMoneyId
                                        , ObjectString_Comment.ValueData                    AS Comment
-
-                                       , ROW_NUMBER() OVER (PARTITION BY OL_JuridicalOrderFinance_Juridical.ChildObjectId, Main_BankAccount_View.Id, OL_JuridicalOrderFinance_InfoMoney.ChildObjectId
-                                                            ORDER BY ObjectDate_OperDate.ValueData DESC
+                                         -- ¹ ï/ï
+                                       , ROW_NUMBER() OVER (PARTITION BY OL_JuridicalOrderFinance_Juridical.ChildObjectId
+                                                                       , OL_JuridicalOrderFinance_InfoMoney.ChildObjectId
+                                                            ORDER BY CASE WHEN ObjectString_Comment.ValueData ILIKE '%SUMMA_P%' THEN 0 ELSE 1 END
+                                                                   , CASE WHEN ObjectString_Comment.ValueData <>    ''          THEN 0 ELSE 1 END
+                                                                   , ObjectDate_OperDate.ValueData DESC
                                                            ) AS Ord
                                   FROM Object AS Object_JuridicalOrderFinance
                                        LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_Juridical
@@ -212,7 +217,7 @@ BEGIN
                                                  AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
                              LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_Contract_InfoMoney.ChildObjectId
 
-                        WHERE COALESCE (MIBoolean_AmountPlan.ValueData, True) = TRUE
+                        WHERE COALESCE (MIBoolean_AmountPlan.ValueData, TRUE) = TRUE
                           AND COALESCE (MIFloat_AmountPlan.ValueData,0) <> 0
                      )
      , tmpContract_View AS (SELECT * FROM Object_Contract_View WHERE Object_Contract_View.ContractId IN (SELECT DISTINCT tmpMILO_Contract.ObjectId FROM tmpMILO_Contract))
