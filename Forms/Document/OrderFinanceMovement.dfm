@@ -1167,9 +1167,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1070#1088'.'#1083#1080#1094#1072
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -5840,8 +5837,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
-    Left = 440
-    Top = 48
+    Left = 448
+    Top = 40
   end
   object spUpdate_SignWait_1_Yes: TdsdStoredProc
     StoredProcName = 'gpUpdateMovement_OrderFinance_SignWait_1'

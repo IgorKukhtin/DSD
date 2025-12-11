@@ -849,18 +849,13 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         end
       end
       object edNPP: TcxCurrencyEdit
-        Left = 588
-        Top = 83
+        Left = 932
+        Top = 75
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####'
         Properties.ReadOnly = False
         TabOrder = 1
         Width = 40
-      end
-      object edNPP_text: TcxLabel
-        Left = 588
-        Top = 68
-        Caption = #8470' '#1087'/'#1087
       end
     end
   end
@@ -1754,7 +1749,6 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       Category = 0
       Hint = 'New Item'
       Visible = ivAlways
-      Control = edNPP_text
     end
     object bbPrintPlan: TdxBarButton
       Action = actPrintPlan

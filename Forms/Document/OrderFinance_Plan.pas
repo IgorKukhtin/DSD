@@ -93,7 +93,6 @@ type
     Number_calc: TcxGridDBColumn;
     dxBarSubItem1: TdxBarSubItem;
     edNPP: TcxCurrencyEdit;
-    edNPP_text: TcxLabel;
     mactExport_New_OTP_NPP: TMultiAction;
     spGet_Export_FileNameNPP: TdsdStoredProc;
     actGet_Export_FileNameNPP: TdsdExecStoredProc;
