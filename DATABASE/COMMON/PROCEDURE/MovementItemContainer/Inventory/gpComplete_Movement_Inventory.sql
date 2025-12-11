@@ -1622,7 +1622,7 @@ END IF;
 , (SELECT sum (_tmpRemainsCount.OperCount_find) FROM _tmpRemainsCount WHERE _tmpRemainsCount.GoodsId = 5341 and _tmpRemainsCount.GoodsKindId =  8349)
 , (SELECT sum (_tmpRemainsCount.OperSumm_item) FROM _tmpRemainsCount WHERE _tmpRemainsCount.GoodsId = 5341 and _tmpRemainsCount.GoodsKindId =  8349)
 
--- err update inMovementId = 32931756 + 27.11.2025 - RK
+-- err update inMovementId = 32931756 + 27.11.2025 - RK - код=2161
 update Container set Amount = Amount + 764.4900 Where Id = 13198897
 update MovementItemContainer set Amount = Amount + 764.4900 where ContainerId =13198897 and MovementId = 32931756 and Id = 38782244792
 --  
