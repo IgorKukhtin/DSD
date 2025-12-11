@@ -10,11 +10,11 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderFinance_Plan(
     IN inBankMainId        Integer , -- банк  Плательщик
     IN inStartWeekNumber   Integer , --
     IN inEndWeekNumber     Integer , --
-    IN inisDay_1           Boolean    , --
-    IN inisDay_2           Boolean    , --
-    IN inisDay_3           Boolean    , --
-    IN inisDay_4           Boolean    , --
-    IN inisDay_5           Boolean    , --
+    IN inIsDay_1           Boolean    , --
+    IN inIsDay_2           Boolean    , --
+    IN inIsDay_3           Boolean    , --
+    IN inIsDay_4           Boolean    , --
+    IN inIsDay_5           Boolean    , --
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
@@ -213,11 +213,11 @@ BEGIN
                                   )
 
 
-     -- статьи для группировки
+       -- статьи для группировки
      , tmpOrderFinanceProperty AS (SELECT DISTINCT
-                                          OrderFinanceProperty_OrderFinance.ChildObjectId AS OrderFinanceId
-                                        , OrderFinanceProperty_Object.ChildObjectId AS Id
-                                        , ObjectFloat_Group.ValueData                        AS NumGroup
+                                          OrderFinanceProperty_OrderFinance.ChildObjectId          AS OrderFinanceId
+                                        , OrderFinanceProperty_Object.ChildObjectId                AS Id
+                                        , ObjectFloat_Group.ValueData                              AS NumGroup
                                         , COALESCE (ObjectBoolean_Group.ValueData,FALSE) ::Boolean AS isGroup
                                    FROM ObjectLink AS OrderFinanceProperty_OrderFinance
                                         INNER JOIN ObjectLink AS OrderFinanceProperty_Object
@@ -244,9 +244,10 @@ BEGIN
                                   , tmpOrderFinanceProperty.OrderFinanceId
                              FROM Object_InfoMoney_View
                                   INNER JOIN tmpOrderFinanceProperty ON (tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyId
-                                                                     OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyDestinationId
-                                                                     OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyGroupId)
-                             )
+                                                                      OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyDestinationId
+                                                                      OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyGroupId
+                                                                        )
+                            )
 
 
       , tmpMI_Data AS (SELECT MovementItem.MovementId
@@ -813,15 +814,15 @@ BEGIN
         , tmpMI.AmountPlan_5    :: TFloat AS AmountPlan_5
         , tmpMI.AmountPlan_total :: TFloat AS AmountPlan_total
 
-        , CASE WHEN inisDay_1 = TRUE AND COALESCE (tmpMI.isAmountPlan_1, TRUE) = TRUE
+        , CASE WHEN inIsDay_1 = TRUE AND COALESCE (tmpMI.isAmountPlan_1, TRUE) = TRUE
                     THEN tmpMI.AmountPlan_1
-               WHEN inisDay_2 = TRUE AND COALESCE (tmpMI.isAmountPlan_2, TRUE) = TRUE
+               WHEN inIsDay_2 = TRUE AND COALESCE (tmpMI.isAmountPlan_2, TRUE) = TRUE
                     THEN tmpMI.AmountPlan_2
-               WHEN inisDay_3 = TRUE AND COALESCE (tmpMI.isAmountPlan_3, TRUE) = TRUE
+               WHEN inIsDay_3 = TRUE AND COALESCE (tmpMI.isAmountPlan_3, TRUE) = TRUE
                     THEN tmpMI.AmountPlan_3
-               WHEN inisDay_4 = TRUE AND COALESCE (tmpMI.isAmountPlan_4, TRUE) = TRUE
+               WHEN inIsDay_4 = TRUE AND COALESCE (tmpMI.isAmountPlan_4, TRUE) = TRUE
                     THEN tmpMI.AmountPlan_4
-               WHEN inisDay_5 = TRUE AND COALESCE (tmpMI.isAmountPlan_5, TRUE) = TRUE
+               WHEN inIsDay_5 = TRUE AND COALESCE (tmpMI.isAmountPlan_5, TRUE) = TRUE
                     THEN tmpMI.AmountPlan_5
                ELSE 0
           END ::TFloat AS AmountPlan_calc
@@ -832,51 +833,51 @@ BEGIN
         , tmpMI.Number_4    :: TFloat AS Number_4
         , tmpMI.Number_5    :: TFloat AS Number_5
 
-        , CASE WHEN inisDay_1 = TRUE AND COALESCE (tmpMI.isAmountPlan_1, TRUE) = TRUE
+        , CASE WHEN inIsDay_1 = TRUE AND COALESCE (tmpMI.isAmountPlan_1, TRUE) = TRUE
                     THEN tmpMI.Number_1
-               WHEN inisDay_2 = TRUE AND COALESCE (tmpMI.isAmountPlan_2, TRUE) = TRUE
+               WHEN inIsDay_2 = TRUE AND COALESCE (tmpMI.isAmountPlan_2, TRUE) = TRUE
                     THEN tmpMI.Number_2
-               WHEN inisDay_3 = TRUE AND COALESCE (tmpMI.isAmountPlan_3, TRUE) = TRUE
+               WHEN inIsDay_3 = TRUE AND COALESCE (tmpMI.isAmountPlan_3, TRUE) = TRUE
                     THEN tmpMI.Number_3
-               WHEN inisDay_4 = TRUE AND COALESCE (tmpMI.isAmountPlan_4, TRUE) = TRUE
+               WHEN inIsDay_4 = TRUE AND COALESCE (tmpMI.isAmountPlan_4, TRUE) = TRUE
                     THEN tmpMI.Number_4
-               WHEN inisDay_5 = TRUE AND COALESCE (tmpMI.isAmountPlan_5, TRUE) = TRUE
+               WHEN inIsDay_5 = TRUE AND COALESCE (tmpMI.isAmountPlan_5, TRUE) = TRUE
                     THEN tmpMI.Number_5
                ELSE 0
           END ::TFloat AS Number_calc
 
-        , CASE WHEN inisDay_1 = TRUE AND COALESCE (tmpMI.isAmountPlan_1, TRUE) = TRUE AND tmpMI.AmountPlan_1 > 0
+        , CASE WHEN inIsDay_1 = TRUE AND COALESCE (tmpMI.isAmountPlan_1, TRUE) = TRUE AND tmpMI.AmountPlan_1 > 0
                     THEN zc_Color_Yelow()
                ELSE zc_Color_White()
           END :: Integer AS FonColor_AmountPlan_1
-        , CASE WHEN inisDay_2 = TRUE AND COALESCE (tmpMI.isAmountPlan_2, TRUE) = TRUE AND tmpMI.AmountPlan_2 > 0
+        , CASE WHEN inIsDay_2 = TRUE AND COALESCE (tmpMI.isAmountPlan_2, TRUE) = TRUE AND tmpMI.AmountPlan_2 > 0
                     THEN zc_Color_Yelow()
                ELSE zc_Color_White()
           END :: Integer AS FonColor_AmountPlan_2
-        , CASE WHEN inisDay_3 = TRUE AND COALESCE (tmpMI.isAmountPlan_3, TRUE) = TRUE AND tmpMI.AmountPlan_3 > 0
+        , CASE WHEN inIsDay_3 = TRUE AND COALESCE (tmpMI.isAmountPlan_3, TRUE) = TRUE AND tmpMI.AmountPlan_3 > 0
                     THEN zc_Color_Yelow()
                ELSE zc_Color_White()
           END :: Integer AS FonColor_AmountPlan_3
-        , CASE WHEN inisDay_4 = TRUE AND COALESCE (tmpMI.isAmountPlan_4, TRUE) = TRUE AND tmpMI.AmountPlan_4 > 0
+        , CASE WHEN inIsDay_4 = TRUE AND COALESCE (tmpMI.isAmountPlan_4, TRUE) = TRUE AND tmpMI.AmountPlan_4 > 0
                     THEN zc_Color_Yelow()
                ELSE zc_Color_White()
           END :: Integer AS FonColor_AmountPlan_3
-        , CASE WHEN inisDay_5 = TRUE AND COALESCE (tmpMI.isAmountPlan_5, TRUE) = TRUE AND tmpMI.AmountPlan_5 > 0
+        , CASE WHEN inIsDay_5 = TRUE AND COALESCE (tmpMI.isAmountPlan_5, TRUE) = TRUE AND tmpMI.AmountPlan_5 > 0
                     THEN zc_Color_Yelow()
                ELSE zc_Color_White()
           END :: Integer AS FonColor_AmountPlan_5
 
         , CASE WHEN 1=1
                     THEN zc_Color_White()
-               WHEN inisDay_1 = TRUE AND COALESCE (tmpMI.isAmountPlan_1, TRUE) = TRUE AND tmpMI.AmountPlan_1 > 0
+               WHEN inIsDay_1 = TRUE AND COALESCE (tmpMI.isAmountPlan_1, TRUE) = TRUE AND tmpMI.AmountPlan_1 > 0
                     THEN zc_Color_Yelow()
-               WHEN inisDay_2 = TRUE AND COALESCE (tmpMI.isAmountPlan_2, TRUE) = TRUE AND tmpMI.AmountPlan_2 > 0
+               WHEN inIsDay_2 = TRUE AND COALESCE (tmpMI.isAmountPlan_2, TRUE) = TRUE AND tmpMI.AmountPlan_2 > 0
                     THEN zc_Color_Yelow()
-               WHEN inisDay_3 = TRUE AND COALESCE (tmpMI.isAmountPlan_3, TRUE) = TRUE AND tmpMI.AmountPlan_3 > 0
+               WHEN inIsDay_3 = TRUE AND COALESCE (tmpMI.isAmountPlan_3, TRUE) = TRUE AND tmpMI.AmountPlan_3 > 0
                     THEN zc_Color_Yelow()
-               WHEN inisDay_4 = TRUE AND COALESCE (tmpMI.isAmountPlan_4, TRUE) = TRUE AND tmpMI.AmountPlan_4 > 0
+               WHEN inIsDay_4 = TRUE AND COALESCE (tmpMI.isAmountPlan_4, TRUE) = TRUE AND tmpMI.AmountPlan_4 > 0
                     THEN zc_Color_Yelow()
-               WHEN inisDay_5 = TRUE AND COALESCE (tmpMI.isAmountPlan_5, TRUE) = TRUE AND tmpMI.AmountPlan_5 > 0
+               WHEN inIsDay_5 = TRUE AND COALESCE (tmpMI.isAmountPlan_5, TRUE) = TRUE AND tmpMI.AmountPlan_5 > 0
                     THEN zc_Color_Yelow()
                ELSE zc_Color_White()
           END :: Integer AS FonColor_AmountPlan_calc
@@ -888,22 +889,22 @@ BEGIN
         , tmpMI.isAmountPlan_5 ::Boolean
 
           -- по умолчанию платим , если нет снимают галку  -- надо еще колонку одну, где будут ставить  да/нет, а в шапке вывести 5 дней недели и там где галку поставят, тогда и будем понимать в какой это день
-        , CASE WHEN inisDay_1 = TRUE AND COALESCE (tmpMI.isAmountPlan_1, TRUE) = TRUE
+        , CASE WHEN inIsDay_1 = TRUE AND COALESCE (tmpMI.isAmountPlan_1, TRUE) = TRUE
                     THEN TRUE
-               WHEN inisDay_2 = TRUE AND COALESCE (tmpMI.isAmountPlan_2, TRUE) = TRUE
+               WHEN inIsDay_2 = TRUE AND COALESCE (tmpMI.isAmountPlan_2, TRUE) = TRUE
                     THEN TRUE
-               WHEN inisDay_3 = TRUE AND COALESCE (tmpMI.isAmountPlan_3, TRUE) = TRUE
+               WHEN inIsDay_3 = TRUE AND COALESCE (tmpMI.isAmountPlan_3, TRUE) = TRUE
                     THEN TRUE
-               WHEN inisDay_4 = TRUE AND COALESCE (tmpMI.isAmountPlan_4, TRUE) = TRUE
+               WHEN inIsDay_4 = TRUE AND COALESCE (tmpMI.isAmountPlan_4, TRUE) = TRUE
                     THEN TRUE
-               WHEN inisDay_5 = TRUE AND COALESCE (tmpMI.isAmountPlan_5, TRUE) = TRUE
+               WHEN inIsDay_5 = TRUE AND COALESCE (tmpMI.isAmountPlan_5, TRUE) = TRUE
                     THEN TRUE
                ELSE FALSE
           END ::Boolean  AS isAmountPlan
 
         , tmpMI.Comment        ::TVarChar AS Comment
 
-        , CASE WHEN inisDay_1 = TRUE AND COALESCE (tmpMI.isAmountPlan_1, TRUE) = TRUE AND tmpMI.AmountPlan_1 > 0
+        , CASE WHEN inIsDay_1 = TRUE AND COALESCE (tmpMI.isAmountPlan_1, TRUE) = TRUE AND tmpMI.AmountPlan_1 > 0
                     THEN REPLACE
                         (REPLACE
                         (REPLACE
@@ -913,7 +914,7 @@ BEGIN
                                                                   , 'PDV', '20')
                                                                   , 'SUMMA_P', zfConvert_FloatToString (ROUND(tmpMI.AmountPlan_1/6, 2)))
 
-               WHEN inisDay_2 = TRUE AND COALESCE (tmpMI.isAmountPlan_2, TRUE) = TRUE AND tmpMI.AmountPlan_2 > 0
+               WHEN inIsDay_2 = TRUE AND COALESCE (tmpMI.isAmountPlan_2, TRUE) = TRUE AND tmpMI.AmountPlan_2 > 0
                     THEN REPLACE
                         (REPLACE
                         (REPLACE
@@ -923,7 +924,7 @@ BEGIN
                                                                   , 'PDV', '20')
                                                                   , 'SUMMA_P', zfConvert_FloatToString (ROUND(tmpMI.AmountPlan_2/6, 2)))
 
-               WHEN inisDay_3 = TRUE AND COALESCE (tmpMI.isAmountPlan_3, TRUE) = TRUE AND tmpMI.AmountPlan_3 > 0
+               WHEN inIsDay_3 = TRUE AND COALESCE (tmpMI.isAmountPlan_3, TRUE) = TRUE AND tmpMI.AmountPlan_3 > 0
                     THEN REPLACE
                         (REPLACE
                         (REPLACE
@@ -933,7 +934,7 @@ BEGIN
                                                                   , 'PDV', '20')
                                                                   , 'SUMMA_P', zfConvert_FloatToString (ROUND(tmpMI.AmountPlan_3/6, 2)))
 
-               WHEN inisDay_4 = TRUE AND COALESCE (tmpMI.isAmountPlan_4, TRUE) = TRUE AND tmpMI.AmountPlan_4 > 0
+               WHEN inIsDay_4 = TRUE AND COALESCE (tmpMI.isAmountPlan_4, TRUE) = TRUE AND tmpMI.AmountPlan_4 > 0
                     THEN REPLACE
                         (REPLACE
                         (REPLACE
@@ -943,7 +944,7 @@ BEGIN
                                                                   , 'PDV', '20')
                                                                   , 'SUMMA_P', zfConvert_FloatToString (ROUND(tmpMI.AmountPlan_4/6, 2)))
 
-               WHEN inisDay_5 = TRUE AND COALESCE (tmpMI.isAmountPlan_5, TRUE) = TRUE AND tmpMI.AmountPlan_5 > 0
+               WHEN inIsDay_5 = TRUE AND COALESCE (tmpMI.isAmountPlan_5, TRUE) = TRUE AND tmpMI.AmountPlan_5 > 0
                     THEN REPLACE
                         (REPLACE
                         (REPLACE
@@ -1003,5 +1004,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderFinance_Plan (inStartDate:= '01.11.2025', inEndDate:= '30.12.2025', inStartWeekNumber:=47, inEndWeekNumber := 48, inisDay_1:=FALSE, inisDay_2:=FALSE, inisDay_3:=FALSE, inisDay_4:=FALSE, inisDay_5:=FALSE, inSession:= '2')
--- SELECT * FROM gpSelect_Movement_OrderFinance_Plan (inStartDate:= '01.11.2025', inEndDate:= '30.12.2025', inBankMainId:=76970, inStartWeekNumber:=47, inEndWeekNumber := 48, inisDay_1:=FALSE, inisDay_2:=FALSE, inisDay_3:=FALSE, inisDay_4:=FALSE, inisDay_5:=FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_OrderFinance_Plan (inStartDate:= '01.11.2025', inEndDate:= '30.12.2025', inStartWeekNumber:=47, inEndWeekNumber := 48, inIsDay_1:=FALSE, inIsDay_2:=FALSE, inIsDay_3:=FALSE, inIsDay_4:=FALSE, inIsDay_5:=FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_OrderFinance_Plan (inStartDate:= '01.11.2025', inEndDate:= '30.12.2025', inBankMainId:=76970, inStartWeekNumber:=47, inEndWeekNumber := 48, inIsDay_1:=FALSE, inIsDay_2:=FALSE, inIsDay_3:=FALSE, inIsDay_4:=FALSE, inIsDay_5:=FALSE, inSession:= '2')
