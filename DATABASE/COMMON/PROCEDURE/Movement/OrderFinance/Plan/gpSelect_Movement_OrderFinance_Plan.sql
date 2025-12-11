@@ -118,6 +118,12 @@ BEGIN
                                                      ON MovementFloat_WeekNumber.MovementId = Movement.Id
                                                     AND MovementFloat_WeekNumber.DescId = zc_MovementFloat_WeekNumber()
                                                     AND MovementFloat_WeekNumber.ValueData BETWEEN inStartWeekNumber AND inEndWeekNumber
+                           -- временно - Відділ забезбечення - 1
+                           INNER JOIN MovementLinkObject AS MovementLinkObject_OrderFinance
+                                                         ON MovementLinkObject_OrderFinance.MovementId = Movement.Id
+                                                        AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
+                                                        AND MovementLinkObject_OrderFinance.ObjectId   = 3988049
+
                        WHERE Movement.DescId = zc_Movement_OrderFinance()
                          AND Movement.StatusId IN (SELECT tmpStatus.StatusId FROM tmpStatus)
                          AND Movement.OperDate BETWEEN inStartDate - INTERVAL '14 DAY' AND inEndDate
@@ -177,7 +183,7 @@ BEGIN
                                                                  , zc_MIFloat_Number_3()
                                                                  , zc_MIFloat_Number_4()
                                                                  , zc_MIFloat_Number_5()
-                                                                 )
+                                                                  )
                                 )
 
      , tmpMovementItemDate AS (SELECT *
@@ -190,8 +196,8 @@ BEGIN
                                      FROM MovementItemLinkObject
                                      WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                        AND MovementItemLinkObject.DescId IN (zc_MILinkObject_Insert()
-                                                                  , zc_MILinkObject_Update()
-                                                                   )
+                                                                           , zc_MILinkObject_Update()
+                                                                            )
                                      )
      , tmpMovementItemString AS (SELECT *
                                  FROM MovementItemString
@@ -715,10 +721,7 @@ BEGIN
                                         AND Object_JuridicalOrderFinance.isErased = FALSE
                                        -- AND inBankMainId = 0
                                         )
-
-
-
-
+   -- Результат
    SELECT tmpMovement.MovementId
         , tmpMovement.InvNumber
         , tmpMovement.OperDate
@@ -777,7 +780,7 @@ BEGIN
         , CASE WHEN tmpMovement.isSign_1 = TRUE THEN FALSE ELSE tmpMovement.isSignWait_1 END :: Boolean
         , tmpMovement.isSign_1        ::Boolean  --35
 
-        --
+          --
         , tmpMI.Id AS MovementItemId
         , tmpMI.JuridicalId
         , tmpMI.JuridicalCode
@@ -798,15 +801,21 @@ BEGIN
         , tmpMI.EndDate_real           ::TDateTime
         , tmpMI.EndDate                ::TVarChar
 
+          -- Предварительная сумма оплаты на неделю
         , tmpMI.Amount          :: TFloat AS Amount
+          -- Нач. долг
         , tmpMI.AmountRemains   :: TFloat AS AmountRemains
+          -- Долг с отсрочкой
         , tmpMI.AmountPartner   :: TFloat AS AmountPartner
+          -- Приход
         , tmpMI.AmountSumm      :: TFloat AS AmountSumm
+          -- Просроченный долг 7 дн.
         , tmpMI.AmountPartner_1 :: TFloat AS AmountPartner_1
         , tmpMI.AmountPartner_2 :: TFloat AS AmountPartner_2
         , tmpMI.AmountPartner_3 :: TFloat AS AmountPartner_3
         , tmpMI.AmountPartner_4 :: TFloat AS AmountPartner_4
 
+          -- План оплат на 1.пн
         , tmpMI.AmountPlan_1    :: TFloat AS AmountPlan_1
         , tmpMI.AmountPlan_2    :: TFloat AS AmountPlan_2
         , tmpMI.AmountPlan_3    :: TFloat AS AmountPlan_3
@@ -814,6 +823,7 @@ BEGIN
         , tmpMI.AmountPlan_5    :: TFloat AS AmountPlan_5
         , tmpMI.AmountPlan_total :: TFloat AS AmountPlan_total
 
+          -- Платим да/нет (ввод)
         , CASE WHEN inIsDay_1 = TRUE AND COALESCE (tmpMI.isAmountPlan_1, TRUE) = TRUE
                     THEN tmpMI.AmountPlan_1
                WHEN inIsDay_2 = TRUE AND COALESCE (tmpMI.isAmountPlan_2, TRUE) = TRUE
@@ -827,12 +837,14 @@ BEGIN
                ELSE 0
           END ::TFloat AS AmountPlan_calc
 
+          -- № в очереди на 1.пн.
         , tmpMI.Number_1    :: TFloat AS Number_1
         , tmpMI.Number_2    :: TFloat AS Number_2
         , tmpMI.Number_3    :: TFloat AS Number_3
         , tmpMI.Number_4    :: TFloat AS Number_4
         , tmpMI.Number_5    :: TFloat AS Number_5
 
+          -- № в очереди (ввод)
         , CASE WHEN inIsDay_1 = TRUE AND COALESCE (tmpMI.isAmountPlan_1, TRUE) = TRUE
                     THEN tmpMI.Number_1
                WHEN inIsDay_2 = TRUE AND COALESCE (tmpMI.isAmountPlan_2, TRUE) = TRUE
@@ -882,6 +894,7 @@ BEGIN
                ELSE zc_Color_White()
           END :: Integer AS FonColor_AmountPlan_calc
 
+          -- Платим (да/нет) 1.пн.
         , tmpMI.isAmountPlan_1 ::Boolean
         , tmpMI.isAmountPlan_2 ::Boolean
         , tmpMI.isAmountPlan_3 ::Boolean
@@ -904,6 +917,7 @@ BEGIN
 
         , tmpMI.Comment        ::TVarChar AS Comment
 
+          -- всегда считаем - ФАКТ Назначение платежа
         , CASE WHEN inIsDay_1 = TRUE AND COALESCE (tmpMI.isAmountPlan_1, TRUE) = TRUE AND tmpMI.AmountPlan_1 > 0
                     THEN REPLACE
                         (REPLACE
@@ -975,7 +989,7 @@ BEGIN
 
         LEFT JOIN tmpInfoMoney_OFP ON tmpInfoMoney_OFP.InfoMoneyId = tmpMI.InfoMoneyId
                                   AND tmpInfoMoney_OFP.OrderFinanceId = tmpMovement.OrderFinanceId
-        --привязка  юр.лицо + статья + выбранный банк (плательщик)
+        -- привязка  юр.лицо + статья + выбранный банк (плательщик)
         LEFT JOIN tmpJuridicalOrderFinance ON tmpJuridicalOrderFinance.JuridicalId = tmpMI.JuridicalId
                                           AND tmpJuridicalOrderFinance.InfoMoneyId = tmpMI.InfoMoneyId
                                           AND inBankMainId <> 0
@@ -985,11 +999,14 @@ BEGIN
         LEFT JOIN tmpJuridicalOrderFinance_last ON tmpJuridicalOrderFinance_last.JuridicalId = tmpMI.JuridicalId
                                                AND tmpJuridicalOrderFinance_last.InfoMoneyId = tmpMI.InfoMoneyId
                                                AND tmpJuridicalOrderFinance_last.Ord = 1
+   -- или план по дням
    WHERE tmpMI.AmountPlan_1 <> 0
       OR tmpMI.AmountPlan_2 <> 0
       OR tmpMI.AmountPlan_3 <> 0
       OR tmpMI.AmountPlan_4 <> 0
       OR tmpMI.AmountPlan_5 <> 0
+      -- или Предварительный план
+      OR (tmpMI.JuridicalId > 0 AND tmpMI.Amount <> 0)
       ;
 
 END;
