@@ -112,6 +112,12 @@ BEGIN
                  -- схема Vchasno - EDI
                , CASE WHEN MovementString_DealId.ValueData <> ''
                            THEN COALESCE (ObjectBoolean_Juridical_VchasnoEdi.ValueData, FALSE)
+
+                      -- Дільниця обліку і реалізації м`ясної сировини
+                      WHEN MovementString_DealId.ValueData <> ''
+                           MovementLinkObject_From.ObjectId = 133049
+                           THEN TRUE
+
                       ELSE FALSE
                  END :: Boolean AS isVchasnoEDI
 

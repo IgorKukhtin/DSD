@@ -718,9 +718,9 @@ BEGIN
                   OR tmpMovement.DescId_From = zc_Object_Unit()
               ) AS ChangePercentAmount
 
-            , COALESCE (ObjectBoolean_Partner_EdiOrdspr.ValueData, FALSE)  :: Boolean AS isEdiOrdspr
-            , COALESCE (ObjectBoolean_Partner_EdiInvoice.ValueData, FALSE) :: Boolean AS isEdiInvoice
-            , COALESCE (ObjectBoolean_Partner_EdiDesadv.ValueData, FALSE)  :: Boolean AS isEdiDesadv
+            , COALESCE (ObjectBoolean_Partner_EdiOrdspr_vch.ValueData, ObjectBoolean_Partner_EdiOrdspr.ValueData, FALSE)  :: Boolean AS isEdiOrdspr
+            , COALESCE (ObjectBoolean_Partner_EdiInvoice_vch.ValueData, ObjectBoolean_Partner_EdiInvoice.ValueData, FALSE) :: Boolean AS isEdiInvoice
+            , COALESCE (ObjectBoolean_Partner_EdiDesadv_vch.ValueData, ObjectBoolean_Partner_EdiDesadv.ValueData, FALSE)  :: Boolean AS isEdiDesadv
 
             , CASE WHEN tmpJuridicalPrint.isPack = TRUE OR tmpJuridicalPrint.isSpec = TRUE THEN COALESCE (tmpJuridicalPrint.isMovement, FALSE) ELSE TRUE END :: Boolean AS isMovement
             , CASE WHEN tmpJuridicalPrint.CountMovement > 0 THEN tmpJuridicalPrint.CountMovement ELSE 2 END :: TFloat AS CountMovement
@@ -791,6 +791,7 @@ BEGIN
                              ON MovementLinkMovement_Order.MovementId = tmpMovement.Id
                             AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
 
+            -- EDI + VHASNO
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiOrdspr
                                     ON ObjectBoolean_Partner_EdiOrdspr.ObjectId =  tmpMovement.FromId
                                    AND ObjectBoolean_Partner_EdiOrdspr.DescId = zc_ObjectBoolean_Partner_EdiOrdspr()
@@ -803,6 +804,28 @@ BEGIN
                                     ON ObjectBoolean_Partner_EdiDesadv.ObjectId =  tmpMovement.FromId
                                    AND ObjectBoolean_Partner_EdiDesadv.DescId = zc_ObjectBoolean_Partner_EdiDesadv()
                                    AND MovementLinkMovement_Order.MovementChildId > 0 -- проверка по связи заявки с EDI
+            -- VHASNO
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiOrdspr_vch
+                                    ON ObjectBoolean_Partner_EdiOrdspr_vch.ObjectId =  tmpMovement.FromId
+                                   AND ObjectBoolean_Partner_EdiOrdspr_vch.DescId = zc_ObjectBoolean_Partner_EdiOrdspr_vch()
+                                    -- проверка по связи заявки с EDI
+                                   AND MovementLinkMovement_Order.MovementChildId > 0
+                                      -- Дільниця обліку і реалізації м`ясної сировини
+                                   AND tmpMovement.FromId = 133049
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiInvoice_vch
+                                    ON ObjectBoolean_Partner_EdiInvoice_vch.ObjectId =  tmpMovement.FromId
+                                   AND ObjectBoolean_Partner_EdiInvoice_vch.DescId = zc_ObjectBoolean_Partner_EdiInvoice_vch()
+                                    -- проверка по связи заявки с EDI
+                                   AND MovementLinkMovement_Order.MovementChildId > 0
+                                      -- Дільниця обліку і реалізації м`ясної сировини
+                                   AND tmpMovement.FromId = 133049
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiDesadv_vch
+                                    ON ObjectBoolean_Partner_EdiDesadv_vch.ObjectId =  tmpMovement.FromId
+                                   AND ObjectBoolean_Partner_EdiDesadv_vch.DescId = zc_ObjectBoolean_Partner_EdiDesadv_vch()
+                                    -- проверка по связи заявки с EDI
+                                   AND MovementLinkMovement_Order.MovementChildId > 0
+                                      -- Дільниця обліку і реалізації м`ясної сировини
+                                   AND tmpMovement.FromId = 133049
 
             LEFT JOIN tmpMLO AS MovementLinkObject_Personal
                                          ON MovementLinkObject_Personal.MovementId = tmpMovement.Id

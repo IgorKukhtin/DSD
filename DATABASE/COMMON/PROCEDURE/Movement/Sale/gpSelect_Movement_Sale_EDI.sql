@@ -635,14 +635,14 @@ END IF;
            , CASE WHEN 1=0 AND OH_JuridicalDetails_To.JuridicalId = 15158 -- МЕТРО Кеш енд Кері Україна ТОВ
                        THEN '' -- если Метро, тогда наш = "пусто"
                   ELSE zfCalc_GLNCodeCorporate (inGLNCode                  := ObjectString_Partner_GLNCode.ValueData
-                                              , inGLNCodeCorporate_partner := ObjectString_Partner_GLNCodeCorporate.ValueData
+                                              , inGLNCodeCorporate_partner := COALESCE (ObjectString_Partner_GLNCodeCorporate_vch.ValueData, ObjectString_Partner_GLNCodeCorporate.ValueData)
                                               , inGLNCodeCorporate_retail  := ObjectString_Retail_GLNCodeCorporate.ValueData
                                               , inGLNCodeCorporate_main    := ObjectString_JuridicalFrom_GLNCode.ValueData
                                                )
              END :: TVarChar AS SupplierGLNCode
 
            , zfCalc_GLNCodeCorporate (inGLNCode                  := ObjectString_Partner_GLNCode.ValueData
-                                    , inGLNCodeCorporate_partner := ObjectString_Partner_GLNCodeCorporate.ValueData
+                                    , inGLNCodeCorporate_partner := COALESCE (ObjectString_Partner_GLNCodeCorporate_vch.ValueData, ObjectString_Partner_GLNCodeCorporate.ValueData)
                                     , inGLNCodeCorporate_retail  := ObjectString_Retail_GLNCodeCorporate.ValueData
                                     , inGLNCodeCorporate_main    := ObjectString_JuridicalFrom_GLNCode.ValueData
                                      ) AS SenderGLNCode
@@ -921,9 +921,16 @@ END IF;
          LEFT JOIN ObjectString AS ObjectString_Partner_GLNCodeRetail
                                 ON ObjectString_Partner_GLNCodeRetail.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, Object_To.Id)
                                AND ObjectString_Partner_GLNCodeRetail.DescId = zc_ObjectString_Partner_GLNCodeRetail()
+         -- EDI + VHASNO
          LEFT JOIN ObjectString AS ObjectString_Partner_GLNCodeCorporate
                                 ON ObjectString_Partner_GLNCodeCorporate.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, Object_To.Id)
                                AND ObjectString_Partner_GLNCodeCorporate.DescId = zc_ObjectString_Partner_GLNCodeCorporate()
+         -- VHASNO
+         LEFT JOIN ObjectString AS ObjectString_Partner_GLNCodeCorporate_vch
+                                ON ObjectString_Partner_GLNCodeCorporate_vch.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, Object_To.Id)
+                               AND ObjectString_Partner_GLNCodeCorporate_vch.DescId = zc_ObjectString_Partner_GLNCodeCorporate()
+                               -- Дільниця обліку і реалізації м`ясної сировини
+                               AND MovementLinkObject_From.ObjectId = 133049
 
             LEFT JOIN tmpOH_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
                                                         ON OH_JuridicalDetails_To.JuridicalId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, Object_To.Id)
@@ -1442,4 +1449,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale_EDI (inMovementId:= 30866920, inMovementId_send:= 0, inSession:=  '5'); -- FETCH ALL "<unnamed portal 1>";
+-- SELECT * FROM gpSelect_Movement_Sale_EDI (inMovementId:= 30866920, inMovementId_EDI_send:= 0, inSession:=  '5'); -- FETCH ALL "<unnamed portal 1>";

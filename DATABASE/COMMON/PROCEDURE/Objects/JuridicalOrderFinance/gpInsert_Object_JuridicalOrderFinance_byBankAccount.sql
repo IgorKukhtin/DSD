@@ -19,24 +19,44 @@ BEGIN
 
    -- данные из документов zc_Movement_BankAccount за выбранный период
    CREATE TEMP TABLE tmpData ON COMMIT DROP AS (
-          WITH
-          tmpBankAccount AS (SELECT Object_MoneyPlace.Id                                    AS JuridicalId
+     WITH tmpBankAccount AS (SELECT Object_MoneyPlace.Id                                    AS JuridicalId
                                   , Movement.OperDate                                       AS OperDate
                                   , MILinkObject_InfoMoney.ObjectId                         AS InfoMoneyId
+                                    -- с какого р./сч оплата
                                   , MovementItem.ObjectId                                   AS BankAccountId_main
+                                    -- с какого банка оплата
+                                  , ObjectLink_BankAccount_Bank_main.ChildObjectId          AS BankId_main
+                                    -- на какой р./сч оплата
                                   , MILinkObject_BankAccount.ObjectId                       AS BankAccountId
+                                    -- на какой банк оплата
                                   , COALESCE (Object_Bank.Id, 0)                            AS BankId
+                                    --
                                   , -1 * MovementItem.Amount                                AS Amount
                                   , MIString_Comment.ValueData                              AS Comment
                                     -- № п/п
-                                  , ROW_NUMBER() OVER (PARTITION BY Object_MoneyPlace.Id, MILinkObject_InfoMoney.ObjectId, MovementItem.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
+                                  , ROW_NUMBER() OVER (PARTITION BY Object_MoneyPlace.Id
+                                                                  , MILinkObject_InfoMoney.ObjectId
+                                                                -- без р.сч. - BankAccountId_main
+                                                                --, MovementItem.ObjectId
+                                                       ORDER BY Movement.OperDate DESC
+                                                      ) AS Ord
                                     -- № п/п - комментарий последнего документа
-                                  , ROW_NUMBER() OVER (PARTITION BY Object_MoneyPlace.Id, MILinkObject_InfoMoney.ObjectId, MovementItem.ObjectId ORDER BY Movement.OperDate DESC) AS Ord_byComment
+                                  , ROW_NUMBER() OVER (PARTITION BY Object_MoneyPlace.Id
+                                                                  , MILinkObject_InfoMoney.ObjectId
+                                                                -- без р.сч. - BankAccountId_main
+                                                                --, MovementItem.ObjectId
+                                                       ORDER BY Movement.OperDate DESC
+                                                      ) AS Ord_byComment
                              FROM Movement
                                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                          AND MovementItem.DescId     = zc_MI_Master()
                                                          -- Только Мы платим
                                                          AND MovementItem.Amount     < 0
+
+                                  -- с какого банка
+                                  LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank_main
+                                                       ON ObjectLink_BankAccount_Bank_main.ObjectId = MovementItem.ObjectId
+                                                      AND ObjectLink_BankAccount_Bank_main.DescId   = zc_ObjectLink_BankAccount_Bank()
 
                                   -- Кому оплата
                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
@@ -53,7 +73,7 @@ BEGIN
                                   INNER JOIN MovementItemLinkObject AS MILinkObject_BankAccount
                                                                     ON MILinkObject_BankAccount.MovementItemId = MovementItem.Id
                                                                    AND MILinkObject_BankAccount.DescId         = zc_MILinkObject_BankAccount()
-                                  -- найдем банк
+                                  -- на какой банк
                                   LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank
                                                        ON ObjectLink_BankAccount_Bank.ObjectId = MILinkObject_BankAccount.ObjectId
                                                       AND ObjectLink_BankAccount_Bank.DescId   = zc_ObjectLink_BankAccount_Bank()
@@ -86,10 +106,11 @@ BEGIN
                                                       ) AS Ord
                              FROM tmpBankAccount
                                   LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = tmpBankAccount.BankAccountId
+                                  -- нашли такой же р./счет
                                   INNER JOIN Object AS Object_BankAccount_find ON TRIM (Object_BankAccount_find.ValueData) ILIKE TRIM (Object_BankAccount.ValueData)
                                                                               AND Object_BankAccount_find.DescId    = zc_Object_BankAccount()
                                                                               AND Object_BankAccount_find.isErased  = FALSE
-                                  -- найдем банк
+                                  -- нашли банк
                                   INNER JOIN ObjectLink AS ObjectLink_BankAccount_Bank
                                                         ON ObjectLink_BankAccount_Bank.ObjectId      = Object_BankAccount_find.Id
                                                        AND ObjectLink_BankAccount_Bank.DescId        = zc_ObjectLink_BankAccount_Bank()
@@ -106,6 +127,7 @@ BEGIN
                , tmpBankAccount.JuridicalId
                , tmpBankAccount.InfoMoneyId
                , tmpBankAccount.BankAccountId_main
+               , tmpBankAccount.BankId_main
                  -- Замена на другой р.сч
                , COALESCE (tmpBank_find.BankAccountId_find, tmpBankAccount.BankAccountId) AS BankAccountId
                  --
@@ -132,21 +154,35 @@ BEGIN
    CREATE TEMP TABLE tmpJuridicalOrderFinance ON COMMIT DROP
       AS (SELECT Object_JuridicalOrderFinance.Id                        AS Id
                , OL_JuridicalOrderFinance_Juridical.ChildObjectId       AS JuridicalId
-               , OL_JuridicalOrderFinance_BankAccountMain.ChildObjectId AS BankAccountId_main
-               , OL_JuridicalOrderFinance_BankAccount.ChildObjectId     AS BankAccountId
+                 --
                , OL_JuridicalOrderFinance_InfoMoney.ChildObjectId       AS InfoMoneyId
+                 -- с какого р./сч оплата
+               , OL_JuridicalOrderFinance_BankAccountMain.ChildObjectId AS BankAccountId_main
+                 -- с какого банка оплата
+               , ObjectLink_BankAccount_Bank_main.ChildObjectId         AS BankId_main
+                 -- на какой р./сч оплата
+               , OL_JuridicalOrderFinance_BankAccount.ChildObjectId     AS BankAccountId
                  -- № п/п
                , ROW_NUMBER() OVER (PARTITION BY OL_JuridicalOrderFinance_Juridical.ChildObjectId
                                                , OL_JuridicalOrderFinance_InfoMoney.ChildObjectId
-                                               , OL_JuridicalOrderFinance_BankAccountMain.ChildObjectId
-                                               , OL_JuridicalOrderFinance_BankAccount.ChildObjectId
-                                    ORDER BY Object_JuridicalOrderFinance.Id DESC
+                                               , ObjectLink_BankAccount_Bank_main.ChildObjectId
+                                             --, OL_JuridicalOrderFinance_BankAccountMain.ChildObjectId
+                                             --, OL_JuridicalOrderFinance_BankAccount.ChildObjectId
+                                    ORDER BY CASE WHEN Object_JuridicalOrderFinance.isErased = FALSE THEN 0 ELSE 1 END
+                                           , CASE WHEN ObjectString_Comment.ValueData ILIKE '%SUMMA_P%' THEN 0 ELSE 1 END
+                                           , CASE WHEN ObjectString_Comment.ValueData <>    ''          THEN 0 ELSE 1 END
+                                           , ObjectDate_OperDate.ValueData DESC
+                                           , Object_JuridicalOrderFinance.Id DESC
                                    ) AS Ord
           FROM Object AS Object_JuridicalOrderFinance
               INNER JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccountMain
-                                    ON OL_JuridicalOrderFinance_BankAccountMain.ObjectId = Object_JuridicalOrderFinance.Id
-                                   AND OL_JuridicalOrderFinance_BankAccountMain.DescId = zc_ObjectLink_JuridicalOrderFinance_BankAccountMain()
+                                    ON OL_JuridicalOrderFinance_BankAccountMain.ObjectId       = Object_JuridicalOrderFinance.Id
+                                   AND OL_JuridicalOrderFinance_BankAccountMain.DescId         = zc_ObjectLink_JuridicalOrderFinance_BankAccountMain()
                                    AND (OL_JuridicalOrderFinance_BankAccountMain.ChildObjectId = inBankAccountId_main OR inBankAccountId_main = 0)
+              -- нашли банк
+              INNER JOIN ObjectLink AS ObjectLink_BankAccount_Bank_main
+                                    ON ObjectLink_BankAccount_Bank_main.ObjectId = OL_JuridicalOrderFinance_BankAccountMain.ChildObjectId
+                                   AND ObjectLink_BankAccount_Bank_main.DescId   = zc_ObjectLink_BankAccount_Bank()
 
               LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccount
                                    ON OL_JuridicalOrderFinance_BankAccount.ObjectId = Object_JuridicalOrderFinance.Id
@@ -159,11 +195,19 @@ BEGIN
               LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_InfoMoney
                                    ON OL_JuridicalOrderFinance_InfoMoney.ObjectId = Object_JuridicalOrderFinance.Id
                                   AND OL_JuridicalOrderFinance_InfoMoney.DescId = zc_ObjectLink_JuridicalOrderFinance_InfoMoney()
+
+              LEFT JOIN ObjectString AS ObjectString_Comment
+                                     ON ObjectString_Comment.ObjectId = Object_JuridicalOrderFinance.Id
+                                    AND ObjectString_Comment.DescId   = zc_ObjectString_JuridicalOrderFinance_Comment()
+              LEFT JOIN ObjectDate AS ObjectDate_OperDate
+                                     ON ObjectDate_OperDate.ObjectId = Object_JuridicalOrderFinance.Id
+                                    AND ObjectDate_OperDate.DescId   = zc_ObjectDate_JuridicalOrderFinance_OperDate()
+
           WHERE Object_JuridicalOrderFinance.DescId = zc_Object_JuridicalOrderFinance()
          );
 
    -- удаляем сохраненные элементы справочника, которых нет в выборке по документам
-   UPDATE Object SET isErased = CASE WHEN tmpData.JuridicalId > 0 AND tmpJuridical.Ord = 1 THEN FALSE ELSE TRUE END
+   /*UPDATE Object SET isErased = CASE WHEN tmpData.JuridicalId > 0 AND tmpJuridical.Ord = 1 THEN FALSE ELSE TRUE END
    FROM tmpJuridicalOrderFinance AS tmpJuridical
         LEFT JOIN tmpData ON tmpData.BankAccountId_main = tmpJuridical.BankAccountId_main
                          AND tmpData.JuridicalId        = tmpJuridical.JuridicalId
@@ -175,6 +219,17 @@ BEGIN
      AND tmpData.JuridicalId > 0 AND tmpJuridical.Ord = 1
      --
      AND Object.isErased = TRUE
+  ;*/
+
+
+   -- удаляем если платили с разных счетов одного банка
+   UPDATE Object SET isErased = TRUE
+   FROM tmpJuridicalOrderFinance AS tmpJuridical
+   WHERE tmpJuridical.Id  = Object.Id
+     AND tmpJuridical.Ord > 1
+     --
+     AND Object.DescId   = zc_Object_JuridicalOrderFinance()
+     AND Object.isErased = FALSE
   ;
 
 
@@ -201,11 +256,10 @@ BEGIN
                                          AND Object.isErased = FALSE
                    WHERE tmpJuridical.Ord = 1
                   ) AS tmp
-                    ON tmp.BankAccountId_main = tmpData.BankAccountId_main
-                   AND tmp.JuridicalId        = tmpData.JuridicalId
-                   AND tmp.InfoMoneyId        = tmpData.InfoMoneyId
-                   AND tmp.BankAccountId      = tmpData.BankAccountId
-   -- Только новые
+                    ON tmp.BankId_main = tmpData.BankId_main
+                   AND tmp.JuridicalId = tmpData.JuridicalId
+                   AND tmp.InfoMoneyId = tmpData.InfoMoneyId
+   -- только новые
    WHERE tmp.JuridicalId IS NULL
   ;
 

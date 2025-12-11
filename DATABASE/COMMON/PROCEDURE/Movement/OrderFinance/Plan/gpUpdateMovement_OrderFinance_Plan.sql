@@ -262,8 +262,9 @@ BEGIN
                                                              AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
 
                                 WHERE TRIM (Object_BankAccount_View.Name) ILIKE TRIM (inBankAccountName_jof)
-                                  AND Object_BankAccount_View.isErased = FALSE
-                                  AND Object_BankAccount_View.BankId = inBankId_jof
+                                  AND Object_BankAccount_View.isErased    = FALSE
+                                  -- этот Банк
+                                  AND Object_BankAccount_View.BankId      = inBankId_jof
                                  /*AND (ObjectBoolean_isCorporate.ValueData <> TRUE
                                     OR Object_BankAccount_View.JuridicalId <> 15505 -- ДУКО ТОВ
                                     OR Object_BankAccount_View.JuridicalId <> 15512 -- Ірна-1 Фірма ТОВ
