@@ -3152,7 +3152,7 @@ end if;
 
      -- 3.1. определяется Счет(справочника) для проводок по долг Покупателя или Физ.лица (подотчетные лица)
      UPDATE _tmpItem SET AccountId_Partner = _tmpItem_byAccount.AccountId
-     FROM (SELECT CASE WHEN vbIsCorporate_To = TRUE
+     FROM (SELECT CASE WHEN vbIsCorporate_To = TRUE AND vbCurrencyPartnerId = zc_Enum_Currency_Basis()
                             THEN _tmpItem_group.AccountId_Corporate
                        ELSE lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_30000() -- Дебиторы
                                                        , inAccountDirectionId     := _tmpItem_group.AccountDirectionId
@@ -3164,8 +3164,13 @@ end if;
                 , _tmpItem_group.InfoMoneyDestinationId
            FROM (SELECT CASE WHEN vbMemberId_To <> 0
                                   THEN zc_Enum_AccountDirection_30500() -- Физ.лица (подотчетные лица)
+
                              WHEN vbIsCorporate_To = TRUE
-                                  THEN zc_Enum_AccountDirection_30200() -- наши компании
+                                  THEN CASE WHEN vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
+                                                 THEN zc_Enum_AccountDirection_30150() -- покупатели ВЭД
+                                            ELSE zc_Enum_AccountDirection_30200() -- наши компании
+                                       END
+
                              WHEN vbInfoMoneyDestinationId_To IN (zc_Enum_InfoMoneyDestination_10100()  -- Мясное сырье
                                                                 , zc_Enum_InfoMoneyDestination_20700()  -- Товары
                                                                 , zc_Enum_InfoMoneyDestination_20900()  -- Ирна
@@ -4817,7 +4822,8 @@ end if;
                  FROM _tmpItem
                  WHERE vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
                    AND vbMemberId_To = 0
-                   AND vbIsCorporate_To = FALSE
+                 -- + для НАШИХ
+                 --AND vbIsCorporate_To = FALSE
                  GROUP BY _tmpItem.ContainerId_Partner
                         , _tmpItem.AccountId_Partner
                         , _tmpItem.InfoMoneyId
