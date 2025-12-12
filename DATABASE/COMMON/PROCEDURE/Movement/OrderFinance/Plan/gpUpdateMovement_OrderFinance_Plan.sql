@@ -71,7 +71,7 @@ BEGIN
         -- сохранили свойство <>
         PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_1(), inMovementItemId, inIsAmountPlan);
         outisAmountPlan_1 := inIsAmountPlan;
-        
+
         -- сохранили свойство <>
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Number_1(), inMovementItemId, inNumber_calc);
         --
@@ -83,7 +83,7 @@ BEGIN
         -- сохранили свойство <>
         PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_2(), inMovementItemId, inIsAmountPlan);
         outisAmountPlan_2 := inIsAmountPlan;
-                
+
         -- сохранили свойство <>
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Number_2(), inMovementItemId, inNumber_calc);
         --
@@ -95,7 +95,7 @@ BEGIN
         -- сохранили свойство <>
         PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_3(), inMovementItemId, inIsAmountPlan);
         outisAmountPlan_3 := inIsAmountPlan;
-                
+
         -- сохранили свойство <>
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Number_3(), inMovementItemId, inNumber_calc);
         --
@@ -107,7 +107,7 @@ BEGIN
         -- сохранили свойство <>
         PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_4(), inMovementItemId, inIsAmountPlan);
         outisAmountPlan_4 := inIsAmountPlan;
-                
+
         -- сохранили свойство <>
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Number_4(), inMovementItemId, inNumber_calc);
         --
@@ -119,7 +119,7 @@ BEGIN
         -- сохранили свойство <>
         PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_5(), inMovementItemId, inIsAmountPlan);
         outisAmountPlan_5 := inIsAmountPlan;
-                
+
         -- сохранили свойство <>
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Number_5(), inMovementItemId, inNumber_calc);
         --
@@ -291,13 +291,15 @@ BEGIN
          -- пробуем найти JuridicalOrderFinanceId по внесенным данным если нашли берем его
          ioJuridicalOrderFinanceId := (SELECT tmp.JuridicalOrderFinanceId
                                        FROM (SELECT Object_JuridicalOrderFinance.Id AS JuridicalOrderFinanceId
-                                                  , ROW_NUMBER() OVER (PARTITION BY OL_JuridicalOrderFinance_Juridical.ChildObjectId, Main_BankAccount_View.BankId, OL_JuridicalOrderFinance_InfoMoney.ChildObjectId
+                                                  , ROW_NUMBER() OVER (PARTITION BY OL_JuridicalOrderFinance_Juridical.ChildObjectId
+                                                                                  , OL_JuridicalOrderFinance_InfoMoney.ChildObjectId
+                                                                                  , Main_BankAccount_View.BankId
                                                                        ORDER BY ObjectDate_OperDate.ValueData DESC
-                                                                       ) AS Ord
+                                                                      ) AS Ord
                                              FROM Object AS Object_JuridicalOrderFinance
                                                   INNER JOIN ObjectLink AS OL_JuridicalOrderFinance_Juridical
-                                                                        ON OL_JuridicalOrderFinance_Juridical.ObjectId = Object_JuridicalOrderFinance.Id
-                                                                       AND OL_JuridicalOrderFinance_Juridical.DescId = zc_ObjectLink_JuridicalOrderFinance_Juridical()
+                                                                        ON OL_JuridicalOrderFinance_Juridical.ObjectId      = Object_JuridicalOrderFinance.Id
+                                                                       AND OL_JuridicalOrderFinance_Juridical.DescId        = zc_ObjectLink_JuridicalOrderFinance_Juridical()
                                                                        AND OL_JuridicalOrderFinance_Juridical.ChildObjectId = inJuridicalId
 
                                                   LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccountMain
@@ -310,23 +312,23 @@ BEGIN
                                                                        AND OL_JuridicalOrderFinance_InfoMoney.DescId = zc_ObjectLink_JuridicalOrderFinance_InfoMoney()
                                                                        AND OL_JuridicalOrderFinance_InfoMoney.ChildObjectId = inInfoMoneyId
 
-                                                  INNER JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccount
+                                                  /*INNER JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccount
                                                                         ON OL_JuridicalOrderFinance_BankAccount.ObjectId = Object_JuridicalOrderFinance.Id
                                                                        AND OL_JuridicalOrderFinance_BankAccount.DescId = zc_ObjectLink_JuridicalOrderFinance_BankAccount()
-                                                   LEFT JOIN Object_BankAccount_View AS Partner_BankAccount_View ON Partner_BankAccount_View.Id = OL_JuridicalOrderFinance_BankAccount.ChildObjectId
-
+                                                  LEFT JOIN Object_BankAccount_View AS Partner_BankAccount_View ON Partner_BankAccount_View.Id = OL_JuridicalOrderFinance_BankAccount.ChildObjectId
+                                                  */
 
                                                   LEFT JOIN ObjectDate AS ObjectDate_OperDate
                                                                        ON ObjectDate_OperDate.ObjectId = Object_JuridicalOrderFinance.Id
                                                                       AND ObjectDate_OperDate.DescId = zc_ObjectDate_JuridicalOrderFinance_OperDate()
+
                                              WHERE Object_JuridicalOrderFinance.DescId = zc_Object_JuridicalOrderFinance()
-                                              AND Object_JuridicalOrderFinance.isErased = FALSE
-                                              --AND Object_JuridicalOrderFinance.Id <> ioJuridicalOrderFinanceId
-                                              AND Main_BankAccount_View.BankId = inBankId_main
-                                              AND Partner_BankAccount_View.BankId = inBankId_jof --9264407
-                                             ) AS tmp
+                                               AND Object_JuridicalOrderFinance.isErased = FALSE
+                                               -- Для этого банка
+                                               AND Main_BankAccount_View.BankId = inBankId_main
+                                            ) AS tmp
                                        WHERE tmp.Ord = 1
-                                        );
+                                      );
 
          IF COALESCE (ioJuridicalOrderFinanceId,0) = 0
          THEN
