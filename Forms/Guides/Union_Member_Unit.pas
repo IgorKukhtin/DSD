@@ -1,4 +1,4 @@
-unit Asset_Object;
+unit Union_Member_Unit;
 
 interface
 
@@ -21,11 +21,10 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  cxContainer, dsdGuides, cxTextEdit, cxMaskEdit, cxButtonEdit, cxLabel,
-  cxCurrencyEdit, dsdCommon;
+  dsdCommon;
 
 type
-  TAsset_ObjectForm = class(TParentForm)
+  TUnion_Member_UnitForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     Code: TcxGridDBColumn;
@@ -37,46 +36,19 @@ type
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
     bbRefresh: TdxBarButton;
-    bbInsert: TdxBarButton;
-    bbEdit: TdxBarButton;
-    bbErased: TdxBarButton;
-    bbUnErased: TdxBarButton;
     bbGridToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
     bbChoiceGuides: TdxBarButton;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
-    actInsert: TdsdInsertUpdateAction;
-    actUpdate: TdsdInsertUpdateAction;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
     dsdGridToExcel: TdsdGridToExcel;
     spSelect: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    InvNumber: TcxGridDBColumn;
-    AssetGroupName: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     isErased: TcxGridDBColumn;
-    spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    SerialNumber: TcxGridDBColumn;
-    PassportNumber: TcxGridDBColumn;
-    Release: TcxGridDBColumn;
-    MakerName: TcxGridDBColumn;
-    ProtocolOpenForm: TdsdOpenForm;
-    bbProtocolOpenForm: TdxBarButton;
-    Comment: TcxGridDBColumn;
-    FullName: TcxGridDBColumn;
-    cxLabel6: TcxLabel;
-    edUnit: TcxButtonEdit;
-    GuidesUnit: TdsdGuides;
-    bbLabel6: TdxBarControlContainerItem;
-    bbUnit: TdxBarControlContainerItem;
-    AmountRemains: TcxGridDBColumn;
-    ContainerId: TcxGridDBColumn;
-    FormParams: TdsdFormParams;
-    RefreshDispatcher: TRefreshDispatcher;
     ItemName: TcxGridDBColumn;
+
   private
     { Private declarations }
   public
@@ -87,6 +59,7 @@ type
 implementation
 
 {$R *.dfm}
+
 initialization
-  RegisterClass(TAsset_ObjectForm);
+  RegisterClass(TUnion_Member_UnitForm);
 end.

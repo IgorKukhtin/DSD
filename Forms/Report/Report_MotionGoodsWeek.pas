@@ -55,6 +55,9 @@ type
     EndDate: TcxGridDBColumn;
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
+    cbIsRemainsNull: TcxCheckBox;
+    cbIsRemainsNull_use: TcxCheckBox;
+    Operdate_Use: TcxGridDBColumn;
   private
     { Private declarations }
   public

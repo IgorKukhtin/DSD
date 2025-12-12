@@ -6,25 +6,25 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1382
-  ExplicitHeight = 572
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 59
+    Top = 74
     Width = 1366
-    Height = 357
+    Height = 342
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 1366
     ExplicitHeight = 357
-    ClientRectBottom = 357
+    ClientRectBottom = 342
     ClientRectRight = 1366
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1366
       ExplicitHeight = 357
       inherited cxGrid: TcxGrid
         Width = 1366
-        Height = 357
+        Height = 342
         ExplicitWidth = 1366
         ExplicitHeight = 357
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1177,47 +1177,64 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
             VisibleForCustomization = False
             Width = 60
           end
+          object Operdate_Use: TcxGridDBColumn
+            Caption = #1055#1086#1089#1083#1077#1076#1085#1103#1103' '#1076#1072#1090#1072' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1080#1103
+            DataBinding.FieldName = 'Operdate_Use'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1089#1083#1077#1076#1085#1103#1103' '#1076#1072#1090#1072' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1080#1103
+            Options.Editing = False
+            Width = 80
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
     Width = 1366
-    Height = 33
+    Height = 48
     ExplicitWidth = 1366
-    ExplicitHeight = 33
+    ExplicitHeight = 48
     inherited deStart: TcxDateEdit
-      Left = 98
+      Left = 5
+      Top = 20
       EditValue = 42736d
       Properties.SaveTime = False
-      ExplicitLeft = 98
-      ExplicitWidth = 79
-      Width = 79
+      ExplicitLeft = 5
+      ExplicitTop = 20
+      ExplicitWidth = 91
+      Width = 91
     end
     inherited deEnd: TcxDateEdit
-      Left = 294
+      Left = 110
+      Top = 20
       EditValue = 42736d
       Properties.SaveTime = False
-      ExplicitLeft = 294
-      ExplicitWidth = 81
-      Width = 81
+      ExplicitLeft = 110
+      ExplicitTop = 20
+      ExplicitWidth = 106
+      Width = 106
     end
     inherited cxLabel1: TcxLabel
       Left = 5
+      Top = 1
       ExplicitLeft = 5
+      ExplicitTop = 1
     end
     inherited cxLabel2: TcxLabel
-      Left = 182
-      ExplicitLeft = 182
+      Left = 110
+      Top = 1
+      ExplicitLeft = 110
+      ExplicitTop = 1
     end
     object cxLabel4: TcxLabel
-      Left = 691
-      Top = 6
+      Left = 454
+      Top = 1
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
     end
     object edGoodsGroup: TcxButtonEdit
-      Left = 782
-      Top = 5
+      Left = 454
+      Top = 20
       Properties.Buttons = <
         item
           Default = True
@@ -1228,13 +1245,13 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
       Width = 180
     end
     object cxLabel3: TcxLabel
-      Left = 387
-      Top = 6
+      Left = 231
+      Top = 1
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object edUnit: TcxButtonEdit
-      Left = 474
-      Top = 4
+      Left = 231
+      Top = 20
       Properties.Buttons = <
         item
           Default = True
@@ -1245,13 +1262,13 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
       Width = 209
     end
     object cxLabel5: TcxLabel
-      Left = 969
-      Top = 6
+      Left = 649
+      Top = 1
       Caption = #1070#1088'. '#1083#1080#1094#1086' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082'):'
     end
     object edJuridical: TcxButtonEdit
-      Left = 1091
-      Top = 4
+      Left = 649
+      Top = 20
       Properties.Buttons = <
         item
           Default = True
@@ -1260,6 +1277,20 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
       Properties.ReadOnly = True
       TabOrder = 9
       Width = 192
+    end
+    object cbIsRemainsNull: TcxCheckBox
+      Left = 851
+      Top = 20
+      Caption = ' '#1087#1086#1082#1072#1079#1072#1090#1100' '#1089' 0 '#1086#1089#1090#1072#1090#1082#1086#1084' ('#1076#1072'/'#1085#1077#1090')'
+      TabOrder = 10
+      Width = 188
+    end
+    object cbIsRemainsNull_use: TcxCheckBox
+      Left = 1045
+      Top = 20
+      Caption = #1085#1072#1095' '#1076#1072#1090#1072' '#1087#1086' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1080#1102' ('#1076#1072'/'#1085#1077#1090')'
+      TabOrder = 11
+      Width = 215
     end
   end
   object cxGridReceiptChild: TcxGrid [2]
@@ -2691,7 +2722,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -2702,7 +2733,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -2757,6 +2788,9 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint_Real: TdsdPrintAction
       Category = 'DSDLib'
@@ -2778,7 +2812,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -2789,7 +2823,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -2893,6 +2927,9 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -2971,6 +3008,22 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inIsRemainsNull'
+          Value = Null
+          Component = cbIsRemainsNull
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inIsRemainsNull_use'
+          Value = Null
+          Component = cbIsRemainsNull_use
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -2996,7 +3049,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -3007,7 +3060,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -3062,6 +3115,9 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object OrderJournal: TdsdOpenForm
       Category = 'DSDLib'
@@ -3161,6 +3217,22 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IsRemainsNull'
+        Value = Null
+        Component = cbIsRemainsNull
+        DataType = ftBoolean
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IsRemainsNull_use'
+        Value = Null
+        Component = cbIsRemainsNull_use
+        DataType = ftBoolean
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 208
@@ -3363,7 +3435,8 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 848
+    Left = 512
+    Top = 16
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -3432,8 +3505,8 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 568
-    Top = 1
+    Left = 328
+    Top = 9
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
@@ -3461,7 +3534,8 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1152
+    Left = 744
+    Top = 16
   end
   object ChildCDS: TClientDataSet
     Aggregates = <>
@@ -3495,6 +3569,7 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorValueList = <>
@@ -3529,6 +3604,9 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
     Left = 782
     Top = 318
   end

@@ -3,7 +3,7 @@ object Report_MotionGoodsWeekDialogForm: TReport_MotionGoodsWeekDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1086' '#1076#1074#1080#1078#1077#1085#1080#1102' '#1087#1086' '#1076#1085#1103#1084' '#1085#1077#1076#1077#1083#1080'>'
-  ClientHeight = 158
+  ClientHeight = 222
   ClientWidth = 371
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,8 +18,8 @@ object Report_MotionGoodsWeekDialogForm: TReport_MotionGoodsWeekDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 94
-    Top = 122
+    Left = 92
+    Top = 186
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_MotionGoodsWeekDialogForm: TReport_MotionGoodsWeekDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 200
-    Top = 122
+    Left = 198
+    Top = 186
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -82,6 +82,20 @@ object Report_MotionGoodsWeekDialogForm: TReport_MotionGoodsWeekDialogForm
     Properties.ReadOnly = True
     TabOrder = 7
     Width = 217
+  end
+  object cbIsRemainsNull_use: TcxCheckBox
+    Left = 33
+    Top = 149
+    Caption = #1085#1072#1095' '#1076#1072#1090#1072' '#1087#1086' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1080#1102' ('#1076#1072'/'#1085#1077#1090')'
+    TabOrder = 8
+    Width = 218
+  end
+  object cbIsRemainsNull: TcxCheckBox
+    Left = 33
+    Top = 122
+    Caption = ' '#1087#1086#1082#1072#1079#1072#1090#1100' '#1089' 0 '#1086#1089#1090#1072#1090#1082#1086#1084' ('#1076#1072'/'#1085#1077#1090')'
+    TabOrder = 9
+    Width = 190
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -146,6 +160,22 @@ object Report_MotionGoodsWeekDialogForm: TReport_MotionGoodsWeekDialogForm
         Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IsRemainsNull'
+        Value = Null
+        Component = cbIsRemainsNull
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IsRemainsNull_use'
+        Value = Null
+        Component = cbIsRemainsNull_use
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

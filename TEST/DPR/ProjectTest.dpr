@@ -1639,7 +1639,8 @@ uses
   WeighingPartner_PartionQEdit in '..\..\Forms\Document\WeighingPartner_PartionQEdit.pas' {WeighingPartner_PartionQEditForm: TParentForm},
   BankAccount_Choice in '..\..\Forms\Guides\BankAccount_Choice.pas' {BankAccount_ChoiceForm: TParentForm},
   ContractJuridicalChoice in '..\..\Forms\Guides\ContractJuridicalChoice.pas' {ContractJuridicalChoiceForm: TParentForm},
-  Inventory_scale_NumSecurityDialog in '..\..\Forms\Document\Inventory_scale_NumSecurityDialog.pas' {Inventory_scale_NumSecurityDialogForm: TParentForm};
+  Inventory_scale_NumSecurityDialog in '..\..\Forms\Document\Inventory_scale_NumSecurityDialog.pas' {Inventory_scale_NumSecurityDialogForm: TParentForm},
+  Union_Member_Unit in '..\..\Forms\Guides\Union_Member_Unit.pas' {Union_Member_UnitForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

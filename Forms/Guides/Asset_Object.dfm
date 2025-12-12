@@ -263,13 +263,13 @@ object Asset_ObjectForm: TAsset_ObjectForm
     end
   end
   object cxLabel6: TcxLabel
-    Left = 489
-    Top = 78
+    Left = 521
+    Top = 110
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
   end
   object edUnit: TcxButtonEdit
-    Left = 583
-    Top = 77
+    Left = 607
+    Top = 109
     Properties.Buttons = <
       item
         Default = True
@@ -848,6 +848,7 @@ object Asset_ObjectForm: TAsset_ObjectForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 448
     Top = 112
@@ -855,11 +856,11 @@ object Asset_ObjectForm: TAsset_ObjectForm
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
-    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.Value = 'TUnion_Member_UnitForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TUnion_Member_UnitForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
