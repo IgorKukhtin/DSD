@@ -837,7 +837,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             Width = 70
           end
           object Number_calc: TcxGridDBColumn
-            Caption = '***'#8470' '#1087'/'#1087' '#1088#1072#1089#1095#1077#1090
+            Caption = #8470' '#1087'/'#1087
             DataBinding.FieldName = 'Number_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 0

@@ -351,75 +351,13 @@ BEGIN
      END IF;
 
 
-     WITH
-     tmpJuridicalOrderFinance AS (SELECT ObjectString_Comment.ValueData         :: TVarChar AS Comment
-                                       , ROW_NUMBER() OVER (PARTITION BY OL_JuridicalOrderFinance_Juridical.ChildObjectId, Main_BankAccount_View.BankId, OL_JuridicalOrderFinance_InfoMoney.ChildObjectId
-                                                            ORDER BY ObjectDate_OperDate.ValueData DESC
-                                                            ) AS Ord
-                                  FROM Object AS Object_JuridicalOrderFinance
-                                       INNER JOIN ObjectLink AS OL_JuridicalOrderFinance_Juridical
-                                                             ON OL_JuridicalOrderFinance_Juridical.ObjectId = Object_JuridicalOrderFinance.Id
-                                                            AND OL_JuridicalOrderFinance_Juridical.DescId = zc_ObjectLink_JuridicalOrderFinance_Juridical()
-                                                            AND OL_JuridicalOrderFinance_Juridical.ChildObjectId = inJuridicalId
-
-                                       LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccountMain
-                                                            ON OL_JuridicalOrderFinance_BankAccountMain.ObjectId = Object_JuridicalOrderFinance.Id
-                                                           AND OL_JuridicalOrderFinance_BankAccountMain.DescId = zc_ObjectLink_JuridicalOrderFinance_BankAccountMain()
-                                       LEFT JOIN Object_BankAccount_View AS Main_BankAccount_View ON Main_BankAccount_View.Id = OL_JuridicalOrderFinance_BankAccountMain.ChildObjectId
-
-                                       INNER JOIN ObjectLink AS OL_JuridicalOrderFinance_InfoMoney
-                                                             ON OL_JuridicalOrderFinance_InfoMoney.ObjectId = Object_JuridicalOrderFinance.Id
-                                                            AND OL_JuridicalOrderFinance_InfoMoney.DescId = zc_ObjectLink_JuridicalOrderFinance_InfoMoney()
-                                                            AND OL_JuridicalOrderFinance_InfoMoney.ChildObjectId = inInfoMoneyId
-
-                                       LEFT JOIN ObjectString AS ObjectString_Comment
-                                                              ON ObjectString_Comment.ObjectId = Object_JuridicalOrderFinance.Id
-                                                             AND ObjectString_Comment.DescId = zc_ObjectString_JuridicalOrderFinance_Comment()
-
-                                       LEFT JOIN ObjectDate AS ObjectDate_OperDate
-                                                            ON ObjectDate_OperDate.ObjectId = Object_JuridicalOrderFinance.Id
-                                                           AND ObjectDate_OperDate.DescId = zc_ObjectDate_JuridicalOrderFinance_OperDate()
-                                  WHERE Object_JuridicalOrderFinance.DescId = zc_Object_JuridicalOrderFinance()
-                                   AND Object_JuridicalOrderFinance.isErased = FALSE
-                                   AND Object_JuridicalOrderFinance.Id = ioJuridicalOrderFinanceId
-                                   AND Main_BankAccount_View.BankId = inBankId_main
-                                   AND inBankId_main <> 0
-                                   )
-
-   , tmpJuridicalOrderFinance_last AS (SELECT ObjectString_Comment.ValueData         :: TVarChar AS Comment
-                                            , ROW_NUMBER() OVER (PARTITION BY OL_JuridicalOrderFinance_Juridical.ChildObjectId, OL_JuridicalOrderFinance_InfoMoney.ChildObjectId
-                                                                 ORDER BY ObjectDate_OperDate.ValueData DESC
-                                                                ) AS Ord
-                                       FROM Object AS Object_JuridicalOrderFinance
-                                            INNER JOIN ObjectLink AS OL_JuridicalOrderFinance_Juridical
-                                                                  ON OL_JuridicalOrderFinance_Juridical.ObjectId = Object_JuridicalOrderFinance.Id
-                                                                 AND OL_JuridicalOrderFinance_Juridical.DescId = zc_ObjectLink_JuridicalOrderFinance_Juridical()
-                                                                 AND OL_JuridicalOrderFinance_Juridical.ChildObjectId = inJuridicalId
-
-                                            INNER JOIN ObjectLink AS OL_JuridicalOrderFinance_InfoMoney
-                                                                  ON OL_JuridicalOrderFinance_InfoMoney.ObjectId = Object_JuridicalOrderFinance.Id
-                                                                 AND OL_JuridicalOrderFinance_InfoMoney.DescId = zc_ObjectLink_JuridicalOrderFinance_InfoMoney()
-                                                                 AND OL_JuridicalOrderFinance_InfoMoney.ChildObjectId = inInfoMoneyId
-
-                                            LEFT JOIN ObjectString AS ObjectString_Comment
-                                                                   ON ObjectString_Comment.ObjectId = Object_JuridicalOrderFinance.Id
-                                                                  AND ObjectString_Comment.DescId = zc_ObjectString_JuridicalOrderFinance_Comment()
-
-                                            LEFT JOIN ObjectDate AS ObjectDate_OperDate
-                                                                 ON ObjectDate_OperDate.ObjectId = Object_JuridicalOrderFinance.Id
-                                                                AND ObjectDate_OperDate.DescId = zc_ObjectDate_JuridicalOrderFinance_OperDate()
-                                       WHERE Object_JuridicalOrderFinance.DescId = zc_Object_JuridicalOrderFinance()
-                                        AND Object_JuridicalOrderFinance.isErased = FALSE
-                                        AND Object_JuridicalOrderFinance.Id = ioJuridicalOrderFinanceId
-                                        )
-
      SELECT MIFloat_AmountPlan.ValueData ::TFloat AS AmountPlan_calc
           , MIFloat_Number.ValueData     ::TFloat AS Number_calc
           , CASE WHEN MIFloat_AmountPlan.ValueData > 0
                  THEN REPLACE
                      (REPLACE
                      (REPLACE
-                     (REPLACE (COALESCE (tmpJuridicalOrderFinance.Comment, tmpJuridicalOrderFinance_last.Comment)
+                     (REPLACE (COALESCE (inComment_jof, '')
                                 , 'NOM_DOG', COALESCE (View_Contract.InvNumber, ''))
                                 , 'DATA_DOG', zfConvert_DateToString (COALESCE (View_Contract.StartDate, zc_DateStart())))
                                 , 'PDV', '20')
@@ -438,26 +376,19 @@ BEGIN
                                                                           WHEN outisAmountPlan_5 = TRUE THEN zc_MIFloat_AmountPlan_5()
                                                                      END
 
-          LEFT JOIN tmpMovementItemFloat AS MIFloat_Number
-                                         ON MIFloat_Number.MovementItemId = MovementItem.Id
-                                        AND MIFloat_Number.DescId = CASE WHEN outisAmountPlan_1 = TRUE THEN zc_MIFloat_Number_1()
-                                                                         WHEN outisAmountPlan_2 = TRUE THEN zc_MIFloat_Number_2()
-                                                                         WHEN outisAmountPlan_3 = TRUE THEN zc_MIFloat_Number_3()
-                                                                         WHEN outisAmountPlan_4 = TRUE THEN zc_MIFloat_Number_4()
-                                                                         WHEN outisAmountPlan_5 = TRUE THEN zc_MIFloat_Number_5()
-                                                                    END
+          LEFT JOIN MovementItemFloat AS MIFloat_Number
+                                      ON MIFloat_Number.MovementItemId = MovementItem.Id
+                                     AND MIFloat_Number.DescId = CASE WHEN COALESCE (inisDay_1, FALSE) = TRUE THEN zc_MIFloat_Number_1()
+                                                                      WHEN COALESCE (inisDay_2, FALSE) = TRUE THEN zc_MIFloat_Number_2()
+                                                                      WHEN COALESCE (inisDay_3, FALSE) = TRUE THEN zc_MIFloat_Number_3()
+                                                                      WHEN COALESCE (inisDay_4, FALSE) = TRUE THEN zc_MIFloat_Number_4()
+                                                                      WHEN COALESCE (inisDay_5, FALSE) = TRUE THEN zc_MIFloat_Number_5()
+                                                                 END
 
           LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                            ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                           AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
           LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = MILinkObject_Contract.ObjectId
-
-          --привязка  юр.лицо + статья + выбранный банк (плательщик)
-          LEFT JOIN tmpJuridicalOrderFinance ON inBankId_main <> 0
-                                            AND tmpJuridicalOrderFinance.Ord = 1
-
-          --привязка  юр.лицо + статья + последний платеж
-          LEFT JOIN tmpJuridicalOrderFinance_last ON tmpJuridicalOrderFinance_last.Ord = 1
 
      WHERE MovementItem.MovementId = inMovementId
        AND MovementItem.Id = inMovementItemId
@@ -505,6 +436,7 @@ inBankAccountName_main := 'UA173005280000026000301367079' ,
 inBankAccountName_jof := 'UA583209840000026004210394845' ,
 inComment_jof := 'За  свиней згідно договору № NOM_DOG у т.ч. ПДВ PDV% SUMMA_P грн.' ,
 --inComment_pay := '' ,
+ inNumber_calc := 0::TFloat     ,
 inSession := '9457');
 
 */

@@ -845,15 +845,15 @@ BEGIN
         , tmpMI.Number_5    :: TFloat AS Number_5
 
           -- № в очереди (ввод)
-        , CASE WHEN inIsDay_1 = TRUE AND COALESCE (tmpMI.isAmountPlan_1, TRUE) = TRUE
+        , CASE WHEN inIsDay_1 = TRUE
                     THEN tmpMI.Number_1
-               WHEN inIsDay_2 = TRUE AND COALESCE (tmpMI.isAmountPlan_2, TRUE) = TRUE
+               WHEN inIsDay_2 = TRUE
                     THEN tmpMI.Number_2
-               WHEN inIsDay_3 = TRUE AND COALESCE (tmpMI.isAmountPlan_3, TRUE) = TRUE
+               WHEN inIsDay_3 = TRUE
                     THEN tmpMI.Number_3
-               WHEN inIsDay_4 = TRUE AND COALESCE (tmpMI.isAmountPlan_4, TRUE) = TRUE
+               WHEN inIsDay_4 = TRUE
                     THEN tmpMI.Number_4
-               WHEN inIsDay_5 = TRUE AND COALESCE (tmpMI.isAmountPlan_5, TRUE) = TRUE
+               WHEN inIsDay_5 = TRUE
                     THEN tmpMI.Number_5
                ELSE 0
           END ::TFloat AS Number_calc
