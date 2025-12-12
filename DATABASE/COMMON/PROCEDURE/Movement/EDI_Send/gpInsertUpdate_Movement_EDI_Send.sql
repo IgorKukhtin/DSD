@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDI_Send (Integer, Integer, TVar
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_EDI_Send(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ для отправки в EDI>
     IN inParentId              Integer    , -- Документ - Продажа покупателю
-    IN inDescCode              TVarChar  , --
+    IN inDescCode              TVarChar   , --
     IN inSession               TVarChar     -- сессия пользователя
 )
 RETURNS Integer

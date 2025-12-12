@@ -115,7 +115,7 @@ BEGIN
 
                       -- Дільниця обліку і реалізації м`ясної сировини
                       WHEN MovementString_DealId.ValueData <> ''
-                           MovementLinkObject_From.ObjectId = 133049
+                       AND MovementLinkObject_From.ObjectId = 133049
                            THEN TRUE
 
                       ELSE FALSE
@@ -365,7 +365,7 @@ BEGIN
                   )
 
                -- Этих Отправляем Сразу
-               OR (Object_Retail.Id IN (310855 -- !!!Варус!!!
+               OR (Object_Retail.Id IN (-310855 -- !!!Варус!!!
                                       -- , 310846 -- !!!ВК!!!
                                        )
                AND Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '1 MIN'

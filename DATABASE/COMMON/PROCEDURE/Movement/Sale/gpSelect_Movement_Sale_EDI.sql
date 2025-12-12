@@ -928,7 +928,7 @@ END IF;
          -- VHASNO
          LEFT JOIN ObjectString AS ObjectString_Partner_GLNCodeCorporate_vch
                                 ON ObjectString_Partner_GLNCodeCorporate_vch.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, Object_To.Id)
-                               AND ObjectString_Partner_GLNCodeCorporate_vch.DescId = zc_ObjectString_Partner_GLNCodeCorporate()
+                               AND ObjectString_Partner_GLNCodeCorporate_vch.DescId   = zc_ObjectString_Partner_GLNCodeCorporate_vch()
                                -- Дільниця обліку і реалізації м`ясної сировини
                                AND MovementLinkObject_From.ObjectId = 133049
 
