@@ -1,11 +1,14 @@
 -- Function: gpReport_MotionGoodsWeek()
 
-DROP FUNCTION IF EXISTS gpReport_MotionGoodsWeek (TDateTime, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_MotionGoodsWeek (TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_MotionGoodsWeek (TDateTime, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_MotionGoodsWeek(
     IN inStartDate          TDateTime , --
     IN inUnitId             Integer,    -- подразделение склад
     IN inGoodsGroupId       Integer,    -- группа товара
+    IN inIsRemainsNull      Boolean,    -- показать с 0 остатком да/нет
+    IN inIsRemainsNull_Use  Boolean,    -- нач дата по использованию, тогда если остаток = 0 + но было движение с даты по сегодня тоже показать + в гриде показать для всех "последняя дата использования"
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
@@ -31,6 +34,7 @@ RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , CountOut6 TFloat
              , CountOut7 TFloat
              , EndDate TDateTime
+             , Operdate_Use TDateTime
              --, Color_RemainsDays Integer
               )
 AS
@@ -75,8 +79,9 @@ BEGIN
            _tmpGoods AS (SELECT lfObject_Goods_byGoodsGroup.GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup 
                          WHERE inGoodsGroupId <> 0
                         UNION
-                         SELECT Object.Id FROM Object WHERE DescId = zc_Object_Goods();
-                         WHERE COALESCE (inGoodsGroupId, 0) = 0
+                         SELECT Object.Id FROM Object
+                         WHERE DescId = zc_Object_Goods()
+                           AND COALESCE (inGoodsGroupId, 0) = 0
                         )
     , tmpListDate AS (SELECT generate_series(inStartDate, vbEndDate, '1 DAY'::interval) OperDate)
 
@@ -96,11 +101,13 @@ BEGIN
                       )
     , tmpRemains AS (SELECT tmp.GoodsId, tmp.GoodsKindId
                           , SUM (tmp.StartAmount)        AS RemainsStart 
-                          , SUM (tmp.EndAmount)          AS RemainsEnd 
+                          , SUM (tmp.EndAmount)          AS RemainsEnd
+                          , MAX (tmp.OperDate_use) ::TDateTime AS OperDate_use 
                      FROM (SELECT tmpContainer.GoodsId
                                 , tmpContainer.GoodsKindId
                                 , tmpContainer.Amount - SUM (COALESCE(MIContainer.Amount, 0))  AS StartAmount
                                 , tmpContainer.Amount - SUM (CASE WHEN MIContainer.OperDate > vbEndDate THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS EndAmount
+                                , MAX (COALESCE (MIContainer.OperDate, zc_DateStart())) AS OperDate_use
                            FROM tmpContainer
                                 LEFT JOIN MovementItemContainer AS MIContainer 
                                                                 ON MIContainer.Containerid = tmpContainer.ContainerId
@@ -201,6 +208,7 @@ BEGIN
            , tmpData.CountOut6  :: TFloat
            , tmpData.CountOut7  :: TFloat
            , vbEndDate          AS EndDate
+           , CASE WHEN tmpRemains.OperDate_use = zc_DateStart() THEN NULL ELSE tmpRemains.OperDate_use END ::TDateTime
        FROM tmpGoods
           LEFT JOIN tmpData ON tmpData.GoodsId = tmpGoods.GoodsId 
                            AND tmpData.GoodsKindId = tmpGoods.GoodsKindId 
@@ -222,11 +230,13 @@ BEGIN
                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                               AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
           LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
-       WHERE tmpRemains.RemainsStart <> 0 OR tmpRemains.RemainsEnd   <> 0
-          OR tmpData.CountIn1  <> 0 OR tmpData.CountIn2  <> 0 OR tmpData.CountIn3  <> 0 OR tmpData.CountIn4 <> 0
-          OR tmpData.CountIn5  <> 0 OR tmpData.CountIn6  <> 0 OR tmpData.CountIn7  <> 0
-          OR tmpData.CountOut1 <> 0 OR tmpData.CountOut2 <> 0 OR tmpData.CountOut3 <> 0 OR tmpData.CountOut4 <> 0
-          OR tmpData.CountOut5 <> 0 OR tmpData.CountOut6 <> 0 OR tmpData.CountOut7 <> 0
+       WHERE   ((tmpRemains.RemainsStart <> 0 OR tmpRemains.RemainsEnd <> 0
+            OR tmpData.CountIn1  <> 0 OR tmpData.CountIn2  <> 0 OR tmpData.CountIn3  <> 0 OR tmpData.CountIn4 <> 0
+            OR tmpData.CountIn5  <> 0 OR tmpData.CountIn6  <> 0 OR tmpData.CountIn7  <> 0
+            OR tmpData.CountOut1 <> 0 OR tmpData.CountOut2 <> 0 OR tmpData.CountOut3 <> 0 OR tmpData.CountOut4 <> 0
+            OR tmpData.CountOut5 <> 0 OR tmpData.CountOut6 <> 0 OR tmpData.CountOut7 <> 0
+               ) AND (inIsRemainsNull = FALSE AND inIsRemainsNull_Use = FALSE)
+            ) OR (inIsRemainsNull = TRUE OR (inIsRemainsNull_Use = TRUE AND tmpRemains.OperDate_use <> zc_DateStart()) )
        ORDER BY Object_Goods.ValueData    
           ;
 
@@ -236,8 +246,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 12.12.25         *
  31.03.17         *
 */
 
 -- тест
- --select * from gpReport_MotionGoodsWeek(inStartDate := ('27.03.2016')::TDateTime, inUnitId := 8455 , inGoodsGroupId := 1917 ,  inSession := '5');
+ --select * from gpReport_MotionGoodsWeek(inStartDate := ('01.11.2025')::TDateTime, inUnitId := 8455 , inGoodsGroupId := 1917, inIsRemainsNull:= true, inIsRemainsNull_Use:= False, inSession := '5');

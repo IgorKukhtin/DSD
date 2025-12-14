@@ -24,7 +24,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, dsdCommon;
 
 type
   TReport_SupplyBalanceForm = class(TAncestorReportForm)
@@ -79,6 +79,9 @@ type
     cxGridDBTableViewReceiptChild: TcxGridDBTableView;
     cxGridLevel2: TcxGridLevel;
     cxBottomSplitter: TcxSplitter;
+    cbIsRemainsNull: TcxCheckBox;
+    cbIsRemainsNull_use: TcxCheckBox;
+    Operdate_Use: TcxGridDBColumn;
   private
     { Private declarations }
   public

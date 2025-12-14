@@ -75,6 +75,7 @@ type
     GoodsGroupName: TcxGridDBColumn;
     GoodsGroupNameFull: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
   private
   public
   end;

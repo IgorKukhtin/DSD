@@ -1,14 +1,18 @@
 -- Function: gpReport_SupplyBalance()
 
 DROP FUNCTION IF EXISTS gpReport_SupplyBalance (TDateTime, TDateTime, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_SupplyBalance (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_SupplyBalance (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_SupplyBalance (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_SupplyBalance(
     IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
     IN inUnitId             Integer,    -- подразделение склад
     IN inGoodsGroupId       Integer,    -- группа товара
-    IN inJuridicalId        Integer,    -- поставщик
+    IN inJuridicalId        Integer,    -- поставщик 
+    IN inIsRemainsNull      Boolean,    -- показать с 0 остатком да/нет
+    IN inIsRemainsNull_Use  Boolean,    -- нач дата по использованию, тогда если остаток = 0 + но было движение с даты по сегодня тоже показать + в гриде показать для всех "последняя дата использования"
+
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsId              Integer
@@ -116,7 +120,8 @@ RETURNS TABLE (GoodsId              Integer
              , CountProductionOut_30  TFloat
              , CountProductionOut_31  TFloat
 
-             , Color_RemainsDays    Integer
+             , Color_RemainsDays    Integer 
+             , OperDate_use TDateTime
               )
 AS
 $BODY$
@@ -460,7 +465,7 @@ BEGIN
                                             THEN 1 * COALESCE (MIContainer.Amount, 0)
                                             ELSE 0
                                        END) AS CountIn_oth
-
+                                , MAX (COALESCE (MIContainer.OperDate, zc_DateStart())) AS OperDate_use
                            FROM tmpContainerAll
                                 LEFT JOIN MovementItemContainer AS MIContainer
                                                                 ON MIContainer.Containerid = tmpContainerAll.ContainerId
@@ -481,6 +486,7 @@ BEGIN
                           , (tmp.CountSendOut_Calc)  AS CountProductionOut_Calc
                           , (tmp.CountIn_oth   + COALESCE (tmpIncome.CountIn_oth, 0))  AS CountIn_oth
                           , (tmp.CountOut_oth  + COALESCE (tmpIncome.CountOut_oth, 0)) AS CountOut_oth
+                          , (tmp.OperDate_use) ::TDateTime AS OperDate_use
 
                      FROM (SELECT tmp.GoodsId
                                 , SUM (tmp.StartAmount)       AS StartAmount
@@ -489,6 +495,7 @@ BEGIN
                                 , SUM (tmp.CountSendOut_Calc) AS CountSendOut_Calc
                                 , SUM (tmp.CountOut_oth)      AS CountOut_oth
                                 , SUM (tmp.CountIn_oth)       AS CountIn_oth
+                                , MAX (tmp.OperDate_use) ::TDateTime AS OperDate_use
                            FROM
                           (SELECT tmpMIContainerAll.GoodsId
                                 , tmpMIContainerAll.Amount - SUM (tmpMIContainerAll.StartAmountSum)  AS StartAmount
@@ -497,6 +504,7 @@ BEGIN
                                 , SUM (tmpMIContainerAll.CountSendOut_Calc) AS CountSendOut_Calc
                                 , SUM (tmpMIContainerAll.CountOut_oth)      AS CountOut_oth
                                 , SUM (tmpMIContainerAll.CountIn_oth)       AS CountIn_oth
+                                , MAX (tmpMIContainerAll.OperDate_use) ::TDateTime AS OperDate_use
                            FROM tmpMIContainerAll
                            GROUP BY tmpMIContainerAll.ContainerId, tmpMIContainerAll.GoodsId, tmpMIContainerAll.Amount
                           ) AS tmp
@@ -868,7 +876,7 @@ BEGIN
                          ELSE zc_Color_Red()
                     END
               END :: Integer AS Color_RemainsDays
-
+           , CASE WHEN tmpContainer.OperDate_use = zc_DateStart() THEN NULL ELSE tmpContainer.OperDate_use END ::TDateTime AS OperDate_use
        FROM tmpGoodsList
           LEFT JOIN tmpContainer ON tmpContainer.GoodsId = tmpGoodsList.GoodsId
           LEFT JOIN tmpOrderIncome ON tmpOrderIncome.GoodsId = tmpGoodsList.GoodsId
@@ -890,11 +898,15 @@ BEGIN
 
           LEFT JOIN tmpOnDays ON tmpOnDays.GoodsId = tmpGoodsList.GoodsId
 
-       WHERE tmpContainer.RemainsStart   <> 0 OR tmpContainer.RemainsEnd         <> 0 OR tmpOrderIncome.Amount  <> 0
-          OR tmpContainer.CountIncome    <> 0 OR tmpContainer.CountProductionOut <> 0
-          OR tmpContainer.CountIn_oth    <> 0 OR tmpContainer.CountOut_oth       <> 0
-          OR tmpRemains_Oth.RemainsStart <> 0
-          OR tmpRemains_Oth.RemainsEnd   <> 0
+       WHERE ((tmpContainer.RemainsStart   <> 0 OR tmpContainer.RemainsEnd         <> 0 OR tmpOrderIncome.Amount  <> 0
+            OR tmpContainer.CountIncome    <> 0 OR tmpContainer.CountProductionOut <> 0
+            OR tmpContainer.CountIn_oth    <> 0 OR tmpContainer.CountOut_oth       <> 0
+            OR tmpRemains_Oth.RemainsStart <> 0
+            OR tmpRemains_Oth.RemainsEnd   <> 0
+             ) AND (inIsRemainsNull = FALSE AND inIsRemainsNull_Use = FALSE)
+          )
+          OR (inIsRemainsNull = TRUE OR (inIsRemainsNull_Use = TRUE AND tmpContainer.OperDate_use <> zc_DateStart()))
+          
       ;
 
 END;
@@ -904,6 +916,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 12.12.25         *
  29.04.20         * zc_Movement_SendAsset()
  31.05.17         *
  25.05.17         *

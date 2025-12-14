@@ -3,7 +3,7 @@ object Report_SupplyBalanceDialogForm: TReport_SupplyBalanceDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1076#1083#1103' '#1089#1085#1072#1073#1078#1077#1085#1080#1103'>'
-  ClientHeight = 239
+  ClientHeight = 291
   ClientWidth = 220
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,8 +18,8 @@ object Report_SupplyBalanceDialogForm: TReport_SupplyBalanceDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 19
-    Top = 201
+    Left = 17
+    Top = 254
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_SupplyBalanceDialogForm: TReport_SupplyBalanceDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 125
-    Top = 201
+    Left = 119
+    Top = 254
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -112,6 +112,20 @@ object Report_SupplyBalanceDialogForm: TReport_SupplyBalanceDialogForm
     Properties.ReadOnly = True
     TabOrder = 11
     Width = 200
+  end
+  object cbIsRemainsNull: TcxCheckBox
+    Left = 8
+    Top = 190
+    Caption = ' '#1087#1086#1082#1072#1079#1072#1090#1100' '#1089' 0 '#1086#1089#1090#1072#1090#1082#1086#1084' ('#1076#1072'/'#1085#1077#1090')'
+    TabOrder = 12
+    Width = 190
+  end
+  object cbIsRemainsNull_use: TcxCheckBox
+    Left = 8
+    Top = 218
+    Caption = #1085#1072#1095' '#1076#1072#1090#1072' '#1087#1086' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1080#1102' ('#1076#1072'/'#1085#1077#1090')'
+    TabOrder = 13
+    Width = 218
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart

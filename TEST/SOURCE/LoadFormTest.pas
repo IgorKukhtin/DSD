@@ -2678,7 +2678,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Inventory_WeighingFactDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Inventory_WeighingFactDialogForm');
   ///exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_Inventory_scaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovement_Inventory_scaleForm');
 
@@ -2731,7 +2731,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PartionCell_historyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PartionCell_historyForm');
 
-   {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSend_PartionCell_isManyEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSend_PartionCell_isManyEditForm');
 
@@ -3006,19 +3006,20 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_OrderInternalBySendForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_OrderInternalBySendDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_OrderInternalBySendDialogForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsWeekForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsWeekForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsWeekDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsWeekDialogForm');
+    exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SupplyBalanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SupplyBalanceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SupplyBalanceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SupplyBalanceDialogForm');
   exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsForm');
   exit;
@@ -3834,6 +3835,10 @@ end;
 
 procedure TLoadFormTest.LoadUnionFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnion_Member_UnitForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnion_Member_UnitForm');
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromo_ServiceGoodsJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromo_ServiceGoodsJournalChoiceForm');
@@ -4204,11 +4209,11 @@ end;
 
 procedure TLoadFormTest.LoadAssetFormTest;
 begin
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAsset_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAsset_ObjectForm');
   exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAsset_DocGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAsset_DocGoodsForm');
 

@@ -19,6 +19,7 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar, Movem
              , UnitId Integer, UnitName TVarChar
              , BranchId Integer, BranchName TVarChar
              , Amount TFloat, Price TFloat, Summa TFloat, SummaLoss TFloat, SummaService TFloat
+             , Comment TVarChar
              )
 AS
 $BODY$
@@ -194,7 +195,7 @@ BEGIN
                     , SUM (COALESCE (tmp.SummaLoss,0))     AS SummaLoss
                     , SUM (COALESCE (tmp.SummaService,0))  AS SummaService
                     , SUM (COALESCE (tmp.SummaLoss,0) + COALESCE (tmp.SummaService,0))  AS Summa
-                    , STRING_AGG (tmp.Comment, ';') ::TVarChar AS Comment
+                    , STRING_AGG (DISTINCT tmp.Comment, '; ' ) ::TVarChar AS Comment
                FROM (SELECT tmp.MovementId
                           , tmp.OperDate
                           , tmp.InvNumber
@@ -264,6 +265,7 @@ BEGIN
              , tmpData.Summa        ::TFloat
              , tmpData.SummaLoss    ::TFloat
              , tmpData.SummaService ::TFloat
+             , tmpData.Comment      ::TVarChar
         FROM tmpData
             LEFT JOIN MovementDesc ON MovementDesc.Id = tmpData.MovementDescId
      
@@ -305,6 +307,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 12.12.25         *
  08.12.21         *
 */
 

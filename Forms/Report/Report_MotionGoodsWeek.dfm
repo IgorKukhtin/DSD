@@ -5,6 +5,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -175
   ExplicitWidth = 1382
   ExplicitHeight = 573
   PixelsPerInch = 96
@@ -945,6 +946,15 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
             VisibleForCustomization = False
             Width = 60
           end
+          object Operdate_Use: TcxGridDBColumn
+            Caption = #1055#1086#1089#1083#1077#1076#1085#1103#1103' '#1076#1072#1090#1072' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1080#1103
+            DataBinding.FieldName = 'Operdate_Use'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1089#1083#1077#1076#1085#1103#1103' '#1076#1072#1090#1072' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1080#1103
+            Options.Editing = False
+            Width = 80
+          end
         end
       end
     end
@@ -1013,6 +1023,20 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
       Properties.ReadOnly = True
       TabOrder = 7
       Width = 210
+    end
+    object cbIsRemainsNull: TcxCheckBox
+      Left = 803
+      Top = 5
+      Caption = ' '#1087#1086#1082#1072#1079#1072#1090#1100' '#1089' 0 '#1086#1089#1090#1072#1090#1082#1086#1084' ('#1076#1072'/'#1085#1077#1090')'
+      TabOrder = 8
+      Width = 190
+    end
+    object cbIsRemainsNull_use: TcxCheckBox
+      Left = 999
+      Top = 5
+      Caption = #1085#1072#1095' '#1076#1072#1090#1072' '#1087#1086' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1080#1102' ('#1076#1072'/'#1085#1077#1090')'
+      TabOrder = 9
+      Width = 218
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -1323,6 +1347,22 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsRemainsNull'
+          Value = Null
+          Component = cbIsRemainsNull
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsRemainsNull_use'
+          Value = Null
+          Component = cbIsRemainsNull_use
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1469,6 +1509,22 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
         Value = ''
         Component = GuidesGoodsGroup
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsRemainsNull'
+        Value = Null
+        Component = cbIsRemainsNull
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsRemainsNull_Use'
+        Value = Null
+        Component = cbIsRemainsNull_use
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
