@@ -289,10 +289,16 @@ BEGIN
                   WHEN Object_To.Id = zc_Unit_RK()
                        THEN FALSE
                   -- Дільниця обліку і реалізації м`ясної сировини
-                  WHEN Object_To.Id = 133049 AND vbJuridicalId IN (15212, 15346 ) -- ОМЕГА ТОВ + РТЦ ТОВ
-                       THEN FALSE
+                  -- WHEN Object_To.Id = 133049 AND vbJuridicalId IN (15212, 15346 ) -- ОМЕГА ТОВ + РТЦ ТОВ
+                  --      THEN FALSE
                   ELSE TRUE
              END :: Boolean AS isPage_1
+
+           , CASE -- Дільниця обліку і реалізації м`ясної сировини
+                  WHEN Object_To.Id = 133049 AND vbJuridicalId IN (15212, 15346 ) -- ОМЕГА ТОВ + РТЦ ТОВ
+                       THEN TRUE
+                  ELSE FALSE
+             END :: Boolean AS isPLU_Page_1
 
        FROM tmpMovement_total
             LEFT JOIN Movement ON Movement.Id = tmpMovement_total.MovementId
@@ -619,8 +625,17 @@ BEGIN
                                    , gpSelect.GoodsKindId
                                    , ROW_NUMBER() OVER (PARTITION BY gpSelect.GoodsId, gpSelect.GoodsKindId ORDER BY gpSelect.NPP) AS Ord
                               FROM gpSelect_Object_ChoiceCell (FALSE, inSession) AS gpSelect
+                              WHERE vbUnitId = zc_Unit_RK()
                              )
-           --срок годности
+        /*, tmpChoiceCell AS (SELECT 0           ::Integer   AS NPP
+                                   , 0           ::Integer   AS CellCode
+                                   , ''          ::TVarChar  AS CellName
+                                   , ''          ::TVarChar  AS CellName_shot
+                                   , 0                       AS GoodsId
+                                   , 0                       AS GoodsKindId
+                                   , 0                       AS Ord
+                             )*/
+           -- срок годности
           , tmpGoodsQuality AS (SELECT GoodsQuality_Goods.ChildObjectId AS GoodsId
                                      , ObjectString_Value2.ValueData    AS Value2 
                                 FROM ObjectLink AS GoodsQuality_Goods

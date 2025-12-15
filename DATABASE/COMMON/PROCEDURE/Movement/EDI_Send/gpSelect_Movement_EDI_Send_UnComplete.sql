@@ -365,7 +365,7 @@ BEGIN
                   )
 
                -- Этих Отправляем Сразу
-               OR (Object_Retail.Id IN (-310855 -- !!!Варус!!!
+               OR (Object_Retail.Id IN (-1 * 310855 -- !!!Варус!!!
                                       -- , 310846 -- !!!ВК!!!
                                        )
                AND Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '1 MIN'
