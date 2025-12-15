@@ -38,7 +38,8 @@ type
     GuidesUnit: TdsdGuides;
     edUnit: TcxButtonEdit;
     cbIsRemainsNull_use: TcxCheckBox;
-    cbIsRemainsNull: TcxCheckBox;
+    cxLabel5: TcxLabel;
+    deStartDate_use: TcxDateEdit;
   private
     { Private declarations }
   public

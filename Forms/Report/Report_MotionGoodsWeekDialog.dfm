@@ -86,16 +86,23 @@ object Report_MotionGoodsWeekDialogForm: TReport_MotionGoodsWeekDialogForm
   object cbIsRemainsNull_use: TcxCheckBox
     Left = 33
     Top = 149
-    Caption = #1085#1072#1095' '#1076#1072#1090#1072' '#1087#1086' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1080#1102' ('#1076#1072'/'#1085#1077#1090')'
+    Caption = ' '#1087#1086#1082#1072#1079#1072#1090#1100' '#1089' '#1085#1091#1083#1077#1074#1080#1084' '#1086#1089#1090#1072#1090#1082#1086#1084' ('#1076#1072'/'#1085#1077#1090')'
     TabOrder = 8
     Width = 218
   end
-  object cbIsRemainsNull: TcxCheckBox
-    Left = 33
+  object cxLabel5: TcxLabel
+    Left = 37
+    Top = 124
+    Caption = #1053#1072#1095'. '#1076#1072#1090#1072' '#1080#1089#1087#1086#1083#1100#1079'.:'
+  end
+  object deStartDate_use: TcxDateEdit
+    Left = 139
     Top = 122
-    Caption = ' '#1087#1086#1082#1072#1079#1072#1090#1100' '#1089' 0 '#1086#1089#1090#1072#1090#1082#1086#1084' ('#1076#1072'/'#1085#1077#1090')'
-    TabOrder = 9
-    Width = 190
+    EditValue = 45748d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 10
+    Width = 83
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -164,18 +171,18 @@ object Report_MotionGoodsWeekDialogForm: TReport_MotionGoodsWeekDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'IsRemainsNull'
+        Name = 'IsRemainsNull_use'
         Value = Null
-        Component = cbIsRemainsNull
+        Component = cbIsRemainsNull_use
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'IsRemainsNull_use'
+        Name = 'StartDate_use'
         Value = Null
-        Component = cbIsRemainsNull_use
-        DataType = ftBoolean
+        Component = deStartDate_use
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

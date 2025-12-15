@@ -5,27 +5,26 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -175
   ExplicitWidth = 1382
   ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 59
+    Top = 77
     Width = 1366
-    Height = 475
+    Height = 457
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 1366
     ExplicitHeight = 475
-    ClientRectBottom = 475
+    ClientRectBottom = 457
     ClientRectRight = 1366
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1366
       ExplicitHeight = 475
       inherited cxGrid: TcxGrid
         Width = 1366
-        Height = 475
+        Height = 457
         ExplicitWidth = 1366
         ExplicitHeight = 475
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -961,43 +960,49 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
   end
   inherited Panel: TPanel
     Width = 1366
-    Height = 33
+    Height = 51
     ExplicitWidth = 1366
-    ExplicitHeight = 33
+    ExplicitHeight = 51
     inherited deStart: TcxDateEdit
-      Left = 118
+      Left = 9
+      Top = 22
       EditValue = 42826d
       Properties.SaveTime = False
-      ExplicitLeft = 118
+      ExplicitLeft = 9
+      ExplicitTop = 22
+      ExplicitWidth = 91
+      Width = 91
     end
     inherited deEnd: TcxDateEdit
-      Left = 6
-      Top = 15
+      Left = 0
+      Top = 30
       EditValue = 42826d
       Properties.SaveTime = False
       Visible = False
-      ExplicitLeft = 6
-      ExplicitTop = 15
+      ExplicitLeft = 0
+      ExplicitTop = 30
     end
     inherited cxLabel1: TcxLabel
-      Left = 25
-      ExplicitLeft = 25
+      Left = 9
+      Top = 4
+      ExplicitLeft = 9
+      ExplicitTop = 4
     end
     inherited cxLabel2: TcxLabel
-      Left = 2
-      Top = 8
+      Left = 3
+      Top = 30
       Visible = False
-      ExplicitLeft = 2
-      ExplicitTop = 8
+      ExplicitLeft = 3
+      ExplicitTop = 30
     end
     object cxLabel4: TcxLabel
-      Left = 515
-      Top = 6
+      Left = 342
+      Top = 4
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
     end
     object edGoodsGroup: TcxButtonEdit
-      Left = 606
-      Top = 5
+      Left = 342
+      Top = 22
       Properties.Buttons = <
         item
           Default = True
@@ -1008,13 +1013,13 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
       Width = 180
     end
     object cxLabel3: TcxLabel
-      Left = 212
-      Top = 6
+      Left = 116
+      Top = 4
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object edUnit: TcxButtonEdit
-      Left = 302
-      Top = 4
+      Left = 116
+      Top = 22
       Properties.Buttons = <
         item
           Default = True
@@ -1024,20 +1029,27 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
       TabOrder = 7
       Width = 210
     end
-    object cbIsRemainsNull: TcxCheckBox
-      Left = 803
-      Top = 5
-      Caption = ' '#1087#1086#1082#1072#1079#1072#1090#1100' '#1089' 0 '#1086#1089#1090#1072#1090#1082#1086#1084' ('#1076#1072'/'#1085#1077#1090')'
-      TabOrder = 8
-      Width = 190
-    end
     object cbIsRemainsNull_use: TcxCheckBox
-      Left = 999
-      Top = 5
-      Caption = #1085#1072#1095' '#1076#1072#1090#1072' '#1087#1086' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1080#1102' ('#1076#1072'/'#1085#1077#1090')'
-      TabOrder = 9
-      Width = 218
+      Left = 645
+      Top = 21
+      Caption = ' '#1087#1086#1082#1072#1079#1072#1090#1100' '#1089' '#1085#1091#1083#1077#1074#1080#1084' '#1086#1089#1090#1072#1090#1082#1086#1084' ('#1076#1072'/'#1085#1077#1090')'
+      TabOrder = 8
+      Width = 228
     end
+  end
+  object cxLabel5: TcxLabel [2]
+    Left = 533
+    Top = 8
+    Caption = #1053#1072#1095'. '#1076#1072#1090#1072' '#1080#1089#1087#1086#1083#1100#1079'.:'
+  end
+  object deStartDate_use: TcxDateEdit [3]
+    Left = 537
+    Top = 22
+    EditValue = 45748d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 7
+    Width = 102
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1349,18 +1361,18 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'IsRemainsNull'
+          Name = 'IsRemainsNull_use'
           Value = Null
-          Component = cbIsRemainsNull
+          Component = cbIsRemainsNull_use
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'IsRemainsNull_use'
+          Name = 'StartDate_use'
           Value = Null
-          Component = cbIsRemainsNull_use
-          DataType = ftBoolean
+          Component = deStartDate_use
+          DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -1489,11 +1501,11 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inEndDate'
-        Value = 41640d
-        Component = deEnd
+        Name = 'inStartDate_use'
+        Value = 45748d
+        Component = deStartDate_use
         DataType = ftDateTime
-        ParamType = ptUnknown
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -1513,19 +1525,22 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsRemainsNull'
-        Value = Null
-        Component = cbIsRemainsNull
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inIsRemainsNull_Use'
         Value = Null
         Component = cbIsRemainsNull_use
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        DataType = ftBoolean
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 112
@@ -1697,8 +1712,8 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 672
-    Top = 16
+    Left = 448
+    Top = 24
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1767,7 +1782,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 384
+    Left = 232
     Top = 17
   end
 end
