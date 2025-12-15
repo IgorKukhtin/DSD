@@ -5353,13 +5353,21 @@ var
 begin
   // Создать XML
   DESADV := DesadvXML.NewDESADV;
-  //
+  // Номер повідомлення про відвантаження
   DESADV.NUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
-  DESADV.Date := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDate').asDateTime);
-  DESADV.DELIVERYDATE := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDate').asDateTime);
+  // Дата Повідомлення про відвантаження
+  DESADV.Date := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
+  //Очікувана дата доставки
+  DESADV.DELIVERYDATE := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
+  //Очікуваний час доставки
+  //DESADV.DELIVERYTIME := '00:00';
+  // Номер замовлення
   DESADV.ORDERNUMBER := HeaderDataSet.FieldByName('InvNumberOrder').asString;
+  // Дата замовлення
   DESADV.ORDERDATE := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDateOrder').asDateTime);
+  // Номер накладної
   DESADV.DELIVERYNOTENUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
+  // Дата накладної
   DESADV.DELIVERYNOTEDATE := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
   // Номер договору на поставку
   DESADV.CAMPAIGNNUMBER:= HeaderDataSet.FieldByName('ContractName').asString;

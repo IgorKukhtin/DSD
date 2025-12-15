@@ -810,22 +810,22 @@ BEGIN
                                    AND ObjectBoolean_Partner_EdiOrdspr_vch.DescId = zc_ObjectBoolean_Partner_EdiOrdspr_vch()
                                     -- проверка по связи заявки с EDI
                                    AND MovementLinkMovement_Order.MovementChildId > 0
-                                      -- Дільниця обліку і реалізації м`ясної сировини
-                                   AND tmpMovement.FromId = 133049
+                                      -- Заявка Кому = Дільниця обліку і реалізації м`ясної сировини
+                                   AND tmpMovement.ToId = 133049
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiInvoice_vch
                                     ON ObjectBoolean_Partner_EdiInvoice_vch.ObjectId =  tmpMovement.FromId
                                    AND ObjectBoolean_Partner_EdiInvoice_vch.DescId = zc_ObjectBoolean_Partner_EdiInvoice_vch()
                                     -- проверка по связи заявки с EDI
                                    AND MovementLinkMovement_Order.MovementChildId > 0
-                                      -- Дільниця обліку і реалізації м`ясної сировини
-                                   AND tmpMovement.FromId = 133049
+                                      -- Заявка Кому = Дільниця обліку і реалізації м`ясної сировини
+                                   AND tmpMovement.ToId = 133049
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiDesadv_vch
                                     ON ObjectBoolean_Partner_EdiDesadv_vch.ObjectId =  tmpMovement.FromId
                                    AND ObjectBoolean_Partner_EdiDesadv_vch.DescId = zc_ObjectBoolean_Partner_EdiDesadv_vch()
                                     -- проверка по связи заявки с EDI
                                    AND MovementLinkMovement_Order.MovementChildId > 0
-                                      -- Дільниця обліку і реалізації м`ясної сировини
-                                   AND tmpMovement.FromId = 133049
+                                      -- Заявка Кому = Дільниця обліку і реалізації м`ясної сировини
+                                   AND tmpMovement.ToId = 133049
 
             LEFT JOIN tmpMLO AS MovementLinkObject_Personal
                                          ON MovementLinkObject_Personal.MovementId = tmpMovement.Id

@@ -51,7 +51,7 @@ BEGIN
                                              AND COALESCE (Container.Amount, 0) <> 0
                          INNER JOIN ContainerLinkObject AS CLO_Unit
                                                         ON CLO_Unit.ContainerId = Container.Id
-                                                       AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                                       AND CLO_Unit.DescId IN (zc_ContainerLinkObject_Unit(), zc_ContainerLinkObject_Member())
                                                        AND (CLO_Unit.ObjectId = inUnitId OR inUnitId = 0)
                          LEFT JOIN ContainerLinkObject AS CLO_AssetTo ON CLO_AssetTo.ContainerId = Container.Id
                                                                      AND CLO_AssetTo.DescId = zc_ContainerLinkObject_AssetTo()

@@ -16,7 +16,7 @@ BEGIN
                        THEN inGLNCodeCorporate_partner
                   WHEN inGLNCodeCorporate_retail <> '' AND inGLNCode <> ''
                        THEN inGLNCodeCorporate_retail
-                  WHEN inGLNCode <> ''
+                  WHEN inGLNCode <> '' OR 1=1
                        THEN inGLNCodeCorporate_main
                   ELSE ''
              END);
