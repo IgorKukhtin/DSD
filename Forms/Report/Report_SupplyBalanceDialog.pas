@@ -42,8 +42,9 @@ type
     cxLabel2: TcxLabel;
     edJuridical: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
-    cbIsRemainsNull: TcxCheckBox;
     cbIsRemainsNull_use: TcxCheckBox;
+    cxLabel5: TcxLabel;
+    deStartDate_use: TcxDateEdit;
   private
     { Private declarations }
   public

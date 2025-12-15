@@ -14,19 +14,19 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
     Width = 1366
     Height = 457
     TabOrder = 3
-    ExplicitTop = 59
+    ExplicitTop = 77
     ExplicitWidth = 1366
-    ExplicitHeight = 475
+    ExplicitHeight = 457
     ClientRectBottom = 457
     ClientRectRight = 1366
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1366
-      ExplicitHeight = 475
+      ExplicitHeight = 457
       inherited cxGrid: TcxGrid
         Width = 1366
         Height = 457
         ExplicitWidth = 1366
-        ExplicitHeight = 475
+        ExplicitHeight = 457
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -961,6 +961,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
   inherited Panel: TPanel
     Width = 1366
     Height = 51
+    ExplicitTop = 6
     ExplicitWidth = 1366
     ExplicitHeight = 51
     inherited deStart: TcxDateEdit

@@ -3,8 +3,8 @@ object Report_SupplyBalanceDialogForm: TReport_SupplyBalanceDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1076#1083#1103' '#1089#1085#1072#1073#1078#1077#1085#1080#1103'>'
-  ClientHeight = 291
-  ClientWidth = 220
+  ClientHeight = 297
+  ClientWidth = 244
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,8 +18,8 @@ object Report_SupplyBalanceDialogForm: TReport_SupplyBalanceDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 17
-    Top = 254
+    Left = 25
+    Top = 264
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_SupplyBalanceDialogForm: TReport_SupplyBalanceDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 119
-    Top = 254
+    Left = 121
+    Top = 264
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -113,19 +113,26 @@ object Report_SupplyBalanceDialogForm: TReport_SupplyBalanceDialogForm
     TabOrder = 11
     Width = 200
   end
-  object cbIsRemainsNull: TcxCheckBox
-    Left = 8
-    Top = 190
-    Caption = ' '#1087#1086#1082#1072#1079#1072#1090#1100' '#1089' 0 '#1086#1089#1090#1072#1090#1082#1086#1084' ('#1076#1072'/'#1085#1077#1090')'
-    TabOrder = 12
-    Width = 190
-  end
   object cbIsRemainsNull_use: TcxCheckBox
     Left = 8
-    Top = 218
-    Caption = #1085#1072#1095' '#1076#1072#1090#1072' '#1087#1086' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1080#1102' ('#1076#1072'/'#1085#1077#1090')'
-    TabOrder = 13
-    Width = 218
+    Top = 233
+    Caption = ' '#1087#1086#1082#1072#1079#1072#1090#1100' '#1089' '#1085#1091#1083#1077#1074#1080#1084' '#1086#1089#1090#1072#1090#1082#1086#1084' ('#1076#1072'/'#1085#1077#1090')'
+    TabOrder = 12
+    Width = 224
+  end
+  object cxLabel5: TcxLabel
+    Left = 10
+    Top = 187
+    Caption = #1053#1072#1095'. '#1076#1072#1090#1072' '#1080#1089#1087#1086#1083#1100#1079'.:'
+  end
+  object deStartDate_use: TcxDateEdit
+    Left = 10
+    Top = 206
+    EditValue = 45748d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 14
+    Width = 102
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -216,6 +223,22 @@ object Report_SupplyBalanceDialogForm: TReport_SupplyBalanceDialogForm
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IsRemainsNull_use'
+        Value = Null
+        Component = cbIsRemainsNull_use
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartDate_use'
+        Value = Null
+        Component = deStartDate_use
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

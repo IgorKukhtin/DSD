@@ -84,11 +84,11 @@ object Report_MotionGoodsWeekDialogForm: TReport_MotionGoodsWeekDialogForm
     Width = 217
   end
   object cbIsRemainsNull_use: TcxCheckBox
-    Left = 33
-    Top = 149
+    Left = 37
+    Top = 151
     Caption = ' '#1087#1086#1082#1072#1079#1072#1090#1100' '#1089' '#1085#1091#1083#1077#1074#1080#1084' '#1086#1089#1090#1072#1090#1082#1086#1084' ('#1076#1072'/'#1085#1077#1090')'
     TabOrder = 8
-    Width = 218
+    Width = 224
   end
   object cxLabel5: TcxLabel
     Left = 37

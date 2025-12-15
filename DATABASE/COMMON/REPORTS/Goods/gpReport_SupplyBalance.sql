@@ -3,16 +3,16 @@
 DROP FUNCTION IF EXISTS gpReport_SupplyBalance (TDateTime, TDateTime, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpReport_SupplyBalance (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_SupplyBalance (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_SupplyBalance (TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_SupplyBalance(
     IN inStartDate          TDateTime , --
-    IN inEndDate            TDateTime , --
+    IN inEndDate            TDateTime , --   
+    IN inStartDate_use      TDateTime , --
     IN inUnitId             Integer,    -- подразделение склад
     IN inGoodsGroupId       Integer,    -- группа товара
     IN inJuridicalId        Integer,    -- поставщик 
-    IN inIsRemainsNull      Boolean,    -- показать с 0 остатком да/нет
     IN inIsRemainsNull_Use  Boolean,    -- нач дата по использованию, тогда если остаток = 0 + но было движение с даты по сегодня тоже показать + в гриде показать для всех "последняя дата использования"
-
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsId              Integer
@@ -466,7 +466,7 @@ BEGIN
                            FROM tmpContainerAll
                                 LEFT JOIN MovementItemContainer AS MIContainer
                                                                 ON MIContainer.Containerid = tmpContainerAll.ContainerId
-                                                               AND MIContainer.OperDate >= vbStartDate
+                                                               AND MIContainer.OperDate >= CASE WHEN inIsRemainsNull_Use = FALSE THEN vbStartDate ELSE inStartDate_use END
                                 LEFT JOIN zfCalc_DayOfWeekName (MIContainer.OperDate) AS tmpWeekDay ON 1=1
                            GROUP BY CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut()) THEN MIContainer.ObjectExtId_Analyzer
                                          WHEN MIContainer.MovementDescId IN (zc_Movement_ProductionUnion()) AND MIContainer.isActive = TRUE THEN MIContainer.ObjectExtId_Analyzer

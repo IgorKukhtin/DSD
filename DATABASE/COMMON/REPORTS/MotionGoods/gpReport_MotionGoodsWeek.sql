@@ -106,13 +106,13 @@ BEGIN
                           , MAX (tmp.OperDate_use) ::TDateTime AS OperDate_use 
                      FROM (SELECT tmpContainer.GoodsId
                                 , tmpContainer.GoodsKindId
-                                , tmpContainer.Amount - SUM (CASE WHEN MIContainer.OperDate > inStartDate THEN COALESCE(MIContainer.Amount, 0) ELSE 0 END) AS StartAmount
+                                , tmpContainer.Amount - SUM (CASE WHEN MIContainer.OperDate >= inStartDate THEN COALESCE(MIContainer.Amount, 0) ELSE 0 END) AS StartAmount
                                 , tmpContainer.Amount - SUM (CASE WHEN MIContainer.OperDate > vbEndDate THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END)  AS EndAmount
                                 , MAX (COALESCE (MIContainer.OperDate, zc_DateStart())) AS OperDate_use
                            FROM tmpContainer
                                 LEFT JOIN MovementItemContainer AS MIContainer 
                                                                 ON MIContainer.Containerid = tmpContainer.ContainerId
-                                                               AND MIContainer.OperDate >= inStartDate_use
+                                                               AND MIContainer.OperDate >= CASE WHEN inIsRemainsNull_Use = FALSE THEN inStartDate ELSE inStartDate_use END
                            GROUP BY tmpContainer.GoodsId
                                   , tmpContainer.GoodsKindId
                                   , tmpContainer.Amount
