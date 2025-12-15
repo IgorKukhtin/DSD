@@ -245,7 +245,7 @@ BEGIN
                                  , MIFloat_AmountSecond.ValueData                AS AmountSecond
                                  , MIFloat_AmountManual.ValueData                AS AmountManual
                                  , MIFloat_Summ.ValueData                        AS Summ
-                                 , MIFloat_PromoMovement.ValueData               AS MovementId_Promo
+                                 , MIFloat_PromoMovement.ValueData    :: Integer AS MovementId_Promo
                                  , MIDate_StartBegin.ValueData                   AS StartBegin
                                  , MIDate_EndBegin.ValueData                     AS EndBegin
                                  , EXTRACT (EPOCH FROM (COALESCE (MIDate_EndBegin.ValueData, zc_DateStart()) - COALESCE (MIDate_StartBegin.ValueData, zc_DateStart())) :: INTERVAL) :: TFloat AS diffBegin_sec
@@ -988,7 +988,7 @@ BEGIN
                                  , MIFloat_AmountSecond.ValueData                AS AmountSecond
                                  , MIFloat_AmountManual.ValueData                AS AmountManual
                                  , MIFloat_Summ.ValueData                        AS Summ
-                                 , MIFloat_PromoMovement.ValueData               AS MovementId_Promo
+                                 , MIFloat_PromoMovement.ValueData    :: Integer AS MovementId_Promo
                                  , MIDate_StartBegin.ValueData                   AS StartBegin
                                  , MIDate_EndBegin.ValueData                     AS EndBegin
                                  , EXTRACT (EPOCH FROM (COALESCE (MIDate_EndBegin.ValueData, zc_DateStart()) - COALESCE (MIDate_StartBegin.ValueData, zc_DateStart())) :: INTERVAL) :: TFloat AS diffBegin_sec
@@ -1164,10 +1164,12 @@ BEGIN
                              AND vbIsOrderDnepr = FALSE
                            GROUP BY tmpMI_Goods.MovementItemId
                           )
+          , tmpMLO_PromoSchemaKind_list AS (SELECT DISTINCT tmpMI_Goods.MovementId_Promo :: Integer AS MovementId_Promo FROM tmpMI_Goods)
           , tmpMLO_PromoSchemaKind AS (SELECT MLO_PromoSchemaKind.*
                                        FROM MovementLinkObject AS MLO_PromoSchemaKind
-                                       WHERE MLO_PromoSchemaKind.MovementId IN (SELECT DISTINCT tmpMI_Goods.MovementId_Promo FROM tmpMI_Goods)
+                                       WHERE MLO_PromoSchemaKind.MovementId IN (SELECT DISTINCT tmpMLO_PromoSchemaKind_list.MovementId_Promo FROM tmpMLO_PromoSchemaKind_list)
                                          AND MLO_PromoSchemaKind.DescId     = zc_MovementLinkObject_PromoSchemaKind()
+                                         AND MLO_PromoSchemaKind.ObjectId   > 0
                                       )
             -- LEFT JOIN Товаров из заявки + Акции + Остатки
           , tmpMI AS (SELECT COALESCE (tmpMI_Goods.MovementItemId, 0)                   AS MovementItemId
