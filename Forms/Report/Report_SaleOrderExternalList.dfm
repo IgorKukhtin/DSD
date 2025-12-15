@@ -1066,6 +1066,7 @@ object Report_SaleOrderExternalListForm: TReport_SaleOrderExternalListForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 304
     Top = 296
