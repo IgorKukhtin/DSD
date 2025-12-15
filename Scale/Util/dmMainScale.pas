@@ -32,6 +32,7 @@ type
     function gpGet_Scale_MI_Goods_gofro(var execParamsMovement:TParams;var execParamsMI:TParams): Boolean;
     // Scale + ScaleCeh
     function gpUpdate_Scale_MI_Erased(MovementItemId:Integer;NewValue: Boolean): Boolean;
+    function gpUpdate_Scale_MI_all_Erased(MovementId:Integer;NewValue: Boolean): Boolean;
     function gpUpdate_Scale_MIFloat(execParams:TParams): Boolean;
     function gpUpdate_Scale_MIString(execParams:TParams): Boolean;
     function gpUpdate_Scale_MIDate(execParams:TParams): Boolean;
@@ -1071,6 +1072,28 @@ begin
        {except
          Result := '';
          ShowMessage('Ошибка получения - gpInsert_Scale_MI');
+       end;}
+    end;
+
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpUpdate_Scale_MI_all_Erased(MovementId:Integer;NewValue: Boolean): Boolean;
+begin
+    Result:= false;
+    //
+    with spSelect do begin
+       StoredProcName:='gpUpdate_Scale_MI_all_Erased';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inMovementId', ftInteger, ptInput, MovementId);
+       Params.AddParam('inIsErased', ftBoolean, ptInput, NewValue);
+       //try
+         Execute;
+         ParamsMovement.ParamByName('TotalSumm').AsFloat:=DataSet.FieldByName('TotalSumm').AsFloat;
+         ParamsMovement.ParamByName('TotalSummPartner').AsFloat:=DataSet.FieldByName('TotalSummPartner').AsFloat;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpUpdate_Scale_MI_Erased');
        end;}
     end;
 

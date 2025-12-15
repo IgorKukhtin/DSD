@@ -22,7 +22,7 @@ type
     fIsPartionGoods :Boolean;
     function Checked: boolean; override;//Проверка корректного ввода в Edit
   public
-    function Execute (isPartionGoods, isHide, isPeresort :Boolean): boolean;
+    function Execute (isPartionGoods, isHide, isPeresort, isAll :Boolean): boolean;
   end;
 
 var
@@ -32,15 +32,28 @@ implementation
 uses UtilScale, DMMainScale;
 {$R *.dfm}
 {------------------------------------------------------------------------------}
-function TDialogStringValueForm.Execute(isPartionGoods, isHide, isPeresort :Boolean): boolean;
+function TDialogStringValueForm.Execute(isPartionGoods, isHide, isPeresort, isAll :Boolean): boolean;
 begin
      fIsPartionGoods:=isPartionGoods;
      fIsHide:=isHide;
      fPSW:=false;
      //
+     LabelStringValue.Font.Color:= clWindowText;
+     LabelStringValue.Font.Style:= [];
+     //
      if isHide = true
-     then begin StringValueEdit.Text:='';StringValueEdit.PasswordChar:='*';
-                if isPeresort
+     then begin
+                StringValueEdit.Text:='';
+                StringValueEdit.PasswordChar:='*';
+                //
+                if isAll = TRUE then
+                begin
+                     LabelStringValue.Font.Color:= clRed;
+                     LabelStringValue.Font.Style:= [fsBold];
+                     LabelStringValue.Caption:='Подтвердите Удаление ВСЕ взвешивания'
+                end
+                else
+                if isPeresort = TRUE
                 then LabelStringValue.Caption:='Пароль для подтверждения Пересортицы'
                 else LabelStringValue.Caption:='Пароль для подтверждения';
      end

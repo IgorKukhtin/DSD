@@ -168,7 +168,7 @@ begin
      //
      if not  Result then
      begin
-          if not DialogStringValueForm.Execute(false, true, true)
+          if not DialogStringValueForm.Execute(false, true, true, false)
           then begin ShowMessage ('Не разрешено проводить данный вид пересортицы.Для подтверждения необходимо ввести пароль СБ.'); exit; end;
           //
           //

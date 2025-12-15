@@ -302,6 +302,7 @@ type
     Ord_1001_group: TcxGridDBColumn;
     Amount_1001: TcxGridDBColumn;
     bbTotal_1001_del: TSpeedButton;
+    bbDeleteAll: TSpeedButton;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -352,6 +353,7 @@ type
     procedure bbPrintReestrClick(Sender: TObject);
     procedure bbPrint_MIPassportClick(Sender: TObject);
     procedure bbTotal_1001_delClick(Sender: TObject);
+    procedure bbDeleteAllClick(Sender: TObject);
   private
     //aTest: Boolean;
     Scale_AP: IAPScale;
@@ -1453,7 +1455,7 @@ begin
               LabelStringValue.Caption:='Партия СЫРЬЯ';
               ActiveControl:=StringValueEdit;
               StringValueEdit.Text:=CDS.FieldByName('PartionGoods').AsString;
-              if not Execute (true, false, false) then begin execParams.Free;exit;end;
+              if not Execute (true, false, false, false) then begin execParams.Free;exit;end;
               //
               ParamAddValue(execParams,'inValueData',ftString,StringValueEdit.Text);
               DMMainScaleForm.gpUpdate_Scale_MIString(execParams);
@@ -1810,7 +1812,7 @@ begin
           LabelStringValue.Caption:='Документ поставщика № для <'+ParamsMovement.ParamByName('MovementDescName_master').asString+'>';
           ActiveControl:=StringValueEdit;
           StringValueEdit.Text:=ParamsMovement.ParamByName('InvNumberPartner').AsString;
-          if Execute (false, false, false)
+          if Execute (false, false, false, false)
           then begin ParamsMovement.ParamByName('InvNumberPartner').AsString:= StringValueEdit.Text;
                      PanelPartner.Caption:=GetPanelPartnerCaption(ParamsMovement);
           end;
@@ -1835,7 +1837,7 @@ begin
           LabelStringValue.Caption:='Ввод примечания для <'+ParamsMovement.ParamByName('MovementDescName_master').asString+'>';
           ActiveControl:=StringValueEdit;
           StringValueEdit.Text:=ParamsMovement.ParamByName('DocumentComment').AsString;
-          if Execute (false, false, false)
+          if Execute (false, false, false, false)
           then ParamsMovement.ParamByName('DocumentComment').AsString:= StringValueEdit.Text;
           //
           EditSubjectDoc.Text:= ParamsMovement.ParamByName('DocumentComment').AsString;
@@ -1902,7 +1904,7 @@ begin
                     LabelStringValue.Caption:='Ввод примечания для <'+execParams.ParamByName('SubjectDocName').AsString+'>';
                     ActiveControl:=StringValueEdit;
                     StringValueEdit.Text:=ParamsMovement.ParamByName('DocumentComment').AsString;
-                    if Execute (false, false, false)
+                    if Execute (false, false, false, false)
                     then ParamsMovement.ParamByName('DocumentComment').AsString:= StringValueEdit.Text;
                     //
                     EditSubjectDoc.Text:= EditSubjectDoc.Text + ' / ' + ParamsMovement.ParamByName('DocumentComment').AsString;
@@ -2335,6 +2337,8 @@ begin
 
   bbChangeHeadCount.Visible:=HeadCountPanel.Visible;
   bbChangePartionGoods.Visible:=(HeadCountPanel.Visible) or (SettingMain.isPartionDate = TRUE);
+
+  bbDeleteAll.Visible:=SettingMain.BranchCode = 1;
 
   bbChangeCountPack.Visible:=not bbChangeHeadCount.Visible;
   if SettingMain.isSticker = TRUE then bbChangeCountPack.Visible:= false;
@@ -2838,6 +2842,51 @@ begin
      myActiveControl;
 end;
 {------------------------------------------------------------------------}
+procedure TMainForm.bbDeleteAllClick(Sender: TObject);
+begin
+     // выход
+     if GetArrayList_Value_byName(Default_Array,'isCheckDelete') <> AnsiUpperCase('TRUE') then
+     begin
+          ShowMessage('Ошибка.Элемент взвешивания не выбран.');
+          exit;
+     end;
+     // выход
+     if CDS.FieldByName('MovementItemId').AsInteger = 0 then
+     begin
+          ShowMessage('Ошибка.Элемент взвешивания не выбран.');
+          exit;
+     end;
+     //
+     if CDS.FieldByName('isErased').AsBoolean=false
+     then
+         if MessageDlg('Действительно удалить ВСЕ взвешивания?'
+                ,mtConfirmation,mbYesNoCancel,0) <> 6
+         then exit
+         else begin
+                   if GetArrayList_Value_byName(Default_Array,'isCheckDelete') = AnsiUpperCase('TRUE')
+                   then with DialogStringValueForm do
+                        begin
+                             if not Execute (false, true, false, true) then begin ShowMessage ('Действие отменено.');exit;end;
+                             //
+                             if DMMainScaleForm.gpGet_Scale_PSW_delete (StringValueEdit.Text) <> ''
+                             then begin ShowMessage ('Пароль неверный.Действие отменено.');exit;end;
+                        end;
+                   //
+                   DMMainScaleForm.gpUpdate_Scale_MI_all_Erased(ParamsMovement.ParamByName('MovementId').AsInteger,true);
+                   RefreshDataSet;
+                   WriteParamsMovement;
+              end
+     else
+         if MessageDlg('Действительно восстановить ВСЕ взвешивания?'
+                ,mtConfirmation,mbYesNoCancel,0) <> 6
+         then exit
+         else begin
+                   DMMainScaleForm.gpUpdate_Scale_MI_all_Erased(ParamsMovement.ParamByName('MovementId').AsInteger,false);
+                   RefreshDataSet;
+                   WriteParamsMovement;
+              end
+end;
+{------------------------------------------------------------------------}
 procedure TMainForm.bbDeleteItemClick(Sender: TObject);
 begin
      // выход
@@ -2856,7 +2905,7 @@ begin
                    if GetArrayList_Value_byName(Default_Array,'isCheckDelete') = AnsiUpperCase('TRUE')
                    then with DialogStringValueForm do
                         begin
-                             if not Execute (false, true, false) then begin ShowMessage ('Действие отменено.');exit;end;
+                             if not Execute (false, true, false, false) then begin ShowMessage ('Действие отменено.');exit;end;
                              //
                              if DMMainScaleForm.gpGet_Scale_PSW_delete (StringValueEdit.Text) <> ''
                              then begin ShowMessage ('Пароль неверный.Действие отменено.');exit;end;
