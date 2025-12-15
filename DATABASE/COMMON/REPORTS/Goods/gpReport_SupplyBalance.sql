@@ -135,9 +135,6 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
 
-     -- !!!Только просмотр Аудитор!!!
-     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
-
     -- !!!Только просмотр Аудитор!!!
     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
@@ -176,7 +173,7 @@ BEGIN
     vbStartDate_Calc := vbEndDate_Calc - ((vbCountDays - 1) :: TVarChar || ' DAY') :: INTERVAL;
     -- начальная - для ВСЕХ данных
     vbStartDate := (CASE WHEN vbStartDate_Calc < inStartDate THEN vbStartDate_Calc ELSE inStartDate END);
-    
+
 
      RETURN QUERY
      WITH -- подразделения для "остатки в производстве"
@@ -906,7 +903,6 @@ BEGIN
              ) AND (inIsRemainsNull = FALSE AND inIsRemainsNull_Use = FALSE)
           )
           OR (inIsRemainsNull = TRUE OR (inIsRemainsNull_Use = TRUE AND tmpContainer.OperDate_use <> zc_DateStart()))
-          
       ;
 
 END;
