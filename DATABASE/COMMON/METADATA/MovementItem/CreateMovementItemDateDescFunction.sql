@@ -10,12 +10,45 @@ CREATE OR REPLACE FUNCTION zc_MIDate_PartionGoods_out() RETURNS Integer AS $BODY
 INSERT INTO MovementItemDateDesc (Code, ItemName)
   SELECT 'zc_MIDate_PartionGoods_out', 'Дата партии (расход)' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_PartionGoods_out');
 
-CREATE OR REPLACE FUNCTION zc_MIDate_PartionGoods_q() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_PartionGoods_q'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_MIDate_PartionGoods_q_1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_PartionGoods_q_1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemDateDesc (Code, ItemName)
-  SELECT 'zc_MIDate_PartionGoods_q', 'Партия товара (для Декларация)' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_PartionGoods_q');
+  SELECT 'zc_MIDate_PartionGoods_q_1', 'Партия-1 (Декларация)' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_PartionGoods_q_1');
 
+CREATE OR REPLACE FUNCTION zc_MIDate_PartionGoods_q_2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_PartionGoods_q_2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_PartionGoods_q_2', 'Партия-2 (Декларация)' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_PartionGoods_q_2');
 
+CREATE OR REPLACE FUNCTION zc_MIDate_PartionGoods_q_3() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_PartionGoods_q_3'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_PartionGoods_q_3', 'Партия-3 (Декларация)' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_PartionGoods_q_3');
 
+CREATE OR REPLACE FUNCTION zc_MIDate_PartionGoods_q_4() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_PartionGoods_q_4'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_PartionGoods_q_4', 'Партия-4 (Декларация)' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_PartionGoods_q_4');
+
+CREATE OR REPLACE FUNCTION zc_MIDate_PartionGoods_q_5() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_PartionGoods_q_5'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_PartionGoods_q_5', 'Партия-5 (Декларация)' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_PartionGoods_q_5');
+
+CREATE OR REPLACE FUNCTION zc_MIDate_PartionGoods_q_6() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_PartionGoods_q_6'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_PartionGoods_q_6', 'Партия-6 (Декларация)' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_PartionGoods_q_6');
+
+CREATE OR REPLACE FUNCTION zc_MIDate_PartionGoods_q_7() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_PartionGoods_q_7'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_PartionGoods_q_7', 'Партия-7 (Декларация)' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_PartionGoods_q_7');
+
+CREATE OR REPLACE FUNCTION zc_MIDate_PartionGoods_q_8() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_PartionGoods_q_8'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_PartionGoods_q_8', 'Партия-8 (Декларация)' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_PartionGoods_q_8');
+
+CREATE OR REPLACE FUNCTION zc_MIDate_PartionGoods_q_9() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_PartionGoods_q_9'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_PartionGoods_q_9', 'Партия-9 (Декларация)' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_PartionGoods_q_9');
+
+CREATE OR REPLACE FUNCTION zc_MIDate_PartionGoods_q_10() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_PartionGoods_q_10'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_PartionGoods_q_10', 'Партия-10 (Декларация)' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_PartionGoods_q_10');
 
 CREATE OR REPLACE FUNCTION zc_MIDate_OperDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_OperDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemDateDesc (Code, ItemName)

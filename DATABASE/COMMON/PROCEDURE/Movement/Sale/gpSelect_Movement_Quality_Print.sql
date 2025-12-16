@@ -37,7 +37,7 @@ BEGIN
      vbGoodsPropertyId:= (SELECT zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId), MovementLinkObject_To.ObjectId)
                           FROM Movement
                                LEFT JOIN MovementLinkMovement AS MLM_Child
-                                                              ON MLM_Child.MovementChildId = Movement.Id 
+                                                              ON MLM_Child.MovementChildId = Movement.Id
                                                              AND MLM_Child.DescId          = zc_MovementLinkMovement_Child()
                                LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                             ON MovementLinkObject_Contract.MovementId = MLM_Child.MovementId
@@ -100,7 +100,17 @@ BEGIN
                   , SUM (CASE WHEN Movement.DescId = zc_Movement_SendOnPrice() THEN MovementItem.Amount ELSE MIFloat_AmountPartner.ValueData END) :: TFloat AS AmountPartner
                   , MILO_GoodsKind.ObjectId             AS GoodsKindId
                     -- Партия дата для Декларация
-                  , MAX (COALESCE (MIDate_PartionGoods_q.ValueData, zc_DateStart())) AS PartionGoods_q
+                  , MAX (COALESCE (MIDate_PartionGoods_q_1.ValueData,  zc_DateStart())) AS PartionGoods_q_1
+                  , MAX (COALESCE (MIDate_PartionGoods_q_2.ValueData,  zc_DateStart())) AS PartionGoods_q_2
+                  , MAX (COALESCE (MIDate_PartionGoods_q_3.ValueData,  zc_DateStart())) AS PartionGoods_q_3
+                  , MAX (COALESCE (MIDate_PartionGoods_q_4.ValueData,  zc_DateStart())) AS PartionGoods_q_4
+                  , MAX (COALESCE (MIDate_PartionGoods_q_5.ValueData,  zc_DateStart())) AS PartionGoods_q_5
+                  , MAX (COALESCE (MIDate_PartionGoods_q_6.ValueData,  zc_DateStart())) AS PartionGoods_q_6
+                  , MAX (COALESCE (MIDate_PartionGoods_q_7.ValueData,  zc_DateStart())) AS PartionGoods_q_7
+                  , MAX (COALESCE (MIDate_PartionGoods_q_8.ValueData,  zc_DateStart())) AS PartionGoods_q_8
+                  , MAX (COALESCE (MIDate_PartionGoods_q_9.ValueData,  zc_DateStart())) AS PartionGoods_q_9
+                  , MAX (COALESCE (MIDate_PartionGoods_q_10.ValueData, zc_DateStart())) AS PartionGoods_q_10
+
                   , ObjectLink_GoodsGroup.ChildObjectId AS GoodsGroupId
              FROM MovementItem
                   INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
@@ -112,9 +122,36 @@ BEGIN
                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                              AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
                   -- Партия дата для Декларация
-                  LEFT JOIN MovementItemDate AS MIDate_PartionGoods_q
-                                             ON MIDate_PartionGoods_q.MovementItemId = MovementItem.Id
-                                            AND MIDate_PartionGoods_q.DescId         = zc_MIDate_PartionGoods_q()
+                  LEFT JOIN MovementItemDate AS MIDate_PartionGoods_q_1
+                                             ON MIDate_PartionGoods_q_1.MovementItemId = MovementItem.Id
+                                            AND MIDate_PartionGoods_q_1.DescId         = zc_MIDate_PartionGoods_q_1()
+                  LEFT JOIN MovementItemDate AS MIDate_PartionGoods_q_2
+                                             ON MIDate_PartionGoods_q_2.MovementItemId = MovementItem.Id
+                                            AND MIDate_PartionGoods_q_2.DescId         = zc_MIDate_PartionGoods_q_2()
+                  LEFT JOIN MovementItemDate AS MIDate_PartionGoods_q_3
+                                             ON MIDate_PartionGoods_q_3.MovementItemId = MovementItem.Id
+                                            AND MIDate_PartionGoods_q_3.DescId         = zc_MIDate_PartionGoods_q_3()
+                  LEFT JOIN MovementItemDate AS MIDate_PartionGoods_q_4
+                                             ON MIDate_PartionGoods_q_4.MovementItemId = MovementItem.Id
+                                            AND MIDate_PartionGoods_q_4.DescId         = zc_MIDate_PartionGoods_q_4()
+                  LEFT JOIN MovementItemDate AS MIDate_PartionGoods_q_5
+                                             ON MIDate_PartionGoods_q_5.MovementItemId = MovementItem.Id
+                                            AND MIDate_PartionGoods_q_5.DescId         = zc_MIDate_PartionGoods_q_5()
+                  LEFT JOIN MovementItemDate AS MIDate_PartionGoods_q_6
+                                             ON MIDate_PartionGoods_q_6.MovementItemId = MovementItem.Id
+                                            AND MIDate_PartionGoods_q_6.DescId         = zc_MIDate_PartionGoods_q_6()
+                  LEFT JOIN MovementItemDate AS MIDate_PartionGoods_q_7
+                                             ON MIDate_PartionGoods_q_7.MovementItemId = MovementItem.Id
+                                            AND MIDate_PartionGoods_q_7.DescId         = zc_MIDate_PartionGoods_q_7()
+                  LEFT JOIN MovementItemDate AS MIDate_PartionGoods_q_8
+                                             ON MIDate_PartionGoods_q_8.MovementItemId = MovementItem.Id
+                                            AND MIDate_PartionGoods_q_8.DescId         = zc_MIDate_PartionGoods_q_8()
+                  LEFT JOIN MovementItemDate AS MIDate_PartionGoods_q_9
+                                             ON MIDate_PartionGoods_q_9.MovementItemId = MovementItem.Id
+                                            AND MIDate_PartionGoods_q_9.DescId         = zc_MIDate_PartionGoods_q_9()
+                  LEFT JOIN MovementItemDate AS MIDate_PartionGoods_q_10
+                                             ON MIDate_PartionGoods_q_10.MovementItemId = MovementItem.Id
+                                            AND MIDate_PartionGoods_q_10.DescId         = zc_MIDate_PartionGoods_q_10()
 
                   LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
                                                    ON MILO_GoodsKind.MovementItemId = MovementItem.Id
@@ -137,7 +174,7 @@ BEGIN
                             (SELECT tmpMI.*
                                     -- для вида товара - Вид оболонки, №4
                                   , ObjectString_GK_Value1.ValueData     AS Value1_gk
-                                    -- для вида товара - Вид пакування/стан продукції 
+                                    -- для вида товара - Вид пакування/стан продукції
                                   , ObjectString_GK_Value11.ValueData    AS Value11_gk
                                     -- для вида товара - срок годности в днях
                                   , ObjectFloat_GK_NormInDays.ValueData  AS NormInDays_gk
@@ -150,7 +187,7 @@ BEGIN
                                   JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
                                                   ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId      = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
                                                  AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
-                                                 AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId = tmpMI.GoodsKindId	
+                                                 AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId = tmpMI.GoodsKindId
                                   LEFT JOIN ObjectString AS ObjectString_GK_Value1
                                                          ON ObjectString_GK_Value1.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
                                                         AND ObjectString_GK_Value1.DescId   = zc_ObjectString_GoodsByGoodsKind_Quality1()
@@ -246,7 +283,7 @@ BEGIN
                                           ON ObjectString_Value21.ObjectId = ObjectLink_GoodsQuality_Goods.ObjectId
                                          AND ObjectString_Value21.DescId = zc_ObjectString_GoodsQuality_Value21()
 
-/* 
+/*
                    LEFT JOIN ObjectLink AS ObjectLink_Quality_Juridical
                                         ON ObjectLink_Quality_Juridical.ObjectId = Object_Quality.Id
                                        AND ObjectLink_Quality_Juridical.DescId = zc_ObjectLink_Quality_Juridical()
@@ -462,7 +499,7 @@ BEGIN
                                                                                       AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_To.EndDate
                               WHERE Movement.Id = inMovementId
                               )
-   
+
            , tmpNewQuality AS (SELECT DISTINCT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId AS GoodsId
                                FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
                                     JOIN ObjectBoolean AS ObjectBoolean_NewQuality
@@ -477,7 +514,7 @@ BEGIN
            , Movement.OperDate				                              AS OperDate
            , Movement.InvNumberPartner
            , Movement.OperDatePartner
-         
+
            , Movement.JuridicalName_From
            , Movement.JuridicalAddress_From
            , Movement.Phone_From
@@ -522,7 +559,7 @@ BEGIN
            || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
              ) :: TVarChar AS GoodsName
            , (CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE Object_GoodsKind.ValueData END) :: TVarChar AS GoodsKindName
-           
+
            , tmpMI.AmountPartner                                                                                AS AmountPartner
            , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Kg() THEN tmpMI.AmountPartner:: TVarChar ELSE CAST (tmpMI.AmountPartner AS NUMERIC (16,0) ) ||' шт' END AS TVarChar) AS AmountPartner_str
            , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Kg() THEN tmpMI.AmountPartner ELSE 0 END AS TFloat) AS Amount5
@@ -531,20 +568,31 @@ BEGIN
 
            , tmpMovement_QualityParams.OperDateIn
            , (tmpMovement_QualityParams.OperDateIn + (CASE WHEN tmpMIGoodsByGoodsKind.DaysQ_gk <> 0 THEN (tmpMIGoodsByGoodsKind.DaysQ_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl) :: TDateTime AS OperDateIn_str4
+
              -- Партия дата для Декларация
-           , CASE WHEN tmpMI.PartionGoods_q = zc_DateStart() THEN '' ELSE LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q), 5) END :: TVarChar AS PartionGoods_q
+           , (CASE WHEN tmpMI.PartionGoods_q_1  = zc_DateStart() THEN '' ELSE             LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_1),  5) END
+           || CASE WHEN tmpMI.PartionGoods_q_2  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_2),  5) END
+           || CASE WHEN tmpMI.PartionGoods_q_3  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_3),  5) END
+           || CASE WHEN tmpMI.PartionGoods_q_4  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_4),  5) END
+           || CASE WHEN tmpMI.PartionGoods_q_5  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_5),  5) END
+           || CASE WHEN tmpMI.PartionGoods_q_6  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_6),  5) END
+           || CASE WHEN tmpMI.PartionGoods_q_7  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_7),  5) END
+           || CASE WHEN tmpMI.PartionGoods_q_8  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_8),  5) END
+           || CASE WHEN tmpMI.PartionGoods_q_9  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_9),  5) END
+           || CASE WHEN tmpMI.PartionGoods_q_10 = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_10), 5) END
+             ):: TVarChar AS PartionGoods_q
 
              -- Дата відвантаження
            , tmpMovement_QualityParams.OperDateOut
 
            , (tmpMovement_QualityParams.OperDateIn + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl) :: TDateTime AS OperDate_end
-           
+
              -- 2393 - КОВБАСКИ БАВАРСЬКІ С/К в/г ПРЕМІЯ 120 гр/шт + 2222 + 2369
            , CASE WHEN tmpNewQuality.GoodsId > 0
                        THEN tmpMovement_QualityParams.OperDateIn + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl
                   ELSE tmpMovement_QualityParams.OperDateIn
              END :: TDateTime AS OperDate_part
-           
+
            , (zfConvert_FloatToString (tmpMIGoodsByGoodsKind.NormInDays_gk) || ' діб') :: TVarChar AS NormInDays_gk_str
 
            , (COALESCE (Object_CarModel.ValueData,'') || COALESCE (' ' || Object_CarType.ValueData, '') ) ::TVarChar AS CarModelName
@@ -566,9 +614,9 @@ BEGIN
                   WHEN tmpObject_GoodsPropertyValue.Quality NOT ILIKE '*удален%' AND tmpObject_GoodsPropertyValue.Quality <> ''
                       THEN tmpObject_GoodsPropertyValue.Quality
                   -- замена - всегда Value17 - 16.08.2023
-                  ELSE COALESCE (tmpGoodsQuality.Value17, tmpObject_GoodsPropertyValueGroup.Quality, tmpObject_GoodsPropertyValue.Quality, tmpGoodsQuality.Value17)  
+                  ELSE COALESCE (tmpGoodsQuality.Value17, tmpObject_GoodsPropertyValueGroup.Quality, tmpObject_GoodsPropertyValue.Quality, tmpGoodsQuality.Value17)
              END :: TVarChar AS Value17
-             -- для вида товара - Вид оболонки, №4 
+             -- для вида товара - Вид оболонки, №4
            , CASE WHEN tmpMIGoodsByGoodsKind.Value1_gk <> '' AND tmpGoodsQuality.NumberPrint <> 4 THEN tmpMIGoodsByGoodsKind.Value1_gk ELSE tmpGoodsQuality.Value1 END :: TVarChar AS Value1
 
            , tmpGoodsQuality.Value2
@@ -581,7 +629,7 @@ BEGIN
            , tmpGoodsQuality.Value9
            , tmpGoodsQuality.Value10
            , tmpGoodsQuality.Value21
-             -- для вида товара - Вид пакування/стан продукції 
+             -- для вида товара - Вид пакування/стан продукції
            , tmpMIGoodsByGoodsKind.Value11_gk
 
            , tmpMovement_QualityParams.InvNumber            AS InvNumber_Quality
@@ -595,17 +643,17 @@ BEGIN
            , tmpMovement_QualityParams.QualityNumber
            , tmpMovement_QualityParams.Comment              AS QualityComment_Movement
            , tmpMovement_QualityParams.ReportType
-           
+
            , Movement.InvNumber_Order
 
        FROM tmpMI
             INNER JOIN tmpMovement_Params AS Movement ON Movement.Id =  tmpMI.MovementId
 
             LEFT JOIN tmpNewQuality ON tmpNewQuality.GoodsId = tmpMI.ObjectId
-            
+
             LEFT JOIN tmpMIGoodsByGoodsKind ON tmpMIGoodsByGoodsKind.ObjectId    = tmpMI.ObjectId
                                            AND tmpMIGoodsByGoodsKind.GoodsKindId = tmpMI.GoodsKindId
-            
+
             LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = tmpMI.ObjectId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
 
@@ -624,7 +672,7 @@ BEGIN
                                 AND ObjectDate_Goods_UKTZED_new.DescId = zc_ObjectDate_Goods_UKTZED_new()
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
@@ -669,7 +717,17 @@ BEGIN
                           , SUM (CASE WHEN Movement.DescId = zc_Movement_SendOnPrice() THEN MovementItem.Amount ELSE MIFloat_AmountPartner.ValueData END) :: TFloat AS AmountPartner
                           , MILO_GoodsKind.ObjectId             AS GoodsKindId
                             -- Партия дата для Декларация
-                          , MAX (COALESCE (MIDate_PartionGoods_q.ValueData, zc_DateStart())) AS PartionGoods_q
+                          , MAX (COALESCE (MIDate_PartionGoods_q_1.ValueData,  zc_DateStart())) AS PartionGoods_q_1
+                          , MAX (COALESCE (MIDate_PartionGoods_q_2.ValueData,  zc_DateStart())) AS PartionGoods_q_2
+                          , MAX (COALESCE (MIDate_PartionGoods_q_3.ValueData,  zc_DateStart())) AS PartionGoods_q_3
+                          , MAX (COALESCE (MIDate_PartionGoods_q_4.ValueData,  zc_DateStart())) AS PartionGoods_q_4
+                          , MAX (COALESCE (MIDate_PartionGoods_q_5.ValueData,  zc_DateStart())) AS PartionGoods_q_5
+                          , MAX (COALESCE (MIDate_PartionGoods_q_6.ValueData,  zc_DateStart())) AS PartionGoods_q_6
+                          , MAX (COALESCE (MIDate_PartionGoods_q_7.ValueData,  zc_DateStart())) AS PartionGoods_q_7
+                          , MAX (COALESCE (MIDate_PartionGoods_q_8.ValueData,  zc_DateStart())) AS PartionGoods_q_8
+                          , MAX (COALESCE (MIDate_PartionGoods_q_9.ValueData,  zc_DateStart())) AS PartionGoods_q_9
+                          , MAX (COALESCE (MIDate_PartionGoods_q_10.ValueData, zc_DateStart())) AS PartionGoods_q_10
+
                           , ObjectLink_GoodsGroup.ChildObjectId AS GoodsGroupId
                      FROM MovementItem
                           INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
@@ -681,9 +739,36 @@ BEGIN
                                                       ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                      AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
                           -- Партия дата для Декларация
-                          LEFT JOIN MovementItemDate AS MIDate_PartionGoods_q
-                                                     ON MIDate_PartionGoods_q.MovementItemId = MovementItem.Id
-                                                    AND MIDate_PartionGoods_q.DescId         = zc_MIDate_PartionGoods_q()
+                          LEFT JOIN MovementItemDate AS MIDate_PartionGoods_q_1
+                                                     ON MIDate_PartionGoods_q_1.MovementItemId = MovementItem.Id
+                                                    AND MIDate_PartionGoods_q_1.DescId         = zc_MIDate_PartionGoods_q_1()
+                          LEFT JOIN MovementItemDate AS MIDate_PartionGoods_q_2
+                                                     ON MIDate_PartionGoods_q_2.MovementItemId = MovementItem.Id
+                                                    AND MIDate_PartionGoods_q_2.DescId         = zc_MIDate_PartionGoods_q_2()
+                          LEFT JOIN MovementItemDate AS MIDate_PartionGoods_q_3
+                                                     ON MIDate_PartionGoods_q_3.MovementItemId = MovementItem.Id
+                                                    AND MIDate_PartionGoods_q_3.DescId         = zc_MIDate_PartionGoods_q_3()
+                          LEFT JOIN MovementItemDate AS MIDate_PartionGoods_q_4
+                                                     ON MIDate_PartionGoods_q_4.MovementItemId = MovementItem.Id
+                                                    AND MIDate_PartionGoods_q_4.DescId         = zc_MIDate_PartionGoods_q_4()
+                          LEFT JOIN MovementItemDate AS MIDate_PartionGoods_q_5
+                                                     ON MIDate_PartionGoods_q_5.MovementItemId = MovementItem.Id
+                                                    AND MIDate_PartionGoods_q_5.DescId         = zc_MIDate_PartionGoods_q_5()
+                          LEFT JOIN MovementItemDate AS MIDate_PartionGoods_q_6
+                                                     ON MIDate_PartionGoods_q_6.MovementItemId = MovementItem.Id
+                                                    AND MIDate_PartionGoods_q_6.DescId         = zc_MIDate_PartionGoods_q_6()
+                          LEFT JOIN MovementItemDate AS MIDate_PartionGoods_q_7
+                                                     ON MIDate_PartionGoods_q_7.MovementItemId = MovementItem.Id
+                                                    AND MIDate_PartionGoods_q_7.DescId         = zc_MIDate_PartionGoods_q_7()
+                          LEFT JOIN MovementItemDate AS MIDate_PartionGoods_q_8
+                                                     ON MIDate_PartionGoods_q_8.MovementItemId = MovementItem.Id
+                                                    AND MIDate_PartionGoods_q_8.DescId         = zc_MIDate_PartionGoods_q_8()
+                          LEFT JOIN MovementItemDate AS MIDate_PartionGoods_q_9
+                                                     ON MIDate_PartionGoods_q_9.MovementItemId = MovementItem.Id
+                                                    AND MIDate_PartionGoods_q_9.DescId         = zc_MIDate_PartionGoods_q_9()
+                          LEFT JOIN MovementItemDate AS MIDate_PartionGoods_q_10
+                                                     ON MIDate_PartionGoods_q_10.MovementItemId = MovementItem.Id
+                                                    AND MIDate_PartionGoods_q_10.DescId         = zc_MIDate_PartionGoods_q_10()
                           LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
                                                            ON MILO_GoodsKind.MovementItemId = MovementItem.Id
                                                           AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
@@ -705,7 +790,7 @@ BEGIN
                             (SELECT tmpMI.*
                                     -- для вида товара - Вид оболонки, №4
                                   , ObjectString_GK_Value1.ValueData     AS Value1_gk
-                                    -- для вида товара - Вид пакування/стан продукції 
+                                    -- для вида товара - Вид пакування/стан продукції
                                   , ObjectString_GK_Value11.ValueData    AS Value11_gk
                                     -- для вида товара - срок годности в днях
                                   , ObjectFloat_GK_NormInDays.ValueData  AS NormInDays_gk
@@ -719,7 +804,7 @@ BEGIN
                                   JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
                                                   ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId      = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
                                                  AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
-                                                 AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId = tmpMI.GoodsKindId	
+                                                 AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId = tmpMI.GoodsKindId
                                   LEFT JOIN ObjectString AS ObjectString_GK_Value1
                                                          ON ObjectString_GK_Value1.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
                                                         AND ObjectString_GK_Value1.DescId   = zc_ObjectString_GoodsByGoodsKind_Quality1()
@@ -742,7 +827,7 @@ BEGIN
                                     , Object_Quality.ValueData    AS QualityName
                                     , OS_QualityComment.ValueData AS QualityComment
                                     , ObjectFloat_Quality_NumberPrint.ValueData AS NumberPrint
-                  
+
                                     , Object_GoodsQuality.ValueData AS Value17
                                     , ObjectString_Value1.ValueData AS Value1
                                     , ObjectString_Value2.ValueData AS Value2
@@ -759,16 +844,16 @@ BEGIN
                                      INNER JOIN ObjectLink AS ObjectLink_GoodsQuality_Goods
                                                            ON ObjectLink_GoodsQuality_Goods.ChildObjectId = tmpMIGoods.GoodsId
                                                           AND ObjectLink_GoodsQuality_Goods.DescId = zc_ObjectLink_GoodsQuality_Goods()
-                  
+
                                      INNER JOIN Object AS Object_GoodsQuality ON Object_GoodsQuality.Id        = ObjectLink_GoodsQuality_Goods.ObjectId
                                                                              AND (Object_GoodsQuality.isErased = FALSE
                                                                              --OR vbUserId = 5
                                                                                  )
-                  
+
                                      LEFT JOIN ObjectLink AS ObjectLink_GoodsQuality_Quality
                                                           ON ObjectLink_GoodsQuality_Quality.ObjectId = ObjectLink_GoodsQuality_Goods.ObjectId
                                                          AND ObjectLink_GoodsQuality_Quality.DescId = zc_ObjectLink_GoodsQuality_Quality()
-                  
+
                                      LEFT JOIN Object AS Object_Quality ON Object_Quality.Id = ObjectLink_GoodsQuality_Quality.ChildObjectId
                                      LEFT JOIN ObjectString AS OS_QualityComment
                                                             ON OS_QualityComment.ObjectId = ObjectLink_GoodsQuality_Quality.ChildObjectId
@@ -777,7 +862,7 @@ BEGIN
                                                             ON ObjectFloat_Quality_NumberPrint.ObjectId = ObjectLink_GoodsQuality_Quality.ChildObjectId
                                                            AND ObjectFloat_Quality_NumberPrint.DescId = zc_ObjectFloat_Quality_NumberPrint()
                                                            AND ObjectFloat_Quality_NumberPrint.ValueData >= 2 -- !!!так захардкодил!!!
-                  
+
                                      LEFT JOIN ObjectString AS ObjectString_Value1
                                                             ON ObjectString_Value1.ObjectId = ObjectLink_GoodsQuality_Goods.ObjectId
                                                            AND ObjectString_Value1.DescId = zc_ObjectString_GoodsQuality_Value1()
@@ -811,7 +896,7 @@ BEGIN
                                      LEFT JOIN ObjectString AS ObjectString_Value21
                                                             ON ObjectString_Value21.ObjectId = ObjectLink_GoodsQuality_Goods.ObjectId
                                                            AND ObjectString_Value21.DescId = zc_ObjectString_GoodsQuality_Value21()
-                  /* 
+                  /*
                                      LEFT JOIN ObjectLink AS ObjectLink_Quality_Juridical
                                                           ON ObjectLink_Quality_Juridical.ObjectId = Object_Quality.Id
                                                          AND ObjectLink_Quality_Juridical.DescId = zc_ObjectLink_Quality_Juridical()
@@ -860,19 +945,19 @@ BEGIN
                                      LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
                                                                   ON MovementLinkObject_Car.MovementId = MovementLinkMovement_Child.MovementId
                                                                  AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
-                   
+
                                      LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                                                     ON MovementLinkMovement_Master.MovementId = MovementLinkMovement_Child.MovementId
                                                                    AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
                                      LEFT JOIN MovementLinkObject AS MovementLinkObject_Quality
                                                                   ON MovementLinkObject_Quality.MovementId = MovementLinkMovement_Master.MovementChildId
                                                                  AND MovementLinkObject_Quality.DescId = zc_MovementLinkObject_Quality()
-                   
+
                                      LEFT JOIN Movement AS Movement_QualityNumber
                                                         ON Movement_QualityNumber.OperDate = DATE_TRUNC ('DAY', MovementDate_OperDateIn.ValueData)
                                                        AND Movement_QualityNumber.DescId = zc_Movement_QualityNumber()
                                                        AND Movement_QualityNumber.StatusId = zc_Enum_Status_Complete()
-                   
+
                                      LEFT JOIN MovementString AS MS_QualityNumber
                                                               ON MS_QualityNumber.MovementId = COALESCE (Movement_QualityNumber.Id, MovementLinkMovement_Child.MovementId) -- tmpMovement_find.MovementId
                                                              AND MS_QualityNumber.DescId = zc_MovementString_QualityNumber()
@@ -1082,15 +1167,25 @@ BEGIN
            , CASE WHEN COALESCE (tmpMIGoodsByGoodsKind.DaysQ_gk,0) = 0 THEN zfConvert_DateToString (Movement.OperDatePartner)
                   ELSE zfConvert_DateToString (Movement.OperDatePartner)||', '
                     || zfConvert_DateToString (Movement.OperDatePartner - ((tmpMIGoodsByGoodsKind.DaysQ_gk)     :: TVarChar || ' DAY') :: INTERVAl) ||', '
-                    || zfConvert_DateToString (Movement.OperDatePartner - ((tmpMIGoodsByGoodsKind.DaysQ_gk + 1) :: TVarChar || ' DAY') :: INTERVAl) 
+                    || zfConvert_DateToString (Movement.OperDatePartner - ((tmpMIGoodsByGoodsKind.DaysQ_gk + 1) :: TVarChar || ' DAY') :: INTERVAl)
              END :: TVarChar AS OperDateIn_str4
 
              -- Партия дата для Декларация
-           , CASE WHEN tmpMI.PartionGoods_q = zc_DateStart() THEN '' ELSE LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q), 5) END :: TVarChar AS PartionGoods_q
+           , (CASE WHEN tmpMI.PartionGoods_q_1  = zc_DateStart() THEN '' ELSE             LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_1),  5) END
+           || CASE WHEN tmpMI.PartionGoods_q_2  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_2),  5) END
+           || CASE WHEN tmpMI.PartionGoods_q_3  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_3),  5) END
+           || CASE WHEN tmpMI.PartionGoods_q_4  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_4),  5) END
+           || CASE WHEN tmpMI.PartionGoods_q_5  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_5),  5) END
+           || CASE WHEN tmpMI.PartionGoods_q_6  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_6),  5) END
+           || CASE WHEN tmpMI.PartionGoods_q_7  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_7),  5) END
+           || CASE WHEN tmpMI.PartionGoods_q_8  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_8),  5) END
+           || CASE WHEN tmpMI.PartionGoods_q_9  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_9),  5) END
+           || CASE WHEN tmpMI.PartionGoods_q_10 = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_10), 5) END
+             ):: TVarChar AS PartionGoods_q
 
              -- Дата відвантаження
            , Movement.OperDate AS OperDateOut
-           
+
            , tmpMIGoodsByGoodsKind.DaysQ_gk :: Integer AS DaysQ_gk
 
            , (tmpMovement_QualityParams.OperDateIn + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl) :: TDateTime AS OperDate_end
@@ -1117,7 +1212,7 @@ BEGIN
                   ELSE COALESCE (tmpGoodsQuality.Value17, tmpObject_GoodsPropertyValueGroup.Quality, tmpObject_GoodsPropertyValue.Quality, tmpGoodsQuality.Value17)
              END :: TVarChar AS Value17
 
-             -- для вида товара - Вид оболонки, №4 
+             -- для вида товара - Вид оболонки, №4
            , CASE WHEN tmpMIGoodsByGoodsKind.Value1_gk <> ''  AND tmpGoodsQuality.NumberPrint <> 4 THEN tmpMIGoodsByGoodsKind.Value1_gk ELSE tmpGoodsQuality.Value1 END :: TVarChar AS Value1
 
            , tmpGoodsQuality.Value2
@@ -1163,7 +1258,7 @@ BEGIN
                                    ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
 
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight

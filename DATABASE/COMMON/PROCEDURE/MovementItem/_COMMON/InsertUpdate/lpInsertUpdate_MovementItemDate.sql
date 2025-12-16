@@ -4,9 +4,9 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItemDate (Integer, Integer, TDate
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItemDate(
     IN inDescId                Integer           , -- ключ класса свойства
-    IN inMovementItemId        Integer           , -- ключ 
+    IN inMovementItemId        Integer           , -- ключ
     IN inValueData             TDateTime           -- свойство
-))
+)
 RETURNS Boolean
 AS
 $BODY$
@@ -16,12 +16,12 @@ BEGIN
      UPDATE MovementItemDate SET ValueData = inValueData WHERE MovementItemId = inMovementItemId AND DescId = inDescId;
 
      -- если не нашли
-     IF NOT FOUND
+     IF NOT FOUND AND COALESCE (inValueData, zc_DateStart()) <> zc_DateStart()
      THEN
          -- добавить <свойство>
         INSERT INTO MovementItemDate (DescId, MovementItemId, ValueData)
             VALUES (inDescId, inMovementItemId, inValueData);
-     END IF;             
+     END IF;
 
      RETURN TRUE;
 

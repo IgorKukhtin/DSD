@@ -26,7 +26,7 @@ BEGIN
      -- сохранили
      PERFORM lpInsert_MovementItemProtocol (tmpMI.Id, vbUserId, FALSE)
      FROM (SELECT tmpMI.Id AS Id
-                , lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods_q(), tmpMI.Id, DATE_TRUNC ('DAY', inPartionGoods_Q) - (tmpMI.DaysQ :: TVarChar || ' DAY') :: INTERVAL)
+                , lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods_q_1(), tmpMI.Id, DATE_TRUNC ('DAY', inPartionGoods_Q) - (tmpMI.DaysQ :: TVarChar || ' DAY') :: INTERVAL)
            FROM (WITH tmpMI AS (SELECT MovementItem.Id
                                      , MovementItem.ObjectId           AS GoodsId
                                      , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
@@ -37,7 +37,7 @@ BEGIN
                                      LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
                                      LEFT JOIN MovementItemDate AS MIDate_PartionGoods_q
                                                                 ON MIDate_PartionGoods_q.MovementItemId = MovementItem.Id
-                                                               AND MIDate_PartionGoods_q.DescId         = zc_MIDate_PartionGoods_q()
+                                                               AND MIDate_PartionGoods_q.DescId         = zc_MIDate_PartionGoods_q_1()
                                                                AND MIDate_PartionGoods_q.ValueData      > zc_DateStart()
               
                                 WHERE MovementItem.MovementId = inMovementId
