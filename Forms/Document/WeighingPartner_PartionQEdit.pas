@@ -121,7 +121,7 @@ type
     cbPromo: TcxCheckBox;
     edInvNumberOrder: TcxButtonEdit;
     OrderChoiceGuides: TdsdGuides;
-    spUpdate_PartionGoodsQ: TdsdStoredProc;
+    spUpdateMI_PartionGoods_Q: TdsdStoredProc;
     MovementItemProtocolOpenForm: TdsdOpenForm;
     bbProtocol: TdxBarButton;
     cxLabel21: TcxLabel;
@@ -132,6 +132,15 @@ type
     actRefreshMI: TdsdDataSetRefresh;
     actPrint_Brutto: TdsdPrintAction;
     BoxCount: TcxGridDBColumn;
+    PartionGoodsDate_q_2: TcxGridDBColumn;
+    PartionGoodsDate_q_3: TcxGridDBColumn;
+    PartionGoodsDate_q_4: TcxGridDBColumn;
+    PartionGoodsDate_q_5: TcxGridDBColumn;
+    PartionGoodsDate_q_6: TcxGridDBColumn;
+    PartionGoodsDate_q_7: TcxGridDBColumn;
+    PartionGoodsDate_q_8: TcxGridDBColumn;
+    PartionGoodsDate_q_9: TcxGridDBColumn;
+    PartionGoodsDate_q_10: TcxGridDBColumn;
   private
   public
   end;

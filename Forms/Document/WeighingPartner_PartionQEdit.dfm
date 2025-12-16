@@ -2,8 +2,8 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
   Left = 0
   Top = 0
   Caption = 
-    #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090')> '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' <'#1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080' (' +
-    #1076#1083#1103' '#1044#1077#1082#1083#1072#1088#1072#1094#1080#1080')>'
+    #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102'> '#1080#1079#1084#1077#1085#1077#1085#1080#1077' <'#1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080' '#1074' '#1044#1077#1082#1083#1072#1088#1072#1094#1080 +
+    #1080')>'
   ClientHeight = 460
   ClientWidth = 1142
   Color = clBtnFace
@@ -515,7 +515,7 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 207
+            Width = 150
           end
           object GoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
@@ -523,7 +523,7 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 90
+            Width = 70
           end
           object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -542,14 +542,6 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
             Options.Editing = False
             Width = 45
           end
-          object PartionGoodsDate_q: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' ('#1044#1077#1082#1083#1072#1088#1072#1094#1080#1103')'
-            DataBinding.FieldName = 'PartionGoodsDate_q'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080' '#1076#1083#1103' '#1044#1077#1082#1083#1072#1088#1072#1094#1080#1080
-            Width = 101
-          end
           object PartionGoods: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103
             DataBinding.FieldName = 'PartionGoods'
@@ -566,12 +558,123 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
             Options.Editing = False
             Width = 179
           end
+          object PartionGoodsDate_q_1: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' -1'
+            DataBinding.FieldName = 'PartionGoodsDate_q_1'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm'
+            Properties.EditFormat = 'dd.mm'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'-1 '#1087#1072#1088#1090#1080#1103' '#1076#1083#1103' '#1044#1077#1082#1083#1072#1088#1072#1094#1080#1080
+            Width = 55
+          end
+          object PartionGoodsDate_q_2: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' -2'
+            DataBinding.FieldName = 'PartionGoodsDate_q_2'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm'
+            Properties.EditFormat = 'dd.mm'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'-2 '#1087#1072#1088#1090#1080#1103' '#1076#1083#1103' '#1044#1077#1082#1083#1072#1088#1072#1094#1080#1080
+            Width = 55
+          end
+          object PartionGoodsDate_q_3: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' -3'
+            DataBinding.FieldName = 'PartionGoodsDate_q_3'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm'
+            Properties.EditFormat = 'dd.mm'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'-3 '#1087#1072#1088#1090#1080#1103' '#1076#1083#1103' '#1044#1077#1082#1083#1072#1088#1072#1094#1080#1080
+            Width = 55
+          end
+          object PartionGoodsDate_q_4: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' -4'
+            DataBinding.FieldName = 'PartionGoodsDate_q_4'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm'
+            Properties.EditFormat = 'dd.mm'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'-4 '#1087#1072#1088#1090#1080#1103' '#1076#1083#1103' '#1044#1077#1082#1083#1072#1088#1072#1094#1080#1080
+            Width = 55
+          end
+          object PartionGoodsDate_q_5: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' -5'
+            DataBinding.FieldName = 'PartionGoodsDate_q_5'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm'
+            Properties.EditFormat = 'dd.mm'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'-5 '#1087#1072#1088#1090#1080#1103' '#1076#1083#1103' '#1044#1077#1082#1083#1072#1088#1072#1094#1080#1080
+            Width = 55
+          end
+          object PartionGoodsDate_q_6: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' -6'
+            DataBinding.FieldName = 'PartionGoodsDate_q_6'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm'
+            Properties.EditFormat = 'dd.mm'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'-6 '#1087#1072#1088#1090#1080#1103' '#1076#1083#1103' '#1044#1077#1082#1083#1072#1088#1072#1094#1080#1080
+            Width = 55
+          end
+          object PartionGoodsDate_q_7: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' -7'
+            DataBinding.FieldName = 'PartionGoodsDate_q_7'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm'
+            Properties.EditFormat = 'dd.mm'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'-7 '#1087#1072#1088#1090#1080#1103' '#1076#1083#1103' '#1044#1077#1082#1083#1072#1088#1072#1094#1080#1080
+            Width = 55
+          end
+          object PartionGoodsDate_q_8: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' -8'
+            DataBinding.FieldName = 'PartionGoodsDate_q_8'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm'
+            Properties.EditFormat = 'dd.mm'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'-8 '#1087#1072#1088#1090#1080#1103' '#1076#1083#1103' '#1044#1077#1082#1083#1072#1088#1072#1094#1080#1080
+            Width = 55
+          end
+          object PartionGoodsDate_q_9: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' -9'
+            DataBinding.FieldName = 'PartionGoodsDate_q_9'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm'
+            Properties.EditFormat = 'dd.mm'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'-9 '#1087#1072#1088#1090#1080#1103' '#1076#1083#1103' '#1044#1077#1082#1083#1072#1088#1072#1094#1080#1080
+            Width = 55
+          end
+          object PartionGoodsDate_q_10: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' -10'
+            DataBinding.FieldName = 'PartionGoodsDate_q_10'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm'
+            Properties.EditFormat = 'dd.mm'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'-10 '#1087#1072#1088#1090#1080#1103' '#1076#1083#1103' '#1044#1077#1082#1083#1072#1088#1072#1094#1080#1080
+            Width = 55
+          end
           object BoxCount: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1075#1086#1092#1088#1086
             DataBinding.FieldName = 'BoxCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -610,7 +713,7 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 100
+            Width = 70
           end
           object AmountPartner: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'.'
@@ -621,7 +724,7 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 100
+            Width = 70
           end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -705,7 +808,7 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
     Top = 375
   end
   object spSelectMI: TdsdStoredProc
-    StoredProcName = 'gpSelect_MI_WeighingPartner_PartionGoodsQ'
+    StoredProcName = 'gpSelect_MI_Sale_PartionGoods_Q'
     DataSet = MasterCDS
     DataSets = <
       item
@@ -988,10 +1091,10 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_PartionGoodsQ
+      StoredProc = spUpdateMI_PartionGoods_Q
       StoredProcList = <
         item
-          StoredProc = spUpdate_PartionGoodsQ
+          StoredProc = spUpdateMI_PartionGoods_Q
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = MasterDS
@@ -2064,7 +2167,6 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
     Top = 44
   end
   object spUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_WeighingPartner'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2147,8 +2249,8 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
     Left = 68
     Top = 65528
   end
-  object spUpdate_PartionGoodsQ: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MI_WeighingPartner_PartionGoodsQ'
+  object spUpdateMI_PartionGoods_Q: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Sale_PartionGoods_Q'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2185,25 +2287,97 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPartionGoodsDate_q'
+        Name = 'PartionGoodsDate_q_1'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'PartionGoodsDate_q'
+        ComponentItem = 'PartionGoodsDate_q_1'
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPartionGoodsDate_q_old'
+        Name = 'PartionGoodsDate_q_2'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'PartionGoodsDate_q_old'
+        ComponentItem = 'PartionGoodsDate_q_2'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionGoodsDate_q_3'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoodsDate_q_3'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionGoodsDate_q_4'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoodsDate_q_4'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionGoodsDate_q_5'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoodsDate_q_5'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionGoodsDate_q_6'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoodsDate_q_6'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionGoodsDate_q_7'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoodsDate_q_7'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionGoodsDate_q_8'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoodsDate_q_8'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionGoodsDate_q_9'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoodsDate_q_9'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionGoodsDate_q_10'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoodsDate_q_10'
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 913
-    Top = 280
+    Left = 185
+    Top = 192
   end
 end
