@@ -99,6 +99,8 @@ BEGIN
                   , SUM (MovementItem.Amount) :: TFloat AS Amount
                   , SUM (CASE WHEN Movement.DescId = zc_Movement_SendOnPrice() THEN MovementItem.Amount ELSE MIFloat_AmountPartner.ValueData END) :: TFloat AS AmountPartner
                   , MILO_GoodsKind.ObjectId             AS GoodsKindId
+                    -- Партия дата для Декларация
+                  , MAX (COALESCE (MIDate_PartionGoods_q.ValueData, zc_DateStart())) AS PartionGoods_q
                   , ObjectLink_GoodsGroup.ChildObjectId AS GoodsGroupId
              FROM MovementItem
                   INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
@@ -109,6 +111,11 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                              AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                  -- Партия дата для Декларация
+                  LEFT JOIN MovementItemDate AS MIDate_PartionGoods_q
+                                             ON MIDate_PartionGoods_q.MovementItemId = MovementItem.Id
+                                            AND MIDate_PartionGoods_q.DescId         = zc_MIDate_PartionGoods_q()
+
                   LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
                                                    ON MILO_GoodsKind.MovementItemId = MovementItem.Id
                                                   AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
@@ -524,6 +531,10 @@ BEGIN
 
            , tmpMovement_QualityParams.OperDateIn
            , (tmpMovement_QualityParams.OperDateIn + (CASE WHEN tmpMIGoodsByGoodsKind.DaysQ_gk <> 0 THEN (tmpMIGoodsByGoodsKind.DaysQ_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl) :: TDateTime AS OperDateIn_str4
+             -- Партия дата для Декларация
+           , CASE WHEN tmpMI.PartionGoods_q = zc_DateStart() THEN '' ELSE LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q), 5) END :: TVarChar AS PartionGoods_q
+
+             -- Дата відвантаження
            , tmpMovement_QualityParams.OperDateOut
 
            , (tmpMovement_QualityParams.OperDateIn + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl) :: TDateTime AS OperDate_end
@@ -657,6 +668,8 @@ BEGIN
                           , SUM (MovementItem.Amount) :: TFloat AS Amount
                           , SUM (CASE WHEN Movement.DescId = zc_Movement_SendOnPrice() THEN MovementItem.Amount ELSE MIFloat_AmountPartner.ValueData END) :: TFloat AS AmountPartner
                           , MILO_GoodsKind.ObjectId             AS GoodsKindId
+                            -- Партия дата для Декларация
+                          , MAX (COALESCE (MIDate_PartionGoods_q.ValueData, zc_DateStart())) AS PartionGoods_q
                           , ObjectLink_GoodsGroup.ChildObjectId AS GoodsGroupId
                      FROM MovementItem
                           INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
@@ -667,6 +680,10 @@ BEGIN
                           LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                       ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                      AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                          -- Партия дата для Декларация
+                          LEFT JOIN MovementItemDate AS MIDate_PartionGoods_q
+                                                     ON MIDate_PartionGoods_q.MovementItemId = MovementItem.Id
+                                                    AND MIDate_PartionGoods_q.DescId         = zc_MIDate_PartionGoods_q()
                           LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
                                                            ON MILO_GoodsKind.MovementItemId = MovementItem.Id
                                                           AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
@@ -1067,6 +1084,11 @@ BEGIN
                     || zfConvert_DateToString (Movement.OperDatePartner - ((tmpMIGoodsByGoodsKind.DaysQ_gk)     :: TVarChar || ' DAY') :: INTERVAl) ||', '
                     || zfConvert_DateToString (Movement.OperDatePartner - ((tmpMIGoodsByGoodsKind.DaysQ_gk + 1) :: TVarChar || ' DAY') :: INTERVAl) 
              END :: TVarChar AS OperDateIn_str4
+
+             -- Партия дата для Декларация
+           , CASE WHEN tmpMI.PartionGoods_q = zc_DateStart() THEN '' ELSE LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q), 5) END :: TVarChar AS PartionGoods_q
+
+             -- Дата відвантаження
            , Movement.OperDate AS OperDateOut
            
            , tmpMIGoodsByGoodsKind.DaysQ_gk :: Integer AS DaysQ_gk

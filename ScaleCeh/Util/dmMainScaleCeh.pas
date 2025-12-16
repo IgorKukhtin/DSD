@@ -127,16 +127,19 @@ begin
               exit;
          end;
 
-       if SettingMain.isCeh = TRUE
+       if SettingMain.isCeh = FALSE
        then
            // для Scale
            with execParams do
            begin
              ParamByName('Weight_gd').AsFloat := DataSet.FieldByName('Weight_gd').asFloat;
              ParamByName('WeightPackageSticker_gd').AsFloat:= DataSet.FieldByName('WeightTare_gd').asFloat;
+             //
+             //ParamByName('NamePack').AsString := DataSet.FieldByName('GoodsKindName').AsString;
+             //ParamByName('WeightPack').AsFloat:= DataSet.FieldByName('WeightTare_gd').asFloat;
            end
        else
-           // для Scale
+           // для ScaleCeh
            with execParams do
            begin
              ParamByName('NamePack').AsString := DataSet.FieldByName('GoodsKindName').AsString;

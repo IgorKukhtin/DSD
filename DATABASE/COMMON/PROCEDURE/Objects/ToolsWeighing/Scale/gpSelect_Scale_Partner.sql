@@ -598,6 +598,69 @@ BEGIN
 
 
       UNION ALL
+       SELECT Object_Unit.Id          AS PartnerId
+            , Object_Unit.ObjectCode  AS PartnerCode
+            , Object_Unit.ValueData   AS PartnerName
+            , '' :: TVarChar  AS JuridicalName
+            , NULL :: Integer AS PaidKindId
+            , '' :: TVarChar  AS PaidKindName
+
+            , 0     :: Integer    AS ContractId
+            , NULL  :: Integer    AS ContractCode
+            , ''    :: TVarChar   AS ContractNumber
+            , ''    :: TVarChar   AS ContractTagName
+
+            , NULL :: Integer AS InfoMoneyId
+            , NULL :: Integer AS InfoMoneyCode
+            , '' :: TVarChar  AS InfoMoneyName
+
+            , NULL :: TFloat AS ChangePercent
+            , NULL :: TFloat AS ChangePercentAmount
+
+            , FALSE       :: Boolean AS isEdiOrdspr
+            , FALSE       :: Boolean AS isEdiInvoice
+            , FALSE       :: Boolean AS isEdiDesadv
+
+            , TRUE        :: Boolean AS isMovement,  2 :: TFloat AS CountMovement
+            , FALSE       :: Boolean AS isAccount,   0 :: TFloat AS CountAccount
+            , FALSE       :: Boolean AS isTransport, 0 :: TFloat AS CountTransport
+            , FALSE       :: Boolean AS isQuality,   0 :: TFloat AS CountQuality
+            , FALSE       :: Boolean AS isPack   ,   0 :: TFloat AS CountPack
+            , FALSE       :: Boolean AS isSpec   ,   0 :: TFloat AS CountSpec
+            , FALSE       :: Boolean AS isTax    ,   0 :: TFloat AS CountTax
+
+            , ObjectDesc.Id AS ObjectDescId
+            , zc_Movement_Send() AS MovementDescId
+            , ObjectDesc.ItemName
+
+       FROM Object AS Object_Unit
+            LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Unit.DescId
+
+       WHERE Object_Unit.DescId   = zc_Object_Unit()
+         AND Object_Unit.isErased = FALSE
+         AND Object_Unit.Id IN (301309 -- 22121	Склад ГП ф.Запорожье	филиал Запорожье
+                              , 309599 -- 22122	Склад возвратов ф.Запорожье	филиал Запорожье
+                              , 8411   -- 22021	Склад ГП ф.Киев	филиал Киев
+                              , 428365 -- 22022	Склад возвратов ф.Киев	филиал Киев
+                              , 8413   -- 22031	Склад ГП ф.Кривой Рог	филиал Кр.Рог
+                              , 428366 -- 22032	Склад возвратов ф.Кривой Рог	филиал Кр.Рог
+                              , 8417   -- 22051	Склад ГП ф.Николаев (Херсон)	филиал Николаев (Херсон)
+                              , 428364 -- 22052	Склад возвратов ф.Николаев (Херсон)	филиал Николаев (Херсон)
+                              , 346093 -- 22081	Склад ГП ф.Одесса	филиал Одесса
+                              , 346094 -- 22082	Склад возвратов ф.Одесса	филиал Одесса
+                              , 8425   -- 22091	Склад ГП ф.Харьков	филиал Харьков
+                              , 409007 -- 22092	Склад возвратов ф.Харьков	филиал Харьков
+                              , 8415   -- 22041	Склад ГП ф.Черкассы (Кировоград)	филиал Черкассы (Кировоград)
+                              , 428363 -- 22042	Склад возвратов ф.Черкассы (Кировоград)	филиал Черкассы (Кировоград)
+                              , 3080691-- 50010	Склад ГП ф.Львов
+                              , 3080696-- 50011	Склад возвратов ф.Львов
+                              , 11921035 -- Склад ГП ф.Вінниця
+                              , 11921036 -- Склад повернень ф.Вінниця
+                               )
+         AND inBranchCode BETWEEN 301 AND 310
+
+
+      UNION ALL
        SELECT tmpMember.MemberId     AS PartnerId
             , tmpMember.MemberCode   AS PartnerCode
             , tmpMember.MemberName   AS PartnerName

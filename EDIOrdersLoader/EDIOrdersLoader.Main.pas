@@ -761,8 +761,9 @@ begin
                             // если нет Ошибки
                             if (FormParams.ParamByName('Err_str_toEDI').Value = '')
                             then
+                                    AddToLog_Vchasno(true, 'Ошибка при Подписании CONDRA Вчасно № :  <' + FieldByName('InvNumber_Parent').AsString + '> от' + DateToStr(FieldByName('OperDate_Parent').AsDateTime) + '>', true);
                               // а теперь еще подписать Декларация
-                              if mactVchasnoEDISignCondra.Execute
+                              {if mactVchasnoEDISignCondra.Execute
                               then actUpdateEdiCONDRASignTrue.Execute
                               else begin
                                     // Ошибку записать в базе
@@ -771,7 +772,7 @@ begin
                                     AddToLog_Vchasno(true, 'Ошибка при Подписании CONDRA Вчасно № :  <' + FieldByName('InvNumber_Parent').AsString + '> от' + DateToStr(FieldByName('OperDate_Parent').AsDateTime) + '>', true);
                                     AddToLog_Vchasno(true, actVchasnoEDISignCondra.ErrorText.Value, true);
                                     AddToLog_Vchasno(true, '', true);
-                               end;
+                               end;}
                             //
                             MyDelay_two(3000);
 

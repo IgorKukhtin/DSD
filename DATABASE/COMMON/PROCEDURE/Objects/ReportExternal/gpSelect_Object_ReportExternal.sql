@@ -43,6 +43,14 @@ BEGIN
         WHERE vbUserId IN (539659, 5) -- Стасюк Ю.П.
           AND 1=0
 
+       UNION
+        SELECT 0 :: Integer AS Id
+             , 0 :: Integer AS Code
+             , 'gpSelect_Movement_ProductionUnionTech' :: TVarChar  AS Name
+             , FALSE :: Boolean AS isErased
+        WHERE vbUserId IN (5, 6561986) -- Брикова В.В.
+          AND 1=0
+
         ORDER BY 3
        ;
 
