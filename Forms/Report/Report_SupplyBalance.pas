@@ -79,9 +79,10 @@ type
     cxGridDBTableViewReceiptChild: TcxGridDBTableView;
     cxGridLevel2: TcxGridLevel;
     cxBottomSplitter: TcxSplitter;
-    cbIsRemainsNull: TcxCheckBox;
     cbIsRemainsNull_use: TcxCheckBox;
     Operdate_Use: TcxGridDBColumn;
+    cxLabel6: TcxLabel;
+    deStartDate_use: TcxDateEdit;
   private
     { Private declarations }
   public

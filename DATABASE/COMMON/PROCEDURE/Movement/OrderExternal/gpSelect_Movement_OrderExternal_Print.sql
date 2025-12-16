@@ -616,8 +616,28 @@ BEGIN
                             GROUP BY MovementItem.ParentId
                            )
 
-            -- ячейки отбора
-          , tmpChoiceCell AS (SELECT gpSelect.NPP           ::Integer   AS NPP
+            -- ячейки отбора 
+            , tmpChoiceCell AS (SELECT Object_ChoiceCell.ObjectCode  AS CellCode
+                                     , Object_ChoiceCell.ValueData   AS CellName
+                                     , LEFT (Object_ChoiceCell.ValueData, 1)::TVarChar  AS CellName_shot
+                                     , ObjectLink_Goods.ChildObjectId         AS GoodsId
+                                     , ObjectLink_GoodsKind.ChildObjectId     AS GoodsKindId
+                                     , Object_ChoiceCell.ObjectCode AS NPP
+                                     , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Goods.ChildObjectId , ObjectLink_GoodsKind.ChildObjectId ORDER BY Object_ChoiceCell.ObjectCode) AS Ord
+                                FROM Object AS Object_ChoiceCell
+                                    LEFT JOIN ObjectLink AS ObjectLink_Goods
+                                                         ON ObjectLink_Goods.ObjectId = Object_ChoiceCell.Id
+                                                        AND ObjectLink_Goods.DescId = zc_ObjectLink_ChoiceCell_Goods()
+                                    LEFT JOIN ObjectLink AS ObjectLink_GoodsKind
+                                                         ON ObjectLink_GoodsKind.ObjectId = Object_ChoiceCell.Id
+                                                        AND ObjectLink_GoodsKind.DescId = zc_ObjectLink_ChoiceCell_GoodsKind()
+                                    LEFT JOIN ObjectFloat AS ObjectFloat_NPP
+                                                          ON ObjectFloat_NPP.ObjectId = Object_ChoiceCell.Id
+                                                         AND ObjectFloat_NPP.DescId = zc_ObjectFloat_ChoiceCell_NPP()
+                                WHERE Object_ChoiceCell.DescId = zc_Object_ChoiceCell()
+                                  AND Object_ChoiceCell.isErased = FALSE 
+                                )
+          /*, tmpChoiceCell AS (SELECT gpSelect.NPP           ::Integer   AS NPP
                                    , gpSelect.Code          ::Integer   AS CellCode
                                    , gpSelect.Name          ::TVarChar  AS CellName
                                    , LEFT (gpSelect.Name, 1)::TVarChar  AS CellName_shot
@@ -626,7 +646,7 @@ BEGIN
                                    , ROW_NUMBER() OVER (PARTITION BY gpSelect.GoodsId, gpSelect.GoodsKindId ORDER BY gpSelect.NPP) AS Ord
                               FROM gpSelect_Object_ChoiceCell (FALSE, inSession) AS gpSelect
                               WHERE vbUnitId = zc_Unit_RK()
-                             )
+                             )*/
         /*, tmpChoiceCell AS (SELECT 0           ::Integer   AS NPP
                                    , 0           ::Integer   AS CellCode
                                    , ''          ::TVarChar  AS CellName

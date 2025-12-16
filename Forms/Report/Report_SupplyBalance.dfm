@@ -14,19 +14,19 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
     Width = 1366
     Height = 342
     TabOrder = 3
-    ExplicitTop = 59
+    ExplicitTop = 74
     ExplicitWidth = 1366
-    ExplicitHeight = 357
+    ExplicitHeight = 342
     ClientRectBottom = 342
     ClientRectRight = 1366
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1366
-      ExplicitHeight = 357
+      ExplicitHeight = 342
       inherited cxGrid: TcxGrid
         Width = 1366
         Height = 342
         ExplicitWidth = 1366
-        ExplicitHeight = 357
+        ExplicitHeight = 342
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1278,19 +1278,26 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
       TabOrder = 9
       Width = 192
     end
-    object cbIsRemainsNull: TcxCheckBox
-      Left = 851
-      Top = 20
-      Caption = ' '#1087#1086#1082#1072#1079#1072#1090#1100' '#1089' 0 '#1086#1089#1090#1072#1090#1082#1086#1084' ('#1076#1072'/'#1085#1077#1090')'
-      TabOrder = 10
-      Width = 188
-    end
     object cbIsRemainsNull_use: TcxCheckBox
-      Left = 1045
+      Left = 974
       Top = 20
-      Caption = #1085#1072#1095' '#1076#1072#1090#1072' '#1087#1086' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1080#1102' ('#1076#1072'/'#1085#1077#1090')'
-      TabOrder = 11
-      Width = 215
+      Caption = ' '#1087#1086#1082#1072#1079#1072#1090#1100' '#1089' '#1085#1091#1083#1077#1074#1080#1084' '#1086#1089#1090#1072#1090#1082#1086#1084' ('#1076#1072'/'#1085#1077#1090')'
+      TabOrder = 10
+      Width = 224
+    end
+    object cxLabel6: TcxLabel
+      Left = 857
+      Top = 1
+      Caption = #1053#1072#1095'. '#1076#1072#1090#1072' '#1080#1089#1087#1086#1083#1100#1079'.:'
+    end
+    object deStartDate_use: TcxDateEdit
+      Left = 857
+      Top = 20
+      EditValue = 45748d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 12
+      Width = 102
     end
   end
   object cxGridReceiptChild: TcxGrid [2]
@@ -3010,10 +3017,10 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'inIsRemainsNull'
+          Name = 'StartDate_use'
           Value = Null
-          Component = cbIsRemainsNull
-          DataType = ftBoolean
+          Component = deStartDate_use
+          DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
@@ -3196,6 +3203,14 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inStartDate_use'
+        Value = Null
+        Component = deStartDate_use
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inUnitId'
         Value = ''
         Component = UnitGuides
@@ -3220,19 +3235,11 @@ inherited Report_SupplyBalanceForm: TReport_SupplyBalanceForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'IsRemainsNull'
-        Value = Null
-        Component = cbIsRemainsNull
-        DataType = ftBoolean
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'IsRemainsNull_use'
         Value = Null
         Component = cbIsRemainsNull_use
         DataType = ftBoolean
-        ParamType = ptUnknown
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 208
