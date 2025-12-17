@@ -34,7 +34,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , MovementItemId Integer
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , OKPO TVarChar
-             , ContractId Integer, ContractCode Integer, ContractName TVarChar
+             , ContractId Integer, ContractCode Integer, ContractName TVarChar, PersonalName_contract TVarChar
              , PaidKindName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar, NumGroup Integer
              , Condition TVarChar, ContractStateKindCode Integer
@@ -339,6 +339,7 @@ BEGIN
                             , (''|| CASE WHEN View_Contract.ContractTermKindId = zc_Enum_ContractTermKind_Long() THEN '* ' ELSE '' END
                                  || (LPAD (EXTRACT (Day FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||LPAD (EXTRACT (Month FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||EXTRACT (YEAR FROM View_Contract.EndDate_term) :: TVarChar)
                               ) ::TVarChar AS EndDate
+                            , Object_Personal.ValueData ::TVarChar AS PersonalName_contract
 
                             , CASE WHEN MovementItem.Ord = 1 THEN MovementItem.Amount ELSE 0 END :: TFloat AS Amount
                             , MIFloat_AmountRemains.ValueData   :: TFloat AS AmountRemains
@@ -436,6 +437,11 @@ BEGIN
 
                              LEFT JOIN tmpContract_View AS View_Contract ON View_Contract.ContractId = Object_Contract.Id
                              LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = View_Contract.PaidKindId
+
+                             LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
+                                                  ON ObjectLink_Contract_Personal.ObjectId = View_Contract.ContractId
+                                                 AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
+                             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Contract_Personal.ChildObjectId
                      )
 
        --
@@ -786,6 +792,7 @@ BEGIN
         , tmpMI.ContractId
         , tmpMI.ContractCode
         , tmpMI.ContractName
+        , tmpMI.PersonalName_contract  ::TVarChar
         , tmpMI.PaidKindName
         , tmpMI.InfoMoneyId
         , tmpMI.InfoMoneyName

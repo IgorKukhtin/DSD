@@ -24,6 +24,8 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 277
+        ExplicitLeft = -24
+        ExplicitTop = -72
         ExplicitWidth = 1020
         ExplicitHeight = 277
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -326,6 +328,15 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
             Options.Editing = False
             Width = 100
           end
+          object PersonalName_contract: TcxGridDBColumn
+            Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1076#1086#1075'. ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
+            DataBinding.FieldName = 'PersonalName_contract'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1076#1086#1075'. ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
+            Options.Editing = False
+            Width = 119
+          end
           object Condition: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1077
             DataBinding.FieldName = 'Condition'
@@ -513,6 +524,78 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
             Options.Editing = False
             Width = 100
           end
+          object AmountSumm: TcxGridDBColumn
+            Caption = #1055#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'AmountSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object AmountPartner_1: TcxGridDBColumn
+            Caption = '7 '#1076#1085#1077#1081
+            DataBinding.FieldName = 'AmountPartner_1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object AmountPartner_2: TcxGridDBColumn
+            Caption = '14 '#1076#1085#1077#1081
+            DataBinding.FieldName = 'AmountPartner_2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object AmountPartner_3: TcxGridDBColumn
+            Caption = '21 '#1076#1085#1077#1081
+            DataBinding.FieldName = 'AmountPartner_3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object AmountPartner_4: TcxGridDBColumn
+            Caption = '28 '#1076#1085#1077#1081
+            DataBinding.FieldName = 'AmountPartner_4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object AmountPartner_5: TcxGridDBColumn
+            Caption = '>28 '#1076#1085#1077#1081
+            DataBinding.FieldName = 'AmountPartner_5'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object AmountPlan_total: TcxGridDBColumn
             Caption = #1055#1083#1072#1085' '#1048#1058#1054#1043#1054
             DataBinding.FieldName = 'AmountPlan_total'
@@ -669,12 +752,13 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
         end
       end
       object edNPP: TcxCurrencyEdit
-        Left = 932
-        Top = 75
+        Left = 484
+        Top = 83
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####'
         Properties.ReadOnly = False
         TabOrder = 1
+        Visible = False
         Width = 40
       end
     end
@@ -1341,6 +1425,66 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object MovementItemProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementItemId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object MovementProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementProtocolForm'
+      FormNameParam.Value = 'TMovementProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -1430,31 +1574,11 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
         end
         item
           Visible = True
-          ItemName = 'bbExport_New_OTP'
+          ItemName = 'bbMovementProtocolOpen'
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbBank'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintPlan'
+          ItemName = 'bbMovementItemProtocolOpen'
         end
         item
           Visible = True
@@ -1502,6 +1626,14 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
     end
     object dxBarButton1: TdxBarButton
       Action = mactExport_New_OTP_NPP
+      Category = 0
+    end
+    object bbMovementItemProtocolOpen: TdxBarButton
+      Action = MovementItemProtocolOpenForm
+      Category = 0
+    end
+    object bbMovementProtocolOpen: TdxBarButton
+      Action = MovementProtocolOpenForm
       Category = 0
     end
   end

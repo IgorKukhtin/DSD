@@ -84,6 +84,10 @@ type
     dxBarButton1: TdxBarButton;
     DateDay: TcxGridDBColumn;
     WeekDay: TcxGridDBColumn;
+    MovementItemProtocolOpenForm: TdsdOpenForm;
+    bbMovementItemProtocolOpen: TdxBarButton;
+    MovementProtocolOpenForm: TdsdOpenForm;
+    bbMovementProtocolOpen: TdxBarButton;
   private
     { Private declarations }
   public
