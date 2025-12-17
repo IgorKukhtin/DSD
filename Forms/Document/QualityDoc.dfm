@@ -224,8 +224,8 @@ inherited QualityDocForm: TQualityDocForm
     TabOrder = 28
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 78
-    Top = 249
+    Left = 102
+    Top = 217
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 115
@@ -281,8 +281,8 @@ inherited QualityDocForm: TQualityDocForm
       MoveParams = <>
       Caption = 'actUpdateForm_PartionDateQ'
       ImageIndex = 35
-      FormName = 'TWeighingPartner_PartionQEditForm'
-      FormNameParam.Value = 'TWeighingPartner_PartionQEditForm'
+      FormName = 'TSale_PartionQEditForm'
+      FormNameParam.Value = 'TSale_PartionQEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

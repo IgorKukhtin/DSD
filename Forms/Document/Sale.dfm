@@ -1,26 +1,26 @@
 inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'  ('#1074#1089#1077')>'
   ClientHeight = 658
-  ClientWidth = 1465
+  ClientWidth = 1461
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1481
+  ExplicitWidth = 1477
   ExplicitHeight = 697
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 167
-    Width = 1465
+    Width = 1461
     Height = 491
     ExplicitTop = 167
     ExplicitWidth = 1465
     ExplicitHeight = 491
     ClientRectBottom = 491
-    ClientRectRight = 1465
+    ClientRectRight = 1461
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1465
       ExplicitHeight = 467
       inherited cxGrid: TcxGrid
-        Width = 1465
+        Width = 1461
         Height = 467
         ExplicitWidth = 1465
         ExplicitHeight = 467
@@ -747,7 +747,7 @@ inherited SaleForm: TSaleForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1465
+    Width = 1461
     Height = 141
     TabOrder = 3
     ExplicitWidth = 1465
@@ -930,8 +930,8 @@ inherited SaleForm: TSaleForm
       Width = 102
     end
     object cxLabel10: TcxLabel
-      Left = 255
-      Top = 44
+      Left = 252
+      Top = 40
       Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
     end
     object edIsChecked: TcxCheckBox
@@ -959,8 +959,8 @@ inherited SaleForm: TSaleForm
       Width = 140
     end
     object cxLabel12: TcxLabel
-      Left = 85
-      Top = 5
+      Left = 88
+      Top = 0
       Caption = #8470' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
     end
     object edInvNumberPartner: TcxTextEdit
@@ -1042,7 +1042,7 @@ inherited SaleForm: TSaleForm
       Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075#1086#1074#1086#1088#1072
     end
     object edInvNumberOrder: TcxButtonEdit
-      Left = 171
+      Left = 168
       Top = 23
       Properties.Buttons = <
         item
@@ -6548,7 +6548,7 @@ inherited SaleForm: TSaleForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 100
+    Left = 52
     Top = 8
   end
   object spSelectPrint_ExpPack: TdsdStoredProc

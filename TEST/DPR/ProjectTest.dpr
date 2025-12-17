@@ -1636,12 +1636,12 @@ uses
   Week_Date in '..\..\Forms\Document\Week_Date.pas' {Week_DateForm: TParentForm},
   OrderFinance_Plan in '..\..\Forms\Document\OrderFinance_Plan.pas' {OrderFinance_PlanForm: TParentForm},
   WeekPeriodDialog in '..\..\Forms\Guides\WeekPeriodDialog.pas' {WeekPeriodDialogForm: TParentForm},
-  WeighingPartner_PartionQEdit in '..\..\Forms\Document\WeighingPartner_PartionQEdit.pas' {WeighingPartner_PartionQEditForm: TParentForm},
   BankAccount_Choice in '..\..\Forms\Guides\BankAccount_Choice.pas' {BankAccount_ChoiceForm: TParentForm},
   ContractJuridicalChoice in '..\..\Forms\Guides\ContractJuridicalChoice.pas' {ContractJuridicalChoiceForm: TParentForm},
   Inventory_scale_NumSecurityDialog in '..\..\Forms\Document\Inventory_scale_NumSecurityDialog.pas' {Inventory_scale_NumSecurityDialogForm: TParentForm},
   Union_Member_Unit in '..\..\Forms\Guides\Union_Member_Unit.pas' {Union_Member_UnitForm: TParentForm},
-  OrderFinance_PlanDate in '..\..\Forms\Document\OrderFinance_PlanDate.pas' {OrderFinance_PlanDateForm: TParentForm};
+  OrderFinance_PlanDate in '..\..\Forms\Document\OrderFinance_PlanDate.pas' {OrderFinance_PlanDateForm: TParentForm},
+  Sale_PartionQEdit in '..\..\Forms\Document\Sale_PartionQEdit.pas' {Sale_PartionQEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

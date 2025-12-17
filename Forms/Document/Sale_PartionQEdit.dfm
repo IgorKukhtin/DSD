@@ -1,4 +1,4 @@
-object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
+object Sale_PartionQEditForm: TSale_PartionQEditForm
   Left = 0
   Top = 0
   Caption = 
@@ -24,39 +24,39 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
     Left = 0
     Top = 0
     Width = 1142
-    Height = 93
+    Height = 97
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
     object edInvNumber: TcxTextEdit
-      Left = 175
+      Left = 226
       Top = 22
       Properties.ReadOnly = True
       TabOrder = 0
-      Width = 80
+      Width = 124
     end
     object cxLabel1: TcxLabel
-      Left = 175
-      Top = 5
+      Left = 226
+      Top = 4
       Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
     object edOperDate: TcxDateEdit
-      Left = 262
+      Left = 10
       Top = 22
       EditValue = 42184d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
-      Width = 96
+      Width = 97
     end
     object cxLabel2: TcxLabel
-      Left = 262
-      Top = 5
+      Left = 8
+      Top = 4
       Caption = #1044#1072#1090#1072
     end
     object edFrom: TcxButtonEdit
-      Left = 365
+      Left = 361
       Top = 22
       Properties.Buttons = <
         item
@@ -82,7 +82,7 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
       Width = 264
     end
     object cxLabel3: TcxLabel
-      Left = 365
+      Left = 361
       Top = 5
       Caption = #1054#1090' '#1082#1086#1075#1086
     end
@@ -91,18 +91,13 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
       Top = 5
       Caption = #1050#1086#1084#1091
     end
-    object cxLabel5: TcxLabel
-      Left = 114
-      Top = 5
-      Caption = #8470' '#1074#1079#1074#1077#1096'.'
-    end
     object cxLabel6: TcxLabel
-      Left = 365
+      Left = 361
       Top = 45
       Caption = #1053#1072#1095'. '#1074#1079#1074#1077#1096'.'
     end
     object edStartWeighing: TcxDateEdit
-      Left = 365
+      Left = 361
       Top = 63
       EditValue = 42184d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
@@ -118,8 +113,8 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
       Caption = #1057#1090#1072#1090#1091#1089
     end
     object ceStatus: TcxButtonEdit
-      Left = 9
-      Top = 63
+      Left = 8
+      Top = 62
       Properties.Buttons = <
         item
           Action = CompleteMovement
@@ -136,37 +131,24 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
         end>
       Properties.Images = dmMain.ImageList
       Properties.ReadOnly = True
-      TabOrder = 12
+      TabOrder = 11
       Width = 160
     end
     object cxLabel9: TcxLabel
-      Left = 476
+      Left = 472
       Top = 45
       Caption = #1054#1082#1086#1085#1095'. '#1074#1079#1074#1077#1096'.'
     end
     object edEndWeighing: TcxDateEdit
-      Left = 476
+      Left = 472
       Top = 63
       EditValue = 42184d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
       Properties.EditFormat = 'dd.mm.yyyy hh:mm'
       Properties.Kind = ckDateTime
       Properties.ReadOnly = True
-      TabOrder = 14
+      TabOrder = 13
       Width = 105
-    end
-    object edUser: TcxButtonEdit
-      Left = 864
-      Top = 22
-      Properties.Buttons = <
-        item
-          Default = True
-          Enabled = False
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 15
-      Width = 118
     end
     object cxLabel10: TcxLabel
       Left = 588
@@ -183,40 +165,8 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 17
+      TabOrder = 15
       Width = 69
-    end
-    object edOperDate_parent: TcxDateEdit
-      Left = 262
-      Top = 63
-      EditValue = 42184d
-      Properties.ReadOnly = True
-      Properties.SaveTime = False
-      Properties.ShowTime = False
-      TabOrder = 18
-      Width = 96
-    end
-    object cxLabel12: TcxLabel
-      Left = 262
-      Top = 45
-      Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1075#1083#1072#1074#1085')'
-    end
-    object edInvNumber_parent: TcxTextEdit
-      Left = 175
-      Top = 63
-      Properties.ReadOnly = True
-      TabOrder = 20
-      Width = 80
-    end
-    object cxLabel14: TcxLabel
-      Left = 175
-      Top = 45
-      Caption = #8470' '#1076#1086#1082'.('#1075#1083#1072#1074#1085')'
-    end
-    object cxLabel15: TcxLabel
-      Left = 9
-      Top = 5
-      Caption = #8470' '#1076#1086#1082'. '#1086#1089#1085#1086#1074#1072#1085#1080#1077
     end
     object cxLabel16: TcxLabel
       Left = 670
@@ -232,24 +182,13 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
           Enabled = False
           Kind = bkEllipsis
         end>
-      TabOrder = 24
+      TabOrder = 17
       Width = 92
     end
     object cxLabel17: TcxLabel
-      Left = 761
+      Left = 755
       Top = 45
       Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075#1086#1074#1086#1088#1072
-    end
-    object edWeighingNumber: TcxCurrencyEdit
-      Left = 115
-      Top = 22
-      Properties.Alignment.Horz = taRightJustify
-      Properties.Alignment.Vert = taVCenter
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0'
-      Properties.ReadOnly = False
-      TabOrder = 26
-      Width = 54
     end
     object edContractTag: TcxButtonEdit
       Left = 755
@@ -261,15 +200,15 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 27
+      TabOrder = 19
       Width = 97
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 1041
-      Top = 5
+      Left = 913
+      Top = 1
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057
       Properties.ReadOnly = True
-      TabOrder = 28
+      TabOrder = 20
       Width = 85
     end
     object edChangePercent: TcxCurrencyEdit
@@ -278,34 +217,113 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
       Properties.DecimalPlaces = 3
       Properties.DisplayFormat = ',0.###'
       Properties.ReadOnly = True
-      TabOrder = 29
-      Width = 171
+      TabOrder = 21
+      Width = 149
     end
     object cxLabel20: TcxLabel
-      Left = 995
+      Left = 867
       Top = 4
       Caption = '% '#1053#1044#1057
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 995
+      Left = 867
       Top = 22
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
       Properties.ReadOnly = True
-      TabOrder = 31
+      TabOrder = 23
       Width = 40
+    end
+    object edOperDatePartner: TcxDateEdit
+      Left = 113
+      Top = 22
+      EditValue = 42192d
+      Properties.ReadOnly = True
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 24
+      Width = 102
+    end
+    object cxLabel7: TcxLabel
+      Left = 113
+      Top = 4
+      Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
+    end
+    object cxLabel8: TcxLabel
+      Left = 269
+      Top = 45
+      Caption = #8470' '#1079#1072#1103#1074#1082#1080
+    end
+    object edInvNumberOrder: TcxButtonEdit
+      Left = 269
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 27
+      Width = 82
+    end
+    object cxLabel13: TcxLabel
+      Left = 175
+      Top = 45
+      Caption = #8470' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
+    end
+    object edInvNumberPartner: TcxTextEdit
+      Left = 175
+      Top = 63
+      Properties.ReadOnly = True
+      TabOrder = 29
+      Width = 84
+    end
+    object cxLabel18: TcxLabel
+      Left = 1025
+      Top = 4
+      Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
+    end
+    object edInsertDate: TcxDateEdit
+      Left = 1025
+      Top = 22
+      EditValue = 42132d
+      Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+      Properties.EditFormat = 'dd.mm.yyyy hh:mm'
+      Properties.Kind = ckDateTime
+      Properties.ReadOnly = True
+      TabOrder = 31
+      Width = 112
+    end
+    object edInsertName: TcxButtonEdit
+      Left = 1025
+      Top = 62
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 32
+      Width = 114
+    end
+    object cxLabel22: TcxLabel
+      Left = 1025
+      Top = 45
+      Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
     end
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 119
+    Top = 123
     Width = 1142
-    Height = 341
+    Height = 337
     Align = alClient
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 341
+    ClientRectBottom = 337
     ClientRectRight = 1142
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
@@ -315,7 +333,7 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
         Left = 0
         Top = 0
         Width = 1142
-        Height = 317
+        Height = 313
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -757,29 +775,12 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
     Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
   end
   object cbPromo: TcxCheckBox
-    Left = 1041
-    Top = 24
+    Left = 913
+    Top = 23
     Caption = #1040#1082#1094#1080#1103' ('#1076#1072'/'#1085#1077#1090')'
     Properties.ReadOnly = True
     TabOrder = 3
     Width = 100
-  end
-  object edInvNumberOrder: TcxButtonEdit
-    Left = 9
-    Top = 22
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 4
-    Width = 104
-  end
-  object cxLabel21: TcxLabel
-    Left = 864
-    Top = 4
-    Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1354,6 +1355,7 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
   object dsdGuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TPartner_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1384,6 +1386,7 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
   object dsdGuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1445,7 +1448,7 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
     Top = 367
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_WeighingPartner'
+    StoredProcName = 'gpGet_Movement_Sale_PartionGoods_Q'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1479,6 +1482,13 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'OperDatePartner'
+        Value = Null
+        Component = edOperDatePartner
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'MovementId_Order'
         Value = Null
         Component = OrderChoiceGuides
@@ -1494,34 +1504,9 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InvNumber_parent'
-        Value = ''
-        Component = edInvNumber_parent
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'WeighingNumber'
-        Value = 0.000000000000000000
-        Component = edWeighingNumber
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'OperDatePartner'
-        Value = Null
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'OperDate_parent'
-        Value = 0d
-        Component = edOperDate_parent
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
@@ -1591,6 +1576,12 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'InvNumberPartner'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'PaidKindId'
         Value = ''
         Component = PaidKindGuides
@@ -1601,21 +1592,6 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
         Name = 'PaidKindName'
         Value = ''
         Component = PaidKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UserId'
-        Value = ''
-        Component = UserGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UserName'
-        Value = ''
-        Component = UserGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1649,280 +1625,22 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PartionGoods'
+        Name = 'InsertName'
         Value = Null
+        Component = edInsertName
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'MovementDescName'
+        Name = 'InsertDate'
         Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MovementDescNumber'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MemberId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MemberName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalId1'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PersonalId1'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalName1'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PersonalName1'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionId1'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PositionId1'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionName1'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PositionName1'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalId2'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PersonalId2'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalName2'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PersonalName2'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionId2'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PositionId2'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionName2'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PositionName2'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalId3'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PersonalId3'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalName3'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PersonalName3'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionId3'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PositionId3'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionName3'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PositionName31'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalId4'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PersonalId4'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalName4'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PersonalName4'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionId4'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PositionId4'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionName4'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PositionName4'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalId55'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PersonalId5'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalName5'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PersonalName5'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionId5'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PositionId5'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionName5'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PositionName5'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalId1_Stick'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PersonalId1_Stick'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalName1_Stick'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PersonalName1_Stick'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionId1_Stick'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PositionId1_Stick'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionName1_Stick'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PositionName1_Stick'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalGroupId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalGroupName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'SubjectDocId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'SubjectDocName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Comment'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isList'
-        Value = Null
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumberPartner'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isDocPartner'
-        Value = Null
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ChangePercentAmount'
-        Value = Null
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isReason1'
-        Value = Null
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isReason2'
-        Value = Null
-        DataType = ftBoolean
+        Component = edInsertDate
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 384
-    Top = 248
+    Left = 408
+    Top = 56
   end
   object RefreshAddOn: TRefreshAddOn
     DataSet = 'ClientDataSet'
@@ -1954,12 +1672,13 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
   object ChangeStatus: TChangeStatus
     KeyField = 'Code'
     LookupControl = ceStatus
+    DisableGuidesOpen = True
     IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
     IdParam.MultiSelectSeparator = ','
     StoredProcName = 'gpUpdate_Status_WeighingPartner'
-    Left = 109
+    Left = 77
     Top = 32
   end
   object spErasedMIMaster: TdsdStoredProc
@@ -2013,13 +1732,14 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
   object StatusGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceStatus
+    DisableGuidesOpen = True
     FormNameParam.Value = ''
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     PositionDataSet = 'ClientDataSet'
     Params = <>
     Left = 23
-    Top = 2
+    Top = 58
   end
   object spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_WeighingPartner'
@@ -2043,42 +1763,13 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 68
-    Top = 18
-  end
-  object UserGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edUser
-    FormNameParam.Value = 'TUser_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUser_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = UserGuides
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = UserGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 920
-    Top = 8
+    Left = 76
+    Top = 106
   end
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPaidKind
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TPaidKindForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -2109,6 +1800,7 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edContract
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TContractForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -2139,6 +1831,7 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
   object ContractTagGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edContractTag
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TContractTagForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -2163,8 +1856,8 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 771
-    Top = 44
+    Left = 787
+    Top = 76
   end
   object spUpdateMovement: TdsdStoredProc
     DataSets = <>
@@ -2181,7 +1874,6 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
       item
         Name = 'inWeighingNumber'
         Value = '0'
-        Component = edWeighingNumber
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -2192,6 +1884,7 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
   object OrderChoiceGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edInvNumberOrder
+    DisableGuidesOpen = True
     Key = '0'
     FormNameParam.Value = 'TOrderExternal_SendOnPriceJournalChoiceForm'
     FormNameParam.DataType = ftString
@@ -2246,8 +1939,8 @@ object WeighingPartner_PartionQEditForm: TWeighingPartner_PartionQEditForm
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
-    Left = 68
-    Top = 65528
+    Left = 284
+    Top = 56
   end
   object spUpdateMI_PartionGoods_Q: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_Sale_PartionGoods_Q'

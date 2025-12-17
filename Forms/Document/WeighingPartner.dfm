@@ -2067,8 +2067,8 @@ object WeighingPartnerForm: TWeighingPartnerForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1072#1090#1091' '#1087#1072#1088#1090#1080#1080' ('#1076#1083#1103' '#1044#1077#1082#1083#1072#1088#1072#1094#1080#1080')'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1072#1090#1091' '#1087#1072#1088#1090#1080#1080' ('#1076#1083#1103' '#1044#1077#1082#1083#1072#1088#1072#1094#1080#1080')'
       ImageIndex = 35
-      FormName = 'TWeighingPartner_PartionQEditForm'
-      FormNameParam.Value = 'TWeighingPartner_PartionQEditForm'
+      FormName = 'TSale_PartionQEditForm'
+      FormNameParam.Value = 'TSale_PartionQEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
