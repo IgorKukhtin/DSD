@@ -5782,6 +5782,10 @@
 				<Form>Union_Member_UnitForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\OrderFinance_PlanDate.pas">
+				<Form>OrderFinance_PlanDateForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -1085,6 +1085,10 @@ end;
 
 procedure TLoadFormTest.LoadOrderFinanceMovementFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinance_PlanDateForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderFinance_PlanDateForm');
+
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeekPeriodDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeekPeriodDialogForm');
 
@@ -1098,6 +1102,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceJournalForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadPartnerMapFormTest;
