@@ -1640,7 +1640,8 @@ uses
   BankAccount_Choice in '..\..\Forms\Guides\BankAccount_Choice.pas' {BankAccount_ChoiceForm: TParentForm},
   ContractJuridicalChoice in '..\..\Forms\Guides\ContractJuridicalChoice.pas' {ContractJuridicalChoiceForm: TParentForm},
   Inventory_scale_NumSecurityDialog in '..\..\Forms\Document\Inventory_scale_NumSecurityDialog.pas' {Inventory_scale_NumSecurityDialogForm: TParentForm},
-  Union_Member_Unit in '..\..\Forms\Guides\Union_Member_Unit.pas' {Union_Member_UnitForm: TParentForm};
+  Union_Member_Unit in '..\..\Forms\Guides\Union_Member_Unit.pas' {Union_Member_UnitForm: TParentForm},
+  OrderFinance_PlanDate in '..\..\Forms\Document\OrderFinance_PlanDate.pas' {OrderFinance_PlanDateForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
