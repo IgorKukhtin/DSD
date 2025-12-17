@@ -1,7 +1,7 @@
 -- Function: gpSelect_Object_MemberPersonalServiceList()
 
---DROP FUNCTION IF EXISTS gpSelect_Object_MemberPersonalServiceList(TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_MemberPersonalServiceList(Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_MemberPersonalServiceList(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_MemberPersonalServiceList (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_MemberPersonalServiceList(
     IN inIsErased    Boolean ,
@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_MemberPersonalServiceList(
 )
 RETURNS TABLE (Id Integer
              , PersonalServiceListId Integer, PersonalServiceListCode Integer, PersonalServiceListName TVarChar
-             , MemberId Integer, MemberCode Integer, MemberName TVarChar
+             , UserId Integer, MemberId Integer, MemberCode Integer, MemberName TVarChar
              , UnitCode_Personal Integer, UnitName_Personal TVarChar
              , BranchName_Personal TVarChar
              , PositionName_Personal TVarChar
@@ -58,6 +58,7 @@ BEGIN
            , Object_PersonalServiceList.Id               AS PersonalServiceListId
            , Object_PersonalServiceList.ObjectCode       AS PersonalServiceListCode
            , Object_PersonalServiceList.ValueData        AS PersonalServiceListName
+           , ObjectLink_User_Member.ObjectId             AS UserId
            , Object_Member.Id                            AS MemberId
            , Object_Member.ObjectCode                    AS MemberCode
            , Object_Member.ValueData                     AS MemberName 
@@ -88,12 +89,19 @@ BEGIN
            LEFT JOIN Object AS Object_Unit_Personal ON Object_Unit_Personal.Id = tmpPersonal.UnitId
            LEFT JOIN Object AS Object_Branch   ON Object_Branch.Id   = tmpPersonal.BranchId
             
+           LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                ON ObjectLink_User_Member.ChildObjectId = Object_Member.Id
+                               AND ObjectLink_User_Member.DescId        = zc_ObjectLink_User_Member()
+
   -- WHERE Object_MemberPersonalServiceList.DescId = zc_Object_MemberPersonalServiceList()
-  UNION
+
+  UNION ALL
    SELECT -1 AS Id
            , Object_PersonalServiceList.Id               AS PersonalServiceListId
            , (-1 * Object_PersonalServiceList.ObjectCode) :: Integer AS PersonalServiceListCode
            , Object_PersonalServiceList.ValueData        AS PersonalServiceListName
+
+           , ObjectLink_User_Member.ObjectId             AS UserId
            , Object_Member.Id                            AS MemberId
            , Object_Member.ObjectCode                    AS MemberCode
            , Object_Member.ValueData                     AS MemberName 
@@ -118,6 +126,10 @@ BEGIN
         LEFT JOIN Object AS Object_Unit_Personal ON Object_Unit_Personal.Id = tmpPersonal.UnitId
         LEFT JOIN Object AS Object_Branch   ON Object_Branch.Id   = tmpPersonal.BranchId
 
+        LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                             ON ObjectLink_User_Member.ChildObjectId = Object_Member.Id
+                            AND ObjectLink_User_Member.DescId        = zc_ObjectLink_User_Member()
+
    WHERE OL_PersonalServiceList_Member.DescId = zc_ObjectLink_PersonalServiceList_Member()
      AND COALESCE (OL_PersonalServiceList_Member.ObjectId,0) <> 0
      AND COALESCE (OL_PersonalServiceList_Member.ChildObjectId,0) <> 0
@@ -136,4 +148,4 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_MemberPersonalServiceList ('2')
+-- SELECT * FROM gpSelect_Object_MemberPersonalServiceList (false, '2')

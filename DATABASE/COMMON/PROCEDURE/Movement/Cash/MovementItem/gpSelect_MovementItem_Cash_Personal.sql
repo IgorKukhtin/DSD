@@ -92,9 +92,10 @@ BEGIN
      -- определяем
      vbPersonalServiceList_NotRound:= COALESCE ((SELECT OB.ValueData FROM ObjectBoolean AS OB WHERE OB.ObjectId = vbPersonalServiceListId AND OB.DescId = zc_ObjectBoolean_PersonalServiceList_NotRound()), FALSE);
 
-     -- !!!Проверка прав роль - Ограничение - нет вообще доступа к просмотру данных ЗП!!!
+     -- !!!Проверка прав если ведомость НЕ назначена!!!
      IF NOT EXISTS (SELECT 1 FROM Object_PersonalServiceList_User_View WHERE Object_PersonalServiceList_User_View.UserId = vbUserId AND (Object_PersonalServiceList_User_View.PersonalServiceListId = vbPersonalServiceListId OR COALESCE (vbPersonalServiceListId, 0) = 0))
-     THEN PERFORM lpCheck_UserRole_8813637 (vbUserId);
+     THEN -- роль - Ограничение - нет вообще доступа к просмотру данных ЗП
+          PERFORM lpCheck_UserRole_8813637 (vbUserId);
      END IF;
 
 

@@ -44,6 +44,10 @@ BEGIN
                                                      AND ObjectBoolean_EdiOrdspr.DescId    IN (zc_ObjectBoolean_Partner_EdiOrdspr()
                                                                                              , zc_ObjectBoolean_Partner_EdiInvoice()
                                                                                              , zc_ObjectBoolean_Partner_EdiDesadv()
+                                                                                               --
+                                                                                             , zc_ObjectBoolean_Partner_EdiOrdspr_vch()
+                                                                                             , zc_ObjectBoolean_Partner_EdiInvoice_vch()
+                                                                                             , zc_ObjectBoolean_Partner_EdiDesadv_vch()
                                                                                               )
                                                      AND ObjectBoolean_EdiOrdspr.ValueData = TRUE
                         WHERE MLO.MovementId = inParentId

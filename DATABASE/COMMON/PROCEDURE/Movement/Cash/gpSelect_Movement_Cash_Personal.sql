@@ -203,8 +203,9 @@ BEGIN
                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                             AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
             LEFT JOIN tmpInfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
-       WHERE tmpPersonalServiceList_User.PersonalServiceListId > 0
-          OR Object_PersonalServiceList.Id IS NULL
+       WHERE (tmpPersonalServiceList_User.PersonalServiceListId > 0
+           OR Object_PersonalServiceList.Id IS NULL
+             )
       ;
    
 END;

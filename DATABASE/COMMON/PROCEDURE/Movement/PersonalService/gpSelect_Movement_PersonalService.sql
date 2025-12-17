@@ -71,7 +71,7 @@ BEGIN
                            SELECT Constant_User_LevelMax01_View.UserId
                            FROM Constant_User_LevelMax01_View
                                 -- Ограниченние - только разрешенные ведомости ЗП
-                                LEFT JOIN ObjectLink_UserRole_View ON ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 10657326 
+                                LEFT JOIN ObjectLink_UserRole_View ON ObjectLink_UserRole_View.UserId = Constant_User_LevelMax01_View.UserId AND ObjectLink_UserRole_View.RoleId = 10657326 
 
                            WHERE Constant_User_LevelMax01_View.UserId = vbUserId
                              -- если нет Ограничения - только разрешенные ведомости ЗП
@@ -580,7 +580,7 @@ BEGIN
         AND (OB_PersonalServiceList_User.ObjectId IS NULL
           OR vbIsLevelMax01 = TRUE
           --OR vbUserId = 2573318
-          OR vbUserId = 5
+          --OR vbUserId = 5
             )
             ;
 
