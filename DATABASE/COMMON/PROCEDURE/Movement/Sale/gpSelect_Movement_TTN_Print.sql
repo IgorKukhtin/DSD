@@ -40,6 +40,9 @@ $BODY$
     DECLARE vbMemberName1_check TVarChar;
     DECLARE vbDocHeadeName_sale TVarChar;
 
+    -- Корректировка суммы покупателя для выравнивания округлений
+    DECLARE vbCorrSumm TFloat;
+
 BEGIN
      -- сразу запомнили время начала выполнения Проц.
      vbOperDate_Begin1:= CLOCK_TIMESTAMP();
@@ -114,13 +117,22 @@ BEGIN
            --
           --, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId)
 
+            -- Корректировка суммы покупателя для выравнивания округлений
+          , COALESCE (MovementFloat_CorrSumm.ValueData, 0) AS CorrSumm
+
             INTO vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbPaidKindId, vbContractId
                , vbOperDate_find
                , vbFromId_find
                , vbToId_find
                , vbJuridicalId_zamovn
                , vbFromId, vbToId
+               , vbCorrSumm
      FROM Movement
+          -- Корректировка суммы
+          LEFT JOIN MovementFloat AS MovementFloat_CorrSumm
+                                  ON MovementFloat_CorrSumm.MovementId = Movement.Id
+                                 AND MovementFloat_CorrSumm.DescId     = zc_MovementFloat_CorrSumm()
+
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
                                    AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
@@ -489,8 +501,15 @@ BEGIN
 
            , MovementFloat_TotalCountKg.ValueData       AS TotalCountKg
            , MovementFloat_TotalCountSh.ValueData       AS TotalCountSh
-           , MovementFloat_TotalSumm.ValueData          AS TotalSumm
-           , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
+
+           , (MovementFloat_TotalSumm.ValueData
+              -- Корректировка суммы
+            + vbCorrSumm
+             ) :: TFloat AS TotalSumm
+           , (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)
+              -- Корректировка суммы
+            + vbCorrSumm
+             ) :: TFloat AS TotalSummVAT
 
            , Object_From.ValueData AS FromName
            , COALESCE (Object_Partner.ValueData, Object_To.ValueData) AS ToName

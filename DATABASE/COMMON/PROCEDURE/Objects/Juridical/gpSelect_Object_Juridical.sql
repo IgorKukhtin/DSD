@@ -123,7 +123,7 @@ BEGIN
                        FROM ObjectString
                        WHERE ObjectString.ObjectId IN (SELECT DISTINCT tmpJuridical.Id FROM tmpJuridical)
                          AND ObjectString.DescId IN (zc_ObjectString_Juridical_GLNCode()
-                                                   , zc_ObjectString_Juridical_GUID() 
+                                                   , zc_ObjectString_Juridical_GUID()
                                                    , zc_ObjectString_Juridical_DocHeadeName()
                                                     )
                        )
@@ -162,22 +162,25 @@ BEGIN
 
  , tmpPrintForms_Sale AS (SELECT *
                           FROM PrintForms_View
-                          WHERE PrintForms_View.ReportType IN ('Sale' ) 
+                          WHERE PrintForms_View.ReportType IN ('Sale' )
                             AND CURRENT_DATE BETWEEN PrintForms_View.StartDate AND PrintForms_View.EndDate
+                            AND vbUserId IN (5, 9457)
                          )
- , tmpPrintForms_Sale_Default AS (SELECT * 
+ , tmpPrintForms_Sale_Default AS (SELECT *
                                   FROM PrintForms_View
                                   WHERE PrintForms_View.JuridicalId = 0
                                     AND PrintForms_View.ReportType = 'Sale'
                                     AND CURRENT_DATE BETWEEN PrintForms_View.StartDate AND PrintForms_View.EndDate
+                                    AND vbUserId IN (5, 9457)
                                   )
  , tmpPrintForms_TransportGoods AS (SELECT *
                                     FROM PrintForms_View
-                                    WHERE PrintForms_View.ReportType IN ('TransportGoods' ) 
+                                    WHERE PrintForms_View.ReportType IN ('TransportGoods' )
                                       AND CURRENT_DATE BETWEEN PrintForms_View.StartDate AND PrintForms_View.EndDate
+                                      AND vbUserId IN (5, 9457)
                                     )
 
-
+   -- Результат
    SELECT
          Object_Juridical.Id             AS Id
        , Object_Juridical.ObjectCode     AS Code
@@ -271,8 +274,8 @@ BEGIN
        , COALESCE (ObjectBoolean_isEdiDelnot.ValueData, FALSE) :: Boolean  AS isEdiDelnot
        , COALESCE (ObjectBoolean_isEdiQuality.ValueData, FALSE):: Boolean  AS isEdiQuality
 
-       , Object_Juridical.isErased   AS isErased 
-       
+       , Object_Juridical.isErased   AS isErased
+
        , COALESCE (tmpPrintForms_Sale.PrintFormName, tmpPrintForms_Sale_Default_ff.PrintFormName) ::TVarChar AS PrintFormName_sale_ff
        , COALESCE (tmpPrintForms_Sale.PrintFormName, tmpPrintForms_Sale_Default_sf.PrintFormName) ::TVarChar AS PrintFormName_sale_sf
        , COALESCE (tmpPrintForms_TransportGoods.PrintFormName, 'PrintMovement_TTN_03012025')      ::TVarChar AS PrintFormName_ttn
@@ -439,7 +442,7 @@ BEGIN
                                                             ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
                                                            AND COALESCE (inShowDate, CURRENT_DATE) >= OH_JuridicalDetails.StartDate
                                                            AND COALESCE (inShowDate, CURRENT_DATE) <  OH_JuridicalDetails.EndDate
-        --fr3 - продажа для юр лица 
+        --fr3 - продажа для юр лица
         LEFT JOIN tmpPrintForms_Sale ON tmpPrintForms_Sale.JuridicalId = Object_Juridical.Id
         --fr3 - продажа для б/нал по умолчанию
         LEFT JOIN tmpPrintForms_Sale_Default AS tmpPrintForms_Sale_Default_ff ON tmpPrintForms_Sale_Default_ff.PaidKindId = zc_Enum_PaidKind_FirstForm()
