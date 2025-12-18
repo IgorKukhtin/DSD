@@ -5762,10 +5762,6 @@
 				<Form>WeekPeriodDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\WeighingPartner_PartionQEdit.pas">
-				<Form>WeighingPartner_PartionQEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\BankAccount_Choice.pas">
 				<Form>BankAccount_ChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -5784,6 +5780,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\OrderFinance_PlanDate.pas">
 				<Form>OrderFinance_PlanDateForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Sale_PartionQEdit.pas">
+				<Form>Sale_PartionQEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

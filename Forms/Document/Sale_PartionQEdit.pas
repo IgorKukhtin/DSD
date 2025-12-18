@@ -1,4 +1,4 @@
-unit WeighingPartner_PartionQEdit;
+unit Sale_PartionQEdit;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit, dsdCommon;
 
 type
-  TWeighingPartner_PartionQEditForm = class(TParentForm)
+  TSale_PartionQEditForm = class(TParentForm)
     FormParams: TdsdFormParams;
     spSelectMI: TdsdStoredProc;
     dxBarManager: TdxBarManager;
@@ -65,7 +65,6 @@ type
     actShowAll: TBooleanStoredProcAction;
     MasterViewAddOn: TdsdDBViewAddOn;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    cxLabel5: TcxLabel;
     cxLabel6: TcxLabel;
     edStartWeighing: TcxDateEdit;
     spGet: TdsdStoredProc;
@@ -92,21 +91,13 @@ type
     PartionGoodsDate: TcxGridDBColumn;
     cxLabel9: TcxLabel;
     edEndWeighing: TcxDateEdit;
-    edUser: TcxButtonEdit;
-    UserGuides: TdsdGuides;
     cxLabel10: TcxLabel;
     edPaidKind: TcxButtonEdit;
     PaidKindGuides: TdsdGuides;
-    edOperDate_parent: TcxDateEdit;
-    cxLabel12: TcxLabel;
-    edInvNumber_parent: TcxTextEdit;
-    cxLabel14: TcxLabel;
-    cxLabel15: TcxLabel;
     cxLabel16: TcxLabel;
     edContract: TcxButtonEdit;
     cxLabel17: TcxLabel;
     ContractGuides: TdsdGuides;
-    edWeighingNumber: TcxCurrencyEdit;
     AmountPartner: TcxGridDBColumn;
     edContractTag: TcxButtonEdit;
     ContractTagGuides: TdsdGuides;
@@ -119,12 +110,10 @@ type
     GoodsGroupNameFull: TcxGridDBColumn;
     spUpdateMovement: TdsdStoredProc;
     cbPromo: TcxCheckBox;
-    edInvNumberOrder: TcxButtonEdit;
     OrderChoiceGuides: TdsdGuides;
     spUpdateMI_PartionGoods_Q: TdsdStoredProc;
     MovementItemProtocolOpenForm: TdsdOpenForm;
     bbProtocol: TdxBarButton;
-    cxLabel21: TcxLabel;
     PartionGoods: TcxGridDBColumn;
     actPrint_all: TdsdPrintAction;
     actPrint_diff: TdsdPrintAction;
@@ -141,6 +130,16 @@ type
     PartionGoodsDate_q_8: TcxGridDBColumn;
     PartionGoodsDate_q_9: TcxGridDBColumn;
     PartionGoodsDate_q_10: TcxGridDBColumn;
+    edOperDatePartner: TcxDateEdit;
+    cxLabel7: TcxLabel;
+    cxLabel8: TcxLabel;
+    edInvNumberOrder: TcxButtonEdit;
+    cxLabel13: TcxLabel;
+    edInvNumberPartner: TcxTextEdit;
+    cxLabel18: TcxLabel;
+    edInsertDate: TcxDateEdit;
+    edInsertName: TcxButtonEdit;
+    cxLabel22: TcxLabel;
   private
   public
   end;
@@ -150,6 +149,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TWeighingPartner_PartionQEditForm);
+  RegisterClass(TSale_PartionQEditForm);
 
 end.

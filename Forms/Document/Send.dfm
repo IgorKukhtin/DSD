@@ -2217,8 +2217,8 @@ inherited SendForm: TSendForm
       Width = 114
     end
     object cxLabel8: TcxLabel
-      Left = 938
-      Top = 5
+      Left = 937
+      Top = 0
       Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
     end
     object edInsertDate: TcxDateEdit
@@ -2238,8 +2238,8 @@ inherited SendForm: TSendForm
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
     end
     object edInsertName: TcxButtonEdit
-      Left = 1054
-      Top = 23
+      Left = 1055
+      Top = 28
       Properties.Buttons = <
         item
           Default = True
@@ -5156,6 +5156,7 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'MaskId'
+        Value = Null
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -7192,6 +7193,7 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'inMovementId_new'
+        Value = Null
         Component = FormParams
         ComponentItem = 'MaskId'
         ParamType = ptInput
