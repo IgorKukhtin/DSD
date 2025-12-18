@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isPromo Boolean
              , InsertName TVarChar
              , InsertDate TDateTime
+             , StartWeighing TDateTime, EndWeighing TDateTime
               )
 AS
 $BODY$
@@ -66,6 +67,9 @@ BEGIN
 
              , Object_Insert.ValueData              AS InsertName
              , CURRENT_TIMESTAMP ::TDateTime        AS InsertDate
+
+             , Null ::TDateTime  AS StartWeighing
+             , Null ::TDateTime  AS EndWeighing
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object as Object_Currency ON Object_Currency.Id = zc_Enum_Currency_Basis();
      ELSE
@@ -86,6 +90,21 @@ BEGIN
            WITH tmpMS  AS (SELECT * FROM MovementString       WHERE MovementString.MovementId       = inMovementId)
               , tmpMLO AS (SELECT * FROM MovementLinkObject   WHERE MovementLinkObject.MovementId   = inMovementId)
               , tmpMLM AS (SELECT * FROM MovementLinkMovement WHERE MovementLinkMovement.MovementId = inMovementId)
+              
+              --данные из док. взвешиваний
+              , tmpWeighing AS (SELECT MIN (MovementDate_StartWeighing.ValueData)  AS StartWeighing
+                                     , MAX (MovementDate_EndWeighing.ValueData)    AS EndWeighing
+                                FROM Movement
+                                     LEFT JOIN MovementDate AS MovementDate_StartWeighing
+                                                            ON MovementDate_StartWeighing.MovementId = Movement.Id
+                                                           AND MovementDate_StartWeighing.DescId = zc_MovementDate_StartWeighing()
+                                     LEFT JOIN MovementDate AS MovementDate_EndWeighing
+                                                            ON MovementDate_EndWeighing.MovementId = Movement.Id
+                                                           AND MovementDate_EndWeighing.DescId = zc_MovementDate_EndWeighing() 
+                                WHERE Movement.ParentId = inMovementId --32748596 --32739680    --32748596
+                                  AND Movement.DescId = zc_movement_WeighingPartner()
+                                )
+           --результат
            SELECT
                  Movement.Id                                    AS Id
                , Movement.InvNumber                             AS InvNumber
@@ -126,6 +145,9 @@ BEGIN
 
                , Object_Insert.ValueData                                                  AS InsertName
                , COALESCE (MovementDate_Insert.ValueData, Movement.OperDate) :: TDateTime AS InsertDate
+
+               , tmpWeighing.StartWeighing ::TDateTime AS StartWeighing
+               , tmpWeighing.EndWeighing   ::TDateTime AS EndWeighing
            FROM Movement
                 LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -192,8 +214,9 @@ BEGIN
                                  ON MovementLinkObject_Insert.MovementId = Movement.Id
                                 AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
                 LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MovementLinkObject_Insert.ObjectId
+                --взвешивания
+                LEFT JOIN tmpWeighing ON 1 = 1
 
- 
            WHERE Movement.Id     = inMovementId
              AND Movement.DescId = zc_Movement_Sale()
            LIMIT 1
