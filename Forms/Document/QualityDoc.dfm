@@ -224,8 +224,8 @@ inherited QualityDocForm: TQualityDocForm
     TabOrder = 28
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 102
-    Top = 217
+    Left = 118
+    Top = 193
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 115

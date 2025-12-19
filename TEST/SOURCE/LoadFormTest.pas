@@ -910,12 +910,13 @@ end;
 
 procedure TLoadFormTest.LoadQualityDocFormTest;
 begin
-  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TQualityDocForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TQualityDocForm'));
   TdsdFormStorageFactory.GetStorage.Load('TQualityDocForm');
-  }
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TQualityDocJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TQualityDocJournalForm');
-end;
+  }
+  end;
 
 procedure TLoadFormTest.LoadQualityNumberFormTest;
 begin
