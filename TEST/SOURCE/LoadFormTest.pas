@@ -1097,13 +1097,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TWeek_DateForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinance_PlanForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderFinance_PlanForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceMovementForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceJournalForm');
-  }
 end;
 
 procedure TLoadFormTest.LoadPartnerMapFormTest;

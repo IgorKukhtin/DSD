@@ -24,8 +24,6 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 277
-        ExplicitLeft = -24
-        ExplicitTop = -72
         ExplicitWidth = 1020
         ExplicitHeight = 277
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -69,6 +67,36 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
               Format = ',0.00'
               Kind = skSum
               Column = AmountPartner
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountSumm
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountPartner_1
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountPartner_2
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountPartner_3
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountPartner_4
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountPartner_5
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -115,6 +143,36 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
               Format = ',0.00'
               Kind = skSum
               Column = AmountPartner
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountSumm
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountPartner_1
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountPartner_2
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountPartner_3
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountPartner_4
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountPartner_5
             end>
           OptionsData.Deleting = False
           OptionsView.GroupByBox = True
@@ -609,7 +667,7 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
             Width = 80
           end
           object AmountPlan_day: TcxGridDBColumn
-            Caption = #1055#1083#1072#1085
+            Caption = #1055#1083#1072#1085' '#1085#1072' '#1076#1072#1090#1091
             DataBinding.FieldName = 'AmountPlan_day'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -618,17 +676,14 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090
-            Options.Editing = False
             Width = 70
           end
           object isAmountPlan_day: TcxGridDBColumn
             Caption = #1055#1083#1072#1090#1080#1084' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isAmountPlan_day'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1083#1072#1090#1080#1084' ('#1076#1072'/'#1085#1077#1090')'
-            Options.Editing = False
             Width = 70
           end
           object Number_day: TcxGridDBColumn
@@ -1784,6 +1839,15 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
         ComponentItem = 'WeekDay'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAmountPlan_day'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isAmountPlan_day'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 584
@@ -2448,7 +2512,7 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 696
-    Top = 272
+    Left = 496
+    Top = 232
   end
 end
