@@ -36,7 +36,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , OKPO TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, PersonalName_contract TVarChar
              , PaidKindName TVarChar
-             , InfoMoneyId Integer, InfoMoneyName TVarChar, NumGroup Integer
+             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, NumGroup Integer
              , Condition TVarChar, ContractStateKindCode Integer
              , StartDate TDateTime, EndDate_real TDateTime, EndDate TVarChar
              , Amount TFloat, AmountRemains TFloat, AmountPartner TFloat
@@ -91,20 +91,21 @@ BEGIN
                            INNER JOIN MovementLinkObject AS MovementLinkObject_OrderFinance
                                                          ON MovementLinkObject_OrderFinance.MovementId = Movement.Id
                                                         AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
-                                                        AND MovementLinkObject_OrderFinance.ObjectId   = 3988049
+                                                      --AND MovementLinkObject_OrderFinance.ObjectId   = 3988049
 
                        WHERE Movement.DescId = zc_Movement_OrderFinance()
                          AND Movement.StatusId IN (SELECT tmpStatus.StatusId FROM tmpStatus)
                          AND Movement.OperDate BETWEEN inStartDate - INTERVAL '14 DAY' AND inEndDate
                        )
 
-     , tmpMI AS ( SELECT MovementItem.*
+     , tmpMI AS (SELECT MovementItem.*
                  FROM MovementItem
                  WHERE MovementItem.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)
-                   AND MovementItem.DescId = zc_MI_Master()
-                   AND MovementItem.isErased = FALSE
-                   AND COALESCE (MovementItem.ObjectId,0) <> 0 
-                 )
+                   AND MovementItem.DescId     = zc_MI_Master()
+                   AND MovementItem.isErased   = FALSE
+                   -- есть Juridical
+                   AND MovementItem.ObjectId   <> 0
+                )
 
      , tmpMILO_Contract AS (SELECT *
                             FROM MovementItemLinkObject
@@ -226,18 +227,30 @@ BEGIN
                             )
 
       , tmpMI_Union AS (SELECT tmpMI.*
+                               -- План оплат на день недели
                              , tmp.AmountPlan_day
+                               -- ???????
                              , SUM (COALESCE (tmp.AmountPlan_day,0)) OVER(PARTITION BY tmpMI.Id) :: TFloat AS AmountPlan_total
-                             , tmp.Number_day 
+                               -- № в очереди
+                             , tmp.Number_day
+                               -- Платим (да/нет)
                              , tmp.isAmountPlan_day
+                               -- день недели
                              , tmp.NumDay
+                               --
                              , ROW_NUMBER() OVER (PARTITION BY tmpMI.Id ORDER BY COALESCE (tmp.NumDay,0)) AS Ord
+
                         FROM tmpMI
                              LEFT JOIN (SELECT MovementItem.Id
+                                               -- План оплат на день недели
                                              , MIFloat_AmountPlan_day.ValueData    :: TFloat AS AmountPlan_day
-                                             , MIFloat_Number_day.ValueData        :: TFloat AS Number_day 
+                                               -- № в очереди
+                                             , MIFloat_Number_day.ValueData        :: TFloat AS Number_day
+                                               -- Платим (да/нет)
                                              , COALESCE (MIBoolean_AmountPlan_day.ValueData, True) ::Boolean AS isAmountPlan_day
+                                               -- день недели
                                              , 1 AS NumDay
+
                                         FROM tmpMI AS MovementItem
                                              INNER JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_day
                                                                              ON MIFloat_AmountPlan_day.MovementItemId = MovementItem.Id
@@ -248,13 +261,19 @@ BEGIN
                                              LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_day
                                                                               ON MIBoolean_AmountPlan_day.MovementItemId = MovementItem.Id
                                                                              AND MIBoolean_AmountPlan_day.DescId = zc_MIBoolean_AmountPlan_1()
-                                        WHERE COALESCE (MIFloat_AmountPlan_day.ValueData,0) <> 0 
-                                      UNION
+                                        WHERE MIFloat_AmountPlan_day.ValueData <> 0
+
+                                      UNION ALL
                                         SELECT MovementItem.Id
+                                               -- План оплат на день недели
                                              , MIFloat_AmountPlan_day.ValueData    :: TFloat AS AmountPlan_day
-                                             , MIFloat_Number_day.ValueData        :: TFloat AS Number_day 
+                                               -- № в очереди
+                                             , MIFloat_Number_day.ValueData        :: TFloat AS Number_day
+                                               -- Платим (да/нет)
                                              , COALESCE (MIBoolean_AmountPlan_day.ValueData, True) ::Boolean AS isAmountPlan_day
+                                               -- день недели
                                              , 2 AS NumDay
+
                                         FROM tmpMI AS MovementItem
                                              INNER JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_day
                                                                              ON MIFloat_AmountPlan_day.MovementItemId = MovementItem.Id
@@ -265,13 +284,19 @@ BEGIN
                                              LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_day
                                                                               ON MIBoolean_AmountPlan_day.MovementItemId = MovementItem.Id
                                                                              AND MIBoolean_AmountPlan_day.DescId = zc_MIBoolean_AmountPlan_2()
-                                        WHERE COALESCE (MIFloat_AmountPlan_day.ValueData,0) <> 0
-                                      UNION
+                                        WHERE MIFloat_AmountPlan_day.ValueData <> 0
+
+                                      UNION ALL
                                         SELECT MovementItem.Id
+                                               -- План оплат на день недели
                                              , MIFloat_AmountPlan_day.ValueData    :: TFloat AS AmountPlan_day
-                                             , MIFloat_Number_day.ValueData        :: TFloat AS Number_day 
+                                               -- № в очереди
+                                             , MIFloat_Number_day.ValueData        :: TFloat AS Number_day
+                                               -- Платим (да/нет)
                                              , COALESCE (MIBoolean_AmountPlan_day.ValueData, True) ::Boolean AS isAmountPlan_day
+                                               -- день недели
                                              , 3 AS NumDay
+
                                         FROM tmpMI AS MovementItem
                                              INNER JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_day
                                                                              ON MIFloat_AmountPlan_day.MovementItemId = MovementItem.Id
@@ -282,13 +307,19 @@ BEGIN
                                              LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_day
                                                                               ON MIBoolean_AmountPlan_day.MovementItemId = MovementItem.Id
                                                                              AND MIBoolean_AmountPlan_day.DescId = zc_MIBoolean_AmountPlan_3()
-                                        WHERE COALESCE (MIFloat_AmountPlan_day.ValueData,0) <> 0
-                                      UNION
+                                        WHERE MIFloat_AmountPlan_day.ValueData <> 0
+
+                                      UNION ALL
                                         SELECT MovementItem.Id
+                                               -- План оплат на день недели
                                              , MIFloat_AmountPlan_day.ValueData    :: TFloat AS AmountPlan_day
-                                             , MIFloat_Number_day.ValueData        :: TFloat AS Number_day 
+                                               -- № в очереди
+                                             , MIFloat_Number_day.ValueData        :: TFloat AS Number_day
+                                               -- Платим (да/нет)
                                              , COALESCE (MIBoolean_AmountPlan_day.ValueData, True) ::Boolean AS isAmountPlan_day
+                                               -- день недели
                                              , 4 AS NumDay
+
                                         FROM tmpMI AS MovementItem
                                              INNER JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_day
                                                                              ON MIFloat_AmountPlan_day.MovementItemId = MovementItem.Id
@@ -299,13 +330,19 @@ BEGIN
                                              LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_day
                                                                               ON MIBoolean_AmountPlan_day.MovementItemId = MovementItem.Id
                                                                              AND MIBoolean_AmountPlan_day.DescId = zc_MIBoolean_AmountPlan_4()
-                                        WHERE COALESCE (MIFloat_AmountPlan_day.ValueData,0) <> 0
-                                      UNION
+                                        WHERE MIFloat_AmountPlan_day.ValueData <> 0
+
+                                      UNION ALL
                                         SELECT MovementItem.Id
+                                               -- План оплат на день недели
                                              , MIFloat_AmountPlan_day.ValueData    :: TFloat AS AmountPlan_day
-                                             , MIFloat_Number_day.ValueData        :: TFloat AS Number_day 
+                                               -- № в очереди
+                                             , MIFloat_Number_day.ValueData        :: TFloat AS Number_day
+                                               -- Платим (да/нет)
                                              , COALESCE (MIBoolean_AmountPlan_day.ValueData, True) ::Boolean AS isAmountPlan_day
+                                               -- день недели
                                              , 5 AS NumDay
+
                                         FROM tmpMI AS MovementItem
                                              INNER JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_day
                                                                              ON MIFloat_AmountPlan_day.MovementItemId = MovementItem.Id
@@ -316,8 +353,9 @@ BEGIN
                                              LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_day
                                                                               ON MIBoolean_AmountPlan_day.MovementItemId = MovementItem.Id
                                                                              AND MIBoolean_AmountPlan_day.DescId = zc_MIBoolean_AmountPlan_5()
-                                        WHERE COALESCE (MIFloat_AmountPlan_day.ValueData,0) <> 0
-                                        ) AS tmp ON tmp.Id = tmpMI.Id
+                                        WHERE MIFloat_AmountPlan_day.ValueData <> 0
+
+                                       ) AS tmp ON tmp.Id = tmpMI.Id
                        )
 
       , tmpMI_Data AS (SELECT MovementItem.MovementId
@@ -332,6 +370,7 @@ BEGIN
                             , Object_Contract.ValueData        AS ContractName
                             , Object_PaidKind.ValueData        AS PaidKindName
                             , Object_InfoMoney.Id              AS InfoMoneyId
+                            , Object_InfoMoney.ObjectCode      AS InfoMoneyCode
                             , Object_InfoMoney.ValueData       AS InfoMoneyName
 
 
@@ -354,9 +393,12 @@ BEGIN
                             , MIFloat_AmountPartner_4.ValueData :: TFloat AS AmountPartner_4
 
                             , CASE WHEN MovementItem.Ord = 1 THEN MovementItem.AmountPlan_total ELSE 0 END :: TFloat AS AmountPlan_total
+                              -- Сумма План оплат на дату
                             , MovementItem.AmountPlan_day       :: TFloat
+                              -- 
                             , MovementItem.Number_day           :: TFloat
-                            , COALESCE (MovementItem.isAmountPlan_day, True) ::Boolean AS isAmountPlan_day
+                              -- Платим (да/нет)
+                            , COALESCE (MovementItem.isAmountPlan_day, TRUE) ::Boolean AS isAmountPlan_day
 
                             , MIString_Comment.ValueData       AS Comment
                             , MIString_Comment_pay.ValueData   AS Comment_pay
@@ -365,6 +407,16 @@ BEGIN
                             , Object_Update.ValueData          AS UpdateName
                             , MIDate_Insert.ValueData          AS InsertDate
                             , MIDate_Update.ValueData          AS UpdateDate
+
+                             -- убирается дублирование
+                           , ROW_NUMBER() OVER (PARTITION BY Object_Juridical.Id
+                                                           , Object_Contract.Id
+                                                           , Object_InfoMoney.Id
+                                                           , Object_PaidKind.Id
+                                                ORDER BY CASE WHEN MovementItem.AmountPlan_day > 0 THEN 0 ELSE 1 END ASC
+                                                       , CASE WHEN MovementItem.Amount         > 0 THEN 0 ELSE 1 END ASC
+                                                       , MovementItem.Id ASC
+                                               ) AS Ord_Juridical
 
                         FROM tmpMI_Union AS MovementItem
                              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId
@@ -747,23 +799,23 @@ BEGIN
         , CASE WHEN tmpMI.NumDay = 1 THEN tmpMovement.StartDate_WeekNumber
                WHEN tmpMI.NumDay = 2 THEN tmpMovement.StartDate_WeekNumber + INTERVAL'1 day'
                WHEN tmpMI.NumDay = 3 THEN tmpMovement.StartDate_WeekNumber + INTERVAL'2 day'
-               WHEN tmpMI.NumDay = 4 THEN tmpMovement.StartDate_WeekNumber + INTERVAL'3 day'    
-               WHEN tmpMI.NumDay = 5 THEN tmpMovement.StartDate_WeekNumber + INTERVAL'4 day' 
+               WHEN tmpMI.NumDay = 4 THEN tmpMovement.StartDate_WeekNumber + INTERVAL'3 day'
+               WHEN tmpMI.NumDay = 5 THEN tmpMovement.StartDate_WeekNumber + INTERVAL'4 day'
                ELSE NULL
           END ::TDateTime AS DateDay
         , CASE WHEN tmpMI.NumDay = 1 THEN tmpMovement.StartDate_WeekNumber
                WHEN tmpMI.NumDay = 2 THEN tmpMovement.StartDate_WeekNumber + INTERVAL'1 day'
                WHEN tmpMI.NumDay = 3 THEN tmpMovement.StartDate_WeekNumber + INTERVAL'2 day'
-               WHEN tmpMI.NumDay = 4 THEN tmpMovement.StartDate_WeekNumber + INTERVAL'3 day'    
-               WHEN tmpMI.NumDay = 5 THEN tmpMovement.StartDate_WeekNumber + INTERVAL'4 day' 
+               WHEN tmpMI.NumDay = 4 THEN tmpMovement.StartDate_WeekNumber + INTERVAL'3 day'
+               WHEN tmpMI.NumDay = 5 THEN tmpMovement.StartDate_WeekNumber + INTERVAL'4 day'
                ELSE NULL
           END ::TDateTime AS DateDay_old
         --дата по дню недели
         , CASE WHEN tmpMI.NumDay = 1 THEN '1.Пн.'
                WHEN tmpMI.NumDay = 2 THEN '2.Вт.'
                WHEN tmpMI.NumDay = 3 THEN '3.Ср.'
-               WHEN tmpMI.NumDay = 4 THEN '4.Чт.'    
-               WHEN tmpMI.NumDay = 5 THEN '5.Пт.' 
+               WHEN tmpMI.NumDay = 4 THEN '4.Чт.'
+               WHEN tmpMI.NumDay = 5 THEN '5.Пт.'
                ELSE NULL
           END ::TVarChar AS WeekDay
         , tmpMovement.DateUpdate_report ::TDateTime
@@ -773,7 +825,7 @@ BEGIN
 
         , tmpMovement.Comment           ::TVarChar  AS Comment_mov
 
-        , CASE WHEN vbUserId = 5 THEN 'ФИО Автор' ELSE tmpMovement.InsertName END :: TVarChar AS InsertName
+        , CASE WHEN vbUserId = 5 AND 1=0 THEN 'ФИО Автор' ELSE tmpMovement.InsertName END :: TVarChar AS InsertName
         , tmpMovement.InsertDate
         , tmpMovement.UpdateName
         , tmpMovement.UpdateDate
@@ -798,6 +850,7 @@ BEGIN
         , tmpMI.PersonalName_contract  ::TVarChar
         , tmpMI.PaidKindName
         , tmpMI.InfoMoneyId
+        , tmpMI.InfoMoneyCode
         , tmpMI.InfoMoneyName
         --, tmpMI.NumGroup
         --, tmpMI.Condition              ::TVarChar
@@ -821,14 +874,14 @@ BEGIN
         , tmpMI.AmountPartner_2 :: TFloat AS AmountPartner_2
         , tmpMI.AmountPartner_3 :: TFloat AS AmountPartner_3
         , tmpMI.AmountPartner_4 :: TFloat AS AmountPartner_4
-          --Итого план оплат
+          -- Итого план оплат
         , tmpMI.AmountPlan_total  :: TFloat
           -- План оплат на 1.пн-5,пт
         , tmpMI.AmountPlan_day    :: TFloat
           -- № в очереди на 1.пн.
         , tmpMI.Number_day    :: TFloat
 
-        , CASE WHEN COALESCE (tmpMI.isAmountPlan_day, TRUE) = TRUE AND tmpMI.AmountPlan_day > 0
+        , CASE WHEN tmpMI.AmountPlan_day > 0
                     THEN zc_Color_Yelow()
                ELSE zc_Color_White()
           END :: Integer AS FonColor_AmountPlan_day
@@ -861,6 +914,8 @@ BEGIN
 
    FROM tmpMovement_Data AS tmpMovement
         INNER JOIN tmpMI_Data AS tmpMI ON tmpMI.MovementId = tmpMovement.MovementId
+                                      -- убирается дублирование
+                                      AND (tmpMI.Ord_Juridical = 1 OR tmpMI.Amount <> 0 OR tmpMI.AmountPlan_day <> 0)
 
         LEFT JOIN tmpContractCondition ON tmpContractCondition.ContractId = tmpMI.ContractId
                                       AND tmpMovement.OperDate BETWEEN tmpContractCondition.StartDate AND tmpContractCondition.EndDate
@@ -873,7 +928,7 @@ BEGIN
                                           AND inBankMainId <> 0
                                           AND tmpJuridicalOrderFinance.Ord = 1
 
-        --привязка  юр.лицо + статья + последний платеж
+        -- привязка  юр.лицо + статья + последний платеж
         LEFT JOIN tmpJuridicalOrderFinance_last ON tmpJuridicalOrderFinance_last.JuridicalId = tmpMI.JuridicalId
                                                AND tmpJuridicalOrderFinance_last.InfoMoneyId = tmpMI.InfoMoneyId
                                                AND tmpJuridicalOrderFinance_last.Ord = 1

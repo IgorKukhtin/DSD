@@ -42,7 +42,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , OKPO TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
              , PaidKindName TVarChar
-             , InfoMoneyId Integer, InfoMoneyName TVarChar, NumGroup Integer
+             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, NumGroup Integer
              , Condition TVarChar, ContractStateKindCode Integer
              , StartDate TDateTime, EndDate_real TDateTime, EndDate TVarChar
              , Amount TFloat, AmountRemains TFloat, AmountPartner TFloat
@@ -267,8 +267,8 @@ BEGIN
                             , Object_Contract.ValueData        AS ContractName
                             , Object_PaidKind.ValueData        AS PaidKindName
                             , Object_InfoMoney.Id              AS InfoMoneyId
+                            , Object_InfoMoney.ObjectCode      AS InfoMoneyCode
                             , Object_InfoMoney.ValueData       AS InfoMoneyName
-
 
                             , View_Contract.ContractStateKindCode  ::Integer  AS ContractStateKindCode
                             , View_Contract.StartDate
@@ -767,7 +767,7 @@ BEGIN
 
         , tmpMovement.Comment           ::TVarChar  AS Comment_mov
 
-        , CASE WHEN vbUserId = 5 THEN '‘»Œ ¿‚ÚÓ' ELSE tmpMovement.InsertName END :: TVarChar AS InsertName
+        , CASE WHEN vbUserId = 5 AND 1=0 THEN '‘»Œ ¿‚ÚÓ' ELSE tmpMovement.InsertName END :: TVarChar AS InsertName
         , tmpMovement.InsertDate
         , tmpMovement.UpdateName
         , tmpMovement.UpdateDate
@@ -791,6 +791,7 @@ BEGIN
         , tmpMI.ContractName
         , tmpMI.PaidKindName
         , tmpMI.InfoMoneyId
+        , tmpMI.InfoMoneyCode
         , tmpMI.InfoMoneyName
         --, tmpMI.NumGroup
         --, tmpMI.Condition              ::TVarChar
