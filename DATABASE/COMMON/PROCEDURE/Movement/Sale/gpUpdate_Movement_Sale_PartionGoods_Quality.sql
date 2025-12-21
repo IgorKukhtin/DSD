@@ -11,6 +11,7 @@ RETURNS VOID
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbFromId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Sale());
@@ -18,15 +19,44 @@ BEGIN
 
 
      -- проверка
+     IF vbUserId = 5 AND 1=1
+     THEN
+         RETURN;
+     END IF;
+
+     -- проверка
      IF vbUserId <> 5 AND 1=0
      THEN
          RAISE EXCEPTION 'Ошибка.Нет Прав.';
      END IF;
+     
+     -- определяется
+     vbFromId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From());
 
      -- сохранили
      PERFORM lpInsert_MovementItemProtocol (tmpMI.Id, vbUserId, FALSE)
      FROM (SELECT tmpMI.Id AS Id
-                , lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods_q_1(), tmpMI.Id, DATE_TRUNC ('DAY', inPartionGoods_Q) - (tmpMI.DaysQ :: TVarChar || ' DAY') :: INTERVAL)
+                , CASE -- Дільниця обліку і реалізації м`ясної сировини
+                       WHEN vbFromId = 133049  AND tmpMI.DaysQ = 0
+                            THEN lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods_q_1(), tmpMI.Id, DATE_TRUNC ('DAY', inPartionGoods_Q) - ('0' :: TVarChar || ' DAY') :: INTERVAL)
+
+                       -- Дільниця обліку і реалізації м`ясної сировини - 2 дня
+                       WHEN vbFromId = 133049  AND tmpMI.DaysQ > 0
+                            THEN lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods_q_1(), tmpMI.Id, DATE_TRUNC ('DAY', inPartionGoods_Q) - ('2' :: TVarChar || ' DAY') :: INTERVAL)
+
+                       ELSE lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods_q_1(), tmpMI.Id, DATE_TRUNC ('DAY', inPartionGoods_Q) - (tmpMI.DaysQ :: TVarChar || ' DAY') :: INTERVAL)
+                  END
+
+                , CASE -- Дільниця обліку і реалізації м`ясної сировини
+                       WHEN vbFromId = 133049  AND tmpMI.DaysQ > 0
+                            THEN lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods_q_2(), tmpMI.Id, DATE_TRUNC ('DAY', inPartionGoods_Q) - ('1' :: TVarChar || ' DAY') :: INTERVAL)
+                  END
+
+                , CASE -- Дільниця обліку і реалізації м`ясної сировини
+                       WHEN vbFromId = 133049  AND tmpMI.DaysQ > 0
+                            THEN lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods_q_3(), tmpMI.Id, DATE_TRUNC ('DAY', inPartionGoods_Q) - ('0' :: TVarChar || ' DAY') :: INTERVAL)
+                  END
+
            FROM (WITH tmpMI AS (SELECT MovementItem.Id
                                      , MovementItem.ObjectId           AS GoodsId
                                      , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
