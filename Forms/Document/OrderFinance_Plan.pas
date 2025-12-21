@@ -99,6 +99,7 @@ type
     spSelect_ExportNPP: TdsdStoredProc;
     actExport_fileNPP: TdsdStoredProcExportToFile;
     dxBarButton1: TdxBarButton;
+    InfoMoneyCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

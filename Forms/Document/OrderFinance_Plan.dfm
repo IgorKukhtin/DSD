@@ -387,6 +387,14 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             Options.Editing = False
             Width = 50
           end
+          object InfoMoneyCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1055
+            DataBinding.FieldName = 'InfoMoneyCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object InfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
@@ -789,6 +797,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1074' '#1086#1095#1077#1088#1077#1076#1080' '#1085#1072' '#1101#1082#1089#1087#1086#1088#1090' '#1074' '#1073#1072#1085#1082
             Options.Editing = False
             Width = 70
           end
@@ -800,6 +809,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1074' '#1086#1095#1077#1088#1077#1076#1080' '#1085#1072' '#1101#1082#1089#1087#1086#1088#1090' '#1074' '#1073#1072#1085#1082
             Options.Editing = False
             Width = 70
           end
@@ -811,6 +821,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1074' '#1086#1095#1077#1088#1077#1076#1080' '#1085#1072' '#1101#1082#1089#1087#1086#1088#1090' '#1074' '#1073#1072#1085#1082
             Options.Editing = False
             Width = 70
           end
@@ -822,6 +833,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1074' '#1086#1095#1077#1088#1077#1076#1080' '#1085#1072' '#1101#1082#1089#1087#1086#1088#1090' '#1074' '#1073#1072#1085#1082
             Options.Editing = False
             Width = 70
           end
@@ -833,6 +845,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1074' '#1086#1095#1077#1088#1077#1076#1080' '#1085#1072' '#1101#1082#1089#1087#1086#1088#1090' '#1074' '#1073#1072#1085#1082
             Options.Editing = False
             Width = 70
           end
@@ -844,6 +857,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1074' '#1086#1095#1077#1088#1077#1076#1080' '#1085#1072' '#1101#1082#1089#1087#1086#1088#1090' '#1074' '#1073#1072#1085#1082
             Width = 70
           end
         end

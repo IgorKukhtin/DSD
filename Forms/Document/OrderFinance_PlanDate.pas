@@ -88,6 +88,7 @@ type
     bbMovementItemProtocolOpen: TdxBarButton;
     MovementProtocolOpenForm: TdsdOpenForm;
     bbMovementProtocolOpen: TdxBarButton;
+    InfoMoneyCode: TcxGridDBColumn;
   private
     { Private declarations }
   public
