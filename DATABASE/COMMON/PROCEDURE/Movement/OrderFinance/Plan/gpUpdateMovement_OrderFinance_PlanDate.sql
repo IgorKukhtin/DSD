@@ -1,5 +1,6 @@
 -- Function: gpUpdateMovement_OrderFinance_PlanDate()
 DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_PlanDate (Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_PlanDate (Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdateMovement_OrderFinance_PlanDate(
     IN inMovementId              Integer   , -- Ключ объекта <Документ>
@@ -8,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpUpdateMovement_OrderFinance_PlanDate(
     IN ioDateDay_old             TDateTime , --
     IN inAmount                  TFloat    ,
  INOUT ioAmountPlan_day          TFloat    ,
-   OUT outWeekDay                TVarChar  ,
+   OUT outWeekDay                TVarChar  ,  
+    IN inisAmountPlan_day        Boolean   ,
     IN inSession                 TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -22,17 +24,25 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-     IF COALESCE (inDateDay, zc_DateStart()) = COALESCE (ioDateDay_old, zc_DateStart())
+     /*IF COALESCE (inDateDay, zc_DateStart()) = COALESCE (ioDateDay_old, zc_DateStart()) 
      THEN
          RETURN;
      END IF;
+     */
      
      --определяем день недели для предыдущей и текущей даты
      vbNumDay     := zfCalc_DayOfWeekNumber (inDateDay);
      vbNumDay_old := zfCalc_DayOfWeekNumber (ioDateDay_old);
-     ioAmountPlan_day := (CASE WHEN COALESCE (ioAmountPlan_day,0) = 0 THEN inAmount ELSE ioAmountPlan_day END);
 
-     IF COALESCE (ioDateDay_old, zc_DateStart()) <> zc_DateStart()
+
+     IF COALESCE (inisAmountPlan_day,TRUE) = TRUE
+     THEN
+         ioAmountPlan_day := (CASE WHEN COALESCE (ioAmountPlan_day,0) = 0 THEN inAmount ELSE ioAmountPlan_day END);
+     ELSE 
+         ioAmountPlan_day := 0;
+     END IF;
+
+     IF COALESCE (ioDateDay_old, zc_DateStart()) <> zc_DateStart() AND COALESCE (ioDateDay_old, zc_DateStart()) <> COALESCE (inDateDay, zc_DateStart())
      THEN
          --обнуляем данные прошлой даты
          PERFORM lpInsertUpdate_MovementItemFloat (CASE vbNumDay_old 
@@ -41,11 +51,21 @@ BEGIN
                                                         WHEN 3 THEN zc_MIFloat_AmountPlan_3()
                                                         WHEN 4 THEN zc_MIFloat_AmountPlan_4()
                                                         WHEN 5 THEN zc_MIFloat_AmountPlan_5()
-                                                   END                                                  
-                                                 , inMovementItemId, 0);
+                                                   END
+                                                 , inMovementItemId, 0); 
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementItemBoolean (CASE vbNumDay_old 
+                                                        WHEN 1 THEN zc_MIBoolean_AmountPlan_1()
+                                                        WHEN 2 THEN zc_MIBoolean_AmountPlan_2()
+                                                        WHEN 3 THEN zc_MIBoolean_AmountPlan_3()
+                                                        WHEN 4 THEN zc_MIBoolean_AmountPlan_4()
+                                                        WHEN 5 THEN zc_MIBoolean_AmountPlan_5()
+                                                     END
+                                                   , inMovementItemId, FALSE);
      END IF;
 
-     IF COALESCE (inDateDay, zc_DateStart()) <> zc_DateStart()
+
+     IF COALESCE (inDateDay, zc_DateStart()) <> zc_DateStart() AND COALESCE (ioDateDay_old, zc_DateStart()) <> COALESCE (inDateDay, zc_DateStart()) 
      THEN
          --обновляем новые данные
          PERFORM lpInsertUpdate_MovementItemFloat (CASE vbNumDay 
@@ -54,9 +74,20 @@ BEGIN
                                                         WHEN 3 THEN zc_MIFloat_AmountPlan_3()
                                                         WHEN 4 THEN zc_MIFloat_AmountPlan_4()
                                                         WHEN 5 THEN zc_MIFloat_AmountPlan_5()
-                                                   END                                                  
+                                                   END     
                                                  , inMovementItemId, ioAmountPlan_day);
+
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementItemBoolean (CASE vbNumDay_old 
+                                                        WHEN 1 THEN zc_MIBoolean_AmountPlan_1()
+                                                        WHEN 2 THEN zc_MIBoolean_AmountPlan_2()
+                                                        WHEN 3 THEN zc_MIBoolean_AmountPlan_3()
+                                                        WHEN 4 THEN zc_MIBoolean_AmountPlan_4()
+                                                        WHEN 5 THEN zc_MIBoolean_AmountPlan_5()
+                                                     END
+                                                   , inMovementItemId, COALESCE (inisAmountPlan_day,TRUE));
      END IF; 
+
 
      ioDateDay_old := COALESCE (inDateDay, NULL) ::TDateTime;
      outWeekDay := (CASE EXTRACT (DOW FROM inDateDay)
@@ -68,12 +99,10 @@ BEGIN
                          ELSE ''
                     END :: TVarChar);
 
-     -- сохранили протокол
+  -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (inMovementItemId, vbUserId, FALSE);
 
-
      if vbUserId = 9457 then RAISE EXCEPTION 'Админ.Test Ok. <%>  <%>', outWeekDay, ioAmountPlan_day; end if;
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -86,3 +115,4 @@ $BODY$
 
 
 -- тест
+-- select * from gpUpdateMovement_OrderFinance_PlanDate(inMovementId := 32907603 , inMovementItemId := 341774314 , inDateDay := ('27.10.2025')::TDateTime , ioDateDay_old := ('27.10.2025')::TDateTime , inAmount := 15000 , ioAmountPlan_day := 23 , inisAmountPlan_day := 'True' ,  inSession := '9457');

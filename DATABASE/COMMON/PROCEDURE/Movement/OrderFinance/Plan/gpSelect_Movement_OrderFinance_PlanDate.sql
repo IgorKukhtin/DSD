@@ -45,6 +45,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , AmountPartner_2    TFloat
              , AmountPartner_3    TFloat
              , AmountPartner_4    TFloat
+             , AmountPlan_total   TFloat
              , AmountPlan_day     TFloat
              , Number_day         TFloat
              , FonColor_AmountPlan_day  Integer
@@ -226,6 +227,7 @@ BEGIN
 
       , tmpMI_Union AS (SELECT tmpMI.*
                              , tmp.AmountPlan_day
+                             , SUM (COALESCE (tmp.AmountPlan_day,0)) OVER(PARTITION BY tmpMI.Id) :: TFloat AS AmountPlan_total
                              , tmp.Number_day 
                              , tmp.isAmountPlan_day
                              , tmp.NumDay
@@ -351,6 +353,7 @@ BEGIN
                             , MIFloat_AmountPartner_3.ValueData :: TFloat AS AmountPartner_3
                             , MIFloat_AmountPartner_4.ValueData :: TFloat AS AmountPartner_4
 
+                            , CASE WHEN MovementItem.Ord = 1 THEN MovementItem.AmountPlan_total ELSE 0 END :: TFloat AS AmountPlan_total
                             , MovementItem.AmountPlan_day       :: TFloat
                             , MovementItem.Number_day           :: TFloat
                             , COALESCE (MovementItem.isAmountPlan_day, True) ::Boolean AS isAmountPlan_day
@@ -818,7 +821,9 @@ BEGIN
         , tmpMI.AmountPartner_2 :: TFloat AS AmountPartner_2
         , tmpMI.AmountPartner_3 :: TFloat AS AmountPartner_3
         , tmpMI.AmountPartner_4 :: TFloat AS AmountPartner_4
-          -- План оплат на 1.пн
+          --Итого план оплат
+        , tmpMI.AmountPlan_total  :: TFloat
+          -- План оплат на 1.пн-5,пт
         , tmpMI.AmountPlan_day    :: TFloat
           -- № в очереди на 1.пн.
         , tmpMI.Number_day    :: TFloat

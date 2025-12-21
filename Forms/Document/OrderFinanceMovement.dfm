@@ -4159,7 +4159,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
         Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 6
+        DataSummaryItemIndex = 1
       end>
     ShowFieldImageList = <>
     ViewDocumentList = <>
@@ -6047,15 +6047,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
-    SummaryItemList = <
-      item
-        Param.Value = Null
-        Param.Component = FormParams
-        Param.ComponentItem = 'TotalSumm'
-        Param.DataType = ftString
-        Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 6
-      end>
+    SummaryItemList = <>
     ShowFieldImageList = <>
     ViewDocumentList = <>
     PropertiesCellList = <>
