@@ -124,11 +124,19 @@ BEGIN
                                      AND MovementString_InvNumberPartner.ValueData = vbInvNumberPartner 
                                      AND COALESCE (MovementString_InvNumberPartner.ValueData,'') <> '' 
                                      AND vbInvNumberPartner <> ''                         
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                         ON MovementLinkObject_To.MovementId = Movement.Id
+                                        AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                        -- Склад специй + Склад запчастей
+                                        AND MovementLinkObject_To.ObjectId   NOT IN (8455, 8456)
+
        WHERE Movement.OperDate BETWEEN (vbOperDate - INTERVAL '1 DAY')::TDateTime AND vbOperDate
          AND Movement.DescId = zc_Movement_Income()
          AND Movement.StatusId = zc_Enum_Status_Complete()
          AND inisActDiff = TRUE
          AND Movement.Id <> inMovementId
+         --
+         AND MovementLinkObject_To.MovementId IS NULL
      UNION
        --текущий док, всегда, даже если нет  InvNumberPartner
        SELECT inMovementId AS Id, vbOperDate ::TDateTime  AS OperDate
