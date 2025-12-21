@@ -185,7 +185,11 @@ BEGIN
                                       MAX (MIContainer.MovementItemId) AS MovementItemId,
 
                                       SUM (MIContainer.Amount) AS MovementSumm,
-                                      0                        AS MovementSumm_Currency
+                                      SUM (CASE WHEN MIContainer.Amount > 0 THEN  1 * MIContainer.Amount ELSE 0 END) AS MovementSumm_d,
+                                      SUM (CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END) AS MovementSumm_k,
+                                      0                        AS MovementSumm_Currency,
+                                      0                        AS MovementSumm_Currency_d,
+                                      0                        AS MovementSumm_Currency_k
                                     , tmpContainer.isNotBalance
                                FROM tmpContainer
                                     INNER JOIN MovementItemContainer AS MIContainer
@@ -196,8 +200,8 @@ BEGIN
                                       , tmpContainer.ContainerId
                                       , tmpContainer.isNotBalance
                                       , tmpContainer.PartnerId
+                               HAVING SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_TransferDebtIn()) THEN ABS (MIContainer.Amount) ELSE MIContainer.Amount END) <> 0
 
-                               HAVING SUM (MIContainer.Amount) <> 0
                               UNION ALL
                                -- 1.2. сумма движения в валюте операции - Currency
                                SELECT tmpContainer.ContainerId,
@@ -214,7 +218,11 @@ BEGIN
                                       MAX (MIContainer.MovementItemId) AS MovementItemId,
 
                                       0                        AS MovementSumm,
-                                      SUM (MIContainer.Amount) AS MovementSumm_Currency
+                                      0                        AS MovementSumm_d,
+                                      0                        AS MovementSumm_k,
+                                      SUM (MIContainer.Amount) AS MovementSumm_Currency,
+                                      SUM (CASE WHEN MIContainer.Amount > 0 THEN  1 * MIContainer.Amount ELSE 0 END) AS MovementSumm_Currency_d,
+                                      SUM (CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END) AS MovementSumm_Currency_k
                                     , tmpContainer.isNotBalance
                                FROM tmpContainer
                                     INNER JOIN MovementItemContainer AS MIContainer
@@ -226,7 +234,7 @@ BEGIN
                                       , tmpContainer.ContainerId
                                       , tmpContainer.isNotBalance
                                       , tmpContainer.PartnerId
-                               HAVING SUM (MIContainer.Amount) <> 0
+                               HAVING SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_TransferDebtIn()) THEN ABS (MIContainer.Amount) ELSE MIContainer.Amount END) <> 0
                               )
         , tmpRemains AS (-- 2.1. остаток в валюте баланса
                          SELECT tmpContainer.ContainerId,
@@ -306,6 +314,8 @@ BEGIN
                                MAX (tmpContainer.MovementItemId) AS MovementItemId,
 
                                SUM (tmpContainer.MovementSumm)          AS MovementSumm,
+                               SUM (tmpContainer.MovementSumm_d)        AS MovementSumm_d,
+                               SUM (tmpContainer.MovementSumm_k)        AS MovementSumm_k,
                                SUM (tmpContainer.MovementSumm_Currency) AS MovementSumm_Currency,
                                0 AS StartSumm,
                                0 AS EndSumm,
@@ -348,6 +358,8 @@ BEGIN
                                NULL :: TDateTime AS OperDate,
                                0 AS MovementItemId,
                                0 AS MovementSumm,
+                               0 AS MovementSumm_d,
+                               0 AS MovementSumm_k,
                                0 AS MovementSumm_Currency,
                                SUM (tmpRemains.StartSumm) AS StartSumm,
                                SUM (tmpRemains.EndSumm) AS EndSumm,
@@ -377,11 +389,15 @@ BEGIN
 
           CASE WHEN Operation.OperationSort = 0 AND Operation.MovementSumm > 0
                     THEN Operation.MovementSumm
+               WHEN Operation.OperationSort = 0 AND Operation.MovementSumm = 0
+                    THEN Operation.MovementSumm_d
                ELSE 0
           END :: TFloat AS Debet,
 
           CASE WHEN Operation.OperationSort = 0 AND Operation.MovementSumm < 0
                     THEN -1 * Operation.MovementSumm
+               WHEN Operation.OperationSort = 0 AND Operation.MovementSumm = 0
+                    THEN  1 * Operation.MovementSumm_k
                ELSE 0
           END :: TFloat AS Kredit,
 
