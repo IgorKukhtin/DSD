@@ -91,6 +91,63 @@ BEGIN
     END IF;
 
 
+    -- очень важная проверка
+    IF vbUserId <> 1329039 -- Авто-Загрузка EDI
+   AND EXISTS (SELECT FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PaidKind() AND MLO.ObjectId = zc_Enum_PaidKind_FirstForm())
+   AND EXISTS (SELECT FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From()     AND MLO.ObjectId = zc_Unit_RK())
+   AND EXISTS (SELECT 1
+               FROM MovementItem
+                    LEFT JOIN MovementItemDate AS MIDate_PartionGoods_q
+                                               ON MIDate_PartionGoods_q.MovementItemId = MovementItem.Id
+                                              AND MIDate_PartionGoods_q.DescId         = zc_MIDate_PartionGoods_q_1()
+                                              AND MIDate_PartionGoods_q.ValueData      > zc_DateStart()
+              
+                    LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+               WHERE MovementItem.MovementId = inMovementId
+                 AND MovementItem.DescId     = zc_MI_Master()
+                 AND MovementItem.isErased   = FALSE
+                 --
+                 AND MIDate_PartionGoods_q.MovementItemId IS NULL
+                 --
+                 AND Object_Goods.ObjectCode IN (2036 -- Ковбаса З ЯЛОВИЧИНИ Фітнес вар в/ґ 400 г/шт ТМ Фітнес
+                                               , 2031 -- Ковбаса ОЛІВ`Є вар 1 ґ 400 г/шт ТМ Наші Ковбаси
+                                               , 2023 -- МОЛОЧНА п/а (шкiльна) В/Г 0,400
+                                               , 2281 -- Ковбаса ЛIКАРСЬКА вар п/а в/ґ 400 г/шт (шкiльна) ТМ Алан
+                                               , 2093 -- КОВБАСА ДИТЯЧА ВАР. В/Г 0,400
+                                                )
+              )
+    THEN
+        RAISE EXCEPTION 'Ошибка.Документ № <%> от <%>.%Необходимо установить партию для Деклариции.%Товар = <%>'
+                      , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId)
+                      , (SELECT zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId)
+                      , CHR (13)
+                      , CHR (13)
+                      , (SELECT lfGet_Object_ValueData (MovementItem.ObjectId)
+                         FROM MovementItem
+                              LEFT JOIN MovementItemDate AS MIDate_PartionGoods_q
+                                                         ON MIDate_PartionGoods_q.MovementItemId = MovementItem.Id
+                                                        AND MIDate_PartionGoods_q.DescId         = zc_MIDate_PartionGoods_q_1()
+                                                        AND MIDate_PartionGoods_q.ValueData      > zc_DateStart()
+                        
+                              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+                         WHERE MovementItem.MovementId = inMovementId
+                           AND MovementItem.DescId     = zc_MI_Master()
+                           AND MovementItem.isErased   = FALSE
+                           --
+                           AND MIDate_PartionGoods_q.MovementItemId IS NULL
+                           --
+                           AND Object_Goods.ObjectCode IN (2036 -- Ковбаса З ЯЛОВИЧИНИ Фітнес вар в/ґ 400 г/шт ТМ Фітнес
+                                                         , 2031 -- Ковбаса ОЛІВ`Є вар 1 ґ 400 г/шт ТМ Наші Ковбаси
+                                                         , 2023 -- МОЛОЧНА п/а (шкiльна) В/Г 0,400
+                                                         , 2281 -- Ковбаса ЛIКАРСЬКА вар п/а в/ґ 400 г/шт (шкiльна) ТМ Алан
+                                                         , 2093 -- КОВБАСА ДИТЯЧА ВАР. В/Г 0,400
+                                                          )
+                         LIMIT 1
+                        )
+                       ;
+    END IF;
+
+
      -- Данные: заголовок + строчная часть для ФОРМЫ 1
      OPEN Cursor1 FOR
        WITH tmpMI AS
@@ -567,31 +624,92 @@ BEGIN
            , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI.AmountPartner ELSE 0 END AS TFloat) AS Amount13
 
            , tmpMovement_QualityParams.OperDateIn
-           , (tmpMovement_QualityParams.OperDateIn + (CASE WHEN tmpMIGoodsByGoodsKind.DaysQ_gk <> 0 THEN (tmpMIGoodsByGoodsKind.DaysQ_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl) :: TDateTime AS OperDateIn_str4
+
+             -- Дата виготовлення = Page_4
+           , (CASE WHEN tmpMI.PartionGoods_q_1  <> zc_DateStart() OR tmpMI.PartionGoods_q_2  <> zc_DateStart() OR tmpMI.PartionGoods_q_3  <> zc_DateStart() OR tmpMI.PartionGoods_q_4  <> zc_DateStart() OR tmpMI.PartionGoods_q_5  <> zc_DateStart() OR tmpMI.PartionGoods_q_6  <> zc_DateStart() OR tmpMI.PartionGoods_q_7  <> zc_DateStart() OR tmpMI.PartionGoods_q_8  <> zc_DateStart() OR tmpMI.PartionGoods_q_9  <> zc_DateStart() OR tmpMI.PartionGoods_q_10  <> zc_DateStart()
+                                      THEN CASE WHEN tmpMI.PartionGoods_q_1  = zc_DateStart() THEN '' ELSE             LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_1  + (CASE WHEN tmpMIGoodsByGoodsKind.DaysQ_gk > 0 THEN (tmpMIGoodsByGoodsKind.DaysQ_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_2  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_2  + (CASE WHEN tmpMIGoodsByGoodsKind.DaysQ_gk > 0 THEN (tmpMIGoodsByGoodsKind.DaysQ_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_3  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_3  + (CASE WHEN tmpMIGoodsByGoodsKind.DaysQ_gk > 0 THEN (tmpMIGoodsByGoodsKind.DaysQ_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_4  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_4  + (CASE WHEN tmpMIGoodsByGoodsKind.DaysQ_gk > 0 THEN (tmpMIGoodsByGoodsKind.DaysQ_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_5  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_5  + (CASE WHEN tmpMIGoodsByGoodsKind.DaysQ_gk > 0 THEN (tmpMIGoodsByGoodsKind.DaysQ_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_6  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_6  + (CASE WHEN tmpMIGoodsByGoodsKind.DaysQ_gk > 0 THEN (tmpMIGoodsByGoodsKind.DaysQ_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_7  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_7  + (CASE WHEN tmpMIGoodsByGoodsKind.DaysQ_gk > 0 THEN (tmpMIGoodsByGoodsKind.DaysQ_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_8  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_8  + (CASE WHEN tmpMIGoodsByGoodsKind.DaysQ_gk > 0 THEN (tmpMIGoodsByGoodsKind.DaysQ_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_9  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_9  + (CASE WHEN tmpMIGoodsByGoodsKind.DaysQ_gk > 0 THEN (tmpMIGoodsByGoodsKind.DaysQ_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_10 = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_10 + (CASE WHEN tmpMIGoodsByGoodsKind.DaysQ_gk > 0 THEN (tmpMIGoodsByGoodsKind.DaysQ_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+
+                   ELSE LEFT (zfConvert_DateShortToString (tmpMovement_QualityParams.OperDateIn + (CASE WHEN tmpMIGoodsByGoodsKind.DaysQ_gk <> 0 THEN (tmpMIGoodsByGoodsKind.DaysQ_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl)
+                            , 5)
+              END
+             ) :: TVarChar AS OperDateIn_str4
 
              -- Партия дата для Декларация
-           , (CASE WHEN tmpMI.PartionGoods_q_1  = zc_DateStart() THEN '' ELSE             LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_1),  5) END
-           || CASE WHEN tmpMI.PartionGoods_q_2  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_2),  5) END
-           || CASE WHEN tmpMI.PartionGoods_q_3  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_3),  5) END
-           || CASE WHEN tmpMI.PartionGoods_q_4  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_4),  5) END
-           || CASE WHEN tmpMI.PartionGoods_q_5  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_5),  5) END
-           || CASE WHEN tmpMI.PartionGoods_q_6  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_6),  5) END
-           || CASE WHEN tmpMI.PartionGoods_q_7  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_7),  5) END
-           || CASE WHEN tmpMI.PartionGoods_q_8  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_8),  5) END
-           || CASE WHEN tmpMI.PartionGoods_q_9  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_9),  5) END
-           || CASE WHEN tmpMI.PartionGoods_q_10 = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_10), 5) END
+           , (CASE WHEN tmpMI.PartionGoods_q_1  = zc_DateStart() THEN '' ELSE             LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_1),  10) END
+           || CASE WHEN tmpMI.PartionGoods_q_2  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_2),  10) END
+           || CASE WHEN tmpMI.PartionGoods_q_3  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_3),  10) END
+           || CASE WHEN tmpMI.PartionGoods_q_4  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_4),  10) END
+           || CASE WHEN tmpMI.PartionGoods_q_5  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_5),  10) END
+           || CASE WHEN tmpMI.PartionGoods_q_6  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_6),  10) END
+           || CASE WHEN tmpMI.PartionGoods_q_7  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_7),  10) END
+           || CASE WHEN tmpMI.PartionGoods_q_8  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_8),  10) END
+           || CASE WHEN tmpMI.PartionGoods_q_9  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_9),  10) END
+           || CASE WHEN tmpMI.PartionGoods_q_10 = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_10), 10) END
              ):: TVarChar AS PartionGoods_q
 
              -- Дата відвантаження
            , tmpMovement_QualityParams.OperDateOut
 
-           , (tmpMovement_QualityParams.OperDateIn + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl) :: TDateTime AS OperDate_end
+             -- Дата "Вжити до"
+           , (CASE WHEN tmpMI.PartionGoods_q_1  <> zc_DateStart() OR tmpMI.PartionGoods_q_2  <> zc_DateStart() OR tmpMI.PartionGoods_q_3  <> zc_DateStart() OR tmpMI.PartionGoods_q_4  <> zc_DateStart() OR tmpMI.PartionGoods_q_5  <> zc_DateStart() OR tmpMI.PartionGoods_q_6  <> zc_DateStart() OR tmpMI.PartionGoods_q_7  <> zc_DateStart() OR tmpMI.PartionGoods_q_8  <> zc_DateStart() OR tmpMI.PartionGoods_q_9  <> zc_DateStart() OR tmpMI.PartionGoods_q_10  <> zc_DateStart()
+                                      THEN CASE WHEN tmpMI.PartionGoods_q_1  = zc_DateStart() THEN '' ELSE             LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_1  + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_2  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_2  + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_3  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_3  + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_4  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_4  + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_5  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_5  + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_6  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_6  + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_7  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_7  + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_8  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_8  + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_9  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_9  + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_10 = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_10 + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
 
-             -- 2393 - КОВБАСКИ БАВАРСЬКІ С/К в/г ПРЕМІЯ 120 гр/шт + 2222 + 2369
+                    ELSE LEFT (zfConvert_DateShortToString (tmpMovement_QualityParams.OperDateIn + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl)
+                             , 5)
+              END
+             ) :: TVarChar AS OperDate_end
+
+             -- Партія: 2393 - КОВБАСКИ БАВАРСЬКІ С/К в/г ПРЕМІЯ 120 гр/шт + 2222 + 2369 + ...
            , CASE WHEN tmpNewQuality.GoodsId > 0
-                       THEN tmpMovement_QualityParams.OperDateIn + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl
-                  ELSE tmpMovement_QualityParams.OperDateIn
-             END :: TDateTime AS OperDate_part
+                       THEN CASE WHEN tmpMI.PartionGoods_q_1  <> zc_DateStart() OR tmpMI.PartionGoods_q_2  <> zc_DateStart() OR tmpMI.PartionGoods_q_3  <> zc_DateStart() OR tmpMI.PartionGoods_q_4  <> zc_DateStart() OR tmpMI.PartionGoods_q_5  <> zc_DateStart() OR tmpMI.PartionGoods_q_6  <> zc_DateStart() OR tmpMI.PartionGoods_q_7  <> zc_DateStart() OR tmpMI.PartionGoods_q_8  <> zc_DateStart() OR tmpMI.PartionGoods_q_9  <> zc_DateStart() OR tmpMI.PartionGoods_q_10  <> zc_DateStart()
+                                      THEN CASE WHEN tmpMI.PartionGoods_q_1  = zc_DateStart() THEN '' ELSE             LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_1  + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_2  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_2  + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_3  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_3  + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_4  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_4  + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_5  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_5  + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_6  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_6  + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_7  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_7  + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_8  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_8  + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_9  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_9  + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_10 = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_10 + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+
+                                 ELSE LEFT (zfConvert_DateShortToString (tmpMovement_QualityParams.OperDateIn + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl)
+                                          , 5)
+                            END
+                  ELSE CASE WHEN tmpMI.PartionGoods_q_1  <> zc_DateStart() OR tmpMI.PartionGoods_q_2  <> zc_DateStart() OR tmpMI.PartionGoods_q_3  <> zc_DateStart() OR tmpMI.PartionGoods_q_4  <> zc_DateStart() OR tmpMI.PartionGoods_q_5  <> zc_DateStart() OR tmpMI.PartionGoods_q_6  <> zc_DateStart() OR tmpMI.PartionGoods_q_7  <> zc_DateStart() OR tmpMI.PartionGoods_q_8  <> zc_DateStart() OR tmpMI.PartionGoods_q_9  <> zc_DateStart() OR tmpMI.PartionGoods_q_10  <> zc_DateStart()
+                                      THEN CASE WHEN tmpMI.PartionGoods_q_1  = zc_DateStart() THEN '' ELSE             LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_1), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_2  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_2), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_3  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_3), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_4  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_4), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_5  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_5), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_6  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_6), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_7  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_7), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_8  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_8), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_9  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_9), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_10 = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_10),5) END
+
+                            ELSE LEFT (zfConvert_DateShortToString (tmpMovement_QualityParams.OperDateIn)
+                                     , 5)
+                       END
+             END :: TVarChar AS OperDate_part
 
            , (zfConvert_FloatToString (tmpMIGoodsByGoodsKind.NormInDays_gk) || ' діб') :: TVarChar AS NormInDays_gk_str
 
@@ -1163,32 +1281,62 @@ BEGIN
            , 0 AS Amount13
 
            , Movement.OperDate AS OperDateIn
-           -- в качественное для страницы №4 - zc_ObjectFloat_GoodsByGoodsKind_DaysQ - если св-во заполнено выводим 3 даты через зпт, 1) дата пок - 1 - DaysQ  2)дата пок - DaysQ 3)дата пок если не заполнено выводим "дата пок"
-           , CASE WHEN COALESCE (tmpMIGoodsByGoodsKind.DaysQ_gk,0) = 0 THEN zfConvert_DateToString (Movement.OperDatePartner)
-                  ELSE zfConvert_DateToString (Movement.OperDatePartner)||', '
-                    || zfConvert_DateToString (Movement.OperDatePartner - ((tmpMIGoodsByGoodsKind.DaysQ_gk)     :: TVarChar || ' DAY') :: INTERVAl) ||', '
-                    || zfConvert_DateToString (Movement.OperDatePartner - ((tmpMIGoodsByGoodsKind.DaysQ_gk + 1) :: TVarChar || ' DAY') :: INTERVAl)
+
+             -- в качественное для страницы №4 - zc_ObjectFloat_GoodsByGoodsKind_DaysQ - если св-во заполнено выводим 3 даты через зпт, 1) дата пок - 1 - DaysQ  2)дата пок - DaysQ 3)дата пок если не заполнено выводим "дата пок"
+           , CASE WHEN tmpMI.PartionGoods_q_1  <> zc_DateStart() OR tmpMI.PartionGoods_q_2  <> zc_DateStart() OR tmpMI.PartionGoods_q_3  <> zc_DateStart() OR tmpMI.PartionGoods_q_4  <> zc_DateStart() OR tmpMI.PartionGoods_q_5  <> zc_DateStart() OR tmpMI.PartionGoods_q_6  <> zc_DateStart() OR tmpMI.PartionGoods_q_7  <> zc_DateStart() OR tmpMI.PartionGoods_q_8  <> zc_DateStart() OR tmpMI.PartionGoods_q_9  <> zc_DateStart() OR tmpMI.PartionGoods_q_10  <> zc_DateStart()
+                                      THEN CASE WHEN tmpMI.PartionGoods_q_1  = zc_DateStart() THEN '' ELSE             LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_1),  5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_2  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_2),  5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_3  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_3),  5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_4  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_4),  5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_5  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_5),  5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_6  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_6),  5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_7  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_7),  5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_8  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_8),  5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_9  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_9),  5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_10 = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_10), 5) END
+
+                  WHEN COALESCE (tmpMIGoodsByGoodsKind.DaysQ_gk,0) = 0
+                  THEN LEFT (zfConvert_DateShortToString (Movement.OperDatePartner), 5)
+                  ELSE LEFT (zfConvert_DateShortToString (Movement.OperDatePartner), 5) ||', '
+                    || LEFT (zfConvert_DateShortToString (Movement.OperDatePartner - ((tmpMIGoodsByGoodsKind.DaysQ_gk)     :: TVarChar || ' DAY') :: INTERVAl), 5) ||', '
+                    || LEFT (zfConvert_DateShortToString (Movement.OperDatePartner - ((tmpMIGoodsByGoodsKind.DaysQ_gk + 1) :: TVarChar || ' DAY') :: INTERVAl), 5)
              END :: TVarChar AS OperDateIn_str4
 
              -- Партия дата для Декларация
-           , (CASE WHEN tmpMI.PartionGoods_q_1  = zc_DateStart() THEN '' ELSE             LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_1),  5) END
-           || CASE WHEN tmpMI.PartionGoods_q_2  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_2),  5) END
-           || CASE WHEN tmpMI.PartionGoods_q_3  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_3),  5) END
-           || CASE WHEN tmpMI.PartionGoods_q_4  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_4),  5) END
-           || CASE WHEN tmpMI.PartionGoods_q_5  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_5),  5) END
-           || CASE WHEN tmpMI.PartionGoods_q_6  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_6),  5) END
-           || CASE WHEN tmpMI.PartionGoods_q_7  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_7),  5) END
-           || CASE WHEN tmpMI.PartionGoods_q_8  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_8),  5) END
-           || CASE WHEN tmpMI.PartionGoods_q_9  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_9),  5) END
-           || CASE WHEN tmpMI.PartionGoods_q_10 = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateToString (tmpMI.PartionGoods_q_10), 5) END
+           , (CASE WHEN tmpMI.PartionGoods_q_1  = zc_DateStart() THEN '' ELSE             LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_1),  10) END
+           || CASE WHEN tmpMI.PartionGoods_q_2  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_2),  10) END
+           || CASE WHEN tmpMI.PartionGoods_q_3  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_3),  10) END
+           || CASE WHEN tmpMI.PartionGoods_q_4  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_4),  10) END
+           || CASE WHEN tmpMI.PartionGoods_q_5  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_5),  10) END
+           || CASE WHEN tmpMI.PartionGoods_q_6  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_6),  10) END
+           || CASE WHEN tmpMI.PartionGoods_q_7  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_7),  10) END
+           || CASE WHEN tmpMI.PartionGoods_q_8  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_8),  10) END
+           || CASE WHEN tmpMI.PartionGoods_q_9  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_9),  10) END
+           || CASE WHEN tmpMI.PartionGoods_q_10 = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_10), 10) END
              ):: TVarChar AS PartionGoods_q
 
              -- Дата відвантаження
            , Movement.OperDate AS OperDateOut
 
-           , tmpMIGoodsByGoodsKind.DaysQ_gk :: Integer AS DaysQ_gk
+             -- Дата "Вжити до"
+           , (CASE WHEN tmpMI.PartionGoods_q_1  <> zc_DateStart() OR tmpMI.PartionGoods_q_2  <> zc_DateStart() OR tmpMI.PartionGoods_q_3  <> zc_DateStart() OR tmpMI.PartionGoods_q_4  <> zc_DateStart() OR tmpMI.PartionGoods_q_5  <> zc_DateStart() OR tmpMI.PartionGoods_q_6  <> zc_DateStart() OR tmpMI.PartionGoods_q_7  <> zc_DateStart() OR tmpMI.PartionGoods_q_8  <> zc_DateStart() OR tmpMI.PartionGoods_q_9  <> zc_DateStart() OR tmpMI.PartionGoods_q_10  <> zc_DateStart()
+                                      THEN CASE WHEN tmpMI.PartionGoods_q_1  = zc_DateStart() THEN '' ELSE             LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_1  + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_2  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_2  + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_3  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_3  + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_4  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_4  + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_5  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_5  + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_6  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_6  + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_7  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_7  + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_8  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_8  + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_9  = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_9  + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
+                                        || CASE WHEN tmpMI.PartionGoods_q_10 = zc_DateStart() THEN '' ELSE CHR (13) || LEFT (zfConvert_DateShortToString (tmpMI.PartionGoods_q_10 + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl), 5) END
 
-           , (tmpMovement_QualityParams.OperDateIn + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl) :: TDateTime AS OperDate_end
+                    ELSE LEFT (zfConvert_DateShortToString (tmpMovement_QualityParams.OperDateIn + (CASE WHEN tmpMIGoodsByGoodsKind.NormInDays_gk > 0 THEN (tmpMIGoodsByGoodsKind.NormInDays_gk) :: TVarChar ELSE '0' END || ' DAY') :: INTERVAl)
+                              , 5)
+              END
+             ) :: TVarChar AS OperDate_end
+
+           , tmpMIGoodsByGoodsKind.DaysQ_gk :: Integer AS DaysQ_gk
            , (zfConvert_FloatToString (tmpMIGoodsByGoodsKind.NormInDays_gk) || ' діб') :: TVarChar AS NormInDays_gk_str
 
            , '' :: TVarChar    AS CarModelName
