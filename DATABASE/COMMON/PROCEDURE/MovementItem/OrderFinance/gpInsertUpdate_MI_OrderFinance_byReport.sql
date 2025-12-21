@@ -188,13 +188,15 @@ BEGIN
 
 
     -- строки документа
-    CREATE TEMP TABLE _tmpData (Id Integer, JuridicalId Integer, ContractId Integer, PaidKindId Integer, InfoMoneyId Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpData (Id Integer, JuridicalId Integer, ContractId Integer, PaidKindId Integer, InfoMoneyId Integer, isErased Boolena) ON COMMIT DROP;
     INSERT INTO _tmpData (Id, JuridicalId, ContractId, PaidKindId, InfoMoneyId)
        WITH tmpMI AS (SELECT MovementItem.Id                     AS Id
                            , MovementItem.ObjectId               AS JuridicalId
                            , MILinkObject_Contract.ObjectId      AS ContractId
                            , OL_Contract_PaidKind.ChildObjectId  AS PaidKindId
                            , OL_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
+                             -- !!!ВСЕ!!!
+                           , MovementItem.isErased               AS isErased
                       FROM MovementItem
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                                             ON MILinkObject_Contract.MovementItemId = MovementItem.Id
@@ -209,7 +211,8 @@ BEGIN
                                                AND OL_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
                        WHERE MovementItem.MovementId = inMovementId
                          AND MovementItem.DescId     = zc_MI_Master()
-                         AND MovementItem.isErased   = FALSE
+                         -- !!!ВСЕ!!!
+                         -- AND MovementItem.isErased   = FALSE
                       )
        -- Результат
        SELECT
@@ -244,6 +247,17 @@ BEGIN
                            AND _tmpData.ContractId  = _tmpReport.ContractId
                            AND _tmpData.InfoMoneyId = _tmpReport.InfoMoneyId
                            AND _tmpData.PaidKindId  = _tmpReport.PaidKindId --OR COALESCE (vbPaidKindId,0) = 0)
+                           -- не удален
+                           AND _tmpData.isErased    = FALSE
+         LEFT JOIN _tmpData AS _tmpData_erased
+                            ON _tmpData_erased.JuridicalId = _tmpReport.JuridicalId
+                           AND _tmpData_erased.ContractId  = _tmpReport.ContractId
+                           AND _tmpData_erased.InfoMoneyId = _tmpReport.InfoMoneyId
+                           AND _tmpData_erased.PaidKindId  = _tmpReport.PaidKindId --OR COALESCE (vbPaidKindId,0) = 0)
+                           -- !!!удален!!!
+                           AND _tmpData_erased.isErased    = TRUE
+    -- если удалили, больше заливать не надо
+    WHERE _tmpData_erased.JuridicalId IS NULL
     ;
 
     -- сохранили свойство <Дата/время заполнения данных из отчета>
