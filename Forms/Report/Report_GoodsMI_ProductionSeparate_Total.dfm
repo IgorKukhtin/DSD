@@ -5,6 +5,7 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -631
   ExplicitWidth = 1524
   ExplicitHeight = 546
   PixelsPerInch = 96
@@ -2069,6 +2070,10 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
         end
         item
           Visible = True
+          ItemName = 'dxBarSubItem2'
+        end
+        item
+          Visible = True
           ItemName = 'bbDetail'
         end
         item
@@ -2270,18 +2275,6 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
         item
           Visible = True
           ItemName = 'bbPrint_4134_grPart'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSeparator'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton2'
         end>
     end
     object bbPrint_4134_part: TdxBarButton
@@ -2307,6 +2300,24 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
       Hint = 'New Item'
       Visible = ivAlways
       Control = cbDetailPrint
+    end
+    object dxBarSubItem2: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1080#1090#1086#1075')'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
+        end>
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

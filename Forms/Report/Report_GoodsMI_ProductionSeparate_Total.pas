@@ -165,6 +165,7 @@ type
     dxBarButton2: TdxBarButton;
     cbDetailPrint: TcxCheckBox;
     bbDetail: TdxBarControlContainerItem;
+    dxBarSubItem2: TdxBarSubItem;
   private
     { Private declarations }
   public
