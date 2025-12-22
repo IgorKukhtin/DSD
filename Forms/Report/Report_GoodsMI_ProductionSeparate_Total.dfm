@@ -1,7 +1,5 @@
 inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_ProductionSeparate_TotalForm
-  Caption = 
-    #1054#1090#1095#1077#1090' <'#1056#1072#1089#1093#1086#1076'/'#1055#1088#1080#1093#1086#1076' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077')> '#1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' '#1048#1090#1086#1075 +
-    #1086#1074#1099#1081
+  Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' '#1048#1090#1086#1075#1086#1074#1099#1081'>'
   ClientHeight = 427
   ClientWidth = 1374
   AddOnFormData.isSingle = False
@@ -331,12 +329,14 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 108
+      EditValue = 45658d
       Properties.SaveTime = False
       ExplicitLeft = 108
     end
     inherited deEnd: TcxDateEdit
       Left = 108
       Top = 29
+      EditValue = 45658d
       Properties.SaveTime = False
       ExplicitLeft = 108
       ExplicitTop = 29
@@ -1980,7 +1980,7 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
       Category = 0
     end
     object bbsPrint: TdxBarSubItem
-      Caption = #1055#1077#1095#1072#1090#1100' ('#1079#1072' '#1087#1077#1088#1080#1086#1076')'
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1087#1086' 1-'#1084#1091' '#1076#1086#1082'. '#1079#1072' '#1087#1077#1088#1080#1086#1076')'
       Category = 0
       Visible = ivAlways
       ItemLinks = <
@@ -2057,7 +2057,7 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
       Category = 0
     end
     object bbsPrintMovement: TdxBarSubItem
-      Caption = #1055#1077#1095#1072#1090#1100' ('#1087#1086' '#1090#1077#1082'. '#1076#1086#1082'.)'
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1076#1083#1103' 1-'#1086#1075#1086' '#1076#1086#1082'.)'
       Category = 0
       Visible = ivAlways
       ItemLinks = <
@@ -2091,7 +2091,7 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
       Category = 0
     end
     object bbs: TdxBarSubItem
-      Caption = #1055#1077#1095#1072#1090#1100' ('#1080#1090#1086#1075')'
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1080#1090#1086#1075' '#1087#1086' 1-'#1086#1081' '#1087#1072#1088#1090#1080#1080')'
       Category = 0
       Hint = #1055#1077#1095#1072#1090#1100' ('#1080#1090#1086#1075')'
       Visible = ivAlways
@@ -2134,7 +2134,7 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
       Category = 0
     end
     object dxBarSubItem1: TdxBarSubItem
-      Caption = #1055#1077#1095#1072#1090#1100' ('#1080#1090#1086#1075'*) '
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1080#1090#1086#1075' '#1087#1086' 1-'#1086#1081' '#1087#1072#1088#1090#1080#1080' '#1086#1073'-/'#1087#1088'-) '
       Category = 0
       Visible = ivAlways
       ItemLinks = <
@@ -2154,6 +2154,7 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
     end
     object bbPrint_4134_grPart: TdxBarButton
       Action = actPrint_4134_grPart
+      Caption = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1086#1073'-/'#1087#1088'-)'
       Category = 0
     end
   end
