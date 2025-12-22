@@ -350,9 +350,9 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
         end
       end
       object cxLabel9: TcxLabel
-        Left = 420
-        Top = 126
-        Caption = #1055#1088#1072#1081#1089' '#1087#1083#1072#1085' '#1086#1073#1074#1072#1083#1082#1072':'
+        Left = 1263
+        Top = 6
+        Caption = #1055#1083#1072#1085' '#1086#1073#1074#1072#1083#1082#1072':'
       end
       object edPriceListNorm: TcxButtonEdit
         Left = 676
@@ -366,11 +366,11 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
         Width = 147
       end
       object cbDetailPrint: TcxCheckBox
-        Left = 1180
+        Left = 1164
         Top = 6
         Caption = #1076#1077#1090#1072#1083#1100#1085#1086
         TabOrder = 3
-        Width = 77
+        Width = 75
       end
     end
   end
@@ -2695,7 +2695,7 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
       end>
     PackSize = 1
     Left = 1111
-    Top = 192
+    Top = 232
   end
   object spSelectPrint_its_mov: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ProductionSeparate_Print_byReport'
@@ -2771,8 +2771,8 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1087
-    Top = 168
+    Left = 1119
+    Top = 176
   end
   object spSelectPrint_4001: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ProductionSeparate_Print_byReport'
@@ -2846,8 +2846,8 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1079
-    Top = 168
+    Left = 1063
+    Top = 208
   end
   object spSelectPrint_4218: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ProductionSeparate_Print_byReport'
@@ -2921,7 +2921,7 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1087
+    Left = 1047
     Top = 168
   end
   object spSelectPrint_4134: TdsdStoredProc
