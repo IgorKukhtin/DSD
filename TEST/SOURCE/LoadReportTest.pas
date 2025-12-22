@@ -139,13 +139,14 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+{
  LoadReportFromFile('PrintMovement_OrderFinance_xls', ReportPath + '\Финансовый Учет\PrintMovement_OrderFinance_xls.fr3');
  exit;
   LoadReportFromFile('PrintMovement_OrderFinancePlan', ReportPath + '\Финансовый Учет\PrintMovement_OrderFinancePlan.fr3');
  exit;
  LoadReportFromFile('PrintMovement_OrderFinance', ReportPath + '\Финансовый Учет\PrintMovement_OrderFinance.fr3');
  exit;
-{
+
   LoadReportFromFile('PrintMovement_Inventory_Scale_Security', ReportPath + '\Товарный Учет\PrintMovement_Inventory_Scale_Security.fr3');
   exit;
 
@@ -187,12 +188,12 @@ begin
   exit;
   LoadReportFromFile('Печать паспорта ячейки', ReportPath + '\Товарный Учет\Печать паспорта ячейки.fr3');
   exit;
-  }
+
   LoadReportFromFile('Партия учета по Ячейкам хранения(ошибки)', ReportPath + '\Отчеты (товарные)\Партия учета по Ячейкам хранения(ошибки).fr3');
   exit;
   //LoadReportFromFile('Партия учета по Ячейкам хранения(остатки)', ReportPath + '\Отчеты (товарные)\Партия учета по Ячейкам хранения(остатки).fr3');
   //exit;
-  {
+
   LoadReportFromFile('Партия учета по Ячейкам хранения', ReportPath + '\Отчеты (товарные)\Партия учета по Ячейкам хранения.fr3');
   exit;
 
@@ -549,8 +550,10 @@ begin
 
   LoadReportFromFile('Акт обвалки (4001)', ReportPath + '\Производство\Акт обвалки (4001).fr3');
   exit;
-
-
+  }
+  LoadReportFromFile('Акт обвалки (4134) отчетAll', ReportPath + '\Отчеты (производство)\Акт обвалки (4134) отчетAll.fr3');
+   exit;
+   {
   LoadReportFromFile('Акт обвалки (4134) отчет(партии)', ReportPath + '\Отчеты (производство)\Акт обвалки (4134) отчет(партии).fr3');
   exit;
   LoadReportFromFile('Акт обвалки (its) отчет', ReportPath + '\Отчеты (производство)\Акт обвалки (its) отчет.fr3');

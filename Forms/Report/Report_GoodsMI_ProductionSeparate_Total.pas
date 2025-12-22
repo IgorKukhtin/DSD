@@ -157,6 +157,14 @@ type
     Print_test_4134_grPart: TdsdStoredProc;
     actPrint_4134_grPart: TdsdPrintAction;
     bbPrint_4134_grPart: TdxBarButton;
+    Print_test_4134_All: TdsdStoredProc;
+    Print_test_4134_AllPart: TdsdStoredProc;
+    actPrint_4134_All: TdsdPrintAction;
+    actPrint_4134_AllPart: TdsdPrintAction;
+    dxBarButton1: TdxBarButton;
+    dxBarButton2: TdxBarButton;
+    cbDetailPrint: TcxCheckBox;
+    bbDetail: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

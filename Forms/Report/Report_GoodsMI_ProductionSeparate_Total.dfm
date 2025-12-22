@@ -1,32 +1,35 @@
 inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_ProductionSeparate_TotalForm
   Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' '#1048#1090#1086#1075#1086#1074#1099#1081'>'
-  ClientHeight = 427
-  ClientWidth = 1374
+  ClientHeight = 507
+  ClientWidth = 1508
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1390
-  ExplicitHeight = 466
+  ExplicitLeft = -10
+  ExplicitWidth = 1524
+  ExplicitHeight = 546
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 124
-    Width = 1374
-    Height = 303
+    Width = 1508
+    Height = 383
     TabOrder = 3
     ExplicitTop = 124
     ExplicitWidth = 1374
     ExplicitHeight = 303
-    ClientRectBottom = 303
-    ClientRectRight = 1374
+    ClientRectBottom = 383
+    ClientRectRight = 1508
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1374
       ExplicitHeight = 303
       inherited cxGrid: TcxGrid
-        Width = 1374
-        Height = 303
+        Width = 1508
+        Height = 383
+        ExplicitLeft = 240
+        ExplicitTop = -41
         ExplicitWidth = 1374
-        ExplicitHeight = 303
+        ExplicitHeight = 383
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -310,8 +313,8 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
         Caption = #1055#1088#1072#1081#1089' '#1087#1083#1072#1085' '#1086#1073#1074#1072#1083#1082#1072':'
       end
       object edPriceListNorm: TcxButtonEdit
-        Left = 536
-        Top = 125
+        Left = 676
+        Top = 93
         Properties.Buttons = <
           item
             Default = True
@@ -320,10 +323,17 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
         TabOrder = 2
         Width = 147
       end
+      object cbDetailPrint: TcxCheckBox
+        Left = 1180
+        Top = 6
+        Caption = #1076#1077#1090#1072#1083#1100#1085#1086
+        TabOrder = 3
+        Width = 77
+      end
     end
   end
   inherited Panel: TPanel
-    Width = 1374
+    Width = 1508
     Height = 57
     ExplicitWidth = 1374
     ExplicitHeight = 57
@@ -474,7 +484,7 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
     end
     object cbCalculated: TcxCheckBox
       Left = 1113
-      Top = 30
+      Top = 29
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' "'#1056#1072#1089#1095#1080#1090#1099#1074#1072#1102#1090#1089#1103'"'
       TabOrder = 18
       Width = 178
@@ -496,10 +506,11 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
   object PanelSearch: TPanel [3]
     Left = 0
     Top = 83
-    Width = 1374
+    Width = 1508
     Height = 41
     Align = alTop
     TabOrder = 7
+    ExplicitWidth = 1374
     object lbSearchCode: TcxLabel
       Left = 0
       Top = 10
@@ -723,7 +734,85 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_4134_part: TdsdPrintAction [3]
+    object actPrint_4134_AllPart: TdsdPrintAction [2]
+      Category = 'Print_act'
+      MoveParams = <>
+      StoredProc = Print_test_4134_AllPart
+      StoredProcList = <
+        item
+          StoredProc = Print_test_4134_AllPart
+        end>
+      Caption = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1057#1074#1080#1085#1080#1085#1072' '#1053#1050') ('#1080#1090#1086#1075#1086' '#1087#1086' '#1055#1072#1088#1090#1080#1103' ***)'
+      Hint = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1057#1074#1080#1085#1080#1085#1072' '#1053#1050') '#1087#1086' '#1074#1089#1077#1084' '#1087#1072#1088#1090#1080#1103#1084', '#1074#1089#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1080
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+          IndexFieldNames = 
+            'MovementId;GroupStatName;GoodsGroupCode;GoodsGroupNameFull;Goods' +
+            'Name'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4134) '#1086#1090#1095#1077#1090
+      ReportNameParam.Value = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4134) '#1086#1090#1095#1077#1090
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint_4134_All: TdsdPrintAction [4]
+      Category = 'Print_act'
+      MoveParams = <>
+      StoredProc = Print_test_4134_All
+      StoredProcList = <
+        item
+          StoredProc = Print_test_4134_All
+        end>
+      Caption = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1057#1074#1080#1085#1080#1085#1072' '#1053#1050') ('#1080#1090#1086#1075#1086' '#1087#1086' '#1055#1072#1088#1090#1080#1103' ***)'
+      Hint = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1057#1074#1080#1085#1080#1085#1072' '#1053#1050') '#1087#1086' '#1074#1089#1077#1084' '#1087#1072#1088#1090#1080#1103#1084' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+          IndexFieldNames = 
+            'MovementId;GroupStatName;GoodsGroupCode;GoodsGroupNameFull;Goods' +
+            'Name'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4134) '#1086#1090#1095#1077#1090'All'
+      ReportNameParam.Value = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4134) '#1086#1090#1095#1077#1090'All'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint_4134_part: TdsdPrintAction [5]
       Category = 'Print_act'
       MoveParams = <>
       StoredProc = Print_test_4134_part
@@ -762,7 +851,7 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_4134_grPart: TdsdPrintAction [4]
+    object actPrint_4134_grPart: TdsdPrintAction [6]
       Category = 'Print_act'
       MoveParams = <>
       StoredProc = Print_test_4134_grPart
@@ -801,7 +890,7 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_4001_gov_gr: TdsdPrintAction [5]
+    object actPrint_4001_gov_gr: TdsdPrintAction [7]
       Category = 'Print_act'
       MoveParams = <>
       StoredProc = Print_test_4001_gr
@@ -840,7 +929,7 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_4134_gr: TdsdPrintAction [6]
+    object actPrint_4134_gr: TdsdPrintAction [8]
       Category = 'Print_act'
       MoveParams = <>
       StoredProc = Print_test_4134_gr
@@ -879,7 +968,7 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_4218_gr: TdsdPrintAction [7]
+    object actPrint_4218_gr: TdsdPrintAction [9]
       Category = 'Print_act'
       MoveParams = <>
       StoredProc = Print_test_4218_gr
@@ -1940,6 +2029,10 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
         end
         item
           Visible = True
+          ItemName = 'bbDetail'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1957,10 +2050,6 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
         item
           Visible = True
           ItemName = 'bbGridToExcel'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end>
     end
     object bbPrint: TdxBarButton
@@ -2140,11 +2229,15 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbPrint_4134_part'
+          ItemName = 'bbPrint_4134_grPart'
         end
         item
           Visible = True
-          ItemName = 'bbPrint_4134_grPart'
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
         end>
     end
     object bbPrint_4134_part: TdxBarButton
@@ -2156,6 +2249,23 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
       Action = actPrint_4134_grPart
       Caption = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1086#1073'-/'#1087#1088'-)'
       Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actPrint_4134_All
+      Caption = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1086#1073'-/'#1087#1088'-) '#1087#1086' '#1074#1089#1077#1084' '#1087#1072#1088#1090#1080#1103#1084' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actPrint_4134_AllPart
+      Caption = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1086#1073'-/'#1087#1088'-) '#1087#1086' '#1074#1089#1077#1084' '#1087#1072#1088#1090#1080#1103#1084', '#1074#1089#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1080
+      Category = 0
+    end
+    object bbDetail: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cbDetailPrint
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -4062,8 +4172,8 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 471
-    Top = 328
+    Left = 455
+    Top = 320
   end
   object Print_test_4134_grPart: TdsdStoredProc
     StoredProcName = 'gpSelect_ProductionSeparate_Print_byReport_Test'
@@ -4159,5 +4269,225 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
     PackSize = 1
     Left = 567
     Top = 328
+  end
+  object Print_test_4134_All: TdsdStoredProc
+    StoredProcName = 'gpSelect_ProductionSeparate_Print_byReport_Test_all_1'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 45658d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 45658d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFromId'
+        Value = ''
+        Component = FromGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToId'
+        Value = ''
+        Component = ToGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceListId_norm'
+        Value = ''
+        Component = GuidesPriceListNorm
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisGroup'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDetail'
+        Value = True
+        Component = cbDetailPrint
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionGoods_main'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoods_main'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionGoods_main2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoods_main2'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 567
+    Top = 392
+  end
+  object Print_test_4134_AllPart: TdsdStoredProc
+    StoredProcName = 'gpSelect_ProductionSeparate_Print_byReport_Test_all_1'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 45658d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 45658d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFromId'
+        Value = ''
+        Component = FromGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToId'
+        Value = ''
+        Component = ToGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceListId_norm'
+        Value = ''
+        Component = GuidesPriceListNorm
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisGroup'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAll'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDetail'
+        Value = Null
+        Component = cbDetailPrint
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionGoods_main'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoods_main'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionGoods_main2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoods_main2'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 567
+    Top = 424
   end
 end
