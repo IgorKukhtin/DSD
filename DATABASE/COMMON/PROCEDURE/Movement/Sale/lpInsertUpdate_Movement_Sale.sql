@@ -167,7 +167,7 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Sale(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Sale(), inInvNumber, inOperDate, NULL, vbAccessKeyId, inUserId);
 
      UPDATE Movement SET AccessKeyId = vbAccessKeyId WHERE Movement.Id = ioId AND Movement.AccessKeyId <> vbAccessKeyId;
 
