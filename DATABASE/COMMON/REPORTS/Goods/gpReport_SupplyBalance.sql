@@ -895,14 +895,16 @@ BEGIN
 
           LEFT JOIN tmpOnDays ON tmpOnDays.GoodsId = tmpGoodsList.GoodsId
 
-       WHERE ((tmpContainer.RemainsStart   <> 0 OR tmpContainer.RemainsEnd         <> 0 OR tmpOrderIncome.Amount  <> 0
+       WHERE tmpContainer.RemainsStart   <> 0 OR tmpContainer.RemainsEnd         <> 0 OR tmpOrderIncome.Amount  <> 0
             OR tmpContainer.CountIncome    <> 0 OR tmpContainer.CountProductionOut <> 0
             OR tmpContainer.CountIn_oth    <> 0 OR tmpContainer.CountOut_oth       <> 0
             OR tmpRemains_Oth.RemainsStart <> 0
             OR tmpRemains_Oth.RemainsEnd   <> 0
-             ) AND (inIsRemainsNull = FALSE AND inIsRemainsNull_Use = FALSE)
-          )
-          OR (inIsRemainsNull = TRUE OR (inIsRemainsNull_Use = TRUE AND tmpContainer.OperDate_use <> zc_DateStart()))
+                   
+            OR (inIsRemainsNull_Use = TRUE 
+              AND (tmpContainer.RemainsStart = 0 OR tmpContainer.RemainsEnd = 0)
+              AND tmpContainer.OperDate_use <> zc_DateStart()
+               )
       ;
 
 END;
