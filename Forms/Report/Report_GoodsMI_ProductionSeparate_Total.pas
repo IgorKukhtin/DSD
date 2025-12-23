@@ -161,8 +161,8 @@ type
     Print_test_4134_AllPart: TdsdStoredProc;
     actPrint_4134_All: TdsdPrintAction;
     actPrint_4134_AllPart: TdsdPrintAction;
-    dxBarButton1: TdxBarButton;
-    dxBarButton2: TdxBarButton;
+    bbPrint_4134_All: TdxBarButton;
+    bbPrint_4134_AllPart: TdxBarButton;
     cbDetailPrint: TcxCheckBox;
     bbDetail: TdxBarControlContainerItem;
     dxBarSubItem2: TdxBarSubItem;
@@ -170,6 +170,10 @@ type
     actPrint_4001_AllPart: TdsdPrintAction;
     bbPrint_4001_All: TdxBarButton;
     bbPrint_4001_AllPart: TdxBarButton;
+    actPrint_4218_AllPart: TdsdPrintAction;
+    actPrint_4218_All: TdsdPrintAction;
+    bbtPrint_4218_All: TdxBarButton;
+    bbPrint_4218_AllPart: TdxBarButton;
   private
     { Private declarations }
   public

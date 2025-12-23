@@ -348,7 +348,7 @@ BEGIN
                                     , CASE WHEN inisDetail = FALSE THEN '' ELSE tmpResult.PartionGoods_main END
                                     , tmpResult.GoodsGroupName   
                                     , CASE WHEN tmpResult.GroupStatId = 12045233 THEN 0 ELSE 1 END 
-                                  , tmpResult.GoodsGroupCode
+                                    , tmpResult.GoodsGroupCode
                              HAVING SUM (tmpResult.Amount) <> 0 AND SUM (tmpResult.SummFact) <> 0
                              ) AS tmp
                       )
@@ -524,7 +524,7 @@ BEGIN
                          SELECT '' ::TVarChar                  AS MovementId
                               , CASE WHEN inisAll = FALSE THEN inPartionGoods_main ELSE 'Все партии' END ::TVarChar AS InvNumber
                               , MIN (tmp.OperDate)             AS OperDate
-                              , LEFT (tmp.PartionGoods,7)      AS PartionGoods
+                              , STRING_AGG (DISTINCT LEFT (tmp.PartionGoods,7), '; ')      AS PartionGoods
                               , CASE WHEN inisDetail = TRUE THEN tmp.PartionGoods_main ELSE 'Все партии' END ::TVarChar AS PartionGoods_main
                               , MIN (tmp.OperDate_partion)     AS OperDate_partion
                               , tmp.GoodsNameMaster
@@ -560,8 +560,8 @@ BEGIN
                                 --, tmp.PersonalPackerName
                                 , tmp.GoodsNameIncome
                                 , tmp.GoodsNameSeparate 
-                                , LEFT (tmp.PartionGoods,7)
-                                , LEFT (tmp.PartionGoods_main,4)
+                                --, LEFT (tmp.PartionGoods,7)
+                                --, LEFT (tmp.PartionGoods_main,4)
                                , CASE WHEN inisDetail = TRUE THEN tmp.PartionGoods_main ELSE 'Все партии' END
                         )
 
