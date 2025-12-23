@@ -34,7 +34,7 @@ RETURNS TABLE (OperDate TDateTime
              , CountPackage TFloat, WeightPackage TFloat, WeightPackage_one TFloat
              , CountPackage_calc TFloat, WeightPackage_calc TFloat
 
-             , Weight_diff TFloat
+             , Weight_diff TFloat, Weight_diff_two TFloat
              , WeightTotal TFloat -- Вес в упаковке - GoodsByGoodsKind
              
              , PersonalGroupId        Integer
@@ -413,8 +413,15 @@ BEGIN
            -- Вес Упаковок (пакетов)
          , tmpMI_Union.WeightPackage_calc :: TFloat AS WeightPackage_calc
  
+           -- Потери(-) Эконом(+)
          , ((tmpMI_Union.Amount_Send_out + tmpMI_Union.Amount_Production - tmpMI_Union.Amount_Send_in) * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
            ) :: TFloat AS Weight_diff
+
+           -- (-) / (+) + без пак.
+         , ((tmpMI_Union.Amount_Send_out + tmpMI_Union.Amount_Production - tmpMI_Union.Amount_Send_in) * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
+            -- Плюс Вес Упаковок (пакетов)
+            + COALESCE (tmpMI_Union.WeightPackage_calc, 0)
+           ) :: TFloat AS Weight_diff_two
 
            -- Вес в упаковке - GoodsByGoodsKind
          , tmpMI_Union.WeightTotal AS WeightTotal
@@ -495,7 +502,7 @@ SELECT * FROM gpReport_GoodsMI_Package(inStartDate:= '01.08.2020', inEndDate:= '
 where goodsId = 2062
 ORDER BY 7;
 
-SELECT * FROM gpReport_GoodsMI_Package(inStartDate:= '01.11.2022', inEndDate:= '04.11.2022', inUnitId:= 8451, inIsDate:= False, inIsPersonalGroup:= False, inisMovement := true, inisUnComplete:= true, inSession:= zfCalc_UserAdmin()) 
+SELECT * FROM gpReport_GoodsMI_Package(inStartDate:= '01.11.2025', inEndDate:= '04.11.2025', inUnitId:= 8451, inIsDate:= False, inIsPersonalGroup:= False, inisMovement := true, inisUnComplete:= true, inSession:= zfCalc_UserAdmin()) 
 where goodsId = 6694203
 
 */

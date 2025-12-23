@@ -19,9 +19,9 @@ BEGIN
      -- Результат
      RETURN QUERY
 
-     SELECT inWeekNumber1                                         :: Integer    AS WeekNumber2
-          , DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', CURRENT_DATE) + ((((7 * COALESCE (inWeekNumber1 - 1, 0)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL)                      ::TDateTime AS StartDate_WeekNumber
-          , (DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', CURRENT_DATE) + ((((7 * COALESCE (inWeekNumber1 - 1, 0)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL) + INTERVAL '6 DAY') ::TDateTime AS EndDate_WeekNumber
+     SELECT inWeekNumber1                                                 :: Integer AS WeekNumber2
+          , zfCalc_Week_StartDate (CURRENT_DATE, inWeekNumber1 :: TFloat)            AS StartDate_WeekNumber
+          , zfCalc_Week_EndDate   (CURRENT_DATE, inWeekNumber1 :: TFloat)            AS EndDate_WeekNumber
 
       ;
 

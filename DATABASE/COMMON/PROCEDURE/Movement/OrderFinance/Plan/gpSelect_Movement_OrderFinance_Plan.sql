@@ -128,7 +128,8 @@ BEGIN
                            INNER JOIN MovementLinkObject AS MovementLinkObject_OrderFinance
                                                          ON MovementLinkObject_OrderFinance.MovementId = Movement.Id
                                                         AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
-                                                        AND MovementLinkObject_OrderFinance.ObjectId   = 3988049
+                                                        AND (MovementLinkObject_OrderFinance.ObjectId   = 3988049
+                                                          OR vbUserId = 5)
 
                        WHERE Movement.DescId = zc_Movement_OrderFinance()
                          AND Movement.StatusId IN (SELECT tmpStatus.StatusId FROM tmpStatus)

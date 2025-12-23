@@ -103,6 +103,11 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
               Format = ',0.####'
               Kind = skSum
               Column = Weight_Send_out_oth
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Weight_diff_two
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -184,6 +189,11 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
               Format = ',0.####'
               Kind = skSum
               Column = Weight_Send_out_oth
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Weight_diff_two
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -440,7 +450,20 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
+          end
+          object Weight_diff_two: TcxGridDBColumn
+            Caption = '(-) / (+) + '#1073#1077#1079' '#1087#1072#1082'.'
+            DataBinding.FieldName = 'Weight_diff_two'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object ReceiptCode_code: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'. ('#1082#1086#1076')'

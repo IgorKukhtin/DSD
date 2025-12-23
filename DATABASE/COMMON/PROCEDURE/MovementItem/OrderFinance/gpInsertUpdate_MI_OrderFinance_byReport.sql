@@ -51,7 +51,7 @@ BEGIN
      WHERE Movement.Id = inMovementId;
 
      -- переопределяем  - заливка данных на дату - конец недели WeekNumber
-     vbOperDate := DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', vbOperDate) + ((((7 * (vbWeekNumber-1)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL) + INTERVAL'6 DAY' ;
+     vbOperDate := zfCalc_Week_EndDate (vbOperDate, vbWeekNumber);
 
 
     -- данные из отчета
