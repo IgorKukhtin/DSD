@@ -104,6 +104,12 @@ BEGIN
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
 
+     -- Замена, т.к. 1-ая неделя может быть переходящей в следующий год
+     inStartDate:= zfCalc_Week_StartDate (inStartDate, inStartWeekNumber :: TFloat);
+     -- временно, только 1 неделя
+     inEndDate:= zfCalc_Week_EndDate (inStartDate, inStartWeekNumber :: TFloat);
+
+
      -- Результат
      RETURN QUERY
      WITH
@@ -469,8 +475,8 @@ BEGIN
                           , COALESCE (MovementFloat_AmountPlan_4.Valuedata, 0) ::TFloat   AS AmountPlan_4
                           , COALESCE (MovementFloat_AmountPlan_5.Valuedata, 0) ::TFloat   AS AmountPlan_5
 
-                          , DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', Movement.OperDate) + ((((7 * COALESCE (MovementFloat_WeekNumber.ValueData - 1, 0)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL) ::TDateTime AS StartDate_WeekNumber
-                          , (DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', Movement.OperDate) + ((((7 * COALESCE (MovementFloat_WeekNumber.ValueData - 1, 0)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL) + INTERVAL '6 DAY') ::TDateTime AS EndDate_WeekNumber
+                          , zfCalc_Week_StartDate (Movement.OperDate, MovementFloat_WeekNumber.ValueData) AS StartDate_WeekNumber
+                          , zfCalc_Week_EndDate   (Movement.OperDate, MovementFloat_WeekNumber.ValueData) AS EndDate_WeekNumber
 
                           , MovementDate_Update_report.ValueData ::TDateTime AS DateUpdate_report
                           , Object_Update_report.ValueData       ::TVarChar  AS UserUpdate_report

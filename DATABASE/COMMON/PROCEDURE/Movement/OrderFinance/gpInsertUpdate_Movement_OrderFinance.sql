@@ -31,7 +31,7 @@ BEGIN
      IF COALESCE (ioId, 0) = 0
      THEN
          inOperDate:= CURRENT_DATE;
-         inWeekNumber:= EXTRACT (WEEK FROM inOperDate) + 1;
+         inWeekNumber:= CASE WHEN EXTRACT (YEAR FROM inOperDate + INTERVAL '10 DAY') > EXTRACT (YEAR FROM inOperDate) THEN 1 ELSE EXTRACT (WEEK FROM inOperDate) + 1 END;
      END IF;
 
 

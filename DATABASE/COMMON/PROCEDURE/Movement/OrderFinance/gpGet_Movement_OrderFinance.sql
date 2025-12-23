@@ -139,7 +139,7 @@ BEGIN
              , COALESCE (tmpOrderFinance.BankName,'')         ::TVarChar AS BankName
              , COALESCE (tmpOrderFinance.BankAccountNameAll,'') ::TVarChar AS BankAccountNameAll
 
-             , (EXTRACT (WEEK FROM CURRENT_DATE) +1)  ::TFloat    AS WeekNumber
+             , CASE WHEN EXTRACT (YEAR FROM CURRENT_DATE + INTERVAL '10 DAY') > EXTRACT (YEAR FROM CURRENT_DATE) THEN 1 ELSE EXTRACT (WEEK FROM CURRENT_DATE) + 1 END :: TFloat AS WeekNumber
              , 0                                      :: TFloat   AS TotalSumm_1
              , 0                                      :: TFloat   AS TotalSumm_2
              , 0                                      :: TFloat   AS TotalSumm_3
@@ -208,8 +208,8 @@ BEGIN
            , COALESCE (MovementFloat_TotalSumm_2.Valuedata, 0)                                  ::TFloat   AS TotalSumm_2
            , COALESCE (MovementFloat_TotalSumm_3.Valuedata, 0)                                  ::TFloat   AS TotalSumm_3
 
-           , DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', Movement.OperDate) + ((((7 * COALESCE (MovementFloat_WeekNumber.ValueData - 1, 0)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL) ::TDateTime AS StartDate_WeekNumber
-           , (DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', Movement.OperDate) + ((((7 * COALESCE (MovementFloat_WeekNumber.ValueData - 1, 0)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL) + INTERVAL '6 DAY') ::TDateTime AS EndDate_WeekNumber
+           , zfCalc_Week_StartDate (Movement.OperDate, MovementFloat_WeekNumber.ValueData) AS StartDate_WeekNumber
+           , zfCalc_Week_EndDate   (Movement.OperDate, MovementFloat_WeekNumber.ValueData) AS EndDate_WeekNumber
 
            , CASE WHEN vbUserId = 5 AND 1=0 THEN MovementDate_Update_report.ValueData - INTERVAL '12 HOUR' ELSE MovementDate_Update_report.ValueData END ::TDateTime AS DateUpdate_report
            , CASE WHEN vbUserId = 5 AND 1=0 THEN '‘»Œ' ELSE Object_Update_report.ValueData END       ::TVarChar  AS UserUpdate_report

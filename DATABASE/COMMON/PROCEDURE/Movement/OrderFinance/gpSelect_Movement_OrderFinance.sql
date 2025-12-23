@@ -110,20 +110,21 @@ BEGIN
            , COALESCE (MovementDate_Sign_1.ValueData, NULL)         ::TDateTime AS Date_Sign_1
            , CASE WHEN MovementBoolean_Sign_1.ValueData = TRUE THEN FALSE ELSE COALESCE (MovementBoolean_SignWait_1.ValueData, FALSE) END ::Boolean AS isSignWait_1 
            , COALESCE (MovementBoolean_Sign_1.ValueData, FALSE)     ::Boolean   AS isSign_1
-       FROM (SELECT Movement.Id  
-                  , MovementFloat_WeekNumber.ValueData                            AS WeekNumber
-                  , DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', Movement.OperDate) + ((((7 * COALESCE (MovementFloat_WeekNumber.ValueData - 1, 0)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL) ::TDateTime AS StartDate_WeekNumber
-                  , (DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', Movement.OperDate) + ((((7 * COALESCE (MovementFloat_WeekNumber.ValueData - 1, 0)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL) + INTERVAL '6 DAY') ::TDateTime AS EndDate_WeekNumber
-             FROM tmpStatus
-                  JOIN Movement ON Movement.DescId = zc_Movement_OrderFinance()
-                               AND Movement.StatusId = tmpStatus.StatusId
-                               --AND Movement.OperDate BETWEEN inStartDate AND inEndDate 
-                  LEFT JOIN MovementFloat AS MovementFloat_WeekNumber
-                                          ON MovementFloat_WeekNumber.MovementId = Movement.Id
-                                         AND MovementFloat_WeekNumber.DescId = zc_MovementFloat_WeekNumber()
-
-             WHERE DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', Movement.OperDate) + ((((7 * COALESCE (MovementFloat_WeekNumber.ValueData - 1, 0)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL) ::TDateTime <= inEndDate
-               AND (DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', Movement.OperDate) + ((((7 * COALESCE (MovementFloat_WeekNumber.ValueData - 1, 0)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL) + INTERVAL '6 DAY') ::TDateTime >=inStartDate
+       FROM (SELECT tmpMovement.*
+             FROM (SELECT Movement.Id  
+                        , MovementFloat_WeekNumber.ValueData                            AS WeekNumber
+                        , zfCalc_Week_StartDate (Movement.OperDate, MovementFloat_WeekNumber.ValueData) AS StartDate_WeekNumber
+                        , zfCalc_Week_EndDate   (Movement.OperDate, MovementFloat_WeekNumber.ValueData) AS EndDate_WeekNumber
+      
+                   FROM tmpStatus
+                        JOIN Movement ON Movement.DescId = zc_Movement_OrderFinance()
+                                     AND Movement.StatusId = tmpStatus.StatusId
+                                     AND Movement.OperDate BETWEEN inStartDate - INTERVAL '1 MONTH' AND inEndDate + INTERVAL '1 MONTH'
+                        LEFT JOIN MovementFloat AS MovementFloat_WeekNumber
+                                                ON MovementFloat_WeekNumber.MovementId = Movement.Id
+                                               AND MovementFloat_WeekNumber.DescId = zc_MovementFloat_WeekNumber()
+                  ) AS tmpMovement
+              WHERE tmpMovement.StartDate_WeekNumber BETWEEN inStartDate AND inEndDate
             ) AS tmpMovement
 
             LEFT JOIN Movement ON Movement.Id = tmpMovement.Id
