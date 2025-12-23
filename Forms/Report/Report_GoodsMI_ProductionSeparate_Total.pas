@@ -174,6 +174,10 @@ type
     actPrint_4218_All: TdsdPrintAction;
     bbtPrint_4218_All: TdxBarButton;
     bbPrint_4218_AllPart: TdxBarButton;
+    actPrint_its_AllPart: TdsdPrintAction;
+    actPrint_its_All: TdsdPrintAction;
+    bbPrint_its_All: TdxBarButton;
+    bbPrint_its_AllPart: TdxBarButton;
   private
     { Private declarations }
   public
