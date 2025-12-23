@@ -24,6 +24,7 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 277
+        ExplicitTop = -4
         ExplicitWidth = 1020
         ExplicitHeight = 277
         inherited cxGridDBTableView: TcxGridDBTableView

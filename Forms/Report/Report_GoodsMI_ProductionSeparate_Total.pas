@@ -166,6 +166,10 @@ type
     cbDetailPrint: TcxCheckBox;
     bbDetail: TdxBarControlContainerItem;
     dxBarSubItem2: TdxBarSubItem;
+    actPrint_4001_All: TdsdPrintAction;
+    actPrint_4001_AllPart: TdsdPrintAction;
+    bbPrint_4001_All: TdxBarButton;
+    bbPrint_4001_AllPart: TdxBarButton;
   private
     { Private declarations }
   public

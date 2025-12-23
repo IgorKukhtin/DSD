@@ -5,7 +5,7 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -614
+  ExplicitLeft = -327
   ExplicitWidth = 1524
   ExplicitHeight = 546
   PixelsPerInch = 96
@@ -736,7 +736,85 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_4001_test: TdsdPrintAction [1]
+    object actPrint_4001_AllPart: TdsdPrintAction [1]
+      Category = 'Print_actAll'
+      MoveParams = <>
+      StoredProc = Print_test_4134_AllPart
+      StoredProcList = <
+        item
+          StoredProc = Print_test_4134_AllPart
+        end>
+      Caption = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1043#1086#1074#1103#1076#1080#1085#1072') ('#1087#1088'-/'#1086#1073'-) '#1042#1089#1077' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1080
+      Hint = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1043#1086#1074#1103#1076#1080#1085#1072') ('#1087#1088'-/'#1086#1073'-) '#1042#1089#1077' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1080
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+          IndexFieldNames = 
+            'MovementId;GroupStatName;GoodsGroupCode;GoodsGroupNameFull;Goods' +
+            'Name'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4001) '#1086#1090#1095#1077#1090
+      ReportNameParam.Value = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4001) '#1086#1090#1095#1077#1090
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint_4001_All: TdsdPrintAction [2]
+      Category = 'Print_actAll'
+      MoveParams = <>
+      StoredProc = Print_test_4134_All
+      StoredProcList = <
+        item
+          StoredProc = Print_test_4134_All
+        end>
+      Caption = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1043#1086#1074#1103#1076#1080#1085#1072') ('#1087#1088'-/'#1086#1073'-) '#1087#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1091
+      Hint = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1043#1086#1074#1103#1076#1080#1085#1072') ('#1087#1088'-/'#1086#1073'-) '#1087#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1091
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+          IndexFieldNames = 
+            'MovementId;GroupStatName;GoodsGroupCode;GoodsGroupNameFull;Goods' +
+            'Name'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4001) '#1086#1090#1095#1077#1090'All'
+      ReportNameParam.Value = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4001) '#1086#1090#1095#1077#1090'All'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint_4001_test: TdsdPrintAction [3]
       Category = 'Print_act'
       MoveParams = <>
       StoredProc = Print_test_4134
@@ -775,15 +853,15 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_4134_AllPart: TdsdPrintAction [2]
-      Category = 'Print_act'
+    object actPrint_4134_AllPart: TdsdPrintAction [4]
+      Category = 'Print_actAll'
       MoveParams = <>
       StoredProc = Print_test_4134_AllPart
       StoredProcList = <
         item
           StoredProc = Print_test_4134_AllPart
         end>
-      Caption = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1087#1088'-/'#1086#1073'-) '#1042#1089#1077' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1080
+      Caption = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1057#1074#1080#1085#1080#1085#1072' '#1053#1050') ('#1087#1088'-/'#1086#1073'-) '#1042#1089#1077' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1080
       Hint = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1087#1088'-/'#1086#1073'-) '#1042#1089#1077' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1080
       ImageIndex = 15
       DataSets = <
@@ -814,8 +892,8 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_4134_All: TdsdPrintAction [4]
-      Category = 'Print_act'
+    object actPrint_4134_All: TdsdPrintAction [6]
+      Category = 'Print_actAll'
       MoveParams = <>
       StoredProc = Print_test_4134_All
       StoredProcList = <
@@ -853,7 +931,7 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_4134_part: TdsdPrintAction [5]
+    object actPrint_4134_part: TdsdPrintAction [7]
       Category = 'Print_act'
       MoveParams = <>
       StoredProc = Print_test_4134_part
@@ -892,7 +970,7 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_4134_grPart: TdsdPrintAction [6]
+    object actPrint_4134_grPart: TdsdPrintAction [8]
       Category = 'Print_act'
       MoveParams = <>
       StoredProc = Print_test_4134_grPart
@@ -931,7 +1009,7 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_4001_gov_gr: TdsdPrintAction [7]
+    object actPrint_4001_gov_gr: TdsdPrintAction [9]
       Category = 'Print_act'
       MoveParams = <>
       StoredProc = Print_test_4001_gr
@@ -970,7 +1048,7 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_4134_gr: TdsdPrintAction [8]
+    object actPrint_4134_gr: TdsdPrintAction [10]
       Category = 'Print_act'
       MoveParams = <>
       StoredProc = Print_test_4134_gr
@@ -1009,7 +1087,7 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_4218_gr: TdsdPrintAction [9]
+    object actPrint_4218_gr: TdsdPrintAction [11]
       Category = 'Print_act'
       MoveParams = <>
       StoredProc = Print_test_4218_gr
@@ -2288,6 +2366,7 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
     end
     object dxBarButton1: TdxBarButton
       Action = actPrint_4134_All
+      Caption = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' ('#1057#1074#1080#1085#1080#1085#1072' '#1053#1050') ('#1087#1088'-/'#1086#1073'-) '#1087#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1091
       Category = 0
     end
     object dxBarButton2: TdxBarButton
@@ -2312,12 +2391,28 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
         end
         item
           Visible = True
+          ItemName = 'bbPrint_4001_All'
+        end
+        item
+          Visible = True
           ItemName = 'bbSeparator'
         end
         item
           Visible = True
           ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_4001_AllPart'
         end>
+    end
+    object bbPrint_4001_All: TdxBarButton
+      Action = actPrint_4001_All
+      Category = 0
+    end
+    object bbPrint_4001_AllPart: TdxBarButton
+      Action = actPrint_4001_AllPart
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
