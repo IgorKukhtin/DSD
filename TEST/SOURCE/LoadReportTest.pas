@@ -551,6 +551,9 @@ begin
   LoadReportFromFile('Акт обвалки (4001)', ReportPath + '\Производство\Акт обвалки (4001).fr3');
   exit;
   }
+  LoadReportFromFile('Акт обвалки (its) отчетAll', ReportPath + '\Отчеты (производство)\Акт обвалки (its) отчетAll.fr3');
+  LoadReportFromFile('Акт обвалки (4218) отчетAll', ReportPath + '\Отчеты (производство)\Акт обвалки (4218) отчетAll.fr3');
+  LoadReportFromFile('Акт обвалки (4001) отчетAll', ReportPath + '\Отчеты (производство)\Акт обвалки (4001) отчетAll.fr3');
   LoadReportFromFile('Акт обвалки (4134) отчетAll', ReportPath + '\Отчеты (производство)\Акт обвалки (4134) отчетAll.fr3');
    exit;
    {

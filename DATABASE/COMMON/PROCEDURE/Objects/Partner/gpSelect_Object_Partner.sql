@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, BasisCode Integer,
                Address TVarChar, HouseNumber TVarChar, CaseNumber TVarChar, RoomNumber TVarChar,
                StreetId Integer, StreetName TVarChar,
                PrepareDayCount TFloat, DocumentDayCount TFloat,
+               PrepareDayCount_30201 TFloat, DocumentDayCount_30201 TFloat,
                GPSN TFloat, GPSE TFloat,
                Category TFloat,
                TaxSale_Personal TFloat, TaxSale_PersonalTrade TFloat, TaxSale_MemberSaler1 TFloat, TaxSale_MemberSaler2 TFloat,
@@ -226,6 +227,9 @@ BEGIN
 
          , ObjectFloat_PrepareDayCount.ValueData  AS PrepareDayCount
          , ObjectFloat_DocumentDayCount.ValueData AS DocumentDayCount
+
+         , ObjectFloat_PrepareDayCount_30201.ValueData  ::TFloat AS PrepareDayCount_30201
+         , ObjectFloat_DocumentDayCount_30201.ValueData ::TFloat AS DocumentDayCount_30201
 
          , COALESCE (Partner_GPSN.ValueData,0)         ::Tfloat  AS GPSN
          , COALESCE (Partner_GPSE.ValueData,0)         ::Tfloat  AS GPSE
@@ -436,6 +440,13 @@ BEGIN
          LEFT JOIN ObjectFloat AS ObjectFloat_DocumentDayCount
                                ON ObjectFloat_DocumentDayCount.ObjectId = Object_Partner.Id
                               AND ObjectFloat_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()
+
+         LEFT JOIN ObjectFloat AS ObjectFloat_PrepareDayCount_30201
+                               ON ObjectFloat_PrepareDayCount_30201.ObjectId = Object_Partner.Id
+                              AND ObjectFloat_PrepareDayCount_30201.DescId = zc_ObjectFloat_Partner_PrepareDayCount_30201()
+         LEFT JOIN ObjectFloat AS ObjectFloat_DocumentDayCount_30201
+                               ON ObjectFloat_DocumentDayCount_30201.ObjectId = Object_Partner.Id
+                              AND ObjectFloat_DocumentDayCount_30201.DescId = zc_ObjectFloat_Partner_DocumentDayCount_30201()
 
          LEFT JOIN ObjectFloat AS Partner_GPSN
                                ON Partner_GPSN.ObjectId = Object_Partner.Id
@@ -702,6 +713,9 @@ BEGIN
          , ObjectFloat_PrepareDayCount.ValueData  AS PrepareDayCount
          , ObjectFloat_DocumentDayCount.ValueData AS DocumentDayCount
 
+         , ObjectFloat_PrepareDayCount_30201.ValueData  AS PrepareDayCount_30201
+         , ObjectFloat_DocumentDayCount_30201.ValueData AS DocumentDayCount_30201
+
          , COALESCE (Partner_GPSN.ValueData,0)         ::Tfloat  AS GPSN
          , COALESCE (Partner_GPSE.ValueData,0)         ::Tfloat  AS GPSE
          , COALESCE (ObjectFloat_Category.ValueData,0) ::TFloat  AS Category
@@ -900,13 +914,20 @@ BEGIN
          LEFT JOIN ObjectString AS ObjectString_GLNCodeCorporate_vch
                                 ON ObjectString_GLNCodeCorporate_vch.ObjectId = Object_Partner.Id
                                AND ObjectString_GLNCodeCorporate_vch.DescId = zc_ObjectString_Partner_GLNCodeCorporate_vch()
-
+                                                                         
          LEFT JOIN ObjectFloat AS ObjectFloat_PrepareDayCount
                                ON ObjectFloat_PrepareDayCount.ObjectId = Object_Partner.Id
                               AND ObjectFloat_PrepareDayCount.DescId = zc_ObjectFloat_Partner_PrepareDayCount()
          LEFT JOIN ObjectFloat AS ObjectFloat_DocumentDayCount
                                ON ObjectFloat_DocumentDayCount.ObjectId = Object_Partner.Id
                               AND ObjectFloat_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()
+
+         LEFT JOIN ObjectFloat AS ObjectFloat_PrepareDayCount_30201
+                               ON ObjectFloat_PrepareDayCount_30201.ObjectId = Object_Partner.Id
+                              AND ObjectFloat_PrepareDayCount_30201.DescId = zc_ObjectFloat_Partner_PrepareDayCount_30201()
+         LEFT JOIN ObjectFloat AS ObjectFloat_DocumentDayCount_30201
+                               ON ObjectFloat_DocumentDayCount_30201.ObjectId = Object_Partner.Id
+                              AND ObjectFloat_DocumentDayCount_30201.DescId = zc_ObjectFloat_Partner_DocumentDayCount_30201()
 
          LEFT JOIN ObjectFloat AS Partner_GPSN
                                ON Partner_GPSN.ObjectId = Object_Partner.Id
@@ -1144,6 +1165,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 23.12.25         *
  09.12.25         * ...._vch
  07.11.24         * PersonalSigning
  04.07.24         * Terminal

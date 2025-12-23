@@ -2,7 +2,7 @@ object PartnerForm: TPartnerForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099'>'
-  ClientHeight = 432
+  ClientHeight = 441
   ClientWidth = 1139
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,9 +22,10 @@ object PartnerForm: TPartnerForm
     Left = 0
     Top = 61
     Width = 1139
-    Height = 371
+    Height = 380
     Align = alClient
     TabOrder = 1
+    ExplicitHeight = 371
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -636,6 +637,28 @@ object PartnerForm: TPartnerForm
         Properties.DisplayFormat = '0.;-0.; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 45
+      end
+      object PrepareDayCount_30201: TcxGridDBColumn
+        Caption = #1044#1085'. '#1079#1072#1082#1072#1079' ('#1052'.'#1089'.)'
+        DataBinding.FieldName = 'PrepareDayCount_30201'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0.;-0.; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1085'. '#1079#1072#1082#1072#1079' ('#1052#1103#1089#1085#1086#1077' '#1089#1099#1088#1100#1077')'
+        Width = 45
+      end
+      object DocumentDayCount_30201: TcxGridDBColumn
+        Caption = #1044#1085'. '#1076#1086#1082'. ('#1052'.'#1089'.)'
+        DataBinding.FieldName = 'DocumentDayCount_30201'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0.;-0.; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1085'. '#1076#1086#1082'. ('#1052#1103#1089#1085#1086#1077' '#1089#1099#1088#1100#1077')'
         Width = 45
       end
       object BranchCode: TcxGridDBColumn

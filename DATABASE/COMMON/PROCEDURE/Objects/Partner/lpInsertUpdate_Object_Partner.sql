@@ -49,9 +49,15 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
                                                        Boolean, Boolean, Boolean,
                                                        Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
                                                        Integer, Integer,
-                                                       TDateTime, TDateTime, Integer);*/
+                                                       TDateTime, TDateTime, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
                                                        TFloat, TFloat, TFloat,TFloat, TFloat, TFloat, TFloat,
+                                                       Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar
+                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                                                       Integer, Integer,
+                                                       TDateTime, TDateTime, Integer); */
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
+                                                       TFloat, TFloat, TFloat,TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,
                                                        Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar
                                                        Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
                                                        Integer, Integer,
@@ -72,8 +78,10 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
     IN inTerminal            TVarChar  ,    -- код терминала
 
     IN inPrepareDayCount     TFloat    ,    -- За сколько дней принимается заказ
-    IN inDocumentDayCount    TFloat    ,    -- Через сколько дней оформляется документально
-    IN inCategory            TFloat    ,    -- категория ТТ
+    IN inDocumentDayCount    TFloat    ,    -- Через сколько дней оформляется документально 
+    IN inPrepareDayCount_30201     TFloat    ,    -- За сколько дней принимается заказ (Мясное сырье)
+    IN inDocumentDayCount_30201    TFloat    ,    -- Через сколько дней оформляется документально (Мясное сырье)
+    IN inCategory               TFloat    ,    -- категория ТТ
     IN inTaxSale_Personal       TFloat    ,   -- супервайзер - % от товарооборота
     IN inTaxSale_PersonalTrade  TFloat    ,   -- ТП - % от товарооборота
     IN inTaxSale_MemberSaler1   TFloat    ,   -- Продавец-1 - % от товарооборота
@@ -164,6 +172,11 @@ BEGIN
    -- сохранили свойство <Через сколько дней оформляется документально>
    PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_DocumentDayCount(), ioId, inDocumentDayCount);
 
+   -- сохранили свойство <За сколько дней принимается заказ Мясное сырье>
+   PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_PrepareDayCount_30201(), ioId, inPrepareDayCount_30201);
+   -- сохранили свойство <Через сколько дней оформляется документально Мясное сырье>
+   PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_DocumentDayCount_30201(), ioId, inDocumentDayCount_30201);
+
    -- сохранили свойство <inCategory>
    PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_Category(), ioId, inCategory);
 
@@ -250,6 +263,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И. 
+ 23.12.25         *
  07.11.24         * inPersonalSigningId
  04.07.24         *
  24.10.23         *
