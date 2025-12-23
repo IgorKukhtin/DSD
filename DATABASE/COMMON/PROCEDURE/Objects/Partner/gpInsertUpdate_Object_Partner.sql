@@ -64,9 +64,17 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                      , Integer, Integer
                                                      , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
-                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);*/
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                      , Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
+*/
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                     , Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar
                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                      , Integer, Integer
@@ -94,7 +102,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     IN inStreetId            Integer   ,    -- Улица/проспект  
     IN inPrepareDayCount     TFloat    ,    -- За сколько дней принимается заказ
     IN inDocumentDayCount    TFloat    ,    -- Через сколько дней оформляется документально
-    IN inCategory            TFloat    ,    -- категория ТТ
+    IN inPrepareDayCount_30201  TFloat    ,    -- За сколько дней принимается заказ (Мясное сырье)
+    IN inDocumentDayCount_30201 TFloat    ,    -- Через сколько дней оформляется документально (Мясное сырье)
+    IN inCategory               TFloat    ,    -- категория ТТ
                 
     IN inTaxSale_Personal       TFloat    ,   -- супервайзер - % от товарооборота
     IN inTaxSale_PersonalTrade  TFloat    ,   -- ТП - % от товарооборота
@@ -234,6 +244,8 @@ BEGIN
 
                                         , inPrepareDayCount := inPrepareDayCount
                                         , inDocumentDayCount:= inDocumentDayCount
+                                        , inPrepareDayCount_30201 := inPrepareDayCount_30201
+                                        , inDocumentDayCount_30201:= inDocumentDayCount_30201
                                         , inCategory        := inCategory
                                         , inTaxSale_Personal      := inTaxSale_Personal
                                         , inTaxSale_PersonalTrade := inTaxSale_PersonalTrade

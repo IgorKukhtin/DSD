@@ -305,6 +305,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Partner_TaxSale_MemberSaler2() RETURNS
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Partner(), 'zc_ObjectFloat_Partner_TaxSale_MemberSaler2', 'Продавец-2 - % от товарооборота' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Partner_TaxSale_MemberSaler2');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Partner_PrepareDayCount_30201() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Partner_PrepareDayCount_30201'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Partner(), 'zc_ObjectFloat_Partner_PrepareDayCount_30201', ' 	За сколько дней принимается заказ (Мясное сырье)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Partner_PrepareDayCount_30201');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Partner_DocumentDayCount_30201() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Partner_DocumentDayCount_30201'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Partner(), 'zc_ObjectFloat_Partner_DocumentDayCount_30201', 'Через сколько дней оформляется документально (Мясное сырье)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Partner_DocumentDayCount_30201');
+
 
 --
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_PriceList_VATPercent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PriceList_VATPercent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;

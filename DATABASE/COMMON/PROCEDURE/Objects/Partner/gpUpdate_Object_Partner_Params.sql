@@ -3,7 +3,8 @@
 DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Params (Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Params (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 --DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Params (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Params (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Params (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Params (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Partner_Params(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
@@ -17,7 +18,9 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_Partner_Params(
     IN inUnitId              Integer   ,    --            
     IN inBasisCode           Integer   ,    -- код Алан
     IN inPrepareDayCount     TFloat    ,    -- 
-    IN inDocumentDayCount    TFloat    ,    -- 
+    IN inDocumentDayCount    TFloat    ,    --
+    IN inPrepareDayCount_30201  TFloat    ,    -- 
+    IN inDocumentDayCount_30201 TFloat    ,    -- 
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS Integer
@@ -34,6 +37,8 @@ $BODY$
    DECLARE vbUnitId Integer;  
    DECLARE vbPrepareDayCount TFloat;
    DECLARE vbDocumentDayCount TFloat;
+   DECLARE vbPrepareDayCount_30201 TFloat;
+   DECLARE vbDocumentDayCount_30201 TFloat;
    DECLARE vbBasisCode Integer;
 BEGIN
 
@@ -48,6 +53,9 @@ BEGIN
    vbUnitId          := (SELECT ObjectLink.ChildObjectId FROM ObjectLink WHERE ObjectLink.ObjectId = ioId AND ObjectLink.DescId = zc_ObjectLink_Partner_Unit()) ::Integer; 
    vbPrepareDayCount := (SELECT ObjectFloat.ValueData    FROM ObjectFloat WHERE ObjectFloat.ObjectId = ioId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_PrepareDayCount()) ::TFloat;
    vbDocumentDayCount:= (SELECT ObjectFloat.ValueData    FROM ObjectFloat WHERE ObjectFloat.ObjectId = ioId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount()) ::TFloat;
+   vbPrepareDayCount_30201 := (SELECT ObjectFloat.ValueData    FROM ObjectFloat WHERE ObjectFloat.ObjectId = ioId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_PrepareDayCount_30201()) ::TFloat;
+   vbDocumentDayCount_30201:= (SELECT ObjectFloat.ValueData    FROM ObjectFloat WHERE ObjectFloat.ObjectId = ioId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount_30201()) ::TFloat;
+
    --
    vbBasisCode       := (SELECT ObjectFloat.ValueData    FROM ObjectFloat WHERE ObjectFloat.ObjectId = ioId AND ObjectFloat.DescId = zc_ObjectFloat_ObjectCode_Basis()) ::Integer;
 
@@ -60,6 +68,8 @@ BEGIN
    OR COALESCE (vbPersonalMerchId,0) <> COALESCE (inPersonalMerchId,0)
    OR COALESCE (vbPrepareDayCount,0) <> COALESCE (inPrepareDayCount,0)
    OR COALESCE (vbDocumentDayCount,0)<> COALESCE (inDocumentDayCount,0)
+   OR COALESCE (vbPrepareDayCount_30201,0) <> COALESCE (inPrepareDayCount_30201,0)
+   OR COALESCE (vbDocumentDayCount_30201,0)<> COALESCE (inDocumentDayCount_30201,0)
    OR COALESCE (vbUnitId,0)          <> COALESCE (inUnitId,0)
    THEN
    
@@ -104,6 +114,11 @@ BEGIN
         PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_PrepareDayCount(), ioId, inPrepareDayCount);
         -- сохранили свойство <Через сколько дней оформляется документально>
         PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_DocumentDayCount(), ioId, inDocumentDayCount);
+
+        -- сохранили свойство <За сколько дней принимается заказ Мясное сырье>
+        PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_PrepareDayCount_30201(), ioId, inPrepareDayCount_30201);
+        -- сохранили свойство <Через сколько дней оформляется документально Мясное сырье>
+        PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_DocumentDayCount_30201(), ioId, inDocumentDayCount_30201);
 
    END IF;
    END IF; 

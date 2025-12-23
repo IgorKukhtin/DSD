@@ -2527,7 +2527,7 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerEditForm');
-
+   exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerJuridicalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerJuridicalEditForm');

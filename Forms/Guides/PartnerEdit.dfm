@@ -1,23 +1,23 @@
 ﻿inherited PartnerEditForm: TPartnerEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
-  ClientHeight = 517
+  ClientHeight = 528
   ClientWidth = 1087
   ExplicitWidth = 1093
-  ExplicitHeight = 546
+  ExplicitHeight = 557
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 816
-    Top = 470
+    Left = 735
+    Top = 501
     TabOrder = 2
-    ExplicitLeft = 816
-    ExplicitTop = 470
+    ExplicitLeft = 735
+    ExplicitTop = 501
   end
   inherited bbCancel: TcxButton
-    Left = 948
-    Top = 470
-    ExplicitLeft = 948
-    ExplicitTop = 470
+    Left = 878
+    Top = 501
+    ExplicitLeft = 878
+    ExplicitTop = 501
   end
   object edAddress: TcxTextEdit [2]
     Left = 158
@@ -101,13 +101,13 @@
   end
   object cxLabel7: TcxLabel [14]
     Left = 961
-    Top = 424
+    Top = 412
     Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
     Visible = False
   end
   object ceRouteSorting: TcxButtonEdit [15]
-    Left = 1016
-    Top = 424
+    Left = 1022
+    Top = 410
     Properties.Buttons = <
       item
         Default = True
@@ -939,12 +939,45 @@
     TabOrder = 127
     Width = 171
   end
+  object cxLabel54: TcxLabel [128]
+    Left = 736
+    Top = 449
+    Caption = #1063#1077#1088#1077#1079' '#1089#1082#1086#1083#1100#1082#1086' '#1076#1085#1077#1081' '#1086#1092#1086#1088#1084'. '#1076#1086#1082'. ('#1052#1103#1089#1085'.'#1089#1099#1088#1100#1077')'
+  end
+  object cxLabel55: TcxLabel [129]
+    Left = 736
+    Top = 472
+    Caption = #1047#1072' '#1089#1082#1086#1083#1100#1082#1086' '#1076#1085#1077#1081' '#1087#1088#1080#1085#1080#1084'-'#1089#1103' '#1079#1072#1082#1072#1079' ('#1052#1103#1089#1085'.'#1089#1099#1088#1100#1077')'
+  end
+  object edPrepareDayCount_30201: TcxCurrencyEdit [130]
+    Left = 988
+    Top = 472
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    Properties.EditFormat = '0'
+    TabOrder = 130
+    Width = 85
+  end
+  object edDocumentDayCount_30201: TcxCurrencyEdit [131]
+    Left = 988
+    Top = 447
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    Properties.EditFormat = '0'
+    TabOrder = 131
+    Width = 85
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 355
-    Top = 326
+    Left = 291
+    Top = 446
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Top = 200
+    Left = 112
+    Top = 280
   end
   inherited ActionList: TActionList
     Left = 295
@@ -1134,6 +1167,22 @@
         Name = 'inDocumentDayCount'
         Value = 0.000000000000000000
         Component = ceDocumentDayCount
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrepareDayCount_30201'
+        Value = Null
+        Component = edPrepareDayCount_30201
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDocumentDayCount_30201'
+        Value = Null
+        Component = edDocumentDayCount_30201
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2229,6 +2278,20 @@
         Component = cbEdiOrdspr_vch
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DocumentDayCount_30201'
+        Value = Null
+        Component = edDocumentDayCount_30201
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PrepareDayCount_30201'
+        Value = Null
+        Component = edPrepareDayCount_30201
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 520
     Top = 452
@@ -2320,8 +2383,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 64
-    Top = 197
+    Left = 80
+    Top = 269
   end
   object dsdRouteGuides: TdsdGuides
     KeyField = 'Id'
@@ -2350,8 +2413,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 152
-    Top = 228
+    Left = 168
+    Top = 292
   end
   object dsdPriceListGuides: TdsdGuides
     KeyField = 'Id'

@@ -173,6 +173,10 @@ type
     cbEdiDesadv_vch: TcxCheckBox;
     cxLabel53: TcxLabel;
     edGLNCodeCorporate_vch: TcxTextEdit;
+    cxLabel54: TcxLabel;
+    cxLabel55: TcxLabel;
+    edPrepareDayCount_30201: TcxCurrencyEdit;
+    edDocumentDayCount_30201: TcxCurrencyEdit;
 
   private
     { Private declarations }
