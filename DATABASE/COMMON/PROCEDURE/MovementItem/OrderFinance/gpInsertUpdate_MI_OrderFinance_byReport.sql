@@ -188,8 +188,8 @@ BEGIN
 
 
     -- строки документа
-    CREATE TEMP TABLE _tmpData (Id Integer, JuridicalId Integer, ContractId Integer, PaidKindId Integer, InfoMoneyId Integer, isErased Boolena) ON COMMIT DROP;
-    INSERT INTO _tmpData (Id, JuridicalId, ContractId, PaidKindId, InfoMoneyId)
+    CREATE TEMP TABLE _tmpData (Id Integer, JuridicalId Integer, ContractId Integer, PaidKindId Integer, InfoMoneyId Integer, isErased Boolean) ON COMMIT DROP;
+    INSERT INTO _tmpData (Id, JuridicalId, ContractId, PaidKindId, InfoMoneyId, isErased)
        WITH tmpMI AS (SELECT MovementItem.Id                     AS Id
                            , MovementItem.ObjectId               AS JuridicalId
                            , MILinkObject_Contract.ObjectId      AS ContractId
@@ -221,6 +221,7 @@ BEGIN
            , COALESCE (tmpMI.ContractId, 0)    AS ContractId
            , COALESCE (tmpMI.PaidKindId, 0)    AS PaidKindId
            , COALESCE (tmpMI.InfoMoneyId, 0)   AS InfoMoneyId
+           , tmpMI.isErased                    AS isErased
        FROM tmpMI
        ;
 
@@ -258,6 +259,8 @@ BEGIN
                            AND _tmpData_erased.isErased    = TRUE
     -- если удалили, больше заливать не надо
     WHERE _tmpData_erased.JuridicalId IS NULL
+       -- или есть в рабочих
+       OR _tmpData.JuridicalId > 0
     ;
 
     -- сохранили свойство <Дата/время заполнения данных из отчета>
