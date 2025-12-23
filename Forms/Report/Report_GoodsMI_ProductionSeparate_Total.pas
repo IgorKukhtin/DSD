@@ -61,8 +61,8 @@ type
     ToGroupGuides: TdsdGuides;
     cbGroupMovement: TcxCheckBox;
     cbGroupPartion: TcxCheckBox;
-    cxLabel6: TcxLabel;
     cxLabel8: TcxLabel;
+    cxLabel6: TcxLabel;
     edChildGoods: TcxButtonEdit;
     edChildGoodsGroup: TcxButtonEdit;
     ChildGoodsGroupGuides: TdsdGuides;

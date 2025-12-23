@@ -5,7 +5,7 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -631
+  ExplicitLeft = -614
   ExplicitWidth = 1524
   ExplicitHeight = 546
   PixelsPerInch = 96
@@ -370,7 +370,7 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
         Top = 6
         Caption = #1076#1077#1090#1072#1083#1100#1085#1086
         TabOrder = 3
-        Width = 75
+        Width = 74
       end
     end
   end
