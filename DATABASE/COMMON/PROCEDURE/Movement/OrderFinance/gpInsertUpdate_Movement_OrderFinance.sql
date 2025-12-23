@@ -53,8 +53,8 @@ BEGIN
 
 
      --
-     outStartDate:= DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', inOperDate) + ((((7 * (inWeekNumber-1)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL);
-     outEndDate:= outStartDate + INTERVAL '6 DAY';
+     outStartDate:= zfCalc_Week_StartDate (inOperDate, inWeekNumber :: TFloat);
+     outEndDate  := zfCalc_Week_EndDate   (inOperDate, inWeekNumber :: TFloat);
 
 END;
 $BODY$

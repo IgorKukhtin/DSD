@@ -238,7 +238,9 @@ CREATE OR REPLACE FUNCTION zc_MIDate_SMS() RETURNS Integer AS $BODY$BEGIN RETURN
 INSERT INTO MovementItemDateDesc (Code, ItemName)
   SELECT 'zc_MIDate_SMS', 'Дата/время отправки смс' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_SMS');
 
-
+CREATE OR REPLACE FUNCTION zc_MIDate_Amount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_Amount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_Amount', 'Дата предварительный план' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_Amount');
 
  
 

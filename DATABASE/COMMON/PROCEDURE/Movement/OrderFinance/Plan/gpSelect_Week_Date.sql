@@ -10,6 +10,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Week_Date(
 RETURNS TABLE (WeekNumber           Integer
              , StartDate_WeekNumber TDateTime
              , EndDate_WeekNumber   TDateTime
+             , StartDate            TDateTime
+             , EndDate              TDateTime
               )
 AS
 $BODY$
@@ -18,8 +20,9 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-     inStartDate:= DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', inStartDate));
-     inEndDate  := inStartDate + INTERVAL '52 WEEK' - INTERVAL '1 DAY' ;
+     -- inStartDate:= DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', inStartDate));
+     inStartDate:= DATE_TRUNC ('YEAR', inStartDate);
+     inEndDate  := DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', inStartDate) + INTERVAL '1 YEAR' + INTERVAL '1 WEEK');
 
      -- Результат
      RETURN QUERY
@@ -30,6 +33,8 @@ BEGIN
           SELECT EXTRACT (WEEK FROM tmp.OperDate)  :: Integer   AS WeekNumber
                , tmp.OperDate                      :: TDateTime AS StartDate_WeekNumber
                , (tmp.OperDate + INTERVAL '6 DAY') :: TDateTime AS EndDate_WeekNumber
+               , inStartDate                                    AS StartDate
+               , inEndDate                                      AS EndDate
           FROM tmpDataWeek AS tmp
       ;
 

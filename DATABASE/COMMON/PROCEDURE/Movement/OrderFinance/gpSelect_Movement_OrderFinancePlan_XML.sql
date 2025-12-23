@@ -78,8 +78,7 @@ BEGIN
                        SELECT Movement.Id
                             , Movement.Invnumber
                           --, Movement.OperDate
-                            , (DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', Movement.OperDate) + ((((7 * COALESCE (MovementFloat_WeekNumber.ValueData - 1, 0)
-                                                                                               ) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL)
+                            , (DATE_TRUNC ('WEEK', zfCalc_Week_StartDate (Movement.OperDate, MovementFloat_WeekNumber.ValueData)):: INTERVAL
                              + (CASE WHEN COALESCE (inIsDay_1,FALSE) = TRUE THEN 0
                                      WHEN COALESCE (inIsDay_2,FALSE) = TRUE THEN 1
                                      WHEN COALESCE (inIsDay_3,FALSE) = TRUE THEN 2

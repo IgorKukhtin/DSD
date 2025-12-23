@@ -22,8 +22,9 @@ BEGIN
 
      -- Результат
      SELECT COALESCE (Object_OrderFinance.ValueData, '')
-            || '_' || zfConvert_FloatToString (MovementFloat_WeekNumber.ValueData )    --  , MovementFloat_WeekNumber.ValueData   ::TFloat    AS WeekNumber
-            || '_' || zfConvert_DateShortToString (DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', Movement.OperDate) + ((((7 * COALESCE (MovementFloat_WeekNumber.ValueData - 1, 0)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL)::TDateTime) ::TVarChar
+            || '-' || zfConvert_FloatToString (MovementFloat_WeekNumber.ValueData )    --  , MovementFloat_WeekNumber.ValueData   ::TFloat    AS WeekNumber
+            || '-' || zfConvert_DateShortToString (zfCalc_Week_StartDate (Movement.OperDate, MovementFloat_WeekNumber.ValueData)
+                                                  ) ::TVarChar
            -- || '_' || REPLACE (zfConvert_DateShortToString (Movement.OperDate), '.', '')
             || '_' || COALESCE (Object_Insert.ValueData,'' )
           --  || '_' || Movement.InvNumber  
