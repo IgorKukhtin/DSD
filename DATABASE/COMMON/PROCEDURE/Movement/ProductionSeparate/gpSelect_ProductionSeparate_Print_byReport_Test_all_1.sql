@@ -522,10 +522,10 @@ BEGIN
                          WHERE inisDetail = TRUE
                         UNION 
                          SELECT '' ::TVarChar                  AS MovementId
-                              , inPartionGoods_main2 ::TVarChar                  AS InvNumber
+                              , CASE WHEN inisAll = FALSE THEN inPartionGoods_main ELSE 'Все партии' END ::TVarChar AS InvNumber
                               , MIN (tmp.OperDate)             AS OperDate
                               , LEFT (tmp.PartionGoods,7)      AS PartionGoods
-                              , LEFT (tmp.PartionGoods_main,4) AS PartionGoods_main
+                              , CASE WHEN inisDetail = TRUE THEN tmp.PartionGoods_main ELSE 'Все партии' END ::TVarChar AS PartionGoods_main
                               , MIN (tmp.OperDate_partion)     AS OperDate_partion
                               , tmp.GoodsNameMaster
                               , SUM (tmp.CountMaster)          AS CountMaster
@@ -533,7 +533,7 @@ BEGIN
                               , SUM (tmp.CountMaster_4134)     AS CountMaster_4134
                               , SUM (tmp.HeadCountMaster)      AS HeadCountMaster
                               , AVG (tmp.PriceMaster)          AS PriceMaster
-                              , STRING_AGG (DISTINCT tmp.FromName, '; ') AS FromName
+                              , STRING_AGG (DISTINCT CASE WHEN inisAll = TRUE THEN 'Все поставщики' ELSE tmp.FromName END, '; ')  AS FromName
                               , STRING_AGG (DISTINCT tmp.PersonalPackerName, '; ') AS  PersonalPackerName
                               , tmp.GoodsNameIncome
                               , SUM (COALESCE (tmp.CountIncome,0)) AS CountIncome
@@ -562,11 +562,14 @@ BEGIN
                                 , tmp.GoodsNameSeparate 
                                 , LEFT (tmp.PartionGoods,7)
                                 , LEFT (tmp.PartionGoods_main,4)
+                               , CASE WHEN inisDetail = TRUE THEN tmp.PartionGoods_main ELSE 'Все партии' END
                         )
 
       
       -- Результат 
-      SELECT tmpMain_Group.MovementId  AS MovementId
+      SELECT inStartDate ::TDateTime AS StartDate
+           , inEndDate   ::TDateTime AS EndDate
+           , tmpMain_Group.MovementId  AS MovementId
            , tmpMain_Group.InvNumber   AS InvNumber
            , tmpMain_Group.OperDate
            , tmpMain_Group.PartionGoods
@@ -639,8 +642,8 @@ BEGIN
            , tmpCursor1.PriceFact_4134
            , SUM(tmpCursor1.PriceFact * tmpCursor1.Amount) ::TFloat AS SummFact_4134
            --, CASE WHEN COALESCE (SUM (tmpCursor1.Amount_4134),0) <> 0 THEN SUM (tmpCursor1.summ_4134) /SUM (tmpCursor1.Amount_4134) ELSE 0 END   AS price_4134
-           , MAX (tmpCursor1.Amount_4134) AS Amount_4134
-           --, tmpMain_Group.CountMaster AS Amount_4134
+           --, (tmpCursor1.Amount_4134) AS Amount_4134
+           , tmpMain_Group.CountMaster AS Amount_4134
            --, tmpCursor1.Persent_4134 
            , CASE WHEN COALESCE (SUM (tmpCursor1.CountMaster),0) <> 0 THEN 100  * SUM (tmpCursor1.Amount_4134) / SUM (tmpCursor1.CountMaster) ELSE 0 END :: TFloat AS Persent_4134
            , SUM (tmpCursor1.AmountMaster_4134)  AS AmountMaster_4134    

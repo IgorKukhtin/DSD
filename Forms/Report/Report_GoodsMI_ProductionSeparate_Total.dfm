@@ -5,7 +5,6 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -10
   ExplicitWidth = 1524
   ExplicitHeight = 546
   PixelsPerInch = 96
@@ -16,19 +15,17 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
     Height = 383
     TabOrder = 3
     ExplicitTop = 124
-    ExplicitWidth = 1374
-    ExplicitHeight = 303
+    ExplicitWidth = 1508
+    ExplicitHeight = 383
     ClientRectBottom = 383
     ClientRectRight = 1508
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1374
-      ExplicitHeight = 303
+      ExplicitWidth = 1508
+      ExplicitHeight = 383
       inherited cxGrid: TcxGrid
         Width = 1508
         Height = 383
-        ExplicitLeft = 240
-        ExplicitTop = -41
-        ExplicitWidth = 1374
+        ExplicitWidth = 1508
         ExplicitHeight = 383
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -335,7 +332,7 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
   inherited Panel: TPanel
     Width = 1508
     Height = 57
-    ExplicitWidth = 1374
+    ExplicitWidth = 1508
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 108
@@ -510,7 +507,6 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
     Height = 41
     Align = alTop
     TabOrder = 7
-    ExplicitWidth = 1374
     object lbSearchCode: TcxLabel
       Left = 0
       Top = 10
