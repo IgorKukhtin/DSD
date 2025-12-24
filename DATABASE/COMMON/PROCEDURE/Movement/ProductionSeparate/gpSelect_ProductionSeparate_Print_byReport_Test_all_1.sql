@@ -551,7 +551,7 @@ BEGIN
                               , SUM (tmp.CountSeparate)        AS CountSeparate
                               -- , tmp.PercentCount   
                               , 100 * (SUM (tmp.CountSeparate) / SUM (tmp.CountIncome)) AS PercentCount
-                              , tmp.GoodsNameSeparate
+                              , STRING_AGG (DISTINCT tmp.GoodsNameSeparate, '; ') AS GoodsNameSeparate
                               , SUM (tmp.SummHeadCount1)       AS SummHeadCount1
                          FROM tmp
                          WHERE inisDetail = FALSE AND inisGroup = TRUE
@@ -559,7 +559,7 @@ BEGIN
                                 --, tmp.FromName
                                 --, tmp.PersonalPackerName
                                 , tmp.GoodsNameIncome
-                                , tmp.GoodsNameSeparate 
+                                --, tmp.GoodsNameSeparate 
                                 --, LEFT (tmp.PartionGoods,7)
                                 --, LEFT (tmp.PartionGoods_main,4)
                                , CASE WHEN inisDetail = TRUE THEN tmp.PartionGoods_main ELSE 'Все партии' END
