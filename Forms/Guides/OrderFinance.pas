@@ -79,6 +79,7 @@ type
     MemberName_2: TcxGridDBColumn;
     NumGroup: TcxGridDBColumn;
     isGroup: TcxGridDBColumn;
+    isStatus_off: TcxGridDBColumn;
   private
     { Private declarations }
   public

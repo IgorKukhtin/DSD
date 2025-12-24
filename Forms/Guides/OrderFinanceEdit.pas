@@ -18,7 +18,8 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, Vcl.Menus, dsdAddOn, cxPropertiesStore,
   dsdDB, dsdAction, Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons,
-  cxLabel, cxTextEdit, dsdGuides, cxMaskEdit, cxButtonEdit, dsdCommon;
+  cxLabel, cxTextEdit, dsdGuides, cxMaskEdit, cxButtonEdit, dsdCommon,
+  cxCheckBox;
 
 type
   TOrderFinanceEditForm = class(TParentForm)
@@ -69,6 +70,13 @@ type
     cxLabel11: TcxLabel;
     edInsertUser_5: TcxButtonEdit;
     GuidesInsert_5: TdsdGuides;
+    cbisStatus_off: TcxCheckBox;
+    cbisOperDate: TcxCheckBox;
+    cbisPlan_1: TcxCheckBox;
+    cbisPlan_2: TcxCheckBox;
+    cbisPlan_3: TcxCheckBox;
+    cbisPlan_4: TcxCheckBox;
+    cbisPlan_5: TcxCheckBox;
   private
     { Private declarations }
   public

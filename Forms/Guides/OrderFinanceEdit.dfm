@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1042#1080#1076' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1087#1083#1072#1090#1077#1078#1077#1081
-  ClientHeight = 355
+  ClientHeight = 431
   ClientWidth = 564
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 28
-    Top = 314
+    Left = 291
+    Top = 391
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -37,8 +37,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 172
-    Top = 314
+    Left = 427
+    Top = 391
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -241,6 +241,55 @@
     TabOrder = 27
     Width = 247
   end
+  object cbisStatus_off: TcxCheckBox
+    Left = 179
+    Top = 299
+    Caption = #1056#1072#1079#1088#1077#1096#1077#1085#1086' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1083#1072#1085#1072' '#1087#1086' '#1076#1085#1103#1084' - '#1074' '#1087#1088#1086#1074#1077#1076#1077#1085#1085#1086#1084' '#1076#1086#1082'. ('#1076#1072'/'#1085#1077#1090')'
+    TabOrder = 28
+    Width = 377
+  end
+  object cbisOperDate: TcxCheckBox
+    Left = 180
+    Top = 323
+    Caption = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1076#1072#1090#1072' '#1087#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1087#1083#1072#1085' ('#1076#1072'/'#1085#1077#1090')'
+    TabOrder = 29
+    Width = 281
+  end
+  object cbisPlan_1: TcxCheckBox
+    Left = 11
+    Top = 299
+    Caption = #1055#1083#1072#1090#1080#1084' 1.'#1087#1085'.('#1076#1072'/'#1085#1077#1090')'
+    TabOrder = 30
+    Width = 140
+  end
+  object cbisPlan_2: TcxCheckBox
+    Left = 11
+    Top = 323
+    Caption = #1055#1083#1072#1090#1080#1084' 2.'#1074#1090'.('#1076#1072'/'#1085#1077#1090')'
+    TabOrder = 31
+    Width = 140
+  end
+  object cbisPlan_3: TcxCheckBox
+    Left = 11
+    Top = 347
+    Caption = #1055#1083#1072#1090#1080#1084' 3.'#1089#1088'.('#1076#1072'/'#1085#1077#1090')'
+    TabOrder = 32
+    Width = 140
+  end
+  object cbisPlan_4: TcxCheckBox
+    Left = 11
+    Top = 371
+    Caption = #1055#1083#1072#1090#1080#1084' 4.'#1095#1090'.('#1076#1072'/'#1085#1077#1090')'
+    TabOrder = 33
+    Width = 140
+  end
+  object cbisPlan_5: TcxCheckBox
+    Left = 11
+    Top = 395
+    Caption = #1055#1083#1072#1090#1080#1084' 5.'#1087#1090'.('#1076#1072'/'#1085#1077#1090')'
+    TabOrder = 34
+    Width = 140
+  end
   object ActionList: TActionList
     Left = 192
     Top = 98
@@ -380,6 +429,62 @@
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisStatus_off'
+        Value = Null
+        Component = cbisStatus_off
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOperDate'
+        Value = Null
+        Component = cbisOperDate
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPlan_1'
+        Value = Null
+        Component = cbisPlan_1
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPlan_2'
+        Value = Null
+        Component = cbisPlan_2
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPlan_3'
+        Value = Null
+        Component = cbisPlan_3
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPlan_4'
+        Value = Null
+        Component = cbisPlan_4
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPlan_5'
+        Value = Null
+        Component = cbisPlan_5
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 487
@@ -394,7 +499,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 344
-    Top = 274
+    Top = 218
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_OrderFinance'
@@ -577,6 +682,55 @@
         Component = GuidesMember2
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isStatus_off'
+        Value = Null
+        Component = cbisStatus_off
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isOperDate'
+        Value = Null
+        Component = cbisOperDate
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPlan_1'
+        Value = Null
+        Component = cbisPlan_1
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPlan_2'
+        Value = Null
+        Component = cbisPlan_2
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPlan_3'
+        Value = Null
+        Component = cbisPlan_3
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPlan_4'
+        Value = Null
+        Component = cbisPlan_4
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPlan_5'
+        Value = Null
+        Component = cbisPlan_5
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

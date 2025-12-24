@@ -24,6 +24,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MemberId_1 Integer, MemberCode_1 Integer, MemberName_1 TVarChar
              , MemberId_2 Integer, MemberCode_2 Integer, MemberName_2 TVarChar
              , Comment TVarChar
+             , isStatus_off Boolean, isOperDate Boolean
+             , isPlan_1 Boolean, isPlan_2 Boolean, isPlan_3 Boolean, isPlan_4 Boolean, isPlan_5 Boolean 
              , isErased Boolean
              )
 AS
@@ -96,6 +98,14 @@ BEGIN
 
             , ObjectString_Comment.ValueData   AS Comment
 
+            , COALESCE (ObjectBoolean_Status_off.ValueData, FALSE) ::Boolean AS isStatus_off
+            , COALESCE (ObjectBoolean_OperDate.ValueData, FALSE)   ::Boolean AS isOperDate
+            , COALESCE (ObjectBoolean_Plan_1.ValueData, FALSE)     ::Boolean AS isPlan_1
+            , COALESCE (ObjectBoolean_Plan_2.ValueData, FALSE)     ::Boolean AS isPlan_2
+            , COALESCE (ObjectBoolean_Plan_3.ValueData, FALSE)     ::Boolean AS isPlan_3
+            , COALESCE (ObjectBoolean_Plan_4.ValueData, FALSE)     ::Boolean AS isPlan_4
+            , COALESCE (ObjectBoolean_Plan_5.ValueData, FALSE)     ::Boolean AS isPlan_5
+
             , Object_OrderFinance.isErased     AS isErased
 
        FROM Object AS Object_OrderFinance
@@ -167,6 +177,29 @@ BEGIN
                                 ON OrderFinance_BankAccount.ObjectId = Object_OrderFinance.Id
                                AND OrderFinance_BankAccount.DescId = zc_ObjectLink_OrderFinance_BankAccount()
            LEFT JOIN Object_BankAccount_View ON Object_BankAccount_View.Id = OrderFinance_BankAccount.ChildObjectId
+           --
+           LEFT JOIN ObjectBoolean  AS ObjectBoolean_Status_off 
+                                    ON ObjectBoolean_Status_off.ObjectId = Object_OrderFinance.Id
+                                   AND ObjectBoolean_Status_off.DescId = zc_ObjectBoolean_OrderFinance_Status_off()
+           LEFT JOIN ObjectBoolean  AS ObjectBoolean_OperDate 
+                                    ON ObjectBoolean_OperDate.ObjectId = Object_OrderFinance.Id
+                                   AND ObjectBoolean_OperDate.DescId = zc_ObjectBoolean_OrderFinance_OperDate()
+
+           LEFT JOIN ObjectBoolean  AS ObjectBoolean_Plan_1 
+                                    ON ObjectBoolean_Plan_1.ObjectId = Object_OrderFinance.Id
+                                   AND ObjectBoolean_Plan_1.DescId = zc_ObjectBoolean_OrderFinance_Plan_1()
+           LEFT JOIN ObjectBoolean  AS ObjectBoolean_Plan_2 
+                                    ON ObjectBoolean_Plan_2.ObjectId = Object_OrderFinance.Id
+                                   AND ObjectBoolean_Plan_2.DescId = zc_ObjectBoolean_OrderFinance_Plan_2()
+           LEFT JOIN ObjectBoolean  AS ObjectBoolean_Plan_3 
+                                    ON ObjectBoolean_Plan_3.ObjectId = Object_OrderFinance.Id
+                                   AND ObjectBoolean_Plan_3.DescId = zc_ObjectBoolean_OrderFinance_Plan_3()
+           LEFT JOIN ObjectBoolean  AS ObjectBoolean_Plan_4 
+                                    ON ObjectBoolean_Plan_4.ObjectId = Object_OrderFinance.Id
+                                   AND ObjectBoolean_Plan_4.DescId = zc_ObjectBoolean_OrderFinance_Plan_4()
+           LEFT JOIN ObjectBoolean  AS ObjectBoolean_Plan_5 
+                                    ON ObjectBoolean_Plan_5.ObjectId = Object_OrderFinance.Id
+                                   AND ObjectBoolean_Plan_5.DescId = zc_ObjectBoolean_OrderFinance_Plan_5()
 
        WHERE Object_OrderFinance.DescId = zc_Object_OrderFinance()
          AND (Object_OrderFinance.isErased = FALSE OR inisErased = TRUE);
@@ -179,6 +212,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 24.12.25         *
  08.12.25         *
  02.11.20         * add inisErased
  12.08.19         *

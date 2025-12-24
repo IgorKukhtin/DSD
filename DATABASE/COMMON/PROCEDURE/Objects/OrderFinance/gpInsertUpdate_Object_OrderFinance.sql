@@ -4,7 +4,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinance (Integer, Integer, TV
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinance (Integer, Integer, TVarChar, TVarChar, Integer, Integer, TVarchar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinance (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinance (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinance (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarchar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinance (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinance (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean,Boolean,Boolean,Boolean,Boolean,Boolean,Boolean, TVarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_OrderFinance(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Договор>
@@ -19,7 +20,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_OrderFinance(
     IN inMemberId_insert_4       Integer   ,    -- ФИО - Автор заявки 4
     IN inMemberId_insert_5       Integer   ,    -- ФИО - Автор заявки 5
     IN inMemberId_1              Integer   ,    -- ФИО - на контроле-1
-    IN inMemberId_2              Integer   ,    -- ФИО - на контроле-2
+    IN inMemberId_2              Integer   ,    -- ФИО - на контроле-2 
+    IN inisStatus_off            Boolean   , 
+    IN inisOperDate              Boolean   , 
+    IN inisPlan_1                Boolean   , 
+    IN inisPlan_2                Boolean   , 
+    IN inisPlan_3                Boolean   , 
+    IN inisPlan_4                Boolean   , 
+    IN inisPlan_5                Boolean   ,             
     IN inSession                 TVarChar       -- сессия пользователя
 )
   RETURNS Integer AS
@@ -69,6 +77,20 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OrderFinance_Member_2(), ioId, inMemberId_2);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_OrderFinance_Status_off(), ioId, inisStatus_off);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_OrderFinance_OperDate(), ioId, inisOperDate);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_OrderFinance_Plan_1(), ioId, inisPlan_1);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_OrderFinance_Plan_2(), ioId, inisPlan_2);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_OrderFinance_Plan_3(), ioId, inisPlan_3);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_OrderFinance_Plan_4(), ioId, inisPlan_4);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_OrderFinance_Plan_5(), ioId, inisPlan_5);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -81,6 +103,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.12.25         *
  08.12.25         *
  10.11.25         *
  12.08.19         *

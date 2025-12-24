@@ -1588,12 +1588,42 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_OrderFinanceProperty_Group() RETURNS
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_OrderFinanceProperty(), 'zc_ObjectBoolean_OrderFinanceProperty_Group', 'План по группе (да/нет)' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderFinanceProperty_Group');
 
- 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_OrderFinance_Status_off() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderFinance_Status_off'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_OrderFinanceProperty(), 'zc_ObjectBoolean_OrderFinance_Status_off', 'Разрешено изменение плана по дням - в проведенном док. (да/нет)' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderFinance_Status_off');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_OrderFinance_OperDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderFinance_OperDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_OrderFinanceProperty(), 'zc_ObjectBoolean_OrderFinance_OperDate', 'Заполнение дата предварительный план (да/нет)' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderFinance_OperDate');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_OrderFinance_Plan_1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderFinance_Plan_1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_OrderFinanceProperty(), 'zc_ObjectBoolean_OrderFinance_Plan_1', 'Платим 1.пн.(да/нет)' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderFinance_Plan_1');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_OrderFinance_Plan_2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderFinance_Plan_2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_OrderFinanceProperty(), 'zc_ObjectBoolean_OrderFinance_Plan_2', 'Платим 2.вт.(да/нет)' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderFinance_Plan_2');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_OrderFinance_Plan_3() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderFinance_Plan_3'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_OrderFinanceProperty(), 'zc_ObjectBoolean_OrderFinance_Plan_3', 'Платим 3.ср.(да/нет)' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderFinance_Plan_3');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_OrderFinance_Plan_4() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderFinance_Plan_4'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_OrderFinanceProperty(), 'zc_ObjectBoolean_OrderFinance_Plan_4', 'Платим 4.чт.(да/нет)' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderFinance_Plan_4');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_OrderFinance_Plan_5() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderFinance_Plan_5'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_OrderFinanceProperty(), 'zc_ObjectBoolean_OrderFinance_Plan_5', 'Платим 5.пт.(да/нет)' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderFinance_Plan_5');
+
  
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 24.12.25         * zc_ObjectBoolean_OrderFinance_Status_off
+                    zc_ObjectBoolean_OrderFinance_OperDate
+                    zc_ObjectBoolean_OrderFinance_Plan_1...5 
  09.12.25         * zc_ObjectBoolean_Partner_EdiDesadv_vch
                     zc_ObjectBoolean_Partner_EdiInvoice_vch
                     zc_ObjectBoolean_Partner_EdiOrdspr_vch

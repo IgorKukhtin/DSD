@@ -237,6 +237,71 @@ inherited OrderFinanceForm: TOrderFinanceForm
             Options.Editing = False
             Width = 110
           end
+          object isStatus_off: TcxGridDBColumn
+            Caption = #1048#1079#1084'. '#1087#1083#1072#1085#1072' '#1074' '#1087#1088#1086#1074#1077#1076'. '#1076#1086#1082'. ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isStatus_off'
+            FooterAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1079#1088#1077#1096#1077#1085#1086' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1083#1072#1085#1072' '#1087#1086' '#1076#1085#1103#1084' - '#1074' '#1087#1088#1086#1074#1077#1076#1077#1085#1085#1086#1084' '#1076#1086#1082'. ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 85
+          end
+          object isOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1088#1077#1076#1074#1072#1088'. '#1087#1083#1072#1085' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isOperDate'
+            FooterAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1076#1072#1090#1072' '#1087#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1087#1083#1072#1085' ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 61
+          end
+          object isPlan_1: TcxGridDBColumn
+            Caption = #1055#1083#1072#1090#1080#1084' 1.'#1087#1085'. ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPlan_1'
+            FooterAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 72
+          end
+          object isPlan_2: TcxGridDBColumn
+            Caption = #1055#1083#1072#1090#1080#1084' 2.'#1074#1090'. ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPlan_2'
+            FooterAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object isPlan_3: TcxGridDBColumn
+            Caption = #1055#1083#1072#1090#1080#1084' 3.'#1089#1088'. ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPlan_3'
+            FooterAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object isPlan_4: TcxGridDBColumn
+            Caption = #1055#1083#1072#1090#1080#1084' 4.'#1095#1090'. ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPlan_4'
+            FooterAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object isPlan_5: TcxGridDBColumn
+            Caption = #1055#1083#1072#1090#1080#1084' 5.'#1087#1090'. ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPlan_5'
+            FooterAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
       object cxGrid1: TcxGrid
