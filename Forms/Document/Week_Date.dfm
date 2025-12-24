@@ -1,5 +1,5 @@
 inherited Week_DateForm: TWeek_DateForm
-  Caption = #1042#1074#1073#1086#1088' '#1085#1077#1076#1077#1083#1080
+  Caption = #1042#1099#1073#1086#1088' '#1085#1077#1076#1077#1083#1080
   ClientHeight = 376
   ClientWidth = 440
   AddOnFormData.isAlwaysRefresh = True
