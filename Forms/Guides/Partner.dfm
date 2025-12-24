@@ -2777,6 +2777,24 @@ object PartnerForm: TPartnerForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrepareDayCount_30201'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PrepareDayCount_30201'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDocumentDayCount_30201'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DocumentDayCount_30201'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 160
