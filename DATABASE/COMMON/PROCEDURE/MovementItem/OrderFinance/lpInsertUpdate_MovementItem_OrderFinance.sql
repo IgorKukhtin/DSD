@@ -52,12 +52,13 @@ BEGIN
                 FROM MovementItem
                      INNER JOIN MovementItemLinkObject AS MILinkObject_Contract
                                                        ON MILinkObject_Contract.MovementItemId = MovementItem.Id
-                                                      AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-                                                      AND MILinkObject_Contract.ObjectId = InContractId               
+                                                      AND MILinkObject_Contract.DescId         = zc_MILinkObject_Contract()
+                                                      AND MILinkObject_Contract.ObjectId       = inContractId               
                 WHERE MovementItem.MovementId = inMovementId
-                  AND MovementItem.Id <> ioId
-                  AND MovementItem.ObjectId = inJuridicalId
-                )
+                  AND MovementItem.Id         <> ioId
+                  AND MovementItem.ObjectId   = inJuridicalId
+                  AND MovementItem.isErased   = FALSE
+               )
      THEN
          RAISE EXCEPTION 'Ошибка.Дублирование запрещено. Для <%> и договора <%> уже сохранена строка.', (SELECT '(' ||Object.ObjectCode||') '|| Object.ValueData FROM Object WHERE Object.Id = inJuridicalId)
                                                                                                       , (SELECT '(' ||Object.ObjectCode||') '|| Object.ValueData FROM Object WHERE Object.Id = inContractId);
