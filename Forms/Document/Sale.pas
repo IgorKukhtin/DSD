@@ -324,6 +324,9 @@ type
     cbGofro: TcxCheckBox;
     actUpdateScale_MI_gofro: TdsdInsertUpdateAction;
     dxBarButton2: TdxBarButton;
+    actSaleJournalChoiceMasc: TOpenChoiceForm;
+    mactUpdateMaskSale: TMultiAction;
+    bbUpdateMaskSale: TdxBarButton;
   private
     { Private declarations }
   public
