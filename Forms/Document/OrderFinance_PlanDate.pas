@@ -43,7 +43,6 @@ type
     spGet_WeekNumber_byPeriod: TdsdStoredProc;
     actGet_Period_byWeekNumber: TdsdDataSetRefresh;
     actGet_WeekNumber_byPeriod: TdsdDataSetRefresh;
-    spGet_CurrentWeekDay: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     spSelect_Export: TdsdStoredProc;
     mactExport_New_OTP: TMultiAction;
@@ -89,6 +88,17 @@ type
     MovementProtocolOpenForm: TdsdOpenForm;
     bbMovementProtocolOpen: TdxBarButton;
     InfoMoneyCode: TcxGridDBColumn;
+    AmountPlan_1: TcxGridDBColumn;
+    AmountPlan_2: TcxGridDBColumn;
+    AmountPlan_3: TcxGridDBColumn;
+    AmountPlan_4: TcxGridDBColumn;
+    AmountPlan_5: TcxGridDBColumn;
+    actUpdateStatus_Complete: TdsdExecStoredProc;
+    actUpdateStatus_UnComplete: TdsdExecStoredProc;
+    bbUpdateStatus_Complete: TdxBarButton;
+    bbUpdateStatus_UnComplete: TdxBarButton;
+    spUpdateStatus_UnComplete: TdsdStoredProc;
+    spUpdateStatus_Complete: TdsdStoredProc;
   private
     { Private declarations }
   public

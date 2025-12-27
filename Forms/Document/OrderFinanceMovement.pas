@@ -302,6 +302,11 @@ type
     bbsPrint: TdxBarSubItem;
     InfoMoneyCode: TcxGridDBColumn;
     PersonalName_contract: TcxGridDBColumn;
+    cxLabel20: TcxLabel;
+    edOperDate_Amount: TcxDateEdit;
+    OperDate_Amount: TcxGridDBColumn;
+    OperDate_Amount_old: TcxGridDBColumn;
+    Amount_old: TcxGridDBColumn;
   private
   public
   end;
