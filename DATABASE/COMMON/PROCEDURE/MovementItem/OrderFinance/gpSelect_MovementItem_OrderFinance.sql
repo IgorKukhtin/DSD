@@ -16,26 +16,33 @@ RETURNS TABLE (Id Integer
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, NumGroup Integer
              , Condition TVarChar, ContractStateKindCode Integer
              , StartDate TDateTime, EndDate_real TDateTime, EndDate TVarChar, PersonalName_contract TVarChar
-             , Amount TFloat, AmountRemains TFloat, AmountPartner TFloat
-             , AmountSumm         TFloat
-             , AmountPartner_1    TFloat
-             , AmountPartner_2    TFloat
-             , AmountPartner_3    TFloat
-             , AmountPartner_4    TFloat
-             , AmountPartner_5    TFloat
-             , AmountPlan_1       TFloat
-             , AmountPlan_2       TFloat
-             , AmountPlan_3       TFloat
-             , AmountPlan_4       TFloat
-             , AmountPlan_5       TFloat
-             , AmountPlan_total   TFloat
-             , isAmountPlan_1     Boolean
-             , isAmountPlan_2     Boolean
-             , isAmountPlan_3     Boolean
-             , isAmountPlan_4     Boolean
-             , isAmountPlan_5     Boolean
-             , Comment            TVarChar
-             , Comment_pay        TVarChar
+               -- *** Предварительный План на неделю
+             , Amount               TFloat
+             , Amount_old           TFloat
+               -- *** Дата предварительный план
+             , OperDate_Amount      TDateTime
+             , OperDate_Amount_old  TDateTime
+               --
+             , AmountRemains TFloat, AmountPartner TFloat
+             , AmountSumm           TFloat
+             , AmountPartner_1      TFloat
+             , AmountPartner_2      TFloat
+             , AmountPartner_3      TFloat
+             , AmountPartner_4      TFloat
+             , AmountPartner_5      TFloat
+             , AmountPlan_1         TFloat
+             , AmountPlan_2         TFloat
+             , AmountPlan_3         TFloat
+             , AmountPlan_4         TFloat
+             , AmountPlan_5         TFloat
+             , AmountPlan_total     TFloat
+             , isAmountPlan_1       Boolean
+             , isAmountPlan_2       Boolean
+             , isAmountPlan_3       Boolean
+             , isAmountPlan_4       Boolean
+             , isAmountPlan_5       Boolean
+             , Comment              TVarChar
+             , Comment_pay          TVarChar
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
              , isErased Boolean
@@ -189,7 +196,9 @@ BEGIN
                                        FROM MovementItemDate
                                        WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                          AND MovementItemDate.DescId IN (zc_MIDate_Insert()
-                                                                       , zc_MIDate_Update())
+                                                                       , zc_MIDate_Update()
+                                                                       , zc_MIDate_Amount()
+                                                                        )
                                         )
              , tmpMovementItemLinkObject AS (SELECT *
                                              FROM MovementItemLinkObject
@@ -218,7 +227,12 @@ BEGIN
                SELECT MovementItem.Id                   AS Id
                     , MovementItem.ObjectId             AS JuridicalId
                     , MILinkObject_Contract.ObjectId    AS ContractId
+                      -- Предварительный План на неделю
                     , MovementItem.Amount               AS Amount
+                      -- Дата предварительный план
+                    , MIDate_Amount.ValueData           AS OperDate_Amount
+                    , MIDate_Amount.ValueData           AS OperDate_Amount_old
+                      --
                     , MIFloat_AmountRemains.ValueData   AS AmountRemains
                     , MIFloat_AmountPartner.ValueData   AS AmountPartner
                     , MIFloat_AmountSumm.ValueData      AS AmountSumm
@@ -338,6 +352,10 @@ BEGIN
                     LEFT JOIN tmpMovementItemDate AS MIDate_Update
                                                   ON MIDate_Update.MovementItemId = MovementItem.Id
                                                  AND MIDate_Update.DescId = zc_MIDate_Update()
+                    -- Дата предварительный план
+                    LEFT JOIN tmpMovementItemDate AS MIDate_Amount
+                                                  ON MIDate_Amount.MovementItemId = MovementItem.Id
+                                                 AND MIDate_Amount.DescId = zc_MIDate_Amount()
 
                     LEFT JOIN tmpMovementItemLinkObject AS MILO_Insert
                                                         ON MILO_Insert.MovementItemId = MovementItem.Id
@@ -348,7 +366,7 @@ BEGIN
                                                         ON MILO_Update.MovementItemId = MovementItem.Id
                                                        AND MILO_Update.DescId = zc_MILinkObject_Update()
                     LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
-                    )
+                   )
 
         , tmpContractCondition AS (SELECT Object_ContractCondition_View.ContractId
                                         --, Object_ContractCondition_View.ContractConditionId
@@ -433,24 +451,29 @@ BEGIN
                 || (LPAD (EXTRACT (Day FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||LPAD (EXTRACT (Month FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||EXTRACT (YEAR FROM View_Contract.EndDate_term) :: TVarChar)
              ) ::TVarChar AS EndDate
            , Object_Personal.ValueData ::TVarChar AS PersonalName_contract
+             -- Предварительный План на неделю
+           , tmpMI.Amount              ::TFloat AS Amount
+           , tmpMI.Amount              ::TFloat AS Amount_old
+             -- Дата предварительный план
+           , tmpMI.OperDate_Amount     :: TDateTime
+           , tmpMI.OperDate_Amount_old :: TDateTime
+             --
+           , tmpMI.AmountRemains       ::TFloat
+           , tmpMI.AmountPartner       ::TFloat
+           , tmpMI.AmountSumm          ::TFloat
 
-           , tmpMI.Amount        ::TFloat
-           , tmpMI.AmountRemains ::TFloat
-           , tmpMI.AmountPartner ::TFloat
-           , tmpMI.AmountSumm       ::TFloat
-
-           , tmpMI.AmountPartner_1  ::TFloat
-           , tmpMI.AmountPartner_2  ::TFloat
-           , tmpMI.AmountPartner_3  ::TFloat
-           , tmpMI.AmountPartner_4  ::TFloat
-           , tmpMI.AmountPartner_5  ::TFloat
-
-           , tmpMI.AmountPlan_1     ::TFloat
-           , tmpMI.AmountPlan_2     ::TFloat
-           , tmpMI.AmountPlan_3     ::TFloat
-           , tmpMI.AmountPlan_4     ::TFloat
-           , tmpMI.AmountPlan_5     ::TFloat
-           , tmpMI.AmountPlan_total ::TFloat
+           , tmpMI.AmountPartner_1     ::TFloat
+           , tmpMI.AmountPartner_2     ::TFloat
+           , tmpMI.AmountPartner_3     ::TFloat
+           , tmpMI.AmountPartner_4     ::TFloat
+           , tmpMI.AmountPartner_5     ::TFloat
+                                       
+           , tmpMI.AmountPlan_1        ::TFloat
+           , tmpMI.AmountPlan_2        ::TFloat
+           , tmpMI.AmountPlan_3        ::TFloat
+           , tmpMI.AmountPlan_4        ::TFloat
+           , tmpMI.AmountPlan_5        ::TFloat
+           , tmpMI.AmountPlan_total    ::TFloat
 
            , COALESCE (tmpMI.isAmountPlan_1, TRUE)  ::Boolean  AS isAmountPlan_1
            , COALESCE (tmpMI.isAmountPlan_2, TRUE)  ::Boolean  AS isAmountPlan_2
@@ -529,7 +552,13 @@ BEGIN
            , ''   ::TVarChar                  AS EndDate
            , ''   ::TVarChar                  AS PersonalName_contract
 
-           , COALESCE (tmpMI.Amount,0) ::TFloat AS Amount
+             -- Предварительный План на неделю
+           , COALESCE (tmpMI.Amount, 0)::TFloat AS Amount
+           , COALESCE (tmpMI.Amount, 0)::TFloat AS Amount_old
+             -- Дата предварительный план
+           , tmpMI.OperDate_Amount     :: TDateTime
+           , tmpMI.OperDate_Amount_old :: TDateTime
+             --
            , 0 ::TFloat       AS AmountRemains
            , 0 ::TFloat       AS AmountPartner
            , 0 ::TFloat       AS AmountSumm
@@ -640,7 +669,9 @@ BEGIN
                                FROM MovementItemDate
                                WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                  AND MovementItemDate.DescId IN (zc_MIDate_Insert()
-                                                                , zc_MIDate_Update())
+                                                               , zc_MIDate_Update()
+                                                               , zc_MIDate_Amount()
+                                                                 )
                               )
        -- св-ва
      , tmpMovementItemLinkObject AS (SELECT *
@@ -743,7 +774,13 @@ BEGIN
            , Object_Personal.ValueData ::TVarChar AS PersonalName_contract
 
 
+             -- Предварительный План на неделю
            , MovementItem.Amount               :: TFloat AS Amount
+           , MovementItem.Amount               :: TFloat AS Amount_old
+             -- Дата предварительный план
+           , MIDate_Amount.ValueData           AS OperDate_Amount
+           , MIDate_Amount.ValueData           AS OperDate_Amount_old
+
            , MIFloat_AmountRemains.ValueData   :: TFloat AS AmountRemains
            , MIFloat_AmountPartner.ValueData   :: TFloat AS AmountPartner
            , MIFloat_AmountSumm.ValueData      :: TFloat AS AmountSumm
@@ -862,6 +899,10 @@ BEGIN
             LEFT JOIN tmpMovementItemDate AS MIDate_Update
                                           ON MIDate_Update.MovementItemId = MovementItem.Id
                                          AND MIDate_Update.DescId = zc_MIDate_Update()
+            -- Дата предварительный план
+            LEFT JOIN tmpMovementItemDate AS MIDate_Amount
+                                          ON MIDate_Amount.MovementItemId = MovementItem.Id
+                                         AND MIDate_Amount.DescId = zc_MIDate_Amount()
 
             LEFT JOIN tmpMovementItemLinkObject AS MILO_Insert
                                                 ON MILO_Insert.MovementItemId = MovementItem.Id
@@ -915,7 +956,13 @@ BEGIN
            , ''   ::TVarChar                  AS EndDate
            , ''   ::TVarChar                  AS PersonalName_contract
 
-           , COALESCE (tmpMI.Amount,0) ::TFloat AS Amount
+             -- Предварительный План на неделю
+           , COALESCE (tmpMI.Amount, 0)::TFloat AS Amount
+           , COALESCE (tmpMI.Amount, 0)::TFloat AS Amount_old
+             -- Дата предварительный план
+           , MIDate_Amount.ValueData            AS OperDate_Amount
+           , MIDate_Amount.ValueData            AS OperDate_Amount_old
+             --
            , 0 ::TFloat       AS AmountRemains
            , 0 ::TFloat       AS AmountPartner
            , 0 ::TFloat       AS AmountSumm
@@ -961,6 +1008,10 @@ BEGIN
             LEFT JOIN tmpMovementItemDate AS MIDate_Update
                                           ON MIDate_Update.MovementItemId = tmpMI.Id
                                          AND MIDate_Update.DescId = zc_MIDate_Update()
+            -- Дата предварительный план
+            LEFT JOIN tmpMovementItemDate AS MIDate_Amount
+                                          ON MIDate_Amount.MovementItemId = tmpMI.Id
+                                         AND MIDate_Amount.DescId = zc_MIDate_Amount()
 
             LEFT JOIN tmpMovementItemLinkObject AS MILO_Insert
                                                 ON MILO_Insert.MovementItemId = tmpMI.Id

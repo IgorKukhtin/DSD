@@ -811,6 +811,28 @@ BEGIN
          END IF;
                                                                      
 
+         -- Проверка
+         IF 1 < (SELECT COUNT(*) FROM Movement 
+                                       INNER JOIN MovementFloat AS MovementFloat_NumSecurity
+                                                                ON MovementFloat_NumSecurity.MovementId = Movement.Id
+                                                               AND MovementFloat_NumSecurity.DescId     = zc_MovementFloat_NumSecurity()
+                                                               AND MovementFloat_NumSecurity.ValueData  > 0
+                                       INNER JOIN Movement AS Movement_find
+                                                           ON Movement_find.OperDate BETWEEN Movement.OperDate - INTERVAL '1 DAY' AND Movement.OperDate + INTERVAL '1 DAY'
+                                                          AND Movement_find.DescId   = zc_Movement_WeighingProduction()
+                                                          AND Movement_find.StatusId = zc_Enum_Status_UnComplete()
+                                       INNER JOIN MovementFloat AS MovementFloat_NumSecurity_find
+                                                                ON MovementFloat_NumSecurity_find.MovementId = Movement_find.Id
+                                                               AND MovementFloat_NumSecurity_find.DescId     = zc_MovementFloat_NumSecurity()
+                                                               AND MovementFloat_NumSecurity_find.ValueData  = -1 * ABS (MovementFloat_NumSecurity.ValueData)
+                                  WHERE Movement.Id       = inMovementId
+                                    AND Movement.DescId   = zc_Movement_WeighingProduction()
+                                    -- Не проведен
+                                    AND Movement.StatusId = zc_Enum_Status_UnComplete())
+         THEN
+             RAISE EXCEPTION 'Ошибка.Найдено несколько документов Инвентаризация для охранника.';
+         END IF;
+
          -- Нашли документ охраны
          vbMovementId_Security:= (SELECT Movement_find.Id
          
@@ -820,7 +842,7 @@ BEGIN
                                                                AND MovementFloat_NumSecurity.DescId     = zc_MovementFloat_NumSecurity()
                                                                AND MovementFloat_NumSecurity.ValueData  > 0
                                        INNER JOIN Movement AS Movement_find
-                                                           ON Movement_find.OperDate = Movement.OperDate
+                                                           ON Movement_find.OperDate BETWEEN Movement.OperDate - INTERVAL '1 DAY' AND Movement.OperDate + INTERVAL '1 DAY'
                                                           AND Movement_find.DescId   = zc_Movement_WeighingProduction()
                                                           AND Movement_find.StatusId = zc_Enum_Status_UnComplete()
                                        INNER JOIN MovementFloat AS MovementFloat_NumSecurity_find
@@ -836,13 +858,14 @@ BEGIN
          -- Проверка
          IF COALESCE (vbMovementId_Security, 0) = 0
          THEN
-             RAISE EXCEPTION 'Ошибка.Не найден документ Инвентаризация для охранника № = <%> от <%>.'
+             RAISE EXCEPTION 'Ошибка.Не найден документ Инвентаризация для охранника № = <%> за период с <%> по <%>.'
                             , (SELECT MovementFloat_NumSecurity.ValueData :: Integer
                                FROM MovementFloat AS MovementFloat_NumSecurity
                                WHERE MovementFloat_NumSecurity.MovementId = inMovementId
                                  AND MovementFloat_NumSecurity.DescId     = zc_MovementFloat_NumSecurity()
                               )
-                            , zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId))
+                            , zfConvert_DateToString ((SELECT Movement.OperDate - INTERVAL '1 DAY' FROM Movement WHERE Movement.Id = inMovementId))
+                            , zfConvert_DateToString ((SELECT Movement.OperDate + INTERVAL '1 DAY' FROM Movement WHERE Movement.Id = inMovementId))
                              ;
          END IF;
                                                                      
@@ -2054,7 +2077,7 @@ BEGIN
      END IF;
 
 
-if (vbUserId = 5 AND 1=1)
+if (vbUserId = 5 AND 1=1) OR inMovementId = 33154555
 then
     RAISE EXCEPTION 'Admin - Errr _end <%>  <%>', (select Movement.InvNumber from Movement where Movement.Id = vbMovementId_begin), vbMovementId_begin;
     -- 'Повторите действие через 3 мин.'

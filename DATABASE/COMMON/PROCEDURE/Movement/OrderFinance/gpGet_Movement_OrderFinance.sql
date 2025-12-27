@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_OrderFinance(
     IN inOperDate          TDateTime, -- дата Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, OperDate_Amount TDateTime
              , StatusCode Integer, StatusName TVarChar
              , OrderFinanceId Integer, OrderFinanceName TVarChar
              , BankAccountId Integer, BankAccountName TVarChar
@@ -127,7 +127,15 @@ BEGIN
          SELECT
                0 AS Id
              , CAST (NEXTVAL ('Movement_OrderFinance_seq') AS TVarChar) AS InvNumber
+               -- Дата док.
              , CURRENT_DATE :: TDateTime                        AS OperDate
+               -- Дата - ***План на неделю
+             , (zfCalc_Week_StartDate (CURRENT_DATE
+                                     , CASE WHEN EXTRACT (YEAR FROM CURRENT_DATE + INTERVAL '10 DAY') > EXTRACT (YEAR FROM CURRENT_DATE) THEN 1 ELSE EXTRACT (WEEK FROM CURRENT_DATE) + 1 END :: TFloat
+                                      ) 
+              + INTERVAL '1 DAY'
+               ) :: TDateTime AS OperDate_Amount
+               --
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
              , COALESCE (tmpOrderFinance.OrderFinanceId,0)    ::Integer AS OrderFinanceId
@@ -190,7 +198,13 @@ BEGIN
        SELECT
              Movement.Id                                        AS Id
            , Movement.InvNumber                                 AS InvNumber
+             -- Дата док.
            , Movement.OperDate                                  AS OperDate
+             -- Дата - ***План на неделю
+           , (zfCalc_Week_StartDate (Movement.OperDate, MovementFloat_WeekNumber.ValueData)
+            + INTERVAL '1 DAY'
+             ) :: TDateTime AS OperDate_Amount
+             -- 
            , Object_Status.ObjectCode                           AS StatusCode
            , Object_Status.ValueData                            AS StatusName
 
