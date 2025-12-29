@@ -1623,7 +1623,6 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
     object actUpdateStatus_Complete: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
-      PostDataSetBeforeExecute = False
       StoredProc = spUpdateStatus_Complete
       StoredProcList = <
         item
@@ -1634,11 +1633,11 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
         end>
       Caption = #1047#1072#1082#1088#1099#1090#1100' '#1042#1057#1045' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1081
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1047#1072#1082#1088#1099#1090#1100' '#1042#1057#1045' '#1042#1080#1076#1099' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1081'?'
+      InfoAfterExecute = #1047#1072#1082#1088#1099#1090#1099' '#1042#1057#1045' '#1042#1080#1076#1099' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1081
     end
     object actUpdateStatus_UnComplete: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
-      PostDataSetBeforeExecute = False
       StoredProc = spUpdateStatus_UnComplete
       StoredProcList = <
         item
@@ -1649,6 +1648,7 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
         end>
       Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1081
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1082#1088#1099#1090#1100' '#1086#1076#1080#1085' '#1042#1080#1076' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1081'?'
+      InfoAfterExecute = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1042#1080#1076' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1086#1090#1082#1088#1099#1090' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1081
     end
   end
   inherited MasterDS: TDataSource
