@@ -10,8 +10,14 @@ $BODY$
 BEGIN
   IF EXTRACT (MONTH FROM inOperDate) = 12 AND inWeekNumber IN (1, 2)
   THEN
-      RETURN 
-             DATE_TRUNC ('WEEK', DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH');
+      IF inWeekNumber = 2
+      THEN
+          RETURN 
+                 DATE_TRUNC ('WEEK', DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH' + INTERVAL '1 WEEK');
+      ELSE
+          RETURN 
+                 DATE_TRUNC ('WEEK', DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH');
+      END IF;
   ELSE
       RETURN 
              DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', inOperDate) + ((((7 * COALESCE (inWeekNumber - 1, 0)) :: Integer) :: TVarChar) || ' DAY' ):: INTERVAL) ::TDateTime;

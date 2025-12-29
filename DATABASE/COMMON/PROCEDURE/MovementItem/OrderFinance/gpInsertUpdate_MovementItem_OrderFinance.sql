@@ -3,37 +3,226 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinance(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId            Integer   , -- Ключ объекта <Документ>
     IN inJuridicalId           Integer   , --
     IN inContractId            Integer   , --
-    --IN inBankAccountId         Integer   , --
-    IN inAmount                TFloat    , --
-    ---IN inAmountStart           TFloat    , --
-    IN inAmountPlan_1          TFloat    , --
-    IN inAmountPlan_2          TFloat    , --
-    IN inAmountPlan_3          TFloat    , --
-    IN inAmountPlan_4          TFloat    , --
-    IN inAmountPlan_5          TFloat    , --
+  --IN inBankAccountId         Integer   , --
+    IN inAmount                TFloat    , -- *** Предварительный План на неделю
+ INOUT ioAmount_old            TFloat    , -- *** Предварительный План на неделю
+    IN inOperDate_Amount_top   TDateTime , -- *** Дата предварительный план
+ INOUT ioOperDate_Amount       TDateTime , -- *** Дата предварительный план
+ INOUT ioOperDate_Amount_old   TDateTime , -- *** Дата предварительный план
+ ---IN inAmountStart           TFloat    , --
+ INOUT ioAmountPlan_1          TFloat    , --
+ INOUT ioAmountPlan_2          TFloat    , --
+ INOUT ioAmountPlan_3          TFloat    , --
+ INOUT ioAmountPlan_4          TFloat    , --
+ INOUT ioAmountPlan_5          TFloat    , --
    OUT outAmountPlan_total     TFloat    , --
-    IN inisAmountPlan_1        Boolean    , --
-    IN inisAmountPlan_2        Boolean    , --
-    IN inisAmountPlan_3        Boolean    , --
-    IN inisAmountPlan_4        Boolean    , --
-    IN inisAmountPlan_5        Boolean    , --
+    IN inIsAmountPlan_1        Boolean    , --
+    IN inIsAmountPlan_2        Boolean    , --
+    IN inIsAmountPlan_3        Boolean    , --
+    IN inIsAmountPlan_4        Boolean    , --
+    IN inIsAmountPlan_5        Boolean    , --
     IN inComment               TVarChar  , --
     IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId   Integer;
+   DECLARE vbOperDate_start TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderFinance());
+
+
+     -- замена
+     IF EXISTS (SELECT 1
+                FROM MovementLinkObject AS MovementLinkObject_OrderFinance
+                     -- если Заполнение дата предварительный план = ДА
+                     INNER JOIN ObjectBoolean AS ObjectBoolean_OperDate
+                                              ON ObjectBoolean_OperDate.ObjectId  = MovementLinkObject_OrderFinance.ObjectId
+                                             AND ObjectBoolean_OperDate.DescId    = zc_ObjectBoolean_OrderFinance_OperDate()
+                                             AND ObjectBoolean_OperDate.ValueData = TRUE
+
+                WHERE MovementLinkObject_OrderFinance.MovementId = inMovementId
+                  AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
+               )
+     THEN
+         -- замена
+         IF ioOperDate_Amount IS NULL THEN ioOperDate_Amount:= inOperDate_Amount_top; END IF;
+
+         -- нашли дату начала недели
+         vbOperDate_start:= (SELECT zfCalc_Week_StartDate (Movement.OperDate, MovementFloat_WeekNumber.ValueData)
+                             FROM Movement
+                                  LEFT JOIN MovementFloat AS MovementFloat_WeekNumber
+                                                          ON MovementFloat_WeekNumber.MovementId = Movement.Id
+                                                         AND MovementFloat_WeekNumber.DescId     = zc_MovementFloat_WeekNumber()
+                             WHERE Movement.Id = inMovementId
+                            );
+
+         -- если изменили план
+         IF COALESCE (inAmount, 0) <> COALESCE (ioAmount_old, 0)
+            OR ioOperDate_Amount <> COALESCE (ioOperDate_Amount_old, zc_DateStart())
+         THEN
+             -- пн.
+             IF ioOperDate_Amount = vbOperDate_start + INTERVAL '0 DAY'
+             THEN
+                 ioAmountPlan_1:= inAmount;
+                 ioAmountPlan_2:= 0;
+                 ioAmountPlan_3:= 0;
+                 ioAmountPlan_4:= 0;
+                 ioAmountPlan_5:= 0;
+
+             -- вт.
+             ELSEIF ioOperDate_Amount = vbOperDate_start + INTERVAL '1 DAY'
+             THEN
+                 ioAmountPlan_1:= 0;
+                 ioAmountPlan_2:= inAmount;
+                 ioAmountPlan_3:= 0;
+                 ioAmountPlan_4:= 0;
+                 ioAmountPlan_5:= 0;
+
+             -- ср.
+             ELSEIF ioOperDate_Amount = vbOperDate_start + INTERVAL '2 DAY'
+             THEN
+                 ioAmountPlan_1:= 0;
+                 ioAmountPlan_2:= 0;
+                 ioAmountPlan_3:= inAmount;
+                 ioAmountPlan_4:= 0;
+                 ioAmountPlan_5:= 0;
+
+             -- чт.
+             ELSEIF ioOperDate_Amount = vbOperDate_start + INTERVAL '3 DAY'
+             THEN
+                 ioAmountPlan_1:= 0;
+                 ioAmountPlan_2:= 0;
+                 ioAmountPlan_3:= 0;
+                 ioAmountPlan_4:= inAmount;
+                 ioAmountPlan_5:= 0;
+
+             -- пт.
+             ELSEIF ioOperDate_Amount = vbOperDate_start + INTERVAL '4 DAY'
+             THEN
+                 ioAmountPlan_1:= 0;
+                 ioAmountPlan_2:= 0;
+                 ioAmountPlan_3:= 0;
+                 ioAmountPlan_4:= 0;
+                 ioAmountPlan_5:= inAmount;
+
+             ELSE
+	         RAISE EXCEPTION 'Ошибка.Дата План = <%>%.Должна быть в периоде с <%> по <%>.'
+                                , zfConvert_DateToString (ioOperDate_Amount)
+                                , CHR (13)
+                                , zfConvert_DateToString (vbOperDate_start)
+                                , zfConvert_DateToString (vbOperDate_start + INTERVAL '4 DAY')
+                                 ;
+             END IF;
+
+         -- если изменили план
+         ELSE
+             -- пн.
+             IF ioAmountPlan_1 > 0
+             THEN
+                 ioOperDate_Amount:= vbOperDate_start + INTERVAL '0 DAY';
+
+             -- вт.
+             ELSEIF ioAmountPlan_2 > 0
+             THEN
+                 ioOperDate_Amount:= vbOperDate_start + INTERVAL '1 DAY';
+
+             -- ср.
+             ELSEIF ioAmountPlan_3 > 0
+             THEN
+                 ioOperDate_Amount:= vbOperDate_start + INTERVAL '2 DAY';
+
+             -- чт.
+             ELSEIF ioAmountPlan_4 > 0
+             THEN
+                 ioOperDate_Amount:= vbOperDate_start + INTERVAL '3 DAY';
+
+             -- пт.
+             ELSEIF ioAmountPlan_5 > 0
+             THEN
+                 ioOperDate_Amount:= vbOperDate_start + INTERVAL '4 DAY';
+
+             ELSE
+                 -- не меняется значение
+	         ioOperDate_Amount:= COALESCE ((SELECT MID.ValueData FROM MovementItemDate AS MID WHERE MID.MovementItemId = ioId AND MID.DescId = zc_MIDate_Amount()), ioOperDate_Amount);
+
+                 -- !!!Еще раз!!!
+
+                 -- пн.
+                 IF ioOperDate_Amount = vbOperDate_start + INTERVAL '0 DAY'
+                 THEN
+                     ioAmountPlan_1:= inAmount;
+                     ioAmountPlan_2:= 0;
+                     ioAmountPlan_3:= 0;
+                     ioAmountPlan_4:= 0;
+                     ioAmountPlan_5:= 0;
+
+                 -- вт.
+                 ELSEIF ioOperDate_Amount = vbOperDate_start + INTERVAL '1 DAY'
+                 THEN
+                     ioAmountPlan_1:= 0;
+                     ioAmountPlan_2:= inAmount;
+                     ioAmountPlan_3:= 0;
+                     ioAmountPlan_4:= 0;
+                     ioAmountPlan_5:= 0;
+
+                 -- ср.
+                 ELSEIF ioOperDate_Amount = vbOperDate_start + INTERVAL '2 DAY'
+                 THEN
+                     ioAmountPlan_1:= 0;
+                     ioAmountPlan_2:= 0;
+                     ioAmountPlan_3:= inAmount;
+                     ioAmountPlan_4:= 0;
+                     ioAmountPlan_5:= 0;
+
+                 -- чт.
+                 ELSEIF ioOperDate_Amount = vbOperDate_start + INTERVAL '3 DAY'
+                 THEN
+                     ioAmountPlan_1:= 0;
+                     ioAmountPlan_2:= 0;
+                     ioAmountPlan_3:= 0;
+                     ioAmountPlan_4:= inAmount;
+                     ioAmountPlan_5:= 0;
+
+                 -- пт.
+                 ELSEIF ioOperDate_Amount = vbOperDate_start + INTERVAL '4 DAY'
+                 THEN
+                     ioAmountPlan_1:= 0;
+                     ioAmountPlan_2:= 0;
+                     ioAmountPlan_3:= 0;
+                     ioAmountPlan_4:= 0;
+                     ioAmountPlan_5:= inAmount;
+
+                 ELSE
+                     RAISE EXCEPTION 'Ошибка.Дата План = <%>%.Должна быть в периоде с <%> по <%>.'
+                                    , zfConvert_DateToString (ioOperDate_Amount)
+                                    , CHR (13)
+                                    , zfConvert_DateToString (vbOperDate_start)
+                                    , zfConvert_DateToString (vbOperDate_start + INTERVAL '4 DAY')
+                                     ;
+                 END IF;
+
+             END IF;
+
+
+         END IF;
+
+     ELSE
+         -- замена
+         ioOperDate_Amount:= NULL;
+     END IF;
+
 
      -- сохранили
      SELECT tmp.ioId
@@ -43,29 +232,36 @@ BEGIN
                                                   , inJuridicalId     := inJuridicalId
                                                   , inContractId      := inContractId
                                                   , inAmount          := inAmount
-                                                  , inAmountPlan_1    := inAmountPlan_1
-                                                  , inAmountPlan_2    := inAmountPlan_2
-                                                  , inAmountPlan_3    := inAmountPlan_3
-                                                  , inAmountPlan_4    := inAmountPlan_4
-                                                  , inAmountPlan_5    := inAmountPlan_5
-                                                  , inisAmountPlan_1  := inisAmountPlan_1
-                                                  , inisAmountPlan_2  := inisAmountPlan_2
-                                                  , inisAmountPlan_3  := inisAmountPlan_3
-                                                  , inisAmountPlan_4  := inisAmountPlan_4
-                                                  , inisAmountPlan_5  := inisAmountPlan_5
+                                                  , inOperDate_Amount := ioOperDate_Amount
+                                                  , inAmountPlan_1    := ioAmountPlan_1
+                                                  , inAmountPlan_2    := ioAmountPlan_2
+                                                  , inAmountPlan_3    := ioAmountPlan_3
+                                                  , inAmountPlan_4    := ioAmountPlan_4
+                                                  , inAmountPlan_5    := ioAmountPlan_5
+                                                  , inIsAmountPlan_1  := inIsAmountPlan_1
+                                                  , inIsAmountPlan_2  := inIsAmountPlan_2
+                                                  , inIsAmountPlan_3  := inIsAmountPlan_3
+                                                  , inIsAmountPlan_4  := inIsAmountPlan_4
+                                                  , inIsAmountPlan_5  := inIsAmountPlan_5
                                                   , inComment         := inComment
                                                   , inUserId          := vbUserId
                                                    ) AS tmp;
 
-    --
-    outAmountPlan_total:= COALESCE (inAmountPlan_1, 0)
-                        + COALESCE (inAmountPlan_2, 0)
-                        + COALESCE (inAmountPlan_3, 0)
-                        + COALESCE (inAmountPlan_4, 0)
-                        + COALESCE (inAmountPlan_5, 0)
+    -- вернули
+    outAmountPlan_total:= COALESCE (ioAmountPlan_1, 0)
+                        + COALESCE (ioAmountPlan_2, 0)
+                        + COALESCE (ioAmountPlan_3, 0)
+                        + COALESCE (ioAmountPlan_4, 0)
+                        + COALESCE (ioAmountPlan_5, 0)
                        ;
+    -- вернули
+    ioOperDate_Amount_old:= ioOperDate_Amount;
+    -- вернули
+    ioAmount_old:= inAmount;
 
-     if vbUserId IN (5, 9457) then RAISE EXCEPTION 'Админ.Test Ok. outAmountPlan_total =  <%>', outAmountPlan_total; end if;
+
+    -- тест
+    if vbUserId IN (9457) then RAISE EXCEPTION 'Админ.Test Ok. outAmountPlan_total =  <%>', outAmountPlan_total; end if;
 
 END;
 $BODY$

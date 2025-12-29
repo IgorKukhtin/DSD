@@ -25,6 +25,13 @@ BEGIN
                             AND MovementLinkObject.DescId = zc_MovementLinkObject_OrderFinance()
                          );
 
+     -- если Заполнение дата предварительный план = ДА
+     IF EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId  = vbOrderFinanceId AND OB.DescId = zc_ObjectBoolean_OrderFinance_OperDate() AND OB.ValueData = TRUE)
+     THEN
+         RETURN;
+     END IF;
+
+
      -- нашли
      SELECT COALESCE (MovementFloat_TotalSumm_1.ValueData, 0)
           , COALESCE (MovementFloat_TotalSumm_2.ValueData, 0)

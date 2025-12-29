@@ -21,7 +21,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, cxCurrencyEdit;
+  dxSkinXmas2008Blue, cxCurrencyEdit, dsdCommon;
 
 type
   TRoleUnionForm = class(TParentForm)
@@ -74,6 +74,7 @@ type
     bbInsertMask: TdxBarButton;
     colProcess_EnumName: TcxGridDBColumn;
     Panel1: TPanel;
+    Panel2: TPanel;
     RoleGrid: TcxGrid;
     RoleGridView: TcxGridDBTableView;
     cxGridDBColumn5: TcxGridDBColumn;

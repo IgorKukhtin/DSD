@@ -17,104 +17,26 @@ object RoleUnionForm: TRoleUnionForm
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
-  object cxGrid: TcxGrid
+  object Panel2: TPanel
     Left = 0
     Top = 26
-    Width = 529
-    Height = 287
-    Align = alLeft
-    TabOrder = 0
-    LookAndFeel.NativeStyle = True
-    LookAndFeel.SkinName = 'UserSkin'
-    object cxGridDBTableView: TcxGridDBTableView
-      Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = DataSource
-      DataController.Filter.Options = [fcoCaseInsensitive]
-      DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
-      DataController.Summary.SummaryGroups = <>
-      Images = dmMain.SortImageList
-      OptionsCustomize.ColumnHiding = True
-      OptionsCustomize.ColumnsQuickCustomization = True
-      OptionsData.Deleting = False
-      OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
-      OptionsData.Inserting = False
-      OptionsSelection.InvertSelect = False
-      OptionsView.ColumnAutoWidth = True
-      OptionsView.GroupByBox = False
-      OptionsView.HeaderAutoHeight = True
-      OptionsView.Indicator = True
-      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
-        DataBinding.FieldName = 'Code'
-        HeaderAlignmentHorz = taRightJustify
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
-      object clName: TcxGridDBColumn
-        Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
-        DataBinding.FieldName = 'Name'
-        HeaderAlignmentVert = vaCenter
-        Width = 100
-      end
-      object colProcess_EnumName: TcxGridDBColumn
-        DataBinding.FieldName = 'Process_EnumName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 90
-      end
-      object cldescName: TcxGridDBColumn
-        Caption = #1058#1080#1087
-        DataBinding.FieldName = 'descName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 87
-      end
-      object clErased: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083#1077#1085
-        DataBinding.FieldName = 'isErased'
-        PropertiesClassName = 'TcxCheckBoxProperties'
-        Properties.ReadOnly = True
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 34
-      end
-    end
-    object cxGridLevel: TcxGridLevel
-      GridView = cxGridDBTableView
-    end
-  end
-  object cxLeftSplitter: TcxSplitter
-    Left = 529
-    Top = 26
-    Width = 7
-    Height = 287
-    Control = cxGrid
-  end
-  object Panel1: TPanel
-    Left = 536
-    Top = 26
-    Width = 236
+    Width = 772
     Height = 287
     Align = alClient
     BevelOuter = bvNone
-    TabOrder = 4
-    object RoleGrid: TcxGrid
+    TabOrder = 3
+    object cxGrid: TcxGrid
       Left = 0
       Top = 0
-      Width = 236
+      Width = 529
       Height = 287
-      Align = alClient
+      Align = alLeft
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      object RoleGridView: TcxGridDBTableView
+      object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
-        DataController.DataSource = ActionDS
+        DataController.DataSource = DataSource
         DataController.Filter.Options = [fcoCaseInsensitive]
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
@@ -122,23 +44,110 @@ object RoleUnionForm: TRoleUnionForm
         Images = dmMain.SortImageList
         OptionsCustomize.ColumnHiding = True
         OptionsCustomize.ColumnsQuickCustomization = True
-        OptionsData.Appending = True
         OptionsData.Deleting = False
+        OptionsData.DeletingConfirmation = False
+        OptionsData.Editing = False
+        OptionsData.Inserting = False
         OptionsSelection.InvertSelect = False
         OptionsView.ColumnAutoWidth = True
         OptionsView.GroupByBox = False
         OptionsView.HeaderAutoHeight = True
         OptionsView.Indicator = True
         Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-        object cxGridDBColumn5: TcxGridDBColumn
-          Caption = #1056#1086#1083#1100
-          DataBinding.FieldName = 'roleName'
+        object clCode: TcxGridDBColumn
+          Caption = #1050#1086#1076
+          DataBinding.FieldName = 'Code'
+          HeaderAlignmentHorz = taRightJustify
           HeaderAlignmentVert = vaCenter
-          Width = 224
+          Width = 60
+        end
+        object clName: TcxGridDBColumn
+          Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+          DataBinding.FieldName = 'Name'
+          HeaderAlignmentVert = vaCenter
+          Width = 100
+        end
+        object colProcess_EnumName: TcxGridDBColumn
+          DataBinding.FieldName = 'Process_EnumName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 90
+        end
+        object cldescName: TcxGridDBColumn
+          Caption = #1058#1080#1087
+          DataBinding.FieldName = 'descName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 87
+        end
+        object clErased: TcxGridDBColumn
+          Caption = #1059#1076#1072#1083#1077#1085
+          DataBinding.FieldName = 'isErased'
+          PropertiesClassName = 'TcxCheckBoxProperties'
+          Properties.ReadOnly = True
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 34
         end
       end
-      object RoleGridLevel: TcxGridLevel
-        GridView = RoleGridView
+      object cxGridLevel: TcxGridLevel
+        GridView = cxGridDBTableView
+      end
+    end
+    object cxLeftSplitter: TcxSplitter
+      Left = 529
+      Top = 0
+      Width = 7
+      Height = 287
+      Control = cxGrid
+    end
+    object Panel1: TPanel
+      Left = 536
+      Top = 0
+      Width = 236
+      Height = 287
+      Align = alClient
+      BevelOuter = bvNone
+      TabOrder = 2
+      object RoleGrid: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 236
+        Height = 287
+        Align = alClient
+        TabOrder = 0
+        LookAndFeel.NativeStyle = True
+        LookAndFeel.SkinName = 'UserSkin'
+        object RoleGridView: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = ActionDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsData.Appending = True
+          OptionsData.Deleting = False
+          OptionsSelection.InvertSelect = False
+          OptionsView.ColumnAutoWidth = True
+          OptionsView.GroupByBox = False
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object cxGridDBColumn5: TcxGridDBColumn
+            Caption = #1056#1086#1083#1100
+            DataBinding.FieldName = 'roleName'
+            HeaderAlignmentVert = vaCenter
+            Width = 224
+          end
+        end
+        object RoleGridLevel: TcxGridLevel
+          GridView = RoleGridView
+        end
       end
     end
   end
@@ -148,7 +157,7 @@ object RoleUnionForm: TRoleUnionForm
     Width = 772
     Height = 239
     Align = alBottom
-    TabOrder = 7
+    TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
     object cxGridDBTableViewUser: TcxGridDBTableView
@@ -268,7 +277,8 @@ object RoleUnionForm: TRoleUnionForm
     Width = 772
     Height = 7
     AlignSplitter = salBottom
-    Control = cxGrid
+    Control = cxGridUser
+    ExplicitTop = 19
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet

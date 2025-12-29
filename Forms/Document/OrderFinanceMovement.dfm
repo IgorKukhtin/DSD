@@ -469,6 +469,34 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Text = 'edTotalText_3'
       Width = 134
     end
+    object cxLabel20: TcxLabel
+      Left = 328
+      Top = 125
+      Caption = '***'#1055#1083#1072#1085' '#1085#1072' '#1085#1077#1076'.:'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -11
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edOperDate_Amount: TcxDateEdit
+      Left = 328
+      Top = 146
+      EditValue = 42160d
+      ParentFont = False
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -11
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+      TabOrder = 44
+      Width = 103
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
@@ -572,6 +600,11 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
               Format = ',0.00'
               Kind = skSum
               Column = AmountPartner_5
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = Amount_old
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -653,6 +686,11 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
               Format = ',0.00'
               Kind = skSum
               Column = AmountPartner_5
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = Amount_old
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -938,6 +976,38 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1055#1083#1072#1085' '#1085#1072' '#1085#1077#1076#1077#1083#1102
             Width = 80
+          end
+          object Amount_old: TcxGridDBColumn
+            Caption = '***'#1055#1083#1072#1085' '#1085#1072' '#1085#1077#1076#1077#1083#1102' ('#1080#1085#1092#1086'.)'
+            DataBinding.FieldName = 'Amount_old'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1055#1083#1072#1085' '#1085#1072' '#1085#1077#1076#1077#1083#1102' ('#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086')'
+            Options.Editing = False
+            Width = 70
+          end
+          object OperDate_Amount: TcxGridDBColumn
+            Caption = '***'#1044#1072#1090#1072' '#1087#1083#1072#1085
+            DataBinding.FieldName = 'OperDate_Amount'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'DD.MM.YYYY'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1055#1083#1072#1085' '#1085#1072' '#1085#1077#1076#1077#1083#1102
+            Width = 70
+          end
+          object OperDate_Amount_old: TcxGridDBColumn
+            Caption = '***'#1044#1072#1090#1072' '#1087#1083#1072#1085' ('#1080#1085#1092#1086'.)'
+            DataBinding.FieldName = 'OperDate_Amount_old'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1055#1083#1072#1085' '#1085#1072' '#1085#1077#1076#1077#1083#1102' ('#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086')'
+            Options.Editing = False
+            Width = 70
           end
           object AmountPlan_total: TcxGridDBColumn
             Caption = #1055#1083#1072#1085' '#1048#1058#1054#1043#1054
@@ -4023,48 +4093,83 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmountPlan_1'
+        Name = 'ioAmount_old'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount_old'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate_Amount_top'
+        Value = Null
+        Component = edOperDate_Amount
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioOperDate_Amount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDate_Amount'
+        DataType = ftDateTime
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioOperDate_Amount_old'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDate_Amount_old'
+        DataType = ftDateTime
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioAmountPlan_1'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountPlan_1'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmountPlan_2'
+        Name = 'ioAmountPlan_2'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountPlan_2'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmountPlan_3'
+        Name = 'ioAmountPlan_3'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountPlan_3'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmountPlan_4'
+        Name = 'ioAmountPlan_4'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountPlan_4'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmountPlan_5'
+        Name = 'ioAmountPlan_5'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountPlan_5'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -4366,6 +4471,13 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate_Amount'
+        Value = Null
+        Component = edOperDate_Amount
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
@@ -5368,7 +5480,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Top = 120
   end
   object spInsertMaskMIMaster2: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_OrderFinance'
     DataSets = <>
     OutputType = otResult
     Params = <

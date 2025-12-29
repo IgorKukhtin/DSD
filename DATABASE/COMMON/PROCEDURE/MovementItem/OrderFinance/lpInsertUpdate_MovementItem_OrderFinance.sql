@@ -6,7 +6,8 @@
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean,Boolean,Boolean,Boolean,Boolean, TVarChar, TVarChar, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean,Boolean,Boolean,Boolean,Boolean, TVarChar, Integer);
+-- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean,Boolean,Boolean,Boolean,Boolean, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean,Boolean,Boolean,Boolean,Boolean, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_OrderFinance(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -15,17 +16,18 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_OrderFinance(
     IN inContractId            Integer   , --
     --IN inBankAccountId         Integer   , --
     IN inAmount                TFloat    , --
+    IN inOperDate_Amount       TDateTime , --
     --IN inAmountStart           TFloat    , --
     IN inAmountPlan_1          TFloat    , --
     IN inAmountPlan_2          TFloat    , --
     IN inAmountPlan_3          TFloat    , --
     IN inAmountPlan_4          TFloat    , --
     IN inAmountPlan_5          TFloat    , --
-    IN inisAmountPlan_1        Boolean    , --
-    IN inisAmountPlan_2        Boolean    , --
-    IN inisAmountPlan_3        Boolean    , --
-    IN inisAmountPlan_4        Boolean    , --
-    IN inisAmountPlan_5        Boolean    , --
+    IN inIsAmountPlan_1        Boolean    , --
+    IN inIsAmountPlan_2        Boolean    , --
+    IN inIsAmountPlan_3        Boolean    , --
+    IN inIsAmountPlan_4        Boolean    , --
+    IN inIsAmountPlan_5        Boolean    , --
     IN inComment               TVarChar  , --
     IN inUserId                Integer     -- пользователь
 )
@@ -44,6 +46,8 @@ BEGIN
          WHERE ObjectLink_Contract_ContractStateKind.ObjectId = inContractId
             AND ObjectLink_Contract_ContractStateKind.DescId = zc_ObjectLink_Contract_ContractStateKind()
         ) = zc_Enum_ContractStateKind_Close()
+        --
+        AND inUserId <> 5
      THEN
          RAISE EXCEPTION 'Ошибка.Договор <%> уже Завершен.', (SELECT '(' ||Object.ObjectCode||') '|| Object.ValueData FROM Object WHERE Object.Id = inContractId);
      END IF;
@@ -70,6 +74,9 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
 
+     -- сохранили свойство <Дата предварительный план>
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Amount(), ioId, inOperDate_Amount);
+
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), ioId, inContractId);
      -- сохранили связь с <>
@@ -89,15 +96,15 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_5(), ioId, inAmountPlan_5);
 
      -- сохранили свойство <>
-     /*PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_1(), ioId, inisAmountPlan_1);
+     /*PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_1(), ioId, inIsAmountPlan_1);
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_2(), ioId, inisAmountPlan_2);
+     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_2(), ioId, inIsAmountPlan_2);
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_3(), ioId, inisAmountPlan_3);
+     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_3(), ioId, inIsAmountPlan_3);
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_4(), ioId, inisAmountPlan_4);
+     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_4(), ioId, inIsAmountPlan_4);
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_5(), ioId, inisAmountPlan_5);*/
+     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_5(), ioId, inIsAmountPlan_5);*/
 
 
 
@@ -123,7 +130,7 @@ BEGIN
 
      -- сохранили протокол
      -- !!! времнно откл.!!!
-     PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
+     IF inUserId <> 5 OR vbIsInsert = TRUE THEN PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert); END IF;
 
 END;
 $BODY$

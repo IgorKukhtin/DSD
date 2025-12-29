@@ -39,15 +39,34 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, NumGroup Integer
              , Condition TVarChar, ContractStateKindCode Integer
              , StartDate TDateTime, EndDate_real TDateTime, EndDate TVarChar
-             , Amount TFloat, AmountRemains TFloat, AmountPartner TFloat
+
+               -- Предварительная сумма оплаты на неделю
+             , Amount TFloat
+               -- Нач. долг
+             , AmountRemains TFloat
+               -- Долг с отсрочкой
+             , AmountPartner TFloat
+               -- Приход
              , AmountSumm         TFloat
+               -- Просроченный долг 7 дн.
              , AmountPartner_1    TFloat
              , AmountPartner_2    TFloat
              , AmountPartner_3    TFloat
              , AmountPartner_4    TFloat
+               -- Итого план оплат
              , AmountPlan_total   TFloat
+               -- План оплат на 1.пн-5,пт
              , AmountPlan_day     TFloat
+               -- № в очереди на 1.пн.
              , Number_day         TFloat
+
+               -- План оплат на 1.пн-5,пт
+             , AmountPlan_1         TFloat
+             , AmountPlan_2         TFloat
+             , AmountPlan_3         TFloat
+             , AmountPlan_4         TFloat
+             , AmountPlan_5         TFloat
+
              , FonColor_AmountPlan_day  Integer
              , isAmountPlan_day   Boolean
              , Comment            TVarChar
@@ -801,7 +820,7 @@ BEGIN
         , tmpMovement.WeekNumber
         , tmpMovement.StartDate_WeekNumber ::TDateTime
         , tmpMovement.EndDate_WeekNumber   ::TDateTime  --20
-        --дата по дню недели
+          -- дата по дню недели
         , CASE WHEN tmpMI.NumDay = 1 THEN tmpMovement.StartDate_WeekNumber
                WHEN tmpMI.NumDay = 2 THEN tmpMovement.StartDate_WeekNumber + INTERVAL'1 day'
                WHEN tmpMI.NumDay = 3 THEN tmpMovement.StartDate_WeekNumber + INTERVAL'2 day'
@@ -816,7 +835,7 @@ BEGIN
                WHEN tmpMI.NumDay = 5 THEN tmpMovement.StartDate_WeekNumber + INTERVAL'4 day'
                ELSE NULL
           END ::TDateTime AS DateDay_old
-        --дата по дню недели
+          -- дата по дню недели
         , CASE WHEN tmpMI.NumDay = 1 THEN '1.Пн.'
                WHEN tmpMI.NumDay = 2 THEN '2.Вт.'
                WHEN tmpMI.NumDay = 3 THEN '3.Ср.'
@@ -886,6 +905,23 @@ BEGIN
         , tmpMI.AmountPlan_day    :: TFloat
           -- № в очереди на 1.пн.
         , tmpMI.Number_day    :: TFloat
+
+          -- План оплат на 1.пн-5,пт
+        , CASE WHEN tmpMI.NumDay = 1 THEN tmpMI.AmountPlan_day
+               ELSE 0
+          END ::TFloat AS AmountPlan_1
+        , CASE WHEN tmpMI.NumDay = 2 THEN tmpMI.AmountPlan_day
+               ELSE 0
+          END ::TFloat AS AmountPlan_2
+        , CASE WHEN tmpMI.NumDay = 3 THEN tmpMI.AmountPlan_day
+               ELSE 0
+          END ::TFloat AS AmountPlan_3
+        , CASE WHEN tmpMI.NumDay = 4 THEN tmpMI.AmountPlan_day
+               ELSE 0
+          END ::TFloat AS AmountPlan_4
+        , CASE WHEN tmpMI.NumDay = 5 THEN tmpMI.AmountPlan_day
+               ELSE 0
+          END ::TFloat AS AmountPlan_5
 
         , CASE WHEN tmpMI.AmountPlan_day > 0
                     THEN zc_Color_Yelow()
