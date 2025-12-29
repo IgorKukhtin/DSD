@@ -403,7 +403,10 @@ BEGIN
                                       , tmpCursor1.GoodsNameMaster
                                       , SUM (tmpCursor1.CountMaster ) AS CountMaster
                                       , SUM (tmpCursor1.SummMaster) AS SummMaster
+
                                       , SUM (tmpCursor1.CountMaster_4134 ) AS CountMaster_4134
+                                      , (tmpCursor1.Amount_4134 )          AS Amount_4134
+
                                       , SUM (tmpCursor1.HeadCountMaster) AS HeadCountMaster
                                       , SUM (tmpCursor1.SummMaster) / SUM (tmpCursor1.CountMaster ) AS PriceMaster
                                       , tmpCursor1.FromName
@@ -429,13 +432,17 @@ BEGIN
                                    SELECT DISTINCT 
                                           CASE WHEN inisGroup = TRUE THEN tmpCursor1.PartionGoods_main ELSE tmpCursor1.MovementId::TVarChar END AS MovementId
                                         , CASE WHEN inisGroup = TRUE THEN tmpCursor1.PartionGoods_main ELSE tmpCursor1.InvNumber END AS InvNumber
-                                        , (tmpCursor1.OperDate)  AS OperDate
+                                          -- ***
+                                        , tmpCursor1.OperDate AS OperDate
                                         , CASE WHEN inisGroup = TRUE THEN '' ELSE tmpCursor1.PartionGoods END AS PartionGoods 
                                         , tmpCursor1.PartionGoods_main
                                         , (tmpCursor1.OperDate_partion) AS OperDate_partion
                                         , tmpCursor1.GoodsNameMaster
                                         , (tmpCursor1.CountMaster) 
+                                          -- ***
                                         , (COALESCE (tmpCursor1.AmountMaster_4134,0)) AS CountMaster_4134
+                                        , (COALESCE (tmpCursor1.Amount_4134,0)) AS Amount_4134
+
                                         , (tmpCursor1.SummMaster) AS SummMaster
                                         , (tmpCursor1.HeadCountMaster) AS HeadCountMaster
                                         , tmpCursor1.PriceMaster
@@ -455,10 +462,13 @@ BEGIN
                                         , (tmpCursor1.SummCostIncome)   ::TFloat                                                          AS SummCostIncome
                                         , (tmpCursor1.CountDocIncome)   ::TFloat                                                          AS CountDocIncome
                                         , (tmpCursor1.Count_CountPacker) AS Count_CountPacker
+
+                                          -- ***
                                         , 100 * ((tmpCursor1.CountSeparate) / (tmpCursor1.CountIncome)) AS PercentCount
                                         , (tmpCursor1.CountSeparate) AS CountSeparate
                                         , tmpCursor1.GoodsNameSeparate
                                         , (tmpCursor1.SummHeadCount1) AS SummHeadCount1  -- ср вес головы из Separate
+
                                 FROM tmpResult AS tmpCursor1
                                 ) AS tmpCursor1
                                  GROUP BY tmpCursor1.MovementId
@@ -486,6 +496,8 @@ BEGIN
                                         , tmpCursor1.PercentCount
                                         , tmpCursor1.GoodsNameSeparate
                                         , tmpCursor1.SummHeadCount1
+                                          --
+                                        , tmpCursor1.Amount_4134
                                 )
                          SELECT tmp.MovementId
                               , tmp.InvNumber
@@ -496,7 +508,10 @@ BEGIN
                               , tmp.GoodsNameMaster
                               , tmp.CountMaster
                               , tmp.SummMaster
+
                               , tmp.CountMaster_4134
+                              , tmp.Amount_4134
+
                               , tmp.HeadCountMaster
                               , tmp.PriceMaster
                               , tmp.FromName
@@ -530,7 +545,10 @@ BEGIN
                               , tmp.GoodsNameMaster
                               , SUM (tmp.CountMaster)          AS CountMaster
                               , SUM (tmp.SummMaster)           AS SummMaster
+
                               , SUM (tmp.CountMaster_4134)     AS CountMaster_4134
+                              , SUM (tmp.Amount_4134)          AS Amount_4134
+
                               , SUM (tmp.HeadCountMaster)      AS HeadCountMaster
                               , AVG (tmp.PriceMaster)          AS PriceMaster
                               , STRING_AGG (DISTINCT CASE WHEN inisAll = TRUE THEN 'Все поставщики' ELSE tmp.FromName END, '; ')  AS FromName
@@ -643,7 +661,9 @@ BEGIN
            , SUM(tmpCursor1.PriceFact * tmpCursor1.Amount) ::TFloat AS SummFact_4134
            --, CASE WHEN COALESCE (SUM (tmpCursor1.Amount_4134),0) <> 0 THEN SUM (tmpCursor1.summ_4134) /SUM (tmpCursor1.Amount_4134) ELSE 0 END   AS price_4134
            --, (tmpCursor1.Amount_4134) AS Amount_4134
-           , tmpMain_Group.CountMaster AS Amount_4134
+
+           , CASE WHEN vbUserId = 5 THEN tmpMain_Group.Amount_4134 ELSE tmpMain_Group.CountMaster END AS Amount_4134
+
            --, tmpCursor1.Persent_4134 
            , CASE WHEN COALESCE (SUM (tmpCursor1.CountMaster),0) <> 0 THEN 100  * SUM (tmpCursor1.Amount_4134) / SUM (tmpCursor1.CountMaster) ELSE 0 END :: TFloat AS Persent_4134
            , SUM (tmpCursor1.AmountMaster_4134)  AS AmountMaster_4134    
@@ -738,7 +758,10 @@ BEGIN
              , tmpMain_Group.OperDate_partion
              , tmpMain_Group.GoodsNameMaster
              , tmpMain_Group.CountMaster
+
              , tmpMain_Group.CountMaster_4134
+             , tmpMain_Group.Amount_4134
+
              , tmpMain_Group.SummMaster
              , tmpMain_Group.HeadCountMaster
              --, tmpMain_Group.PriceMaster
