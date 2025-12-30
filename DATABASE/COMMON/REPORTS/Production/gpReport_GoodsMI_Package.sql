@@ -419,8 +419,8 @@ BEGIN
 
            -- (-) / (+) + без пак.
          , ((tmpMI_Union.Amount_Send_out + tmpMI_Union.Amount_Production - tmpMI_Union.Amount_Send_in) * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
-            -- Плюс Вес Упаковок (пакетов)
-            + COALESCE (tmpMI_Union.WeightPackage_calc, 0)
+            -- МИНУС Вес Упаковок (пакетов)
+            - COALESCE (tmpMI_Union.WeightPackage_calc, 0)
            ) :: TFloat AS Weight_diff_two
 
            -- Вес в упаковке - GoodsByGoodsKind
