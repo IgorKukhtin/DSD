@@ -230,6 +230,7 @@ BEGIN
                       , tmpGoods_4134.GoodsName      AS GoodsName_4134
                       , tmpGoods_4134.PriceFact      AS PriceFact_4134
                       , tmpGoods_4134.Amount         AS Amount_4134
+                      , tmpGoods_4134.SummFact       AS SummFact_4134
                       , tmpGoods_4134.Persent_v :: TFloat AS Persent_4134
 
                    FROM tmpMovement
@@ -312,6 +313,7 @@ BEGIN
                           , tmpData.GoodsName_4134
                           , tmpData.PriceFact_4134
                           , tmpData.Amount_4134
+                          , tmpData.SummFact_4134
                           , tmpData.Persent_4134
                           --
                           , SUM (CASE WHEN tmpData.GroupStatId = 12045233 THEN tmpData.Amount ELSE 0 END) OVER (PARTITION BY tmpData.MovementId, tmpData.PartionGoods_main)      AS Amount_GroupStat
@@ -406,6 +408,7 @@ BEGIN
 
                                       , SUM (tmpCursor1.CountMaster_4134 ) AS CountMaster_4134
                                       , (tmpCursor1.Amount_4134 )          AS Amount_4134
+                                      , SUM (tmpCursor1.SummFact_4134)     AS SummFact_4134
 
                                       , SUM (tmpCursor1.HeadCountMaster) AS HeadCountMaster
                                       , SUM (tmpCursor1.SummMaster) / SUM (tmpCursor1.CountMaster ) AS PriceMaster
@@ -468,7 +471,8 @@ BEGIN
                                         , (tmpCursor1.CountSeparate) AS CountSeparate
                                         , tmpCursor1.GoodsNameSeparate
                                         , (tmpCursor1.SummHeadCount1) AS SummHeadCount1  -- ср вес головы из Separate
-
+                                        --
+                                        , tmpCursor1.SummFact_4134
                                 FROM tmpResult AS tmpCursor1
                                 ) AS tmpCursor1
                                  GROUP BY tmpCursor1.MovementId
@@ -511,6 +515,7 @@ BEGIN
 
                               , tmp.CountMaster_4134
                               , tmp.Amount_4134
+                              , CASE WHEN COALESCE (tmp.CountMaster,0) <> 0 THEN tmp.SummFact_4134/tmp.CountMaster ELSE 0 END AS PriceFact_4134_group -- для группировки
 
                               , tmp.HeadCountMaster
                               , tmp.PriceMaster
@@ -547,7 +552,8 @@ BEGIN
                               , SUM (tmp.SummMaster)           AS SummMaster
 
                               , SUM (tmp.CountMaster_4134)     AS CountMaster_4134
-                              , SUM (tmp.Amount_4134)          AS Amount_4134
+                              , SUM (tmp.Amount_4134)          AS Amount_4134 
+                              , CASE WHEN SUM (tmp.CountMaster) <> 0 THEN SUM (tmp.SummFact_4134) / SUM (tmp.CountMaster) ELSE 0 END AS PriceFact_4134_group -- для группировки
 
                               , SUM (tmp.HeadCountMaster)      AS HeadCountMaster
                               , AVG (tmp.PriceMaster)          AS PriceMaster
@@ -570,7 +576,8 @@ BEGIN
                               -- , tmp.PercentCount   
                               , 100 * (SUM (tmp.CountSeparate) / SUM (tmp.CountIncome)) AS PercentCount
                               , STRING_AGG (DISTINCT tmp.GoodsNameSeparate, '; ') AS GoodsNameSeparate
-                              , SUM (tmp.SummHeadCount1)       AS SummHeadCount1
+                              , SUM (tmp.SummHeadCount1)       AS SummHeadCount1 
+                              
                          FROM tmp
                          WHERE inisDetail = FALSE AND inisGroup = TRUE
                          GROUP BY tmp.GoodsNameMaster
@@ -657,7 +664,8 @@ BEGIN
            , AVG (tmpCursor1.SummHeadCount1) AS SummHeadCount1  -- ср вес головы из Separate
            */
            , tmpCursor1.GoodsName_4134
-           , tmpCursor1.PriceFact_4134
+           , AVG (tmpCursor1.PriceFact_4134) AS PriceFact_4134
+           , tmpMain_Group.PriceFact_4134_group
            , SUM(tmpCursor1.PriceFact * tmpCursor1.Amount) ::TFloat AS SummFact_4134
            --, CASE WHEN COALESCE (SUM (tmpCursor1.Amount_4134),0) <> 0 THEN SUM (tmpCursor1.summ_4134) /SUM (tmpCursor1.Amount_4134) ELSE 0 END   AS price_4134
            --, (tmpCursor1.Amount_4134) AS Amount_4134
@@ -788,7 +796,8 @@ BEGIN
             -- , tmpCursor1.PriceMaster
              , tmpCursor1.Separate_info  
              , tmpCursor1.GoodsName_4134
-             , tmpCursor1.PriceFact_4134
+             --, tmpCursor1.PriceFact_4134 
+             , tmpMain_Group.PriceFact_4134_group
              --  
              , tmpCursor1.GoodsId
              , tmpCursor1.GoodsCode
