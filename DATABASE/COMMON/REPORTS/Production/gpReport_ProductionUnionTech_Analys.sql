@@ -983,25 +983,33 @@ BEGIN
             , tmpData.GoodsCode 
             , tmpData.GoodsName       :: TVarChar
 
+              -- Факт кол-во
             , tmpData.Amount          :: TFloat
+              -- Куттеров факт
             , tmpData.CuterCount      :: TFloat
+              -- Расчет кол-во
             , tmpData.Amount_calc     :: TFloat
+              -- Вес ГП (партия)
             , tmpData.Amount_container ::TFloat
 
             , tmpData.isPartionClose
 
             , tmpData.Comment         :: TVarChar
             , tmpData.Count           :: TFloat
+              -- Вес КВК
             , tmpData.RealWeight      :: TFloat
             , tmpData.CuterWeight     :: TFloat
             , tmpData.RealWeightShp   :: TFloat
             , tmpData.RealWeightMsg   :: TFloat
 
+              -- Кол-во заявка
             , tmpData.Amount_Order     :: TFloat
             , tmpData.CuterCount_Order :: TFloat
-            
-            , (tmpData.Amount - tmpData.Amount_Order)         ::TFloat AS Amount_diff
-            , (tmpData.CuterCount - tmpData.CuterCount_Order) ::TFloat AS CuterCount_diff
+
+              -- Разн. Вес ГП / Кол-во заявка
+            , (tmpData.Amount_container - tmpData.Amount_Order) ::TFloat AS Amount_diff
+              -- Разница заявка/факт для пф-гп
+            , (tmpData.CuterCount - tmpData.CuterCount_Order)   ::TFloat AS CuterCount_diff
 
             , tmpData.GoodsKindId
             , tmpData.GoodsKindCode
