@@ -320,7 +320,7 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1082#1072' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1082#1072' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1074#1077#1089' '#1043#1055')'
             Options.Editing = False
             Width = 50
           end
@@ -496,7 +496,7 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
             Width = 55
           end
           object Amount_diff: TcxGridDBColumn
-            Caption = #1056#1072#1079#1085'. '#1079#1072#1103#1074#1082#1072'/'#1092#1072#1082#1090
+            Caption = #1056#1072#1079#1085'. '#1043#1055'/'#1079#1072#1103#1074#1082#1072
             DataBinding.FieldName = 'Amount_diff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -504,7 +504,7 @@ inherited Report_ProductionUnionTech_AnalysForm: TReport_ProductionUnionTech_Ana
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1056#1072#1079#1085#1080#1094#1072' '#1079#1072#1103#1074#1082#1072'/'#1092#1072#1082#1090' '#1076#1083#1103' '#1087#1092'-'#1075#1087
+            HeaderHint = #1056#1072#1079#1085#1080#1094#1072' '#1042#1077#1089' '#1043#1055' ('#1087#1072#1088#1090#1080#1103')/'#1047#1072#1103#1074#1082#1072' '#1076#1083#1103' '#1043#1055
             Options.Editing = False
             Width = 86
           end
