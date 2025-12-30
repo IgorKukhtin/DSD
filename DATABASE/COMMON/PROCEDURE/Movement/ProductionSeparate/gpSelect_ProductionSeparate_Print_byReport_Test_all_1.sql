@@ -182,11 +182,13 @@ BEGIN
                                   , CASE  WHEN tmpMovement_all.PartionGoods ::TVarChar LIKE 'пр-%' THEN SUBSTRING (tmpMovement_all.PartionGoods::TVarChar FROM 4)
                                           WHEN tmpMovement_all.PartionGoods ::TVarChar LIKE 'об-%' THEN SUBSTRING (tmpMovement_all.PartionGoods::TVarChar FROM 4)
                                           WHEN tmpMovement_all.PartionGoods ::TVarChar LIKE 'мо-%' THEN SUBSTRING (tmpMovement_all.PartionGoods::TVarChar FROM 4)
+                                          WHEN tmpMovement_all.PartionGoods ::TVarChar LIKE 'тр-%' THEN SUBSTRING (tmpMovement_all.PartionGoods::TVarChar FROM 4)
                                           ELSE tmpMovement_all.PartionGoods ::TVarChar
                                     END AS PartionGoods_main
                                   , CASE WHEN tmpMovement_all.PartionGoods ::TVarChar LIKE 'пр-%' THEN LEFT ( tmpMovement_all.PartionGoods ::TVarChar, length (tmpMovement_all.PartionGoods)-11 )  ::TVarChar
                                          WHEN tmpMovement_all.PartionGoods ::TVarChar LIKE 'об-%' THEN LEFT ( tmpMovement_all.PartionGoods ::TVarChar, length (tmpMovement_all.PartionGoods)-11 )  ::TVarChar
                                          WHEN tmpMovement_all.PartionGoods ::TVarChar LIKE 'мо-%' THEN LEFT ( tmpMovement_all.PartionGoods ::TVarChar, length (tmpMovement_all.PartionGoods)-11 )  ::TVarChar
+                                         WHEN tmpMovement_all.PartionGoods ::TVarChar LIKE 'тр-%' THEN LEFT ( tmpMovement_all.PartionGoods ::TVarChar, length (tmpMovement_all.PartionGoods)-11 )  ::TVarChar
                                          ELSE '' ::TVarChar
                                     END ::TVarChar AS PartionGoods_main2
                              FROM tmpMovement_all
