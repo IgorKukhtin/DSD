@@ -44,6 +44,11 @@ BEGIN
                                           OR vbUserId = 5
                                              THEN 0
 
+                                        -- разрешено 2
+                                        WHEN inProcName ILIKE 'gpReport_GoodsBalance'
+                                         AND vbUserId = 447966 -- Черниловский С.Ф.
+                                             THEN 0
+                                             
                                         -- если много процессов
                                         WHEN 25 < (SELECT COUNT(*) FROM tmpProcess)
                                              THEN 60
