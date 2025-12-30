@@ -18,7 +18,8 @@ $BODY$BEGIN
            , Object.ValueData  AS Name
            , Object.isErased   AS isErased
        FROM Object
-       WHERE Object.DescId = zc_Object_PaidKind()
+       WHERE Object.DescId   = zc_Object_PaidKind()
+         AND Object.isErased = FALSE
       UNION ALL
        SELECT 0 AS Id
             , 0 AS Code
