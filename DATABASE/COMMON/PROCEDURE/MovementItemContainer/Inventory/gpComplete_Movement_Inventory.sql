@@ -662,10 +662,13 @@ BEGIN
                             LEFT JOIN tmpMIS_all AS MIString_PartionGoods
                                                          ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                                         AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
-                                                        AND View_InfoMoney.InfoMoneyDestinationId NOT IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                        AND (View_InfoMoney.InfoMoneyDestinationId NOT IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
                                                                                                         , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                                                                         , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                                                                                          )
+                                                          -- 30.12.2025 - теперь у МНМА могут указывать партию?
+                                                          --OR TRIM (COALESCE (MIString_PartionGoods.ValueData, '')) <> ''
+                                                            )
                             LEFT JOIN tmpMID_all AS MIDate_PartionGoods
                                                        ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                                       AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
@@ -727,6 +730,8 @@ BEGIN
                                         )
                                     -- исправлена ошибка
                                     AND ObjectLink_PartionGoods_GoodsKindComplete.ObjectId IS NULL
+                                    -- 30.12.2025 - теперь у МНМА могут указывать партию?
+                                    -- AND tmpMI.PartionGoods = ''
                                     --
                                     AND tmpMI.PartionGoodsId = 0
                                     AND ((CLO_Unit.ObjectId   = vbUnitId   AND vbUnitId    > 0)
@@ -776,6 +781,8 @@ BEGIN
                                         )
                                     -- исправлена ошибка
                                     AND ObjectLink_PartionGoods_GoodsKindComplete.ObjectId IS NULL
+                                    -- 30.12.2025 - теперь у МНМА могут указывать партию?
+                                    -- AND tmpMI.PartionGoods = ''
                                     --
                                     AND tmpMI.PartionGoodsId = 0
                                     AND ((CLO_Unit.ObjectId   = vbUnitId   AND vbUnitId    > 0)
@@ -1060,6 +1067,16 @@ BEGIN
                                                                                  )
      WHERE _tmpItem.ContainerId_Goods = 0
     ;
+
+/*     -- test - 30.12.2025
+    RAISE EXCEPTION 'ok - <%> <%>  <%>     <%> <%>  <%> '
+ , (SELECT min (_tmpItem.PartionGoodsId) FROM _tmpItem WHERE _tmpItem.MovementItemId = 344882458)
+ , (SELECT min (_tmpItem.PartionGoodsId) FROM _tmpItem WHERE _tmpItem.MovementItemId = 344882383)
+ , (SELECT max (_tmpItem.PartionGoodsId) FROM _tmpItem WHERE _tmpItem.MovementItemId = 344882386)
+, (SELECT min (_tmpItem.ContainerId_Goods) FROM _tmpItem WHERE _tmpItem.MovementItemId = 344882458)
+, (SELECT min (_tmpItem.ContainerId_Goods) FROM _tmpItem WHERE _tmpItem.MovementItemId = 344882383)
+, (SELECT max (_tmpItem.ContainerId_Goods) FROM _tmpItem WHERE _tmpItem.MovementItemId = 344882386)
+;*/
 
      -- определяется ContainerId_count для количественного учета батонов
      UPDATE _tmpItem SET ContainerId_count = lpInsertFind_Container (inContainerDescId   := zc_Container_CountCount()
@@ -3571,4 +3588,4 @@ where amount1 <> amount2
 -- SELECT * FROM gpComplete_Movement_Inventory (inMovementId:= 1902144, inIsLastComplete:= FALSE, inSession:= zc_Enum_Process_Auto_PrimeCost() :: TVarChar)
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 29207, inSession:= '2')
 -- SELECT * FROM gpReComplete_Movement_Inventory (inMovementId:= 14590084, inSession:= '5')
--- select * from gpComplete_All_Sybase (30382239, False, '444873')
+-- select * from gpComplete_All_Sybase (33165104, False, '444873')
