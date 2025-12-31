@@ -246,14 +246,14 @@ BEGIN
     FROM _tmpReport
          LEFT JOIN _tmpData ON _tmpData.JuridicalId = _tmpReport.JuridicalId
                            AND _tmpData.ContractId  = _tmpReport.ContractId
-                           AND _tmpData.InfoMoneyId = _tmpReport.InfoMoneyId
+                         --AND _tmpData.InfoMoneyId = _tmpReport.InfoMoneyId
                            AND _tmpData.PaidKindId  = _tmpReport.PaidKindId --OR COALESCE (vbPaidKindId,0) = 0)
                            -- не удален
                            AND _tmpData.isErased    = FALSE
          LEFT JOIN _tmpData AS _tmpData_erased
                             ON _tmpData_erased.JuridicalId = _tmpReport.JuridicalId
                            AND _tmpData_erased.ContractId  = _tmpReport.ContractId
-                           AND _tmpData_erased.InfoMoneyId = _tmpReport.InfoMoneyId
+                         --AND _tmpData_erased.InfoMoneyId = _tmpReport.InfoMoneyId
                            AND _tmpData_erased.PaidKindId  = _tmpReport.PaidKindId --OR COALESCE (vbPaidKindId,0) = 0)
                            -- !!!удален!!!
                            AND _tmpData_erased.isErased    = TRUE

@@ -123,7 +123,7 @@ BEGIN
                           -- WHERE MLO_To.ObjectId IN (inFromId, vbFromId_group)
                             -- AND OrderType_Unit.ChildObjectId = inFromId
 
-WHERE vbUserId NOT IN (5, 6561986) -- Брикова В.В.
+WHERE vbUserId NOT IN (6561986) -- Брикова В.В.
 
                           GROUP BY Movement.OperDate
                                  , COALESCE (MILO_Goods.ObjectId, MovementItem.ObjectId)
@@ -622,7 +622,7 @@ WHERE vbUserId NOT IN (5, 6561986) -- Брикова В.В.
                                    AND MovementItem.DescId   = zc_MI_Child()
             INNER JOIN (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased ON tmpIsErased.isErased = MovementItem.isErased
        WHERE _tmpListMaster.MovementId <> 0
-         AND vbUserId NOT IN (5, 6561986) -- Брикова В.В.
+         AND vbUserId NOT IN (6561986) -- Брикова В.В.
       ;
 
     -- !!!!!!!!!!!!!!!!!!!!!!!
@@ -714,7 +714,7 @@ WHERE vbUserId NOT IN (5, 6561986) -- Брикова В.В.
                              -- нет Типа документов
                              AND ObjectLink_ReceiptLevel_DocumentKind.ChildObjectId IS NULL
                              -- нет
-                             AND vbUserId NOT IN (5, 6561986) -- Брикова В.В.
+                             AND vbUserId NOT IN (6561986) -- Брикова В.В.
 
                          )
  , tmpMI_ReceiptChild AS (SELECT MAX (COALESCE (tmpMI_Child.MovementItemId_Child, 0)) AS MovementItemId_Child

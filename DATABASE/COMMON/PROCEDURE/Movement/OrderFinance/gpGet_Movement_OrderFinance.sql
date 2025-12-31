@@ -73,6 +73,15 @@ BEGIN
                               , Object_Member_1.ValueData        AS MemberName_1
                               , Object_Member_2.Id               AS MemberId_2
                               , Object_Member_2.ValueData        AS MemberName_2
+
+                              , CASE WHEN ObjectBoolean_Plan_1.ValueData = TRUE THEN 0
+                                     WHEN ObjectBoolean_Plan_2.ValueData = TRUE THEN 1
+                                     WHEN ObjectBoolean_Plan_3.ValueData = TRUE THEN 2
+                                     WHEN ObjectBoolean_Plan_4.ValueData = TRUE THEN 3
+                                     WHEN ObjectBoolean_Plan_5.ValueData = TRUE THEN 4
+                                     ELSE 0
+                                END AS addDayPlan
+
                          FROM Object AS Object_OrderFinance
 
                              LEFT JOIN ObjectLink AS OrderFinance_Member_insert
@@ -105,6 +114,24 @@ BEGIN
                                                   ON OrderFinance_BankAccount.ObjectId = Object_OrderFinance.Id
                                                  AND OrderFinance_BankAccount.DescId = zc_ObjectLink_OrderFinance_BankAccount()
                              LEFT JOIN Object_BankAccount_View ON Object_BankAccount_View.Id = OrderFinance_BankAccount.ChildObjectId
+
+                             -- Платим 1.пн.(да/нет)
+                             LEFT JOIN ObjectBoolean AS ObjectBoolean_Plan_1
+                                                     ON ObjectBoolean_Plan_1.ObjectId = Object_OrderFinance.Id
+                                                    AND ObjectBoolean_Plan_1.DescId   = zc_ObjectBoolean_OrderFinance_Plan_1()
+                             LEFT JOIN ObjectBoolean AS ObjectBoolean_Plan_2
+                                                     ON ObjectBoolean_Plan_2.ObjectId = Object_OrderFinance.Id
+                                                    AND ObjectBoolean_Plan_2.DescId   = zc_ObjectBoolean_OrderFinance_Plan_2()
+                             LEFT JOIN ObjectBoolean AS ObjectBoolean_Plan_3
+                                                     ON ObjectBoolean_Plan_3.ObjectId = Object_OrderFinance.Id
+                                                    AND ObjectBoolean_Plan_3.DescId   = zc_ObjectBoolean_OrderFinance_Plan_3()
+                             LEFT JOIN ObjectBoolean AS ObjectBoolean_Plan_4
+                                                     ON ObjectBoolean_Plan_4.ObjectId = Object_OrderFinance.Id
+                                                    AND ObjectBoolean_Plan_4.DescId   = zc_ObjectBoolean_OrderFinance_Plan_4()
+                             LEFT JOIN ObjectBoolean AS ObjectBoolean_Plan_5
+                                                     ON ObjectBoolean_Plan_5.ObjectId = Object_OrderFinance.Id
+                                                    AND ObjectBoolean_Plan_5.DescId   = zc_ObjectBoolean_OrderFinance_Plan_5()
+
                          WHERE Object_OrderFinance.DescId = zc_Object_OrderFinance()
                            AND Object_OrderFinance.isErased = FALSE 
                            AND (OrderFinance_Member_insert.ChildObjectId = vbMemberId
@@ -133,7 +160,7 @@ BEGIN
              , (zfCalc_Week_StartDate (CURRENT_DATE
                                      , CASE WHEN EXTRACT (YEAR FROM CURRENT_DATE + INTERVAL '10 DAY') > EXTRACT (YEAR FROM CURRENT_DATE) THEN 1 ELSE EXTRACT (WEEK FROM CURRENT_DATE) + 1 END :: TFloat
                                       ) 
-              + INTERVAL '1 DAY'
+              + ((COALESCE (tmpOrderFinance.addDayPlan, 0) :: Integer) :: TVarChar || ' DAY') :: INTERVAL
                ) :: TDateTime AS OperDate_Amount
                --
              , Object_Status.Code                               AS StatusCode
@@ -152,7 +179,7 @@ BEGIN
              , 0                                      :: TFloat   AS TotalSumm_2
              , 0                                      :: TFloat   AS TotalSumm_3
 
-             , DATE_TRUNC('WEEK', CURRENT_DATE + INTERVAL'7 DAY')                     ::TDateTime AS StartDate_WeekNumber
+             , DATE_TRUNC('WEEK', CURRENT_DATE + INTERVAL'7 DAY')                      ::TDateTime AS StartDate_WeekNumber
              , (DATE_TRUNC('WEEK', CURRENT_DATE + INTERVAL'7 DAY') + INTERVAL '6 DAY') ::TDateTime AS EndDate_WeekNumber
              , CAST (NULL AS TDateTime)                         AS DateUpdate_report
              , ''                                   ::TVarChar  AS UserUpdate_report
@@ -202,7 +229,13 @@ BEGIN
            , Movement.OperDate                                  AS OperDate
              -- Дата - ***План на неделю
            , (zfCalc_Week_StartDate (Movement.OperDate, MovementFloat_WeekNumber.ValueData)
-            + INTERVAL '1 DAY'
+            + ((CASE WHEN ObjectBoolean_Plan_1.ValueData = TRUE THEN 0
+                     WHEN ObjectBoolean_Plan_2.ValueData = TRUE THEN 1
+                     WHEN ObjectBoolean_Plan_3.ValueData = TRUE THEN 2
+                     WHEN ObjectBoolean_Plan_4.ValueData = TRUE THEN 3
+                     WHEN ObjectBoolean_Plan_5.ValueData = TRUE THEN 4
+                     ELSE 0
+                END :: Integer) :: TVarChar || ' DAY') :: INTERVAL
              ) :: TDateTime AS OperDate_Amount
              -- 
            , Object_Status.ObjectCode                           AS StatusCode
@@ -343,6 +376,23 @@ BEGIN
                                          ON MovementLinkObject_Position.MovementId = Movement.Id
                                         AND MovementLinkObject_Position.DescId = zc_MovementLinkObject_Position()
             LEFT JOIN Object AS Object_Position_insert ON Object_Position_insert.Id = MovementLinkObject_Position.ObjectId
+
+            -- Платим 1.пн.(да/нет)
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Plan_1
+                                    ON ObjectBoolean_Plan_1.ObjectId = Object_OrderFinance.Id
+                                   AND ObjectBoolean_Plan_1.DescId   = zc_ObjectBoolean_OrderFinance_Plan_1()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Plan_2
+                                    ON ObjectBoolean_Plan_2.ObjectId = Object_OrderFinance.Id
+                                   AND ObjectBoolean_Plan_2.DescId   = zc_ObjectBoolean_OrderFinance_Plan_2()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Plan_3
+                                    ON ObjectBoolean_Plan_3.ObjectId = Object_OrderFinance.Id
+                                   AND ObjectBoolean_Plan_3.DescId   = zc_ObjectBoolean_OrderFinance_Plan_3()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Plan_4
+                                    ON ObjectBoolean_Plan_4.ObjectId = Object_OrderFinance.Id
+                                   AND ObjectBoolean_Plan_4.DescId   = zc_ObjectBoolean_OrderFinance_Plan_4()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Plan_5
+                                    ON ObjectBoolean_Plan_5.ObjectId = Object_OrderFinance.Id
+                                   AND ObjectBoolean_Plan_5.DescId   = zc_ObjectBoolean_OrderFinance_Plan_5()
 
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_OrderFinance();

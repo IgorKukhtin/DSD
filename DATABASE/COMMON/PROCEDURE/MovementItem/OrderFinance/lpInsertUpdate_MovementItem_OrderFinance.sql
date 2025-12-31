@@ -34,7 +34,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_OrderFinance(
 RETURNS Integer
 AS
 $BODY$
-   DECLARE vbIsInsert       Boolean;
+   DECLARE vbIsInsert Boolean;
+   DECLARE vbContractConditionValue Integer;
 BEGIN
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
