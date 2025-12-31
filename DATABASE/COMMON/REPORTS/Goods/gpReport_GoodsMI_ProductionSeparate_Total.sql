@@ -122,12 +122,14 @@ BEGIN
                                     , CASE WHEN MovementString_PartionGoods.ValueData ::TVarChar LIKE 'пр-%' THEN SUBSTRING (MovementString_PartionGoods.ValueData::TVarChar FROM 4)
                                            WHEN MovementString_PartionGoods.ValueData ::TVarChar LIKE 'об-%' THEN SUBSTRING (MovementString_PartionGoods.ValueData::TVarChar FROM 4)
                                            WHEN MovementString_PartionGoods.ValueData ::TVarChar LIKE 'мо-%' THEN SUBSTRING (MovementString_PartionGoods.ValueData::TVarChar FROM 4)
+                                           WHEN MovementString_PartionGoods.ValueData ::TVarChar LIKE 'тр-%' THEN SUBSTRING (MovementString_PartionGoods.ValueData::TVarChar FROM 4)
                                            ELSE MovementString_PartionGoods.ValueData ::TVarChar
                                       END ::TVarChar AS PartionGoods_main
                                     --, LEFT ( MovementString_PartionGoods.ValueData ::TVarChar, length (MovementString_PartionGoods.ValueData)-11 )  ::TVarChar AS PartionGoods_main2  
                                     , CASE WHEN MovementString_PartionGoods.ValueData ::TVarChar LIKE 'пр-%' THEN LEFT ( MovementString_PartionGoods.ValueData ::TVarChar, length (MovementString_PartionGoods.ValueData)-11 )  ::TVarChar
                                            WHEN MovementString_PartionGoods.ValueData ::TVarChar LIKE 'об-%' THEN LEFT ( MovementString_PartionGoods.ValueData ::TVarChar, length (MovementString_PartionGoods.ValueData)-11 )  ::TVarChar
                                            WHEN MovementString_PartionGoods.ValueData ::TVarChar LIKE 'мо-%' THEN LEFT ( MovementString_PartionGoods.ValueData ::TVarChar, length (MovementString_PartionGoods.ValueData)-11 )  ::TVarChar
+                                           WHEN MovementString_PartionGoods.ValueData ::TVarChar LIKE 'тр-%' THEN LEFT ( MovementString_PartionGoods.ValueData ::TVarChar, length (MovementString_PartionGoods.ValueData)-11 )  ::TVarChar
                                            ELSE '' ::TVarChar
                                       END ::TVarChar AS PartionGoods_main2
                                FROM Movement 
@@ -157,6 +159,7 @@ BEGIN
                                       , CASE WHEN MovementString_PartionGoods.ValueData ::TVarChar LIKE 'пр-%' THEN SUBSTRING (MovementString_PartionGoods.ValueData::TVarChar FROM 4)
                                              WHEN MovementString_PartionGoods.ValueData ::TVarChar LIKE 'об-%' THEN SUBSTRING (MovementString_PartionGoods.ValueData::TVarChar FROM 4)
                                              WHEN MovementString_PartionGoods.ValueData ::TVarChar LIKE 'мо-%' THEN SUBSTRING (MovementString_PartionGoods.ValueData::TVarChar FROM 4)
+                                             WHEN MovementString_PartionGoods.ValueData ::TVarChar LIKE 'тр-%' THEN SUBSTRING (MovementString_PartionGoods.ValueData::TVarChar FROM 4)
                                              ELSE MovementString_PartionGoods.ValueData ::TVarChar
                                         END 
                                )AS tmp
@@ -420,6 +423,7 @@ BEGIN
            , CASE WHEN tmpOperationGroup.PartionGoods ::TVarChar LIKE 'пр-%' THEN LEFT ( tmpOperationGroup.PartionGoods ::TVarChar, length (tmpOperationGroup.PartionGoods)-11 )  ::TVarChar
                   WHEN tmpOperationGroup.PartionGoods ::TVarChar LIKE 'об-%' THEN LEFT ( tmpOperationGroup.PartionGoods ::TVarChar, length (tmpOperationGroup.PartionGoods)-11 )  ::TVarChar
                   WHEN tmpOperationGroup.PartionGoods ::TVarChar LIKE 'мо-%' THEN LEFT ( tmpOperationGroup.PartionGoods ::TVarChar, length (tmpOperationGroup.PartionGoods)-11 )  ::TVarChar
+                  WHEN tmpOperationGroup.PartionGoods ::TVarChar LIKE 'тр-%' THEN LEFT ( tmpOperationGroup.PartionGoods ::TVarChar, length (tmpOperationGroup.PartionGoods)-11 )  ::TVarChar
                   ELSE '' ::TVarChar
              END ::TVarChar AS PartionGoods_main2
            , Right (tmpOperationGroup.PartionGoods_main ,10) ::TVarChar  AS  PartionGoods_Date 

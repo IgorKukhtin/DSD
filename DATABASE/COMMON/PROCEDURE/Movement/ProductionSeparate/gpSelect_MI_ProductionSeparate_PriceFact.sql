@@ -187,11 +187,36 @@ BEGIN
                              LEFT JOIN Container ON Container.Id =  CLO_PartionGoods.ContainerId
                        )
 
-     , tmpIncome_Container AS (SELECT MIContainer.*
-                               FROM MovementItemContainer AS MIContainer
-                               WHERE MIContainer.ContainerId IN (SELECT tmpContainer.ContainerId FROM tmpContainer)
-                                 AND MIContainer.MovementDescId = zc_Movement_Income()
-                               )
+    -- приход от поставщика
+    , tmpIncome_Container1 AS (SELECT MIContainer.*
+                                        FROM MovementItemContainer AS MIContainer
+                                        WHERE MIContainer.ContainerId IN (SELECT tmpContainer.ContainerId FROM tmpContainer)
+                                          AND MIContainer.MovementDescId = zc_Movement_Income()
+                                         )
+    , tmpIncome_Container2 AS (SELECT MIContainer.*
+                                        FROM (SELECT Movement.Id AS MovementId 
+                                              FROM MovementItemString AS MIString_PartionGoods
+
+                                                  LEFT JOIN MovementItem ON MovementItem.Id =  MIString_PartionGoods.MovementItemId
+                                                                        AND MovementItem.DescId = zc_MI_Master()
+                                                                        AND MovementItem.isErased = FALSE
+
+                                                  INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                                                     AND Movement.DescId = zc_Movement_Income()
+                                                  LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+
+                                                WHERE MIString_PartionGoods.DescId IN (zc_MIString_PartionGoodsCalc(), zc_MIString_PartionGoods())
+                                                      AND MIString_PartionGoods.ValueData = inPartionGoods  --  ILIKE '%'||inPartionGoods||'%'  -- ---'4294-245764-30.11.2025'
+                                                 ) AS tmpIncome
+                                          LEFT JOIN  MovementItemContainer AS MIContainer
+                                                                           ON MIContainer.MovementId = tmpIncome.MovementId
+                                                                          AND MIContainer.DescId = zc_MIContainer_Count()
+                                          WHERE (SELECT COUNT(*) FROM tmpIncome_Container1) = 0
+                                           )
+     , tmpIncome_Container AS (SELECT tmp.* FROM tmpIncome_Container1 AS tmp
+                         UNION SELECT tmp.* FROM tmpIncome_Container2 AS tmp
+                              )
+
 
      , tmpMI_Float AS (SELECT MovementItemFloat.*
                        FROM MovementItemFloat
@@ -211,8 +236,8 @@ BEGIN
                            , MIContainer.ObjectId_analyzer AS GoodsId
                            , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN (MIContainer.Amount) ELSE 0 END) AS Amount_count
                            , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  THEN (MIContainer.Amount) ELSE 0 END) AS Amount_summ
-                           , SUM (COALESCE (MIFloat_AmountPacker.ValueData, 0)) AS CountPacker
-                           , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0))    AS HeadCount
+                           , SUM (COALESCE (MIFloat_AmountPacker.ValueData, 0))       AS CountPacker
+                           , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0))          AS HeadCount
                            , SUM (COALESCE (MIFloat_AmountPartner.ValueData,0))       AS AmountPartner
                            , SUM (COALESCE (MIFloat_AmountPartnerSecond.ValueData,0)) AS AmountPartnerSecond
                       FROM tmpIncome_Container AS MIContainer
@@ -247,8 +272,8 @@ BEGIN
                            , 0 AS ContainerId
                            , MIContainer.MovementId
                            , MIContainer.ObjectId_analyzer AS GoodsId
-                           , CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN SUM (MIContainer.Amount) ELSE 0 END AS Amount_count
-                           , CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  THEN SUM (MIContainer.Amount) ELSE 0 END AS Amount_summ
+                           , CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN SUM (COALESCE (MIContainer.Amount,0)) ELSE 0 END AS Amount_count
+                           , CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  THEN SUM (COALESCE (MIContainer.Amount,0)) ELSE 0 END AS Amount_summ
                            , SUM (COALESCE (MIFloat_AmountPacker.ValueData, 0)) AS CountPacker
                            , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0))    AS HeadCount
                            , SUM (COALESCE (MIFloat_AmountPartner.ValueData,0))       AS AmountPartner
@@ -373,10 +398,12 @@ BEGIN
            LEFT JOIN (SELECT MAX (tmpIncome.GoodsId)                                               AS GoodsId
                            , MAX (COALESCE (MovementLinkObject_From.ObjectId, 0))                  AS FromId
                            , MAX (COALESCE (MovementLinkObject_PersonalPacker.ObjectId, 0))        AS PersonalPackerId
-                           , SUM (tmpIncome.Amount_count) AS Amount_count, SUM ( tmpIncome.Amount_summ) AS Amount_summ
-                           , SUM (tmpIncome.CountPacker) AS CountPacker, SUM (tmpIncome.HeadCount) AS HeadCount
-                           , SUM (tmpIncome.AmountPartner)       AS AmountPartner
-                           , SUM (tmpIncome.AmountPartnerSecond) AS AmountPartnerSecond
+                           , SUM (COALESCE (tmpIncome.Amount_count, 0))        AS Amount_count
+                           , SUM (COALESCE (tmpIncome.Amount_summ, 0))         AS Amount_summ
+                           , SUM (COALESCE (tmpIncome.CountPacker, 0))         AS CountPacker
+                           , SUM (COALESCE (tmpIncome.HeadCount, 0))           AS HeadCount
+                           , SUM (COALESCE (tmpIncome.AmountPartner, 0))       AS AmountPartner
+                           , SUM (COALESCE (tmpIncome.AmountPartnerSecond, 0)) AS AmountPartnerSecond
                       FROM tmpIncome
                            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                         ON MovementLinkObject_From.MovementId = tmpIncome.MovementId
@@ -647,4 +674,10 @@ $BODY$
 --SELECT * FROM gpSelect_MI_ProductionSeparate_PriceFact (inStartDate := ('24.04.2025')::TDateTime , inEndDate := ('28.04.2025')::TDateTime , inMovementId:=31194601 , inGoodsId := 4261, inPartionGoods := '4218-242592-24.04.2025' ::TVarChar , inSession:= zfCalc_UserAdmin());  --5225 живой вес
  --SELECT * FROM gpSelect_MI_ProductionSeparate_PriceFact (inStartDate := ('05.05.2025')::TDateTime , inEndDate := ('05.05.2025')::TDateTime , inMovementId:=31194601, inPriceListId_norm:= 0, inGoodsId := 0, inPartionGoods := '4218-11956-05.05.2025' ::TVarChar , inSession:= zfCalc_UserAdmin());  --5225 живой вес
 
+   /*
 
+select *
+from gpSelect_MI_ProductionSeparate_PriceFact
+('03.12.2025'::TDateTime, '03.12.2025'::TDateTime, 32968157 , 12048635, 0, '4294-245764-30.11.2025', '5') AS tmpData  
+
+*/
