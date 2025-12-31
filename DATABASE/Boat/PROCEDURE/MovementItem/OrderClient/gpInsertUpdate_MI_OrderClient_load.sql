@@ -82,6 +82,10 @@ BEGIN
 
 
      -- замена - кривой Id_site
+     inValue1:= TRIM (inValue1);
+
+
+     -- замена - кривой Id_site
      IF inValue1 ILIKE 'b330_doa_' AND inValue2 = 'Dual Battery System' THEN inValue1:= 'b330_doa_3'; END IF;
      IF inValue1 ILIKE 'b330_doa_' AND inValue2 = 'Digital Sonar'       THEN inValue1:= 'b330_doa_4'; END IF;
 
@@ -692,7 +696,10 @@ END IF;
          IF 1 < (SELECT COUNT(*)
                  FROM Object AS Object_Model
                  WHERE Object_Model.DescId = zc_Object_ProdModel()
-                   AND inValue2 ILIKE ('%' || Object_Model.ValueData || '%')
+                   AND ((inValue2 ILIKE ('%' || Object_Model.ValueData || '%') AND inValue2 NOT ILIKE '%280%')
+                     OR ('280E'   ILIKE ('%' || Object_Model.ValueData || '')  AND inValue2 ILIKE '%280E')
+                     OR ('280'    ILIKE ('%' || Object_Model.ValueData || '')  AND inValue2 ILIKE '%280')
+                       )
                    AND inTitle2 ILIKE 'title'
                    AND TRIM (inValue2) <> ''
                 )
@@ -704,7 +711,10 @@ END IF;
          vbModelId:= (SELECT Object_Model.Id
                       FROM Object AS Object_Model
                       WHERE Object_Model.DescId = zc_Object_ProdModel()
-                        AND inValue2 ILIKE ('%' || Object_Model.ValueData || '%')
+                        AND ((inValue2 ILIKE ('%' || Object_Model.ValueData || '%') AND inValue2 NOT ILIKE '%280%')
+                          OR ('280E'   ILIKE ('%' || Object_Model.ValueData || '')  AND inValue2 ILIKE '%280E')
+                          OR ('280'    ILIKE ('%' || Object_Model.ValueData || '')  AND inValue2 ILIKE '%280')
+                            )
                         AND inTitle2 ILIKE 'title'
                         AND TRIM (inValue2) <> ''
                      );
@@ -810,6 +820,13 @@ END IF;
                                                ) AS tmp
                        );
 
+         -- Проверка
+         IF COALESCE (ioProductId, 0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Лодка не создана (ioProductId = 0) для ioMovementId_OrderClient = <%>.', ioMovementId_OrderClient;
+         END IF;
+
+
          --  если вдруг был пустой
          IF COALESCE (ioMovementId_OrderClient, 0) = 0
          THEN
@@ -856,6 +873,14 @@ END IF;
 
          -- нашли созданный
          vbMovementItemId:= (SELECT MI.Id FROM MovementItem AS MI WHERE MI.MovementId = ioMovementId_OrderClient AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE);
+         -- Проверка
+         IF COALESCE (vbMovementItemId, 0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Не создан MovementItemId для ioMovementId_OrderClient = <%>.'
+                            , ioMovementId_OrderClient
+                             ;
+         END IF;
+
 
          -- 5.2. Проверка
          IF NOT EXISTS (SELECT 1 FROM MovementFloat AS MF WHERE MF.MovementId = ioMovementId_OrderClient AND MF.DescId = zc_MovementFloat_OperPrice_load() AND MF.ValueData > 0)
