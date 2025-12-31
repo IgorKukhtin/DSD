@@ -38,7 +38,10 @@ BEGIN
                          INNER JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyDestination
                                                ON ObjectLink_InfoMoney_InfoMoneyDestination.ObjectId = ObjectLink_Goods_InfoMoney.ChildObjectId
                                               AND ObjectLink_InfoMoney_InfoMoneyDestination.DescId = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
-                                              AND ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId IN (zc_Enum_InfoMoneyDestination_20300(), zc_Enum_InfoMoneyDestination_70100(), zc_Enum_InfoMoneyDestination_70200())
+                                              AND ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId IN (zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                                                                            , zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+                                                                                                            , zc_Enum_InfoMoneyDestination_70200() -- Капитальный ремонт
+                                                                                                             )
                                               AND vbUserId IN (5)
                     WHERE ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                    )

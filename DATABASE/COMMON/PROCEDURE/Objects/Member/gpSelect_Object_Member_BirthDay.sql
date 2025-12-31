@@ -70,7 +70,7 @@ BEGIN
                         , Object_Position.ValueData  AS PositionName
                         , COALESCE(ObjectDate_Birthday.ValueData, Null)   ::TDateTime  AS Birthday_Date
                         , CASE WHEN EXTRACT (DAY FROM ObjectDate_Birthday.ValueData) < 10 THEN '0' ELSE '' END || EXTRACT (DAY FROM ObjectDate_Birthday.ValueData)     :: TVarChar AS Birthday_Day
-                        , CASE WHEN EXTRACT (Month FROM ObjectDate_Birthday.ValueData) < 10 THEN '0' ELSE '' END || EXTRACT (Month FROM ObjectDate_Birthday.ValueData) :: TVarChar AS Month_ord
+                        , CASE WHEN EXTRACT (MONTH FROM ObjectDate_Birthday.ValueData) < 10 THEN '0' ELSE '' END || EXTRACT (MONTH FROM ObjectDate_Birthday.ValueData) :: TVarChar AS Month_ord
                         , zfCalc_MonthNameUkr (ObjectDate_Birthday.ValueData) :: TVarChar AS Birthday_Month
                         , CASE WHEN (EXTRACT (YEAR FROM Current_Date) ::Integer - EXTRACT (YEAR FROM ObjectDate_Birthday.ValueData)::Integer) % 5 <> 0 THEN '' ELSE 'ёв≥л€р' END :: TVarChar AS Anniversary
                    FROM Object AS Object_Member
@@ -84,9 +84,9 @@ BEGIN
                    WHERE Object_Member.DescId = zc_Object_Member()
                      AND Object_Member.isErased = FALSE
                      AND ObjectDate_Birthday.ValueData IS NOT NULL
-                     AND ( (EXTRACT (Month FROM ObjectDate_Birthday.ValueData) = EXTRACT (Month FROM Current_Date) AND inIsNext = FALSE)
-                        OR (EXTRACT (Month FROM ObjectDate_Birthday.ValueData) = EXTRACT (Month FROM Current_Date)+1 AND inIsNext = TRUE)
-                          )
+                     AND ((inIsNext = FALSE AND EXTRACT (MONTH FROM ObjectDate_Birthday.ValueData) = EXTRACT (MONTH FROM Current_Date))
+                       OR (inIsNext = TRUE  AND EXTRACT (MONTH FROM ObjectDate_Birthday.ValueData) = CASE WHEN EXTRACT (MONTH FROM Current_Date) = 12 THEN 1 ELSE EXTRACT (MONTH FROM Current_Date) + 1 END)
+                         )
                    )
 
       --–езультат
