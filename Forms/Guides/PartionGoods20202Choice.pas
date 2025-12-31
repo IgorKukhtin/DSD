@@ -22,7 +22,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
   dxSkinXmas2008Blue, cxImageComboBox, cxContainer, dsdGuides, cxLabel,
-  cxTextEdit, cxMaskEdit, cxButtonEdit, Vcl.ExtCtrls;
+  cxTextEdit, cxMaskEdit, cxButtonEdit, Vcl.ExtCtrls, dsdCommon;
 
 type
   TPartionGoods20202ChoiceForm = class(TAncestorEnumForm)
