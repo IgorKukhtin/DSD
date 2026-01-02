@@ -16,12 +16,18 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Service(
     IN inIsErased          Boolean   ,
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+RETURNS TABLE (Id Integer, MovementId_corr Integer, InvNumber Integer, NPP_corr Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
+               -- Дебет/Кредит
              , AmountIn TFloat, AmountOut TFloat
+               -- Дебет/Кредит (корректировка)
+             , AmountIn_corr TFloat, AmountOut_corr TFloat
+               -- Дебет/Кредит (валюта)
              , AmountCurrencyDebet TFloat, AmountCurrencyKredit TFloat
+               -- Дебет/Кредит (кол-во)
              , CountDebet TFloat, CountKredit TFloat, Price TFloat, Summa_calc TFloat
+
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
              , CurrencyPartnerName TVarChar
              , Comment TVarChar
@@ -150,7 +156,7 @@ BEGIN
                                    AND MovementString.DescId IN (zc_MovementString_InvNumberInvoice() 
                                                                , zc_MovementString_MovementId()
                                                                , zc_MovementString_InvNumberPartner()
-                                                              )
+                                                                )
                                 )
          , tmpMovementFloat AS (SELECT *
                                 FROM MovementFloat
@@ -158,7 +164,8 @@ BEGIN
                                   AND MovementFloat.DescId IN (zc_MovementFloat_AmountCurrency()
                                                              , zc_MovementFloat_CurrencyPartnerValue()
                                                              , zc_MovementFloat_ParPartnerValue()
-                                                             )
+                                                             , zc_MovementFloat_NPP_corr()
+                                                              )
                                )
          , tmpMI AS (SELECT MovementItem.*
                      FROM MovementItem
@@ -172,11 +179,12 @@ BEGIN
                                                            , zc_MIFloat_Price()
                                                            )
                          )
-
-
+       -- Результат
        SELECT
              Movement.Id                                    AS Id
-           , Movement.InvNumber                             AS InvNumber
+           , Movement.ParentId                              AS MovementId_corr
+           , zfConvert_StringToNumber (Movement.InvNumber)  AS InvNumber
+           , MovementFloat_NPP_corr.ValueData    :: Integer AS NPP_corr
            , Movement.OperDate                              AS OperDate
            , Object_Status.ObjectCode                       AS StatusCode
            , Object_Status.ValueData                        AS StatusName
@@ -184,27 +192,44 @@ BEGIN
            , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
            , MovementString_InvNumberPartner.ValueData      AS InvNumberPartner
 
-           , CASE WHEN MovementItem.Amount > 0
+             -- Дебет
+           , CASE WHEN MovementItem.Amount > 0 AND COALESCE (Movement.ParentId, 0) = 0
                        THEN MovementItem.Amount
                   ELSE 0
              END                                  :: TFloat AS AmountIn
-           , CASE WHEN MovementItem.Amount < 0
+             -- Кредит
+           , CASE WHEN MovementItem.Amount < 0 AND COALESCE (Movement.ParentId, 0) = 0
                        THEN -1 * MovementItem.Amount
                   ELSE 0
              END                                  :: TFloat AS AmountOut
 
+             -- Дебет (корректировка)
+           , CASE WHEN MovementItem.Amount > 0 AND Movement.ParentId > 0
+                       THEN MovementItem.Amount
+                  ELSE 0
+             END                                  :: TFloat AS AmountIn_corr
+             -- Кредит (корректировка)
+           , CASE WHEN MovementItem.Amount < 0 AND Movement.ParentId > 0
+                       THEN -1 * MovementItem.Amount
+                  ELSE 0
+             END                                  :: TFloat AS AmountOut_corr
+
+             -- Дебет (валюта)
            , CASE WHEN MovementFloat_AmountCurrency.ValueData > 0
                   THEN MovementFloat_AmountCurrency.ValueData 
                   ELSE 0
              END                                  :: TFloat AS AmountCurrencyDebet
-             
+             -- Кредит (валюта)
            , CASE WHEN MovementFloat_AmountCurrency.ValueData < 0
                   THEN -1 * MovementFloat_AmountCurrency.ValueData 
                   ELSE 0
              END                                  :: TFloat AS AmountCurrencyKredit
              
+             -- Дебет кол-во
            , CASE WHEN MIFloat_Count.ValueData > 0 THEN MIFloat_Count.ValueData ELSE 0 END :: TFloat AS CountDebet
+             -- Кредит кол-во
            , CASE WHEN MIFloat_Count.ValueData < 0 THEN -1* MIFloat_Count.ValueData ELSE 0 END :: TFloat AS CountKredit
+
            , MIFloat_Price.ValueData :: TFloat AS Price
            , (MIFloat_Price.ValueData * CASE WHEN MIFloat_Count.ValueData < 0 THEN -1 * MIFloat_Count.ValueData ELSE MIFloat_Count.ValueData END) :: TFloat AS Summa_calc
 
@@ -270,9 +295,13 @@ BEGIN
                                         ON MovementString_MovementId.MovementId = Movement.Id
                                        AND MovementString_MovementId.DescId = zc_MovementString_MovementId()
 
+            LEFT JOIN tmpMovementFloat AS MovementFloat_NPP_corr
+                                       ON MovementFloat_NPP_corr.MovementId = Movement.Id
+                                      AND MovementFloat_NPP_corr.DescId     = zc_MovementFloat_NPP_corr()
+
             LEFT JOIN tmpMovementFloat AS MovementFloat_AmountCurrency
-                                    ON MovementFloat_AmountCurrency.MovementId = Movement.Id
-                                   AND MovementFloat_AmountCurrency.DescId = zc_MovementFloat_AmountCurrency()
+                                       ON MovementFloat_AmountCurrency.MovementId = Movement.Id
+                                      AND MovementFloat_AmountCurrency.DescId = zc_MovementFloat_AmountCurrency()
                                    
             LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner
                                          ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id
@@ -427,5 +456,3 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_Movement_Service (inStartDate:= '30.01.2016', inEndDate:= '01.02.2016', inJuridicalBasisId:=0, inSettingsServiceId := 3175171, inIsWith:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_Movement_Service (inStartDate:= '01.09.2021'::TDateTime, inEndDate:= '03.09.2021'::TDateTime, inJuridicalBasisId:=0, inSettingsServiceId := 3175171, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
-
---3175171

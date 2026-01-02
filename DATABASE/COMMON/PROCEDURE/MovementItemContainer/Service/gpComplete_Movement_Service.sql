@@ -32,7 +32,7 @@ BEGIN
                      );
 
 
-     -- Поиск
+     -- Поиск - Акция OR Трейд-маркетинг
      vbMovementId_Doc:= (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Doc());
 
      -- Проверили  - 

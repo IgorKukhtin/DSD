@@ -18,13 +18,19 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (Integer, TVarChar, TDat
                                                        , TVarChar, TVarChar, TVarChar
                                                        , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);*/
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (Integer, TVarChar, TDateTime, TDateTime, TVarChar
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (Integer, TVarChar, TDateTime, TDateTime, TVarChar
+                                                       , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                       , TVarChar, TVarChar, TVarChar
+                                                       , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);*/
+
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (Integer, Integer, TVarChar, TDateTime, TDateTime, TVarChar
                                                        , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                        , TVarChar, TVarChar, TVarChar
                                                        , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
+    IN inMovementId_corr          Integer   , -- Ключ объекта <Документ>
     IN inInvNumber                TVarChar  , -- Номер документа
     IN inOperDate                 TDateTime , -- Дата документа
     IN inOperDatePartner          TDateTime , -- Дата акта(контрагента)
@@ -114,6 +120,49 @@ BEGIN
          ioAmountCurrencyKredit:= 0;
      END IF;
 
+
+     -- проверка для корректировки, inMovementId_corr > 0
+     IF inMovementId_corr > 0
+     THEN
+         -- 1.
+         IF COALESCE (inPaidKindId, 0) <> zc_Enum_PaidKind_Balance_no()
+         THEN
+             RAISE EXCEPTION 'Ошибка.Нет прав проводить форму оплаты = <%>%Для данного документа можно только <%>.'
+                           , lfGet_Object_ValueData_sh (inPaidKindId)
+                           , CHR (13)
+                           , lfGet_Object_ValueData_sh (zc_Enum_PaidKind_Balance_no())
+                            ;
+         END IF;
+
+         -- 2.1.
+         IF COALESCE (inPartnerId, 0) <> COALESCE ((SELECT MI.ObjectId FROM MovementItem AS MI WHERE MI.MovementId = inMovementId_corr AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE), 0)
+            AND inPartnerId <> 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Нет прав менять Контрагента.%Для данного документа можно только <%>.'
+                           , CHR (13)
+                           , lfGet_Object_ValueData_sh ((SELECT MI.ObjectId FROM MovementItem AS MI WHERE MI.MovementId = inMovementId_corr AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE))
+                            ;
+         END IF;
+         -- 2.2.
+         IF COALESCE (inJuridicalId, 0) <> COALESCE ((SELECT MI.ObjectId FROM MovementItem AS MI WHERE MI.MovementId = inMovementId_corr AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE), 0)
+            AND COALESCE (inPartnerId, 0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Нет прав менять Юр.лицо.%Для данного документа можно только <%>.'
+                           , CHR (13)
+                           , lfGet_Object_ValueData_sh ((SELECT MI.ObjectId FROM MovementItem AS MI WHERE MI.MovementId = inMovementId_corr AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE))
+                            ;
+         END IF;
+
+         -- 3.
+         IF COALESCE (inContractId, 0) <> COALESCE ((SELECT MILO_Contract.ObjectId FROM MovementItem AS MI JOIN MovementItemLinkObject AS MILO_Contract ON MILO_Contract.MovementItemId = MI.Id AND MILO_Contract.DescId = zc_MILinkObject_Contract() WHERE MI.MovementId = inMovementId_corr AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE), 0)
+         THEN
+             RAISE EXCEPTION 'Ошибка.Нет прав менять договор.%Для данного документа можно только № = <%>.'
+                           , CHR (13)
+                           , lfGet_Object_ValueData_sh ((SELECT MILO_Contract.ObjectId FROM MovementItem AS MI JOIN MovementItemLinkObject AS MILO_Contract ON MILO_Contract.MovementItemId = MI.Id AND MILO_Contract.DescId = zc_MILinkObject_Contract() WHERE MI.MovementId = inMovementId_corr AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE))
+                            ;
+         END IF;
+
+     END IF;
 
      -- проверка Юр. лицо
      IF inContractId > 0 AND NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = inContractId AND OL.DescId = zc_ObjectLink_Contract_Juridical() AND OL.ChildObjectId = inJuridicalId)
@@ -252,7 +301,7 @@ BEGIN
      END IF;
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Service(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Service(), inInvNumber, inOperDate, inMovementId_corr, vbAccessKeyId);
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), ioId, inOperDatePartner);
@@ -272,6 +321,22 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ParPartnerValue(), ioId, inParPartnerValue);
      -- сохранили свойство <Сумма операции (в валюте)>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountCurrency(), ioId, vbAmountCurrency);
+
+     -- если режим "корректировки"
+     IF inMovementId_corr > 0 AND NOT EXISTS (SELECT 1 FROM MovementFloat AS MF WHERE MF.MovementId = ioId AND MF.DescId = zc_MovementFloat_NPP_corr() AND MF.ValueData > 0)
+     THEN
+         -- сохранили свойство <№ корректировки>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_NPP_corr(), ioId
+                                             , 1 + COALESCE ((SELECT MAX (COALESCE (MovementFloat_NPP_corr.ValueData, 0)) AS NPP_corr
+                                                              FROM Movement
+                                                                   JOIN MovementFloat AS MovementFloat_NPP_corr
+                                                                                      ON MovementFloat_NPP_corr.MovementId = Movement.Id
+                                                                                     AND MovementFloat_NPP_corr.DescId     = zc_MovementFloat_NPP_corr()
+                                                              WHERE Movement.ParentId   = inMovementId_corr
+                                                                AND Movement.DescId     = zc_Movement_Service()
+                                                                AND Movement.StatusId   <> zc_Enum_Status_Erased()
+                                                             ), 0));
+     END IF;
 
      --
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_TradeMark(), ioId, inTradeMarkId);

@@ -2,15 +2,17 @@
 
 DROP FUNCTION IF EXISTS gpGet_Movement_Service (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_Service (Integer, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Movement_Service (Integer, Integer, TDateTime, TVarChar);
+-- DROP FUNCTION IF EXISTS gpGet_Movement_Service (Integer, Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Service (Integer, Integer, Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Service(
     IN inMovementId        Integer   , -- ключ Документа
-    IN inMovementId_Value  Integer   ,
+    IN inMovementId_Value  Integer   , -- Добавить по маске
+    IN inMovementId_corr   Integer   , -- Добавить корректировку
     IN inOperDate          TDateTime , --
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+RETURNS TABLE (Id Integer, MovementId_corr Integer, InvNumber TVarChar, InvNumber_real TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , AmountIn TFloat, AmountOut TFloat
@@ -37,21 +39,80 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbIsMovementId_corr Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Service());
      vbUserId := lpGetUserBySession (inSession);
 
-     -- замена
-     IF inMovementId_Value = 0 THEN inMovementId_Value:= inMovementId; END IF;
+/*
+Insert
+-0
+-0
+-0
 
-     IF COALESCE (inMovementId_Value, 0) = 0
+InsertMask
+-0
+-Value <> 0
+-Value <> 0 or Value = 0
+
+Update
+-Value <> 0
+-Value <> 0
+-Value <> 0 or Value = 0
+
+Corr
+-0
+-0
+-Value <> 0
+
+*/
+
+
+     -- проверка
+     IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId_corr AND Movement.ParentId > 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Корректировку можно создать только для обычного документа.'
+                        ;
+     END IF;
+
+
+     -- НЕ режим корректировки
+     vbIsMovementId_corr:= FALSE;
+
+
+     -- замена
+     IF inMovementId > 0
+     THEN
+         -- это всегда "update"
+         inMovementId_Value:= inMovementId;
+
+     ELSEIF COALESCE (inMovementId, 0) = 0 AND COALESCE (inMovementId_Value, 0) = 0
+     THEN
+         -- это всегда корректировка, здесь док. который корректируется
+         inMovementId_Value:= inMovementId_corr;
+
+         -- режим корректировки
+         vbIsMovementId_corr:= TRUE;
+         
+     ELSEIF COALESCE (inMovementId_Value, 0) = 0
+     THEN
+         -- если это НЕ добавление по маске
+         inMovementId_Value:= inMovementId;
+     END IF;
+
+
+     -- НЕ Добавить по маске + НЕ Добавить корректировку
+     IF COALESCE (inMovementId_Value, 0) = 0 AND COALESCE (inMovementId_corr, 0) = 0
      THEN
 
      RETURN QUERY
+       WITH tmpInvNumber AS (SELECT CAST (NEXTVAL ('Movement_Service_seq') AS TVarChar) AS InvNumber)
        SELECT
              0 AS Id
-           , CAST (NEXTVAL ('Movement_Service_seq') AS TVarChar) AS InvNumber
+           , 0 AS MovementId_corr
+           , tmpInvNumber.InvNumber
+           , tmpInvNumber.InvNumber AS InvNumber_real 
 --           , CAST (CURRENT_DATE AS TDateTime) AS OperDate
            , inOperDate AS OperDate
            , lfObject_Status.Code             AS StatusCode
@@ -114,7 +175,9 @@ BEGIN
            , CAST ('' AS TVarChar)            AS InvNumberInvoice
 
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
-            LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = zc_Enum_Currency_Basis();
+            LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = zc_Enum_Currency_Basis()
+            LEFT JOIN tmpInvNumber ON 1 = 1
+      ;
 
      ELSE
 
@@ -134,7 +197,7 @@ BEGIN
      , tmpMovementFloat AS (SELECT MovementFloat.*
                             FROM MovementFloat
                             WHERE MovementFloat.MovementId = inMovementId_Value
-                            )
+                           )
 
      , tmpMovementString AS (SELECT MovementString.*
                              FROM MovementString
@@ -191,11 +254,44 @@ BEGIN
                                                          , zc_MILinkObject_ContractChild()
                                                          )
                   )
-
-
+     , tmpNPP_corr_max AS (SELECT MAX (COALESCE (MovementFloat_NPP_corr.ValueData, 0)) AS NPP_corr
+                           FROM Movement
+                                JOIN MovementFloat AS MovementFloat_NPP_corr
+                                                   ON MovementFloat_NPP_corr.MovementId = Movement.Id
+                                                  AND MovementFloat_NPP_corr.DescId     = zc_MovementFloat_NPP_corr()
+                           WHERE Movement.ParentId   = inMovementId_Value
+                             AND Movement.DescId     = zc_Movement_Service()
+                             AND Movement.StatusId   <> zc_Enum_Status_Erased()
+                             AND vbIsMovementId_corr = TRUE
+                         )
+       -- Результат
        SELECT
+             -- т.к. может быть = 0
              inMovementId                        AS Id
-           , CASE WHEN inMovementId = 0 THEN CAST (NEXTVAL ('Movement_Service_seq') AS TVarChar) ELSE Movement.InvNumber END AS InvNumber
+           , CASE WHEN vbIsMovementId_corr = TRUE THEN inMovementId_Value ELSE Movement.ParentId END :: Integer AS MovementId_corr
+             --
+           , CASE WHEN vbIsMovementId_corr = TRUE
+                       -- insert corr
+                       THEN Movement.InvNumber || '/' || (COALESCE (tmpNPP_corr_max.NPP_corr, 0) :: Integer + 1) :: TVarChar
+
+                  WHEN inMovementId = 0
+                       -- insert
+                       THEN CAST (NEXTVAL ('Movement_Service_seq') AS TVarChar)
+
+                  WHEN Movement.ParentId > 0
+                       -- update corr
+                       THEN Movement.InvNumber || '/' || (COALESCE (MovementFloat_NPP_corr.ValueData, 0) :: Integer) :: TVarChar
+
+                  WHEN MovementFloat_NPP_corr.ValueData > 0
+                       -- так не должно быть
+                       THEN Movement.InvNumber || '/' || (COALESCE (MovementFloat_NPP_corr.ValueData, 0) :: Integer) :: TVarChar
+                  -- update
+                  ELSE Movement.InvNumber
+
+             END :: TVarChar AS InvNumber
+
+           , Movement.InvNumber AS InvNumber_real
+
            , CASE WHEN inMovementId = 0 THEN inOperDate ELSE Movement.OperDate END                                           AS OperDate
            , Object_Status.ObjectCode            AS StatusCode
            , Object_Status.ValueData             AS StatusName
@@ -253,8 +349,9 @@ BEGIN
            , Object_ContractChild.ValueData      AS ContractChildInvNumber
            , Object_Unit.Id                      AS UnitId
            , Object_Unit.ValueData               AS UnitName
-           , Object_PaidKind.Id                  AS PaidKindId
-           , Object_PaidKind.ValueData           AS PaidKindName
+
+           , CASE WHEN vbIsMovementId_corr = TRUE THEN Object_PaidKind_corr.Id        ELSE Object_PaidKind.Id        END :: Integer  AS PaidKindId
+           , CASE WHEN vbIsMovementId_corr = TRUE THEN Object_PaidKind_corr.ValueData ELSE Object_PaidKind.ValueData END :: TVarChar AS PaidKindName
 
            , MovementString_MovementId.ValueData AS CostMovementId
            , tmpCost.strInvNumber    ::TVarChar  AS CostMovementInvNumber
@@ -282,6 +379,14 @@ BEGIN
             LEFT JOIN tmpMovementDate AS MovementDate_OperDatePartner
                                       ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                      AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+
+            -- NPP у документа 
+            LEFT JOIN tmpMovementFloat AS MovementFloat_NPP_corr
+                                       ON MovementFloat_NPP_corr.MovementId = Movement.Id
+                                      AND MovementFloat_NPP_corr.DescId     = zc_MovementFloat_NPP_corr()
+            -- NPP последний
+            LEFT JOIN tmpNPP_corr_max ON tmpNPP_corr_max.NPP_corr > 0
+
 
             LEFT JOIN tmpMovementFloat AS MovementFloat_AmountCurrency
                                     ON MovementFloat_AmountCurrency.MovementId = Movement.Id
@@ -373,6 +478,7 @@ BEGIN
                                              ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MILinkObject_PaidKind.ObjectId
+            LEFT JOIN Object AS Object_PaidKind_corr ON Object_PaidKind_corr.Id = zc_Enum_PaidKind_Balance_no()
 
             LEFT JOIN tmpMILO AS MILinkObject_Asset
                                              ON MILinkObject_Asset.MovementItemId = MovementItem.Id
@@ -401,7 +507,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_Service (Integer, Integer, TDateTime, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -424,4 +529,4 @@ ALTER FUNCTION gpGet_Movement_Service (Integer, Integer, TDateTime, TVarChar) OW
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_Service (inMovementId:= 1, inMovementId_Value:= 0, inOperDate:= CURRENT_DATE,  inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_Movement_Service (inMovementId:= 1, inMovementId_Value:= 0, inMovementId_corr:= 0, inOperDate:= CURRENT_DATE,  inSession:= zfCalc_UserAdmin());

@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_Service(
 RETURNS void
 AS
 $BODY$
-  DECLARE vbMovementDescId Integer;
+  DECLARE vbMovementDescId  Integer;
+  DECLARE vbMovementId_corr Integer;
   DECLARE vbIsChild         Boolean;
   DECLARE vbIsAccount_50401 Boolean;
   DECLARE vbIsAccount_60301 Boolean;
@@ -31,7 +32,7 @@ BEGIN
 
 
      -- нужен тип документа, т.к. проведение для двух разных видов документов
-     SELECT Movement.DescId
+     SELECT Movement.DescId, COALESCE (Movement.ParentId, 0)
           , CASE WHEN Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500()) -- Маркетинг
                   AND MILinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()
                  THEN TRUE
@@ -42,7 +43,7 @@ BEGIN
                  THEN TRUE
                  ELSE FALSE
             END
-            INTO vbMovementDescId
+            INTO vbMovementDescId, vbMovementId_corr
                , vbIsAccount_50401 -- Расходы будущих периодов + Услуги по маркетингу
                , vbIsAccount_60301 -- Прибыль будущих периодов + Услуги по маркетингу
      FROM Movement
@@ -87,6 +88,18 @@ BEGIN
                          , CurrencyId
                          , IsActive, IsMaster
                           )
+        WITH tmpMI_Child AS (SELECT MI_Child.ParentId, MI_Child.Id AS MovementItemId, MIF_MovementId.ValueData :: Integer AS MovementId_begin, MI_Child.Amount
+                             FROM MovementItem AS MI_Child
+                                  INNER JOIN MovementItemFloat AS MIF_MovementId ON MIF_MovementId.MovementItemId = MI_Child.Id
+                                                                                AND MIF_MovementId.DescId         = zc_MIFloat_MovementId()
+                             WHERE MI_Child.MovementId = inMovementId
+                               AND MI_Child.DescId = zc_MI_Child()
+                               AND MI_Child.isErased = FALSE
+                             --AND inUserId = 5
+                               AND vbIsChild = TRUE
+                            )
+             , tmpMI_corr AS (SELECT * FROM MovementItem AS MovementItem_corr WHERE MovementItem_corr.MovementId = inMovementId AND MovementItem_corr.DescId = zc_MI_Master())
+
         -- 1.1. долг Юр Лицу
         SELECT Movement.DescId
              , Movement.OperDate
@@ -210,7 +223,207 @@ BEGIN
         WHERE Movement.Id = inMovementId
           AND Movement.DescId IN (zc_Movement_Service(), zc_Movement_ProfitLossService(), zc_Movement_ProfitIncomeService())
           AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+          -- только если НЕ корректировка
+          AND (vbMovementId_corr = 0 OR Movement.DescId <> zc_Movement_Service())
+
+       -- только если корректировка
+       UNION ALL
+        -- 1.1. НЕ долг Юр Лицу
+        SELECT Movement_corr.DescId
+             , Movement_corr.OperDate
+
+             , CASE WHEN MILinkObject_Asset.ObjectId > 0 AND View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+                         THEN Object.Id -- дублируем УП, попадет в ОС
+
+                    WHEN vbIsChild = TRUE
+                         THEN Object.Id -- дублируем для zc_Movement_ProfitLossService
+
+                    -- если это Расчеты с участниками
+                    WHEN ObjectLink_Unit_Founder.ChildObjectId >  0
+                         THEN ObjectLink_Unit_Founder.ChildObjectId
+
+                    ELSE 0 -- значит попадет в ОПиУ или в ОС
+
+               END AS ObjectId
+
+             , CASE WHEN MILinkObject_Asset.ObjectId > 0 AND View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+                         THEN zc_Object_InfoMoney() -- дублируем УП, попадет в ОС
+
+                    WHEN vbIsChild = TRUE
+                         THEN COALESCE (Object.DescId, 0) -- из предыдущей проводки - дублируем для zc_Movement_ProfitLossService
+
+                    -- если это Расчеты с участниками
+                    WHEN ObjectLink_Unit_Founder.ChildObjectId >  0
+                         THEN zc_Object_Founder()
+
+                    ELSE 0 -- значит попадет в ОПиУ
+
+               END AS ObjectDescId
+
+             , CASE WHEN Movement_corr.OperDate >= zc_DateStart_Asset() AND View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() AND vbMovementDescId = zc_Movement_Service()
+                         THEN 0
+                    ELSE 1 * MovementItem_corr.Amount + (1) * COALESCE (MI_Child.Amount, 0)
+               END  AS OperSumm
+
+               -- не используется
+             , 0 AS OperSumm_Currency
+
+             , CASE WHEN Movement_corr.OperDate >= zc_DateStart_Asset() AND View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() AND vbMovementDescId = zc_Movement_Service()
+                         THEN 1
+                    ELSE 0
+               END * MovementItem_corr.Amount                                                                         AS OperSumm_Asset
+
+             , MovementItem_corr.Id AS MovementItemId
+
+             , 0 AS ContainerId                                                     -- сформируем позже
+
+             , 0 AS AccountGroupId                                                  -- сформируем позже, или ...
+
+             , CASE WHEN MILinkObject_Asset.ObjectId > 0 AND View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+                         THEN -- определяется сразу здесь
+                              COALESCE ((SELECT tmp.AccountDirectionId FROM lfGet_Object_Unit_byAccountDirection_Asset (MILinkObject_Unit.ObjectId) AS tmp), 0)
+                    ELSE 0 -- сформируем позже, или ...
+               END AS AccountDirectionId
+
+               -- Корректировка затрат
+             , 0 AS AccountId
+
+               -- Группы ОПиУ (для затрат) - из предыдущего документа
+             , COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossGroupId, 0) AS ProfitLossGroupId
+               -- Аналитики ОПиУ - направления (для затрат) - из предыдущего документа
+             , COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossDirectionId, 0) AS ProfitLossDirectionId
+
+               -- Управленческие группы назнаения
+             , COALESCE (View_InfoMoney.InfoMoneyGroupId, 0) AS InfoMoneyGroupId
+               -- Управленческие назначения
+             , COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) AS InfoMoneyDestinationId
+               -- Управленческие статьи назначения
+             , COALESCE (View_InfoMoney.InfoMoneyId, 0) AS InfoMoneyId
+
+               -- Бизнес Баланс: не используется
+             , 0 AS BusinessId_Balance
+
+               -- Бизнес ОПиУ: ObjectLink_Unit_Business
+             , COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0) AS BusinessId_ProfitLoss
+
+               -- Главное Юр.лицо всегда из договора
+             , COALESCE (MILinkObject_JuridicalBasis.ObjectId, ObjectLink_Contract_JuridicalBasis.ChildObjectId, 0) AS JuridicalId_Basis
+
+               -- из предыдущего документа
+             , COALESCE (MILinkObject_Unit.ObjectId, 0) AS UnitId
+             , 0 AS PositionId -- не используется
+
+               -- Филиал Баланс:
+             , CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40900() AND Movement_corr.OperDate = '31.12.2014'
+                         THEN -- Финансовая помощь
+                              0
+                    ELSE -- всегда по подразделению или "Главный филиал" (нужен для НАЛ долгов)
+                         COALESCE (MILinkObject_Branch.ObjectId, ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
+               END AS BranchId_Balance
+               -- Филиал ОПиУ: всегда по подразделению или "Главный филиал" (здесь не используется, нужен для следующей проводки)
+             , COALESCE (MILinkObject_Branch.ObjectId, ObjectLink_Unit_Branch.ChildObjectId, 0 /*zc_Branch_Basis()*/) AS BranchId_ProfitLoss
+
+               -- Месяц начислений: не используется
+             , 0 AS ServiceDateId
+
+             , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId -- из предыдущего документа
+             , COALESCE (MILinkObject_PaidKind.ObjectId, 0) AS PaidKindId -- из предыдущего документа
+
+             , 0 AS PartionMovementId -- не используется
+             , 0 AS PartionGoodsId    -- сформируем позже, надо для Партии услуг (т.е. НЕ списываем в ОПиУ)
+
+               -- !!!заполнено!!!
+             , CASE WHEN View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+                         THEN COALESCE (MILinkObject_Asset.ObjectId, 0) -- надо для Партии услуг (т.е. НЕ списываем в ОПиУ)
+                    ELSE 0
+               END AS AssetId
+
+             , CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Продукция OR Доходы + Мясное сырье
+                         THEN 0
+                    ELSE 0
+               END AS AnalyzerId -- заполняется !!!только!!! для текущей
+
+               -- Валюта - не используется
+             , 0 AS CurrencyId
+
+             , CASE WHEN MovementItem_corr.Amount >= 0 THEN FALSE ELSE TRUE END AS IsActive
+             , TRUE AS IsMaster
+        FROM Movement
+             JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
+
+             JOIN Movement AS Movement_corr ON Movement_corr.Id = inMovementId
+             JOIN tmpMI_corr AS MovementItem_corr ON MovementItem_corr.MovementId = inMovementId AND MovementItem_corr.DescId = zc_MI_Master()
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = MILinkObject_Unit.ObjectId
+                                                           AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
+
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Founder
+                                  ON ObjectLink_Unit_Founder.ObjectId = MILinkObject_Unit.ObjectId
+                                 AND ObjectLink_Unit_Founder.DescId   = zc_ObjectLink_Unit_Founder()
+
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Business ON ObjectLink_Unit_Business.ObjectId = MILinkObject_Unit.ObjectId
+                                                             AND ObjectLink_Unit_Business.DescId = zc_ObjectLink_Unit_Business()
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Contract ON ObjectLink_Unit_Contract.ObjectId = MILinkObject_Unit.ObjectId
+                                                             AND ObjectLink_Unit_Contract.DescId = zc_ObjectLink_Unit_Contract()
+             LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = MILinkObject_Unit.ObjectId
+                                                                                                          AND NOT (vbMovementDescId = zc_Movement_Service() AND vbIsAccount_50401 = TRUE) -- !!!нужен только для затрат!!!
+                                                                                                          AND vbIsChild = FALSE
+                                                                                                          -- игнорируем Подразделение для Собственный капитал + Представительские, пакеты, подарки
+                                                                                                          AND View_InfoMoney.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_80600()
+             LEFT JOIN (SELECT tmpMI_Child.ParentId, SUM (tmpMI_Child.Amount) AS Amount FROM tmpMI_Child GROUP BY tmpMI_Child.ParentId
+                       ) AS MI_Child ON MI_Child.ParentId = MovementItem_corr.Id
+
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
+                                              ON MILinkObject_Branch.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
+                                             AND Movement.DescId IN (zc_Movement_ProfitLossService(), zc_Movement_ProfitIncomeService())
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                              ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
+                                              ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_JuridicalBasis
+                                              ON MILinkObject_JuridicalBasis.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_JuridicalBasis.DescId         = zc_MILinkObject_JuridicalBasis()
+
+             LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
+             LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis ON ObjectLink_Contract_JuridicalBasis.ObjectId = MILinkObject_Contract.ObjectId
+                                                                       AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                              ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Asset.DescId         = zc_MILinkObject_Asset()
+                                             AND View_InfoMoney.InfoMoneyGroupId   = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+
+        -- если документ Корректировка
+        WHERE Movement.Id = vbMovementId_corr
+          -- такая Корректировка
+          AND Movement.DescId IN (zc_Movement_Service())
+          AND Movement.StatusId IN (zc_Enum_Status_Complete())
        ;
+
+     -- если документ Корректировка - только для zc_Movement_Service
+     IF vbMovementId_corr > 0 AND vbMovementDescId = zc_Movement_Service()
+        AND NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = vbMovementId_corr AND Movement.StatusId = zc_Enum_Status_Complete())
+     THEN
+         RAISE EXCEPTION 'Ошибка.Для проведения корректировки должен быть проведен "Главный" документ.%Начисление услуг № <%> от <%>'
+                       ,  CHR (13)
+                       , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_corr)
+                       , (SELECT zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = vbMovementId_corr)
+                        ;
+     END IF;
+
 
      IF vbIsChild = FALSE AND EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.OperSumm = 0 AND _tmpItem.OperSumm_Currency = 0 AND _tmpItem.MovementDescId = zc_Movement_ProfitLossService())
      THEN
@@ -219,6 +432,7 @@ BEGIN
 
      -- проверка
      IF EXISTS (SELECT _tmpItem.ObjectId FROM _tmpItem WHERE _tmpItem.ObjectId = 0 OR _tmpItem.ObjectDescId NOT IN (zc_Object_Juridical(), zc_Object_Partner()))
+    AND (vbMovementId_corr = 0 OR vbMovementDescId <> zc_Movement_Service())
      THEN
          RAISE EXCEPTION 'Ошибка.В документе не определено <Юридическое лицо>.Проведение невозможно.';
      END IF;
@@ -267,7 +481,7 @@ BEGIN
                              --AND inUserId = 5
                                AND vbIsChild = TRUE
                             )
-
+        -- Результат - если НЕ корректировка
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate
 
@@ -373,8 +587,8 @@ BEGIN
              , _tmpItem.ContractId -- из предыдущей проводки
              , _tmpItem.PaidKindId -- из предыдущей проводки
 
-             , 0 AS PartionMovementId                               -- не используется
-             , 0 AS PartionGoodsId                                  -- сформируем позже, надо для Партии услуг (т.е. НЕ списываем в ОПиУ)
+             , 0 AS PartionMovementId -- не используется
+             , 0 AS PartionGoodsId    -- сформируем позже, надо для Партии услуг (т.е. НЕ списываем в ОПиУ)
 
              , CASE WHEN _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
                          THEN COALESCE (MILinkObject_Asset.ObjectId, 0) -- надо для Партии услуг (т.е. НЕ списываем в ОПиУ)
@@ -401,7 +615,9 @@ BEGIN
                                                                                                           -- игнорируем Подразделение для Собственный капитал + Представительские, пакеты, подарки
                                                                                                           AND _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_80600()
                                                                                                           
-             LEFT JOIN (SELECT tmpMI_Child.ParentId, SUM (tmpMI_Child.Amount) AS Amount FROM tmpMI_Child GROUP BY tmpMI_Child.ParentId) AS MI_Child ON MI_Child.ParentId = _tmpItem.MovementItemId
+             LEFT JOIN (SELECT tmpMI_Child.ParentId, SUM (tmpMI_Child.Amount) AS Amount FROM tmpMI_Child GROUP BY tmpMI_Child.ParentId
+                       ) AS MI_Child ON MI_Child.ParentId = _tmpItem.MovementItemId
+
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
                                               ON MILinkObject_Branch.MovementItemId = NULL -- MI_Child.MovementItemId
                                              AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
@@ -410,10 +626,178 @@ BEGIN
                                               ON MILinkObject_Asset.MovementItemId = _tmpItem.MovementItemId
                                              AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
                                              AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
-        WHERE (ObjectLink_Unit_Contract.ChildObjectId IS NULL -- !!!если НЕ перевыставление!!!
-           AND (_tmpItem.OperDate < zc_DateStart_Asset() OR _tmpItem.InfoMoneyGroupId <> zc_Enum_InfoMoneyGroup_70000() OR vbMovementDescId <> zc_Movement_Service())
+        WHERE ((ObjectLink_Unit_Contract.ChildObjectId IS NULL -- !!!если НЕ перевыставление!!!
+            AND (_tmpItem.OperDate < zc_DateStart_Asset() OR _tmpItem.InfoMoneyGroupId <> zc_Enum_InfoMoneyGroup_70000() OR vbMovementDescId <> zc_Movement_Service())
+               )
+            OR MILinkObject_Asset.ObjectId IS NOT NULL        -- !!!если ОС!!!
               )
-           OR MILinkObject_Asset.ObjectId IS NOT NULL        -- !!!если ОС!!!
+          -- + только если НЕ корректировка
+          AND (vbMovementId_corr = 0 OR vbMovementDescId <> zc_Movement_Service())
+
+       UNION ALL
+        -- Результат - если корректировка
+        SELECT _tmpItem.MovementDescId
+             , _tmpItem.OperDate
+
+             , CASE WHEN MILinkObject_Asset.ObjectId > 0 AND View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+                         THEN Object.Id -- дублируем УП, попадет в ОС
+
+                    WHEN vbIsChild = TRUE
+                         THEN Object.Id -- дублируем для zc_Movement_ProfitLossService
+
+                    -- если это Расчеты с участниками
+                    WHEN ObjectLink_Unit_Founder.ChildObjectId >  0
+                         THEN ObjectLink_Unit_Founder.ChildObjectId
+
+                    ELSE 0 -- значит попадет в ОПиУ или в ОС
+
+               END AS ObjectId
+
+             , CASE WHEN MILinkObject_Asset.ObjectId > 0 AND View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+                         THEN zc_Object_InfoMoney() -- дублируем УП, попадет в ОС
+
+                    WHEN vbIsChild = TRUE
+                         THEN COALESCE (Object.DescId, 0) -- из предыдущей проводки - дублируем для zc_Movement_ProfitLossService
+
+                    -- если это Расчеты с участниками
+                    WHEN ObjectLink_Unit_Founder.ChildObjectId >  0
+                         THEN zc_Object_Founder()
+
+                    ELSE 0 -- значит попадет в ОПиУ
+
+               END AS ObjectDescId
+
+             , CASE WHEN _tmpItem.OperDate >= zc_DateStart_Asset() AND View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() AND vbMovementDescId = zc_Movement_Service()
+                         THEN 0
+                    ELSE -1 * _tmpItem.OperSumm
+               END AS OperSumm
+
+             , CASE WHEN _tmpItem.OperDate >= zc_DateStart_Asset() AND View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() AND vbMovementDescId = zc_Movement_Service()
+                         THEN -1 * _tmpItem.OperSumm_Asset
+                    ELSE 0
+               END AS OperSumm_Asset
+
+             , _tmpItem.MovementItemId
+
+             , 0 AS ContainerId    -- сформируем позже
+             , 0 AS AccountGroupId -- сформируем позже, или ...
+             , CASE WHEN MILinkObject_Asset.ObjectId > 0 AND View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+                         THEN -- определяется сразу здесь
+                              COALESCE ((SELECT tmp.AccountDirectionId FROM lfGet_Object_Unit_byAccountDirection_Asset (MILinkObject_Unit.ObjectId) AS tmp), 0)
+                    ELSE 0 -- сформируем позже, или ...
+               END AS AccountDirectionId
+
+               -- Корректировка затрат
+             , 0 AS AccountId
+
+               -- Группы ОПиУ (для затрат)
+             , COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossGroupId, 0) AS ProfitLossGroupId
+               -- Аналитики ОПиУ - направления (для затрат)
+             , COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossDirectionId, 0) AS ProfitLossDirectionId
+
+               -- Управленческие группы назнаения
+             , COALESCE (View_InfoMoney.InfoMoneyGroupId, 0) AS InfoMoneyGroupId
+               -- Управленческие назначения
+             , COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) AS InfoMoneyDestinationId
+               -- Управленческие статьи назначения
+             , COALESCE (View_InfoMoney.InfoMoneyId, 0) AS InfoMoneyId
+
+               -- Бизнес Баланс: не используется
+             , 0 AS BusinessId_Balance
+
+               -- Бизнес ОПиУ: ObjectLink_Unit_Business
+             , COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0) AS BusinessId_ProfitLoss
+
+               -- Главное Юр.лицо всегда из договора
+             , _tmpItem.JuridicalId_Basis
+
+               -- всегда из этой проводки
+             , COALESCE (MILinkObject_Unit.ObjectId, 0) AS UnitId
+
+             , 0 AS PositionId -- не используется
+
+               -- Филиал Баланс: всегда из этой проводки
+             , CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40900() AND _tmpItem.OperDate = '31.12.2014'
+                         THEN -- Финансовая помощь
+                              0
+                    ELSE -- всегда по подразделению или "Главный филиал" (нужен для НАЛ долгов)
+                         COALESCE (MILinkObject_Branch.ObjectId, ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
+               END AS BranchId_Balance
+
+               -- Филиал ОПиУ: всегда по подразделению или "Главный филиал" (здесь не используется, нужен для следующей проводки)
+             , COALESCE (MILinkObject_Branch.ObjectId, ObjectLink_Unit_Branch.ChildObjectId, 0 /*zc_Branch_Basis()*/) AS BranchId_ProfitLoss
+
+               -- Месяц начислений: не используется
+             , 0 AS ServiceDateId
+
+             , _tmpItem.ContractId                                        -- из предыдущего документа
+             , COALESCE (MILinkObject_PaidKind.ObjectId, 0) AS PaidKindId -- из текущего документа
+
+             , 0 AS PartionMovementId -- не используется
+             , 0 AS PartionGoodsId    -- сформируем позже, надо для Партии услуг (т.е. НЕ списываем в ОПиУ)
+
+             , CASE WHEN View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+                         THEN COALESCE (MILinkObject_Asset.ObjectId, 0) -- надо для Партии услуг (т.е. НЕ списываем в ОПиУ)
+                    ELSE 0
+               END AS AssetId
+
+             , 0 AS AnalyzerId -- заполнено !!!только!!! для первой
+             , 0 AS ObjectIntId_Analyzer
+
+             , NOT _tmpItem.IsActive
+             , NOT _tmpItem.IsMaster
+        FROM _tmpItem
+             LEFT JOIN MovementItem ON MovementItem.Id = _tmpItem.MovementItemId
+             LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                              ON MILinkObject_InfoMoney.MovementItemId = _tmpItem.MovementItemId
+                                             AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                              ON MILinkObject_Unit.MovementItemId = _tmpItem.MovementItemId
+                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = MILinkObject_Unit.ObjectId
+                                                           AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
+
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Founder
+                                  ON ObjectLink_Unit_Founder.ObjectId = MILinkObject_Unit.ObjectId
+                                 AND ObjectLink_Unit_Founder.DescId   = zc_ObjectLink_Unit_Founder()
+
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Business ON ObjectLink_Unit_Business.ObjectId = MILinkObject_Unit.ObjectId
+                                                             AND ObjectLink_Unit_Business.DescId = zc_ObjectLink_Unit_Business()
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Contract ON ObjectLink_Unit_Contract.ObjectId = MILinkObject_Unit.ObjectId
+                                                             AND ObjectLink_Unit_Contract.DescId = zc_ObjectLink_Unit_Contract()
+             LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = MILinkObject_Unit.ObjectId
+                                                                                                          AND NOT (vbMovementDescId = zc_Movement_Service() AND vbIsAccount_50401 = TRUE) -- !!!нужен только для затрат!!!
+                                                                                                          AND vbIsChild = FALSE
+                                                                                                          -- игнорируем Подразделение для Собственный капитал + Представительские, пакеты, подарки
+                                                                                                          AND View_InfoMoney.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_80600()
+                                                                                                          
+             LEFT JOIN (SELECT tmpMI_Child.ParentId, SUM (tmpMI_Child.Amount) AS Amount FROM tmpMI_Child GROUP BY tmpMI_Child.ParentId
+                       ) AS MI_Child ON MI_Child.ParentId = _tmpItem.MovementItemId
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
+                                              ON MILinkObject_Branch.MovementItemId = NULL -- MI_Child.MovementItemId
+                                             AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
+                                              ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                              ON MILinkObject_Asset.MovementItemId = _tmpItem.MovementItemId
+                                             AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+                                             AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+
+        WHERE ((ObjectLink_Unit_Contract.ChildObjectId IS NULL -- !!!если НЕ перевыставление!!!
+            AND (_tmpItem.OperDate < zc_DateStart_Asset() OR _tmpItem.InfoMoneyGroupId <> zc_Enum_InfoMoneyGroup_70000() OR vbMovementDescId <> zc_Movement_Service())
+               )
+            OR MILinkObject_Asset.ObjectId IS NOT NULL        -- !!!если ОС!!!
+              )
+          -- + только если корректировка
+          AND vbMovementId_corr > 0 AND vbMovementDescId = zc_Movement_Service()
 
        UNION ALL
          -- 1.2.2. Перевыставление затрат на Юр Лицо
@@ -611,6 +995,8 @@ BEGIN
      END IF;
 
 
+     RAISE EXCEPTION 'Ошибка.%   %', (select count(*) from _tmpItem), (select count(*) from _tmpItem WHERE _tmpItem.OperSumm <> 0);
+
      -- 5.1. ФИНИШ - формируем/сохраняем Проводки
      PERFORM lpComplete_Movement_Finance (inMovementId := inMovementId
                                         , inUserId     := inUserId);
@@ -645,3 +1031,4 @@ END;$BODY$
 */
 -- SELECT * FROM lpUnComplete_Movement (inMovementId:= 4139, inUserId:= zfCalc_UserAdmin() :: Integer)
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 4139, inSession:= zfCalc_UserAdmin())
+select * from gpComplete_Movement_Service(inMovementId := 33189767 ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');
