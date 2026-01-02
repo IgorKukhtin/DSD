@@ -31,7 +31,7 @@ RETURNS TABLE (MovementItemId Integer, GoodsCode Integer, GoodsName TVarChar, Me
              , ChangePercentAmount TFloat
              , Price TFloat, CountForPrice TFloat
              , PartionGoods TVarChar, PartionGoodsDate TDateTime
-             , GoodsKindName TVarChar
+             , GoodsKindCode Integer, GoodsKindName TVarChar
              , BoxId Integer, BoxName TVarChar
              , PriceListName  TVarChar
              , ReasonName  TVarChar, AssetId  Integer, AssetName  TVarChar
@@ -588,6 +588,7 @@ BEGIN
            , tmpMI.PartionGoods :: TVarChar       AS PartionGoods
            , COALESCE (tmpMI.OperDate_ReturnOut, tmpMI.PartionGoodsDate) :: TDateTime  AS PartionGoodsDate
 
+           , Object_GoodsKind.ObjectCode     AS GoodsKindCode
            , Object_GoodsKind.ValueData      AS GoodsKindName
            , Object_Box.Id                   AS BoxId
            , Object_Box.ValueData            AS BoxName
@@ -664,8 +665,12 @@ BEGIN
              -- Для Печати Этикетки - накопительно кол-во
            , (CASE WHEN tmpMI.MovementItemId >= tmp_group_1001.Id_show_w AND tmp_group_1001.Id_show_w > 0 AND tmpMI.isErased = FALSE
               THEN
-              SUM (tmpMI.RealWeight -- * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END
+              SUM (CASE WHEN tmpMI.isErased = FALSE 
+                   THEN
+                   tmpMI.RealWeight -- * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END
                  - tmpMI.WeightTare * tmpMI.CountTare
+                   ELSE 0
+                   END
                   ) OVER (PARTITION BY COALESCE (tmp_group_1001.Ord_group, 1)
                                      , tmpMI.MovementId_Promo
                                      , tmpMI.GoodsId
