@@ -14,6 +14,8 @@ $BODY$
   DECLARE vbIsChild         Boolean;
   DECLARE vbIsAccount_50401 Boolean;
   DECLARE vbIsAccount_60301 Boolean;
+  DECLARE vbSummCorr_1      TFloat;
+  DECLARE vbSummCorr_2      TFloat;
 BEGIN
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
@@ -413,15 +415,99 @@ BEGIN
           AND Movement.StatusId IN (zc_Enum_Status_Complete())
        ;
 
-     -- если документ Корректировка - только для zc_Movement_Service
+     -- если документ Корректировка + только для zc_Movement_Service
      IF vbMovementId_corr > 0 AND vbMovementDescId = zc_Movement_Service()
-        AND NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = vbMovementId_corr AND Movement.StatusId = zc_Enum_Status_Complete())
      THEN
-         RAISE EXCEPTION 'Ошибка.Для проведения корректировки должен быть проведен "Главный" документ.%Начисление услуг № <%> от <%>'
-                       ,  CHR (13)
-                       , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_corr)
-                       , (SELECT zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = vbMovementId_corr)
-                        ;
+         -- Проверка - Статус Проведен
+         IF NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = vbMovementId_corr AND Movement.StatusId = zc_Enum_Status_Complete())
+         THEN
+             RAISE EXCEPTION 'Ошибка.Для проведения корректировки должен быть проведен "Главный" документ.%Начисление услуг № <%> от <%>'
+                           ,  CHR (13)
+                           , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_corr)
+                           , (SELECT zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = vbMovementId_corr)
+                            ;
+         END IF;
+
+         -- Проверка - Дата документа
+         IF (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId) <> (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_corr)
+         THEN
+             RAISE EXCEPTION 'Ошибка.Дата документа корректировки = <%>%должна соответствовать дате в "Главном" документе%№ <%> от <%>'
+                           , (SELECT zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId)
+                           ,  CHR (13)
+                           ,  CHR (13)
+                           , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_corr)
+                           , (SELECT zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = vbMovementId_corr)
+                            ;
+         END IF;
+
+         -- Сумма Документ ParentId
+         vbSummCorr_1:= (SELECT (MovementItem.Amount)
+                         FROM Movement
+                              JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                               AND MovementItem.DescId     = zc_MI_Master()
+                         WHERE Movement.Id       = vbMovementId_corr
+                           AND Movement.DescId   = zc_Movement_Service()
+                           AND Movement.StatusId = zc_Enum_Status_Complete()
+                        );
+
+         -- Сумма Документы-корректировки
+         vbSummCorr_2:= COALESCE ((SELECT SUM (MovementItem.Amount)
+                                   FROM Movement
+                                        JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                         AND MovementItem.DescId     = zc_MI_Master()
+                                   WHERE Movement.ParentId   = vbMovementId_corr
+                                     AND Movement.DescId     = zc_Movement_Service()
+                                     AND Movement.StatusId   = zc_Enum_Status_Complete()
+                                     AND Movement.Id         <> inMovementId 
+                                  ), 0)
+                        -- текущий
+                      + COALESCE ((SELECT (MovementItem.Amount)
+                                   FROM Movement
+                                        JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                         AND MovementItem.DescId     = zc_MI_Master()
+                                   WHERE Movement.Id     = inMovementId
+                                     AND Movement.DescId = zc_Movement_Service()
+                                  ), 0)
+                       ;
+
+         -- Проверка - Сумма
+         IF ABS (vbSummCorr_1) < ABS (vbSummCorr_2)
+         THEN
+             RAISE EXCEPTION 'Ошибка.Для сумма в корректировках = <%> не может быть больше суммы в "Главном" документе = <%>.'
+                           , zfConvert_FloatToString (ABS (vbSummCorr_2))
+                           , zfConvert_FloatToString (ABS (vbSummCorr_1))
+                            ;
+         END IF;
+
+     ELSEIF vbMovementDescId = zc_Movement_Service()
+     THEN
+         -- Сумма Документ ParentId
+         vbSummCorr_1:= (SELECT (MovementItem.Amount)
+                         FROM Movement
+                              JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                               AND MovementItem.DescId     = zc_MI_Master()
+                         WHERE Movement.Id       = inMovementId
+                           AND Movement.DescId   = zc_Movement_Service()
+                        );
+
+         -- Сумма Документы-корректировки
+         vbSummCorr_2:= (SELECT SUM (MovementItem.Amount)
+                         FROM Movement
+                              JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                               AND MovementItem.DescId     = zc_MI_Master()
+                         WHERE Movement.ParentId   = inMovementId
+                           AND Movement.DescId     = zc_Movement_Service()
+                           AND Movement.StatusId   = zc_Enum_Status_Complete()
+                        );
+         -- Проверка - Сумма
+         IF ABS (vbSummCorr_1) < ABS (vbSummCorr_2)
+         THEN
+             RAISE EXCEPTION 'Ошибка.Для сумма в корректировках = <%> не может быть больше суммы в "Главном" документе = <%>.'
+                           , zfConvert_FloatToString (ABS (vbSummCorr_2))
+                           , zfConvert_FloatToString (ABS (vbSummCorr_1))
+                            ;
+         END IF;
+
      END IF;
 
 
@@ -995,7 +1081,7 @@ BEGIN
      END IF;
 
 
-     RAISE EXCEPTION 'Ошибка.%   %', (select count(*) from _tmpItem), (select count(*) from _tmpItem WHERE _tmpItem.OperSumm <> 0);
+     -- RAISE EXCEPTION 'Ошибка.%   %', (select count(*) from _tmpItem), (select count(*) from _tmpItem WHERE _tmpItem.OperSumm <> 0);
 
      -- 5.1. ФИНИШ - формируем/сохраняем Проводки
      PERFORM lpComplete_Movement_Finance (inMovementId := inMovementId
@@ -1031,4 +1117,4 @@ END;$BODY$
 */
 -- SELECT * FROM lpUnComplete_Movement (inMovementId:= 4139, inUserId:= zfCalc_UserAdmin() :: Integer)
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 4139, inSession:= zfCalc_UserAdmin())
-select * from gpComplete_Movement_Service(inMovementId := 33189767 ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');
+-- select * from gpComplete_Movement_Service(inMovementId := 33189767 ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');

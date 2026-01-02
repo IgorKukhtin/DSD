@@ -223,7 +223,21 @@ BEGIN
 
      -- проводим Документ
      PERFORM lpComplete_Movement_Service (inMovementId := inMovementId
-                                        , inUserId     := vbUserId);
+                                        , inUserId     := vbUserId
+                                         );
+
+     --
+     IF EXISTS (SELECT 1 FROM Movement WHERE Movement.ParentId = inMovementId AND Movement.DescId = zc_Movement_Service() AND Movement.StatusId = zc_Enum_Status_Complete())
+     THEN
+         -- Перепровести ВСЕ корректировки
+         PERFORM gpReComplete_Movement_Service (Movement.Id, inSession)
+         FROM Movement
+         WHERE Movement.ParentId = inMovementId
+           AND Movement.DescId   = zc_Movement_Service()
+           AND Movement.StatusId = zc_Enum_Status_Complete()
+          ;
+
+     END IF;
 
 END;
 $BODY$
