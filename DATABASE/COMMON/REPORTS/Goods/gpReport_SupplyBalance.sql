@@ -901,9 +901,7 @@ BEGIN
             OR tmpRemains_Oth.RemainsStart <> 0
             OR tmpRemains_Oth.RemainsEnd   <> 0
                    
-            OR (inIsRemainsNull_Use = TRUE 
-              AND (tmpContainer.RemainsStart = 0 OR tmpContainer.RemainsEnd = 0)
-              AND tmpContainer.OperDate_use <> zc_DateStart()
+            OR (inIsRemainsNull_Use = TRUE AND tmpContainer.OperDate_use <> zc_DateStart()
                )
       ;
 
