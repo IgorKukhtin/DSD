@@ -138,8 +138,9 @@ BEGIN
          IF COALESCE (inPartnerId, 0) <> COALESCE ((SELECT MI.ObjectId FROM MovementItem AS MI WHERE MI.MovementId = inMovementId_corr AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE), 0)
             AND inPartnerId <> 0
          THEN
-             RAISE EXCEPTION 'Ошибка.Нет прав менять Контрагента.%Для данного документа можно только <%>.'
+             RAISE EXCEPTION 'Ошибка.Нет прав менять Контрагента.%Для документа <%> можно только <%>.'
                            , CHR (13)
+                           , lfGet_Object_ValueData_sh (inPaidKindId)
                            , lfGet_Object_ValueData_sh ((SELECT MI.ObjectId FROM MovementItem AS MI WHERE MI.MovementId = inMovementId_corr AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE))
                             ;
          END IF;
@@ -147,8 +148,9 @@ BEGIN
          IF COALESCE (inJuridicalId, 0) <> COALESCE ((SELECT MI.ObjectId FROM MovementItem AS MI WHERE MI.MovementId = inMovementId_corr AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE), 0)
             AND COALESCE (inPartnerId, 0) = 0
          THEN
-             RAISE EXCEPTION 'Ошибка.Нет прав менять Юр.лицо.%Для данного документа можно только <%>.'
+             RAISE EXCEPTION 'Ошибка.Нет прав менять Юр.лицо.%Для документа <%> можно только <%>.'
                            , CHR (13)
+                           , lfGet_Object_ValueData_sh (inPaidKindId)
                            , lfGet_Object_ValueData_sh ((SELECT MI.ObjectId FROM MovementItem AS MI WHERE MI.MovementId = inMovementId_corr AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE))
                             ;
          END IF;
@@ -156,8 +158,9 @@ BEGIN
          -- 3.
          IF COALESCE (inContractId, 0) <> COALESCE ((SELECT MILO_Contract.ObjectId FROM MovementItem AS MI JOIN MovementItemLinkObject AS MILO_Contract ON MILO_Contract.MovementItemId = MI.Id AND MILO_Contract.DescId = zc_MILinkObject_Contract() WHERE MI.MovementId = inMovementId_corr AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE), 0)
          THEN
-             RAISE EXCEPTION 'Ошибка.Нет прав менять договор.%Для данного документа можно только № = <%>.'
+             RAISE EXCEPTION 'Ошибка.Нет прав менять договор.%Для документа <%> можно только <%>.'
                            , CHR (13)
+                           , lfGet_Object_ValueData_sh (inPaidKindId)
                            , lfGet_Object_ValueData_sh ((SELECT MILO_Contract.ObjectId FROM MovementItem AS MI JOIN MovementItemLinkObject AS MILO_Contract ON MILO_Contract.MovementItemId = MI.Id AND MILO_Contract.DescId = zc_MILinkObject_Contract() WHERE MI.MovementId = inMovementId_corr AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE))
                             ;
          END IF;

@@ -1,4 +1,4 @@
--- Function: gpReComplete_Movement_Service(integer, tvarchar)
+-- Function: gpReComplete_Movement_Service (integer, tvarchar)
 
 DROP FUNCTION IF EXISTS gpReComplete_Movement_Service (Integer, TVarChar);
 
@@ -21,9 +21,6 @@ BEGIN
                                       , inUserId     := vbUserId);
      END IF;
 
-
-     -- создаютс€ временные таблицы - дл€ формирование данных дл€ проводок
-     PERFORM lpComplete_Movement_Service_CreateTemp();
      -- ѕроводим ƒокумент
      PERFORM lpComplete_Movement_Service (inMovementId     := inMovementId
                                         , inUserId         := vbUserId
@@ -42,4 +39,3 @@ $BODY$
 -- тест
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 1794 , inSession:= '2')
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 1794 , inSession:= '2')
-
