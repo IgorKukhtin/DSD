@@ -70,9 +70,9 @@ type
     GoodsKindName_complete: TcxGridDBColumn;
     PreviewPanel: TPanel;
     frxPreview: TfrxPreview;
-    PrintHeaderFormCDS: TClientDataSet;
-    spSelectPrintForm: TdsdStoredProc;
-    frxDBDHeaderForm: TfrxDBDataset;
+    PrintHeade_gridrFormCDS: TClientDataSet;
+    spSelectPrint_gridForm: TdsdStoredProc;
+    frxDBDHeader_gridForm: TfrxDBDataset;
     cxSplitter1: TcxSplitter;
     cxSplitter2: TcxSplitter;
     GoodsKindCode: TcxGridDBColumn;
@@ -283,9 +283,9 @@ end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsStickerForm.pSelectPrintForm;
 begin
-    frxDBDHeaderForm.UserName:= 'frxDBDHeader';
+    frxDBDHeader_gridForm.UserName:= 'frxDBDHeader';
 
-    with spSelectPrintForm do
+    with spSelectPrint_gridForm do
     begin
        ParamByName('inObjectId').Value:=CDS.FieldByName('Id').asInteger;
        ParamByName('inRetailId').Value:=ParamsMI.ParamByName('RetailId_1001').asInteger;
@@ -336,7 +336,8 @@ end;
 procedure TGuideGoodsStickerForm.pSelectPrint;
 begin
     try
-       frxDBDHeaderForm.UserName:= 'frxDBDHeader_';
+       if ParamsMI.ParamByName('isTotal_1001').AsBoolean = FALSE
+       then frxDBDHeader_gridForm.UserName:= 'frxDBDHeader_grid';
 
     with spSelectPrint do
     begin
@@ -391,7 +392,8 @@ begin
     then actPrint.Execute;
 
     finally
-           frxDBDHeaderForm.UserName:= 'frxDBDHeader';
+           if ParamsMI.ParamByName('isTotal_1001').AsBoolean = FALSE
+           then frxDBDHeader_gridForm.UserName:= 'frxDBDHeader';
     end;
 
 end;
@@ -955,9 +957,9 @@ begin
 
           // ÔÓÒÎÂ ÒÓı‡ÌÂÌËˇ - Â˘Â œ≈◊¿“‹ »“Œ√Œ¬Œ…
           try
-            frxDBDHeaderForm.UserName:= 'frxDBDHeader_';
+            frxDBDHeader_gridForm.UserName:= 'frxDBDHeader_grid_total';
             //
-            if (cb_70_70.Checked = TRUE) and (ParamsMI.ParamByName('isTotal_1001').AsBoolean = TRUE)
+             if (cb_70_70.Checked = TRUE) and (ParamsMI.ParamByName('isTotal_1001').AsBoolean = TRUE)
             then begin
                     ParamsMI.ParamByName('RealWeight_Get').AsFloat:= DMMainScaleForm.gpGet_Scale_Scale_MI_StickerTotal(ParamsMI);
                     //œ≈◊¿“‹
@@ -972,7 +974,7 @@ begin
                     actPrint_total.Execute;
             end;
           finally
-                 frxDBDHeaderForm.UserName:= 'frxDBDHeader';
+                 frxDBDHeader_gridForm.UserName:= 'frxDBDHeader';
           end;
 
           if not Result

@@ -353,8 +353,6 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           TabOrder = 1
           WordWrap = True
           OnClick = rgPriceListClick
-          ExplicitLeft = 5
-          ExplicitTop = 119
         end
         object gbPriceListCode: TGroupBox
           Left = 0
@@ -830,18 +828,18 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       PrinterNameParam.MultiSelectSeparator = ','
     end
   end
-  object PrintHeaderFormCDS: TClientDataSet
+  object PrintHeade_gridrFormCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 84
     Top = 49
   end
-  object spSelectPrintForm: TdsdStoredProc
+  object spSelectPrint_gridForm: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_StickerProperty_Print'
-    DataSet = PrintHeaderFormCDS
+    DataSet = PrintHeade_gridrFormCDS
     DataSets = <
       item
-        DataSet = PrintHeaderFormCDS
+        DataSet = PrintHeade_gridrFormCDS
       end>
     Params = <
       item
@@ -956,17 +954,17 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
     Left = 191
     Top = 96
   end
-  object frxDBDHeaderForm: TfrxDBDataset
+  object frxDBDHeader_gridForm: TfrxDBDataset
     UserName = 'frxDBDHeader'
     CloseDataSource = False
-    DataSet = PrintHeaderFormCDS
+    DataSet = PrintHeade_gridrFormCDS
     BCDToCurrency = False
     Left = 80
     Top = 112
   end
   object FReport: TfrxReport
     Version = '4.15.6'
-    DataSet = frxDBDHeaderForm
+    DataSet = frxDBDHeader_gridForm
     DataSetName = 'frxDBDHeader'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'

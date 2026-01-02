@@ -303,6 +303,7 @@ type
     Amount_1001: TcxGridDBColumn;
     bbTotal_1001_del: TSpeedButton;
     bbDeleteAll: TSpeedButton;
+    GoodsKindCode: TcxGridDBColumn;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -2958,8 +2959,8 @@ begin
      then
      begin
           DMMainScaleForm.gpUpdate_Scale_MI_StickerTotal(-1 * ParamsMovement.ParamByName('MovementId').AsInteger, TRUE);
-          ParamsMI.ParamByName('GoodsCode_1001').AsInteger:= 46;
-          ParamsMI.ParamByName('GoodsKindCode_1001').AsInteger:= 3;
+          ParamsMI.ParamByName('GoodsCode_1001').AsInteger:= CDS.FieldByName('GoodsCode').AsInteger;
+          ParamsMI.ParamByName('GoodsKindCode_1001').AsInteger:= CDS.FieldByName('GoodsKindCode').AsInteger;
           cbAuto_1001.Checked:= TRUE;
           //GuideGoodsStickerForm.cb_70_70.Checked:= TRUE;
           //

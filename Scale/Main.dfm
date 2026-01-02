@@ -1366,6 +1366,15 @@ object MainForm: TMainForm
           Options.Editing = False
           Width = 200
         end
+        object GoodsKindCode: TcxGridDBColumn
+          Caption = #1050#1086#1076' ('#1074#1080#1076')'
+          DataBinding.FieldName = 'GoodsKindCode'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 50
+        end
         object GoodsKindName: TcxGridDBColumn
           Caption = #1042#1080#1076
           DataBinding.FieldName = 'GoodsKindName'
