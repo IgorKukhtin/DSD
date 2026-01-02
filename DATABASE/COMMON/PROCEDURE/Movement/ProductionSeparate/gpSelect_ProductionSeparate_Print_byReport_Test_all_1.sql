@@ -199,7 +199,7 @@ BEGIN
                           OR COALESCE (inPartionGoods_main2,'') = ''
                        )
 
-       --данные по партии для товара 4134 по партии
+       --данные по партии для товара 4134 по партии   (для товара мастера , может быть не только 4134((( )
      ,  tmpGoods_4134 AS (SELECT tmpPartionGoods.PartionGoods_main
                                , tmpData.GoodsCode
                                , tmpData.GoodsName
@@ -210,7 +210,7 @@ BEGIN
                                , tmpData.Persent_v 
                           FROM (SELECT DISTINCT tmpMovement.PartionGoods_main, MAX (tmpMovement.OperDate) AS OperDate FROM tmpMovement
                                GROUP BY tmpMovement.PartionGoods_main) AS tmpPartionGoods
-                           LEFT JOIN gpSelect_MI_ProductionSeparate_PriceFact(tmpPartionGoods.OperDate::TDateTime, tmpPartionGoods.OperDate::TDateTime, 0, inPriceListId_norm, 4261, tmpPartionGoods.PartionGoods_main, inSession) AS tmpData  ON 1=1
+                           LEFT JOIN gpSelect_MI_ProductionSeparate_PriceFact(tmpPartionGoods.OperDate::TDateTime, tmpPartionGoods.OperDate::TDateTime, 0, inPriceListId_norm, inGoodsId /*4261*/, tmpPartionGoods.PartionGoods_main, inSession) AS tmpData  ON 1=1
                           )
 
        --данные по документам
@@ -281,8 +281,8 @@ BEGIN
                           , tmpData.SummHeadCount1  -- ср вес головы из Separate
                           --, tmpData.Separate_info   
                           
-                          , SUM (CASE WHEN tmpData.GoodsId = 4261 THEN tmpData.SummFact ELSE 0 END) OVER (PARTITION BY tmpData.MovementId)     AS summ_4134
-                          , SUM (CASE WHEN tmpData.GoodsId = 4261 THEN tmpData.Amount ELSE 0 END) OVER (PARTITION BY tmpData.MovementId)       AS AmountMaster_4134
+                          , SUM (CASE WHEN tmpData.GoodsId = inGoodsId /*4261*/ THEN tmpData.SummFact ELSE 0 END) OVER (PARTITION BY tmpData.MovementId)     AS summ_4134
+                          , SUM (CASE WHEN tmpData.GoodsId = inGoodsId /*4261*/ THEN tmpData.Amount ELSE 0 END) OVER (PARTITION BY tmpData.MovementId)       AS AmountMaster_4134
                           --, CASE WHEN COALESCE (tmpCursor1.CountMaster,0) <> 0 THEN 100  * tmpMaster.Amount / tmpCursor1.CountMaster ELSE 0 END :: TFloat AS Persent_4134
                           
                           --
