@@ -39,11 +39,13 @@ RETURNS TABLE (GoodsId Integer
 
              , FromName            TVarChar
              , PersonalPackerName  TVarChar
+             , GoodsIdMaster    Integer
              , GoodsNameMaster  TVarChar
              , CountMaster      TFloat
              , HeadCountMaster  TFloat
              , SummMaster       TFloat
              , PriceMaster      TFloat
+             , GoodsIdIncome    Integer
              , GoodsNameIncome  TVarChar
              , CountIncome      TFloat
              , SummIncome       TFloat
@@ -194,25 +196,25 @@ BEGIN
                                           AND MIContainer.MovementDescId = zc_Movement_Income()
                                          )
     , tmpIncome_Container2 AS (SELECT MIContainer.*
-                                        FROM (SELECT Movement.Id AS MovementId 
-                                              FROM MovementItemString AS MIString_PartionGoods
+                               FROM (SELECT Movement.Id AS MovementId 
+                                     FROM MovementItemString AS MIString_PartionGoods
 
-                                                  LEFT JOIN MovementItem ON MovementItem.Id =  MIString_PartionGoods.MovementItemId
-                                                                        AND MovementItem.DescId = zc_MI_Master()
-                                                                        AND MovementItem.isErased = FALSE
+                                         LEFT JOIN MovementItem ON MovementItem.Id =  MIString_PartionGoods.MovementItemId
+                                                               AND MovementItem.DescId = zc_MI_Master()
+                                                               AND MovementItem.isErased = FALSE
 
-                                                  INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
-                                                                     AND Movement.DescId = zc_Movement_Income()
-                                                  LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+                                         INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                                            AND Movement.DescId = zc_Movement_Income()
+                                         LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 
-                                                WHERE MIString_PartionGoods.DescId IN (zc_MIString_PartionGoodsCalc(), zc_MIString_PartionGoods())
-                                                      AND MIString_PartionGoods.ValueData = inPartionGoods  --  ILIKE '%'||inPartionGoods||'%'  -- ---'4294-245764-30.11.2025'
-                                                 ) AS tmpIncome
-                                          LEFT JOIN  MovementItemContainer AS MIContainer
-                                                                           ON MIContainer.MovementId = tmpIncome.MovementId
-                                                                          AND MIContainer.DescId = zc_MIContainer_Count()
-                                          WHERE (SELECT COUNT(*) FROM tmpIncome_Container1) = 0
-                                           )
+                                       WHERE MIString_PartionGoods.DescId IN (zc_MIString_PartionGoodsCalc(), zc_MIString_PartionGoods())
+                                             AND MIString_PartionGoods.ValueData = inPartionGoods  --  ILIKE '%'||inPartionGoods||'%'  -- ---'4294-245764-30.11.2025'
+                                        ) AS tmpIncome
+                                 LEFT JOIN  MovementItemContainer AS MIContainer
+                                                                  ON MIContainer.MovementId = tmpIncome.MovementId
+                                                                 AND MIContainer.DescId = zc_MIContainer_Count()
+                                 WHERE (SELECT COUNT(*) FROM tmpIncome_Container1) = 0
+                                  )
      , tmpIncome_Container AS (SELECT tmp.* FROM tmpIncome_Container1 AS tmp
                          UNION SELECT tmp.* FROM tmpIncome_Container2 AS tmp
                               )
@@ -360,7 +362,8 @@ BEGIN
              
      , tmpCursor1 AS ( 
       -- Результат
-      SELECT Object_Goods.ValueData   AS GoodsNameMaster
+      SELECT Object_Goods.Id          AS GoodsIdMaster
+           , Object_Goods.ValueData   AS GoodsNameMaster
            , tmpMI_group.Amount_count AS CountMaster
            , tmpMI_group.HeadCount    AS HeadCountMaster
            , tmpMI_group.Amount_summ  AS SummMaster
@@ -370,6 +373,7 @@ BEGIN
 
            , Object_From.ValueData            AS FromName
            , Object_PersonalPacker.ValueData  AS PersonalPackerName
+           , Object_Goods_income.Id           AS GoodsIdIncome
            , Object_Goods_income.ValueData    AS GoodsNameIncome
            , tmpIncomeAll.Amount_count        AS CountIncome
            , tmpIncomeAll.Amount_summ         AS SummIncome
@@ -558,6 +562,7 @@ BEGIN
                           
 
                           --
+                          , tmpCursor1.GoodsIdMaster
                           , tmpCursor1.GoodsNameMaster
                           , tmpCursor1.CountMaster
                           , tmpCursor1.HeadCountMaster
@@ -566,6 +571,7 @@ BEGIN
                           , tmpCursor1.PriceMaster
                           , tmpCursor1.FromName
                           , tmpCursor1.PersonalPackerName
+                          , tmpCursor1.GoodsIdIncome
                           , tmpCursor1.GoodsNameIncome
                           , tmpCursor1.CountIncome
                           , tmpCursor1.SummIncome
@@ -621,7 +627,8 @@ BEGIN
           
           --шапка 
           , tmpData.FromName
-          , tmpData.PersonalPackerName
+          , tmpData.PersonalPackerName 
+          , tmpData.GoodsIdMaster
           , tmpData.GoodsNameMaster
           , tmpData.CountMaster      ::TFloat
           , tmpData.HeadCountMaster  ::TFloat
@@ -629,6 +636,7 @@ BEGIN
           
           , tmpData.PriceMaster      ::TFloat
                                      
+          , tmpData.GoodsIdIncome
           , tmpData.GoodsNameIncome  
           , tmpData.CountIncome      ::TFloat
           , tmpData.SummIncome       ::TFloat

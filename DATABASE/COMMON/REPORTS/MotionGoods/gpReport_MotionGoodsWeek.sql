@@ -118,6 +118,7 @@ BEGIN
                                   , tmpContainer.Amount
                           HAVING tmpContainer.Amount - SUM (COALESCE (MIContainer.Amount, 0))  <> 0
                               OR tmpContainer.Amount - SUM (CASE WHEN MIContainer.OperDate > vbEndDate THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) <> 0
+                              OR (MAX (COALESCE (MIContainer.OperDate, zc_DateStart())) <> zc_DateStart())
                            ) AS tmp
                      GROUP BY tmp.GoodsId, tmp.goodskindid
                      )
@@ -238,8 +239,8 @@ BEGIN
             OR tmpData.CountOut5 <> 0 OR tmpData.CountOut6 <> 0 OR tmpData.CountOut7 <> 0
             
             OR (inIsRemainsNull_Use = TRUE 
-            AND tmpRemains.RemainsStart = 0 
-            AND tmpRemains.RemainsEnd = 0
+            --AND tmpRemains.RemainsStart = 0 
+            --AND tmpRemains.RemainsEnd = 0
             AND tmpRemains.OperDate_use <> zc_DateStart()
                 ) 
        ORDER BY Object_Goods.ValueData    
