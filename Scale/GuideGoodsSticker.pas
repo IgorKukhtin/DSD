@@ -318,9 +318,12 @@ begin
        //є смены технологов, по умолчанию = 1 (дл€ режим 3)
        ParamByName('inNumTech').Value        := ParamsMI.ParamByName('NumTech_Sticker').AsFloat;
        //
-       //ParamByName('inWeight').Value       := 0;
+       // помен€ли
+       //if ParamsMI.ParamByName('isTotal_1001').AsBoolean = true
+       //then ParamsMI.ParamByName('RealWeight_Get').AsFloat:= DMMainScaleForm.gpGet_Scale_Scale_MI_StickerTotal(ParamsMI);
        //***
        ParamByName('inWeight').Value         := ParamsMI.ParamByName('RealWeight_Get').AsFloat;
+       //ParamByName('inWeight').Value       := 0;
        //
        Execute;
     end;
@@ -956,7 +959,7 @@ begin
             //
             if (cb_70_70.Checked = TRUE) and (ParamsMI.ParamByName('isTotal_1001').AsBoolean = TRUE)
             then begin
-                    spSelectPrint.ParamByName('inWeight').Value:= DMMainScaleForm.gpGet_Scale_Scale_MI_StickerTotal(ParamsMI);
+                    ParamsMI.ParamByName('RealWeight_Get').AsFloat:= DMMainScaleForm.gpGet_Scale_Scale_MI_StickerTotal(ParamsMI);
                     //ѕ≈„ј“№
                     pSelectPrint;
 

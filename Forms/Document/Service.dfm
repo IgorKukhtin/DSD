@@ -503,6 +503,19 @@
         Value = '0'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_corr'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_real'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 59
     Top = 453
@@ -511,7 +524,7 @@
     StoredProcName = 'gpInsertUpdate_Movement_Service'
     Params = <
       item
-        Name = 'ioid'
+        Name = 'ioId'
         Value = '0'
         Component = FormParams
         ComponentItem = 'Id'
@@ -519,15 +532,24 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ininvnumber'
+        Name = 'inMovementId_corr'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMovementId_corr'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumber'
         Value = '0'
-        Component = edInvNumber
+        Component = FormParams
+        ComponentItem = 'InvNumber_real'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inoperdate'
+        Name = 'inOperDate'
         Value = 0d
         Component = ceOperDate
         DataType = ftDateTime
@@ -787,6 +809,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementId_corr'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMovementId_corr'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inOperDate'
         Value = Null
         Component = FormParams
@@ -806,6 +836,14 @@
         Name = 'InvNumber'
         Value = '0'
         Component = edInvNumber
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_real'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'InvNumber_real'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item

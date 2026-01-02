@@ -61,6 +61,16 @@ inherited ServiceJournalForm: TServiceJournalForm
               Format = ',0.00'
               Kind = skSum
               Column = Summa_calc
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountIn_corr
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountOut_corr
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -97,6 +107,16 @@ inherited ServiceJournalForm: TServiceJournalForm
               Format = ',0.00'
               Kind = skSum
               Column = Summa_calc
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountIn_corr
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountOut_corr
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -117,6 +137,18 @@ inherited ServiceJournalForm: TServiceJournalForm
             Options.Editing = False
             Width = 55
           end
+          object NPP_corr: TcxGridDBColumn [2]
+            Caption = #8470' '#1082#1086#1088#1088'.'
+            DataBinding.FieldName = 'NPP_corr'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
+            Options.Editing = False
+            Width = 55
+          end
           inherited colOperDate: TcxGridDBColumn
             Options.Editing = False
             Width = 75
@@ -127,7 +159,7 @@ inherited ServiceJournalForm: TServiceJournalForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 75
@@ -138,9 +170,31 @@ inherited ServiceJournalForm: TServiceJournalForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 77
+          end
+          object AmountIn_corr: TcxGridDBColumn
+            Caption = #1044#1077#1073#1077#1090' ('#1082#1086#1088#1088'.)'
+            DataBinding.FieldName = 'AmountIn_corr'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1077#1073#1077#1090' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072')'
+            Width = 80
+          end
+          object AmountOut_corr: TcxGridDBColumn
+            Caption = #1050#1088#1077#1076#1080#1090' ('#1082#1086#1088#1088'.)'
+            DataBinding.FieldName = 'AmountOut_corr'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1088#1077#1076#1080#1090' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072')'
+            Width = 80
           end
           object AmountCurrencyDebet: TcxGridDBColumn
             Caption = #1044#1077#1073#1077#1090' ('#1074' '#1074#1072#1083#1102#1090#1077')'
@@ -148,7 +202,7 @@ inherited ServiceJournalForm: TServiceJournalForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 75
@@ -159,8 +213,9 @@ inherited ServiceJournalForm: TServiceJournalForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 77
           end
           object CurrencyPartnerValue: TcxGridDBColumn
@@ -493,10 +548,10 @@ inherited ServiceJournalForm: TServiceJournalForm
     Width = 1020
     ExplicitWidth = 1020
     inherited deStart: TcxDateEdit
-      EditValue = 42370d
+      EditValue = 46023d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42370d
+      EditValue = 46023d
     end
   end
   object cxLabel27: TcxLabel [2]
@@ -517,6 +572,47 @@ inherited ServiceJournalForm: TServiceJournalForm
     Width = 155
   end
   inherited ActionList: TActionList
+    object actInsert_corr: TdsdInsertUpdateAction [5]
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1091
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1091
+      ShortCut = 45
+      ImageIndex = 27
+      FormName = 'TServiceForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId_Value'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId_corr'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
     inherited actInsert: TdsdInsertUpdateAction
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       FormName = 'TServiceForm'
@@ -528,6 +624,11 @@ inherited ServiceJournalForm: TServiceJournalForm
         end
         item
           Name = 'inMovementId_Value'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId_corr'
           Value = Null
           MultiSelectSeparator = ','
         end
@@ -557,6 +658,13 @@ inherited ServiceJournalForm: TServiceJournalForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'inMovementId_corr'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_corr'
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'inOperDate'
           Value = 41640d
           Component = deStart
@@ -582,6 +690,13 @@ inherited ServiceJournalForm: TServiceJournalForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId_corr'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_corr'
           MultiSelectSeparator = ','
         end
         item
@@ -874,6 +989,14 @@ inherited ServiceJournalForm: TServiceJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbInsert_corr'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbComplete'
         end
         item
@@ -968,6 +1091,10 @@ inherited ServiceJournalForm: TServiceJournalForm
     end
     object bbOpenDocumentPromo: TdxBarButton
       Action = mactOpenDocumentPromo
+      Category = 0
+    end
+    object bbInsert_corr: TdxBarButton
+      Action = actInsert_corr
       Category = 0
     end
   end

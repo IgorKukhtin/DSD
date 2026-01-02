@@ -1598,6 +1598,8 @@ type
     miOrderFinance_Plan: TMenuItem;
     actOrderFinance_PlanDate: TdsdOpenForm;
     miOrderFinance_PlanDate: TMenuItem;
+    miPlanDocuments: TMenuItem;
+    N272: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

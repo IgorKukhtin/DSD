@@ -60,6 +60,11 @@ type
     actOpenFormPromo: TdsdOpenForm;
     mactOpenDocumentPromo: TMultiAction;
     bbOpenDocumentPromo: TdxBarButton;
+    actInsert_corr: TdsdInsertUpdateAction;
+    bbInsert_corr: TdxBarButton;
+    NPP_corr: TcxGridDBColumn;
+    AmountIn_corr: TcxGridDBColumn;
+    AmountOut_corr: TcxGridDBColumn;
   private
     { Private declarations }
   public
