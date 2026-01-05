@@ -75,6 +75,7 @@ BEGIN
                             FROM Movement
                             WHERE Movement.ParentId = inMovementId
                               AND NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_PersonalService())
+                              AND Movement.DescId <> zc_Movement_Service()
                             --AND vbUserId <> 5
                             --AND 1=0
                            )
