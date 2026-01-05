@@ -248,7 +248,7 @@ BEGIN
                              , tmpMI_Container.isActive
                              , tmpMI_Container.isCalculated
                         FROM tmpMI_Container
-                        Where tmpMI_Container.MIContainerDescId = zc_MIContainer_Count()
+                        WHERE tmpMI_Container.MIContainerDescId = zc_MIContainer_Count()
                         GROUP BY tmpMI_Container.MovementId 
                              , tmpMI_Container.InvNumber
                              , tmpMI_Container.OperDate
@@ -286,7 +286,7 @@ BEGIN
                   FROM tmpMI_Container
                     -- JOIN (SELECT AccountID FROM Object_Account_View WHERE AccountGroupId = zc_Enum_AccountGroup_20000()
                     --       ) AS tmpAccount on tmpAccount.AccountID = tmpMI_Container.ContainerObjectId
-                  Where tmpMI_Container.MIContainerDescId = zc_MIContainer_Summ()
+                  WHERE tmpMI_Container.MIContainerDescId = zc_MIContainer_Summ()
                   GROUP BY tmpMI_Container.MovementId 
                          , tmpMI_Container.InvNumber
                          , tmpMI_Container.OperDate
@@ -304,6 +304,27 @@ BEGIN
                          , tmpMI_Container.ToId
                      )
 
+  , tmpMI_out AS (SELECT tmpMI_out.*
+                  FROM tmpMI_Count AS tmpMI_out
+                      JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpMI_out.GoodsId
+                  WHERE tmpMI_out.isActive = FALSE
+                  )
+  , tmpMI_in AS (SELECT tmpMI_in.*
+                 FROM tmpMI_Count AS tmpMI_in
+                    JOIN _tmpChildGoods ON _tmpChildGoods.ChildGoodsId = tmpMI_in.GoodsId OR inisDetail = False
+                WHERE tmpMI_in.isActive = TRUE
+                )
+  , tmpMI_out_Sum AS (SELECT tmpMI_out_Sum.*
+                      FROM tmpMI_sum AS tmpMI_out_Sum
+                          JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpMI_out_Sum.GoodsId
+                      WHERE tmpMI_out_Sum.isActive = FALSE
+                      )
+  , tmpMI_in_Sum AS (SELECT tmpMI_in_Sum.*
+                     FROM tmpMI_sum AS tmpMI_in_Sum
+                        JOIN _tmpChildGoods ON _tmpChildGoods.ChildGoodsId = tmpMI_in_Sum.GoodsId OR inisDetail = False
+                    WHERE tmpMI_in_Sum.isActive = TRUE
+                    )
+
   , tmpMI_total AS
            (SELECT tmpMI.GoodsId 
                  , -1* SUM (tmpMI.Summ) AS Summ
@@ -313,22 +334,17 @@ BEGIN
                         , tmpMI_out.Summ
                         , tmpMI_out.Amount
                         , tmpMI_out.HeadCount
-                  FROM tmpMI_Count AS tmpMI_out
-                       JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpMI_out.GoodsId
-                  Where tmpMI_out.isActive = FALSE
-                    AND inIsMovement       = FALSE
-                    AND inIsPartion        = FALSE
-                    
+                  FROM tmpMI_out
+                  WHERE inIsMovement = FALSE
+                    AND inIsPartion  = FALSE
                  UNION ALL
                   SELECT  tmpMI_out_Sum.GoodsId       
                         , tmpMI_out_Sum.Summ
                         , tmpMI_out_Sum.Amount
                         , 0 AS HeadCount
-                  FROM tmpMI_sum AS tmpMI_out_Sum
-                       JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpMI_out_Sum.GoodsId
-                  Where tmpMI_out_Sum.isActive = FALSE
-                    AND inIsMovement           = FALSE
-                    AND inIsPartion            = FALSE
+                  FROM tmpMI_out_Sum
+                  WHERE inIsMovement = FALSE
+                    AND inIsPartion  = FALSE
                  ) AS tmpMI 
             GROUP BY tmpMI.GoodsId
            )
@@ -339,7 +355,7 @@ BEGIN
                  , tmpMI.PartionGoods_main2 
                  , -1* SUM (tmpMI.Summ) AS Summ
                  , -1* SUM (tmpMI.Amount) AS Amount
-                 ,  SUM (tmpMI.HeadCount) AS HeadCount
+                 , SUM (tmpMI.HeadCount) AS HeadCount
             FROM (SELECT  tmpMI_out.GoodsId
                         , tmpMI_out.PartionGoods
                         , tmpMI_out.PartionGoods_main
@@ -347,10 +363,8 @@ BEGIN
                         , tmpMI_out.Summ
                         , tmpMI_out.Amount
                         , tmpMI_out.HeadCount
-                  FROM tmpMI_Count AS tmpMI_out
-                       JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpMI_out.GoodsId
-                  Where tmpMI_out.isActive = FALSE
-                    AND inIsMovement       = FALSE
+                  FROM tmpMI_out
+                  WHERE inIsMovement       = FALSE
                     AND inIsPartion        = TRUE
                  UNION ALL
                   SELECT  tmpMI_out_Sum.GoodsId       
@@ -360,10 +374,8 @@ BEGIN
                         , tmpMI_out_Sum.Summ
                         , tmpMI_out_Sum.Amount
                         , 0 AS HeadCount
-                  FROM tmpMI_sum AS tmpMI_out_Sum
-                       JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpMI_out_Sum.GoodsId
-                  Where tmpMI_out_Sum.isActive = FALSE
-                    AND inIsMovement           = FALSE
+                  FROM tmpMI_out_Sum
+                  WHERE inIsMovement           = FALSE
                     AND inIsPartion            = TRUE
                  ) AS tmpMI 
             GROUP BY tmpMI.GoodsId
@@ -383,10 +395,8 @@ BEGIN
                         , tmpMI_out.Summ
                         , tmpMI_out.Amount
                         , tmpMI_out.HeadCount
-                  FROM tmpMI_Count AS tmpMI_out
-                       JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpMI_out.GoodsId
-                  Where tmpMI_out.isActive = FALSE
-                    AND inIsMovement       = TRUE
+                  FROM tmpMI_out
+                  WHERE inIsMovement       = TRUE
                     AND inIsPartion        = TRUE
                  UNION ALL
                   SELECT  tmpMI_out_Sum.GoodsId       
@@ -394,15 +404,15 @@ BEGIN
                         , tmpMI_out_Sum.Summ
                         , tmpMI_out_Sum.Amount
                         , 0 AS HeadCount
-                  FROM tmpMI_sum AS tmpMI_out_Sum
-                       JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpMI_out_Sum.GoodsId
-                  Where tmpMI_out_Sum.isActive = FALSE
-                    AND inIsMovement           = TRUE
+                  FROM tmpMI_out_Sum
+                  WHERE inIsMovement           = TRUE
                     AND inIsPartion            = TRUE
                  ) AS tmpMI 
             GROUP BY tmpMI.GoodsId
                    , tmpMI.MovementId
            )
+              
+   , tmpPrice AS (SELECT * FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_ProductionSeparate(), inOperDate:= inEndDate) )
                      
       -- –≈«”À‹“¿“
       SELECT CAST (tmpOperationGroup.MovementId AS Integer)    AS MovementId
@@ -502,14 +512,10 @@ BEGIN
                         , tmpMI_in.Summ         AS ChildSumm
                         , tmpMI_in.Amount       AS ChildAmount
                         , tmpMI_in.isCalculated
-                  FROM tmpMI_Count AS tmpMI_out
-                       JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpMI_out.GoodsId
-                       LEFT JOIN tmpMI_Count AS tmpMI_in on tmpMI_in.MovementId = tmpMI_out.MovementId
-                                                        AND tmpMI_in.isActive = TRUE 
-                                                        AND inisDetail = TRUE
-                       JOIN _tmpChildGoods ON _tmpChildGoods.ChildGoodsId = tmpMI_in.GoodsId OR inisDetail = False
-                  Where tmpMI_out.isActive = FALSE
-                   AND COALESCE (tmpMI_in.Amount, -1 ) <> 0
+                  FROM tmpMI_out
+                       LEFT JOIN tmpMI_in ON tmpMI_in.MovementId = tmpMI_out.MovementId
+                                         AND inisDetail = TRUE
+                  WHERE COALESCE (tmpMI_in.Amount, -1 ) <> 0
                  UNION ALL
                   SELECT  tmpMI_out_Sum.MovementId
                         , tmpMI_out_Sum.InvNumber
@@ -532,14 +538,9 @@ BEGIN
                         , tmpMI_in_Sum.Summ         AS ChildSumm
                         , tmpMI_in_Sum.Amount       AS ChildAmount
                         , tmpMI_in_Sum.isCalculated
-                  FROM tmpMI_sum AS tmpMI_out_Sum
-                       JOIN tmpMI_sum AS tmpMI_in_Sum on tmpMI_out_Sum.MovementId = tmpMI_in_Sum.MovementId
-                                                       AND tmpMI_in_Sum.isActive = TRUE
-                                                       AND inisDetail = TRUE
-                       JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpMI_out_Sum.GoodsId
-                       JOIN _tmpChildGoods ON _tmpChildGoods.ChildGoodsId = tmpMI_in_Sum.GoodsId OR inisDetail = False
-                  Where tmpMI_out_Sum.isActive = FALSE
- 
+                  FROM tmpMI_out_Sum
+                       JOIN tmpMI_in_Sum ON tmpMI_out_Sum.MovementId = tmpMI_in_Sum.MovementId
+                                        AND inisDetail = TRUE
                  ) AS tmpMI 
                  GROUP BY CASE WHEN inIsMovement = True THEN tmpMI.MovementId ELSE 0 END
                         , CASE WHEN inIsMovement = True THEN tmpMI.InvNumber ELSE '' END
@@ -587,10 +588,9 @@ BEGIN
                                  AND ObjectLink_Goods_GoodsGroupChild.DescId = zc_ObjectLink_Goods_GoodsGroup()
              LEFT JOIN Object AS Object_GoodsGroupChild ON Object_GoodsGroupChild.Id = ObjectLink_Goods_GoodsGroupChild.ChildObjectId
 
-             LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_ProductionSeparate(), inOperDate:= inEndDate)
-                    AS lfObjectHistory_PriceListItem 
-                    ON lfObjectHistory_PriceListItem.GoodsId = Object_GoodsChild.Id
-                   AND lfObjectHistory_PriceListItem.GoodsKindId IS NULL  
+             LEFT JOIN tmpPrice AS lfObjectHistory_PriceListItem 
+                                ON lfObjectHistory_PriceListItem.GoodsId = Object_GoodsChild.Id
+                               AND lfObjectHistory_PriceListItem.GoodsKindId IS NULL  
                    
              LEFT JOIN Object AS Object_From_partion ON Object_From_partion.ObjectCode = tmpOperationGroup.FromCode_partion
                                                     AND Object_From_partion.DescId = zc_Object_Partner()
@@ -624,3 +624,25 @@ $BODY$
 -- SELECT * FROM gpReport_GoodsMI_ProductionSeparate_Total (inStartDate:= '17.12.2024' , inEndDate:= '17.12.2024', inIsMovement:= False, inIsPartion:= 'False', inIsStorageLine:= False, inisCalculated:= False, inisDetail:= FALSE, inGoodsGroupId:= 0, inGoodsId:= 5225, inChildGoodsGroupId:= 0, inChildGoodsId:= 0, inFromId:= 0, inToId:= 0, inSession:= '9457');
 
 --select * from gpReport_GoodsMI_ProductionSeparate_Total(inStartDate := ('06.06.2025')::TDateTime , inEndDate := ('06.06.2025')::TDateTime , inIsMovement := 'True' , inIsPartion := 'True' , inIsStorageLine := 'False' , inisCalculated := 'False',inisDetail:= True, inGoodsGroupId := 0 , inGoodsId := 4234 , inChildGoodsGroupId := 0 , inChildGoodsId := 0 , inFromId := 0 , inToId := 0 ,  inSession := '9457');
+
+
+/*
+--22---394 ÒÚÓÍË
+select * from gpReport_GoodsMI_ProductionSeparate_Total(
+inStartDate := ('01.12.2025')::TDateTime , 
+inEndDate := ('16.12.2025')::TDateTime , 
+inIsMovement := 'True' , 
+inIsPartion := 'True' ,
+inIsStorageLine := 'False' , 
+inisCalculated := 'False' , 
+inisDetail := 'False' , 
+inGoodsGroupId := 0 , 
+inGoodsId := 0 , 
+inChildGoodsGroupId := 0 , 
+inChildGoodsId := 0 , 
+inFromId := 8439 , 
+inToId := 8439 ,  
+inSession := '9457');
+
+   
+*/
