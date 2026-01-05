@@ -31,7 +31,7 @@ THEN RETURN; END IF;
      
 
 
-if CURRENT_TIMESTAMP between '01.12.2025 7:55' and '01.12.2025 10:00' AND 1=0
+if CURRENT_TIMESTAMP between '05.01.2026 7:55' and '05.01.2026 10:00' AND 1=0
 then
     RAISE EXCEPTION 'Ошибка.ok-pause';
 end if;

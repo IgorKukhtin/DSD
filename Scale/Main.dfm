@@ -1219,6 +1219,16 @@ object MainForm: TMainForm
             Format = ',0.####'
             Kind = skSum
             Column = CountTare6
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = Amount_1001
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = RealWeight_1001
           end>
         DataController.Summary.FooterSummaryItems = <
           item
@@ -1295,6 +1305,16 @@ object MainForm: TMainForm
             Format = ',0.####'
             Kind = skSum
             Column = CountTare6
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = Amount_1001
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = RealWeight_1001
           end>
         DataController.Summary.SummaryGroups = <>
         OptionsCustomize.ColumnHiding = True
@@ -1342,6 +1362,17 @@ object MainForm: TMainForm
         object Amount_1001: TcxGridDBColumn
           Caption = #1042#1077#1089' '#1103#1097'.'
           DataBinding.FieldName = 'Amount_1001'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 55
+        end
+        object RealWeight_1001: TcxGridDBColumn
+          Caption = '*'#1042#1077#1089' '#1085#1072' '#1058#1072#1073#1083#1086
+          DataBinding.FieldName = 'RealWeight_1001'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'

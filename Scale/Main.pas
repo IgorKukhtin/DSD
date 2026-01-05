@@ -304,6 +304,7 @@ type
     bbTotal_1001_del: TSpeedButton;
     bbDeleteAll: TSpeedButton;
     GoodsKindCode: TcxGridDBColumn;
+    RealWeight_1001: TcxGridDBColumn;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -2146,6 +2147,8 @@ begin
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Ord_1001').Index].Visible:=SettingMain.isSticker = TRUE;
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Ord_1001_group').Index].Visible:=SettingMain.isSticker = TRUE;
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Amount_1001').Index].Visible:=SettingMain.isSticker = TRUE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('RealWeight_1001').Index].Visible:=SettingMain.isSticker = TRUE;
+  if SettingMain.isSticker = TRUE then cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('RealWeight').Index].Visible:=FALSE;
   //
   // надо отловить сохранение 2 раза
   DMMainScaleForm.time_exec_Insert_Scale_MI:=now;
@@ -2254,7 +2257,8 @@ begin
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Amount').Index].Caption           := 'Печать';
 
      //Вес на Табло
-     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('RealWeight').Index].Visible             := TRUE;
+     if SettingMain.isSticker = FALSE
+     then cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('RealWeight').Index].Visible     := TRUE;
      //Заказ (печать этикетки)
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('OrderExternalName_1001').Index].Visible := TRUE;
      //
