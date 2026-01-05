@@ -211,6 +211,7 @@ type
     bbUpdate_PersonalMerch: TdxBarButton;
     BranchName_Personal: TcxGridDBColumn;
     UnitName_Personal: TcxGridDBColumn;
+    isDayCount_30201: TcxGridDBColumn;
   private
     { Private declarations }
   public

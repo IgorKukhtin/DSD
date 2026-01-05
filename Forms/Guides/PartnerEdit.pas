@@ -179,7 +179,8 @@ type
     edDocumentDayCount_30201: TcxCurrencyEdit;
 
   private
-    { Private declarations }
+    { Private declara
+    cxCheckBox1: TcxCheckBox;tions }
   public
     { Public declarations }
   end;

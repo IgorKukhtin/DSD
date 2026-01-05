@@ -73,9 +73,17 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
                                                      , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
 */
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                      , Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
+*/
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                     , Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar
                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                      , Integer, Integer
                                                      , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
@@ -111,6 +119,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     IN inTaxSale_MemberSaler1   TFloat    ,   -- Продавец-1 - % от товарооборота
     IN inTaxSale_MemberSaler2   TFloat    ,   -- Продавец-2 - % от товарооборота
     
+    IN inisDayCount_30201    Boolean   ,    -- Подключена схема(Мясное сырье)
+
     IN inEdiOrdspr           Boolean   ,    -- EDI - Подтверждение
     IN inEdiInvoice          Boolean   ,    -- EDI - Счет
     IN inEdiDesadv           Boolean   ,    -- EDI - уведомление
@@ -251,6 +261,7 @@ BEGIN
                                         , inTaxSale_PersonalTrade := inTaxSale_PersonalTrade
                                         , inTaxSale_MemberSaler1  := inTaxSale_MemberSaler1
                                         , inTaxSale_MemberSaler2  := inTaxSale_MemberSaler2
+                                        , inisDayCount_30201:= inisDayCount_30201
                                         , inEdiOrdspr       := inEdiOrdspr
                                         , inEdiInvoice      := inEdiInvoice
                                         , inEdiDesadv       := inEdiDesadv
@@ -314,6 +325,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.01.26         *
  09.12.25         *
  07.11.24         *
  04.07.24         *

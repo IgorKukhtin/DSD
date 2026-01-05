@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar,
 
                EdiOrdspr Boolean, EdiInvoice Boolean, EdiDesadv Boolean,
                GLNCodeCorporate_vch TVarChar, EdiOrdspr_vch Boolean, EdiInvoice_vch Boolean, EdiDesadv_vch Boolean,
+               isDayCount_30201 Boolean,
 
                JuridicalId Integer, JuridicalName TVarChar, 
                RouteId Integer, RouteName TVarChar,
@@ -112,6 +113,7 @@ BEGIN
            , CAST (False AS Boolean) AS EdiOrdspr_vch
            , CAST (False AS Boolean) AS EdiInvoice_vch
            , CAST (False AS Boolean) AS EdiDesadv_vch
+           , CAST (FALSE AS Boolean) AS isDayCount_30201
            
            , inJuridicalId    AS JuridicalId
            , lfGet_Object_ValueData (inJuridicalId)  AS JuridicalName
@@ -247,6 +249,7 @@ BEGIN
            , COALESCE (ObjectBoolean_EdiOrdspr_vch.ValueData, False)   ::Boolean       AS EdiOrdspr_vch
            , COALESCE (ObjectBoolean_EdiInvoice_vch.ValueData, False)  ::Boolean       AS EdiInvoice_vch
            , COALESCE (ObjectBoolean_EdiDesadv_vch.ValueData, False)   ::Boolean       AS EdiDesadv_vch
+           , COALESCE (ObjectBoolean_DayCount_30201.ValueData, False)  ::Boolean       AS isDayCount_30201
 
            , Object_Juridical.Id         AS JuridicalId
            , Object_Juridical.ValueData  AS JuridicalName
@@ -458,6 +461,10 @@ BEGIN
                                    ON ObjectBoolean_EdiDesadv_vch.ObjectId = Object_Partner.Id
                                   AND ObjectBoolean_EdiDesadv_vch.DescId = zc_ObjectBoolean_Partner_EdiDesadv_vch()
 
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_DayCount_30201
+                                   ON ObjectBoolean_DayCount_30201.ObjectId = Object_Partner.Id
+                                  AND ObjectBoolean_DayCount_30201.DescId = zc_ObjectBoolean_Partner_DayCount_30201()
+
            LEFT JOIN ObjectDate AS ObjectDate_StartPromo
                                 ON ObjectDate_StartPromo.ObjectId = Object_Partner.Id
                                AND ObjectDate_StartPromo.DescId = zc_ObjectDate_Partner_StartPromo()
@@ -591,6 +598,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 05.01.25         *
  23.12.25         * 
  09.12.25         * .._vch
  07.11.24         * PersonalSigning

@@ -414,6 +414,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Partner_EdiDesadv_vch() RETURNS Inte
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Partner(), 'zc_ObjectBoolean_Partner_EdiDesadv_vch', 'Платформа ВЧАСНО - уведомление, Платформа ВЧАСНО' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Partner_EdiDesadv_vch');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Partner_DayCount_30201() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Partner_DayCount_30201'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Partner(), 'zc_ObjectBoolean_Partner_DayCount_30201', 'Подключена схема(Мясное сырье)' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Partner_DayCount_30201');
+
+
 
 
 CREATE OR REPLACE FUNCTION zc_ObjectBoolean_GoodsByGoodsKind_Order() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_GoodsByGoodsKind_Order'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -1621,6 +1626,7 @@ INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 05.01.26         * zc_ObjectBoolean_Partner_DayCount_30201
  24.12.25         * zc_ObjectBoolean_OrderFinance_Status_off
                     zc_ObjectBoolean_OrderFinance_OperDate
                     zc_ObjectBoolean_OrderFinance_Plan_1...5 
