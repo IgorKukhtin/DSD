@@ -158,6 +158,13 @@ inherited InventoryForm: TInventoryForm
           object PartionGoods: TcxGridDBColumn [6]
             Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'PartionGoods'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actPartionGoods20202Choice
+                Default = True
+                Kind = bkEllipsis
+              end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 102
@@ -1481,6 +1488,63 @@ inherited InventoryForm: TInventoryForm
           Value = '0'
           Component = FormParams
           ComponentItem = 'MovementId_Separate'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actPartionGoods20202Choice: TOpenChoiceForm
+      Category = 'Partion'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actPartionGoodsChoice'
+      FormName = 'TPartionGoods20202ChoiceForm'
+      FormNameParam.Value = 'TPartionGoods20202ChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = MasterCDS
+          ComponentItem = 'PartionGoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionGoods'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = True
