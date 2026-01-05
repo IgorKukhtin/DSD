@@ -87,6 +87,7 @@ BEGIN
                          , UnitId, PositionId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
                          , PartionMovementId, PartionGoodsId, AssetId
                          , AnalyzerId
+                         , ObjectIntId_Analyzer
                          , CurrencyId
                          , IsActive, IsMaster
                           )
@@ -178,6 +179,9 @@ BEGIN
                          THEN zc_Enum_AnalyzerId_SaleSumm_10300() -- !!!Сумма, реализация, Скидка дополнительная!!!
                     ELSE 0
                END AS AnalyzerId -- заполняется !!!только!!! для текущей
+
+               -- УП Статья для аналитики
+             , MILinkObject_InfoMoney.ObjectId AS ObjectIntId_Analyzer
 
                -- Валюта
              , COALESCE (MLO_Currency.ObjectId, zc_Enum_Currency_Basis()) AS CurrencyId
@@ -344,6 +348,9 @@ BEGIN
                          THEN 0
                     ELSE 0
                END AS AnalyzerId -- заполняется !!!только!!! для текущей
+
+               -- УП Статья для аналитики
+             , MILinkObject_InfoMoney.ObjectId AS ObjectIntId_Analyzer
 
                -- Валюта - не используется
              , 0 AS CurrencyId
@@ -682,7 +689,9 @@ BEGIN
                END AS AssetId
 
              , 0 AS AnalyzerId -- заполнено !!!только!!! для первой
-             , 0 AS ObjectIntId_Analyzer
+
+               -- УП Статья для аналитики
+             , _tmpItem.InfoMoneyId AS ObjectIntId_Analyzer
 
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
@@ -828,7 +837,9 @@ BEGIN
                END AS AssetId
 
              , 0 AS AnalyzerId -- заполнено !!!только!!! для первой
-             , 0 AS ObjectIntId_Analyzer
+
+               -- УП Статья для аналитики
+             , MILinkObject_InfoMoney.ObjectId AS ObjectIntId_Analyzer
 
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
@@ -934,7 +945,9 @@ BEGIN
              , 0 AS AssetId           -- заполнено !!!только!!! для предыдущей
 
              , 0 AS AnalyzerId -- заполнено !!!только!!! для первой
-             , 0 AS ObjectIntId_Analyzer
+
+               -- УП Статья для аналитики
+             , _tmpItem.InfoMoneyId AS ObjectIntId_Analyzer
 
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
