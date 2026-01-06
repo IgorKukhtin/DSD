@@ -5258,10 +5258,14 @@ begin
   ORDRSP := ORDRSPXML.NewORDRSP;
   //
   ORDRSP.NUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
-  ORDRSP.Date := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDate').asDateTime);
-  ORDRSP.DELIVERYDATE := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDate').asDateTime);
+  //Дата Підтвердження замовлення
+  ORDRSP.Date := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
+  //Очікувана дата доставки
+  ORDRSP.DELIVERYDATE := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
+  //Номер Замовлення у системі Вчано.EDI
   ORDRSP.ORDERNUMBER := HeaderDataSet.FieldByName('InvNumberOrder').asString;
-  ORDRSP.ORDERDATE := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDate').asDateTime);
+  //Дата Замовлення
+  ORDRSP.ORDERDATE := FormatDateTime('yyyy-mm-dd',HeaderDataSet.FieldByName('OperDateOrder').asDateTime);
   // Номер договору на поставку
   ORDRSP.CAMPAIGNNUMBER:= HeaderDataSet.FieldByName('ContractName').asString;
   // Дата договору
