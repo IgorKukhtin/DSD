@@ -60,10 +60,13 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
      vbUserId:= lpGetUserBySession (inSession);
 
+
+--
 if vbUserId <> 5 AND 1=0
 THEN
     RAISE EXCEPTION 'Ошибка.Нет прав.';
 END IF;
+
 
      -- определяется - Крыхта Владимир Николаевич * м. Дніпро вул. Стартова 26
      vbPartneFromId := 258612;
@@ -1084,7 +1087,11 @@ END IF;
              , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
              , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
              , Object_GoodsPropertyValue.ValueData  AS Name
+               -- Кол-во шт. при скан.
              , ObjectFloat_Amount.ValueData         AS Amount
+               -- Кол-во ед. в ящ.
+             , COALESCE (ObjectFloat_GoodsPropertyValue_BoxCount.ValueData, 0)     AS BoxCount
+               --
              , ObjectString_BarCode.ValueData       AS BarCode
              , ObjectString_Article.ValueData       AS Article
              , ObjectString_BarCodeGLN.ValueData    AS BarCodeGLN
@@ -1098,6 +1105,10 @@ END IF;
              LEFT JOIN ObjectFloat AS ObjectFloat_Amount
                                    ON ObjectFloat_Amount.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                   AND ObjectFloat_Amount.DescId = zc_ObjectFloat_GoodsPropertyValue_Amount()
+
+             LEFT JOIN ObjectFloat AS ObjectFloat_GoodsPropertyValue_BoxCount
+                                   ON ObjectFloat_GoodsPropertyValue_BoxCount.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                  AND ObjectFloat_GoodsPropertyValue_BoxCount.DescId   = zc_ObjectFloat_GoodsPropertyValue_BoxCount()
 
              LEFT JOIN ObjectString AS ObjectString_BarCode
                                     ON ObjectString_BarCode.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
@@ -1275,12 +1286,23 @@ END IF;
              -- Замовлена кількість
            , tmpMI_Order.Amount              AS AmountOrder
              -- Новая схема Сильпо - Desadv = BOXESQUANTITY (Кількість ящиків)
-           , tmpMI.Count_Box_fozz :: TFloat AS Count_Box_fozz
+           , CASE WHEN tmpMI.Count_Box_fozz > 0
+                       THEN tmpMI.Count_Box_fozz
+
+                  WHEN tmpObject_GoodsPropertyValue.BoxCount > 0
+                   -- !!!Фоззи-Тушенка!!!
+                   AND vbGoodsPropertyId = 4440563 
+                       -- расчет, когда есть Кол-во ед. в ящ.
+                       THEN (tmpMI.AmountPartner / tmpObject_GoodsPropertyValue.BoxCount) :: Integer
+
+                  ELSE 0
+             END:: TFloat AS Count_Box_fozz
 
            , tmpMI.Price                     AS Price
            , tmpMI.CountForPrice             AS CountForPrice
 
            , COALESCE (tmpObject_GoodsPropertyValue.Name, '')       AS GoodsName_Juridical
+             -- Кол-во шт. при скан.
            , COALESCE (tmpObject_GoodsPropertyValue.Amount, 0)      AS AmountInPack_Juridical
 
            , COALESCE (tmpObject_GoodsPropertyValueGroup.Article,    COALESCE (tmpObject_GoodsPropertyValue.Article, ''))    AS Article_Juridical

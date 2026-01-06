@@ -185,21 +185,21 @@ BEGIN
              , ''                                   ::TVarChar  AS UserUpdate_report
 
              , COALESCE (tmpOrderFinance.MemberId_1,0)     ::Integer   AS UserMemberId_1
-             , CASE WHEN vbUserId = 5 AND 1=0 THEN '' ELSE COALESCE (tmpOrderFinance.MemberName_1,'' ) END ::TVarChar  AS UserMember_1
+             , CASE WHEN vbUserId = 5 AND 1=1 THEN '' ELSE COALESCE (tmpOrderFinance.MemberName_1,'' ) END ::TVarChar  AS UserMember_1
 
              , COALESCE (tmpOrderFinance.MemberId_2,0)     ::Integer   AS UserMemberId_2
-             , CASE WHEN vbUserId = 5 AND 1=0 THEN '' ELSE COALESCE (tmpOrderFinance.MemberName_2,'')  END ::TVarChar  AS UserMember_2
+             , CASE WHEN vbUserId = 5 AND 1=1 THEN '' ELSE COALESCE (tmpOrderFinance.MemberName_2,'')  END ::TVarChar  AS UserMember_2
 
              , CAST ('' AS TVarChar) 	                        AS Comment
 
-             , CASE WHEN vbUserId = 5 AND 1=0 THEN 'ФИО' ELSE Object_Insert.ValueData END ::TVarChar AS InsertName
+             , CASE WHEN vbUserId = 5 AND 1=1 THEN 'ФИО' ELSE Object_Insert.ValueData END ::TVarChar AS InsertName
              , CURRENT_TIMESTAMP ::TDateTime                    AS InsertDate
 
              , CAST ('' AS TVarChar)                            AS UpdateName
              , CAST (NULL AS TDateTime)                         AS UpdateDate
 
-             , CASE WHEN vbUserId = 5 AND 1=0 THEN 'Подразделение' ELSE Object_Unit.ValueData     END ::TVarChar AS UnitName_insert
-             , CASE WHEN vbUserId = 5 AND 1=0 THEN 'Должность'     ELSE Object_Position.ValueData END ::TVarChar AS PositionName_insert
+             , CASE WHEN vbUserId = 5 AND 1=1 THEN 'Подразделение' ELSE Object_Unit.ValueData     END ::TVarChar AS UnitName_insert
+             , CASE WHEN vbUserId = 5 AND 1=1 THEN 'Должность'     ELSE Object_Position.ValueData END ::TVarChar AS PositionName_insert
 
              , CAST (NULL AS TDateTime)                         AS Date_SignWait_1
              , CAST (NULL AS TDateTime)                         AS Date_Sign_1
@@ -258,28 +258,28 @@ BEGIN
            , zfCalc_Week_StartDate (Movement.OperDate, MovementFloat_WeekNumber.ValueData) AS StartDate_WeekNumber
            , zfCalc_Week_EndDate   (Movement.OperDate, MovementFloat_WeekNumber.ValueData) AS EndDate_WeekNumber
 
-           , CASE WHEN vbUserId = 5 AND 1=0 THEN MovementDate_Update_report.ValueData - INTERVAL '12 HOUR' ELSE MovementDate_Update_report.ValueData END ::TDateTime AS DateUpdate_report
-           , CASE WHEN vbUserId = 5 AND 1=0 THEN 'ФИО' ELSE Object_Update_report.ValueData END       ::TVarChar  AS UserUpdate_report
+           , CASE WHEN vbUserId = 5 AND 1=1 THEN MovementDate_Update_report.ValueData - INTERVAL '12 HOUR' ELSE MovementDate_Update_report.ValueData END ::TDateTime AS DateUpdate_report
+           , CASE WHEN vbUserId = 5 AND 1=1 THEN 'ФИО' ELSE Object_Update_report.ValueData END       ::TVarChar  AS UserUpdate_report
 
            , Object_Member_1.Id                   ::Integer   AS UserMemberId_1
-           , CASE WHEN vbUserId = 5 AND 1=0 THEN 'ФИО-1' ELSE COALESCE (Object_Member_1.ValueData,'' ) END ::TVarChar  AS UserMember_1
+           , CASE WHEN vbUserId = 5 AND 1=1 THEN 'ФИО-1' ELSE COALESCE (Object_Member_1.ValueData,'' ) END ::TVarChar  AS UserMember_1
 
            , Object_Member_2.Id                   ::Integer   AS UserMemberId_2
-           , CASE WHEN vbUserId = 5 AND 1=0 THEN 'ФИО-2' ELSE COALESCE (Object_Member_2.ValueData,'' ) END ::TVarChar  AS UserMember_2
+           , CASE WHEN vbUserId = 5 AND 1=1 THEN 'ФИО-2' ELSE COALESCE (Object_Member_2.ValueData,'' ) END ::TVarChar  AS UserMember_2
 
            , MovementString_Comment.ValueData       AS Comment
 
-           , CASE WHEN vbUserId = 5 AND 1=0 THEN 'ФИО' ELSE COALESCE (Object_Insert.ValueData,'' ) END ::TVarChar  AS InsertName
+           , CASE WHEN vbUserId = 5 AND 1=1 THEN 'ФИО' ELSE COALESCE (Object_Insert.ValueData,'' ) END ::TVarChar  AS InsertName
 
-           , CASE WHEN vbUserId = 5 AND 1=0 THEN MovementDate_Insert.ValueData - INTERVAL '12 HOUR' ELSE MovementDate_Insert.ValueData END :: TDateTime          AS InsertDate
+           , CASE WHEN vbUserId = 5 AND 1=1 THEN MovementDate_Insert.ValueData - INTERVAL '12 HOUR' ELSE MovementDate_Insert.ValueData END :: TDateTime          AS InsertDate
            , Object_Update.ValueData                AS UpdateName
            , MovementDate_Update.ValueData          AS UpdateDate
 
-           , CASE WHEN vbUserId = 5 AND 1=0 THEN 'Подразделение' ELSE Object_Unit_insert.ValueData     END ::TVarChar AS UnitName_insert
-           , CASE WHEN vbUserId = 5 AND 1=0 THEN 'Должность'     ELSE Object_Position_insert.ValueData END ::TVarChar AS PositionName_insert
+           , CASE WHEN vbUserId = 5 AND 1=1 THEN 'Подразделение' ELSE Object_Unit_insert.ValueData     END ::TVarChar AS UnitName_insert
+           , CASE WHEN vbUserId = 5 AND 1=1 THEN 'Должность'     ELSE Object_Position_insert.ValueData END ::TVarChar AS PositionName_insert
 
-           , CASE WHEN vbUserId = 5 AND 1=0 THEN MovementDate_SignWait_1.ValueData - INTERVAL '12 HOUR' ELSE MovementDate_SignWait_1.ValueData END ::TDateTime AS Date_SignWait_1
-           , CASE WHEN vbUserId = 5 AND 1=0 THEN MovementDate_Sign_1.ValueData     - INTERVAL '12 HOUR' ELSE MovementDate_Sign_1.ValueData     END ::TDateTime AS Date_Sign_1
+           , CASE WHEN vbUserId = 5 AND 1=1 THEN MovementDate_SignWait_1.ValueData - INTERVAL '12 HOUR' ELSE MovementDate_SignWait_1.ValueData END ::TDateTime AS Date_SignWait_1
+           , CASE WHEN vbUserId = 5 AND 1=1 THEN MovementDate_Sign_1.ValueData     - INTERVAL '12 HOUR' ELSE MovementDate_Sign_1.ValueData     END ::TDateTime AS Date_Sign_1
            , COALESCE (MovementBoolean_SignWait_1.ValueData, FALSE) ::Boolean   AS isSignWait_1
            , COALESCE (MovementBoolean_Sign_1.ValueData, FALSE)     ::Boolean   AS isSign_1
 

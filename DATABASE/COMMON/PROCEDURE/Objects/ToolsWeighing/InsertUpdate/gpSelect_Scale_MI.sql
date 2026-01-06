@@ -22,7 +22,7 @@ RETURNS TABLE (MovementItemId Integer, GoodsCode Integer, GoodsName TVarChar, Me
              , OperDate_ReturnOut  TDateTime
 
                --
-             , RealWeight TFloat, RealWeightWeight TFloat, CountTare TFloat, WeightTare TFloat
+             , RealWeight TFloat, RealWeight_1001 TFloat, RealWeightWeight TFloat, CountTare TFloat, WeightTare TFloat
              , CountTareTotal TFloat, WeightTareTotal TFloat
              , CountTare1 TFloat, CountTare2 TFloat, CountTare3 TFloat, CountTare4 TFloat, CountTare5 TFloat, CountTare6 TFloat
              , WeightTare1  TFloat, WeightTare2  TFloat, WeightTare3  TFloat, WeightTare4  TFloat, WeightTare5  TFloat, WeightTare6  TFloat
@@ -532,6 +532,7 @@ BEGIN
 
 
            , tmpMI.RealWeight  :: TFloat      AS RealWeight
+           , tmpMI.RealWeight  :: TFloat      AS RealWeight_1001 -- дублируется для Этикетки
            , (tmpMI.RealWeight * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat AS RealWeightWeight
            , tmpMI.CountTare   :: TFloat      AS CountTare
            , tmpMI.WeightTare  :: TFloat      AS WeightTare

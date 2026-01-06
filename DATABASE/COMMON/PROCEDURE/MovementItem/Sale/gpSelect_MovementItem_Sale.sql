@@ -1273,8 +1273,12 @@ BEGIN
      , tmpObject_GoodsPropertyValue AS (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
                                              , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
                                              , Object_GoodsProperty.ValueData  AS Name
+                                               -- Гофроящик
                                              , COALESCE (ObjectLink_GoodsPropertyValue_GoodsBox.ChildObjectId, 0)  AS GoodsBoxId
+                                               -- вес товара "Гофроящик"
                                              , COALESCE (ObjectFloat_Weight.ValueData, 0)                          AS GoodsBox_Weight
+                                               -- Кол-во ед. в ящ.
+                                             , COALESCE (ObjectFloat_GoodsPropertyValue_BoxCount.ValueData, 0)     AS BoxCount
                                         FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
                                              ) AS tmpGoodsProperty
                                              INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
@@ -1295,6 +1299,9 @@ BEGIN
                                              LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                                                    ON ObjectFloat_Weight.ObjectId = ObjectLink_GoodsPropertyValue_GoodsBox.ChildObjectId
                                                                   AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
+                                             LEFT JOIN ObjectFloat AS ObjectFloat_GoodsPropertyValue_BoxCount
+                                                                   ON ObjectFloat_GoodsPropertyValue_BoxCount.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                  AND ObjectFloat_GoodsPropertyValue_BoxCount.DescId   = zc_ObjectFloat_GoodsPropertyValue_BoxCount()
 
                                        -- WHERE 1=0
                                        )
@@ -1329,7 +1336,12 @@ BEGIN
 
            , CASE WHEN tmpResult.Ord = 1 THEN tmpResult.Count ELSE 0 END     :: TFloat AS Count
            , CASE WHEN tmpResult.Ord = 1 THEN tmpResult.HeadCount ELSE 0 END :: TFloat AS HeadCount
-           , CASE WHEN tmpResult.Ord = 1 THEN tmpResult.BoxCount ELSE 0 END  :: TFloat AS BoxCount
+           , CASE WHEN tmpResult.Ord = 1 AND tmpResult.BoxCount > 0
+                       THEN tmpResult.BoxCount
+                  --WHEN tmpResult.Ord = 1 AND tmpObject_GoodsPropertyValue.BoxCount > 0
+                  --     THEN tmpResult.AmountPartner / tmpObject_GoodsPropertyValue.BoxCount
+                  ELSE 0
+             END  :: TFloat AS BoxCount
 
            , tmpResult.PartionGoods
            , tmpResult.PartionGoodsDate
@@ -1347,7 +1359,13 @@ BEGIN
            , tmpResult.AssetName
 
            , tmpResult.BoxId
-           , CASE WHEN Object_GoodsBox.Id > 0 THEN Object_GoodsBox.ValueData || '(' || zfConvert_FloatToString (tmpObject_GoodsPropertyValue.GoodsBox_Weight) || ')' || '(' || tmpObject_GoodsPropertyValue.Name || ')' ELSE tmpResult.BoxName END :: TVarChar AS BoxName
+             -- вес товара "Гофроящик" + Кол-во ед. в ящ.
+           , CASE WHEN Object_GoodsBox.Id > 0
+                       THEN Object_GoodsBox.ValueData || '(' || zfConvert_FloatToString (tmpObject_GoodsPropertyValue.GoodsBox_Weight) || ')'  || '(' || zfConvert_FloatToString (tmpObject_GoodsPropertyValue.BoxCount) || ')' || '(' || tmpObject_GoodsPropertyValue.Name || ')'
+                  WHEN tmpObject_GoodsPropertyValue.BoxCount > 0 AND COALESCE (tmpResult.BoxCount, 0) = 0
+                       THEN zfConvert_FloatToString (tmpResult.AmountPartner / tmpObject_GoodsPropertyValue.BoxCount) || ' ящ. (' || zfConvert_FloatToString (tmpObject_GoodsPropertyValue.BoxCount) || ' ед. в ящ.)'
+                  ELSE tmpResult.BoxName
+             END :: TVarChar AS BoxName
 
            , CASE WHEN tmpResult.Ord = 1 THEN tmpResult.AmountSumm ELSE 0 END :: TFloat AS AmountSumm
 

@@ -131,10 +131,8 @@ BEGIN
                                                AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                                                AND Movement.StatusId = tmpStatus.StatusId
                                   JOIN (SELECT DISTINCT Object_RoleAccessKey_View.AccessKeyId FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = vbUserId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
-
-                             )
-
-         --ProfitLoss определяем через проводки
+                            )
+           -- ProfitLoss определяем через проводки
          , tmpMIС_ProfitLoss AS (SELECT DISTINCT MovementItemContainer.MovementId
                                       , CLO_ProfitLoss.ObjectId AS ProfitLossId
                                  FROM MovementItemContainer
@@ -171,7 +169,7 @@ BEGIN
                      FROM MovementItem
                      WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                        AND MovementItem.DescId = zc_MI_Master()
-                     )
+                    )
          , tmpMIFloat AS (SELECT *
                           FROM MovementItemFloat
                           WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
@@ -179,6 +177,16 @@ BEGIN
                                                            , zc_MIFloat_Price()
                                                            )
                          )
+             -- Итого по корректировкам
+           , tmpMovement_corr AS (SELECT tmpMovement.ParentId
+                                       , SUM (CASE WHEN tmpMI.Amount > 0 THEN  1 * tmpMI.Amount ELSE 0 END) AS Amount_debet
+                                       , SUM (CASE WHEN tmpMI.Amount < 0 THEN -1 * tmpMI.Amount ELSE 0 END) AS Amount_kredit
+                                  FROM tmpMovement
+                                       INNER JOIN tmpMI ON tmpMI.MovementId = tmpMovement.Id
+                                  WHERE tmpMovement.ParentId > 0
+                                    AND tmpMovement.StatusId = zc_Enum_Status_Complete()
+                                  GROUP BY tmpMovement.ParentId
+                                 )
        -- Результат
        SELECT
              Movement.Id                                    AS Id
@@ -204,12 +212,16 @@ BEGIN
              END                                  :: TFloat AS AmountOut
 
              -- Дебет (корректировка)
-           , CASE WHEN MovementItem.Amount > 0 AND Movement.ParentId > 0
+           , CASE WHEN tmpMovement_corr.Amount_kredit > 0
+                       THEN tmpMovement_corr.Amount_kredit
+                  WHEN MovementItem.Amount > 0 AND Movement.ParentId > 0
                        THEN MovementItem.Amount
                   ELSE 0
              END                                  :: TFloat AS AmountIn_corr
              -- Кредит (корректировка)
-           , CASE WHEN MovementItem.Amount < 0 AND Movement.ParentId > 0
+           , CASE WHEN tmpMovement_corr.Amount_debet > 0
+                       THEN tmpMovement_corr.Amount_debet
+                  WHEN MovementItem.Amount < 0 AND Movement.ParentId > 0
                        THEN -1 * MovementItem.Amount
                   ELSE 0
              END                                  :: TFloat AS AmountOut_corr
@@ -288,6 +300,8 @@ BEGIN
            , MovementDesc_Doc.ItemName              AS DescName_doc
            , MovementString_InvNumberInvoice.ValueData ::TVarChar AS InvNumberInvoice
        FROM tmpMovement AS Movement
+
+            LEFT JOIN tmpMovement_corr ON tmpMovement_corr.ParentId = Movement.Id
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 

@@ -189,7 +189,7 @@ BEGIN
                                    --
                                  , MIContainer.MovementDescId
                                    -- УП статья
-                                 , CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() AND Object_InfoMoney.DescId = zc_Object_InfoMoney() AND 1=1
+                                 , CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() AND Object_InfoMoney.Id > 0 AND 1=1
                                              THEN Object_InfoMoney.Id
                                         ELSE MILinkObject_InfoMoney.ObjectId
                                    END AS InfoMoney_inf
@@ -206,7 +206,8 @@ BEGIN
                                                                  AND MovementItem_1.DescId = zc_MI_Master()
                                                                  AND MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_Service(), zc_Movement_PersonalService(), zc_Movement_ProfitLossService(), zc_Movement_MobileBills(), zc_Movement_TransportService(), zc_Movement_PersonalReport(), zc_Movement_LossPersonal(), zc_Movement_LossDebt())
 
-                                 LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = MIContainer.ObjectIntId_Analyzer
+                                 LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id     = MIContainer.ObjectIntId_Analyzer
+                                                                     AND Object_InfoMoney.DescId = zc_Object_InfoMoney()
 
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                                   ON MILinkObject_InfoMoney.MovementItemId = MovementItem_1.Id
@@ -305,7 +306,7 @@ BEGIN
                                      --
                                    , MIContainer.MovementDescId
                                      -- УП статья
-                                   , CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() AND Object_InfoMoney.DescId = zc_Object_InfoMoney() AND 1=1
+                                   , CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() AND Object_InfoMoney.Id > 0 AND 1=1
                                                THEN Object_InfoMoney.Id
                                           ELSE MILinkObject_InfoMoney.ObjectId
                                      END

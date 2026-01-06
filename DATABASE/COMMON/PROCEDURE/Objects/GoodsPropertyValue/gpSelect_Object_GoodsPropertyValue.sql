@@ -65,10 +65,13 @@ BEGIN
        , Object_GoodsPropertyValue.ValueData  AS Name
        , ObjectString_NameExternal.ValueData    AS NameExternal
        , ObjectString_ArticleExternal.ValueData AS ArticleExternal
-
+         -- Кол-во шт. при скан.
        , ObjectFloat_Amount.ValueData         AS Amount
+         -- Кол-во ед. в ящ.
        , ObjectFloat_BoxCount.ValueData       AS BoxCount
+         --Кол-во шт. вложение - проверка веса ящика
        , ObjectFloat_AmountDoc.ValueData      AS AmountDoc
+         --
        , ObjectString_BarCodeShort.ValueData  AS BarCodeShort
        , ObjectString_BarCode.ValueData       AS BarCode
        , ObjectString_Article.ValueData       AS Article

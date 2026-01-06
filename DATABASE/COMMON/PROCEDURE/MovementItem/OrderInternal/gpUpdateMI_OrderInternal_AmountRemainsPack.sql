@@ -23,7 +23,7 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Дата документа <%> не сохранена.<%>', inOperDate, (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
     END IF;
 
-if vbUserId = 5 AND 1=1
+if vbUserId = 5 AND 1=0
 then
     inOperDate:= CURRENT_DATE;
 end if;
@@ -289,12 +289,26 @@ end if;
                                                )
     FROM tmpAll;
 
-if vbUserId = 5 AND 1=0
+if vbUserId = 5 AND 1=1
 then
-    RAISE EXCEPTION 'Ошибка. end <%>  %   %', (select sum (tmpAll.Amount_start) from tmpAll where tmpAll.GoodsId = 6749 and tmpAll.GoodsKindId = 8352)
+    RAISE EXCEPTION 'Ошибка. end <%>  %   % % error = %', (select sum (tmpAll.Amount_start) from tmpAll where tmpAll.GoodsId = 6749 and tmpAll.GoodsKindId = 8352)
     , (select sum (tmpAll.AmountRK_start) from tmpAll) -- where tmpAll.GoodsId = 6749 and tmpAll.GoodsKindId = 8352)
     , (select (tmpAll.AmountRK_start) from tmpAll where tmpAll.MovementItemId =  253571013 )
-    ;
+    , CHR (13)
+    , (SELECT COUNT(*)
+       FROM (SELECT MI.ObjectId , MILO_2.ObjectId
+             FROM MovementItem AS MI 
+                 JOIN MovementItemLinkObject AS MILO_2 ON MILO_2.MovementItemId = MI.Id AND MILO_2.DescId = zc_MILinkObject_GoodsKind() -- AND MILO_2.ObjectId = 8335      -- vbGoodsKindId_complete
+             WHERE MI.MovementId = inMovementId 
+               AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE -- AND MI.ObjectId = 2160   -- vbGoodsId_complete
+             -- AND MILO_2.ObjectId <> zc_GoodsKind_Basis()
+                AND MILO_2.ObjectId <> 8345
+             GROUP BY MILO_2.ObjectId, MI.ObjectId 
+             HAVING COUNT(*) > 1
+            ) AS tmp
+      )
+     ;
+
 end if;
 
 

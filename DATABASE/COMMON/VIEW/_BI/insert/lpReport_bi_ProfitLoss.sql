@@ -192,20 +192,23 @@ BEGIN
                                    END AS DestinationId
 
                                    -- 1.4. ÓÏ ñòàòüÿ
-                                 , COALESCE (MILO_InfoMoney_01.ObjectId
-                                           , ObjectLink_ArticleLoss_InfoMoney.ChildObjectId
-                                           , ObjectLink_Goods_InfoMoney.ChildObjectId
-                                           , CASE WHEN ObjectId_Analyzer.DescId = zc_Object_InfoMoney() THEN ObjectId_Analyzer.Id END
-                                             -- Äëÿ Transport - ÇÏ + ÃÑÌ
-                                           , CASE WHEN MIContainer.MovementDescId = zc_Movement_Transport()
-                                                       THEN CASE WHEN ObjectId_Analyzer.DescId IN (zc_Object_Personal(), zc_Object_Member())
-                                                                      -- Äëÿ Transport - ÇÏ
-                                                                      THEN zc_Enum_InfoMoney_60101()
-                                                                 -- Äëÿ Transport - ÃÑÌ
-                                                                 ELSE  zc_Enum_InfoMoney_20401()
-                                                            END
-                                             END
-                                            ) AS InfoMoneyId
+                                 , CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() AND Object_InfoMoney.Id > 0 AND 1=1
+                                               THEN Object_InfoMoney.Id
+                                        ELSE COALESCE (MILO_InfoMoney_01.ObjectId
+                                                     , ObjectLink_ArticleLoss_InfoMoney.ChildObjectId
+                                                     , ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                     , CASE WHEN ObjectId_Analyzer.DescId = zc_Object_InfoMoney() THEN ObjectId_Analyzer.Id END
+                                                       -- Äëÿ Transport - ÇÏ + ÃÑÌ
+                                                     , CASE WHEN MIContainer.MovementDescId = zc_Movement_Transport()
+                                                                 THEN CASE WHEN ObjectId_Analyzer.DescId IN (zc_Object_Personal(), zc_Object_Member())
+                                                                                -- Äëÿ Transport - ÇÏ
+                                                                                THEN zc_Enum_InfoMoney_60101()
+                                                                           -- Äëÿ Transport - ÃÑÌ
+                                                                           ELSE  zc_Enum_InfoMoney_20401()
+                                                                      END
+                                                       END
+                                            )
+                                    END AS InfoMoneyId
 
                                    -- 2.1. Ïîäðàçäåëåíèå ó÷åòà
                                  , MLO_From.ObjectId         AS UnitId
@@ -263,6 +266,9 @@ BEGIN
                                  , MILO_GoodsKind_02.ObjectId       AS GoodsKindId_transport*/
 
                             FROM MovementItemContainer AS MIContainer
+                                 LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id     = MIContainer.ObjectIntId_Analyzer
+                                                                     AND Object_InfoMoney.DescId = zc_Object_InfoMoney()
+
                                  LEFT JOIN MovementItem AS MovementItem_01
                                                         ON MovementItem_01.Id = MIContainer.MovementItemId
                                                        AND MovementItem_01.DescId = zc_MI_Master()

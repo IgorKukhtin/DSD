@@ -346,13 +346,17 @@ BEGIN
              --
              AND COALESCE (Movement_Parent.StatusId, 0) <> zc_Enum_Status_UnComplete()
              --
-             AND (-- Этих Отправляем 55-min
+             AND (-- 1. Этих EDI + Vchasno - Отправляем 55-min
                   (Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '55 MIN'
                AND COALESCE (CASE WHEN tmpMovement_WeighingPartner.InsertDate > MovementDate_Update.ValueData THEN tmpMovement_WeighingPartner.InsertDate ELSE MovementDate_Update.ValueData END, zc_DateStart())
                  < CURRENT_TIMESTAMP - INTERVAL '55 MIN'
+               -- исключение
+               AND (Object_Retail.Id NOT IN (310855) -- !!!Варус!!!
+                 OR COALESCE (ObjectBoolean_Juridical_VchasnoEdi.ValueData, FALSE) = FALSE
+                   )
                   )
 
-               OR -- Этих Отправляем 10-min
+               OR -- 2.1. Этих Vchasno - Отправляем 20-min
                   (Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '20 MIN'
                AND COALESCE (CASE WHEN tmpMovement_WeighingPartner.InsertDate > MovementDate_Update.ValueData THEN tmpMovement_WeighingPartner.InsertDate ELSE MovementDate_Update.ValueData END, zc_DateStart())
                    < CURRENT_TIMESTAMP - INTERVAL '20 MIN'
@@ -361,10 +365,22 @@ BEGIN
                -- Vchasno - без этих
                AND Object_Retail.Id NOT IN (310859 -- !!!Новус!!!
                                        -- , 310846 -- !!!ВК!!!
+                                          , 310855 -- !!!Варус!!!
                                            )
                   )
 
-               -- Этих Отправляем Сразу
+               OR -- 2.2. Этих Vchasno - Отправляем 2 HOUR
+                  (Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '2 HOUR'
+               AND COALESCE (CASE WHEN tmpMovement_WeighingPartner.InsertDate > MovementDate_Update.ValueData THEN tmpMovement_WeighingPartner.InsertDate ELSE MovementDate_Update.ValueData END, zc_DateStart())
+                   < CURRENT_TIMESTAMP - INTERVAL '2 HOUR'
+               -- схема Vchasno - EDI
+               AND ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE
+               -- Vchasno - без этих
+               AND Object_Retail.Id IN (310855 -- !!!Варус!!!
+                                       )
+                  )
+
+               -- 3. Этих EDI + Vchasno - 20:49 06.01.2026Отправляем Сразу
                OR (Object_Retail.Id IN (-1 * 310855 -- !!!Варус!!!
                                       -- , 310846 -- !!!ВК!!!
                                        )
