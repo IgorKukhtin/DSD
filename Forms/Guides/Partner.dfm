@@ -25,7 +25,6 @@ object PartnerForm: TPartnerForm
     Height = 380
     Align = alClient
     TabOrder = 1
-    ExplicitHeight = 371
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -639,6 +638,15 @@ object PartnerForm: TPartnerForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
+      object isDayCount_30201: TcxGridDBColumn
+        Caption = #1057#1093#1077#1084#1072' '#1052'.'#1089'. ('#1044#1072'/'#1053#1077#1090')'
+        DataBinding.FieldName = 'isDayCount_30201'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086#1076#1082#1083#1102#1095#1077#1085#1072' '#1089#1093#1077#1084#1072' ('#1052#1103#1089#1085#1086#1077' '#1089#1099#1088#1100#1077') ('#1044#1072'/'#1053#1077#1090')'
+        Width = 80
+      end
       object PrepareDayCount_30201: TcxGridDBColumn
         Caption = #1044#1085'. '#1079#1072#1082#1072#1079' ('#1052'.'#1089'.)'
         DataBinding.FieldName = 'PrepareDayCount_30201'
@@ -648,7 +656,7 @@ object PartnerForm: TPartnerForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1044#1085'. '#1079#1072#1082#1072#1079' ('#1052#1103#1089#1085#1086#1077' '#1089#1099#1088#1100#1077')'
-        Width = 45
+        Width = 67
       end
       object DocumentDayCount_30201: TcxGridDBColumn
         Caption = #1044#1085'. '#1076#1086#1082'. ('#1052'.'#1089'.)'
@@ -659,7 +667,7 @@ object PartnerForm: TPartnerForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1044#1085'. '#1076#1086#1082'. ('#1052#1103#1089#1085#1086#1077' '#1089#1099#1088#1100#1077')'
-        Width = 45
+        Width = 62
       end
       object BranchCode: TcxGridDBColumn
         Caption = #1053#1086#1084#1077#1088' '#1092#1080#1083#1080#1072#1083#1072
@@ -2793,6 +2801,15 @@ object PartnerForm: TPartnerForm
         Component = MasterCDS
         ComponentItem = 'DocumentDayCount_30201'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDayCount_30201'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isDayCount_30201'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

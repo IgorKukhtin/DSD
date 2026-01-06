@@ -87,6 +87,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
     IN inTaxSale_MemberSaler1   TFloat    ,   -- Продавец-1 - % от товарооборота
     IN inTaxSale_MemberSaler2   TFloat    ,   -- Продавец-2 - % от товарооборота
 
+    IN inisDayCount_30201    Boolean   ,    -- Подключена схема(Мясное сырье)
+
     IN inEdiOrdspr           Boolean   ,    -- EDI - Подтверждение
     IN inEdiInvoice          Boolean   ,    -- EDI - Счет
     IN inEdiDesadv           Boolean   ,    -- EDI - уведомление
@@ -239,6 +241,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Partner_StartPromo(), ioId, DATE (inStartPromo));
       -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Partner_EndPromo(), ioId, DATE (inEndPromo));
+
+   -- сохранили свойство <Подключена схема(Мясное сырье)>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Partner_DayCount_30201(), ioId, inisDayCount_30201);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Partner_EdiOrdspr(), ioId, inEdiOrdspr);

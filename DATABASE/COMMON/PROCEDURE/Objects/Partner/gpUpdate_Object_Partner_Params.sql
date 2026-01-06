@@ -4,7 +4,8 @@ DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Params (Integer, Integer, Intege
 DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Params (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 --DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Params (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 --DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Params (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Params (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Params (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Params (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Partner_Params(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
@@ -21,6 +22,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_Partner_Params(
     IN inDocumentDayCount    TFloat    ,    --
     IN inPrepareDayCount_30201  TFloat    ,    -- 
     IN inDocumentDayCount_30201 TFloat    ,    -- 
+    IN inisDayCount_30201    Boolean   ,    -- Подключена схема(Мясное сырье)
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS Integer
@@ -40,6 +42,7 @@ $BODY$
    DECLARE vbPrepareDayCount_30201 TFloat;
    DECLARE vbDocumentDayCount_30201 TFloat;
    DECLARE vbBasisCode Integer;
+   DECLARE vbisDayCount_30201 Boolean;
 BEGIN
 
    --разные права
@@ -55,6 +58,7 @@ BEGIN
    vbDocumentDayCount:= (SELECT ObjectFloat.ValueData    FROM ObjectFloat WHERE ObjectFloat.ObjectId = ioId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount()) ::TFloat;
    vbPrepareDayCount_30201 := (SELECT ObjectFloat.ValueData    FROM ObjectFloat WHERE ObjectFloat.ObjectId = ioId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_PrepareDayCount_30201()) ::TFloat;
    vbDocumentDayCount_30201:= (SELECT ObjectFloat.ValueData    FROM ObjectFloat WHERE ObjectFloat.ObjectId = ioId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount_30201()) ::TFloat;
+   vbisDayCount_30201 := (SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = ioId AND ObjectBoolean.DescId = zc_ObjectBoolean_Partner_DayCount_30201()) ::Boolean;
 
    --
    vbBasisCode       := (SELECT ObjectFloat.ValueData    FROM ObjectFloat WHERE ObjectFloat.ObjectId = ioId AND ObjectFloat.DescId = zc_ObjectFloat_ObjectCode_Basis()) ::Integer;
@@ -71,6 +75,7 @@ BEGIN
    OR COALESCE (vbPrepareDayCount_30201,0) <> COALESCE (inPrepareDayCount_30201,0)
    OR COALESCE (vbDocumentDayCount_30201,0)<> COALESCE (inDocumentDayCount_30201,0)
    OR COALESCE (vbUnitId,0)          <> COALESCE (inUnitId,0)
+   OR COALESCE (vbisDayCount_30201, False) <> COALESCE (inisDayCount_30201, False)
    THEN
    
    -- проверка прав пользователя на вызов процедуры
@@ -120,6 +125,8 @@ BEGIN
         -- сохранили свойство <Через сколько дней оформляется документально Мясное сырье>
         PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_DocumentDayCount_30201(), ioId, inDocumentDayCount_30201);
 
+        -- сохранили свойство <Подключена схема(Мясное сырье)>
+        PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Partner_DayCount_30201(), ioId, inisDayCount_30201);
    END IF;
    END IF; 
    END IF;
@@ -146,6 +153,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.01.26         * inisDayCount_30201
  19.06.17         * add inPersonalMerchId
  26.06.15                                        * add inRouteId_30201
  22.06.15                                        * all

@@ -971,6 +971,13 @@
     TabOrder = 131
     Width = 85
   end
+  object cbDayCount_30201: TcxCheckBox [132]
+    Left = 871
+    Top = 419
+    Caption = #1055#1086#1076#1082#1083#1102#1095#1077#1085#1072' '#1089#1093#1077#1084#1072' ('#1052#1103#1089#1085#1086#1077' '#1089#1099#1088#1100#1077')'
+    TabOrder = 132
+    Width = 202
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 291
     Top = 446
@@ -1224,6 +1231,14 @@
         Value = Null
         Component = edTaxSale_MemberSaler2
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDayCount_30201'
+        Value = Null
+        Component = cbDayCount_30201
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2291,6 +2306,13 @@
         Value = Null
         Component = edPrepareDayCount_30201
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDayCount_30201'
+        Value = Null
+        Component = cbDayCount_30201
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 520

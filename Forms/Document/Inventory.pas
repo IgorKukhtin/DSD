@@ -174,6 +174,7 @@ type
     UpdateDate: TcxGridDBColumn;
     UpdateName: TcxGridDBColumn;
     isNotFact: TcxGridDBColumn;
+    actPartionGoods20202Choice: TOpenChoiceForm;
   private
     { Private declarations }
   public
