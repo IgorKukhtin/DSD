@@ -23,7 +23,7 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   cxCurrencyEdit, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit, cxButtonEdit,
-  cxLabel, Vcl.ExtCtrls;
+  cxLabel, Vcl.ExtCtrls, dsdCommon;
 
 type
   TProdModelForm = class(TParentForm)
