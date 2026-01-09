@@ -26,6 +26,13 @@ BEGIN
     THEN
          RAISE EXCEPTION 'Ошибка.Не выбран Поставщик';
     END IF;
+
+    -- Eсли группа
+    IF TRIM (COALESCE (inGoodsName, '')) = '' AND COALESCE (inAmount, 0) = 0
+    THEN
+         RETURN;
+    END IF;
+    
             
    
    IF COALESCE (inArticle,'') <> ''
@@ -60,6 +67,8 @@ BEGIN
                                                     , inComment          := Null     :: TVarChar
                                                     , inIsArc            := FALSE    :: Boolean
                                                     , inAmountMin        := 0             :: TFloat
+                                                    , inFeet             := 0
+                                                    , inMetres           := 0
                                                     , inAmountRefer      := 0             :: TFloat
                                                     , inEKPrice          := inAmount      :: TFloat
                                                     , inEmpfPrice        := 0             :: TFloat
