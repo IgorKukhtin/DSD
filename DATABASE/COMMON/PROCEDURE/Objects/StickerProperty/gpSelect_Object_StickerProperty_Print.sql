@@ -112,6 +112,7 @@ BEGIN
 
      -- тест
      IF COALESCE (inRetailId, 0) = 539062 -- 
+     OR EXISTS (SELECT 1 FROM Object WHERE Object.Id = inRetailId AND Object.ValueData ILIKE '%розница%')
      THEN
          inRetailId:= 83955; -- Алан
      END IF;

@@ -357,9 +357,9 @@ BEGIN
                   )
 
                OR -- 2.1. Этих Vchasno - Отправляем 20-min
-                  (Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '20 MIN'
+                  (Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '30 MIN'
                AND COALESCE (CASE WHEN tmpMovement_WeighingPartner.InsertDate > MovementDate_Update.ValueData THEN tmpMovement_WeighingPartner.InsertDate ELSE MovementDate_Update.ValueData END, zc_DateStart())
-                   < CURRENT_TIMESTAMP - INTERVAL '20 MIN'
+                   < CURRENT_TIMESTAMP - INTERVAL '30 MIN'
                -- схема Vchasno - EDI
                AND ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE
                -- Vchasno - без этих
@@ -369,10 +369,10 @@ BEGIN
                                            )
                   )
 
-               OR -- 2.2. Этих Vchasno - Отправляем 2 HOUR
-                  (Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '2 HOUR'
+               OR -- 2.2. Этих Vchasno - Отправляем 6 HOUR
+                  (Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '6 HOUR'
                AND COALESCE (CASE WHEN tmpMovement_WeighingPartner.InsertDate > MovementDate_Update.ValueData THEN tmpMovement_WeighingPartner.InsertDate ELSE MovementDate_Update.ValueData END, zc_DateStart())
-                   < CURRENT_TIMESTAMP - INTERVAL '2 HOUR'
+                   < CURRENT_TIMESTAMP - INTERVAL '6 HOUR'
                -- схема Vchasno - EDI
                AND ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE
                -- Vchasno - без этих

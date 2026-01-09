@@ -30,17 +30,46 @@ RETURNS TABLE (Id Integer
              , AmountPartner_3      TFloat
              , AmountPartner_4      TFloat
              , AmountPartner_5      TFloat
+               -- План оплат
              , AmountPlan_1         TFloat
              , AmountPlan_2         TFloat
              , AmountPlan_3         TFloat
              , AmountPlan_4         TFloat
              , AmountPlan_5         TFloat
+               -- План оплат - Итог
              , AmountPlan_total     TFloat
+
+               -- План прошлой недели
+             , AmountPlan_1_old     TFloat
+             , AmountPlan_2_old     TFloat
+             , AmountPlan_3_old     TFloat
+             , AmountPlan_4_old     TFloat
+             , AmountPlan_5_old     TFloat
+               -- План прошлой недели - Итог
+             , AmountPlan_total_old TFloat
+
+               -- Факт прошлой недели
+             , AmountReal_1_old     TFloat
+             , AmountReal_2_old     TFloat
+             , AmountReal_3_old     TFloat
+             , AmountReal_4_old     TFloat
+             , AmountReal_5_old     TFloat
+               -- Факт прошлой недели - Итог
+             , AmountReal_total_old TFloat
+
+               -- Платим да/нет
              , isAmountPlan_1       Boolean
              , isAmountPlan_2       Boolean
              , isAmountPlan_3       Boolean
              , isAmountPlan_4       Boolean
              , isAmountPlan_5       Boolean
+               -- Учитывается в долгах План прошлой недели да/нет
+             , isPlan_1_old         Boolean
+             , isPlan_2_old         Boolean
+             , isPlan_3_old         Boolean
+             , isPlan_4_old         Boolean
+             , isPlan_5_old         Boolean
+
              , Comment              TVarChar
              , Comment_pay          TVarChar
              , InsertName TVarChar, UpdateName TVarChar
@@ -50,31 +79,85 @@ RETURNS TABLE (Id Integer
               )
 AS
 $BODY$
-  DECLARE vbUserId Integer;
-  DECLARE vbOrderFinanceId Integer;
+  DECLARE vbUserId            Integer;
+  DECLARE vbOrderFinanceId    Integer;
   DECLARE vbBankAccountMainId Integer;
-  DECLARE vbOperDate TDateTime;
+  DECLARE vbMovementId_old    Integer;
+  DECLARE vbWeekNumber        TFloat;
+  DECLARE vbWeekNumber_old    TFloat;
+
+  DECLARE vbOperDate          TDateTime;
+  DECLARE vbStartDate         TDateTime;
+  DECLARE vbEndDate           TDateTime;
+  DECLARE vbStartDate_old     TDateTime;
+  DECLARE vbEndDate_old       TDateTime;
+
+  DECLARE vbIsPlan_1_old      Boolean;
+  DECLARE vbIsPlan_2_old      Boolean;
+  DECLARE vbIsPlan_3_old      Boolean;
+  DECLARE vbIsPlan_4_old      Boolean;
+  DECLARE vbIsPlan_5_old      Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_OrderFinance());
      vbUserId:= lpGetUserBySession (inSession);
 
      -- нашли
+     vbIsPlan_1_old:= FALSE;
+     vbIsPlan_2_old:= FALSE;
+     vbIsPlan_3_old:= FALSE;
+     vbIsPlan_4_old:= FALSE;
+     vbIsPlan_5_old:= TRUE;
+
+     -- нашли
      vbOperDate := (SELECT Movement.OperDate
                     FROM Movement
                     WHERE Movement.Id = inMovementId
-                    );
-
+                   );
      -- нашли
      vbOrderFinanceId := (SELECT MovementLinkObject.ObjectId AS Id
                           FROM MovementLinkObject
                           WHERE MovementLinkObject.MovementId = inMovementId
-                            AND MovementLinkObject.DescId = zc_MovementLinkObject_OrderFinance()
+                            AND MovementLinkObject.DescId     = zc_MovementLinkObject_OrderFinance()
                          );
-
-
      -- нашли
-    IF inShowAll = TRUE THEN
+     vbWeekNumber := (SELECT MovementFloat.ValueData
+                      FROM MovementFloat
+                      WHERE MovementFloat.MovementId = inMovementId
+                        AND MovementFloat.DescId     = zc_MovementFloat_WeekNumber()
+                     );
+
+     -- начало недели
+     vbStartDate:= zfCalc_Week_StartDate (vbOperDate, vbWeekNumber);
+     -- окончание недели
+     vbEndDate  := zfCalc_Week_EndDate (vbOperDate, vbWeekNumber);
+
+     -- начало предыдущей недели
+     vbStartDate_old:= vbStartDate - INTERVAL '14 DAY';
+     -- окончание предыдущей недели
+     vbEndDate_old  := vbEndDate   - INTERVAL '14 DAY'; 
+
+     -- предыдущая неделя
+     vbWeekNumber_old := EXTRACT (WEEK FROM vbStartDate_old) ;
+
+     -- план прошлой недели
+     vbMovementId_old:= (SELECT Movement.Id
+                         FROM Movement
+                              INNER JOIN MovementFloat AS MovementFloat_WeekNumber
+                                                       ON MovementFloat_WeekNumber.MovementId = Movement.Id
+                                                      AND MovementFloat_WeekNumber.DescId     = zc_MovementFloat_WeekNumber()
+                                                      AND MovementFloat_WeekNumber.ValueData  = vbWeekNumber_old
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_OrderFinance
+                                                            ON MovementLinkObject_OrderFinance.MovementId = Movement.Id
+                                                           AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
+                                                           AND MovementLinkObject_OrderFinance.ObjectId   = vbOrderFinanceId
+
+                         WHERE Movement.DescId = zc_Movement_OrderFinance()
+                           AND Movement.StatusId IN (zc_Enum_Status_Complete()) -- zc_Enum_Status_UnComplete()
+                           AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '14 DAY' AND vbOperDate - INTERVAL '1 DAY'
+                         );
+     --
+     IF inShowAll = TRUE THEN
 
      -- нашли
      vbBankAccountMainId := (SELECT MovementLinkObject.ObjectId AS Id
@@ -223,7 +306,7 @@ BEGIN
                                                                              )
                                           )
 
-
+               -- Результат - tmpMI
                SELECT MovementItem.Id                   AS Id
                     , MovementItem.ObjectId             AS JuridicalId
                     , MILinkObject_Contract.ObjectId    AS ContractId
@@ -248,12 +331,14 @@ BEGIN
                        - COALESCE (MIFloat_AmountPartner_4.ValueData,0)
                       )   :: TFloat AS AmountPartner_5                -->28дней
 
+                      -- План оплат
                     , MIFloat_AmountPlan_1.ValueData    AS AmountPlan_1
                     , MIFloat_AmountPlan_2.ValueData    AS AmountPlan_2
                     , MIFloat_AmountPlan_3.ValueData    AS AmountPlan_3
                     , MIFloat_AmountPlan_4.ValueData    AS AmountPlan_4
                     , MIFloat_AmountPlan_5.ValueData    AS AmountPlan_5
 
+                      -- План оплат - Итог
                     , (COALESCE (MIFloat_AmountPlan_1.ValueData, 0)
                      + COALESCE (MIFloat_AmountPlan_2.ValueData, 0)
                      + COALESCE (MIFloat_AmountPlan_3.ValueData, 0)
@@ -425,7 +510,28 @@ BEGIN
                                                                       OR tmpOrderFinanceProperty.Id = Object_InfoMoney_View.InfoMoneyGroupId)
                              )
 
-
+       -- план прошлой недели
+     , tmpMI_old AS (SELECT MovementItem.Id                AS MovementItemId
+                          , MovementItem.ObjectId          AS JuridicalId
+                          , MILinkObject_Contract.ObjectId AS ContractId
+                     FROM MovementItem
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                                            ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                     WHERE MovementItem.MovementId = vbMovementId_old
+                       AND MovementItem.DescId     = zc_MI_Master()
+                       AND MovementItem.isErased   = FALSE
+                    )
+     , tmpMovementItemFloat_old AS (SELECT *
+                                    FROM MovementItemFloat
+                                    WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_old.MovementItemId FROM tmpMI_old)
+                                      AND MovementItemFloat.DescId IN (zc_MIFloat_AmountPlan_1()
+                                                                     , zc_MIFloat_AmountPlan_2()
+                                                                     , zc_MIFloat_AmountPlan_3()
+                                                                     , zc_MIFloat_AmountPlan_4()
+                                                                     , zc_MIFloat_AmountPlan_5()
+                                                                      )
+                                   )
        -- Результат
        SELECT
              tmpMI.Id                         AS Id
@@ -467,19 +573,53 @@ BEGIN
            , tmpMI.AmountPartner_3     ::TFloat
            , tmpMI.AmountPartner_4     ::TFloat
            , tmpMI.AmountPartner_5     ::TFloat
-                                       
+
+             -- План оплат
            , tmpMI.AmountPlan_1        ::TFloat
            , tmpMI.AmountPlan_2        ::TFloat
            , tmpMI.AmountPlan_3        ::TFloat
            , tmpMI.AmountPlan_4        ::TFloat
            , tmpMI.AmountPlan_5        ::TFloat
+             -- План оплат - Итог
            , tmpMI.AmountPlan_total    ::TFloat
 
+             -- План прошлой недели
+           , MIFloat_AmountPlan_1_old.ValueData    AS AmountPlan_1_old
+           , MIFloat_AmountPlan_2_old.ValueData    AS AmountPlan_2_old
+           , MIFloat_AmountPlan_3_old.ValueData    AS AmountPlan_3_old
+           , MIFloat_AmountPlan_4_old.ValueData    AS AmountPlan_4_old
+           , MIFloat_AmountPlan_5_old.ValueData    AS AmountPlan_5_old
+
+             -- План прошлой недели - Итог
+           , (COALESCE (MIFloat_AmountPlan_1_old.ValueData, 0)
+            + COALESCE (MIFloat_AmountPlan_2_old.ValueData, 0)
+            + COALESCE (MIFloat_AmountPlan_3_old.ValueData, 0)
+            + COALESCE (MIFloat_AmountPlan_4_old.ValueData, 0)
+            + COALESCE (MIFloat_AmountPlan_5_old.ValueData, 0)
+             ) :: TFloat AS AmountPlan_total_old
+
+             -- Факт прошлой недели
+           , 0 :: TFloat AS AmountReal_1_old
+           , 0 :: TFloat AS AmountReal_2_old
+           , 0 :: TFloat AS AmountReal_3_old
+           , 0 :: TFloat AS AmountReal_4_old
+           , 0 :: TFloat AS AmountReal_5_old
+             -- Факт прошлой недели - Итог
+           , 0 :: TFloat AS AmountReal_total_old
+
+             -- Платим да/нет
            , COALESCE (tmpMI.isAmountPlan_1, TRUE)  ::Boolean  AS isAmountPlan_1
            , COALESCE (tmpMI.isAmountPlan_2, TRUE)  ::Boolean  AS isAmountPlan_2
            , COALESCE (tmpMI.isAmountPlan_3, TRUE)  ::Boolean  AS isAmountPlan_3
            , COALESCE (tmpMI.isAmountPlan_4, TRUE)  ::Boolean  AS isAmountPlan_4
            , COALESCE (tmpMI.isAmountPlan_5, TRUE)  ::Boolean  AS isAmountPlan_5
+
+             -- Учитывается в долгах План прошлой недели да/нет
+           , vbIsPlan_1_old AS isPlan_1_old
+           , vbIsPlan_2_old AS isPlan_2_old
+           , vbIsPlan_3_old AS isPlan_3_old
+           , vbIsPlan_4_old AS isPlan_4_old
+           , vbIsPlan_5_old AS isPlan_5_old
 
            , COALESCE (tmpMI.Comment, '') ::TVarChar AS Comment
            , CASE WHEN COALESCE (tmpMI.Comment_pay,'') = '' THEN COALESCE (tmpData.Comment_pay,'') ELSE COALESCE (tmpMI.Comment_pay,'') END ::TVarChar AS Comment_pay
@@ -507,6 +647,25 @@ BEGIN
             LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_Contract_InfoMoney.ChildObjectId
 
             LEFT JOIN tmpJuridicalDetails_View ON tmpJuridicalDetails_View.JuridicalId = Object_Juridical.Id
+
+            -- план прошлой недели
+            LEFT JOIN tmpMI_old ON tmpMI_old.JuridicalId = COALESCE (tmpData.JuridicalId, tmpMI.JuridicalId)
+                               AND tmpMI_old.ContractId  = COALESCE (tmpData.ContractId, tmpMI.ContractId)
+            LEFT JOIN tmpMovementItemFloat_old AS MIFloat_AmountPlan_1_old
+                                               ON MIFloat_AmountPlan_1_old.MovementItemId = tmpMI_old.MovementItemId
+                                              AND MIFloat_AmountPlan_1_old.DescId = zc_MIFloat_AmountPlan_1()
+            LEFT JOIN tmpMovementItemFloat_old AS MIFloat_AmountPlan_2_old
+                                               ON MIFloat_AmountPlan_2_old.MovementItemId = tmpMI_old.MovementItemId
+                                              AND MIFloat_AmountPlan_2_old.DescId = zc_MIFloat_AmountPlan_2()
+            LEFT JOIN tmpMovementItemFloat_old AS MIFloat_AmountPlan_3_old
+                                               ON MIFloat_AmountPlan_3_old.MovementItemId = tmpMI_old.MovementItemId
+                                              AND MIFloat_AmountPlan_3_old.DescId = zc_MIFloat_AmountPlan_3()
+            LEFT JOIN tmpMovementItemFloat_old AS MIFloat_AmountPlan_4_old
+                                               ON MIFloat_AmountPlan_4_old.MovementItemId = tmpMI_old.MovementItemId
+                                              AND MIFloat_AmountPlan_4_old.DescId = zc_MIFloat_AmountPlan_4()
+            LEFT JOIN tmpMovementItemFloat_old AS MIFloat_AmountPlan_5_old
+                                               ON MIFloat_AmountPlan_5_old.MovementItemId = tmpMI_old.MovementItemId
+                                              AND MIFloat_AmountPlan_5_old.DescId = zc_MIFloat_AmountPlan_5()
 
            /* LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
                                  ON ObjectLink_Contract_PaidKind.ObjectId = tmpData.ContractId
@@ -569,18 +728,45 @@ BEGIN
            , 0 ::TFloat       AS AmountPartner_4
            , 0 ::TFloat       AS AmountPartner_5
 
+             -- План оплат
            , 0 ::TFloat       AS AmountPlan_1
            , 0 ::TFloat       AS AmountPlan_2
            , 0 ::TFloat       AS AmountPlan_3
            , 0 ::TFloat       AS AmountPlan_4
            , 0 ::TFloat       AS AmountPlan_5
+             -- План оплат - Итог
            , 0 ::TFloat       AS AmountPlan_total
+
+             -- План прошлой недели
+           , 0 :: TFloat AS AmountReal_1_old
+           , 0 :: TFloat AS AmountReal_2_old
+           , 0 :: TFloat AS AmountReal_3_old
+           , 0 :: TFloat AS AmountReal_4_old
+           , 0 :: TFloat AS AmountReal_5_old
+             -- План прошлой недели - Итог
+           , 0 :: TFloat AS AmountReal_total_old
+
+             -- Факт прошлой недели
+           , 0 :: TFloat AS AmountReal_1_old
+           , 0 :: TFloat AS AmountReal_2_old
+           , 0 :: TFloat AS AmountReal_3_old
+           , 0 :: TFloat AS AmountReal_4_old
+           , 0 :: TFloat AS AmountReal_5_old
+             -- Факт прошлой недели - Итог
+           , 0 :: TFloat AS AmountReal_total_old
 
            , FALSE ::Boolean  AS isAmountPlan_1
            , FALSE ::Boolean  AS isAmountPlan_2
            , FALSE ::Boolean  AS isAmountPlan_3
            , FALSE ::Boolean  AS isAmountPlan_4
            , FALSE ::Boolean  AS isAmountPlan_5
+
+             -- Учитывается в долгах План прошлой недели да/нет
+           , vbIsPlan_1_old AS isPlan_1_old
+           , vbIsPlan_2_old AS isPlan_2_old
+           , vbIsPlan_3_old AS isPlan_3_old
+           , vbIsPlan_4_old AS isPlan_4_old
+           , vbIsPlan_5_old AS isPlan_5_old
 
            , ''   ::TVarChar  AS Comment
            , ''   ::TVarChar  AS Comment_pay
@@ -741,7 +927,84 @@ BEGIN
                                                                       OR tmpOrderFinanceProperty.ObjectId = Object_InfoMoney_View.InfoMoneyGroupId
                                                                         )
                              )
-
+       -- план прошлой недели
+     , tmpMI_old AS (SELECT MovementItem.Id                AS MovementItemId
+                          , MovementItem.ObjectId          AS JuridicalId
+                          , MILinkObject_Contract.ObjectId AS ContractId
+                     FROM MovementItem
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                                            ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                     WHERE MovementItem.MovementId = vbMovementId_old
+                       AND MovementItem.DescId     = zc_MI_Master()
+                       AND MovementItem.isErased   = FALSE
+                    )
+     , tmpMovementItemFloat_old AS (SELECT *
+                                    FROM MovementItemFloat
+                                    WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_old.MovementItemId FROM tmpMI_old)
+                                      AND MovementItemFloat.DescId IN (zc_MIFloat_AmountPlan_1()
+                                                                     , zc_MIFloat_AmountPlan_2()
+                                                                     , zc_MIFloat_AmountPlan_3()
+                                                                     , zc_MIFloat_AmountPlan_4()
+                                                                     , zc_MIFloat_AmountPlan_5()
+                                                                      )
+                                   )
+   -- Банк предыдущей недели
+ , tmpMI_bank_old AS (SELECT MILinkObject_MoneyPlace.ObjectId AS JuridicalId
+                           , MILinkObject_Contract.ObjectId   AS ContractId
+                           , SUM (CASE WHEN Movement.OperDate =  vbStartDate_old                     THEN -1 * MovementItem.Amount ELSE 0 END) AS Amount_1
+                           , SUM (CASE WHEN Movement.OperDate =  vbStartDate_old + INTERVAL '1 DAY ' THEN -1 * MovementItem.Amount ELSE 0 END) AS Amount_2
+                           , SUM (CASE WHEN Movement.OperDate =  vbStartDate_old + INTERVAL '2 DAY ' THEN -1 * MovementItem.Amount ELSE 0 END) AS Amount_3
+                           , SUM (CASE WHEN Movement.OperDate =  vbStartDate_old + INTERVAL '3 DAY ' THEN -1 * MovementItem.Amount ELSE 0 END) AS Amount_4
+                           , SUM (CASE WHEN Movement.OperDate >= vbStartDate_old + INTERVAL '4 DAY ' THEN -1 * MovementItem.Amount ELSE 0 END) AS Amount_5
+                      FROM Movement
+                           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                  AND MovementItem.DescId     = zc_MI_Master()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                                            ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_Contract.DescId         = zc_MILinkObject_Contract()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                                            ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_MoneyPlace.DescId         = zc_MILinkObject_MoneyPlace()
+                           INNER JOIN (SELECT DISTINCT tmpMI.ObjectId AS JuridicalId, tmpMI.ContractId FROM tmpMI
+                                      ) AS tmpList
+                                        ON tmpList.JuridicalId = MILinkObject_MoneyPlace.ObjectId
+                                       AND tmpList.ContractId  = MILinkObject_Contract.ObjectId
+ 
+                      WHERE Movement.OperDate BETWEEN vbStartDate_old AND vbEndDate_old
+                        AND Movement.DescId   = zc_Movement_BankAccount()
+                        AND Movement.StatusId = zc_Enum_Status_Complete()
+                      GROUP BY MILinkObject_MoneyPlace.ObjectId
+                             , MILinkObject_Contract.ObjectId
+                     )
+       -- Банк текущей недели
+     , tmpMI_bank AS (SELECT MILinkObject_MoneyPlace.ObjectId AS JuridicalId
+                           , MILinkObject_Contract.ObjectId   AS ContractId
+                           , SUM (CASE WHEN Movement.OperDate =  vbStartDate                     THEN -1 * MovementItem.Amount ELSE 0 END) AS Amount_1
+                           , SUM (CASE WHEN Movement.OperDate =  vbStartDate + INTERVAL '1 DAY ' THEN -1 * MovementItem.Amount ELSE 0 END) AS Amount_2
+                           , SUM (CASE WHEN Movement.OperDate =  vbStartDate + INTERVAL '2 DAY ' THEN -1 * MovementItem.Amount ELSE 0 END) AS Amount_3
+                           , SUM (CASE WHEN Movement.OperDate =  vbStartDate + INTERVAL '3 DAY ' THEN -1 * MovementItem.Amount ELSE 0 END) AS Amount_4
+                           , SUM (CASE WHEN Movement.OperDate >= vbStartDate + INTERVAL '4 DAY ' THEN -1 * MovementItem.Amount ELSE 0 END) AS Amount_5
+                      FROM Movement
+                           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                  AND MovementItem.DescId     = zc_MI_Master()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                                            ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_Contract.DescId         = zc_MILinkObject_Contract()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                                            ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_MoneyPlace.DescId         = zc_MILinkObject_MoneyPlace()
+                           INNER JOIN (SELECT DISTINCT tmpMI.ObjectId AS JuridicalId, tmpMI.ContractId FROM tmpMI
+                                      ) AS tmpList
+                                        ON tmpList.JuridicalId = MILinkObject_MoneyPlace.ObjectId
+                                       AND tmpList.ContractId  = MILinkObject_Contract.ObjectId
+ 
+                      WHERE Movement.OperDate BETWEEN vbStartDate AND vbEndDate
+                        AND Movement.DescId   = zc_Movement_BankAccount()
+                        AND Movement.StatusId = zc_Enum_Status_Complete()
+                      GROUP BY MILinkObject_MoneyPlace.ObjectId
+                             , MILinkObject_Contract.ObjectId
+                     )
        -- Результат
        SELECT
              MovementItem.Id                  AS Id
@@ -752,7 +1015,7 @@ BEGIN
 
            , View_Contract.ContractId
            , View_Contract.ContractCode
-           , View_Contract.InvNumber          AS ContractName 
+           , View_Contract.InvNumber          AS ContractName
            , Object_PaidKind.Id               AS PaidKindId
            , Object_PaidKind.ValueData        AS PaidKindName
 
@@ -781,9 +1044,23 @@ BEGIN
            , MIDate_Amount.ValueData           AS OperDate_Amount
            , MIDate_Amount.ValueData           AS OperDate_Amount_old
 
-           , MIFloat_AmountRemains.ValueData   :: TFloat AS AmountRemains
-           , MIFloat_AmountPartner.ValueData   :: TFloat AS AmountPartner
+             -- Нач. долг
+           , (COALESCE (MIFloat_AmountRemains.ValueData, 0) - CASE WHEN vbIsPlan_1_old = TRUE THEN COALESCE (MIFloat_AmountPlan_1_old.ValueData, 0) ELSE 0 END
+                                                            - CASE WHEN vbIsPlan_2_old = TRUE THEN COALESCE (MIFloat_AmountPlan_2_old.ValueData, 0) ELSE 0 END
+                                                            - CASE WHEN vbIsPlan_3_old = TRUE THEN COALESCE (MIFloat_AmountPlan_3_old.ValueData, 0) ELSE 0 END
+                                                            - CASE WHEN vbIsPlan_4_old = TRUE THEN COALESCE (MIFloat_AmountPlan_4_old.ValueData, 0) ELSE 0 END
+                                                            - CASE WHEN vbIsPlan_5_old = TRUE THEN COALESCE (MIFloat_AmountPlan_5_old.ValueData, 0) ELSE 0 END
+             ) :: TFloat AS AmountRemains
+             -- Долг с отсрочкой
+           , (COALESCE (MIFloat_AmountPartner.ValueData, 0) - CASE WHEN vbIsPlan_1_old = TRUE THEN COALESCE (MIFloat_AmountPlan_1_old.ValueData, 0) ELSE 0 END
+                                                            - CASE WHEN vbIsPlan_2_old = TRUE THEN COALESCE (MIFloat_AmountPlan_2_old.ValueData, 0) ELSE 0 END
+                                                            - CASE WHEN vbIsPlan_3_old = TRUE THEN COALESCE (MIFloat_AmountPlan_3_old.ValueData, 0) ELSE 0 END
+                                                            - CASE WHEN vbIsPlan_4_old = TRUE THEN COALESCE (MIFloat_AmountPlan_4_old.ValueData, 0) ELSE 0 END
+                                                            - CASE WHEN vbIsPlan_5_old = TRUE THEN COALESCE (MIFloat_AmountPlan_5_old.ValueData, 0) ELSE 0 END
+             ) :: TFloat AS AmountPartner
+             -- Приход
            , MIFloat_AmountSumm.ValueData      :: TFloat AS AmountSumm
+             -- Просрочка
            , MIFloat_AmountPartner_1.ValueData :: TFloat AS AmountPartner_1
            , MIFloat_AmountPartner_2.ValueData :: TFloat AS AmountPartner_2
            , MIFloat_AmountPartner_3.ValueData :: TFloat AS AmountPartner_3
@@ -795,11 +1072,13 @@ BEGIN
                - COALESCE (MIFloat_AmountPartner_4.ValueData,0)
               )   :: TFloat AS AmountPartner_5                -->28дней
 
+             -- План оплат
            , MIFloat_AmountPlan_1.ValueData    :: TFloat AS AmountPlan_1
            , MIFloat_AmountPlan_2.ValueData    :: TFloat AS AmountPlan_2
            , MIFloat_AmountPlan_3.ValueData    :: TFloat AS AmountPlan_3
            , MIFloat_AmountPlan_4.ValueData    :: TFloat AS AmountPlan_4
            , MIFloat_AmountPlan_5.ValueData    :: TFloat AS AmountPlan_5
+             -- План оплат - Итог
            , (COALESCE (MIFloat_AmountPlan_1.ValueData, 0)
             + COALESCE (MIFloat_AmountPlan_2.ValueData, 0)
             + COALESCE (MIFloat_AmountPlan_3.ValueData, 0)
@@ -807,11 +1086,43 @@ BEGIN
             + COALESCE (MIFloat_AmountPlan_5.ValueData, 0)
              ) :: TFloat AS AmountPlan_total
 
+             -- План прошлой недели
+           , MIFloat_AmountPlan_1_old.ValueData    AS AmountPlan_1_old
+           , MIFloat_AmountPlan_2_old.ValueData    AS AmountPlan_2_old
+           , MIFloat_AmountPlan_3_old.ValueData    AS AmountPlan_3_old
+           , MIFloat_AmountPlan_4_old.ValueData    AS AmountPlan_4_old
+           , MIFloat_AmountPlan_5_old.ValueData    AS AmountPlan_5_old
+
+             -- План прошлой недели - Итог
+           , (COALESCE (MIFloat_AmountPlan_1_old.ValueData, 0)
+            + COALESCE (MIFloat_AmountPlan_2_old.ValueData, 0)
+            + COALESCE (MIFloat_AmountPlan_3_old.ValueData, 0)
+            + COALESCE (MIFloat_AmountPlan_4_old.ValueData, 0)
+            + COALESCE (MIFloat_AmountPlan_5_old.ValueData, 0)
+             ) :: TFloat AS AmountPlan_total_old
+
+             -- Факт прошлой недели
+           , tmpMI_bank_old.Amount_1 :: TFloat AS AmountReal_1_old
+           , tmpMI_bank_old.Amount_2 :: TFloat AS AmountReal_2_old
+           , tmpMI_bank_old.Amount_3 :: TFloat AS AmountReal_3_old
+           , tmpMI_bank_old.Amount_4 :: TFloat AS AmountReal_4_old
+           , tmpMI_bank_old.Amount_5 :: TFloat AS AmountReal_5_old
+             -- Факт прошлой недели - Итог
+           , 0 :: TFloat AS AmountReal_total_old
+
+             -- Платим да/нет
            , COALESCE (MIBoolean_AmountPlan_1.ValueData, TRUE) ::Boolean AS isAmountPlan_1
            , COALESCE (MIBoolean_AmountPlan_2.ValueData, TRUE) ::Boolean AS isAmountPlan_2
            , COALESCE (MIBoolean_AmountPlan_3.ValueData, TRUE) ::Boolean AS isAmountPlan_3
            , COALESCE (MIBoolean_AmountPlan_4.ValueData, TRUE) ::Boolean AS isAmountPlan_4
            , COALESCE (MIBoolean_AmountPlan_5.ValueData, TRUE) ::Boolean AS isAmountPlan_5
+
+             -- Учитывается в долгах План прошлой недели да/нет
+           , vbIsPlan_1_old AS isPlan_1_old
+           , vbIsPlan_2_old AS isPlan_2_old
+           , vbIsPlan_3_old AS isPlan_3_old
+           , vbIsPlan_4_old AS isPlan_4_old
+           , vbIsPlan_5_old AS isPlan_5_old
 
            , MIString_Comment.ValueData     ::TVarChar AS Comment
            , MIString_Comment_pay.ValueData ::TVarChar AS Comment_pay
@@ -826,6 +1137,8 @@ BEGIN
            , zc_Color_White() ::Integer AS Color_Group
 
        FROM tmpMI AS MovementItem
+
+
             INNER JOIN Object AS Object_Juridical ON Object_Juridical.Id     = MovementItem.ObjectId
                                                  -- Только Юр.л.
                                                  AND Object_Juridical.DescId = zc_Object_Juridical()
@@ -869,6 +1182,29 @@ BEGIN
             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_5
                                            ON MIFloat_AmountPlan_5.MovementItemId = MovementItem.Id
                                           AND MIFloat_AmountPlan_5.DescId = zc_MIFloat_AmountPlan_5()
+
+            -- Банк предыдущей недели
+            LEFT JOIN tmpMI_bank_old ON tmpMI_bank_old.JuridicalId = MovementItem.ObjectId
+                                    AND tmpMI_bank_old.ContractId  = MovementItem.ContractId
+
+            -- план прошлой недели
+            LEFT JOIN tmpMI_old ON tmpMI_old.JuridicalId = MovementItem.ObjectId
+                               AND tmpMI_old.ContractId  = MovementItem.ContractId
+            LEFT JOIN tmpMovementItemFloat_old AS MIFloat_AmountPlan_1_old
+                                               ON MIFloat_AmountPlan_1_old.MovementItemId = tmpMI_old.MovementItemId
+                                              AND MIFloat_AmountPlan_1_old.DescId = zc_MIFloat_AmountPlan_1()
+            LEFT JOIN tmpMovementItemFloat_old AS MIFloat_AmountPlan_2_old
+                                               ON MIFloat_AmountPlan_2_old.MovementItemId = tmpMI_old.MovementItemId
+                                              AND MIFloat_AmountPlan_2_old.DescId = zc_MIFloat_AmountPlan_2()
+            LEFT JOIN tmpMovementItemFloat_old AS MIFloat_AmountPlan_3_old
+                                               ON MIFloat_AmountPlan_3_old.MovementItemId = tmpMI_old.MovementItemId
+                                              AND MIFloat_AmountPlan_3_old.DescId = zc_MIFloat_AmountPlan_3()
+            LEFT JOIN tmpMovementItemFloat_old AS MIFloat_AmountPlan_4_old
+                                               ON MIFloat_AmountPlan_4_old.MovementItemId = tmpMI_old.MovementItemId
+                                              AND MIFloat_AmountPlan_4_old.DescId = zc_MIFloat_AmountPlan_4()
+            LEFT JOIN tmpMovementItemFloat_old AS MIFloat_AmountPlan_5_old
+                                               ON MIFloat_AmountPlan_5_old.MovementItemId = tmpMI_old.MovementItemId
+                                              AND MIFloat_AmountPlan_5_old.DescId = zc_MIFloat_AmountPlan_5()
 
             LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_1
                                              ON MIBoolean_AmountPlan_1.MovementItemId = MovementItem.Id
@@ -972,19 +1308,46 @@ BEGIN
            , 0 ::TFloat       AS AmountPartner_3
            , 0 ::TFloat       AS AmountPartner_4
            , 0 ::TFloat       AS AmountPartner_5
-
+             -- План оплат
            , 0 ::TFloat       AS AmountPlan_1
            , 0 ::TFloat       AS AmountPlan_2
            , 0 ::TFloat       AS AmountPlan_3
            , 0 ::TFloat       AS AmountPlan_4
            , 0 ::TFloat       AS AmountPlan_5
+             -- План оплат - Итог
            , 0 ::TFloat       AS AmountPlan_total
 
+             -- План прошлой недели
+           , 0 :: TFloat AS AmountReal_1_old
+           , 0 :: TFloat AS AmountReal_2_old
+           , 0 :: TFloat AS AmountReal_3_old
+           , 0 :: TFloat AS AmountReal_4_old
+           , 0 :: TFloat AS AmountReal_5_old
+             -- План прошлой недели - Итог
+           , 0 :: TFloat AS AmountReal_total_old
+
+             -- Факт прошлой недели
+           , 0 :: TFloat AS AmountReal_1_old
+           , 0 :: TFloat AS AmountReal_2_old
+           , 0 :: TFloat AS AmountReal_3_old
+           , 0 :: TFloat AS AmountReal_4_old
+           , 0 :: TFloat AS AmountReal_5_old
+             -- Факт прошлой недели - Итог
+           , 0 :: TFloat AS AmountReal_total_old
+
+             -- Платим да/нет
            , FALSE ::Boolean  AS isAmountPlan_1
            , FALSE ::Boolean  AS isAmountPlan_2
            , FALSE ::Boolean  AS isAmountPlan_3
            , FALSE ::Boolean  AS isAmountPlan_4
            , FALSE ::Boolean  AS isAmountPlan_5
+
+             -- Учитывается в долгах План прошлой недели да/нет
+           , vbIsPlan_1_old AS isPlan_1_old
+           , vbIsPlan_2_old AS isPlan_2_old
+           , vbIsPlan_3_old AS isPlan_3_old
+           , vbIsPlan_4_old AS isPlan_4_old
+           , vbIsPlan_5_old AS isPlan_5_old
 
            , ''   ::TVarChar  AS Comment
            , ''   ::TVarChar  AS Comment_pay
@@ -1042,3 +1405,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_OrderFinance (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
+-- SELECT * FROM gpSelect_MovementItem_OrderFinance (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '9818')

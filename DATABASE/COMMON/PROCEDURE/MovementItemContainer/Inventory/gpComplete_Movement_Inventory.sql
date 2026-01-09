@@ -516,8 +516,11 @@ BEGIN
            , tmpMI AS (SELECT MovementItem.Id AS MovementItemId
 
                             , COALESCE (ObjectLink_Goods_Fuel.ChildObjectId, MovementItem.ObjectId, 0) AS GoodsId
-                            , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция
-                                        THEN CASE WHEN MILinkObject_GoodsKind.ObjectId > 0 THEN MILinkObject_GoodsKind.ObjectId
+                            , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30102(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция + Тушенка
+                                        THEN CASE -- Тушенка + Вес
+                                                  WHEN View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_30102() AND MILinkObject_GoodsKind.ObjectId = zc_GoodsKind_Basis() THEN 0
+                                                  --
+                                                  WHEN MILinkObject_GoodsKind.ObjectId > 0 THEN MILinkObject_GoodsKind.ObjectId
                                                   WHEN CLO_GoodsKind.ObjectId > 0 THEN CLO_GoodsKind.ObjectId
                                                   ELSE 0
                                              END
