@@ -304,7 +304,7 @@ object ProdModelForm: TProdModelForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 48
+    Left = 56
     Top = 64
     DockControlHeights = (
       0

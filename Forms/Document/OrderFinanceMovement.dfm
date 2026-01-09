@@ -2197,6 +2197,10 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end
         item
           Visible = True
+          ItemName = 'bbmactLoadExcel'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -2539,6 +2543,10 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
           ItemName = 'bbPrint_xls'
         end>
     end
+    object bbmactLoadExcel: TdxBarButton
+      Action = mactLoadExcel
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -2552,8 +2560,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 89
-    Top = 216
+    Left = 121
+    Top = 280
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -2737,6 +2745,17 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actGetImportSetting: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSetting
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSetting
+        end>
+      Caption = 'actGetImportSetting'
     end
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
@@ -4347,6 +4366,42 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1087#1083#1072#1085' '#1087#1086' '#1087#1086#1095#1090#1077
       ImageIndex = 53
     end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = '0'
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+    end
+    object mactLoadExcel: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' Excel?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' Excel'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' Excel'
+      ImageIndex = 41
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -5081,8 +5136,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 558
-    Top = 200
+    Left = 494
+    Top = 232
   end
   object spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderFinance_SetUnErased'
@@ -5106,8 +5161,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 646
-    Top = 272
+    Left = 614
+    Top = 264
   end
   object StatusGuides: TdsdGuides
     KeyField = 'Id'
@@ -5439,8 +5494,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     ShowFieldImageList = <>
     ViewDocumentList = <>
     PropertiesCellList = <>
-    Left = 835
-    Top = 289
+    Left = 875
+    Top = 297
   end
   object spSelectJuridicalOrderFinance: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_JuridicalOrderFinance_choice'
@@ -6658,5 +6713,37 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     PackSize = 1
     Left = 120
     Top = 560
+  end
+  object spGetImportSetting: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TOrderFinanceJournalForm;zc_Object_ImportSetting_OrderFinance'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 736
+    Top = 272
   end
 end

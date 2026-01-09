@@ -1499,6 +1499,16 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       ShowHint = True
       TabOrder = 8
     end
+    object cxButton2: TcxButton
+      Left = 277
+      Top = 35
+      Width = 115
+      Height = 25
+      Action = mactInsertUpdateReceiptProdModel
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 9
+    end
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
@@ -1980,7 +1990,9 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     end
     object bbInsertUpdate_ReceiptGoods: TdxBarButton
       Action = actspInsertUpdate_ReceiptGoods
+      Caption = #1047#1072#1084#1077#1085#1080#1090#1100' '#1091#1079#1077#1083' '#1085#1072' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' '#1074' '#1064#1072#1073#1083#1086#1085#1077' '#1089#1073#1086#1088#1082#1072' '#1052#1086#1076#1077#1083#1080
       Category = 0
+      DropDownEnabled = False
     end
     object bbProtocolGoods: TdxBarButton
       Action = actProtocolGoods
@@ -2374,6 +2386,49 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       ShortCut = 49201
       ErasedFieldName = 'isErased'
       DataSource = GoodsDS
+    end
+    object mactInsertUpdateReceiptProdModel: TMultiAction
+      Category = 'Copy'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actChoiceFormProdModel
+        end
+        item
+          Action = actInsertUpdate_byModel
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100
+      ImageIndex = 27
+    end
+    object actChoiceFormProdModel: TOpenChoiceForm
+      Category = 'Copy'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceFormProdModel'
+      FormName = 'TProdModelForm'
+      FormNameParam.Value = 'TProdModelForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ModelId_mask'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ModelName_mask'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
     object actSetUnErasedGoods: TdsdUpdateErased
       Category = 'DSDLib'
@@ -2947,6 +3002,17 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088
       ImageIndexTrue = 25
       ImageIndexFalse = 26
+    end
+    object actInsertUpdate_byModel: TdsdExecStoredProc
+      Category = 'Copy'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_byModel
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_byModel
+        end>
+      Caption = 'actInsertUpdate_byModel'
     end
   end
   object spSelect: TdsdStoredProc
@@ -3932,8 +3998,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 152
-    Top = 176
+    Left = 224
+    Top = 200
   end
   object GuidesReceiptGoods: TdsdGuides
     KeyField = 'Id'
@@ -3963,5 +4029,32 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       end>
     Left = 224
     Top = 72
+  end
+  object spInsertUpdate_byModel: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_ReceiptProdModelChild_byModel'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inReceiptProdModelId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inModelId_mask'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'ModelId_mask'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 536
+    Top = 384
   end
 end

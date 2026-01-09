@@ -232,6 +232,11 @@ type
     bbPrintStructureSum: TdxBarButton;
     bbPrintStructureGoodsSum: TdxBarButton;
     actPrintStructureGoodsSumAll: TdsdPrintAction;
+    actChoiceFormProdModel: TOpenChoiceForm;
+    mactInsertUpdateReceiptProdModel: TMultiAction;
+    cxButton2: TcxButton;
+    spInsertUpdate_byModel: TdsdStoredProc;
+    actInsertUpdate_byModel: TdsdExecStoredProc;
   private
     { Private declarations }
   public

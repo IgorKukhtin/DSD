@@ -24,7 +24,8 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox, dsdInternetAction, dsdCommon, ChoicePeriod, cxBlobEdit;
+  cxImageComboBox, dsdInternetAction, dsdCommon, ChoicePeriod, cxBlobEdit,
+  ExternalLoad;
 
 type
   TOrderFinanceMovementForm = class(TParentForm)
@@ -324,6 +325,11 @@ type
     isPlan_3_old: TcxGridDBColumn;
     isPlan_4_old: TcxGridDBColumn;
     isPlan_5_old: TcxGridDBColumn;
+    spGetImportSetting: TdsdStoredProc;
+    actGetImportSetting: TdsdExecStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    mactLoadExcel: TMultiAction;
+    bbmactLoadExcel: TdxBarButton;
   private
   public
   end;
