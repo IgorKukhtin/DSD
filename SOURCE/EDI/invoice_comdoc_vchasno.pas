@@ -282,6 +282,7 @@ type
     function Get_ПрийнятаКількість: UnicodeString;
     function Get_БазоваЦіна: UnicodeString;
     function Get_ОдиницяВиміру: UnicodeString;
+    function Get_КодУКТЗЕД: UnicodeString;
     function Get_ПДВ: UnicodeString;
     function Get_Ціна: UnicodeString;
     function Get_СтавкаПДВ: UnicodeString;
@@ -294,6 +295,7 @@ type
     procedure Set_ПрийнятаКількість(Value: UnicodeString);
     procedure Set_БазоваЦіна(Value: UnicodeString);
     procedure Set_ОдиницяВиміру(Value: UnicodeString);
+    procedure Set_КодУКТЗЕД(Value: UnicodeString);
     procedure Set_ПДВ(Value: UnicodeString);
     procedure Set_Ціна(Value: UnicodeString);
     procedure Set_СтавкаПДВ(Value: UnicodeString);
@@ -306,6 +308,7 @@ type
     property ПрийнятаКількість: UnicodeString read Get_ПрийнятаКількість write Set_ПрийнятаКількість;
     property БазоваЦіна: UnicodeString read Get_БазоваЦіна write Set_БазоваЦіна;
     property ОдиницяВиміру: UnicodeString read Get_ОдиницяВиміру write Set_ОдиницяВиміру;
+    property КодУКТЗЕД: UnicodeString read Get_КодУКТЗЕД write Set_КодУКТЗЕД;
     property ПДВ: UnicodeString read Get_ПДВ write Set_ПДВ;
     property Ціна: UnicodeString read Get_Ціна write Set_Ціна;
     property СтавкаПДВ: UnicodeString read Get_СтавкаПДВ write Set_СтавкаПДВ;
@@ -505,6 +508,7 @@ type
     function Get_ПрийнятаКількість: UnicodeString;
     function Get_БазоваЦіна: UnicodeString;
     function Get_ОдиницяВиміру: UnicodeString;
+    function Get_КодУКТЗЕД: UnicodeString;
     function Get_ПДВ: UnicodeString;
     function Get_Ціна: UnicodeString;
     function Get_СтавкаПДВ: UnicodeString;
@@ -517,6 +521,7 @@ type
     procedure Set_ПрийнятаКількість(Value: UnicodeString);
     procedure Set_БазоваЦіна(Value: UnicodeString);
     procedure Set_ОдиницяВиміру(Value: UnicodeString);
+    procedure Set_КодУКТЗЕД(Value: UnicodeString);
     procedure Set_ПДВ(Value: UnicodeString);
     procedure Set_Ціна(Value: UnicodeString);
     procedure Set_СтавкаПДВ(Value: UnicodeString);
@@ -1009,6 +1014,16 @@ end;
 procedure TXMLРядокType.Set_ОдиницяВиміру(Value: UnicodeString);
 begin
   ChildNodes['ОдиницяВиміру'].NodeValue := Value;
+end;
+
+function TXMLРядокType.Get_КодУКТЗЕД: UnicodeString;
+begin
+  Result := ChildNodes['КодУКТЗЕД'].Text;
+end;
+
+procedure TXMLРядокType.Set_КодУКТЗЕД(Value: UnicodeString);
+begin
+  ChildNodes['КодУКТЗЕД'].NodeValue := Value;
 end;
 
 function TXMLРядокType.Get_ПДВ: UnicodeString;

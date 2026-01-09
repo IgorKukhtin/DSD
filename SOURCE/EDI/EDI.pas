@@ -5698,6 +5698,8 @@ begin
       Найменування := ItemsDataSet.FieldByName('GoodsName').asString;
       //ОдиницяВиміру
       ОдиницяВиміру:= ItemsDataSet.FieldByName('MeasureName').asString;
+      // код УКТЗЕД
+      КодУКТЗЕД := ItemsDataSet.FieldByName('GoodsCodeUKTZED').asString;
 
       ПрийнятаКількість := gfFloatToStr(ItemsDataSet.FieldByName('AmountPartner').AsFloat);
       //Ціна за одиницю без ПДВ
@@ -5713,6 +5715,7 @@ begin
       ВсьогоПоРядку.ПДВ:= gfFloatToStr(ROUND(ItemsDataSet.FieldByName('AmountSummWVAT').AsFloat * 100) / 100 - ItemsDataSet.FieldByName('AmountSummNoVAT').AsFloat);
       //ВсьогоПоРядку - Сума з ПДВ
       ВсьогоПоРядку.Сума:= gfFloatToStr(ROUND(ItemsDataSet.FieldByName('AmountSummWVAT').AsFloat * 100) / 100);
+
 
       inc(i);
     end;

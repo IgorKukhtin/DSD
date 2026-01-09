@@ -307,6 +307,23 @@ type
     OperDate_Amount: TcxGridDBColumn;
     OperDate_Amount_old: TcxGridDBColumn;
     Amount_old: TcxGridDBColumn;
+    AmountPlan_1_old: TcxGridDBColumn;
+    AmountPlan_2_old: TcxGridDBColumn;
+    AmountPlan_3_old: TcxGridDBColumn;
+    AmountPlan_4_old: TcxGridDBColumn;
+    AmountPlan_5_old: TcxGridDBColumn;
+    AmountReal_1_old: TcxGridDBColumn;
+    AmountReal_2_old: TcxGridDBColumn;
+    AmountReal_3_old: TcxGridDBColumn;
+    AmountReal_4_old: TcxGridDBColumn;
+    AmountReal_5_old: TcxGridDBColumn;
+    AmountPlan_total_old: TcxGridDBColumn;
+    AmountReal_total_old: TcxGridDBColumn;
+    isPlan_1_old: TcxGridDBColumn;
+    isPlan_2_old: TcxGridDBColumn;
+    isPlan_3_old: TcxGridDBColumn;
+    isPlan_4_old: TcxGridDBColumn;
+    isPlan_5_old: TcxGridDBColumn;
   private
   public
   end;
