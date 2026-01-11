@@ -80,7 +80,7 @@ implementation
 
 { TClientBankLoadAction }
 
-uses VCL.ActnList, Dialogs, SysUtils, Variants;
+uses VCL.ActnList, Dialogs, SysUtils, Variants, UtilConvert;
 
 procedure Register;
 begin
@@ -701,10 +701,21 @@ end;
 
 function TVostokBankLoad.GetOperSumm: real;
 begin
-  if FDataSet.FieldByName('FL_DK').AsInteger = 0 then
-    result := FDataSet.FieldByName('SUM').AsFloat
-  else
-    result := -FDataSet.FieldByName('SUM').AsFloat
+    try
+      // если Число
+      if FDataSet.FieldByName('FL_DK').AsInteger = 0
+      then
+        result := FDataSet.FieldByName('SUM').AsFloat
+      else
+        result := -FDataSet.FieldByName('SUM').AsFloat;
+    except
+      // если Строка
+      if FDataSet.FieldByName('FL_DK').AsInteger = 0
+      then
+        result := gfStrToFloat (FDataSet.FieldByName('SUM').AsString)
+      else
+        result := -1 * gfStrToFloat (FDataSet.FieldByName('SUM').AsString);
+    end;
 end;
 
 { TFidoBankLoad }
@@ -781,10 +792,19 @@ end;
 
 function TFidoBankLoad.GetOperSumm: real;
 begin
-  if FDataSet.FieldByName('DK').AsInteger = 2 then
-    result := FDataSet.FieldByName('S').AsFloat
-  else
-    result := -FDataSet.FieldByName('S').AsFloat
+  try
+    // если Число
+    if FDataSet.FieldByName('DK').AsInteger = 2 then
+      result := FDataSet.FieldByName('S').AsFloat
+    else
+      result := -1 * FDataSet.FieldByName('S').AsFloat
+  except
+      // если Строка
+      if FDataSet.FieldByName('DK').AsInteger = 2 then
+        result := gfStrToFloat (FDataSet.FieldByName('S').AsString)
+      else
+        result := -1 * gfStrToFloat (FDataSet.FieldByName('S').AsString);
+  end;
 end;
 
 { TOTPBankLoad }

@@ -250,6 +250,7 @@ begin
          if  FExternalLoad.RecordCount > 0 then
              with TGaugeFactory.GetGauge('Загрузка данных', 1, FExternalLoad.RecordCount) do begin
                Start;
+               FExternalLoad.First;
                try
                  while not FExternalLoad.EOF do begin
                    ProcessingOneRow(FExternalLoad, FStoredProc);
