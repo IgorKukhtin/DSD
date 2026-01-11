@@ -613,7 +613,7 @@ BEGIN
          -- Голота К.О.
          --AND (_tmpToolsWeighing.Number <> 80 OR vbUserId IN (5, 6604558) OR inBranchCode <> 201)
          -- AND (_tmpToolsWeighing.Number <> 42 OR vbUserId IN (5, 6604558) OR inBranchCode <> 301)
-         AND (_tmpToolsWeighing.Number <> 104 OR vbUserId IN (5, 6604558) OR inBranchCode <> 1)
+         -- AND (_tmpToolsWeighing.Number <> 104 OR vbUserId IN (5, 6604558) OR inBranchCode <> 1)
 
       UNION
        -- это группы
