@@ -107,7 +107,7 @@ BEGIN
      vbIsPlan_2_old:= FALSE;
      vbIsPlan_3_old:= FALSE;
      vbIsPlan_4_old:= FALSE;
-     vbIsPlan_5_old:= TRUE;
+     vbIsPlan_5_old:= FALSE;
 
      -- нашли
      vbOperDate := (SELECT Movement.OperDate
@@ -133,9 +133,9 @@ BEGIN
      vbEndDate  := zfCalc_Week_EndDate (vbOperDate, vbWeekNumber);
 
      -- начало предыдущей недели
-     vbStartDate_old:= vbStartDate - INTERVAL '14 DAY';
+     vbStartDate_old:= vbStartDate - INTERVAL '7 DAY';
      -- окончание предыдущей недели
-     vbEndDate_old  := vbEndDate   - INTERVAL '14 DAY'; 
+     vbEndDate_old  := vbEndDate   - INTERVAL '7 DAY'; 
 
      -- предыдущая неделя
      vbWeekNumber_old := EXTRACT (WEEK FROM vbStartDate_old) ;
@@ -156,6 +156,33 @@ BEGIN
                            AND Movement.StatusId IN (zc_Enum_Status_Complete()) -- zc_Enum_Status_UnComplete()
                            AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '14 DAY' AND vbOperDate - INTERVAL '1 DAY'
                          );
+
+
+     -- Если неделя еще не началась
+     IF CURRENT_DATE < vbStartDate
+        -- или пн. до 11:00 + нет данных за пятн.
+        OR (CURRENT_DATE = vbStartDate AND EXTRACT (HOUR FROM CURRENT_DATE) <= 10
+            AND NOT EXISTS (SELECT 1
+                            FROM Object AS Object_GlobalConst
+                                 INNER JOIN ObjectDate AS ActualBankStatement
+                                                       ON ActualBankStatement.DescId    = zc_ObjectDate_GlobalConst_ActualBankStatement()
+                                                      AND ActualBankStatement.ObjectId  = Object_GlobalConst.Id
+                                                      -- здесь пятн.
+                                                      AND ActualBankStatement.ValueData >= vbStartDate  - INTERVAL '3 DAY'
+                            WHERE Object_GlobalConst.DescId = zc_Object_GlobalConst()
+                              AND Object_GlobalConst.Id = zc_Enum_GlobalConst_BankAccountDate()
+                           )
+
+           )
+     THEN
+         -- берем план птн.
+         vbIsPlan_5_old:= TRUE;
+     ELSE
+         -- НЕ берем план птн.
+         vbIsPlan_5_old:= FALSE;
+     END IF;
+
+
      --
      IF inShowAll = TRUE THEN
 

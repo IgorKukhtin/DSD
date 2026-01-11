@@ -15,19 +15,20 @@ $BODY$
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
 
-    DECLARE vbDescId Integer;
-    DECLARE vbStatusId Integer;
-    DECLARE vbOperDate TDateTime;
-    DECLARE vbInvNumber TVarChar;
+    DECLARE vbDescId         Integer;
+    DECLARE vbStatusId       Integer;
+    DECLARE vbOperDate       TDateTime;
+    DECLARE vbStartDate      TDateTime;
+    DECLARE vbInvNumber      TVarChar;
     DECLARE vbOrderFinanceId Integer;
-    DECLARE vbMovementId_old    Integer;
-    DECLARE vbWeekNumber        TFloat;
-    DECLARE vbWeekNumber_old    TFloat;
-    DECLARE vbIsPlan_1_old      Boolean;
-    DECLARE vbIsPlan_2_old      Boolean;
-    DECLARE vbIsPlan_3_old      Boolean;
-    DECLARE vbIsPlan_4_old      Boolean;
-    DECLARE vbIsPlan_5_old      Boolean;
+    DECLARE vbMovementId_old Integer;
+    DECLARE vbWeekNumber     TFloat;
+    DECLARE vbWeekNumber_old TFloat;
+    DECLARE vbIsPlan_1_old   Boolean;
+    DECLARE vbIsPlan_2_old   Boolean;
+    DECLARE vbIsPlan_3_old   Boolean;
+    DECLARE vbIsPlan_4_old   Boolean;
+    DECLARE vbIsPlan_5_old   Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income_Print());
@@ -39,7 +40,7 @@ BEGIN
      vbIsPlan_2_old:= FALSE;
      vbIsPlan_3_old:= FALSE;
      vbIsPlan_4_old:= FALSE;
-     vbIsPlan_5_old:= TRUE;
+     vbIsPlan_5_old:= FALSE;
 
 
      -- параметры из документа
@@ -64,9 +65,11 @@ BEGIN
                       WHERE MovementFloat.MovementId = inMovementId
                         AND MovementFloat.DescId     = zc_MovementFloat_WeekNumber()
                      );
+     -- начало недели
+     vbStartDate:= zfCalc_Week_StartDate (vbOperDate, vbWeekNumber);
 
      -- начало недели минус 7 дней
-     vbWeekNumber_old := EXTRACT (WEEK FROM zfCalc_Week_StartDate (vbOperDate, vbWeekNumber) - INTERVAL '7 DAY') ;
+     vbWeekNumber_old := EXTRACT (WEEK FROM vbStartDate - INTERVAL '7 DAY') ;
 
      -- план прошлой недели
      vbMovementId_old:= (SELECT Movement.Id
@@ -84,6 +87,31 @@ BEGIN
                            AND Movement.StatusId IN (zc_Enum_Status_Complete()) -- zc_Enum_Status_UnComplete()
                            AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '14 DAY' AND vbOperDate - INTERVAL '1 DAY'
                          );
+
+
+     -- Если неделя еще не началась
+     IF CURRENT_DATE < vbStartDate
+        -- или пн. до 11:00 + нет данных за пятн.
+        OR (CURRENT_DATE = vbStartDate AND EXTRACT (HOUR FROM CURRENT_DATE) <= 10
+            AND NOT EXISTS (SELECT 1
+                            FROM Object AS Object_GlobalConst
+                                 INNER JOIN ObjectDate AS ActualBankStatement
+                                                       ON ActualBankStatement.DescId    = zc_ObjectDate_GlobalConst_ActualBankStatement()
+                                                      AND ActualBankStatement.ObjectId  = Object_GlobalConst.Id
+                                                      -- здесь пятн.
+                                                      AND ActualBankStatement.ValueData >= vbStartDate  - INTERVAL '3 DAY'
+                            WHERE Object_GlobalConst.DescId = zc_Object_GlobalConst()
+                              AND Object_GlobalConst.Id = zc_Enum_GlobalConst_BankAccountDate()
+                           )
+
+           )
+     THEN
+         -- берем план птн.
+         vbIsPlan_5_old:= TRUE;
+     ELSE
+         -- НЕ берем план птн.
+         vbIsPlan_5_old:= FALSE;
+     END IF;
 
 
      -- очень важная проверка
