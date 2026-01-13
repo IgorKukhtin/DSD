@@ -3666,17 +3666,17 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Protocol_ChangeStatusDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Protocol_ChangeStatusDialogForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MIProtocolUpdateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MIProtocolUpdateForm');
-  {exit;
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementProtocolGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementProtocolGroupForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementProtocolGroupDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementProtocolGroupDialogForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementProtocolForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementProtocolDialogForm'));
@@ -3691,12 +3691,12 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_LoginProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_LoginProtocolForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_UserProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_UserProtocolForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_UserProtocolDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_UserProtocolDialogForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_UserProtocolViewForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_UserProtocolViewForm');
 end;

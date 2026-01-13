@@ -16,17 +16,17 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
     Height = 466
     TabOrder = 3
     ExplicitTop = 86
-    ExplicitWidth = 887
+    ExplicitWidth = 1115
     ExplicitHeight = 466
     ClientRectBottom = 466
     ClientRectRight = 1115
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 887
+      ExplicitWidth = 1115
       ExplicitHeight = 466
       inherited cxGrid: TcxGrid
         Width = 1115
         Height = 200
-        ExplicitWidth = 887
+        ExplicitWidth = 1115
         ExplicitHeight = 200
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -350,7 +350,6 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
         Height = 258
         Align = alBottom
         TabOrder = 1
-        ExplicitWidth = 887
         object grChartDBChartView1: TcxGridDBChartView
           DataController.DataSource = MasterDS
           DiagramColumn.Active = True
@@ -402,15 +401,12 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = grChart
-        ExplicitWidth = 887
       end
     end
   end
   inherited Panel: TPanel
     Width = 1115
     Height = 60
-    ExplicitLeft = 24
-    ExplicitTop = -15
     ExplicitWidth = 1115
     ExplicitHeight = 60
     inherited deStart: TcxDateEdit
@@ -607,8 +603,8 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
-      Hint = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
       FormName = 'TReport_UserProtocolDialogForm'
       FormNameParam.Value = 'TReport_UserProtocolDialogForm'
@@ -617,7 +613,7 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
       GuiParams = <
         item
           Name = 'StartDate'
-          Value = Null
+          Value = 42614d
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
@@ -625,7 +621,7 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
         end
         item
           Name = 'EndDate'
-          Value = Null
+          Value = 42614d
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
