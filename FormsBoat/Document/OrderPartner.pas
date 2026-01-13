@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox, cxSplitter, cxBlobEdit, Vcl.StdCtrls, cxButtons;
+  cxImageComboBox, cxSplitter, cxBlobEdit, Vcl.StdCtrls, cxButtons, dsdCommon;
 
 type
   TOrderPartnerForm = class(TParentForm)
@@ -231,6 +231,19 @@ type
     bbsGoods: TdxBarSubItem;
     bbsOpenForm: TdxBarSubItem;
     bbsProtocol: TdxBarSubItem;
+    Panel2: TPanel;
+    lbSearchArticle: TcxLabel;
+    edSearchArticle: TcxTextEdit;
+    lbSearchName: TcxLabel;
+    edSearchName: TcxTextEdit;
+    FieldFilter_Article: TdsdFieldFilter;
+    actChoiceGuides: TdsdChoiceGuides;
+    actInsertRecordGoodsMain: TInsertRecord;
+    bbInsertRecordGoodsMain: TdxBarButton;
+    dxBarSeparator1: TdxBarSeparator;
+    bbactUpdateAction: TdxBarButton;
+    bbUpdateActionMain: TcxButton;
+    actGoodsMainChoiceForm: TOpenChoiceForm;
 
   private
   public

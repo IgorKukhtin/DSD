@@ -22,7 +22,7 @@ object OrderPartnerForm: TOrderPartnerForm
     Left = 0
     Top = 0
     Width = 1236
-    Height = 97
+    Height = 126
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
@@ -274,17 +274,66 @@ object OrderPartnerForm: TOrderPartnerForm
       TabOrder = 30
       Width = 175
     end
+    object Panel2: TPanel
+      Left = 1
+      Top = 91
+      Width = 488
+      Height = 35
+      TabOrder = 31
+      object lbSearchArticle: TcxLabel
+        Left = 1
+        Top = 5
+        Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
+        ParentFont = False
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clBlue
+        Style.Font.Height = -13
+        Style.Font.Name = 'Tahoma'
+        Style.Font.Style = [fsBold]
+        Style.IsFontAssigned = True
+      end
+      object edSearchArticle: TcxTextEdit
+        Left = 124
+        Top = 7
+        TabOrder = 1
+        DesignSize = (
+          125
+          21)
+        Width = 125
+      end
+      object lbSearchName: TcxLabel
+        Left = 270
+        Top = 7
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' : '
+        ParentFont = False
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clBlue
+        Style.Font.Height = -13
+        Style.Font.Name = 'Tahoma'
+        Style.Font.Style = [fsBold]
+        Style.IsFontAssigned = True
+      end
+      object edSearchName: TcxTextEdit
+        Left = 350
+        Top = 7
+        TabOrder = 3
+        DesignSize = (
+          125
+          21)
+        Width = 125
+      end
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 123
+    Top = 152
     Width = 1236
-    Height = 367
+    Height = 338
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 367
+    ClientRectBottom = 338
     ClientRectRight = 1236
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
@@ -294,7 +343,7 @@ object OrderPartnerForm: TOrderPartnerForm
         Left = 0
         Top = 0
         Width = 1236
-        Height = 125
+        Height = 96
         Align = alClient
         Caption = 'Panel1'
         TabOrder = 0
@@ -302,9 +351,10 @@ object OrderPartnerForm: TOrderPartnerForm
           Left = 1
           Top = 1
           Width = 1234
-          Height = 123
+          Height = 94
           Align = alClient
           TabOrder = 0
+          ExplicitHeight = 95
           object cxGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = MasterDS
@@ -474,7 +524,7 @@ object OrderPartnerForm: TOrderPartnerForm
               PropertiesClassName = 'TcxButtonEditProperties'
               Properties.Buttons = <
                 item
-                  Action = actGoodsChoiceForm
+                  Action = actGoodsMainChoiceForm
                   Default = True
                   Kind = bkEllipsis
                 end>
@@ -652,16 +702,18 @@ object OrderPartnerForm: TOrderPartnerForm
       end
       object cxTopSplitter: TcxSplitter
         Left = 0
-        Top = 125
+        Top = 96
         Width = 1236
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = Panel4
+        ExplicitLeft = 3
+        ExplicitTop = 105
       end
       object Panel4: TPanel
         Left = 0
-        Top = 133
+        Top = 104
         Width = 1236
         Height = 210
         Align = alBottom
@@ -680,6 +732,8 @@ object OrderPartnerForm: TOrderPartnerForm
           Height = 208
           Align = alClient
           TabOrder = 1
+          ExplicitLeft = 15
+          ExplicitTop = 2
           object cxGridDBTableView1: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ChildDS
@@ -957,7 +1011,7 @@ object OrderPartnerForm: TOrderPartnerForm
     Properties.DecimalPlaces = 3
     Properties.DisplayFormat = ',0.###'
     Properties.ReadOnly = False
-    TabOrder = 5
+    TabOrder = 3
     Width = 125
   end
   object Panel_btn: TPanel
@@ -978,8 +1032,8 @@ object OrderPartnerForm: TOrderPartnerForm
       TabOrder = 0
     end
     object btntAdd_limit: TcxButton
-      Left = 223
-      Top = 35
+      Left = 337
+      Top = 37
       Width = 105
       Height = 25
       Action = SetErased
@@ -988,7 +1042,7 @@ object OrderPartnerForm: TOrderPartnerForm
       TabOrder = 1
     end
     object btnCompleteMovement: TcxButton
-      Left = 528
+      Left = 670
       Top = 6
       Width = 150
       Height = 25
@@ -998,8 +1052,8 @@ object OrderPartnerForm: TOrderPartnerForm
       TabOrder = 2
     end
     object btnUnCompleteMovement: TcxButton
-      Left = 528
-      Top = 35
+      Left = 670
+      Top = 37
       Width = 150
       Height = 25
       Action = UnCompleteMovement
@@ -1008,8 +1062,8 @@ object OrderPartnerForm: TOrderPartnerForm
       TabOrder = 3
     end
     object btnSetErased: TcxButton
-      Left = 334
-      Top = 35
+      Left = 476
+      Top = 37
       Width = 162
       Height = 25
       Action = macErasedMI_Master
@@ -1018,7 +1072,7 @@ object OrderPartnerForm: TOrderPartnerForm
       TabOrder = 4
     end
     object btnShowAll: TcxButton
-      Left = 715
+      Left = 857
       Top = 6
       Width = 153
       Height = 25
@@ -1028,17 +1082,17 @@ object OrderPartnerForm: TOrderPartnerForm
       TabOrder = 5
     end
     object btnInsertAction: TcxButton
-      Left = 223
-      Top = 5
-      Width = 105
+      Left = 219
+      Top = 6
+      Width = 112
       Height = 25
-      Action = InsertRecordGoods
+      Action = actInsertRecordGoodsMain
       ParentShowHint = False
       ShowHint = True
       TabOrder = 6
     end
     object btnUpdateAction: TcxButton
-      Left = 334
+      Left = 476
       Top = 6
       Width = 162
       Height = 25
@@ -1058,14 +1112,24 @@ object OrderPartnerForm: TOrderPartnerForm
       TabOrder = 8
     end
     object btnFormClose: TcxButton
-      Left = 715
-      Top = 35
+      Left = 857
+      Top = 37
       Width = 153
       Height = 25
       Action = actFormClose
       ParentShowHint = False
       ShowHint = True
       TabOrder = 9
+    end
+    object bbUpdateActionMain: TcxButton
+      Left = 219
+      Top = 37
+      Width = 112
+      Height = 25
+      Action = actGoodsMainChoiceForm
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 10
     end
   end
   object FormParams: TdsdFormParams
@@ -1327,6 +1391,7 @@ object OrderPartnerForm: TOrderPartnerForm
     object bbInsertRecordGoods: TdxBarButton
       Action = InsertRecordGoods
       Category = 0
+      ShortCut = 16434
     end
     object bbPrintSticker: TdxBarButton
       Caption = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
@@ -1447,7 +1512,11 @@ object OrderPartnerForm: TOrderPartnerForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsertRecordGoods'
+          ItemName = 'bbInsertRecordGoodsMain'
+        end
+        item
+          Visible = True
+          ItemName = 'bbactUpdateAction'
         end
         item
           Visible = True
@@ -1456,6 +1525,14 @@ object OrderPartnerForm: TOrderPartnerForm
         item
           Visible = True
           ItemName = 'bbUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'Separator_1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordGoods'
         end
         item
           Visible = True
@@ -1503,6 +1580,20 @@ object OrderPartnerForm: TOrderPartnerForm
           Visible = True
           ItemName = 'bbMovementItemProtocol'
         end>
+    end
+    object bbInsertRecordGoodsMain: TdxBarButton
+      Action = actInsertRecordGoodsMain
+      Category = 0
+    end
+    object dxBarSeparator1: TdxBarSeparator
+      Caption = 'New Separator'
+      Category = 0
+      Hint = 'New Separator'
+      Visible = ivAlways
+    end
+    object bbactUpdateAction: TdxBarButton
+      Action = actGoodsMainChoiceForm
+      Category = 0
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -1768,7 +1859,7 @@ object OrderPartnerForm: TOrderPartnerForm
           StoredProc = spUnErasedMIMaster
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 49220
       ErasedFieldName = 'isErased'
@@ -1969,6 +2060,42 @@ object OrderPartnerForm: TOrderPartnerForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
       ImageIndex = 54
     end
+    object actGoodsMainChoiceForm: TOpenChoiceForm
+      Category = 'Goods'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1090#1086#1074#1072#1088
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1090#1086#1074#1072#1088
+      ImageIndex = 1
+      FormName = 'TGoodsMain_ChoiceForm'
+      FormNameParam.Value = 'TGoodsMain_ChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object actGoodsChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -2011,7 +2138,7 @@ object OrderPartnerForm: TOrderPartnerForm
       PostDataSetAfterExecute = True
       Action = actGoodsChoiceForm
       Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100'***'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 16433
       ImageIndex = 0
@@ -2391,6 +2518,45 @@ object OrderPartnerForm: TOrderPartnerForm
       Status = mtComplete
       Guides = StatusGuides
     end
+    object actChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      Params = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ImageIndex = 7
+      DataSource = MasterDS
+    end
+    object actInsertRecordGoodsMain: TInsertRecord
+      Category = 'Goods'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      View = cxGridDBTableView
+      Action = actGoodsMainChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1090#1086#1074#1072#1088
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 16433
+      ImageIndex = 0
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -2647,8 +2813,8 @@ object OrderPartnerForm: TOrderPartnerForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 186
-    Top = 168
+    Left = 178
+    Top = 208
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -2898,15 +3064,15 @@ object OrderPartnerForm: TOrderPartnerForm
       end>
     PackSize = 1
     Left = 344
-    Top = 184
+    Top = 216
   end
   object RefreshAddOn: TRefreshAddOn
     DataSet = 'ClientDataSet'
     KeyField = 'Id'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
-    Left = 518
-    Top = 130
+    Left = 422
+    Top = 162
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null
@@ -2949,8 +3115,8 @@ object OrderPartnerForm: TOrderPartnerForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 494
-    Top = 168
+    Left = 574
+    Top = 152
   end
   object spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderPartner_SetUnErased'
@@ -2975,7 +3141,7 @@ object OrderPartnerForm: TOrderPartnerForm
       end>
     PackSize = 1
     Left = 390
-    Top = 184
+    Top = 216
   end
   object StatusGuides: TdsdGuides
     KeyField = 'Id'
@@ -3011,7 +3177,7 @@ object OrderPartnerForm: TOrderPartnerForm
       end>
     PackSize = 1
     Left = 100
-    Top = 64
+    Top = 16
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -3488,5 +3654,22 @@ object OrderPartnerForm: TOrderPartnerForm
       end>
     Left = 812
     Top = 15
+  end
+  object FieldFilter_Article: TdsdFieldFilter
+    TextEdit = edSearchArticle
+    DataSet = MasterCDS
+    Column = Article
+    ColumnList = <
+      item
+        Column = Article
+      end
+      item
+        Column = GoodsName
+        TextEdit = edSearchName
+      end>
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 64
+    Top = 344
   end
 end
