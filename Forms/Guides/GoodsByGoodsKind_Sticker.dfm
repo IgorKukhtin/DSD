@@ -183,6 +183,17 @@ inherited GoodsByGoodsKind_StickerForm: TGoodsByGoodsKind_StickerForm
             HeaderHint = #1042#1077#1089' 1-'#1086#1075#1086' '#1087#1072#1082#1077#1090#1072' '#1076#1083#1103' '#1087#1077#1095'. '#1069#1058#1048#1050#1045#1058#1050#1048
             Width = 80
           end
+          object WeightPackageSticker_real: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1087#1072#1082'. '#1076#1083#1103' '#1069#1058'. ('#1088#1077#1072#1083#1100#1085#1099#1081')'
+            DataBinding.FieldName = 'WeightPackageSticker_real'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1045#1040#1051#1068#1053#1067#1049' '#1042#1077#1089' 1-'#1086#1075#1086' '#1087#1072#1082#1077#1090#1072' '#1076#1083#1103' '#1087#1077#1095'. '#1069#1058#1048#1050#1045#1058#1050#1048
+            Width = 78
+          end
           object WeightTotal: TcxGridDBColumn
             Caption = #1042#1077#1089' '#1074' '#1091#1087#1072#1082#1086#1074#1082#1077
             DataBinding.FieldName = 'WeightTotal'
@@ -544,7 +555,8 @@ inherited GoodsByGoodsKind_StickerForm: TGoodsByGoodsKind_StickerForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_GoodsByGoodsKind'
-    Top = 40
+    Left = 88
+    Top = 96
   end
   inherited BarManager: TdxBarManager
     Top = 40
@@ -626,6 +638,15 @@ inherited GoodsByGoodsKind_StickerForm: TGoodsByGoodsKind_StickerForm
         Value = 'Felse'
         Component = MasterCDS
         ComponentItem = 'WeightPackageSticker'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeightPackageSticker_real'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightPackageSticker_real'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
