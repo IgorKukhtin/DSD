@@ -19,7 +19,7 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
 
 type
   TWeighingPartnerDialogForm = class(TParentForm)
@@ -64,6 +64,24 @@ type
     cxLabel12: TcxLabel;
     edPosition1_Stick: TcxButtonEdit;
     GuidesPosition1_Stick: TdsdGuides;
+    edPersonal6: TcxButtonEdit;
+    cxLabel13: TcxLabel;
+    cxLabel14: TcxLabel;
+    edPosition6: TcxButtonEdit;
+    GuidesPersonal6: TdsdGuides;
+    GuidesPosition6: TdsdGuides;
+    edPersonal7: TcxButtonEdit;
+    cxLabel15: TcxLabel;
+    cxLabel16: TcxLabel;
+    edPosition7: TcxButtonEdit;
+    GuidesPersonal7: TdsdGuides;
+    GuidesPosition7: TdsdGuides;
+    edPersonal8: TcxButtonEdit;
+    cxLabel17: TcxLabel;
+    cxLabel18: TcxLabel;
+    edPosition8: TcxButtonEdit;
+    GuidesPersonal8: TdsdGuides;
+    GuidesPosition8: TdsdGuides;
   private
     { Private declarations }
   public

@@ -370,7 +370,6 @@ uses
   WeighingProductionJournal in '..\..\Forms\Document\WeighingProductionJournal.pas' {WeighingProductionJournalForm: TParentForm},
   WeighingProduction in '..\..\Forms\Document\WeighingProduction.pas' {WeighingProductionForm: TParentForm},
   WeighingPartner in '..\..\Forms\Document\WeighingPartner.pas' {WeighingPartnerForm: TParentForm},
-  WeighingPartnerJournal in '..\..\Forms\Document\WeighingPartnerJournal.pas' {WeighingPartnerJournalForm: TParentForm},
   Report_CheckTax in '..\..\Forms\Report\Report_CheckTax.pas' {Report_CheckTaxForm: TParentForm},
   AccountGroup in '..\..\Forms\Guides\AccountGroup.pas' {AccountGroupForm: TParentForm},
   AccountDirection in '..\..\Forms\Guides\AccountDirection.pas' {AccountDirectionForm: TParentForm},
@@ -1641,7 +1640,8 @@ uses
   Inventory_scale_NumSecurityDialog in '..\..\Forms\Document\Inventory_scale_NumSecurityDialog.pas' {Inventory_scale_NumSecurityDialogForm: TParentForm},
   Union_Member_Unit in '..\..\Forms\Guides\Union_Member_Unit.pas' {Union_Member_UnitForm: TParentForm},
   OrderFinance_PlanDate in '..\..\Forms\Document\OrderFinance_PlanDate.pas' {OrderFinance_PlanDateForm: TParentForm},
-  Sale_PartionQEdit in '..\..\Forms\Document\Sale_PartionQEdit.pas' {Sale_PartionQEditForm: TParentForm};
+  Sale_PartionQEdit in '..\..\Forms\Document\Sale_PartionQEdit.pas' {Sale_PartionQEditForm: TParentForm},
+  WeighingPartnerJournal in '..\..\Forms\Document\WeighingPartnerJournal.pas' {WeighingPartnerJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

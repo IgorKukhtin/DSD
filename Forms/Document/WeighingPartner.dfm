@@ -2249,6 +2249,57 @@ object WeighingPartnerForm: TWeighingPartnerForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'inPersonalId6'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PersonalId6'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPersonalName6'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PersonalName6'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPersonalId7'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PersonalId7'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPersonalName7'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PersonalName7'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPersonalId8'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PersonalId8'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPersonalName8'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PersonalName8'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'inPositionId1'
           Value = Null
           Component = FormParams
@@ -2329,6 +2380,57 @@ object WeighingPartnerForm: TWeighingPartnerForm
           Value = Null
           Component = FormParams
           ComponentItem = 'PositionName5'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPositionId6'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PositionId6'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPositionName6'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PositionName6'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPositionId7'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PositionId7'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPositionName7'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PositionName7'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPositionId8'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PositionId8'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPositionName8'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PositionName8'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -2784,18 +2886,6 @@ object WeighingPartnerForm: TWeighingPartnerForm
       end
       item
         Control = edTo
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
       end>
     GetStoredProc = spGet
     Left = 296
@@ -3170,7 +3260,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PersonalId55'
+        Name = 'PersonalId5'
         Value = Null
         Component = FormParams
         ComponentItem = 'PersonalId5'
@@ -3196,6 +3286,96 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Value = Null
         Component = FormParams
         ComponentItem = 'PositionName5'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalId6'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PersonalId6'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalName6'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PersonalName6'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionId6'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PositionId6'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionName6'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PositionName6'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalId7'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PersonalId75'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalName7'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PersonalName7'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionId7'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PositionId7'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionName7'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PositionName7'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalId8'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PersonalId8'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalName8'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PersonalName8'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionId8'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PositionId8'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionName8'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PositionName8'
         DataType = ftString
         MultiSelectSeparator = ','
       end

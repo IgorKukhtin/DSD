@@ -2,7 +2,8 @@
 
 -- DROP FUNCTION IF EXISTS gpUpdate_Scale_Movement_PersonalComlete (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpUpdate_Scale_Movement_PersonalComlete (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_Scale_Movement_PersonalComlete (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpUpdate_Scale_Movement_PersonalComlete (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Scale_Movement_PersonalComlete (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Scale_Movement_PersonalComlete(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
@@ -11,11 +12,17 @@ CREATE OR REPLACE FUNCTION gpUpdate_Scale_Movement_PersonalComlete(
     IN inPersonalId3         Integer   , -- Ключ объекта
     IN inPersonalId4         Integer   , -- Ключ объекта
     IN inPersonalId5         Integer   , -- Ключ объекта
+    IN inPersonalId6         Integer   , -- Ключ объекта
+    IN inPersonalId7         Integer   , -- Ключ объекта
+    IN inPersonalId8         Integer   , -- Ключ объекта
     IN inPositionId1         Integer   , -- Ключ объекта
     IN inPositionId2         Integer   , -- Ключ объекта
     IN inPositionId3         Integer   , -- Ключ объекта
     IN inPositionId4         Integer   , -- Ключ объекта
     IN inPositionId5         Integer   , -- Ключ объекта
+    IN inPositionId6         Integer   , -- Ключ объекта
+    IN inPositionId7         Integer   , -- Ключ объекта
+    IN inPositionId8         Integer   , -- Ключ объекта
     IN inPersonalId1_Stick   Integer   , -- Ключ объекта
     IN inPositionId1_Stick   Integer   , -- Ключ объекта
     IN inSession             TVarChar    -- сессия пользователя
@@ -41,6 +48,14 @@ BEGIN
      -- сохранили связь с <Сотрудник комплектовщик 5>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalComplete5(), inMovementId, inPersonalId5);
 
+     -- сохранили связь с <Сотрудник комплектовщик 6>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalComplete6(), inMovementId, inPersonalId6);
+     -- сохранили связь с <Сотрудник комплектовщик 7>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalComplete7(), inMovementId, inPersonalId7);
+     -- сохранили связь с <Сотрудник комплектовщик 8>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalComplete8(), inMovementId, inPersonalId8);
+
+
      -- сохранили связь с <Должность комплектовщик 1>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PositionComplete1(), inMovementId, inPositionId1);
      -- сохранили связь с <Должность комплектовщик 2>
@@ -51,6 +66,14 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PositionComplete4(), inMovementId, inPositionId4);
      -- сохранили связь с <Должность комплектовщик 5>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PositionComplete5(), inMovementId, inPositionId5);
+
+     -- сохранили связь с <Должность комплектовщик 6>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PositionComplete6(), inMovementId, inPositionId6);
+     -- сохранили связь с <Должность комплектовщик 7>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PositionComplete7(), inMovementId, inPositionId7);
+     -- сохранили связь с <Должность комплектовщик 8>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PositionComplete8(), inMovementId, inPositionId8);
+
 
      -- сохранили связь с <Сотрудник Стикеровщик 1>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalStick1(), inMovementId, inPersonalId1_Stick);
@@ -67,6 +90,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 13.01.26         *
  30.04.19                                        *
  18.05.15                                        *
 */

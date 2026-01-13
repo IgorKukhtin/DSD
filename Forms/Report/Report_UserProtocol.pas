@@ -46,7 +46,6 @@ type
     GuidesUser: TdsdGuides;
     GuidesBranch: TdsdGuides;
     actRefreshIsDay: TdsdDataSetRefresh;
-    ExecuteDialog: TExecuteDialog;
     bbDialog: TdxBarButton;
     Color_Calc: TcxGridDBColumn;
     grChart: TcxGrid;
@@ -76,6 +75,7 @@ type
     cxLabel7: TcxLabel;
     edPosition: TcxButtonEdit;
     GuidesPosition: TdsdGuides;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

@@ -1031,10 +1031,6 @@
 				<Form>WeighingPartnerForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\WeighingPartnerJournal.pas">
-				<Form>WeighingPartnerJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_CheckTax.pas">
 				<Form>Report_CheckTaxForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -5784,6 +5780,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\Sale_PartionQEdit.pas">
 				<Form>Sale_PartionQEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\WeighingPartnerJournal.pas">
+				<Form>WeighingPartnerJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

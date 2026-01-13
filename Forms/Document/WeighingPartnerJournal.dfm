@@ -779,6 +779,51 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 120
       end
+      object PersonalCode6: TcxGridDBColumn
+        Caption = #1050#1086#1076'6 '#1089#1086#1090#1088'. '#1082#1086#1084#1087#1083'.'
+        DataBinding.FieldName = 'PersonalCode6'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object PersonalName6: TcxGridDBColumn
+        Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082' 6'
+        DataBinding.FieldName = 'PersonalName6'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 120
+      end
+      object PersonalCode7: TcxGridDBColumn
+        Caption = #1050#1086#1076'7 '#1089#1086#1090#1088'. '#1082#1086#1084#1087#1083'.'
+        DataBinding.FieldName = 'PersonalCode7'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object PersonalName7: TcxGridDBColumn
+        Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082' 7'
+        DataBinding.FieldName = 'PersonalName7'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 120
+      end
+      object PersonalCode8: TcxGridDBColumn
+        Caption = #1050#1086#1076'8 '#1089#1086#1090#1088'. '#1082#1086#1084#1087#1083'.'
+        DataBinding.FieldName = 'PersonalCode8'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object PersonalName8: TcxGridDBColumn
+        Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082' 8'
+        DataBinding.FieldName = 'PersonalName8'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 120
+      end
       object PositionName1: TcxGridDBColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' '#1082#1086#1084#1087#1083'.1'
         DataBinding.FieldName = 'PositionName1'
@@ -814,6 +859,30 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
       object PositionName5: TcxGridDBColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' '#1082#1086#1084#1087#1083'.5'
         DataBinding.FieldName = 'PositionName5'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object PositionName6: TcxGridDBColumn
+        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' '#1082#1086#1084#1087#1083'.6'
+        DataBinding.FieldName = 'PositionName6'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object PositionName7: TcxGridDBColumn
+        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' '#1082#1086#1084#1087#1083'.7'
+        DataBinding.FieldName = 'PositionName7'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object PositionName8: TcxGridDBColumn
+        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' '#1082#1086#1084#1087#1083'.8'
+        DataBinding.FieldName = 'PositionName8'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter

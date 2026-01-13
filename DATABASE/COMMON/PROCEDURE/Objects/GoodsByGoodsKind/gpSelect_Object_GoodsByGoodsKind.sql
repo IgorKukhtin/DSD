@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
              , MeasureName TVarChar
              , Weight TFloat
-             , WeightPackageKorob TFloat, WeightPackage TFloat, WeightPackageSticker TFloat
+             , WeightPackageKorob TFloat, WeightPackage TFloat, WeightPackageSticker TFloat, WeightPackageSticker_real TFloat
              , WeightTotal TFloat, ChangePercentAmount TFloat
              , WeightMin TFloat, WeightMax TFloat
              , Height TFloat, Length TFloat, Width TFloat
@@ -197,6 +197,7 @@ BEGIN
            , COALESCE (ObjectFloat_WeightPackageKorob.ValueData,0)  ::TFloat  AS WeightPackageKorob
            , COALESCE (ObjectFloat_WeightPackage.ValueData,0)       ::TFloat  AS WeightPackage
            , COALESCE (ObjectFloat_WeightPackageSticker.ValueData,0)::TFloat  AS WeightPackageSticker
+           , COALESCE (ObjectFloat_WeightPackageSticker_real.ValueData,0)::TFloat AS WeightPackageSticker_real
            , COALESCE (ObjectFloat_WeightTotal.ValueData,0)         ::TFloat  AS WeightTotal
            , COALESCE (ObjectFloat_ChangePercentAmount.ValueData,0) ::TFloat  AS ChangePercentAmount
 
@@ -370,6 +371,10 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackageSticker
                                   ON ObjectFloat_WeightPackageSticker.ObjectId = Object_GoodsByGoodsKind_View.Id
                                  AND ObjectFloat_WeightPackageSticker.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightPackageSticker()
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackageSticker_real
+                                  ON ObjectFloat_WeightPackageSticker_real.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                 AND ObjectFloat_WeightPackageSticker_real.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightPackageSticker_real()
 
             LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
                                   ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
@@ -693,12 +698,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Object_GoodsByGoodsKind (TVarChar) OWNER TO postgres;
-
+--ALTER FUNCTION gpSelect_Object_GoodsByGoodsKind (TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 13.01.26        *
  27.05.25        *
  22.05.25        * 
  21.03.25        * WeightPackageKorob 
