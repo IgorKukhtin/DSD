@@ -28,8 +28,8 @@ object InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 42370d
-      Properties.ReadOnly = True
+      EditValue = 46023d
+      Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -38,8 +38,8 @@ object InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 42370d
-      Properties.ReadOnly = True
+      EditValue = 46023d
+      Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -624,9 +624,9 @@ object InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
       Category = 0
     end
     object bbStatic: TdxBarStatic
-      Caption = '     '
       Category = 0
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel
@@ -728,6 +728,9 @@ object InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -746,7 +749,7 @@ object InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -811,7 +814,7 @@ object InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -1124,7 +1127,7 @@ object InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -1388,10 +1391,14 @@ object InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
     Left = 248
     Top = 216
   end
@@ -1517,7 +1524,7 @@ object InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
       end
       item
         Name = 'inIsLastComplete'
-        Value = 'True'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

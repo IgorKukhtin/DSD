@@ -28,8 +28,8 @@ object InvoiceJournalDetailChoiceForm: TInvoiceJournalDetailChoiceForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 43466d
-      Properties.ReadOnly = True
+      EditValue = 46023d
+      Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -38,8 +38,8 @@ object InvoiceJournalDetailChoiceForm: TInvoiceJournalDetailChoiceForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 43466d
-      Properties.ReadOnly = True
+      EditValue = 46023d
+      Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -632,9 +632,9 @@ object InvoiceJournalDetailChoiceForm: TInvoiceJournalDetailChoiceForm
       Category = 0
     end
     object bbStatic: TdxBarStatic
-      Caption = '     '
       Category = 0
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel
@@ -1474,6 +1474,7 @@ object InvoiceJournalDetailChoiceForm: TInvoiceJournalDetailChoiceForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 248
     Top = 216
