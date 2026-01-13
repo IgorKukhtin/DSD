@@ -98,7 +98,7 @@ type
     bbMovementItemProtocol: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
-    spSelectPrintOld: TdsdStoredProc;
+    spSelectPrint: TdsdStoredProc;
     bbCalcAmountPartner: TdxBarControlContainerItem;
     actGoodsKindChoice: TOpenChoiceForm;
     spInsertMaskMIMaster: TdsdStoredProc;

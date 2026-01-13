@@ -708,8 +708,8 @@ object OrderPartnerForm: TOrderPartnerForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = Panel4
-        ExplicitLeft = 3
-        ExplicitTop = 105
+        ExplicitLeft = -1
+        ExplicitTop = 91
       end
       object Panel4: TPanel
         Left = 0
@@ -1276,6 +1276,14 @@ object OrderPartnerForm: TOrderPartnerForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintAgilis'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbsProtocol'
         end
         item
@@ -1319,7 +1327,7 @@ object OrderPartnerForm: TOrderPartnerForm
       Category = 0
     end
     object bbPrintAgilis: TdxBarButton
-      Action = actPrintAgilis
+      Action = actPrint
       Category = 0
     end
     object bbGridToExel: TdxBarButton
@@ -1751,10 +1759,10 @@ object OrderPartnerForm: TOrderPartnerForm
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectPrintOld
+      StoredProc = spSelectPrint
       StoredProcList = <
         item
-          StoredProc = spSelectPrintOld
+          StoredProc = spSelectPrint
         end>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
@@ -1795,8 +1803,8 @@ object OrderPartnerForm: TOrderPartnerForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Income'
-      ReportNameParam.Value = 'PrintMovement_Income'
+      ReportName = 'PrintMovement_OrderPartner'
+      ReportNameParam.Value = 'PrintMovement_OrderPartner'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -3231,7 +3239,7 @@ object OrderPartnerForm: TOrderPartnerForm
     Left = 1028
     Top = 86
   end
-  object spSelectPrintOld: TdsdStoredProc
+  object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_OrderPartner_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
@@ -3252,8 +3260,8 @@ object OrderPartnerForm: TOrderPartnerForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 975
-    Top = 216
+    Left = 967
+    Top = 336
   end
   object spInsertMaskMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_OrderPartner'
@@ -3401,8 +3409,8 @@ object OrderPartnerForm: TOrderPartnerForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1048
-    Top = 200
+    Left = 1144
+    Top = 160
   end
   object spSelectPrintOrderConfirmation: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Product_OrderConfirmationPrint'
