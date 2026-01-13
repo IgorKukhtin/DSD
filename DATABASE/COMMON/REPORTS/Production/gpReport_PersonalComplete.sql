@@ -93,7 +93,13 @@ BEGIN
                             SELECT zc_MovementLinkObject_PersonalComplete4() AS PersonalDescId
                            UNION ALL
                             SELECT zc_MovementLinkObject_PersonalComplete5() AS PersonalDescId
-                          UNION ALL
+                           UNION ALL
+                            SELECT zc_MovementLinkObject_PersonalComplete6() AS PersonalDescId
+                           UNION ALL
+                            SELECT zc_MovementLinkObject_PersonalComplete7() AS PersonalDescId
+                           UNION ALL
+                            SELECT zc_MovementLinkObject_PersonalComplete8() AS PersonalDescId
+                           UNION ALL
                            SELECT zc_MovementLinkObject_PersonalStick1()     AS PersonalDescId
                            )
         -- Все документы
@@ -484,6 +490,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.01.26         *
  26.06.23         *
  12.07.19         *
  17.12.18         * add PersonalComplete5
