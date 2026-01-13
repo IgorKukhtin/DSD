@@ -16,6 +16,11 @@ $BODY$
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       vbUserId:= lpGetUserBySession (inSession);
+      
+      /*IF CURRENT_TIMESTAMP <= '12.01.2026 7:55'
+      THEN
+          RETURN;
+      END IF;*/
 
       RETURN QUERY
         SELECT Object.Id
@@ -63,6 +68,14 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Ярошенко Р.Ф.
   28.04.17                                                       *
+*/
+
+/*
+-- снимаются задачи
+select pid, waiting, query_start, Query, *, pg_cancel_backend(pId) 
+from pg_stat_activity as a 
+    join (SELECT '%' || name || '%'  as name FROM gpSelect_Object_ReportExternal (inSession:= zfCalc_UserAdmin())) as x on query ilike x.name
+where state = 'active' and pid <> 9645
 */
 
 -- тест
