@@ -354,6 +354,9 @@ type
     spInsertUpdateMIChild: TdsdStoredProc;
     actUpdateChildDS: TdsdUpdateDataSet;
     isSign_ch2: TcxGridDBColumn;
+    Sign_Child: TcxGridDBColumn;
+    GoodsName_Child: TcxGridDBColumn;
+    InvNumber_Child: TcxGridDBColumn;
   private
   public
   end;

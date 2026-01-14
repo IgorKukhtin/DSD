@@ -1515,6 +1515,28 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             Options.Editing = False
             Width = 70
           end
+          object Sign_Child: TcxGridDBColumn
+            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' ('#1044#1072'/'#1053#1077#1090') ('#1047#1072#1103#1074#1082#1072' '#1058#1052#1062')'
+            DataBinding.FieldName = 'Sign_Child'
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object GoodsName_Child: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088' ('#1047#1072#1103#1074#1082#1072' '#1058#1052#1062')'
+            DataBinding.FieldName = 'GoodsName_Child'
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Width = 100
+          end
+          object InvNumber_Child: TcxGridDBColumn
+            Caption = #8470' '#1079#1072#1103#1074#1082#1080' ('#1047#1072#1103#1074#1082#1072' '#1058#1052#1062')'
+            DataBinding.FieldName = 'InvNumber_Child'
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Width = 100
+          end
         end
         object cxGridLevel: TcxGridLevel
           GridView = cxGridDBTableView
@@ -2961,6 +2983,9 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       StoredProcList = <
         item
           StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spSelectMIChild
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
@@ -3244,7 +3269,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       View = cxGridDBTableViewChild
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1047#1072#1103#1074#1082#1072' '#1058#1052#1062'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1047#1072#1103#1074#1082#1072' '#1058#1052#1062'>'
       ImageIndex = 0
     end
     object CompleteMovement: TChangeGuidesStatus
@@ -4818,9 +4843,27 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsName_child'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsName_child'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumber_child'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumber_child'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 46
+    Left = 62
     Top = 359
   end
   object MasterViewAddOn: TdsdDBViewAddOn
@@ -5994,7 +6037,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       end>
     PackSize = 1
     Left = 136
-    Top = 432
+    Top = 464
   end
   object ExportDS: TDataSource
     DataSet = ExportCDS
@@ -6192,8 +6235,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 86
-    Top = 367
+    Left = 102
+    Top = 391
   end
   object GuidesInsert: TdsdGuides
     KeyField = 'Id'

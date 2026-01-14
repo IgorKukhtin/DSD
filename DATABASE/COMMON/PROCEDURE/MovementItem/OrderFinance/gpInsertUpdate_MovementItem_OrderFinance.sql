@@ -5,8 +5,10 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integ
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar);
 
+ 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinance(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId            Integer   , -- Ключ объекта <Документ>
@@ -30,7 +32,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinance(
     IN inIsAmountPlan_3        Boolean    , --
     IN inIsAmountPlan_4        Boolean    , --
     IN inIsAmountPlan_5        Boolean    , --
-    IN inComment               TVarChar  , --
+    IN inComment               TVarChar   , --
+    --child
+    IN inGoodsName_child       TVarChar  , -- Товары
+    IN inInvNumber_child       TVarChar  , -- 
     IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -38,6 +43,9 @@ AS
 $BODY$
    DECLARE vbUserId   Integer;
    DECLARE vbOperDate_start TDateTime;
+           vbGoodsName_child TVarChar;
+           vbInvNumber_child TVarChar;
+           vbMIId_child      Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderFinance());
@@ -259,7 +267,75 @@ BEGIN
     -- вернули
     ioAmount_old:= inAmount;
 
-
+    --могут внести данные для чайлд
+    
+    --проверка
+    --сохраненные значение  
+    SELECT STRING_AGG (DISTINCT COALESCE (MIString_GoodsName.ValueData, ''), '; ') AS GoodsName
+         , STRING_AGG (DISTINCT COALESCE (MIString_InvNumber.ValueData, ''), '; ') AS InvNumber
+  INTO vbGoodsName_child, vbInvNumber_child
+    FROM MovementItem
+        LEFT JOIN MovementItemString AS MIString_GoodsName
+                                     ON MIString_GoodsName.MovementItemId = MovementItem.Id
+                                    AND MIString_GoodsName.DescId = zc_MIString_GoodsName()
+        LEFT JOIN MovementItemString AS MIString_InvNumber
+                                     ON MIString_InvNumber.MovementItemId = MovementItem.Id
+                                    AND MIString_InvNumber.DescId = zc_MIString_InvNumber()
+    WHERE MovementItem.MovementId = inMovementId
+      AND MovementItem.DescId     = zc_MI_Child()
+      AND MovementItem.isErased   = FALSE
+      AND MovementItem.ParentId   = ioId;
+    --                   
+    IF COALESCE (inInvNumber_child, '') <> COALESCE (vbInvNumber_child,'')
+    OR COALESCE (inGoodsName_child, '') <> COALESCE (vbGoodsName_child,'')
+    THEN
+        -- проверка что строка child одна
+        IF (SELECT COUNT(*)
+            FROM MovementItem 
+            WHERE MovementItem.DescId = zc_MI_Child()
+              AND MovementItem.ParentId = ioId
+              AND MovementItem.MovementId = inMovementId
+              AND MovementItem.isErased = FALSE
+            ) > 1
+        THEN
+            RAISE EXCEPTION 'Ошибка.Элементов более одного. Корректировка возможна только в таблице <Заявка ТМЦ>.';
+        ELSE
+            vbMIId_child := (SELECT MovementItem.Id
+                             FROM MovementItem 
+                             WHERE MovementItem.DescId = zc_MI_Child()
+                               AND MovementItem.ParentId = ioId
+                               AND MovementItem.MovementId = inMovementId
+                               AND MovementItem.isErased = FALSE);
+    
+            --сохраненные значение
+            vbInvNumber_child := (SELECT MIS.ValueData FROM MovementItemString AS MIS WHERE MIS.MovementItemId = vbMIId_child AND MIS.DescId = zc_MIString_InvNumber());
+            --сохраненные значение
+            vbGoodsName_child := (SELECT MIS.ValueData FROM MovementItemString AS MIS WHERE MIS.MovementItemId = vbMIId_child AND MIS.DescId = zc_MIString_GoodsName()); 
+            
+            IF COALESCE (inInvNumber_child, '') <> COALESCE (vbInvNumber_child,'')
+            OR COALESCE (inGoodsName_child, '') <> COALESCE (vbGoodsName_child, '')
+            THEN
+                IF COALESCE (vbMIId_child,0) = 0
+                THEN
+                     -- сохранили <Элемент документа>
+                     vbMIId_child := lpInsertUpdate_MovementItem (0, zc_MI_Child(), Null, inMovementId, inAmount, ioId);
+                END IF;
+            
+                IF COALESCE (vbInvNumber_child,'') <> COALESCE (inInvNumber_child, '')
+                THEN
+                    -- сохранили свойство <>
+                    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_InvNumber(), vbMIId_child, inInvNumber_child);
+                END IF;
+                
+                IF COALESCE (vbGoodsName_child,'') <> COALESCE (inGoodsName_child, '')
+                THEN    
+                    -- сохранили свойство <>
+                    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GoodsName(), vbMIId_child, inGoodsName_child);
+                END IF;
+            END IF
+        END IF;
+    END IF;
+    
     -- тест
     if vbUserId IN (9457) then RAISE EXCEPTION 'Админ.Test Ok. outAmountPlan_total =  <%>', outAmountPlan_total; end if;
 
