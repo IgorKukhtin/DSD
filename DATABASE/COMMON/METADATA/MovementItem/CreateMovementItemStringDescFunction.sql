@@ -47,7 +47,11 @@ CREATE OR REPLACE FUNCTION zc_MIString_Model() RETURNS Integer AS $BODY$BEGIN RE
 INSERT INTO MovementItemStringDesc (Code, ItemName)
   SELECT 'zc_MIString_Model', 'Модель' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_Model');
 
+CREATE OR REPLACE FUNCTION zc_MIString_InvNumber() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_InvNumber'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_InvNumber', '№ заявки' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_InvNumber');
 
+    
    
 
 ----!!!!!!Farmacy
