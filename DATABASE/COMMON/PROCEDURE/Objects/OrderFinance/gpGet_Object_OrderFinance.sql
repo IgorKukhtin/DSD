@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Comment TVarChar
              , isStatus_off Boolean, isOperDate Boolean
              , isPlan_1 Boolean, isPlan_2 Boolean, isPlan_3 Boolean, isPlan_4 Boolean, isPlan_5 Boolean
+             , isSB Boolean
              , isErased Boolean
              )
 AS
@@ -72,6 +73,8 @@ BEGIN
            , FALSE     ::Boolean AS isPlan_3
            , FALSE     ::Boolean AS isPlan_4
            , FALSE     ::Boolean AS isPlan_5
+           
+           , FALSE     ::Boolean AS isSB
        
            , CAST (NULL AS Boolean) AS isErased;
    
@@ -118,6 +121,8 @@ BEGIN
             , COALESCE (ObjectBoolean_Plan_4.ValueData, FALSE)     ::Boolean AS isPlan_4
             , COALESCE (ObjectBoolean_Plan_5.ValueData, FALSE)     ::Boolean AS isPlan_5
           
+            , COALESCE (ObjectBoolean_SB.ValueData, FALSE)         ::Boolean AS isSB
+
             , Object_OrderFinance.isErased     AS isErased
            
        FROM Object AS Object_OrderFinance
@@ -197,6 +202,10 @@ BEGIN
            LEFT JOIN ObjectBoolean  AS ObjectBoolean_Plan_5 
                                     ON ObjectBoolean_Plan_5.ObjectId = Object_OrderFinance.Id
                                    AND ObjectBoolean_Plan_5.DescId = zc_ObjectBoolean_OrderFinance_Plan_5()
+
+           LEFT JOIN ObjectBoolean  AS ObjectBoolean_SB 
+                                    ON ObjectBoolean_SB.ObjectId = Object_OrderFinance.Id
+                                   AND ObjectBoolean_SB.DescId = zc_ObjectBoolean_OrderFinance_SB()
        WHERE Object_OrderFinance.Id = inId;
    END IF;
   
@@ -209,6 +218,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.01.26         *
  24.12.25         *
  08.12.25         *
  02.11.20         * add BankName

@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, OperDate_Amou
              , PositionName_insert TVarChar
              , Date_SignWait_1 TDateTime, Date_Sign_1 TDateTime
              , isSignWait_1 Boolean, isSign_1 Boolean
+             , Date_SignSB TDateTime, isSignSB Boolean 
              , TotalText_1 TVarChar, TotalText_2 TVarChar, TotalText_3 TVarChar
              )
 AS
@@ -204,7 +205,10 @@ BEGIN
              , CAST (NULL AS TDateTime)                         AS Date_SignWait_1
              , CAST (NULL AS TDateTime)                         AS Date_Sign_1
              , FALSE                                 ::Boolean  AS isSignWait_1
-             , FALSE                                 ::Boolean  AS isSign_1
+             , FALSE                                 ::Boolean  AS isSign_1 
+             
+             , CAST (NULL AS TDateTime)                         AS Date_SignSB
+             , FALSE                                 ::Boolean  AS isSignSB
 
              , CASE WHEN tmpOrderFinance.OrderFinanceCode = 1 THEN 'Говядина на неделю:'        ELSE 'Группа-0:'   END :: TVarChar AS TotalText_1
              , CASE WHEN tmpOrderFinance.OrderFinanceCode = 1 THEN 'Живой вес на неделю :'      ELSE 'нет группы:' END :: TVarChar AS TotalText_2
@@ -282,6 +286,9 @@ BEGIN
            , CASE WHEN vbUserId = 5 AND 1=0 THEN MovementDate_Sign_1.ValueData     - INTERVAL '12 HOUR' ELSE MovementDate_Sign_1.ValueData     END ::TDateTime AS Date_Sign_1
            , COALESCE (MovementBoolean_SignWait_1.ValueData, FALSE) ::Boolean   AS isSignWait_1
            , COALESCE (MovementBoolean_Sign_1.ValueData, FALSE)     ::Boolean   AS isSign_1
+           
+           , MovementDate_SignSB.ValueData                          ::TDateTime AS Date_SignSB
+           , COALESCE (MovementBoolean_SignSB.ValueData, FALSE)     ::Boolean   AS isSignSB
 
            , CASE WHEN Object_OrderFinance.ObjectCode = 1 THEN 'Говядина на неделю:'        ELSE 'Группа-0:'   END :: TVarChar AS TotalText_1
            , CASE WHEN Object_OrderFinance.ObjectCode = 1 THEN 'Живой вес на неделю :'      ELSE 'нет группы:' END :: TVarChar AS TotalText_2
@@ -325,12 +332,19 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_Sign_1
                                    ON MovementDate_Sign_1.MovementId = Movement.Id
                                   AND MovementDate_Sign_1.DescId = zc_MovementDate_Sign_1()
+            LEFT JOIN MovementDate AS MovementDate_SignSB
+                                   ON MovementDate_SignSB.MovementId = Movement.Id
+                                  AND MovementDate_SignSB.DescId = zc_MovementDate_SignSB()
+
             LEFT JOIN MovementBoolean AS MovementBoolean_SignWait_1
                                       ON MovementBoolean_SignWait_1.MovementId = Movement.Id
                                      AND MovementBoolean_SignWait_1.DescId = zc_MovementBoolean_SignWait_1()
             LEFT JOIN MovementBoolean AS MovementBoolean_Sign_1
                                       ON MovementBoolean_Sign_1.MovementId = Movement.Id
                                      AND MovementBoolean_Sign_1.DescId = zc_MovementBoolean_Sign_1()
+            LEFT JOIN MovementBoolean AS MovementBoolean_SignSB
+                                      ON MovementBoolean_SignSB.MovementId = Movement.Id
+                                     AND MovementBoolean_SignSB.DescId = zc_MovementBoolean_SignSB()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
                                          ON MovementLinkObject_Insert.MovementId = Movement.Id
@@ -406,6 +420,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.01.26         *
  09.11.25         *
  29.07.19         *
 */

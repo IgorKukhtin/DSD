@@ -290,6 +290,13 @@
     TabOrder = 34
     Width = 140
   end
+  object cbSB: TcxCheckBox
+    Left = 180
+    Top = 348
+    Caption = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1057#1041' ('#1076#1072'/'#1085#1077#1090')'
+    TabOrder = 35
+    Width = 169
+  end
   object ActionList: TActionList
     Left = 192
     Top = 98
@@ -482,6 +489,14 @@
         Name = 'inisPlan_5'
         Value = Null
         Component = cbisPlan_5
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSB'
+        Value = Null
+        Component = cbSB
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -730,6 +745,13 @@
         Name = 'isPlan_5'
         Value = Null
         Component = cbisPlan_5
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isSB'
+        Value = Null
+        Component = cbSB
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

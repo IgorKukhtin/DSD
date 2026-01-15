@@ -357,6 +357,14 @@ type
     Sign_Child: TcxGridDBColumn;
     GoodsName_Child: TcxGridDBColumn;
     InvNumber_Child: TcxGridDBColumn;
+    ceDate_SignSB: TcxDateEdit;
+    cbSignSB: TcxCheckBox;
+    spUpdate_SignSB_Yes: TdsdStoredProc;
+    spUpdate_SignSB_No: TdsdStoredProc;
+    actUpdate_SignSB_Yes: TdsdExecStoredProc;
+    actUpdate_SignSB_No: TdsdExecStoredProc;
+    bbUpdate_SignSB_Yes: TdxBarButton;
+    bbUpdate_SignSB_No: TdxBarButton;
   private
   public
   end;

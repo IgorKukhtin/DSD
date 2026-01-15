@@ -302,6 +302,14 @@ inherited OrderFinanceForm: TOrderFinanceForm
             Options.Editing = False
             Width = 70
           end
+          object isSB: TcxGridDBColumn
+            Caption = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1057#1041' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isSB'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
         end
       end
       object cxGrid1: TcxGrid

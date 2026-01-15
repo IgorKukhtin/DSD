@@ -77,6 +77,7 @@ type
     cbisPlan_3: TcxCheckBox;
     cbisPlan_4: TcxCheckBox;
     cbisPlan_5: TcxCheckBox;
+    cbSB: TcxCheckBox;
   private
     { Private declarations }
   public

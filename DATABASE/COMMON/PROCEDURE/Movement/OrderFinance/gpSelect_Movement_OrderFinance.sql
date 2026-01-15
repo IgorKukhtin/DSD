@@ -29,6 +29,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , PositionName_insert TVarChar
              , Date_SignWait_1 TDateTime, Date_Sign_1 TDateTime
              , isSignWait_1 Boolean, isSign_1 Boolean
+             , Date_SignSB TDateTime, isSignSB Boolean 
               )
 AS
 $BODY$
@@ -52,7 +53,6 @@ BEGIN
         /*, tmpRoleAccessKey AS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND NOT EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
                          UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
                               )*/
-
        --
        SELECT
              Movement.Id                            AS Id
@@ -110,6 +110,9 @@ BEGIN
            , COALESCE (MovementDate_Sign_1.ValueData, NULL)         ::TDateTime AS Date_Sign_1
            , CASE WHEN MovementBoolean_Sign_1.ValueData = TRUE THEN FALSE ELSE COALESCE (MovementBoolean_SignWait_1.ValueData, FALSE) END ::Boolean AS isSignWait_1 
            , COALESCE (MovementBoolean_Sign_1.ValueData, FALSE)     ::Boolean   AS isSign_1
+
+           , MovementDate_SignSB.ValueData                          ::TDateTime AS Date_SignSB
+           , COALESCE (MovementBoolean_SignSB.ValueData, FALSE)     ::Boolean   AS isSignSB
        FROM (SELECT tmpMovement.*
              FROM (SELECT Movement.Id  
                         , MovementFloat_WeekNumber.ValueData                            AS WeekNumber
@@ -232,6 +235,13 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Sign_1
                                       ON MovementBoolean_Sign_1.MovementId = Movement.Id
                                      AND MovementBoolean_Sign_1.DescId = zc_MovementBoolean_Sign_1()
+
+            LEFT JOIN MovementDate AS MovementDate_SignSB
+                                   ON MovementDate_SignSB.MovementId = Movement.Id
+                                  AND MovementDate_SignSB.DescId = zc_MovementDate_SignSB()
+            LEFT JOIN MovementBoolean AS MovementBoolean_SignSB
+                                      ON MovementBoolean_SignSB.MovementId = Movement.Id
+                                     AND MovementBoolean_SignSB.DescId = zc_MovementBoolean_SignSB()
       ;
 
 END;
@@ -241,6 +251,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 14.01.25         *
  08.11.25         *
  29.07.19         *
 */

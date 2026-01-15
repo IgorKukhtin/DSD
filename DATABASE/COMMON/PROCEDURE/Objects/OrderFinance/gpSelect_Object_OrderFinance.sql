@@ -25,7 +25,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MemberId_2 Integer, MemberCode_2 Integer, MemberName_2 TVarChar
              , Comment TVarChar
              , isStatus_off Boolean, isOperDate Boolean
-             , isPlan_1 Boolean, isPlan_2 Boolean, isPlan_3 Boolean, isPlan_4 Boolean, isPlan_5 Boolean 
+             , isPlan_1 Boolean, isPlan_2 Boolean, isPlan_3 Boolean, isPlan_4 Boolean, isPlan_5 Boolean
+             , isSB Boolean 
              , isErased Boolean
              )
 AS
@@ -105,6 +106,8 @@ BEGIN
             , COALESCE (ObjectBoolean_Plan_3.ValueData, FALSE)     ::Boolean AS isPlan_3
             , COALESCE (ObjectBoolean_Plan_4.ValueData, FALSE)     ::Boolean AS isPlan_4
             , COALESCE (ObjectBoolean_Plan_5.ValueData, FALSE)     ::Boolean AS isPlan_5
+            
+            , COALESCE (ObjectBoolean_SB.ValueData, FALSE)         ::Boolean AS isSB
 
             , Object_OrderFinance.isErased     AS isErased
 
@@ -201,6 +204,10 @@ BEGIN
                                     ON ObjectBoolean_Plan_5.ObjectId = Object_OrderFinance.Id
                                    AND ObjectBoolean_Plan_5.DescId = zc_ObjectBoolean_OrderFinance_Plan_5()
 
+           LEFT JOIN ObjectBoolean  AS ObjectBoolean_SB 
+                                    ON ObjectBoolean_SB.ObjectId = Object_OrderFinance.Id
+                                   AND ObjectBoolean_SB.DescId = zc_ObjectBoolean_OrderFinance_SB()
+
        WHERE Object_OrderFinance.DescId = zc_Object_OrderFinance()
          AND (Object_OrderFinance.isErased = FALSE OR inisErased = TRUE);
   
@@ -212,6 +219,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 14.01.26         *
  24.12.25         *
  08.12.25         *
  02.11.20         * add inisErased

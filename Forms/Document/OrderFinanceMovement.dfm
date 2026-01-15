@@ -26,6 +26,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitLeft = 898
+    ExplicitTop = 65
     object edInvNumber: TcxTextEdit
       Left = 232
       Top = 19
@@ -358,8 +360,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Style.IsFontAssigned = True
     end
     object edOKPO_search: TcxTextEdit
-      Left = 120
-      Top = 173
+      Left = 123
+      Top = 174
       TabOrder = 34
       DesignSize = (
         103
@@ -496,6 +498,26 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Style.IsFontAssigned = True
       TabOrder = 44
       Width = 103
+    end
+    object ceDate_SignSB: TcxDateEdit
+      Left = 458
+      Top = 173
+      EditValue = 42132d
+      Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+      Properties.EditFormat = 'dd.mm.yyyy hh:mm'
+      Properties.Kind = ckDateTime
+      Properties.ReadOnly = True
+      Properties.ValidateOnEnter = False
+      TabOrder = 45
+      Width = 116
+    end
+    object cbSignSB: TcxCheckBox
+      Left = 580
+      Top = 173
+      Caption = #1044#1072#1090#1072' ('#1042#1080#1079#1072' '#1057#1041')'
+      Properties.ReadOnly = True
+      TabOrder = 46
+      Width = 101
     end
   end
   object cxPageControl: TcxPageControl
@@ -2662,6 +2684,18 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         item
           Visible = True
           ItemName = 'bbUpdate_Sign_1_No'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_SignSB_Yes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_SignSB_No'
         end>
     end
     object bbUpdate_SignWait_1_Yes: TdxBarButton
@@ -2717,6 +2751,14 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     end
     object bbSetUnErasedChild: TdxBarButton
       Action = SetUnErasedChild
+      Category = 0
+    end
+    object bbUpdate_SignSB_Yes: TdxBarButton
+      Action = actUpdate_SignSB_Yes
+      Category = 0
+    end
+    object bbUpdate_SignSB_No: TdxBarButton
+      Action = actUpdate_SignSB_No
       Category = 0
     end
   end
@@ -3023,6 +3065,24 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1087#1083#1072#1085' '#1087#1086' '#1087#1086#1095#1090#1077' (XLS)'
       ImageIndex = 53
     end
+    object DeleteMovement: TChangeGuidesStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spChangeStatus
+      StoredProcList = <
+        item
+          StoredProc = spChangeStatus
+        end
+        item
+        end
+        item
+        end>
+      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      ImageIndex = 13
+      Status = mtDelete
+      Guides = StatusGuides
+    end
     object actExport_New: TMultiAction
       Category = 'Export_file'
       MoveParams = <>
@@ -3290,23 +3350,35 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Status = mtComplete
       Guides = StatusGuides
     end
-    object DeleteMovement: TChangeGuidesStatus
+    object actUpdate_SignSB_No: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spChangeStatus
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SignSB_No
       StoredProcList = <
         item
-          StoredProc = spChangeStatus
+          StoredProc = spUpdate_SignSB_No
         end
         item
-        end
-        item
+          StoredProc = spGet
         end>
-      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
-      Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
-      ImageIndex = 13
-      Status = mtDelete
-      Guides = StatusGuides
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' <'#1042#1080#1079#1072' '#1057#1041'>'
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' <'#1042#1080#1079#1072' '#1057#1041'>'
+    end
+    object actUpdate_SignSB_Yes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SignSB_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SignSB_Yes
+        end
+        item
+          StoredProc = spGet
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1042#1080#1079#1072' '#1057#1041'>'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1042#1080#1079#1072' '#1057#1041'>'
     end
     object actMIContainer: TdsdOpenForm
       Category = 'DSDLib'
@@ -5337,6 +5409,20 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Component = edTotalText_3
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isSignSB'
+        Value = Null
+        Component = cbSignSB
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Date_SignSB'
+        Value = Null
+        Component = ceDate_SignSB
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216
@@ -5900,8 +5986,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 952
-    Top = 128
+    Left = 848
+    Top = 80
   end
   object GuidesBankAccount: TdsdGuides
     KeyField = 'Id'
@@ -5930,8 +6016,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 904
-    Top = 88
+    Left = 896
+    Top = 80
   end
   object spSelect_Export: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_OrderFinance_XML'
@@ -6625,7 +6711,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       end>
     PackSize = 1
     Left = 968
-    Top = 272
+    Top = 264
   end
   object spUpdate_Sign_1_Yes: TdsdStoredProc
     StoredProcName = 'gpUpdateMovement_OrderFinance_Sign_1'
@@ -7204,5 +7290,53 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     PackSize = 1
     Left = 800
     Top = 448
+  end
+  object spUpdate_SignSB_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_OrderFinance_SignSB'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSignSB'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 968
+    Top = 136
+  end
+  object spUpdate_SignSB_No: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_OrderFinance_SignSB'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSignSB'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 960
+    Top = 184
   end
 end
