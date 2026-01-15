@@ -73,8 +73,8 @@ inherited Week_DateForm: TWeek_DateForm
     object deStart: TcxDateEdit
       Left = 107
       Top = 5
-      EditValue = 45658d
-      Properties.ReadOnly = True
+      EditValue = 46023d
+      Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -83,8 +83,8 @@ inherited Week_DateForm: TWeek_DateForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 45658d
-      Properties.ReadOnly = True
+      EditValue = 46023d
+      Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1

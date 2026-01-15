@@ -32,7 +32,7 @@ BEGIN
  
      IF NOT EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.isErased = FALSE)
      THEN
-         RAISE EXCEPTION 'Ошибка. Строки документа не заполнены';
+         RAISE EXCEPTION 'Ошибка.Данные отчета не сформированы';
      END IF;
 
      vbStartDate_WeekNumber := (SELECT zfCalc_Week_StartDate (Movement.OperDate, MovementFloat_WeekNumber.ValueData) ::TDateTime AS StartDate_WeekNumber
@@ -44,7 +44,7 @@ BEGIN
                                 );
 
      SELECT ObjectHistory.ObjectId
-   INTO vbJuridicalId
+            INTO vbJuridicalId
      FROM ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_OKPO
           JOIN ObjectHistory ON ObjectHistory.Id = ObjectHistoryString_JuridicalDetails_OKPO.ObjectHistoryId
                             AND vbStartDate_WeekNumber BETWEEN ObjectHistory.StartDate AND ObjectHistory.EndDate
@@ -55,12 +55,12 @@ BEGIN
      --проверка
      IF COALESCE (vbJuridicalId,0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка. Не найдено Юр.лицо %, ОКПО %', inJuridicalName, inOKPO;
+         RAISE EXCEPTION 'Ошибка.Не найдено Юр.лицо = <%> с ОКПО = <%>.', inJuridicalName, inOKPO;
      END IF;   
            
 
      SELECT Object_Contract.Id  AS ContractId
-   INTO vbContractId
+           INTO vbContractId
      FROM ObjectLink AS ObjectLink_Contract_Juridical
           INNER JOIN Object AS Object_Contract ON Object_Contract.Id       = ObjectLink_Contract_Juridical.ObjectId
                                               AND Object_Contract.isErased = FALSE
@@ -80,7 +80,7 @@ BEGIN
      --проверка
      IF COALESCE (vbContractId,0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка. Не найден Договор %, для юр.лица %', inContract, inJuridicalName;
+         RAISE EXCEPTION 'Ошибка.Не найден Договор № = <%> для Юр.лицо = <%>', inContract, inJuridicalName;
      END IF;  
      
      vbId := (SELECT MovementItem.Id
@@ -98,7 +98,7 @@ BEGIN
      --проверка
      IF COALESCE (vbId,0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка. Не найдена строка для юр.лица %', inContract, inJuridicalName;
+         RAISE EXCEPTION 'Ошибка.Не найдена строка с долгом для Договор № <%> + <%>', inContract, inJuridicalName;
      END IF;
 
      
@@ -137,9 +137,11 @@ BEGIN
          PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_5(), vbId, inAmountPlan_5); 
      END IF;
 
-                  
      -- сохранили свойство <Дата предварительный план>
      PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Amount(), vbId, vbMIDate_Amount);
+
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovementFloat_TotalSummOrderFinance (inMovementId);
 
 END;
 $BODY$
