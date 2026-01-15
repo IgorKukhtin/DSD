@@ -1071,16 +1071,16 @@ BEGIN
      WHERE _tmpItem.ContainerId_Goods = 0
     ;
 
-/*     -- test - 30.12.2025
-    RAISE EXCEPTION 'ok - <%> <%>  <%>     <%> <%>  <%> '
- , (SELECT min (_tmpItem.PartionGoodsId) FROM _tmpItem WHERE _tmpItem.MovementItemId = 344882458)
- , (SELECT min (_tmpItem.PartionGoodsId) FROM _tmpItem WHERE _tmpItem.MovementItemId = 344882383)
- , (SELECT max (_tmpItem.PartionGoodsId) FROM _tmpItem WHERE _tmpItem.MovementItemId = 344882386)
-, (SELECT min (_tmpItem.ContainerId_Goods) FROM _tmpItem WHERE _tmpItem.MovementItemId = 344882458)
-, (SELECT min (_tmpItem.ContainerId_Goods) FROM _tmpItem WHERE _tmpItem.MovementItemId = 344882383)
-, (SELECT max (_tmpItem.ContainerId_Goods) FROM _tmpItem WHERE _tmpItem.MovementItemId = 344882386)
-;*/
-
+     -- test - 30.12.2025
+/*    RAISE EXCEPTION 'ok - <%> <%>  <%>     <%> <%>  <%> '
+ , (SELECT min (_tmpItem.PartionGoodsId) FROM _tmpItem WHERE _tmpItem.MovementItemId = 345332189)
+ , (SELECT min (_tmpItem.ContainerId_Goods) FROM _tmpItem WHERE _tmpItem.MovementItemId = 345332189)
+ , (SELECT max (_tmpItem.GoodsKindId) FROM _tmpItem WHERE _tmpItem.MovementItemId = 345332189)
+, (SELECT min (_tmpItem.PartionGoods) FROM _tmpItem WHERE _tmpItem.MovementItemId = 345332189)
+, (SELECT min (_tmpItem.ContainerId_Goods) FROM _tmpItem WHERE _tmpItem.MovementItemId = 345332189)
+, (SELECT max (_tmpItem.ContainerId_Goods) FROM _tmpItem WHERE _tmpItem.MovementItemId = 345332189)
+;
+*/
      -- определяется ContainerId_count для количественного учета батонов
      UPDATE _tmpItem SET ContainerId_count = lpInsertFind_Container (inContainerDescId   := zc_Container_CountCount()
                                                                    , inParentId          := _tmpItem.ContainerId_Goods
@@ -3273,7 +3273,29 @@ end if;
 
 
 
-     -- !!!формируется свойство <ContainerId>!!!
+     IF EXISTS (SELECT 1
+                FROM _tmpItem
+                      JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem.MovementItemId AND MIF.DescId = zc_MIFloat_ContainerId() AND MIF.ValueData > 0
+                      JOIN ContainerLinkObject AS CLO ON CLO.ContainerId = MIF.ValueData :: Integer AND CLO.DescId = zc_ContainerLinkObject_GoodsKind()
+                      JOIN Object ON Object.Id     = CLO.ObjectId
+                                 -- здесь ошибка
+                                 AND Object.DescId <> zc_Object_GoodsKind()
+
+               )
+     THEN
+         RAISE EXCEPTION 'System.Ошибка. Object.DescId <> zc_Object_GoodsKind on = <%>'
+                        , (SELECT COUNT(*)
+                           FROM _tmpItem
+                                 JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem.MovementItemId AND MIF.DescId = zc_MIFloat_ContainerId() AND MIF.ValueData > 0
+                                 JOIN ContainerLinkObject AS CLO ON CLO.ContainerId = MIF.ValueData :: Integer AND CLO.DescId = zc_ContainerLinkObject_GoodsKind()
+                                 JOIN Object ON Object.Id     = CLO.ObjectId
+                                            -- здесь ошибка
+                                            AND Object.DescId <> zc_Object_GoodsKind()
+                       
+                          );
+     END IF;
+
+     -- !!!ошибки нет, поэтому формируется свойство <ContainerId>!!!
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContainerId(), _tmpItem.MovementItemId, _tmpItem.ContainerId_Goods)
      FROM _tmpItem
     ;
