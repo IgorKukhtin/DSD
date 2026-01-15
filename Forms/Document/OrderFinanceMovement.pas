@@ -25,7 +25,7 @@ uses
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
   cxImageComboBox, dsdInternetAction, dsdCommon, ChoicePeriod, cxBlobEdit,
-  ExternalLoad;
+  ExternalLoad, cxSplitter;
 
 type
   TOrderFinanceMovementForm = class(TParentForm)
@@ -330,6 +330,33 @@ type
     actDoLoad: TExecuteImportSettingsAction;
     mactLoadExcel: TMultiAction;
     bbmactLoadExcel: TdxBarButton;
+    ChildDS: TDataSource;
+    ChildCDS: TClientDataSet;
+    ChildViewAddOn: TdsdDBViewAddOn;
+    cxGridChild: TcxGrid;
+    cxGridDBTableViewChild: TcxGridDBTableView;
+    InvNumber_ch2: TcxGridDBColumn;
+    Comment_ch2: TcxGridDBColumn;
+    GoodsName_ch2: TcxGridDBColumn;
+    Amount_ch2: TcxGridDBColumn;
+    IsErased_ch2: TcxGridDBColumn;
+    cxGridLevel2: TcxGridLevel;
+    cxSplitter_Bottom: TcxSplitter;
+    spSelectMIChild: TdsdStoredProc;
+    actInsertRecordChild: TInsertRecord;
+    spUnErasedMIchild: TdsdStoredProc;
+    spErasedMIchild: TdsdStoredProc;
+    SetErasedChild: TdsdUpdateErased;
+    SetUnErasedChild: TdsdUpdateErased;
+    bbInsertRecordChild: TdxBarButton;
+    bbSetErasedChild: TdxBarButton;
+    bbSetUnErasedChild: TdxBarButton;
+    spInsertUpdateMIChild: TdsdStoredProc;
+    actUpdateChildDS: TdsdUpdateDataSet;
+    isSign_ch2: TcxGridDBColumn;
+    Sign_Child: TcxGridDBColumn;
+    GoodsName_Child: TcxGridDBColumn;
+    InvNumber_Child: TcxGridDBColumn;
   private
   public
   end;

@@ -76,6 +76,10 @@ RETURNS TABLE (Id Integer
              , InsertDate TDateTime, UpdateDate TDateTime
              , isErased Boolean
              , Color_Group Integer
+
+             , GoodsName_Child TVarChar
+             , InvNumber_Child TVarChar
+             , Sign_Child      TVarChar
               )
 AS
 $BODY$
@@ -743,6 +747,27 @@ BEGIN
                                                                      , zc_MIFloat_AmountPlan_5()
                                                                       )
                                    )
+
+    , tmpMI_Child AS (SELECT MovementItem.ParentId
+                           , STRING_AGG (DISTINCT COALESCE (MIString_GoodsName.ValueData, ''), '; ') AS GoodsName
+                           , STRING_AGG (DISTINCT COALESCE (MIString_InvNumber.ValueData, ''), '; ') AS InvNumber
+                           , STRING_AGG (DISTINCT COALESCE (MIBoolean_Sign.ValueData, FALSE)::TVarChar, '; ') AS Sign
+                      FROM MovementItem
+                          LEFT JOIN MovementItemString AS MIString_GoodsName
+                                                       ON MIString_GoodsName.MovementItemId = MovementItem.Id
+                                                      AND MIString_GoodsName.DescId = zc_MIString_GoodsName()
+                          LEFT JOIN MovementItemString AS MIString_InvNumber
+                                                       ON MIString_InvNumber.MovementItemId = MovementItem.Id
+                                                      AND MIString_InvNumber.DescId = zc_MIString_InvNumber()
+                          LEFT JOIN MovementItemBoolean AS MIBoolean_Sign
+                                                        ON MIBoolean_Sign.MovementItemId = MovementItem.Id
+                                                       AND MIBoolean_Sign.DescId = zc_MIBoolean_Sign()                    
+                      WHERE MovementItem.MovementId = inMovementId
+                        AND MovementItem.DescId     = zc_MI_Child()
+                        AND MovementItem.isErased   = FALSE
+                      GROUP BY MovementItem.ParentId
+                     )
+
        -- Результат
        SELECT
              tmpMI.Id                         AS Id
@@ -845,6 +870,9 @@ BEGIN
 
            , zc_Color_White() ::Integer AS Color_Group
 
+           , tmpMI_Child.GoodsName ::TVarChar AS GoodsName_Child
+           , tmpMI_Child.InvNumber ::TVarChar AS InvNumber_Child
+           , tmpMI_Child.Sign      ::TVarChar AS Sign_Child
        FROM tmpData
             FULL JOIN tmpMI ON tmpMI.JuridicalId = tmpData.JuridicalId
                            AND tmpMI.ContractId  = tmpData.ContractId
@@ -899,6 +927,8 @@ BEGIN
                                  ON ObjectLink_Contract_Personal.ObjectId = View_Contract.ContractId
                                 AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Contract_Personal.ChildObjectId
+            
+            LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI.Id
      UNION
        SELECT
              tmpMI.Id                         AS Id
@@ -991,6 +1021,9 @@ BEGIN
 
            , zc_Color_Yelow() ::Integer AS Color_Group
 
+           , '' ::TVarChar AS GoodsName_Child
+           , '' ::TVarChar AS InvNumber_Child
+           , '' ::TVarChar AS Sign_Child
        FROM tmpInfoMoney_OrderF
             LEFT JOIN tmpMI ON tmpMI.JuridicalId = tmpInfoMoney_OrderF.InfoMoneyId --для итогового значения статью записываем в ObjectId
             LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = tmpInfoMoney_OrderF.InfoMoneyId
@@ -1216,6 +1249,27 @@ BEGIN
                       GROUP BY MILinkObject_MoneyPlace.ObjectId
                              , MILinkObject_Contract.ObjectId
                      )
+
+    , tmpMI_Child AS (SELECT MovementItem.ParentId
+                           , STRING_AGG (DISTINCT COALESCE (MIString_GoodsName.ValueData, ''), '; ') AS GoodsName
+                           , STRING_AGG (DISTINCT COALESCE (MIString_InvNumber.ValueData, ''), '; ') AS InvNumber
+                           , STRING_AGG (DISTINCT COALESCE (MIBoolean_Sign.ValueData, FALSE)::TVarChar, '; ') AS Sign
+                      FROM MovementItem
+                          LEFT JOIN MovementItemString AS MIString_GoodsName
+                                                       ON MIString_GoodsName.MovementItemId = MovementItem.Id
+                                                      AND MIString_GoodsName.DescId = zc_MIString_GoodsName()
+                          LEFT JOIN MovementItemString AS MIString_InvNumber
+                                                       ON MIString_InvNumber.MovementItemId = MovementItem.Id
+                                                      AND MIString_InvNumber.DescId = zc_MIString_InvNumber()
+                          LEFT JOIN MovementItemBoolean AS MIBoolean_Sign
+                                                        ON MIBoolean_Sign.MovementItemId = MovementItem.Id
+                                                       AND MIBoolean_Sign.DescId = zc_MIBoolean_Sign()                    
+                      WHERE MovementItem.MovementId = inMovementId
+                        AND MovementItem.DescId     = zc_MI_Child()
+                        AND MovementItem.isErased   = FALSE
+                      GROUP BY MovementItem.ParentId
+                     )
+
        -- Результат
        SELECT
              MovementItem.Id                  AS Id
@@ -1347,6 +1401,9 @@ BEGIN
 
            , zc_Color_White() ::Integer AS Color_Group
 
+           , tmpMI_Child.GoodsName ::TVarChar AS GoodsName_Child
+           , tmpMI_Child.InvNumber ::TVarChar AS InvNumber_Child
+           , tmpMI_Child.Sign      ::TVarChar AS Sign_Child
        FROM tmpMI AS MovementItem
 
 
@@ -1481,6 +1538,7 @@ BEGIN
             -- УП-статья + № группы
             LEFT JOIN tmpInfoMoney_OrderF ON tmpInfoMoney_OrderF.InfoMoneyId = Object_InfoMoney.Id
 
+            LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = MovementItem.Id
      UNION ALL
        SELECT
              tmpMI.Id                         AS Id
@@ -1572,6 +1630,10 @@ BEGIN
            , COALESCE (tmpMI.isErased, FALSE) AS isErased
 
            , zc_Color_Yelow() ::Integer AS Color_Group
+
+           , '' ::TVarChar AS GoodsName_Child
+           , '' ::TVarChar AS InvNumber_Child
+           , '' ::TVarChar AS Sign_Child
        FROM tmpInfoMoney_OrderF
             -- для итогов статья в ObjectId
             LEFT JOIN tmpMI ON tmpMI.ObjectId = tmpInfoMoney_OrderF.InfoMoneyId
@@ -1609,6 +1671,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.01.26         *
  10.12.25         *
  17.11.25         *
  18.02.21         * AmountStart
@@ -1617,4 +1680,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_OrderFinance (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
--- SELECT * FROM gpSelect_MovementItem_OrderFinance (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '9818')
+-- SELECT * FROM gpSelect_MovementItem_OrderFinance (inMovementId:= 33154757, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '9818')

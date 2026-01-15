@@ -299,11 +299,18 @@ CREATE OR REPLACE FUNCTION zc_MovementDate_Sign_1() RETURNS Integer AS $BODY$BEG
 INSERT INTO MovementDateDesc (Code, ItemName)
   SELECT 'zc_MovementDate_Sign_1', 'Дата/время Согласован-1' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Sign_1');
 
+CREATE OR REPLACE FUNCTION zc_MovementDate_SignSB() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_SignSB'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_SignSB', 'Дата/время когда поставили Виза СБ' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_SignSB');
+
+
+
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д. А.    Воробкало А.А.   Ярошенко Р.Ф.   Шаблий О.В.
+ 14.01.26         * zc_MovementDate_SignSB
  13.11.25         * zc_MovementDate_Sign_1
                     zc_MovementDate_SignWait_1 
  07.11.25         * zc_MovementDate_Update_report
