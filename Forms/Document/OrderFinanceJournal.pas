@@ -114,6 +114,7 @@ type
     isSign_1: TcxGridDBColumn;
     isSignWait_1: TcxGridDBColumn;
     TotalSumm_all: TcxGridDBColumn;
+    AmountPlan_total: TcxGridDBColumn;
   private
   public
   end;

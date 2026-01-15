@@ -124,6 +124,11 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalSumm_all
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountPlan_total
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -184,6 +189,11 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalSumm_all
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountPlan_total
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -346,6 +356,18 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1085#1072#1103' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102
+        Options.Editing = False
+        Width = 85
+      end
+      object AmountPlan_total: TcxGridDBColumn
+        Caption = #1048#1090#1086#1075#1086' '#1055#1083#1072#1085' '#1086#1087#1083#1072#1090
+        DataBinding.FieldName = 'AmountPlan_total'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1055#1083#1072#1085' '#1086#1087#1083#1072#1090' '#1087#1086' '#1076#1085#1103#1084' '#1085#1077#1076#1077#1083#1080
         Options.Editing = False
         Width = 85
       end
