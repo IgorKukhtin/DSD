@@ -2121,6 +2121,7 @@ BEGIN
                    FROM (SELECT MILinkObject_Goods_out.ObjectId                   AS GoodsId
                               , COALESCE (MILinkObject_GoodsKind_out.ObjectId, 0) AS GoodsKindId
                               , COALESCE (MIFloat_Amount_out.ValueData, 0)        AS Amount
+                                --
                               , MIDate_PartionGoods_out.ValueData                 AS PartionGoodsDate
 
                               , MovementItem.ObjectId                             AS GoodsId_parent
@@ -2140,10 +2141,13 @@ BEGIN
                               LEFT JOIN MovementItemDate AS MIDate_PartionGoods_out
                                                          ON MIDate_PartionGoods_out.MovementItemId = MovementItem.Id
                                                         AND MIDate_PartionGoods_out.DescId         = zc_MIDate_PartionGoods_out()
+                                                        -- !!!без Партия-дата!!!!
+                                                        AND 1=0 
 
                               LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                               AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                              -- Партия из прихода
                               LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                                          ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                                         AND MIDate_PartionGoods.DescId         = zc_MIDate_PartionGoods()
@@ -2154,8 +2158,10 @@ BEGIN
                            -- ПЕРЕСОРТ
                            AND vbIsPeresort = TRUE
                         ) AS tmp
+                        -- нашли ParentId с такой Партия-дата
                         LEFT JOIN tmpMI_parent ON tmpMI_parent.GoodsId          = tmp.GoodsId_parent
                                               AND tmpMI_parent.GoodsKindId      = tmp.GoodsKindId_parent
+                                              -- Партия-дата
                                               AND tmpMI_parent.PartionGoodsDate = tmp.PartionGoodsDate_parent
                                               -- на всякий случай
                                               AND tmpMI_parent.ord              = 1
