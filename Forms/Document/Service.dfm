@@ -362,8 +362,8 @@
   object cePrice: TcxCurrencyEdit [47]
     Left = 293
     Top = 113
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.00'
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.00##'
     TabOrder = 47
     Width = 142
   end
