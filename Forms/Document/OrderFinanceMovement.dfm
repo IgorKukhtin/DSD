@@ -26,9 +26,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitLeft = 898
-    ExplicitTop = 65
-    ExplicitWidth = 1060
     object edInvNumber: TcxTextEdit
       Left = 232
       Top = 19
@@ -530,22 +527,19 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 1060
     ClientRectBottom = 390
     ClientRectRight = 1160
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 1060
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1060
+        Width = 1160
         Height = 184
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 137
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1576,7 +1570,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Anchors = [akTop, akRight, akBottom]
         TabOrder = 1
         Visible = False
-        ExplicitWidth = 1060
         object ExportXmlGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ExportDS
@@ -1606,7 +1599,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       object cxGridChild: TcxGrid
         Left = 0
         Top = 192
-        Width = 1060
+        Width = 1160
         Height = 139
         Align = alBottom
         TabOrder = 2
@@ -1662,6 +1655,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             DataBinding.FieldName = 'isSign'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 112
           end
           object InvNumber_ch2: TcxGridDBColumn
@@ -1709,24 +1703,20 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       object cxSplitter_Bottom: TcxSplitter
         Left = 0
         Top = 184
-        Width = 1060
+        Width = 1160
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridChild
-        ExplicitTop = 8
       end
     end
     object cxTabSheet1: TcxTabSheet
       Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1070#1088'.'#1083#1080#1094#1072
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
-        Width = 1060
+        Width = 1160
         Height = 366
         Align = alClient
         TabOrder = 0
@@ -3005,6 +2995,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1047#1072#1103#1074#1082#1072' '#1058#1052#1062'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ChildDS
     end
@@ -3020,6 +3011,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ChildDS
