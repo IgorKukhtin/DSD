@@ -35,6 +35,12 @@ BEGIN
      END IF;
 
 
+     -- проверка
+     IF COALESCE (inOrderFinanceId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Вид Планирования не выбран.';
+     END IF;
+
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement_OrderFinance (ioId               := ioId
                                                  , inInvNumber        := inInvNumber

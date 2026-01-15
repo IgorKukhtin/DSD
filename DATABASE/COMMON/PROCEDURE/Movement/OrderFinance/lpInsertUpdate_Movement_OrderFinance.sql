@@ -30,6 +30,70 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
      END IF;
 
+     -- проверка
+     IF COALESCE (inOrderFinanceId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Вид Планирования не выбран.';
+     END IF;
+
+     -- проверка
+     IF COALESCE (ioId, 0) = 0 AND EXISTS (SELECT 1
+                                           FROM Movement
+                                                INNER JOIN MovementFloat AS MovementFloat_WeekNumber
+                                                                         ON MovementFloat_WeekNumber.MovementId = Movement.Id
+                                                                        AND MovementFloat_WeekNumber.DescId     = zc_MovementFloat_WeekNumber()
+                                                                        AND MovementFloat_WeekNumber.ValueData  = inWeekNumber
+                                                INNER JOIN MovementLinkObject AS MovementLinkObject_OrderFinance
+                                                                              ON MovementLinkObject_OrderFinance.MovementId = Movement.Id
+                                                                             AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
+                                                                             AND MovementLinkObject_OrderFinance.ObjectId   = inOrderFinanceId
+                                           WHERE Movement.DescId = zc_Movement_OrderFinance()
+                                             AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                             AND Movement.OperDate BETWEEN inOperDate - INTERVAL '14 DAY' AND inOperDate - INTERVAL '1 DAY'
+                                          )
+        AND inUserId <> 5
+     THEN
+         RAISE EXCEPTION 'Ошибка.Дублирование запрещено.%Уже существует документ планирования № <%> от <%>%для <%> недели + <%>'
+                                        , CHR (13)
+                                        , (SELECT Movement.InvNumber
+                                           FROM Movement
+                                                INNER JOIN MovementFloat AS MovementFloat_WeekNumber
+                                                                         ON MovementFloat_WeekNumber.MovementId = Movement.Id
+                                                                        AND MovementFloat_WeekNumber.DescId     = zc_MovementFloat_WeekNumber()
+                                                                        AND MovementFloat_WeekNumber.ValueData  = inWeekNumber
+                                                INNER JOIN MovementLinkObject AS MovementLinkObject_OrderFinance
+                                                                              ON MovementLinkObject_OrderFinance.MovementId = Movement.Id
+                                                                             AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
+                                                                             AND MovementLinkObject_OrderFinance.ObjectId   = inOrderFinanceId
+                                           WHERE Movement.DescId = zc_Movement_OrderFinance()
+                                             AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                             AND Movement.OperDate BETWEEN inOperDate - INTERVAL '14 DAY' AND inOperDate - INTERVAL '1 DAY'
+                                           ORDER BY Movement.Id
+                                           LIMIT 1
+                                          )
+                                        , (SELECT zfConvert_DateToString (Movement.OperDate)
+                                           FROM Movement
+                                                INNER JOIN MovementFloat AS MovementFloat_WeekNumber
+                                                                         ON MovementFloat_WeekNumber.MovementId = Movement.Id
+                                                                        AND MovementFloat_WeekNumber.DescId     = zc_MovementFloat_WeekNumber()
+                                                                        AND MovementFloat_WeekNumber.ValueData  = inWeekNumber
+                                                INNER JOIN MovementLinkObject AS MovementLinkObject_OrderFinance
+                                                                              ON MovementLinkObject_OrderFinance.MovementId = Movement.Id
+                                                                             AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
+                                                                             AND MovementLinkObject_OrderFinance.ObjectId   = inOrderFinanceId
+                                           WHERE Movement.DescId = zc_Movement_OrderFinance()
+                                             AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                             AND Movement.OperDate BETWEEN inOperDate - INTERVAL '14 DAY' AND inOperDate - INTERVAL '1 DAY'
+                                           ORDER BY Movement.Id
+                                           LIMIT 1
+                                          )
+                                        , CHR (13)
+                                        , zfConvert_FloatToString (inWeekNumber)
+                                        , lfGet_Object_ValueData_sh (inOrderFinanceId)
+                                         ;
+     END IF;
+
+
      -- определяем ключ доступа
      --vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_OrderFinance());
 
