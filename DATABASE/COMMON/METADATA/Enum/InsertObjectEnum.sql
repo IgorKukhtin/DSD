@@ -14595,7 +14595,7 @@ BEGIN
                                                               inName         := 'Загрузка <Планирование платежей> из файла',
                                                               inJuridicalId  := NULL::Integer,
                                                               inContractId   := NULL::Integer,
-                                                              inFileTypeId   := zc_Enum_FileTypeKind_Excel(),
+                                                              inFileTypeId   := zc_Enum_FileTypeKind_Excel_OLE(),
                                                               inImportTypeId := vbImportTypeId,
                                                               inEmailId      := (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectLink_ImportSettings_Email()),
                                                               inContactPersonId:= (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectLink_ImportSettings_ContactPerson()),
