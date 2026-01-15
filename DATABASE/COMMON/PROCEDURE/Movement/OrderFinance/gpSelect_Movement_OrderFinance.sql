@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , BankId Integer, BankName TVarChar, BankAccountNameAll TVarChar
              , WeekNumber TFloat
              , TotalSumm TFloat, TotalSumm_all TFloat, TotalSumm_1 TFloat, TotalSumm_2 TFloat, TotalSumm_3 TFloat
-             , AmountPlan_1 TFloat, AmountPlan_2 TFloat, AmountPlan_3 TFloat, AmountPlan_4 TFloat, AmountPlan_5 TFloat
+             , AmountPlan_1 TFloat, AmountPlan_2 TFloat, AmountPlan_3 TFloat, AmountPlan_4 TFloat, AmountPlan_5 TFloat, AmountPlan_total TFloat
              , StartDate_WeekNumber TDateTime, EndDate_WeekNumber TDateTime
              , DateUpdate_report TDateTime
              , UserUpdate_report TVarChar
@@ -84,6 +84,13 @@ BEGIN
            , COALESCE (MovementFloat_AmountPlan_3.Valuedata, 0) ::TFloat   AS AmountPlan_3
            , COALESCE (MovementFloat_AmountPlan_4.Valuedata, 0) ::TFloat   AS AmountPlan_4
            , COALESCE (MovementFloat_AmountPlan_5.Valuedata, 0) ::TFloat   AS AmountPlan_5
+
+           , (COALESCE (MovementFloat_AmountPlan_1.Valuedata, 0)
+            + COALESCE (MovementFloat_AmountPlan_2.Valuedata, 0)
+            + COALESCE (MovementFloat_AmountPlan_3.Valuedata, 0)
+            + COALESCE (MovementFloat_AmountPlan_4.Valuedata, 0)
+            + COALESCE (MovementFloat_AmountPlan_5.Valuedata, 0)
+            ) ::TFloat   AS AmountPlan_total
 
            , tmpMovement.StartDate_WeekNumber  ::TDateTime AS StartDate_WeekNumber
            , tmpMovement.EndDate_WeekNumber    ::TDateTime AS EndDate_WeekNumber
