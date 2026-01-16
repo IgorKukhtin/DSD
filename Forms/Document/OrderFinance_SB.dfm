@@ -482,7 +482,7 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
             Width = 100
           end
           object Amount_Child: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1055#1083#1072#1085
+            Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'Amount_Child'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -1475,12 +1475,6 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    ColorRuleList = <
-      item
-        ColorColumn = Amount_Child
-        BackGroundValueColumn = InvNumber_Child
-        ColorValueList = <>
-      end>
     Left = 240
     Top = 248
   end
@@ -2246,6 +2240,7 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MovementItemId_Child'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -2253,6 +2248,7 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MovementItemId'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item

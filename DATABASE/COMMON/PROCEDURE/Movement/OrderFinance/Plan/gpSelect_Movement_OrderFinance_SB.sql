@@ -88,9 +88,9 @@ BEGIN
                                                    AND ObjectBoolean_SB.DescId = zc_ObjectBoolean_OrderFinance_SB()
 
                        WHERE Movement.DescId = zc_Movement_OrderFinance()
-                         AND Movement.StatusId NOT IN (SELECT tmpStatus.StatusId FROM tmpStatus)
+                         AND Movement.StatusId IN (SELECT tmpStatus.StatusId FROM tmpStatus)
                          AND Movement.OperDate BETWEEN inStartDate - INTERVAL '14 DAY' AND inEndDate
-                         --AND COALESCE (ObjectBoolean_SB.ValueData, FALSE) = TRUE     --только те виды планировани, что нужно согласовывать СБ
+                         AND COALESCE (ObjectBoolean_SB.ValueData, FALSE) = TRUE     --только те виды планировани, что нужно согласовывать СБ
                        )
 
      , tmpMI_Master AS (SELECT MovementItem.*
@@ -147,12 +147,13 @@ BEGIN
        --мастер у которого есть чайлд + чайлд
      , tmpMI AS (SELECT tmpMI_Master.Id
                       , tmpMI_Master.ObjectId
-                      , tmpMI_Master.MovementId 
-                          , tmpMI_Child.Id         AS MovementItemId_Child
-                          , tmpMI_Child.Amount     AS Amount_Child
-                          , tmpMI_Child.InvNumber  AS InvNumber_Child
-                          , tmpMI_Child.GoodsName  AS GoodsName_Child
-                          , tmpMI_Child.isSign     AS isSign_Child
+                      , tmpMI_Master.MovementId
+                      , tmpMI_Master.Amount 
+                      , tmpMI_Child.Id         AS MovementItemId_Child
+                      , tmpMI_Child.Amount     AS Amount_Child
+                      , tmpMI_Child.InvNumber  AS InvNumber_Child
+                      , tmpMI_Child.GoodsName  AS GoodsName_Child
+                      , tmpMI_Child.isSign     AS isSign_Child
                      FROM tmpMI_Master
                           LEFT JOIN tmpMI_Data_Child AS tmpMI_Child 
                                                      ON tmpMI_Child.ParentId = tmpMI_Master.Id

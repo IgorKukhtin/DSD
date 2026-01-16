@@ -19,14 +19,14 @@ BEGIN
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_MI_OrderFinance_SB());
 
      -- определяется признак Создание/Корректировка
-     vbIsInsert:= COALESCE (ioId, 0) = 0;    
+     vbIsInsert:= COALESCE (inId, 0) = 0;    
 
      --если нет чайлда - создаем 
-     IF COALESCE (ioId, 0) = 0
+     IF COALESCE (inId, 0) = 0
      THEN
      
      -- сохранили <Элемент документа>
-     inId := lpInsertUpdate_MovementItem (ioId
+     inId := lpInsertUpdate_MovementItem (inId
                                         , zc_MI_Child()
                                         , Null
                                         , inMovementId
