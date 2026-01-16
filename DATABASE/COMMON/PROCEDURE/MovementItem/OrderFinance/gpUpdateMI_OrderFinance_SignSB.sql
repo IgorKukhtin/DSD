@@ -3,13 +3,13 @@
 DROP FUNCTION IF EXISTS gpUpdateMI_OrderFinance_SignSB (Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdateMI_OrderFinance_SignSB(
-    IN inId                    Integer   , -- Ключ объекта <Элемент документа>
+ INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inParentId              Integer   , -- Ключ объекта <главный элемент>
     IN inMovementId            Integer   , -- Ключ объекта <Документ> 
     IN inisSign                Boolean   ,
     IN inSession               TVarChar    -- сессия пользователя
 )
-RETURNS Void
+RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -19,14 +19,14 @@ BEGIN
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_MI_OrderFinance_SB());
 
      -- определяется признак Создание/Корректировка
-     vbIsInsert:= COALESCE (inId, 0) = 0;    
+     vbIsInsert:= COALESCE (ioId, 0) = 0;    
 
      --если нет чайлда - создаем 
-     IF COALESCE (inId, 0) = 0
+     IF COALESCE (ioId, 0) = 0
      THEN
      
      -- сохранили <Элемент документа>
-     inId := lpInsertUpdate_MovementItem (inId
+     ioId := lpInsertUpdate_MovementItem (ioId
                                         , zc_MI_Child()
                                         , Null
                                         , inMovementId
@@ -35,11 +35,11 @@ BEGIN
      END IF;
      
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Sign(), inId, inisSign);
+     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Sign(), ioId, inisSign);
 
 
      -- сохранили протокол
-     PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, vbIsInsert);
+     PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

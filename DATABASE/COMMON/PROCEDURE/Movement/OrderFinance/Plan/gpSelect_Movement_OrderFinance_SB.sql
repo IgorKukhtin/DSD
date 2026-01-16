@@ -42,7 +42,8 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , Amount_Child         TFloat
              , InvNumber_Child      TVarChar
              , GoodsName_Child      TVarChar
-             , isSign_Child         Boolean
+             , isSign_Child         Boolean 
+             , TextSign_Child       TVarChar
               )
 AS
 $BODY$
@@ -866,6 +867,10 @@ BEGIN
         , tmpMI.InvNumber_Child
         , tmpMI.GoodsName_Child
         , tmpMI.isSign_Child
+        , CASE WHEN tmpMI.isSign_Child = TRUE THEN 'Погоджено'
+               WHEN tmpMI.isSign_Child = FALSE THEN 'Не погоджено'
+               ELSE ''
+          END                  ::TVarChar AS TextSign_Child
    FROM tmpMovement_Data AS tmpMovement
         INNER JOIN tmpMI_Data AS tmpMI ON tmpMI.MovementId = tmpMovement.MovementId
                                       -- убирается дублирование

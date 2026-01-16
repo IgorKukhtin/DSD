@@ -461,6 +461,14 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
             HeaderGlyphAlignmentVert = vaTop
             Width = 100
           end
+          object TextSign_Child: TcxGridDBColumn
+            Caption = #1055#1086#1075#1086#1076#1078#1077#1085#1085#1103' '#1057#1041
+            DataBinding.FieldName = 'TextSign_Child'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
           object GoodsName_Child: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName_Child'
@@ -2236,11 +2244,11 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
     OutputType = otResult
     Params = <
       item
-        Name = 'inId'
+        Name = 'ioId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MovementItemId_Child'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item

@@ -96,6 +96,7 @@ type
     GoodsName_Child: TcxGridDBColumn;
     isSign_Child: TcxGridDBColumn;
     spUpdate_SignSB: TdsdStoredProc;
+    TextSign_Child: TcxGridDBColumn;
   private
     { Private declarations }
   public
