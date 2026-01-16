@@ -307,7 +307,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Value_m(), ioId, COALESCE (outValue_m, 0));
      -- сохранили свойство <«начение n>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Value_n(), ioId, COALESCE (outValue_n, 0));
-     -- сохранили свойство <«начение n>
+     -- сохранили свойство <подарочное кол-во>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Value_promo(), ioId, COALESCE (outValue_promo, 0));
      
 
