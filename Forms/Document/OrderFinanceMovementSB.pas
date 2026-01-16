@@ -1,4 +1,4 @@
-unit OrderFinanceMovement;
+unit OrderFinanceMovementSB;
 
 interface
 
@@ -25,10 +25,10 @@ uses
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
   cxImageComboBox, dsdInternetAction, dsdCommon, ChoicePeriod, cxBlobEdit,
-  ExternalLoad;
+  ExternalLoad, cxSplitter;
 
 type
-  TOrderFinanceMovementForm = class(TParentForm)
+  TOrderFinanceMovementSBForm = class(TParentForm)
     FormParams: TdsdFormParams;
     spSelectMI: TdsdStoredProc;
     dxBarManager: TdxBarManager;
@@ -330,6 +330,41 @@ type
     actDoLoad: TExecuteImportSettingsAction;
     mactLoadExcel: TMultiAction;
     bbmactLoadExcel: TdxBarButton;
+    ChildDS: TDataSource;
+    ChildCDS: TClientDataSet;
+    ChildViewAddOn: TdsdDBViewAddOn;
+    cxGridChild: TcxGrid;
+    cxGridDBTableViewChild: TcxGridDBTableView;
+    InvNumber_ch2: TcxGridDBColumn;
+    Comment_ch2: TcxGridDBColumn;
+    GoodsName_ch2: TcxGridDBColumn;
+    Amount_ch2: TcxGridDBColumn;
+    IsErased_ch2: TcxGridDBColumn;
+    cxGridLevel2: TcxGridLevel;
+    cxSplitter_Bottom: TcxSplitter;
+    spSelectMIChild: TdsdStoredProc;
+    actInsertRecordChild: TInsertRecord;
+    spUnErasedMIchild: TdsdStoredProc;
+    spErasedMIchild: TdsdStoredProc;
+    SetErasedChild: TdsdUpdateErased;
+    SetUnErasedChild: TdsdUpdateErased;
+    bbInsertRecordChild: TdxBarButton;
+    bbSetErasedChild: TdxBarButton;
+    bbSetUnErasedChild: TdxBarButton;
+    spInsertUpdateMIChild: TdsdStoredProc;
+    actUpdateChildDS: TdsdUpdateDataSet;
+    isSign_ch2: TcxGridDBColumn;
+    Sign_Child: TcxGridDBColumn;
+    GoodsName_Child: TcxGridDBColumn;
+    InvNumber_Child: TcxGridDBColumn;
+    ceDate_SignSB: TcxDateEdit;
+    cbSignSB: TcxCheckBox;
+    spUpdate_SignSB_Yes: TdsdStoredProc;
+    spUpdate_SignSB_No: TdsdStoredProc;
+    actUpdate_SignSB_Yes: TdsdExecStoredProc;
+    actUpdate_SignSB_No: TdsdExecStoredProc;
+    bbUpdate_SignSB_Yes: TdxBarButton;
+    bbUpdate_SignSB_No: TdxBarButton;
   private
   public
   end;
@@ -338,5 +373,5 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TOrderFinanceMovementForm);
+  RegisterClass(TOrderFinanceMovementSBForm);
 end.

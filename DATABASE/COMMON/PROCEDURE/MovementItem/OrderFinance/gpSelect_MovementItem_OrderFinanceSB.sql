@@ -1,8 +1,8 @@
--- Function: gpSelect_MovementItem_OrderFinance()
+-- Function: gpSelect_MovementItem_OrderFinanceSB()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_OrderFinance (Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_OrderFinanceSB (Integer, Boolean, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderFinance(
+CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderFinanceSB(
     IN inMovementId  Integer      , -- ключ Документа
     IN inShowAll     Boolean      , --
     IN inIsErased    Boolean      , --
@@ -76,6 +76,10 @@ RETURNS TABLE (Id Integer
              , InsertDate TDateTime, UpdateDate TDateTime
              , isErased Boolean
              , Color_Group Integer
+
+             , GoodsName_Child TVarChar
+             , InvNumber_Child TVarChar
+             , Sign_Child      TVarChar
               )
 AS
 $BODY$
@@ -135,13 +139,180 @@ BEGIN
      -- начало предыдущей недели
      vbStartDate_old:= vbStartDate - INTERVAL '7 DAY';
      -- окончание предыдущей недели
-     vbEndDate_old  := vbEndDate   - INTERVAL '7 DAY'; 
+     vbEndDate_old  := vbEndDate   - INTERVAL '7 DAY';
 
      -- предыдущая неделя
      vbWeekNumber_old := EXTRACT (WEEK FROM vbStartDate_old) ;
 
+
+     -- проверка
+     IF 1 < (SELECT COUNT(*)
+             FROM (SELECT DISTINCT Movement.Id
+                   FROM Movement
+                        INNER JOIN MovementFloat AS MovementFloat_WeekNumber
+                                                 ON MovementFloat_WeekNumber.MovementId = Movement.Id
+                                                AND MovementFloat_WeekNumber.DescId     = zc_MovementFloat_WeekNumber()
+                                                AND MovementFloat_WeekNumber.ValueData  = vbWeekNumber_old
+                        INNER JOIN MovementLinkObject AS MovementLinkObject_OrderFinance
+                                                      ON MovementLinkObject_OrderFinance.MovementId = Movement.Id
+                                                     AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
+                                                     AND MovementLinkObject_OrderFinance.ObjectId   = vbOrderFinanceId
+
+                        INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                               AND MovementItem.DescId     = zc_MI_Master()
+                                               AND MovementItem.isErased   = FALSE
+                                               AND MovementItem.ObjectId   <> 0
+                        INNER JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id
+                                                    AND MovementItemFloat.DescId IN (zc_MIFloat_AmountPlan_1()
+                                                                                   , zc_MIFloat_AmountPlan_2()
+                                                                                   , zc_MIFloat_AmountPlan_3()
+                                                                                   , zc_MIFloat_AmountPlan_4()
+                                                                                   , zc_MIFloat_AmountPlan_5()
+                                                                                    )
+                                                    AND MovementItemFloat.ValueData <> 0
+                   WHERE Movement.DescId = zc_Movement_OrderFinance()
+                     AND Movement.StatusId IN (zc_Enum_Status_Complete()) -- zc_Enum_Status_UnComplete()
+                     AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '14 DAY' AND vbOperDate - INTERVAL '1 DAY'
+                  ) AS tmp
+            )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Найдено несколько документов планирования.%для <%> недели + <%>%Необходимо удалить лишний.%№ <%> от <%>%или%№ <%> от <%>'
+                        , CHR (13)
+                        , zfConvert_FloatToString (vbWeekNumber_old)
+                        , lfGet_Object_ValueData_sh (vbOrderFinanceId)
+                        , CHR (13)
+                        , CHR (13)
+                        , (SELECT Movement.InvNumber
+                           FROM (SELECT DISTINCT Movement.*
+                                 FROM Movement
+                                      INNER JOIN MovementFloat AS MovementFloat_WeekNumber
+                                                               ON MovementFloat_WeekNumber.MovementId = Movement.Id
+                                                              AND MovementFloat_WeekNumber.DescId     = zc_MovementFloat_WeekNumber()
+                                                              AND MovementFloat_WeekNumber.ValueData  = vbWeekNumber_old
+                                      INNER JOIN MovementLinkObject AS MovementLinkObject_OrderFinance
+                                                                    ON MovementLinkObject_OrderFinance.MovementId = Movement.Id
+                                                                   AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
+                                                                   AND MovementLinkObject_OrderFinance.ObjectId   = vbOrderFinanceId
+
+                                      INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                             AND MovementItem.DescId     = zc_MI_Master()
+                                                             AND MovementItem.isErased   = FALSE
+                                                             AND MovementItem.ObjectId   <> 0
+                                      INNER JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id
+                                                                  AND MovementItemFloat.DescId IN (zc_MIFloat_AmountPlan_1()
+                                                                                                 , zc_MIFloat_AmountPlan_2()
+                                                                                                 , zc_MIFloat_AmountPlan_3()
+                                                                                                 , zc_MIFloat_AmountPlan_4()
+                                                                                                 , zc_MIFloat_AmountPlan_5()
+                                                                                                  )
+                                                                  AND MovementItemFloat.ValueData <> 0
+                                 WHERE Movement.DescId = zc_Movement_OrderFinance()
+                                   AND Movement.StatusId IN (zc_Enum_Status_Complete()) -- zc_Enum_Status_UnComplete()
+                                   AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '14 DAY' AND vbOperDate - INTERVAL '1 DAY'
+                                ) AS Movement
+                           ORDER BY Movement.Id ASC
+                           LIMIT 1
+                          )
+                        , (SELECT zfConvert_DateToString (Movement.OperDate)
+                           FROM (SELECT DISTINCT Movement.*
+                                 FROM Movement
+                                      INNER JOIN MovementFloat AS MovementFloat_WeekNumber
+                                                               ON MovementFloat_WeekNumber.MovementId = Movement.Id
+                                                              AND MovementFloat_WeekNumber.DescId     = zc_MovementFloat_WeekNumber()
+                                                              AND MovementFloat_WeekNumber.ValueData  = vbWeekNumber_old
+                                      INNER JOIN MovementLinkObject AS MovementLinkObject_OrderFinance
+                                                                    ON MovementLinkObject_OrderFinance.MovementId = Movement.Id
+                                                                   AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
+                                                                   AND MovementLinkObject_OrderFinance.ObjectId   = vbOrderFinanceId
+
+                                      INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                             AND MovementItem.DescId     = zc_MI_Master()
+                                                             AND MovementItem.isErased   = FALSE
+                                                             AND MovementItem.ObjectId   <> 0
+                                      INNER JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id
+                                                                  AND MovementItemFloat.DescId IN (zc_MIFloat_AmountPlan_1()
+                                                                                                 , zc_MIFloat_AmountPlan_2()
+                                                                                                 , zc_MIFloat_AmountPlan_3()
+                                                                                                 , zc_MIFloat_AmountPlan_4()
+                                                                                                 , zc_MIFloat_AmountPlan_5()
+                                                                                                  )
+                                                                  AND MovementItemFloat.ValueData <> 0
+                                 WHERE Movement.DescId = zc_Movement_OrderFinance()
+                                   AND Movement.StatusId IN (zc_Enum_Status_Complete()) -- zc_Enum_Status_UnComplete()
+                                   AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '14 DAY' AND vbOperDate - INTERVAL '1 DAY'
+                                ) AS Movement
+                           ORDER BY Movement.Id ASC
+                           LIMIT 1
+                          )
+                        , CHR (13)
+                        , CHR (13)
+                        , (SELECT Movement.InvNumber
+                           FROM (SELECT DISTINCT Movement.*
+                                 FROM Movement
+                                      INNER JOIN MovementFloat AS MovementFloat_WeekNumber
+                                                               ON MovementFloat_WeekNumber.MovementId = Movement.Id
+                                                              AND MovementFloat_WeekNumber.DescId     = zc_MovementFloat_WeekNumber()
+                                                              AND MovementFloat_WeekNumber.ValueData  = vbWeekNumber_old
+                                      INNER JOIN MovementLinkObject AS MovementLinkObject_OrderFinance
+                                                                    ON MovementLinkObject_OrderFinance.MovementId = Movement.Id
+                                                                   AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
+                                                                   AND MovementLinkObject_OrderFinance.ObjectId   = vbOrderFinanceId
+
+                                      INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                             AND MovementItem.DescId     = zc_MI_Master()
+                                                             AND MovementItem.isErased   = FALSE
+                                                             AND MovementItem.ObjectId   <> 0
+                                      INNER JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id
+                                                                  AND MovementItemFloat.DescId IN (zc_MIFloat_AmountPlan_1()
+                                                                                                 , zc_MIFloat_AmountPlan_2()
+                                                                                                 , zc_MIFloat_AmountPlan_3()
+                                                                                                 , zc_MIFloat_AmountPlan_4()
+                                                                                                 , zc_MIFloat_AmountPlan_5()
+                                                                                                  )
+                                                                  AND MovementItemFloat.ValueData <> 0
+                                 WHERE Movement.DescId = zc_Movement_OrderFinance()
+                                   AND Movement.StatusId IN (zc_Enum_Status_Complete()) -- zc_Enum_Status_UnComplete()
+                                   AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '14 DAY' AND vbOperDate - INTERVAL '1 DAY'
+                                ) AS Movement
+                           ORDER BY Movement.Id DESC
+                           LIMIT 1
+                          )
+                        , (SELECT zfConvert_DateToString (Movement.OperDate)
+                           FROM (SELECT DISTINCT Movement.*
+                                 FROM Movement
+                                      INNER JOIN MovementFloat AS MovementFloat_WeekNumber
+                                                               ON MovementFloat_WeekNumber.MovementId = Movement.Id
+                                                              AND MovementFloat_WeekNumber.DescId     = zc_MovementFloat_WeekNumber()
+                                                              AND MovementFloat_WeekNumber.ValueData  = vbWeekNumber_old
+                                      INNER JOIN MovementLinkObject AS MovementLinkObject_OrderFinance
+                                                                    ON MovementLinkObject_OrderFinance.MovementId = Movement.Id
+                                                                   AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
+                                                                   AND MovementLinkObject_OrderFinance.ObjectId   = vbOrderFinanceId
+
+                                      INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                             AND MovementItem.DescId     = zc_MI_Master()
+                                                             AND MovementItem.isErased   = FALSE
+                                                             AND MovementItem.ObjectId   <> 0
+                                      INNER JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id
+                                                                  AND MovementItemFloat.DescId IN (zc_MIFloat_AmountPlan_1()
+                                                                                                 , zc_MIFloat_AmountPlan_2()
+                                                                                                 , zc_MIFloat_AmountPlan_3()
+                                                                                                 , zc_MIFloat_AmountPlan_4()
+                                                                                                 , zc_MIFloat_AmountPlan_5()
+                                                                                                  )
+                                                                  AND MovementItemFloat.ValueData <> 0
+                                 WHERE Movement.DescId = zc_Movement_OrderFinance()
+                                   AND Movement.StatusId IN (zc_Enum_Status_Complete()) -- zc_Enum_Status_UnComplete()
+                                   AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '14 DAY' AND vbOperDate - INTERVAL '1 DAY'
+                                ) AS Movement
+                           ORDER BY Movement.Id DESC
+                           LIMIT 1
+                          )
+                       ;
+     END IF;
+
      -- план прошлой недели
-     vbMovementId_old:= (SELECT Movement.Id
+     vbMovementId_old:= (SELECT DISTINCT Movement.Id
                          FROM Movement
                               INNER JOIN MovementFloat AS MovementFloat_WeekNumber
                                                        ON MovementFloat_WeekNumber.MovementId = Movement.Id
@@ -152,10 +323,27 @@ BEGIN
                                                            AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
                                                            AND MovementLinkObject_OrderFinance.ObjectId   = vbOrderFinanceId
 
+                              INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                     AND MovementItem.DescId     = zc_MI_Master()
+                                                     AND MovementItem.isErased   = FALSE
+                                                     AND MovementItem.ObjectId   <> 0
+                              INNER JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id
+                                                          AND MovementItemFloat.DescId IN (zc_MIFloat_AmountPlan_1()
+                                                                                         , zc_MIFloat_AmountPlan_2()
+                                                                                         , zc_MIFloat_AmountPlan_3()
+                                                                                         , zc_MIFloat_AmountPlan_4()
+                                                                                         , zc_MIFloat_AmountPlan_5()
+                                                                                          )
+                                                          AND MovementItemFloat.ValueData <> 0
                          WHERE Movement.DescId = zc_Movement_OrderFinance()
                            AND Movement.StatusId IN (zc_Enum_Status_Complete()) -- zc_Enum_Status_UnComplete()
                            AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '14 DAY' AND vbOperDate - INTERVAL '1 DAY'
-                         );
+                        );
+
+    IF vbUserId = 5 AND 1=0
+    THEN
+         RAISE EXCEPTION 'Ошибка-test.%.%.', vbMovementId_old, (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_old);
+    END IF;
 
 
      -- Если неделя еще не началась
@@ -559,6 +747,27 @@ BEGIN
                                                                      , zc_MIFloat_AmountPlan_5()
                                                                       )
                                    )
+
+    , tmpMI_Child AS (SELECT MovementItem.ParentId
+                           , STRING_AGG (DISTINCT COALESCE (MIString_GoodsName.ValueData, ''), '; ') AS GoodsName
+                           , STRING_AGG (DISTINCT COALESCE (MIString_InvNumber.ValueData, ''), '; ') AS InvNumber
+                           , STRING_AGG (DISTINCT COALESCE (MIBoolean_Sign.ValueData, FALSE)::TVarChar, '; ') AS Sign
+                      FROM MovementItem
+                          LEFT JOIN MovementItemString AS MIString_GoodsName
+                                                       ON MIString_GoodsName.MovementItemId = MovementItem.Id
+                                                      AND MIString_GoodsName.DescId = zc_MIString_GoodsName()
+                          LEFT JOIN MovementItemString AS MIString_InvNumber
+                                                       ON MIString_InvNumber.MovementItemId = MovementItem.Id
+                                                      AND MIString_InvNumber.DescId = zc_MIString_InvNumber()
+                          LEFT JOIN MovementItemBoolean AS MIBoolean_Sign
+                                                        ON MIBoolean_Sign.MovementItemId = MovementItem.Id
+                                                       AND MIBoolean_Sign.DescId = zc_MIBoolean_Sign()                    
+                      WHERE MovementItem.MovementId = inMovementId
+                        AND MovementItem.DescId     = zc_MI_Child()
+                        AND MovementItem.isErased   = FALSE
+                      GROUP BY MovementItem.ParentId
+                     )
+
        -- Результат
        SELECT
              tmpMI.Id                         AS Id
@@ -661,6 +870,9 @@ BEGIN
 
            , zc_Color_White() ::Integer AS Color_Group
 
+           , tmpMI_Child.GoodsName ::TVarChar AS GoodsName_Child
+           , tmpMI_Child.InvNumber ::TVarChar AS InvNumber_Child
+           , tmpMI_Child.Sign      ::TVarChar AS Sign_Child
        FROM tmpData
             FULL JOIN tmpMI ON tmpMI.JuridicalId = tmpData.JuridicalId
                            AND tmpMI.ContractId  = tmpData.ContractId
@@ -715,6 +927,8 @@ BEGIN
                                  ON ObjectLink_Contract_Personal.ObjectId = View_Contract.ContractId
                                 AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Contract_Personal.ChildObjectId
+            
+            LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI.Id
      UNION
        SELECT
              tmpMI.Id                         AS Id
@@ -807,6 +1021,9 @@ BEGIN
 
            , zc_Color_Yelow() ::Integer AS Color_Group
 
+           , '' ::TVarChar AS GoodsName_Child
+           , '' ::TVarChar AS InvNumber_Child
+           , '' ::TVarChar AS Sign_Child
        FROM tmpInfoMoney_OrderF
             LEFT JOIN tmpMI ON tmpMI.JuridicalId = tmpInfoMoney_OrderF.InfoMoneyId --для итогового значения статью записываем в ObjectId
             LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = tmpInfoMoney_OrderF.InfoMoneyId
@@ -997,7 +1214,7 @@ BEGIN
                                       ) AS tmpList
                                         ON tmpList.JuridicalId = MILinkObject_MoneyPlace.ObjectId
                                        AND tmpList.ContractId  = MILinkObject_Contract.ObjectId
- 
+
                       WHERE Movement.OperDate BETWEEN vbStartDate_old AND vbEndDate_old
                         AND Movement.DescId   = zc_Movement_BankAccount()
                         AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -1025,13 +1242,34 @@ BEGIN
                                       ) AS tmpList
                                         ON tmpList.JuridicalId = MILinkObject_MoneyPlace.ObjectId
                                        AND tmpList.ContractId  = MILinkObject_Contract.ObjectId
- 
+
                       WHERE Movement.OperDate BETWEEN vbStartDate AND vbEndDate
                         AND Movement.DescId   = zc_Movement_BankAccount()
                         AND Movement.StatusId = zc_Enum_Status_Complete()
                       GROUP BY MILinkObject_MoneyPlace.ObjectId
                              , MILinkObject_Contract.ObjectId
                      )
+
+    , tmpMI_Child AS (SELECT MovementItem.ParentId
+                           , STRING_AGG (DISTINCT COALESCE (MIString_GoodsName.ValueData, ''), '; ') AS GoodsName
+                           , STRING_AGG (DISTINCT COALESCE (MIString_InvNumber.ValueData, ''), '; ') AS InvNumber
+                           , STRING_AGG (DISTINCT COALESCE (MIBoolean_Sign.ValueData, FALSE)::TVarChar, '; ') AS Sign
+                      FROM MovementItem
+                          LEFT JOIN MovementItemString AS MIString_GoodsName
+                                                       ON MIString_GoodsName.MovementItemId = MovementItem.Id
+                                                      AND MIString_GoodsName.DescId = zc_MIString_GoodsName()
+                          LEFT JOIN MovementItemString AS MIString_InvNumber
+                                                       ON MIString_InvNumber.MovementItemId = MovementItem.Id
+                                                      AND MIString_InvNumber.DescId = zc_MIString_InvNumber()
+                          LEFT JOIN MovementItemBoolean AS MIBoolean_Sign
+                                                        ON MIBoolean_Sign.MovementItemId = MovementItem.Id
+                                                       AND MIBoolean_Sign.DescId = zc_MIBoolean_Sign()                    
+                      WHERE MovementItem.MovementId = inMovementId
+                        AND MovementItem.DescId     = zc_MI_Child()
+                        AND MovementItem.isErased   = FALSE
+                      GROUP BY MovementItem.ParentId
+                     )
+
        -- Результат
        SELECT
              MovementItem.Id                  AS Id
@@ -1163,6 +1401,9 @@ BEGIN
 
            , zc_Color_White() ::Integer AS Color_Group
 
+           , tmpMI_Child.GoodsName ::TVarChar AS GoodsName_Child
+           , tmpMI_Child.InvNumber ::TVarChar AS InvNumber_Child
+           , tmpMI_Child.Sign      ::TVarChar AS Sign_Child
        FROM tmpMI AS MovementItem
 
 
@@ -1213,6 +1454,7 @@ BEGIN
             -- Банк предыдущей недели
             LEFT JOIN tmpMI_bank_old ON tmpMI_bank_old.JuridicalId = MovementItem.ObjectId
                                     AND tmpMI_bank_old.ContractId  = MovementItem.ContractId
+                                  --AND 1=0
 
             -- план прошлой недели
             LEFT JOIN tmpMI_old ON tmpMI_old.JuridicalId = MovementItem.ObjectId
@@ -1296,6 +1538,7 @@ BEGIN
             -- УП-статья + № группы
             LEFT JOIN tmpInfoMoney_OrderF ON tmpInfoMoney_OrderF.InfoMoneyId = Object_InfoMoney.Id
 
+            LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = MovementItem.Id
      UNION ALL
        SELECT
              tmpMI.Id                         AS Id
@@ -1387,6 +1630,10 @@ BEGIN
            , COALESCE (tmpMI.isErased, FALSE) AS isErased
 
            , zc_Color_Yelow() ::Integer AS Color_Group
+
+           , '' ::TVarChar AS GoodsName_Child
+           , '' ::TVarChar AS InvNumber_Child
+           , '' ::TVarChar AS Sign_Child
        FROM tmpInfoMoney_OrderF
             -- для итогов статья в ObjectId
             LEFT JOIN tmpMI ON tmpMI.ObjectId = tmpInfoMoney_OrderF.InfoMoneyId
@@ -1424,6 +1671,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.01.26         *
  10.12.25         *
  17.11.25         *
  18.02.21         * AmountStart
@@ -1432,4 +1680,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_OrderFinance (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
--- SELECT * FROM gpSelect_MovementItem_OrderFinance (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '9818')
+-- SELECT * FROM gpSelect_MovementItem_OrderFinance (inMovementId:= 33154757, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '9818')

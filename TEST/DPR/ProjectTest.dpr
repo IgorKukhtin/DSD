@@ -1642,7 +1642,9 @@ uses
   OrderFinance_PlanDate in '..\..\Forms\Document\OrderFinance_PlanDate.pas' {OrderFinance_PlanDateForm: TParentForm},
   Sale_PartionQEdit in '..\..\Forms\Document\Sale_PartionQEdit.pas' {Sale_PartionQEditForm: TParentForm},
   WeighingPartnerJournal in '..\..\Forms\Document\WeighingPartnerJournal.pas' {WeighingPartnerJournalForm: TParentForm},
-  OrderFinance_SB in '..\..\Forms\Document\OrderFinance_SB.pas' {OrderFinance_SBForm: TParentForm};
+  OrderFinance_SB in '..\..\Forms\Document\OrderFinance_SB.pas' {OrderFinance_SBForm: TParentForm},
+  OrderFinanceMovementSB in '..\..\Forms\Document\OrderFinanceMovementSB.pas' {OrderFinanceMovementSBForm: TParentForm},
+  OrderFinanceSBJournal in '..\..\Forms\Document\OrderFinanceSBJournal.pas' {OrderFinanceSBJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

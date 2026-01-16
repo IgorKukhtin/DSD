@@ -5790,6 +5790,14 @@
 				<Form>OrderFinance_SBForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\OrderFinanceMovementSB.pas">
+				<Form>OrderFinanceMovementSBForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\OrderFinanceSBJournal.pas">
+				<Form>OrderFinanceSBJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
