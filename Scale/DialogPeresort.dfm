@@ -73,7 +73,7 @@ inherited DialogPeresortForm: TDialogPeresortForm
     object LabelGoodsName_in: TLabel
       Left = 0
       Top = 0
-      Width = 115
+      Width = 357
       Height = 14
       Align = alTop
       Caption = '      '#1053#1072#1079#1074#1072#1085#1080#1077' '#1055#1088#1080#1093#1086#1076
@@ -83,6 +83,7 @@ inherited DialogPeresortForm: TDialogPeresortForm
       Font.Name = 'Arial'
       Font.Style = [fsBold]
       ParentFont = False
+      ExplicitWidth = 115
     end
     object EditGoodsName_in: TcxButtonEdit
       Left = 5
@@ -125,7 +126,7 @@ inherited DialogPeresortForm: TDialogPeresortForm
       object LabelGoodsCode_in: TLabel
         Left = 0
         Top = 0
-        Width = 66
+        Width = 105
         Height = 14
         Align = alTop
         Alignment = taCenter
@@ -136,6 +137,7 @@ inherited DialogPeresortForm: TDialogPeresortForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 66
       end
       object PanelGoodsCode_in: TPanel
         Left = 0
@@ -165,7 +167,7 @@ inherited DialogPeresortForm: TDialogPeresortForm
       object LabelGoodsKindName_in: TLabel
         Left = 0
         Top = 0
-        Width = 107
+        Width = 252
         Height = 14
         Align = alTop
         Alignment = taCenter
@@ -176,6 +178,7 @@ inherited DialogPeresortForm: TDialogPeresortForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 107
       end
       object PanelGoodsKindName_in: TPanel
         Left = 0
@@ -220,7 +223,7 @@ inherited DialogPeresortForm: TDialogPeresortForm
       object LabelAmount_in: TLabel
         Left = 0
         Top = 0
-        Width = 102
+        Width = 166
         Height = 14
         Align = alTop
         Caption = '      '#1050#1086#1083'-'#1074#1086' '#1055#1088#1080#1093#1086#1076
@@ -230,6 +233,7 @@ inherited DialogPeresortForm: TDialogPeresortForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 102
       end
       object EditAmount_in: TcxCurrencyEdit
         Left = 5
@@ -261,7 +265,7 @@ inherited DialogPeresortForm: TDialogPeresortForm
       object LabelPartionDate_in: TLabel
         Left = 0
         Top = 0
-        Width = 102
+        Width = 191
         Height = 14
         Align = alTop
         Caption = '      '#1055#1072#1088#1090#1080#1103' '#1055#1088#1080#1093#1086#1076
@@ -271,6 +275,7 @@ inherited DialogPeresortForm: TDialogPeresortForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 102
       end
       object EditPartionDate_in: TcxDateEdit
         Left = 12
@@ -278,7 +283,7 @@ inherited DialogPeresortForm: TDialogPeresortForm
         EditValue = 41640d
         ParentFont = False
         Properties.DateButtons = [btnToday]
-        Properties.ReadOnly = False
+        Properties.ReadOnly = True
         Properties.SaveTime = False
         Properties.ShowTime = False
         Style.Font.Charset = RUSSIAN_CHARSET
@@ -320,7 +325,7 @@ inherited DialogPeresortForm: TDialogPeresortForm
       object Label1: TLabel
         Left = 0
         Top = 0
-        Width = 81
+        Width = 105
         Height = 14
         Align = alTop
         Caption = '      '#1050#1086#1076' '#1056#1072#1089#1093#1086#1076
@@ -330,6 +335,7 @@ inherited DialogPeresortForm: TDialogPeresortForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 81
       end
       object PanelGoodsCode_out: TPanel
         Left = 0
@@ -359,7 +365,7 @@ inherited DialogPeresortForm: TDialogPeresortForm
       object LabelGoodsKindName_out: TLabel
         Left = 0
         Top = 0
-        Width = 104
+        Width = 252
         Height = 14
         Align = alTop
         Alignment = taCenter
@@ -370,6 +376,7 @@ inherited DialogPeresortForm: TDialogPeresortForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 104
       end
       object PanelGoodsKindName_out: TPanel
         Left = 0
@@ -400,7 +407,7 @@ inherited DialogPeresortForm: TDialogPeresortForm
     object LabelGoodsName_out: TLabel
       Left = 0
       Top = 0
-      Width = 112
+      Width = 357
       Height = 14
       Align = alTop
       Caption = '      '#1053#1072#1079#1074#1072#1085#1080#1077' '#1056#1072#1089#1093#1086#1076
@@ -410,6 +417,7 @@ inherited DialogPeresortForm: TDialogPeresortForm
       Font.Name = 'Arial'
       Font.Style = [fsBold]
       ParentFont = False
+      ExplicitWidth = 112
     end
     object EditGoodsName_out: TcxButtonEdit
       Left = 5
@@ -458,7 +466,7 @@ inherited DialogPeresortForm: TDialogPeresortForm
       object LabelAmount_out: TLabel
         Left = 0
         Top = 0
-        Width = 99
+        Width = 166
         Height = 14
         Align = alTop
         Caption = '      '#1050#1086#1083'-'#1074#1086' '#1056#1072#1089#1093#1086#1076
@@ -468,6 +476,7 @@ inherited DialogPeresortForm: TDialogPeresortForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 99
       end
       object EditAmount_out: TcxCurrencyEdit
         Left = 5
@@ -496,10 +505,11 @@ inherited DialogPeresortForm: TDialogPeresortForm
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 1
+      Visible = False
       object LabelPartionDate_out: TLabel
         Left = 0
         Top = 0
-        Width = 99
+        Width = 191
         Height = 14
         Align = alTop
         Caption = '      '#1055#1072#1088#1090#1080#1103' '#1056#1072#1089#1093#1086#1076
@@ -509,6 +519,7 @@ inherited DialogPeresortForm: TDialogPeresortForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 99
       end
       object EditPartionDate_out: TcxDateEdit
         Left = 12
