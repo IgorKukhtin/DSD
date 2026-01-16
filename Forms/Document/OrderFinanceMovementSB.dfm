@@ -1,9 +1,9 @@
-object OrderFinanceMovementForm: TOrderFinanceMovementForm
+object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081'>'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081'> ('#1042#1080#1079#1072' '#1057#1041')'
   ClientHeight = 612
-  ClientWidth = 1060
+  ClientWidth = 1160
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1060
+    Width = 1160
     Height = 196
     Align = alTop
     BevelOuter = bvNone
@@ -358,8 +358,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Style.IsFontAssigned = True
     end
     object edOKPO_search: TcxTextEdit
-      Left = 120
-      Top = 173
+      Left = 123
+      Top = 174
       TabOrder = 34
       DesignSize = (
         103
@@ -497,18 +497,38 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       TabOrder = 44
       Width = 103
     end
+    object ceDate_SignSB: TcxDateEdit
+      Left = 458
+      Top = 173
+      EditValue = 42132d
+      Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+      Properties.EditFormat = 'dd.mm.yyyy hh:mm'
+      Properties.Kind = ckDateTime
+      Properties.ReadOnly = True
+      Properties.ValidateOnEnter = False
+      TabOrder = 45
+      Width = 116
+    end
+    object cbSignSB: TcxCheckBox
+      Left = 580
+      Top = 173
+      Caption = #1044#1072#1090#1072' ('#1042#1080#1079#1072' '#1057#1041')'
+      Properties.ReadOnly = True
+      TabOrder = 46
+      Width = 101
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 222
-    Width = 1060
+    Width = 1160
     Height = 390
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 390
-    ClientRectRight = 1060
+    ClientRectRight = 1160
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -516,8 +536,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1060
-        Height = 331
+        Width = 1160
+        Height = 184
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -1514,6 +1534,28 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
             Options.Editing = False
             Width = 70
           end
+          object Sign_Child: TcxGridDBColumn
+            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' ('#1044#1072'/'#1053#1077#1090') ('#1047#1072#1103#1074#1082#1072' '#1058#1052#1062')'
+            DataBinding.FieldName = 'Sign_Child'
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object GoodsName_Child: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088' ('#1047#1072#1103#1074#1082#1072' '#1058#1052#1062')'
+            DataBinding.FieldName = 'GoodsName_Child'
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Width = 100
+          end
+          object InvNumber_Child: TcxGridDBColumn
+            Caption = #8470' '#1079#1072#1103#1074#1082#1080' ('#1047#1072#1103#1074#1082#1072' '#1058#1052#1062')'
+            DataBinding.FieldName = 'InvNumber_Child'
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Width = 100
+          end
         end
         object cxGridLevel: TcxGridLevel
           GridView = cxGridDBTableView
@@ -1522,7 +1564,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       object ExportXmlGrid: TcxGrid
         Left = 0
         Top = 331
-        Width = 1060
+        Width = 1160
         Height = 35
         Align = alBottom
         Anchors = [akTop, akRight, akBottom]
@@ -1554,6 +1596,119 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
           GridView = ExportXmlGridDBTableView
         end
       end
+      object cxGridChild: TcxGrid
+        Left = 0
+        Top = 192
+        Width = 1160
+        Height = 139
+        Align = alBottom
+        TabOrder = 2
+        LookAndFeel.Kind = lfStandard
+        LookAndFeel.NativeStyle = False
+        LookAndFeel.SkinName = ''
+        object cxGridDBTableViewChild: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = ChildDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Filter.Active = True
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_ch2
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_ch2
+            end
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = GoodsName_ch2
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.IncSearch = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderHeight = 40
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object isSign_ch2: TcxGridDBColumn
+            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' ('#1044#1072'/'#1053#1077#1090')'
+            DataBinding.FieldName = 'isSign'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 112
+          end
+          object InvNumber_ch2: TcxGridDBColumn
+            Caption = #8470' '#1079#1072#1103#1074#1082#1080
+            DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 127
+          end
+          object GoodsName_ch2: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088
+            DataBinding.FieldName = 'GoodsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 271
+          end
+          object Amount_ch2: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 103
+          end
+          object Comment_ch2: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 218
+          end
+          object IsErased_ch2: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085
+            DataBinding.FieldName = 'isErased'
+            Visible = False
+            Options.Editing = False
+            Width = 60
+          end
+        end
+        object cxGridLevel2: TcxGridLevel
+          GridView = cxGridDBTableViewChild
+        end
+      end
+      object cxSplitter_Bottom: TcxSplitter
+        Left = 0
+        Top = 184
+        Width = 1160
+        Height = 8
+        HotZoneClassName = 'TcxMediaPlayer8Style'
+        AlignSplitter = salBottom
+        Control = cxGridChild
+      end
     end
     object cxTabSheet1: TcxTabSheet
       Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1070#1088'.'#1083#1080#1094#1072
@@ -1561,7 +1716,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
-        Width = 1060
+        Width = 1160
         Height = 366
         Align = alClient
         TabOrder = 0
@@ -2053,7 +2208,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Top = 343
   end
   object spSelectMI: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_OrderFinance'
+    StoredProcName = 'gpSelect_MovementItem_OrderFinanceSB'
     DataSet = MasterCDS
     DataSets = <
       item
@@ -2171,6 +2326,26 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
           ItemName = 'bbUnErased'
         end
         item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordChild'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedChild'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErasedChild'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
@@ -2266,6 +2441,10 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         item
           Visible = True
           ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedChild'
         end>
       OneOnRow = True
       Row = 0
@@ -2502,6 +2681,18 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         item
           Visible = True
           ItemName = 'bbUpdate_Sign_1_No'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_SignSB_Yes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_SignSB_No'
         end>
     end
     object bbUpdate_SignWait_1_Yes: TdxBarButton
@@ -2545,6 +2736,26 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     end
     object bbmactLoadExcel: TdxBarButton
       Action = mactLoadExcel
+      Category = 0
+    end
+    object bbInsertRecordChild: TdxBarButton
+      Action = actInsertRecordChild
+      Category = 0
+    end
+    object bbSetErasedChild: TdxBarButton
+      Action = SetErasedChild
+      Category = 0
+    end
+    object bbSetUnErasedChild: TdxBarButton
+      Action = SetUnErasedChild
+      Category = 0
+    end
+    object bbUpdate_SignSB_Yes: TdxBarButton
+      Action = actUpdate_SignSB_Yes
+      Category = 0
+    end
+    object bbUpdate_SignSB_No: TdxBarButton
+      Action = actUpdate_SignSB_No
       Category = 0
     end
   end
@@ -2656,6 +2867,21 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       ImageIndexTrue = 65
       ImageIndexFalse = 64
     end
+    object actUpdateChildDS: TdsdUpdateDataSet
+      Category = 'Child'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMIChild
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIChild
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end>
+      Caption = 'actUpdateChildDS'
+      DataSource = ChildDS
+    end
     object actUpdateJuridicalDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
@@ -2757,6 +2983,39 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end>
       Caption = 'actGetImportSetting'
     end
+    object SetErasedChild: TdsdUpdateErased
+      Category = 'Child'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      StoredProc = spErasedMIchild
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIchild
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1047#1072#1103#1074#1082#1072' '#1058#1052#1062'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = ChildDS
+    end
+    object SetUnErasedChild: TdsdUpdateErased
+      Category = 'Child'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      StoredProc = spUnErasedMIchild
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMIchild
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = ChildDS
+    end
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
@@ -2765,6 +3024,9 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       StoredProcList = <
         item
           StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spSelectMIChild
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
@@ -2801,6 +3063,24 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1087#1083#1072#1085' '#1087#1086' '#1087#1086#1095#1090#1077
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1087#1083#1072#1085' '#1087#1086' '#1087#1086#1095#1090#1077' (XLS)'
       ImageIndex = 53
+    end
+    object DeleteMovement: TChangeGuidesStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spChangeStatus
+      StoredProcList = <
+        item
+          StoredProc = spChangeStatus
+        end
+        item
+        end
+        item
+        end>
+      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      ImageIndex = 13
+      Status = mtDelete
+      Guides = StatusGuides
     end
     object actExport_New: TMultiAction
       Category = 'Export_file'
@@ -2910,6 +3190,9 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end
         item
           StoredProc = spSelectJuridicalOrderFinance
+        end
+        item
+          StoredProc = spSelectMIChild
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -3038,6 +3321,16 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Status = mtUncomplete
       Guides = StatusGuides
     end
+    object actInsertRecordChild: TInsertRecord
+      Category = 'Child'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableViewChild
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1047#1072#1103#1074#1082#1072' '#1058#1052#1062'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1047#1072#1103#1074#1082#1072' '#1058#1052#1062'>'
+      ImageIndex = 0
+    end
     object CompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
       MoveParams = <>
@@ -3056,23 +3349,35 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Status = mtComplete
       Guides = StatusGuides
     end
-    object DeleteMovement: TChangeGuidesStatus
+    object actUpdate_SignSB_No: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spChangeStatus
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SignSB_No
       StoredProcList = <
         item
-          StoredProc = spChangeStatus
+          StoredProc = spUpdate_SignSB_No
         end
         item
-        end
-        item
+          StoredProc = spGet
         end>
-      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
-      Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
-      ImageIndex = 13
-      Status = mtDelete
-      Guides = StatusGuides
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' <'#1042#1080#1079#1072' '#1057#1041'>'
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' <'#1042#1080#1079#1072' '#1057#1041'>'
+    end
+    object actUpdate_SignSB_Yes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SignSB_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SignSB_Yes
+        end
+        item
+          StoredProc = spGet
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1042#1080#1079#1072' '#1057#1041'>'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1042#1080#1079#1072' '#1057#1041'>'
     end
     object actMIContainer: TdsdOpenForm
       Category = 'DSDLib'
@@ -4400,7 +4705,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' Excel'
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' Excel'
-      ImageIndex = 41
     end
   end
   object MasterDS: TDataSource
@@ -4423,7 +4727,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     end
   end
   object spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_OrderFinance'
+    StoredProcName = 'gpInsertUpdate_MovementItem_OrderFinanceSB'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -4609,9 +4913,27 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsName_child'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsName_child'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumber_child'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumber_child'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 46
+    Left = 62
     Top = 359
   end
   object MasterViewAddOn: TdsdDBViewAddOn
@@ -4768,8 +5090,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 322
-    Top = 208
+    Left = 258
+    Top = 224
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -5084,6 +5406,20 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Value = Null
         Component = edTotalText_3
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isSignSB'
+        Value = Null
+        Component = cbSignSB
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Date_SignSB'
+        Value = Null
+        Component = ceDate_SignSB
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -5648,8 +5984,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 952
-    Top = 128
+    Left = 848
+    Top = 80
   end
   object GuidesBankAccount: TdsdGuides
     KeyField = 'Id'
@@ -5678,8 +6014,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 904
-    Top = 88
+    Left = 896
+    Top = 80
   end
   object spSelect_Export: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_OrderFinance_XML'
@@ -5785,7 +6121,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       end>
     PackSize = 1
     Left = 136
-    Top = 432
+    Top = 464
   end
   object ExportDS: TDataSource
     DataSet = ExportCDS
@@ -5983,8 +6319,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 46
-    Top = 415
+    Left = 102
+    Top = 391
   end
   object GuidesInsert: TdsdGuides
     KeyField = 'Id'
@@ -6373,7 +6709,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       end>
     PackSize = 1
     Left = 968
-    Top = 272
+    Top = 264
   end
   object spUpdate_Sign_1_Yes: TdsdStoredProc
     StoredProcName = 'gpUpdateMovement_OrderFinance_Sign_1'
@@ -6745,5 +7081,260 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     PackSize = 1
     Left = 736
     Top = 272
+  end
+  object ChildDS: TDataSource
+    DataSet = ChildCDS
+    Left = 934
+    Top = 549
+  end
+  object ChildCDS: TClientDataSet
+    Aggregates = <>
+    IndexFieldNames = 'ParentId'
+    MasterFields = 'Id'
+    MasterSource = MasterDS
+    PacketRecords = 0
+    Params = <>
+    Left = 897
+    Top = 549
+  end
+  object ChildViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewChild
+    OnDblClickActionList = <
+      item
+      end
+      item
+      end>
+    ActionItemList = <
+      item
+        ShortCut = 13
+      end
+      item
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
+    Left = 992
+    Top = 544
+  end
+  object spSelectMIChild: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItem_OrderFinance_Child'
+    DataSet = ChildCDS
+    DataSets = <
+      item
+        DataSet = ChildCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 834
+    Top = 557
+  end
+  object spUnErasedMIchild: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_OrderFinance_SetUnErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 590
+    Top = 560
+  end
+  object spErasedMIchild: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_OrderFinance_SetErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 654
+    Top = 560
+  end
+  object spInsertUpdateMIChild: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_OrderFinance_Child'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementItemId_Order'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'MovementItemId_OrderIncome'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsName'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'GoodsName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumber'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'InvNumber'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSign'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'isSign'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 800
+    Top = 448
+  end
+  object spUpdate_SignSB_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_OrderFinance_SignSB'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSignSB'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 968
+    Top = 136
+  end
+  object spUpdate_SignSB_No: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_OrderFinance_SignSB'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSignSB'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 960
+    Top = 184
   end
 end
