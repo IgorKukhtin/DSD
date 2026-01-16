@@ -863,7 +863,7 @@ BEGIN
         --строки для согласования СБ
         , tmpMI.MovementItemId_Child
         , tmpMI.Amount
-        , tmpMI.Amount_Child
+        , COALESCE (tmpMI.Amount_Child, tmpMI.Amount) ::TFloat AS Amount_Child
         , tmpMI.InvNumber_Child
         , tmpMI.GoodsName_Child
         , tmpMI.isSign_Child

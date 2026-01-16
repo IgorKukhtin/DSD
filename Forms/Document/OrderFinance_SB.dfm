@@ -2275,6 +2275,14 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTextSign'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TextSign_Child'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 592

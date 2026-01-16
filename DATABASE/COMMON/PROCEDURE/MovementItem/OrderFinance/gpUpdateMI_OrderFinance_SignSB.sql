@@ -6,10 +6,11 @@ CREATE OR REPLACE FUNCTION gpUpdateMI_OrderFinance_SignSB(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inParentId              Integer   , -- Ключ объекта <главный элемент>
     IN inMovementId            Integer   , -- Ключ объекта <Документ> 
-    IN inisSign                Boolean   ,
+    IN inisSign                Boolean   , 
+   OUT outTextSign             TVarChar  , 
     IN inSession               TVarChar    -- сессия пользователя
 )
-RETURNS Integer
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -37,6 +38,10 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Sign(), ioId, inisSign);
 
+     outTextSign := (CASE WHEN inisSign = TRUE THEN 'Погоджено'
+                          WHEN inisSign = FALSE THEN 'Не погоджено'
+                          ELSE ''
+                     END)::TVarChar;
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
