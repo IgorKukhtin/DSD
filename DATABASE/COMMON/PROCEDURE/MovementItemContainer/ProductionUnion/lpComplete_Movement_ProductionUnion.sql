@@ -1002,7 +1002,7 @@ BEGIN
                                , tmpMI.GoodsId              AS GoodsId
                                , tmpMI.GoodsKindId          AS GoodsKindId
                                , CASE WHEN tmpMI.PartionGoodsId_real > 0 THEN tmpMI.PartionGoodsId_real ELSE COALESCE (CLO_PartionGoods.ObjectId, 0) END AS PartionGoodsId
-                               , CASE WHEN tmpMI.PartionGoodsDate <> zc_DateStart() THEN tmpMI.PartionGoodsDate ELSE COALESCE (ObjectDate_Value.ValueData, zc_DateStart()) END AS PartionGoodsDate
+                               , CASE WHEN tmpMI.PartionGoodsDate NOT IN (zc_DateStart(), zc_DateEnd()) THEN tmpMI.PartionGoodsDate ELSE COALESCE (ObjectDate_Value.ValueData, zc_DateStart()) END AS PartionGoodsDate
                                  -- !!!Надо отловить ОДИН!!!
                                , ROW_NUMBER() OVER (PARTITION BY tmpMI.MovementItemId
                                                     ORDER BY -- сначала если указана партия
@@ -1044,7 +1044,7 @@ BEGIN
                             -- без Товар в пути
                             AND CLO_Account.ObjectId IS NULL
                             --
-                            AND (tmpMI.PartionGoodsDate    <> zc_DateStart()
+                            AND (tmpMI.PartionGoodsDate    NOT IN (zc_DateStart(), zc_DateEnd())
                               OR tmpMI.PartionGoodsId_real <> 0
                                 )
                             AND (tmpMI.PartionGoodsDate    = ObjectDate_Value.ValueData
@@ -1083,7 +1083,7 @@ BEGIN
                                                                , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
                                                                 )
                             --
-                            AND (tmpMI.PartionGoodsDate    <> zc_DateStart()
+                            AND (tmpMI.PartionGoodsDate    NOT IN (zc_DateStart(), zc_DateEnd())
                               OR tmpMI.PartionGoodsId_real <> 0
                                 )
                             --!!! партия указана но не нашли
