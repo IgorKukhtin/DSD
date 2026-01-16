@@ -96,7 +96,9 @@ BEGIN
                            INNER JOIN MovementLinkObject AS MovementLinkObject_OrderFinance
                                                          ON MovementLinkObject_OrderFinance.MovementId = Movement.Id
                                                         AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
-                                                        AND MovementLinkObject_OrderFinance.ObjectId   = 3988049
+                                                        AND MovementLinkObject_OrderFinance.ObjectId   IN (3988049 -- ћ€со
+                                                                                                         , 3988054 -- —ырье, упаковочные и расходные материалы
+                                                                                                           )
                        WHERE Movement.DescId = zc_Movement_OrderFinance()
                          AND Movement.StatusId IN (SELECT tmpStatus.StatusId FROM tmpStatus)
                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '14 DAY' AND inOperDate + INTERVAL '14 DAY'

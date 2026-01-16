@@ -188,7 +188,7 @@ BEGIN
                                                               ON ObjectFloat_Group.ObjectId = OL_OrderFinanceProperty_OrderFinance.ObjectId
                                                              AND ObjectFloat_Group.DescId   = zc_ObjectFloat_OrderFinanceProperty_Group()
 
-                                   WHERE OL_OrderFinanceProperty_OrderFinance.ChildObjectId = inOrderFinanceId -- 3988049 -- inOrderFinanceId
+                                   WHERE OL_OrderFinanceProperty_OrderFinance.ChildObjectId = inOrderFinanceId
                                      AND OL_OrderFinanceProperty_OrderFinance.DescId        = zc_ObjectLink_OrderFinanceProperty_OrderFinance()
                                   )
        -- разворачивается по УП-статьям + № группы

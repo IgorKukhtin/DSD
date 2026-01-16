@@ -415,30 +415,4 @@ $BODY$
 
 
 -- тест
---select * from gpUpdateMovement_OrderFinance_Plan(inMovementId := 32907603 , inMovementItemId := 341774289 , inIsAmountPlan := 'True' , inisDay_1 := 'False' , inisDay_2 := 'False' , inisDay_3 := 'True' , inisDay_4 := 'False' , inisDay_5 := 'False' , inOrderFinanceId := 3988049 , ioJuridicalOrderFinanceId := 12995943 , inJuridicalId := 397619 , inInfoMoneyId := 8908 , inBankId_main := 76970 , inBankId_jof := 81452 , inBankAccountName_main := 'UA173005280000026000301367079' , inBankAccountName_jof := 'UA523003350000000026005464177' , inComment_jof := 'За Яловичину, згідно Договору  NOM_DOG у т.ч. ПДВ PDV% SUMMA_P грн.' , inSession := '9457');
-
-
-/*select * from gpUpdateMovement_OrderFinance_Plan(
-inMovementId := 32907603 ,
-inMovementItemId := 341774317 ,
-inIsAmountPlan := 'True' ,
-inisDay_1 := 'False' ,
-inisDay_2 := 'False' ,
-inisDay_3 := 'True' ,
-inisDay_4 := 'False' ,
-inisDay_5 := 'False' ,
-inOrderFinanceId := 3988049 ,
-ioJuridicalOrderFinanceId := 12996023 ,
-inJuridicalId := 11057033 ,
-inInfoMoneyId := 8906 ,
-inBankId_main_top := 0 ,
-inBankId_main := 76970 ,    ---76970
-inBankId_jof := 9264405 ,
-inBankAccountName_main := 'UA173005280000026000301367079' ,
-inBankAccountName_jof := 'UA583209840000026004210394845' ,
-inComment_jof := 'За  свиней згідно договору № NOM_DOG у т.ч. ПДВ PDV% SUMMA_P грн.' ,
---inComment_pay := '' ,
- inNumber_calc := 0::TFloat     ,
-inSession := '9457');
-
-*/
+-- select * from gpUpdateMovement_OrderFinance_Plan(inMovementId := 32907603 , inMovementItemId := 341774289 , inIsAmountPlan := 'True' , inisDay_1 := 'False' , inisDay_2 := 'False' , inisDay_3 := 'True' , inisDay_4 := 'False' , inisDay_5 := 'False' , inOrderFinanceId := 398804 9 , ioJuridicalOrderFinanceId := 12995943 , inJuridicalId := 397619 , inInfoMoneyId := 8908 , inBankId_main := 76970 , inBankId_jof := 81452 , inBankAccountName_main := 'UA173005280000026000301367079' , inBankAccountName_jof := 'UA523003350000000026005464177' , inComment_jof := 'За Яловичину, згідно Договору  NOM_DOG у т.ч. ПДВ PDV% SUMMA_P грн.' , inSession := '9457');
