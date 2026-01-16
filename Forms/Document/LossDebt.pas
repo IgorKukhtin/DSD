@@ -23,7 +23,8 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit;
+  DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit, ExternalLoad,
+  dsdCommon;
 
 type
   TLossDebtForm = class(TParentForm)
@@ -134,6 +135,11 @@ type
     JuridicalBasisChoiceForm: TOpenChoiceForm;
     actMovementItemProtocolOpenForm: TdsdOpenForm;
     bbMIProtocolOpenForm: TdxBarButton;
+    spGetImportSetting: TdsdStoredProc;
+    actGetImportSetting: TdsdExecStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    mactLoadExcel: TMultiAction;
+    bbmactLoadExcel: TdxBarButton;
   private
   public
   end;

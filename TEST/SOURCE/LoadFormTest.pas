@@ -1970,7 +1970,7 @@ procedure TLoadFormTest.LoadLossDebtFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossDebtForm'));
   TdsdFormStorageFactory.GetStorage.Load('TLossDebtForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossDebtJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TLossDebtJournalForm');
 end;

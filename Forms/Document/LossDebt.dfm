@@ -784,6 +784,18 @@ object LossDebtForm: TLossDebtForm
         end
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbmactLoadExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMIContainer'
         end
         item
@@ -871,6 +883,10 @@ object LossDebtForm: TLossDebtForm
     end
     object bbMIProtocolOpenForm: TdxBarButton
       Action = actMovementItemProtocolOpenForm
+      Category = 0
+    end
+    object bbmactLoadExcel: TdxBarButton
+      Action = mactLoadExcel
       Category = 0
     end
   end
@@ -1630,6 +1646,53 @@ object LossDebtForm: TLossDebtForm
         end>
       isShowModal = False
     end
+    object actGetImportSetting: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSetting
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSetting
+        end>
+      Caption = 'actGetImportSetting'
+    end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = '0'
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+    end
+    object mactLoadExcel: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' Excel?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' Excel'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' Excel'
+      ImageIndex = 41
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -1881,6 +1944,7 @@ object LossDebtForm: TLossDebtForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 352
     Top = 312
@@ -2332,5 +2396,37 @@ object LossDebtForm: TLossDebtForm
     PackSize = 1
     Left = 875
     Top = 209
+  end
+  object spGetImportSetting: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TLossDebtJournalForm;zc_Object_ImportSetting_LossDebt'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 736
+    Top = 272
   end
 end

@@ -1721,11 +1721,17 @@ CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_PersonalServiceList_Member() RE
 CREATE OR REPLACE FUNCTION zc_Enum_ImportType_OrderFinance() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_OrderFinance' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_OrderFinance() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_OrderFinance' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
   
+-- ЗП Загрузка LossDebt
+CREATE OR REPLACE FUNCTION zc_Enum_ImportType_LossDebt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_LossDebt' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_LossDebt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_LossDebt' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  
+
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 16.01.26         * ЗП Загрузка OrderFinance
  23.10.25         * Загрузка CFO для Unit
  22.07.25         * Загрузка <Больничные листы из 1С> из файла
  25.04.25         * Загрузка для Договоров   Юридические лица(печать док.)
