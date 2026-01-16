@@ -19,7 +19,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
     OPEN Cursor1 FOR
-      
+
        SELECT
              Movement.InvNumber                                 AS InvNumber
            , Movement.OperDate                                  AS OperDate
@@ -27,9 +27,9 @@ BEGIN
            , Object_From.ValueData                              AS FromName
            , Object_To.ValueData                                AS ToName
            , Object_SubjectDoc.ValueData                        AS SubjectDocName
-       
+
        FROM Movement
-   
+
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
@@ -38,7 +38,7 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-  
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -57,6 +57,24 @@ BEGIN
 
     OPEN Cursor2 FOR
 
+      -- –ÂÁÛÎ¸Ú‡Ú
+      WITH tmpMIContainer AS (SELECT MIContainer.MovementItemId
+                                   , MAX (MIContainer.ContainerId) AS ContainerId
+                                   , COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateStart()) AS PartionGoodsDate
+                                   , SUM (-1 * MIContainer.Amount) AS Amount
+                              FROM MovementItemContainer AS MIContainer
+                                   LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                                 ON CLO_PartionGoods.ContainerId = MIContainer.ContainerId
+                                                                AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+                                   LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value ON ObjectDate_PartionGoods_Value.ObjectId = CLO_PartionGoods.ObjectId
+                                                                                        AND ObjectDate_PartionGoods_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
+
+                              WHERE MIContainer.MovementId = inMovementId
+                                AND MIContainer.DescId     = zc_MIContainer_Count()
+                              GROUP BY MIContainer.MovementItemId
+                                   , COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateStart())
+                             )
+      -- –ÂÁÛÎ¸Ú‡Ú
       SELECT
              MovementItem.Id                    AS MovementItemId
             , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS INTEGER) AS LineNum
@@ -71,18 +89,20 @@ BEGIN
             , Object_GoodsChild.ValueData            AS GoodsChildName
             , ObjectString_GoodsChild_GoodsGroupFull.ValueData AS GoodsChildGroupNameFull
             , Object_MeasureChild.ValueData                    AS MeasureChildName
-         
+
             , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN MovementItem.Amount   ELSE 0 END                                 :: TFloat AS Amountin
             , (MovementItem.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)  :: TFloat AS WeightIn
 
-            , CASE WHEN Object_MeasureChild.Id = zc_Measure_Sh() THEN MovementItemChild.Amount   ELSE 0 END                                     :: TFloat AS AmountOut
-            , (MovementItemChild.Amount * CASE WHEN Object_MeasureChild.Id = zc_Measure_Sh() THEN ObjectFloat_WeightChild.ValueData ELSE 1 END) :: TFloat AS WeightOut         
+            , CASE WHEN Object_MeasureChild.Id = zc_Measure_Sh() THEN COALESCE (tmpMIContainer_child.Amount, MovementItemChild.Amount) ELSE 0 END                                     :: TFloat AS AmountOut
+            , (COALESCE (tmpMIContainer_child.Amount, MovementItemChild.Amount) * CASE WHEN Object_MeasureChild.Id = zc_Measure_Sh() THEN ObjectFloat_WeightChild.ValueData ELSE 1 END) :: TFloat AS WeightOut
 
             , MIString_PartionGoods.ValueData   AS PartionGoods
             , MIDate_PartionGoods.ValueData     AS PartionGoodsDate
 
             , MIString_PartionGoodsChild.ValueData   AS PartionGoodsChild
-            , MIDate_PartionGoodsChild.ValueData     AS PartionGoodsDateChild
+            , COALESCE (CASE WHEN tmpMIContainer_child.PartionGoodsDate > zc_DateStart() THEN tmpMIContainer_child.PartionGoodsDate ELSE NULL END
+                      , MIDate_PartionGoodsChild.ValueData
+                       ) :: TDateTime AS PartionGoodsDateChild
 
             , Object_GoodsKind.ObjectCode       AS GoodsKindCode
             , Object_GoodsKind.ValueData        AS GoodsKindName
@@ -91,7 +111,7 @@ BEGIN
             , Object_GoodsKindChild.ValueData        AS GoodsKindChildName
 
 
-       FROM MovementItem 
+       FROM MovementItem
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
@@ -116,6 +136,8 @@ BEGIN
                               AND MovementItemChild.DescId     = zc_MI_Child()
                               AND MovementItemChild.isErased   = False
              LEFT JOIN Object AS Object_GoodsChild ON Object_GoodsChild.Id = MovementItemChild.ObjectId
+
+             LEFT JOIN tmpMIContainer AS tmpMIContainer_child ON tmpMIContainer_child.MovementItemId = MovementItemChild.Id
 
              LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                     ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
@@ -153,21 +175,18 @@ BEGIN
                                   AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
              LEFT JOIN ObjectFloat AS ObjectFloat_WeightChild
                                    ON ObjectFloat_WeightChild.ObjectId = Object_GoodsChild.Id
-                                  AND ObjectFloat_WeightChild.DescId = zc_ObjectFloat_Goods_Weight() 
-             
+                                  AND ObjectFloat_WeightChild.DescId = zc_ObjectFloat_Goods_Weight()
+
         WHERE  MovementItem.MovementId = inMovementId
            AND MovementItem.DescId     = zc_MI_Master()
            AND MovementItem.isErased   = False
- 
-        ;
-
+       ;
 
     RETURN NEXT Cursor2;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_ProductionUnion_Print (Integer,TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
