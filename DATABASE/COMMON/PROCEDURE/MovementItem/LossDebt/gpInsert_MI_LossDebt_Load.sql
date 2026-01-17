@@ -38,15 +38,15 @@ BEGIN
      END IF;
 
 
-     --Филиал
+     -- Филиал
      vbBranchId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.ValueData = inBranchName AND Object.isErased = FALSE);
-     --проверка
-     IF COALESCE (vbBranchId,0) = 0
+     -- НЕ проверка
+     IF COALESCE (vbBranchId,0) = 0 AND 1=0
      THEN
          RAISE EXCEPTION 'Ошибка.Не найден Филиал <%> для Юр.лица <%>.', inBranchName, inJuridicalName;
      END IF;
      
-     --Гл.Юр.лицо
+     -- Гл.Юр.лицо
      vbJuridicalBasisId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Juridical() AND Object.ValueData = inJuridicalBasisName AND Object.isErased = FALSE);
      --проверка
      IF COALESCE (vbJuridicalBasisId,0) = 0
@@ -92,8 +92,8 @@ BEGIN
 
      --Контрагент
      vbPartnerId := (SELECT Object.Id FROM Object WHERE Object.ValueData = TRIM (inPartnerName) AND Object.DescId = zc_Object_Partner() AND Object.isErased = FALSE);
-     --проверка
-     IF COALESCE (vbPartnerId,0) = 0
+     --НЕ проверка
+     IF COALESCE (vbPartnerId,0) = 0 AND 1=0
      THEN
          RAISE EXCEPTION 'Ошибка.Не найден Контрагент <%> для Юр.лица <%>', inPartnerName, inJuridicalName;
      END IF; 

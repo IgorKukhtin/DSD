@@ -29,7 +29,6 @@ BEGIN
                 INNER JOIN MovementLinkObject AS MovementLinkObject_OrderFinance
                                               ON MovementLinkObject_OrderFinance.MovementId = Movement.Id
                                              AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
-                                           --AND MovementLinkObject_OrderFinance.ObjectId   = 3988049
                 -- если Разрешено изменение плана по дням - в проведенном док. = ДА
                 LEFT JOIN ObjectBoolean AS ObjectBoolean_Status_off
                                          ON ObjectBoolean_Status_off.ObjectId  = MovementLinkObject_OrderFinance.ObjectId
