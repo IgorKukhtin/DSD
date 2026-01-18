@@ -23,7 +23,9 @@ BEGIN
                                 AND ObjectLink_ProfitLoss_InfoMoney.DescId = zc_ObjectLink_ProfitLoss_InfoMoney()
 
        WHERE ObjectLink_ProfitLoss_ProfitLossGroup.ChildObjectId = inProfitLossGroupId
-         AND ObjectLink_ProfitLoss_InfoMoney.ChildObjectId = inInfoMoneId AND Object_ProfitLoss.DescId = zc_Object_ProfitLoss());
+         AND ObjectLink_ProfitLoss_InfoMoney.ChildObjectId = inInfoMoneId AND Object_ProfitLoss.DescId = zc_Object_ProfitLoss()
+         AND Object_ProfitLoss.isErased = FALSE
+         );
 
 END;
 $BODY$

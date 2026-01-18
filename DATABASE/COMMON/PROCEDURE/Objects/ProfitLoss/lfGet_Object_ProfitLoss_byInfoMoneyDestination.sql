@@ -27,7 +27,10 @@ BEGIN
                                 AND ObjectLink_ProfitLoss_InfoMoneyDestination.DescId = zc_ObjectLink_ProfitLoss_InfoMoneyDestination()
 
        WHERE ObjectLink_ProfitLoss_ProfitLossGroup.ChildObjectId = inProfitLossGroupId AND ObjectLink_ProfitLoss_ProfitLossDirection.ChildObjectId = inProfitLossDirectionId
-         AND ObjectLink_ProfitLoss_InfoMoneyDestination.ChildObjectId = inInfoMoneyDestinationId AND Object_ProfitLoss.DescId = zc_Object_ProfitLoss());
+         AND ObjectLink_ProfitLoss_InfoMoneyDestination.ChildObjectId = inInfoMoneyDestinationId AND Object_ProfitLoss.DescId = zc_Object_ProfitLoss()
+         AND Object_ProfitLoss.isErased = FALSE
+        )
+         ;
 
 END;
 $BODY$
