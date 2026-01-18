@@ -661,12 +661,18 @@ end if;
      IF vbPartnerId_min <> vbPartnerId_max
         AND NOT EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.MovementDescId = zc_Movement_ProfitLossService())
      THEN
-         RAISE EXCEPTION 'Ошибка.Нельзя автоматически определить контрагента, т.к. их больше одного%<1. %>%<2. %>.'
-                       , CHR (13)
-                       , lfGet_Object_ValueData (vbPartnerId_min)
-                       , CHR (13)
-                       , lfGet_Object_ValueData (vbPartnerId_max)
-                       ;
+         IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.MovementDescId = zc_Movement_LossDebt())
+         THEN
+             vbPartnerId_min:= 0;
+             vbPartnerId_max:= 0;
+         ELSE
+             RAISE EXCEPTION 'Ошибка.Нельзя автоматически определить контрагента, т.к. их больше одного%<1. %>%<2. %>.'
+                           , CHR (13)
+                           , lfGet_Object_ValueData (vbPartnerId_min)
+                           , CHR (13)
+                           , lfGet_Object_ValueData (vbPartnerId_max)
+                            ;
+         END IF;
      END IF;
 
 
@@ -856,7 +862,10 @@ end if;
                                                                             , inObjectCostDescId  := NULL
                                                                             , inObjectCostId      := NULL
                                                                             , inDescId_1          := zc_ContainerLinkObject_Juridical()
-                                                                            , inObjectId_1        := CASE WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() THEN _tmpItem.ObjectId ELSE (SELECT ObjectLink.ChildObjectId FROM ObjectLink WHERE ObjectLink.ObjectId = _tmpItem.ObjectId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()) END
+                                                                            , inObjectId_1        := CASE WHEN _tmpItem.ObjectDescId = zc_Object_Juridical()
+                                                                                                               THEN _tmpItem.ObjectId
+                                                                                                          ELSE (SELECT ObjectLink.ChildObjectId FROM ObjectLink WHERE ObjectLink.ObjectId = _tmpItem.ObjectId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical())
+                                                                                                     END
                                                                             , inDescId_2          := zc_ContainerLinkObject_Contract()
                                                                             , inObjectId_2        := _tmpItem.ContractId
                                                                             , inDescId_3          := zc_ContainerLinkObject_InfoMoney()
@@ -867,7 +876,7 @@ end if;
                                                                             , inObjectId_5        := _tmpItem.PartionMovementId
                                                                             , inDescId_6          := CASE WHEN COALESCE (_tmpItem.CurrencyId, zc_Enum_Currency_Basis()) = zc_Enum_Currency_Basis() THEN NULL ELSE zc_ContainerLinkObject_Currency() END
                                                                             , inObjectId_6        := CASE WHEN COALESCE (_tmpItem.CurrencyId, zc_Enum_Currency_Basis()) = zc_Enum_Currency_Basis() THEN NULL ELSE _tmpItem.CurrencyId END
-                                                                            , inDescId_7          := CASE WHEN inMovementId = 4955377 /*vbTmp = -1*/ THEN NULL WHEN /*inMovementId IN (3470198) OR*/ (_tmpItem.BranchId_Balance = 0 AND _tmpItem.ObjectId IN (9400, 9401)) /*Золотий Екватор ТОВ*/ THEN NULL ELSE CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId NOT IN (zc_Enum_AccountDirection_30200()/*, zc_Enum_AccountDirection_70700(), zc_Enum_AccountDirection_70800()*/) THEN zc_ContainerLinkObject_Partner() ELSE NULL END END -- and <> наши компании
+                                                                            , inDescId_7          := CASE WHEN inMovementId = 4955377 /*vbTmp = -1*/ THEN NULL WHEN /*inMovementId IN (3470198) OR*/ (_tmpItem.BranchId_Balance = 0 AND _tmpItem.ObjectId IN (9400, 9401)) /*Золотий Екватор ТОВ*/ THEN NULL ELSE CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId NOT IN (zc_Enum_AccountDirection_30200()/*, zc_Enum_AccountDirection_70700(), zc_Enum_AccountDirection_70800()*/) AND vbPartnerId_max > 0 THEN zc_ContainerLinkObject_Partner() ELSE NULL END END -- and <> наши компании
                                                                             , inObjectId_7        := CASE WHEN inMovementId = 4955377 /*vbTmp = -1*/ THEN 0    WHEN /*inMovementId IN (3470198, 3528808) OR*/ (_tmpItem.BranchId_Balance = 0 AND _tmpItem.ObjectId IN (9400, 9401)) /*Золотий Екватор ТОВ*/ THEN NULL ELSE CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400() /*ГСМ*/ THEN 0 ELSE CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId NOT IN (zc_Enum_AccountDirection_30200()/*, zc_Enum_AccountDirection_70700(), zc_Enum_AccountDirection_70800()*/) THEN CASE WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() THEN vbPartnerId_max ELSE _tmpItem.ObjectId END ELSE NULL END END END -- and <> наши компании
                                                                             , inDescId_8          := CASE WHEN inMovementId = 4955377 /*vbTmp = -1*/ THEN NULL WHEN /*inMovementId IN (3470198) OR*/ (_tmpItem.BranchId_Balance = 0 AND _tmpItem.ObjectId IN (9400, 9401)) /*Золотий Екватор ТОВ*/ THEN NULL ELSE CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId NOT IN (zc_Enum_AccountDirection_30200()/*, zc_Enum_AccountDirection_70700(), zc_Enum_AccountDirection_70800()*/) THEN zc_ContainerLinkObject_Branch() ELSE NULL END END -- and <> наши компании
                                                                             , inObjectId_8        := CASE WHEN inMovementId = 4955377 /*vbTmp = -1*/ THEN 0    WHEN /*inMovementId IN (3470198) OR*/ (_tmpItem.BranchId_Balance = 0 AND _tmpItem.ObjectId IN (9400, 9401)) /*Золотий Екватор ТОВ*/ THEN NULL ELSE CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId NOT IN (zc_Enum_AccountDirection_30200()/*, zc_Enum_AccountDirection_70700(), zc_Enum_AccountDirection_70800()*/) THEN _tmpItem.BranchId_Balance ELSE NULL END END -- and <> наши компании
