@@ -210,7 +210,7 @@ inherited MainForm: TMainForm
     object actOrderFinanceSBJournal: TdsdOpenForm [4]
       Category = #1055#1083#1072#1085#1080#1088#1086#1074#1085#1080#1077
       MoveParams = <>
-      Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1042#1080#1079#1072' '#1057#1041') ('#1078#1091#1088#1085#1072#1083')'
+      Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1057#1095#1077#1090#1072')'
       FormName = 'TOrderFinanceSBJournalForm'
       FormNameParam.Value = 'TOrderFinanceSBJournalForm'
       FormNameParam.DataType = ftString
@@ -11447,17 +11447,17 @@ inherited MainForm: TMainForm
       object miOrderFinanceMov: TMenuItem
         Action = actOrderFinanceMov
       end
-      object miOrderFinance_Plan: TMenuItem
-        Action = actOrderFinance_Plan
-      end
-      object miOrderFinance_PlanDate: TMenuItem
-        Action = actOrderFinance_PlanDate
+      object miOrderFinanceSBJournal: TMenuItem
+        Action = actOrderFinanceSBJournal
       end
       object miOrderFinance_SB: TMenuItem
         Action = actOrderFinance_SB
       end
-      object miOrderFinanceSBJournal: TMenuItem
-        Action = actOrderFinanceSBJournal
+      object miOrderFinance_PlanDate: TMenuItem
+        Action = actOrderFinance_PlanDate
+      end
+      object miOrderFinance_Plan: TMenuItem
+        Action = actOrderFinance_Plan
       end
       object N272: TMenuItem
         Caption = '-'

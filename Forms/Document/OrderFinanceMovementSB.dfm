@@ -1,7 +1,7 @@
 object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081'> ('#1042#1080#1079#1072' '#1057#1041')'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081'> ('#1057#1095#1077#1090#1072')'
   ClientHeight = 612
   ClientWidth = 1160
   Color = clBtnFace
@@ -930,6 +930,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
           object StartDate: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088' '#1089
             DataBinding.FieldName = 'StartDate'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1086#1075#1086#1074#1086#1088' '#1089
@@ -939,6 +940,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
           object EndDate: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088' '#1076#1086
             DataBinding.FieldName = 'EndDate'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1086#1075#1086#1074#1086#1088' '#1076#1086
@@ -958,6 +960,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
           object Condition: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1077
             DataBinding.FieldName = 'Condition'
+            Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -992,6 +995,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
           object NumGroup: TcxGridDBColumn
             Caption = #8470' '#1059#1055
             DataBinding.FieldName = 'NumGroup'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1018,6 +1022,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1030,6 +1035,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Properties.ReadOnly = False
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1042,6 +1048,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Properties.ReadOnly = False
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1054,6 +1061,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Properties.ReadOnly = False
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1066,6 +1074,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Properties.ReadOnly = False
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1078,6 +1087,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Properties.ReadOnly = False
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1090,6 +1100,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Properties.ReadOnly = False
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1101,9 +1112,40 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 100
+          end
+          object Sign_Child: TcxGridDBColumn
+            Caption = #1042#1080#1079#1072' '#1057#1041' ('#1044#1072'/'#1053#1077#1090')'
+            DataBinding.FieldName = 'Sign_Child'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object InvNumber_Child: TcxGridDBColumn
+            Caption = #8470' '#1079#1072#1103#1074#1082#1080' (1'#1057')'
+            DataBinding.FieldName = 'InvNumber_Child'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1079#1072#1103#1074#1082#1080' '#1058#1052#1062' '#1074' 1'#1057
+            Width = 80
+          end
+          object GoodsName_Child: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088' ('#1047#1072#1103#1074#1082#1072' '#1058#1052#1062')'
+            DataBinding.FieldName = 'GoodsName_Child'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 150
+          end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 100
           end
           object Amount: TcxGridDBColumn
@@ -1155,6 +1197,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090' '#1048#1058#1054#1043#1054
@@ -1168,9 +1211,11 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Properties.ReadOnly = False
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090' '#1085#1072' 1.'#1087#1085'.'
+            Options.Editing = False
             Width = 70
           end
           object AmountPlan_2: TcxGridDBColumn
@@ -1184,6 +1229,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090' '#1085#1072' 2.'#1074#1090'.'
+            Options.Editing = False
             Width = 70
           end
           object AmountPlan_3: TcxGridDBColumn
@@ -1193,9 +1239,11 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Properties.ReadOnly = False
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090' '#1085#1072' 3.'#1089#1088'.'
+            Options.Editing = False
             Width = 70
           end
           object AmountPlan_4: TcxGridDBColumn
@@ -1209,6 +1257,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090' '#1085#1072' 4.'#1095#1090'.'
+            Options.Editing = False
             Width = 70
           end
           object AmountPlan_5: TcxGridDBColumn
@@ -1218,17 +1267,21 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             Properties.ReadOnly = False
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090' '#1085#1072' 5.'#1087#1090'.'
+            Options.Editing = False
             Width = 70
           end
           object isAmountPlan_1: TcxGridDBColumn
             Caption = #1055#1083#1072#1090#1080#1084' ('#1076#1072'/'#1085#1077#1090') 1.'#1087#1085'.'
             DataBinding.FieldName = 'isAmountPlan_1'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1083#1072#1090#1080#1084' ('#1076#1072'/'#1085#1077#1090') 1.'#1087#1085'.'
+            Options.Editing = False
             Width = 70
           end
           object isAmountPlan_2: TcxGridDBColumn
@@ -1238,14 +1291,17 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1083#1072#1090#1080#1084' ('#1076#1072'/'#1085#1077#1090') 2.'#1074#1090'.'
+            Options.Editing = False
             Width = 70
           end
           object isAmountPlan_3: TcxGridDBColumn
             Caption = #1055#1083#1072#1090#1080#1084' ('#1076#1072'/'#1085#1077#1090') 3.'#1089#1088'.'
             DataBinding.FieldName = 'isAmountPlan_3'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1083#1072#1090#1080#1084' ('#1076#1072'/'#1085#1077#1090') 3.'#1089#1088'.'
+            Options.Editing = False
             Width = 70
           end
           object isAmountPlan_4: TcxGridDBColumn
@@ -1255,14 +1311,29 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1083#1072#1090#1080#1084' ('#1076#1072'/'#1085#1077#1090') 4.'#1095#1090'.'
+            Options.Editing = False
             Width = 70
           end
           object isAmountPlan_5: TcxGridDBColumn
             Caption = #1055#1083#1072#1090#1080#1084' ('#1076#1072'/'#1085#1077#1090') 5.'#1087#1090'.'
             DataBinding.FieldName = 'isAmountPlan_5'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1083#1072#1090#1080#1084' ('#1076#1072'/'#1085#1077#1090') 5.'#1087#1090'.'
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountPlan_total_old: TcxGridDBColumn
+            Caption = '*'#1055#1083#1072#1085' *'#1048#1058#1054#1043#1054
+            DataBinding.FieldName = 'AmountPlan_total_old'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085' '#1087#1088#1086#1096#1083#1086#1081' '#1085#1077#1076#1077#1083#1080' *'#1048#1058#1054#1043#1054
+            Options.Editing = False
             Width = 70
           end
           object AmountPlan_1_old: TcxGridDBColumn
@@ -1318,20 +1389,22 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             DataBinding.FieldName = 'AmountPlan_5_old'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1083#1072#1085' '#1087#1088#1086#1096#1083#1086#1081' '#1085#1077#1076#1077#1083#1080' '#1085#1072' *5.'#1087#1090'.'
             Options.Editing = False
             Width = 70
           end
-          object AmountPlan_total_old: TcxGridDBColumn
-            Caption = '*'#1055#1083#1072#1085' *'#1048#1058#1054#1043#1054
-            DataBinding.FieldName = 'AmountPlan_total_old'
+          object AmountReal_total_old: TcxGridDBColumn
+            Caption = '*'#1060#1072#1082#1090' *'#1048#1058#1054#1043#1054
+            DataBinding.FieldName = 'AmountReal_total_old'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1083#1072#1085' '#1087#1088#1086#1096#1083#1086#1081' '#1085#1077#1076#1077#1083#1080' *'#1048#1058#1054#1043#1054
+            HeaderHint = #1060#1072#1082#1090' '#1086#1087#1083#1072#1090' '#1087#1088#1086#1096#1083#1086#1081' '#1085#1077#1076#1077#1083#1080' *'#1048#1058#1054#1043#1054
             Options.Editing = False
             Width = 70
           end
@@ -1395,17 +1468,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             Options.Editing = False
             Width = 70
           end
-          object AmountReal_total_old: TcxGridDBColumn
-            Caption = '*'#1060#1072#1082#1090' *'#1048#1058#1054#1043#1054
-            DataBinding.FieldName = 'AmountReal_total_old'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1060#1072#1082#1090' '#1086#1087#1083#1072#1090' '#1087#1088#1086#1096#1083#1086#1081' '#1085#1077#1076#1077#1083#1080' *'#1048#1058#1054#1043#1054
-            Options.Editing = False
-            Width = 70
-          end
           object isPlan_1_old: TcxGridDBColumn
             Caption = '*'#1055#1083#1072#1085' ('#1076'/'#1085') *1.'#1087#1085'.'
             DataBinding.FieldName = 'isPlan_1_old'
@@ -1465,13 +1527,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
               '.'
             Options.Editing = False
             Width = 55
-          end
-          object Comment: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-            DataBinding.FieldName = 'Comment'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 200
           end
           object Comment_pay: TcxGridDBColumn
             Caption = #1053#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1072
@@ -1533,28 +1588,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
-          end
-          object Sign_Child: TcxGridDBColumn
-            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' ('#1044#1072'/'#1053#1077#1090') ('#1047#1072#1103#1074#1082#1072' '#1058#1052#1062')'
-            DataBinding.FieldName = 'Sign_Child'
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            Options.Editing = False
-            Width = 100
-          end
-          object GoodsName_Child: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088' ('#1047#1072#1103#1074#1082#1072' '#1058#1052#1062')'
-            DataBinding.FieldName = 'GoodsName_Child'
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            Width = 100
-          end
-          object InvNumber_Child: TcxGridDBColumn
-            Caption = #8470' '#1079#1072#1103#1074#1082#1080' ('#1047#1072#1103#1074#1082#1072' '#1058#1052#1062')'
-            DataBinding.FieldName = 'InvNumber_Child'
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            Width = 100
           end
         end
         object cxGridLevel: TcxGridLevel
@@ -1651,7 +1684,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object isSign_ch2: TcxGridDBColumn
-            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' ('#1044#1072'/'#1053#1077#1090')'
+            Caption = #1042#1080#1079#1072' '#1057#1041' ('#1044#1072'/'#1053#1077#1090')'
             DataBinding.FieldName = 'isSign'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -1659,14 +1692,14 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             Width = 112
           end
           object InvNumber_ch2: TcxGridDBColumn
-            Caption = #8470' '#1079#1072#1103#1074#1082#1080
+            Caption = #8470' '#1079#1072#1103#1074#1082#1080' (1'#1057')'
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 127
+            Width = 80
           end
           object GoodsName_ch2: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088
+            Caption = #1058#1086#1074#1072#1088' ('#1047#1072#1103#1074#1082#1072' '#1058#1052#1062')'
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -1713,6 +1746,9 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1070#1088'.'#1083#1080#1094#1072
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -2372,10 +2408,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         end
         item
           Visible = True
-          ItemName = 'bbmactLoadExcel'
-        end
-        item
-          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -2995,7 +3027,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1047#1072#1103#1074#1082#1072' '#1058#1052#1062'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
-      ShortCut = 46
+      ShortCut = 49217
       ErasedFieldName = 'isErased'
       DataSource = ChildDS
     end
@@ -3011,7 +3043,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
+      ShortCut = 49217
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ChildDS

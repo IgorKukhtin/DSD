@@ -4,6 +4,7 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
   ClientWidth = 1020
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -126
   ExplicitWidth = 1036
   ExplicitHeight = 413
   PixelsPerInch = 96
@@ -453,16 +454,16 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
             Width = 70
           end
           object isSign_Child: TcxGridDBColumn
-            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' ('#1044#1072'/'#1053#1077#1090')'
+            Caption = #1042#1080#1079#1072' '#1057#1041' ('#1044#1072'/'#1053#1077#1090')'
             DataBinding.FieldName = 'isSign_Child'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             HeaderGlyphAlignmentVert = vaTop
-            Width = 100
+            Width = 80
           end
           object TextSign_Child: TcxGridDBColumn
-            Caption = #1055#1086#1075#1086#1076#1078#1077#1085#1085#1103' '#1057#1041
+            Caption = #1042#1080#1079#1072' '#1057#1041
             DataBinding.FieldName = 'TextSign_Child'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -470,7 +471,7 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
             Width = 100
           end
           object GoodsName_Child: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088
+            Caption = #1058#1086#1074#1072#1088' ('#1047#1072#1103#1074#1082#1072' '#1058#1052#1062')'
             DataBinding.FieldName = 'GoodsName_Child'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -480,12 +481,13 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
             Width = 100
           end
           object InvNumber_Child: TcxGridDBColumn
-            Caption = #8470' '#1079#1072#1103#1074#1082#1080
+            Caption = #8470' '#1079#1072#1103#1074#1082#1080' (1'#1057')'
             DataBinding.FieldName = 'InvNumber_Child'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             HeaderGlyphAlignmentVert = vaTop
+            HeaderHint = #8470' '#1079#1072#1103#1074#1082#1080' '#1058#1052#1062' '#1074' 1'#1057
             Options.Editing = False
             Width = 100
           end
