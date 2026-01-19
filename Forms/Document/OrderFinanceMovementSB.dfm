@@ -324,7 +324,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Caption = #1085#1077#1076#1077#1083#1103' '#1076#1086
     end
     object edTotalSumm_1: TcxCurrencyEdit
-      Left = 458
+      Left = 811
       Top = 146
       Hint = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102
       ParentFont = False
@@ -343,6 +343,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
       TabOrder = 32
+      Visible = False
       Width = 135
     end
     object cxLabel23: TcxLabel
@@ -383,9 +384,9 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Top = 173
       TabOrder = 36
       DesignSize = (
-        103
+        116
         21)
-      Width = 103
+      Width = 116
     end
     object ceDateSignWait_1: TcxDateEdit
       Left = 9
@@ -416,8 +417,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Width = 198
     end
     object edTotalText_1: TcxTextEdit
-      Left = 458
-      Top = 124
+      Left = 811
+      Top = 126
       Hint = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102
       TabStop = False
       ParentFont = False
@@ -431,11 +432,12 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Style.IsFontAssigned = True
       TabOrder = 40
       Text = 'edTotalText_1'
+      Visible = False
       Width = 134
     end
     object edTotalText_2: TcxTextEdit
-      Left = 599
-      Top = 124
+      Left = 903
+      Top = 126
       Hint = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102
       TabStop = False
       ParentFont = False
@@ -449,11 +451,12 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Style.IsFontAssigned = True
       TabOrder = 41
       Text = 'edTotalText_2'
+      Visible = False
       Width = 140
     end
     object edTotalText_3: TcxTextEdit
-      Left = 745
-      Top = 124
+      Left = 1022
+      Top = 126
       Hint = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102
       TabStop = False
       ParentFont = False
@@ -467,10 +470,11 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Style.IsFontAssigned = True
       TabOrder = 42
       Text = 'edTotalText_3'
+      Visible = False
       Width = 134
     end
     object cxLabel20: TcxLabel
-      Left = 328
+      Left = 490
       Top = 125
       Caption = '***'#1055#1083#1072#1085' '#1085#1072' '#1085#1077#1076'.:'
       ParentFont = False
@@ -482,7 +486,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Style.IsFontAssigned = True
     end
     object edOperDate_Amount: TcxDateEdit
-      Left = 328
+      Left = 490
       Top = 146
       EditValue = 42160d
       ParentFont = False
@@ -498,8 +502,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Width = 103
     end
     object ceDate_SignSB: TcxDateEdit
-      Left = 458
-      Top = 173
+      Left = 310
+      Top = 146
       EditValue = 42132d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
       Properties.EditFormat = 'dd.mm.yyyy hh:mm'
@@ -510,12 +514,19 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Width = 116
     end
     object cbSignSB: TcxCheckBox
-      Left = 580
-      Top = 173
+      Left = 310
+      Top = 126
       Caption = #1044#1072#1090#1072' ('#1042#1080#1079#1072' '#1057#1041')'
+      ParentFont = False
       Properties.ReadOnly = True
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -11
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
       TabOrder = 46
-      Width = 101
+      Width = 116
     end
   end
   object cxPageControl: TcxPageControl
@@ -551,12 +562,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
               Column = Amount
             end
             item
-              Format = ',0.00'
-              Kind = skSum
-              Column = AmountSumm
-              Sorted = True
-            end
-            item
               Format = ',0.####'
               Kind = skSum
               Column = AmountRemains
@@ -565,21 +570,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
               Format = ',0.00'
               Kind = skSum
               Column = AmountPartner
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = AmountPartner_1
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = AmountPartner_2
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = AmountPartner_3
             end
             item
               Format = ',0.00'
@@ -609,17 +599,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = AmountPartner_4
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
               Column = AmountPlan_total
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = AmountPartner_5
             end
             item
               Format = ',0.00'
@@ -693,11 +673,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
               Column = Amount
             end
             item
-              Format = ',0.00'
-              Kind = skSum
-              Column = AmountSumm
-            end
-            item
               Format = ',0.####'
               Kind = skSum
               Column = AmountRemains
@@ -711,21 +686,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = JuridicalName
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = AmountPartner_1
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = AmountPartner_2
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = AmountPartner_3
             end
             item
               Format = ',0.00'
@@ -755,17 +715,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = AmountPartner_4
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = AmountPlan_total
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = AmountPartner_5
             end
             item
               Format = ',0.00'
@@ -1028,84 +977,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             Options.Editing = False
             Width = 80
           end
-          object AmountSumm: TcxGridDBColumn
-            Caption = #1055#1088#1080#1093#1086#1076
-            DataBinding.FieldName = 'AmountSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            Properties.ReadOnly = False
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object AmountPartner_1: TcxGridDBColumn
-            Caption = '7 '#1076#1085#1077#1081
-            DataBinding.FieldName = 'AmountPartner_1'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            Properties.ReadOnly = False
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object AmountPartner_2: TcxGridDBColumn
-            Caption = '14 '#1076#1085#1077#1081
-            DataBinding.FieldName = 'AmountPartner_2'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            Properties.ReadOnly = False
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object AmountPartner_3: TcxGridDBColumn
-            Caption = '21 '#1076#1085#1077#1081
-            DataBinding.FieldName = 'AmountPartner_3'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            Properties.ReadOnly = False
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object AmountPartner_4: TcxGridDBColumn
-            Caption = '28 '#1076#1085#1077#1081
-            DataBinding.FieldName = 'AmountPartner_4'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            Properties.ReadOnly = False
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object AmountPartner_5: TcxGridDBColumn
-            Caption = '>28 '#1076#1085#1077#1081
-            DataBinding.FieldName = 'AmountPartner_5'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            Properties.ReadOnly = False
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
           object AmountPartner: TcxGridDBColumn
             Caption = #1044#1086#1083#1075' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081
             DataBinding.FieldName = 'AmountPartner'
@@ -1119,7 +990,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             Width = 100
           end
           object Sign_Child: TcxGridDBColumn
-            Caption = #1042#1080#1079#1072' '#1057#1041' ('#1044#1072'/'#1053#1077#1090')'
+            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' '#1057#1041' ('#1044#1072'/'#1053#1077#1090')'
             DataBinding.FieldName = 'Sign_Child'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -1683,14 +1554,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
           OptionsView.HeaderHeight = 40
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object isSign_ch2: TcxGridDBColumn
-            Caption = #1042#1080#1079#1072' '#1057#1041' ('#1044#1072'/'#1053#1077#1090')'
-            DataBinding.FieldName = 'isSign'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 112
-          end
           object InvNumber_ch2: TcxGridDBColumn
             Caption = #8470' '#1079#1072#1103#1074#1082#1080' (1'#1057')'
             DataBinding.FieldName = 'InvNumber'
@@ -1728,6 +1591,14 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             Options.Editing = False
             Width = 60
           end
+          object isSign_ch2: TcxGridDBColumn
+            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' '#1057#1041' ('#1044#1072'/'#1053#1077#1090')'
+            DataBinding.FieldName = 'isSign'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 112
+          end
         end
         object cxGridLevel2: TcxGridLevel
           GridView = cxGridDBTableViewChild
@@ -1746,9 +1617,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1070#1088'.'#1083#1080#1094#1072
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -2163,7 +2031,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     ShowHint = True
   end
   object edTotalSumm_2: TcxCurrencyEdit
-    Left = 599
+    Left = 903
     Top = 146
     Hint = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102
     ParentFont = False
@@ -2182,10 +2050,11 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     Style.Font.Style = [fsBold]
     Style.IsFontAssigned = True
     TabOrder = 8
+    Visible = False
     Width = 135
   end
   object edTotalSumm_3: TcxCurrencyEdit
-    Left = 745
+    Left = 1022
     Top = 146
     Hint = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102
     ParentFont = False
@@ -2204,6 +2073,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     Style.Font.Style = [fsBold]
     Style.IsFontAssigned = True
     TabOrder = 9
+    Visible = False
     Width = 135
   end
   object ceDateSign_1: TcxDateEdit
@@ -4893,51 +4763,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisAmountPlan_1'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isAmountPlan_1'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisAmountPlan_2'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isAmountPlan_2'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisAmountPlan_3'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isAmountPlan_3'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisAmountPlan_4'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isAmountPlan_4'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisAmountPlan_5'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isAmountPlan_5'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inComment'
         Value = Null
         Component = MasterCDS
@@ -5590,8 +5415,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 548
-    Top = 100
+    Left = 556
+    Top = 60
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -7309,12 +7134,11 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisSign'
+        Name = 'outSumm_parent'
         Value = Null
-        Component = ChildCDS
-        ComponentItem = 'isSign'
-        DataType = ftBoolean
-        ParamType = ptInput
+        Component = MasterCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1
