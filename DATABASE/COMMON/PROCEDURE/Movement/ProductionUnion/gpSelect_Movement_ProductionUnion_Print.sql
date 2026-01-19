@@ -27,7 +27,7 @@ BEGIN
            , Object_From.ValueData                              AS FromName
            , Object_To.ValueData                                AS ToName
            , Object_SubjectDoc.ValueData                        AS SubjectDocName
-
+           , Object_Insert.ValueData                            AS InsertName        --Автор документа - из протокола
        FROM Movement
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
@@ -48,6 +48,10 @@ BEGIN
                                          ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
                                         AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
             LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
+            
+            LEFT JOIN MovementProtocol ON MovementProtocol.MovementId = Movement.Id
+                                      AND MovementProtocol.isInsert = True
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MovementProtocol.UserId
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId IN (zc_Movement_ProductionUnion())
