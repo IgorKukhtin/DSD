@@ -89,7 +89,7 @@ BEGIN
                                                    AND ObjectBoolean_SB.DescId = zc_ObjectBoolean_OrderFinance_SB()
 
                        WHERE Movement.DescId = zc_Movement_OrderFinance()
-                         AND Movement.StatusId IN (SELECT tmpStatus.StatusId FROM tmpStatus)
+                        -- AND Movement.StatusId IN (SELECT tmpStatus.StatusId FROM tmpStatus)
                          AND Movement.OperDate BETWEEN inStartDate - INTERVAL '14 DAY' AND inEndDate
                          AND COALESCE (ObjectBoolean_SB.ValueData, FALSE) = TRUE     --только те виды планировани, что нужно согласовывать СБ
                        )

@@ -1,11 +1,11 @@
 inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
   Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1087#1086' '#1076#1072#1090#1072#1084')'
-  ClientHeight = 374
+  ClientHeight = 410
   ClientWidth = 1020
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1036
-  ExplicitHeight = 413
+  ExplicitHeight = 449
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -996,11 +996,12 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
     Left = 0
     Top = 336
     Width = 1020
-    Height = 38
+    Height = 74
     Align = alBottom
     Anchors = [akTop, akRight, akBottom]
     TabOrder = 6
     Visible = False
+    ExplicitHeight = 38
     object ExportXmlGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ExportDS
@@ -1623,6 +1624,7 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
     object actUpdateStatus_Complete: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spUpdateStatus_Complete
       StoredProcList = <
         item
@@ -1638,6 +1640,7 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
     object actUpdateStatus_UnComplete: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spUpdateStatus_UnComplete
       StoredProcList = <
         item

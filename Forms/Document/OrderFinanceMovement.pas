@@ -330,6 +330,10 @@ type
     actDoLoad: TExecuteImportSettingsAction;
     mactLoadExcel: TMultiAction;
     bbmactLoadExcel: TdxBarButton;
+    actGet_Export_Email_body: TdsdExecStoredProc;
+    spGet_Export_Email_Body: TdsdStoredProc;
+    mactExport_body: TMultiAction;
+    dxBarButton2: TdxBarButton;
   private
   public
   end;
