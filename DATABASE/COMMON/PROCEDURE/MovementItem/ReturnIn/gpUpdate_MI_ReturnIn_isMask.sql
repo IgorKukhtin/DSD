@@ -53,6 +53,7 @@ BEGIN
 
              , MIFloat_Price.ValueData                       AS Price
              , MIFloat_CountForPrice.ValueData               AS CountForPrice
+             , MIFloat_Count.ValueData                       AS Count
              , MIFloat_HeadCount.ValueData                   AS HeadCount
              , COALESCE (MIString_PartionGoods.ValueData, MIString_PartionGoodsCalc.ValueData, '') AS PartionGoods
 
@@ -122,6 +123,7 @@ BEGIN
                                                   )
      FROM tmpMI
     ;
+
     --если из док продажи или возврат в док возврат или продажи - учитывать признак цены "с ндс или без" - и тогда его тоже переносить
     -- сохранили свойство <Цена с НДС (да/нет)>
     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PriceWithVAT()
@@ -129,8 +131,9 @@ BEGIN
                                           , (SELECT COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) ::Boolean
                                              FROM MovementBoolean AS MovementBoolean_PriceWithVAT
                                              WHERE MovementBoolean_PriceWithVAT.MovementId = inMovementMaskId
-                                               AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT())
-                                          );
+                                               AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+                                            )
+                                           );
 
 END;
 $BODY$

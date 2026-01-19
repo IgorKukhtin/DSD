@@ -79,7 +79,7 @@ RETURNS TABLE (Id Integer
 
              , GoodsName_Child TVarChar
              , InvNumber_Child TVarChar
-             , Sign_Child      TVarChar
+             , Sign_Child      Boolean
               )
 AS
 $BODY$
@@ -751,7 +751,7 @@ BEGIN
     , tmpMI_Child AS (SELECT MovementItem.ParentId
                            , STRING_AGG (DISTINCT COALESCE (MIString_GoodsName.ValueData, ''), '; ') AS GoodsName
                            , STRING_AGG (DISTINCT COALESCE (MIString_InvNumber.ValueData, ''), '; ') AS InvNumber
-                           , STRING_AGG (DISTINCT COALESCE (MIBoolean_Sign.ValueData, FALSE)::TVarChar, '; ') AS Sign
+                           , MAX (CASE WHEN MIBoolean_Sign.ValueData = TRUE THEN 0 ELSE 1 END)       AS isSign
                       FROM MovementItem
                           LEFT JOIN MovementItemString AS MIString_GoodsName
                                                        ON MIString_GoodsName.MovementItemId = MovementItem.Id
@@ -872,7 +872,8 @@ BEGIN
 
            , tmpMI_Child.GoodsName ::TVarChar AS GoodsName_Child
            , tmpMI_Child.InvNumber ::TVarChar AS InvNumber_Child
-           , tmpMI_Child.Sign      ::TVarChar AS Sign_Child
+           , CASE WHEN tmpMI_Child.isSign = 0 THEN TRUE ELSE FALSE END ::Boolean AS Sign_Child
+
        FROM tmpData
             FULL JOIN tmpMI ON tmpMI.JuridicalId = tmpData.JuridicalId
                            AND tmpMI.ContractId  = tmpData.ContractId
@@ -1021,9 +1022,10 @@ BEGIN
 
            , zc_Color_Yelow() ::Integer AS Color_Group
 
-           , '' ::TVarChar AS GoodsName_Child
-           , '' ::TVarChar AS InvNumber_Child
-           , '' ::TVarChar AS Sign_Child
+           , ''    ::TVarChar AS GoodsName_Child
+           , ''    ::TVarChar AS InvNumber_Child
+           , NULL  ::Boolean  AS Sign_Child
+
        FROM tmpInfoMoney_OrderF
             LEFT JOIN tmpMI ON tmpMI.JuridicalId = tmpInfoMoney_OrderF.InfoMoneyId --для итогового значения статью записываем в ObjectId
             LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = tmpInfoMoney_OrderF.InfoMoneyId
@@ -1253,7 +1255,7 @@ BEGIN
     , tmpMI_Child AS (SELECT MovementItem.ParentId
                            , STRING_AGG (DISTINCT COALESCE (MIString_GoodsName.ValueData, ''), '; ') AS GoodsName
                            , STRING_AGG (DISTINCT COALESCE (MIString_InvNumber.ValueData, ''), '; ') AS InvNumber
-                           , STRING_AGG (DISTINCT COALESCE (MIBoolean_Sign.ValueData, FALSE)::TVarChar, '; ') AS Sign
+                           , MAX (CASE WHEN MIBoolean_Sign.ValueData = TRUE THEN 0 ELSE 1 END)       AS isSign
                       FROM MovementItem
                           LEFT JOIN MovementItemString AS MIString_GoodsName
                                                        ON MIString_GoodsName.MovementItemId = MovementItem.Id
@@ -1403,7 +1405,8 @@ BEGIN
 
            , tmpMI_Child.GoodsName ::TVarChar AS GoodsName_Child
            , tmpMI_Child.InvNumber ::TVarChar AS InvNumber_Child
-           , tmpMI_Child.Sign      ::TVarChar AS Sign_Child
+           , CASE WHEN tmpMI_Child.isSign = 0 THEN TRUE ELSE FALSE END ::Boolean AS Sign_Child
+
        FROM tmpMI AS MovementItem
 
 
@@ -1631,9 +1634,10 @@ BEGIN
 
            , zc_Color_Yelow() ::Integer AS Color_Group
 
-           , '' ::TVarChar AS GoodsName_Child
-           , '' ::TVarChar AS InvNumber_Child
-           , '' ::TVarChar AS Sign_Child
+           , ''   ::TVarChar AS GoodsName_Child
+           , ''   ::TVarChar AS InvNumber_Child
+           , NULL ::Boolean  AS Sign_Child
+
        FROM tmpInfoMoney_OrderF
             -- для итогов статья в ObjectId
             LEFT JOIN tmpMI ON tmpMI.ObjectId = tmpInfoMoney_OrderF.InfoMoneyId
@@ -1662,8 +1666,10 @@ BEGIN
 
        WHERE tmpInfoMoney_OrderF.isGroup = TRUE
           OR (Object_InfoMoney.DescId = zc_Object_InfoMoney() AND tmpMI.Id IS NOT NULL)   --сохраненные строки итого , даже если с н х сняли признак группы
-       ;
+      ;
+
      END IF;
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

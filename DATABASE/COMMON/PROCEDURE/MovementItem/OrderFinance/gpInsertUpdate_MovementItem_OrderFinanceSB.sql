@@ -267,7 +267,7 @@ BEGIN
     --сохраненные значение  
     SELECT STRING_AGG (DISTINCT COALESCE (MIString_GoodsName.ValueData, ''), '; ') AS GoodsName
          , STRING_AGG (DISTINCT COALESCE (MIString_InvNumber.ValueData, ''), '; ') AS InvNumber
-  INTO vbGoodsName_child, vbInvNumber_child
+           INTO vbGoodsName_child, vbInvNumber_child
     FROM MovementItem
         LEFT JOIN MovementItemString AS MIString_GoodsName
                                      ON MIString_GoodsName.MovementItemId = MovementItem.Id
@@ -279,6 +279,7 @@ BEGIN
       AND MovementItem.DescId     = zc_MI_Child()
       AND MovementItem.isErased   = FALSE
       AND MovementItem.ParentId   = ioId;
+
     --                   
     IF COALESCE (inInvNumber_child, '') <> COALESCE (vbInvNumber_child,'')
     OR COALESCE (inGoodsName_child, '') <> COALESCE (vbGoodsName_child,'')
@@ -326,7 +327,8 @@ BEGIN
                     -- сохранили свойство <>
                     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GoodsName(), vbMIId_child, inGoodsName_child);
                 END IF;
-            END IF
+            END IF;
+
         END IF;
     END IF;
     

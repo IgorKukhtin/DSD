@@ -28,6 +28,7 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderFinance());
 
      IF EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.isErased = FALSE)
+        AND 1=0
      THEN
          RAISE EXCEPTION 'Ошибка.Данные в документе уже заполнены';
      END IF;
@@ -54,13 +55,24 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Не найдено Гл.Юр.лицо <%>. для Юр.лица <%>', inJuridicalBasisName, inJuridicalName;
      END IF;
      
+
      --Юр.лицо
-     vbJuridicalId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Juridical() AND Object.ValueData = inJuridicalName AND Object.isErased = FALSE);
+     vbJuridicalId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Juridical() AND TRIM (Object.ValueData) = TRIM (inJuridicalName) AND Object.isErased = FALSE);
      --проверка
      IF COALESCE (vbJuridicalId,0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Не найдено Юр.лицо <%>.', inJuridicalName;
+         vbJuridicalId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Juridical() AND TRIM (Object.ValueData) = zfCalc_Text_replace (TRIM (inJuridicalName), '`', CHR (39)) AND Object.isErased = FALSE);
      END IF;   
+     --проверка
+     IF COALESCE (vbJuridicalId,0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не найдено Юр.лицо <%> <%>.', TRIM (inJuridicalName), zfCalc_Text_replace (TRIM (inJuridicalName), '`', CHR (39));
+-- <Мельникова Дар`я Олександрівна ФОП>
+-- <Мельникова Дар'я Олександрівна ФОП>
+--  Мельникова Дар'я Олександрівна ФОП 
+
+     END IF;   
+
 
      --Форма оплаты
      vbPaidKindId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_PaidKind() AND Object.ValueData = inPaidKindName AND Object.isErased = FALSE);

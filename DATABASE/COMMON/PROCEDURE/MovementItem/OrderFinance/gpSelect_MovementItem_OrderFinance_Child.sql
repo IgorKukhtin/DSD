@@ -53,6 +53,7 @@ BEGIN
            
            , COALESCE (MIBoolean_Sign.ValueData, FALSE) ::Boolean AS isSign
            , MovementItem.isErased                      ::Boolean AS isErased
+
        FROM tmpMI_Child AS MovementItem
             LEFT JOIN MovementItemString AS MIString_GoodsName
                                          ON MIString_GoodsName.MovementItemId = MovementItem.Id
@@ -73,6 +74,26 @@ BEGIN
             LEFT JOIN MovementItemBoolean AS MIBoolean_Sign
                                           ON MIBoolean_Sign.MovementItemId = MovementItem.Id
                                          AND MIBoolean_Sign.DescId = zc_MIBoolean_Sign()
+
+      UNION ALL
+       -- Пустая строчка для удобства
+       SELECT
+             0                   AS Id
+           , MovementItem.Id     AS ParentId
+           , ''    ::TVarChar    AS InvNumber
+           , ''    ::TVarChar    AS GoodsName
+           , ''    ::TVarChar    AS Comment
+           , 0     ::TFloat      AS Amount
+                   
+           , 0     ::Integer     AS MovementItemId_OrderIncome 
+           
+           , FALSE ::Boolean     AS isSign
+           , MovementItem.isErased
+
+       FROM MovementItem
+       WHERE MovementItem.MovementId = inMovementId
+         AND MovementItem.DescId     = zc_MI_Master()
+         AND MovementItem.isErased   = FALSE
       ;
 
 END;

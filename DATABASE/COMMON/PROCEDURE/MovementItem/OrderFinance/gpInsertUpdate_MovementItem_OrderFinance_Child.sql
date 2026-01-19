@@ -23,6 +23,28 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderFinance());
 
+     -- проверка
+     IF TRIM (COALESCE (inInvNumber, '')) = ''
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не заполнено значение <№ заявки (1С)>.';
+     END IF;
+     -- проверка
+     IF TRIM (COALESCE (inGoodsName, '')) = ''
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не заполнено значение <Товар (Заявка ТМЦ)>.';
+     END IF;
+     -- проверка
+     IF COALESCE (inAmount, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не заполнено значение <Сумма>.';
+     END IF;
+     -- проверка
+     IF NOT EXISTS (SELECT 1 FROM inParentId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не заполнено значение <Сумма>.';
+     END IF;
+
+
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;    
 
@@ -40,11 +62,17 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
 
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Sign(), ioId, inisSign);
+     -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Sign(), ioId, inisSign);
 
+     -- сохранили <Итого>
+     PERFORM lpInsertUpdate_MovementItem (zc_MIBoolean_Sign(), ioId, inisSign)
+     FROM MovementItem
+     WHERE MovementItem
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
+
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

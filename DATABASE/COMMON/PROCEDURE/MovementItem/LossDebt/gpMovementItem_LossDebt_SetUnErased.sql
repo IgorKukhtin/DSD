@@ -16,7 +16,7 @@ BEGIN
   vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetUnErased_MI_LossDebt());
 
   -- устанавливаем новое значение
-  outIsErased:= lpSetErased_MovementItem (inMovementItemId:= inMovementItemId, inUserId:= vbUserId);
+  outIsErased:= lpSetUnErased_MovementItem (inMovementItemId:= inMovementItemId, inUserId:= vbUserId);
 
 END;
 $BODY$
