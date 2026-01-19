@@ -33,10 +33,24 @@ $BODY$
    DECLARE vbOperDate_start TDateTime;
            vbGoodsName_child TVarChar;
            vbInvNumber_child TVarChar;
-           vbMIId_child      Integer;
+           vbId_child        Integer;
+           vbAmount_child    TFloat;
+           vbIsInsert_child  Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderFinance());
+
+
+     -- проверка
+     IF TRIM (COALESCE (inInvNumber_child, '')) = ''
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не заполнено значение <№ заявки (1С)>.';
+     END IF;
+     -- проверка
+     IF TRIM (COALESCE (inGoodsName_child, '')) = ''
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не заполнено значение <Товар (Заявка ТМЦ)>.';
+     END IF;
 
 
      -- замена
@@ -252,28 +266,37 @@ BEGIN
     -- вернули
     ioAmount_old:= inAmount;
 
-    --могут внести данные для чайлд
+    -- могут внести данные для чайлд
     
     --проверка
     --сохраненные значение  
-    SELECT STRING_AGG (DISTINCT COALESCE (MIString_GoodsName.ValueData, ''), '; ') AS GoodsName
-         , STRING_AGG (DISTINCT COALESCE (MIString_InvNumber.ValueData, ''), '; ') AS InvNumber
-           INTO vbGoodsName_child, vbInvNumber_child
-    FROM MovementItem
-        LEFT JOIN MovementItemString AS MIString_GoodsName
-                                     ON MIString_GoodsName.MovementItemId = MovementItem.Id
-                                    AND MIString_GoodsName.DescId = zc_MIString_GoodsName()
-        LEFT JOIN MovementItemString AS MIString_InvNumber
-                                     ON MIString_InvNumber.MovementItemId = MovementItem.Id
-                                    AND MIString_InvNumber.DescId = zc_MIString_InvNumber()
-    WHERE MovementItem.MovementId = inMovementId
-      AND MovementItem.DescId     = zc_MI_Child()
-      AND MovementItem.isErased   = FALSE
-      AND MovementItem.ParentId   = ioId;
+    SELECT STRING_AGG (tmpMI.GoodsName, '; ') AS GoodsName
+         , STRING_AGG (tmpMI.InvNumber, '; ') AS InvNumber
+         , SUM (tmpMI.Amount)                 AS Amount
+           INTO vbGoodsName_child, vbInvNumber_child, vbAmount_child
+    FROM (SELECT COALESCE (MIString_GoodsName.ValueData, '') AS GoodsName
+               , COALESCE (MIString_InvNumber.ValueData, '') AS InvNumber
+               , MovementItem.Amount                                               
+          FROM MovementItem
+              LEFT JOIN MovementItemString AS MIString_GoodsName
+                                           ON MIString_GoodsName.MovementItemId = MovementItem.Id
+                                          AND MIString_GoodsName.DescId = zc_MIString_GoodsName()
+              LEFT JOIN MovementItemString AS MIString_InvNumber
+                                           ON MIString_InvNumber.MovementItemId = MovementItem.Id
+                                          AND MIString_InvNumber.DescId = zc_MIString_InvNumber()
+          WHERE MovementItem.MovementId = inMovementId
+            AND MovementItem.DescId     = zc_MI_Child()
+            AND MovementItem.isErased   = FALSE
+            AND MovementItem.ParentId   = ioId
+            -- Важно - Сортировать
+          ORDER BY MovementItem.Id ASC
+        ) AS tmpMI
+        ;
 
     --                   
     IF COALESCE (inInvNumber_child, '') <> COALESCE (vbInvNumber_child,'')
     OR COALESCE (inGoodsName_child, '') <> COALESCE (vbGoodsName_child,'')
+    OR COALESCE (inAmount, 0)           <> COALESCE (vbAmount_child, 0)
     THEN
         -- проверка что строка child одна
         IF (SELECT COUNT(*)
@@ -282,43 +305,42 @@ BEGIN
               AND MovementItem.ParentId = ioId
               AND MovementItem.MovementId = inMovementId
               AND MovementItem.isErased = FALSE
-            ) > 1
+           ) > 1
         THEN
-            RAISE EXCEPTION 'Ошибка.Элементов более одного. Корректировка возможна только в таблице <Заявка ТМЦ>.';
+            RAISE EXCEPTION 'Ошибка.Заполнение возможно только во второй таблице <Товар (Заявка ТМЦ)>.';
         ELSE
-            vbMIId_child := (SELECT MovementItem.Id
+            -- нашли
+            vbId_child := (SELECT MovementItem.Id
                              FROM MovementItem 
                              WHERE MovementItem.DescId = zc_MI_Child()
                                AND MovementItem.ParentId = ioId
                                AND MovementItem.MovementId = inMovementId
-                               AND MovementItem.isErased = FALSE);
+                               AND MovementItem.isErased = FALSE
+                          );
     
             --сохраненные значение
-            vbInvNumber_child := (SELECT MIS.ValueData FROM MovementItemString AS MIS WHERE MIS.MovementItemId = vbMIId_child AND MIS.DescId = zc_MIString_InvNumber());
+            vbInvNumber_child := (SELECT MIS.ValueData FROM MovementItemString AS MIS WHERE MIS.MovementItemId = vbId_child AND MIS.DescId = zc_MIString_InvNumber());
             --сохраненные значение
-            vbGoodsName_child := (SELECT MIS.ValueData FROM MovementItemString AS MIS WHERE MIS.MovementItemId = vbMIId_child AND MIS.DescId = zc_MIString_GoodsName()); 
+            vbGoodsName_child := (SELECT MIS.ValueData FROM MovementItemString AS MIS WHERE MIS.MovementItemId = vbId_child AND MIS.DescId = zc_MIString_GoodsName()); 
             
-            IF COALESCE (inInvNumber_child, '') <> COALESCE (vbInvNumber_child,'')
-            OR COALESCE (inGoodsName_child, '') <> COALESCE (vbGoodsName_child, '')
+
+            IF COALESCE (vbId_child,0) = 0
             THEN
-                IF COALESCE (vbMIId_child,0) = 0
-                THEN
-                     -- сохранили <Элемент документа>
-                     vbMIId_child := lpInsertUpdate_MovementItem (0, zc_MI_Child(), Null, inMovementId, inAmount, ioId);
-                END IF;
-            
-                IF COALESCE (vbInvNumber_child,'') <> COALESCE (inInvNumber_child, '')
-                THEN
-                    -- сохранили свойство <>
-                    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_InvNumber(), vbMIId_child, inInvNumber_child);
-                END IF;
-                
-                IF COALESCE (vbGoodsName_child,'') <> COALESCE (inGoodsName_child, '')
-                THEN    
-                    -- сохранили свойство <>
-                    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GoodsName(), vbMIId_child, inGoodsName_child);
-                END IF;
+                 vbIsInsert_child:= TRUE;
+                 -- сохранили <Элемент документа>
+                 vbId_child := lpInsertUpdate_MovementItem (0, zc_MI_Child(), NULL, inMovementId, inAmount, ioId);
+            ELSE
+                 vbIsInsert_child:= FALSE;
             END IF;
+            
+            -- сохранили свойство <>
+            PERFORM lpInsertUpdate_MovementItemString (zc_MIString_InvNumber(), vbId_child, inInvNumber_child);
+            
+            -- сохранили свойство <>
+            PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GoodsName(), vbId_child, inGoodsName_child);
+
+            -- сохранили протокол
+            PERFORM lpInsert_MovementItemProtocol (vbId_child, vbUserId, vbIsInsert_child);
 
         END IF;
     END IF;

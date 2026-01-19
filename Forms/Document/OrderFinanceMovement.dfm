@@ -26,7 +26,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 1060
     object edInvNumber: TcxTextEdit
       Left = 232
       Top = 19
@@ -508,14 +507,12 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 1060
     ClientRectBottom = 390
     ClientRectRight = 1065
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 1060
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -523,7 +520,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Height = 331
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1060
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1532,7 +1528,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         Anchors = [akTop, akRight, akBottom]
         TabOrder = 1
         Visible = False
-        ExplicitWidth = 1060
         object ExportXmlGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ExportDS
@@ -2411,7 +2406,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 0
     end
     object bbOut: TdxBarSubItem
-      Caption = #1042#1099#1075#1088#1091#1079#1082#1072
+      Caption = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
       Category = 0
       Visible = ivAlways
       ItemLinks = <
@@ -2421,7 +2416,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end
         item
           Visible = True
-          ItemName = 'bbmactExport_group'
+          ItemName = 'bbExport_group'
         end
         item
           Visible = True
@@ -2429,7 +2424,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton2'
+          ItemName = 'bbtExport_msg'
         end
         item
           Visible = True
@@ -2526,7 +2521,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Visible = ivAlways
       ShowCaption = False
     end
-    object bbmactExport_group: TdxBarButton
+    object bbExport_group: TdxBarButton
       Action = mactExportGroup_fr3
       Category = 0
     end
@@ -2556,8 +2551,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Action = mactLoadExcel
       Category = 0
     end
-    object dxBarButton2: TdxBarButton
-      Action = mactExport_body
+    object bbtExport_msg: TdxBarButton
+      Action = mactExport_msg
       Category = 0
     end
   end
@@ -2612,8 +2607,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end>
       Caption = 'actGet_Export_Email'
     end
-    object actGet_Export_Email_body: TdsdExecStoredProc
-      Category = 'Export_Email_body'
+    object actGet_Export_Email_msg: TdsdExecStoredProc
+      Category = 'Export_Email_msg'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spGet_Export_Email_Body
@@ -2659,20 +2654,20 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end>
       Caption = 'actSelect_Export_xls'
     end
-    object mactExport_body: TMultiAction
-      Category = 'Export_Email_body'
+    object mactExport_msg: TMultiAction
+      Category = 'Export_Email_msg'
       MoveParams = <>
       ActionList = <
         item
-          Action = actGet_Export_Email_body
+          Action = actGet_Export_Email_msg
         end
         item
           Action = actSMTPFile
         end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1059#1074#1077#1076#1086#1084#1080#1090#1100' '#1057#1041' '#1087#1086' '#1087#1086#1095#1090#1077'?'
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1057#1041' '#1087#1086' '#1087#1086#1095#1090#1077'?'
       InfoAfterExecute = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1057#1041' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1086
-      Caption = #1059#1074#1077#1076#1086#1084#1080#1090#1100' '#1057#1041
-      Hint = #1059#1074#1077#1076#1086#1084#1080#1090#1100' '#1057#1041
+      Caption = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1057#1041
+      Hint = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1057#1041
       ImageIndex = 53
     end
     object actShowErasedJur: TBooleanStoredProcAction
@@ -3025,6 +3020,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       StoredProc = spErasedMIMaster
       StoredProcList = <
         item
@@ -3033,8 +3029,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         item
           StoredProc = spGetTotalSumm
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
-      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1070#1088'. '#1083#1080#1094#1086'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1070#1088'. '#1083#1080#1094#1086'>'
       ImageIndex = 2
       ShortCut = 49220
       ErasedFieldName = 'isErased'
@@ -3044,6 +3040,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       StoredProc = spUnErasedMIMaster
       StoredProcList = <
         item
@@ -3052,8 +3049,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         item
           StoredProc = spGetTotalSumm
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1070#1088'. '#1083#1080#1094#1086'>'
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1070#1088'. '#1083#1080#1094#1086'>'
       ImageIndex = 8
       ShortCut = 49220
       ErasedFieldName = 'isErased'
@@ -3626,8 +3623,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       View = cxGridDBTableView
       Action = actJuridicalChoiceForm
       Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1070#1088'. '#1083#1080#1094#1086'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1070#1088'. '#1083#1080#1094#1086'>'
       ShortCut = 16429
       ImageIndex = 0
     end
