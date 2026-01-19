@@ -1558,9 +1558,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1070#1088'.'#1083#1080#1094#1072
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -2419,7 +2416,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end
         item
           Visible = True
-          ItemName = 'bbmactExport_group'
+          ItemName = 'bbExport_group'
         end
         item
           Visible = True
@@ -2427,7 +2424,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton2'
+          ItemName = 'bbtExport_msg'
         end
         item
           Visible = True
@@ -2524,7 +2521,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Visible = ivAlways
       ShowCaption = False
     end
-    object bbmactExport_group: TdxBarButton
+    object bbExport_group: TdxBarButton
       Action = mactExportGroup_fr3
       Category = 0
     end
@@ -2554,8 +2551,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Action = mactLoadExcel
       Category = 0
     end
-    object dxBarButton2: TdxBarButton
-      Action = mactExport_body
+    object bbtExport_msg: TdxBarButton
+      Action = mactExport_msg
       Category = 0
     end
   end
@@ -2610,8 +2607,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end>
       Caption = 'actGet_Export_Email'
     end
-    object actGet_Export_Email_body: TdsdExecStoredProc
-      Category = 'Export_Email_body'
+    object actGet_Export_Email_msg: TdsdExecStoredProc
+      Category = 'Export_Email_msg'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spGet_Export_Email_Body
@@ -2657,12 +2654,12 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         end>
       Caption = 'actSelect_Export_xls'
     end
-    object mactExport_body: TMultiAction
-      Category = 'Export_Email_body'
+    object mactExport_msg: TMultiAction
+      Category = 'Export_Email_msg'
       MoveParams = <>
       ActionList = <
         item
-          Action = actGet_Export_Email_body
+          Action = actGet_Export_Email_msg
         end
         item
           Action = actSMTPFile

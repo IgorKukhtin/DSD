@@ -283,7 +283,7 @@ type
     spGet_Export_Email_gr: TdsdStoredProc;
     spGetFileName_gr: TdsdStoredProc;
     dsdDBViewAddOn_Export: TdsdDBViewAddOn;
-    bbmactExport_group: TdxBarButton;
+    bbExport_group: TdxBarButton;
     actExport_Grid_groupCSV: TExportGrid;
     actSMTPFile: TdsdSMTPFileAction;
     spGet_Export_Email: TdsdStoredProc;
@@ -330,10 +330,10 @@ type
     actDoLoad: TExecuteImportSettingsAction;
     mactLoadExcel: TMultiAction;
     bbmactLoadExcel: TdxBarButton;
-    actGet_Export_Email_body: TdsdExecStoredProc;
+    actGet_Export_Email_msg: TdsdExecStoredProc;
     spGet_Export_Email_Body: TdsdStoredProc;
-    mactExport_body: TMultiAction;
-    dxBarButton2: TdxBarButton;
+    mactExport_msg: TMultiAction;
+    bbtExport_msg: TdxBarButton;
   private
   public
   end;
