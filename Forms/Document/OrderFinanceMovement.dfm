@@ -4597,51 +4597,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisAmountPlan_1'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isAmountPlan_1'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisAmountPlan_2'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isAmountPlan_2'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisAmountPlan_3'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isAmountPlan_3'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisAmountPlan_4'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isAmountPlan_4'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisAmountPlan_5'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isAmountPlan_5'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inComment'
         Value = Null
         Component = MasterCDS

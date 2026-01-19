@@ -35,7 +35,7 @@ BEGIN
      -- нашли
      SELECT COALESCE (MovementFloat_TotalSumm_1.ValueData, 0)
           , COALESCE (MovementFloat_TotalSumm_2.ValueData, 0)
-          , COALESCE (MovementFloat_TotalSumm_2.ValueData, 0)
+          , COALESCE (MovementFloat_TotalSumm_3.ValueData, 0)
             INTO vbSum_1, vbSum_2, vbSum_3
      FROM Movement
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm_1
@@ -181,6 +181,20 @@ BEGIN
                         , zfConvert_FloatToString (vbSum_3)
                          ;
      END IF;
+
+     IF inUserId = 5 AND 1=0
+     THEN
+          RAISE EXCEPTION 'Ошибка.<%>.<%>.<%>.%<%>.<%>.<%>'
+                        , zfConvert_FloatToString (vbSum_1_sum)
+                        , zfConvert_FloatToString (vbSum_2_sum)
+                        , zfConvert_FloatToString (vbSum_3_sum)
+                        , CHR (13)
+                        , zfConvert_FloatToString (vbSum_1)
+                        , zfConvert_FloatToString (vbSum_2)
+                        , zfConvert_FloatToString (vbSum_3)
+                         ;
+     END IF;
+
 
 END;
 $BODY$

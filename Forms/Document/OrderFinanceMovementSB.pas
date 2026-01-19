@@ -54,7 +54,6 @@ type
     ContractName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     AmountRemains: TcxGridDBColumn;
-    AmountSumm: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     actUpdateMasterDS: TdsdUpdateDataSet;
     spInsertUpdateMIMaster: TdsdStoredProc;

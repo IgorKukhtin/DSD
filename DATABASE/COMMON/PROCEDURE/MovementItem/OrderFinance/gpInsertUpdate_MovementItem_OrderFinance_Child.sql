@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_OrderFinance_Child()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance_Child (Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance_Child (Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinance_Child(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -11,14 +12,15 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinance_Child(
     IN inInvNumber             TVarChar  , -- 
     IN inComment               TVarChar  , --
     IN inAmount                TFloat    , -- 
-    IN inisSign                Boolean   ,
+   OUT outSumm_parent          TFloat    , -- 
     IN inSession               TVarChar    -- сессия пользователя
 )
-RETURNS Integer
+RETURNS RECORD
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbIsInsert Boolean;
+   DECLARE vbUserId     Integer;
+   DECLARE vbSumm_child TFloat;
+   DECLARE vbIsInsert   Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderFinance());
@@ -39,9 +41,9 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Не заполнено значение <Сумма>.';
      END IF;
      -- проверка
-     IF NOT EXISTS (SELECT 1 FROM inParentId, 0) = 0
+     IF COALESCE (inParentId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Не заполнено значение <Сумма>.';
+         RAISE EXCEPTION 'Ошибка.Не выбран "главный" Элемент - Юр.Лицо + договор.';
      END IF;
 
 
@@ -61,13 +63,23 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
 
-     -- сохранили свойство <>
-     -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Sign(), ioId, inisSign);
+
+     -- Только после сохранения
+     outSumm_parent:= COALESCE ((SELECT SUM (MovementItem.Amount) AS Amount
+                                FROM MovementItem
+                                WHERE MovementItem.MovementId = inMovementId
+                                  AND MovementItem.DescId     = zc_MI_Child()
+                                  AND MovementItem.ParentId   = inParentId
+                                  AND MovementItem.isErased   = FALSE
+                               ), 0);
 
      -- сохранили <Итого>
-     PERFORM lpInsertUpdate_MovementItem (zc_MIBoolean_Sign(), ioId, inisSign)
+     PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, zc_MI_Master(), MovementItem.ObjectId, MovementItem.MovementId, outSumm_parent, MovementItem.ParentId)
      FROM MovementItem
-     WHERE MovementItem
+     WHERE MovementItem.MovementId = inMovementId
+       AND MovementItem.DescId     = zc_MI_Master()
+       AND MovementItem.Id         = inParentId
+      ;
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);

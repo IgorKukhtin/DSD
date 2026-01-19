@@ -135,6 +135,12 @@ BEGIN
                                             )
                                            );
 
+     -- !!! бпелеммн !!!
+    IF vbUserId = 9457
+    THEN
+        RAISE EXCEPTION 'Admin - Test = OK';
+    END IF;
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

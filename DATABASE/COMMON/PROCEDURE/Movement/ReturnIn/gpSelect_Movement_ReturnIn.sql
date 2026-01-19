@@ -235,6 +235,7 @@ BEGIN
                                           INNER JOIN MovementLinkObject AS MovementLinkObject_Personal
                                                                         ON MovementLinkObject_Personal.MovementId = MovementLinkObject_From_Order.MovementId
                                                                        AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
+WHERE 1=0
                                      GROUP BY tmpMovement.Id
                                      ) AS tmp
                                LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmp.PersonalId

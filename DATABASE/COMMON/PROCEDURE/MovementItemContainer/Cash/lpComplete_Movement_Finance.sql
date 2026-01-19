@@ -654,7 +654,7 @@ end if;
        AND inMovementId <> 4955377 
        AND (_tmpItem.BranchId_Balance <> 0 OR _tmpItem.ObjectId NOT IN (9400, 9401))
        AND _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20400()
-       AND _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId NOT IN (zc_Enum_AccountDirection_30200())
+       AND _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId NOT IN (zc_Enum_AccountDirection_30200()) -- наши компании
     ;
     
      -- 2.0.2. проверка
@@ -876,8 +876,34 @@ end if;
                                                                             , inObjectId_5        := _tmpItem.PartionMovementId
                                                                             , inDescId_6          := CASE WHEN COALESCE (_tmpItem.CurrencyId, zc_Enum_Currency_Basis()) = zc_Enum_Currency_Basis() THEN NULL ELSE zc_ContainerLinkObject_Currency() END
                                                                             , inObjectId_6        := CASE WHEN COALESCE (_tmpItem.CurrencyId, zc_Enum_Currency_Basis()) = zc_Enum_Currency_Basis() THEN NULL ELSE _tmpItem.CurrencyId END
-                                                                            , inDescId_7          := CASE WHEN inMovementId = 4955377 /*vbTmp = -1*/ THEN NULL WHEN /*inMovementId IN (3470198) OR*/ (_tmpItem.BranchId_Balance = 0 AND _tmpItem.ObjectId IN (9400, 9401)) /*Золотий Екватор ТОВ*/ THEN NULL ELSE CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId NOT IN (zc_Enum_AccountDirection_30200()/*, zc_Enum_AccountDirection_70700(), zc_Enum_AccountDirection_70800()*/) AND vbPartnerId_max > 0 THEN zc_ContainerLinkObject_Partner() ELSE NULL END END -- and <> наши компании
-                                                                            , inObjectId_7        := CASE WHEN inMovementId = 4955377 /*vbTmp = -1*/ THEN 0    WHEN /*inMovementId IN (3470198, 3528808) OR*/ (_tmpItem.BranchId_Balance = 0 AND _tmpItem.ObjectId IN (9400, 9401)) /*Золотий Екватор ТОВ*/ THEN NULL ELSE CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400() /*ГСМ*/ THEN 0 ELSE CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId NOT IN (zc_Enum_AccountDirection_30200()/*, zc_Enum_AccountDirection_70700(), zc_Enum_AccountDirection_70800()*/) THEN CASE WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() THEN vbPartnerId_max ELSE _tmpItem.ObjectId END ELSE NULL END END END -- and <> наши компании
+                                                                            , inDescId_7          := CASE WHEN inMovementId = 4955377 /*vbTmp = -1*/
+                                                                                                               THEN NULL
+                                                                                                          WHEN /*inMovementId IN (3470198) OR*/ (_tmpItem.BranchId_Balance = 0 AND _tmpItem.ObjectId IN (9400, 9401)) /*Золотий Екватор ТОВ*/
+                                                                                                               THEN NULL
+                                                                                                          ELSE CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId NOT IN (zc_Enum_AccountDirection_30200()/*, zc_Enum_AccountDirection_70700(), zc_Enum_AccountDirection_70800()*/)
+                                                                                                                     AND vbPartnerId_max > 0 AND _tmpItem.ObjectDescId = zc_Object_Juridical()
+                                                                                                                         THEN zc_ContainerLinkObject_Partner()
+                                                                                                                    WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId NOT IN (zc_Enum_AccountDirection_30200()/*, zc_Enum_AccountDirection_70700(), zc_Enum_AccountDirection_70800()*/)
+                                                                                                                     AND COALESCE (_tmpItem.ObjectDescId, 0) <> zc_Object_Juridical()
+                                                                                                                         THEN zc_ContainerLinkObject_Partner()
+                                                                                                                    ELSE NULL
+                                                                                                               END
+                                                                                                     END -- and <> наши компании
+                                                                            , inObjectId_7        := CASE WHEN inMovementId = 4955377 /*vbTmp = -1*/
+                                                                                                               THEN 0
+                                                                                                          WHEN /*inMovementId IN (3470198, 3528808) OR*/ (_tmpItem.BranchId_Balance = 0 AND _tmpItem.ObjectId IN (9400, 9401)) /*Золотий Екватор ТОВ*/
+                                                                                                               THEN NULL
+                                                                                                          ELSE CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400() /*ГСМ*/ 
+                                                                                                                         THEN 0
+                                                                                                               ELSE CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId NOT IN (zc_Enum_AccountDirection_30200()/*, zc_Enum_AccountDirection_70700(), zc_Enum_AccountDirection_70800()*/)
+                                                                                                                              THEN CASE WHEN _tmpItem.ObjectDescId = zc_Object_Juridical()
+                                                                                                                                             THEN vbPartnerId_max
+                                                                                                                                        ELSE _tmpItem.ObjectId
+                                                                                                                                   END
+                                                                                                                         ELSE NULL
+                                                                                                                    END
+                                                                                                               END
+                                                                                                     END -- and <> наши компании
                                                                             , inDescId_8          := CASE WHEN inMovementId = 4955377 /*vbTmp = -1*/ THEN NULL WHEN /*inMovementId IN (3470198) OR*/ (_tmpItem.BranchId_Balance = 0 AND _tmpItem.ObjectId IN (9400, 9401)) /*Золотий Екватор ТОВ*/ THEN NULL ELSE CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId NOT IN (zc_Enum_AccountDirection_30200()/*, zc_Enum_AccountDirection_70700(), zc_Enum_AccountDirection_70800()*/) THEN zc_ContainerLinkObject_Branch() ELSE NULL END END -- and <> наши компании
                                                                             , inObjectId_8        := CASE WHEN inMovementId = 4955377 /*vbTmp = -1*/ THEN 0    WHEN /*inMovementId IN (3470198) OR*/ (_tmpItem.BranchId_Balance = 0 AND _tmpItem.ObjectId IN (9400, 9401)) /*Золотий Екватор ТОВ*/ THEN NULL ELSE CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId NOT IN (zc_Enum_AccountDirection_30200()/*, zc_Enum_AccountDirection_70700(), zc_Enum_AccountDirection_70800()*/) THEN _tmpItem.BranchId_Balance ELSE NULL END END -- and <> наши компании
                                                                              )

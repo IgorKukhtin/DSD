@@ -371,15 +371,62 @@ BEGIN
                                                  WHERE MovementItemFloat.DescId = zc_MIFloat_PriceWithOutVAT()
                                                    AND MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMIPromo_.MovementItemId FROM tmpMIPromo_)
                                                 )
+           -- Товар + Вид товара (факт отгрузка), если он есть - тогда Промо-механика
+         , tmpMILinkObject_promo AS (SELECT MILinkObject_GoodsKind.*
+                                     FROM MovementItemLinkObject AS MILinkObject_GoodsKind
+                                     WHERE MILinkObject_GoodsKind.MovementItemId IN (SELECT DISTINCT tmpMIPromo_all.MovementItemId FROM tmpMIPromo_all)
+                                       AND MILinkObject_GoodsKind.DescId IN (zc_MILinkObject_Goods_out()
+                                                                           , zc_MILinkObject_GoodsKind_out()
+                                                                            )
+                                    )
+          -- Значение m+n - Промо-механика
+        , tmpMIFloat_promo AS (SELECT MIFloat_PriceWithOutVAT.*
+                               FROM MovementItemFloat AS MIFloat_PriceWithOutVAT
+                               WHERE MIFloat_PriceWithOutVAT.MovementItemId IN (SELECT DISTINCT tmpMIPromo_all.MovementItemId FROM tmpMIPromo_all)
+                                 AND MIFloat_PriceWithOutVAT.DescId IN (zc_MIFloat_Value_m()
+                                                                      , zc_MIFloat_Value_n()
+                                                                       )
+                              )
           , tmpMIPromo AS (SELECT DISTINCT
                                   tmpMIPromo_all.MovementId_Promo
                                 , tmpMIPromo_all.GoodsId
                                 , tmpMIPromo_all.GoodsKindId
                                 , CASE WHEN /*tmpMIPromo_all.TaxPromo <> 0*/ 1=1 THEN MIFloat_PriceWithOutVAT.ValueData ELSE 0 END AS PricePromo
+
+                                  -- Промо-механика
+                                , MLO_PromoSchemaKind.ObjectId AS PromoSchemaKindId
+                                  -- Товар (факт отгрузка), если он есть - тогда Промо-механика
+                                , MILinkObject_Goods_out.ObjectId     AS GoodsId_out
+                                , MILinkObject_GoodsKind_out.ObjectId AS GoodsKindId_out
+                                  -- Значение m
+                                , MIFloat_Value_m.ValueData AS Value_m
+                                  -- Значение n
+                                , MIFloat_Value_n.ValueData AS Value_n
+
                            FROM tmpMIPromo_all
                                 LEFT JOIN tmpMIFLoat_PriceWithOutVAT_promo AS MIFloat_PriceWithOutVAT
                                                                            ON MIFloat_PriceWithOutVAT.MovementItemId = tmpMIPromo_all.MovementItemId
                                                                           AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
+                                -- Промо-механика
+                                LEFT JOIN MovementLinkObject AS MLO_PromoSchemaKind
+                                                             ON MLO_PromoSchemaKind.MovementId = tmpMIPromo_all.MovementId_Promo
+                                                            AND MLO_PromoSchemaKind.DescId     = zc_MovementLinkObject_PromoSchemaKind()
+                                -- Товар (факт отгрузка), если он есть - тогда Промо-механика
+                                LEFT JOIN tmpMILinkObject_promo AS MILinkObject_Goods_out
+                                                                ON MILinkObject_Goods_out.MovementItemId = tmpMIPromo_all.MovementItemId
+                                                               AND MILinkObject_Goods_out.DescId         = zc_MILinkObject_Goods_out()
+                                -- Виды товаров (факт отгрузка), если он есть - тогда Промо-механика
+                                LEFT JOIN tmpMILinkObject_promo AS MILinkObject_GoodsKind_out
+                                                                ON MILinkObject_GoodsKind_out.MovementItemId = tmpMIPromo_all.MovementItemId
+                                                               AND MILinkObject_GoodsKind_out.DescId         = zc_MILinkObject_GoodsKind_out()
+                                -- Значение m
+                                LEFT JOIN tmpMIFloat_promo AS MIFloat_Value_m
+                                                           ON MIFloat_Value_m.MovementItemId = tmpMIPromo_all.MovementItemId
+                                                          AND MIFloat_Value_m.DescId         = zc_MIFloat_Value_m()
+                                -- Значение n
+                                LEFT JOIN tmpMIFloat_promo AS MIFloat_Value_n
+                                                           ON MIFloat_Value_n.MovementItemId = tmpMIPromo_all.MovementItemId
+                                                          AND MIFloat_Value_n.DescId         = zc_MIFloat_Value_n()
                           )
           -- Товары из заявки
           , tmpMIOrder_ AS (SELECT MovementItem.ObjectId AS GoodsId
@@ -555,7 +602,25 @@ BEGIN
 
            , tmpPromo.MovementId     ::Integer AS MovementId_Promo
            , tmpPromo.MovementPromo
-           , CAST (CASE WHEN /*tmpPromo.TaxPromo <> 0 AND*/ tmpPromo.GoodsId > 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT / tmpPromo.CountForPrice
+           , CAST (CASE WHEN tmpPromo.PromoSchemaKindId = zc_Enum_PromoSchemaKind_m_n() AND tmpPromo.Value_m > 0 AND 1 > 0 AND vbPriceWithVAT = TRUE
+                             THEN zfCalc_Summ_PromoSchema_m_n
+                                  (tmpPromo.Value_n
+                                   -- Цена с НДС
+                                   * tmpPromo.PriceWithVAT / tmpPromo.CountForPrice
+                                 -- делим на общее кол-во
+                                 / tmpPromo.Value_m
+                                  )
+
+                        WHEN tmpPromo.PromoSchemaKindId = zc_Enum_PromoSchemaKind_m_n() AND tmpPromo.Value_m > 0 AND 1 > 0 AND vbPriceWithVAT = FALSE
+                             THEN zfCalc_Summ_PromoSchema_m_n
+                                  (tmpPromo.Value_n
+                                   -- БЕЗ НДС
+                                   * tmpPromo.PriceWithOutVAT / tmpPromo.CountForPrice
+                                 -- делим на общее кол-во
+                                 / tmpPromo.Value_m
+                                  )
+
+                        WHEN /*tmpPromo.TaxPromo <> 0 AND*/ tmpPromo.GoodsId > 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT / tmpPromo.CountForPrice
                         WHEN /*tmpPromo.TaxPromo <> 0*/ tmpPromo.GoodsId > 0 AND 1=1 THEN tmpPromo.PriceWithOutVAT / tmpPromo.CountForPrice
                         ELSE 0
                    END AS Numeric (16,8)) AS PricePromo
@@ -697,7 +762,25 @@ BEGIN
                    ELSE ''
               END) :: TVarChar AS MovementPromo
 
-           , CAST (CASE WHEN 1 = 0 AND tmpMIPromo.PricePromo <> 0 THEN tmpMIPromo.PricePromo / tmpPromo.CountForPrice
+           , CAST (CASE WHEN tmpPromo.PromoSchemaKindId = zc_Enum_PromoSchemaKind_m_n() AND tmpPromo.Value_m > 0 AND 1 > 0 AND vbPriceWithVAT = TRUE
+                             THEN zfCalc_Summ_PromoSchema_m_n
+                                  (tmpPromo.Value_n
+                                   -- Цена с НДС
+                                   * tmpPromo.PriceWithVAT / tmpPromo.CountForPrice
+                                 -- делим на общее кол-во
+                                 / tmpPromo.Value_m
+                                  )
+
+                        WHEN tmpPromo.PromoSchemaKindId = zc_Enum_PromoSchemaKind_m_n() AND tmpPromo.Value_m > 0 AND 1 > 0 AND vbPriceWithVAT = FALSE
+                             THEN zfCalc_Summ_PromoSchema_m_n
+                                  (tmpPromo.Value_n
+                                   -- БЕЗ НДС
+                                   * tmpPromo.PriceWithOutVAT / tmpPromo.CountForPrice
+                                 -- делим на общее кол-во
+                                 / tmpPromo.Value_m
+                                  )
+
+                        WHEN 1 = 0 AND tmpMIPromo.PricePromo <> 0 THEN tmpMIPromo.PricePromo / tmpPromo.CountForPrice
                         WHEN /*tmpPromo.TaxPromo <> 0 AND*/ tmpPromo.GoodsId > 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT / tmpPromo.CountForPrice
                         WHEN /*tmpPromo.TaxPromo <> 0*/ tmpPromo.GoodsId > 0 AND 1=1 THEN tmpPromo.PriceWithOutVAT / tmpPromo.CountForPrice
                         ELSE 0
@@ -999,15 +1082,62 @@ BEGIN
                                                  WHERE MovementItemFloat.DescId = zc_MIFloat_PriceWithOutVAT()
                                                    AND MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMIPromo_.MovementItemId FROM tmpMIPromo_)
                                                 )
+           -- Товар + Вид товара (факт отгрузка), если он есть - тогда Промо-механика
+         , tmpMILinkObject_promo AS (SELECT MILinkObject_GoodsKind.*
+                                     FROM MovementItemLinkObject AS MILinkObject_GoodsKind
+                                     WHERE MILinkObject_GoodsKind.MovementItemId IN (SELECT DISTINCT tmpMIPromo_all.MovementItemId FROM tmpMIPromo_all)
+                                       AND MILinkObject_GoodsKind.DescId IN (zc_MILinkObject_Goods_out()
+                                                                           , zc_MILinkObject_GoodsKind_out()
+                                                                            )
+                                    )
+          -- Значение m+n - Промо-механика
+        , tmpMIFloat_promo AS (SELECT MIFloat_PriceWithOutVAT.*
+                               FROM MovementItemFloat AS MIFloat_PriceWithOutVAT
+                               WHERE MIFloat_PriceWithOutVAT.MovementItemId IN (SELECT DISTINCT tmpMIPromo_all.MovementItemId FROM tmpMIPromo_all)
+                                 AND MIFloat_PriceWithOutVAT.DescId IN (zc_MIFloat_Value_m()
+                                                                      , zc_MIFloat_Value_n()
+                                                                       )
+                              )
           , tmpMIPromo AS (SELECT DISTINCT
                                   tmpMIPromo_all.MovementId_Promo
                                 , tmpMIPromo_all.GoodsId
                                 , tmpMIPromo_all.GoodsKindId
                                 , CASE WHEN /*tmpMIPromo_all.TaxPromo <> 0*/ 1=1 THEN MIFloat_PriceWithOutVAT.ValueData ELSE 0 END AS PricePromo
+
+                                  -- Промо-механика
+                                , MLO_PromoSchemaKind.ObjectId AS PromoSchemaKindId
+                                  -- Товар (факт отгрузка), если он есть - тогда Промо-механика
+                                , MILinkObject_Goods_out.ObjectId     AS GoodsId_out
+                                , MILinkObject_GoodsKind_out.ObjectId AS GoodsKindId_out
+                                  -- Значение m
+                                , MIFloat_Value_m.ValueData AS Value_m
+                                  -- Значение n
+                                , MIFloat_Value_n.ValueData AS Value_n
+
                            FROM tmpMIPromo_all
                                 LEFT JOIN tmpMIFLoat_PriceWithOutVAT_promo AS MIFloat_PriceWithOutVAT
                                                                            ON MIFloat_PriceWithOutVAT.MovementItemId = tmpMIPromo_all.MovementItemId
                                                                           AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
+                                -- Промо-механика
+                                LEFT JOIN MovementLinkObject AS MLO_PromoSchemaKind
+                                                             ON MLO_PromoSchemaKind.MovementId = tmpMIPromo_all.MovementId_Promo
+                                                            AND MLO_PromoSchemaKind.DescId     = zc_MovementLinkObject_PromoSchemaKind()
+                                -- Товар (факт отгрузка), если он есть - тогда Промо-механика
+                                LEFT JOIN tmpMILinkObject_promo AS MILinkObject_Goods_out
+                                                                ON MILinkObject_Goods_out.MovementItemId = tmpMIPromo_all.MovementItemId
+                                                               AND MILinkObject_Goods_out.DescId         = zc_MILinkObject_Goods_out()
+                                -- Виды товаров (факт отгрузка), если он есть - тогда Промо-механика
+                                LEFT JOIN tmpMILinkObject_promo AS MILinkObject_GoodsKind_out
+                                                                ON MILinkObject_GoodsKind_out.MovementItemId = tmpMIPromo_all.MovementItemId
+                                                               AND MILinkObject_GoodsKind_out.DescId         = zc_MILinkObject_GoodsKind_out()
+                                -- Значение m
+                                LEFT JOIN tmpMIFloat_promo AS MIFloat_Value_m
+                                                           ON MIFloat_Value_m.MovementItemId = tmpMIPromo_all.MovementItemId
+                                                          AND MIFloat_Value_m.DescId         = zc_MIFloat_Value_m()
+                                -- Значение n
+                                LEFT JOIN tmpMIFloat_promo AS MIFloat_Value_n
+                                                           ON MIFloat_Value_n.MovementItemId = tmpMIPromo_all.MovementItemId
+                                                          AND MIFloat_Value_n.DescId         = zc_MIFloat_Value_n()
                           )
           -- Товары из заявки
           , tmpMIOrder_ AS (SELECT MovementItem.ObjectId AS GoodsId
@@ -1207,7 +1337,25 @@ BEGIN
                    ELSE ''
               END) :: TVarChar AS MovementPromo
 
-           , CAST (CASE WHEN 1 = 0 AND tmpMIPromo.PricePromo <> 0 THEN tmpMIPromo.PricePromo / tmpPromo.CountForPrice
+           , CAST (CASE WHEN tmpPromo.PromoSchemaKindId = zc_Enum_PromoSchemaKind_m_n() AND tmpPromo.Value_m > 0 AND 1 > 0 AND vbPriceWithVAT = TRUE
+                             THEN zfCalc_Summ_PromoSchema_m_n
+                                  (tmpPromo.Value_n
+                                   -- Цена с НДС
+                                   * tmpPromo.PriceWithVAT / tmpPromo.CountForPrice
+                                 -- делим на общее кол-во
+                                 / tmpPromo.Value_m
+                                  )
+
+                        WHEN tmpPromo.PromoSchemaKindId = zc_Enum_PromoSchemaKind_m_n() AND tmpPromo.Value_m > 0 AND 1 > 0 AND vbPriceWithVAT = FALSE
+                             THEN zfCalc_Summ_PromoSchema_m_n
+                                  (tmpPromo.Value_n
+                                   -- БЕЗ НДС
+                                   * tmpPromo.PriceWithOutVAT / tmpPromo.CountForPrice
+                                 -- делим на общее кол-во
+                                 / tmpPromo.Value_m
+                                  )
+
+                        WHEN 1 = 0 AND tmpMIPromo.PricePromo <> 0 THEN tmpMIPromo.PricePromo / tmpPromo.CountForPrice
                         WHEN /*tmpPromo.TaxPromo <> 0 AND*/ tmpPromo.GoodsId > 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT / tmpPromo.CountForPrice
                         WHEN /*tmpPromo.TaxPromo <> 0*/ tmpPromo.GoodsId > 0 AND 1=1 THEN tmpPromo.PriceWithOutVAT / tmpPromo.CountForPrice
                         ELSE 0
