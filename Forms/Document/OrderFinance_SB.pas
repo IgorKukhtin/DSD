@@ -104,6 +104,12 @@ type
     mactExport_body: TMultiAction;
     bbExport_body: TdxBarButton;
     actSMTPFile_body: TdsdSMTPFileAction;
+    spUpdate_SignSB_Yes: TdsdStoredProc;
+    spUpdate_SignSB_No: TdsdStoredProc;
+    actUpdate_SignSB_No: TdsdExecStoredProc;
+    actUpdate_SignSB_Yes: TdsdExecStoredProc;
+    bbUpdate_SignSB_Yes: TdxBarButton;
+    bbUpdate_SignSB_No: TdxBarButton;
   private
     { Private declarations }
   public

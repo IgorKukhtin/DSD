@@ -20,8 +20,10 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , StartDate_WeekNumber TDateTime, EndDate_WeekNumber TDateTime
              , DateDay TDateTime, DateDay_old TDateTime, WeekDay TVarChar
              
-             , Comment_mov TVarChar
-                          --
+             , Comment_mov TVarChar 
+             , Date_SignSB TDateTime, isSignSB Boolean
+             
+             --
              , MovementItemId Integer
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , OKPO TVarChar
@@ -29,8 +31,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , PaidKindName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, NumGroup Integer
              , Condition TVarChar, ContractStateKindCode Integer
-             , StartDate TDateTime, EndDate_real TDateTime, EndDate TVarChar
-
+             , StartDate TDateTime, EndDate_real TDateTime, EndDate TVarChar 
              -- № в очереди на 1.пн.
              , Number_day         TFloat
 
@@ -70,8 +71,7 @@ BEGIN
        tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                     )
-     , tmpMovement AS (
-                       SELECT Movement.*
+     , tmpMovement AS (SELECT Movement.*
                             , MovementFloat_WeekNumber.ValueData AS WeekNumber
                        FROM Movement
                             INNER JOIN MovementFloat AS MovementFloat_WeekNumber
@@ -89,7 +89,7 @@ BEGIN
                                                    AND ObjectBoolean_SB.DescId = zc_ObjectBoolean_OrderFinance_SB()
 
                        WHERE Movement.DescId = zc_Movement_OrderFinance()
-                        -- AND Movement.StatusId IN (SELECT tmpStatus.StatusId FROM tmpStatus)
+                         AND Movement.StatusId IN (SELECT tmpStatus.StatusId FROM tmpStatus)
                          AND Movement.OperDate BETWEEN inStartDate - INTERVAL '14 DAY' AND inEndDate
                          AND COALESCE (ObjectBoolean_SB.ValueData, FALSE) = TRUE     --только те виды планировани, что нужно согласовывать СБ
                        )
@@ -538,7 +538,9 @@ BEGIN
                           , COALESCE (MovementDate_Sign_1.ValueData, NULL)         ::TDateTime AS Date_Sign_1
                           , COALESCE (MovementBoolean_SignWait_1.ValueData, FALSE) ::Boolean   AS isSignWait_1
                           , COALESCE (MovementBoolean_Sign_1.ValueData, FALSE)     ::Boolean   AS isSign_1     
-                          */
+                          */ 
+                          , MovementDate_SignSB.ValueData                          ::TDateTime AS Date_SignSB
+                          , COALESCE (MovementBoolean_SignSB.ValueData, FALSE)     ::Boolean   AS isSignSB
                       FROM tmpMovement AS Movement
 
                            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -644,6 +646,13 @@ BEGIN
                                                      ON MovementBoolean_Sign_1.MovementId = Movement.Id
                                                     AND MovementBoolean_Sign_1.DescId = zc_MovementBoolean_Sign_1() 
                         */
+
+                           LEFT JOIN MovementDate AS MovementDate_SignSB
+                                                  ON MovementDate_SignSB.MovementId = Movement.Id
+                                                 AND MovementDate_SignSB.DescId = zc_MovementDate_SignSB()
+                           LEFT JOIN MovementBoolean AS MovementBoolean_SignSB
+                                                     ON MovementBoolean_SignSB.MovementId = Movement.Id
+                                                    AND MovementBoolean_SignSB.DescId = zc_MovementBoolean_SignSB()
                     )
 
    , tmpJuridicalOrderFinance AS (SELECT Object_JuridicalOrderFinance.Id                   AS JuridicalOrderFinanceId
@@ -808,6 +817,9 @@ BEGIN
           END ::TVarChar AS WeekDay
        
         , tmpMovement.Comment           ::TVarChar  AS Comment_mov
+
+        , tmpMovement.Date_SignSB       ::TDateTime AS Date_SignSB
+        , tmpMovement.isSignSB          ::Boolean   AS isSignSB
 
           --
         , tmpMI.Id AS MovementItemId

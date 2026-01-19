@@ -29,7 +29,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , PositionName_insert TVarChar
              , Date_SignWait_1 TDateTime, Date_Sign_1 TDateTime
              , isSignWait_1 Boolean, isSign_1 Boolean
-             , Date_SignSB TDateTime, isSignSB Boolean 
+             , Date_SignSB TDateTime, isSignSB Boolean
               )
 AS
 $BODY$
