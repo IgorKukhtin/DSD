@@ -1,7 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_OrderFinanceSB()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinanceSB (Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinanceSB (Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar);
  
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinanceSB(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -21,13 +20,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinanceSB(
  INOUT ioAmountPlan_4          TFloat    , --
  INOUT ioAmountPlan_5          TFloat    , --
    OUT outAmountPlan_total     TFloat    , --
-    IN inIsAmountPlan_1        Boolean    , --
-    IN inIsAmountPlan_2        Boolean    , --
-    IN inIsAmountPlan_3        Boolean    , --
-    IN inIsAmountPlan_4        Boolean    , --
-    IN inIsAmountPlan_5        Boolean    , --
     IN inComment               TVarChar   , --
-    --child
+    -- child
     IN inGoodsName_child       TVarChar  , -- Товары
     IN inInvNumber_child       TVarChar  , -- 
     IN inSession               TVarChar    -- сессия пользователя
@@ -73,6 +67,8 @@ BEGIN
          -- если изменили план
          IF COALESCE (inAmount, 0) <> COALESCE (ioAmount_old, 0)
             OR ioOperDate_Amount <> COALESCE (ioOperDate_Amount_old, zc_DateStart())
+            -- или Заполнение дата предварительный план = ДА = EXISTS zc_ObjectBoolean_OrderFinance_OperDate
+            OR 1=1
          THEN
              -- пн.
              IF ioOperDate_Amount = vbOperDate_start + INTERVAL '0 DAY'
@@ -240,11 +236,6 @@ BEGIN
                                                   , inAmountPlan_3    := ioAmountPlan_3
                                                   , inAmountPlan_4    := ioAmountPlan_4
                                                   , inAmountPlan_5    := ioAmountPlan_5
-                                                  , inIsAmountPlan_1  := inIsAmountPlan_1
-                                                  , inIsAmountPlan_2  := inIsAmountPlan_2
-                                                  , inIsAmountPlan_3  := inIsAmountPlan_3
-                                                  , inIsAmountPlan_4  := inIsAmountPlan_4
-                                                  , inIsAmountPlan_5  := inIsAmountPlan_5
                                                   , inComment         := inComment
                                                   , inUserId          := vbUserId
                                                    ) AS tmp;

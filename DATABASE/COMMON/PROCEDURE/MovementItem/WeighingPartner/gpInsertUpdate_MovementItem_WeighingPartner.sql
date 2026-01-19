@@ -335,6 +335,16 @@ BEGIN
      -- Партия-Пересорт
      IF inGoodsId_out > 0
      THEN 
+         -- проверка
+         IF inGoodsId_out = inGoodsId AND inGoodsKindId_out = inGoodsKindId
+         THEN
+             RAISE EXCEPTION 'Ошибка.В приходе Товар+вид должен отличаться от пересортицы расход%<%> <%>.'
+                           , CHR (13)
+                           , lfGet_Object_ValueData (inGoodsId_out)
+                           , lfGet_Object_ValueData_sh (inGoodsKindId)
+                            ;
+         END IF;
+
          -- сохранили связь с <товар>
          PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods_out(), ioId, inGoodsId_out);
          -- сохранили связь с <Виды товаров>
