@@ -1,11 +1,11 @@
 inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
   Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1087#1086' '#1076#1072#1090#1072#1084')'
-  ClientHeight = 374
+  ClientHeight = 410
   ClientWidth = 1020
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1036
-  ExplicitHeight = 413
+  ExplicitHeight = 449
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -996,11 +996,12 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
     Left = 0
     Top = 336
     Width = 1020
-    Height = 38
+    Height = 74
     Align = alBottom
     Anchors = [akTop, akRight, akBottom]
     TabOrder = 6
     Visible = False
+    ExplicitHeight = 38
     object ExportXmlGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ExportDS
@@ -1623,6 +1624,7 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
     object actUpdateStatus_Complete: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spUpdateStatus_Complete
       StoredProcList = <
         item
@@ -1638,6 +1640,7 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
     object actUpdateStatus_UnComplete: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spUpdateStatus_UnComplete
       StoredProcList = <
         item
@@ -1649,6 +1652,77 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
       Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1081
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1082#1088#1099#1090#1100' '#1086#1076#1080#1085' '#1042#1080#1076' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1081'?'
       InfoAfterExecute = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1042#1080#1076' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1086#1090#1082#1088#1099#1090' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1081
+    end
+    object actGet_Export_Email_body: TdsdExecStoredProc
+      Category = 'Export_Email_body'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Export_Email_Body
+      StoredProcList = <
+        item
+          StoredProc = spGet_Export_Email_Body
+        end>
+      Caption = 'actGet_Export_Email'
+    end
+    object actSMTPFile_body: TdsdSMTPFileAction
+      Category = 'Export_Email_body'
+      MoveParams = <>
+      Host.Value = Null
+      Host.Component = ExportEmailCDS
+      Host.ComponentItem = 'Host'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Port.Value = 25
+      Port.Component = ExportEmailCDS
+      Port.ComponentItem = 'Port'
+      Port.DataType = ftString
+      Port.MultiSelectSeparator = ','
+      UserName.Value = Null
+      UserName.Component = ExportEmailCDS
+      UserName.ComponentItem = 'UserName'
+      UserName.DataType = ftString
+      UserName.MultiSelectSeparator = ','
+      Password.Value = Null
+      Password.Component = ExportEmailCDS
+      Password.ComponentItem = 'Password'
+      Password.DataType = ftString
+      Password.MultiSelectSeparator = ','
+      Body.Value = Null
+      Body.Component = ExportEmailCDS
+      Body.ComponentItem = 'Body'
+      Body.DataType = ftString
+      Body.MultiSelectSeparator = ','
+      Subject.Value = Null
+      Subject.Component = ExportEmailCDS
+      Subject.ComponentItem = 'Subject'
+      Subject.DataType = ftString
+      Subject.MultiSelectSeparator = ','
+      FromAddress.Value = Null
+      FromAddress.Component = ExportEmailCDS
+      FromAddress.ComponentItem = 'AddressFrom'
+      FromAddress.DataType = ftString
+      FromAddress.MultiSelectSeparator = ','
+      ToAddress.Value = Null
+      ToAddress.Component = ExportEmailCDS
+      ToAddress.ComponentItem = 'AddressTo'
+      ToAddress.DataType = ftString
+      ToAddress.MultiSelectSeparator = ','
+    end
+    object mactExport_body: TMultiAction
+      Category = 'Export_Email_body'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Export_Email_body
+        end
+        item
+          Action = actSMTPFile_body
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1059#1074#1077#1076#1086#1084#1080#1090#1100' '#1060#1080#1085'.'#1089#1083#1091#1078#1073#1091' '#1087#1086' '#1087#1086#1095#1090#1077'?'
+      InfoAfterExecute = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1060#1080#1085'.'#1089#1083#1091#1078#1073#1077' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1086
+      Caption = #1059#1074#1077#1076#1086#1084#1080#1090#1100' '#1060#1080#1085'.'#1089#1083#1091#1078#1073#1091
+      Hint = #1059#1074#1077#1076#1086#1084#1080#1090#1100' '#1057#1041
+      ImageIndex = 53
     end
   end
   inherited MasterDS: TDataSource
@@ -1759,6 +1833,10 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
         end
         item
           Visible = True
+          ItemName = 'bbExport_body'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1835,6 +1913,10 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
     end
     object bbUpdateStatus_UnComplete: TdxBarButton
       Action = actUpdateStatus_UnComplete
+      Category = 0
+    end
+    object bbExport_body: TdxBarButton
+      Action = mactExport_body
       Category = 0
     end
   end
@@ -2708,5 +2790,43 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
     PackSize = 1
     Left = 280
     Top = 152
+  end
+  object ExportEmailDS: TDataSource
+    DataSet = ExportEmailCDS
+    Left = 408
+    Top = 330
+  end
+  object ExportEmailCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 360
+    Top = 329
+  end
+  object spGet_Export_Email_Body: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_OrderFinance_Email_sendBody'
+    DataSet = ExportEmailCDS
+    DataSets = <
+      item
+        DataSet = ExportEmailCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParam'
+        Value = '3'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 288
+    Top = 336
   end
 end

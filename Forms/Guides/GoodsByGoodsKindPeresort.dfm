@@ -808,7 +808,7 @@ inherited GoodsByGoodsKindPeresortForm: TGoodsByGoodsKindPeresortForm
     Top = 144
   end
   object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
+    StoredProcName = 'gpUpdate_Object_isErased_GoodsByGoodsKindPeresort'
     DataSet = MasterCDS
     DataSets = <
       item

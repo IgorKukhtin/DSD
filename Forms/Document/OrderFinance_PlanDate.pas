@@ -99,6 +99,13 @@ type
     bbUpdateStatus_UnComplete: TdxBarButton;
     spUpdateStatus_UnComplete: TdsdStoredProc;
     spUpdateStatus_Complete: TdsdStoredProc;
+    ExportEmailDS: TDataSource;
+    ExportEmailCDS: TClientDataSet;
+    spGet_Export_Email_Body: TdsdStoredProc;
+    actGet_Export_Email_body: TdsdExecStoredProc;
+    actSMTPFile_body: TdsdSMTPFileAction;
+    mactExport_body: TMultiAction;
+    bbExport_body: TdxBarButton;
   private
     { Private declarations }
   public

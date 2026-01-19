@@ -97,6 +97,13 @@ type
     isSign_Child: TcxGridDBColumn;
     spUpdate_SignSB: TdsdStoredProc;
     TextSign_Child: TcxGridDBColumn;
+    ExportEmailCDS: TClientDataSet;
+    ExportEmailDS: TDataSource;
+    spGet_Export_Email_Body: TdsdStoredProc;
+    actGet_Export_Email_body: TdsdExecStoredProc;
+    mactExport_body: TMultiAction;
+    bbExport_body: TdxBarButton;
+    actSMTPFile_body: TdsdSMTPFileAction;
   private
     { Private declarations }
   public

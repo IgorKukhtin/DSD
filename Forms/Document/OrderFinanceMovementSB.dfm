@@ -5451,8 +5451,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 607
-    Top = 128
+    Left = 631
+    Top = 96
   end
   object spIDEL: TdsdStoredProc
     DataSets = <>
