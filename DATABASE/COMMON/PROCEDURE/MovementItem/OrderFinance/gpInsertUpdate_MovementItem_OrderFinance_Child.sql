@@ -13,6 +13,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinance_Child(
     IN inComment               TVarChar  , --
     IN inAmount                TFloat    , -- 
    OUT outSumm_parent          TFloat    , -- 
+   OUT outInvNumber_parent     TVarChar  , -- 
+   OUT outGoodsName_parent     TVarChar  , -- 
     IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -65,13 +67,28 @@ BEGIN
 
 
      -- Только после сохранения
-     outSumm_parent:= COALESCE ((SELECT SUM (MovementItem.Amount) AS Amount
-                                FROM MovementItem
-                                WHERE MovementItem.MovementId = inMovementId
-                                  AND MovementItem.DescId     = zc_MI_Child()
-                                  AND MovementItem.ParentId   = inParentId
-                                  AND MovementItem.isErased   = FALSE
-                               ), 0);
+    SELECT STRING_AGG (tmpMI.InvNumber, '; ') AS InvNumber
+         , STRING_AGG (tmpMI.GoodsName, '; ') AS GoodsName
+         , SUM (tmpMI.Amount)          AS Amount
+           INTO outInvNumber_parent, outGoodsName_parent, outSumm_parent
+    FROM (SELECT COALESCE (MIString_GoodsName.ValueData, '') AS GoodsName
+               , COALESCE (MIString_InvNumber.ValueData, '') AS InvNumber
+               , MovementItem.Amount                                               
+          FROM MovementItem
+              LEFT JOIN MovementItemString AS MIString_InvNumber
+                                           ON MIString_InvNumber.MovementItemId = MovementItem.Id
+                                          AND MIString_InvNumber.DescId = zc_MIString_InvNumber()
+              LEFT JOIN MovementItemString AS MIString_GoodsName
+                                           ON MIString_GoodsName.MovementItemId = MovementItem.Id
+                                          AND MIString_GoodsName.DescId = zc_MIString_GoodsName()
+          WHERE MovementItem.MovementId = inMovementId
+            AND MovementItem.DescId     = zc_MI_Child()
+            AND MovementItem.isErased   = FALSE
+            AND MovementItem.ParentId   = inParentId
+            -- Важно - Сортировать
+          ORDER BY MovementItem.Id ASC
+        ) AS tmpMI;
+
 
      -- сохранили <Итого>
      PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, zc_MI_Master(), MovementItem.ObjectId, MovementItem.MovementId, outSumm_parent, MovementItem.ParentId)
