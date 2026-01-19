@@ -2286,10 +2286,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         end
         item
           Visible = True
-          ItemName = 'bbUpdate_Sign_1_Yes'
-        end
-        item
-          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -2343,10 +2339,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         item
           Visible = True
           ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetErasedChild'
         end>
       OneOnRow = True
       Row = 0
@@ -2487,7 +2479,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 0
     end
     object bbOut: TdxBarSubItem
-      Caption = #1042#1099#1075#1088#1091#1079#1082#1072
+      Caption = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
       Category = 0
       Visible = ivAlways
       ItemLinks = <
@@ -2579,14 +2571,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         item
           Visible = True
           ItemName = 'dxBarSeparator1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_Sign_1_No'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarSeparator'
         end
         item
           Visible = True
@@ -2894,8 +2878,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         item
           StoredProc = spErasedMIchild
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1047#1072#1103#1074#1082#1072' '#1058#1052#1062'>'
-      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1058#1086#1074#1072#1088' ('#1047#1072#1103#1074#1082#1072' '#1058#1052#1062')>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1058#1086#1074#1072#1088' ('#1047#1072#1103#1074#1082#1072' '#1058#1052#1062')>'
       ImageIndex = 2
       ShortCut = 49217
       ErasedFieldName = 'isErased'
@@ -2910,8 +2894,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         item
           StoredProc = spUnErasedMIchild
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088' ('#1047#1072#1103#1074#1082#1072' '#1058#1052#1062')>'
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088' ('#1047#1072#1103#1074#1082#1072' '#1058#1052#1062')>'
       ImageIndex = 8
       ShortCut = 49217
       ErasedFieldName = 'isErased'
@@ -3178,8 +3162,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         item
           StoredProc = spGetTotalSumm
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
-      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1070#1088'. '#1083#1080#1094#1086'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1070#1088'. '#1083#1080#1094#1086'>'
       ImageIndex = 2
       ShortCut = 49220
       ErasedFieldName = 'isErased'
@@ -3197,8 +3181,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         item
           StoredProc = spGetTotalSumm
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1070#1088'. '#1083#1080#1094#1086'>'
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1070#1088'. '#1083#1080#1094#1086'>'
       ImageIndex = 8
       ShortCut = 49220
       ErasedFieldName = 'isErased'
@@ -3229,8 +3213,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       PostDataSetBeforeExecute = False
       View = cxGridDBTableViewChild
       Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1047#1072#1103#1074#1082#1072' '#1058#1052#1062'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1047#1072#1103#1074#1082#1072' '#1058#1052#1062'>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088' ('#1047#1072#1103#1074#1082#1072' '#1058#1052#1062')>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088' ('#1047#1072#1103#1074#1082#1072' '#1058#1052#1062')>'
       ImageIndex = 0
     end
     object CompleteMovement: TChangeGuidesStatus
@@ -3254,6 +3238,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     object actUpdate_SignSB_No: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_SignSB_No
       StoredProcList = <
@@ -3269,6 +3254,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     object actUpdate_SignSB_Yes: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_SignSB_Yes
       StoredProcList = <
@@ -3793,8 +3779,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       View = cxGridDBTableView
       Action = actJuridicalChoiceForm
       Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1070#1088'. '#1083#1080#1094#1086'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1070#1088'. '#1083#1080#1094#1086'>'
       ShortCut = 16429
       ImageIndex = 0
     end
@@ -6316,6 +6302,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
   object GuidesMember1: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceMember_1
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TMember_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -6352,6 +6339,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
   object GuidesMember2: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceMember_2
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TMember_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -7139,6 +7127,22 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInvNumber_parent'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumber_Child'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsName_parent'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsName_Child'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
