@@ -3,6 +3,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   ClientHeight = 556
   ClientWidth = 1118
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -224
   ExplicitWidth = 1134
   ExplicitHeight = 595
   PixelsPerInch = 96
@@ -622,6 +623,14 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object JuridicalName_Basis: TcxGridDBColumn
+            Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'.'#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName_Basis'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object AreaName: TcxGridDBColumn
             Caption = #1056#1077#1075#1080#1086#1085' ('#1076#1086#1075#1086#1074#1086#1088')'
             DataBinding.FieldName = 'AreaName'
