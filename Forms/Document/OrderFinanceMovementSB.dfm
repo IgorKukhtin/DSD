@@ -535,7 +535,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Caption = #1050#1072#1089#1089#1072' ('#1084#1077#1089#1090#1086' '#1074#1099#1076#1072#1095#1080')'
     end
     object ceCash: TcxButtonEdit
-      Left = 599
+      Left = 600
       Top = 146
       Properties.Buttons = <
         item
@@ -544,7 +544,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         end>
       Properties.ReadOnly = True
       TabOrder = 48
-      Width = 170
+      Width = 169
     end
   end
   object cxPageControl: TcxPageControl
@@ -3051,9 +3051,9 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'ContractChoiceForm'
-      FormName = 'TCash_ObjectForm'
-      FormNameParam.Value = 'TCash_ObjectForm'
+      Caption = 'Cash_BranchChoiceForm'
+      FormName = 'TCash_BranchForm'
+      FormNameParam.Value = 'TCash_BranchForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -7293,10 +7293,10 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
   object GuidesCash: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceCash
-    FormNameParam.Value = 'TCash_ObjectForm'
+    FormNameParam.Value = 'TCash_BranchForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TCash_ObjectForm'
+    FormName = 'TCash_BranchForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
