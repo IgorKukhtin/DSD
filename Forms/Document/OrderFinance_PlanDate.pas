@@ -106,6 +106,7 @@ type
     actSMTPFile_body: TdsdSMTPFileAction;
     mactExport_body: TMultiAction;
     bbExport_body: TdxBarButton;
+    FonColor_string: TcxGridDBColumn;
   private
     { Private declarations }
   public
