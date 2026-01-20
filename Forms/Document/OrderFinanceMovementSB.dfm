@@ -993,6 +993,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1072#1089#1089#1072' ('#1084#1077#1089#1090#1086' '#1074#1099#1076#1072#1095#1080')'
