@@ -31,7 +31,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , Date_SignWait_1 TDateTime, Date_Sign_1 TDateTime
              , isSignWait_1 Boolean, isSign_1 Boolean 
              
-             , Date_SignSB TDateTime, isSB Boolean         
+             , Date_SignSB TDateTime, isSignSB Boolean         
              , FonColor_string Integer
         
              --
@@ -576,12 +576,14 @@ BEGIN
                           , COALESCE (MovementBoolean_Sign_1.ValueData, FALSE)     ::Boolean   AS isSign_1
                           
                           , COALESCE (MovementDate_SignSB.ValueData, NULL)         ::TDateTime AS Date_SignSB
-                          , COALESCE (MovementBoolean_SignSB.ValueData, FALSE)     ::Boolean   AS isSB
+                          , COALESCE (MovementBoolean_SignSB.ValueData, FALSE)     ::Boolean   AS isSignSB
                           
-                          , CASE WHEN COALESCE (MovementBoolean_Sign_1.ValueData, FALSE) = FALSE 
-                                 AND ((COALESCE (ObjectBoolean_SB.ValueData, FALSE) = TRUE AND COALESCE (MovementBoolean_SignSB.ValueData, FALSE) = FALSE) OR (COALESCE (ObjectBoolean_SB.ValueData, FALSE) = FALSE ) )
+                          , CASE WHEN Object_Status.Id = zc_Enum_Status_UnComplete() AND COALESCE (ObjectBoolean_Status_off.ValueData, FALSE) <> TRUE
+                                     THEN zc_Color_Yelow()
+                                 WHEN COALESCE (MovementBoolean_Sign_1.ValueData, FALSE) = FALSE 
+                                 OR (COALESCE (ObjectBoolean_SB.ValueData, FALSE) = TRUE AND COALESCE (MovementBoolean_SignSB.ValueData, FALSE) = FALSE)
                                      THEN zc_Color_Aqua()
-                                 WHEN Object_Status.Id = zc_Enum_Status_UnComplete() THEN zc_Color_Yelow()
+                                 
                                  ELSE zc_Color_White()
                             END  ::Integer AS FonColor_string
                       FROM tmpMovement AS Movement
@@ -630,9 +632,12 @@ BEGIN
                                                        AND MovementLinkObject_OrderFinance.DescId = zc_MovementLinkObject_OrderFinance()
                            LEFT JOIN Object AS Object_OrderFinance ON Object_OrderFinance.Id = MovementLinkObject_OrderFinance.ObjectId
 
-                           LEFT JOIN ObjectBoolean  AS ObjectBoolean_SB 
-                                                    ON ObjectBoolean_SB.ObjectId = MovementLinkObject_OrderFinance.ObjectId 
-                                                   AND ObjectBoolean_SB.DescId = zc_ObjectBoolean_OrderFinance_SB()
+                           LEFT JOIN ObjectBoolean AS ObjectBoolean_SB 
+                                                   ON ObjectBoolean_SB.ObjectId = MovementLinkObject_OrderFinance.ObjectId 
+                                                  AND ObjectBoolean_SB.DescId = zc_ObjectBoolean_OrderFinance_SB()
+                           LEFT JOIN ObjectBoolean AS ObjectBoolean_Status_off 
+                                                   ON ObjectBoolean_Status_off.ObjectId = MovementLinkObject_OrderFinance.ObjectId
+                                                  AND ObjectBoolean_Status_off.DescId = zc_ObjectBoolean_OrderFinance_Status_off()
 
                            LEFT JOIN MovementLinkObject AS MovementLinkObject_BankAccount
                                                         ON MovementLinkObject_BankAccount.MovementId = Movement.Id
@@ -886,7 +891,7 @@ BEGIN
         , tmpMovement.isSign_1        ::Boolean  --35 
 
         , tmpMovement.Date_SignSB     ::TDateTime 
-        , tmpMovement.isSB            ::Boolean         
+        , tmpMovement.isSignSB        ::Boolean         
         , tmpMovement.FonColor_string ::Integer
 
           --

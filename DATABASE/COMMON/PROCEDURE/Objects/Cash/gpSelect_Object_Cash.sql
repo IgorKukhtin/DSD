@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_Cash()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Cash(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Cash( Boolean , TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Cash(
+    IN inShowAll     Boolean ,
     IN inSession     TVarChar        -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, 
@@ -70,18 +72,19 @@ BEGIN
                                 ON ObjectBoolean_notCurrencyDiff.ObjectId = Object.Id
                                AND ObjectBoolean_notCurrencyDiff.DescId = zc_ObjectBoolean_Cash_notCurrencyDiff()                      
    WHERE Object.DescId = zc_Object_Cash()
-     AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
+     AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll) 
+     AND (Object.isErased = FALSE OR inShowAll = TRUE)
   ;
   
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpSelect_Object_Cash (TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.01.26         * inShowAll
  29.05.24         *
  25.11.14         * add PaidKind               
  28.12.13                                        * rename to zc_ObjectLink_Cash_JuridicalBasis
@@ -90,4 +93,4 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Cash (zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Cash (FALSE, zfCalc_UserAdmin())

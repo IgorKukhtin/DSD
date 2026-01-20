@@ -72,6 +72,7 @@ BEGIN
    WHERE Object.DescId = zc_Object_Cash()
      AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
      AND COALESCE (Cash_Branch.ChildObjectId,0) <> 0
+     AND Object.isErased = FALSE
   ;
   
 END;$BODY$

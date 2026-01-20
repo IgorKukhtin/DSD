@@ -977,7 +977,7 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
       Caption = #1053#1077#1076#1077#1083#1103':'
     end
     object edWeekNumber1: TcxButtonEdit
-      Left = 49
+      Left = 45
       Top = 5
       Properties.Buttons = <
         item
@@ -1947,17 +1947,9 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    ActionItemList = <
-      item
-      end>
     ColorRuleList = <
       item
         BackGroundValueColumn = FonColor_string
-        ColorValueList = <>
-      end
-      item
-        ColorColumn = AmountPlan_day
-        BackGroundValueColumn = FonColor_AmountPlan_day
         ColorValueList = <>
       end>
     Left = 240
