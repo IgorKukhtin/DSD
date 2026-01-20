@@ -38,6 +38,8 @@ RETURNS TABLE (ContainerId Integer, JuridicalCode Integer, JuridicalName TVarCha
              , PaymentDate TDateTime
 
              , AccountId Integer, JuridicalId Integer, PartnerId Integer, InfoMoneyId Integer, ContractId Integer, PaidKindId Integer, BranchId Integer
+             , JuridicalId_Basis Integer
+             , JuridicalName_Basis TVarChar
 
              , StartAmount_A TFloat, StartAmount_P TFloat, StartAmountD TFloat, StartAmountK TFloat
              , DebetSumm TFloat, KreditSumm TFloat
@@ -184,12 +186,13 @@ BEGIN
                                 , Container.ObjectId
                                 , Container.Amount
                                 , COALESCE (Container_Currency.Amount, 0) AS Amount_Currency
-                                , CLO_Juridical.ObjectId AS JuridicalId
-                                , CLO_InfoMoney.ObjectId AS InfoMoneyId
-                                , CLO_PaidKind.ObjectId  AS PaidKindId
-                                , CLO_Contract.ObjectId  AS ContractId
-                                , CLO_Branch.ObjectId    AS BranchId
+                                , CLO_Juridical.ObjectId                  AS JuridicalId
+                                , CLO_InfoMoney.ObjectId                  AS InfoMoneyId
+                                , CLO_PaidKind.ObjectId                   AS PaidKindId
+                                , CLO_Contract.ObjectId                   AS ContractId
+                                , CLO_Branch.ObjectId                     AS BranchId
                                 , CASE WHEN inIsPartionMovement = FALSE THEN CLO_PartionMovement.ObjectId ELSE 0 END AS PartionMovementId
+                                , CLO_JuridicalBasis.ObjectId             AS JuridicalId_Basis
                                 , COALESCE (CLO_Currency.ObjectId, 0)     AS CurrencyId
 
                            FROM ContainerLinkObject AS CLO_Juridical
@@ -209,6 +212,9 @@ BEGIN
                                 LEFT JOIN ContainerLinkObject AS CLO_PartionMovement
                                                               ON CLO_PartionMovement.ContainerId = Container.Id
                                                              AND CLO_PartionMovement.DescId = zc_ContainerLinkObject_PartionMovement()
+                                LEFT JOIN ContainerLinkObject AS CLO_JuridicalBasis
+                                                              ON CLO_JuridicalBasis.ContainerId = Container.Id
+                                                             AND CLO_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
 
                                 LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
                                                      ON ObjectLink_Juridical_JuridicalGroup.ObjectId = CLO_Juridical.ObjectId
@@ -247,7 +253,7 @@ BEGIN
 
         , Operation_all AS (-- 1.1. сумма даижения в валюте баланса
                             SELECT tmpContainer.ContainerId, tmpContainer.ObjectId, tmpContainer.JuridicalId, tmpContainer.InfoMoneyId, tmpContainer.PaidKindId
-                                 , tmpContainer.ContractId, tmpContainer.BranchId, tmpContainer.PartionMovementId
+                                 , tmpContainer.ContractId, tmpContainer.BranchId, tmpContainer.PartionMovementId, tmpContainer.JuridicalId_Basis
                                  , tmpContainer.CurrencyId
                                  , tmpContainer.Amount - COALESCE(SUM (MIContainer.Amount), 0) AS StartAmount
                                  , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS DebetSumm
@@ -367,12 +373,12 @@ BEGIN
                                                                   ON MIContainer.ContainerId = tmpContainer.ContainerId
                                                                  AND MIContainer.OperDate >= inStartDate
                              GROUP BY tmpContainer.ContainerId, tmpContainer.ObjectId, tmpContainer.Amount, tmpContainer.JuridicalId, tmpContainer.InfoMoneyId, tmpContainer.PaidKindId
-                                    , tmpContainer.ContractId, tmpContainer.BranchId, tmpContainer.PartionMovementId
+                                    , tmpContainer.ContractId, tmpContainer.BranchId, tmpContainer.PartionMovementId, tmpContainer.JuridicalId_Basis
                                     , tmpContainer.CurrencyId
                           UNION ALL
                             -- 1.2. сумма движения в валюте операции - Currency
                             SELECT tmpContainer.ContainerId, tmpContainer.ObjectId, tmpContainer.JuridicalId, tmpContainer.InfoMoneyId, tmpContainer.PaidKindId
-                                 , tmpContainer.ContractId, tmpContainer.BranchId, tmpContainer.PartionMovementId
+                                 , tmpContainer.ContractId, tmpContainer.BranchId, tmpContainer.PartionMovementId, tmpContainer.JuridicalId_Basis
                                  , tmpContainer.CurrencyId
                                  , 0 AS StartAmount
                                  , 0 AS DebetSumm
@@ -449,7 +455,7 @@ BEGIN
                                                                 AND MIContainer.OperDate >= inStartDate
                             WHERE tmpContainer.ContainerId_Currency > 0
                             GROUP BY tmpContainer.ContainerId, tmpContainer.ObjectId, tmpContainer.Amount_Currency, tmpContainer.JuridicalId, tmpContainer.InfoMoneyId, tmpContainer.PaidKindId
-                                   , tmpContainer.ContractId, tmpContainer.BranchId, tmpContainer.PartionMovementId
+                                   , tmpContainer.ContractId, tmpContainer.BranchId, tmpContainer.PartionMovementId, tmpContainer.JuridicalId_Basis
                                    , tmpContainer.CurrencyId
 
                            )
@@ -533,6 +539,9 @@ BEGIN
         View_Contract.ContractId,
         Object_PaidKind.Id  AS PaidKindId,
         Object_Branch.Id    AS BranchId,
+
+        Operation.JuridicalId_Basis,
+        Object_Juridical_Basis.ValueData AS JuridicalName_Basis,
 
         (Operation.StartAmount * COALESCE (tmpReport_res.Koeff, 1.0)) ::TFloat AS StartAmount_A,
         (-1 * Operation.StartAmount * COALESCE (tmpReport_res.Koeff, 1.0)) ::TFloat AS StartAmount_P,
@@ -623,6 +632,7 @@ BEGIN
                , CLO_Partner.ObjectId AS PartnerId
                , View_Contract_ContractKey.ContractId_Key AS ContractId
                , Operation_all.CurrencyId
+               , Operation_all.JuridicalId_Basis
 
                , SUM (Operation_all.StartAmount)         AS StartAmount
                , SUM (Operation_all.DebetSumm)           AS DebetSumm
@@ -678,6 +688,7 @@ BEGIN
                  , View_Contract_ContractKey.ContractId_Key
                  , CLO_Partner.ObjectId
                  , Operation_all.CurrencyId
+                 , Operation_all.JuridicalId_Basis
 
          ) AS Operation
 
@@ -797,6 +808,8 @@ BEGIN
                               AND ObjectDate_PartionMovement_Payment.DescId = zc_ObjectDate_PartionMovement_Payment()
 
           LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = Operation.CurrencyId
+
+          LEFT JOIN Object AS Object_Juridical_Basis ON Object_Juridical_Basis.Id = Operation.JuridicalId_Basis
 
           LEFT JOIN tmpPartnerTag ON tmpPartnerTag.PartnerId = Operation.PartnerId
           LEFT JOIN tmpJuridical_PartnerTag ON tmpJuridical_PartnerTag.JuridicalId = Operation.JuridicalId
