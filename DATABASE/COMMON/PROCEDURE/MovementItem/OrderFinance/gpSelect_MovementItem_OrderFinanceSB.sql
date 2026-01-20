@@ -16,6 +16,8 @@ RETURNS TABLE (Id Integer
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, NumGroup Integer
              , Condition TVarChar, ContractStateKindCode Integer
              , StartDate TDateTime, EndDate_real TDateTime, EndDate TVarChar, PersonalName_contract TVarChar
+               -- Касса (место выдачи)
+             , CashId Integer, CashName TVarChar
                -- *** Предварительный План на неделю
              , Amount               TFloat
              , Amount_old           TFloat
@@ -525,6 +527,7 @@ BEGIN
                SELECT MovementItem.Id                   AS Id
                     , MovementItem.ObjectId             AS JuridicalId
                     , MILinkObject_Contract.ObjectId    AS ContractId
+                    , MILinkObject_Cash.ObjectId        AS CashId
                       -- Предварительный План на неделю
                     , MovementItem.Amount               AS Amount
                       -- Дата предварительный план
@@ -645,6 +648,10 @@ BEGIN
                     LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_Contract
                                                         ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                                        AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+
+                    LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_Cash
+                                                        ON MILinkObject_Cash.MovementItemId = MovementItem.Id
+                                                       AND MILinkObject_Cash.DescId = zc_MILinkObject_Cash()
 
                     LEFT JOIN tmpMovementItemDate AS MIDate_Insert
                                                   ON MIDate_Insert.MovementItemId = MovementItem.Id
@@ -793,6 +800,9 @@ BEGIN
                 || (LPAD (EXTRACT (Day FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||LPAD (EXTRACT (Month FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||EXTRACT (YEAR FROM View_Contract.EndDate_term) :: TVarChar)
              ) ::TVarChar AS EndDate
            , Object_Personal.ValueData ::TVarChar AS PersonalName_contract
+             -- касса (место выдачи)
+           , Object_Cash.Id            ::Integer   AS CashId
+           , Object_Cash.ValueData     ::TVarChar  AS CashName
              -- Предварительный План на неделю
            , tmpMI.Amount              ::TFloat AS Amount
            , tmpMI.Amount              ::TFloat AS Amount_old
@@ -880,6 +890,7 @@ BEGIN
 
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (tmpData.JuridicalId, tmpMI.JuridicalId)
             LEFT JOIN Object AS Object_Contract  ON Object_Contract.Id  = COALESCE (tmpData.ContractId, tmpMI.ContractId)
+            LEFT JOIN Object AS Object_Cash      ON Object_Cash.Id  = tmpMI.CashId
 
             LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
                                  ON ObjectLink_Contract_InfoMoney.ObjectId = Object_Contract.Id
@@ -953,6 +964,9 @@ BEGIN
            , ''   ::TVarChar                  AS EndDate
            , ''   ::TVarChar                  AS PersonalName_contract
 
+             -- касса (место выдачи)
+           , 0                    ::Integer   AS CashId
+           , ''                   ::TVarChar  AS CashName
              -- Предварительный План на неделю
            , COALESCE (tmpMI.Amount, 0)::TFloat AS Amount
            , COALESCE (tmpMI.Amount, 0)::TFloat AS Amount_old
@@ -1303,6 +1317,9 @@ BEGIN
              ) ::TVarChar AS EndDate
            , Object_Personal.ValueData ::TVarChar AS PersonalName_contract
 
+             -- касса (место выдачи)
+           , Object_Cash.Id            ::Integer   AS CashId
+           , Object_Cash.ValueData     ::TVarChar  AS CashName
 
              -- Предварительный План на неделю
            , MovementItem.Amount               :: TFloat AS Amount
@@ -1512,6 +1529,11 @@ BEGIN
                                           ON MIDate_Amount.MovementItemId = MovementItem.Id
                                          AND MIDate_Amount.DescId = zc_MIDate_Amount()
 
+            LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_Cash
+                                                ON MILinkObject_Cash.MovementItemId = MovementItem.Id
+                                               AND MILinkObject_Cash.DescId = zc_MILinkObject_Cash()
+            LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = MILinkObject_Cash.ObjectId
+
             LEFT JOIN tmpMovementItemLinkObject AS MILO_Insert
                                                 ON MILO_Insert.MovementItemId = MovementItem.Id
                                                AND MILO_Insert.DescId = zc_MILinkObject_Insert()
@@ -1564,6 +1586,10 @@ BEGIN
            , NULL ::TDateTime                 AS EndDate_real
            , ''   ::TVarChar                  AS EndDate
            , ''   ::TVarChar                  AS PersonalName_contract
+
+             -- касса (место выдачи)
+           , 0                    ::Integer   AS CashId
+           , ''                   ::TVarChar  AS CashName
 
              -- Предварительный План на неделю
            , COALESCE (tmpMI.Amount, 0)::TFloat AS Amount
@@ -1677,6 +1703,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.01.26         *
  14.01.26         *
  10.12.25         *
  17.11.25         *

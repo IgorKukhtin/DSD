@@ -28,6 +28,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, OperDate_Amou
              , isSignWait_1 Boolean, isSign_1 Boolean
              , Date_SignSB TDateTime, isSignSB Boolean 
              , TotalText_1 TVarChar, TotalText_2 TVarChar, TotalText_3 TVarChar
+             --
+             , CashId Integer, CashName TVarChar
              )
 AS
 $BODY$
@@ -213,7 +215,9 @@ BEGIN
              , CASE WHEN tmpOrderFinance.OrderFinanceCode = 1 THEN 'Говядина на неделю:'        ELSE 'Группа-0:'   END :: TVarChar AS TotalText_1
              , CASE WHEN tmpOrderFinance.OrderFinanceCode = 1 THEN 'Живой вес на неделю :'      ELSE 'нет группы:' END :: TVarChar AS TotalText_2
              , CASE WHEN tmpOrderFinance.OrderFinanceCode = 1 THEN 'Прочее мясн.с. на неделю :' ELSE 'нет группы:' END :: TVarChar AS TotalText_3
-
+             --
+             , 0    ::Integer  AS CashId
+             , ''   ::TVarChar AS CashName
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
               LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
 
@@ -293,7 +297,9 @@ BEGIN
            , CASE WHEN Object_OrderFinance.ObjectCode = 1 THEN 'Говядина на неделю:'        ELSE 'Группа-0:'   END :: TVarChar AS TotalText_1
            , CASE WHEN Object_OrderFinance.ObjectCode = 1 THEN 'Живой вес на неделю :'      ELSE 'нет группы:' END :: TVarChar AS TotalText_2
            , CASE WHEN Object_OrderFinance.ObjectCode = 1 THEN 'Прочее мясн.с. на неделю :' ELSE 'нет группы:' END :: TVarChar AS TotalText_3
-
+           --
+           , 0    ::Integer  AS CashId
+           , ''   ::TVarChar AS CashName
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 

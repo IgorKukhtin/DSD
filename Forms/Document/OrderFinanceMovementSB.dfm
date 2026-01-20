@@ -26,6 +26,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitTop = 2
     object edInvNumber: TcxTextEdit
       Left = 232
       Top = 19
@@ -528,6 +529,23 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       TabOrder = 46
       Width = 116
     end
+    object cxLabel21: TcxLabel
+      Left = 599
+      Top = 127
+      Caption = #1050#1072#1089#1089#1072' ('#1084#1077#1089#1090#1086' '#1074#1099#1076#1072#1095#1080')'
+    end
+    object ceCash: TcxButtonEdit
+      Left = 599
+      Top = 146
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 48
+      Width = 170
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
@@ -964,6 +982,21 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
+          end
+          object CashName: TcxGridDBColumn
+            Caption = #1050#1072#1089#1089#1072
+            DataBinding.FieldName = 'CashName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actCashChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1072#1089#1089#1072' ('#1084#1077#1089#1090#1086' '#1074#1099#1076#1072#1095#1080')'
+            Width = 92
           end
           object AmountRemains: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1076#1086#1083#1075
@@ -2894,8 +2927,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         item
           StoredProc = spUnErasedMIchild
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088' ('#1047#1072#1103#1074#1082#1072' '#1058#1052#1062')>'
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088' ('#1047#1072#1103#1074#1082#1072' '#1058#1052#1062')>'
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 49217
       ErasedFieldName = 'isErased'
@@ -3012,6 +3045,35 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actCashChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'ContractChoiceForm'
+      FormName = 'TCash_ObjectForm'
+      FormNameParam.Value = 'TCash_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CashId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CashName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
     object ProtocolOpenFormJOF: TdsdOpenForm
       Category = #1055#1088#1086#1090#1086#1082#1086#1083
@@ -3181,8 +3243,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         item
           StoredProc = spGetTotalSumm
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1070#1088'. '#1083#1080#1094#1086'>'
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1070#1088'. '#1083#1080#1094#1086'>'
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 49220
       ErasedFieldName = 'isErased'
@@ -4652,6 +4714,22 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCashId_top'
+        Value = Null
+        Component = GuidesCash
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCashId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CashId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAmount'
         Value = Null
         Component = MasterCDS
@@ -5264,6 +5342,21 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         Component = ceDate_SignSB
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CashId'
+        Value = Null
+        Component = GuidesCash
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CashName'
+        Value = Null
+        Component = GuidesCash
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216
@@ -5437,7 +5530,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 631
+    Left = 679
     Top = 96
   end
   object spIDEL: TdsdStoredProc
@@ -5640,8 +5733,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 472
-    Top = 65528
+    Left = 512
   end
   object JuridicalCDS: TClientDataSet
     Aggregates = <>
@@ -6031,8 +6123,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 720
-    Top = 120
+    Left = 768
+    Top = 144
   end
   object spInsertMaskMIMaster2: TdsdStoredProc
     DataSets = <>
@@ -7196,5 +7288,47 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     PackSize = 1
     Left = 960
     Top = 184
+  end
+  object GuidesCash: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceCash
+    FormNameParam.Value = 'TCash_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TCash_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesCash
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesCash
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 640
+    Top = 149
   end
 end
