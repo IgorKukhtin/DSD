@@ -24,7 +24,7 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
 
 type
   TReport_JuridicalSold_BranchForm = class(TAncestorReportForm)
@@ -163,6 +163,7 @@ type
     deEnd_sale: TcxDateEdit;
     cxLabel12: TcxLabel;
     PeriodChoice1: TPeriodChoice;
+    JuridicalName_Basis: TcxGridDBColumn;
   private
     { Private declarations }
   public

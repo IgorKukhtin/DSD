@@ -130,7 +130,7 @@ BEGIN
                                  , MovementItem.ParentId
                                  , MIString_InvNumber.ValueData ::TVarChar AS InvNumber
                                  , MIString_GoodsName.ValueData ::TVarChar AS GoodsName
-                                 , COALESCE (MIBoolean_Sign.ValueData, FALSE) ::Boolean AS isSign
+                                 , MIBoolean_Sign.ValueData     ::Boolean  AS isSign
                             FROM tmpMI_Child AS MovementItem
                                  LEFT JOIN tmpMIString_Child AS MIString_GoodsName
                                                              ON MIString_GoodsName.MovementItemId = MovementItem.Id

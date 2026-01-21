@@ -72,6 +72,7 @@ $BODY$
    DECLARE vbIsCloseInventory Boolean;
 
    DECLARE vbIsPeresort       Boolean;
+   DECLARE vbIsEtiketka       Boolean;
 
    DECLARE vbInvNumberPartner_find TVarChar;
    DECLARE vbContractId_find Integer;
@@ -297,6 +298,22 @@ BEGIN
                                   AND MovementFloat.ValueData > 0
                                ) AS tmp
                          );
+
+          vbIsEtiketka:= (SELECT CASE WHEN TRIM (tmp.RetV) ILIKE 'TRUE' THEN TRUE ELSE FALSE END :: Boolean
+                          FROM (SELECT gpGet_ToolsWeighing_Value (inLevel1      := 'Scale_' || inBranchCode
+                                                                , inLevel2      := 'Movement'
+                                                                , inLevel3      := 'MovementDesc_' || CASE WHEN MovementFloat.ValueData < 10 THEN '0' ELSE '' END || (MovementFloat.ValueData :: Integer) :: TVarChar
+                                                                , inItemName    := 'isEtiketka'
+                                                                , inDefaultValue:= 'FALSE'
+                                                                , inSession     := inSession
+                                                                 ) AS RetV
+                                FROM MovementFloat
+                                WHERE MovementFloat.MovementId = inMovementId
+                                  AND MovementFloat.DescId = zc_MovementFloat_MovementDescNumber()
+                                  AND MovementFloat.ValueData > 0
+                               ) AS tmp
+                         );
+
      ELSE
          vbIsPeresort:= FALSE;
      END IF;
@@ -1174,6 +1191,13 @@ BEGIN
                                                        , (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Order() AND MLM.MovementChildId > 0)
                                                         );
         END IF;
+
+        -- дописали св-во - ЭТИКЕТКА
+        IF vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsPeresort = TRUE AND vbIsEtiketka = TRUE
+        THEN
+            PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Etiketka(), vbMovementId_begin, TRUE);
+        END IF;
+
 
         -- дописали св-во - SubjectDoc
         IF EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_SubjectDoc() AND MLO.ObjectId > 0)

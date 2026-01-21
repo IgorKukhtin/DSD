@@ -13,6 +13,9 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_LossDebt());
+     
+     
+     -- if inMovementId = 33311003  then perform  gpUnComplete_Movement_LossDebt(inMovementId, inSession); end if
 
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_Finance_CreateTemp();
@@ -38,5 +41,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 601, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpComplete_Movement_LossDebt (inMovementId:= 601, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 601, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpComplete_Movement_LossDebt (inMovementId:= 33311003, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 33311003, inSession:= zfCalc_UserAdmin())

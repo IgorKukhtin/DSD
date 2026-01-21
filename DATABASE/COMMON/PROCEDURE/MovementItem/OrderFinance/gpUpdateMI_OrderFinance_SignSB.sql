@@ -5,9 +5,9 @@ DROP FUNCTION IF EXISTS gpUpdateMI_OrderFinance_SignSB (Integer, Integer, Intege
 CREATE OR REPLACE FUNCTION gpUpdateMI_OrderFinance_SignSB(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inParentId              Integer   , -- Ключ объекта <главный элемент>
-    IN inMovementId            Integer   , -- Ключ объекта <Документ> 
-    IN inisSign                Boolean   , 
-   OUT outTextSign             TVarChar  , 
+    IN inMovementId            Integer   , -- Ключ объекта <Документ>
+    IN inisSign                Boolean   ,
+   OUT outTextSign             TVarChar  ,
     IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -20,21 +20,22 @@ BEGIN
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_MI_OrderFinance_SB());
 
      -- определяется признак Создание/Корректировка
-     vbIsInsert:= COALESCE (ioId, 0) = 0;    
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
-     --если нет чайлда - создаем 
+     --если нет чайлда - создаем
      IF COALESCE (ioId, 0) = 0
      THEN
-     
+
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId
                                         , zc_MI_Child()
-                                        , Null
+                                        , NULL
                                         , inMovementId
                                         , (SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.Id = inParentId) ::TFloat  -- нет чайлда сохраняем сумму из мастера
-                                        , inParentId);
+                                        , inParentId
+                                         );
      END IF;
-     
+
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Sign(), ioId, inisSign);
 
@@ -45,6 +46,7 @@ BEGIN
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

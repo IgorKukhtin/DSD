@@ -24,7 +24,7 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
 
 type
   TReport_JuridicalSoldForm = class(TAncestorReportForm)
@@ -158,6 +158,7 @@ type
     actPrintReportCollation: TdsdPrintAction;
     BranchName_personal: TcxGridDBColumn;
     BranchName_personal_trade: TcxGridDBColumn;
+    JuridicalName_Basis: TcxGridDBColumn;
   private
     { Private declarations }
   public
