@@ -271,6 +271,12 @@ type
     cxLabel32: TcxLabel;
     edCorrSumm: TcxCurrencyEdit;
     cbGofro: TcxCheckBox;
+    spUpdate_CorrSumm: TdsdStoredProc;
+    actUpdate_CorrSumm: TdsdExecStoredProc;
+    ExecuteDialogUpdateCorrSumm: TExecuteDialog;
+    actRefresh_Get: TdsdDataSetRefresh;
+    macUpdate_CorrSumm: TMultiAction;
+    bbUpdate_CorrSumm: TdxBarButton;
   private
     { Private declarations }
   public

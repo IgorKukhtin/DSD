@@ -327,6 +327,12 @@ type
     actSaleJournalChoiceMasc: TOpenChoiceForm;
     mactUpdateMaskSale: TMultiAction;
     bbUpdateMaskSale: TdxBarButton;
+    spUpdate_CorrSumm: TdsdStoredProc;
+    actUpdate_CorrSumm: TdsdExecStoredProc;
+    ExecuteDialogUpdateCorrSumm: TExecuteDialog;
+    actRefresh_Get: TdsdDataSetRefresh;
+    macUpdate_CorrSumm: TMultiAction;
+    bbUpdate_CorrSumm: TdxBarButton;
   private
     { Private declarations }
   public

@@ -3608,6 +3608,80 @@ inherited SaleForm: TSaleForm
       ActionType = acUpdate
       IdFieldName = 'Id'
     end
+    object actUpdate_CorrSumm: TdsdExecStoredProc
+      Category = 'CorrSumm'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_CorrSumm
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_CorrSumm
+        end
+        item
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1088#1088'.'#1089#1091#1084#1084#1099' '#1087#1086#1082#1091#1087'.>'
+      ImageIndex = 38
+    end
+    object ExecuteDialogUpdateCorrSumm: TExecuteDialog
+      Category = 'CorrSumm'
+      MoveParams = <>
+      Caption = 'actAmountDialog'
+      FormName = 'TAmountDialogForm'
+      FormNameParam.Value = 'TAmountDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Amount'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'CorrSumm'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1050#1086#1088#1088'.'#1089#1091#1084#1084#1099' '#1087#1086#1082#1091#1087'.'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actRefresh_Get: TdsdDataSetRefresh
+      Category = 'CorrSumm'
+      MoveParams = <>
+      StoredProc = spGet
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = True
+    end
+    object macUpdate_CorrSumm: TMultiAction
+      Category = 'CorrSumm'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogUpdateCorrSumm
+        end
+        item
+          Action = actUpdate_CorrSumm
+        end
+        item
+          Action = actRefresh_Get
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1088#1088'.'#1089#1091#1084#1084#1099' '#1087#1086#1082#1091#1087'.>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1088#1088'.'#1089#1091#1084#1084#1099' '#1087#1086#1082#1091#1087'.>'
+      ImageIndex = 38
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -3975,6 +4049,10 @@ inherited SaleForm: TSaleForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_CorrSumm'
+        end
+        item
+          Visible = True
           ItemName = 'bbSeparator'
         end
         item
@@ -4224,6 +4302,10 @@ inherited SaleForm: TSaleForm
     end
     object bbUpdateMaskSale: TdxBarButton
       Action = mactUpdateMaskSale
+      Category = 0
+    end
+    object bbUpdate_CorrSumm: TdxBarButton
+      Action = macUpdate_CorrSumm
       Category = 0
     end
   end
@@ -7611,5 +7693,31 @@ inherited SaleForm: TSaleForm
     PackSize = 1
     Left = 583
     Top = 360
+  end
+  object spUpdate_CorrSumm: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Sale_CorrSumm'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCorrSumm'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CorrSumm'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1216
+    Top = 444
   end
 end
