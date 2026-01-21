@@ -54,6 +54,7 @@ RETURNS TABLE (Number              Integer
              , isCalc_Sh                 Boolean
              , isRePack                  Boolean -- 
              , isPeresort                Boolean -- 
+             , isEtiketka                Boolean -- 
              , isOperCountPartner        Boolean -- Кол-во контрагента
              , isOperPricePartner        Boolean -- Цена контрагента
              , isReturnOut_Date          Boolean -- Дата для цены возврат поставщику 
@@ -129,6 +130,7 @@ BEGIN
                                        , isCalc_Sh                Boolean
                                        , isRePack                 Boolean
                                        , isPeresort               Boolean
+                                       , isEtiketka               Boolean
                                        , isOperCountPartner       Boolean
                                        , isOperPricePartner       Boolean
                                        , isReturnOut_Date         Boolean
@@ -140,7 +142,7 @@ BEGIN
                                  , PaidKindId, InfoMoneyId, GoodsId_ReWork, DocumentKindId, GoodsKindWeighingGroupId, ColorGridValue, OrderById, isSendOnPriceIn
                                  , isPartionGoodsDate, isPartionDate_save, isStorageLine, isArticleLoss, isTransport_link, isSubjectDoc, isComment, isInvNumberPartner, isInvNumberPartner_check, isDocPartner, isPersonalGroup, isOrderInternal
                                  , isSticker_Ceh, isSticker_KVK, isLockStartWeighing, isKVK, isListInventory, isAsset
-                                 , isPartionCell, isPartionPassport, isReReturnIn, isCloseInventory, isCalc_Sh, isRePack, isPeresort
+                                 , isPartionCell, isPartionPassport, isReReturnIn, isCloseInventory, isCalc_Sh, isRePack, isPeresort, isEtiketka
                                  , isOperCountPartner, isOperPricePartner, isReturnOut_Date, isCalc_PriceVat
                                  , ItemName
                                   )
@@ -218,6 +220,7 @@ BEGIN
             , CASE WHEN tmp.isCalc_Sh                 ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isCalc_Sh
             , CASE WHEN tmp.isRePack                  ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isRePack
             , CASE WHEN tmp.isPeresort                ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isPeresort
+            , CASE WHEN tmp.isEtiketka                ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isEtiketka
             , CASE WHEN tmp.isOperCountPartner        ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isOperCountPartner
             , CASE WHEN tmp.isOperPricePartner        ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isOperPricePartner
             , CASE WHEN tmp.isReturnOut_Date          ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isReturnOut_Date
@@ -277,6 +280,7 @@ BEGIN
                         , CASE WHEN                    inIsCeh     = TRUE               THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isCalc_Sh',          'FALSE',                                                     inSession) ELSE 'FALSE' END AS isCalc_Sh
                         , CASE WHEN                    inIsCeh     = TRUE               THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isRePack',           'FALSE',                                                     inSession) ELSE 'FALSE' END AS isRePack
                         , CASE WHEN inIsCeh = FALSE AND vbIsSticker = FALSE             THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isPeresort',         'FALSE',                                                     inSession) ELSE 'FALSE' END AS isPeresort
+                        , CASE WHEN inIsCeh = FALSE AND vbIsSticker = FALSE             THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isEtiketka',         'FALSE',                                                     inSession) ELSE 'FALSE' END AS isEtiketka
                         
 
                         , CASE WHEN                    inIsCeh     = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isOperCountPartner', 'FALSE',                                                     inSession)              END AS isOperCountPartner
@@ -481,7 +485,9 @@ BEGIN
                   ELSE ''
              END
              
-          || CASE WHEN _tmpToolsWeighing.isPeresort = TRUE
+          || CASE WHEN _tmpToolsWeighing.isPeresort = TRUE AND _tmpToolsWeighing.isEtiketka = TRUE
+                       THEN '  (ПЕРЕСОРТ + ЭТИКЕТКА)'
+                  WHEN _tmpToolsWeighing.isPeresort = TRUE
                        THEN '  (ПЕРЕСОРТ)'
                   ELSE ''
              END
@@ -540,7 +546,9 @@ BEGIN
                        THEN '  (ПЕРЕПАК)'
                   ELSE ''
              END
-          || CASE WHEN _tmpToolsWeighing.isPeresort = TRUE
+          || CASE WHEN _tmpToolsWeighing.isPeresort = TRUE AND _tmpToolsWeighing.isEtiketka = TRUE
+                       THEN '  (ПЕРЕСОРТ + ЭТИКЕТКА)'
+                  WHEN _tmpToolsWeighing.isPeresort = TRUE
                        THEN '  (ПЕРЕСОРТ)'
                   ELSE ''
              END
@@ -580,6 +588,7 @@ BEGIN
            , _tmpToolsWeighing.isCalc_Sh
            , _tmpToolsWeighing.isRePack
            , _tmpToolsWeighing.isPeresort
+           , _tmpToolsWeighing.isEtiketka
            , _tmpToolsWeighing.isOperCountPartner
            , _tmpToolsWeighing.isOperPricePartner
            , _tmpToolsWeighing.isReturnOut_Date
@@ -613,7 +622,7 @@ BEGIN
          -- Голота К.О.
          --AND (_tmpToolsWeighing.Number <> 80 OR vbUserId IN (5, 6604558) OR inBranchCode <> 201)
          -- AND (_tmpToolsWeighing.Number <> 42 OR vbUserId IN (5, 6604558) OR inBranchCode <> 301)
-         -- AND (_tmpToolsWeighing.Number <> 104 OR vbUserId IN (5, 6604558) OR inBranchCode <> 1)
+         -- AND (_tmpToolsWeighing.Number <> 107 OR vbUserId IN (5, 6604558) OR inBranchCode <> 1)
 
       UNION
        -- это группы
@@ -722,6 +731,7 @@ BEGIN
             , FALSE AS isCalc_Sh
             , FALSE AS isRePack
             , FALSE AS isPeresort
+            , FALSE AS isEtiketka
             , FALSE AS isOperCountPartner
             , FALSE AS isOperPricePartner
             , FALSE AS isReturnOut_Date
