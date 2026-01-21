@@ -2157,6 +2157,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbStartLoad_Personal'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarSeparator1'
         end
         item
@@ -2343,6 +2347,10 @@
       Action = macStartLoad_JurDoc
       Category = 0
     end
+    object bbStartLoad_Personal: TdxBarButton
+      Action = macStartLoad_Personal
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -2472,6 +2480,17 @@
         end>
       isShowModal = False
     end
+    object actGetImportSetting_Personal: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId_Personal
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId_Personal
+        end>
+      Caption = 'actGetImportSetting'
+    end
     object dsdSetErasedCC: TdsdUpdateErased
       Category = 'Condition'
       MoveParams = <>
@@ -2486,6 +2505,25 @@
       ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ContractConditionDS
+    end
+    object macStartLoad_Personal: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_Personal
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1060#1048#1054' '#1086#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1093' '#1080#1079' '#1101#1082#1089#1077#1083#1103'?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#1060#1048#1054' '#1086#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1093
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#1060#1048#1054' '#1086#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1093
+      ImageIndex = 41
     end
     object actSetErased_ContractPriceList: TdsdUpdateErased
       Category = 'ContractPriceList'
@@ -5665,7 +5703,39 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 904
+    Left = 912
     Top = 136
+  end
+  object spGetImportSettingId_Personal: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TContractForm;zc_Object_ImportSetting_Contract_Personal'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 920
+    Top = 184
   end
 end
