@@ -72,6 +72,11 @@ type
     edSearchBank: TcxTextEdit;
     cxLabel1: TcxLabel;
     MFO: TcxGridDBColumn;
+    OKPO_BankAccount: TcxGridDBColumn;
+    cxLabel3: TcxLabel;
+    edSearchOKPO: TcxTextEdit;
+    cxLabel4: TcxLabel;
+    edSearchJuridical: TcxTextEdit;
   private
     { Private declarations }
   public
