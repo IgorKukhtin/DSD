@@ -290,8 +290,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountMovement_SplitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccountMovement_SplitForm');
   exit;
-
-//
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccount_PersonalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccount_PersonalJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccount_PersonalForm'));
@@ -309,7 +308,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccount_ChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccount_ChoiceForm');
 
-
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccountEditForm');
 end;
@@ -321,7 +319,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCorrespondentAccountEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCorrespondentAccountEditForm');
 end;
-
 
 procedure TLoadFormTest.LoadBankAccountContractFormTest;
 begin

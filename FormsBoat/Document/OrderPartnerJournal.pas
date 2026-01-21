@@ -25,7 +25,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel,
-  dsdGuides, cxButtonEdit, Vcl.StdCtrls, cxButtons, dsdCommon;
+  dsdGuides, cxButtonEdit, Vcl.StdCtrls, cxButtons, dsdCommon, Document;
 
 type
   TOrderPartnerJournalForm = class(TParentForm)
@@ -100,7 +100,7 @@ type
     N1: TMenuItem;
     ExecuteDialog: TExecuteDialog;
     actPrintSticker: TdsdPrintAction;
-    bbPrintSticker: TdxBarButton;
+    bbSave_Print: TdxBarButton;
     actPrintStickerTermo: TdsdPrintAction;
     bbPrintStickerTermo: TdxBarButton;
     PrintItemsColorCDS: TClientDataSet;
@@ -118,6 +118,19 @@ type
     btnUnComplete: TcxButton;
     btnSetErased: TcxButton;
     btnFormClose: TcxButton;
+    actGetFileName: TdsdExecStoredProc;
+    spGetReportName: TdsdStoredProc;
+    actPrint_save: TdsdPrintAction;
+    ChildCDS: TClientDataSet;
+    ChildDS: TDataSource;
+    spSelectPrint: TdsdStoredProc;
+    DocumentInvoice: TDocument;
+    spInsertDocument: TdsdStoredProc;
+    actInsertDocument: TdsdExecStoredProc;
+    actDocumentOpenInvoice: TDocumentOpenAction;
+    mactSave_Print: TMultiAction;
+    dsdPrintAction1: TdsdPrintAction;
+    spGetDocument: TdsdStoredProc;
   private
   public
   end;
