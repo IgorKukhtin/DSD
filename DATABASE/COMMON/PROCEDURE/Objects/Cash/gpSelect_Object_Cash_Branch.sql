@@ -1,10 +1,8 @@
--- Function: gpSelect_Object_Cash()
+-- Function: gpSelect_Object_Cash_Branch()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Cash(TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_Cash( Boolean , TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Cash_Branch(TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_Cash(
-    IN inShowAll     Boolean ,
+CREATE OR REPLACE FUNCTION gpSelect_Object_Cash_Branch(
     IN inSession     TVarChar        -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, 
@@ -72,8 +70,9 @@ BEGIN
                                 ON ObjectBoolean_notCurrencyDiff.ObjectId = Object.Id
                                AND ObjectBoolean_notCurrencyDiff.DescId = zc_ObjectBoolean_Cash_notCurrencyDiff()                      
    WHERE Object.DescId = zc_Object_Cash()
-     AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll) 
-     AND (Object.isErased = FALSE OR inShowAll = TRUE)
+     AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
+     AND COALESCE (Cash_Branch.ChildObjectId,0) <> 0
+     AND Object.isErased = FALSE
   ;
   
 END;$BODY$
@@ -84,13 +83,8 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 20.01.26         * inShowAll
- 29.05.24         *
- 25.11.14         * add PaidKind               
- 28.12.13                                        * rename to zc_ObjectLink_Cash_JuridicalBasis
- 24.12.13                                        * Cyr1251
- 10.05.13         *
+ 20.01.26         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Cash (FALSE, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Cash_Branch (zfCalc_UserAdmin())

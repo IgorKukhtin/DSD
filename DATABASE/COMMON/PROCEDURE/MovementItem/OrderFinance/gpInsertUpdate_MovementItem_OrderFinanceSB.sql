@@ -1,12 +1,15 @@
 -- Function: gpInsertUpdate_MovementItem_OrderFinanceSB()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinanceSB (Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar);
- 
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinanceSB (Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinanceSB (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar);
+  
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinanceSB(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId            Integer   , -- Ключ объекта <Документ>
     IN inJuridicalId           Integer   , --
     IN inContractId            Integer   , --
+    IN inCashId_top            Integer   , --
+    IN inCashId                Integer   , -- 
   --IN inBankAccountId         Integer   , --
     IN inAmount                TFloat    , -- *** Предварительный План на неделю
  INOUT ioAmount_old            TFloat    , -- *** Предварительный План на неделю
@@ -234,8 +237,7 @@ BEGIN
          -- замена
          ioOperDate_Amount:= NULL;
      END IF;
-
-
+   
      -- сохранили
      SELECT tmp.ioId
             INTO ioId
@@ -265,6 +267,16 @@ BEGIN
     ioOperDate_Amount_old:= ioOperDate_Amount;
     -- вернули
     ioAmount_old:= inAmount;
+
+
+    --если не заполнено в сроке берем из шапки документа
+    IF COALESCE (inCashId,0) = 0
+    THEN
+        inCashId := COALESCE (inCashId_top);
+    END IF;
+    
+    -- сохранили связь с <касса место выдачи>
+    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Cash(), ioId, inCashId);
 
     -- могут внести данные для чайлд
     

@@ -1644,7 +1644,8 @@ uses
   WeighingPartnerJournal in '..\..\Forms\Document\WeighingPartnerJournal.pas' {WeighingPartnerJournalForm: TParentForm},
   OrderFinance_SB in '..\..\Forms\Document\OrderFinance_SB.pas' {OrderFinance_SBForm: TParentForm},
   OrderFinanceMovementSB in '..\..\Forms\Document\OrderFinanceMovementSB.pas' {OrderFinanceMovementSBForm: TParentForm},
-  OrderFinanceSBJournal in '..\..\Forms\Document\OrderFinanceSBJournal.pas' {OrderFinanceSBJournalForm: TParentForm};
+  OrderFinanceSBJournal in '..\..\Forms\Document\OrderFinanceSBJournal.pas' {OrderFinanceSBJournalForm: TParentForm},
+  Cash_Branch in '..\..\Forms\Guides\Cash_Branch.pas' {Cash_BranchForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

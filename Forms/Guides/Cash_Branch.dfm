@@ -1,24 +1,24 @@
-inherited CashForm: TCashForm
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1072#1089#1089#1099'>'
+inherited Cash_BranchForm: TCash_BranchForm
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1072#1089#1089#1099' '#1092#1080#1083#1080#1072#1083#1086#1074'>'
   ClientHeight = 374
-  ClientWidth = 773
+  ClientWidth = 667
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 789
+  ExplicitWidth = 683
   ExplicitHeight = 413
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 773
+    Width = 667
     Height = 348
     ExplicitWidth = 773
     ExplicitHeight = 348
     ClientRectBottom = 348
-    ClientRectRight = 773
+    ClientRectRight = 667
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 773
       ExplicitHeight = 348
       inherited cxGrid: TcxGrid
-        Width = 773
+        Width = 667
         Height = 348
         ExplicitWidth = 773
         ExplicitHeight = 348
@@ -42,7 +42,7 @@ inherited CashForm: TCashForm
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             HeaderAlignmentVert = vaCenter
-            Width = 172
+            Width = 152
           end
           object CurrencyName: TcxGridDBColumn
             Caption = #1042#1072#1083#1102#1090#1072
@@ -71,16 +71,9 @@ inherited CashForm: TCashForm
           object PaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 60
-          end
-          object isNotCurrencyDiff: TcxGridDBColumn
-            Caption = #1054#1090#1082#1083' '#1092#1086#1088#1084#1080#1088'. '#1082#1091#1088#1089'. '#1088#1072#1079#1085#1080#1094#1099
-            DataBinding.FieldName = 'isNotCurrencyDiff'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1082#1091#1088#1089#1086#1074#1086#1081' '#1088#1072#1079#1085#1080#1094#1099
-            Width = 70
           end
           object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -95,44 +88,78 @@ inherited CashForm: TCashForm
   end
   inherited ActionList: TActionList
     inherited actInsert: TInsertUpdateChoiceAction
-      FormName = 'TCashEditForm'
+      Enabled = False
+      FormName = 'Error'
+      FormNameParam.Value = 'Error'
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TCashEditForm'
+      Enabled = False
+      ShortCut = 0
+      FormName = 'Error'
+      FormNameParam.Value = 'Error'
     end
-    object actShowErased: TBooleanStoredProcAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
+    inherited dsdSetUnErased: TdsdUpdateErased
+      Enabled = False
+      ShortCut = 0
+    end
+    inherited dsdSetErased: TdsdUpdateErased
+      Enabled = False
+      ShortCut = 0
+    end
+    inherited dsdChoiceGuides: TdsdChoiceGuides
+      Params = <
         item
-          StoredProc = spSelect
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CurrencyId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CurrencyName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Branchid'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Branchid'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BranchName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndex = 64
-      Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077' '#1101#1083#1077#1084#1077#1085#1090#1099
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077' '#1101#1083#1077#1084#1077#1085#1090#1099
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndexTrue = 65
-      ImageIndexFalse = 64
     end
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Cash'
-    Params = <
-      item
-        Name = 'inShowAll'
-        Value = Null
-        Component = actShowErased
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
+    StoredProcName = 'gpSelect_Object_Cash_Branch'
   end
   inherited BarManager: TdxBarManager
+    Left = 112
     DockControlHeights = (
       0
       0
@@ -155,15 +182,6 @@ inherited CashForm: TCashForm
         item
           Visible = True
           ItemName = 'bbUnErased'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbShowErased'
         end
         item
           Visible = True
@@ -193,25 +211,28 @@ inherited CashForm: TCashForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbProtocolOpenForm'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end>
     end
-    object bbShowErased: TdxBarButton
-      Action = actShowErased
-      Category = 0
+    inherited bbInsert: TdxBarButton
+      Visible = ivNever
+    end
+    inherited bbEdit: TdxBarButton
+      Visible = ivNever
+    end
+    inherited bbErased: TdxBarButton
+      Visible = ivNever
+    end
+    inherited bbUnErased: TdxBarButton
+      Visible = ivNever
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
       item
-        Action = actUpdate
+        Action = dsdChoiceGuides
       end>
+  end
+  inherited spErasedUnErased: TdsdStoredProc
+    StoredProcName = ''
   end
 end

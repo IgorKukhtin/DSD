@@ -343,6 +343,26 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
             Options.Editing = False
             Width = 90
           end
+          object isSignSB: TcxGridDBColumn
+            Caption = #1042#1080#1079#1072' '#1057#1041
+            DataBinding.FieldName = 'isSignSB'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1103#1074#1082#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072
+            Options.Editing = False
+            Width = 85
+          end
+          object Date_SignSB: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1042#1080#1079#1072' '#1057#1041')'
+            DataBinding.FieldName = 'Date_SignSB'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1047#1072#1103#1074#1082#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072
+            Options.Editing = False
+            Width = 72
+          end
           object OrderFinanceName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103
             DataBinding.FieldName = 'OrderFinanceName'
@@ -887,6 +907,13 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
             VisibleForCustomization = False
             Width = 55
           end
+          object FonColor_string: TcxGridDBColumn
+            DataBinding.FieldName = 'FonColor_string'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 60
+          end
         end
       end
       object edNPP: TcxCurrencyEdit
@@ -950,7 +977,7 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
       Caption = #1053#1077#1076#1077#1083#1103':'
     end
     object edWeekNumber1: TcxButtonEdit
-      Left = 49
+      Left = 45
       Top = 5
       Properties.Buttons = <
         item
@@ -1001,7 +1028,6 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
     Anchors = [akTop, akRight, akBottom]
     TabOrder = 6
     Visible = False
-    ExplicitHeight = 38
     object ExportXmlGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ExportDS
@@ -1923,8 +1949,7 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColorRuleList = <
       item
-        ColorColumn = AmountPlan_day
-        BackGroundValueColumn = FonColor_AmountPlan_day
+        BackGroundValueColumn = FonColor_string
         ColorValueList = <>
       end>
     Left = 240

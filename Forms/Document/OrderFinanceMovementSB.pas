@@ -364,6 +364,11 @@ type
     actUpdate_SignSB_No: TdsdExecStoredProc;
     bbUpdate_SignSB_Yes: TdxBarButton;
     bbUpdate_SignSB_No: TdxBarButton;
+    CashName: TcxGridDBColumn;
+    actCashChoiceForm: TOpenChoiceForm;
+    cxLabel21: TcxLabel;
+    ceCash: TcxButtonEdit;
+    GuidesCash: TdsdGuides;
   private
   public
   end;

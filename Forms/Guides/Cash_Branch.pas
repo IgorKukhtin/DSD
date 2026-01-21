@@ -1,4 +1,4 @@
-unit Cash_Object;
+unit Cash_Branch;
 
 interface
 
@@ -23,10 +23,8 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
 
 type
-  TCash_ObjectForm = class(TAncestorGuidesForm)
+  TCash_BranchForm = class(TAncestorGuidesForm)
     PaidKindName: TcxGridDBColumn;
-    actShowErased: TBooleanStoredProcAction;
-    bbShowErased: TdxBarButton;
   private
     { Private declarations }
   public
@@ -38,6 +36,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TCash_ObjectForm);
+  RegisterClass(TCash_BranchForm);
 
 end.
