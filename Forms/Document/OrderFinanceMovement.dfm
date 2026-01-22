@@ -1558,6 +1558,9 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1070#1088'.'#1083#1080#1094#1072
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -3020,7 +3023,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spErasedMIMaster
       StoredProcList = <
         item
@@ -3040,7 +3042,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spUnErasedMIMaster
       StoredProcList = <
         item
@@ -3049,8 +3050,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         item
           StoredProc = spGetTotalSumm
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1070#1088'. '#1083#1080#1094#1086'>'
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1070#1088'. '#1083#1080#1094#1086'>'
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 49220
       ErasedFieldName = 'isErased'

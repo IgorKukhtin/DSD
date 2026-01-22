@@ -70,7 +70,6 @@ type
     spSelectPrint: TdsdStoredProc;
     actPrintPlan: TdsdPrintAction;
     bbPrintPlan: TdxBarButton;
-    Number_day: TcxGridDBColumn;
     dxBarSubItem1: TdxBarSubItem;
     edNPP: TcxCurrencyEdit;
     mactExport_New_OTP_NPP: TMultiAction;
@@ -110,6 +109,11 @@ type
     actUpdate_SignSB_Yes: TdsdExecStoredProc;
     bbUpdate_SignSB_Yes: TdxBarButton;
     bbUpdate_SignSB_No: TdxBarButton;
+    InsertDate: TcxGridDBColumn;
+    InsertName: TcxGridDBColumn;
+    isSign_1: TcxGridDBColumn;
+    Date_Sign_1: TcxGridDBColumn;
+    UserMember_1: TcxGridDBColumn;
   private
     { Private declarations }
   public

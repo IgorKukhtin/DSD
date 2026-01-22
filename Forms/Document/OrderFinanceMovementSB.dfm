@@ -26,7 +26,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 2
     object edInvNumber: TcxTextEdit
       Left = 232
       Top = 19
@@ -1452,7 +1451,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             Width = 100
           end
           object InsertName: TcxGridDBColumn
-            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+            Caption = #1040#1074#1090#1086#1088' ('#1079#1072#1103#1074#1082#1080')'
             DataBinding.FieldName = 'InsertName'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -1651,6 +1650,9 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1070#1088'.'#1083#1080#1094#1072
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -5343,21 +5345,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         Component = ceDate_SignSB
         DataType = ftDateTime
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CashId'
-        Value = Null
-        Component = GuidesCash
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CashName'
-        Value = Null
-        Component = GuidesCash
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216
@@ -7111,10 +7098,34 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         ComponentItem = 'isErased'
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSumm_parent'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInvNumber_parent'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumber_Child'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsName_parent'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsName_Child'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 590
-    Top = 560
+    Left = 574
+    Top = 536
   end
   object spErasedMIchild: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderFinance_SetErased'
@@ -7130,11 +7141,27 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outIsErased'
+        Name = 'outSumm_parent'
         Value = Null
-        Component = ChildCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
+        Component = MasterCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInvNumber_parent'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumber_Child'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsName_parent'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsName_Child'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1

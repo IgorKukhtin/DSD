@@ -289,17 +289,17 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1047#1072#1103#1074#1082#1072' '#1053#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1080
+            HeaderHint = #1047#1072#1103#1074#1082#1072' '#1053#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1080' '#1091' '#1056#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1103
             Options.Editing = False
             Width = 85
           end
           object isSign_1: TcxGridDBColumn
-            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072
+            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072'-1'
             DataBinding.FieldName = 'isSign_1'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1047#1072#1103#1074#1082#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072
+            HeaderHint = #1047#1072#1103#1074#1082#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072' '#1056#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1077#1084
             Options.Editing = False
             Width = 85
           end
@@ -309,6 +309,7 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1060#1048#1054' - '#1085#1072' '#1082#1086#1085#1090#1088#1086#1083#1077' '#1091' '#1056#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1103
             Options.Editing = False
             VisibleForCustomization = False
             Width = 120
@@ -329,17 +330,17 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1047#1072#1103#1074#1082#1072' '#1085#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1080
+            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1047#1072#1103#1074#1082#1072' '#1085#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1080' '#1091' '#1056#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1103
             Options.Editing = False
             Width = 97
           end
           object Date_Sign_1: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072
+            Caption = #1044#1072#1090#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072'-1'
             DataBinding.FieldName = 'Date_Sign_1'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1047#1072#1103#1074#1082#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072
+            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1047#1072#1103#1074#1082#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072' '#1056#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1077#1084
             Options.Editing = False
             Width = 90
           end
@@ -349,7 +350,7 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1047#1072#1103#1074#1082#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072
+            HeaderHint = #1047#1072#1103#1074#1082#1072' '#1077#1089#1090#1100' '#1042#1080#1079#1072' '#1057#1041
             Options.Editing = False
             Width = 85
           end
@@ -359,7 +360,7 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1047#1072#1103#1074#1082#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072
+            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1047#1072#1103#1074#1082#1072' '#1077#1089#1090#1100' '#1042#1080#1079#1072' '#1057#1041
             Options.Editing = False
             Width = 72
           end
