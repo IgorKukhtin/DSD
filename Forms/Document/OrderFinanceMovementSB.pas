@@ -369,6 +369,11 @@ type
     cxLabel21: TcxLabel;
     ceCash: TcxButtonEdit;
     GuidesCash: TdsdGuides;
+    Comment_SB: TcxGridDBColumn;
+    spGet_Export_Email_msg: TdsdStoredProc;
+    actGet_Export_Email_msg: TdsdExecStoredProc;
+    mactExport_msg: TMultiAction;
+    mactSign_1_Yes: TMultiAction;
   private
   public
   end;

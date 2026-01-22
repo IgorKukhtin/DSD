@@ -113,6 +113,7 @@ type
     UserMember_1: TcxGridDBColumn;
     Comment_mov: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
+    Comment_SB: TcxGridDBColumn;
   private
     { Private declarations }
   public

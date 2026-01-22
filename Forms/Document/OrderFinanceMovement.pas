@@ -331,9 +331,10 @@ type
     mactLoadExcel: TMultiAction;
     bbmactLoadExcel: TdxBarButton;
     actGet_Export_Email_msg: TdsdExecStoredProc;
-    spGet_Export_Email_Body: TdsdStoredProc;
+    spGet_Export_Email_msg: TdsdStoredProc;
     mactExport_msg: TMultiAction;
     bbtExport_msg: TdxBarButton;
+    mactSign_1_Yes: TMultiAction;
   private
   public
   end;

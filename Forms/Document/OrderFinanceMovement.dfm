@@ -1558,9 +1558,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1070#1088'.'#1083#1080#1094#1072
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -2482,7 +2479,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 0
     end
     object bbUpdate_Sign_1_Yes: TdxBarButton
-      Action = actUpdate_Sign_1_Yes
+      Action = mactSign_1_Yes
       Category = 0
     end
     object bbUpdate_Sign_1_No: TdxBarButton
@@ -2614,12 +2611,12 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Category = 'Export_Email_msg'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGet_Export_Email_Body
+      StoredProc = spGet_Export_Email_msg
       StoredProcList = <
         item
-          StoredProc = spGet_Export_Email_Body
+          StoredProc = spGet_Export_Email_msg
         end>
-      Caption = 'actGet_Export_Email'
+      Caption = 'actGet_Export_Email_msg'
     end
     object actGet_Export_Email_gr: TdsdExecStoredProc
       Category = 'Export_mail_group'
@@ -2646,6 +2643,19 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       ImageIndex = 14
       ShortCut = 113
     end
+    object mactSign_1_Yes: TMultiAction
+      Category = 'Sign_1'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = mactExport_msg
+        end
+        item
+          Action = actUpdate_Sign_1_Yes
+        end>
+      Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1090#1100
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086'>'
+    end
     object actSelect_Export_gr: TdsdExecStoredProc
       Category = 'Export_mail_group'
       MoveParams = <>
@@ -2667,8 +2677,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         item
           Action = actSMTPFile
         end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1057#1041' '#1087#1086' '#1087#1086#1095#1090#1077'?'
-      InfoAfterExecute = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1057#1041' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1086
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1057#1041' - '#1085#1072' '#1089#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1077'?'
+      InfoAfterExecute = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1057#1041' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1086' '#1085#1072' '#1089#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1077
       Caption = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1057#1041
       Hint = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1057#1041
       ImageIndex = 53
@@ -4107,7 +4117,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       DataSource = MasterDS
     end
     object actUpdate_SignWait_1_Yes: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'Sign_1'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_SignWait_1_Yes
@@ -4122,7 +4132,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <C'#1090#1072#1088#1090' '#1089#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1103'>'
     end
     object actUpdate_SignWait_1_No: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'Sign_1'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_SignWait_1_No
@@ -4137,7 +4147,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' <'#1057#1090#1072#1088#1090' '#1089#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1103'>'
     end
     object actUpdate_Sign_1_No: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'Sign_1'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_Sign_1_No
@@ -4152,7 +4162,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' <'#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086'>'
     end
     object actUpdate_Sign_1_Yes: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'Sign_1'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_Sign_1_Yes
@@ -4163,7 +4173,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         item
           StoredProc = spGet
         end>
-      Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1090#1100
+      Caption = #1058#1086#1083#1100#1082#1086' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1090#1100
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086'>'
     end
     object actBankChoiceForm_JurMain: TOpenChoiceForm
@@ -6739,7 +6749,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Left = 736
     Top = 272
   end
-  object spGet_Export_Email_Body: TdsdStoredProc
+  object spGet_Export_Email_msg: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_OrderFinance_Email_sendBody'
     DataSet = ExportEmailCDS
     DataSets = <

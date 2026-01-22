@@ -4,7 +4,6 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
   ClientWidth = 1020
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -126
   ExplicitWidth = 1036
   ExplicitHeight = 438
   PixelsPerInch = 96
@@ -556,14 +555,12 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
             Options.Editing = False
             Width = 90
           end
-          object InsertDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076#1072#1085#1080#1077')'
-            DataBinding.FieldName = 'InsertDate'
+          object Comment_SB: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1057#1041')'
+            DataBinding.FieldName = 'Comment_SB'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076#1072#1085#1080#1077' '#1047#1072#1103#1074#1082#1080')'
-            Options.Editing = False
-            Width = 80
+            Width = 100
           end
           object Comment_mov: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -580,6 +577,15 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 150
+          end
+          object InsertDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076#1072#1085#1080#1077')'
+            DataBinding.FieldName = 'InsertDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076#1072#1085#1080#1077' '#1047#1072#1103#1074#1082#1080')'
+            Options.Editing = False
+            Width = 80
           end
         end
       end
@@ -2307,8 +2313,8 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 272
-    Top = 136
+    Left = 280
+    Top = 128
   end
   object spUpdateStatus_Complete: TdsdStoredProc
     StoredProcName = 'gpUpdateMovement_OrderFinance_Status_Complete'
@@ -2346,8 +2352,8 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 240
-    Top = 136
+    Left = 232
+    Top = 152
   end
   object spUpdate_SignSB: TdsdStoredProc
     StoredProcName = 'gpUpdateMI_OrderFinance_SignSB'
@@ -2379,11 +2385,20 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisSignSB'
+        Name = 'inIsSignSB'
         Value = True
         Component = MasterCDS
         ComponentItem = 'isSign_Child'
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment_SB'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Comment_SB'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

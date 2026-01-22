@@ -1617,6 +1617,14 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             HeaderAlignmentVert = vaCenter
             Width = 218
           end
+          object Comment_SB: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1057#1041')'
+            DataBinding.FieldName = 'Comment_SB'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
           object IsErased_ch2: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
@@ -1650,9 +1658,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1070#1088'.'#1083#1080#1094#1072
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -2326,6 +2331,14 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_Sign_1_Yes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbSign'
         end
         item
@@ -2584,7 +2597,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 0
     end
     object bbUpdate_Sign_1_Yes: TdxBarButton
-      Action = actUpdate_Sign_1_Yes
+      Action = mactSign_1_Yes
       Category = 0
     end
     object bbUpdate_Sign_1_No: TdxBarButton
@@ -2607,6 +2620,10 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         item
           Visible = True
           ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Sign_1_No'
         end
         item
           Visible = True
@@ -4327,7 +4344,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       DataSource = MasterDS
     end
     object actUpdate_SignWait_1_Yes: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'Sign_1'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_SignWait_1_Yes
@@ -4342,7 +4359,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <C'#1090#1072#1088#1090' '#1089#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1103'>'
     end
     object actUpdate_SignWait_1_No: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'Sign_1'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_SignWait_1_No
@@ -4357,7 +4374,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' <'#1057#1090#1072#1088#1090' '#1089#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1103'>'
     end
     object actUpdate_Sign_1_No: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'Sign_1'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_Sign_1_No
@@ -4372,7 +4389,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' <'#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086'>'
     end
     object actUpdate_Sign_1_Yes: TdsdExecStoredProc
-      Category = 'DSDLib'
+      Category = 'Sign_1'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_Sign_1_Yes
@@ -4658,6 +4675,46 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' Excel'
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' Excel'
+    end
+    object actGet_Export_Email_msg: TdsdExecStoredProc
+      Category = 'Export_Email_msg'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Export_Email_msg
+      StoredProcList = <
+        item
+          StoredProc = spGet_Export_Email_msg
+        end>
+      Caption = 'actGet_Export_Email_msg'
+    end
+    object mactExport_msg: TMultiAction
+      Category = 'Export_Email_msg'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Export_Email_msg
+        end
+        item
+          Action = actSMTPFile
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1057#1041' - '#1085#1072' '#1089#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1077'?'
+      InfoAfterExecute = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1057#1041' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1086' '#1085#1072' '#1089#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1077
+      Caption = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1057#1041
+      Hint = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1057#1041
+      ImageIndex = 53
+    end
+    object mactSign_1_Yes: TMultiAction
+      Category = 'Sign_1'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = mactExport_msg
+        end
+        item
+          Action = actUpdate_Sign_1_Yes
+        end>
+      Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1090#1100
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086'>'
     end
   end
   object MasterDS: TDataSource
@@ -7358,5 +7415,31 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       end>
     Left = 640
     Top = 149
+  end
+  object spGet_Export_Email_msg: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_OrderFinance_Email_sendBody'
+    DataSet = ExportEmailCDS
+    DataSets = <
+      item
+        DataSet = ExportEmailCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParam'
+        Value = '1'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 608
+    Top = 407
   end
 end
