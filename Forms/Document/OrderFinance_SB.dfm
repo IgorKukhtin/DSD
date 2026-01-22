@@ -4,6 +4,7 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
   ClientWidth = 1020
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -126
   ExplicitWidth = 1036
   ExplicitHeight = 438
   PixelsPerInch = 96
@@ -490,6 +491,7 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1072#1090#1072' '#1087#1083#1072#1085' '#1086#1087#1083#1072#1090#1099
+            Options.Editing = False
             Width = 70
           end
           object isSign_Child: TcxGridDBColumn
@@ -497,7 +499,7 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
             DataBinding.FieldName = 'isSign_Child'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 85
           end
           object TextSign_Child: TcxGridDBColumn
             Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' '#1057#1041
@@ -537,6 +539,7 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 90
           end
           object Amount: TcxGridDBColumn
@@ -561,6 +564,22 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
             HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076#1072#1085#1080#1077' '#1047#1072#1103#1074#1082#1080')'
             Options.Editing = False
             Width = 80
+          end
+          object Comment_mov: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment_mov'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1047#1072#1103#1074#1082#1072' '#1058#1052#1062')'
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 150
           end
         end
       end
@@ -633,7 +652,7 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 6
+      TabOrder = 5
       Width = 64
     end
     object edWeekNumber2: TcxButtonEdit
@@ -645,26 +664,9 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 7
+      TabOrder = 6
       Visible = False
       Width = 31
-    end
-    object cxLabel12: TcxLabel
-      Left = 644
-      Top = 6
-      Caption = #1041#1072#1085#1082' ('#1055#1083#1072#1090#1077#1083#1100#1097#1080#1082'):'
-    end
-    object edBankMain: TcxButtonEdit
-      Left = 753
-      Top = 5
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 2
-      Width = 265
     end
   end
   object ExportXmlGrid: TcxGrid [2]
@@ -1458,9 +1460,7 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
       end
       item
         Name = 'inBankMainId'
-        Value = Null
-        Component = GuidesBankMain
-        ComponentItem = 'Key'
+        Value = 0
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1661,13 +1661,6 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
       end
       item
         Component = GuidesWeek_Date1
-      end
-      item
-        Component = GuidesBankMain
-      end
-      item
-      end
-      item
       end>
     Left = 328
     Top = 184
@@ -1779,9 +1772,7 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
       end
       item
         Name = 'inBankMainId'
-        Value = '76970'
-        Component = GuidesBankMain
-        ComponentItem = 'Key'
+        Value = 0
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1926,9 +1917,7 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
       end
       item
         Name = 'inBankName_Main'
-        Value = Null
-        Component = GuidesBankMain
-        ComponentItem = 'TextValue'
+        Value = 0
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2031,36 +2020,6 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
     Left = 336
     Top = 216
   end
-  object GuidesBankMain: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edBankMain
-    FormNameParam.Value = 'TBankForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TBankForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesBankMain
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesBankMain
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 832
-    Top = 21
-  end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
@@ -2095,9 +2054,7 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
       end
       item
         Name = 'inBankMainId'
-        Value = Null
-        Component = GuidesBankMain
-        ComponentItem = 'Key'
+        Value = 0
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2186,9 +2143,7 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
       end
       item
         Name = 'inBankName_Main'
-        Value = ''
-        Component = GuidesBankMain
-        ComponentItem = 'TextValue'
+        Value = 0
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2280,9 +2235,7 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
       end
       item
         Name = 'inBankMainId'
-        Value = ''
-        Component = GuidesBankMain
-        ComponentItem = 'Key'
+        Value = 0
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

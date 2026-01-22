@@ -755,24 +755,33 @@ BEGIN
                                                                       )
                                    )
 
-    , tmpMI_Child AS (SELECT MovementItem.ParentId
-                           , STRING_AGG (DISTINCT COALESCE (MIString_GoodsName.ValueData, ''), '; ') AS GoodsName
-                           , STRING_AGG (DISTINCT COALESCE (MIString_InvNumber.ValueData, ''), '; ') AS InvNumber
-                           , MAX (CASE WHEN MIBoolean_Sign.ValueData = TRUE THEN 0 ELSE 1 END)       AS isSign
-                      FROM MovementItem
-                          LEFT JOIN MovementItemString AS MIString_GoodsName
-                                                       ON MIString_GoodsName.MovementItemId = MovementItem.Id
-                                                      AND MIString_GoodsName.DescId = zc_MIString_GoodsName()
-                          LEFT JOIN MovementItemString AS MIString_InvNumber
-                                                       ON MIString_InvNumber.MovementItemId = MovementItem.Id
-                                                      AND MIString_InvNumber.DescId = zc_MIString_InvNumber()
-                          LEFT JOIN MovementItemBoolean AS MIBoolean_Sign
-                                                        ON MIBoolean_Sign.MovementItemId = MovementItem.Id
-                                                       AND MIBoolean_Sign.DescId = zc_MIBoolean_Sign()                    
-                      WHERE MovementItem.MovementId = inMovementId
-                        AND MovementItem.DescId     = zc_MI_Child()
-                        AND MovementItem.isErased   = FALSE
-                      GROUP BY MovementItem.ParentId
+    , tmpMI_Child AS (SELECT tmpMI.ParentId
+                           , STRING_AGG (tmpMI.GoodsName, '; ') AS GoodsName
+                           , STRING_AGG (tmpMI.InvNumber, '; ') AS InvNumber
+                           , MAX (tmpMI.isSign)                 AS isSign
+                      FROM (SELECT MovementItem.Id
+                                 , MovementItem.ParentId
+                                 , COALESCE (MIString_GoodsName.ValueData, '')                  AS GoodsName
+                                 , COALESCE (MIString_InvNumber.ValueData, '')                  AS InvNumber
+                                 , CASE WHEN MIBoolean_Sign.ValueData = TRUE THEN 0 ELSE 1 END  AS isSign
+                            FROM MovementItem
+                                LEFT JOIN MovementItemString AS MIString_GoodsName
+                                                             ON MIString_GoodsName.MovementItemId = MovementItem.Id
+                                                            AND MIString_GoodsName.DescId = zc_MIString_GoodsName()
+                                LEFT JOIN MovementItemString AS MIString_InvNumber
+                                                             ON MIString_InvNumber.MovementItemId = MovementItem.Id
+                                                            AND MIString_InvNumber.DescId = zc_MIString_InvNumber()
+                                LEFT JOIN MovementItemBoolean AS MIBoolean_Sign
+                                                              ON MIBoolean_Sign.MovementItemId = MovementItem.Id
+                                                             AND MIBoolean_Sign.DescId = zc_MIBoolean_Sign()                    
+                            WHERE MovementItem.MovementId = inMovementId
+                              AND MovementItem.DescId     = zc_MI_Child()
+                              AND MovementItem.isErased   = FALSE
+                            -- Важно - Сортировать
+                            ORDER BY MovementItem.ParentId ASC
+                                   , MovementItem.Id ASC
+                           ) AS tmpMI
+                      GROUP BY tmpMI.ParentId
                      )
 
        -- Результат
@@ -1266,24 +1275,33 @@ BEGIN
                              , MILinkObject_Contract.ObjectId
                      )
 
-     , tmpMI_Child AS (SELECT MovementItem.ParentId
-                           , STRING_AGG (DISTINCT COALESCE (MIString_GoodsName.ValueData, ''), '; ') AS GoodsName
-                           , STRING_AGG (DISTINCT COALESCE (MIString_InvNumber.ValueData, ''), '; ') AS InvNumber
-                           , MAX (CASE WHEN MIBoolean_Sign.ValueData = TRUE THEN 0 ELSE 1 END)       AS isSign
-                      FROM MovementItem
-                          LEFT JOIN MovementItemString AS MIString_GoodsName
-                                                       ON MIString_GoodsName.MovementItemId = MovementItem.Id
-                                                      AND MIString_GoodsName.DescId = zc_MIString_GoodsName()
-                          LEFT JOIN MovementItemString AS MIString_InvNumber
-                                                       ON MIString_InvNumber.MovementItemId = MovementItem.Id
-                                                      AND MIString_InvNumber.DescId = zc_MIString_InvNumber()
-                          LEFT JOIN MovementItemBoolean AS MIBoolean_Sign
-                                                        ON MIBoolean_Sign.MovementItemId = MovementItem.Id
-                                                       AND MIBoolean_Sign.DescId = zc_MIBoolean_Sign()                    
-                      WHERE MovementItem.MovementId = inMovementId
-                        AND MovementItem.DescId     = zc_MI_Child()
-                        AND MovementItem.isErased   = FALSE
-                      GROUP BY MovementItem.ParentId
+     , tmpMI_Child AS (SELECT tmpMI.ParentId
+                           , STRING_AGG (tmpMI.GoodsName, '; ') AS GoodsName
+                           , STRING_AGG (tmpMI.InvNumber, '; ') AS InvNumber
+                           , MAX (tmpMI.isSign)                 AS isSign
+                      FROM (SELECT MovementItem.Id
+                                 , MovementItem.ParentId
+                                 , COALESCE (MIString_GoodsName.ValueData, '')                  AS GoodsName
+                                 , COALESCE (MIString_InvNumber.ValueData, '')                  AS InvNumber
+                                 , CASE WHEN MIBoolean_Sign.ValueData = TRUE THEN 0 ELSE 1 END  AS isSign
+                            FROM MovementItem
+                                LEFT JOIN MovementItemString AS MIString_GoodsName
+                                                             ON MIString_GoodsName.MovementItemId = MovementItem.Id
+                                                            AND MIString_GoodsName.DescId = zc_MIString_GoodsName()
+                                LEFT JOIN MovementItemString AS MIString_InvNumber
+                                                             ON MIString_InvNumber.MovementItemId = MovementItem.Id
+                                                            AND MIString_InvNumber.DescId = zc_MIString_InvNumber()
+                                LEFT JOIN MovementItemBoolean AS MIBoolean_Sign
+                                                              ON MIBoolean_Sign.MovementItemId = MovementItem.Id
+                                                             AND MIBoolean_Sign.DescId = zc_MIBoolean_Sign()                    
+                            WHERE MovementItem.MovementId = inMovementId
+                              AND MovementItem.DescId     = zc_MI_Child()
+                              AND MovementItem.isErased   = FALSE
+                            -- Важно - Сортировать
+                            ORDER BY MovementItem.ParentId ASC
+                                   , MovementItem.Id ASC
+                           ) AS tmpMI
+                      GROUP BY tmpMI.ParentId
                      )
 
        -- Результат

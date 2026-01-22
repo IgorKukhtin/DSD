@@ -32,6 +32,10 @@ BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_JuridicalOrderFinance());
+   
+
+     -- !!!ВЫХОД!!!
+     IF inMovementId > 0 THEN RETURN; END IF;
 
      -- Результат
      RETURN QUERY

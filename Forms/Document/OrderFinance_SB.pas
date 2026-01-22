@@ -58,9 +58,6 @@ type
     actExport_file: TdsdStoredProcExportToFile;
     bbExport_New_OTP: TdxBarButton;
     spGet_Period: TdsdStoredProc;
-    cxLabel12: TcxLabel;
-    GuidesBankMain: TdsdGuides;
-    edBankMain: TcxButtonEdit;
     bbBank: TdxBarControlContainerItem;
     bbText: TdxBarControlContainerItem;
     actBankChoiceFormMain: TOpenChoiceForm;
@@ -114,6 +111,8 @@ type
     isSign_1: TcxGridDBColumn;
     Date_Sign_1: TcxGridDBColumn;
     UserMember_1: TcxGridDBColumn;
+    Comment_mov: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

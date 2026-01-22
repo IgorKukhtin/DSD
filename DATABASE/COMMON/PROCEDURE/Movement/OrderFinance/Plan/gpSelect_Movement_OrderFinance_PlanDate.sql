@@ -872,6 +872,7 @@ BEGIN
           END ::TVarChar AS WeekDay
         , tmpMovement.DateUpdate_report ::TDateTime
         , tmpMovement.UserUpdate_report ::TVarChar
+
         , tmpMovement.UserMember_1      ::TVarChar
         , tmpMovement.UserMember_2      ::TVarChar
 
@@ -888,7 +889,7 @@ BEGIN
         , tmpMovement.Date_SignWait_1 ::TDateTime
         , tmpMovement.Date_Sign_1     ::TDateTime
         , CASE WHEN tmpMovement.isSign_1 = TRUE THEN FALSE ELSE tmpMovement.isSignWait_1 END :: Boolean
-        , tmpMovement.isSign_1        ::Boolean  --35 
+        , tmpMovement.isSign_1        ::Boolean
 
         , tmpMovement.Date_SignSB     ::TDateTime 
         , tmpMovement.isSignSB        ::Boolean         

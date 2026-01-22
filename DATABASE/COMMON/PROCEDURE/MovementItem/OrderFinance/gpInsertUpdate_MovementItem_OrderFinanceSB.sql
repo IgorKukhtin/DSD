@@ -319,7 +319,14 @@ BEGIN
               AND MovementItem.isErased = FALSE
            ) > 1
         THEN
-            RAISE EXCEPTION 'Ошибка.Заполнение возможно только во второй таблице <Товар (Заявка ТМЦ)>.';
+            RAISE EXCEPTION 'Ошибка.Заполнение возможно только во второй таблице <Товар (Заявка ТМЦ)>. % % % % % % % % %'
+                          , CHR (13)
+                          ,  COALESCE (inInvNumber_child, ''), ' <> ' || COALESCE (vbInvNumber_child,'')
+                          , CHR (13)
+                          ,  COALESCE (inGoodsName_child, ''), ' <> ' || COALESCE (vbGoodsName_child,'')
+                          , CHR (13)
+                          ,  zfConvert_FloatToString (COALESCE (inAmount, 0)), ' <> ' || zfConvert_FloatToString (COALESCE (vbAmount_child, 0))
+                           ;
         ELSE
             -- нашли
             vbId_child := (SELECT MovementItem.Id
