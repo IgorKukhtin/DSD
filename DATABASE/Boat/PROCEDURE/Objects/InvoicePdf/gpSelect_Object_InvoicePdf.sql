@@ -35,7 +35,7 @@ BEGIN
                                                     AND MovementItem_OrderClient.isErased    = FALSE
                          WHERE Movement_Invoice.Id       = inMovementId
                            AND Movement_Invoice.StatusId <> zc_Enum_Status_Erased()
-                           AND Movement_Invoice.DescId   = zc_Movement_Invoice()
+                         --  AND Movement_Invoice.DescId   = zc_Movement_Invoice()
                         )
      SELECT
             Object_InvoicePdf.Id        AS Id

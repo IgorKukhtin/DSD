@@ -17,7 +17,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , Comment TVarChar
              , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
-             , InsertId Integer, InsertName TVarChar, InsertDate TDateTime
+             , InsertId Integer, InsertName TVarChar, InsertDate TDateTime  
+             , TotalSumm TFloat
               )
 AS
 $BODY$
@@ -58,6 +59,7 @@ BEGIN
              , Object_Insert.Id                AS InsertId
              , Object_Insert.ValueData         AS InsertName
              , CURRENT_TIMESTAMP  ::TDateTime  AS InsertDate
+             , 0                  ::TFloat     AS TotalSumm
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
                                      ON ObjectFloat_TaxKind_Value.ObjectId = zc_Enum_TaxKind_Basis()
@@ -100,6 +102,7 @@ BEGIN
           , Object_Insert.ValueData              AS InsertName
           , MovementDate_Insert.ValueData        AS InsertDate
 
+          , MovementFloat_TotalSumm.ValueData    AS TotalSumm
         FROM Movement AS Movement_OrderPartner 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_OrderPartner.StatusId
 
@@ -136,6 +139,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_DiscountNextTax
                                     ON MovementFloat_DiscountNextTax.MovementId = Movement_OrderPartner.Id
                                    AND MovementFloat_DiscountNextTax.DescId = zc_MovementFloat_DiscountNextTax()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                    ON MovementFloat_TotalSumm.MovementId = Movement_OrderPartner.Id
+                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId = Movement_OrderPartner.Id

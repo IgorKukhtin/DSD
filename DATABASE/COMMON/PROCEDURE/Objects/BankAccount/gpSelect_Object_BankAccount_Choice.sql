@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameAll TVarChar, isEras
              , BankId Integer, BankName TVarChar, MFO TVarChar
              , CurrencyId Integer, CurrencyName TVarChar
              , CurrencyValue TFloat, ParValue TFloat, JuridicalId Integer, JuridicalName TVarChar
+             , OKPO_BankAccount TVarChar
               )
 AS
 $BODY$
@@ -91,13 +92,16 @@ BEGIN
            , tmpCurrency.ParValue :: TFloat AS ParValue
            , Object_BankAccount_View.JuridicalId
            , Object_BankAccount_View.JuridicalName
+           , View_JuridicalDetails_BankAccount.OKPO AS OKPO_BankAccount
      FROM Object_BankAccount_View
           -- Покажем счета только по внутренним фирмам
           LEFT JOIN ObjectBoolean AS ObjectBoolean_isCorporate
-                                   ON ObjectBoolean_isCorporate.ObjectId = Object_BankAccount_View.JuridicalId
-                                  AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
+                                  ON ObjectBoolean_isCorporate.ObjectId = Object_BankAccount_View.JuridicalId
+                                 AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
                                  
           LEFT JOIN tmpCurrency ON tmpCurrency.CurrencyToId = Object_BankAccount_View.CurrencyId
+
+          LEFT JOIN ObjectHistory_JuridicalDetails_View AS View_JuridicalDetails_BankAccount ON View_JuridicalDetails_BankAccount.JuridicalId = Object_BankAccount_View.JuridicalId
      WHERE (Object_BankAccount_View.isErased = FALSE
         OR (Object_BankAccount_View.isErased = TRUE AND inIsShowAll = TRUE))
         AND (Object_BankAccount_View.BankId = inBankId OR inBankId = 0) 
@@ -118,6 +122,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 21.01.26         *
  28.11.25         * 
  21.11.25         * inBankId
  13.11.14                                        *

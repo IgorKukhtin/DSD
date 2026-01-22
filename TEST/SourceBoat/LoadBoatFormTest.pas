@@ -511,6 +511,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TOrderPartnerJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderPartnerForm');
+  //просмотр PDF
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderPartnerPdfEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderPartnerPdfEditForm');
 end;
 
 procedure TLoadFormTest.LoadProductionUnionFormTest;

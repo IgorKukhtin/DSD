@@ -3,7 +3,7 @@ object BankAccount_ChoiceForm: TBankAccount_ChoiceForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1056#1072#1089#1095#1077#1090#1085#1099#1077' '#1089#1095#1077#1090#1072'> ('#1087#1086#1083#1091#1095#1072#1090#1077#1083#1100')'
   ClientHeight = 644
-  ClientWidth = 883
+  ClientWidth = 879
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,11 +20,14 @@ object BankAccount_ChoiceForm: TBankAccount_ChoiceForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 56
-    Width = 883
-    Height = 588
+    Top = 89
+    Width = 879
+    Height = 555
     Align = alClient
     TabOrder = 0
+    ExplicitTop = 56
+    ExplicitWidth = 883
+    ExplicitHeight = 588
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -114,10 +117,16 @@ object BankAccount_ChoiceForm: TBankAccount_ChoiceForm
         Width = 88
       end
       object JuridicalName: TcxGridDBColumn
-        Caption = #1070#1088#1083#1080#1094#1086
+        Caption = #1070#1088'.'#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentHorz = taCenter
         Width = 106
+      end
+      object OKPO_BankAccount: TcxGridDBColumn
+        Caption = #1054#1050#1055#1054
+        DataBinding.FieldName = 'OKPO_BankAccount'
+        Options.Editing = False
+        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -126,14 +135,16 @@ object BankAccount_ChoiceForm: TBankAccount_ChoiceForm
   end
   object Panel2: TPanel
     Left = 0
-    Top = 26
-    Width = 883
-    Height = 30
+    Top = 0
+    Width = 879
+    Height = 63
     Align = alTop
     TabOrder = 5
+    ExplicitTop = 48
+    ExplicitWidth = 883
     object lbSearchName: TcxLabel
-      Left = 2
-      Top = 4
+      Left = 0
+      Top = 35
       Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090': '
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
@@ -144,8 +155,8 @@ object BankAccount_ChoiceForm: TBankAccount_ChoiceForm
       Style.IsFontAssigned = True
     end
     object edSearchName: TcxTextEdit
-      Left = 117
-      Top = 5
+      Left = 116
+      Top = 36
       TabOrder = 1
       DesignSize = (
         140
@@ -153,7 +164,7 @@ object BankAccount_ChoiceForm: TBankAccount_ChoiceForm
       Width = 140
     end
     object edBank: TcxButtonEdit
-      Left = 581
+      Left = 576
       Top = 5
       Properties.Buttons = <
         item
@@ -165,13 +176,13 @@ object BankAccount_ChoiceForm: TBankAccount_ChoiceForm
       Width = 289
     end
     object cxLabel2: TcxLabel
-      Left = 548
+      Left = 538
       Top = 6
       Caption = #1041#1072#1085#1082':'
     end
     object edSearchBank: TcxTextEdit
-      Left = 321
-      Top = 5
+      Left = 310
+      Top = 36
       TabOrder = 4
       DesignSize = (
         140
@@ -179,8 +190,8 @@ object BankAccount_ChoiceForm: TBankAccount_ChoiceForm
       Width = 140
     end
     object cxLabel1: TcxLabel
-      Left = 278
-      Top = 4
+      Left = 266
+      Top = 37
       Caption = #1041#1072#1085#1082': '
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
@@ -189,6 +200,48 @@ object BankAccount_ChoiceForm: TBankAccount_ChoiceForm
       Style.Font.Name = 'Tahoma'
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
+    end
+    object cxLabel3: TcxLabel
+      Left = 459
+      Top = 37
+      Caption = #1054#1050#1055#1054': '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchOKPO: TcxTextEdit
+      Left = 506
+      Top = 36
+      TabOrder = 7
+      DesignSize = (
+        139
+        21)
+      Width = 139
+    end
+    object cxLabel4: TcxLabel
+      Left = 655
+      Top = 37
+      Caption = #1070#1088'.'#1083#1080#1094#1086': '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchJuridical: TcxTextEdit
+      Left = 725
+      Top = 36
+      TabOrder = 9
+      DesignSize = (
+        140
+        21)
+      Width = 140
     end
   end
   object DataSource: TDataSource
@@ -599,6 +652,14 @@ object BankAccount_ChoiceForm: TBankAccount_ChoiceForm
       item
         Column = BankName
         TextEdit = edSearchBank
+      end
+      item
+        Column = OKPO_BankAccount
+        TextEdit = edSearchOKPO
+      end
+      item
+        Column = clJuridicalName
+        TextEdit = edSearchJuridical
       end>
     ActionNumber1 = dsdChoiceGuides
     CheckBoxList = <>

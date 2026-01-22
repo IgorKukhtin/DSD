@@ -1,4 +1,4 @@
-unit InvoicePdfEdit;
+unit OrderPartnerPdfEdit;
 
 interface
 
@@ -30,11 +30,10 @@ uses
   cxGridDBBandedTableView, dsdCommon;
 
 type
-  TInvoicePdfEditForm = class(TParentForm)
+  TOrderPartnerPdfEditForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     ActionList: TActionList;
-    spInsertUpdate: TdsdStoredProc;
     dsdFormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
     dsdDataSetRefresh: TdsdDataSetRefresh;
@@ -84,8 +83,8 @@ type
     cxLabel3: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
     cxLabel6: TcxLabel;
-    ceObject: TcxButtonEdit;
-    GuidesObject: TdsdGuides;
+    ceTo: TcxButtonEdit;
+    GuidesTo: TdsdGuides;
     edInvNumber: TcxTextEdit;
     spUpdate_InvoicePdf: TdsdStoredProc;
     cxRightSplitter: TcxSplitter;
@@ -99,25 +98,11 @@ type
     cxSplitter1: TcxSplitter;
     cxLabel1: TcxLabel;
     PanelDocView: TPanel;
-    cxLabel9: TcxLabel;
-    edInvoiceKind: TcxButtonEdit;
-    GuidesInvoiceKind: TdsdGuides;
-    cxLabel5: TcxLabel;
-    ceAmount_pay: TcxCurrencyEdit;
     cxLabel4: TcxLabel;
-    edAmount: TcxCurrencyEdit;
-    cxLabel7: TcxLabel;
-    edParent: TcxButtonEdit;
-    GuidesParent: TdsdGuides;
-    ceInfoMoneyName_invoice: TcxTextEdit;
-    cxLabel8: TcxLabel;
-    cxLabel10: TcxLabel;
-    ceBoat: TcxTextEdit;
+    edTotalSumm: TcxCurrencyEdit;
     DocInvNumber: TcxGridDBBandedColumn;
     cxLabel19: TcxLabel;
-    edReceiptNumber: TcxTextEdit;
-    cxLabel11: TcxLabel;
-    edAmount_diff: TcxCurrencyEdit;
+    edInvNumber_Invoice: TcxTextEdit;
     DocDateUnloading: TcxGridDBBandedColumn;
   private
     { Private declarations }
@@ -131,6 +116,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TInvoicePdfEditForm);
+  RegisterClass(TOrderPartnerPdfEditForm);
 
 end.
