@@ -53,8 +53,12 @@ BEGIN
                   AND MovementItem.isErased   = FALSE
                )
      THEN
-         RAISE EXCEPTION 'Ошибка.Дублирование запрещено. Для <%> и договора <%> уже сохранена строка.', (SELECT '(' ||Object.ObjectCode||') '|| Object.ValueData FROM Object WHERE Object.Id = inJuridicalId)
-                                                                                                      , (SELECT '(' ||Object.ObjectCode||') '|| Object.ValueData FROM Object WHERE Object.Id = inContractId);
+         RAISE EXCEPTION 'Ошибка.Дублирование запрещено.%Может быть только одна строчка для%<%> и договор = <%>.'
+                       , CHR (13)
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh (inJuridicalId)
+                       , lfGet_Object_ValueData_sh (inContractId)
+                        ;
      END IF;
 
      -- сохранили <Элемент документа>

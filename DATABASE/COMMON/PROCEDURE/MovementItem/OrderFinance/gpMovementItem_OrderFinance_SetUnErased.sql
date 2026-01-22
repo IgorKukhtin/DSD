@@ -5,25 +5,71 @@ DROP FUNCTION IF EXISTS gpMovementItem_OrderFinance_SetUnErased (Integer, TVarCh
 CREATE OR REPLACE FUNCTION gpMovementItem_OrderFinance_SetUnErased(
     IN inMovementItemId      Integer              , -- ключ объекта <Элемент документа>
    OUT outIsErased           Boolean              , -- новое значение
+   OUT outSumm_parent        TFloat               , --
+   OUT outInvNumber_parent   TVarChar             , -- 
+   OUT outGoodsName_parent   TVarChar             , -- 
     IN inSession             TVarChar               -- текущий пользователь
 )
-  RETURNS Boolean
+RETURNS RECORD
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId     Integer;
    DECLARE vbMovementId Integer;
+   DECLARE vbParentId   Integer;
 BEGIN
   -- проверка прав пользователя на вызов процедуры
-  vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetUnErased_MI_OrderFinance());
+  IF EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.Id = inMovementItemId AND MovementItem.DescId = zc_MI_Master())
+  THEN vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetUnErased_MI_OrderFinance());
+  ELSE vbUserId:= lpGetUserBySession (inSession);
+  END IF;
 
   -- нашли
-  vbMovementId:= (SELECT MovementItem.MovementId FROM MovementItem WHERE MovementItem.Id = inMovementItemId);
+  SELECT MovementItem.MovementId, MovementItem.ParentId INTO vbMovementId, vbParentId FROM MovementItem WHERE MovementItem.Id = inMovementItemId;
 
   -- устанавливаем новое значение
   outIsErased:= lpSetUnErased_MovementItem (inMovementItemId:= inMovementItemId, inUserId:= vbUserId);
 
-  -- Проверка - после SetUnErased
-  PERFORM lpCheck_Movement_OrderFinance (inMovementId:= vbMovementId, inUserId:= vbUserId);
+
+  -- для zc_MI_Child
+  IF EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.Id = inMovementItemId AND MovementItem.DescId = zc_MI_Child())
+  THEN
+      -- Только после Set UnErased
+      SELECT STRING_AGG (tmpMI.InvNumber, '; ') AS InvNumber
+           , STRING_AGG (tmpMI.GoodsName, '; ') AS GoodsName
+           , SUM (tmpMI.Amount)          AS Amount
+             INTO outInvNumber_parent, outGoodsName_parent, outSumm_parent
+      FROM (SELECT COALESCE (MIString_GoodsName.ValueData, '') AS GoodsName
+                 , COALESCE (MIString_InvNumber.ValueData, '') AS InvNumber
+                 , MovementItem.Amount
+            FROM MovementItem
+                LEFT JOIN MovementItemString AS MIString_InvNumber
+                                             ON MIString_InvNumber.MovementItemId = MovementItem.Id
+                                            AND MIString_InvNumber.DescId = zc_MIString_InvNumber()
+                LEFT JOIN MovementItemString AS MIString_GoodsName
+                                             ON MIString_GoodsName.MovementItemId = MovementItem.Id
+                                            AND MIString_GoodsName.DescId = zc_MIString_GoodsName()
+            WHERE MovementItem.MovementId = vbMovementId
+              AND MovementItem.DescId     = zc_MI_Child()
+              AND MovementItem.isErased   = FALSE
+              AND MovementItem.ParentId   = vbParentId
+              -- НЕ Важно - Сортировать
+            ORDER BY MovementItem.Id ASC
+          ) AS tmpMI;
+
+      -- сохранили <Итого>
+      PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, zc_MI_Master(), MovementItem.ObjectId, MovementItem.MovementId, COALESCE (outSumm_parent, 0), MovementItem.ParentId)
+      FROM MovementItem
+      WHERE MovementItem.MovementId = vbMovementId
+        AND MovementItem.DescId     = zc_MI_Master()
+        AND MovementItem.Id         = vbParentId
+       ;
+
+  -- для zc_MI_Master
+  ELSE
+      -- Проверка - после SetUnErased
+       PERFORM lpCheck_Movement_OrderFinance (inMovementId:= vbMovementId, inUserId:= vbUserId);
+  END IF;
+
 
   -- пересчитали Итоговые суммы
   PERFORM lpInsertUpdate_MovementFloat_TotalSummOrderFinance (vbMovementId);

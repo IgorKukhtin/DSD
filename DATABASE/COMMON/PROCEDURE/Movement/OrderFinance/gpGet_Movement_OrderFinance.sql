@@ -300,6 +300,7 @@ BEGIN
            --
            , 0    ::Integer  AS CashId
            , ''   ::TVarChar AS CashName
+
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 

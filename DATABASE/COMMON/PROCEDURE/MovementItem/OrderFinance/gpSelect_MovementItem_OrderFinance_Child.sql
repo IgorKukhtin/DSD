@@ -94,6 +94,7 @@ BEGIN
        WHERE MovementItem.MovementId = inMovementId
          AND MovementItem.DescId     = zc_MI_Master()
          AND MovementItem.isErased   = FALSE
+         AND 1=0
       ;
 
 END;

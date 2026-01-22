@@ -994,6 +994,8 @@ BEGIN
                                                             ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_MoneyPlace.DescId         = zc_MILinkObject_MoneyPlace()
                            INNER JOIN (SELECT DISTINCT tmpMI.ObjectId AS JuridicalId, tmpMI.ContractId FROM tmpMI
+                                      UNION
+                                       SELECT DISTINCT tmpMI_old.JuridicalId, tmpMI_old.ContractId FROM tmpMI_old
                                       ) AS tmpList
                                         ON tmpList.JuridicalId = MILinkObject_MoneyPlace.ObjectId
                                        AND tmpList.ContractId  = MILinkObject_Contract.ObjectId
@@ -1135,7 +1137,12 @@ BEGIN
            , tmpMI_bank_old.Amount_4 :: TFloat AS AmountReal_4_old
            , tmpMI_bank_old.Amount_5 :: TFloat AS AmountReal_5_old
              -- Факт прошлой недели - Итог
-           , 0 :: TFloat AS AmountReal_total_old
+           , (COALESCE (tmpMI_bank_old.Amount_1, 0)
+            + COALESCE (tmpMI_bank_old.Amount_2, 0)
+            + COALESCE (tmpMI_bank_old.Amount_3, 0)
+            + COALESCE (tmpMI_bank_old.Amount_4, 0)
+            + COALESCE (tmpMI_bank_old.Amount_5, 0)
+             )  :: TFloat AS AmountReal_total_old
 
              -- Платим да/нет
            , COALESCE (MIBoolean_AmountPlan_1.ValueData, TRUE) ::Boolean AS isAmountPlan_1
@@ -1415,7 +1422,192 @@ BEGIN
 
        WHERE tmpInfoMoney_OrderF.isGroup = TRUE
           OR (Object_InfoMoney.DescId = zc_Object_InfoMoney() AND tmpMI.Id IS NOT NULL)   --сохраненные строки итого , даже если с н х сняли признак группы
-       ;
+
+
+     UNION ALL
+       -- Данные прошлой недели
+       SELECT
+             0 :: Integer                     AS Id
+           , Object_Juridical.Id              AS JuridicalId
+           , Object_Juridical.ObjectCode      AS JuridicalCode
+           , Object_Juridical.ValueData       AS JuridicalName
+           , tmpJuridicalDetails_View.OKPO
+
+           , View_Contract.ContractId
+           , View_Contract.ContractCode
+           , View_Contract.InvNumber          AS ContractName
+           , Object_PaidKind.Id               AS PaidKindId
+           , Object_PaidKind.ValueData        AS PaidKindName
+
+           , Object_InfoMoney.ObjectCode      AS InfoMoneyCode
+           , Object_InfoMoney.ValueData       AS InfoMoneyName
+           , COALESCE (tmpInfoMoney_OrderF.NumGroup, NULL) ::Integer AS NumGroup
+
+           , tmpContractCondition.Condition       ::TVarChar AS Condition
+           , View_Contract.ContractStateKindCode  ::Integer  AS ContractStateKindCode
+
+             -- Договор с
+           , View_Contract.StartDate
+             -- Договор до
+           , View_Contract.EndDate_real
+             -- Договор до (инф.)
+           , (''|| CASE WHEN View_Contract.ContractTermKindId = zc_Enum_ContractTermKind_Long() THEN '* ' ELSE '' END
+                || (LPAD (EXTRACT (Day FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||LPAD (EXTRACT (Month FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||EXTRACT (YEAR FROM View_Contract.EndDate_term) :: TVarChar)
+             ) ::TVarChar AS EndDate
+           , Object_Personal.ValueData ::TVarChar AS PersonalName_contract
+
+             -- Предварительный План на неделю
+           , 0::TFloat AS Amount
+           , 0::TFloat AS Amount_old
+             -- Дата предварительный план
+           , NULL :: TDateTime AS OperDate_Amount
+           , NULL :: TDateTime AS OperDate_Amount_old
+             --
+             -- Нач. долг
+           , 0 ::TFloat       AS AmountRemains
+             -- Долг с отсрочкой
+           , 0 ::TFloat       AS AmountPartner
+             -- Приход
+           , 0 ::TFloat       AS AmountSumm
+
+             -- Просрочка
+           , 0 ::TFloat       AS AmountPartner_1
+           , 0 ::TFloat       AS AmountPartner_2
+           , 0 ::TFloat       AS AmountPartner_3
+           , 0 ::TFloat       AS AmountPartner_4
+           , 0 ::TFloat       AS AmountPartner_5
+             -- План оплат
+           , 0 ::TFloat       AS AmountPlan_1
+           , 0 ::TFloat       AS AmountPlan_2
+           , 0 ::TFloat       AS AmountPlan_3
+           , 0 ::TFloat       AS AmountPlan_4
+           , 0 ::TFloat       AS AmountPlan_5
+             -- План оплат - Итог
+           , 0 ::TFloat       AS AmountPlan_total
+
+             -- План прошлой недели
+           , MIFloat_AmountPlan_1_old.ValueData    AS AmountPlan_1_old
+           , MIFloat_AmountPlan_2_old.ValueData    AS AmountPlan_2_old
+           , MIFloat_AmountPlan_3_old.ValueData    AS AmountPlan_3_old
+           , MIFloat_AmountPlan_4_old.ValueData    AS AmountPlan_4_old
+           , MIFloat_AmountPlan_5_old.ValueData    AS AmountPlan_5_old
+
+             -- План прошлой недели - Итог
+           , (COALESCE (MIFloat_AmountPlan_1_old.ValueData, 0)
+            + COALESCE (MIFloat_AmountPlan_2_old.ValueData, 0)
+            + COALESCE (MIFloat_AmountPlan_3_old.ValueData, 0)
+            + COALESCE (MIFloat_AmountPlan_4_old.ValueData, 0)
+            + COALESCE (MIFloat_AmountPlan_5_old.ValueData, 0)
+             ) :: TFloat AS AmountPlan_total_old
+
+             -- Факт прошлой недели
+           , tmpMI_bank_old.Amount_1 :: TFloat AS AmountReal_1_old
+           , tmpMI_bank_old.Amount_2 :: TFloat AS AmountReal_2_old
+           , tmpMI_bank_old.Amount_3 :: TFloat AS AmountReal_3_old
+           , tmpMI_bank_old.Amount_4 :: TFloat AS AmountReal_4_old
+           , tmpMI_bank_old.Amount_5 :: TFloat AS AmountReal_5_old
+             -- Факт прошлой недели - Итог
+           , (COALESCE (tmpMI_bank_old.Amount_1, 0)
+            + COALESCE (tmpMI_bank_old.Amount_2, 0)
+            + COALESCE (tmpMI_bank_old.Amount_3, 0)
+            + COALESCE (tmpMI_bank_old.Amount_4, 0)
+            + COALESCE (tmpMI_bank_old.Amount_5, 0)
+             )  :: TFloat AS AmountReal_total_old
+
+             -- Платим да/нет
+           , FALSE ::Boolean  AS isAmountPlan_1
+           , FALSE ::Boolean  AS isAmountPlan_2
+           , FALSE ::Boolean  AS isAmountPlan_3
+           , FALSE ::Boolean  AS isAmountPlan_4
+           , FALSE ::Boolean  AS isAmountPlan_5
+
+             -- Учитывается в долгах План прошлой недели да/нет
+           , FALSE ::Boolean AS isPlan_1_old
+           , FALSE ::Boolean AS isPlan_2_old
+           , FALSE ::Boolean AS isPlan_3_old
+           , FALSE ::Boolean AS isPlan_4_old
+           , FALSE ::Boolean AS isPlan_5_old
+
+           , ''   ::TVarChar AS Comment
+           , ''   ::TVarChar AS Comment_pay
+
+           , ''   :: TVarChar           AS InsertName
+           , ''   :: TVarChar           AS UpdateName
+           , NULL :: TDateTime          AS InsertDate
+           , NULL :: TDateTime          AS UpdateDate
+
+           , FALSE :: Boolean AS isErased
+
+           , zc_Color_White() ::Integer AS Color_Group
+
+       FROM (-- Банк предыдущей недели
+             SELECT DISTINCT tmpMI_bank_old.JuridicalId, tmpMI_bank_old.ContractId
+             FROM tmpMI_bank_old
+             WHERE 1=1
+             --AND vbUserId = 5
+
+            UNION
+             -- план прошлой недели
+             SELECT DISTINCT tmpMI_old.JuridicalId, tmpMI_old.ContractId
+             FROM tmpMI_old
+             WHERE 1=1
+             --AND vbUserId = 5
+            ) AS tmpMI_list
+
+            INNER JOIN Object AS Object_Juridical ON Object_Juridical.Id     = tmpMI_list.JuridicalId
+                                                 -- Только Юр.л.
+                                                 AND Object_Juridical.DescId = zc_Object_Juridical()
+
+            LEFT JOIN tmpMI ON tmpMI.ObjectId   = tmpMI_list.JuridicalId
+                           AND tmpMI.ContractId = tmpMI_list.ContractId
+
+            -- Банк предыдущей недели
+            LEFT JOIN tmpMI_bank_old ON tmpMI_bank_old.JuridicalId = tmpMI_list.JuridicalId
+                                    AND tmpMI_bank_old.ContractId  = tmpMI_list.ContractId
+
+            -- план прошлой недели
+            LEFT JOIN tmpMI_old ON tmpMI_old.JuridicalId = tmpMI_list.JuridicalId
+                               AND tmpMI_old.ContractId  = tmpMI_list.ContractId
+
+            LEFT JOIN tmpMovementItemFloat_old AS MIFloat_AmountPlan_1_old
+                                               ON MIFloat_AmountPlan_1_old.MovementItemId = tmpMI_old.MovementItemId
+                                              AND MIFloat_AmountPlan_1_old.DescId = zc_MIFloat_AmountPlan_1()
+            LEFT JOIN tmpMovementItemFloat_old AS MIFloat_AmountPlan_2_old
+                                               ON MIFloat_AmountPlan_2_old.MovementItemId = tmpMI_old.MovementItemId
+                                              AND MIFloat_AmountPlan_2_old.DescId = zc_MIFloat_AmountPlan_2()
+            LEFT JOIN tmpMovementItemFloat_old AS MIFloat_AmountPlan_3_old
+                                               ON MIFloat_AmountPlan_3_old.MovementItemId = tmpMI_old.MovementItemId
+                                              AND MIFloat_AmountPlan_3_old.DescId = zc_MIFloat_AmountPlan_3()
+            LEFT JOIN tmpMovementItemFloat_old AS MIFloat_AmountPlan_4_old
+                                               ON MIFloat_AmountPlan_4_old.MovementItemId = tmpMI_old.MovementItemId
+                                              AND MIFloat_AmountPlan_4_old.DescId = zc_MIFloat_AmountPlan_4()
+            LEFT JOIN tmpMovementItemFloat_old AS MIFloat_AmountPlan_5_old
+                                               ON MIFloat_AmountPlan_5_old.MovementItemId = tmpMI_old.MovementItemId
+                                              AND MIFloat_AmountPlan_5_old.DescId = zc_MIFloat_AmountPlan_5()
+
+
+            -- Реквизиты
+            LEFT JOIN tmpJuridicalDetails_View ON tmpJuridicalDetails_View.JuridicalId = Object_Juridical.Id
+
+            -- Договора - только tmpMI
+            LEFT JOIN tmpContract_View AS View_Contract ON View_Contract.ContractId = tmpMI_list.ContractId
+            -- Условия договора
+            LEFT JOIN tmpContractCondition ON tmpContractCondition.ContractId = tmpMI_list.ContractId
+
+            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = View_Contract.InfoMoneyId
+            LEFT JOIN Object AS Object_PaidKind  ON Object_PaidKind.Id  = View_Contract.PaidKindId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
+                                 ON ObjectLink_Contract_Personal.ObjectId = View_Contract.ContractId
+                                AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
+            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Contract_Personal.ChildObjectId
+
+            -- УП-статья + № группы
+            LEFT JOIN tmpInfoMoney_OrderF ON tmpInfoMoney_OrderF.InfoMoneyId = Object_InfoMoney.Id
+
+       WHERE tmpMI.ObjectId IS NULL
+      ;
+
      END IF;
 END;
 $BODY$

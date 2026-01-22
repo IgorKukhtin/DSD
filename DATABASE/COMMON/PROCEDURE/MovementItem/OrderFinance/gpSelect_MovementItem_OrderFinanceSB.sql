@@ -1266,7 +1266,7 @@ BEGIN
                              , MILinkObject_Contract.ObjectId
                      )
 
-    , tmpMI_Child AS (SELECT MovementItem.ParentId
+     , tmpMI_Child AS (SELECT MovementItem.ParentId
                            , STRING_AGG (DISTINCT COALESCE (MIString_GoodsName.ValueData, ''), '; ') AS GoodsName
                            , STRING_AGG (DISTINCT COALESCE (MIString_InvNumber.ValueData, ''), '; ') AS InvNumber
                            , MAX (CASE WHEN MIBoolean_Sign.ValueData = TRUE THEN 0 ELSE 1 END)       AS isSign
