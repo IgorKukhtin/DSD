@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, ParentId Integer
              , InvNumber  TVarChar
              , GoodsName TVarChar
              , Comment TVarChar
+             , Comment_SB         TVarChar
              , Amount TFloat
              
              , MovementItemId_OrderIncome Integer
@@ -47,6 +48,7 @@ BEGIN
            , MIString_InvNumber.ValueData ::TVarChar AS InvNumber
            , MIString_GoodsName.ValueData ::TVarChar AS GoodsName
            , MIString_Comment.ValueData   ::TVarChar AS Comment
+           , MIString_Comment_SB.ValueData           AS Comment_SB
            , MovementItem.Amount          ::TFloat   AS Amount
            
            , MIFloat_MovementItemId.ValueData           ::Integer AS MovementItemId_OrderIncome 
@@ -66,6 +68,9 @@ BEGIN
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
+            LEFT JOIN MovementItemString AS MIString_Comment_SB
+                                         ON MIString_Comment_SB.MovementItemId = MovementItem.Id
+                                        AND MIString_Comment_SB.DescId = zc_MIString_Comment_SB()
 
             LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
                                         ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
@@ -83,6 +88,7 @@ BEGIN
            , ''    ::TVarChar    AS InvNumber
            , ''    ::TVarChar    AS GoodsName
            , ''    ::TVarChar    AS Comment
+           , ''    ::TVarChar    AS Comment_SB
            , 0     ::TFloat      AS Amount
                    
            , 0     ::Integer     AS MovementItemId_OrderIncome 
@@ -94,7 +100,7 @@ BEGIN
        WHERE MovementItem.MovementId = inMovementId
          AND MovementItem.DescId     = zc_MI_Master()
          AND MovementItem.isErased   = FALSE
-         AND 1=0
+         AND 1=1
       ;
 
 END;

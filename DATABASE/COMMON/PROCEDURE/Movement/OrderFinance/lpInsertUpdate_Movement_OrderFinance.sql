@@ -49,9 +49,9 @@ BEGIN
                                                                              AND MovementLinkObject_OrderFinance.ObjectId   = inOrderFinanceId
                                            WHERE Movement.DescId = zc_Movement_OrderFinance()
                                              AND Movement.StatusId <> zc_Enum_Status_Erased()
-                                             AND Movement.OperDate BETWEEN inOperDate - INTERVAL '14 DAY' AND inOperDate - INTERVAL '1 DAY'
+                                             AND Movement.OperDate BETWEEN inOperDate - INTERVAL '14 DAY' AND inOperDate + INTERVAL '7 DAY'
                                           )
-        AND inUserId <> 5
+      --AND inUserId <> 5
      THEN
          RAISE EXCEPTION 'Ошибка.Дублирование запрещено.%Уже существует документ планирования № <%> от <%>%для <%> недели + <%>'
                                         , CHR (13)
@@ -67,7 +67,7 @@ BEGIN
                                                                              AND MovementLinkObject_OrderFinance.ObjectId   = inOrderFinanceId
                                            WHERE Movement.DescId = zc_Movement_OrderFinance()
                                              AND Movement.StatusId <> zc_Enum_Status_Erased()
-                                             AND Movement.OperDate BETWEEN inOperDate - INTERVAL '14 DAY' AND inOperDate - INTERVAL '1 DAY'
+                                             AND Movement.OperDate BETWEEN inOperDate - INTERVAL '14 DAY' AND inOperDate + INTERVAL '7 DAY'
                                            ORDER BY Movement.Id
                                            LIMIT 1
                                           )
@@ -83,7 +83,7 @@ BEGIN
                                                                              AND MovementLinkObject_OrderFinance.ObjectId   = inOrderFinanceId
                                            WHERE Movement.DescId = zc_Movement_OrderFinance()
                                              AND Movement.StatusId <> zc_Enum_Status_Erased()
-                                             AND Movement.OperDate BETWEEN inOperDate - INTERVAL '14 DAY' AND inOperDate - INTERVAL '1 DAY'
+                                             AND Movement.OperDate BETWEEN inOperDate - INTERVAL '14 DAY' AND inOperDate + INTERVAL '7 DAY'
                                            ORDER BY Movement.Id
                                            LIMIT 1
                                           )

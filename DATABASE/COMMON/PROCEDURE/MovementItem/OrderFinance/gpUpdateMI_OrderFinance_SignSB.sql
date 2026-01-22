@@ -1,12 +1,14 @@
 -- Function: gpUpdateMI_OrderFinance_SignSB()
 
 DROP FUNCTION IF EXISTS gpUpdateMI_OrderFinance_SignSB (Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdateMI_OrderFinance_SignSB (Integer, Integer, Integer, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdateMI_OrderFinance_SignSB(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inParentId              Integer   , -- Ключ объекта <главный элемент>
     IN inMovementId            Integer   , -- Ключ объекта <Документ>
-    IN inisSign                Boolean   ,
+    IN inIsSign                Boolean   ,
+    IN inComment_SB            TVarChar  ,
    OUT outTextSign             TVarChar  ,
     IN inSession               TVarChar    -- сессия пользователя
 )
@@ -25,22 +27,25 @@ BEGIN
      --если нет чайлда - создаем
      IF COALESCE (ioId, 0) = 0
      THEN
-
-     -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId
-                                        , zc_MI_Child()
-                                        , NULL
-                                        , inMovementId
-                                        , (SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.Id = inParentId) ::TFloat  -- нет чайлда сохраняем сумму из мастера
-                                        , inParentId
-                                         );
+         -- сохранили <Элемент документа>
+         ioId := lpInsertUpdate_MovementItem (ioId
+                                            , zc_MI_Child()
+                                            , NULL
+                                            , inMovementId
+                                            , (SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.Id = inParentId) ::TFloat  -- нет чайлда сохраняем сумму из мастера
+                                            , inParentId
+                                             );
      END IF;
 
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Sign(), ioId, inisSign);
+     -- сохранили свойство <Согласован>
+     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Sign(), ioId, inIsSign);
 
-     outTextSign := (CASE WHEN inisSign = TRUE THEN 'Погоджено'
-                          WHEN inisSign = FALSE THEN 'Не погоджено'
+     -- сохранили свойство <Согласован>
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment_SB(), ioId, inComment_SB);
+
+     -- Результат
+     outTextSign := (CASE WHEN inIsSign = TRUE THEN 'Погоджено'
+                          WHEN inIsSign = FALSE THEN 'Не погоджено'
                           ELSE ''
                      END)::TVarChar;
 

@@ -4,8 +4,8 @@ DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_SignSB (Integer, Boolean, 
 
 CREATE OR REPLACE FUNCTION gpUpdateMovement_OrderFinance_SignSB(
     IN inMovementId      Integer   , -- Ключ объекта <Документ>
-    IN inisSignSB        Boolean   ,
-   OUT outisSignSB       Boolean   ,
+    IN inIsSignSB        Boolean   ,
+   OUT outIsSignSB       Boolean   ,
     IN inSession         TVarChar    -- сессия пользователя
 )
 RETURNS Boolean
@@ -23,32 +23,76 @@ BEGIN
                         INNER JOIN MovementLinkObject AS MovementLinkObject_OrderFinance
                                                       ON MovementLinkObject_OrderFinance.MovementId = Movement.Id
                                                      AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
-                        INNER JOIN ObjectBoolean  AS ObjectBoolean_SB 
-                                                  ON ObjectBoolean_SB.ObjectId = MovementLinkObject_OrderFinance.ObjectId 
+                        INNER JOIN ObjectBoolean  AS ObjectBoolean_SB
+                                                  ON ObjectBoolean_SB.ObjectId = MovementLinkObject_OrderFinance.ObjectId
                                                  AND ObjectBoolean_SB.DescId = zc_ObjectBoolean_OrderFinance_SB()
                                                  AND COALESCE (ObjectBoolean_SB.ValueData, FALSE) = TRUE     --только те виды планировани, что нужно согласовывать СБ
-    
+
                     WHERE Movement.DescId = zc_Movement_OrderFinance()
                       AND Movement.Id = inMovementId
                     )
      THEN
          RAISE EXCEPTION 'Ошибка.Документ не требует <Виза СБ>.';
      END IF;
-                
+
 
      -- сохранили свойство  <Виза СБ>
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_SignSB(), inMovementId, inisSignSB);
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_SignSB(), inMovementId, inIsSignSB);
 
-     IF COALESCE (inisSignSB, FALSE) = TRUE
+     IF inIsSignSB = TRUE
      THEN
          -- сохранили свойство <Дата/время когда установили Виза СБ>
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_SignSB(), inMovementId, CURRENT_TIMESTAMP);
+
+         -- сохранили <Итого>
+         PERFORM lpInsertUpdate_MovementItem (tmpMI.Id, zc_MI_Master(), tmpMI.ObjectId, tmpMI.MovementId, tmpMI.Amount_child, tmpMI.ParentId)
+         FROM (WITH tmpMI_child AS (SELECT MovementItem.ParentId, SUM (MovementItem.Amount) AS Amount
+                                    FROM MovementItem
+                                          INNER JOIN MovementItemBoolean AS MIBoolean_Sign
+                                                                         ON MIBoolean_Sign.MovementItemId = MovementItem.Id
+                                                                        AND MIBoolean_Sign.DescId         = zc_MIBoolean_Sign()
+                                                                        AND MIBoolean_Sign.ValueData      = TRUE
+                                    WHERE MovementItem.MovementId = inMovementId
+                                      AND MovementItem.DescId     = zc_MI_Child()
+                                      AND MovementItem.isErased   = FALSE
+                                    GROUP BY MovementItem.ParentId
+                                   )
+               SELECT MovementItem.*
+                    , COALESCE (tmpMI_child.Amount, 0) AS Amount_child
+               FROM MovementItem
+                    LEFT JOIN tmpMI_child ON tmpMI_child.ParentId = MovementItem.Id
+               WHERE MovementItem.MovementId = inMovementId
+                 AND MovementItem.DescId     = zc_MI_Master()
+                 AND MovementItem.iseRased   = FALSE
+              ) AS tmpMI
+          ;
+
      ELSE
          -- сохранили свойство <Дата/время когда установили Виза СБ>
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_SignSB(), inMovementId, NULL ::TDateTime);
-     END IF; 
-     
-     outisSignSB := inisSignSB;
+
+         -- сохранили <Итого>
+         PERFORM lpInsertUpdate_MovementItem (tmpMI.Id, zc_MI_Master(), tmpMI.ObjectId, tmpMI.MovementId, tmpMI.Amount_child, tmpMI.ParentId)
+         FROM (WITH tmpMI_child AS (SELECT MovementItem.ParentId, SUM (MovementItem.Amount) AS Amount
+                                    FROM MovementItem
+                                    WHERE MovementItem.MovementId = inMovementId
+                                      AND MovementItem.DescId     = zc_MI_Child()
+                                      AND MovementItem.isErased   = FALSE
+                                    GROUP BY MovementItem.ParentId
+                                   )
+               SELECT MovementItem.*
+                    , COALESCE (tmpMI_child.Amount, 0) AS Amount_child
+               FROM MovementItem
+                    LEFT JOIN tmpMI_child ON tmpMI_child.ParentId = MovementItem.Id
+               WHERE MovementItem.MovementId = inMovementId
+                 AND MovementItem.DescId     = zc_MI_Master()
+                 AND MovementItem.iseRased   = FALSE
+              ) AS tmpMI
+          ;
+
+     END IF;
+
+     outIsSignSB := inIsSignSB;
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);

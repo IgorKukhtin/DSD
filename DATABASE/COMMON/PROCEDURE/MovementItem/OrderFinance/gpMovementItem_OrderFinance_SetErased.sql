@@ -13,12 +13,25 @@ CREATE OR REPLACE FUNCTION gpMovementItem_OrderFinance_SetErased(
 RETURNS RECORD
 AS
 $BODY$
-   DECLARE vbUserId     Integer;
-   DECLARE vbMovementId Integer;
-   DECLARE vbParentId   Integer;
+   DECLARE vbUserId         Integer;
+   DECLARE vbOrderFinanceId Integer;
+   DECLARE vbMovementId     Integer;
+   DECLARE vbParentId       Integer;
 BEGIN
+   -- !!!криво!!!
+   -- нашли
+   vbOrderFinanceId := (SELECT MovementLinkObject.ObjectId AS Id
+                        FROM MovementItem 
+                             INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = MovementItem.MovementId
+                                                          AND MovementLinkObject.DescId     = zc_MovementLinkObject_OrderFinance()
+                        WHERE MovementItem.Id     = inMovementItemId
+                          AND MovementItem.DescId = zc_MI_Master()
+                       );
+
   -- проверка прав пользователя на вызов процедуры
   IF EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.Id = inMovementItemId AND MovementItem.DescId = zc_MI_Master())
+     -- НЕ СЧЕТА
+     AND NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = vbOrderFinanceId AND OB.DescId = zc_ObjectBoolean_OrderFinance_SB() AND OB.ValueData = TRUE)
   THEN vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_MI_OrderFinance());
   ELSE vbUserId:= lpGetUserBySession (inSession);
   END IF;

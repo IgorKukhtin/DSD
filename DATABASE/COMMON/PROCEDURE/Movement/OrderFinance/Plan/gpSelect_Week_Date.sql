@@ -1,4 +1,4 @@
--- Function: gpSelect_Week_Date()
+ -- Function: gpSelect_Week_Date()
 
 DROP FUNCTION IF EXISTS gpSelect_Week_Date (TDateTime, TDateTime, TVarChar);
 
@@ -21,8 +21,8 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- inStartDate:= DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', inStartDate));
-     inStartDate:= DATE_TRUNC ('YEAR', inStartDate);
-     inEndDate  := DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', inStartDate) + INTERVAL '1 YEAR' + INTERVAL '1 WEEK');
+     inStartDate:= DATE_TRUNC ('WEEK', DATE_TRUNC ('YEAR', inStartDate));
+     inEndDate  := DATE_TRUNC ('WEEK', inStartDate + INTERVAL '1 YEAR' + INTERVAL '1 WEEK');
 
      -- Результат
      RETURN QUERY

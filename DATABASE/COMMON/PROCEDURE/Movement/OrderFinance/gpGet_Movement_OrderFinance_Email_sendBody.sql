@@ -74,17 +74,18 @@ BEGIN
                                                                , inSession    := inSession)
                     )
      , tmpMovement AS (
-                       SELECT CASE WHEN inParam = 1 THEN 'Уведомление СБ за '|| zfConvert_FloatToString (tmp.WeekNumber)
+                       SELECT CASE WHEN inParam = 1 THEN 'Уведомление для СБ за '|| zfConvert_FloatToString (tmp.WeekNumber)
                                                        ||' неделю c '|| zfConvert_DateShortToString (tmp.StartDate_WeekNumber)
                                                        ||' по '|| zfConvert_DateShortToString (tmp.EndDate_WeekNumber)
-                                   WHEN inParam = 2 THEN 'Уведомление Фин.службе за '|| zfConvert_FloatToString (tmp.WeekNumber)
+                                   WHEN inParam = 2 THEN 'Уведомление для Фин.отдела за '|| zfConvert_FloatToString (tmp.WeekNumber)
                                                        ||' неделю c '|| zfConvert_DateShortToString (tmp.StartDate_WeekNumber)
                                                        ||' по '|| zfConvert_DateShortToString (tmp.EndDate_WeekNumber)
-                                   WHEN inParam = 3 THEN 'Уведомление Бухгалтерия за '|| zfConvert_FloatToString (tmp.WeekNumber)
+                                   WHEN inParam = 3 THEN 'Уведомление для Бухгалтерии за '|| zfConvert_FloatToString (tmp.WeekNumber)
                                                        ||' неделю c '|| zfConvert_DateShortToString (tmp.StartDate_WeekNumber)
                                                        ||' по '|| zfConvert_DateShortToString (tmp.EndDate_WeekNumber)
                                    ELSE ''
                               END ::TVarChar AS Subject
+
                             , CASE WHEN inParam = 1 THEN 'Проверка заявок за '|| zfConvert_FloatToString (tmp.WeekNumber)
                                                        ||' неделю c '|| zfConvert_DateShortToString (tmp.StartDate_WeekNumber)
                                                        ||' по '|| zfConvert_DateShortToString (tmp.EndDate_WeekNumber)
@@ -105,8 +106,11 @@ BEGIN
                             , tmp.WeekNumber
                             , tmp.StartDate_WeekNumber 
                             , tmp.EndDate_WeekNumber
+
+                            , tmp.isSignSB_guide
+
                        FROM gpGet_Movement_OrderFinance (inMovementId, CURRENT_DATE :: TDateTime, inSession) AS tmp
-                       )
+                      )
 
      --РЕЗУЛЬТАТ
      SELECT tmpMovement.Subject :: TVarChar AS Subject
@@ -114,9 +118,25 @@ BEGIN
 
           , gpGet_Mail.Value    :: TVarChar AS AddressFrom
 
-          , CASE WHEN vbUserId = 5    AND 1=1 THEN 'ashtu@ua.fm'
+          , CASE WHEN vbUserId = 5    AND 1=0 THEN 'ashtu@ua.fm'
                  WHEN vbUserId = 9457 AND 1=1 THEN 'innafelon@gmail.com'
-                 WHEN COALESCE (tmpContactPerson.ContactPersonMail, '') = '' AND 1=1 THEN 'ashtu@ua.fm;t.hordienko@alan.ua'
+
+                 -- Для СБ
+                 WHEN tmpMovement.isSignSB_guide = TRUE AND inParam = 1
+                      THEN 'ashtu@ua.fm'
+                    --THEN 'ashtu@ua.fm;o.panasenko@alan.ua'
+
+                 -- такие НИКОМУ
+                 WHEN tmpMovement.isSignSB_guide = FALSE AND inParam = 1
+                      THEN 'ashtu@ua.fm'
+
+                 -- Для ВСЕХ - после СБ
+                 WHEN inParam = 2
+                      THEN 'ashtu@ua.fm'
+                    --THEN 'ashtu@ua.fm;o.gordienko@alan.ua;o.pavlova@alan.ua;y.tihaeva@alan.ua'
+
+
+                 WHEN COALESCE (tmpContactPerson.ContactPersonMail, '') = '' AND 1=1 THEN 'ashtu@ua.fm'
                  ELSE tmpContactPerson.ContactPersonMail
             END :: TVarChar AS AddressTo
 

@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_OrderFinance(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, OperDate_Amount TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , OrderFinanceId Integer, OrderFinanceName TVarChar
+             , OrderFinanceId Integer, OrderFinanceName TVarChar, isSignSB_guide Boolean
              , BankAccountId Integer, BankAccountName TVarChar
              , BankId Integer, BankName TVarChar, BankAccountNameAll TVarChar
              , WeekNumber TFloat
@@ -28,7 +28,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, OperDate_Amou
              , isSignWait_1 Boolean, isSign_1 Boolean
              , Date_SignSB TDateTime, isSignSB Boolean 
              , TotalText_1 TVarChar, TotalText_2 TVarChar, TotalText_3 TVarChar
-             --
+               --
              , CashId Integer, CashName TVarChar
              )
 AS
@@ -64,6 +64,7 @@ BEGIN
    , tmpOrderFinance AS (SELECT Object_OrderFinance.Id           AS OrderFinanceId
                               , Object_OrderFinance.ObjectCode   AS OrderFinanceCode
                               , Object_OrderFinance.ValueData    AS OrderFinanceName
+                              , ObjectBoolean_SB.ValueData       AS isSignSB_guide
 
 
                               , Object_BankAccount_View.Id       AS BankAccountId
@@ -86,6 +87,10 @@ BEGIN
                                 END AS addDayPlan
 
                          FROM Object AS Object_OrderFinance
+
+                             LEFT JOIN ObjectBoolean  AS ObjectBoolean_SB
+                                                      ON ObjectBoolean_SB.ObjectId = Object_OrderFinance.Id
+                                                     AND ObjectBoolean_SB.DescId = zc_ObjectBoolean_OrderFinance_SB()
 
                              LEFT JOIN ObjectLink AS OrderFinance_Member_insert
                                                   ON OrderFinance_Member_insert.ObjectId = Object_OrderFinance.Id
@@ -168,8 +173,9 @@ BEGIN
                --
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
-             , COALESCE (tmpOrderFinance.OrderFinanceId,0)    ::Integer AS OrderFinanceId
-             , COALESCE (tmpOrderFinance.OrderFinanceName,'') ::TVarChar AS OrderFinanceName
+             , COALESCE (tmpOrderFinance.OrderFinanceId,0)        ::Integer AS OrderFinanceId
+             , COALESCE (tmpOrderFinance.OrderFinanceName,'')     ::TVarChar AS OrderFinanceName
+             , COALESCE (tmpOrderFinance.isSignSB_guide, FALSE)   ::Boolean  AS isSignSB_guide
 
              , COALESCE (tmpOrderFinance.BankAccountId,0)     ::Integer  AS BankAccountId
              , COALESCE (tmpOrderFinance.BankAccountName,'')  ::TVarChar AS BankAccountName
@@ -251,6 +257,7 @@ BEGIN
 
            , Object_OrderFinance.Id                             AS OrderFinanceId
            , Object_OrderFinance.ValueData                      AS OrderFinanceName
+           , COALESCE (ObjectBoolean_SB.ValueData, FALSE) :: Boolean AS isSignSB_guide
 
            , Object_BankAccount_View.Id                         AS BankAccountId
            , Object_BankAccount_View.Name                       AS BankAccountName
@@ -367,6 +374,11 @@ BEGIN
                                          ON MovementLinkObject_OrderFinance.MovementId = Movement.Id
                                         AND MovementLinkObject_OrderFinance.DescId = zc_MovementLinkObject_OrderFinance()
             LEFT JOIN Object AS Object_OrderFinance ON Object_OrderFinance.Id = MovementLinkObject_OrderFinance.ObjectId
+
+            LEFT JOIN ObjectBoolean  AS ObjectBoolean_SB
+                                     ON ObjectBoolean_SB.ObjectId = Object_OrderFinance.Id
+                                    AND ObjectBoolean_SB.DescId   = zc_ObjectBoolean_OrderFinance_SB()
+
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_BankAccount
                                          ON MovementLinkObject_BankAccount.MovementId = Movement.Id

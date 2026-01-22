@@ -6,6 +6,10 @@ CREATE OR REPLACE FUNCTION zc_MIString_Comment_pay() RETURNS Integer AS $BODY$BE
 INSERT INTO MovementItemStringDesc (Code, ItemName)
   SELECT 'zc_MIString_Comment_pay', 'Примечание для платежа' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_Comment_pay');
 
+CREATE OR REPLACE FUNCTION zc_MIString_Comment_SB() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_Comment_SB'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_Comment_SB', 'Примечание СБ' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_Comment_SB');
+  
 
 CREATE OR REPLACE FUNCTION zc_MIString_PartionGoods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_PartionGoods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemStringDesc (Code, ItemName)
