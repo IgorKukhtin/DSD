@@ -3,7 +3,7 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
   Top = 0
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1082#1072#1079' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
   ClientHeight = 492
-  ClientWidth = 1034
+  ClientWidth = 1056
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,10 +20,11 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 1034
+    Width = 1056
     Height = 31
     Align = alTop
     TabOrder = 1
+    ExplicitWidth = 1034
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -58,14 +59,13 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 57
-    Width = 1034
+    Width = 1056
     Height = 394
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = -120
-    ExplicitTop = 121
+    ExplicitWidth = 1034
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -423,12 +423,13 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
   object Panel_btn: TPanel
     Left = 0
     Top = 451
-    Width = 1034
+    Width = 1056
     Height = 41
     Align = alBottom
     TabOrder = 6
+    ExplicitTop = 457
     object btnInsert: TcxButton
-      Left = 42
+      Left = 17
       Top = 7
       Width = 101
       Height = 25
@@ -436,7 +437,7 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
       TabOrder = 0
     end
     object btnUpdate: TcxButton
-      Left = 159
+      Left = 134
       Top = 7
       Width = 101
       Height = 25
@@ -444,7 +445,7 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
       TabOrder = 1
     end
     object btnComplete: TcxButton
-      Left = 303
+      Left = 392
       Top = 7
       Width = 150
       Height = 25
@@ -452,7 +453,7 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
       TabOrder = 2
     end
     object btnUnComplete: TcxButton
-      Left = 460
+      Left = 549
       Top = 7
       Width = 150
       Height = 25
@@ -460,7 +461,7 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
       TabOrder = 3
     end
     object btnSetErased: TcxButton
-      Left = 616
+      Left = 705
       Top = 7
       Width = 150
       Height = 25
@@ -468,7 +469,7 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
       TabOrder = 4
     end
     object btnFormClose: TcxButton
-      Left = 809
+      Left = 898
       Top = 7
       Width = 153
       Height = 25
@@ -476,6 +477,14 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
       ParentShowHint = False
       ShowHint = True
       TabOrder = 5
+    end
+    object btnOpenFormPdfEdit: TcxButton
+      Left = 258
+      Top = 6
+      Width = 111
+      Height = 25
+      Action = actOpenFormPdfEdit
+      TabOrder = 6
     end
   end
   object DataSource: TDataSource
@@ -1531,6 +1540,51 @@ object OrderPartnerJournalForm: TOrderPartnerJournalForm
         end>
       Caption = #1055#1077#1095#1072#1090#1100' + '#1057#1086#1093#1088#1072#1085#1080#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100' + '#1057#1086#1093#1088#1072#1085#1080#1090#1100
+    end
+    object actOpenFormPdfEdit: TdsdOpenForm
+      Category = 'OpenForm'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' PDF'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' PDF'
+      ImageIndex = 26
+      FormName = 'TOrderPartnerPdfEditForm'
+      FormNameParam.Value = 'TOrderPartnerPdfEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovmentItemId'
+          Value = Null
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          Component = actShowErased
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   object dsdStoredProc: TdsdStoredProc

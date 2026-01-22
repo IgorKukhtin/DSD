@@ -131,6 +131,8 @@ type
     mactSave_Print: TMultiAction;
     dsdPrintAction1: TdsdPrintAction;
     spGetDocument: TdsdStoredProc;
+    actOpenFormPdfEdit: TdsdOpenForm;
+    btnOpenFormPdfEdit: TcxButton;
   private
   public
   end;
