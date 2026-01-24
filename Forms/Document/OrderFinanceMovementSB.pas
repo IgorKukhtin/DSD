@@ -62,7 +62,7 @@ type
     AmountPartner: TcxGridDBColumn;
     bbShowAll: TdxBarButton;
     bbStatic: TdxBarStatic;
-    MasterViewAddOn: TdsdDBViewAddOn;
+    DBViewAddOn: TdsdDBViewAddOn;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     spInsertUpdateMovement: TdsdStoredProc;
     HeaderSaver: THeaderSaver;
@@ -272,7 +272,7 @@ type
     dxBarSeparator1: TdxBarSeparator;
     NumGroup: TcxGridDBColumn;
     chNumGroup: TcxGridDBColumn;
-    Color_Group: TcxGridDBColumn;
+    ColorFon_record: TcxGridDBColumn;
     actBankChoiceForm_JurMain: TOpenChoiceForm;
     actBankChoiceForm_Jur: TOpenChoiceForm;
     mactExport_group: TMultiAction;
@@ -319,11 +319,6 @@ type
     AmountReal_5_old: TcxGridDBColumn;
     AmountPlan_total_old: TcxGridDBColumn;
     AmountReal_total_old: TcxGridDBColumn;
-    isPlan_1_old: TcxGridDBColumn;
-    isPlan_2_old: TcxGridDBColumn;
-    isPlan_3_old: TcxGridDBColumn;
-    isPlan_4_old: TcxGridDBColumn;
-    isPlan_5_old: TcxGridDBColumn;
     spGetImportSetting: TdsdStoredProc;
     actGetImportSetting: TdsdExecStoredProc;
     actDoLoad: TExecuteImportSettingsAction;
@@ -374,6 +369,7 @@ type
     actGet_Export_Email_msg: TdsdExecStoredProc;
     mactExport_msg: TMultiAction;
     mactSign_1_Yes: TMultiAction;
+    Amount_Child: TcxGridDBColumn;
   private
   public
   end;

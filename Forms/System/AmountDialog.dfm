@@ -40,8 +40,8 @@ object AmountDialogForm: TAmountDialogForm
     Left = 41
     Top = 53
     EditValue = 0.000000000000000000
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = ',0.'
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.00##'
     TabOrder = 2
     Width = 249
   end
