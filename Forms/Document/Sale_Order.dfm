@@ -3091,8 +3091,8 @@ inherited Sale_OrderForm: TSale_OrderForm
       Category = 'CorrSumm'
       MoveParams = <>
       Caption = 'actAmountDialog'
-      FormName = 'TAmountDialogForm'
-      FormNameParam.Value = 'TAmountDialogForm'
+      FormName = 'TASummDialogForm'
+      FormNameParam.Value = 'TASummDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

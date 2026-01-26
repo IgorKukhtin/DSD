@@ -1485,6 +1485,7 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PrintForms_byMovementDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PrintForms_byMovementDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PrintForms_byMovementForm'));
@@ -1498,6 +1499,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMIFloatEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMIFloatEditForm');
 
+  exit;
+  }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSummDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSummDialogForm');
   exit;
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAmountDialogForm'));
@@ -1719,7 +1724,7 @@ begin
    }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleForm');
-  exit;
+  //exit;
 
   {TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleJournalForm');
