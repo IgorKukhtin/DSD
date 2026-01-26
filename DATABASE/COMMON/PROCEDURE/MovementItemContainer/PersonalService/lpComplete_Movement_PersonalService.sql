@@ -696,7 +696,8 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Business ON ObjectLink_Unit_Business.ObjectId = _tmpItem.UnitId
                                                              AND ObjectLink_Unit_Business.DescId = zc_ObjectLink_Unit_Business()
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Contract ON ObjectLink_Unit_Contract.ObjectId = _tmpItem.UnitId
-                                                             AND ObjectLink_Unit_Contract.DescId = zc_ObjectLink_Unit_Contract()
+                                                             AND ObjectLink_Unit_Contract.DescId   = zc_ObjectLink_Unit_Contract()
+                                                           --AND ObjectLink_Unit_Contract.ObjectId <> 295670  -- œ‡‚≥Î¸ÈÓÌË
              LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = _tmpItem.UnitId
 
              LEFT JOIN ObjectLink AS ObjectLink_Personal_Member ON ObjectLink_Personal_Member.ObjectId = _tmpItem.ObjectId
@@ -760,7 +761,8 @@ BEGIN
              , NOT _tmpItem.IsMaster
         FROM _tmpItem
              INNER JOIN ObjectLink AS ObjectLink_Unit_Contract ON ObjectLink_Unit_Contract.ObjectId = _tmpItem.UnitId
-                                                              AND ObjectLink_Unit_Contract.DescId = zc_ObjectLink_Unit_Contract()
+                                                              AND ObjectLink_Unit_Contract.DescId   = zc_ObjectLink_Unit_Contract()
+                                                            --AND ObjectLink_Unit_Contract.ObjectId <> 295670  -- œ‡‚≥Î¸ÈÓÌË
              LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_Unit_Contract.ChildObjectId
                                                                   AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
              LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind ON ObjectLink_Contract_PaidKind.ObjectId = ObjectLink_Unit_Contract.ChildObjectId

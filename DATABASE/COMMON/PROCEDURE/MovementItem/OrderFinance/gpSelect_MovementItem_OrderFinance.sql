@@ -135,7 +135,7 @@ BEGIN
      -- начало предыдущей недели
      vbStartDate_old:= vbStartDate - INTERVAL '7 DAY';
      -- окончание предыдущей недели
-     vbEndDate_old  := vbEndDate   - INTERVAL '7 DAY'; 
+     vbEndDate_old  := vbEndDate   - INTERVAL '7 DAY';
 
      -- предыдущая неделя
      vbWeekNumber_old := EXTRACT (WEEK FROM vbStartDate_old) ;
@@ -765,13 +765,13 @@ BEGIN
            , 0 ::TFloat       AS AmountPlan_total
 
              -- План прошлой недели
-           , 0 :: TFloat AS AmountReal_1_old
-           , 0 :: TFloat AS AmountReal_2_old
-           , 0 :: TFloat AS AmountReal_3_old
-           , 0 :: TFloat AS AmountReal_4_old
-           , 0 :: TFloat AS AmountReal_5_old
+           , 0 :: TFloat AS AmountPlan_1_old
+           , 0 :: TFloat AS AmountPlan_2_old
+           , 0 :: TFloat AS AmountPlan_3_old
+           , 0 :: TFloat AS AmountPlan_4_old
+           , 0 :: TFloat AS AmountPlan_5_old
              -- План прошлой недели - Итог
-           , 0 :: TFloat AS AmountReal_total_old
+           , 0 :: TFloat AS AmountPlan_total_old
 
              -- Факт прошлой недели
            , 0 :: TFloat AS AmountReal_1_old
@@ -999,14 +999,14 @@ BEGIN
                                       ) AS tmpList
                                         ON tmpList.JuridicalId = MILinkObject_MoneyPlace.ObjectId
                                        AND tmpList.ContractId  = MILinkObject_Contract.ObjectId
- 
+
                       WHERE Movement.OperDate BETWEEN vbStartDate_old AND vbEndDate_old
                         AND Movement.DescId   = zc_Movement_BankAccount()
                         AND Movement.StatusId = zc_Enum_Status_Complete()
                       GROUP BY MILinkObject_MoneyPlace.ObjectId
                              , MILinkObject_Contract.ObjectId
                      )
-       -- Банк текущей недели
+       -- НЕТ - Банк текущей недели
      , tmpMI_bank AS (SELECT MILinkObject_MoneyPlace.ObjectId AS JuridicalId
                            , MILinkObject_Contract.ObjectId   AS ContractId
                            , SUM (CASE WHEN Movement.OperDate =  vbStartDate                     THEN -1 * MovementItem.Amount ELSE 0 END) AS Amount_1
@@ -1027,10 +1027,12 @@ BEGIN
                                       ) AS tmpList
                                         ON tmpList.JuridicalId = MILinkObject_MoneyPlace.ObjectId
                                        AND tmpList.ContractId  = MILinkObject_Contract.ObjectId
- 
+
                       WHERE Movement.OperDate BETWEEN vbStartDate AND vbEndDate
                         AND Movement.DescId   = zc_Movement_BankAccount()
                         AND Movement.StatusId = zc_Enum_Status_Complete()
+                        -- НЕТ - Банк текущей недели
+                        AND 1=0
                       GROUP BY MILinkObject_MoneyPlace.ObjectId
                              , MILinkObject_Contract.ObjectId
                      )
@@ -1352,13 +1354,13 @@ BEGIN
            , 0 ::TFloat       AS AmountPlan_total
 
              -- План прошлой недели
-           , 0 :: TFloat AS AmountReal_1_old
-           , 0 :: TFloat AS AmountReal_2_old
-           , 0 :: TFloat AS AmountReal_3_old
-           , 0 :: TFloat AS AmountReal_4_old
-           , 0 :: TFloat AS AmountReal_5_old
+           , 0 :: TFloat AS AmountPlan_1_old
+           , 0 :: TFloat AS AmountPlan_2_old
+           , 0 :: TFloat AS AmountPlan_3_old
+           , 0 :: TFloat AS AmountPlan_4_old
+           , 0 :: TFloat AS AmountPlan_5_old
              -- План прошлой недели - Итог
-           , 0 :: TFloat AS AmountReal_total_old
+           , 0 :: TFloat AS AmountPlan_total_old
 
              -- Факт прошлой недели
            , 0 :: TFloat AS AmountReal_1_old
@@ -1421,7 +1423,8 @@ BEGIN
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
 
        WHERE tmpInfoMoney_OrderF.isGroup = TRUE
-          OR (Object_InfoMoney.DescId = zc_Object_InfoMoney() AND tmpMI.Id IS NOT NULL)   --сохраненные строки итого , даже если с н х сняли признак группы
+          -- сохраненные строки итого , даже если с них сняли признак группы
+          OR (Object_InfoMoney.DescId = zc_Object_InfoMoney() AND tmpMI.Id IS NOT NULL)
 
 
      UNION ALL
@@ -1462,7 +1465,7 @@ BEGIN
              -- Дата предварительный план
            , NULL :: TDateTime AS OperDate_Amount
            , NULL :: TDateTime AS OperDate_Amount_old
-             --
+
              -- Нач. долг
            , 0 ::TFloat       AS AmountRemains
              -- Долг с отсрочкой

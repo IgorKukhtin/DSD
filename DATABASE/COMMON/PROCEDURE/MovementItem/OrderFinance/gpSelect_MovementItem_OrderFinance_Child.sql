@@ -13,11 +13,11 @@ RETURNS TABLE (Id Integer, ParentId Integer
              , Comment TVarChar
              , Comment_SB         TVarChar
              , Amount TFloat
-             
+
              , MovementItemId_OrderIncome Integer
              --, MovementId_OrderIncome Integer
              --, InvNumber_OrderIncome TVarChar, OperDate_OrderIncome TDateTime
-             
+
              , isSign Boolean
              , isErased Boolean
               )
@@ -28,7 +28,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_OrderFinance());
      vbUserId:= lpGetUserBySession (inSession);
-     
+
 
      -- Результат
      RETURN QUERY
@@ -50,9 +50,9 @@ BEGIN
            , MIString_Comment.ValueData   ::TVarChar AS Comment
            , MIString_Comment_SB.ValueData           AS Comment_SB
            , MovementItem.Amount          ::TFloat   AS Amount
-           
-           , MIFloat_MovementItemId.ValueData           ::Integer AS MovementItemId_OrderIncome 
-           
+
+           , MIFloat_MovementItemId.ValueData           ::Integer AS MovementItemId_OrderIncome
+
            , COALESCE (MIBoolean_Sign.ValueData, FALSE) ::Boolean AS isSign
            , MovementItem.isErased                      ::Boolean AS isErased
 
@@ -90,9 +90,9 @@ BEGIN
            , ''    ::TVarChar    AS Comment
            , ''    ::TVarChar    AS Comment_SB
            , 0     ::TFloat      AS Amount
-                   
-           , 0     ::Integer     AS MovementItemId_OrderIncome 
-           
+
+           , 0     ::Integer     AS MovementItemId_OrderIncome
+
            , FALSE ::Boolean     AS isSign
            , MovementItem.isErased
 

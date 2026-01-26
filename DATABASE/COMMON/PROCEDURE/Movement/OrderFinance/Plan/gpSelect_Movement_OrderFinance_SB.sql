@@ -50,6 +50,8 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , GoodsName_Child      TVarChar
              , isSign_Child         Boolean
              , TextSign_Child       TVarChar
+
+             , ColorFon_record Integer
               )
 AS
 $BODY$
@@ -554,6 +556,13 @@ BEGIN
                WHEN tmpMI.isSign_Child = FALSE THEN 'Не погоджено'
                ELSE ''
           END                  ::TVarChar AS TextSign_Child
+
+        , CASE WHEN tmpMI.isSign_Child = FALSE
+                    -- подсветили если Не погоджено
+                    THEN zc_Color_Aqua()
+               ELSE zc_Color_White()
+          END ::Integer AS ColorFon_record
+
    FROM tmpMovement_Data AS tmpMovement
         INNER JOIN tmpMI_Data AS tmpMI ON tmpMI.MovementId = tmpMovement.MovementId
                                       -- убирается дублирование
@@ -574,4 +583,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderFinance_SB (inStartDate:= '05.01.2026', inEndDate:= '11.01.2026', inBankMainId:=0, inStartWeekNumber:=1, inEndWeekNumber := 3, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_OrderFinance_SB (inStartDate:= '05.01.2026', inEndDate:= '11.01.2026', inBankMainId:=0, inStartWeekNumber:=1, inEndWeekNumber := 1, inSession:= '2')

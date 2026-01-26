@@ -123,8 +123,8 @@ BEGIN
 
                  -- Для СБ
                  WHEN tmpMovement.isSignSB_guide = TRUE AND inParam = 1
-                      THEN 'ashtu@ua.fm'
-                    --THEN 'ashtu@ua.fm;o.panasenko@alan.ua'
+                    --THEN 'ashtu@ua.fm'
+                    THEN 'ashtu@ua.fm;o.panasenko@alan.ua'
 
                  -- такие НИКОМУ
                  WHEN tmpMovement.isSignSB_guide = FALSE AND inParam = 1
@@ -132,8 +132,8 @@ BEGIN
 
                  -- Для ВСЕХ - после СБ
                  WHEN inParam = 2
-                      THEN 'ashtu@ua.fm'
-                    --THEN 'ashtu@ua.fm;o.gordienko@alan.ua;o.pavlova@alan.ua;y.tihaeva@alan.ua'
+                    --THEN 'ashtu@ua.fm'
+                      THEN 'ashtu@ua.fm;o.gordienko@alan.ua;o.pavlova@alan.ua;y.tihaeva@alan.ua'
 
 
                  WHEN COALESCE (tmpContactPerson.ContactPersonMail, '') = '' AND 1=1 THEN 'ashtu@ua.fm'

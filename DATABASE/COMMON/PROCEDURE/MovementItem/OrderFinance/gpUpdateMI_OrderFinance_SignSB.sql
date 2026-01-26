@@ -27,14 +27,15 @@ BEGIN
      --если нет чайлда - создаем
      IF COALESCE (ioId, 0) = 0
      THEN
+         RAISE EXCEPTION 'Ошибка.Не найден элемент для подтверждения.';
          -- сохранили <Элемент документа>
-         ioId := lpInsertUpdate_MovementItem (ioId
+         /*ioId := lpInsertUpdate_MovementItem (ioId
                                             , zc_MI_Child()
                                             , NULL
                                             , inMovementId
                                             , (SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.Id = inParentId) ::TFloat  -- нет чайлда сохраняем сумму из мастера
                                             , inParentId
-                                             );
+                                             );*/
      END IF;
 
      -- сохранили свойство <Согласован>

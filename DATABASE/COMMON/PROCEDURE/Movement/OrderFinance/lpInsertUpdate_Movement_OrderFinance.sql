@@ -131,7 +131,7 @@ BEGIN
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), ioId, CURRENT_TIMESTAMP);
          -- сохранили свойство <Пользователь (создание)>
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
- 
+
          vbMemberId:= (SELECT ObjectLink_User_Member.ChildObjectId AS MemberId
                        FROm ObjectLink AS ObjectLink_User_Member
                        WHERE ObjectLink_User_Member.ObjectId = inUserId
@@ -140,11 +140,11 @@ BEGIN
          --
          PERFORM -- сохранили свойство <Unit (Автор заявки)>
                  lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, lfSelect.UnitId)
-                 -- сохранили свойство <Должность (Автор заявки)>  
-               , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Position(), ioId, lfSelect.PositionId)  
+                 -- сохранили свойство <Должность (Автор заявки)>
+               , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Position(), ioId, lfSelect.PositionId)
          FROM lfSelect_Object_Member_findPersonal (inUserId ::TVarChar) AS lfSelect
-         WHERE lfSelect.MemberId = vbMemberId;                
-         
+         WHERE lfSelect.MemberId = vbMemberId;
+
      ELSE
          -- сохранили свойство <>
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Update(), ioId, CURRENT_TIMESTAMP);
@@ -170,4 +170,4 @@ $BODY$
 */
 
 -- тест
--- 
+--

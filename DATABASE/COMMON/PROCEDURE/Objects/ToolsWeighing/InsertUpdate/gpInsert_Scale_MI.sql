@@ -79,7 +79,7 @@ CREATE OR REPLACE FUNCTION gpInsert_Scale_MI(
     IN inAmount_out_calc       TFloat    , --
 
     IN inPrice                 TFloat    , -- Цена
-    IN inPrice_Return          TFloat    , -- Цена или !!!Цена по спецификации!!!
+     IN inPrice_Return          TFloat    , -- Цена или !!!Цена по спецификации!!!
     IN inCountForPrice         TFloat    , -- Цена за количество или !!!Количество у поставщика!!!
     IN inCountForPrice_Return  TFloat    , -- Цена за количество
     IN inDayPrior_PriceReturn  Integer,
