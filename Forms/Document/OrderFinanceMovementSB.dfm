@@ -5904,8 +5904,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 782
-    Top = 383
+    Left = 806
+    Top = 359
   end
   object spInsertUpdateMI_byReport: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_OrderFinance_byReport'

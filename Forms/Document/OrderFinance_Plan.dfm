@@ -224,8 +224,9 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             Width = 80
           end
           object isSignWait_1: TcxGridDBColumn
-            Caption = #1053#1077' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072
+            Caption = #1053#1077' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086
             DataBinding.FieldName = 'isSignWait_1'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1047#1072#1103#1074#1082#1072' '#1053#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1080
@@ -233,7 +234,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             Width = 85
           end
           object isSign_1: TcxGridDBColumn
-            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072
+            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086'-1'
             DataBinding.FieldName = 'isSign_1'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -424,7 +425,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             Width = 120
           end
           object Date_SignWait_1: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1053#1077' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072
+            Caption = #1044#1072#1090#1072' '#1053#1077' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086
             DataBinding.FieldName = 'Date_SignWait_1'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -434,7 +435,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             Width = 97
           end
           object Date_Sign_1: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072
+            Caption = #1044#1072#1090#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086'-1'
             DataBinding.FieldName = 'Date_Sign_1'
             Visible = False
             HeaderAlignmentHorz = taCenter

@@ -115,13 +115,13 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
             Width = 79
           end
           object isSign_1: TcxGridDBColumn
-            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072'-1'
+            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086'-1'
             DataBinding.FieldName = 'isSign_1'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1047#1072#1103#1074#1082#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072' '#1056#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1077#1084
             Options.Editing = False
-            Width = 80
+            Width = 85
           end
           object UserMember_1: TcxGridDBColumn
             Caption = #1060#1048#1054' - '#1085#1072' '#1082#1086#1085#1090#1088#1086#1083#1077'-1'
@@ -134,7 +134,7 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
             Width = 80
           end
           object Date_Sign_1: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072'-1'
+            Caption = #1044#1072#1090#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086'-1'
             DataBinding.FieldName = 'Date_Sign_1'
             Visible = False
             HeaderAlignmentHorz = taCenter
