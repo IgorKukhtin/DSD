@@ -144,12 +144,12 @@ BEGIN
                                                                ON MovementLinkObject_From.MovementId = Movement.Id
                                                               AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                                   JOIN _tmpFromGroup on _tmpFromGroup.FromId = MovementLinkObject_From.ObjectId
-                                  
+
                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                                ON MovementLinkObject_To.MovementId = Movement.Id
                                                               AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                                   JOIN _tmpToGroup on _tmpToGroup.ToId = MovementLinkObject_To.ObjectId
-                            
+
                                   LEFT JOIN MovementString AS MovementString_PartionGoods
                                                            ON MovementString_PartionGoods.MovementId =  Movement.Id
                                                           AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
@@ -672,7 +672,8 @@ BEGIN
            --, CASE WHEN COALESCE (SUM (tmpCursor1.Amount_4134),0) <> 0 THEN SUM (tmpCursor1.summ_4134) /SUM (tmpCursor1.Amount_4134) ELSE 0 END   AS price_4134
            --, (tmpCursor1.Amount_4134) AS Amount_4134
 
-           , CASE WHEN vbUserId = 5 THEN tmpMain_Group.Amount_4134 ELSE tmpMain_Group.CountMaster END AS Amount_4134
+           ---, CASE WHEN vbUserId = 5 THEN tmpMain_Group.Amount_4134 ELSE tmpMain_Group.CountMaster END AS Amount_4134  --26.01.2026 закоментила
+           , tmpMain_Group.Amount_4134 AS Amount_4134
 
            --, tmpCursor1.Persent_4134 
            , CASE WHEN COALESCE (SUM (tmpCursor1.CountMaster),0) <> 0 THEN 100  * SUM (tmpCursor1.Amount_4134) / SUM (tmpCursor1.CountMaster) ELSE 0 END :: TFloat AS Persent_4134
