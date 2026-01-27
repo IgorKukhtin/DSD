@@ -18,8 +18,25 @@ BEGIN
      -- нашли дату
      SELECT Movement.OperDate, Movement.DescId INTO vbOperDate, vbMovementDescId FROM Movement WHERE Movement.Id = inMovementId;
 
+
+     if inUserId = zc_Enum_Process_Auto_PrimeCost() :: Integer
+        AND ((EXTRACT (DOW FROM CURRENT_DATE) = 6 AND EXTRACT (HOUR FROM CURRENT_TIMESTAMP) >= 13)
+          OR (EXTRACT (DOW FROM CURRENT_DATE) = 7 -- AND EXTRACT (HOUR FROM CURRENT_TIMESTAMP) <= 17
+             )
+            )
+     THEN
+         -- ничего не делаем
+         inUserId:= zc_Enum_Process_Auto_Peresort();
+
+     ELSEIF inUserId = zc_Enum_Process_Auto_PrimeCost() :: Integer
+     THEN
+         -- Выход
+         RETURN;
+             
+     END IF;
+
+
      -- if inUserId = 5 then return; end if;
-     -- if inUserId = zc_Enum_Process_Auto_PrimeCost() :: Integer then return; end if;
      -- if (inUserId = zc_Enum_Process_Auto_PrimeCost() :: Integer) AND vbMovementDescId = zc_Movement_Sale() then return; end if;
 
      --IF inUserId = zc_Enum_Process_Auto_PrimeCost() :: Integer
@@ -30,7 +47,10 @@ BEGIN
      
 
      -- Автоматический пересорт
-     IF inUserId = zc_Enum_Process_Auto_PrimeCost() :: Integer THEN inUserId:= zc_Enum_Process_Auto_Peresort(); END IF;
+     IF inUserId = zc_Enum_Process_Auto_PrimeCost() :: Integer
+     THEN
+         inUserId:= zc_Enum_Process_Auto_Peresort();
+     END IF;
 
 
 

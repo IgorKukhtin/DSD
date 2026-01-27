@@ -29,11 +29,11 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , UnitName_insert     TVarChar
              , PositionName_insert TVarChar
              , Date_SignWait_1 TDateTime, Date_Sign_1 TDateTime
-             , isSignWait_1 Boolean, isSign_1 Boolean 
-             
-             , Date_SignSB TDateTime, isSignSB Boolean         
+             , isSignWait_1 Boolean, isSign_1 Boolean
+
+             , Date_SignSB TDateTime, isSignSB Boolean
              , FonColor_string Integer
-        
+
              --
              , MovementItemId Integer
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
@@ -44,6 +44,8 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , Condition TVarChar, ContractStateKindCode Integer
              , StartDate TDateTime, EndDate_real TDateTime, EndDate TVarChar
 
+               -- ***План ИТОГО (расчет)
+             , Amount_Child TFloat
                -- Предварительная сумма оплаты на неделю
              , Amount TFloat
                -- Нач. долг
@@ -133,6 +135,22 @@ BEGIN
                    -- есть Juridical
                    AND MovementItem.ObjectId   <> 0
                 )
+       -- Child - Данные с № заявки 1С
+     , tmpMI_Child AS (SELECT tmpMI.ParentId
+                            , SUM (tmpMI.Amount)                 AS Amount
+                      FROM (SELECT MovementItem.Id
+                                 , MovementItem.ParentId
+                                 , MovementItem.Amount
+                            FROM MovementItem
+                            WHERE MovementItem.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)
+                              AND MovementItem.DescId     = zc_MI_Child()
+                              AND MovementItem.isErased   = FALSE
+                            -- Важно - Сортировать
+                            ORDER BY MovementItem.ParentId ASC
+                                   , MovementItem.Id ASC
+                           ) AS tmpMI
+                      GROUP BY tmpMI.ParentId
+                     )
 
      , tmpMILO_Contract AS (SELECT *
                             FROM MovementItemLinkObject
@@ -422,7 +440,7 @@ BEGIN
                             , CASE WHEN MovementItem.Ord = 1 THEN MovementItem.AmountPlan_total ELSE 0 END :: TFloat AS AmountPlan_total
                               -- Сумма План оплат на дату
                             , MovementItem.AmountPlan_day       :: TFloat
-                              -- 
+                              --
                             , MovementItem.Number_day           :: TFloat
                               -- Платим (да/нет)
                             , COALESCE (MovementItem.isAmountPlan_day, TRUE) ::Boolean AS isAmountPlan_day
@@ -574,18 +592,19 @@ BEGIN
                           , COALESCE (MovementDate_Sign_1.ValueData, NULL)         ::TDateTime AS Date_Sign_1
                           , COALESCE (MovementBoolean_SignWait_1.ValueData, FALSE) ::Boolean   AS isSignWait_1
                           , COALESCE (MovementBoolean_Sign_1.ValueData, FALSE)     ::Boolean   AS isSign_1
-                          
+
                           , COALESCE (MovementDate_SignSB.ValueData, NULL)         ::TDateTime AS Date_SignSB
                           , COALESCE (MovementBoolean_SignSB.ValueData, FALSE)     ::Boolean   AS isSignSB
-                          
+
                           , CASE WHEN Object_Status.Id = zc_Enum_Status_UnComplete() AND COALESCE (ObjectBoolean_Status_off.ValueData, FALSE) <> TRUE
                                      THEN zc_Color_Yelow()
-                                 WHEN COALESCE (MovementBoolean_Sign_1.ValueData, FALSE) = FALSE 
+                                 WHEN COALESCE (MovementBoolean_Sign_1.ValueData, FALSE) = FALSE
                                  OR (COALESCE (ObjectBoolean_SB.ValueData, FALSE) = TRUE AND COALESCE (MovementBoolean_SignSB.ValueData, FALSE) = FALSE)
                                      THEN zc_Color_Aqua()
-                                 
+
                                  ELSE zc_Color_White()
                             END  ::Integer AS FonColor_string
+
                       FROM tmpMovement AS Movement
 
                            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -632,10 +651,10 @@ BEGIN
                                                        AND MovementLinkObject_OrderFinance.DescId = zc_MovementLinkObject_OrderFinance()
                            LEFT JOIN Object AS Object_OrderFinance ON Object_OrderFinance.Id = MovementLinkObject_OrderFinance.ObjectId
 
-                           LEFT JOIN ObjectBoolean AS ObjectBoolean_SB 
-                                                   ON ObjectBoolean_SB.ObjectId = MovementLinkObject_OrderFinance.ObjectId 
+                           LEFT JOIN ObjectBoolean AS ObjectBoolean_SB
+                                                   ON ObjectBoolean_SB.ObjectId = MovementLinkObject_OrderFinance.ObjectId
                                                   AND ObjectBoolean_SB.DescId = zc_ObjectBoolean_OrderFinance_SB()
-                           LEFT JOIN ObjectBoolean AS ObjectBoolean_Status_off 
+                           LEFT JOIN ObjectBoolean AS ObjectBoolean_Status_off
                                                    ON ObjectBoolean_Status_off.ObjectId = MovementLinkObject_OrderFinance.ObjectId
                                                   AND ObjectBoolean_Status_off.DescId = zc_ObjectBoolean_OrderFinance_Status_off()
 
@@ -769,66 +788,9 @@ BEGIN
                                    -- !!! по Этому банку
                                    AND Main_BankAccount_View.BankId = inBankMainId
                                    AND inBankMainId <> 0
+                                   -- !!! ОТКЛЮЧЕНО
+                                   AND 1=0
                                  )
-
-   , tmpJuridicalOrderFinance_last AS (SELECT Object_JuridicalOrderFinance.Id  AS JuridicalOrderFinanceId
-                                            , OL_JuridicalOrderFinance_Juridical.ChildObjectId       AS JuridicalId
-
-                                            , Main_BankAccount_View.BankId     AS BankId_main
-                                            , Main_BankAccount_View.BankName   AS BankName_main
-                                            , Main_BankAccount_View.MFO        AS MFO_main
-                                            , Main_BankAccount_View.Id         AS BankAccountId_main
-                                            , Main_BankAccount_View.Name       AS BankAccountName_main
-                                            , (Main_BankAccount_View.BankName || '' || Main_BankAccount_View.Name) :: TVarChar AS BankAccountNameAll_main
-                                            , Partner_BankAccount_View.BankId
-                                            , Partner_BankAccount_View.BankName
-                                            , Partner_BankAccount_View.MFO
-                                            , Partner_BankAccount_View.Id      AS BankAccountId
-                                            , Partner_BankAccount_View.Name    AS BankAccountName
-                                            , OL_JuridicalOrderFinance_InfoMoney.ChildObjectId AS InfoMoneyId
-                                            , ObjectFloat_SummOrderFinance.ValueData :: TFloat AS SummOrderFinance
-                                            , ObjectString_Comment.ValueData         :: TVarChar AS Comment
-                                              -- № п/п
-                                            , ROW_NUMBER() OVER (PARTITION BY OL_JuridicalOrderFinance_Juridical.ChildObjectId
-                                                                            , OL_JuridicalOrderFinance_InfoMoney.ChildObjectId
-                                                                 ORDER BY CASE WHEN ObjectString_Comment.ValueData ILIKE '%SUMMA_P%' THEN 0 ELSE 1 END
-                                                                        , CASE WHEN ObjectString_Comment.ValueData <>    ''          THEN 0 ELSE 1 END
-                                                                        , ObjectDate_OperDate.ValueData DESC
-                                                                ) AS Ord
-                                       FROM Object AS Object_JuridicalOrderFinance
-                                            LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_Juridical
-                                                                 ON OL_JuridicalOrderFinance_Juridical.ObjectId = Object_JuridicalOrderFinance.Id
-                                                                AND OL_JuridicalOrderFinance_Juridical.DescId = zc_ObjectLink_JuridicalOrderFinance_Juridical()
-
-                                            LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccountMain
-                                                                 ON OL_JuridicalOrderFinance_BankAccountMain.ObjectId = Object_JuridicalOrderFinance.Id
-                                                                AND OL_JuridicalOrderFinance_BankAccountMain.DescId = zc_ObjectLink_JuridicalOrderFinance_BankAccountMain()
-                                            LEFT JOIN Object_BankAccount_View AS Main_BankAccount_View ON Main_BankAccount_View.Id = OL_JuridicalOrderFinance_BankAccountMain.ChildObjectId
-
-                                            LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccount
-                                                                 ON OL_JuridicalOrderFinance_BankAccount.ObjectId = Object_JuridicalOrderFinance.Id
-                                                                AND OL_JuridicalOrderFinance_BankAccount.DescId = zc_ObjectLink_JuridicalOrderFinance_BankAccount()
-                                            LEFT JOIN Object_BankAccount_View AS Partner_BankAccount_View ON Partner_BankAccount_View.Id = OL_JuridicalOrderFinance_BankAccount.ChildObjectId
-
-                                            LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_InfoMoney
-                                                                 ON OL_JuridicalOrderFinance_InfoMoney.ObjectId = Object_JuridicalOrderFinance.Id
-                                                                AND OL_JuridicalOrderFinance_InfoMoney.DescId = zc_ObjectLink_JuridicalOrderFinance_InfoMoney()
-
-                                            LEFT JOIN ObjectFloat AS ObjectFloat_SummOrderFinance
-                                                                  ON ObjectFloat_SummOrderFinance.ObjectId = Object_JuridicalOrderFinance.Id
-                                                                 AND ObjectFloat_SummOrderFinance.DescId = zc_ObjectFloat_JuridicalOrderFinance_SummOrderFinance()
-
-                                            LEFT JOIN ObjectString AS ObjectString_Comment
-                                                                   ON ObjectString_Comment.ObjectId = Object_JuridicalOrderFinance.Id
-                                                                  AND ObjectString_Comment.DescId = zc_ObjectString_JuridicalOrderFinance_Comment()
-
-                                            LEFT JOIN ObjectDate AS ObjectDate_OperDate
-                                                                 ON ObjectDate_OperDate.ObjectId = Object_JuridicalOrderFinance.Id
-                                                                AND ObjectDate_OperDate.DescId = zc_ObjectDate_JuridicalOrderFinance_OperDate()
-                                       WHERE Object_JuridicalOrderFinance.DescId = zc_Object_JuridicalOrderFinance()
-                                        AND Object_JuridicalOrderFinance.isErased = FALSE
-                                       -- AND inBankMainId = 0
-                                        )
    -- Результат
    SELECT tmpMovement.MovementId
         , tmpMovement.InvNumber
@@ -837,12 +799,12 @@ BEGIN
         , tmpMovement.StatusName
         , tmpMovement.OrderFinanceId
         , tmpMovement.OrderFinanceName
-        , COALESCE (tmpJuridicalOrderFinance.BankAccountId_main, tmpJuridicalOrderFinance_last.BankAccountId_main)          ::Integer  AS BankAccountId
-        , COALESCE (tmpJuridicalOrderFinance.BankAccountName_main, tmpJuridicalOrderFinance_last.BankAccountName_main)      ::TVarChar AS BankAccountName
-        , COALESCE (tmpJuridicalOrderFinance.BankId_main, tmpJuridicalOrderFinance_last.BankId_main)                        ::Integer  AS BankId
-        , COALESCE (tmpJuridicalOrderFinance.BankName_main, tmpJuridicalOrderFinance_last.BankName_main)                    ::TVarChar AS BankName
-        , COALESCE (tmpJuridicalOrderFinance.BankAccountNameAll_main, tmpJuridicalOrderFinance_last.BankAccountNameAll_main)::TVarChar AS BankAccountNameAll
-        , COALESCE (tmpJuridicalOrderFinance.MFO_main, tmpJuridicalOrderFinance_last.MFO_main)                              ::TVarChar AS MFO
+        , COALESCE (tmpJuridicalOrderFinance.BankAccountId_main, 0)       ::Integer  AS BankAccountId
+        , COALESCE (tmpJuridicalOrderFinance.BankAccountName_main, '')    ::TVarChar AS BankAccountName
+        , COALESCE (tmpJuridicalOrderFinance.BankId_main, 0)              ::Integer  AS BankId
+        , COALESCE (tmpJuridicalOrderFinance.BankName_main, '')           ::TVarChar AS BankName
+        , COALESCE (tmpJuridicalOrderFinance.BankAccountNameAll_main, '') ::TVarChar AS BankAccountNameAll
+        , COALESCE (tmpJuridicalOrderFinance.MFO_main, '')                ::TVarChar AS MFO
 
         , tmpMovement.WeekNumber
         , tmpMovement.StartDate_WeekNumber ::TDateTime
@@ -891,8 +853,8 @@ BEGIN
         , CASE WHEN tmpMovement.isSign_1 = TRUE THEN FALSE ELSE tmpMovement.isSignWait_1 END :: Boolean
         , tmpMovement.isSign_1        ::Boolean
 
-        , tmpMovement.Date_SignSB     ::TDateTime 
-        , tmpMovement.isSignSB        ::Boolean         
+        , tmpMovement.Date_SignSB     ::TDateTime
+        , tmpMovement.isSignSB        ::Boolean
         , tmpMovement.FonColor_string ::Integer
 
           --
@@ -917,6 +879,12 @@ BEGIN
         , tmpMI.StartDate              ::TDateTime
         , tmpMI.EndDate_real           ::TDateTime
         , tmpMI.EndDate                ::TVarChar
+
+          --
+        , CASE WHEN tmpMI_Child.Amount > 0
+                    THEN tmpMI_Child.Amount
+               ELSE tmpMI.Amount
+          END ::TFloat AS Amount_Child
 
           -- Предварительная сумма оплаты на неделю
         , tmpMI.Amount          :: TFloat AS Amount
@@ -970,7 +938,7 @@ BEGIN
                     THEN REPLACE
                         (REPLACE
                         (REPLACE
-                        (REPLACE (COALESCE (tmpJuridicalOrderFinance.Comment, tmpJuridicalOrderFinance_last.Comment)
+                        (REPLACE (COALESCE (tmpJuridicalOrderFinance.Comment, '')
                                                                   , 'NOM_DOG', COALESCE (tmpMI.ContractName, ''))
                                                                   , 'DATA_DOG', zfConvert_DateToString (COALESCE (tmpMI.StartDate, zc_DateStart())))
                                                                   , 'PDV', '20')
@@ -978,18 +946,22 @@ BEGIN
                ELSE ''
           END :: TVarChar AS Comment_pay
 
-        , COALESCE (tmpJuridicalOrderFinance.JuridicalOrderFinanceId, tmpJuridicalOrderFinance_last.JuridicalOrderFinanceId)  ::Integer  AS JuridicalOrderFinanceId
-        , COALESCE (tmpJuridicalOrderFinance.Comment, tmpJuridicalOrderFinance_last.Comment)                                  ::TVarChar AS Comment_jof          -- JuridicalOrderFinance
-        , COALESCE (tmpJuridicalOrderFinance.BankAccountId, tmpJuridicalOrderFinance_last.BankAccountId)                      ::Integer  AS BankAccountId_jof    -- JuridicalOrderFinance
-        , COALESCE (tmpJuridicalOrderFinance.BankAccountName, tmpJuridicalOrderFinance_last.BankAccountName)                  ::TVarChar AS BankAccountName_jof  -- JuridicalOrderFinance
-        , COALESCE (tmpJuridicalOrderFinance.BankId, tmpJuridicalOrderFinance_last.BankId )                                   ::Integer  AS BankId_jof
-        , COALESCE (tmpJuridicalOrderFinance.BankName, tmpJuridicalOrderFinance_last.BankName)                                ::TVarChar AS BankName_jof
-        , COALESCE (tmpJuridicalOrderFinance.MFO, tmpJuridicalOrderFinance_last.MFO)                                          ::TVarChar AS MFO_jof
+        , COALESCE (tmpJuridicalOrderFinance.JuridicalOrderFinanceId, 0)  ::Integer  AS JuridicalOrderFinanceId
+        , COALESCE (tmpJuridicalOrderFinance.Comment, '')                 ::TVarChar AS Comment_jof          -- JuridicalOrderFinance
+        , COALESCE (tmpJuridicalOrderFinance.BankAccountId, 0)            ::Integer  AS BankAccountId_jof    -- JuridicalOrderFinance
+        , COALESCE (tmpJuridicalOrderFinance.BankAccountName, '')         ::TVarChar AS BankAccountName_jof  -- JuridicalOrderFinance
+        , COALESCE (tmpJuridicalOrderFinance.BankId, 0 )                  ::Integer  AS BankId_jof
+        , COALESCE (tmpJuridicalOrderFinance.BankName, '')                ::TVarChar AS BankName_jof
+        , COALESCE (tmpJuridicalOrderFinance.MFO, '')                     ::TVarChar AS MFO_jof
 
    FROM tmpMovement_Data AS tmpMovement
+
         INNER JOIN tmpMI_Data AS tmpMI ON tmpMI.MovementId = tmpMovement.MovementId
                                       -- убирается дублирование
                                       AND (tmpMI.Ord_Juridical = 1 OR tmpMI.Amount <> 0 OR tmpMI.AmountPlan_day <> 0)
+
+        -- Child - Данные с № заявки 1С
+        LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI.Id
 
         LEFT JOIN tmpContractCondition ON tmpContractCondition.ContractId = tmpMI.ContractId
                                       AND tmpMovement.OperDate BETWEEN tmpContractCondition.StartDate AND tmpContractCondition.EndDate
@@ -1001,11 +973,6 @@ BEGIN
                                           AND tmpJuridicalOrderFinance.InfoMoneyId = tmpMI.InfoMoneyId
                                           AND inBankMainId <> 0
                                           AND tmpJuridicalOrderFinance.Ord = 1
-
-        -- привязка  юр.лицо + статья + последний платеж
-        LEFT JOIN tmpJuridicalOrderFinance_last ON tmpJuridicalOrderFinance_last.JuridicalId = tmpMI.JuridicalId
-                                               AND tmpJuridicalOrderFinance_last.InfoMoneyId = tmpMI.InfoMoneyId
-                                               AND tmpJuridicalOrderFinance_last.Ord = 1
       ;
 
 END;
@@ -1019,4 +986,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderFinance_PlanDate (inStartDate:= '01.11.2025', inEndDate:= '30.12.2025', inBankMainId:=76970, inStartWeekNumber:=47, inEndWeekNumber := 48, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_OrderFinance_PlanDate (inStartDate:= '01.01.2026', inEndDate:= '01.01.2026', inBankMainId:=76970, inStartWeekNumber:=47, inEndWeekNumber := 48, inSession:= '2')

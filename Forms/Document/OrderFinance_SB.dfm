@@ -36,70 +36,9 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
             item
               Format = ',0.00'
               Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
               Column = Amount
             end>
           DataController.Summary.FooterSummaryItems = <
-            item
-              Format = #1057#1090#1088#1086#1082': ,0'
-              Kind = skCount
-              Column = InvNumber
-            end
             item
               Format = ',0.00'
               Kind = skSum
@@ -108,63 +47,12 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
             item
               Format = ',0.00'
               Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
               Column = Amount
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = JuridicalName
             end>
           OptionsData.Deleting = False
           OptionsView.GroupByBox = True
@@ -227,13 +115,13 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
             Width = 79
           end
           object isSign_1: TcxGridDBColumn
-            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072'-1'
+            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086'-1'
             DataBinding.FieldName = 'isSign_1'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1047#1072#1103#1074#1082#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072' '#1056#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1077#1084
             Options.Editing = False
-            Width = 80
+            Width = 85
           end
           object UserMember_1: TcxGridDBColumn
             Caption = #1060#1048#1054' - '#1085#1072' '#1082#1086#1085#1090#1088#1086#1083#1077'-1'
@@ -246,7 +134,7 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
             Width = 80
           end
           object Date_Sign_1: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072'-1'
+            Caption = #1044#1072#1090#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086'-1'
             DataBinding.FieldName = 'Date_Sign_1'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -586,6 +474,12 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
             HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076#1072#1085#1080#1077' '#1047#1072#1103#1074#1082#1080')'
             Options.Editing = False
             Width = 80
+          end
+          object ColorFon_record: TcxGridDBColumn
+            DataBinding.FieldName = 'ColorFon_record'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 55
           end
         end
       end
@@ -1335,26 +1229,26 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1047#1072#1082#1088#1099#1090#1100' '#1042#1057#1045' '#1042#1080#1076#1099' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1081'?'
       InfoAfterExecute = #1047#1072#1082#1088#1099#1090#1099' '#1042#1057#1045' '#1042#1080#1076#1099' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1081
     end
-    object actGet_Export_Email_body: TdsdExecStoredProc
-      Category = 'Export_Email_body'
+    object actGet_Export_Email_msg: TdsdExecStoredProc
+      Category = 'Export_Email_msg'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGet_Export_Email_Body
+      StoredProc = spGet_Export_Email_msg
       StoredProcList = <
         item
-          StoredProc = spGet_Export_Email_Body
+          StoredProc = spGet_Export_Email_msg
         end>
-      Caption = 'actGet_Export_Email'
+      Caption = 'actGet_Export_Email_msg'
     end
-    object mactExport_body: TMultiAction
-      Category = 'Export_Email_body'
+    object mactExport_msg: TMultiAction
+      Category = 'Export_Email_msg'
       MoveParams = <>
       ActionList = <
         item
-          Action = actGet_Export_Email_body
+          Action = actGet_Export_Email_msg
         end
         item
-          Action = actSMTPFile_body
+          Action = actSMTPFile_msg
         end>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1076#1083#1103' <'#1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1086#1090#1076#1077#1083'>?'
       InfoAfterExecute = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1076#1083#1103' <'#1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1086#1090#1076#1077#1083'> '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1086
@@ -1362,8 +1256,8 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
       Hint = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1076#1083#1103' <'#1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1086#1090#1076#1077#1083'>'
       ImageIndex = 53
     end
-    object actSMTPFile_body: TdsdSMTPFileAction
-      Category = 'Export_Email_body'
+    object actSMTPFile_msg: TdsdSMTPFileAction
+      Category = 'Export_Email_msg'
       MoveParams = <>
       Host.Value = Null
       Host.Component = ExportEmailCDS
@@ -1634,7 +1528,7 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
       Category = 0
     end
     object bbExport_body: TdxBarButton
-      Action = mactExport_body
+      Action = mactExport_msg
       Category = 0
     end
     object bbUpdate_SignSB_Yes: TdxBarButton
@@ -1647,6 +1541,11 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = ColorFon_record
+        ColorValueList = <>
+      end>
     Left = 240
     Top = 248
   end
@@ -2426,7 +2325,7 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
     Left = 408
     Top = 330
   end
-  object spGet_Export_Email_Body: TdsdStoredProc
+  object spGet_Export_Email_msg: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_OrderFinance_Email_sendBody'
     DataSet = ExportEmailCDS
     DataSets = <
@@ -2449,8 +2348,8 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 288
-    Top = 336
+    Left = 248
+    Top = 328
   end
   object spUpdate_SignSB_Yes: TdsdStoredProc
     StoredProcName = 'gpUpdateMovement_OrderFinance_SignSB'
@@ -2473,8 +2372,8 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 968
-    Top = 136
+    Left = 784
+    Top = 184
   end
   object spUpdate_SignSB_No: TdsdStoredProc
     StoredProcName = 'gpUpdateMovement_OrderFinance_SignSB'
@@ -2497,7 +2396,7 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 968
-    Top = 192
+    Left = 776
+    Top = 224
   end
 end

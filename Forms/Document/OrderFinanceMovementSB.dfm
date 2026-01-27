@@ -682,6 +682,11 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
               Format = ',0.00'
               Kind = skSum
               Column = AmountReal_total_old
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = Amount_Child
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -797,6 +802,16 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
               Format = ',0.00'
               Kind = skSum
               Column = AmountReal_total_old
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountPlan_total
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = Amount_Child
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1050,6 +1065,17 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object Amount_Child: TcxGridDBColumn
+            Caption = '***'#1055#1083#1072#1085' '#1048#1058#1054#1043#1054' ('#1088#1072#1089#1095#1077#1090')'
+            DataBinding.FieldName = 'Amount_Child'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object Amount: TcxGridDBColumn
@@ -1372,66 +1398,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             Options.Editing = False
             Width = 70
           end
-          object isPlan_1_old: TcxGridDBColumn
-            Caption = '*'#1055#1083#1072#1085' ('#1076'/'#1085') *1.'#1087#1085'.'
-            DataBinding.FieldName = 'isPlan_1_old'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = 
-              #1042' '#1092#1086#1088#1084#1091#1083#1077' "'#1044#1086#1083#1075#1080'" '#1076#1086#1073#1072#1074#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090') '#1055#1083#1072#1085' '#1087#1088#1086#1096#1083#1086#1081' '#1085#1077#1076#1077#1083#1080' '#1085#1072' *1.'#1087#1085 +
-              '.'
-            Options.Editing = False
-            Width = 55
-          end
-          object isPlan_2_old: TcxGridDBColumn
-            Caption = '*'#1055#1083#1072#1085' ('#1076'/'#1085') *2.'#1074#1090'.'
-            DataBinding.FieldName = 'isPlan_2_old'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = 
-              #1042' '#1092#1086#1088#1084#1091#1083#1077' "'#1044#1086#1083#1075#1080'" '#1076#1086#1073#1072#1074#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090') '#1055#1083#1072#1085' '#1087#1088#1086#1096#1083#1086#1081' '#1085#1077#1076#1077#1083#1080' '#1085#1072' *2.'#1074#1090 +
-              '.'
-            Options.Editing = False
-            Width = 55
-          end
-          object isPlan_3_old: TcxGridDBColumn
-            Caption = '*'#1055#1083#1072#1085' ('#1076'/'#1085') *3.'#1089#1088'.'
-            DataBinding.FieldName = 'isPlan_3_old'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = 
-              #1042' '#1092#1086#1088#1084#1091#1083#1077' "'#1044#1086#1083#1075#1080'" '#1076#1086#1073#1072#1074#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090') '#1055#1083#1072#1085' '#1087#1088#1086#1096#1083#1086#1081' '#1085#1077#1076#1077#1083#1080' '#1085#1072' *3.'#1089#1088 +
-              '.'
-            Options.Editing = False
-            Width = 55
-          end
-          object isPlan_4_old: TcxGridDBColumn
-            Caption = '*'#1055#1083#1072#1085' ('#1076'/'#1085') *4.'#1095#1090'.'
-            DataBinding.FieldName = 'isPlan_4_old'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = 
-              #1042' '#1092#1086#1088#1084#1091#1083#1077' "'#1044#1086#1083#1075#1080'" '#1076#1086#1073#1072#1074#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090') '#1055#1083#1072#1085' '#1087#1088#1086#1096#1083#1086#1081' '#1085#1077#1076#1077#1083#1080' '#1085#1072' *4.'#1095#1090 +
-              '.'
-            Options.Editing = False
-            Width = 55
-          end
-          object isPlan_5_old: TcxGridDBColumn
-            Caption = '*'#1055#1083#1072#1085' ('#1076'/'#1085') *5.'#1087#1090'.'
-            DataBinding.FieldName = 'isPlan_5_old'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = 
-              #1042' '#1092#1086#1088#1084#1091#1083#1077' "'#1044#1086#1083#1075#1080'" '#1076#1086#1073#1072#1074#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090') '#1055#1083#1072#1085' '#1087#1088#1086#1096#1083#1086#1081' '#1085#1077#1076#1077#1083#1080' '#1085#1072' *5.'#1087#1090 +
-              '.'
-            Options.Editing = False
-            Width = 55
-          end
           object Comment_pay: TcxGridDBColumn
             Caption = #1053#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1072
             DataBinding.FieldName = 'Comment_pay'
@@ -1477,9 +1443,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             Options.Editing = False
             Width = 100
           end
-          object Color_Group: TcxGridDBColumn
-            DataBinding.FieldName = 'Color_Group'
-            PropertiesClassName = 'TcxBlobEditProperties'
+          object ColorFon_record: TcxGridDBColumn
+            DataBinding.FieldName = 'ColorFon_record'
             Visible = False
             VisibleForCustomization = False
             Width = 80
@@ -2340,14 +2305,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         item
           Visible = True
           ItemName = 'bbSign'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_AmountByReport'
         end
         item
           Visible = True
@@ -4917,7 +4874,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     Left = 62
     Top = 359
   end
-  object MasterViewAddOn: TdsdDBViewAddOn
+  object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
@@ -4931,7 +4888,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     ChartList = <>
     ColorRuleList = <
       item
-        BackGroundValueColumn = Color_Group
+        BackGroundValueColumn = ColorFon_record
         ColorValueList = <>
       end>
     ColumnAddOnList = <>
@@ -5947,8 +5904,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 782
-    Top = 383
+    Left = 806
+    Top = 359
   end
   object spInsertUpdateMI_byReport: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_OrderFinance_byReport'

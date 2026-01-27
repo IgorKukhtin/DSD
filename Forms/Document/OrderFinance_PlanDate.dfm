@@ -102,6 +102,11 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
               Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_5
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = Amount_Child
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -183,6 +188,11 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
               Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_5
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = Amount_Child
             end>
           OptionsData.Deleting = False
           OptionsView.GroupByBox = True
@@ -284,7 +294,7 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
             Width = 80
           end
           object isSignWait_1: TcxGridDBColumn
-            Caption = #1053#1077' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072
+            Caption = #1053#1077' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086
             DataBinding.FieldName = 'isSignWait_1'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -294,7 +304,7 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
             Width = 85
           end
           object isSign_1: TcxGridDBColumn
-            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072'-1'
+            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086'-1'
             DataBinding.FieldName = 'isSign_1'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -325,7 +335,7 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
             Width = 120
           end
           object Date_SignWait_1: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1053#1077' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072
+            Caption = #1044#1072#1090#1072' '#1053#1077' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086
             DataBinding.FieldName = 'Date_SignWait_1'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -335,7 +345,7 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
             Width = 97
           end
           object Date_Sign_1: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072'-1'
+            Caption = #1044#1072#1090#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086'-1'
             DataBinding.FieldName = 'Date_Sign_1'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -568,6 +578,17 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
             VisibleForCustomization = False
             Width = 60
           end
+          object Amount_Child: TcxGridDBColumn
+            Caption = '***'#1055#1083#1072#1085' '#1048#1058#1054#1043#1054' ('#1088#1072#1089#1095#1077#1090')'
+            DataBinding.FieldName = 'Amount_Child'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
           object Amount: TcxGridDBColumn
             Caption = '***'#1055#1083#1072#1085' '#1085#1072' '#1085#1077#1076#1077#1083#1102
             DataBinding.FieldName = 'Amount'
@@ -780,126 +801,6 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
-          end
-          object Number_day: TcxGridDBColumn
-            Caption = #8470' '#1087'/'#1087
-            DataBinding.FieldName = 'Number_day'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = ',0.;-,0.; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #8470' '#1074' '#1086#1095#1077#1088#1077#1076#1080' '#1085#1072' '#1101#1082#1089#1087#1086#1088#1090' '#1074' '#1073#1072#1085#1082
-            Options.Editing = False
-            Width = 70
-          end
-          object Comment_pay: TcxGridDBColumn
-            Caption = #1060#1040#1050#1058' '#1053#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1072
-            DataBinding.FieldName = 'Comment_pay'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 200
-          end
-          object Comment_jof: TcxGridDBColumn
-            Caption = #1064#1040#1041#1051#1054#1053' '#1053#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1072
-            DataBinding.FieldName = 'Comment_jof'
-            Visible = False
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 200
-          end
-          object BankAccountName: TcxGridDBColumn
-            Caption = #1056'/'#1057#1095#1077#1090' ('#1055#1083#1072#1090#1077#1083#1100#1097#1080#1082')'
-            DataBinding.FieldName = 'BankAccountName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actBankAccountChoicetFormMain
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1086#1087#1083#1072#1090#1072' '#1089' '#1088'/'#1089#1095#1077#1090#1072
-            Options.Editing = False
-            Width = 172
-          end
-          object BankName: TcxGridDBColumn
-            Caption = #1041#1072#1085#1082' ('#1055#1083#1072#1090#1077#1083#1100#1097#1080#1082')'
-            DataBinding.FieldName = 'BankName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actBankChoiceFormMain
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 133
-          end
-          object MFO_Main: TcxGridDBColumn
-            Caption = #1052#1060#1054' '#1041#1072#1085#1082' ('#1055#1083#1072#1090#1077#1083#1100#1097#1080#1082')'
-            DataBinding.FieldName = 'MFO'
-            Visible = False
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 97
-          end
-          object BankAccountName_jof: TcxGridDBColumn
-            Caption = #1056'/'#1057#1095#1077#1090' ('#1055#1086#1083#1091#1095#1072#1090#1077#1083#1100')'
-            DataBinding.FieldName = 'BankAccountName_jof'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actBankAccountChoicetForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1086#1087#1083#1072#1090#1072' '#1085#1072' '#1088'/'#1089#1095#1077#1090
-            Options.Editing = False
-            Width = 171
-          end
-          object BankName_jof: TcxGridDBColumn
-            Caption = #1041#1072#1085#1082' ('#1055#1086#1083#1091#1095#1072#1090#1077#1083#1100')'
-            DataBinding.FieldName = 'BankName_jof'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actBankChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = False
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 84
-          end
-          object MFO_jof: TcxGridDBColumn
-            Caption = #1052#1060#1054' '#1041#1072#1085#1082' ('#1055#1086#1083#1091#1095#1072#1090#1077#1083#1100')'
-            DataBinding.FieldName = 'MFO_jof'
-            Visible = False
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 112
           end
           object FonColor_AmountPlan_day: TcxGridDBColumn
             DataBinding.FieldName = 'FonColor_AmountPlan_day'

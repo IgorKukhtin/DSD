@@ -26,7 +26,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, OperDate_Amou
              , PositionName_insert TVarChar
              , Date_SignWait_1 TDateTime, Date_Sign_1 TDateTime
              , isSignWait_1 Boolean, isSign_1 Boolean
-             , Date_SignSB TDateTime, isSignSB Boolean 
+             , Date_SignSB TDateTime, isSignSB Boolean
              , TotalText_1 TVarChar, TotalText_2 TVarChar, TotalText_3 TVarChar
                --
              , CashId Integer, CashName TVarChar
@@ -141,7 +141,7 @@ BEGIN
                                                     AND ObjectBoolean_Plan_5.DescId   = zc_ObjectBoolean_OrderFinance_Plan_5()
 
                          WHERE Object_OrderFinance.DescId = zc_Object_OrderFinance()
-                           AND Object_OrderFinance.isErased = FALSE 
+                           AND Object_OrderFinance.isErased = FALSE
                            AND (OrderFinance_Member_insert.ChildObjectId = vbMemberId
                              OR OrderFinance_Member_insert_2.ChildObjectId = vbMemberId
                              OR OrderFinance_Member_insert_3.ChildObjectId = vbMemberId
@@ -167,7 +167,7 @@ BEGIN
                -- Дата - ***План на неделю
              , (zfCalc_Week_StartDate (CURRENT_DATE
                                      , CASE WHEN EXTRACT (YEAR FROM CURRENT_DATE + INTERVAL '10 DAY') > EXTRACT (YEAR FROM CURRENT_DATE) THEN 1 ELSE EXTRACT (WEEK FROM CURRENT_DATE) + 1 END :: TFloat
-                                      ) 
+                                      )
               + ((COALESCE (tmpOrderFinance.addDayPlan, 0) :: Integer) :: TVarChar || ' DAY') :: INTERVAL
                ) :: TDateTime AS OperDate_Amount
                --
@@ -213,8 +213,8 @@ BEGIN
              , CAST (NULL AS TDateTime)                         AS Date_SignWait_1
              , CAST (NULL AS TDateTime)                         AS Date_Sign_1
              , FALSE                                 ::Boolean  AS isSignWait_1
-             , FALSE                                 ::Boolean  AS isSign_1 
-             
+             , FALSE                                 ::Boolean  AS isSign_1
+
              , CAST (NULL AS TDateTime)                         AS Date_SignSB
              , FALSE                                 ::Boolean  AS isSignSB
 
@@ -251,7 +251,7 @@ BEGIN
                      ELSE 0
                 END :: Integer) :: TVarChar || ' DAY') :: INTERVAL
              ) :: TDateTime AS OperDate_Amount
-             -- 
+             --
            , Object_Status.ObjectCode                           AS StatusCode
            , Object_Status.ValueData                            AS StatusName
 
@@ -297,7 +297,7 @@ BEGIN
            , CASE WHEN vbUserId = 5 AND 1=0 THEN MovementDate_Sign_1.ValueData     - INTERVAL '12 HOUR' ELSE MovementDate_Sign_1.ValueData     END ::TDateTime AS Date_Sign_1
            , COALESCE (MovementBoolean_SignWait_1.ValueData, FALSE) ::Boolean   AS isSignWait_1
            , COALESCE (MovementBoolean_Sign_1.ValueData, FALSE)     ::Boolean   AS isSign_1
-           
+
            , MovementDate_SignSB.ValueData                          ::TDateTime AS Date_SignSB
            , COALESCE (MovementBoolean_SignSB.ValueData, FALSE)     ::Boolean   AS isSignSB
 

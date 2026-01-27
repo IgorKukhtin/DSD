@@ -19,13 +19,6 @@ BEGIN
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderFinance());
 
 
-     -- проверка
-     /*IF EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE)
-     THEN
-         RAISE EXCEPTION 'Ошибка.Документ уже заполнен.';
-     END IF;*/
-
-
      -- из шапки документа
      SELECT Movement.OperDate
           , COALESCE (MovementLinkObject.ObjectId,0)              AS OrderFinanceId
@@ -49,6 +42,13 @@ BEGIN
                                  ON MovementFloat_WeekNumber.MovementId = Movement.Id
                                 AND MovementFloat_WeekNumber.DescId = zc_MovementFloat_WeekNumber()
      WHERE Movement.Id = inMovementId;
+
+     -- проверка - нужно согласовывать СБ
+     IF EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = vbOrderFinanceId AND OB.DescId = zc_ObjectBoolean_OrderFinance_SB() AND OB.ValueData = TRUE)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав заполнять документ по данным из отчета.';
+     END IF;
+
 
      -- переопределяем  - заливка данных на дату - конец недели WeekNumber
      vbOperDate := zfCalc_Week_EndDate (vbOperDate, vbWeekNumber);

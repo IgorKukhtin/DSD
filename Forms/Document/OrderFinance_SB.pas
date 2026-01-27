@@ -95,11 +95,11 @@ type
     TextSign_Child: TcxGridDBColumn;
     ExportEmailCDS: TClientDataSet;
     ExportEmailDS: TDataSource;
-    spGet_Export_Email_Body: TdsdStoredProc;
-    actGet_Export_Email_body: TdsdExecStoredProc;
-    mactExport_body: TMultiAction;
+    spGet_Export_Email_msg: TdsdStoredProc;
+    actGet_Export_Email_msg: TdsdExecStoredProc;
+    mactExport_msg: TMultiAction;
     bbExport_body: TdxBarButton;
-    actSMTPFile_body: TdsdSMTPFileAction;
+    actSMTPFile_msg: TdsdSMTPFileAction;
     spUpdate_SignSB_Yes: TdsdStoredProc;
     spUpdate_SignSB_No: TdsdStoredProc;
     actUpdate_SignSB_No: TdsdExecStoredProc;
@@ -114,6 +114,7 @@ type
     Comment_mov: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
     Comment_SB: TcxGridDBColumn;
+    ColorFon_record: TcxGridDBColumn;
   private
     { Private declarations }
   public

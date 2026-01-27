@@ -45,8 +45,19 @@ BEGIN
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_SignSB(), inMovementId, CURRENT_TIMESTAMP);
 
          -- сохранили <»того>
-         PERFORM lpInsertUpdate_MovementItem (tmpMI.Id, zc_MI_Master(), tmpMI.ObjectId, tmpMI.MovementId, tmpMI.Amount_child, tmpMI.ParentId)
-         FROM (WITH tmpMI_child AS (SELECT MovementItem.ParentId, SUM (MovementItem.Amount) AS Amount
+         PERFORM lpInsertUpdate_MovementItem (tmpMI.Id, zc_MI_Master(), tmpMI.ObjectId, tmpMI.MovementId, tmpMI.Amount_sum, tmpMI.ParentId)
+                 -- пн.
+               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_1(), tmpMI.Id, CASE WHEN EXTRACT (DOW FROM tmpMI.OperDate_amount) = 1 THEN tmpMI.Amount_sum ELSE 0 END)
+                 -- вт.
+               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_2(), tmpMI.Id, CASE WHEN EXTRACT (DOW FROM tmpMI.OperDate_amount) = 2 THEN tmpMI.Amount_sum ELSE 0 END)
+                 -- ср.
+               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_3(), tmpMI.Id, CASE WHEN EXTRACT (DOW FROM tmpMI.OperDate_amount) = 3 THEN tmpMI.Amount_sum ELSE 0 END)
+                 -- чт.
+               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_4(), tmpMI.Id, CASE WHEN EXTRACT (DOW FROM tmpMI.OperDate_amount) = 4 THEN tmpMI.Amount_sum ELSE 0 END)
+                 -- пт.
+               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_5(), tmpMI.Id, CASE WHEN EXTRACT (DOW FROM tmpMI.OperDate_amount) = 5 THEN tmpMI.Amount_sum ELSE 0 END)
+
+         FROM (WITH tmpMI_child AS (SELECT MovementItem.ParentId, SUM (MovementItem.Amount) AS Amount_sum
                                     FROM MovementItem
                                           INNER JOIN MovementItemBoolean AS MIBoolean_Sign
                                                                          ON MIBoolean_Sign.MovementItemId = MovementItem.Id
@@ -58,9 +69,14 @@ BEGIN
                                     GROUP BY MovementItem.ParentId
                                    )
                SELECT MovementItem.*
-                    , COALESCE (tmpMI_child.Amount, 0) AS Amount_child
+                    , COALESCE (tmpMI_child.Amount_sum, 0) AS Amount_sum
+                    , MovementItemDate_Amount.ValueData AS OperDate_amount
                FROM MovementItem
                     LEFT JOIN tmpMI_child ON tmpMI_child.ParentId = MovementItem.Id
+                    LEFT JOIN MovementItemDate AS MovementItemDate_Amount
+                                               ON MovementItemDate_Amount.MovementItemId = MovementItem.Id
+                                              AND MovementItemDate_Amount.DescId         = zc_MIDate_Amount()
+
                WHERE MovementItem.MovementId = inMovementId
                  AND MovementItem.DescId     = zc_MI_Master()
                  AND MovementItem.iseRased   = FALSE
@@ -86,7 +102,7 @@ BEGIN
                     LEFT JOIN tmpMI_child ON tmpMI_child.ParentId = MovementItem.Id
                WHERE MovementItem.MovementId = inMovementId
                  AND MovementItem.DescId     = zc_MI_Master()
-                 AND MovementItem.iseRased   = FALSE
+                 AND MovementItem.isErased   = FALSE
               ) AS tmpMI
           ;
 

@@ -34,7 +34,6 @@ type
     edWeekNumber1: TcxButtonEdit;
     edWeekNumber2: TcxButtonEdit;
     actBankChoiceForm: TOpenChoiceForm;
-    BankName_jof: TcxGridDBColumn;
     actBankAccountChoicetForm: TOpenChoiceForm;
     spUpdate_PlanDate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
@@ -72,7 +71,6 @@ type
     spSelectPrint: TdsdStoredProc;
     actPrintPlan: TdsdPrintAction;
     bbPrintPlan: TdxBarButton;
-    Number_day: TcxGridDBColumn;
     dxBarSubItem1: TdxBarSubItem;
     edNPP: TcxCurrencyEdit;
     mactExport_New_OTP_NPP: TMultiAction;
@@ -107,6 +105,7 @@ type
     mactExport_body: TMultiAction;
     bbExport_body: TdxBarButton;
     FonColor_string: TcxGridDBColumn;
+    Amount_Child: TcxGridDBColumn;
   private
     { Private declarations }
   public

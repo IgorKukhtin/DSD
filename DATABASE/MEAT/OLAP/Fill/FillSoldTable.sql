@@ -946,6 +946,10 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
 
             -- 1.4.JuridicalSold
             PERFORM gpInsert_bi_Table_JuridicalSold (inStartDate, vbEndDate_calc, zfCalc_UserAdmin());
+            
+            -- 1.5.ProfitLoss
+            PERFORM gpInsert_bi_Table_ProfitLoss (inStartDate, vbEndDate_calc, zfCalc_UserAdmin());
+
 
         END IF;
 
@@ -969,8 +973,11 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
             -- 2.3.OrderClient
             PERFORM gpInsert_bi_Table_OrderClient (DATE_TRUNC ('MONTH', CURRENT_DATE), CURRENT_DATE - INTERVAL '1 DAY', zfCalc_UserAdmin());
 
-            -- 2.4.JuridicalSold
+            -- 2.5.JuridicalSold
             PERFORM gpInsert_bi_Table_JuridicalSold (DATE_TRUNC ('MONTH', CURRENT_DATE), CURRENT_DATE - INTERVAL '1 DAY', zfCalc_UserAdmin());
+
+            -- 1.5.ProfitLoss
+            PERFORM gpInsert_bi_Table_ProfitLoss (DATE_TRUNC ('MONTH', CURRENT_DATE), CURRENT_DATE - INTERVAL '1 DAY', zfCalc_UserAdmin());
 
         END IF;
 

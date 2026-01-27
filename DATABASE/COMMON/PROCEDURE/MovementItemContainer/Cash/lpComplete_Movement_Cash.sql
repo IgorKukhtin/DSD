@@ -1061,6 +1061,7 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Contract
                                   ON ObjectLink_Unit_Contract.ObjectId = MILinkObject_Unit.ObjectId
                                  AND ObjectLink_Unit_Contract.DescId   = zc_ObjectLink_Unit_Contract()
+                               --AND ObjectLink_Unit_Contract.ObjectId <> 295670  -- Павільйони
 
         -- !!!если НЕ перевыставление!!!
         WHERE ObjectLink_Unit_Contract.ChildObjectId IS NULL
@@ -1302,6 +1303,7 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Contract
                                   ON ObjectLink_Unit_Contract.ObjectId = MILinkObject_Unit.ObjectId
                                  AND ObjectLink_Unit_Contract.DescId   = zc_ObjectLink_Unit_Contract()
+                               --AND ObjectLink_Unit_Contract.ObjectId <> 295670  -- Павільйони
 
              LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_Unit_Contract.ChildObjectId
                                                                   AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
