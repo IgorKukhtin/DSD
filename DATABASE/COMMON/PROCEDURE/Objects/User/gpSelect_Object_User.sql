@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , isProjectAuthent Boolean, isKeyAuthent Boolean
              , GUID TVarChar
              , Data_GUID TDateTime
+             , Email TVarChar
               )
 AS
 $BODY$
@@ -91,6 +92,8 @@ END IF;
        
        , ObjectString_GUID.ValueData ::TVarChar AS GUID
        , COALESCE (ObjectDate_User_GUID.ValueData, NULL) ::TDateTime AS Data_GUID
+       
+       , ObjectString_Email.ValueData   AS Email
 
    FROM Object AS Object_User
         LEFT JOIN tmpUserRole ON tmpUserRole.UserId = Object_User.Id
@@ -137,6 +140,9 @@ END IF;
                                ON ObjectString_User_SMS.ObjectId = Object_User.Id
                               AND ObjectString_User_SMS.DescId   = zc_ObjectString_User_SMS()
                                
+        LEFT JOIN ObjectString AS ObjectString_Email 
+                               ON ObjectString_Email.ObjectId = Object_User.Id 
+                              AND ObjectString_Email.DescId = zc_ObjectString_User_Email()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_ProjectMobile
                                 ON ObjectBoolean_ProjectMobile.ObjectId = Object_User.Id
@@ -180,6 +186,7 @@ ALTER FUNCTION gpSelect_Object_User (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.
+ 27.01.26         *
  13.05.21         *
  02.05.17                                                       * zc_ObjectDate_User_UpdateMobileFrom, zc_ObjectDate_User_UpdateMobileTo
  21.04.17         *

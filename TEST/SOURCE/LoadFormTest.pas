@@ -1500,11 +1500,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMIFloatEditForm');
 
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSummDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSummDialogForm');
   exit;
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAmountDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAmountDialogForm');
   exit;
@@ -1552,12 +1552,12 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserForm');
-  exit;
-  {
+  //exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserEditForm');
   exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserKeyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserKeyForm');
 

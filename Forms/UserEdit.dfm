@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
-  ClientHeight = 476
+  ClientHeight = 525
   ClientWidth = 303
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 37
-    Top = 443
+    Top = 486
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 181
-    Top = 443
+    Top = 486
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -145,14 +145,14 @@
     Width = 82
   end
   object cxLabel8: TcxLabel
-    Left = 118
-    Top = 448
+    Left = 74
+    Top = 394
     Caption = #8470' '#1090#1077#1083#1077#1092#1086#1085#1072' '#1076#1083#1103' '#1040#1091#1090#1077#1085#1090#1080#1092#1080#1082#1072#1094#1080#1080
     Visible = False
   end
   object edPhoneAuthent: TcxTextEdit
-    Left = 71
-    Top = 458
+    Left = 110
+    Top = 394
     Properties.PasswordChar = '*'
     TabOrder = 20
     Visible = False
@@ -164,6 +164,18 @@
     Caption = #1040#1091#1090#1077#1085#1090#1080#1092#1080#1082#1072#1094#1080#1103' - Google Authenticator'
     TabOrder = 21
     Width = 257
+  end
+  object cxLabel9: TcxLabel
+    Left = 13
+    Top = 430
+    Caption = 'Email'
+  end
+  object edEmail: TcxTextEdit
+    Left = 13
+    Top = 448
+    Properties.PasswordChar = '*'
+    TabOrder = 23
+    Width = 273
   end
   object ActionList: TActionList
     Left = 269
@@ -270,6 +282,14 @@
         Name = 'inPhoneAuthent'
         Value = Null
         Component = edPhoneAuthent
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEmail'
+        Value = Null
+        Component = edEmail
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -409,6 +429,13 @@
         Component = cbisProjectAuthent
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Email'
+        Value = Null
+        Component = edEmail
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 165
@@ -438,8 +465,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 85
-    Top = 173
+    Left = 93
+    Top = 157
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 237
