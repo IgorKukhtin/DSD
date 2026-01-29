@@ -126,6 +126,7 @@ type
     PrintUser_BadgeCDS: TClientDataSet;
     spPrintUser_Badge: TdsdStoredProc;
     actPrintUser_Badge: TdsdPrintAction;
+    Email: TcxGridDBColumn;
   private
     { Private declarations }
   public

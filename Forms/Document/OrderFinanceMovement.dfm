@@ -2524,8 +2524,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 59
-    Top = 207
+    Left = 83
+    Top = 199
     object actExport_Grid_groupCSV: TExportGrid
       Category = 'Export_mail_group'
       MoveParams = <>
@@ -5322,8 +5322,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 134
-    Top = 359
+    Left = 142
+    Top = 375
   end
   object GuidesOrderFinance: TdsdGuides
     KeyField = 'Id'
@@ -5641,7 +5641,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       end>
     PackSize = 1
     Left = 352
-    Top = 440
+    Top = 464
   end
   object spGet_Export_FileName: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_OrderFinance_FileName'
@@ -6480,8 +6480,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     ShowFieldImageList = <>
     ViewDocumentList = <>
     PropertiesCellList = <>
-    Left = 259
-    Top = 441
+    Left = 267
+    Top = 425
   end
   object spGet_Export_Email: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_OrderFinance_Email_send'

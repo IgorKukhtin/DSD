@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isProjectMobile Boolean
              , PhoneAuthent TVarChar
              , isProjectAuthent Boolean
+             , Email TVarChar
 ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -63,6 +64,7 @@ BEGIN
 
            , CAST ('' as TVarChar)   AS PhoneAuthent
            , CAST (FALSE AS Boolean) AS isProjectAuthent
+           , CAST ('' as TVarChar)   AS Email
 ;
    ELSE
       RETURN QUERY 
@@ -85,6 +87,8 @@ BEGIN
 
           , COALESCE (ObjectString_PhoneAuthent.ValueData, '')       ::TVarChar AS PhoneAuthent
           , COALESCE (ObjectBoolean_ProjectAuthent.ValueData, FALSE) ::Boolean AS isProjectAuthent
+          
+          , ObjectString_Email.ValueData   AS Email
        FROM Object AS Object_User
         LEFT JOIN ObjectString AS ObjectString_UserPassword 
                                ON ObjectString_UserPassword.DescId = zc_ObjectString_User_Password() 
@@ -110,6 +114,10 @@ BEGIN
                                ON ObjectString_PhoneAuthent.ObjectId = Object_User.Id
                               AND ObjectString_PhoneAuthent.DescId   = zc_ObjectString_User_PhoneAuthent()
 
+        LEFT JOIN ObjectString AS ObjectString_Email 
+                               ON ObjectString_Email.ObjectId = Object_User.Id 
+                              AND ObjectString_Email.DescId = zc_ObjectString_User_Email()
+
         LEFT JOIN ObjectBoolean AS ObjectBoolean_ProjectAuthent
                                 ON ObjectBoolean_ProjectAuthent.ObjectId = Object_User.Id
                                AND ObjectBoolean_ProjectAuthent.DescId = zc_ObjectBoolean_User_ProjectAuthent()
@@ -132,6 +140,7 @@ END;$BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 27.01.26         *
  21.04.17         *
  12.09.16         *
  07.06.13                                        * lpCheckRight

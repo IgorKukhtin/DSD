@@ -27,8 +27,6 @@ object UserForm: TUserForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitLeft = 608
-    ExplicitTop = 363
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -276,6 +274,13 @@ object UserForm: TUserForm
         HeaderHint = #1057#1086#1079#1076#1072#1085' '#1057#1077#1082#1088#1077#1090#1085#1099#1081' '#1050#1083#1102#1095' '#1076#1083#1103' Google Authenticator'
         Options.Editing = False
         Width = 80
+      end
+      object Email: TcxGridDBColumn
+        DataBinding.FieldName = 'Email'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085

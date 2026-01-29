@@ -617,7 +617,13 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 
 CREATE OR REPLACE FUNCTION zc_ObjectString_User_SMS() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_User_SMS'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
-  SELECT 'zc_ObjectString_User_SMS', zc_Object_User(), 'SMS для идентификации ' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_User_SMS');
+  SELECT 'zc_ObjectString_User_SMS', zc_Object_User(), 'SMS для идентификации' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_User_SMS');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_User_Email() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_User_Email'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_User_Email', zc_Object_User(), 'Email' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_User_Email');
+
+
 
  
 CREATE OR REPLACE FUNCTION zc_ObjectString_WorkTimeKind_ShortName() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_WorkTimeKind_ShortName'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
