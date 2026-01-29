@@ -32,12 +32,38 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinance(
 RETURNS RECORD
 AS
 $BODY$
-   DECLARE vbUserId   Integer;
+   DECLARE vbUserId         Integer;
    DECLARE vbOperDate_start TDateTime;
+   DECLARE vbOrderFinanceId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderFinance());
 
+
+     -- нашли
+     vbOrderFinanceId := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = MovementItem.MovementId AND MLO.DescId = zc_MovementLinkObject_OrderFinance());
+
+     -- Проверка - <Ожидание Согласования-1>
+     IF EXISTS (SELECT FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_SignWait_1() AND MB.ValueData = TRUE)
+        -- НЕ Разрешено изменение плана по дням - в проведенном док. (да/нет)
+        AND NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId  = vbOrderFinanceId AND OB.DescId = zc_ObjectBoolean_OrderFinance_OperDate() AND OB.ValueData = TRUE)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Корректировка заблокирована.В документе установлена <Отправлено на Согласование Руководителю>.';
+     END IF;
+     -- Проверка - <Согласован-1>
+     IF EXISTS (SELECT FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_Sign_1() AND MB.ValueData = TRUE)
+        -- НЕ Разрешено изменение плана по дням - в проведенном док. (да/нет)
+        AND NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId  = vbOrderFinanceId AND OB.DescId = zc_ObjectBoolean_OrderFinance_OperDate() AND OB.ValueData = TRUE)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Корректировка заблокирована.В документе установлена <Согласовано Руководителем>.';
+     END IF;
+     -- Проверка - <Виза СБ>
+     IF EXISTS (SELECT FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_SignSB() AND MB.ValueData = TRUE)
+        -- НЕ Разрешено изменение плана по дням - в проведенном док. (да/нет)
+        AND NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId  = vbOrderFinanceId AND OB.DescId = zc_ObjectBoolean_OrderFinance_OperDate() AND OB.ValueData = TRUE)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Корректировка заблокирована.В документе установлена <Виза СБ>.';
+     END IF;
 
      -- замена
      IF EXISTS (SELECT 1

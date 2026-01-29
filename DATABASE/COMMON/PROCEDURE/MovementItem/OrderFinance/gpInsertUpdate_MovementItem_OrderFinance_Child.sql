@@ -6,23 +6,24 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance_Child (Integer,
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinance_Child(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inParentId              Integer   , -- Ключ объекта <главный элемент>
-    IN inMovementId            Integer   , -- Ключ объекта <Документ> 
+    IN inMovementId            Integer   , -- Ключ объекта <Документ>
     IN inMovementItemId_Order  Integer   , -- MovementItemId OrderIncome
     IN inGoodsName             TVarChar  , -- Товары
-    IN inInvNumber             TVarChar  , -- 
+    IN inInvNumber             TVarChar  , --
     IN inComment               TVarChar  , --
-    IN inAmount                TFloat    , -- 
-   OUT outSumm_parent          TFloat    , -- 
-   OUT outInvNumber_parent     TVarChar  , -- 
-   OUT outGoodsName_parent     TVarChar  , -- 
+    IN inAmount                TFloat    , --
+   OUT outSumm_parent          TFloat    , --
+   OUT outInvNumber_parent     TVarChar  , --
+   OUT outGoodsName_parent     TVarChar  , --
     IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
 AS
 $BODY$
-   DECLARE vbUserId     Integer;
-   DECLARE vbSumm_child TFloat;
-   DECLARE vbIsInsert   Boolean;
+   DECLARE vbUserId         Integer;
+   DECLARE vbSumm_child     TFloat;
+   DECLARE vbOrderFinanceId Integer;
+   DECLARE vbIsInsert       Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderFinance());
@@ -49,8 +50,25 @@ BEGIN
      END IF;
 
 
+     -- Проверка - <Ожидание Согласования-1>
+     IF EXISTS (SELECT FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_SignWait_1() AND MB.ValueData = TRUE)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Корректировка заблокирована.В документе установлена <Отправлено на Согласование Руководителю>.';
+     END IF;
+     -- Проверка - <Согласован-1>
+     IF EXISTS (SELECT FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_Sign_1() AND MB.ValueData = TRUE)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Корректировка заблокирована.В документе установлена <Согласовано Руководителем>.';
+     END IF;
+     -- Проверка - <Виза СБ>
+     IF EXISTS (SELECT FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_SignSB() AND MB.ValueData = TRUE)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Корректировка заблокирована.В документе установлена <Виза СБ>.';
+     END IF;
+
+
      -- определяется признак Создание/Корректировка
-     vbIsInsert:= COALESCE (ioId, 0) = 0;    
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), Null, inMovementId, inAmount, inParentId);
@@ -73,7 +91,7 @@ BEGIN
            INTO outInvNumber_parent, outGoodsName_parent, outSumm_parent
     FROM (SELECT COALESCE (MIString_GoodsName.ValueData, '') AS GoodsName
                , COALESCE (MIString_InvNumber.ValueData, '') AS InvNumber
-               , MovementItem.Amount                                               
+               , MovementItem.Amount
           FROM MovementItem
               LEFT JOIN MovementItemString AS MIString_InvNumber
                                            ON MIString_InvNumber.MovementItemId = MovementItem.Id

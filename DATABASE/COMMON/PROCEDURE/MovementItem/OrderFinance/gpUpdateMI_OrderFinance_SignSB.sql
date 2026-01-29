@@ -24,7 +24,15 @@ BEGIN
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
-     --если нет чайлда - создаем
+
+     -- Проверка - <Виза СБ>
+     IF EXISTS (SELECT FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_SignSB() AND MB.ValueData = TRUE)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Корректировка заблокирована.В документе установлена <Виза СБ>.';
+     END IF;
+
+
+     -- если нет чайлда - создаем
      IF COALESCE (ioId, 0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка.Не найден элемент для подтверждения.';

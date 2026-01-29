@@ -17,6 +17,7 @@ BEGIN
      --vbUserId:= lpGetUserBySession (inSession);
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_OrderFinance_SignSB());
 
+     -- Проверка
      IF NOT EXISTS (SELECT 1
                     FROM Movement
                         -- временно - Відділ забезбечення - 1
@@ -26,13 +27,14 @@ BEGIN
                         INNER JOIN ObjectBoolean  AS ObjectBoolean_SB
                                                   ON ObjectBoolean_SB.ObjectId = MovementLinkObject_OrderFinance.ObjectId
                                                  AND ObjectBoolean_SB.DescId = zc_ObjectBoolean_OrderFinance_SB()
-                                                 AND COALESCE (ObjectBoolean_SB.ValueData, FALSE) = TRUE     --только те виды планировани, что нужно согласовывать СБ
+                                                 -- только те виды планировани, если нужно согласовывать СБ
+                                                 AND ObjectBoolean_SB.ValueData = TRUE
 
                     WHERE Movement.DescId = zc_Movement_OrderFinance()
                       AND Movement.Id = inMovementId
                     )
      THEN
-         RAISE EXCEPTION 'Ошибка.Документ не требует <Виза СБ>.';
+         RAISE EXCEPTION 'Ошибка.Документу не требует <Виза СБ>.';
      END IF;
 
 

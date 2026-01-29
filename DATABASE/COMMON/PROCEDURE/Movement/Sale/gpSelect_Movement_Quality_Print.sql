@@ -1316,7 +1316,7 @@ BEGIN
              ):: TVarChar AS PartionGoods_q
 
              -- Дата відвантаження
-           , Movement.OperDate AS OperDateOut
+           , COALESCE (tmpMovement_QualityParams.OperDateOut, Movement.OperDate) :: TDateTime AS OperDateOut
 
              -- Дата "Вжити до"
            , (CASE WHEN tmpMI.PartionGoods_q_1  <> zc_DateStart() OR tmpMI.PartionGoods_q_2  <> zc_DateStart() OR tmpMI.PartionGoods_q_3  <> zc_DateStart() OR tmpMI.PartionGoods_q_4  <> zc_DateStart() OR tmpMI.PartionGoods_q_5  <> zc_DateStart() OR tmpMI.PartionGoods_q_6  <> zc_DateStart() OR tmpMI.PartionGoods_q_7  <> zc_DateStart() OR tmpMI.PartionGoods_q_8  <> zc_DateStart() OR tmpMI.PartionGoods_q_9  <> zc_DateStart() OR tmpMI.PartionGoods_q_10  <> zc_DateStart()
