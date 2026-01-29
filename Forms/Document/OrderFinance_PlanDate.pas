@@ -99,13 +99,14 @@ type
     spUpdateStatus_Complete: TdsdStoredProc;
     ExportEmailDS: TDataSource;
     ExportEmailCDS: TClientDataSet;
-    spGet_Export_Email_Body: TdsdStoredProc;
-    actGet_Export_Email_body: TdsdExecStoredProc;
-    actSMTPFile_body: TdsdSMTPFileAction;
-    mactExport_body: TMultiAction;
+    spGet_Export_Email_msg: TdsdStoredProc;
+    actGet_Export_Email_msg: TdsdExecStoredProc;
+    actSMTPFile_msg: TdsdSMTPFileAction;
+    mactExport_msg: TMultiAction;
     bbExport_body: TdxBarButton;
     FonColor_string: TcxGridDBColumn;
     Amount_Child: TcxGridDBColumn;
+    mactUpdateStatus_Complete: TMultiAction;
   private
     { Private declarations }
   public

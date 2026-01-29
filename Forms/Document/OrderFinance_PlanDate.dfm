@@ -1581,19 +1581,19 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1082#1088#1099#1090#1100' '#1086#1076#1080#1085' '#1042#1080#1076' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1081'?'
       InfoAfterExecute = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1042#1080#1076' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1086#1090#1082#1088#1099#1090' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1081
     end
-    object actGet_Export_Email_body: TdsdExecStoredProc
-      Category = 'Export_Email_body'
+    object actGet_Export_Email_msg: TdsdExecStoredProc
+      Category = 'Export_Email_msg'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGet_Export_Email_Body
+      StoredProc = spGet_Export_Email_msg
       StoredProcList = <
         item
-          StoredProc = spGet_Export_Email_Body
+          StoredProc = spGet_Export_Email_msg
         end>
       Caption = 'actGet_Export_Email'
     end
-    object actSMTPFile_body: TdsdSMTPFileAction
-      Category = 'Export_Email_body'
+    object actSMTPFile_msg: TdsdSMTPFileAction
+      Category = 'Export_Email_msg'
       MoveParams = <>
       Host.Value = Null
       Host.Component = ExportEmailCDS
@@ -1636,21 +1636,34 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
       ToAddress.DataType = ftString
       ToAddress.MultiSelectSeparator = ','
     end
-    object mactExport_body: TMultiAction
-      Category = 'Export_Email_body'
+    object mactExport_msg: TMultiAction
+      Category = 'Export_Email_msg'
       MoveParams = <>
       ActionList = <
         item
-          Action = actGet_Export_Email_body
+          Action = actGet_Export_Email_msg
         end
         item
-          Action = actSMTPFile_body
+          Action = actSMTPFile_msg
         end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1059#1074#1077#1076#1086#1084#1080#1090#1100' '#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102' '#1087#1086' '#1087#1086#1095#1090#1077'?'
-      InfoAfterExecute = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1080' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1086
-      Caption = #1059#1074#1077#1076#1086#1084#1080#1090#1100' '#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102
-      Hint = #1059#1074#1077#1076#1086#1084#1080#1090#1100' '#1057#1041
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1076#1083#1103' <'#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103'>?'
+      InfoAfterExecute = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1076#1083#1103' <'#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103'> '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1086
+      Caption = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1076#1083#1103' <'#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103'>'
+      Hint = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1076#1083#1103' <'#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103'>'
       ImageIndex = 53
+    end
+    object mactUpdateStatus_Complete: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateStatus_Complete
+        end
+        item
+          Action = mactExport_msg
+        end>
+      Caption = #1047#1072#1082#1088#1099#1090#1100' '#1042#1057#1045' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1081
+      Hint = #1047#1072#1082#1088#1099#1090#1100' '#1042#1057#1045' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1081
     end
   end
   inherited MasterDS: TDataSource
@@ -1836,7 +1849,7 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
       Category = 0
     end
     object bbUpdateStatus_Complete: TdxBarButton
-      Action = actUpdateStatus_Complete
+      Action = mactUpdateStatus_Complete
       Category = 0
     end
     object bbUpdateStatus_UnComplete: TdxBarButton
@@ -1844,7 +1857,7 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
       Category = 0
     end
     object bbExport_body: TdxBarButton
-      Action = mactExport_body
+      Action = mactExport_msg
       Category = 0
     end
   end
@@ -2730,8 +2743,8 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
     Left = 360
     Top = 329
   end
-  object spGet_Export_Email_Body: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_OrderFinance_Email_sendBody'
+  object spGet_Export_Email_msg: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_OrderFinance_Email_send_msg'
     DataSet = ExportEmailCDS
     DataSets = <
       item

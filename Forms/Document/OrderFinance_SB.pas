@@ -104,7 +104,7 @@ type
     spUpdate_SignSB_No: TdsdStoredProc;
     actUpdate_SignSB_No: TdsdExecStoredProc;
     actUpdate_SignSB_Yes: TdsdExecStoredProc;
-    bbUpdate_SignSB_Yes: TdxBarButton;
+    bbSignSB_Yes: TdxBarButton;
     bbUpdate_SignSB_No: TdxBarButton;
     InsertDate: TcxGridDBColumn;
     InsertName: TcxGridDBColumn;
@@ -115,6 +115,7 @@ type
     Comment: TcxGridDBColumn;
     Comment_SB: TcxGridDBColumn;
     ColorFon_record: TcxGridDBColumn;
+    mactSignSB_Yes: TMultiAction;
   private
     { Private declarations }
   public

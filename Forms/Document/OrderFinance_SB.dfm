@@ -1250,10 +1250,10 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
         item
           Action = actSMTPFile_msg
         end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1076#1083#1103' <'#1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1086#1090#1076#1077#1083'>?'
-      InfoAfterExecute = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1076#1083#1103' <'#1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1086#1090#1076#1077#1083'> '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1086
-      Caption = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1076#1083#1103' <'#1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1086#1090#1076#1077#1083'>'
-      Hint = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1076#1083#1103' <'#1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1086#1090#1076#1077#1083'>'
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1087#1086#1089#1083#1077' '#1042#1080#1079#1099' '#1057#1041'?'
+      InfoAfterExecute = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1087#1086#1089#1083#1077' '#1042#1080#1079#1099' '#1057#1041' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1086
+      Caption = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1087#1086#1089#1083#1077' '#1042#1080#1079#1099' '#1057#1041
+      Hint = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1087#1086#1089#1083#1077' '#1042#1080#1079#1099' '#1057#1041
       ImageIndex = 53
     end
     object actSMTPFile_msg: TdsdSMTPFileAction
@@ -1326,6 +1326,19 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
         end
         item
           StoredProc = spSelect
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1042#1080#1079#1072' '#1057#1041'>'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1042#1080#1079#1072' '#1057#1041'>'
+    end
+    object mactSignSB_Yes: TMultiAction
+      Category = 'Export_Email_msg'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = mactExport_msg
+        end
+        item
+          Action = actUpdate_SignSB_Yes
         end>
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1042#1080#1079#1072' '#1057#1041'>'
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1042#1080#1079#1072' '#1057#1041'>'
@@ -1421,7 +1434,7 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
         end
         item
           Visible = True
-          ItemName = 'bbUpdate_SignSB_Yes'
+          ItemName = 'bbSignSB_Yes'
         end
         item
           Visible = True
@@ -1531,8 +1544,8 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
       Action = mactExport_msg
       Category = 0
     end
-    object bbUpdate_SignSB_Yes: TdxBarButton
-      Action = actUpdate_SignSB_Yes
+    object bbSignSB_Yes: TdxBarButton
+      Action = mactSignSB_Yes
       Category = 0
     end
     object bbUpdate_SignSB_No: TdxBarButton
@@ -2326,7 +2339,7 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
     Top = 330
   end
   object spGet_Export_Email_msg: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_OrderFinance_Email_sendBody'
+    StoredProcName = 'gpGet_Movement_OrderFinance_Email_send_msg'
     DataSet = ExportEmailCDS
     DataSets = <
       item

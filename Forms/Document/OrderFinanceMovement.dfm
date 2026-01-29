@@ -534,7 +534,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
               Format = ',0.00'
               Kind = skSum
               Column = AmountSumm
-              Sorted = True
             end
             item
               Format = ',0.####'
@@ -2376,10 +2375,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Action = actShowErasedJur
       Category = 0
     end
-    object bbExport: TdxBarButton
-      Action = actExport_New
-      Category = 0
-    end
     object bbSetErasedJurOrdFin: TdxBarButton
       Action = actSetErasedJurOrdFin
       Category = 0
@@ -2425,30 +2420,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         item
           Visible = True
           ItemName = 'bbtExport_msg'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExport'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExportMail_xls_1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExportMail_xls_2'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExportMail_xls_3'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExportMail_xls_4'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExportMail_xls_5'
         end>
     end
     object dxBarSeparator: TdxBarSeparator
@@ -2457,26 +2428,6 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       Hint = 'dxBarSeparator'
       Visible = ivAlways
       ShowCaption = False
-    end
-    object bbExportMail_xls_1: TdxBarButton
-      Action = mactExportMail_xls_1
-      Category = 0
-    end
-    object bbExportMail_xls_2: TdxBarButton
-      Action = mactExportMail_xls_2
-      Category = 0
-    end
-    object bbExportMail_xls_3: TdxBarButton
-      Action = mactExportMail_xls_3
-      Category = 0
-    end
-    object bbExportMail_xls_4: TdxBarButton
-      Action = mactExportMail_xls_4
-      Category = 0
-    end
-    object bbExportMail_xls_5: TdxBarButton
-      Action = mactExportMail_xls_5
-      Category = 0
     end
     object bbUpdate_Sign_1_Yes: TdxBarButton
       Action = mactSign_1_Yes
@@ -2677,10 +2628,10 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         item
           Action = actSMTPFile
         end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1057#1041' - '#1085#1072' '#1089#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1077'?'
-      InfoAfterExecute = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1057#1041' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1086' '#1085#1072' '#1089#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1077
-      Caption = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1057#1041
-      Hint = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1057#1041
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1087#1086#1089#1083#1077' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1103'?'
+      InfoAfterExecute = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1087#1086#1089#1083#1077' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1103' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1086
+      Caption = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1087#1086#1089#1083#1077' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1103
+      Hint = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' '#1087#1086#1089#1083#1077' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1103
       ImageIndex = 53
     end
     object actShowErasedJur: TBooleanStoredProcAction
@@ -4620,12 +4571,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
   object MasterViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
-    OnDblClickActionList = <
-      item
-      end>
-    ActionItemList = <
-      item
-      end>
+    OnDblClickActionList = <>
+    ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ChartList = <>
@@ -4636,15 +4583,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
       end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
-    SummaryItemList = <
-      item
-        Param.Value = Null
-        Param.Component = FormParams
-        Param.ComponentItem = 'TotalSumm'
-        Param.DataType = ftString
-        Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 1
-      end>
+    SummaryItemList = <>
     ShowFieldImageList = <>
     ViewDocumentList = <>
     PropertiesCellList = <>
@@ -6750,7 +6689,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
     Top = 272
   end
   object spGet_Export_Email_msg: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_OrderFinance_Email_sendBody'
+    StoredProcName = 'gpGet_Movement_OrderFinance_Email_send_msg'
     DataSet = ExportEmailCDS
     DataSets = <
       item
@@ -6772,7 +6711,7 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 608
-    Top = 528
+    Left = 560
+    Top = 392
   end
 end

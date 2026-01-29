@@ -157,7 +157,6 @@ type
     actExport_Grid_file: TExportGrid;
     actSMTPFile_file: TdsdSMTPFileAction;
     actExport: TMultiAction;
-    bbExport: TdxBarButton;
     actBankAccountChoiceFormJurMain: TOpenChoiceForm;
     actExport_file: TdsdStoredProcExportToFile;
     actExport_New: TMultiAction;
@@ -235,11 +234,6 @@ type
     mactExportMail_xls_4: TMultiAction;
     mactExportMail_xls_5: TMultiAction;
     dxBarSeparator: TdxBarSeparator;
-    bbExportMail_xls_1: TdxBarButton;
-    bbExportMail_xls_2: TdxBarButton;
-    bbExportMail_xls_3: TdxBarButton;
-    bbExportMail_xls_4: TdxBarButton;
-    bbExportMail_xls_5: TdxBarButton;
     edTotalSumm_2: TcxCurrencyEdit;
     edTotalSumm_3: TcxCurrencyEdit;
     cxLabel23: TcxLabel;
@@ -370,6 +364,7 @@ type
     mactExport_msg: TMultiAction;
     mactSign_1_Yes: TMultiAction;
     Amount_Child: TcxGridDBColumn;
+    bbExport_msg: TdxBarButton;
   private
   public
   end;
