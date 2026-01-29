@@ -211,7 +211,7 @@ BEGIN
             , tmpProduct.CIN ::TVarChar AS PatternCIN
             , EXTRACT (YEAR FROM tmpProduct.DateBegin)  ::TVarChar AS YearBegin
             , '' ::TVarChar AS ModelGroupName
-            , ObjectFloat_Power.ValueData               ::TFloat   AS EnginePower
+            , (zfConvert_FloatToString (ObjectFloat_Power.ValueData) || ' PS') ::TVarChar AS EnginePower
             , ObjectFloat_Volume.ValueData              ::TFloat   AS EngineVolume
             --
             , tmpInfo.Mail           ::TVarChar AS Mail
@@ -228,7 +228,7 @@ BEGIN
   */
             , Object_Client.ValueData        ::TVarChar AS Name_Firma
             , ObjectString_Street.ValueData  ::TVarChar AS Street_Firma
-            , ObjectString_City.ValueData    ::TVarChar AS City_Firma
+            , (CASE WHEN Object_PLZ.ValueData <> '' THEN Object_PLZ.ValueData || ' ' ELSE '' END || ObjectString_City.ValueData) ::TVarChar AS City_Firma
             , Object_Country.ValueData       ::TVarChar AS Country_Firma
             , ''                             ::TVarChar AS Text1   --**
 

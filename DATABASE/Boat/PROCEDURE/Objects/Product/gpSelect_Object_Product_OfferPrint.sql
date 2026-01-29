@@ -155,7 +155,7 @@ BEGIN
             , tmpProduct.CIN        ::TVarChar AS PatternCIN
             , EXTRACT (YEAR FROM tmpProduct.DateBegin)  ::TVarChar AS YearBegin
             , '' ::TVarChar AS ModelGroupName
-            , ObjectFloat_Power.ValueData               ::TFloat   AS EnginePower
+            , (zfConvert_FloatToString (ObjectFloat_Power.ValueData) || ' PS') ::TVarChar AS EnginePower
             , ObjectFloat_Volume.ValueData              ::TFloat   AS EngineVolume
             --
             , tmpInfo.Mail          ::TVarChar AS Mail
@@ -173,7 +173,7 @@ BEGIN
             --
             , tmpProduct.ClientName                       ::TVarChar AS Name_Client
             , COALESCE (ObjectString_Street.ValueData,'') ::TVarChar AS Street_Client
-            , ObjectString_City.ValueData                 ::TVarChar AS City_Client
+            , (CASE WHEN Object_PLZ.ValueData <> '' THEN Object_PLZ.ValueData || ' ' ELSE '' END || ObjectString_City.ValueData) ::TVarChar AS City_Client
             , Object_Country.ValueData                    ::TVarChar AS Country_Client
             --
 
@@ -218,7 +218,7 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_PLZ
                                ON ObjectLink_PLZ.ObjectId = tmpProduct.ClientId
                               AND ObjectLink_PLZ.DescId = zc_ObjectLink_Client_PLZ()
-          --LEFT JOIN Object AS Object_PLZ ON Object_PLZ.Id = ObjectLink_PLZ.ChildObjectId
+          LEFT JOIN Object AS Object_PLZ ON Object_PLZ.Id = ObjectLink_PLZ.ChildObjectId
           LEFT JOIN ObjectString AS ObjectString_City
                                  ON ObjectString_City.ObjectId = ObjectLink_PLZ.ChildObjectId
                                 AND ObjectString_City.DescId = zc_ObjectString_PLZ_City()

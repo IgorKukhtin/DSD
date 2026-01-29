@@ -183,7 +183,7 @@ BEGIN
             */
             , Object_Client.ValueData        ::TVarChar AS Name_Firma
             , ObjectString_Street.ValueData  ::TVarChar AS Street_Firma
-            , ObjectString_City.ValueData    ::TVarChar AS City_Firma
+            , (CASE WHEN Object_PLZ.ValueData <> '' THEN Object_PLZ.ValueData || ' ' ELSE '' END || ObjectString_City.ValueData) ::TVarChar AS City_Firma
             , Object_Country.ValueData       ::TVarChar AS Country_Firma
             , ''                             ::TVarChar AS Text1   --**
 
