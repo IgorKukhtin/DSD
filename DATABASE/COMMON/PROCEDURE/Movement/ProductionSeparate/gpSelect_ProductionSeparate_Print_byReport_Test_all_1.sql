@@ -594,8 +594,8 @@ BEGIN
 
       
       -- Результат 
-      SELECT inStartDate ::TDateTime AS StartDate
-           , inEndDate   ::TDateTime AS EndDate
+      SELECT inStartDate   ::TDateTime AS StartDate
+           , inEndDate     ::TDateTime AS EndDate
            , tmpMain_Group.MovementId  AS MovementId
            , tmpMain_Group.InvNumber   AS InvNumber
            , tmpMain_Group.OperDate
@@ -603,84 +603,47 @@ BEGIN
            , tmpMain_Group.PartionGoods_main
            , tmpMain_Group.OperDate_partion
            , tmpMain_Group.GoodsNameMaster
-           , tmpMain_Group.CountMaster
-           , tmpMain_Group.CountMaster_4134
-           , tmpMain_Group.SummMaster
-           , tmpMain_Group.HeadCountMaster
+           , COALESCE (tmpMain_Group.CountMaster,0)        ::TFloat AS CountMaster     
+           , COALESCE (tmpMain_Group.CountMaster_4134,0)   ::TFloat AS CountMaster_4134
+           , COALESCE (tmpMain_Group.SummMaster,0)         ::TFloat AS SummMaster      
+           , COALESCE (tmpMain_Group.HeadCountMaster,0)    ::TFloat AS HeadCountMaster 
            --, tmpMain_Group.PriceMaster
            , tmpMain_Group.FromName
            , tmpMain_Group.PersonalPackerName
            , tmpMain_Group.GoodsNameIncome
-           , tmpMain_Group.CountIncome
-           , tmpMain_Group.SummIncome
-           , tmpMain_Group.HeadCountIncome
-           , tmpMain_Group.CountPackerIncome
-           , tmpMain_Group.AmountPartnerIncome
-           , tmpMain_Group.HeadCount1
-           , tmpMain_Group.PriceIncome
-           , tmpMain_Group.PriceIncome1
-           , tmpMain_Group.PriceIncome2
-           , tmpMain_Group.SummCostIncome
-           , tmpMain_Group.CountDocIncome
-           , tmpMain_Group.Count_CountPacker
-           , tmpMain_Group.CountSeparate
-           , tmpMain_Group.PercentCount
+           , COALESCE (tmpMain_Group.CountIncome,0)        ::TFloat   AS CountIncome        
+           , COALESCE (tmpMain_Group.SummIncome,0)         ::TFloat   AS SummIncome         
+           , COALESCE (tmpMain_Group.HeadCountIncome,0)    ::TFloat   AS HeadCountIncome    
+           , COALESCE (tmpMain_Group.CountPackerIncome,0)   ::TFloat  AS CountPackerIncome  
+           , COALESCE (tmpMain_Group.AmountPartnerIncome,0) ::TFloat  AS AmountPartnerIncome
+           , COALESCE (tmpMain_Group.HeadCount1,0)         ::TFloat   AS HeadCount1        
+           , COALESCE (tmpMain_Group.PriceIncome,0)        ::TFloat   AS PriceIncome  
+           , COALESCE (tmpMain_Group.PriceIncome1,0)       ::TFloat   AS PriceIncome1       
+           , COALESCE (tmpMain_Group.PriceIncome2,0)       ::TFloat   AS PriceIncome2      
+           , COALESCE (tmpMain_Group.SummCostIncome,0)     ::TFloat   AS SummCostIncome
+           , COALESCE (tmpMain_Group.CountDocIncome,0)     ::TFloat   AS CountDocIncome
+           , COALESCE (tmpMain_Group.Count_CountPacker,0)  ::TFloat   AS Count_CountPacker
+           , COALESCE (tmpMain_Group.CountSeparate,0)      ::TFloat   AS CountSeparate  
+           , COALESCE (tmpMain_Group.PercentCount,0)       ::TFloat   AS PercentCount
            , tmpMain_Group.GoodsNameSeparate
-           , tmpMain_Group.SummHeadCount1
-           , AVG (tmpCursor1.PriceMaster) AS PriceMaster
+           , COALESCE (tmpMain_Group.SummHeadCount1,0)     ::TFloat   AS SummHeadCount1
+           , AVG (COALESCE (tmpCursor1.PriceMaster,0))     ::TFloat   AS PriceMaster
        
-          /*CASE WHEN inisGroup = TRUE THEN tmpCursor1.PartionGoods_main ELSE tmpCursor1.MovementId::TVarChar END AS MovementId
-           , CASE WHEN inisGroup = TRUE THEN '' ELSE tmpCursor1.InvNumber END AS InvNumber
-           , MAX (tmpCursor1.OperDate)  AS OperDate
-           , CASE WHEN inisGroup = TRUE THEN '' ELSE tmpCursor1.PartionGoods END ::TVarChar AS PartionGoods
-           , tmpCursor1.PartionGoods_main
-           , MAX (tmpCursor1.OperDate_partion) AS OperDate_partion
-           , tmpCursor1.GoodsNameMaster
-           , SUM (tmpCursor1.CountMaster) OVER (PARTITION BY CASE WHEN inisGroup = TRUE THEN tmpCursor1.PartionGoods_main ELSE tmpCursor1.MovementId::TVarChar END) AS CountMaster
-         --  , SUM (COALESCE (tmpCursor1.AmountMaster_4134,0)) AS CountMaster_4134
-           , SUM (tmpCursor1.SummMaster) AS SummMaster
-           , SUM (tmpCursor1.HeadCountMaster) AS HeadCountMaster
-           , tmpCursor1.PriceMaster
-          -- , SUM ((tmpMI_group.Amount_summ - COALESCE (tmpIncomeCost.AmountCost,0)) /tmpMI_group.Amount_count ) OVER (PARTITION BY CASE WHEN inisGroup = TRUE THEN 0 ELSE tmpMovement.MovementId END) AS PriceMaster
-           
-           , tmpCursor1.FromName 
-           , tmpCursor1.PersonalPackerName
-           , tmpCursor1.GoodsNameIncome
-           , SUM (tmpCursor1.CountIncome) AS CountIncome
-           , SUM (tmpCursor1.SummIncome)  AS SummIncome
-           , SUM (tmpCursor1.HeadCountIncome) AS HeadCountIncome
-           , SUM (tmpCursor1.CountPackerIncome)  AS CountPackerIncome
-           , SUM (tmpCursor1.AmountPartnerIncome) AS AmountPartnerIncome
-           , SUM (tmpCursor1.AmountPartnerSecondIncome) AS AmountPartnerSecondIncome
-           , CASE WHEN SUM (tmpCursor1.HeadCountIncome) <> 0 THEN SUM (tmpCursor1.CountIncome) / SUM (tmpCursor1.HeadCountIncome) ELSE 0 END AS HeadCount1 -- цена головы из Income
-           , (SUM (tmpCursor1.SummIncome) / SUM (tmpCursor1.CountIncome))                                        AS PriceIncome
-           , (SUM (tmpCursor1.SummIncome) / (SUM (tmpCursor1.CountIncome) - SUM (tmpCursor1.CountPackerIncome))) AS PriceIncome1
-           , CASE WHEN SUM (COALESCE (tmpCursor1.AmountPartnerIncome,0)) <> 0 THEN (SUM (tmpCursor1.SummIncome) / (SUM (tmpCursor1.AmountPartnerIncome) )) ELSE 0 END ::TFloat AS PriceIncome2
-           , SUM (tmpCursor1.SummCostIncome)   ::TFloat                                                          AS SummCostIncome
-           , SUM (tmpCursor1.CountDocIncome)   ::TFloat                                                          AS CountDocIncome
-           
-           , SUM (tmpCursor1.Count_CountPacker) AS Count_CountPacker
-           , 100 * (SUM (tmpCursor1.CountSeparate) /SUM (tmpCursor1.CountIncome)) AS PercentCount
-           , SUM (tmpCursor1.CountSeparate) AS CountSeparate
-           , tmpCursor1.GoodsNameSeparate
-           , AVG (tmpCursor1.SummHeadCount1) AS SummHeadCount1  -- ср вес головы из Separate
-           */
            , tmpCursor1.GoodsName_4134
-           , AVG (tmpCursor1.PriceFact_4134) AS PriceFact_4134
-           , tmpMain_Group.PriceFact_4134_group
-           , SUM(tmpCursor1.PriceFact * tmpCursor1.Amount) ::TFloat AS SummFact_4134
+           , AVG (COALESCE (tmpCursor1.PriceFact_4134,0))    ::TFloat AS PriceFact_4134
+           , COALESCE (tmpMain_Group.PriceFact_4134_group,0) ::TFloat AS PriceFact_4134_group
+           , SUM(COALESCE (tmpCursor1.PriceFact,0) * COALESCE (tmpCursor1.Amount,0)) ::TFloat AS SummFact_4134
            --, CASE WHEN COALESCE (SUM (tmpCursor1.Amount_4134),0) <> 0 THEN SUM (tmpCursor1.summ_4134) /SUM (tmpCursor1.Amount_4134) ELSE 0 END   AS price_4134
            --, (tmpCursor1.Amount_4134) AS Amount_4134
 
            ---, CASE WHEN vbUserId = 5 THEN tmpMain_Group.Amount_4134 ELSE tmpMain_Group.CountMaster END AS Amount_4134  --26.01.2026 закоментила
-           , tmpMain_Group.Amount_4134 AS Amount_4134
-
-           --, tmpCursor1.Persent_4134 
-           , CASE WHEN COALESCE (SUM (tmpCursor1.CountMaster),0) <> 0 THEN 100  * SUM (tmpCursor1.Amount_4134) / SUM (tmpCursor1.CountMaster) ELSE 0 END :: TFloat AS Persent_4134
-           , SUM (tmpCursor1.AmountMaster_4134)  AS AmountMaster_4134    
+           , COALESCE (tmpMain_Group.Amount_4134,0)          ::TFloat AS Amount_4134
+           
+           , CASE WHEN SUM (COALESCE (tmpCursor1.CountMaster,0)) <> 0 THEN 100  * SUM (COALESCE (tmpCursor1.Amount_4134,0)) / SUM (COALESCE (tmpCursor1.CountMaster,0)) ELSE 0 END :: TFloat AS Persent_4134      --, tmpCursor1.Persent_4134 
+           , SUM (COALESCE (tmpCursor1.AmountMaster_4134,0))            ::TFloat AS AmountMaster_4134    
            --, tmpCursor1.PriceFact_nk  --заменяем на расчет  для варианта итоговой печати
-           , CASE WHEN  SUM (tmpCursor1.Amount) <> 0 THEN (SUM (tmpCursor1.SummFact_nk) / SUM (tmpCursor1.Amount)) ELSE 0 END AS PriceFact_nk
-           , SUM(tmpCursor1.PriceFact_nk * tmpCursor1.Amount) ::TFloat AS SummFact_nk
+           , CASE WHEN  SUM (COALESCE (tmpCursor1.Amount,0)) <> 0 THEN (SUM (COALESCE (tmpCursor1.SummFact_nk,0)) / SUM (COALESCE (tmpCursor1.Amount,0))) ELSE 0 END ::TFloat AS PriceFact_nk
+           , SUM(COALESCE (tmpCursor1.PriceFact_nk,0) * COALESCE (tmpCursor1.Amount,0)) ::TFloat AS SummFact_nk
            
            , tmpCursor1.GoodsId
            , tmpCursor1.GoodsCode
@@ -690,52 +653,52 @@ BEGIN
            , tmpCursor1.GoodsGroupNameFull 
            , tmpCursor1.GroupStatId
            , tmpCursor1.GroupStatName
-           , SUM (tmpCursor1.Amount) AS Amount
+           , SUM (COALESCE (tmpCursor1.Amount,0)) ::TFloat AS Amount
           -- , CASE WHEN SUM (tmpCursor1.Amount) <> 0 THEN SUM (tmpCursor1.Summ) / SUM (tmpCursor1.Amount) ELSE 0 END AS SummPrice
-           , tmpCursor1.PricePlan
-           , tmpCursor1.PriceNorm
-           , CASE WHEN  SUM (tmpCursor1.Amount) <> 0 THEN (SUM (tmpCursor1.SummFact) / SUM (tmpCursor1.Amount)) ELSE 0 END AS PriceFact 
-           , SUM (tmpCursor1.SummFact) AS SummFact
+           , tmpCursor1.PricePlan    ::TFloat 
+           , tmpCursor1.PriceNorm    ::TFloat 
+           , CASE WHEN  SUM (COALESCE (tmpCursor1.Amount,0)) <> 0 THEN (SUM (COALESCE (tmpCursor1.SummFact,0)) / SUM (COALESCE (tmpCursor1.Amount,0))) ELSE 0 END ::TFloat AS PriceFact 
+           , SUM (COALESCE (tmpCursor1.SummFact,0)) ::TFloat AS SummFact
            
               --для проверки
-           , SUM (tmpCursor1.TotalSummaPlan_calc) AS TotalSummaPlan_calc        -- итого сумма по цене план* для расчета факта 
-           , SUM (tmpCursor1.SummaPlan_calc)      AS SummaPlan_calc             -- сумма по цене план* для расчета факта
-           , MAX (tmpCursor1.PricePlan_calc)      AS PricePlan_calc             -- цена план* для расчета факта  
+           , SUM (COALESCE (tmpCursor1.TotalSummaPlan_calc,0))      ::TFloat AS TotalSummaPlan_calc        -- итого сумма по цене план* для расчета факта 
+           , SUM (COALESCE (tmpCursor1.SummaPlan_calc,0))           ::TFloat AS SummaPlan_calc             -- сумма по цене план* для расчета факта
+           , MAX (COALESCE (tmpCursor1.PricePlan_calc,0))           ::TFloat AS PricePlan_calc             -- цена план* для расчета факта  
            --
-           , SUM (tmpCursor1.Amount_GroupStat)          AS Amount_GroupStat
-           , SUM (tmpCursor1.SummFact_GroupStat)        AS SummFact_GroupStat
-           , SUM (tmpCursor1.Amount_Group)              AS Amount_Group
-           , SUM (tmpCursor1.SummFact_Group)            AS SummFact_Group
-           , SUM (tmpCursor1.SummFact_4134_GroupStat)   AS SummFact_4134_GroupStat
-           , SUM (tmpCursor1.SummFact_nk_GroupStat)     AS SummFact_nk_GroupStat
-           , SUM (tmpCursor1.SummFact_nk_Group)         AS SummFact_nk_Group
+           , SUM (COALESCE (tmpCursor1.Amount_GroupStat,0))         ::TFloat AS Amount_GroupStat
+           , SUM (COALESCE (tmpCursor1.SummFact_GroupStat,0))       ::TFloat AS SummFact_GroupStat
+           , SUM (COALESCE (tmpCursor1.Amount_Group,0))             ::TFloat AS Amount_Group
+           , SUM (COALESCE (tmpCursor1.SummFact_Group,0))           ::TFloat AS SummFact_Group
+           , SUM (COALESCE (tmpCursor1.SummFact_4134_GroupStat,0))  ::TFloat AS SummFact_4134_GroupStat
+           , SUM (COALESCE (tmpCursor1.SummFact_nk_GroupStat,0))    ::TFloat AS SummFact_nk_GroupStat
+           , SUM (COALESCE (tmpCursor1.SummFact_nk_Group,0))        ::TFloat AS SummFact_nk_Group
 
-           , SUM (tmpCursor1.Amount_GroupStat_yes) ::TFloat AS Amount_GroupStat_yes
-           , SUM (tmpCursor1.Amount_GroupStat_no)  ::TFloat AS Amount_GroupStat_no
-           , SUM (tmpCursor1.Summ_GroupStat_yes)   ::TFloat AS Summ_GroupStat_yes
-           , SUM (tmpCursor1.Summ_GroupStat_no)    ::TFloat AS Summ_GroupStat_no
+           , SUM (COALESCE (tmpCursor1.Amount_GroupStat_yes,0))     ::TFloat AS Amount_GroupStat_yes
+           , SUM (COALESCE (tmpCursor1.Amount_GroupStat_no,0))      ::TFloat AS Amount_GroupStat_no
+           , SUM (COALESCE (tmpCursor1.Summ_GroupStat_yes,0))       ::TFloat AS Summ_GroupStat_yes
+           , SUM (COALESCE (tmpCursor1.Summ_GroupStat_no,0))        ::TFloat AS Summ_GroupStat_no
            
-           , tmpGroup.Price_gr1
-           , tmpGroup.Price_gr2
-           , tmpGroup.Price_gr3
-           , tmpGroup.Price_gr4
-           , tmpGroup.Price_gr5
-           , tmpGroup.Price_gr6
-           , tmpGroup.Price_gr7
-           , tmpGroup.Price_gr8
-           , tmpGroup.Price_gr9
-           , tmpGroup.Price_gr10  
+           , tmpGroup.Price_gr1     ::TFloat
+           , tmpGroup.Price_gr2     ::TFloat
+           , tmpGroup.Price_gr3     ::TFloat
+           , tmpGroup.Price_gr4     ::TFloat
+           , tmpGroup.Price_gr5     ::TFloat
+           , tmpGroup.Price_gr6     ::TFloat
+           , tmpGroup.Price_gr7     ::TFloat
+           , tmpGroup.Price_gr8     ::TFloat
+           , tmpGroup.Price_gr9     ::TFloat
+           , tmpGroup.Price_gr10    ::TFloat
            
-           , tmpGroup.Price_nk_gr1
-           , tmpGroup.Price_nk_gr2
-           , tmpGroup.Price_nk_gr3
-           , tmpGroup.Price_nk_gr4
-           , tmpGroup.Price_nk_gr5
-           , tmpGroup.Price_nk_gr6
-           , tmpGroup.Price_nk_gr7
-           , tmpGroup.Price_nk_gr8
-           , tmpGroup.Price_nk_gr9
-           , tmpGroup.Price_nk_gr10 
+           , tmpGroup.Price_nk_gr1    ::TFloat
+           , tmpGroup.Price_nk_gr2    ::TFloat
+           , tmpGroup.Price_nk_gr3    ::TFloat
+           , tmpGroup.Price_nk_gr4    ::TFloat
+           , tmpGroup.Price_nk_gr5    ::TFloat
+           , tmpGroup.Price_nk_gr6    ::TFloat
+           , tmpGroup.Price_nk_gr7    ::TFloat
+           , tmpGroup.Price_nk_gr8    ::TFloat
+           , tmpGroup.Price_nk_gr9    ::TFloat
+           , tmpGroup.Price_nk_gr10   ::TFloat
 
            , TRIM (tmpGroup.GoodsGroupName1) AS    GoodsGroupName1 
            , TRIM (tmpGroup.GoodsGroupName2) AS    GoodsGroupName2 
@@ -768,13 +731,13 @@ BEGIN
              , tmpMain_Group.PartionGoods_main
              , tmpMain_Group.OperDate_partion
              , tmpMain_Group.GoodsNameMaster
-             , tmpMain_Group.CountMaster
+             , COALESCE (tmpMain_Group.CountMaster
 
-             , tmpMain_Group.CountMaster_4134
-             , tmpMain_Group.Amount_4134
+             , COALESCE (tmpMain_Group.CountMaster_4134
+             , COALESCE (tmpMain_Group.Amount_4134
 
-             , tmpMain_Group.SummMaster
-             , tmpMain_Group.HeadCountMaster
+             , COALESCE (tmpMain_Group.SummMaster
+             , COALESCE (tmpMain_Group.HeadCountMaster
              --, tmpMain_Group.PriceMaster
              , tmpMain_Group.FromName
              , tmpMain_Group.PersonalPackerName
@@ -846,6 +809,12 @@ BEGIN
              , TRIM (tmpGroup.GoodsGroupName8) 
              , TRIM (tmpGroup.GoodsGroupName9) 
              , TRIM (tmpGroup.GoodsGroupName10)
+                  
+          order by tmpMain_Group.MovementId
+                 , tmpCursor1.GroupStatName
+                 , tmpCursor1.GoodsGroupCode
+                 , tmpCursor1.GoodsGroupNameFull
+                 , tmpCursor1.GoodsName
   
  ;
 
@@ -875,3 +844,31 @@ $BODY$
 
 -- select * from gpSelect_ProductionSeparate_Print_byReport_Test_all_1(inStartDate := ('25.05.2025')::TDateTime , inEndDate := ('25.05.2025')::TDateTime , inFromId := 0 , inToId := 0 , inPriceListId_norm := 0 , inMovementId := 0 , inGoodsId := 4234 , inisGroup := 'false' ,  inSession := '9457');
 --FETCH ALL "<unnamed portal 226>";
+
+
+
+/*
+
+select * from gpSelect_ProductionSeparate_Print_byReport_Test_all_1(inStartDate := ('01.01.2025')::TDateTime , inEndDate := ('31.12.2025')::TDateTime , inFromId := 8439 , inToId := 8439 , inPriceListId_norm := 12048635 , inMovementId := 0 , inGoodsId := 4261 , inisGroup := 'True' , inisAll := 'False' , inisDetail := 'False' , inPartionGoods_main := '4218-11956-29.07.2025' , inPartionGoods_main2 := '' ,  inSession := '9457');
+--order by MovementId,GroupStatName,GoodsGroupCode,GoodsGroupNameFull,GoodsName
+FETCH ALL "<unnamed portal 14417>";
+/* код
+4132
+4132
+4171
+4171
+4115
+
+
+SELECT *
+FROM Object
+WHERE ObjectCode = 4142
+
+ид
+6694;4142;"РУЛЬКА СВ. без кости"
+2130;4132;"РУЛЬКА СВ. Н\К задняя"
+7709;4171;"РУЛЬКА СВ. Н\К передняя"  **** наэтом товаре вылетает
+4255;4115;"РЕБРО-ГРИЛЬ"
+*/
+
+*/
