@@ -55,6 +55,12 @@ CREATE OR REPLACE FUNCTION zc_MIString_InvNumber() RETURNS Integer AS $BODY$BEGI
 INSERT INTO MovementItemStringDesc (Code, ItemName)
   SELECT 'zc_MIString_InvNumber', '№ заявки' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_InvNumber');
 
+CREATE OR REPLACE FUNCTION zc_MIString_InvNumber_Invoice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_InvNumber_Invoice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_InvNumber_Invoice', '№ счета' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_InvNumber_Invoice');
+
+
+
     
    
 
@@ -229,6 +235,7 @@ INSERT INTO MovementItemStringDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 30.01.25         * zc_MIString_InvNumber_Invoice
  20.11.25         * zc_MIString_Comment_pay
  02.05.23         * zc_MIString_PartNumber
  01.04.23                                                                                      * zc_MIString_Referral

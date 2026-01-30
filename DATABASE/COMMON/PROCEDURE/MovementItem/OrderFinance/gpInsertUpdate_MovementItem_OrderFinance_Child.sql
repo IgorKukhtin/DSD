@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_MovementItem_OrderFinance_Child()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance_Child (Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance_Child (Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance_Child (Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance_Child (Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinance_Child(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinance_Child(
     IN inMovementItemId_Order  Integer   , -- MovementItemId OrderIncome
     IN inGoodsName             TVarChar  , -- Товары
     IN inInvNumber             TVarChar  , --
+    IN inInvNumber_Invoice     TVarChar  , --
     IN inComment               TVarChar  , --
     IN inAmount                TFloat    , --
    OUT outSumm_parent          TFloat    , --
@@ -33,6 +35,12 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Не заполнено значение <№ заявки (1С)>.';
      END IF;
+     -- проверка
+   /*  IF TRIM (COALESCE (inInvNumber_Invoice, '')) = ''
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не заполнено значение <№ счета>.';
+     END IF;
+     */
      -- проверка
      IF TRIM (COALESCE (inGoodsName, '')) = ''
      THEN
@@ -79,6 +87,10 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_InvNumber(), ioId, inInvNumber);
      -- сохранили свойство <>
+
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_InvNumber_Invoice(), ioId, inInvNumber_Invoice);
+
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GoodsName(), ioId, inGoodsName);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
@@ -127,6 +139,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.01.26         *
  14.01.26         *
 */
 

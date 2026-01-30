@@ -80,6 +80,7 @@ RETURNS TABLE (Id Integer
 
              , GoodsName_Child TVarChar
              , InvNumber_Child TVarChar
+             , InvNumber_Invoice_Child TVarChar
              , Sign_Child      Boolean
              , Amount_Child    TFloat
               )
@@ -708,12 +709,14 @@ BEGIN
     , tmpMI_Child AS (SELECT tmpMI.ParentId
                            , STRING_AGG (tmpMI.GoodsName, '; ') AS GoodsName
                            , STRING_AGG (tmpMI.InvNumber, '; ') AS InvNumber
+                           , STRING_AGG (tmpMI.InvNumber_Invoice, '; ') AS InvNumber_Invoice
                            , MAX (tmpMI.isSign)                 AS isSign
                            , SUM (tmpMI.Amount)                 AS Amount
                       FROM (SELECT MovementItem.Id
                                  , MovementItem.ParentId
                                  , COALESCE (MIString_GoodsName.ValueData, '')                  AS GoodsName
                                  , COALESCE (MIString_InvNumber.ValueData, '')                  AS InvNumber
+                                 , COALESCE (MIString_InvNumber_Invoice.ValueData, '')          AS InvNumber_Invoice
                                  , CASE WHEN MIBoolean_Sign.ValueData = TRUE THEN 0 ELSE 1 END  AS isSign
                                  , MovementItem.Amount                                          AS Amount
                             FROM MovementItem
@@ -723,6 +726,9 @@ BEGIN
                                 LEFT JOIN MovementItemString AS MIString_InvNumber
                                                              ON MIString_InvNumber.MovementItemId = MovementItem.Id
                                                             AND MIString_InvNumber.DescId = zc_MIString_InvNumber()
+                                LEFT JOIN MovementItemString AS MIString_InvNumber_Invoice
+                                                             ON MIString_InvNumber_Invoice.MovementItemId = MovementItem.Id
+                                                            AND MIString_InvNumber_Invoice.DescId = zc_MIString_InvNumber_Invoice()
                                 LEFT JOIN MovementItemBoolean AS MIBoolean_Sign
                                                               ON MIBoolean_Sign.MovementItemId = MovementItem.Id
                                                              AND MIBoolean_Sign.DescId = zc_MIBoolean_Sign()
@@ -845,6 +851,7 @@ BEGIN
 
            , tmpMI_Child.GoodsName ::TVarChar AS GoodsName_Child
            , tmpMI_Child.InvNumber ::TVarChar AS InvNumber_Child
+           , tmpMI_Child.InvNumber_Invoice ::TVarChar AS InvNumber_Invoice_Child
            , CASE WHEN tmpMI_Child.isSign = 0 THEN TRUE ELSE FALSE END ::Boolean AS Sign_Child
            , tmpMI_Child.Amount    ::TFloat   AS Amount_Child
 
@@ -1132,12 +1139,14 @@ BEGIN
      , tmpMI_Child AS (SELECT tmpMI.ParentId
                             , STRING_AGG (tmpMI.GoodsName, '; ') AS GoodsName
                             , STRING_AGG (tmpMI.InvNumber, '; ') AS InvNumber
+                            , STRING_AGG (tmpMI.InvNumber_Invoice, '; ') AS InvNumber_Invoice
                             , MAX (tmpMI.isSign)                 AS isSign
                             , SUM (tmpMI.Amount)                 AS Amount
                       FROM (SELECT MovementItem.Id
                                  , MovementItem.ParentId
                                  , COALESCE (MIString_GoodsName.ValueData, '')                  AS GoodsName
                                  , COALESCE (MIString_InvNumber.ValueData, '')                  AS InvNumber
+                                 , COALESCE (MIString_InvNumber_Invoice.ValueData, '')          AS InvNumber_Invoice
                                  , CASE WHEN MIBoolean_Sign.ValueData = TRUE THEN 0 ELSE 1 END  AS isSign
                                  , MovementItem.Amount
                             FROM MovementItem
@@ -1147,6 +1156,9 @@ BEGIN
                                 LEFT JOIN MovementItemString AS MIString_InvNumber
                                                              ON MIString_InvNumber.MovementItemId = MovementItem.Id
                                                             AND MIString_InvNumber.DescId = zc_MIString_InvNumber()
+                                LEFT JOIN MovementItemString AS MIString_InvNumber_Invoice
+                                                             ON MIString_InvNumber_Invoice.MovementItemId = MovementItem.Id
+                                                            AND MIString_InvNumber_Invoice.DescId = zc_MIString_InvNumber_Invoice()
                                 LEFT JOIN MovementItemBoolean AS MIBoolean_Sign
                                                               ON MIBoolean_Sign.MovementItemId = MovementItem.Id
                                                              AND MIBoolean_Sign.DescId = zc_MIBoolean_Sign()
@@ -1308,10 +1320,11 @@ BEGIN
                   ELSE zc_Color_White()
              END ::Integer AS ColorFon_record
 
-           , tmpMI_Child.GoodsName ::TVarChar AS GoodsName_Child
-           , tmpMI_Child.InvNumber ::TVarChar AS InvNumber_Child
+           , tmpMI_Child.GoodsName         ::TVarChar AS GoodsName_Child
+           , tmpMI_Child.InvNumber         ::TVarChar AS InvNumber_Child
+           , tmpMI_Child.InvNumber_Invoice ::TVarChar AS InvNumber_Invoice_Child
            , CASE WHEN tmpMI_Child.isSign = 0 THEN TRUE ELSE FALSE END ::Boolean AS Sign_Child
-           , tmpMI_Child.Amount    ::TFloat   AS Amount_Child
+           , tmpMI_Child.Amount            ::TFloat   AS Amount_Child
 
        FROM tmpMI AS MovementItem
             INNER JOIN Object AS Object_Juridical ON Object_Juridical.Id     = MovementItem.ObjectId
@@ -1571,6 +1584,7 @@ BEGIN
 
            , ''    ::TVarChar AS GoodsName_Child
            , ''    ::TVarChar AS InvNumber_Child
+           , ''    ::TVarChar AS InvNumber_Invoice_Child
            , FALSE ::Boolean  AS Sign_Child
            , 0     ::TFloat   AS Amount_Child
 
