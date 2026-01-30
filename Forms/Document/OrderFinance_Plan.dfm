@@ -781,17 +781,6 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             Options.Editing = False
             Width = 100
           end
-          object InvNumber_Child: TcxGridDBColumn
-            Caption = #8470' '#1079#1072#1103#1074#1082#1080' (1'#1057')'
-            DataBinding.FieldName = 'InvNumber_Child'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            HeaderGlyphAlignmentVert = vaTop
-            HeaderHint = #8470' '#1079#1072#1103#1074#1082#1080' '#1058#1052#1062' '#1074' 1'#1057
-            Options.Editing = False
-            Width = 100
-          end
           object InvNumber_Invoice_Child: TcxGridDBColumn
             Caption = #8470' '#1089#1095#1077#1090#1072
             DataBinding.FieldName = 'InvNumber_Invoice_Child'
@@ -800,7 +789,6 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             HeaderGlyphAlignmentHorz = taCenter
             HeaderGlyphAlignmentVert = vaTop
             HeaderHint = #8470' '#1089#1095#1077#1090#1072
-            Options.Editing = False
             Width = 100
           end
           object Amount_Child: TcxGridDBColumn
@@ -2173,6 +2161,23 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         Component = MasterCDS
         ComponentItem = 'Number_calc'
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioMovementItemId_Child'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementItemId_Child'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumber_Invoice_Child'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumber_Invoice_Child'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1

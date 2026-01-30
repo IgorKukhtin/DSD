@@ -973,6 +973,24 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
+          object ObjectDesc_ItemName: TcxGridDBColumn
+            Caption = #1069#1083#1077#1084#1077#1085#1090
+            DataBinding.FieldName = 'ObjectDesc_ItemName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object JuridicalName_inf: TcxGridDBColumn
+            Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'JuridicalName_inf'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object NumGroup: TcxGridDBColumn
             Caption = #8470' '#1059#1055
             DataBinding.FieldName = 'NumGroup'
@@ -2186,8 +2204,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 30
-    Top = 207
+    Left = 62
+    Top = 183
     DockControlHeights = (
       0
       0
@@ -2245,11 +2263,35 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         end
         item
           Visible = True
+          ItemName = 'bbInfoMoney_InsertRecord'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInfoMoney_UpdeteRecord'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecord_Partner'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPartner_UpdeteRecord'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbErased'
         end
         item
           Visible = True
-          ItemName = 'bbUnErased'
+          ItemName = 'bbSetUnErased'
         end
         item
           Visible = True
@@ -2399,7 +2441,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Action = SetErased
       Category = 0
     end
-    object bbUnErased: TdxBarButton
+    object bbSetUnErased: TdxBarButton
       Action = SetUnErased
       Category = 0
     end
@@ -2628,6 +2670,22 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Action = mactExport_msg
       Category = 0
     end
+    object bbInfoMoney_InsertRecord: TdxBarButton
+      Action = actInsertRecord_Infomoney
+      Category = 0
+    end
+    object bbInfoMoney_UpdeteRecord: TdxBarButton
+      Action = actInfoMoney_OrderFinanceChoiceForm
+      Category = 0
+    end
+    object bbInsertRecord_Partner: TdxBarButton
+      Action = actInsertRecord_Partner
+      Category = 0
+    end
+    object bbPartner_UpdeteRecord: TdxBarButton
+      Action = actPartnerChoiceForm
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -2646,8 +2704,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 59
-    Top = 207
+    Left = 99
+    Top = 191
     object actExport_Grid_groupCSV: TExportGrid
       Category = 'Export_mail_group'
       MoveParams = <>
@@ -2842,6 +2900,18 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actInsertRecord_Partner: TInsertRecord
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableView
+      Action = actPartnerChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1085#1090#1072#1075#1077#1085#1090#1072'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1085#1090#1072#1075#1077#1085#1090#1072'>'
+      ImageIndex = 0
+    end
     object actGetImportSetting: TdsdExecStoredProc
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
@@ -2852,6 +2922,72 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
           StoredProc = spGetImportSetting
         end>
       Caption = 'actGetImportSetting'
+    end
+    object actPartnerChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1090#1072#1075#1077#1085#1090#1072'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
+      ImageIndex = 1
+      FormName = 'TContractChoicePartnerForm'
+      FormNameParam.Value = 'TContractChoicePartnerForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractCode'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName_inf'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
     object SetErasedChild: TdsdUpdateErased
       Category = 'Child'
@@ -3069,6 +3205,9 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         end
         item
           StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelectMIChild
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = MasterDS
@@ -3098,6 +3237,58 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actInsertRecord_Infomoney: TInsertRecord
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableView
+      Action = actInfoMoney_OrderFinanceChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1059#1055' '#1089#1090#1072#1090#1100#1102'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1059#1055' '#1089#1090#1072#1090#1100#1102'>'
+      ImageIndex = 0
+    end
+    object actInfoMoney_OrderFinanceChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1059#1055' '#1089#1090#1072#1090#1100#1102'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1059#1055' '#1089#1090#1072#1090#1100#1102'>'
+      ImageIndex = 1
+      FormName = 'TInfoMoney_OrderFinanceForm'
+      FormNameParam.Value = 'TInfoMoney_OrderFinanceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalCode'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'

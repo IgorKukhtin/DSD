@@ -1646,7 +1646,8 @@ uses
   OrderFinanceMovementSB in '..\..\Forms\Document\OrderFinanceMovementSB.pas' {OrderFinanceMovementSBForm: TParentForm},
   OrderFinanceSBJournal in '..\..\Forms\Document\OrderFinanceSBJournal.pas' {OrderFinanceSBJournalForm: TParentForm},
   Cash_Branch in '..\..\Forms\Guides\Cash_Branch.pas' {Cash_BranchForm: TParentForm},
-  SummDialog in '..\..\Forms\System\SummDialog.pas' {SummDialogForm: TParentForm};
+  SummDialog in '..\..\Forms\System\SummDialog.pas' {SummDialogForm: TParentForm},
+  InfoMoney_OrderFinance in '..\..\Forms\Guides\InfoMoney_OrderFinance.pas' {InfoMoney_OrderFinanceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

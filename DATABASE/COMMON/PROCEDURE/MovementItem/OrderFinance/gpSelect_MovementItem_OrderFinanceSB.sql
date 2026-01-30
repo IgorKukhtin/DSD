@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderFinanceSB(
 RETURNS TABLE (Id Integer
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , OKPO TVarChar
+             , ObjectDesc_ItemName TVarChar, JuridicalName_inf TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, NumGroup Integer
@@ -748,6 +749,8 @@ BEGIN
            , Object_Juridical.ObjectCode      AS JuridicalCode
            , Object_Juridical.ValueData       AS JuridicalName
            , tmpJuridicalDetails_View.OKPO
+           , ObjectDesc.ItemName              AS ObjectDesc_ItemName
+           , CASE WHEN ObjectDesc.Id = zc_Object_Juridical() THEN Object_Juridical.ValueData ELSE Object_Juridical_inf.ValueData END ::TVarChar AS JuridicalName_inf
 
            , Object_Contract.Id               AS ContractId
            , Object_Contract.ObjectCode       AS ContractCode
@@ -860,6 +863,7 @@ BEGIN
                            AND tmpMI.ContractId  = tmpData.ContractId
 
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (tmpData.JuridicalId, tmpMI.JuridicalId)
+            LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Juridical.DescId
             LEFT JOIN Object AS Object_Contract  ON Object_Contract.Id  = COALESCE (tmpData.ContractId, tmpMI.ContractId)
             LEFT JOIN Object AS Object_Cash      ON Object_Cash.Id  = tmpMI.CashId
 
@@ -913,6 +917,13 @@ BEGIN
 
             -- Child - Данные с № заявки 1С
             LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI.Id
+
+            -- Юр.лицо информативно
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                 ON ObjectLink_Partner_Juridical.ObjectId      = Object_Juridical.Id       --может быть юр. лицо, статья УП , контарагент
+                                AND ObjectLink_Partner_Juridical.DescId        = zc_ObjectLink_Partner_Juridical()
+                                AND Object_Juridical.DescId = zc_Object_Partner()
+            LEFT JOIN Object AS Object_Juridical_inf ON Object_Juridical_inf.Id = ObjectLink_Partner_Juridical.ObjectId
            ;
 
 
@@ -1178,7 +1189,9 @@ BEGIN
            , Object_Juridical.Id              AS JuridicalId
            , Object_Juridical.ObjectCode      AS JuridicalCode
            , Object_Juridical.ValueData       AS JuridicalName
-           , tmpJuridicalDetails_View.OKPO
+           , tmpJuridicalDetails_View.OKPO 
+           , ObjectDesc.ItemName              AS ObjectDesc_ItemName
+           , CASE WHEN ObjectDesc.Id = zc_Object_Juridical() THEN Object_Juridical.ValueData ELSE Object_Juridical_inf.ValueData END ::TVarChar AS JuridicalName_inf
 
            , View_Contract.ContractId
            , View_Contract.ContractCode
@@ -1328,8 +1341,12 @@ BEGIN
 
        FROM tmpMI AS MovementItem
             INNER JOIN Object AS Object_Juridical ON Object_Juridical.Id     = MovementItem.ObjectId
-                                                 -- Только Юр.л.
-                                                 AND Object_Juridical.DescId = zc_Object_Juridical()
+                                                    -- Только Юр.л.
+                                                 AND (Object_Juridical.DescId = zc_Object_Juridical()
+                                                   OR Object_Juridical.DescId = zc_Object_InfoMoney() --или статья УП
+                                                   OR Object_Juridical.DescId = zc_Object_Partner()   --или Контагент
+                                                     ) 
+            LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Juridical.DescId
 
             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountRemains
                                            ON MIFloat_AmountRemains.MovementItemId = MovementItem.Id
@@ -1463,6 +1480,12 @@ BEGIN
             -- Child - Данные с № заявки 1С
             LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = MovementItem.Id
 
+            -- Юр.лицо информативно
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                 ON ObjectLink_Partner_Juridical.ObjectId      = Object_Juridical.Id       --может быть юр. лицо, статья УП , контарагент
+                                AND ObjectLink_Partner_Juridical.DescId        = zc_ObjectLink_Partner_Juridical()
+                                AND Object_Juridical.DescId = zc_Object_Partner()
+            LEFT JOIN Object AS Object_Juridical_inf ON Object_Juridical_inf.Id = ObjectLink_Partner_Juridical.ObjectId
      UNION ALL
        -- Данные прошлой недели
        SELECT
@@ -1470,7 +1493,9 @@ BEGIN
            , Object_Juridical.Id              AS JuridicalId
            , Object_Juridical.ObjectCode      AS JuridicalCode
            , Object_Juridical.ValueData       AS JuridicalName
-           , tmpJuridicalDetails_View.OKPO
+           , tmpJuridicalDetails_View.OKPO 
+           , ObjectDesc.ItemName              AS ObjectDesc_ItemName
+           , CASE WHEN ObjectDesc.Id = zc_Object_Juridical() THEN Object_Juridical.ValueData ELSE Object_Juridical_inf.ValueData END ::TVarChar AS JuridicalName_inf
 
            , View_Contract.ContractId
            , View_Contract.ContractCode
@@ -1604,7 +1629,11 @@ BEGIN
 
             INNER JOIN Object AS Object_Juridical ON Object_Juridical.Id     = tmpMI_list.JuridicalId
                                                  -- Только Юр.л.
-                                                 AND Object_Juridical.DescId = zc_Object_Juridical()
+                                                 AND (Object_Juridical.DescId = zc_Object_Juridical()
+                                                   OR Object_Juridical.DescId = zc_Object_InfoMoney() --или статья УП
+                                                   OR Object_Juridical.DescId = zc_Object_Partner()   --или Контагент
+                                                     ) 
+            LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Juridical.DescId
 
             LEFT JOIN tmpMI ON tmpMI.ObjectId   = tmpMI_list.JuridicalId
                            AND tmpMI.ContractId = tmpMI_list.ContractId
@@ -1652,6 +1681,12 @@ BEGIN
             -- УП-статья + № группы
             LEFT JOIN tmpInfoMoney_OrderF ON tmpInfoMoney_OrderF.InfoMoneyId = Object_InfoMoney.Id
 
+            -- Юр.лицо информативно
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                 ON ObjectLink_Partner_Juridical.ObjectId      = Object_Juridical.Id       --может быть юр. лицо, статья УП , контарагент
+                                AND ObjectLink_Partner_Juridical.DescId        = zc_ObjectLink_Partner_Juridical()
+                                AND Object_Juridical.DescId = zc_Object_Partner()
+            LEFT JOIN Object AS Object_Juridical_inf ON Object_Juridical_inf.Id = ObjectLink_Partner_Juridical.ObjectId
            ;
 
      END IF;

@@ -6,7 +6,8 @@ DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer, Bo
 --DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer,Boolean, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer,Boolean, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer,Boolean, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer,Boolean, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer,Boolean, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, Integer, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpUpdateMovement_OrderFinance_Plan(
@@ -39,6 +40,8 @@ CREATE OR REPLACE FUNCTION gpUpdateMovement_OrderFinance_Plan(
    OUT outAmountPlan_calc        TFloat     ,
     IN inNumber_calc             TFloat     ,
    OUT outNumber_calc            TFloat     ,
+ INOUT ioMovementItemId_Child    Integer    ,
+    IN inInvNumber_Invoice_Child TVarChar   ,
     IN inSession                 TVarChar    -- сесси€ пользовател€
 )
 RETURNS RECORD
@@ -50,6 +53,7 @@ $BODY$
             vbPlan_count  Integer;
             vbBankId_main Integer;
             vbCount       Integer;
+            vbInvNumber_Invoice_child TVarChar;
 BEGIN
      -- проверка
      -- проверка прав пользовател€ на вызов процедуры
@@ -400,6 +404,29 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment_pay(), inMovementItemId, outComment_pay);
 
+
+     --Child
+     --если уже сохраненный чайл записываем если изменили значение 
+     IF COALESCE (ioMovementItemId_Child,0) <> 0
+     THEN
+         --сохраненные значение
+         vbInvNumber_Invoice_child := (SELECT MIS.ValueData FROM MovementItemString AS MIS WHERE MIS.MovementItemId = ioMovementItemId_Child AND MIS.DescId = zc_MIString_InvNumber_Invoice());
+         IF COALESCE (vbInvNumber_Invoice_child,'') <> COALESCE (inInvNumber_Invoice_Child,'')
+         THEN
+             -- сохранили свойство <>
+             PERFORM lpInsertUpdate_MovementItemString (zc_MIString_InvNumber_Invoice(), ioMovementItemId_Child, inInvNumber_Invoice_Child);
+         END IF; 
+     ELSE
+         --если не сохр. чайлд  и є счета не пусто
+         IF COALESCE (inInvNumber_Invoice_Child,'') <> ''
+         THEN
+             -- сохранили <Ёлемент документа>
+             ioMovementItemId_Child := lpInsertUpdate_MovementItem (0, zc_MI_Child(), Null, inMovementId, outAmountPlan_calc, inMovementItemId);
+             -- сохранили свойство <>
+             PERFORM lpInsertUpdate_MovementItemString (zc_MIString_InvNumber_Invoice(), ioMovementItemId_Child, inInvNumber_Invoice_Child);
+         END IF;
+     END IF;
+          
 
      if vbUserId = 9457 then RAISE EXCEPTION 'јдмин.Test Ok. <%>', ioJuridicalOrderFinanceId ; end if;
 
