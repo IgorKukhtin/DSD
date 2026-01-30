@@ -98,9 +98,9 @@ BEGIN
 
 
      -- Только после сохранения
-    SELECT STRING_AGG (DISTINCT tmpMI.InvNumber, '; ') AS InvNumber
-         , STRING_AGG (DISTINCT tmpMI.InvNumber_Invoice, '; ') AS InvNumber_Invoice
-         , STRING_AGG (DISTINCT tmpMI.GoodsName, '; ') AS GoodsName
+    SELECT STRING_AGG (tmpMI.InvNumber, '; ') AS InvNumber
+         , STRING_AGG (tmpMI.InvNumber_Invoice, '; ') AS InvNumber_Invoice
+         , STRING_AGG (tmpMI.GoodsName, '; ') AS GoodsName
          , SUM (tmpMI.Amount)          AS Amount
            INTO outInvNumber_parent, outInvNumber_Invoice_parent, outGoodsName_parent, outSumm_parent
     FROM (SELECT COALESCE (MIString_GoodsName.ValueData, '') AS GoodsName

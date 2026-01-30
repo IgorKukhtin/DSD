@@ -302,9 +302,9 @@ BEGIN
 
     --проверка
     --сохраненные значение
-    SELECT STRING_AGG (DISTINCT tmpMI.GoodsName, '; ') AS GoodsName
-         , STRING_AGG (DISTINCT tmpMI.InvNumber, '; ') AS InvNumber
-         , STRING_AGG (DISTINCT tmpMI.InvNumber_Invoice, '; ') AS InvNumber_Invoice
+    SELECT STRING_AGG (tmpMI.GoodsName, '; ') AS GoodsName
+         , STRING_AGG (tmpMI.InvNumber, '; ') AS InvNumber
+         , STRING_AGG (tmpMI.InvNumber_Invoice, '; ') AS InvNumber_Invoice
          , SUM (tmpMI.Amount)                 AS Amount
            INTO vbGoodsName_child, vbInvNumber_child, vbInvNumber_Invoice_child, vbAmount_child
     FROM (SELECT COALESCE (MIString_GoodsName.ValueData, '') AS GoodsName

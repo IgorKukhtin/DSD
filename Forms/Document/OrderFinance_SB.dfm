@@ -417,6 +417,17 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
             Options.Editing = False
             Width = 100
           end
+          object InvNumber_Invoice_Child: TcxGridDBColumn
+            Caption = #8470' '#1089#1095#1077#1090#1072
+            DataBinding.FieldName = 'InvNumber_Invoice_Child'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderGlyphAlignmentVert = vaTop
+            HeaderHint = #8470' '#1089#1095#1077#1090#1072
+            Options.Editing = False
+            Width = 100
+          end
           object Amount_Child: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'Amount_Child'

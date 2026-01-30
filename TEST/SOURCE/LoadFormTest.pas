@@ -1093,8 +1093,8 @@ begin
    }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceMovementSBForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceMovementSBForm');
-  exit;
-  {
+  {exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinance_SBForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderFinance_SBForm');
 
@@ -1114,12 +1114,13 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeek_DateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeek_DateForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinance_PlanForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderFinance_PlanForm');
-   }
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceMovementForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceJournalForm');
   }

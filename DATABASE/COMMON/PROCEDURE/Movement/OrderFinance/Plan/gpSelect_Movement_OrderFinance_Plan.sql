@@ -45,7 +45,8 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, NumGroup Integer
              , Condition TVarChar, ContractStateKindCode Integer
              , StartDate TDateTime, EndDate_real TDateTime, EndDate TVarChar
-             , Amount TFloat, AmountRemains TFloat, AmountPartner TFloat
+             , Amount TFloat
+             , AmountRemains TFloat, AmountPartner TFloat
              , AmountSumm         TFloat
              , AmountPartner_1    TFloat
              , AmountPartner_2    TFloat
@@ -89,7 +90,16 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
 
              , BankId_jof Integer
              , BankName_jof TVarChar
-             , MFO_jof      TVarChar
+             , MFO_jof      TVarChar 
+              -- child
+             , MovementItemId_Child Integer
+             , Amount_Child         TFloat
+             , InvNumber_Child      TVarChar
+             , InvNumber_Invoice_Child   TVarChar
+             , GoodsName_Child      TVarChar
+             , isSign_Child         Boolean
+             , TextSign_Child       TVarChar
+             , ColorFon_record      Integer
               )
 AS
 $BODY$
@@ -131,7 +141,7 @@ BEGIN
                                                         AND (MovementLinkObject_OrderFinance.ObjectId  IN (3988049 -- Мясо
                                                                                                          , 3988054 -- Сырье, упаковочные и расходные материалы
                                                                                                            )
-                                                          OR vbUserId = 5)
+                                                          OR vbUserId = 5 OR vbUserId = 9457)
 
                        WHERE Movement.DescId = zc_Movement_OrderFinance()
                          AND Movement.StatusId IN (SELECT tmpStatus.StatusId FROM tmpStatus)
@@ -265,6 +275,59 @@ BEGIN
                             )
 
 
+     , tmpMI_Child AS (SELECT MovementItem.*
+                       FROM MovementItem
+                       WHERE MovementItem.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)
+                         AND MovementItem.DescId     = zc_MI_Child()
+                         AND MovementItem.isErased   = FALSE
+                      )
+
+     , tmpMIString_Child AS (SELECT *
+                             FROM MovementItemString
+                             WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
+                               AND MovementItemString.DescId IN (zc_MIString_GoodsName()
+                                                               , zc_MIString_InvNumber()
+                                                               )
+                             )
+
+     , tmpMIBoolean AS (SELECT *
+                        FROM MovementItemBoolean
+                        WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
+                          AND MovementItemBoolean.DescId IN (zc_MIBoolean_Sign()
+                                                           )
+                        )
+
+     , tmpMI_Data_Child AS (SELECT MovementItem.Id
+                                 , MovementItem.MovementId
+                                 , MovementItem.Amount
+                                 , MovementItem.ParentId
+                                 , MIString_InvNumber.ValueData               ::TVarChar AS InvNumber
+                                 , MIString_InvNumber_Invoice.ValueData       ::TVarChar AS InvNumber_Invoice
+                                 , MIString_GoodsName.ValueData               ::TVarChar AS GoodsName
+                                 , COALESCE (MIBoolean_Sign.ValueData, FALSE) ::Boolean  AS isSign
+                            FROM tmpMI_Child AS MovementItem
+                                 LEFT JOIN tmpMIString_Child AS MIString_GoodsName
+                                                             ON MIString_GoodsName.MovementItemId = MovementItem.Id
+                                                            AND MIString_GoodsName.DescId = zc_MIString_GoodsName()
+
+                                 LEFT JOIN tmpMIString_Child AS MIString_InvNumber
+                                                             ON MIString_InvNumber.MovementItemId = MovementItem.Id
+                                                            AND MIString_InvNumber.DescId = zc_MIString_InvNumber()
+                                 LEFT JOIN tmpMIString_Child AS MIString_InvNumber_Invoice
+                                                             ON MIString_InvNumber_Invoice.MovementItemId = MovementItem.Id
+                                                            AND MIString_InvNumber_Invoice.DescId = zc_MIString_InvNumber_Invoice()
+
+                                 LEFT JOIN tmpMIBoolean AS MIBoolean_Sign
+                                                        ON MIBoolean_Sign.MovementItemId = MovementItem.Id
+                                                       AND MIBoolean_Sign.DescId = zc_MIBoolean_Sign()
+                            )
+
+      , tmpMI_ord AS ( 
+                      SELECT 
+                      FROM tmpMI
+                          LEGT JOIN 
+                      )
+                            
       , tmpMI_Data AS (SELECT MovementItem.MovementId
                             , MovementItem.Id                  AS Id
                             , Object_Juridical.Id              AS JuridicalId
@@ -991,8 +1054,30 @@ BEGIN
         , COALESCE (tmpJuridicalOrderFinance.BankName, tmpJuridicalOrderFinance_last.BankName)                                ::TVarChar AS BankName_jof
         , COALESCE (tmpJuridicalOrderFinance.MFO, tmpJuridicalOrderFinance_last.MFO)                                          ::TVarChar AS MFO_jof
 
+          --  child
+        , tmpMI_Child.Id         AS MovementItemId_Child
+        , tmpMI_Child.Amount     AS Amount_Child
+        , tmpMI_Child.InvNumber  AS InvNumber_Child
+        , tmpMI_Child.InvNumber_Invoice  AS InvNumber_Invoice_Child 
+        , tmpMI_Child.GoodsName  AS GoodsName_Child
+        , tmpMI_Child.isSign     AS isSign_Child
+
+        , CASE WHEN tmpMI_Child.isSign = TRUE THEN 'Погоджено'
+               WHEN tmpMI_Child.isSign = FALSE THEN 'Не погоджено'
+               ELSE ''
+          END                  ::TVarChar AS TextSign_Child
+
+        , CASE WHEN tmpMI_Child.isSign = FALSE
+                    -- подсветили если Не погоджено
+                    THEN zc_Color_Aqua()
+               ELSE zc_Color_White()
+          END ::Integer AS ColorFon_record
+
    FROM tmpMovement_Data AS tmpMovement
         LEFT JOIN tmpMI_Data AS tmpMI ON tmpMI.MovementId = tmpMovement.MovementId
+        LEFT JOIN tmpMI_Data_Child AS tmpMI_Child
+                                   ON tmpMI_Child.MovementId = tmpMovement.MovementId
+                                  AND tmpMI_Child.ParentId = tmpMI.Id 
 
         LEFT JOIN tmpContractCondition ON tmpContractCondition.ContractId = tmpMI.ContractId
                                       AND tmpMovement.OperDate BETWEEN tmpContractCondition.StartDate AND tmpContractCondition.EndDate
@@ -1017,6 +1102,8 @@ BEGIN
       OR tmpMI.AmountPlan_5 <> 0
       -- или Предварительный план
       OR (tmpMI.JuridicalId > 0 AND tmpMI.Amount <> 0)
+      -- child
+      OR (tmpMI.JuridicalId > 0 AND tmpMI_Child.Amount <> 0)
       ;
 
 END;

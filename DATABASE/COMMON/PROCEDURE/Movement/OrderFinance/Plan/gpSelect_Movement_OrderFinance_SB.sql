@@ -367,6 +367,7 @@ BEGIN
                             , MovementItem.MovementItemId_Child
                             , MovementItem.Amount_Child
                             , MovementItem.InvNumber_Child
+                            , MovementItem.InvNumber_Invoice_Child
                             , MovementItem.GoodsName_Child
                             , MovementItem.isSign_Child
                             , MIString_Comment_Child.ValueData    AS Comment_Child
@@ -555,6 +556,7 @@ BEGIN
         , tmpMI.Amount
         , COALESCE (tmpMI.Amount_Child, tmpMI.Amount) ::TFloat AS Amount_Child
         , tmpMI.InvNumber_Child
+        , tmpMI.InvNumber_Invoice_Child
         , tmpMI.GoodsName_Child
         , tmpMI.isSign_Child
         , CASE WHEN tmpMI.isSign_Child = TRUE THEN 'Погоджено'
