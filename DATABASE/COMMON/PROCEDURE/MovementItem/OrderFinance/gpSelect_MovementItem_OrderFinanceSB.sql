@@ -1137,9 +1137,9 @@ BEGIN
                      )
        -- Child - Данные с № заявки 1С
      , tmpMI_Child AS (SELECT tmpMI.ParentId
-                            , STRING_AGG (tmpMI.GoodsName, '; ') AS GoodsName
-                            , STRING_AGG (tmpMI.InvNumber, '; ') AS InvNumber
-                            , STRING_AGG (tmpMI.InvNumber_Invoice, '; ') AS InvNumber_Invoice
+                            , STRING_AGG (DISTINCT tmpMI.GoodsName, '; ') AS GoodsName
+                            , STRING_AGG (DISTINCT tmpMI.InvNumber, '; ') AS InvNumber
+                            , STRING_AGG (DISTINCT tmpMI.InvNumber_Invoice, '; ') AS InvNumber_Invoice
                             , MAX (tmpMI.isSign)                 AS isSign
                             , SUM (tmpMI.Amount)                 AS Amount
                       FROM (SELECT MovementItem.Id

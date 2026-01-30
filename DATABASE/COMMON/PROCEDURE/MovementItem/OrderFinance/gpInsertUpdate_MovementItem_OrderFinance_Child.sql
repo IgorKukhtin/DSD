@@ -16,6 +16,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinance_Child(
     IN inAmount                TFloat    , --
    OUT outSumm_parent          TFloat    , --
    OUT outInvNumber_parent     TVarChar  , --
+   OUT outInvNumber_Invoice_parent     TVarChar  , --
    OUT outGoodsName_parent     TVarChar  , --
     IN inSession               TVarChar    -- сесси€ пользовател€
 )
@@ -97,17 +98,22 @@ BEGIN
 
 
      -- “олько после сохранени€
-    SELECT STRING_AGG (tmpMI.InvNumber, '; ') AS InvNumber
-         , STRING_AGG (tmpMI.GoodsName, '; ') AS GoodsName
+    SELECT STRING_AGG (DISTINCT tmpMI.InvNumber, '; ') AS InvNumber
+         , STRING_AGG (DISTINCT tmpMI.InvNumber_Invoice, '; ') AS InvNumber_Invoice
+         , STRING_AGG (DISTINCT tmpMI.GoodsName, '; ') AS GoodsName
          , SUM (tmpMI.Amount)          AS Amount
-           INTO outInvNumber_parent, outGoodsName_parent, outSumm_parent
+           INTO outInvNumber_parent, outInvNumber_Invoice_parent, outGoodsName_parent, outSumm_parent
     FROM (SELECT COALESCE (MIString_GoodsName.ValueData, '') AS GoodsName
                , COALESCE (MIString_InvNumber.ValueData, '') AS InvNumber
+               , COALESCE (MIString_InvNumber_Invoice.ValueData, '') AS InvNumber_Invoice
                , MovementItem.Amount
           FROM MovementItem
               LEFT JOIN MovementItemString AS MIString_InvNumber
                                            ON MIString_InvNumber.MovementItemId = MovementItem.Id
                                           AND MIString_InvNumber.DescId = zc_MIString_InvNumber()
+              LEFT JOIN MovementItemString AS MIString_InvNumber_Invoice
+                                           ON MIString_InvNumber_Invoice.MovementItemId = MovementItem.Id
+                                          AND MIString_InvNumber_Invoice.DescId = zc_MIString_InvNumber_Invoice()
               LEFT JOIN MovementItemString AS MIString_GoodsName
                                            ON MIString_GoodsName.MovementItemId = MovementItem.Id
                                           AND MIString_GoodsName.DescId = zc_MIString_GoodsName()

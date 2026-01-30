@@ -1053,6 +1053,13 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             HeaderHint = #8470' '#1079#1072#1103#1074#1082#1080' '#1058#1052#1062' '#1074' 1'#1057
             Width = 80
           end
+          object InvNumber_Invoice_Child: TcxGridDBColumn
+            Caption = #8470' '#1089#1095#1077#1090#1072
+            DataBinding.FieldName = 'InvNumber_Invoice_Child'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object GoodsName_Child: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088' ('#1047#1072#1103#1074#1082#1072' '#1058#1052#1062')'
             DataBinding.FieldName = 'GoodsName_Child'
@@ -1558,6 +1565,13 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object InvNumber_Invoice_Child_ch2: TcxGridDBColumn
+            Caption = #8470' '#1089#1095#1077#1090#1072
+            DataBinding.FieldName = 'InvNumber_Invoice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 142
           end
           object GoodsName_ch2: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088' ('#1047#1072#1103#1074#1082#1072' '#1058#1052#1062')'
@@ -4829,6 +4843,15 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumber_Invoice_child'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumber_Invoice_child'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 62
@@ -7090,6 +7113,14 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'outInvNumber_Invoice_parent'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumber_Invoice_child'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outGoodsName_parent'
         Value = Null
         Component = MasterCDS
@@ -7127,6 +7158,14 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'InvNumber_Child'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInvNumber_Invoice_parent'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumber_Invoice_child'
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -7198,6 +7237,15 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inInvNumber_Invoice'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'InvNumber_Invoice'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = ChildCDS
@@ -7228,6 +7276,14 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'InvNumber_Child'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInvNumber_Invoice_parent'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumber_Invoice_Child'
         DataType = ftString
         MultiSelectSeparator = ','
       end

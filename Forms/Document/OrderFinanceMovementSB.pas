@@ -365,6 +365,8 @@ type
     mactSign_1_Yes: TMultiAction;
     Amount_Child: TcxGridDBColumn;
     bbExport_msg: TdxBarButton;
+    InvNumber_Invoice_Child: TcxGridDBColumn;
+    InvNumber_Invoice_Child_ch2: TcxGridDBColumn;
   private
   public
   end;

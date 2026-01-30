@@ -1090,10 +1090,11 @@ begin
   {
   //TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceMovementForm'));
   //TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceMovementForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceMovementSBForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceMovementSBForm');
-
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinance_SBForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderFinance_SBForm');
 
