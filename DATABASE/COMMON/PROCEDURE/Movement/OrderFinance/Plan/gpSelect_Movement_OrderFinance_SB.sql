@@ -47,6 +47,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , Amount               TFloat   --из мастера информативно
              , Amount_Child         TFloat
              , InvNumber_Child      TVarChar
+             , InvNumber_Invoice_Child   TVarChar
              , GoodsName_Child      TVarChar
              , isSign_Child         Boolean
              , TextSign_Child       TVarChar
@@ -136,6 +137,7 @@ BEGIN
                                  , MovementItem.Amount
                                  , MovementItem.ParentId
                                  , MIString_InvNumber.ValueData ::TVarChar AS InvNumber
+                                 , MIString_InvNumber_Invoice.ValueData ::TVarChar AS InvNumber_Invoice
                                  , MIString_GoodsName.ValueData ::TVarChar AS GoodsName
                                  , MIBoolean_Sign.ValueData     ::Boolean  AS isSign
                             FROM tmpMI_Child AS MovementItem
@@ -146,6 +148,9 @@ BEGIN
                                  LEFT JOIN tmpMIString_Child AS MIString_InvNumber
                                                              ON MIString_InvNumber.MovementItemId = MovementItem.Id
                                                             AND MIString_InvNumber.DescId = zc_MIString_InvNumber()
+                                 LEFT JOIN tmpMIString_Child AS MIString_InvNumber_Invoice
+                                                             ON MIString_InvNumber_Invoice.MovementItemId = MovementItem.Id
+                                                            AND MIString_InvNumber_Invoice.DescId = zc_MIString_InvNumber_Invoice()
 
                                  LEFT JOIN tmpMIBoolean AS MIBoolean_Sign
                                                         ON MIBoolean_Sign.MovementItemId = MovementItem.Id
@@ -161,6 +166,7 @@ BEGIN
                       , tmpMI_Child.Id         AS MovementItemId_Child
                       , tmpMI_Child.Amount     AS Amount_Child
                       , tmpMI_Child.InvNumber  AS InvNumber_Child
+                      , tmpMI_Child.InvNumber_Invoice  AS InvNumber_Invoice_Child 
                       , tmpMI_Child.GoodsName  AS GoodsName_Child
                       , tmpMI_Child.isSign     AS isSign_Child
                      FROM tmpMI_Master
@@ -361,6 +367,7 @@ BEGIN
                             , MovementItem.MovementItemId_Child
                             , MovementItem.Amount_Child
                             , MovementItem.InvNumber_Child
+                            , MovementItem.InvNumber_Invoice_Child
                             , MovementItem.GoodsName_Child
                             , MovementItem.isSign_Child
                             , MIString_Comment_Child.ValueData    AS Comment_Child
@@ -549,6 +556,7 @@ BEGIN
         , tmpMI.Amount
         , COALESCE (tmpMI.Amount_Child, tmpMI.Amount) ::TFloat AS Amount_Child
         , tmpMI.InvNumber_Child
+        , tmpMI.InvNumber_Invoice_Child
         , tmpMI.GoodsName_Child
         , tmpMI.isSign_Child
         , CASE WHEN tmpMI.isSign_Child = TRUE THEN 'Погоджено'

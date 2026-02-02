@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderFinance_Child(
 )
 RETURNS TABLE (Id Integer, ParentId Integer
              , InvNumber  TVarChar
+             , InvNumber_Invoice TVarChar
              , GoodsName TVarChar
              , Comment TVarChar
              , Comment_SB         TVarChar
@@ -46,6 +47,7 @@ BEGIN
              MovementItem.Id                         AS Id
            , MovementItem.ParentId
            , MIString_InvNumber.ValueData ::TVarChar AS InvNumber
+           , MIString_InvNumber_Invoice.ValueData ::TVarChar AS InvNumber_Invoice
            , MIString_GoodsName.ValueData ::TVarChar AS GoodsName
            , MIString_Comment.ValueData   ::TVarChar AS Comment
            , MIString_Comment_SB.ValueData           AS Comment_SB
@@ -64,6 +66,10 @@ BEGIN
             LEFT JOIN MovementItemString AS MIString_InvNumber
                                          ON MIString_InvNumber.MovementItemId = MovementItem.Id
                                         AND MIString_InvNumber.DescId = zc_MIString_InvNumber()
+
+            LEFT JOIN MovementItemString AS MIString_InvNumber_Invoice
+                                         ON MIString_InvNumber_Invoice.MovementItemId = MovementItem.Id
+                                        AND MIString_InvNumber_Invoice.DescId = zc_MIString_InvNumber_Invoice()
 
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
@@ -86,6 +92,7 @@ BEGIN
              0                   AS Id
            , MovementItem.Id     AS ParentId
            , ''    ::TVarChar    AS InvNumber
+           , ''    ::TVarChar    AS InvNumber_Invoice
            , ''    ::TVarChar    AS GoodsName
            , ''    ::TVarChar    AS Comment
            , ''    ::TVarChar    AS Comment_SB
@@ -110,6 +117,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 30.01.26         *
  14.01.26         *
 */
 

@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_MovementItem_OrderFinance_Child()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance_Child (Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance_Child (Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance_Child (Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance_Child (Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinance_Child(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -10,10 +11,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinance_Child(
     IN inMovementItemId_Order  Integer   , -- MovementItemId OrderIncome
     IN inGoodsName             TVarChar  , -- Товары
     IN inInvNumber             TVarChar  , --
+    IN inInvNumber_Invoice     TVarChar  , --
     IN inComment               TVarChar  , --
     IN inAmount                TFloat    , --
    OUT outSumm_parent          TFloat    , --
    OUT outInvNumber_parent     TVarChar  , --
+   OUT outInvNumber_Invoice_parent     TVarChar  , --
    OUT outGoodsName_parent     TVarChar  , --
     IN inSession               TVarChar    -- сессия пользователя
 )
@@ -34,6 +37,12 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Не заполнено значение <№ заявки (1С)>.';
      END IF;
      -- проверка
+   /*  IF TRIM (COALESCE (inInvNumber_Invoice, '')) = ''
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не заполнено значение <№ счета>.';
+     END IF;
+     */
+     -- проверка
      IF TRIM (COALESCE (inGoodsName, '')) = ''
      THEN
          RAISE EXCEPTION 'Ошибка.Не заполнено значение <Товар (Заявка ТМЦ)>.';
@@ -48,7 +57,6 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Не выбран "главный" Элемент - Юр.Лицо + договор.';
      END IF;
-
 
      -- Проверка - <Ожидание Согласования-1>
      IF EXISTS (SELECT FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_SignWait_1() AND MB.ValueData = TRUE)
@@ -79,6 +87,10 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_InvNumber(), ioId, inInvNumber);
      -- сохранили свойство <>
+
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_InvNumber_Invoice(), ioId, inInvNumber_Invoice);
+
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GoodsName(), ioId, inGoodsName);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
@@ -86,16 +98,21 @@ BEGIN
 
      -- Только после сохранения
     SELECT STRING_AGG (tmpMI.InvNumber, '; ') AS InvNumber
+         , STRING_AGG (tmpMI.InvNumber_Invoice, '; ') AS InvNumber_Invoice
          , STRING_AGG (tmpMI.GoodsName, '; ') AS GoodsName
          , SUM (tmpMI.Amount)          AS Amount
-           INTO outInvNumber_parent, outGoodsName_parent, outSumm_parent
+           INTO outInvNumber_parent, outInvNumber_Invoice_parent, outGoodsName_parent, outSumm_parent
     FROM (SELECT COALESCE (MIString_GoodsName.ValueData, '') AS GoodsName
                , COALESCE (MIString_InvNumber.ValueData, '') AS InvNumber
+               , COALESCE (MIString_InvNumber_Invoice.ValueData, '') AS InvNumber_Invoice
                , MovementItem.Amount
           FROM MovementItem
               LEFT JOIN MovementItemString AS MIString_InvNumber
                                            ON MIString_InvNumber.MovementItemId = MovementItem.Id
                                           AND MIString_InvNumber.DescId = zc_MIString_InvNumber()
+              LEFT JOIN MovementItemString AS MIString_InvNumber_Invoice
+                                           ON MIString_InvNumber_Invoice.MovementItemId = MovementItem.Id
+                                          AND MIString_InvNumber_Invoice.DescId = zc_MIString_InvNumber_Invoice()
               LEFT JOIN MovementItemString AS MIString_GoodsName
                                            ON MIString_GoodsName.MovementItemId = MovementItem.Id
                                           AND MIString_GoodsName.DescId = zc_MIString_GoodsName()
@@ -127,6 +144,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.01.26         *
  14.01.26         *
 */
 

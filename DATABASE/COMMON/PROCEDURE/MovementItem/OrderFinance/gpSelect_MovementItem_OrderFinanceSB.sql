@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderFinanceSB(
 RETURNS TABLE (Id Integer
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , OKPO TVarChar
+             , ObjectDesc_ItemName TVarChar, JuridicalName_inf TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, NumGroup Integer
@@ -80,6 +81,7 @@ RETURNS TABLE (Id Integer
 
              , GoodsName_Child TVarChar
              , InvNumber_Child TVarChar
+             , InvNumber_Invoice_Child TVarChar
              , Sign_Child      Boolean
              , Amount_Child    TFloat
               )
@@ -708,12 +710,14 @@ BEGIN
     , tmpMI_Child AS (SELECT tmpMI.ParentId
                            , STRING_AGG (tmpMI.GoodsName, '; ') AS GoodsName
                            , STRING_AGG (tmpMI.InvNumber, '; ') AS InvNumber
+                           , STRING_AGG (tmpMI.InvNumber_Invoice, '; ') AS InvNumber_Invoice
                            , MAX (tmpMI.isSign)                 AS isSign
                            , SUM (tmpMI.Amount)                 AS Amount
                       FROM (SELECT MovementItem.Id
                                  , MovementItem.ParentId
                                  , COALESCE (MIString_GoodsName.ValueData, '')                  AS GoodsName
                                  , COALESCE (MIString_InvNumber.ValueData, '')                  AS InvNumber
+                                 , COALESCE (MIString_InvNumber_Invoice.ValueData, '')          AS InvNumber_Invoice
                                  , CASE WHEN MIBoolean_Sign.ValueData = TRUE THEN 0 ELSE 1 END  AS isSign
                                  , MovementItem.Amount                                          AS Amount
                             FROM MovementItem
@@ -723,6 +727,9 @@ BEGIN
                                 LEFT JOIN MovementItemString AS MIString_InvNumber
                                                              ON MIString_InvNumber.MovementItemId = MovementItem.Id
                                                             AND MIString_InvNumber.DescId = zc_MIString_InvNumber()
+                                LEFT JOIN MovementItemString AS MIString_InvNumber_Invoice
+                                                             ON MIString_InvNumber_Invoice.MovementItemId = MovementItem.Id
+                                                            AND MIString_InvNumber_Invoice.DescId = zc_MIString_InvNumber_Invoice()
                                 LEFT JOIN MovementItemBoolean AS MIBoolean_Sign
                                                               ON MIBoolean_Sign.MovementItemId = MovementItem.Id
                                                              AND MIBoolean_Sign.DescId = zc_MIBoolean_Sign()
@@ -742,6 +749,8 @@ BEGIN
            , Object_Juridical.ObjectCode      AS JuridicalCode
            , Object_Juridical.ValueData       AS JuridicalName
            , tmpJuridicalDetails_View.OKPO
+           , ObjectDesc.ItemName              AS ObjectDesc_ItemName
+           , CASE WHEN ObjectDesc.Id = zc_Object_Juridical() THEN Object_Juridical.ValueData ELSE Object_Juridical_inf.ValueData END ::TVarChar AS JuridicalName_inf
 
            , Object_Contract.Id               AS ContractId
            , Object_Contract.ObjectCode       AS ContractCode
@@ -845,6 +854,7 @@ BEGIN
 
            , tmpMI_Child.GoodsName ::TVarChar AS GoodsName_Child
            , tmpMI_Child.InvNumber ::TVarChar AS InvNumber_Child
+           , tmpMI_Child.InvNumber_Invoice ::TVarChar AS InvNumber_Invoice_Child
            , CASE WHEN tmpMI_Child.isSign = 0 THEN TRUE ELSE FALSE END ::Boolean AS Sign_Child
            , tmpMI_Child.Amount    ::TFloat   AS Amount_Child
 
@@ -853,6 +863,7 @@ BEGIN
                            AND tmpMI.ContractId  = tmpData.ContractId
 
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (tmpData.JuridicalId, tmpMI.JuridicalId)
+            LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Juridical.DescId
             LEFT JOIN Object AS Object_Contract  ON Object_Contract.Id  = COALESCE (tmpData.ContractId, tmpMI.ContractId)
             LEFT JOIN Object AS Object_Cash      ON Object_Cash.Id  = tmpMI.CashId
 
@@ -906,6 +917,13 @@ BEGIN
 
             -- Child - Данные с № заявки 1С
             LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI.Id
+
+            -- Юр.лицо информативно
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                 ON ObjectLink_Partner_Juridical.ObjectId      = Object_Juridical.Id       --может быть юр. лицо, статья УП , контарагент
+                                AND ObjectLink_Partner_Juridical.DescId        = zc_ObjectLink_Partner_Juridical()
+                                AND Object_Juridical.DescId = zc_Object_Partner()
+            LEFT JOIN Object AS Object_Juridical_inf ON Object_Juridical_inf.Id = ObjectLink_Partner_Juridical.ObjectId
            ;
 
 
@@ -1132,12 +1150,14 @@ BEGIN
      , tmpMI_Child AS (SELECT tmpMI.ParentId
                             , STRING_AGG (tmpMI.GoodsName, '; ') AS GoodsName
                             , STRING_AGG (tmpMI.InvNumber, '; ') AS InvNumber
+                            , STRING_AGG (tmpMI.InvNumber_Invoice, '; ') AS InvNumber_Invoice
                             , MAX (tmpMI.isSign)                 AS isSign
                             , SUM (tmpMI.Amount)                 AS Amount
                       FROM (SELECT MovementItem.Id
                                  , MovementItem.ParentId
                                  , COALESCE (MIString_GoodsName.ValueData, '')                  AS GoodsName
                                  , COALESCE (MIString_InvNumber.ValueData, '')                  AS InvNumber
+                                 , COALESCE (MIString_InvNumber_Invoice.ValueData, '')          AS InvNumber_Invoice
                                  , CASE WHEN MIBoolean_Sign.ValueData = TRUE THEN 0 ELSE 1 END  AS isSign
                                  , MovementItem.Amount
                             FROM MovementItem
@@ -1147,6 +1167,9 @@ BEGIN
                                 LEFT JOIN MovementItemString AS MIString_InvNumber
                                                              ON MIString_InvNumber.MovementItemId = MovementItem.Id
                                                             AND MIString_InvNumber.DescId = zc_MIString_InvNumber()
+                                LEFT JOIN MovementItemString AS MIString_InvNumber_Invoice
+                                                             ON MIString_InvNumber_Invoice.MovementItemId = MovementItem.Id
+                                                            AND MIString_InvNumber_Invoice.DescId = zc_MIString_InvNumber_Invoice()
                                 LEFT JOIN MovementItemBoolean AS MIBoolean_Sign
                                                               ON MIBoolean_Sign.MovementItemId = MovementItem.Id
                                                              AND MIBoolean_Sign.DescId = zc_MIBoolean_Sign()
@@ -1166,7 +1189,9 @@ BEGIN
            , Object_Juridical.Id              AS JuridicalId
            , Object_Juridical.ObjectCode      AS JuridicalCode
            , Object_Juridical.ValueData       AS JuridicalName
-           , tmpJuridicalDetails_View.OKPO
+           , tmpJuridicalDetails_View.OKPO 
+           , ObjectDesc.ItemName              AS ObjectDesc_ItemName
+           , CASE WHEN ObjectDesc.Id = zc_Object_Juridical() THEN Object_Juridical.ValueData ELSE Object_Juridical_inf.ValueData END ::TVarChar AS JuridicalName_inf
 
            , View_Contract.ContractId
            , View_Contract.ContractCode
@@ -1308,15 +1333,20 @@ BEGIN
                   ELSE zc_Color_White()
              END ::Integer AS ColorFon_record
 
-           , tmpMI_Child.GoodsName ::TVarChar AS GoodsName_Child
-           , tmpMI_Child.InvNumber ::TVarChar AS InvNumber_Child
+           , tmpMI_Child.GoodsName         ::TVarChar AS GoodsName_Child
+           , tmpMI_Child.InvNumber         ::TVarChar AS InvNumber_Child
+           , tmpMI_Child.InvNumber_Invoice ::TVarChar AS InvNumber_Invoice_Child
            , CASE WHEN tmpMI_Child.isSign = 0 THEN TRUE ELSE FALSE END ::Boolean AS Sign_Child
-           , tmpMI_Child.Amount    ::TFloat   AS Amount_Child
+           , tmpMI_Child.Amount            ::TFloat   AS Amount_Child
 
        FROM tmpMI AS MovementItem
             INNER JOIN Object AS Object_Juridical ON Object_Juridical.Id     = MovementItem.ObjectId
-                                                 -- Только Юр.л.
-                                                 AND Object_Juridical.DescId = zc_Object_Juridical()
+                                                    -- Только Юр.л.
+                                                 AND (Object_Juridical.DescId = zc_Object_Juridical()
+                                                   OR Object_Juridical.DescId = zc_Object_InfoMoney() --или статья УП
+                                                   OR Object_Juridical.DescId = zc_Object_Partner()   --или Контагент
+                                                     ) 
+            LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Juridical.DescId
 
             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountRemains
                                            ON MIFloat_AmountRemains.MovementItemId = MovementItem.Id
@@ -1450,6 +1480,12 @@ BEGIN
             -- Child - Данные с № заявки 1С
             LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = MovementItem.Id
 
+            -- Юр.лицо информативно
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                 ON ObjectLink_Partner_Juridical.ObjectId      = Object_Juridical.Id       --может быть юр. лицо, статья УП , контарагент
+                                AND ObjectLink_Partner_Juridical.DescId        = zc_ObjectLink_Partner_Juridical()
+                                AND Object_Juridical.DescId = zc_Object_Partner()
+            LEFT JOIN Object AS Object_Juridical_inf ON Object_Juridical_inf.Id = ObjectLink_Partner_Juridical.ObjectId
      UNION ALL
        -- Данные прошлой недели
        SELECT
@@ -1457,7 +1493,9 @@ BEGIN
            , Object_Juridical.Id              AS JuridicalId
            , Object_Juridical.ObjectCode      AS JuridicalCode
            , Object_Juridical.ValueData       AS JuridicalName
-           , tmpJuridicalDetails_View.OKPO
+           , tmpJuridicalDetails_View.OKPO 
+           , ObjectDesc.ItemName              AS ObjectDesc_ItemName
+           , CASE WHEN ObjectDesc.Id = zc_Object_Juridical() THEN Object_Juridical.ValueData ELSE Object_Juridical_inf.ValueData END ::TVarChar AS JuridicalName_inf
 
            , View_Contract.ContractId
            , View_Contract.ContractCode
@@ -1571,6 +1609,7 @@ BEGIN
 
            , ''    ::TVarChar AS GoodsName_Child
            , ''    ::TVarChar AS InvNumber_Child
+           , ''    ::TVarChar AS InvNumber_Invoice_Child
            , FALSE ::Boolean  AS Sign_Child
            , 0     ::TFloat   AS Amount_Child
 
@@ -1590,7 +1629,11 @@ BEGIN
 
             INNER JOIN Object AS Object_Juridical ON Object_Juridical.Id     = tmpMI_list.JuridicalId
                                                  -- Только Юр.л.
-                                                 AND Object_Juridical.DescId = zc_Object_Juridical()
+                                                 AND (Object_Juridical.DescId = zc_Object_Juridical()
+                                                   OR Object_Juridical.DescId = zc_Object_InfoMoney() --или статья УП
+                                                   OR Object_Juridical.DescId = zc_Object_Partner()   --или Контагент
+                                                     ) 
+            LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Juridical.DescId
 
             LEFT JOIN tmpMI ON tmpMI.ObjectId   = tmpMI_list.JuridicalId
                            AND tmpMI.ContractId = tmpMI_list.ContractId
@@ -1638,6 +1681,12 @@ BEGIN
             -- УП-статья + № группы
             LEFT JOIN tmpInfoMoney_OrderF ON tmpInfoMoney_OrderF.InfoMoneyId = Object_InfoMoney.Id
 
+            -- Юр.лицо информативно
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                 ON ObjectLink_Partner_Juridical.ObjectId      = Object_Juridical.Id       --может быть юр. лицо, статья УП , контарагент
+                                AND ObjectLink_Partner_Juridical.DescId        = zc_ObjectLink_Partner_Juridical()
+                                AND Object_Juridical.DescId = zc_Object_Partner()
+            LEFT JOIN Object AS Object_Juridical_inf ON Object_Juridical_inf.Id = ObjectLink_Partner_Juridical.ObjectId
            ;
 
      END IF;

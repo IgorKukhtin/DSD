@@ -77,7 +77,7 @@ type
     SetUnErased: TdsdUpdateErased;
     actShowErased: TBooleanStoredProcAction;
     bbErased: TdxBarButton;
-    bbUnErased: TdxBarButton;
+    bbSetUnErased: TdxBarButton;
     bbShowErased: TdxBarButton;
     cxLabel11: TcxLabel;
     spErasedMIMaster: TdsdStoredProc;
@@ -365,6 +365,18 @@ type
     mactSign_1_Yes: TMultiAction;
     Amount_Child: TcxGridDBColumn;
     bbExport_msg: TdxBarButton;
+    InvNumber_Invoice_Child: TcxGridDBColumn;
+    InvNumber_Invoice_Child_ch2: TcxGridDBColumn;
+    actInfoMoney_OrderFinanceChoiceForm: TOpenChoiceForm;
+    actInsertRecord_Infomoney: TInsertRecord;
+    bbInfoMoney_InsertRecord: TdxBarButton;
+    bbInfoMoney_UpdeteRecord: TdxBarButton;
+    JuridicalName_inf: TcxGridDBColumn;
+    ObjectDesc_ItemName: TcxGridDBColumn;
+    actInsertRecord_Partner: TInsertRecord;
+    actPartnerChoiceForm: TOpenChoiceForm;
+    bbInsertRecord_Partner: TdxBarButton;
+    bbPartner_UpdeteRecord: TdxBarButton;
   private
   public
   end;

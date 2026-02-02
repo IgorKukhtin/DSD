@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_MovementItem_OrderFinanceSB()
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinanceSB (Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinanceSB (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinanceSB (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinanceSB (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinanceSB(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -26,7 +27,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinanceSB(
     IN inComment               TVarChar   , --
     -- child
     IN inGoodsName_child       TVarChar  , -- Товары
-    IN inInvNumber_child       TVarChar  , --
+    IN inInvNumber_child       TVarChar  , --   
+    IN inInvNumber_Invoice_child  TVarChar  , --
     IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -36,6 +38,7 @@ $BODY$
    DECLARE vbOperDate_start TDateTime;
            vbGoodsName_child TVarChar;
            vbInvNumber_child TVarChar;
+           vbInvNumber_Invoice_child TVarChar;
            vbId_child        Integer;
            vbAmount_child    TFloat;
            vbIsInsert_child  Boolean;
@@ -301,10 +304,12 @@ BEGIN
     --сохраненные значение
     SELECT STRING_AGG (tmpMI.GoodsName, '; ') AS GoodsName
          , STRING_AGG (tmpMI.InvNumber, '; ') AS InvNumber
+         , STRING_AGG (tmpMI.InvNumber_Invoice, '; ') AS InvNumber_Invoice
          , SUM (tmpMI.Amount)                 AS Amount
-           INTO vbGoodsName_child, vbInvNumber_child, vbAmount_child
+           INTO vbGoodsName_child, vbInvNumber_child, vbInvNumber_Invoice_child, vbAmount_child
     FROM (SELECT COALESCE (MIString_GoodsName.ValueData, '') AS GoodsName
                , COALESCE (MIString_InvNumber.ValueData, '') AS InvNumber
+               , COALESCE (MIString_InvNumber_Invoice.ValueData, '') AS InvNumber_Invoice
                , MovementItem.Amount
           FROM MovementItem
               LEFT JOIN MovementItemString AS MIString_GoodsName
@@ -313,6 +318,9 @@ BEGIN
               LEFT JOIN MovementItemString AS MIString_InvNumber
                                            ON MIString_InvNumber.MovementItemId = MovementItem.Id
                                           AND MIString_InvNumber.DescId = zc_MIString_InvNumber()
+              LEFT JOIN MovementItemString AS MIString_InvNumber_Invoice
+                                           ON MIString_InvNumber_Invoice.MovementItemId = MovementItem.Id
+                                          AND MIString_InvNumber_Invoice.DescId = zc_MIString_InvNumber_Invoice()
           WHERE MovementItem.MovementId = inMovementId
             AND MovementItem.DescId     = zc_MI_Child()
             AND MovementItem.isErased   = FALSE
@@ -326,6 +334,7 @@ BEGIN
     IF COALESCE (inInvNumber_child, '') <> COALESCE (vbInvNumber_child,'')
     OR COALESCE (inGoodsName_child, '') <> COALESCE (vbGoodsName_child,'')
     OR COALESCE (inAmount, 0)           <> COALESCE (vbAmount_child, 0)
+    OR COALESCE (inInvNumber_Invoice_child, '') <> COALESCE (vbInvNumber_Invoice_child,'')
     THEN
         -- проверка что строка child одна
         IF (SELECT COUNT(*)
@@ -336,9 +345,11 @@ BEGIN
               AND MovementItem.isErased = FALSE
            ) > 1
         THEN
-            RAISE EXCEPTION 'Ошибка.Заполнение возможно только во второй таблице <Товар (Заявка ТМЦ)>. % % % % % % % % %'
+            RAISE EXCEPTION 'Ошибка.Заполнение возможно только во второй таблице <Товар (Заявка ТМЦ)>. % % % % % % % % % % %'
                           , CHR (13)
                           ,  COALESCE (inInvNumber_child, ''), ' <> ' || COALESCE (vbInvNumber_child,'')
+                          , CHR (13)
+                          ,  COALESCE (inInvNumber_Invoice_child, ''), ' <> ' || COALESCE (vbInvNumber_Invoice_child,'')
                           , CHR (13)
                           ,  COALESCE (inGoodsName_child, ''), ' <> ' || COALESCE (vbGoodsName_child,'')
                           , CHR (13)
@@ -357,6 +368,8 @@ BEGIN
             --сохраненные значение
             vbInvNumber_child := (SELECT MIS.ValueData FROM MovementItemString AS MIS WHERE MIS.MovementItemId = vbId_child AND MIS.DescId = zc_MIString_InvNumber());
             --сохраненные значение
+            vbInvNumber_Invoice_child := (SELECT MIS.ValueData FROM MovementItemString AS MIS WHERE MIS.MovementItemId = vbId_child AND MIS.DescId = zc_MIString_InvNumber_Invoice());
+            --сохраненные значение
             vbGoodsName_child := (SELECT MIS.ValueData FROM MovementItemString AS MIS WHERE MIS.MovementItemId = vbId_child AND MIS.DescId = zc_MIString_GoodsName());
 
 
@@ -371,6 +384,9 @@ BEGIN
 
             -- сохранили свойство <>
             PERFORM lpInsertUpdate_MovementItemString (zc_MIString_InvNumber(), vbId_child, inInvNumber_child);
+            
+            -- сохранили свойство <>
+            PERFORM lpInsertUpdate_MovementItemString (zc_MIString_InvNumber_Invoice(), vbId_child, inInvNumber_Invoice_child);
 
             -- сохранили свойство <>
             PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GoodsName(), vbId_child, inGoodsName_child);
@@ -391,6 +407,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.01.26         *
  18.02.21         * inAmountStart
  29.07.19         *
 */

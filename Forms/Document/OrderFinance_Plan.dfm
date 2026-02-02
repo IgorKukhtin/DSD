@@ -24,6 +24,8 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 277
+        ExplicitLeft = 3
+        ExplicitTop = -4
         ExplicitWidth = 1020
         ExplicitHeight = 277
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -753,6 +755,53 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 112
+          end
+          object isSign_Child: TcxGridDBColumn
+            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' '#1057#1041' ('#1044#1072'/'#1053#1077#1090')'
+            DataBinding.FieldName = 'isSign_Child'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+          end
+          object TextSign_Child: TcxGridDBColumn
+            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' '#1057#1041
+            DataBinding.FieldName = 'TextSign_Child'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object GoodsName_Child: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088' ('#1047#1072#1103#1074#1082#1072' '#1058#1052#1062')'
+            DataBinding.FieldName = 'GoodsName_Child'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderGlyphAlignmentVert = vaTop
+            Options.Editing = False
+            Width = 100
+          end
+          object InvNumber_Invoice_Child: TcxGridDBColumn
+            Caption = #8470' '#1089#1095#1077#1090#1072
+            DataBinding.FieldName = 'InvNumber_Invoice_Child'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderGlyphAlignmentVert = vaTop
+            HeaderHint = #8470' '#1089#1095#1077#1090#1072
+            Width = 100
+          end
+          object Amount_Child: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'Amount_Child'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
           end
           object FonColor_AmountPlan_1: TcxGridDBColumn
             DataBinding.FieldName = 'FonColor_AmountPlan_1'
@@ -2112,6 +2161,23 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         Component = MasterCDS
         ComponentItem = 'Number_calc'
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioMovementItemId_Child'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementItemId_Child'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumber_Invoice_Child'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumber_Invoice_Child'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
