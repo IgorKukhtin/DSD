@@ -110,10 +110,15 @@ BEGIN
 
      END IF;
 
-     outIsSignSB := inIsSignSB;
+
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovementFloat_TotalSummOrderFinance (inMovementId);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
+
+     --
+     outIsSignSB := inIsSignSB;
 
 END;
 $BODY$

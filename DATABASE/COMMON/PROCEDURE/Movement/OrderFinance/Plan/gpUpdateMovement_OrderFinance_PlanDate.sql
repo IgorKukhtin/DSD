@@ -134,6 +134,9 @@ BEGIN
      END IF;
 
 
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovementFloat_TotalSummOrderFinance (inMovementId);
+
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (inMovementItemId, vbUserId, FALSE);
 
