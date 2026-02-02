@@ -185,6 +185,7 @@ BEGIN
 
                           -- !!!Замена!!!! - m по цене n
                           WHEN vbPromoSchemaKindId = zc_Enum_PromoSchemaKind_m_n() AND MIFloat_Value_m.ValueData > 0
+                           AND 1=0
                                THEN CAST (MIFloat_PriceWithOutVAT.ValueData * MIFloat_Value_n.ValueData / MIFloat_Value_m.ValueData AS NUMERIC (16, 2))
 
                           ELSE MIFloat_PriceWithOutVAT.ValueData
@@ -195,6 +196,7 @@ BEGIN
 
                           -- !!!Замена!!!! - m по цене n
                           WHEN vbPromoSchemaKindId = zc_Enum_PromoSchemaKind_m_n() AND MIFloat_Value_m.ValueData > 0
+                           AND 1=0
                                THEN CAST (MIFloat_PriceWithVAT.ValueData * MIFloat_Value_n.ValueData / MIFloat_Value_m.ValueData AS NUMERIC (16, 2))
 
                           ELSE MIFloat_PriceWithVAT.ValueData
