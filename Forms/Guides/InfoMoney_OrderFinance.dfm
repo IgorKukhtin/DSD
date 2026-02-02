@@ -5,7 +5,7 @@ object InfoMoney_OrderFinanceForm: TInfoMoney_OrderFinanceForm
     #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1089#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103'> ('#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1087#1083#1072#1090 +
     #1077#1078#1077#1081')'
   ClientHeight = 376
-  ClientWidth = 597
+  ClientWidth = 553
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,12 +21,14 @@ object InfoMoney_OrderFinanceForm: TInfoMoney_OrderFinanceForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
-    Width = 597
-    Height = 350
+    Top = 56
+    Width = 553
+    Height = 320
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 55
+    ExplicitWidth = 597
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -50,7 +52,7 @@ object InfoMoney_OrderFinanceForm: TInfoMoney_OrderFinanceForm
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object InfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076
-        DataBinding.FieldName = 'InfoMoneyCode'
+        DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
         Width = 86
       end
@@ -68,7 +70,7 @@ object InfoMoney_OrderFinanceForm: TInfoMoney_OrderFinanceForm
       end
       object InfoMoneyName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-        DataBinding.FieldName = 'InfoMoneyName'
+        DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Width = 177
       end
@@ -85,6 +87,38 @@ object InfoMoney_OrderFinanceForm: TInfoMoney_OrderFinanceForm
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Top = 26
+    Width = 553
+    Height = 30
+    Align = alTop
+    TabOrder = 5
+    ExplicitLeft = 32
+    ExplicitTop = 34
+    ExplicitWidth = 597
+    object lbSearchName: TcxLabel
+      Left = 18
+      Top = 4
+      Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103': '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchName: TcxTextEdit
+      Left = 96
+      Top = 3
+      TabOrder = 1
+      DesignSize = (
+        140
+        21)
+      Width = 140
     end
   end
   object DataSource: TDataSource
@@ -160,6 +194,14 @@ object InfoMoney_OrderFinanceForm: TInfoMoney_OrderFinanceForm
         end
         item
           Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -206,6 +248,10 @@ object InfoMoney_OrderFinanceForm: TInfoMoney_OrderFinanceForm
       Action = dsdChoiceGuides
       Category = 0
     end
+    object bbShowErased: TdxBarButton
+      Action = actShowErased
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -233,7 +279,7 @@ object InfoMoney_OrderFinanceForm: TInfoMoney_OrderFinanceForm
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'InfoMoneyId'
+          ComponentItem = 'Id'
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -241,15 +287,15 @@ object InfoMoney_OrderFinanceForm: TInfoMoney_OrderFinanceForm
           Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'InfoMoneyName'
+          ComponentItem = 'Name'
           DataType = ftString
           MultiSelectSeparator = ','
         end
         item
-          Name = 'InfoMoneyCode'
+          Name = 'Code'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'InfoMoneyCode'
+          ComponentItem = 'Code'
           MultiSelectSeparator = ','
         end
         item
@@ -274,6 +320,25 @@ object InfoMoney_OrderFinanceForm: TInfoMoney_OrderFinanceForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object actShowErased: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = dsdStoredProc
+      StoredProcList = <
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_InfoMoney_OrderFinance'
@@ -282,7 +347,15 @@ object InfoMoney_OrderFinanceForm: TInfoMoney_OrderFinanceForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inShowAll'
+        Value = Null
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 256
     Top = 184
@@ -320,5 +393,18 @@ object InfoMoney_OrderFinanceForm: TInfoMoney_OrderFinanceForm
     PropertiesCellList = <>
     Left = 304
     Top = 152
+  end
+  object FieldFilter: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = ClientDataSet
+    Column = InfoMoneyName
+    ColumnList = <
+      item
+        Column = InfoMoneyName
+      end>
+    ActionNumber1 = dsdChoiceGuides
+    CheckBoxList = <>
+    Left = 208
+    Top = 280
   end
 end

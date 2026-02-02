@@ -21,7 +21,7 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  DataModul, dsdCommon;
+  DataModul, dsdCommon, cxContainer, cxTextEdit, cxLabel, Vcl.ExtCtrls;
 
 type
   TInfoMoney_OrderFinanceForm = class(TParentForm)
@@ -49,6 +49,12 @@ type
     InfoMoneyDestination: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     isErased: TcxGridDBColumn;
+    actShowErased: TBooleanStoredProcAction;
+    bbShowErased: TdxBarButton;
+    Panel2: TPanel;
+    lbSearchName: TcxLabel;
+    edSearchName: TcxTextEdit;
+    FieldFilter: TdsdFieldFilter;
   private
     { Private declarations }
   public
