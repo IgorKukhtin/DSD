@@ -1840,6 +1840,8 @@ END IF;
                                    THEN zc_Enum_Account_30204() -- Дворкин
                               WHEN zc_Enum_InfoMoney_21151()
                                    THEN zc_Enum_Account_30205() -- ЕКСПЕРТ-АГРОТРЕЙД
+                              WHEN zc_Enum_InfoMoney_21155()
+                                   THEN zc_Enum_Account_30207() -- Фирменная торговля
                               ELSE 0
                          END
                END AS AccountId_External
@@ -2026,6 +2028,8 @@ END IF;
                                   THEN zc_Enum_Account_30204() -- Дворкин
                              WHEN zc_Enum_InfoMoney_21151() = vbInfoMoneyId_CorporateFrom
                                   THEN zc_Enum_Account_30205() -- ЕКСПЕРТ-АГРОТРЕЙД
+                             WHEN zc_Enum_InfoMoney_21155() = vbInfoMoneyId_CorporateFrom
+                                  THEN zc_Enum_Account_30207() -- Фирменная торговля
                         END AS AccountId
                  FROM _tmpItem_SummPartner
                  GROUP BY _tmpItem_SummPartner.InfoMoneyGroupId, _tmpItem_SummPartner.InfoMoneyDestinationId
@@ -2362,8 +2366,12 @@ END IF;
                             THEN zc_Enum_Account_30204() -- Дворкин
                        WHEN vbIsCorporate_To = TRUE AND zc_Enum_InfoMoney_21151() = vbInfoMoneyId_CorporateTo
                             THEN zc_Enum_Account_30205() -- ЕКСПЕРТ-АГРОТРЕЙД
+                       WHEN vbIsCorporate_To = TRUE AND zc_Enum_InfoMoney_21155() = vbInfoMoneyId_CorporateTo
+                            THEN zc_Enum_Account_30207() -- Фирменная торговля
+
                        WHEN vbIsCorporate_To = TRUE
                             THEN 0 -- будет ошибка
+
                        ELSE lpInsertFind_Object_Account (inAccountGroupId         := _tmpItem_group.AccountGroupId
                                                        , inAccountDirectionId     := _tmpItem_group.AccountDirectionId
                                                        , inInfoMoneyDestinationId := _tmpItem_group.InfoMoneyDestinationId
@@ -2663,6 +2671,12 @@ END IF;
           ) AS _tmpItem_byContainer
      WHERE _tmpItem_SummPersonal.MovementItemId = _tmpItem_byContainer.MovementItemId;
 
+
+     -- Проверка - Перевыставление
+     IF EXISTS (SELECT 1 FROM _tmpItem_SummPersonal WHERE _tmpItem_SummPersonal.OperSumm_Partner <> 0 AND _tmpItem_SummPersonal.ContractId <> 0 AND COALESCE (_tmpItem_SummPersonal.AccountId_External, 0) = 0 )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Перевыставление Счет не найден.';
+     END IF;
 
      -- 2.0.3.5. определяется ContainerId_External для проводок по "Учредитель" или "Перевыставление"
      UPDATE _tmpItem_SummPersonal SET ContainerId_External = _tmpItem_byContainer.ContainerId_External
