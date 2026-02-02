@@ -233,7 +233,7 @@ BEGIN
                                              , inContractId    := _tmpReport.ContractId
                                              --, inBankAccountId := _tmpData.BankAccountId
                                              , inAmountRemains := (COALESCE (_tmpReport.KreditRemains,0) - COALESCE (_tmpReport.DebetRemains,0)) ::TFloat
-                                             , inAmountPartner := CASE WHEN COALESCE (_tmpReport.DefermentPaymentRemains,0) < 0 THEN 0 ELSE COALESCE (_tmpReport.DefermentPaymentRemains,0) END ::TFloat
+                                             , inAmountPartner := CASE WHEN COALESCE (_tmpReport.DefermentPaymentRemains,0) < 0 THEN COALESCE (_tmpReport.DefermentPaymentRemains,0) ELSE COALESCE (_tmpReport.DefermentPaymentRemains,0) END ::TFloat
                                              , inSaleSumm      := COALESCE (_tmpReport.SaleSumm,0)   ::TFloat
                                              , inSaleSumm1     := COALESCE (_tmpReport.SaleSumm1,0)  ::TFloat
                                              , inSaleSumm2     := COALESCE (_tmpReport.SaleSumm2,0)  ::TFloat
@@ -279,4 +279,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MI_OrderFinance_byReport (inMovementId := 32907306, inSession:= '5');
+-- SELECT * FROM gpInsertUpdate_MI_OrderFinance_byReport (inMovementId := 33406019, inSession:= '475048');
