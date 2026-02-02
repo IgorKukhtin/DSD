@@ -5790,10 +5790,6 @@
 				<Form>OrderFinance_SBForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\OrderFinanceMovementSB.pas">
-				<Form>OrderFinanceMovementSBForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\OrderFinanceSBJournal.pas">
 				<Form>OrderFinanceSBJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -5808,6 +5804,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\InfoMoney_OrderFinance.pas">
 				<Form>InfoMoney_OrderFinanceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\OrderFinanceMovementSB.pas">
+				<Form>OrderFinanceMovementSBForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

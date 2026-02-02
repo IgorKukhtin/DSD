@@ -323,7 +323,7 @@ BEGIN
                             )
         --master + Child 
       , tmpMI_ord AS (SELECT tmpMI.*
-                           , ROW_NUMBER() OVER (PARTITION BY tmpMI.MovementId ORDER BY tmpMI_Child.Id ASC) AS Ord
+                           , ROW_NUMBER() OVER (PARTITION BY tmpMI.MovementId, tmpMI.Id ORDER BY tmpMI_Child.Id ASC) AS Ord
                            -- Child
                            , tmpMI_Child.Id         AS MovementItemId_Child
                            , tmpMI_Child.Amount     AS Amount_Child
