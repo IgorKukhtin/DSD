@@ -1393,7 +1393,8 @@ BEGIN
                                                                  AND tmpSend.UnitId    = tmpRemains.UnitId
                                           ) AS tmp ON tmp.PartionId = Object_PartionGoods.MovementItemId
                           WHERE (Object_PartionGoods.MovementItemId IN (SELECT DISTINCT tmpSale_all.PartionId FROM tmpSale_all)
-                              OR Object_PartionGoods.GoodsId IN (SELECT DISTINCT tmpSale_all.GoodsId FROM tmpSale_all)
+                            --OR Object_PartionGoods.GoodsId IN (SELECT DISTINCT tmpSale_all.GoodsId FROM tmpSale_all)
+                              OR Object_PartionGoods.OperDate BETWEEN inStartDate AND inEndDate
                               OR inIsPeriodAll = TRUE
                                 )
                          )
@@ -1949,7 +1950,7 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsGroup8 ON Object_GoodsGroup8.Id = tmpData.GroupId8
            ;
 
- END;
+END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
