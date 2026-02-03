@@ -96,9 +96,10 @@ BEGIN
                            INNER JOIN MovementLinkObject AS MovementLinkObject_OrderFinance
                                                          ON MovementLinkObject_OrderFinance.MovementId = Movement.Id
                                                         AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
-                                                        AND MovementLinkObject_OrderFinance.ObjectId   IN (3988049 -- Мясо
-                                                                                                         , 3988054 -- Сырье, упаковочные и расходные материалы
-                                                                                                           )
+                                                        AND MovementLinkObject_OrderFinance.ObjectId   IN (3988049  -- Мясо
+                                                                                                         , 3988054  -- Сырье, упаковочные и расходные материалы
+                                                                                                         , 13069438 -- Техническое Обслуживание и Основные Средства
+                                                                                                          )
                        WHERE Movement.DescId = zc_Movement_OrderFinance()
                          AND Movement.StatusId IN (SELECT tmpStatus.StatusId FROM tmpStatus)
                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '14 DAY' AND inOperDate + INTERVAL '14 DAY'
@@ -108,10 +109,23 @@ BEGIN
                       , MovementItem.Id       AS Id
                       , MovementItem.ObjectId AS ObjectId
                  FROM MovementItem
-                 WHERE MovementItem.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)
-                   AND MovementItem.DescId = zc_MI_Master()
-                   AND MovementItem.isErased = FALSE
+                 WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                   AND MovementItem.DescId     = zc_MI_Master()
+                   AND MovementItem.isErased   = FALSE
                  )
+     , tmpMI_Child AS (SELECT MovementItem.*
+                       FROM MovementItem
+                       WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                         AND MovementItem.DescId     = zc_MI_Child()
+                         AND MovementItem.isErased   = FALSE
+                      )
+     , tmpMIString_Child AS (SELECT *
+                             FROM MovementItemString
+                             WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
+                               AND MovementItemString.DescId IN (zc_MIString_GoodsName()
+                                                               , zc_MIString_InvNumber_Invoice()
+                                                                )
+                             )
 
      , tmpMIFloat_AmountPlan AS (SELECT *
                                 FROM MovementItemFloat
@@ -212,6 +226,21 @@ BEGIN
                                    AND Object_JuridicalOrderFinance.isErased = FALSE
                                  )
 
+     , tmpMI_Data_Child AS (SELECT MovementItem.Id
+                                 , MovementItem.MovementId
+                                 , MovementItem.Amount
+                                 , MovementItem.ParentId
+                                 , MIString_InvNumber_Invoice.ValueData AS InvNumber_Invoice
+                                 , MIString_GoodsName.ValueData         AS GoodsName
+                            FROM tmpMI_Child AS MovementItem
+                                 LEFT JOIN tmpMIString_Child AS MIString_GoodsName
+                                                             ON MIString_GoodsName.MovementItemId = MovementItem.Id
+                                                            AND MIString_GoodsName.DescId = zc_MIString_GoodsName()
+                                 LEFT JOIN tmpMIString_Child AS MIString_InvNumber_Invoice
+                                                             ON MIString_InvNumber_Invoice.MovementItemId = MovementItem.Id
+                                                            AND MIString_InvNumber_Invoice.DescId = zc_MIString_InvNumber_Invoice()
+                           )
+
       , tmpMI_Data AS (SELECT MovementItem.MovementId
                             , MovementItem.Id                  AS Id
                             , Object_Juridical.Id              AS JuridicalId
@@ -221,8 +250,16 @@ BEGIN
                             , Object_InfoMoney.ValueData       AS InfoMoneyName
                             , MILinkObject_Contract.ObjectId   AS ContractId
 
-                            , MIFloat_AmountPlan.ValueData     AS AmountPlan
+                              -- замена
+                            , COALESCE (tmpMI_Child.Amount, MIFloat_AmountPlan.ValueData) AS AmountPlan
+                             -- Child
+                           , tmpMI_Child.InvNumber_Invoice  AS InvNumber_Invoice_Child 
+                           , tmpMI_Child.GoodsName          AS GoodsName_Child
+
                         FROM tmpMI AS MovementItem
+                             -- Child
+                             LEFT JOIN tmpMI_Data_Child AS tmpMI_Child ON tmpMI_Child.ParentId = MovementItem.Id
+
                              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId
                                                                  AND Object_Juridical.DescId = zc_Object_Juridical()
                              LEFT JOIN ObjectHistory_JuridicalDetails_View AS tmpJuridicalDetails_View ON tmpJuridicalDetails_View.JuridicalId = Object_Juridical.Id
@@ -262,15 +299,15 @@ BEGIN
              , COALESCE (tmpMI.OKPO,'') :: TVarChar AS CORRIDENTIFYCODE
              --, Object_InfoMoney.ValueData       AS DETAILSOFPAYMENT
 
-
-             , REPLACE (REPLACE
-                       (REPLACE
-                       (REPLACE (COALESCE (tmpJuridicalOrderFinance.Comment, '')
-                                                                 , 'NOM_DOG', COALESCE (View_Contract.InvNumber, ''))
-                                                                 , 'DATA_DOG', zfConvert_DateToString (COALESCE (View_Contract.StartDate, zc_DateStart())))
-                                                                 , 'PDV', '20')
-                                                                 , 'SUMMA_P', zfConvert_FloatToString (ROUND(tmpMI.AmountPlan/6, 2))
-                       ) ::TVarChar AS DETAILSOFPAYMENT
+               -- Назначение платежа
+             , zfCalc_Comment_pay_OrderFinance (inComment    := COALESCE (tmpJuridicalOrderFinance.Comment, '')
+                                              , inNOM_DOG    := COALESCE (View_Contract.InvNumber, '')
+                                              , inNOM_IVOICE := COALESCE (tmpMI.InvNumber_Invoice_Child, '')
+                                              , inTOVAR      := COALESCE (tmpMI.GoodsName_Child, '')
+                                              , inDATA_DOG   := COALESCE (View_Contract.StartDate, zc_DateStart())
+                                              , inPDV        := 20
+                                              , inSUMMA_P    := tmpMI.AmountPlan
+                                               ) ::TVarChar AS DETAILSOFPAYMENT
 
              , (COALESCE (tmpMI.AmountPlan,0) *100) :: INTEGER AS AMOUNT
              , 804                  ::TVarChar  AS CORRCOUNTRYID    --Код страны корреспондента

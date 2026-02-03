@@ -58,36 +58,44 @@ BEGIN
      --     ioAmountPlan_day := 0;
      -- END IF;
 
-
+     -- 1.1.
      IF COALESCE (ioDateDay_old, zc_DateStart()) <> zc_DateStart()
     -- если заменили дату
     AND COALESCE (ioDateDay_old, zc_DateStart()) <> COALESCE (inDateDay, zc_DateStart())
      THEN
          -- обнуляем данные прошлой даты
-         PERFORM lpInsertUpdate_MovementItemFloat (CASE vbNumDay_old
-                                                        WHEN 1 THEN zc_MIFloat_AmountPlan_1()
-                                                        WHEN 2 THEN zc_MIFloat_AmountPlan_2()
-                                                        WHEN 3 THEN zc_MIFloat_AmountPlan_3()
-                                                        WHEN 4 THEN zc_MIFloat_AmountPlan_4()
-                                                        WHEN 5 THEN zc_MIFloat_AmountPlan_5()
-                                                   END
-                                                 , inMovementItemId, 0);
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_1(), inMovementItemId, 0);
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_2(), inMovementItemId, 0);
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_3(), inMovementItemId, 0);
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_4(), inMovementItemId, 0);
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_5(), inMovementItemId, 0);
 
          -- обнуляем свойство <Дата предварительный план>
          PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Amount(), inMovementItemId, NULL);
 
-         -- сохранили свойство <Платим (да/нет)>
-         /*PERFORM lpInsertUpdate_MovementItemBoolean (CASE vbNumDay_old
-                                                        WHEN 1 THEN zc_MIBoolean_AmountPlan_1()
-                                                        WHEN 2 THEN zc_MIBoolean_AmountPlan_2()
-                                                        WHEN 3 THEN zc_MIBoolean_AmountPlan_3()
-                                                        WHEN 4 THEN zc_MIBoolean_AmountPlan_4()
-                                                        WHEN 5 THEN zc_MIBoolean_AmountPlan_5()
-                                                     END
-                                                   , inMovementItemId, FALSE);*/
+         -- обновляем данные - Child
+         IF EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.ParentId = inMovementItemId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE)
+         THEN
+             -- проверка
+             IF 1 < (SELECT COUNT(*) FROM MovementItem WHERE MovementItem.ParentId = inMovementItemId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE)
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Изменение данных возможно только с учетом № счета.';
+             END IF;
+
+             -- обновляем данные - Child
+             PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, MovementItem.ParentId, MovementItem.ObjectId, MovementItem.MovementId, 0, inMovementItemId)
+             FROM MovementItem
+             WHERE MovementItem.ParentId = inMovementItemId
+               AND MovementItem.DescId   = zc_MI_Child()
+               AND MovementItem.isErased = FALSE
+            ;
+
+         END IF;
+
      END IF;
 
 
+     -- 1.2.
      IF COALESCE (inDateDay, zc_DateStart()) <> zc_DateStart() -- AND COALESCE (ioDateDay_old, zc_DateStart()) <> COALESCE (inDateDay, zc_DateStart())
      THEN
          -- нашли дату начала недели
@@ -122,16 +130,34 @@ BEGIN
          -- сохранили свойство <Дата предварительный план>
          PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Amount(), inMovementItemId, inDateDay);
 
-         -- сохранили свойство <Платим (да/нет)>
-         /*PERFORM lpInsertUpdate_MovementItemBoolean (CASE vbNumDay_old
-                                                        WHEN 1 THEN zc_MIBoolean_AmountPlan_1()
-                                                        WHEN 2 THEN zc_MIBoolean_AmountPlan_2()
-                                                        WHEN 3 THEN zc_MIBoolean_AmountPlan_3()
-                                                        WHEN 4 THEN zc_MIBoolean_AmountPlan_4()
-                                                        WHEN 5 THEN zc_MIBoolean_AmountPlan_5()
-                                                     END
-                                                   , inMovementItemId, COALESCE (inIsAmountPlan_day,TRUE));*/
+
+
+         -- обновляем данные - Child
+         IF EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.ParentId = inMovementItemId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE)
+         THEN
+             -- проверка
+             IF 1 < (SELECT COUNT(*) FROM MovementItem WHERE MovementItem.ParentId = inMovementItemId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE)
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Изменение данных возможно только с учетом № счета.';
+             END IF;
+
+             -- обновляем данные - Child
+             PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, MovementItem.ParentId, MovementItem.ObjectId, MovementItem.MovementId, ioAmountPlan_day, inMovementItemId)
+             FROM MovementItem
+             WHERE MovementItem.ParentId = inMovementItemId
+               AND MovementItem.DescId   = zc_MI_Child()
+               AND MovementItem.isErased = FALSE
+            ;
+
+         END IF;
+
      END IF;
+
+
+     -- сохранили связь с <протокол>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Update(), inMovementItemId, inUserId);
+     -- сохранили свойство <протокол>
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Update(), inMovementItemId, CURRENT_TIMESTAMP);
 
 
      -- пересчитали Итоговые суммы по накладной
@@ -154,7 +180,7 @@ BEGIN
      ioDateDay_old:= inDateDay;
 
      --
-     if vbUserId IN (9457) then RAISE EXCEPTION 'Админ.Test Ok. <%>  <%>', outWeekDay, ioAmountPlan_day; end if;
+     if vbUserId IN (9457, 5) then RAISE EXCEPTION 'Админ.Test Ok. <%>  <%>', outWeekDay, ioAmountPlan_day; end if;
 
 END;
 $BODY$

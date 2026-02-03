@@ -360,18 +360,19 @@ BEGIN
      SELECT MIFloat_AmountPlan.ValueData ::TFloat AS AmountPlan_calc
           , MIFloat_Number.ValueData     ::TFloat AS Number_calc
           , CASE WHEN MIFloat_AmountPlan.ValueData > 0
-                 THEN REPLACE
-                     (REPLACE
-                     (REPLACE
-                     (REPLACE (COALESCE (inComment_jof, '')
-                                , 'NOM_DOG', COALESCE (View_Contract.InvNumber, ''))
-                                , 'DATA_DOG', zfConvert_DateToString (COALESCE (View_Contract.StartDate, zc_DateStart())))
-                                , 'PDV', '20')
-                                , 'SUMMA_P', zfConvert_FloatToString (ROUND(MIFloat_AmountPlan.ValueData/6, 2)))
+                      THEN zfCalc_Comment_pay_OrderFinance (inComment    := inComment_jof
+                                                          , inNOM_DOG    := View_Contract.InvNumber
+                                                          , inNOM_IVOICE := (SELECT MIS.ValueData FROM MovementItemString AS MIS WHERE MIS.MovementItemId = ioMovementItemId_Child AND MIS.DescId = zc_MIString_InvNumber_Invoice())
+                                                          , inTOVAR      := (SELECT MIS.ValueData FROM MovementItemString AS MIS WHERE MIS.MovementItemId = ioMovementItemId_Child AND MIS.DescId = zc_MIString_GoodsName())
+                                                          , inDATA_DOG   := COALESCE (View_Contract.StartDate, zc_DateStart())
+                                                          , inPDV        := 20
+                                                          , inSUMMA_P    := MIFloat_AmountPlan.ValueData
+                                                           )
                  ELSE ''
             END :: TVarChar AS Comment_pay
 
-   INTO outAmountPlan_calc, outNumber_calc, outComment_pay
+            INTO outAmountPlan_calc, outNumber_calc, outComment_pay
+
      FROM MovementItem
           LEFT JOIN MovementItemFloat AS MIFloat_AmountPlan
                                       ON MIFloat_AmountPlan.MovementItemId = MovementItem.Id
