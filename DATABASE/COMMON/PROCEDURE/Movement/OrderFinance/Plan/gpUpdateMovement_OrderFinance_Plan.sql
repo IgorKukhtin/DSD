@@ -405,12 +405,13 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment_pay(), inMovementItemId, outComment_pay);
 
 
-     --Child
-     --если уже сохраненный чайл записываем если изменили значение 
-     IF COALESCE (ioMovementItemId_Child,0) <> 0
+     -- Child
+     -- если уже сохраненный чайл записываем если изменили значение 
+     IF ioMovementItemId_Child > 0
      THEN
-         --сохраненные значение
+         -- сохраненные значение
          vbInvNumber_Invoice_child := (SELECT MIS.ValueData FROM MovementItemString AS MIS WHERE MIS.MovementItemId = ioMovementItemId_Child AND MIS.DescId = zc_MIString_InvNumber_Invoice());
+         -- сохраненные значение
          IF COALESCE (vbInvNumber_Invoice_child,'') <> COALESCE (inInvNumber_Invoice_Child,'')
          THEN
              -- сохранили свойство <>

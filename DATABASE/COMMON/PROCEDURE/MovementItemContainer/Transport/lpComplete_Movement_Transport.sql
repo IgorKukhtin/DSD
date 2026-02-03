@@ -401,7 +401,7 @@ BEGIN
                      -- Бизнес для Прибыль, эта аналитика всегда берется по принадлежности маршрута к подразделению
                    , COALESCE (ObjectLink_UnitRoute_Business.ChildObjectId, 0) AS BusinessId_Route
 
-                   , COALESCE (ObjectLink_Contract_Juridical.ObjectId, 0)      AS JuridicalId
+                   , COALESCE (ObjectLink_Contract_Juridical.ChildObjectId, 0) AS JuridicalId
                    , COALESCE (ObjectLink_UnitRoute_Contract.ChildObjectId, 0) AS ContractId
                    , COALESCE (ObjectLink_Contract_PaidKind.ChildObjectId, 0)  AS PaidKindId
 
@@ -801,7 +801,7 @@ BEGIN
                                                                       WHEN zc_Enum_InfoMoney_21155()
                                                                            THEN zc_Enum_Account_30207() -- Фирменная торговля
                                                                       -- !!!
-                                                                      ELSE zc_Enum_Account_30205() -- ЕКСПЕРТ-АГРОТРЕЙД
+                                                                      ELSE 0 -- zc_Enum_Account_30205() -- ЕКСПЕРТ-АГРОТРЕЙД
                                                                  END
      FROM _tmpItem_Transport
      WHERE _tmpItem_Transport.MovementItemId = _tmpItem_TransportSumm_Transport.MovementItemId
