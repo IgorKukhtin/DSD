@@ -2057,17 +2057,17 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
-          object Comment_SB_ch3: TcxGridDBColumn
+          object Comment_Child_SB_ch3: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1057#1041')'
-            DataBinding.FieldName = 'Comment_SB'
+            DataBinding.FieldName = 'Comment_SB_Child'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
           end
-          object Comment_ch3: TcxGridDBColumn
+          object Comment_Child_ch3: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-            DataBinding.FieldName = 'Comment'
+            DataBinding.FieldName = 'Comment_Child'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100

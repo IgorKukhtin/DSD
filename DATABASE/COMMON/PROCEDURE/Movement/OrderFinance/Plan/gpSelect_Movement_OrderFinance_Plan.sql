@@ -287,6 +287,7 @@ BEGIN
                              WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
                                AND MovementItemString.DescId IN (zc_MIString_GoodsName()
                                                                , zc_MIString_InvNumber()
+                                                               , zc_MIString_InvNumber_Invoice()
                                                                )
                              )
 

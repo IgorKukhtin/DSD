@@ -107,6 +107,8 @@ type
     FonColor_string: TcxGridDBColumn;
     Amount_Child: TcxGridDBColumn;
     mactUpdateStatus_Complete: TMultiAction;
+    cbDetail: TcxCheckBox;
+    actRefreshDetail: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

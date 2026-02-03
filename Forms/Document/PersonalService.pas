@@ -421,6 +421,11 @@ type
     spGet_Export_FileNameZP_onDate: TdsdStoredProc;
     Action1: TAction;
     actGet_Export_FileNameZp_onDate: TdsdExecStoredProc;
+    spSelectExport_dbf_onDate: TdsdStoredProc;
+    actExport_dbf_onDate: TdsdStoredProcExportToFile;
+    macExport_dbf_onDate: TMultiAction;
+    bbExport_dbf_onDate: TdxBarButton;
+    spGet_Export_FileNameZP_dbf_onDate: TdsdExecStoredProc;
   private
     { Private declarations }
   public

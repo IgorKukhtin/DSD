@@ -1,13 +1,9 @@
--- Function: gpSelect_Movement_PersonalService_export
+-- Function: gpSelect_Movement_PersonalService_exportOnDate_dbf
 
--- DROP FUNCTION IF EXISTS gpexport_txtbankvostokpayroll (Integer, TVarChar, TFloat, TDateTime, TVarChar);
---DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_export_dbf (Integer, TVarChar, TFloat, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_export_dbf (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_exportOnDate_dbf (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService_export_dbf(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService_exportOnDate_dbf(
     IN inMovementId           Integer,
-    --IN inInvNumber            TVarChar,
-    --IN inAmount               TFloat,
     --IN inOperDate             TDateTime,
     IN inSession              TVarChar    -- сессия пользователя
 )
@@ -128,7 +124,9 @@ BEGIN
                                                   , inIsErased   := FALSE
                                                   , inSession    := inSession
                                                    ) AS gpSelect
-        WHERE COALESCE (gpSelect.SummCardRecalc, 0) <> 0;
+        WHERE COALESCE (gpSelect.SummCardRecalc, 0) <> 0
+          AND gpSelect.BankOutDate = vbOperDate
+        ;
 
 
      ELSE
