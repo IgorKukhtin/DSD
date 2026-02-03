@@ -3,7 +3,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081'> ('#1057#1095#1077#1090#1072')'
   ClientHeight = 612
-  ClientWidth = 1160
+  ClientWidth = 1164
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,12 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1160
+    Width = 1164
     Height = 196
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 1160
     object edInvNumber: TcxTextEdit
       Left = 232
       Top = 19
@@ -549,25 +550,28 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 222
-    Width = 1160
+    Width = 1164
     Height = 390
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
+    ExplicitWidth = 1160
     ClientRectBottom = 390
-    ClientRectRight = 1160
+    ClientRectRight = 1164
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 1160
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1160
+        Width = 1164
         Height = 184
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 1160
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1491,12 +1495,13 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       object ExportXmlGrid: TcxGrid
         Left = 0
         Top = 331
-        Width = 1160
+        Width = 1164
         Height = 35
         Align = alBottom
         Anchors = [akTop, akRight, akBottom]
         TabOrder = 1
         Visible = False
+        ExplicitWidth = 1160
         object ExportXmlGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ExportDS
@@ -1526,13 +1531,14 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       object cxGridChild: TcxGrid
         Left = 0
         Top = 192
-        Width = 1160
+        Width = 1164
         Height = 139
         Align = alBottom
         TabOrder = 2
         LookAndFeel.Kind = lfStandard
         LookAndFeel.NativeStyle = False
         LookAndFeel.SkinName = ''
+        ExplicitWidth = 1160
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -1645,23 +1651,26 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       object cxSplitter_Bottom: TcxSplitter
         Left = 0
         Top = 184
-        Width = 1160
+        Width = 1164
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridChild
+        ExplicitWidth = 1160
       end
     end
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
+      ExplicitWidth = 1160
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
-        Width = 1160
+        Width = 1164
         Height = 366
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 1160
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -5478,7 +5487,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 258
+    Left = 226
     Top = 224
   end
   object HeaderSaver: THeaderSaver
@@ -5819,8 +5828,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     KeyField = 'Id'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
-    Left = 446
-    Top = 354
+    Left = 390
+    Top = 346
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null
@@ -6245,8 +6254,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 688
-    Top = 319
+    Left = 616
+    Top = 327
   end
   object spUpdate_Juridical_OrderFinance: TdsdStoredProc
     DataSets = <>
@@ -7448,8 +7457,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 736
-    Top = 272
+    Left = 720
+    Top = 304
   end
   object ChildDS: TDataSource
     DataSet = ChildCDS
@@ -7791,8 +7800,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 960
-    Top = 184
+    Left = 808
+    Top = 240
   end
   object GuidesCash: TdsdGuides
     KeyField = 'Id'
@@ -7861,5 +7870,39 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     PackSize = 1
     Left = 608
     Top = 407
+  end
+  object spGetImportSettingSB: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 
+          'TOrderFinanceSBJournalForm;zc_Object_ImportSetting_OrderFinanceS' +
+          'B'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 720
+    Top = 352
   end
 end

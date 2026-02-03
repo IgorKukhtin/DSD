@@ -1,6 +1,7 @@
 -- Function: gpReport_JuridicalSold_Branch()
 
-DROP FUNCTION IF EXISTS gpReport_JuridicalSold_Branch (TDateTime, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_JuridicalSold_Branch (TDateTime, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_JuridicalSold_Branch (TDateTime, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_JuridicalSold_Branch(
     IN inStartDate                TDateTime , -- 
@@ -15,7 +16,8 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalSold_Branch(
     IN inBranchId                 Integer   , --
     IN inJuridicalGroupId         Integer   , --
     IN inCurrencyId               Integer   , -- Валюта
-    IN inIsPartionMovement        Boolean   ,
+    IN inIsPartionMovement        Boolean   , 
+    IN inIsJuridicalBasis         Boolean   ,
     IN inSession                  TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (ContainerId Integer, JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, INN TVarChar, JuridicalGroupName TVarChar
@@ -24,16 +26,16 @@ RETURNS TABLE (ContainerId Integer, JuridicalCode Integer, JuridicalName TVarCha
              , JuridicalPartnerlName TVarChar
              , BranchCode Integer, BranchName TVarChar, BranchName_personal TVarChar, BranchName_personal_trade TVarChar
              , ContractCode Integer, ContractNumber TVarChar
-             , ContractTagGroupName TVarChar, ContractTagName TVarChar, ContractStateKindCode Integer
+             , ContractTagGroupName TVarChar, ContractTagName TVarChar, ContractStateKindCode Integer   --20
              , ContractJuridicalDocId Integer, ContractJuridicalDocCode Integer, ContractJuridicalDocName TVarChar
              , PersonalName TVarChar, PersonalTradeName TVarChar, PersonalCollationName TVarChar, PersonalTradeName_Partner TVarChar, PersonalSigningName TVarChar
-             , StartDate TDateTime, EndDate TDateTime
+             , StartDate TDateTime, EndDate TDateTime --30
              , PaidKindName TVarChar, AccountName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , AreaName TVarChar, AreaName_Partner TVarChar
              , CurrencyName TVarChar
              , ContractConditionKindName TVarChar, ContractConditionValue TFloat
-             , PartionMovementName TVarChar
+             , PartionMovementId Integer, PartionMovementName TVarChar --43 44
              , PaymentDate TDateTime
              , AccountId Integer, JuridicalId Integer, PartnerId Integer, InfoMoneyId Integer, ContractId Integer, PaidKindId Integer, BranchId Integer
              , JuridicalId_Basis Integer
@@ -86,6 +88,7 @@ BEGIN
                                 , inJuridicalGroupId       := inJuridicalGroupId
                                 , inCurrencyId             := inCurrencyId
                                 , inIsPartionMovement      := inIsPartionMovement
+                                , inIsJuridicalBasis       := inIsJuridicalBasis
                                 , inUserId                 := vbUserId
                                  ) AS tmpReport
                               ;
@@ -103,4 +106,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_JuridicalSold_Branch (inStartDate:= '01.01.2016', inEndDate:= '01.01.2016', inAccountId:= null, inInfoMoneyId:= null, inInfoMoneyGroupId:= null, inInfoMoneyDestinationId:= null, inPaidKindId:= null, inBranchId:= null, inJuridicalGroupId:= null, inCurrencyId:= null, inIsPartionMovement:= FALSE, inSession:= zfCalc_UserAdmin()); 
---select * from gpReport_JuridicalSold_Branch(inStartDate := ('13.01.2022')::TDateTime , inEndDate := ('13.01.2022')::TDateTime , inAccountId := 0 , inInfoMoneyId := 0 , inInfoMoneyGroupId := 0 , inInfoMoneyDestinationId := 0 , inPaidKindId := 0 , inBranchId := 0 , inJuridicalGroupId := 257169 , inCurrencyId := 76965 , inIsPartionMovement := 'False' ,  inSession := '5');
+-- select * from gpReport_JuridicalSold_Branch(inStartDate := ('13.01.2022')::TDateTime , inEndDate := ('13.01.2022')::TDateTime , inStartDate_sale:=('13.01.2022')::TDateTime , inEndDate_sale:=('13.01.2022')::TDateTime, inAccountId := 0 , inInfoMoneyId := 0 , inInfoMoneyGroupId := 0 , inInfoMoneyDestinationId := 0 , inPaidKindId := 0 , inBranchId := 0 , inJuridicalGroupId := 257169 , inCurrencyId := 76965 , inIsPartionMovement := False::Boolean, inIsJuridicalBasis:= True::Boolean , inSession := '5');

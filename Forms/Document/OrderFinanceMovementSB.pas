@@ -370,6 +370,7 @@ type
     actPartnerChoiceForm: TOpenChoiceForm;
     bbInsertRecord_Partner: TdxBarButton;
     bbPartner_UpdeteRecord: TdxBarButton;
+    spGetImportSettingSB: TdsdStoredProc;
   private
   public
   end;

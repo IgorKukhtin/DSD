@@ -159,6 +159,7 @@ type
     BranchName_personal: TcxGridDBColumn;
     BranchName_personal_trade: TcxGridDBColumn;
     JuridicalName_Basis: TcxGridDBColumn;
+    cbJuridicalBasis: TcxCheckBox;
   private
     { Private declarations }
   public

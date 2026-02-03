@@ -200,7 +200,7 @@ object Report_JuridicalSold_BranchDialogForm: TReport_JuridicalSold_BranchDialog
   end
   object cbisPartionMovementName: TcxCheckBox
     Left = 8
-    Top = 68
+    Top = 56
     Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1072#1090#1100' '#1086#1089#1085#1086#1074#1072#1085#1080#1077
     Properties.ReadOnly = False
     TabOrder = 22
@@ -231,6 +231,14 @@ object Report_JuridicalSold_BranchDialogForm: TReport_JuridicalSold_BranchDialog
     Properties.ShowTime = False
     TabOrder = 26
     Width = 100
+  end
+  object cbJuridicalBasis: TcxCheckBox
+    Left = 8
+    Top = 78
+    Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1043#1083'. '#1102#1088'. '#1083#1080#1094#1086
+    Properties.ReadOnly = False
+    TabOrder = 27
+    Width = 153
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -430,6 +438,14 @@ object Report_JuridicalSold_BranchDialogForm: TReport_JuridicalSold_BranchDialog
         Value = Null
         Component = deEnd_sale
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IsJuridicalBasis'
+        Value = Null
+        Component = cbJuridicalBasis
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

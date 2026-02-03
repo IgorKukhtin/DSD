@@ -199,11 +199,19 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
     Width = 138
   end
   object cbisPartionMovementName: TcxCheckBox
-    Left = 8
-    Top = 62
+    Left = 20
+    Top = 52
     Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1072#1090#1100' '#1086#1089#1085#1086#1074#1072#1085#1080#1077
     Properties.ReadOnly = False
     TabOrder = 22
+    Width = 153
+  end
+  object cbJuridicalBasis: TcxCheckBox
+    Left = 20
+    Top = 73
+    Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1043#1083'. '#1102#1088'. '#1083#1080#1094#1086
+    Properties.ReadOnly = False
+    TabOrder = 23
     Width = 153
   end
   object PeriodChoice: TPeriodChoice
@@ -237,6 +245,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
@@ -244,6 +253,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BranchId'
@@ -251,6 +261,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         Component = GuidesBranch
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BranchName'
@@ -259,6 +270,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindId'
@@ -266,6 +278,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
@@ -274,6 +287,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountId'
@@ -281,6 +295,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountName'
@@ -289,6 +304,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyDestinationId'
@@ -296,6 +312,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         Component = GuidesInfoMoneyDestination
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyDestinationName'
@@ -304,6 +321,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyGroupId'
@@ -311,6 +329,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         Component = GuidesInfoMoneyGroup
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyGroupName'
@@ -319,6 +338,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyId'
@@ -326,6 +346,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         Component = GuidesCurrency
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyName'
@@ -334,6 +355,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyId'
@@ -341,6 +363,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         Component = GuidesInfoMoney
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName'
@@ -349,6 +372,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalGroupId'
@@ -356,6 +380,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         Component = GuidesJuridicalGroup
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalGroupName'
@@ -364,6 +389,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isPartionMovementName'
@@ -371,6 +397,15 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         Component = cbisPartionMovementName
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IsJuridicalBasis'
+        Value = Null
+        Component = cbJuridicalBasis
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 40
     Top = 243
@@ -380,6 +415,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
     LookupControl = edBranch
     FormNameParam.Value = 'TBranch_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBranch_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -390,6 +426,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -398,6 +435,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 96
     Top = 194
@@ -407,6 +445,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
     LookupControl = edAccount
     FormNameParam.Value = 'TAccount_ObjectDescForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TAccount_ObjectDescForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -417,6 +456,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -425,11 +465,13 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_Object_Juridical'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 128
     Top = 104
@@ -439,6 +481,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
     LookupControl = edInfoMoneyDestination
     FormNameParam.Value = 'TInfoMoneyDestination_ObjectDescForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoneyDestination_ObjectDescForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -449,6 +492,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -457,11 +501,13 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_Object_Juridical'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 110
     Top = 145
@@ -471,6 +517,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
     LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPaidKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -481,6 +528,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -489,6 +537,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 456
     Top = 20
@@ -498,6 +547,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
     LookupControl = edInfoMoneyGroup
     FormNameParam.Value = 'TInfoMoneyGroup_ObjectDescForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoneyGroup_ObjectDescForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -508,6 +558,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -516,11 +567,13 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_Object_Juridical'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 336
     Top = 104
@@ -530,6 +583,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
     LookupControl = edInfoMoney
     FormNameParam.Value = 'TInfoMoney_ObjectDescForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoney_ObjectDescForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -538,6 +592,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         Value = ''
         Component = GuidesInfoMoney
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -545,11 +600,13 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_Object_Juridical'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 368
     Top = 152
@@ -559,6 +616,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
     LookupControl = edJuridicalGroup
     FormNameParam.Value = 'TJuridicalGroup_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridicalGroup_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -569,6 +627,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -577,6 +636,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 368
     Top = 203
@@ -586,6 +646,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
     LookupControl = edCurrency
     FormNameParam.Value = 'TCurrency_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCurrency_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -596,6 +657,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -604,6 +666,7 @@ object Report_JuridicalSoldDialogForm: TReport_JuridicalSoldDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 456
     Top = 64
