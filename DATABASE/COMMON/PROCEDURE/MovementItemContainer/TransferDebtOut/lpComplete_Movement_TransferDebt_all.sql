@@ -449,6 +449,8 @@ BEGIN
                                   THEN zc_Enum_Account_30204() -- Дворкин
                              WHEN zc_Enum_InfoMoney_21151() = vbInfoMoneyId_Corporate_From
                                   THEN zc_Enum_Account_30205() -- ЕКСПЕРТ-АГРОТРЕЙД
+                             WHEN zc_Enum_InfoMoney_21155() = vbInfoMoneyId_Corporate_From
+                                  THEN zc_Enum_Account_30207() -- Фирменная торговля
                         END AS AccountId
                       , vbInfoMoneyDestinationId_From AS InfoMoneyDestinationId
                       , vbIsCorporate_From            AS isCorporate
@@ -488,6 +490,8 @@ BEGIN
                                   THEN zc_Enum_Account_30204() -- Дворкин
                              WHEN zc_Enum_InfoMoney_21151() = vbInfoMoneyId_Corporate_To
                                   THEN zc_Enum_Account_30205() -- ЕКСПЕРТ-АГРОТРЕЙД
+                             WHEN zc_Enum_InfoMoney_21155() = vbInfoMoneyId_Corporate_To
+                                  THEN zc_Enum_Account_30207() -- Фирменная торговля
                         END AS AccountId
                       , vbInfoMoneyDestinationId_To AS InfoMoneyDestinationId
                       , vbIsCorporate_To            AS isCorporate

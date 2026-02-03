@@ -252,9 +252,9 @@ BEGIN
                                                               THEN zc_Enum_Account_30205() -- ЕКСПЕРТ-АГРОТРЕЙД
                                                          WHEN zc_Enum_InfoMoney_21152()
                                                               THEN zc_Enum_Account_30206() -- Алан АЗИЯ
-                                                         WHEN 13194905 -- Фирменная торговля
-                                                              THEN 13194902  -- Фирменная торговля
-
+                                                         WHEN zc_Enum_InfoMoney_21155()
+                                                              THEN zc_Enum_Account_30207() -- Фирменная торговля
+                                                              
                                                          ELSE 0
                                                     END
 

@@ -3221,6 +3221,8 @@ end if;
                                   THEN zc_Enum_Account_30205() -- ЕКСПЕРТ-АГРОТРЕЙД
                              WHEN zc_Enum_InfoMoney_21152() = vbInfoMoneyId_CorporateTo
                                   THEN zc_Enum_Account_30206() -- Алан АЗИЯ
+                             WHEN zc_Enum_InfoMoney_21155() = vbInfoMoneyId_CorporateTo
+                                  THEN zc_Enum_Account_30207() -- Фирменная торговля
 
                         END AS AccountId_Corporate
                  FROM _tmpItem
