@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService_exportOnDate(
 RETURNS TABLE (RowData Text)
 AS
 $BODY$
+   DECLARE vbUserId    Integer;
    DECLARE vbBankId    Integer;
    DECLARE vbTotalSumm TFloat;
 
@@ -31,9 +32,11 @@ $BODY$
    DECLARE vbOnFlowType TVarChar;
    DECLARE vbKoeffSummCardSecond NUMERIC (16,10); 
 BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpGetUserBySession (inSession);
+
      -- *** Временная таблица для сбора результата
      CREATE TEMP TABLE _tmpResult (NPP Integer, RowData Text, errStr TVarChar) ON COMMIT DROP;
-
 
      -- определяется
      vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
@@ -361,6 +364,52 @@ BEGIN
      THEN
          RAISE EXCEPTION '%', er;
      END IF;
+
+
+     -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
+     INSERT INTO ResourseProtocol (UserId
+                                 , OperDate
+                                 , Value1
+                                 , Value2
+                                 , Value3
+                                 , Value4
+                                 , Value5
+                                 , Time1
+                                 , Time2
+                                 , Time3
+                                 , Time4
+                                 , Time5
+                                 , ProcName
+                                 , ProtocolData
+                                  )
+        WITH tmp_pg AS (SELECT * FROM pg_stat_activity WHERE state = 'active')
+        SELECT vbUserId
+               -- во сколько началась
+             , CURRENT_TIMESTAMP
+             , (SELECT COUNT (*) FROM tmp_pg)                                                    AS Value1
+             , (SELECT COUNT (*) FROM tmp_pg WHERE position( 'autovacuum: VACUUM' in query) = 1) AS Value2
+             , NULL AS Value3
+             , NULL AS Value4
+             , NULL AS Value5
+               -- сколько всего выполнялась проц
+             , (CLOCK_TIMESTAMP() - CURRENT_TIMESTAMP) :: INTERVAL AS Time1
+               -- сколько всего выполнялась проц ДО lpSelectMinPrice_List
+             , NULL AS Time2
+               -- сколько всего выполнялась проц lpSelectMinPrice_List
+             , NULL AS Time3
+               -- сколько всего выполнялась проц ПОСЛЕ lpSelectMinPrice_List
+             , NULL AS Time4
+               -- во сколько закончилась
+             , CLOCK_TIMESTAMP() AS Time5
+               -- ProcName
+             , 'gpSelect_Movement_PersonalService_exportOnDate'
+               -- ProtocolData
+             , inMovementId :: TVarChar
+    || ', ' || inInvNumber
+    || ', ' || zfConvert_FloatToString (inAmount)
+    || ', ' || zfConvert_DateToString (inOperDate)
+    || ', ' || inSession
+              ;
 
 
      -- Результат

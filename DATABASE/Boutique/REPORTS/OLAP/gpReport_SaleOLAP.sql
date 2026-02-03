@@ -1392,7 +1392,8 @@ BEGIN
                                                 FULL JOIN tmpSend ON tmpSend.PartionId = tmpRemains.PartionId
                                                                  AND tmpSend.UnitId    = tmpRemains.UnitId
                                           ) AS tmp ON tmp.PartionId = Object_PartionGoods.MovementItemId
-                          WHERE (Object_PartionGoods.MovementItemId IN (SELECT tmpSale_all.PartionId FROM tmpSale_all)
+                          WHERE (Object_PartionGoods.MovementItemId IN (SELECT DISTINCT tmpSale_all.PartionId FROM tmpSale_all)
+                              OR Object_PartionGoods.GoodsId IN (SELECT DISTINCT tmpSale_all.GoodsId FROM tmpSale_all)
                               OR inIsPeriodAll = TRUE
                                 )
                          )
