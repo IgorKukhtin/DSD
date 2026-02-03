@@ -802,6 +802,51 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
             Options.Editing = False
             Width = 80
           end
+          object isSign_Child: TcxGridDBColumn
+            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' '#1057#1041' ('#1044#1072'/'#1053#1077#1090')'
+            DataBinding.FieldName = 'isSign_Child'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object InvNumber_Child: TcxGridDBColumn
+            Caption = #8470' '#1079#1072#1103#1074#1082#1080' (1'#1057')'
+            DataBinding.FieldName = 'InvNumber_Child'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1079#1072#1103#1074#1082#1080' '#1058#1052#1062' '#1074' 1'#1057
+            Width = 80
+          end
+          object InvNumber_Invoice_Child: TcxGridDBColumn
+            Caption = #8470' '#1089#1095#1077#1090#1072
+            DataBinding.FieldName = 'InvNumber_Invoice_Child'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object GoodsName_Child: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088' ('#1047#1072#1103#1074#1082#1072' '#1058#1052#1062')'
+            DataBinding.FieldName = 'GoodsName_Child'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 150
+          end
+          object Comment_SB_Child: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1057#1041')'
+            DataBinding.FieldName = 'Comment_SB_Child'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object Comment_Child: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment_Child'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
           object FonColor_AmountPlan_day: TcxGridDBColumn
             DataBinding.FieldName = 'FonColor_AmountPlan_day'
             Visible = False
@@ -920,6 +965,15 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
       TabOrder = 2
       Width = 265
     end
+    object cbDetail: TcxCheckBox
+      Left = 338
+      Top = 5
+      Action = actRefreshDetail
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 10
+      Width = 127
+    end
   end
   object ExportXmlGrid: TcxGrid [2]
     Left = 0
@@ -995,7 +1049,21 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
       Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1080#1084#1087#1086#1088#1090' '#1074' OTP Bank '#1076#1083#1103' '#8470' '#1086#1095#1077#1088#1077#1076#1080
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1080#1084#1087#1086#1088#1090' '#1074' OTP Bank '#1076#1083#1103' '#8470' '#1086#1095#1077#1088#1077#1076#1080
     end
-    object actRefreshStart: TdsdDataSetRefresh [1]
+    object actRefreshDetail: TdsdDataSetRefresh [1]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1077#1090#1072#1083#1100#1085#1086
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1077#1090#1072#1083#1100#1085#1086
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actRefreshStart: TdsdDataSetRefresh [2]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spGet_WeekNumber_byPeriod
@@ -1712,6 +1780,14 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
         Name = 'inEndWeekNumber'
         Value = Null
         Component = edWeekNumber1
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsShowAll'
+        Value = Null
+        Component = cbDetail
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

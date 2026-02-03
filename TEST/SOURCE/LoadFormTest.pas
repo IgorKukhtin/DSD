@@ -1086,13 +1086,13 @@ end;
 
 procedure TLoadFormTest.LoadOrderFinanceMovementFormTest;
 begin
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoney_OrderFinanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoney_OrderFinanceForm');
-  {
+
   //TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceMovementForm'));
   //TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceMovementForm');
-   }
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceMovementSBForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceMovementSBForm');
   {exit;
@@ -1107,10 +1107,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinance_SBForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderFinance_SBForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinance_PlanDateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderFinance_PlanDateForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeekPeriodDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeekPeriodDialogForm');
 

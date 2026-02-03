@@ -88,48 +88,48 @@ BEGIN
       --master + Child 
      , tmpMI_ord AS (SELECT ROW_NUMBER() OVER (PARTITION BY tmpMI_Master.Id ORDER BY tmpMI_Child.Id ASC) AS Ord
                           -- master
-            , tmpMI_Master.Id
-            , tmpMI_Master.JuridicalId
-            , tmpMI_Master.JuridicalCode
-            , tmpMI_Master.JuridicalName
-            , tmpMI_Master.OKPO
-            , tmpMI_Master.ObjectDesc_ItemName ::TVarChar
-            , tmpMI_Master.JuridicalName_inf   ::TVarChar
-            , tmpMI_Master.ContractId
-            , tmpMI_Master.ContractCode
-            , tmpMI_Master.ContractName
-            , tmpMI_Master.PaidKindId
-            , tmpMI_Master.PaidKindName
-            , tmpMI_Master.InfoMoneyCode
-            , tmpMI_Master.InfoMoneyName
-            , tmpMI_Master.NumGroup               ::Integer  AS NumGroup
-            , tmpMI_Master.Condition              ::TVarChar AS Condition
-            , tmpMI_Master.ContractStateKindCode  ::Integer  AS ContractStateKindCode
-            , tmpMI_Master.StartDate
-            , tmpMI_Master.EndDate_real
-            , tmpMI_Master.EndDate               ::TVarChar AS EndDate
-            , tmpMI_Master.PersonalName_contract ::TVarChar AS PersonalName_contract
-            , tmpMI_Master.Amount            :: TFloat AS Amount
-            , tmpMI_Master.OperDate_Amount   ::TDateTime AS OperDate_Amount
-            , tmpMI_Master.AmountRemains     :: TFloat AS AmountRemains
-            , tmpMI_Master.AmountSumm        :: TFloat AS AmountSumm
-            , tmpMI_Master.AmountPlan_1      :: TFloat AS AmountPlan_1
-            , tmpMI_Master.AmountPlan_2      :: TFloat AS AmountPlan_2
-            , tmpMI_Master.AmountPlan_3      :: TFloat AS AmountPlan_3
-            , tmpMI_Master.AmountPlan_4      :: TFloat AS AmountPlan_4
-            , tmpMI_Master.AmountPlan_5      :: TFloat AS AmountPlan_5
-            , tmpMI_Master.AmountPlan_total  :: TFloat AS AmountPlan_total
-            , tmpMI_Master.isAmountPlan_1    ::Boolean  AS isAmountPlan_1
-            , tmpMI_Master.isAmountPlan_2    ::Boolean  AS isAmountPlan_2
-            , tmpMI_Master.isAmountPlan_3    ::Boolean  AS isAmountPlan_3
-            , tmpMI_Master.isAmountPlan_4    ::Boolean  AS isAmountPlan_4
-            , tmpMI_Master.isAmountPlan_5    ::Boolean  AS isAmountPlan_5
-            , tmpMI_Master.Comment           ::TVarChar AS Comment
-            , tmpMI_Master.InsertName
-            , tmpMI_Master.UpdateName
-            , tmpMI_Master.InsertDate
-            , tmpMI_Master.UpdateDate
-            , tmpMI_Master.isErased
+                          , tmpMI_Master.Id
+                          , tmpMI_Master.JuridicalId
+                          , tmpMI_Master.JuridicalCode
+                          , tmpMI_Master.JuridicalName
+                          , tmpMI_Master.OKPO
+                          , tmpMI_Master.ObjectDesc_ItemName ::TVarChar
+                          , tmpMI_Master.JuridicalName_inf   ::TVarChar
+                          , tmpMI_Master.ContractId
+                          , tmpMI_Master.ContractCode
+                          , tmpMI_Master.ContractName
+                          , tmpMI_Master.PaidKindId
+                          , tmpMI_Master.PaidKindName
+                          , tmpMI_Master.InfoMoneyCode
+                          , tmpMI_Master.InfoMoneyName
+                          , tmpMI_Master.NumGroup               ::Integer  AS NumGroup
+                          , tmpMI_Master.Condition              ::TVarChar AS Condition
+                          , tmpMI_Master.ContractStateKindCode  ::Integer  AS ContractStateKindCode
+                          , tmpMI_Master.StartDate
+                          , tmpMI_Master.EndDate_real
+                          , tmpMI_Master.EndDate               ::TVarChar AS EndDate
+                          , tmpMI_Master.PersonalName_contract ::TVarChar AS PersonalName_contract
+                          , tmpMI_Master.Amount            :: TFloat AS Amount
+                          , tmpMI_Master.OperDate_Amount   ::TDateTime AS OperDate_Amount
+                          , tmpMI_Master.AmountRemains     :: TFloat AS AmountRemains
+                          , tmpMI_Master.AmountSumm        :: TFloat AS AmountSumm
+                          , tmpMI_Master.AmountPlan_1      :: TFloat AS AmountPlan_1
+                          , tmpMI_Master.AmountPlan_2      :: TFloat AS AmountPlan_2
+                          , tmpMI_Master.AmountPlan_3      :: TFloat AS AmountPlan_3
+                          , tmpMI_Master.AmountPlan_4      :: TFloat AS AmountPlan_4
+                          , tmpMI_Master.AmountPlan_5      :: TFloat AS AmountPlan_5
+                          , tmpMI_Master.AmountPlan_total  :: TFloat AS AmountPlan_total
+                          , tmpMI_Master.isAmountPlan_1    ::Boolean  AS isAmountPlan_1
+                          , tmpMI_Master.isAmountPlan_2    ::Boolean  AS isAmountPlan_2
+                          , tmpMI_Master.isAmountPlan_3    ::Boolean  AS isAmountPlan_3
+                          , tmpMI_Master.isAmountPlan_4    ::Boolean  AS isAmountPlan_4
+                          , tmpMI_Master.isAmountPlan_5    ::Boolean  AS isAmountPlan_5
+                          , tmpMI_Master.Comment           ::TVarChar AS Comment
+                          , tmpMI_Master.InsertName
+                          , tmpMI_Master.UpdateName
+                          , tmpMI_Master.InsertDate
+                          , tmpMI_Master.UpdateDate
+                          , tmpMI_Master.isErased
                           -- Child
                           , tmpMI_Child.Id                ::Integer  AS MovementItemId_Child
                           , tmpMI_Child.InvNumber         ::TVarChar AS InvNumber_Child
