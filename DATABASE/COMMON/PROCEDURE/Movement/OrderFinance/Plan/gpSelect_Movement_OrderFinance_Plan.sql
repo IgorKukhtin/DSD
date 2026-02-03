@@ -138,9 +138,10 @@ BEGIN
                            INNER JOIN MovementLinkObject AS MovementLinkObject_OrderFinance
                                                          ON MovementLinkObject_OrderFinance.MovementId = Movement.Id
                                                         AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
-                                                        AND (MovementLinkObject_OrderFinance.ObjectId  IN (3988049 -- Мясо
-                                                                                                         , 3988054 -- Сырье, упаковочные и расходные материалы
-                                                                                                           )
+                                                        AND (MovementLinkObject_OrderFinance.ObjectId  IN (3988049  -- Мясо
+                                                                                                         , 3988054  -- Сырье, упаковочные и расходные материалы
+                                                                                                         , 13069438 -- Техническое Обслуживание и Основные Средства
+                                                                                                          )
                                                           OR vbUserId = 5 OR vbUserId = 9457)
 
                        WHERE Movement.DescId = zc_Movement_OrderFinance()
@@ -1035,54 +1036,49 @@ BEGIN
 
           -- всегда считаем - ФАКТ Назначение платежа
         , CASE WHEN inIsDay_1 = TRUE AND COALESCE (tmpMI.isAmountPlan_1, TRUE) = TRUE AND tmpMI.AmountPlan_1 > 0
-                    THEN REPLACE
-                        (REPLACE
-                        (REPLACE
-                        (REPLACE (COALESCE (tmpJuridicalOrderFinance.Comment, tmpJuridicalOrderFinance_last.Comment)
-                                                                  , 'NOM_DOG', COALESCE (tmpMI.ContractName, ''))
-                                                                  , 'DATA_DOG', zfConvert_DateToString (COALESCE (tmpMI.StartDate, zc_DateStart())))
-                                                                  , 'PDV', '20')
-                                                                  , 'SUMMA_P', zfConvert_FloatToString (ROUND(tmpMI.AmountPlan_1/6, 2)))
+                    THEN zfCalc_Comment_pay_OrderFinance (inComment    := COALESCE (tmpJuridicalOrderFinance.Comment, tmpJuridicalOrderFinance_last.Comment)
+                                                        , inNOM_DOG    := COALESCE (tmpMI.ContractName, '')
+                                                        , inNOM_IVOICE := COALESCE (tmpMI.InvNumber_Invoice_Child, '')
+                                                        , inDATA_DOG   := COALESCE (tmpMI.StartDate, zc_DateStart())
+                                                        , inPDV        := 20
+                                                        , inSUMMA_P    := tmpMI.AmountPlan_1
+                                                         )
 
                WHEN inIsDay_2 = TRUE AND COALESCE (tmpMI.isAmountPlan_2, TRUE) = TRUE AND tmpMI.AmountPlan_2 > 0
-                    THEN REPLACE
-                        (REPLACE
-                        (REPLACE
-                        (REPLACE (COALESCE (tmpJuridicalOrderFinance.Comment, tmpJuridicalOrderFinance_last.Comment)
-                                                                  , 'NOM_DOG', COALESCE (tmpMI.ContractName, ''))
-                                                                  , 'DATA_DOG', zfConvert_DateToString (COALESCE (tmpMI.StartDate, zc_DateStart())))
-                                                                  , 'PDV', '20')
-                                                                  , 'SUMMA_P', zfConvert_FloatToString (ROUND(tmpMI.AmountPlan_2/6, 2)))
+                    THEN zfCalc_Comment_pay_OrderFinance (inComment    := COALESCE (tmpJuridicalOrderFinance.Comment, tmpJuridicalOrderFinance_last.Comment)
+                                                        , inNOM_DOG    := COALESCE (tmpMI.ContractName, '')
+                                                        , inNOM_IVOICE := COALESCE (tmpMI.InvNumber_Invoice_Child, '')
+                                                        , inDATA_DOG   := COALESCE (tmpMI.StartDate, zc_DateStart())
+                                                        , inPDV        := 20
+                                                        , inSUMMA_P    := tmpMI.AmountPlan_2
+                                                         )
 
                WHEN inIsDay_3 = TRUE AND COALESCE (tmpMI.isAmountPlan_3, TRUE) = TRUE AND tmpMI.AmountPlan_3 > 0
-                    THEN REPLACE
-                        (REPLACE
-                        (REPLACE
-                        (REPLACE (COALESCE (tmpJuridicalOrderFinance.Comment, tmpJuridicalOrderFinance_last.Comment)
-                                                                  , 'NOM_DOG', COALESCE (tmpMI.ContractName, ''))
-                                                                  , 'DATA_DOG', zfConvert_DateToString (COALESCE (tmpMI.StartDate, zc_DateStart())))
-                                                                  , 'PDV', '20')
-                                                                  , 'SUMMA_P', zfConvert_FloatToString (ROUND(tmpMI.AmountPlan_3/6, 2)))
+                    THEN zfCalc_Comment_pay_OrderFinance (inComment    := COALESCE (tmpJuridicalOrderFinance.Comment, tmpJuridicalOrderFinance_last.Comment)
+                                                        , inNOM_DOG    := COALESCE (tmpMI.ContractName, '')
+                                                        , inNOM_IVOICE := COALESCE (tmpMI.InvNumber_Invoice_Child, '')
+                                                        , inDATA_DOG   := COALESCE (tmpMI.StartDate, zc_DateStart())
+                                                        , inPDV        := 20
+                                                        , inSUMMA_P    := tmpMI.AmountPlan_3
+                                                         )
 
                WHEN inIsDay_4 = TRUE AND COALESCE (tmpMI.isAmountPlan_4, TRUE) = TRUE AND tmpMI.AmountPlan_4 > 0
-                    THEN REPLACE
-                        (REPLACE
-                        (REPLACE
-                        (REPLACE (COALESCE (tmpJuridicalOrderFinance.Comment, tmpJuridicalOrderFinance_last.Comment)
-                                                                  , 'NOM_DOG', COALESCE (tmpMI.ContractName, ''))
-                                                                  , 'DATA_DOG', zfConvert_DateToString (COALESCE (tmpMI.StartDate, zc_DateStart())))
-                                                                  , 'PDV', '20')
-                                                                  , 'SUMMA_P', zfConvert_FloatToString (ROUND(tmpMI.AmountPlan_4/6, 2)))
+                    THEN zfCalc_Comment_pay_OrderFinance (inComment    := COALESCE (tmpJuridicalOrderFinance.Comment, tmpJuridicalOrderFinance_last.Comment)
+                                                        , inNOM_DOG    := COALESCE (tmpMI.ContractName, '')
+                                                        , inNOM_IVOICE := COALESCE (tmpMI.InvNumber_Invoice_Child, '')
+                                                        , inDATA_DOG   := COALESCE (tmpMI.StartDate, zc_DateStart())
+                                                        , inPDV        := 20
+                                                        , inSUMMA_P    := tmpMI.AmountPlan_4
+                                                         )
 
                WHEN inIsDay_5 = TRUE AND COALESCE (tmpMI.isAmountPlan_5, TRUE) = TRUE AND tmpMI.AmountPlan_5 > 0
-                    THEN REPLACE
-                        (REPLACE
-                        (REPLACE
-                        (REPLACE (COALESCE (tmpJuridicalOrderFinance.Comment, tmpJuridicalOrderFinance_last.Comment)
-                                                                  , 'NOM_DOG', COALESCE (tmpMI.ContractName, ''))
-                                                                  , 'DATA_DOG', zfConvert_DateToString (COALESCE (tmpMI.StartDate, zc_DateStart())))
-                                                                  , 'PDV', '20')
-                                                                  , 'SUMMA_P', zfConvert_FloatToString (ROUND(tmpMI.AmountPlan_5/6, 2)))
+                    THEN zfCalc_Comment_pay_OrderFinance (inComment    := COALESCE (tmpJuridicalOrderFinance.Comment, tmpJuridicalOrderFinance_last.Comment)
+                                                        , inNOM_DOG    := COALESCE (tmpMI.ContractName, '')
+                                                        , inNOM_IVOICE := COALESCE (tmpMI.InvNumber_Invoice_Child, '')
+                                                        , inDATA_DOG   := COALESCE (tmpMI.StartDate, zc_DateStart())
+                                                        , inPDV        := 20
+                                                        , inSUMMA_P    := tmpMI.AmountPlan_5
+                                                         )
 
                ELSE ''
           END :: TVarChar AS Comment_pay

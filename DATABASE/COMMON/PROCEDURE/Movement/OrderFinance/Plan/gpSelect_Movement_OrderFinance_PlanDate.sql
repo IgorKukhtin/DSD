@@ -933,18 +933,8 @@ BEGIN
 
         , tmpMI.Comment        ::TVarChar AS Comment
 
-          -- всегда считаем - ФАКТ Назначение платежа
-        , CASE WHEN COALESCE (tmpMI.isAmountPlan_day, TRUE) = TRUE AND tmpMI.AmountPlan_day > 0
-                    THEN REPLACE
-                        (REPLACE
-                        (REPLACE
-                        (REPLACE (COALESCE (tmpJuridicalOrderFinance.Comment, '')
-                                                                  , 'NOM_DOG', COALESCE (tmpMI.ContractName, ''))
-                                                                  , 'DATA_DOG', zfConvert_DateToString (COALESCE (tmpMI.StartDate, zc_DateStart())))
-                                                                  , 'PDV', '20')
-                                                                  , 'SUMMA_P', zfConvert_FloatToString (ROUND(tmpMI.AmountPlan_day/6, 2)))
-               ELSE ''
-          END :: TVarChar AS Comment_pay
+          -- ???всегда считаем - ФАКТ Назначение платежа???
+        , tmpMI.Comment_pay    :: TVarChar AS Comment_pay
 
         , COALESCE (tmpJuridicalOrderFinance.JuridicalOrderFinanceId, 0)  ::Integer  AS JuridicalOrderFinanceId
         , COALESCE (tmpJuridicalOrderFinance.Comment, '')                 ::TVarChar AS Comment_jof          -- JuridicalOrderFinance
