@@ -17,6 +17,15 @@ BEGIN
       -- проверка прав пользователя на вызов процедуры
       vbUserId:= lpGetUserBySession (inSession);
       
+      
+      
+      --
+      /*IF vbUserId = 6604558 
+      THEN
+          RETURN;
+      END IF;*/
+      
+      
       /*IF CURRENT_TIMESTAMP <= '12.01.2026 7:55'
       THEN
           RETURN;

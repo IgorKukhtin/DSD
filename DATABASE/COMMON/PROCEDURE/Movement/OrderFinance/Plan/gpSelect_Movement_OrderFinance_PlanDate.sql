@@ -145,7 +145,7 @@ BEGIN
                           -- есть Juridical
                           AND MovementItem.ObjectId   <> 0
                        )
-       -- Child - Данные с № заявки 1С 
+       -- Child - Данные с № заявки 1С + № заказа
      , tmpMI_Child AS (WITH
                        tmpMI_Child AS (SELECT MovementItem.*
                                        FROM MovementItem
