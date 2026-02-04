@@ -173,7 +173,8 @@ BEGIN
                                  LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
                                                          ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
                                                         AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
-                                                        AND CURRENT_DATE >= ObjectHistory_PriceListItem.StartDate AND CURRENT_DATE < ObjectHistory_PriceListItem.EndDate
+                                                        AND CASE WHEN inMovementId_OrderClient > 0 THEN (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId_OrderClient) ELSE CURRENT_DATE END >= ObjectHistory_PriceListItem.StartDate
+                                                        AND CASE WHEN inMovementId_OrderClient > 0 THEN (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId_OrderClient) ELSE CURRENT_DATE END <  ObjectHistory_PriceListItem.EndDate
                                  INNER JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
                                                                ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                                               AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
