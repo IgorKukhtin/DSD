@@ -289,7 +289,7 @@ BEGIN
                                AND MovementItemString.DescId IN (zc_MIString_GoodsName()
                                                                , zc_MIString_InvNumber()
                                                                , zc_MIString_InvNumber_Invoice()
-                                                                )
+                                                               )
                              )
 
      , tmpMIBoolean AS (SELECT *
@@ -506,8 +506,8 @@ BEGIN
                                                            --AND MovementItem.Ord = 1
                              LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_3
                                                               ON MIBoolean_AmountPlan_3.MovementItemId = MovementItem.Id
-                                                           --AND MIBoolean_AmountPlan_3.DescId = zc_MIBoolean_AmountPlan_3()
-                                                             AND MovementItem.Ord = 1
+                                                             AND MIBoolean_AmountPlan_3.DescId = zc_MIBoolean_AmountPlan_3()
+                                                           --AND MovementItem.Ord = 1
                              LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_4
                                                               ON MIBoolean_AmountPlan_4.MovementItemId = MovementItem.Id
                                                              AND MIBoolean_AmountPlan_4.DescId = zc_MIBoolean_AmountPlan_4()

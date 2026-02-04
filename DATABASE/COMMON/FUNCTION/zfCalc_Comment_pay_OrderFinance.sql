@@ -23,7 +23,7 @@ BEGIN
            (REPLACE
            (REPLACE
            (REPLACE (COALESCE (inComment, ''), 'NOM_DOG',    COALESCE (inNOM_DOG, ''))
-                                             , 'NOM_IVOICE', COALESCE (inNOM_IVOICE, ''))
+                                             , 'NOM_IVOICE', CASE WHEN COALESCE (inNOM_IVOICE, '') = '' THEN '  ' ELSE inNOM_IVOICE END)
                                              , 'TOVAR',      COALESCE (inTOVAR, ''))
                                              , 'DATA_DOG',   zfConvert_DateToString (COALESCE (inDATA_DOG, zc_DateStart())))
                                              , 'PDV',        '20')
