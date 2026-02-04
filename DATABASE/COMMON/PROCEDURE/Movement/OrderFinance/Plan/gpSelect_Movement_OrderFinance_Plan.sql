@@ -289,7 +289,7 @@ BEGIN
                                AND MovementItemString.DescId IN (zc_MIString_GoodsName()
                                                                , zc_MIString_InvNumber()
                                                                , zc_MIString_InvNumber_Invoice()
-                                                               )
+                                                                )
                              )
 
      , tmpMIBoolean AS (SELECT *
