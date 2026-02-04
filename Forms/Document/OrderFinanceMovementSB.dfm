@@ -59,8 +59,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Caption = #1057#1090#1072#1090#1091#1089
     end
     object ceStatus: TcxButtonEdit
-      Left = 9
-      Top = 19
+      Left = 12
+      Top = 14
       Properties.Buttons = <
         item
           Action = CompleteMovement
@@ -2633,6 +2633,10 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         end
         item
           Visible = True
+          ItemName = 'bbtLoadExcel_SB'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsert_byMovBankAccount'
         end
         item
@@ -2975,6 +2979,10 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Action = actPartnerChoiceForm
       Category = 0
     end
+    object bbtLoadExcel_SB: TdxBarButton
+      Action = mactLoadExcel_SB
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -2995,6 +3003,18 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     Images = dmMain.ImageList
     Left = 139
     Top = 159
+    object actGetImportSettingSB: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingSB
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingSB
+        end>
+      Caption = 'actGetImportSetting'
+      ImageIndex = 30
+    end
     object actExport_Grid_groupCSV: TExportGrid
       Category = 'Export_mail_group'
       MoveParams = <>
@@ -3015,6 +3035,28 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       DefaultFileName = 'Report_'
       Separator = ';'
       DefaultFileExt = 'XLS'
+    end
+    object mactLoadExcel_SB: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSettingSB
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1087#1083#1072#1090#1077#1078#1077#1081' '#1080#1079' Exce' +
+        'l?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1087#1083#1072#1090#1077#1078#1077#1081' '#1080#1079' Excel'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1087#1083#1072#1090#1077#1078#1077#1081' '#1080#1079' Excel'
+      ImageIndex = 30
     end
     object actGet_Export_EmailGroup: TdsdExecStoredProc
       Category = 'Export_Email_fr3'
