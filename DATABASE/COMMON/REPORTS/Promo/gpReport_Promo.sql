@@ -517,15 +517,44 @@ BEGIN
                                       , CASE WHEN COALESCE (tmpMICalc.SummaProfit_fact,0) <> 0          THEN tmpMICalc.SummaProfit_fact          ELSE COALESCE (tmpMICalc_inf.SummaProfit_fact,0)          END --прибыль факт
                                       , CASE WHEN COALESCE (tmpMICalc.SummaProfit_plan,0) <> 0          THEN tmpMICalc.SummaProfit_plan          ELSE COALESCE (tmpMICalc_inf.SummaProfit_plan,0)          END --прибыль план
                                )
-           -- эл. подпись, выбираем те что уже подписаны полностью 
-           , tmpSign AS (SELECT tmpMovement.Id
-                              , tmpSign.strSign
-                              , tmpSign.strSignNo
-                         FROM tmpMovement
-                              LEFT JOIN lpSelect_MI_Sign (inMovementId:= tmpMovement.Id ) AS tmpSign ON tmpSign.Id = tmpMovement.Id
-                         WHERE COALESCE (tmpSign.strSignNo,'') =''
-                         )
+        -- эл. подпись, выбираем те что уже подписаны полностью 
+        , tmpSign AS (SELECT tmpMovement.Id
+                           , tmpSign.strSign
+                           , tmpSign.strSignNo
+                      FROM tmpMovement
+                           LEFT JOIN lpSelect_MI_Sign (inMovementId:= tmpMovement.Id ) AS tmpSign ON tmpSign.Id = tmpMovement.Id
+                      WHERE COALESCE (tmpSign.strSignNo,'') =''
+                      )
                          
+        , tmpMovement_PromoPartner AS (SELECT *
+                                       FROM Movement AS Movement_PromoPartner
+                                       WHERE Movement_PromoPartner.ParentId IN (SELECT DISTINCT tmpMovement_Promo.Id FROM tmpMovement_Promo)
+                                         AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
+                                         AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
+                                      )
+
+        , tmpMI_PromoPartner AS (SELECT *
+                                 FROM MovementItem AS MI_PromoPartner
+                                 WHERE MI_PromoPartner.MovementId IN (SELECT DISTINCT tmpMovement_PromoPartner.Id FROM tmpMovement_PromoPartner)
+                                   AND MI_PromoPartner.DescId     = zc_MI_Master()
+                                   AND MI_PromoPartner.IsErased   = FALSE                     
+                                 )
+
+/*
+, tmpMovementString_PromoPartner AS (
+SELECT *
+FROM MovementString
+WHERE MovementString.MovementId IN (SELECT DISTINCT tmpMovement_PromoPartner.Id FROM tmpMovement_PromoPartner)
+                         AND MovementString.DescId = zc_MovementString_Retail()
+)
+
+, tmpMLO_PromoPartner AS (
+SELECT *
+FROM MovementLinkObject
+WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement_PromoPartner.Id FROM tmpMovement_PromoPartner)
+                         AND MovementLinkObject.DescId = zc_MovementLinkObject_Partner()
+)*/
+   
         --
         SELECT
             Movement_Promo.Id                --ИД документа акции
@@ -549,15 +578,13 @@ BEGIN
             THEN LENGTH (
             COALESCE ((SELECT STRING_AGG (DISTINCT COALESCE (MovementString_Retail.ValueData, Object_Retail.ValueData),'; ')
                        FROM
-                          Movement AS Movement_PromoPartner
+                          tmpMovement_PromoPartner AS Movement_PromoPartner
                           /*INNER JOIN MovementLinkObject AS MLO_Partner
                                                         ON MLO_Partner.MovementId = Movement_PromoPartner.ID
                                                        AND MLO_Partner.DescId     = zc_MovementLinkObject_Partner()
                           LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = MLO_Partner.ObjectId*/
-                          INNER JOIN MovementItem AS MI_PromoPartner
+                          INNER JOIN tmpMI_PromoPartner AS MI_PromoPartner
                                                   ON MI_PromoPartner.MovementId = Movement_PromoPartner.ID
-                                                 AND MI_PromoPartner.DescId     = zc_MI_Master()
-                                                 AND MI_PromoPartner.IsErased   = FALSE
                           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                ON ObjectLink_Partner_Juridical.ObjectId = MI_PromoPartner.ObjectId
                                               AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
@@ -572,12 +599,10 @@ BEGIN
                                                         AND MovementString_Retail.ValueData <> ''
 
                        WHERE Movement_PromoPartner.ParentId = Movement_Promo.Id
-                         AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
-                         AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
                       )
           , (SELECT STRING_AGG (DISTINCT Object.ValueData,'; ')
              FROM
-                Movement AS Movement_PromoPartner
+                tmpMovement_PromoPartner AS Movement_PromoPartner
                 INNER JOIN MovementLinkObject AS MLO_Partner
                                               ON MLO_Partner.MovementId = Movement_PromoPartner.ID
                                              AND MLO_Partner.DescId     = zc_MovementLinkObject_Partner()
@@ -593,8 +618,6 @@ BEGIN
 
                 INNER JOIN Object ON Object.Id = COALESCE (ObjectLink_Juridical_Retail.ChildObjectId, ObjectLink_Partner_Juridical.ChildObjectId, MLO_Partner.ObjectId)
              WHERE Movement_PromoPartner.ParentId = Movement_Promo.Id
-               AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
-               AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
               )))
                :: TVarChar || '-'
             ELSE ''
@@ -607,11 +630,9 @@ BEGIN
 COALESCE (-- первый - автоматом сформированные MovementItem - всегда Контрагент
           (SELECT STRING_AGG (DISTINCT COALESCE (MovementString_Retail.ValueData, Object_Retail.ValueData),'; ')
                        FROM
-                          Movement AS Movement_PromoPartner
-                          INNER JOIN MovementItem AS MI_PromoPartner
+                          tmpMovement_PromoPartner AS Movement_PromoPartner
+                          INNER JOIN tmpMI_PromoPartner AS MI_PromoPartner
                                                   ON MI_PromoPartner.MovementId = Movement_PromoPartner.ID
-                                                 AND MI_PromoPartner.DescId     = zc_MI_Master()
-                                                 AND MI_PromoPartner.IsErased   = FALSE
                           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                ON ObjectLink_Partner_Juridical.ObjectId = MI_PromoPartner.ObjectId
                                               AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
@@ -626,13 +647,11 @@ COALESCE (-- первый - автоматом сформированные MovementItem - всегда Контрагент
                                                         AND MovementString_Retail.ValueData <> ''
 
                        WHERE Movement_PromoPartner.ParentId = Movement_Promo.Id
-                         AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
-                         AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
                       )
           , -- второй - ввели Юр.л или Контрагент
             (SELECT STRING_AGG (DISTINCT Object.ValueData,'; ')
              FROM
-                  Movement AS Movement_PromoPartner
+                  tmpMovement_PromoPartner AS Movement_PromoPartner
                   INNER JOIN MovementLinkObject AS MLO_Partner
                                                 ON MLO_Partner.MovementId = Movement_PromoPartner.ID
                                                AND MLO_Partner.DescId     = zc_MovementLinkObject_Partner()
@@ -648,46 +667,36 @@ COALESCE (-- первый - автоматом сформированные MovementItem - всегда Контрагент
   
                   INNER JOIN Object ON Object.Id = COALESCE (ObjectLink_Juridical_Retail.ChildObjectId, ObjectLink_Partner_Juridical.ChildObjectId, MLO_Partner.ObjectId)
              WHERE Movement_PromoPartner.ParentId = Movement_Promo.Id
-               AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
-               AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
               ))
        
        , 4000))::TBlob AS RetailName
             --------------------------------------
           , (SELECT STRING_AGG (DISTINCT Object_Area.ValueData,'; ')
              FROM
-                Movement AS Movement_PromoPartner
-                INNER JOIN MovementItem AS MI_PromoPartner
+                tmpMovement_PromoPartner AS Movement_PromoPartner
+                INNER JOIN tmpMI_PromoPartner AS MI_PromoPartner
                                         ON MI_PromoPartner.MovementId = Movement_PromoPartner.ID
-                                       AND MI_PromoPartner.DescId     = zc_MI_Master()
-                                       AND MI_PromoPartner.IsErased   = FALSE
                 INNER JOIN ObjectLink AS ObjectLink_Partner_Area
                                       ON ObjectLink_Partner_Area.ObjectId = MI_PromoPartner.ObjectId
                                      AND ObjectLink_Partner_Area.DescId   = zc_ObjectLink_Partner_Area()
                 INNER JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Partner_Area.ChildObjectId
 
              WHERE Movement_PromoPartner.ParentId = Movement_Promo.Id
-               AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
-               AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
             )::TBlob AS AreaName
             
           , (SELECT STRING_AGG ( tmp.JuridicalName,'; ')
              FROM (SELECT DISTINCT Object_Juridical.ValueData AS JuridicalName
                         , CASE WHEN Object_Juridical.Id = inJuridicalId THEN 1 else 99 END AS ord
                    FROM
-                      Movement AS Movement_PromoPartner
+                      tmpMovement_PromoPartner AS Movement_PromoPartner
 
-                      INNER JOIN MovementItem AS MI_PromoPartner
+                      INNER JOIN tmpMI_PromoPartner AS MI_PromoPartner
                                               ON MI_PromoPartner.MovementId = Movement_PromoPartner.ID
-                                             AND MI_PromoPartner.DescId     = zc_MI_Master()
-                                             AND MI_PromoPartner.IsErased   = FALSE
                       LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                            ON ObjectLink_Partner_Juridical.ObjectId = MI_PromoPartner.ObjectId
                                           AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
                       LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MI_PromoPartner.ObjectId)
                    WHERE Movement_PromoPartner.ParentId = Movement_Promo.Id
-                     AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
-                     AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
                    ORDER BY CASE WHEN Object_Juridical.Id = inJuridicalId THEN 1 else 99 END 
                    ) AS tmp
             ) ::TBlob AS JuridicalName_str
@@ -730,11 +739,9 @@ COALESCE (-- первый - автоматом сформированные MovementItem - всегда Контрагент
           , MI_PromoGoods.GoodsKindCompleteName_byPrint ::TVarChar AS GoodsKindCompleteName_byPrint
 
           , (SELECT STRING_AGG (DISTINCT tmpGoodsKind.GoodsKindName,'; ')
-             FROM Movement AS Movement_PromoPartner
-                INNER JOIN MovementItem AS MI_PromoPartner
+             FROM tmpMovement_PromoPartner AS Movement_PromoPartner
+                INNER JOIN tmpMI_PromoPartner AS MI_PromoPartner
                                         ON MI_PromoPartner.MovementId = Movement_PromoPartner.ID
-                                       AND MI_PromoPartner.DescId     = zc_MI_Master()
-                                       AND MI_PromoPartner.IsErased   = FALSE
 
                 LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_Partner
                                      ON ObjectLink_GoodsListSale_Partner.ChildObjectId = MI_PromoPartner.ObjectId
@@ -751,8 +758,6 @@ COALESCE (-- первый - автоматом сформированные MovementItem - всегда Контрагент
                 LEFT JOIN tmpGoodsKind ON tmpGoodsKind.WordList = ObjectString_GoodsKind.ValueData
 
              WHERE Movement_PromoPartner.ParentId = Movement_Promo.Id
-               AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
-               AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
             )::TVarChar AS GoodsKindName_List
 
 
@@ -824,3 +829,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Report_Promo (inStartDate:= ('01.04.2024')::TDateTime , inEndDate:= ('01.04.2024')::TDateTime , inIsPromo := 'False' , inIsTender := 'False' ,inIsGoodsKind := 'true', inUnitId := 0 ,  inSession := '5'::TVarchar) -- where invnumber = 6862
+
+-- select * from gpSelect_Report_Promo (inStartDate := ('01.02.2026')::TDateTime , inEndDate := ('01.02.2026')::TDateTime , inIsPromo := 'True' , inIsTender := 'False' , inisGoodsKind := 'False' , inUnitId := 0 , inJuridicalId := 0 ,  inSession := '5');
