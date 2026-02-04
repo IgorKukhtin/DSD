@@ -1,7 +1,9 @@
 -- Function: lpReport_JuridicalSold()
 
 DROP FUNCTION IF EXISTS lpReport_JuridicalSold (TDateTime, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS lpReport_JuridicalSold (TDateTime, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer);
+--DROP FUNCTION IF EXISTS lpReport_JuridicalSold (TDateTime, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpReport_JuridicalSold (TDateTime, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Integer);
+
 
 CREATE OR REPLACE FUNCTION lpReport_JuridicalSold(
     IN inStartDate                TDateTime , --
@@ -17,6 +19,7 @@ CREATE OR REPLACE FUNCTION lpReport_JuridicalSold(
     IN inJuridicalGroupId         Integer   , --
     IN inCurrencyId               Integer   , -- Валюта
     IN inIsPartionMovement        Boolean   ,
+    IN inIsJuridicalBasis         Boolean   ,
     IN inUserId                  Integer    -- сессия пользователя
 )
 RETURNS TABLE (ContainerId Integer, JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, INN TVarChar, JuridicalGroupName TVarChar
@@ -28,13 +31,13 @@ RETURNS TABLE (ContainerId Integer, JuridicalCode Integer, JuridicalName TVarCha
              , ContractTagGroupName TVarChar, ContractTagName TVarChar, ContractStateKindCode Integer
              , ContractJuridicalDocId Integer, ContractJuridicalDocCode Integer, ContractJuridicalDocName TVarChar
              , PersonalName TVarChar, PersonalTradeName TVarChar, PersonalCollationName TVarChar, PersonalTradeName_Partner TVarChar, PersonalSigningName TVarChar
-             , StartDate TDateTime, EndDate TDateTime
+             , StartDate TDateTime, EndDate TDateTime       --30
              , PaidKindName TVarChar, AccountName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , AreaName TVarChar, AreaName_Partner TVarChar
              , CurrencyName TVarChar
              , ContractConditionKindName TVarChar, ContractConditionValue TFloat
-             , PartionMovementId Integer, PartionMovementName TVarChar
+             , PartionMovementId Integer, PartionMovementName TVarChar    --44
              , PaymentDate TDateTime
 
              , AccountId Integer, JuridicalId Integer, PartnerId Integer, InfoMoneyId Integer, ContractId Integer, PaidKindId Integer, BranchId Integer
@@ -215,6 +218,7 @@ BEGIN
                                 LEFT JOIN ContainerLinkObject AS CLO_JuridicalBasis
                                                               ON CLO_JuridicalBasis.ContainerId = Container.Id
                                                              AND CLO_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
+                                                             AND inIsJuridicalBasis = TRUE
 
                                 LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
                                                      ON ObjectLink_Juridical_JuridicalGroup.ObjectId = CLO_Juridical.ObjectId
@@ -848,4 +852,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpReport_JuridicalSold (inStartDate:= CURRENT_DATE, inEndDate:= CURRENT_DATE, inStartDate_sale:= NULL, inEndDate_sale:= NULL, inAccountId:= 1, inInfoMoneyId:= 0, inInfoMoneyGroupId:= 0, inInfoMoneyDestinationId:= 0, inPaidKindId:= 0, inBranchId:= 0, inJuridicalGroupId:= 257169, inCurrencyId:= 76965, inIsPartionMovement:= FALSE, inUserId:= zfCalc_UserAdmin() :: Integer);
+-- SELECT * FROM lpReport_JuridicalSold (inStartDate:= CURRENT_DATE, inEndDate:= CURRENT_DATE, inStartDate_sale:= NULL, inEndDate_sale:= NULL, inAccountId:= 1, inInfoMoneyId:= 0, inInfoMoneyGroupId:= 0, inInfoMoneyDestinationId:= 0, inPaidKindId:= 0, inBranchId:= 0, inJuridicalGroupId:= 257169, inCurrencyId:= 76965, inIsPartionMovement:= FALSE, inIsJuridicalBasis:=True, inUserId:= zfCalc_UserAdmin() :: Integer);

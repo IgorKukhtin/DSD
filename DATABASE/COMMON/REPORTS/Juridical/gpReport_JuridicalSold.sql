@@ -3,7 +3,8 @@
 DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_JuridicalSold(
     IN inStartDate                TDateTime , -- 
@@ -17,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalSold(
     IN inJuridicalGroupId         Integer   , --
     IN inCurrencyId               Integer   , -- Валюта
     IN inIsPartionMovement        Boolean   ,
+    IN inIsJuridicalBasis         Boolean   ,
     IN inSession                  TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (ContainerId Integer, JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, INN TVarChar, JuridicalGroupName TVarChar
@@ -86,6 +88,7 @@ BEGIN
                                 , inJuridicalGroupId       := inJuridicalGroupId
                                 , inCurrencyId             := inCurrencyId
                                 , inIsPartionMovement      := inIsPartionMovement
+                                , inIsJuridicalBasis       := inIsJuridicalBasis
                                 , inUserId                 := vbUserId
                                  ) AS tmpReport
                               ;
@@ -118,4 +121,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_JuridicalSold (inStartDate:= '01.01.2016', inEndDate:= '01.01.2016', inAccountId:= null, inInfoMoneyId:= null, inInfoMoneyGroupId:= null, inInfoMoneyDestinationId:= null, inPaidKindId:= null, inBranchId:= null, inJuridicalGroupId:= null, inCurrencyId:= null, inIsPartionMovement:= FALSE, inSession:= zfCalc_UserAdmin()); 
---select * from gpReport_JuridicalSold(inStartDate := ('13.01.2022')::TDateTime , inEndDate := ('13.01.2022')::TDateTime , inAccountId := 0 , inInfoMoneyId := 0 , inInfoMoneyGroupId := 0 , inInfoMoneyDestinationId := 0 , inPaidKindId := 0 , inBranchId := 0 , inJuridicalGroupId := 257169 , inCurrencyId := 76965 , inIsPartionMovement := 'False' ,  inSession := '5');
+--select * from gpReport_JuridicalSold(inStartDate := ('13.01.2022')::TDateTime , inEndDate := ('13.01.2022')::TDateTime , inAccountId := 0 , inInfoMoneyId := 0 , inInfoMoneyGroupId := 0 , inInfoMoneyDestinationId := 0 , inPaidKindId := 0 , inBranchId := 0 , inJuridicalGroupId := 257169 , inCurrencyId := 76965 , inIsPartionMovement := 'False' , inIsJuridicalBasis:=True,  inSession := '5');

@@ -3,27 +3,26 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   ClientHeight = 556
   ClientWidth = 1118
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -224
   ExplicitWidth = 1134
   ExplicitHeight = 595
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 84
+    Top = 94
     Width = 1118
-    Height = 472
+    Height = 462
     TabOrder = 3
     ExplicitTop = 84
     ExplicitWidth = 1118
     ExplicitHeight = 472
-    ClientRectBottom = 472
+    ClientRectBottom = 462
     ClientRectRight = 1118
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1118
       ExplicitHeight = 472
       inherited cxGrid: TcxGrid
         Width = 1118
-        Height = 472
+        Height = 462
         ExplicitWidth = 1118
         ExplicitHeight = 472
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1786,9 +1785,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   end
   inherited Panel: TPanel
     Width = 1118
-    Height = 58
+    Height = 68
     ExplicitWidth = 1118
-    ExplicitHeight = 58
+    ExplicitHeight = 68
     inherited deStart: TcxDateEdit
       Left = 60
       Top = 6
@@ -1799,11 +1798,11 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     end
     inherited deEnd: TcxDateEdit
       Left = 60
-      Top = 33
+      Top = 38
       EditValue = 44197d
       Properties.SaveTime = False
       ExplicitLeft = 60
-      ExplicitTop = 33
+      ExplicitTop = 38
     end
     inherited cxLabel1: TcxLabel
       Left = 15
@@ -1815,20 +1814,20 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     end
     inherited cxLabel2: TcxLabel
       Left = 8
-      Top = 34
+      Top = 39
       Caption = #1044#1072#1090#1072' '#1087#1086' :'
       ExplicitLeft = 8
-      ExplicitTop = 34
+      ExplicitTop = 39
       ExplicitWidth = 52
     end
     object cxLabel3: TcxLabel
       Left = 327
-      Top = 34
+      Top = 39
       Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
     end
     object edInfoMoneyGroup: TcxButtonEdit
       Left = 448
-      Top = 33
+      Top = 38
       Properties.Buttons = <
         item
           Default = True
@@ -1857,7 +1856,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     end
     object edInfoMoney: TcxButtonEdit
       Left = 708
-      Top = 33
+      Top = 38
       Properties.Buttons = <
         item
           Default = True
@@ -1869,7 +1868,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     end
     object cxLabel5: TcxLabel
       Left = 586
-      Top = 34
+      Top = 39
       Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
     end
     object cxLabel6: TcxLabel
@@ -1891,12 +1890,12 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     end
     object cxLabel7: TcxLabel
       Left = 849
-      Top = 34
+      Top = 39
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
     end
     object edPaidKind: TcxButtonEdit
       Left = 929
-      Top = 33
+      Top = 38
       Properties.Buttons = <
         item
           Default = True
@@ -1942,12 +1941,12 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     end
     object cxLabel10: TcxLabel
       Left = 998
-      Top = 34
+      Top = 39
       Caption = #1042#1072#1083#1102#1090#1072':'
     end
     object edCurrency: TcxButtonEdit
       Left = 1044
-      Top = 33
+      Top = 38
       Properties.Buttons = <
         item
           Default = True
@@ -1959,11 +1958,19 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     end
   end
   object cbPartionMovement: TcxCheckBox [2]
-    Left = 155
-    Top = 33
+    Left = 151
+    Top = 27
     Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1072#1090#1100' '#1086#1089#1085#1086#1074#1072#1085#1080#1077
     Properties.ReadOnly = False
     TabOrder = 6
+    Width = 153
+  end
+  object cbJuridicalBasis: TcxCheckBox [3]
+    Left = 151
+    Top = 47
+    Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1043#1083'. '#1102#1088'. '#1083#1080#1094#1086
+    Properties.ReadOnly = False
+    TabOrder = 7
     Width = 153
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -3915,6 +3922,14 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsJuridicalBasis'
+          Value = Null
+          Component = cbJuridicalBasis
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -5797,6 +5812,14 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisJuridicalBasis'
+        Value = Null
+        Component = cbJuridicalBasis
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     AutoWidth = True
     Left = 112
@@ -6034,8 +6057,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       end>
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 152
-    Top = 8
+    Left = 80
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -6068,6 +6090,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       end
       item
         Component = cbPartionMovement
+      end
+      item
+        Component = cbJuridicalBasis
       end>
     Left = 480
     Top = 220
@@ -6106,8 +6131,8 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 488
-    Top = 13
+    Left = 528
+    Top = 37
   end
   object GuidesInfoMoneyDestination: TdsdGuides
     KeyField = 'Id'
@@ -6213,8 +6238,8 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 440
-    Top = 65528
+    Left = 496
+    Top = 16
   end
   object spGetDescSets: TdsdStoredProc
     StoredProcName = 'gpGetDescSets'
@@ -6478,7 +6503,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 256
+    Left = 352
     Top = 65527
   end
   object GuidesJuridicalGroup: TdsdGuides

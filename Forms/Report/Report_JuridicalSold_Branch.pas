@@ -164,6 +164,7 @@ type
     cxLabel12: TcxLabel;
     PeriodChoice1: TPeriodChoice;
     JuridicalName_Basis: TcxGridDBColumn;
+    cbJuridicalBasis: TcxCheckBox;
   private
     { Private declarations }
   public
