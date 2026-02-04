@@ -1,23 +1,19 @@
--- Function: gpInsertUpdate_MovementItem_OrderFinanceSB()
+-- Function: gpInsertUpdate_MovementItem_OrderFinanceSB_byLoad()
 
---DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinanceSB (Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar);
---DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinanceSB (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinanceSB (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinanceSB_byLoad (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinanceSB(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinanceSB_byLoad(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId            Integer   , -- Ключ объекта <Документ>
     IN inJuridicalId           Integer   , --
     IN inContractId            Integer   , --
     IN inCashId_top            Integer   , --
     IN inCashId                Integer   , --
-  --IN inBankAccountId         Integer   , --
     IN inAmount                TFloat    , -- *** Предварительный План на неделю
  INOUT ioAmount_old            TFloat    , -- *** Предварительный План на неделю
     IN inOperDate_Amount_top   TDateTime , -- *** Дата предварительный план
  INOUT ioOperDate_Amount       TDateTime , -- *** Дата предварительный план
  INOUT ioOperDate_Amount_old   TDateTime , -- *** Дата предварительный план
- ---IN inAmountStart           TFloat    , --
  INOUT ioAmountPlan_1          TFloat    , --
  INOUT ioAmountPlan_2          TFloat    , --
  INOUT ioAmountPlan_3          TFloat    , --
@@ -26,9 +22,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinanceSB(
    OUT outAmountPlan_total     TFloat    , --
     IN inComment               TVarChar   , --
     -- child
-    IN inGoodsName_child       TVarChar  , -- Товары
-    IN inInvNumber_child       TVarChar  , --   
-    IN inInvNumber_Invoice_child  TVarChar  , --
+    --IN inGoodsName_child       TVarChar  , -- Товары
+   -- IN inInvNumber_child       TVarChar  , --   
+    --IN inInvNumber_Invoice_child  TVarChar  , --
     IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -36,28 +32,16 @@ AS
 $BODY$
    DECLARE vbUserId   Integer;
    DECLARE vbOperDate_start TDateTime;
-           vbGoodsName_child TVarChar;
-           vbInvNumber_child TVarChar;
-           vbInvNumber_Invoice_child TVarChar;
-           vbId_child        Integer;
-           vbAmount_child    TFloat;
-           vbIsInsert_child  Boolean;
+           --vbGoodsName_child TVarChar;
+           --vbInvNumber_child TVarChar;
+           --vbInvNumber_Invoice_child TVarChar;
+           --vbId_child        Integer;
+           --vbAmount_child    TFloat;
+           --vbIsInsert_child  Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderFinance());
-
-
-     -- проверка
-     IF TRIM (COALESCE (inInvNumber_child, '')) = '' AND vbUserId <> '9457'
-     THEN
-         RAISE EXCEPTION 'Ошибка.Не заполнено значение <№ заявки (1С)>.';
-     END IF;
-     -- проверка
-     IF TRIM (COALESCE (inGoodsName_child, '')) = ''   AND vbUserId <> '9457'
-     THEN
-         RAISE EXCEPTION 'Ошибка.Не заполнено значение <Товар (Заявка ТМЦ)>.';
-     END IF;
-    
+ 
 
      -- Проверка - <Ожидание Согласования-1>
      IF EXISTS (SELECT FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_SignWait_1() AND MB.ValueData = TRUE)
@@ -300,102 +284,6 @@ BEGIN
 
     -- могут внести данные для чайлд
 
-    --проверка
-    --сохраненные значение
-    SELECT STRING_AGG (tmpMI.GoodsName, '; ') AS GoodsName
-         , STRING_AGG (tmpMI.InvNumber, '; ') AS InvNumber
-         , STRING_AGG (tmpMI.InvNumber_Invoice, '; ') AS InvNumber_Invoice
-         , SUM (tmpMI.Amount)                 AS Amount
-           INTO vbGoodsName_child, vbInvNumber_child, vbInvNumber_Invoice_child, vbAmount_child
-    FROM (SELECT COALESCE (MIString_GoodsName.ValueData, '') AS GoodsName
-               , COALESCE (MIString_InvNumber.ValueData, '') AS InvNumber
-               , COALESCE (MIString_InvNumber_Invoice.ValueData, '') AS InvNumber_Invoice
-               , MovementItem.Amount
-          FROM MovementItem
-              LEFT JOIN MovementItemString AS MIString_GoodsName
-                                           ON MIString_GoodsName.MovementItemId = MovementItem.Id
-                                          AND MIString_GoodsName.DescId = zc_MIString_GoodsName()
-              LEFT JOIN MovementItemString AS MIString_InvNumber
-                                           ON MIString_InvNumber.MovementItemId = MovementItem.Id
-                                          AND MIString_InvNumber.DescId = zc_MIString_InvNumber()
-              LEFT JOIN MovementItemString AS MIString_InvNumber_Invoice
-                                           ON MIString_InvNumber_Invoice.MovementItemId = MovementItem.Id
-                                          AND MIString_InvNumber_Invoice.DescId = zc_MIString_InvNumber_Invoice()
-          WHERE MovementItem.MovementId = inMovementId
-            AND MovementItem.DescId     = zc_MI_Child()
-            AND MovementItem.isErased   = FALSE
-            AND MovementItem.ParentId   = ioId
-            -- Важно - Сортировать
-          ORDER BY MovementItem.Id ASC
-        ) AS tmpMI
-        ;
-
-    --
-    IF COALESCE (inInvNumber_child, '') <> COALESCE (vbInvNumber_child,'')
-    OR COALESCE (inGoodsName_child, '') <> COALESCE (vbGoodsName_child,'')
-    OR COALESCE (inAmount, 0)           <> COALESCE (vbAmount_child, 0)
-    OR COALESCE (inInvNumber_Invoice_child, '') <> COALESCE (vbInvNumber_Invoice_child,'')
-    THEN
-        -- проверка что строка child одна
-        IF (SELECT COUNT(*)
-            FROM MovementItem
-            WHERE MovementItem.DescId = zc_MI_Child()
-              AND MovementItem.ParentId = ioId
-              AND MovementItem.MovementId = inMovementId
-              AND MovementItem.isErased = FALSE
-           ) > 1
-        THEN
-            RAISE EXCEPTION 'Ошибка.Заполнение возможно только во второй таблице <Товар (Заявка ТМЦ)>. % % % % % % % % % % %'
-                          , CHR (13)
-                          ,  COALESCE (inInvNumber_child, ''), ' <> ' || COALESCE (vbInvNumber_child,'')
-                          , CHR (13)
-                          ,  COALESCE (inInvNumber_Invoice_child, ''), ' <> ' || COALESCE (vbInvNumber_Invoice_child,'')
-                          , CHR (13)
-                          ,  COALESCE (inGoodsName_child, ''), ' <> ' || COALESCE (vbGoodsName_child,'')
-                          , CHR (13)
-                          ,  zfConvert_FloatToString (COALESCE (inAmount, 0)), ' <> ' || zfConvert_FloatToString (COALESCE (vbAmount_child, 0))
-                           ;
-        ELSE
-            -- нашли
-            vbId_child := (SELECT MovementItem.Id
-                             FROM MovementItem
-                             WHERE MovementItem.DescId = zc_MI_Child()
-                               AND MovementItem.ParentId = ioId
-                               AND MovementItem.MovementId = inMovementId
-                               AND MovementItem.isErased = FALSE
-                          );
-
-            --сохраненные значение
-            vbInvNumber_child := (SELECT MIS.ValueData FROM MovementItemString AS MIS WHERE MIS.MovementItemId = vbId_child AND MIS.DescId = zc_MIString_InvNumber());
-            --сохраненные значение
-            vbInvNumber_Invoice_child := (SELECT MIS.ValueData FROM MovementItemString AS MIS WHERE MIS.MovementItemId = vbId_child AND MIS.DescId = zc_MIString_InvNumber_Invoice());
-            --сохраненные значение
-            vbGoodsName_child := (SELECT MIS.ValueData FROM MovementItemString AS MIS WHERE MIS.MovementItemId = vbId_child AND MIS.DescId = zc_MIString_GoodsName());
-
-
-            IF COALESCE (vbId_child,0) = 0
-            THEN
-                 vbIsInsert_child:= TRUE;
-                 -- сохранили <Элемент документа>
-                 vbId_child := lpInsertUpdate_MovementItem (0, zc_MI_Child(), NULL, inMovementId, inAmount, ioId);
-            ELSE
-                 vbIsInsert_child:= FALSE;
-            END IF;
-
-            -- сохранили свойство <>
-            PERFORM lpInsertUpdate_MovementItemString (zc_MIString_InvNumber(), vbId_child, inInvNumber_child);
-            
-            -- сохранили свойство <>
-            PERFORM lpInsertUpdate_MovementItemString (zc_MIString_InvNumber_Invoice(), vbId_child, inInvNumber_Invoice_child);
-
-            -- сохранили свойство <>
-            PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GoodsName(), vbId_child, inGoodsName_child);
-
-            -- сохранили протокол
-            PERFORM lpInsert_MovementItemProtocol (vbId_child, vbUserId, vbIsInsert_child);
-
-        END IF;
-    END IF;
 
     -- тест
     --if vbUserId IN (9457) then RAISE EXCEPTION 'Админ.Test Ok. outAmountPlan_total =  <%>', outAmountPlan_total; end if;

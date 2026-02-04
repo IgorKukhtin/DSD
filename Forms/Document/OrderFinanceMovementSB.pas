@@ -371,6 +371,9 @@ type
     bbInsertRecord_Partner: TdxBarButton;
     bbPartner_UpdeteRecord: TdxBarButton;
     spGetImportSettingSB: TdsdStoredProc;
+    actGetImportSettingSB: TdsdExecStoredProc;
+    mactLoadExcel_SB: TMultiAction;
+    bbtLoadExcel_SB: TdxBarButton;
   private
   public
   end;
