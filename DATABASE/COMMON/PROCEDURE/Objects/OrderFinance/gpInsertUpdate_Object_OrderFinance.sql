@@ -7,6 +7,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinance (Integer, Integer, TV
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinance (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarchar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinance (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean,Boolean,Boolean,Boolean,Boolean,Boolean,Boolean, TVarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinance (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean,Boolean,Boolean,Boolean,Boolean,Boolean,Boolean,Boolean, TVarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinance (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean,Boolean,Boolean,Boolean,Boolean,Boolean,Boolean,Boolean,Boolean,Boolean, TVarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_OrderFinance(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Договор>
@@ -29,7 +30,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_OrderFinance(
     IN inisPlan_3                Boolean   , 
     IN inisPlan_4                Boolean   , 
     IN inisPlan_5                Boolean   ,
-    IN inisSB                    Boolean   ,             
+    IN inisSB                    Boolean   ,
+    IN inisInvNumber             Boolean   ,
+    IN inisInvNumber_Invoice     Boolean   ,          
     IN inSession                 TVarChar       -- сессия пользователя
 )
   RETURNS Integer AS
@@ -96,6 +99,10 @@ BEGIN
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_OrderFinance_SB(), ioId, inisSB);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_OrderFinance_InvNumber(), ioId, inisInvNumber);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_OrderFinance_InvNumber_Invoice(), ioId, inisInvNumber_Invoice);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -108,6 +115,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.02.26         *
  14.01.26         *
  24.12.25         *
  08.12.25         *

@@ -310,6 +310,24 @@ inherited OrderFinanceForm: TOrderFinanceForm
             Options.Editing = False
             Width = 80
           end
+          object isInvNumber: TcxGridDBColumn
+            Caption = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#8470' '#1079#1072#1103#1074#1082#1080' 1'#1057' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isInvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#8470' '#1079#1072#1103#1074#1082#1080' 1'#1057' ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 70
+          end
+          object isInvNumber_Invoice: TcxGridDBColumn
+            Caption = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#8470' '#1089#1095#1077#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isInvNumber_Invoice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#8470' '#1089#1095#1077#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
       object cxGrid1: TcxGrid

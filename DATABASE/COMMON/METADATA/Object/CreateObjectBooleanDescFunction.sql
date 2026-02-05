@@ -1625,11 +1625,20 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_OrderFinance_SB() RETURNS Integer AS
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_OrderFinance(), 'zc_ObjectBoolean_OrderFinance_SB', 'Подтверждение СБ (да/нет)' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderFinance_SB');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_OrderFinance_InvNumber() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderFinance_InvNumber'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_OrderFinance(), 'zc_ObjectBoolean_OrderFinance_InvNumber', 'Заполнение № заявки 1С (да/нет)' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderFinance_InvNumber');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_OrderFinance_InvNumber_Invoice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderFinance_InvNumber_Invoice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_OrderFinance(), 'zc_ObjectBoolean_OrderFinance_InvNumber_Invoice', ' 	Заполнение № счета (да/нет)' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderFinance_InvNumber_Invoice');
  
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 05.02.26         * zc_ObjectBoolean_OrderFinance_InvNumber
+                    zc_ObjectBoolean_OrderFinance_InvNumber_Invoice
  14.01.26         * zc_ObjectBoolean_OrderFinance_SB
  05.01.26         * zc_ObjectBoolean_Partner_DayCount_30201
  24.12.25         * zc_ObjectBoolean_OrderFinance_Status_off

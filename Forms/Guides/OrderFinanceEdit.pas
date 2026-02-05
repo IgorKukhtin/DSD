@@ -78,6 +78,8 @@ type
     cbisPlan_4: TcxCheckBox;
     cbisPlan_5: TcxCheckBox;
     cbSB: TcxCheckBox;
+    cbisInvNumber_Invoice: TcxCheckBox;
+    cbisInvNumber: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1042#1080#1076' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1087#1083#1072#1090#1077#1078#1077#1081
-  ClientHeight = 431
+  ClientHeight = 427
   ClientWidth = 564
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,7 +28,7 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 291
+    Left = 374
     Top = 391
     Width = 75
     Height = 25
@@ -37,7 +37,7 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 427
+    Left = 481
     Top = 391
     Width = 75
     Height = 25
@@ -242,14 +242,14 @@
     Width = 247
   end
   object cbisStatus_off: TcxCheckBox
-    Left = 179
+    Left = 161
     Top = 299
     Caption = #1056#1072#1079#1088#1077#1096#1077#1085#1086' '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1083#1072#1085#1072' '#1087#1086' '#1076#1085#1103#1084' - '#1074' '#1087#1088#1086#1074#1077#1076#1077#1085#1085#1086#1084' '#1076#1086#1082'. ('#1076#1072'/'#1085#1077#1090')'
     TabOrder = 28
     Width = 377
   end
   object cbisOperDate: TcxCheckBox
-    Left = 180
+    Left = 161
     Top = 323
     Caption = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1076#1072#1090#1072' '#1087#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1087#1083#1072#1085' ('#1076#1072'/'#1085#1077#1090')'
     TabOrder = 29
@@ -291,11 +291,25 @@
     Width = 140
   end
   object cbSB: TcxCheckBox
-    Left = 180
-    Top = 348
+    Left = 161
+    Top = 347
     Caption = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1057#1041' ('#1076#1072'/'#1085#1077#1090')'
     TabOrder = 35
     Width = 169
+  end
+  object cbisInvNumber_Invoice: TcxCheckBox
+    Left = 161
+    Top = 395
+    Caption = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#8470' '#1089#1095#1077#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
+    TabOrder = 36
+    Width = 180
+  end
+  object cbisInvNumber: TcxCheckBox
+    Left = 161
+    Top = 371
+    Caption = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#8470' '#1079#1072#1103#1074#1082#1080' 1'#1057' ('#1076#1072'/'#1085#1077#1090')'
+    TabOrder = 37
+    Width = 205
   end
   object ActionList: TActionList
     Left = 192
@@ -497,6 +511,22 @@
         Name = 'inisSB'
         Value = Null
         Component = cbSB
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisInvNumber'
+        Value = Null
+        Component = cbisInvNumber
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisInvNumber_Invoice'
+        Value = Null
+        Component = cbisInvNumber_Invoice
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -752,6 +782,20 @@
         Name = 'isSB'
         Value = Null
         Component = cbSB
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isInvNumber'
+        Value = Null
+        Component = cbisInvNumber
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isInvNumber_Invoice'
+        Value = Null
+        Component = cbisInvNumber_Invoice
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

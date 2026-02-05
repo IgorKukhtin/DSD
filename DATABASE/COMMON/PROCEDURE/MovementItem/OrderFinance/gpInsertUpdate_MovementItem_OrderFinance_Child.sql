@@ -27,9 +27,26 @@ $BODY$
    DECLARE vbSumm_child     TFloat;
    DECLARE vbOrderFinanceId Integer;
    DECLARE vbIsInsert       Boolean;
+           vbIsInvNumber    Boolean;
+           vbIsInvNumber_Invoice  Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderFinance());
+
+     --Данные для проверки
+     SELECT COALESCE (ObjectBoolean_InvNumber_Invoice.ValueData, FALSE) ::Boolean AS isInvNumber
+          , COALESCE (ObjectBoolean_InvNumber.ValueData, FALSE)         ::Boolean AS isInvNumber_Invoice
+    INTO vbIsInvNumber, vbIsInvNumber_Invoice
+     FROM MovementLinkObject AS MovementLinkObject_OrderFinance
+         LEFT JOIN ObjectBoolean  AS ObjectBoolean_InvNumber 
+                                  ON ObjectBoolean_InvNumber.ObjectId = MovementLinkObject_OrderFinance.ObjectId
+                                 AND ObjectBoolean_InvNumber.DescId = zc_ObjectBoolean_OrderFinance_InvNumber()
+         LEFT JOIN ObjectBoolean  AS ObjectBoolean_InvNumber_Invoice 
+                                  ON ObjectBoolean_InvNumber_Invoice.ObjectId = MovementLinkObject_OrderFinance.ObjectId
+                                 AND ObjectBoolean_InvNumber_Invoice.DescId = zc_ObjectBoolean_OrderFinance_InvNumber_Invoice()
+     WHERE MovementLinkObject_OrderFinance.MovementId = inMovementId
+       AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
+     ;
 
      -- проверка
      IF TRIM (COALESCE (inInvNumber, '')) = ''
@@ -45,15 +62,16 @@ BEGIN
                           AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
                           AND MovementLinkObject_OrderFinance.ObjectId   = 13229475 -- Транспортная логистика
                        )
+        AND COALESCE (vbIsInvNumber, FALSE) = TRUE
      THEN
          RAISE EXCEPTION 'Ошибка.Не заполнено значение <№ заявки (1С)>.';
      END IF;
      -- проверка
-   /*  IF TRIM (COALESCE (inInvNumber_Invoice, '')) = ''
+     IF TRIM (COALESCE (inInvNumber_Invoice, '')) = '' AND COALESCE (vbIsInvNumber_Invoice, FALSE) = TRUE
      THEN
          RAISE EXCEPTION 'Ошибка.Не заполнено значение <№ счета>.';
      END IF;
-     */
+    
      -- проверка
      IF TRIM (COALESCE (inGoodsName, '')) = ''
         AND NOT EXISTS (SELECT 1

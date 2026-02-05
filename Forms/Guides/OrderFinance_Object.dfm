@@ -22,7 +22,8 @@ inherited OrderFinance_ObjectForm: TOrderFinance_ObjectForm
         Left = 3
         Width = 816
         Height = 319
-        ExplicitLeft = 3
+        ExplicitLeft = -429
+        ExplicitTop = -248
         ExplicitWidth = 816
         ExplicitHeight = 319
         inherited cxGridDBTableView: TcxGridDBTableView

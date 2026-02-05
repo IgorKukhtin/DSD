@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isStatus_off Boolean, isOperDate Boolean
              , isPlan_1 Boolean, isPlan_2 Boolean, isPlan_3 Boolean, isPlan_4 Boolean, isPlan_5 Boolean
              , isSB Boolean
+             , isInvNumber Boolean, isInvNumber_Invoice Boolean
              , isErased Boolean
              )
 AS
@@ -75,6 +76,8 @@ BEGIN
            , FALSE     ::Boolean AS isPlan_5
            
            , FALSE     ::Boolean AS isSB
+           , FALSE     ::Boolean AS isInvNumber
+           , FALSE     ::Boolean AS isInvNumber_Invoice
        
            , CAST (NULL AS Boolean) AS isErased;
    
@@ -122,6 +125,8 @@ BEGIN
             , COALESCE (ObjectBoolean_Plan_5.ValueData, FALSE)     ::Boolean AS isPlan_5
           
             , COALESCE (ObjectBoolean_SB.ValueData, FALSE)         ::Boolean AS isSB
+            , COALESCE (ObjectBoolean_InvNumber_Invoice.ValueData, FALSE) ::Boolean AS isInvNumber
+            , COALESCE (ObjectBoolean_InvNumber.ValueData, FALSE)         ::Boolean AS isInvNumber_Invoice
 
             , Object_OrderFinance.isErased     AS isErased
            
@@ -206,6 +211,14 @@ BEGIN
            LEFT JOIN ObjectBoolean  AS ObjectBoolean_SB 
                                     ON ObjectBoolean_SB.ObjectId = Object_OrderFinance.Id
                                    AND ObjectBoolean_SB.DescId = zc_ObjectBoolean_OrderFinance_SB()
+
+           LEFT JOIN ObjectBoolean  AS ObjectBoolean_InvNumber 
+                                    ON ObjectBoolean_InvNumber.ObjectId = Object_OrderFinance.Id
+                                   AND ObjectBoolean_InvNumber.DescId = zc_ObjectBoolean_OrderFinance_InvNumber()
+           LEFT JOIN ObjectBoolean  AS ObjectBoolean_InvNumber_Invoice 
+                                    ON ObjectBoolean_InvNumber_Invoice.ObjectId = Object_OrderFinance.Id
+                                   AND ObjectBoolean_InvNumber_Invoice.DescId = zc_ObjectBoolean_OrderFinance_InvNumber_Invoice()
+
        WHERE Object_OrderFinance.Id = inId;
    END IF;
   

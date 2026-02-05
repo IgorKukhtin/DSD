@@ -81,6 +81,8 @@ type
     isGroup: TcxGridDBColumn;
     isStatus_off: TcxGridDBColumn;
     isSB: TcxGridDBColumn;
+    isInvNumber: TcxGridDBColumn;
+    isInvNumber_Invoice: TcxGridDBColumn;
   private
     { Private declarations }
   public
