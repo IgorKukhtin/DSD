@@ -236,8 +236,8 @@ BEGIN
                            , MIContainer.ContainerId
                            , MIContainer.MovementId
                            , MIContainer.ObjectId_analyzer AS GoodsId
-                           , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN (MIContainer.Amount) ELSE 0 END) AS Amount_count
-                           , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  THEN (MIContainer.Amount) ELSE 0 END) AS Amount_summ
+                           , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) AS Amount_count
+                           , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) AS Amount_summ
                            , SUM (COALESCE (MIFloat_AmountPacker.ValueData, 0))       AS CountPacker
                            , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0))          AS HeadCount
                            , SUM (COALESCE (MIFloat_AmountPartner.ValueData,0))       AS AmountPartner
@@ -340,7 +340,7 @@ BEGIN
 
       -- разделение - кол-во приход товаров (если не головы)
      , tmpSeparateS AS (SELECT MIN (MIContainer.ObjectId_analyzer)  AS GoodsId
-                             , SUM (MIContainer.Amount)    AS Amount_count
+                             , SUM (COALESCE (MIContainer.Amount,0))    AS Amount_count
                         FROM MovementItemContainer AS MIContainer
                              LEFT JOIN tmpGoods ON tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
                         WHERE MIContainer.DescId   = zc_MIContainer_Count()
@@ -364,7 +364,7 @@ BEGIN
       -- Результат
       SELECT Object_Goods.Id          AS GoodsIdMaster
            , Object_Goods.ValueData   AS GoodsNameMaster
-           , tmpMI_group.Amount_count AS CountMaster
+           , COALESCE (tmpMI_group.Amount_count,0) AS CountMaster
            , tmpMI_group.HeadCount    AS HeadCountMaster
            , tmpMI_group.Amount_summ  AS SummMaster
            

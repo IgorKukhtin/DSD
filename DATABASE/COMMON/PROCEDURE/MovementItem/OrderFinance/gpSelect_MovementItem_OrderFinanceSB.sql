@@ -715,9 +715,9 @@ BEGIN
                            , SUM (tmpMI.Amount)                 AS Amount
                       FROM (SELECT MovementItem.Id
                                  , MovementItem.ParentId
-                                 , COALESCE (MIString_GoodsName.ValueData, '')                  AS GoodsName
-                                 , COALESCE (MIString_InvNumber.ValueData, '')                  AS InvNumber
-                                 , COALESCE (MIString_InvNumber_Invoice.ValueData, '')          AS InvNumber_Invoice
+                                 , MIString_GoodsName.ValueData                  AS GoodsName
+                                 , MIString_InvNumber.ValueData                  AS InvNumber
+                                 , MIString_InvNumber_Invoice.ValueData          AS InvNumber_Invoice
                                  , CASE WHEN MIBoolean_Sign.ValueData = TRUE THEN 0 ELSE 1 END  AS isSign
                                  , MovementItem.Amount                                          AS Amount
                             FROM MovementItem

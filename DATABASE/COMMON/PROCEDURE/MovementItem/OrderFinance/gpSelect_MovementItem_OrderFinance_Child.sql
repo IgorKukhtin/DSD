@@ -39,6 +39,7 @@ BEGIN
                           JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                            AND MovementItem.DescId     = zc_MI_Child()
                                            AND MovementItem.isErased   = tmpIsErased.isErased
+                           ORDER BY MovementItem.Id
 
                     )
 

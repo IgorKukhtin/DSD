@@ -327,14 +327,14 @@ BEGIN
 
     --проверка
     --сохраненные значение
-    SELECT STRING_AGG (tmpMI.GoodsName, '; ') AS GoodsName
-         , STRING_AGG (tmpMI.InvNumber, '; ') AS InvNumber
-         , STRING_AGG (tmpMI.InvNumber_Invoice, '; ') AS InvNumber_Invoice
+    SELECT STRING_AGG (tmpMI.GoodsName, '; ') ::TVarChar AS GoodsName
+         , STRING_AGG (tmpMI.InvNumber, '; ') ::TVarChar AS InvNumber
+         , STRING_AGG (tmpMI.InvNumber_Invoice, '; ') ::TVarChar AS InvNumber_Invoice
          , SUM (tmpMI.Amount)                 AS Amount
            INTO vbGoodsName_child, vbInvNumber_child, vbInvNumber_Invoice_child, vbAmount_child
-    FROM (SELECT COALESCE (MIString_GoodsName.ValueData, '') AS GoodsName
-               , COALESCE (MIString_InvNumber.ValueData, '') AS InvNumber
-               , COALESCE (MIString_InvNumber_Invoice.ValueData, '') AS InvNumber_Invoice
+    FROM (SELECT MIString_GoodsName.ValueData AS GoodsName
+               , MIString_InvNumber.ValueData AS InvNumber
+               , MIString_InvNumber_Invoice.ValueData AS InvNumber_Invoice
                , MovementItem.Amount
           FROM MovementItem
               LEFT JOIN MovementItemString AS MIString_GoodsName

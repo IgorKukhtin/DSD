@@ -53,9 +53,9 @@ BEGIN
            , STRING_AGG (tmpMI.GoodsName, '; ') AS GoodsName
            , SUM (tmpMI.Amount)                 AS Amount
              INTO outInvNumber_parent, outInvNumber_Invoice_parent, outGoodsName_parent, outSumm_parent
-      FROM (SELECT COALESCE (MIString_GoodsName.ValueData, '') AS GoodsName
-                 , COALESCE (MIString_InvNumber.ValueData, '') AS InvNumber
-                 , COALESCE (MIString_InvNumber_Invoice.ValueData, '') AS InvNumber_Invoice
+      FROM (SELECT MIString_GoodsName.ValueData AS GoodsName
+                 , MIString_InvNumber.ValueData AS InvNumber
+                 , MIString_InvNumber_Invoice.ValueData AS InvNumber_Invoice
                  , MovementItem.Amount
             FROM MovementItem
                 LEFT JOIN MovementItemString AS MIString_InvNumber
