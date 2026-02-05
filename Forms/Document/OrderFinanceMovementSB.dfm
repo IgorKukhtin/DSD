@@ -26,7 +26,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 1160
     object edInvNumber: TcxTextEdit
       Left = 232
       Top = 19
@@ -556,14 +555,12 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 1160
     ClientRectBottom = 390
     ClientRectRight = 1164
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 1160
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -571,7 +568,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         Height = 184
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1160
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1501,7 +1497,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         Anchors = [akTop, akRight, akBottom]
         TabOrder = 1
         Visible = False
-        ExplicitWidth = 1160
         object ExportXmlGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ExportDS
@@ -1538,7 +1533,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         LookAndFeel.Kind = lfStandard
         LookAndFeel.NativeStyle = False
         LookAndFeel.SkinName = ''
-        ExplicitWidth = 1160
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -1656,13 +1650,14 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridChild
-        ExplicitWidth = 1160
       end
     end
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
+      ExplicitTop = 0
       ExplicitWidth = 1160
+      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -3054,9 +3049,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1087#1083#1072#1090#1077#1078#1077#1081' '#1080#1079' Exce' +
         'l?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1087#1083#1072#1090#1077#1078#1077#1081' '#1080#1079' Excel'
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1087#1083#1072#1090#1077#1078#1077#1081' '#1080#1079' Excel'
-      ImageIndex = 30
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' Excel'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' Excel ('#1092#1086#1088#1084#1072#1090' '#8470' '#1089#1095#1077#1090#1072')'
     end
     object actGet_Export_EmailGroup: TdsdExecStoredProc
       Category = 'Export_Email_fr3'

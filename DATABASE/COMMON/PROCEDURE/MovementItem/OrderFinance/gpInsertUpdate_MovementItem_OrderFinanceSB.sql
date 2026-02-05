@@ -49,11 +49,36 @@ BEGIN
 
      -- проверка
      IF TRIM (COALESCE (inInvNumber_child, '')) = '' AND vbUserId <> '9457'
+        AND NOT EXISTS (SELECT 1
+                        FROM MovementLinkObject AS MovementLinkObject_OrderFinance
+                             -- если Заполнение дата предварительный план = ДА
+                             /*INNER JOIN ObjectBoolean AS ObjectBoolean_OperDate
+                                                      ON ObjectBoolean_OperDate.ObjectId  = MovementLinkObject_OrderFinance.ObjectId
+                                                     AND ObjectBoolean_OperDate.DescId    = zc_ObjectBoolean_OrderFinance_OperDate()
+                                                     AND ObjectBoolean_OperDate.ValueData = TRUE*/
+        
+                        WHERE MovementLinkObject_OrderFinance.MovementId = inMovementId
+                          AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
+                          AND MovementLinkObject_OrderFinance.ObjectId   = 13229475 -- Транспортная логистика
+                       )
+
      THEN
          RAISE EXCEPTION 'Ошибка.Не заполнено значение <№ заявки (1С)>.';
      END IF;
      -- проверка
      IF TRIM (COALESCE (inGoodsName_child, '')) = ''   AND vbUserId <> '9457'
+        AND NOT EXISTS (SELECT 1
+                        FROM MovementLinkObject AS MovementLinkObject_OrderFinance
+                             -- если Заполнение дата предварительный план = ДА
+                             /*INNER JOIN ObjectBoolean AS ObjectBoolean_OperDate
+                                                      ON ObjectBoolean_OperDate.ObjectId  = MovementLinkObject_OrderFinance.ObjectId
+                                                     AND ObjectBoolean_OperDate.DescId    = zc_ObjectBoolean_OrderFinance_OperDate()
+                                                     AND ObjectBoolean_OperDate.ValueData = TRUE*/
+        
+                        WHERE MovementLinkObject_OrderFinance.MovementId = inMovementId
+                          AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
+                          AND MovementLinkObject_OrderFinance.ObjectId   = 13229475 -- Транспортная логистика
+                       )
      THEN
          RAISE EXCEPTION 'Ошибка.Не заполнено значение <Товар (Заявка ТМЦ)>.';
      END IF;
