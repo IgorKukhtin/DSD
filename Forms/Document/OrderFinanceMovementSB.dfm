@@ -2609,22 +2609,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertRecord_JurOrdFin'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetErasedJurOrdFin'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetUnErasedJurOrdFin'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbtLoadExcel_SB'
         end
         item
@@ -3745,6 +3729,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     end
     object actInsertRecordChild: TInsertRecord
       Category = 'Child'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       View = cxGridDBTableViewChild
@@ -4310,6 +4295,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     end
     object actInsertRecord: TInsertRecord
       Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView
@@ -5917,7 +5903,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       end>
     PackSize = 1
     Left = 502
-    Top = 192
+    Top = 240
   end
   object spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderFinance_SetUnErased'

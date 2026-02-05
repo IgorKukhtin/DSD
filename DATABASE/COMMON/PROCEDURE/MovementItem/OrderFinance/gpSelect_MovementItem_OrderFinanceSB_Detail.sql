@@ -75,6 +75,7 @@ BEGIN
                                                                 , inIsErased   := inIsErased   ::Boolean
                                                                 , inSession    := inSession    ::TVarChar
                                                                   ) AS tmp 
+                        WHERE COALESCE (tmp.Id,0) <> 0
                         )
        --данные из чайлда
      , tmpMI_Child AS (SELECT tmp.*
@@ -172,7 +173,7 @@ BEGIN
               -- Предварительный План на неделю
             , CASE WHEN tmpMI.Ord = 1 THEN tmpMI.Amount ELSE 0 END :: TFloat AS Amount
               -- Дата предварительный план
-            , CASE WHEN tmpMI.Ord = 1 THEN tmpMI.OperDate_Amount ELSE Null END     ::TDateTime AS OperDate_Amount
+            , tmpMI.OperDate_Amount     ::TDateTime AS OperDate_Amount
               -- Нач. долг
             , CASE WHEN tmpMI.Ord = 1 THEN tmpMI.AmountRemains ELSE 0 END          :: TFloat AS AmountRemains
               -- Приход
