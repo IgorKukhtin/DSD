@@ -731,13 +731,13 @@ BEGIN
              , tmpMain_Group.PartionGoods_main
              , tmpMain_Group.OperDate_partion
              , tmpMain_Group.GoodsNameMaster
-             , COALESCE (tmpMain_Group.CountMaster
+             , tmpMain_Group.CountMaster
 
-             , COALESCE (tmpMain_Group.CountMaster_4134
-             , COALESCE (tmpMain_Group.Amount_4134
+             , tmpMain_Group.CountMaster_4134
+             , tmpMain_Group.Amount_4134
 
-             , COALESCE (tmpMain_Group.SummMaster
-             , COALESCE (tmpMain_Group.HeadCountMaster
+             , tmpMain_Group.SummMaster
+             , tmpMain_Group.HeadCountMaster
              --, tmpMain_Group.PriceMaster
              , tmpMain_Group.FromName
              , tmpMain_Group.PersonalPackerName
