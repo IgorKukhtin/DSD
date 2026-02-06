@@ -113,7 +113,7 @@ BEGIN
          END IF;
      END IF;   
 
-     --проверка что такой с=мастер уже есть
+     --проверка что такой мастер уже есть
      vbId := (SELECT MovementItem.Id
               FROM MovementItem
                    INNER JOIN MovementItemLinkObject AS MILinkObject_Contract
@@ -155,10 +155,49 @@ BEGIN
                                                                --, inInvNumber_Invoice_child := '' ::TVarChar
                                                                , inSession               := inSession             ::TVarChar
                                                                 ) AS tmp;
+
+
+     ELSE
+     -- Только после сохранения
+     SELECT SUM (COALESCE (MovementItem.Amount,0))          AS Amount
+    INTO vbSumm_parent
+     FROM MovementItem
+     WHERE MovementItem.MovementId = inMovementId
+       AND MovementItem.DescId     = zc_MI_Child()
+       AND MovementItem.isErased   = FALSE
+       AND MovementItem.ParentId   = vbId
+     ;
+         PERFORM gpInsertUpdate_MovementItem_OrderFinanceSB_byLoad (ioId                 := MovementItem.Id                     ::Integer
+                                                               , inMovementId            := inMovementId          ::Integer
+                                                               , inJuridicalId           := MovementItem.ObjectId            ::Integer
+                                                               , inContractId            := vbContractId          ::Integer
+                                                               , inCashId_top            := 0                     ::Integer
+                                                               , inCashId                := vbCashId              ::Integer
+                                                               , inAmount                := COALESCE (vbSumm_parent,0) + COALESCE (inAmount,0)  ::TFloat
+                                                               , ioAmount_old            := 0                     ::TFloat
+                                                               , inOperDate_Amount_top   := inOperDate            ::TDateTime
+                                                               , ioOperDate_Amount       := inOperDate            ::TDateTime
+                                                               , ioOperDate_Amount_old   := zc_DateStart()        ::TDateTime
+                                                               , ioAmountPlan_1          := 0                     ::TFloat
+                                                               , ioAmountPlan_2          := 0                     ::TFloat
+                                                               , ioAmountPlan_3          := 0                     ::TFloat
+                                                               , ioAmountPlan_4          := 0                     ::TFloat
+                                                               , ioAmountPlan_5          := 0                     ::TFloat
+                                                               , inComment               := inComment             ::TVarChar 
+                                                                 -- child
+                                                               --, inGoodsName_child       := '' ::TVarChar  
+                                                               --, inInvNumber_child       := '' ::TVarChar
+                                                               --, inInvNumber_Invoice_child := '' ::TVarChar
+                                                               , inSession               := inSession             ::TVarChar
+                                                                ) 
+         FROM MovementItem
+         WHERE MovementItem.Id = vbId;
+
+
      END IF;
      
 
---RAISE EXCEPTION 'Ошибка.Мастер ОК';
+     --RAISE EXCEPTION 'Ошибка.Мастер ОК';
 
 
      --сохраняем Child
@@ -171,23 +210,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbId_child, inComment);
 
 
-     -- Только после сохранения
-     SELECT SUM (COALESCE (MovementItem.Amount,0))          AS Amount
-    INTO vbSumm_parent
-     FROM MovementItem
-     WHERE MovementItem.MovementId = inMovementId
-       AND MovementItem.DescId     = zc_MI_Child()
-       AND MovementItem.isErased   = FALSE
-       AND MovementItem.ParentId   = vbId
-     ;
-
-     -- сохранили <Итого>  в Master
-     PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, zc_MI_Master(), MovementItem.ObjectId, MovementItem.MovementId, vbSumm_parent, NULL)
-     FROM MovementItem
-     WHERE MovementItem.MovementId = inMovementId
-       AND MovementItem.DescId     = zc_MI_Master()
-       AND MovementItem.Id         = vbId
-      ;
+    
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (vbId_child, vbUserId, TRUE);
