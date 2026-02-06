@@ -1077,6 +1077,10 @@ BEGIN
                      WHERE MovementItem.MovementId = vbMovementId_old
                        AND MovementItem.DescId     = zc_MI_Master()
                        AND MovementItem.isErased   = FALSE
+                        -- !!!только такие!!!
+                        AND vbOrderFinanceId IN (3988049  -- ћ€со
+                                               , 3988054  -- —ырье, упаковочные и расходные материалы
+                                                )
                     )
      , tmpMovementItemFloat_old AS (SELECT *
                                     FROM MovementItemFloat
@@ -1113,6 +1117,10 @@ BEGIN
                       WHERE Movement.OperDate BETWEEN vbStartDate_old AND vbEndDate_old
                         AND Movement.DescId   = zc_Movement_BankAccount()
                         AND Movement.StatusId = zc_Enum_Status_Complete()
+                        -- !!!только такие!!!
+                        AND vbOrderFinanceId IN (3988049  -- ћ€со
+                                               , 3988054  -- —ырье, упаковочные и расходные материалы
+                                                )
                       GROUP BY MILinkObject_MoneyPlace.ObjectId
                              , MILinkObject_Contract.ObjectId
                      )
@@ -1618,6 +1626,10 @@ BEGIN
              FROM tmpMI_bank_old
              WHERE 1=1
              --AND vbUserId = 5
+               -- !!!только такие!!!
+               AND vbOrderFinanceId IN (3988049  -- ћ€со
+                                      , 3988054  -- —ырье, упаковочные и расходные материалы
+                                       )
 
             UNION
              -- план прошлой недели
@@ -1625,6 +1637,10 @@ BEGIN
              FROM tmpMI_old
              WHERE 1=1
              --AND vbUserId = 5
+               -- !!!только такие!!!
+               AND vbOrderFinanceId IN (3988049  -- ћ€со
+                                      , 3988054  -- —ырье, упаковочные и расходные материалы
+                                       )
             ) AS tmpMI_list
 
             INNER JOIN Object AS Object_Juridical ON Object_Juridical.Id     = tmpMI_list.JuridicalId
@@ -1687,7 +1703,9 @@ BEGIN
                                 AND ObjectLink_Partner_Juridical.DescId        = zc_ObjectLink_Partner_Juridical()
                                 AND Object_Juridical.DescId = zc_Object_Partner()
             LEFT JOIN Object AS Object_Juridical_inf ON Object_Juridical_inf.Id = ObjectLink_Partner_Juridical.ObjectId
-           ;
+
+       WHERE tmpMI.ObjectId IS NULL
+      ;
 
      END IF;
 

@@ -965,6 +965,10 @@ BEGIN
                      WHERE MovementItem.MovementId = vbMovementId_old
                        AND MovementItem.DescId     = zc_MI_Master()
                        AND MovementItem.isErased   = FALSE
+                        -- !!!только такие!!!
+                        AND vbOrderFinanceId IN (3988049  -- Мясо
+                                               , 3988054  -- Сырье, упаковочные и расходные материалы
+                                                )
                     )
      , tmpMovementItemFloat_old AS (SELECT *
                                     FROM MovementItemFloat
@@ -1003,6 +1007,10 @@ BEGIN
                       WHERE Movement.OperDate BETWEEN vbStartDate_old AND vbEndDate_old
                         AND Movement.DescId   = zc_Movement_BankAccount()
                         AND Movement.StatusId = zc_Enum_Status_Complete()
+                        -- !!!только такие!!!
+                        AND vbOrderFinanceId IN (3988049  -- Мясо
+                                               , 3988054  -- Сырье, упаковочные и расходные материалы
+                                                )
                       GROUP BY MILinkObject_MoneyPlace.ObjectId
                              , MILinkObject_Contract.ObjectId
                      )
@@ -1076,11 +1084,11 @@ BEGIN
            , MIDate_Amount.ValueData           AS OperDate_Amount_old
 
              -- Нач. долг
-           , (COALESCE (MIFloat_AmountRemains.ValueData, 0) - CASE WHEN vbIsPlan_1_old = TRUE THEN COALESCE (MIFloat_AmountPlan_1_old.ValueData, 0) ELSE 0 END
+           , (COALESCE (MIFloat_AmountRemains.ValueData, 0) /*- CASE WHEN vbIsPlan_1_old = TRUE THEN COALESCE (MIFloat_AmountPlan_1_old.ValueData, 0) ELSE 0 END
                                                             - CASE WHEN vbIsPlan_2_old = TRUE THEN COALESCE (MIFloat_AmountPlan_2_old.ValueData, 0) ELSE 0 END
                                                             - CASE WHEN vbIsPlan_3_old = TRUE THEN COALESCE (MIFloat_AmountPlan_3_old.ValueData, 0) ELSE 0 END
                                                             - CASE WHEN vbIsPlan_4_old = TRUE THEN COALESCE (MIFloat_AmountPlan_4_old.ValueData, 0) ELSE 0 END
-                                                            - CASE WHEN vbIsPlan_5_old = TRUE THEN COALESCE (MIFloat_AmountPlan_5_old.ValueData, 0) ELSE 0 END
+                                                            - CASE WHEN vbIsPlan_5_old = TRUE THEN COALESCE (MIFloat_AmountPlan_5_old.ValueData, 0) ELSE 0 END*/
              ) :: TFloat AS AmountRemains
              -- Долг с отсрочкой
            , (COALESCE (MIFloat_AmountPartner.ValueData, 0) - CASE WHEN vbIsPlan_1_old = TRUE THEN COALESCE (MIFloat_AmountPlan_1_old.ValueData, 0) ELSE 0 END
@@ -1422,10 +1430,10 @@ BEGIN
                                                AND MILO_Update.DescId = zc_MILinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
 
-       WHERE tmpInfoMoney_OrderF.isGroup = TRUE
-          -- сохраненные строки итого , даже если с них сняли признак группы
-          OR (Object_InfoMoney.DescId = zc_Object_InfoMoney() AND tmpMI.Id IS NOT NULL)
-
+       WHERE (tmpInfoMoney_OrderF.isGroup = TRUE
+           -- сохраненные строки итого , даже если с них сняли признак группы
+           OR (Object_InfoMoney.DescId = zc_Object_InfoMoney() AND tmpMI.Id IS NOT NULL)
+             )
 
      UNION ALL
        -- Данные прошлой недели
@@ -1548,6 +1556,10 @@ BEGIN
              FROM tmpMI_bank_old
              WHERE 1=1
              --AND vbUserId = 5
+               -- !!!только такие!!!
+               AND vbOrderFinanceId IN (3988049  -- Мясо
+                                      , 3988054  -- Сырье, упаковочные и расходные материалы
+                                       )
 
             UNION
              -- план прошлой недели
@@ -1555,6 +1567,10 @@ BEGIN
              FROM tmpMI_old
              WHERE 1=1
              --AND vbUserId = 5
+               -- !!!только такие!!!
+               AND vbOrderFinanceId IN (3988049  -- Мясо
+                                      , 3988054  -- Сырье, упаковочные и расходные материалы
+                                       )
             ) AS tmpMI_list
 
             INNER JOIN Object AS Object_Juridical ON Object_Juridical.Id     = tmpMI_list.JuridicalId
@@ -1609,7 +1625,7 @@ BEGIN
             LEFT JOIN tmpInfoMoney_OrderF ON tmpInfoMoney_OrderF.InfoMoneyId = Object_InfoMoney.Id
 
        WHERE tmpMI.ObjectId IS NULL
-      ;
+     ;
 
      END IF;
 END;

@@ -11,22 +11,28 @@ RETURNS TABLE (FormName TVarChar)
 AS
 $BODY$
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_ZakazInternal());
 
-     RETURN QUERY 
+     IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_PersonalService())
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет Прав.';
+     END IF;
+
+
+     -- Результат
+     RETURN QUERY
        SELECT
             COALESCE (CASE WHEN inDescCode = 'zc_Movement_Send' AND Movement.DescId = zc_Movement_Send()
                                 THEN 'TSendMemberForm'
                            ELSE Object_Form.ValueData
                       END, '') :: TVarChar AS FromName
 
-       FROM Movement                          
+       FROM Movement
             JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
             LEFT JOIN Object AS Object_Form ON Object_Form.Id = MovementDesc.FormId
        WHERE Movement.Id = inMovementId;
-  
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

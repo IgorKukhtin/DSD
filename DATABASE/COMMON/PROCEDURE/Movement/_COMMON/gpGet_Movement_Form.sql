@@ -15,6 +15,14 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_ZakazInternal());
      vbUserId:= lpGetUserBySession (inSession);
 
+
+     IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_PersonalService())
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет Прав.';
+     END IF;
+
+
+     -- Результат
      RETURN QUERY
        SELECT
             CASE WHEN 1=1 AND Movement.DescId = zc_Movement_Promo() AND vbUserId IN (280164, /*5,*/ 133035, 9463, 112324) THEN 'TPromoManagerForm'
