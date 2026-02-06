@@ -114,12 +114,12 @@ BEGIN
                           , tmpMI_Master.OperDate_Amount   ::TDateTime AS OperDate_Amount
                           , tmpMI_Master.AmountRemains     :: TFloat AS AmountRemains
                           , tmpMI_Master.AmountSumm        :: TFloat AS AmountSumm
-                          , tmpMI_Master.AmountPlan_1      :: TFloat AS AmountPlan_1
-                          , tmpMI_Master.AmountPlan_2      :: TFloat AS AmountPlan_2
-                          , tmpMI_Master.AmountPlan_3      :: TFloat AS AmountPlan_3
-                          , tmpMI_Master.AmountPlan_4      :: TFloat AS AmountPlan_4
-                          , tmpMI_Master.AmountPlan_5      :: TFloat AS AmountPlan_5
-                          , tmpMI_Master.AmountPlan_total  :: TFloat AS AmountPlan_total
+                          , CASE WHEN COALESCE (tmpMI_Master.AmountPlan_1,0) <> 0 THEN COALESCE (tmpMI_Child.Amount,0) ELSE 0 END      :: TFloat AS AmountPlan_1
+                          , CASE WHEN COALESCE (tmpMI_Master.AmountPlan_2,0) <> 0 THEN COALESCE (tmpMI_Child.Amount,0) ELSE 0 END      :: TFloat AS AmountPlan_2
+                          , CASE WHEN COALESCE (tmpMI_Master.AmountPlan_3,0) <> 0 THEN COALESCE (tmpMI_Child.Amount,0) ELSE 0 END      :: TFloat AS AmountPlan_3
+                          , CASE WHEN COALESCE (tmpMI_Master.AmountPlan_4,0) <> 0 THEN COALESCE (tmpMI_Child.Amount,0) ELSE 0 END      :: TFloat AS AmountPlan_4
+                          , CASE WHEN COALESCE (tmpMI_Master.AmountPlan_5,0) <> 0 THEN COALESCE (tmpMI_Child.Amount,0) ELSE 0 END      :: TFloat AS AmountPlan_5
+                          --, CASE WHEN COALESCE (tmpMI_Master.AmountPlan_total,0) <> 0 THEN COALESCE (tmpMI_Child.Amount,0) ELSE 0 END  :: TFloat AS AmountPlan_total
                           , tmpMI_Master.isAmountPlan_1    ::Boolean  AS isAmountPlan_1
                           , tmpMI_Master.isAmountPlan_2    ::Boolean  AS isAmountPlan_2
                           , tmpMI_Master.isAmountPlan_3    ::Boolean  AS isAmountPlan_3
@@ -179,13 +179,17 @@ BEGIN
               -- Приход
             , CASE WHEN tmpMI.Ord = 1 THEN tmpMI.AmountSumm ELSE 0 END             :: TFloat AS AmountSumm
               -- План оплат
-            , CASE WHEN tmpMI.Ord = 1 THEN tmpMI.AmountPlan_1 ELSE 0 END     :: TFloat AS AmountPlan_1
-            , CASE WHEN tmpMI.Ord = 1 THEN tmpMI.AmountPlan_2 ELSE 0 END     :: TFloat AS AmountPlan_2
-            , CASE WHEN tmpMI.Ord = 1 THEN tmpMI.AmountPlan_3 ELSE 0 END     :: TFloat AS AmountPlan_3
-            , CASE WHEN tmpMI.Ord = 1 THEN tmpMI.AmountPlan_4 ELSE 0 END     :: TFloat AS AmountPlan_4
-            , CASE WHEN tmpMI.Ord = 1 THEN tmpMI.AmountPlan_5 ELSE 0 END     :: TFloat AS AmountPlan_5
+            , tmpMI.AmountPlan_1      :: TFloat AS AmountPlan_1
+            , tmpMI.AmountPlan_2      :: TFloat AS AmountPlan_2
+            , tmpMI.AmountPlan_3      :: TFloat AS AmountPlan_3
+            , tmpMI.AmountPlan_4      :: TFloat AS AmountPlan_4
+            , tmpMI.AmountPlan_5      :: TFloat AS AmountPlan_5
               -- План оплат - Итог
-            , CASE WHEN tmpMI.Ord = 1 THEN tmpMI.AmountPlan_total ELSE 0 END :: TFloat AS AmountPlan_total
+            , (COALESCE (tmpMI.AmountPlan_1,0)
+             + COALESCE (tmpMI.AmountPlan_2,0)
+             + COALESCE (tmpMI.AmountPlan_3,0)
+             + COALESCE (tmpMI.AmountPlan_4,0)
+             + COALESCE (tmpMI.AmountPlan_5,0))      :: TFloat :: TFloat AS AmountPlan_total
  
               -- Платим да/нет
             , tmpMI.isAmountPlan_1    ::Boolean  AS isAmountPlan_1

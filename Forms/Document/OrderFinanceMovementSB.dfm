@@ -553,9 +553,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     Height = 390
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheetMain
+    Properties.ActivePage = cxTabSheetDetail
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 254
     ClientRectBottom = 390
     ClientRectRight = 1164
     ClientRectTop = 24
@@ -2079,9 +2078,11 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 100
           end
           object Amount_ch3: TcxGridDBColumn
@@ -3016,6 +3017,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = actDelete_MI
@@ -3087,7 +3089,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetDetail
       MoveParams = <>
-      Enabled = False
       StoredProc = spSelectDetail
       StoredProcList = <
         item
@@ -3209,6 +3210,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView
       Action = actPartnerChoiceForm
@@ -3232,6 +3234,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1090#1072#1075#1077#1085#1090#1072'>'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
@@ -3298,6 +3301,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'Child'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       StoredProc = spErasedMIchild
       StoredProcList = <
         item
@@ -3314,6 +3318,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'Child'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       StoredProc = spUnErasedMIchild
       StoredProcList = <
         item
@@ -3331,6 +3336,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -3482,7 +3488,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = #1055#1088#1086#1090#1086#1082#1086#1083
       TabSheet = cxTabSheetDetail
       MoveParams = <>
-      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
       ImageIndex = 34
@@ -3558,6 +3563,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView
       Action = actInfoMoney_OrderFinanceChoiceForm
@@ -3570,6 +3576,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1059#1055' '#1089#1090#1072#1090#1100#1102'>'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1059#1055' '#1089#1090#1072#1090#1100#1102'>'
@@ -3664,6 +3671,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -3674,6 +3682,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       StoredProc = spErasedMIMaster
       StoredProcList = <
         item
@@ -3693,6 +3702,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       StoredProc = spUnErasedMIMaster
       StoredProcList = <
         item
@@ -3731,6 +3741,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'Child'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridDBTableViewChild
       Params = <>
@@ -3813,6 +3824,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       ImageIndex = 34
@@ -4280,6 +4292,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       StoredProc = spInsertMaskMIMaster2
       StoredProcList = <
@@ -4297,6 +4310,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView
       Action = actJuridicalChoiceForm
@@ -4310,7 +4324,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetDetail
       MoveParams = <>
-      Enabled = False
       StoredProc = spSelectDetail
       StoredProcList = <
         item
@@ -4331,6 +4344,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -4480,7 +4494,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'JuridicalOrderFinance'
       TabSheet = cxTabSheetDetail
       MoveParams = <>
-      Enabled = False
       StoredProc = spErasedUnErased_JurOrdFin
       StoredProcList = <
         item
@@ -4497,7 +4510,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'JuridicalOrderFinance'
       TabSheet = cxTabSheetDetail
       MoveParams = <>
-      Enabled = False
       StoredProc = spErasedUnErased_JurOrdFin
       StoredProcList = <
         item
@@ -4515,7 +4527,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'JuridicalOrderFinance'
       TabSheet = cxTabSheetDetail
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView1
       Action = actContractChoiceForm_JurOrdFin
@@ -4568,7 +4579,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'JuridicalOrderFinance'
       TabSheet = cxTabSheetDetail
       MoveParams = <>
-      Enabled = False
       ActionList = <
         item
           Action = ExecuteDialogPeriod
@@ -5101,6 +5111,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = actGetImportSetting
@@ -5385,15 +5396,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
-    SummaryItemList = <
-      item
-        Param.Value = Null
-        Param.Component = FormParams
-        Param.ComponentItem = 'TotalSumm'
-        Param.DataType = ftString
-        Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 1
-      end>
+    SummaryItemList = <>
     ShowFieldImageList = <>
     ViewDocumentList = <>
     PropertiesCellList = <>
@@ -6259,8 +6262,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     ShowFieldImageList = <>
     ViewDocumentList = <>
     PropertiesCellList = <>
-    Left = 875
-    Top = 297
+    Left = 907
+    Top = 305
   end
   object spSelectDetail: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_OrderFinanceSB_Detail'
