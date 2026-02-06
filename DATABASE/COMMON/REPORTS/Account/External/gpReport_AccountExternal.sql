@@ -27,7 +27,37 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-       WITH tmpReport AS (SELECT Report_Account.InvNumber, Report_Account.OperDate
+       WITH tmpReport_all AS (SELECT lpReport.*
+                              FROM lpReport_Account(inStartDate := inStartDate, inEndDate := inEndDate
+                                                  , inAccountGroupId := 0, inAccountDirectionId := 0, inInfoMoneyId := 0
+                                                  , inAccountId := 9179, inBusinessId := 0, inProfitLossGroupId := 0, inProfitLossDirectionId := 0
+                                                  , inProfitLossId := 0, inBranchId := 0,  inUserId := -1 * vbUserId, inIsMovement := TRUE
+                                                   ) AS lpReport
+                              WHERE lpReport.SummOut <> 0
+                             )
+        , tmpMovementItem AS (SELECT * FROM MovementItem WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpReport_all.MovementId FROM tmpReport_all) AND MovementItem.DescId = zc_MI_Master())
+        , tmpMILO AS (SELECT *
+                      FROM MovementItemLinkObject AS MILO
+                      WHERE MILO.MovementItemId IN (SELECT DISTINCT tmpMovementItem.Id FROM tmpMovementItem)
+                        AND MILO.DescId         = zc_MILinkObject_PaidKind()
+                        AND MILO.ObjectId       = zc_Enum_PaidKind_FirstForm()
+                     )
+        , tmpMIString AS (SELECT *
+                          FROM MovementItemString AS MIS
+                          WHERE MIS.MovementItemId IN (SELECT DISTINCT tmpMILO.MovementItemId FROM tmpMILO)
+                            AND MIS.DescId         = zc_MIString_Comment()
+                         )
+          , tmpMovementDate AS (SELECT *
+                                FROM MovementDate
+                                WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpReport_all.MovementId FROM tmpReport_all)
+                                  AND MovementDate.DescId      = zc_MovementDate_OperDatePartner()
+                               )
+        , tmpMovementString AS (SELECT *
+                                FROM MovementString
+                                WHERE MovementString.MovementId IN (SELECT DISTINCT tmpReport_all.MovementId FROM tmpReport_all)
+                                  AND MovementString.DescId      = zc_MovementString_InvNumberPartner()
+                               )
+             , tmpReport AS (SELECT Report_Account.InvNumber, Report_Account.OperDate
                                , Report_Account.ObjectCode_Direction, ObjectHistory_JuridicalDetails_ViewByDate.INN
                                , ObjectHistory_JuridicalDetails_ViewByDate.OKPO, Report_Account.ObjectName_Direction
                                , (Report_Account.SummOut/1.2)::TFloat AS SUMA, (Report_Account.SummOut - Report_Account.SummOut/1.2)::TFloat AS PDV, Report_Account.SummOut AS SUMAPDV
@@ -38,35 +68,30 @@ BEGIN
 
                                , Report_Account.MovementId
 
-                          FROM
-                               lpReport_Account(inStartDate := inStartDate, inEndDate := inEndDate
-                                              , inAccountGroupId := 0, inAccountDirectionId := 0, inInfoMoneyId := 0
-                                              , inAccountId := 9179, inBusinessId := 0, inProfitLossGroupId := 0, inProfitLossDirectionId := 0
-                                              , inProfitLossId := 0, inBranchId := 0,  inUserId := vbUserId, inIsMovement := TRUE
-                                               ) AS Report_Account
+                          FROM tmpReport_all AS Report_Account
                                 JOIN ObjectHistory_JuridicalDetails_ViewByDate ON ObjectHistory_JuridicalDetails_ViewByDate.JuridicalId = Report_Account.ObjectId_Direction
                                                                               AND ObjectHistory_JuridicalDetails_ViewByDate.EndDate = zc_DateEnd()
 
-                                  LEFT JOIN MovementItem ON MovementItem.MovementId = Report_Account.MovementId
+                                  LEFT JOIN tmpMovementItem AS MovementItem ON MovementItem.MovementId = Report_Account.MovementId
 
-                                  INNER JOIN MovementItemLinkObject AS MILO_PaidKind
+                                  INNER JOIN tmpMILO AS MILO_PaidKind
                                                                     ON MILO_PaidKind.MovementItemId = MovementItem.Id
                                                                    AND MILO_PaidKind.DescId         = zc_MILinkObject_PaidKind()
                                                                    AND MILO_PaidKind.ObjectId       = zc_Enum_PaidKind_FirstForm()
 
-                                  LEFT JOIN MovementItemString AS MIString_Comment
+                                  LEFT JOIN tmpMIString AS MIString_Comment
                                                                ON MIString_Comment.MovementItemId = MovementItem.Id
                                                               AND MIString_Comment.DescId = zc_MIString_Comment()
 
-                                  LEFT JOIN MovementDate AS MovementDate_OperDatePartner
-                                                         ON MovementDate_OperDatePartner.MovementId = Report_Account.MovementId
-                                                        AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                                  LEFT JOIN tmpMovementDate AS MovementDate_OperDatePartner
+                                                            ON MovementDate_OperDatePartner.MovementId = Report_Account.MovementId
+                                                           AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
 
-                                  LEFT JOIN MovementString AS MovementString_InvNumberPartner
-                                                           ON MovementString_InvNumberPartner.MovementId =  Report_Account.MovementId
-                                                          AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+                                  LEFT JOIN tmpMovementString AS MovementString_InvNumberPartner
+                                                              ON MovementString_InvNumberPartner.MovementId =  Report_Account.MovementId
+                                                             AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
-                          WHERE COALESCE(Report_Account.SummOut, 0) <> 0
+                          --WHERE COALESCE(Report_Account.SummOut, 0) <> 0
                           )
              , tmpMS_InvNumberInvoice AS (SELECT * FROM MovementString AS MS WHERE MS.MovementId IN (SELECT DISTINCT tmpReport.MovementId FROM tmpReport)
                                                                                AND MS.DescId     = zc_MovementString_InvNumberInvoice()

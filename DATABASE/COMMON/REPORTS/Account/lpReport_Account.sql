@@ -47,10 +47,15 @@ RETURNS TABLE  (InvNumber Integer, MovementId Integer, OperDate TDateTime, Movem
               )  
 AS
 $BODY$
+   DECLARE vbUserId_save Integer;
    DECLARE vbIsMovement Boolean;
    DECLARE vbIsAll Boolean;
    DECLARE vbIsUserRole_8813637 Boolean;
 BEGIN
+     vbUserId_save:= inUserId;
+     IF inUserId < 0 THEN inUserId:= -1 * inUserId; END IF;
+
+
      -- !!!Только просмотр Аудитор!!!
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, inUserId);
 
@@ -145,6 +150,189 @@ BEGIN
                                                              AND ContainerLO_Business.ObjectId > 0
                            WHERE ContainerLO_Business.ObjectId = inBusinessId OR COALESCE (inBusinessId, 0) = 0
                          )
+      , tmpMIReport_1 AS (SELECT tmpContainer.BusinessId
+                               , tmpContainer.ContainerId
+                               , tmpContainer.AccountId
+                               , tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS SummStart
+                               , tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) AS SummEnd
+                          FROM tmpContainer
+                               LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId
+                                                                             AND MIContainer.OperDate >= inStartDate
+                          WHERE vbUserId_save > 0
+                          GROUP BY tmpContainer.BusinessId, tmpContainer.ContainerId, tmpContainer.AccountId, tmpContainer.Amount
+                          HAVING (tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
+                              OR (tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) <> 0)
+                         )
+      , tmpMIReport_2 AS (SELECT tmpContainer.BusinessId
+                               , tmpContainer.ContainerId
+                               , tmpContainer.AccountId
+                               , MIContainer.ContainerId_Analyzer
+     
+                               , MIContainer.MovementDescId
+                               , MIContainer.MovementId
+                               , MIContainer.MovementItemId
+                               , MIContainer.OperDate
+     
+                               , MIContainer.ObjectId_Analyzer
+                               , MIContainer.Amount
+                               , MIContainer.isActive
+     
+                          FROM tmpContainer
+                               INNER JOIN MovementItemContainer AS MIContainer
+                                                                ON MIContainer.ContainerId = tmpContainer.ContainerId
+                                                               AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                         )
+    , tmpMILOReport_2 AS (SELECT * FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId IN (SELECT DISTINCT tmpMIReport_2.MovementItemId FROM tmpMIReport_2))
+    , tmpMIContainer_Count_2 AS (SELECT *
+                                 FROM MovementItemContainer AS MIContainer
+                                 WHERE MIContainer.MovementItemId IN (SELECT DISTINCT tmpMIReport_2.MovementItemId FROM tmpMIReport_2 WHERE tmpMIReport_2.MovementDescId IN (zc_Movement_Transport(), zc_Movement_Income()))
+                                   AND MIContainer.DescId         = zc_MIContainer_Count()
+                                )
+   , tmpMIReport AS (SELECT MIContainer.BusinessId
+                          , MIContainer.ContainerId
+                          , MIContainer.AccountId
+                          , MIContainer.ContainerId_Analyzer AS ContainerId_inf
+                          , Container.ObjectId AS AccountId_inf
+                          , CASE WHEN MIContainer.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
+                                      THEN MIContainer.ContainerId
+                                 ELSE MIContainer.ContainerId_Analyzer
+                            END AS ContainerId_ProfitLoss
+                          , SUM (CASE WHEN MIContainer.isActive = TRUE AND COALESCE (MIContainer.AccountId, 0) <> zc_Enum_Account_100301() -- прибыль текущего периода
+                                           THEN MIContainer.Amount
+                                      ELSE 0
+                                 END) AS SummIn
+                          , SUM (CASE WHEN MIContainer.isActive = FALSE OR MIContainer.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
+                                           THEN -1 * MIContainer.Amount
+                                      ELSE 0
+                                 END) AS SummOut
+
+                          , MIContainer.MovementDescId
+                          , CASE WHEN vbIsMovement = TRUE THEN Movement.Id          ELSE 0    END :: Integer   AS MovementId
+                          , CASE WHEN vbIsMovement = TRUE THEN Movement.InvNumber   ELSE ''   END :: TVarChar  AS InvNumber
+                          , CASE WHEN vbIsMovement = TRUE THEN MIContainer.OperDate ELSE NULL END :: TDateTime AS OperDate
+
+                          , CASE WHEN vbIsMovement = TRUE THEN MIContainer.ObjectId_Analyzer    ELSE 0 END :: Integer AS ObjectId_inf
+                          , CASE WHEN vbIsMovement = TRUE THEN MILinkObject_MoneyPlace.ObjectId ELSE 0 END :: Integer AS MoneyPlaceId_inf
+
+                          , MILinkObject_Route.ObjectId  AS RouteId_inf
+                          , MILinkObject_Unit.ObjectId   AS UnitId_inf
+                          , MILinkObject_Branch.ObjectId AS BranchId_inf
+
+                          , CASE WHEN COALESCE (MIContainer_Count.Amount, 0) <> 0 THEN ABS (MIContainer.Amount) / ABS (MIContainer_Count.Amount) ELSE 0 END AS OperPrice
+
+                     FROM tmpMIReport_2 AS MIContainer
+                          LEFT JOIN Container ON Container.Id = MIContainer.ContainerId_Analyzer
+                          LEFT JOIN Movement  ON Movement.Id  = MIContainer.MovementId
+
+                          LEFT JOIN tmpMILOReport_2 AS MILinkObject_Route
+                                                           ON MILinkObject_Route.MovementItemId = MIContainer.MovementItemId
+                                                          AND MILinkObject_Route.DescId = zc_MILinkObject_Route()
+                          LEFT JOIN tmpMILOReport_2 AS MILinkObject_Unit
+                                                           ON MILinkObject_Unit.MovementItemId = MIContainer.MovementItemId
+                                                          AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                          LEFT JOIN tmpMILOReport_2 AS MILinkObject_Branch
+                                                           ON MILinkObject_Branch.MovementItemId = MIContainer.MovementItemId
+                                                          AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
+                          LEFT JOIN tmpMIContainer_Count_2 AS MIContainer_Count ON MIContainer_Count.MovementItemId = MIContainer.MovementItemId
+                                                                             --AND MIContainer_Count.DescId = zc_MIContainer_Count()
+                                                                             --AND Movement.DescId IN (zc_Movement_Transport(), zc_Movement_Income())
+                          LEFT JOIN tmpMILOReport_2 AS MILinkObject_MoneyPlace
+                                                           ON MILinkObject_MoneyPlace.MovementItemId = MIContainer.MovementItemId
+                                                          AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+
+                     WHERE (MILinkObject_Branch.ObjectId = inBranchId OR inBranchId = 0)
+                     GROUP BY MIContainer.BusinessId
+                            , MIContainer.ContainerId
+                            , MIContainer.AccountId
+
+                            , MIContainer.ContainerId_Analyzer
+                            , Container.ObjectId
+
+                            , MIContainer.MovementDescId
+                            , CASE WHEN vbIsMovement = TRUE THEN Movement.Id          ELSE 0    END
+                            , CASE WHEN vbIsMovement = TRUE THEN Movement.InvNumber   ELSE ''   END
+                            , CASE WHEN vbIsMovement = TRUE THEN MIContainer.OperDate ELSE NULL END
+
+                            , CASE WHEN vbIsMovement = TRUE THEN MIContainer.ObjectId_Analyzer ELSE 0 END
+                            , CASE WHEN vbIsMovement = TRUE THEN MILinkObject_MoneyPlace.ObjectId ELSE 0 END
+
+                            , MILinkObject_Route.ObjectId
+                            , MILinkObject_Unit.ObjectId
+                            , MILinkObject_Branch.ObjectId
+
+                            , CASE WHEN COALESCE (MIContainer_Count.Amount, 0) <> 0 THEN ABS (MIContainer.Amount) / ABS (MIContainer_Count.Amount) ELSE 0 END
+                    )
+, tmpReport_All AS (SELECT tmpMIReport_1.BusinessId
+                         , tmpMIReport_1.ContainerId
+                         , tmpMIReport_1.AccountId
+                         , 0 AS ContainerId_inf
+                         , 0 AS AccountId_inf
+                         , 0 AS ContainerId_ProfitLoss
+                         , tmpMIReport_1.SummStart
+                         , tmpMIReport_1.SummEnd
+                         , 0 AS SummIn
+                         , 0 AS SummOut
+                         , 0 AS MovementDescId
+                         , ''   :: TVarChar  AS InvNumber
+                         , 0 AS MovementId
+                         , NULL :: TDateTime AS OperDate
+                         , 0 AS ObjectId_inf
+                         , 0 AS MoneyPlaceId_inf
+                         , 0 AS RouteId_inf
+                         , 0 AS UnitId_inf
+                         , 0 AS BranchId_inf
+                         , 0 AS OperPrice
+                    FROM tmpMIReport_1
+       
+                   UNION ALL
+                    SELECT tmpMIReport.BusinessId
+                         , tmpMIReport.ContainerId
+                         , tmpMIReport.AccountId
+                         , tmpMIReport.ContainerId_inf
+                         , tmpMIReport.AccountId_inf
+                         , tmpMIReport.ContainerId_ProfitLoss
+                         , 0 AS SummStart
+                         , 0 AS SummEnd
+                         , SUM (CASE WHEN tmpMIReport.MovementDescId = zc_Movement_Sale() THEN tmpMIReport.SummIn - tmpMIReport.SummOut ELSE tmpMIReport.SummIn END)  AS SummIn
+                         , SUM (CASE WHEN tmpMIReport.MovementDescId = zc_Movement_Sale() THEN 0 ELSE tmpMIReport.SummOut END) AS SummOut
+                         , tmpMIReport.MovementDescId
+                         , tmpMIReport.InvNumber
+                         , tmpMIReport.MovementId
+                         , tmpMIReport.OperDate
+       
+                         , tmpMIReport.ObjectId_inf
+                         , tmpMIReport.MoneyPlaceId_inf
+       
+                         , tmpMIReport.RouteId_inf
+                         , tmpMIReport.UnitId_inf
+                         , tmpMIReport.BranchId_inf
+       
+                         , tmpMIReport.OperPrice
+       
+                    FROM tmpMIReport
+                    GROUP BY tmpMIReport.BusinessId
+                           , tmpMIReport.ContainerId
+                           , tmpMIReport.AccountId
+                           , tmpMIReport.ContainerId_inf
+                           , tmpMIReport.AccountId_inf
+                           , tmpMIReport.ContainerId_ProfitLoss
+                           , tmpMIReport.MovementDescId
+                           , tmpMIReport.OperDate
+                           , tmpMIReport.InvNumber
+                           , tmpMIReport.MovementId
+                           , tmpMIReport.ObjectId_inf
+                           , tmpMIReport.MoneyPlaceId_inf
+                           , tmpMIReport.RouteId_inf
+                           , tmpMIReport.UnitId_inf
+                           , tmpMIReport.BranchId_inf
+                           , tmpMIReport.OperPrice
+       
+                   )
+  , tmpCLO_Report AS (SELECT * FROM ContainerLinkObject AS CLO WHERE CLO.ContainerId IN (SELECT DISTINCT tmpReport_All.ContainerId FROM tmpReport_All))
+  , tmpCLO_Report_pl AS (SELECT * FROM ContainerLinkObject AS CLO WHERE CLO.ContainerId IN (SELECT DISTINCT tmpReport_All.ContainerId_ProfitLoss FROM tmpReport_All WHERE tmpReport_All.ContainerId_ProfitLoss > 0) AND CLO.DescId = zc_ContainerLinkObject_ProfitLoss())
+  , tmpCLO_Report_inf AS (SELECT * FROM ContainerLinkObject AS CLO WHERE CLO.ContainerId IN (SELECT DISTINCT tmpReport_All.ContainerId_inf FROM tmpReport_All WHERE tmpReport_All.ContainerId_inf > 0))
+                     
+    -- Результат
     SELECT -- 0 :: Integer AS InvNumber
            zfConvert_StringToNumber (tmpReport.InvNumber) AS InvNumber
          , tmpReport.MovementId
@@ -247,226 +435,77 @@ BEGIN
              , tmpReport_All.RouteId_inf
 
              , tmpReport_All.OperPrice
-        FROM
-            (SELECT tmpContainer.BusinessId
-                  , tmpContainer.ContainerId
-                  , tmpContainer.AccountId
-                  , 0 AS ContainerId_inf
-                  , 0 AS AccountId_inf
-                  , 0 AS ContainerId_ProfitLoss
-                  , tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS SummStart
-                  , tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) AS SummEnd
-                  , 0 AS SummIn
-                  , 0 AS SummOut
-                  , 0 AS MovementDescId
-                  , ''   :: TVarChar  AS InvNumber
-                  , 0 AS MovementId
-                  , NULL :: TDateTime AS OperDate
-                  , 0 AS ObjectId_inf
-                  , 0 AS MoneyPlaceId_inf
-                  , 0 AS RouteId_inf
-                  , 0 AS UnitId_inf
-                  , 0 AS BranchId_inf
-                  , 0 AS OperPrice
-             FROM tmpContainer
-                  LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId
-                                                                AND MIContainer.OperDate >= inStartDate
-             GROUP BY tmpContainer.BusinessId, tmpContainer.ContainerId, tmpContainer.AccountId, tmpContainer.Amount
-             HAVING (tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
-                 OR (tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) <> 0)
-            UNION ALL
-             SELECT tmpMIReport.BusinessId
-                  , tmpMIReport.ContainerId
-                  , tmpMIReport.AccountId
-                  , tmpMIReport.ContainerId_inf
-                  , tmpMIReport.AccountId_inf
-                  , tmpMIReport.ContainerId_ProfitLoss
-                  , 0 AS SummStart
-                  , 0 AS SummEnd
-                  , SUM (CASE WHEN tmpMIReport.MovementDescId = zc_Movement_Sale() THEN tmpMIReport.SummIn - tmpMIReport.SummOut ELSE tmpMIReport.SummIn END)  AS SummIn
-                  , SUM (CASE WHEN tmpMIReport.MovementDescId = zc_Movement_Sale() THEN 0 ELSE tmpMIReport.SummOut END) AS SummOut
-                  , tmpMIReport.MovementDescId
-                  , tmpMIReport.InvNumber
-                  , tmpMIReport.MovementId
-                  , tmpMIReport.OperDate
-
-                  , tmpMIReport.ObjectId_inf
-                  , tmpMIReport.MoneyPlaceId_inf
-
-                  , tmpMIReport.RouteId_inf
-                  , tmpMIReport.UnitId_inf
-                  , tmpMIReport.BranchId_inf
-
-                  , tmpMIReport.OperPrice
-
-               FROM (SELECT tmpContainer.BusinessId
-                          , tmpContainer.ContainerId
-                          , tmpContainer.AccountId
-                          , MIContainer.ContainerId_Analyzer AS ContainerId_inf
-                          , Container.ObjectId AS AccountId_inf
-                          , CASE WHEN tmpContainer.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
-                                      THEN tmpContainer.ContainerId
-                                 ELSE MIContainer.ContainerId_Analyzer
-                            END AS ContainerId_ProfitLoss
-                          , SUM (CASE WHEN MIContainer.isActive = TRUE AND COALESCE (MIContainer.AccountId, 0) <> zc_Enum_Account_100301() -- прибыль текущего периода
-                                           THEN MIContainer.Amount
-                                      ELSE 0
-                                 END) AS SummIn
-                          , SUM (CASE WHEN MIContainer.isActive = FALSE OR MIContainer.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
-                                           THEN -1 * MIContainer.Amount
-                                      ELSE 0
-                                 END) AS SummOut
-
-                          , Movement.DescId                                                                    AS MovementDescId
-                          , CASE WHEN vbIsMovement = TRUE THEN Movement.Id          ELSE 0    END :: Integer   AS MovementId
-                          , CASE WHEN vbIsMovement = TRUE THEN Movement.InvNumber   ELSE ''   END :: TVarChar  AS InvNumber
-                          , CASE WHEN vbIsMovement = TRUE THEN MIContainer.OperDate ELSE NULL END :: TDateTime AS OperDate
-
-                          , CASE WHEN vbIsMovement = TRUE THEN MIContainer.ObjectId_Analyzer    ELSE 0 END :: Integer AS ObjectId_inf
-                          , CASE WHEN vbIsMovement = TRUE THEN MILinkObject_MoneyPlace.ObjectId ELSE 0 END :: Integer AS MoneyPlaceId_inf
-
-                          , MILinkObject_Route.ObjectId  AS RouteId_inf
-                          , MILinkObject_Unit.ObjectId   AS UnitId_inf
-                          , MILinkObject_Branch.ObjectId AS BranchId_inf
-
-                          , CASE WHEN COALESCE (MIContainer_Count.Amount, 0) <> 0 THEN ABS (MIContainer.Amount) / ABS (MIContainer_Count.Amount) ELSE 0 END AS OperPrice
-
-                     FROM tmpContainer
-                          INNER JOIN MovementItemContainer AS MIContainer
-                                                           ON MIContainer.ContainerId = tmpContainer.ContainerId
-                                                          AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                          /*JOIN ReportContainerLink ON ReportContainerLink.ContainerId = tmpContainer.ContainerId
-                          JOIN MovementItem Report AS MIReport ON MIReport.ReportContainerId = ReportContainerLink.ReportContainerId
-                                                             AND MIReport.OperDate BETWEEN inStartDate AND inEndDate*/
-                          LEFT JOIN Container ON Container.Id = MIContainer.ContainerId_Analyzer
-
-                          LEFT JOIN MovementItemLinkObject AS MILinkObject_Route
-                                                           ON MILinkObject_Route.MovementItemId = MIContainer.MovementItemId
-                                                          AND MILinkObject_Route.DescId = zc_MILinkObject_Route()
-                          LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                                           ON MILinkObject_Unit.MovementItemId = MIContainer.MovementItemId
-                                                          AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
-                          LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
-                                                           ON MILinkObject_Branch.MovementItemId = MIContainer.MovementItemId
-                                                          AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
-                          LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
-                          LEFT JOIN MovementItemContainer AS MIContainer_Count ON MIContainer_Count.MovementItemId = MIContainer.MovementItemId
-                                                                              AND MIContainer_Count.DescId = zc_MIContainer_Count()
-                                                                              AND Movement.DescId IN (zc_Movement_Transport(), zc_Movement_Income())
-                          LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
-                                                           ON MILinkObject_MoneyPlace.MovementItemId = MIContainer.MovementItemId
-                                                          AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
-
-                     WHERE (MILinkObject_Branch.ObjectId = inBranchId OR inBranchId = 0)
-                     GROUP BY tmpContainer.BusinessId
-                            , tmpContainer.ContainerId
-                            , tmpContainer.AccountId
-
-                            , MIContainer.ContainerId_Analyzer
-                            , Container.ObjectId
-
-                            , Movement.DescId
-                            , CASE WHEN vbIsMovement = TRUE THEN Movement.Id          ELSE 0    END
-                            , CASE WHEN vbIsMovement = TRUE THEN Movement.InvNumber   ELSE ''   END
-                            , CASE WHEN vbIsMovement = TRUE THEN MIContainer.OperDate ELSE NULL END
-
-                            , CASE WHEN vbIsMovement = TRUE THEN MIContainer.ObjectId_Analyzer ELSE 0 END
-                            , CASE WHEN vbIsMovement = TRUE THEN MILinkObject_MoneyPlace.ObjectId ELSE 0 END
-
-                            , MILinkObject_Route.ObjectId
-                            , MILinkObject_Unit.ObjectId
-                            , MILinkObject_Branch.ObjectId
-
-                            , CASE WHEN COALESCE (MIContainer_Count.Amount, 0) <> 0 THEN ABS (MIContainer.Amount) / ABS (MIContainer_Count.Amount) ELSE 0 END
-
-                     ) AS tmpMIReport
-             GROUP BY tmpMIReport.BusinessId
-                    , tmpMIReport.ContainerId
-                    , tmpMIReport.AccountId
-                    , tmpMIReport.ContainerId_inf
-                    , tmpMIReport.AccountId_inf
-                    , tmpMIReport.ContainerId_ProfitLoss
-                    , tmpMIReport.MovementDescId
-                    , tmpMIReport.OperDate
-                    , tmpMIReport.InvNumber
-                    , tmpMIReport.MovementId
-                    , tmpMIReport.ObjectId_inf
-                    , tmpMIReport.MoneyPlaceId_inf
-                    , tmpMIReport.RouteId_inf
-                    , tmpMIReport.UnitId_inf
-                    , tmpMIReport.BranchId_inf
-                    , tmpMIReport.OperPrice
-
-            ) AS tmpReport_All
-            LEFT JOIN ContainerLinkObject AS ContainerLO_JuridicalBasis ON ContainerLO_JuridicalBasis.ContainerId = tmpReport_All.ContainerId
+        FROM tmpReport_All
+            LEFT JOIN tmpCLO_Report AS ContainerLO_JuridicalBasis ON ContainerLO_JuridicalBasis.ContainerId = tmpReport_All.ContainerId
                                                                        AND ContainerLO_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
                                                                        AND ContainerLO_JuridicalBasis.ObjectId > 0
 
-            LEFT JOIN ContainerLinkObject AS ContainerLO_Juridical ON ContainerLO_Juridical.ContainerId = tmpReport_All.ContainerId
+            LEFT JOIN tmpCLO_Report AS ContainerLO_Juridical ON ContainerLO_Juridical.ContainerId = tmpReport_All.ContainerId
                                                                   AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
                                                                   AND ContainerLO_Juridical.ObjectId > 0
-            LEFT JOIN ContainerLinkObject AS ContainerLO_Unit ON ContainerLO_Unit.ContainerId = tmpReport_All.ContainerId
+            LEFT JOIN tmpCLO_Report AS ContainerLO_Unit ON ContainerLO_Unit.ContainerId = tmpReport_All.ContainerId
                                                              AND ContainerLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                                                              AND ContainerLO_Unit.ObjectId > 0
-            LEFT JOIN ContainerLinkObject AS ContainerLO_Car ON ContainerLO_Car.ContainerId = tmpReport_All.ContainerId
+            LEFT JOIN tmpCLO_Report AS ContainerLO_Car ON ContainerLO_Car.ContainerId = tmpReport_All.ContainerId
                                                             AND ContainerLO_Car.DescId = zc_ContainerLinkObject_Car()
                                                             AND ContainerLO_Car.ObjectId > 0
-            LEFT JOIN ContainerLinkObject AS ContainerLO_Member ON ContainerLO_Member.ContainerId = tmpReport_All.ContainerId
+            LEFT JOIN tmpCLO_Report AS ContainerLO_Member ON ContainerLO_Member.ContainerId = tmpReport_All.ContainerId
                                                                AND ContainerLO_Member.DescId = zc_ContainerLinkObject_Member()
                                                                AND ContainerLO_Member.ObjectId > 0
-            LEFT JOIN ContainerLinkObject AS ContainerLO_Cash ON ContainerLO_Cash.ContainerId = tmpReport_All.ContainerId
+            LEFT JOIN tmpCLO_Report AS ContainerLO_Cash ON ContainerLO_Cash.ContainerId = tmpReport_All.ContainerId
                                                              AND ContainerLO_Cash.DescId = zc_ContainerLinkObject_Cash()
                                                              AND ContainerLO_Cash.ObjectId > 0
-            LEFT JOIN ContainerLinkObject AS ContainerLO_BankAccount ON ContainerLO_BankAccount.ContainerId = tmpReport_All.ContainerId
+            LEFT JOIN tmpCLO_Report AS ContainerLO_BankAccount ON ContainerLO_BankAccount.ContainerId = tmpReport_All.ContainerId
                                                                     AND ContainerLO_BankAccount.DescId = zc_ContainerLinkObject_BankAccount()
                                                                     AND ContainerLO_BankAccount.ObjectId > 0
 
-            LEFT JOIN ContainerLinkObject AS ContainerLO_PaidKind ON ContainerLO_PaidKind.ContainerId = tmpReport_All.ContainerId
+            LEFT JOIN tmpCLO_Report AS ContainerLO_PaidKind ON ContainerLO_PaidKind.ContainerId = tmpReport_All.ContainerId
                                                                  AND ContainerLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
                                                                  AND ContainerLO_PaidKind.ObjectId > 0
-            LEFT JOIN ContainerLinkObject AS ContainerLO_Contract ON ContainerLO_Contract.ContainerId = tmpReport_All.ContainerId
+            LEFT JOIN tmpCLO_Report AS ContainerLO_Contract ON ContainerLO_Contract.ContainerId = tmpReport_All.ContainerId
                                                                  AND ContainerLO_Contract.DescId = zc_ContainerLinkObject_Contract()
                                                                  AND ContainerLO_Contract.ObjectId > 0
 
-            LEFT JOIN ContainerLinkObject AS ContainerLO_ProfitLoss_inf ON ContainerLO_ProfitLoss_inf.ContainerId = tmpReport_All.ContainerId_ProfitLoss -- ContainerId_inf
+            LEFT JOIN tmpCLO_Report_pl AS ContainerLO_ProfitLoss_inf ON ContainerLO_ProfitLoss_inf.ContainerId = tmpReport_All.ContainerId_ProfitLoss -- ContainerId_inf
                                                                        AND ContainerLO_ProfitLoss_inf.DescId = zc_ContainerLinkObject_ProfitLoss()
                                                                        AND ContainerLO_ProfitLoss_inf.ObjectId > 0
-            LEFT JOIN ContainerLinkObject AS ContainerLO_Business_inf ON ContainerLO_Business_inf.ContainerId = tmpReport_All.ContainerId_inf
+            LEFT JOIN tmpCLO_Report_inf AS ContainerLO_Business_inf ON ContainerLO_Business_inf.ContainerId = tmpReport_All.ContainerId_inf
                                                                      AND ContainerLO_Business_inf.DescId = zc_ContainerLinkObject_Business()
                                                                      AND ContainerLO_Business_inf.ObjectId > 0
-            LEFT JOIN ContainerLinkObject AS ContainerLO_Branch_inf ON ContainerLO_Branch_inf.ContainerId = tmpReport_All.ContainerId_inf
+            LEFT JOIN tmpCLO_Report_inf AS ContainerLO_Branch_inf ON ContainerLO_Branch_inf.ContainerId = tmpReport_All.ContainerId_inf
                                                                    AND ContainerLO_Branch_inf.DescId = zc_ContainerLinkObject_Branch()
                                                                    AND ContainerLO_Branch_inf.ObjectId > 0
 
-            LEFT JOIN ContainerLinkObject AS ContainerLO_Juridical_inf ON ContainerLO_Juridical_inf.ContainerId = tmpReport_All.ContainerId_inf
+            LEFT JOIN tmpCLO_Report_inf AS ContainerLO_Juridical_inf ON ContainerLO_Juridical_inf.ContainerId = tmpReport_All.ContainerId_inf
                                                                       AND ContainerLO_Juridical_inf.DescId = zc_ContainerLinkObject_Juridical()
                                                                       AND ContainerLO_Juridical_inf.ObjectId > 0
-            LEFT JOIN ContainerLinkObject AS ContainerLO_Unit_inf ON ContainerLO_Unit_inf.ContainerId = tmpReport_All.ContainerId_inf
+            LEFT JOIN tmpCLO_Report_inf AS ContainerLO_Unit_inf ON ContainerLO_Unit_inf.ContainerId = tmpReport_All.ContainerId_inf
                                                                  AND ContainerLO_Unit_inf.DescId = zc_ContainerLinkObject_Unit()
                                                                  AND ContainerLO_Unit_inf.ObjectId > 0
-            LEFT JOIN ContainerLinkObject AS ContainerLO_Car_inf ON ContainerLO_Car_inf.ContainerId = tmpReport_All.ContainerId_inf
+            LEFT JOIN tmpCLO_Report_inf AS ContainerLO_Car_inf ON ContainerLO_Car_inf.ContainerId = tmpReport_All.ContainerId_inf
                                                                 AND ContainerLO_Car_inf.DescId = zc_ContainerLinkObject_Car()
                                                                 AND ContainerLO_Car_inf.ObjectId > 0
-            LEFT JOIN ContainerLinkObject AS ContainerLO_Member_inf ON ContainerLO_Member_inf.ContainerId = tmpReport_All.ContainerId_inf
+            LEFT JOIN tmpCLO_Report_inf AS ContainerLO_Member_inf ON ContainerLO_Member_inf.ContainerId = tmpReport_All.ContainerId_inf
                                                                    AND ContainerLO_Member_inf.DescId = zc_ContainerLinkObject_Member()
                                                                    AND ContainerLO_Member_inf.ObjectId > 0
-            LEFT JOIN ContainerLinkObject AS ContainerLO_Cash_inf ON ContainerLO_Cash_inf.ContainerId = tmpReport_All.ContainerId_inf
+            LEFT JOIN tmpCLO_Report_inf AS ContainerLO_Cash_inf ON ContainerLO_Cash_inf.ContainerId = tmpReport_All.ContainerId_inf
                                                                  AND ContainerLO_Cash_inf.DescId = zc_ContainerLinkObject_Cash()
                                                                  AND ContainerLO_Cash_inf.ObjectId > 0
-            LEFT JOIN ContainerLinkObject AS ContainerLO_BankAccount_inf ON ContainerLO_BankAccount_inf.ContainerId = tmpReport_All.ContainerId_inf
+            LEFT JOIN tmpCLO_Report_inf AS ContainerLO_BankAccount_inf ON ContainerLO_BankAccount_inf.ContainerId = tmpReport_All.ContainerId_inf
                                                                         AND ContainerLO_BankAccount_inf.DescId = zc_ContainerLinkObject_BankAccount()
                                                                         AND ContainerLO_BankAccount_inf.ObjectId > 0
 
-            LEFT JOIN ContainerLinkObject AS ContainerLO_InfoMoney ON ContainerLO_InfoMoney.ContainerId = tmpReport_All.ContainerId
+            LEFT JOIN tmpCLO_Report AS ContainerLO_InfoMoney ON ContainerLO_InfoMoney.ContainerId = tmpReport_All.ContainerId
                                                                   AND ContainerLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
                                                                   AND ContainerLO_InfoMoney.ObjectId > 0
-            LEFT JOIN ContainerLinkObject AS ContainerLO_InfoMoney_inf ON ContainerLO_InfoMoney_inf.ContainerId = tmpReport_All.ContainerId_inf
+
+            LEFT JOIN tmpCLO_Report_inf AS ContainerLO_InfoMoney_inf ON ContainerLO_InfoMoney_inf.ContainerId = tmpReport_All.ContainerId_inf
                                                                       AND ContainerLO_InfoMoney_inf.DescId = zc_ContainerLinkObject_InfoMoney()
                                                                       AND ContainerLO_InfoMoney_inf.ObjectId > 0
-            LEFT JOIN ContainerLinkObject AS ContainerLO_Goods ON ContainerLO_Goods.ContainerId = tmpReport_All.ContainerId
+            LEFT JOIN tmpCLO_Report AS ContainerLO_Goods ON ContainerLO_Goods.ContainerId = tmpReport_All.ContainerId
                                                               AND ContainerLO_Goods.DescId = zc_ContainerLinkObject_Goods()
                                                               AND ContainerLO_Goods.ObjectId > 0
-            LEFT JOIN ContainerLinkObject AS ContainerLO_Goods_inf ON ContainerLO_Goods_inf.ContainerId = tmpReport_All.ContainerId_inf
+            LEFT JOIN tmpCLO_Report_inf AS ContainerLO_Goods_inf ON ContainerLO_Goods_inf.ContainerId = tmpReport_All.ContainerId_inf
                                                                   AND ContainerLO_Goods_inf.DescId = zc_ContainerLinkObject_Goods()
                                                                   AND ContainerLO_Goods_inf.ObjectId > 0
         GROUP BY ContainerLO_JuridicalBasis.ObjectId
@@ -562,8 +601,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpReport_Account (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

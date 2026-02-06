@@ -1,7 +1,5 @@
 -- Function: gpGet_Movement_OrderFinance_Email_sendSB() - Отправка по почте только Сообщение
 
--- DROP FUNCTION IF EXISTS gpGet_Movement_OrderFinance_Email_sendSB (Integer, TVarChar);
--- DROP FUNCTION IF EXISTS gpGet_Movement_OrderFinance_Email_sendBody (Integer, Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpGet_Movement_OrderFinance_Email_send_msg (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_OrderFinance_Email_send_msg(

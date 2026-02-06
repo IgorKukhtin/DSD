@@ -658,7 +658,8 @@ BEGIN
                                                          AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
                             LEFT JOIN tmpCLO_all AS CLO_GoodsKind
                                                           ON CLO_GoodsKind.ContainerId = MIFloat_ContainerId.ContainerId
-                                                         AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_PartionGoods()
+                                                         AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
+
                             LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value ON ObjectDate_PartionGoods_Value.ObjectId = CLO_PartionGoods.ObjectId
                                                                                  AND ObjectDate_PartionGoods_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
 
@@ -3273,6 +3274,7 @@ end if;
 
 
 
+     -- 1.1. Проверка
      IF EXISTS (SELECT 1
                 FROM _tmpItem
                       JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem.MovementItemId AND MIF.DescId = zc_MIFloat_ContainerId() AND MIF.ValueData > 0
@@ -3283,7 +3285,7 @@ end if;
 
                )
      THEN
-         RAISE EXCEPTION 'System.Ошибка. Object.DescId <> zc_Object_GoodsKind on = <%>'
+         RAISE EXCEPTION 'System.Ошибка-1. Object.DescId <> zc_Object_GoodsKind on = <%>'
                         , (SELECT COUNT(*)
                            FROM _tmpItem
                                  JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem.MovementItemId AND MIF.DescId = zc_MIFloat_ContainerId() AND MIF.ValueData > 0
@@ -3293,6 +3295,43 @@ end if;
                                             AND Object.DescId <> zc_Object_GoodsKind()
                        
                           );
+     END IF;
+     -- 1.2. Проверка
+     IF EXISTS (SELECT 1
+                FROM _tmpItem
+                      JOIN ContainerLinkObject AS CLO ON CLO.ContainerId = _tmpItem.ContainerId_Goods AND CLO.DescId = zc_ContainerLinkObject_GoodsKind()
+                      JOIN Object ON Object.Id     = CLO.ObjectId
+                                 -- здесь ошибка
+                                 AND Object.DescId <> zc_Object_GoodsKind()
+
+               )
+     THEN
+         RAISE EXCEPTION 'System.Ошибка-2. Object.DescId <> zc_Object_GoodsKind on = <%>    <%>    <%>'
+                        , (SELECT COUNT(*)
+                           FROM _tmpItem
+                                 JOIN ContainerLinkObject AS CLO ON CLO.ContainerId = _tmpItem.ContainerId_Goods AND CLO.DescId = zc_ContainerLinkObject_GoodsKind()
+                                 JOIN Object ON Object.Id     = CLO.ObjectId
+                                            -- здесь ошибка
+                                            AND Object.DescId <> zc_Object_GoodsKind()
+                       
+                          )
+                        , (SELECT max (Object.DescId)
+                           FROM _tmpItem
+                                 JOIN ContainerLinkObject AS CLO ON CLO.ContainerId = _tmpItem.ContainerId_Goods AND CLO.DescId = zc_ContainerLinkObject_GoodsKind()
+                                 JOIN Object ON Object.Id     = CLO.ObjectId
+                                            -- здесь ошибка
+                                            AND Object.DescId <> zc_Object_GoodsKind()
+                       
+                          )
+                        , (SELECT max (_tmpItem.MovementItemId)
+                           FROM _tmpItem
+                                 JOIN ContainerLinkObject AS CLO ON CLO.ContainerId = _tmpItem.ContainerId_Goods AND CLO.DescId = zc_ContainerLinkObject_GoodsKind()
+                                 JOIN Object ON Object.Id     = CLO.ObjectId
+                                            -- здесь ошибка
+                                            AND Object.DescId <> zc_Object_GoodsKind()
+                       
+                          )
+                         ;
      END IF;
 
      -- !!!ошибки нет, поэтому формируется свойство <ContainerId>!!!

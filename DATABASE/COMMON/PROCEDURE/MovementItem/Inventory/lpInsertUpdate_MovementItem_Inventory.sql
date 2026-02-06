@@ -44,7 +44,23 @@ BEGIN
      IF inUserId < 0 THEN inUserId:= -1 * inUserId; END IF;
 
 
-      -- !!!Проверка inPartionGoodsDate!!!
+     -- !!!замена!!!
+     IF EXISTS (SELECT 1
+                FROM MovementLinkObject AS MLO
+                WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From()
+                  AND MLO.ObjectId IN (8447 -- ЦЕХ ковбасних виробів
+                                     , 8448 -- Дільниця делікатесів
+                                     , 8449 -- Цех сирокопчених ковбас
+                                      )
+               )
+        AND inPartionGoodsId > 0
+     THEN
+         inPartionGoodsId:= 0;
+     END IF;
+
+
+
+     -- !!!Проверка inPartionGoodsDate!!!
      IF inPartionGoodsDate IS NOT NULL
      -- Склад Реализации + Склад База ГП
      AND EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId IN (8458)) --, zc_Unit_RK()
