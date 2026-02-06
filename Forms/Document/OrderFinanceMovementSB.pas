@@ -374,6 +374,8 @@ type
     actGetImportSettingSB: TdsdExecStoredProc;
     mactLoadExcel_SB: TMultiAction;
     bbtLoadExcel_SB: TdxBarButton;
+    spDelete_MI: TdsdStoredProc;
+    actDelete_MI: TdsdExecStoredProc;
   private
   public
   end;

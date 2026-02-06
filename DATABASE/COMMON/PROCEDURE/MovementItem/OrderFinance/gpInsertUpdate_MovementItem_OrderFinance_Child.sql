@@ -127,13 +127,12 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementItemId(), ioId, inMovementItemId_Order);
 
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_InvNumber(), ioId, inInvNumber);
-     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_InvNumber(), ioId, CASE WHEN COALESCE (inInvNumber,'') = '' THEN NULL ELSE inInvNumber END);
 
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_InvNumber_Invoice(), ioId, inInvNumber_Invoice);
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_InvNumber_Invoice(), ioId, CASE WHEN COALESCE (inInvNumber_Invoice,'') = '' THEN NULL ELSE inInvNumber_Invoice END);
 
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GoodsName(), ioId, inGoodsName);
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GoodsName(), ioId, CASE WHEN COALESCE (inGoodsName,'') = '' THEN NULL ELSE inGoodsName END);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
 
@@ -144,9 +143,9 @@ BEGIN
          , STRING_AGG (tmpMI.GoodsName, '; ') AS GoodsName
          , SUM (tmpMI.Amount)          AS Amount
            INTO outInvNumber_parent, outInvNumber_Invoice_parent, outGoodsName_parent, outSumm_parent
-    FROM (SELECT COALESCE (MIString_GoodsName.ValueData, '') AS GoodsName
-               , COALESCE (MIString_InvNumber.ValueData, '') AS InvNumber
-               , COALESCE (MIString_InvNumber_Invoice.ValueData, '') AS InvNumber_Invoice
+    FROM (SELECT MIString_GoodsName.ValueData AS GoodsName
+               , MIString_InvNumber.ValueData AS InvNumber
+               , MIString_InvNumber_Invoice.ValueData AS InvNumber_Invoice
                , MovementItem.Amount
           FROM MovementItem
               LEFT JOIN MovementItemString AS MIString_InvNumber

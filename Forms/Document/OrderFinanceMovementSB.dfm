@@ -555,6 +555,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
+    ExplicitTop = 254
     ClientRectBottom = 390
     ClientRectRight = 1164
     ClientRectTop = 24
@@ -1655,9 +1656,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 1160
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -1665,7 +1663,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         Height = 366
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1160
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -2612,22 +2609,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertRecord_JurOrdFin'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetErasedJurOrdFin'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetUnErasedJurOrdFin'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbtLoadExcel_SB'
         end
         item
@@ -3037,6 +3018,9 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       MoveParams = <>
       ActionList = <
         item
+          Action = actDelete_MI
+        end
+        item
           Action = actGetImportSettingSB
         end
         item
@@ -3409,6 +3393,17 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Status = mtDelete
       Guides = StatusGuides
     end
+    object actDelete_MI: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spDelete_MI
+      StoredProcList = <
+        item
+          StoredProc = spDelete_MI
+        end>
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1089#1090#1088#1086#1082#1080
+    end
     object actExport_New: TMultiAction
       Category = 'Export_file'
       MoveParams = <>
@@ -3734,6 +3729,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     end
     object actInsertRecordChild: TInsertRecord
       Category = 'Child'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       View = cxGridDBTableViewChild
@@ -4299,6 +4295,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     end
     object actInsertRecord: TInsertRecord
       Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView
@@ -5906,7 +5903,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       end>
     PackSize = 1
     Left = 502
-    Top = 192
+    Top = 240
   end
   object spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderFinance_SetUnErased'
@@ -7837,7 +7834,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       end>
     PackSize = 1
     Left = 808
-    Top = 240
+    Top = 304
   end
   object GuidesCash: TdsdGuides
     KeyField = 'Id'
@@ -7939,6 +7936,23 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       end>
     PackSize = 1
     Left = 720
+    Top = 352
+  end
+  object spDelete_MI: TdsdStoredProc
+    StoredProcName = 'gpDelete_MI_OrderFinanceSB'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 832
     Top = 352
   end
 end
