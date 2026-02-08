@@ -264,6 +264,7 @@ Corr
                              AND Movement.StatusId   <> zc_Enum_Status_Erased()
                              AND vbIsMovementId_corr = TRUE
                          )
+    ,  tmpInvNumber AS (SELECT CAST (NEXTVAL ('Movement_Service_seq') AS TVarChar) AS InvNumber WHERE inMovementId = 0 AND vbIsMovementId_corr = FALSE)
        -- Результат
        SELECT
              -- т.к. может быть = 0
@@ -276,7 +277,7 @@ Corr
 
                   WHEN inMovementId = 0
                        -- insert
-                       THEN CAST (NEXTVAL ('Movement_Service_seq') AS TVarChar)
+                       THEN tmpInvNumber.InvNumber
 
                   WHEN Movement.ParentId > 0
                        -- update corr
@@ -290,7 +291,15 @@ Corr
 
              END :: TVarChar AS InvNumber
 
-           , Movement.InvNumber AS InvNumber_real
+           , CASE WHEN vbIsMovementId_corr = TRUE
+                       THEN Movement.InvNumber
+                  WHEN inMovementId = 0
+                       -- insert
+                       THEN tmpInvNumber.InvNumber
+                  -- update
+                  ELSE Movement.InvNumber
+
+             END :: TVarChar AS InvNumber_real
 
            , CASE WHEN inMovementId = 0 THEN inOperDate ELSE Movement.OperDate END                                           AS OperDate
            , Object_Status.ObjectCode            AS StatusCode
@@ -374,6 +383,8 @@ Corr
            , MovementString_InvNumberInvoice.ValueData ::TVarChar AS InvNumberInvoice
 
        FROM Movement
+            LEFT JOIN tmpInvNumber ON 1 = 1
+
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
 
             LEFT JOIN tmpMovementDate AS MovementDate_OperDatePartner
