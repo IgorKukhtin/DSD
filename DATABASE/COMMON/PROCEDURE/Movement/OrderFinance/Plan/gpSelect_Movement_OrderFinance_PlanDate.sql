@@ -1,4 +1,4 @@
--- Function: gpSelect_Movement_OrderFinance_PlanDate()
+ -- Function: gpSelect_Movement_OrderFinance_PlanDate()
 
 --DROP FUNCTION IF EXISTS gpSelect_Movement_OrderFinance_PlanDate (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_OrderFinance_PlanDate (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
@@ -367,7 +367,124 @@ BEGIN
                      FROM tmpMI_Master
                           LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI_Master.Id
                      )
-      , tmpMI_Union AS (SELECT tmpMI.*
+      , tmpMI_Union AS (WITH
+                        tmp AS (SELECT MovementItem.Id
+                                       -- План оплат на день недели
+                                     , MIFloat_AmountPlan_day.ValueData    :: TFloat AS AmountPlan_day
+                                       -- № в очереди
+                                     , MIFloat_Number_day.ValueData        :: TFloat AS Number_day
+                                       -- Платим (да/нет)
+                                     , COALESCE (MIBoolean_AmountPlan_day.ValueData, True) ::Boolean AS isAmountPlan_day
+                                       -- день недели
+                                     , 1 AS NumDay
+
+                                FROM tmpMI_Master AS MovementItem
+                                     INNER JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_day
+                                                                     ON MIFloat_AmountPlan_day.MovementItemId = MovementItem.Id
+                                                                    AND MIFloat_AmountPlan_day.DescId = zc_MIFloat_AmountPlan_1()
+                                     LEFT JOIN tmpMovementItemFloat AS MIFloat_Number_day
+                                                                    ON MIFloat_Number_day.MovementItemId = MovementItem.Id
+                                                                   AND MIFloat_Number_day.DescId = zc_MIFloat_Number_1()
+                                     LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_day
+                                                                      ON MIBoolean_AmountPlan_day.MovementItemId = MovementItem.Id
+                                                                     AND MIBoolean_AmountPlan_day.DescId = zc_MIBoolean_AmountPlan_1()
+                                WHERE MIFloat_AmountPlan_day.ValueData <> 0
+
+                              UNION ALL
+                                SELECT MovementItem.Id
+                                       -- План оплат на день недели
+                                     , MIFloat_AmountPlan_day.ValueData    :: TFloat AS AmountPlan_day
+                                       -- № в очереди
+                                     , MIFloat_Number_day.ValueData        :: TFloat AS Number_day
+                                       -- Платим (да/нет)
+                                     , COALESCE (MIBoolean_AmountPlan_day.ValueData, True) ::Boolean AS isAmountPlan_day
+                                       -- день недели
+                                     , 2 AS NumDay
+
+                                FROM tmpMI_Master AS MovementItem
+                                     INNER JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_day
+                                                                     ON MIFloat_AmountPlan_day.MovementItemId = MovementItem.Id
+                                                                    AND MIFloat_AmountPlan_day.DescId = zc_MIFloat_AmountPlan_2()
+                                     LEFT JOIN tmpMovementItemFloat AS MIFloat_Number_day
+                                                                    ON MIFloat_Number_day.MovementItemId = MovementItem.Id
+                                                                   AND MIFloat_Number_day.DescId = zc_MIFloat_Number_2()
+                                     LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_day
+                                                                      ON MIBoolean_AmountPlan_day.MovementItemId = MovementItem.Id
+                                                                     AND MIBoolean_AmountPlan_day.DescId = zc_MIBoolean_AmountPlan_2()
+                                WHERE MIFloat_AmountPlan_day.ValueData <> 0
+
+                              UNION ALL
+                                SELECT MovementItem.Id
+                                       -- План оплат на день недели
+                                     , MIFloat_AmountPlan_day.ValueData    :: TFloat AS AmountPlan_day
+                                       -- № в очереди
+                                     , MIFloat_Number_day.ValueData        :: TFloat AS Number_day
+                                       -- Платим (да/нет)
+                                     , COALESCE (MIBoolean_AmountPlan_day.ValueData, True) ::Boolean AS isAmountPlan_day
+                                       -- день недели
+                                     , 3 AS NumDay
+
+                                FROM tmpMI_Master AS MovementItem
+                                     INNER JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_day
+                                                                     ON MIFloat_AmountPlan_day.MovementItemId = MovementItem.Id
+                                                                    AND MIFloat_AmountPlan_day.DescId = zc_MIFloat_AmountPlan_3()
+                                     LEFT JOIN tmpMovementItemFloat AS MIFloat_Number_day
+                                                                    ON MIFloat_Number_day.MovementItemId = MovementItem.Id
+                                                                   AND MIFloat_Number_day.DescId = zc_MIFloat_Number_3()
+                                     LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_day
+                                                                      ON MIBoolean_AmountPlan_day.MovementItemId = MovementItem.Id
+                                                                     AND MIBoolean_AmountPlan_day.DescId = zc_MIBoolean_AmountPlan_3()
+                                WHERE MIFloat_AmountPlan_day.ValueData <> 0
+
+                              UNION ALL
+                                SELECT MovementItem.Id
+                                       -- План оплат на день недели
+                                     , MIFloat_AmountPlan_day.ValueData    :: TFloat AS AmountPlan_day
+                                       -- № в очереди
+                                     , MIFloat_Number_day.ValueData        :: TFloat AS Number_day
+                                       -- Платим (да/нет)
+                                     , COALESCE (MIBoolean_AmountPlan_day.ValueData, True) ::Boolean AS isAmountPlan_day
+                                       -- день недели
+                                     , 4 AS NumDay
+
+                                FROM tmpMI_Master AS MovementItem
+                                     INNER JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_day
+                                                                     ON MIFloat_AmountPlan_day.MovementItemId = MovementItem.Id
+                                                                    AND MIFloat_AmountPlan_day.DescId = zc_MIFloat_AmountPlan_4()
+                                     LEFT JOIN tmpMovementItemFloat AS MIFloat_Number_day
+                                                                    ON MIFloat_Number_day.MovementItemId = MovementItem.Id
+                                                                   AND MIFloat_Number_day.DescId = zc_MIFloat_Number_4()
+                                     LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_day
+                                                                      ON MIBoolean_AmountPlan_day.MovementItemId = MovementItem.Id
+                                                                     AND MIBoolean_AmountPlan_day.DescId = zc_MIBoolean_AmountPlan_4()
+                                WHERE MIFloat_AmountPlan_day.ValueData <> 0
+
+                              UNION ALL
+                                SELECT MovementItem.Id
+                                       -- План оплат на день недели
+                                     , MIFloat_AmountPlan_day.ValueData    :: TFloat AS AmountPlan_day
+                                       -- № в очереди
+                                     , MIFloat_Number_day.ValueData        :: TFloat AS Number_day
+                                       -- Платим (да/нет)
+                                     , COALESCE (MIBoolean_AmountPlan_day.ValueData, True) ::Boolean AS isAmountPlan_day
+                                       -- день недели
+                                     , 5 AS NumDay
+
+                                FROM tmpMI_Master AS MovementItem
+                                     INNER JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_day
+                                                                     ON MIFloat_AmountPlan_day.MovementItemId = MovementItem.Id
+                                                                    AND MIFloat_AmountPlan_day.DescId = zc_MIFloat_AmountPlan_5()
+                                     LEFT JOIN tmpMovementItemFloat AS MIFloat_Number_day
+                                                                    ON MIFloat_Number_day.MovementItemId = MovementItem.Id
+                                                                   AND MIFloat_Number_day.DescId = zc_MIFloat_Number_5()
+                                     LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_day
+                                                                      ON MIBoolean_AmountPlan_day.MovementItemId = MovementItem.Id
+                                                                     AND MIBoolean_AmountPlan_day.DescId = zc_MIBoolean_AmountPlan_5()
+                                WHERE MIFloat_AmountPlan_day.ValueData <> 0
+                               ) 
+                        
+                        --
+                        SELECT tmpMI.*
                                -- План оплат на день недели
                              , tmp.AmountPlan_day
                                -- ???????
@@ -381,123 +498,15 @@ BEGIN
                              , tmp.NumDay
                                --
                              , ROW_NUMBER() OVER (PARTITION BY tmpMI.Id ORDER BY COALESCE (tmp.NumDay,0)) AS Ord
+                             
+                             , SUM (CASE WHEN tmp.NumDay = 1 THEN COALESCE (tmp.AmountPlan_day,0) ELSE 0 END) OVER (PARTITION BY tmpMI.Id) :: TFloat AS AmountCalc_1  --сумма оплат в  1 день
+                             , SUM (CASE WHEN tmp.NumDay = 2 THEN COALESCE (tmp.AmountPlan_day,0) ELSE 0 END) OVER (PARTITION BY tmpMI.Id) :: TFloat AS AmountCalc_2  --сумма оплат в  2 день
+                             , SUM (CASE WHEN tmp.NumDay = 3 THEN COALESCE (tmp.AmountPlan_day,0) ELSE 0 END) OVER (PARTITION BY tmpMI.Id) :: TFloat AS AmountCalc_3  --сумма оплат в  3 день
+                             , SUM (CASE WHEN tmp.NumDay = 4 THEN COALESCE (tmp.AmountPlan_day,0) ELSE 0 END) OVER (PARTITION BY tmpMI.Id) :: TFloat AS AmountCalc_4  --сумма оплат в  4 день
+                             , SUM (CASE WHEN tmp.NumDay = 5 THEN COALESCE (tmp.AmountPlan_day,0) ELSE 0 END) OVER (PARTITION BY tmpMI.Id) :: TFloat AS AmountCalc_5  --сумма оплат в  5 день
 
                         FROM tmpMI
-                             LEFT JOIN (SELECT MovementItem.Id
-                                               -- План оплат на день недели
-                                             , MIFloat_AmountPlan_day.ValueData    :: TFloat AS AmountPlan_day
-                                               -- № в очереди
-                                             , MIFloat_Number_day.ValueData        :: TFloat AS Number_day
-                                               -- Платим (да/нет)
-                                             , COALESCE (MIBoolean_AmountPlan_day.ValueData, True) ::Boolean AS isAmountPlan_day
-                                               -- день недели
-                                             , 1 AS NumDay
-
-                                        FROM tmpMI_Master AS MovementItem
-                                             INNER JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_day
-                                                                             ON MIFloat_AmountPlan_day.MovementItemId = MovementItem.Id
-                                                                            AND MIFloat_AmountPlan_day.DescId = zc_MIFloat_AmountPlan_1()
-                                             LEFT JOIN tmpMovementItemFloat AS MIFloat_Number_day
-                                                                            ON MIFloat_Number_day.MovementItemId = MovementItem.Id
-                                                                           AND MIFloat_Number_day.DescId = zc_MIFloat_Number_1()
-                                             LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_day
-                                                                              ON MIBoolean_AmountPlan_day.MovementItemId = MovementItem.Id
-                                                                             AND MIBoolean_AmountPlan_day.DescId = zc_MIBoolean_AmountPlan_1()
-                                        WHERE MIFloat_AmountPlan_day.ValueData <> 0
-
-                                      UNION ALL
-                                        SELECT MovementItem.Id
-                                               -- План оплат на день недели
-                                             , MIFloat_AmountPlan_day.ValueData    :: TFloat AS AmountPlan_day
-                                               -- № в очереди
-                                             , MIFloat_Number_day.ValueData        :: TFloat AS Number_day
-                                               -- Платим (да/нет)
-                                             , COALESCE (MIBoolean_AmountPlan_day.ValueData, True) ::Boolean AS isAmountPlan_day
-                                               -- день недели
-                                             , 2 AS NumDay
-
-                                        FROM tmpMI_Master AS MovementItem
-                                             INNER JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_day
-                                                                             ON MIFloat_AmountPlan_day.MovementItemId = MovementItem.Id
-                                                                            AND MIFloat_AmountPlan_day.DescId = zc_MIFloat_AmountPlan_2()
-                                             LEFT JOIN tmpMovementItemFloat AS MIFloat_Number_day
-                                                                            ON MIFloat_Number_day.MovementItemId = MovementItem.Id
-                                                                           AND MIFloat_Number_day.DescId = zc_MIFloat_Number_2()
-                                             LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_day
-                                                                              ON MIBoolean_AmountPlan_day.MovementItemId = MovementItem.Id
-                                                                             AND MIBoolean_AmountPlan_day.DescId = zc_MIBoolean_AmountPlan_2()
-                                        WHERE MIFloat_AmountPlan_day.ValueData <> 0
-
-                                      UNION ALL
-                                        SELECT MovementItem.Id
-                                               -- План оплат на день недели
-                                             , MIFloat_AmountPlan_day.ValueData    :: TFloat AS AmountPlan_day
-                                               -- № в очереди
-                                             , MIFloat_Number_day.ValueData        :: TFloat AS Number_day
-                                               -- Платим (да/нет)
-                                             , COALESCE (MIBoolean_AmountPlan_day.ValueData, True) ::Boolean AS isAmountPlan_day
-                                               -- день недели
-                                             , 3 AS NumDay
-
-                                        FROM tmpMI_Master AS MovementItem
-                                             INNER JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_day
-                                                                             ON MIFloat_AmountPlan_day.MovementItemId = MovementItem.Id
-                                                                            AND MIFloat_AmountPlan_day.DescId = zc_MIFloat_AmountPlan_3()
-                                             LEFT JOIN tmpMovementItemFloat AS MIFloat_Number_day
-                                                                            ON MIFloat_Number_day.MovementItemId = MovementItem.Id
-                                                                           AND MIFloat_Number_day.DescId = zc_MIFloat_Number_3()
-                                             LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_day
-                                                                              ON MIBoolean_AmountPlan_day.MovementItemId = MovementItem.Id
-                                                                             AND MIBoolean_AmountPlan_day.DescId = zc_MIBoolean_AmountPlan_3()
-                                        WHERE MIFloat_AmountPlan_day.ValueData <> 0
-
-                                      UNION ALL
-                                        SELECT MovementItem.Id
-                                               -- План оплат на день недели
-                                             , MIFloat_AmountPlan_day.ValueData    :: TFloat AS AmountPlan_day
-                                               -- № в очереди
-                                             , MIFloat_Number_day.ValueData        :: TFloat AS Number_day
-                                               -- Платим (да/нет)
-                                             , COALESCE (MIBoolean_AmountPlan_day.ValueData, True) ::Boolean AS isAmountPlan_day
-                                               -- день недели
-                                             , 4 AS NumDay
-
-                                        FROM tmpMI_Master AS MovementItem
-                                             INNER JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_day
-                                                                             ON MIFloat_AmountPlan_day.MovementItemId = MovementItem.Id
-                                                                            AND MIFloat_AmountPlan_day.DescId = zc_MIFloat_AmountPlan_4()
-                                             LEFT JOIN tmpMovementItemFloat AS MIFloat_Number_day
-                                                                            ON MIFloat_Number_day.MovementItemId = MovementItem.Id
-                                                                           AND MIFloat_Number_day.DescId = zc_MIFloat_Number_4()
-                                             LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_day
-                                                                              ON MIBoolean_AmountPlan_day.MovementItemId = MovementItem.Id
-                                                                             AND MIBoolean_AmountPlan_day.DescId = zc_MIBoolean_AmountPlan_4()
-                                        WHERE MIFloat_AmountPlan_day.ValueData <> 0
-
-                                      UNION ALL
-                                        SELECT MovementItem.Id
-                                               -- План оплат на день недели
-                                             , MIFloat_AmountPlan_day.ValueData    :: TFloat AS AmountPlan_day
-                                               -- № в очереди
-                                             , MIFloat_Number_day.ValueData        :: TFloat AS Number_day
-                                               -- Платим (да/нет)
-                                             , COALESCE (MIBoolean_AmountPlan_day.ValueData, True) ::Boolean AS isAmountPlan_day
-                                               -- день недели
-                                             , 5 AS NumDay
-
-                                        FROM tmpMI_Master AS MovementItem
-                                             INNER JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_day
-                                                                             ON MIFloat_AmountPlan_day.MovementItemId = MovementItem.Id
-                                                                            AND MIFloat_AmountPlan_day.DescId = zc_MIFloat_AmountPlan_5()
-                                             LEFT JOIN tmpMovementItemFloat AS MIFloat_Number_day
-                                                                            ON MIFloat_Number_day.MovementItemId = MovementItem.Id
-                                                                           AND MIFloat_Number_day.DescId = zc_MIFloat_Number_5()
-                                             LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_day
-                                                                              ON MIBoolean_AmountPlan_day.MovementItemId = MovementItem.Id
-                                                                             AND MIBoolean_AmountPlan_day.DescId = zc_MIBoolean_AmountPlan_5()
-                                        WHERE MIFloat_AmountPlan_day.ValueData <> 0
-
-                                       ) AS tmp ON tmp.Id = tmpMI.Id
+                             LEFT JOIN tmp ON tmp.Id = tmpMI.Id
                        )
 
       , tmpMI_Data AS (SELECT MovementItem.MovementId
@@ -542,10 +551,37 @@ BEGIN
                                    ELSE 0 END :: TFloat AS AmountPlan_total
                               -- Сумма План оплат на дату
                             --, MovementItem.AmountPlan_day       :: TFloat 
-                            , CASE WHEN inIsShowAll = TRUE AND COALESCE (MovementItem.AmountPlan_day,0) <> 0 
-                                   THEN COALESCE (MovementItem.Amount_Child, MovementItem.AmountPlan_day,0)
-                                   ELSE COALESCE (MovementItem.AmountPlan_day,0)
-                              END AS AmountPlan_day
+                            , CASE WHEN inIsShowAll = FALSE THEN COALESCE (MovementItem.AmountPlan_day,0)
+                                   ELSE CASE WHEN MovementItem.NumDay = 1 
+                                                 THEN CASE WHEN COALESCE (MovementItem.AmountCalc_1,0) > 0 AND COALESCE (MovementItem.Amount_Child, 0) > 0 THEN MovementItem.Amount_Child
+                                                           ELSE COALESCE (MovementItem.AmountPlan_day,0)
+                                                      END
+                                             WHEN MovementItem.NumDay = 2 
+                                                 THEN CASE WHEN COALESCE (MovementItem.AmountCalc_1,0) > 0 AND COALESCE (MovementItem.Amount_Child, 0) > 0 THEN 0
+                                                           WHEN COALESCE (MovementItem.AmountCalc_2,0) > 0 AND COALESCE (MovementItem.Amount_Child, 0) > 0 THEN MovementItem.Amount_Child
+                                                           ELSE COALESCE (MovementItem.AmountPlan_day,0)
+                                                      END 
+
+                                             WHEN MovementItem.NumDay = 3 
+                                                 THEN CASE WHEN COALESCE (MovementItem.AmountCalc_1,0) > 0 AND COALESCE (MovementItem.AmountCalc_2,0) > 0 AND COALESCE (MovementItem.Amount_Child, 0) > 0 THEN 0
+                                                           WHEN COALESCE (MovementItem.AmountCalc_3,0) > 0 AND COALESCE (MovementItem.Amount_Child, 0) > 0 THEN MovementItem.Amount_Child
+                                                           ELSE COALESCE (MovementItem.AmountPlan_day,0)
+                                                      END
+
+                                             WHEN MovementItem.NumDay = 4 
+                                                 THEN CASE WHEN COALESCE (MovementItem.AmountCalc_1,0) > 0 AND COALESCE (MovementItem.AmountCalc_2,0) > 0 AND COALESCE (MovementItem.AmountCalc_3,0) > 0 AND COALESCE (MovementItem.Amount_Child, 0) > 0 THEN 0
+                                                           WHEN COALESCE (MovementItem.AmountCalc_4,0) > 0 AND COALESCE (MovementItem.Amount_Child, 0) > 0 THEN MovementItem.Amount_Child
+                                                           ELSE COALESCE (MovementItem.AmountPlan_day,0)
+                                                      END
+
+                                             WHEN MovementItem.NumDay = 5 
+                                                 THEN CASE WHEN COALESCE (MovementItem.AmountCalc_1,0) > 0 AND COALESCE (MovementItem.AmountCalc_2,0) > 0 AND COALESCE (MovementItem.AmountCalc_3,0) > 0 AND COALESCE (MovementItem.AmountCalc_4,0) > 0 AND COALESCE (MovementItem.Amount_Child, 0) > 0 THEN 0
+                                                           WHEN COALESCE (MovementItem.AmountCalc_5,0) > 0 AND COALESCE (MovementItem.Amount_Child, 0) > 0 THEN MovementItem.Amount_Child
+                                                           ELSE COALESCE (MovementItem.AmountPlan_day,0)
+                                                      END
+                                        END         
+                              END AS AmountPlan_day 
+
                               --
                             , MovementItem.Number_day           :: TFloat
                               -- Платим (да/нет)
@@ -570,13 +606,13 @@ BEGIN
                                                        , MovementItem.Id_child ASC
                                                ) AS Ord_Juridical
                            --
-                      , MovementItem.InvNumber_Child
-                      , MovementItem.InvNumber_Invoice_Child
-                      , MovementItem.GoodsName_Child
-                      , MovementItem.Comment_Child
-                      , MovementItem.Comment_SB_Child
-                      , MovementItem.isSign_Child
-                      , MovementItem.Amount_Child 
+                           , MovementItem.InvNumber_Child
+                           , MovementItem.InvNumber_Invoice_Child
+                           , MovementItem.GoodsName_Child
+                           , MovementItem.Comment_Child
+                           , MovementItem.Comment_SB_Child
+                           , MovementItem.isSign_Child
+                           , MovementItem.Amount_Child 
                         FROM tmpMI_Union AS MovementItem
                              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId
                                                                  AND Object_Juridical.DescId = zc_Object_Juridical()
@@ -585,34 +621,34 @@ BEGIN
                                                             ON MIFloat_AmountRemains.MovementItemId = MovementItem.Id
                                                            AND MIFloat_AmountRemains.DescId = zc_MIFloat_AmountRemains()
                                                            AND MovementItem.Ord = 1
-                                                           AND MovementItem.Ord_child = 1                 --только 1 раз если не один чайлд
+                                                           --AND MovementItem.Ord_child = 1                 --только 1 раз если не один чайлд
 
                              LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPartner
                                                             ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                            AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
                                                            AND MovementItem.Ord = 1
-                                                           AND MovementItem.Ord_child = 1                 --только 1 раз если не один чайлд
+                                                          -- AND MovementItem.Ord_child = 1                 --только 1 раз если не один чайлд
 
                              LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPartner_1
                                                             ON MIFloat_AmountPartner_1.MovementItemId = MovementItem.Id
                                                            AND MIFloat_AmountPartner_1.DescId = zc_MIFloat_AmountPartner_1()
                                                            AND MovementItem.Ord = 1
-                                                           AND MovementItem.Ord_child = 1                 --только 1 раз если не один чайлд
+                                                          -- AND MovementItem.Ord_child = 1                 --только 1 раз если не один чайлд
                              LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPartner_2
                                                             ON MIFloat_AmountPartner_2.MovementItemId = MovementItem.Id
                                                            AND MIFloat_AmountPartner_2.DescId = zc_MIFloat_AmountPartner_2()
                                                            AND MovementItem.Ord = 1
-                                                           AND MovementItem.Ord_child = 1                 --только 1 раз если не один чайлд
+                                                           --AND MovementItem.Ord_child = 1                 --только 1 раз если не один чайлд
                              LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPartner_3
                                                             ON MIFloat_AmountPartner_3.MovementItemId = MovementItem.Id
                                                            AND MIFloat_AmountPartner_3.DescId = zc_MIFloat_AmountPartner_3()
                                                            AND MovementItem.Ord = 1
-                                                           AND MovementItem.Ord_child = 1                 --только 1 раз если не один чайлд
+                                                           --AND MovementItem.Ord_child = 1                 --только 1 раз если не один чайлд
                              LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPartner_4
                                                             ON MIFloat_AmountPartner_4.MovementItemId = MovementItem.Id
                                                            AND MIFloat_AmountPartner_4.DescId = zc_MIFloat_AmountPartner_4()
                                                            AND MovementItem.Ord = 1
-                                                           AND MovementItem.Ord_child = 1                 --только 1 раз если не один чайлд
+                                                          -- AND MovementItem.Ord_child = 1                 --только 1 раз если не один чайлд
 
                              LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountSumm
                                                             ON MIFloat_AmountSumm.MovementItemId = MovementItem.Id
@@ -1105,7 +1141,7 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_Movement_OrderFinance_PlanDate (inStartDate:= '01.01.2026', inEndDate:= '01.01.2026', inBankMainId:=76970, inStartWeekNumber:=47, inEndWeekNumber := 48, inIsShowAll := False, inSession:= '2')
 /*
-select * from gpSelect_Movement_OrderFinance_PlanDate(inStartDate := ('26.01.2026')::TDateTime , inEndDate := ('01.02.2026')::TDateTime , inBankMainId := 0 , inStartWeekNumber := 5 , inEndWeekNumber := 5, inIsShowAll := true , inSession := '9457')
+select * from gpSelect_Movement_OrderFinance_PlanDate(inStartDate := ('26.01.2026')::TDateTime , inEndDate := ('01.02.2026')::TDateTime , inBankMainId := 0 , inStartWeekNumber := 5 , inEndWeekNumber := 5, inIsShowAll :=False , inSession := '9457')
 WHERE JuridicalId = 15178
 order by InvNumber, JuridicalId
 */
