@@ -553,7 +553,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     Height = 390
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheetDetail
+    Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 390
     ClientRectRight = 1164
@@ -2654,7 +2654,15 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         end
         item
           Visible = True
-          ItemName = 'bbMovementItemProtocol'
+          ItemName = 'bbMIProtocolOpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMIChildProtocolOpenForm'
         end
         item
           Visible = True
@@ -2719,8 +2727,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Action = actMIContainer
       Category = 0
     end
-    object bbMovementItemProtocol: TdxBarButton
-      Action = MovementItemProtocolOpenForm
+    object bbMIProtocolOpenForm: TdxBarButton
+      Action = actMIProtocolOpenForm
       Category = 0
     end
     object bbCalcAmountPartner: TdxBarControlContainerItem
@@ -2960,6 +2968,10 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Action = mactLoadExcel_SB
       Category = 0
     end
+    object bbMIChildProtocolOpenForm: TdxBarButton
+      Action = actMIChildProtocolOpenForm
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -3017,7 +3029,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       ActionList = <
         item
           Action = actDelete_MI
@@ -3089,6 +3100,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetDetail
       MoveParams = <>
+      Enabled = False
       StoredProc = spSelectDetail
       StoredProcList = <
         item
@@ -3210,7 +3222,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView
       Action = actPartnerChoiceForm
@@ -3234,7 +3245,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1090#1072#1075#1077#1085#1090#1072'>'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
@@ -3301,7 +3311,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'Child'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spErasedMIchild
       StoredProcList = <
         item
@@ -3318,7 +3327,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'Child'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spUnErasedMIchild
       StoredProcList = <
         item
@@ -3336,7 +3344,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -3488,6 +3495,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = #1055#1088#1086#1090#1086#1082#1086#1083
       TabSheet = cxTabSheetDetail
       MoveParams = <>
+      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
       ImageIndex = 34
@@ -3563,7 +3571,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView
       Action = actInfoMoney_OrderFinanceChoiceForm
@@ -3576,7 +3583,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1059#1055' '#1089#1090#1072#1090#1100#1102'>'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1059#1055' '#1089#1090#1072#1090#1100#1102'>'
@@ -3671,7 +3677,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -3682,7 +3687,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spErasedMIMaster
       StoredProcList = <
         item
@@ -3702,7 +3706,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spUnErasedMIMaster
       StoredProcList = <
         item
@@ -3741,7 +3744,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'Child'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridDBTableViewChild
       Params = <>
@@ -3820,13 +3822,12 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         end>
       isShowModal = False
     end
-    object MovementItemProtocolOpenForm: TdsdOpenForm
+    object actMIProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1070#1088'. '#1083#1080#1094#1086'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1070#1088'. '#1083#1080#1094#1086'>'
       ImageIndex = 34
       FormName = 'TMovementItemProtocolForm'
       FormNameParam.Value = 'TMovementItemProtocolForm'
@@ -3842,10 +3843,41 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'JuridicalName'
+          Name = 'GoodsName'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actMIChildProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1058#1086#1074#1072#1088' ('#1047#1072#1103#1074#1082#1072' '#1058#1052#1062')>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1058#1086#1074#1072#1088' ('#1047#1072#1103#1074#1082#1072' '#1058#1052#1062')>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'GoodsName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -4292,7 +4324,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
       StoredProc = spInsertMaskMIMaster2
       StoredProcList = <
@@ -4310,7 +4341,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView
       Action = actJuridicalChoiceForm
@@ -4324,6 +4354,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetDetail
       MoveParams = <>
+      Enabled = False
       StoredProc = spSelectDetail
       StoredProcList = <
         item
@@ -4344,7 +4375,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -4494,6 +4524,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'JuridicalOrderFinance'
       TabSheet = cxTabSheetDetail
       MoveParams = <>
+      Enabled = False
       StoredProc = spErasedUnErased_JurOrdFin
       StoredProcList = <
         item
@@ -4510,6 +4541,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'JuridicalOrderFinance'
       TabSheet = cxTabSheetDetail
       MoveParams = <>
+      Enabled = False
       StoredProc = spErasedUnErased_JurOrdFin
       StoredProcList = <
         item
@@ -4527,6 +4559,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'JuridicalOrderFinance'
       TabSheet = cxTabSheetDetail
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView1
       Action = actContractChoiceForm_JurOrdFin
@@ -4579,6 +4612,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = 'JuridicalOrderFinance'
       TabSheet = cxTabSheetDetail
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = ExecuteDialogPeriod
@@ -5111,7 +5145,6 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       ActionList = <
         item
           Action = actGetImportSetting
