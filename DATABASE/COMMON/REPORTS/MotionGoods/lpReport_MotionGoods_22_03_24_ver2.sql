@@ -142,7 +142,7 @@ BEGIN
     -- ускорение - ОЛАП + Голота К.О. + Только просмотр Аудитор + Просмотр СБ
     IF vb_IsContainer_OLAP = FALSE AND 1=1
     THEN
-        vb_IsContainer_OLAP:= inEndDate <= '31.12.2025' AND (inUserId IN (5, 6604558)
+        vb_IsContainer_OLAP:= inEndDate <= '31.01.2026' AND (inUserId IN (5, 6604558)
                                                           OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId IN (10597056, 447972))
                                                             )
                                                       --AND inUserId <> 5
@@ -323,6 +323,16 @@ BEGIN
            AND 1=1
         THEN
             vbStartDate_olap:= '01.01.2026';
+            --
+            vbVerId_olap:= 1; -- (SELECT MIN (Container_data.VerId) FROM Container_data WHERE Container_data.StartDate = vbStartDate_olap AND Container_data.VerId > 0);
+
+        -- 01.02.2026
+        ELSEIF vb_IsContainer_OLAP = TRUE AND inEndDate <= '31.01.2026'
+           AND EXISTS (SELECT 1 FROM Container_data WHERE Container_data.StartDate = '01.02.2026' AND Container_data.VerId = 1)
+           AND COALESCE (inGoodsId, 0) = 0
+           AND 1=1
+        THEN
+            vbStartDate_olap:= '01.02.2026';
             --
             vbVerId_olap:= 1; -- (SELECT MIN (Container_data.VerId) FROM Container_data WHERE Container_data.StartDate = vbStartDate_olap AND Container_data.VerId > 0);
 
