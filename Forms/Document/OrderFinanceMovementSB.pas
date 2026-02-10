@@ -92,8 +92,8 @@ type
     spGetTotalSumm: TdsdStoredProc;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
-    MovementItemProtocolOpenForm: TdsdOpenForm;
-    bbMovementItemProtocol: TdxBarButton;
+    actMIProtocolOpenForm: TdsdOpenForm;
+    bbMIProtocolOpenForm: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
@@ -376,6 +376,8 @@ type
     bbtLoadExcel_SB: TdxBarButton;
     spDelete_MI: TdsdStoredProc;
     actDelete_MI: TdsdExecStoredProc;
+    actMIChildProtocolOpenForm: TdsdOpenForm;
+    bbMIChildProtocolOpenForm: TdxBarButton;
   private
   public
   end;
