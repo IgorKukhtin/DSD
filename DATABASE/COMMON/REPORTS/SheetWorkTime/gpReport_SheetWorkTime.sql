@@ -59,7 +59,7 @@ BEGIN
 
      CREATE TEMP TABLE tmpMI ON COMMIT DROP AS
        SELECT tmpOperDate.operdate
-            , MI_SheetWorkTime.Amount
+            , SUM (COALESCE (MI_SheetWorkTime.Amount,0)) AS Amount
             , COALESCE(MI_SheetWorkTime.ObjectId, 0)        AS MemberId
             , COALESCE(MIObject_Position.ObjectId, 0)       AS PositionId
             , COALESCE(MIObject_PositionLevel.ObjectId, 0)  AS PositionLevelId
@@ -103,6 +103,21 @@ BEGIN
                                    AND ObjectBoolean_NoSheetCalc.DescId = zc_ObjectBoolean_PositionLevel_NoSheetCalc()
        WHERE (COALESCE(MI_SheetWorkTime.ObjectId, 0) = inMemberId OR inMemberId = 0)
           AND COALESCE (MIObject_WorkTimeKind.ObjectId,0) <> 0
+       GROUP BY tmpOperDate.operdate
+              , COALESCE(MI_SheetWorkTime.ObjectId, 0)
+              , COALESCE(MIObject_Position.ObjectId, 0)
+              , COALESCE(MIObject_PositionLevel.ObjectId, 0)
+              , COALESCE(MIObject_PersonalGroup.ObjectId, 0)
+              , MIObject_WorkTimeKind.ObjectId
+              , ObjectString_WorkTimeKind_ShortName.ValueData
+              , MovementLinkObject_Unit.ObjectId
+              , COALESCE (ObjectBoolean_NoSheetCalc.ValueData, FALSE)
+              , CASE WHEN -- ЦЕХ упаковки
+                          -- inUnitId = 8451
+                          MovementLinkObject_Unit.ObjectId = 8451
+                          THEN CASE WHEN MI_SheetWorkTime.Amount > 0 AND MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Quit() THEN zc_Enum_WorkTimeKind_Work() ELSE COALESCE (MIObject_WorkTimeKind.ObjectId, 0) END
+                     ELSE 0
+                END
      ;
 
      CREATE TEMP TABLE tmpPersonal ON COMMIT DROP AS
