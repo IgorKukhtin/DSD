@@ -150,7 +150,8 @@ BEGIN
                                , -1 * SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  THEN MIContainer.Amount ELSE 0 END) AS Amount_summ
                           FROM MovementItemContainer AS MIContainer
                           WHERE MIContainer.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                            AND MIContainer.isActive = FALSE
+                            AND MIContainer.isActive = FALSE 
+                            AND COALESCE (MIContainer.Amount,0) <> 0
                           GROUP BY MIContainer.MovementItemId
                                  , MIContainer.DescId
                          )
@@ -263,7 +264,8 @@ BEGIN
                                                  ON MIFloat_AmountPartnerSecond.MovementItemId = MIContainer.MovementItemId
                                                 AND MIFloat_AmountPartnerSecond.DescId = zc_MIFloat_AmountPartnerSecond()
                                                 AND MIContainer.DescId = zc_MIContainer_Count()
-                                                      AND COALESCE (MIContainer.AnalyzerId, 0) = 0
+                                                      AND COALESCE (MIContainer.AnalyzerId, 0) = 0 
+                      --WHERE COALESCE (MIFloat_HeadCount.ValueData, 0) <> 0
                       GROUP BY MIContainer.DescId
                              , MIContainer.ContainerId
                              , MIContainer.MovementId
@@ -312,7 +314,8 @@ BEGIN
                                                       AND MIFloat_AmountPartnerSecond.DescId = zc_MIFloat_AmountPartnerSecond()
                                                       AND MIContainer.DescId = zc_MIContainer_Count()
                       WHERE tmpContainer.ContainerId IS NULL
-                        AND tmpMovement.PartnerCode_partion > 0
+                        AND tmpMovement.PartnerCode_partion > 0 
+                        AND COALESCE (MIContainer.Amount,0) <> 0
                       GROUP BY MIContainer.MovementId, MIContainer.ObjectId_analyzer, MIContainer.DescId
                      )
 
@@ -687,5 +690,12 @@ $BODY$
 select *
 from gpSelect_MI_ProductionSeparate_PriceFact
 ('03.12.2025'::TDateTime, '03.12.2025'::TDateTime, 32968157 , 12048635, 0, '4294-245764-30.11.2025', '5') AS tmpData  
+
+*/
+/*
+
+select *
+from gpSelect_MI_ProductionSeparate_PriceFact
+('01.01.2025'::TDateTime, '31.12.2025'::TDateTime, 30767960 , 12048635, 0, '4218-245764-19.03.2025', '5') AS tmpData  
 
 */

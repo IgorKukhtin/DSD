@@ -178,6 +178,9 @@ type
     actPrint_its_All: TdsdPrintAction;
     bbPrint_its_All: TdxBarButton;
     bbPrint_its_AllPart: TdxBarButton;
+    bbTest: TdxBarButton;
+    actPrint_4134_All_byTest: TdsdPrintAction;
+    test_test: TdsdStoredProc;
   private
     { Private declarations }
   public
