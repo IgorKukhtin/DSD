@@ -430,8 +430,12 @@ BEGIN
              , COALESCE (ObjectLink_Unit_Contract.ChildObjectId, MILinkObject_Contract.ObjectId, 0) AS ContractId
 
                --  НЕ Всегда БН
-             , CASE WHEN ObjectLink_BankAccount_Account.ChildObjectId = 10895486 --
+             , CASE -- для Расчетный счет (павильоны)
+                    WHEN ObjectLink_BankAccount_Account.ChildObjectId = 10895486
                          THEN zc_Enum_PaidKind_FirstForm_pav()
+                    -- для Казахстан...
+                    WHEN ObjectLink_BankAccount_PaidKind.ChildObjectId > 0
+                         THEN ObjectLink_BankAccount_PaidKind.ChildObjectId
                     -- Перевыставление
                     WHEN ObjectLink_Contract_PaidKind.ChildObjectId > 0
                          THEN ObjectLink_Contract_PaidKind.ChildObjectId
@@ -469,6 +473,9 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Account
                                   ON ObjectLink_BankAccount_Account.ObjectId = _tmpItem.ObjectId
                                  AND ObjectLink_BankAccount_Account.DescId   = zc_ObjectLink_BankAccount_Account()
+             LEFT JOIN ObjectLink AS ObjectLink_BankAccount_PaidKind
+                                  ON ObjectLink_BankAccount_PaidKind.ObjectId = _tmpItem.ObjectId
+                                 AND ObjectLink_BankAccount_PaidKind.DescId   = zc_ObjectLink_BankAccount_PaidKind()
 
              LEFT JOIN MovementItem AS MI_Child ON MI_Child.MovementId = inMovementId
                                                AND MI_Child.DescId = zc_MI_Child()
