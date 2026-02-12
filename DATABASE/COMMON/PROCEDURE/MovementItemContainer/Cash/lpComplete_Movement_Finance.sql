@@ -370,8 +370,15 @@ end if;
                                                            THEN zc_Enum_ProfitLossDirection_70200() -- Дополнительная прибыль + Прочее
 
                                                       WHEN _tmpItem.MovementDescId = zc_Movement_BankAccount()
+                                                       AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+                                                       AND  _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70500() -- Инвестиции + НМА
+                                                       AND _tmpItem.OperDate >= zc_DateStart_Asset()
+                                                           THEN zc_Enum_ProfitLossDirection_65300() --  Капитальные Затраты + НМА
+
+                                                      WHEN _tmpItem.MovementDescId = zc_Movement_BankAccount()
+                                                       AND _tmpItem.InfoMoneyId <> 1057225 -- Инвестиции НМА Программное обеспечение
                                                        AND (_tmpItem.InfoMoneyGroupId <> zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
-                                                         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70500() -- НМА
+                                                         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70500() -- Инвестиции + НМА
                                                          OR _tmpItem.OperDate < zc_DateStart_Asset()
                                                            )
                                                          --THEN zc_Enum_ProfitLossDirection_80100() -- Расходы с прибыли + Финансовая деятельность
@@ -437,6 +444,7 @@ end if;
                       , IsActive = FALSE -- !!!всегда по Кредиту!!!
      WHERE _tmpItem.AccountId = zc_Enum_Account_100301(); -- прибыль текущего периода
 
+-- RAISE EXCEPTION 'Ошибка.<%>' , (SELECT lfGet_Object_ValueData (ProfitLossDirectionId) FROM _tmpItem  WHERE _tmpItem.AccountId = zc_Enum_Account_100301());
 
      -- 1.2.2. определяется ProfitLossGroupId для проводок суммового учета по счету Прибыль
      UPDATE _tmpItem SET ProfitLossGroupId = View_ProfitLossDirection.ProfitLossGroupId
@@ -531,7 +539,7 @@ end if;
                                          ELSE
                                     lpInsertFind_Object_ProfitLoss (inProfitLossGroupId      := CASE WHEN _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
                                                                                                       AND _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_LossDebt(), zc_Movement_PersonalReport(), zc_Movement_SendDebt())
-                                                                                                          THEN zc_Enum_ProfitLossGroup_70000() -- Капитальные Затраты
+                                                                                                          THEN zc_Enum_ProfitLossGroup_65000() -- Капитальные Затраты
 
                                                                                                      WHEN _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
                                                                                                           THEN zc_Enum_ProfitLossGroup_60000() -- Расходы строительные

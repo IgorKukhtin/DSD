@@ -97,7 +97,9 @@ BEGIN
                                                                                AND MS.DescId     = zc_MovementString_InvNumberInvoice()
                                          )
        --
-       SELECT MAX (lpReport.InvNumber)  :: Integer AS InvNumber, MAX (lpReport.OperDate) :: TDateTime AS OperDate
+       SELECT -- MAX (lpReport.InvNumber)  :: Integer AS InvNumber
+              MAX (lpReport.MovementId) :: Integer AS InvNumber
+            , MAX (lpReport.OperDate) :: TDateTime AS OperDate
             , lpReport.ObjectCode_Direction, lpReport.INN
             , lpReport.OKPO, lpReport.ObjectName_Direction
             , SUM (lpReport.SUMA)::TFloat, SUM (lpReport.PDV)::TFloat, SUM (lpReport.SUMAPDV)::TFloat

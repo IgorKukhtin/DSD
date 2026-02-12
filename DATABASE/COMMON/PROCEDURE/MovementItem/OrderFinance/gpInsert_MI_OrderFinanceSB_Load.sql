@@ -69,11 +69,11 @@ BEGIN
 
 
      SELECT Object_Contract.Id  AS ContractId
-           INTO vbContractId
+            INTO vbContractId
      FROM ObjectLink AS ObjectLink_Contract_Juridical
           INNER JOIN Object AS Object_Contract ON Object_Contract.Id       = ObjectLink_Contract_Juridical.ObjectId
                                               AND Object_Contract.isErased = FALSE
-                                              AND Object_Contract.ValueData = inContractName
+                                              AND Object_Contract.ValueData ILIKE inContractName
 
           LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractStateKind
                                ON ObjectLink_Contract_ContractStateKind.ObjectId      = Object_Contract.Id
@@ -84,18 +84,26 @@ BEGIN
                               AND ObjectLink_Contract_PaidKind.DescId   = zc_ObjectLink_Contract_PaidKind()
      WHERE ObjectLink_Contract_Juridical.ChildObjectId = vbObjectId
        AND ObjectLink_Contract_Juridical.DescId        = zc_ObjectLink_Contract_Juridical()
-       AND ObjectLink_Contract_PaidKind.ChildObjectId  = vbPaidKindId
+     --AND ObjectLink_Contract_PaidKind.ChildObjectId  = vbPaidKindId
        AND COALESCE (ObjectLink_Contract_ContractStateKind.ChildObjectId, 0) <> zc_Enum_ContractStateKind_Close()
      LIMIT 1;   --
 
      --проверка
-     IF COALESCE (vbContractId,0) = 0
+     IF COALESCE (vbContractId, 0) = 0 AND TRIM (inContractName) <> ''
      THEN
          RAISE EXCEPTION 'Ошибка.Не найден Договор <%> для <%> ОКПО <%> .', inContractName, inObjectName, inOKPO;
      END IF; 
 
-     --статья УП
-     vbInfoMoneyId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Infomoney() AND TRIM (Object.ValueData) = TRIM (inInfoMoneyName) LIMIT 1);
+
+     --проверка
+     IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.DescId = zc_Object_Infomoney() AND TRIM (Object.ValueData) ILIKE TRIM (inInfoMoneyName))
+        AND inInfoMoneyName NOT ILIKE 'Строительные'
+     THEN
+         RAISE EXCEPTION 'Ошибка.УП статья = <%> определена больше 1 раза.', inInfoMoneyName;
+     END IF; 
+
+     -- статья УП
+     vbInfoMoneyId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Infomoney() AND TRIM (Object.ValueData) ILIKE TRIM (inInfoMoneyName) ORDER BY Object.Id LIMIT CASE WHEN TRIM (inInfoMoneyName) ILIKE 'Строительные' THEN 1 ELSE 2 END);
      --проверка
      IF COALESCE (vbInfoMoneyId,0) = 0
      THEN
@@ -103,7 +111,7 @@ BEGIN
      END IF; 
 
      --Касса
-     IF COALESCE (inCashName,'')<> ''
+     IF COALESCE (inCashName,'') <> ''
      THEN
          vbCashId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Cash() AND TRIM (Object.ValueData) = TRIM (inCashName) AND Object.isErased = FALSE);
          --проверка

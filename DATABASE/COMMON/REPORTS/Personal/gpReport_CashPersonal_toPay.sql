@@ -164,7 +164,7 @@ BEGIN
          , MovementDesc.ItemName
          , tmpMovement.PersonalId
          , Object_Personal.ObjectCode AS PersonalCode
-         , Object_Personal.ValueData  AS PersonalName
+         , CASE WHEN Object_Personal.isErased = TRUE THEN '*удален-' || Object_Personal.ValueData ELSE Object_Personal.ValueData END :: TVarChar AS PersonalName
          , Object_Position.Id         AS PositionId
          , Object_Position.ObjectCode AS PositionCode
          , Object_Position.ValueData  AS PositionName

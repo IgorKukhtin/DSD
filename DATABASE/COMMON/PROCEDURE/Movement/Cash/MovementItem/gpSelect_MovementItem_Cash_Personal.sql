@@ -1133,7 +1133,7 @@ end if;
                                  --
                                , Object_Personal.Id                      AS PersonalId
                                , Object_Personal.ObjectCode              AS PersonalCode
-                               , Object_Personal.ValueData               AS PersonalName
+                               , CASE WHEN Object_Personal.isErased = TRUE THEN '*удален-' || Object_Personal.ValueData ELSE Object_Personal.ValueData END :: TVarChar AS PersonalName
                                , ObjectString_Member_INN.ValueData       AS INN
                                , COALESCE (ObjectBoolean_Personal_Main.ValueData, FALSE) :: Boolean   AS isMain
                                , COALESCE (ObjectBoolean_Member_Official.ValueData, FALSE) :: Boolean AS isOfficial

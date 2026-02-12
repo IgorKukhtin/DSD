@@ -53,7 +53,9 @@ BEGIN
                              -- , MovementLinkObject_PersonalServiceList.ObjectId      AS PersonalServiceListId
                              , CASE WHEN COALESCE (MIFloat_SummCardRecalc.ValueData, 0) = 0
                                          THEN tmpParams.MoneyPlaceId
-                                         ELSE MILinkObject_PersonalServiceList.ObjectId
+                                    WHEN MILinkObject_PersonalServiceList.ObjectId > 0
+                                         THEN MILinkObject_PersonalServiceList.ObjectId
+                                    ELSE tmpParams.MoneyPlaceId
                                END AS PersonalServiceListId_to
                              , MovementItem.ObjectId                                AS PersonalId
                              , MILinkObject_Unit.ObjectId                           AS UnitId
@@ -128,7 +130,9 @@ BEGIN
                         GROUP BY Movement.Id
                                , CASE WHEN COALESCE (MIFloat_SummCardRecalc.ValueData, 0) = 0
                                            THEN tmpParams.MoneyPlaceId
-                                           ELSE MILinkObject_PersonalServiceList.ObjectId
+                                      WHEN MILinkObject_PersonalServiceList.ObjectId > 0
+                                           THEN MILinkObject_PersonalServiceList.ObjectId
+                                      ELSE tmpParams.MoneyPlaceId
                                  END
                                , MovementItem.ObjectId
                                , MILinkObject_Unit.ObjectId
