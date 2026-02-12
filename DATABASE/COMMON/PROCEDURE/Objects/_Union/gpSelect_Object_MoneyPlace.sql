@@ -145,6 +145,7 @@ BEGIN
        AND ((View_Contract.PaidKindId = zc_Enum_PaidKind_SecondForm() AND vbUserId IN (SELECT UserId FROM tmpUserTransport))
           OR View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm()
           OR View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm_pav()
+          OR View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm_kaz()
            )
        -- AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
        AND View_Contract.isErased = FALSE

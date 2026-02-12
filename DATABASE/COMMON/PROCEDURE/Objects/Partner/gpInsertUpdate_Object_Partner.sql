@@ -318,6 +318,14 @@ BEGIN
    -- сохранили свойство <примечание для Накладной продажи>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_Movement(), ioId, inMovementComment);
 
+
+   -- !!! ВРЕМЕННО !!!
+   IF vbUserId = 5 AND 1=1
+   THEN
+       RAISE EXCEPTION 'Admin - Test = OK';
+   END IF;
+
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
