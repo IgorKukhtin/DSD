@@ -23,7 +23,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon,
+  ExternalLoad;
 
 type
   TSaleForm = class(TAncestorDocumentForm)
@@ -333,6 +334,13 @@ type
     actRefresh_Get: TdsdDataSetRefresh;
     macUpdate_CorrSumm: TMultiAction;
     bbUpdate_CorrSumm: TdxBarButton;
+    spGetImportSetting: TdsdStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actGetImportSetting: TdsdExecStoredProc;
+    mactLoadExcel: TMultiAction;
+    bbtLoadExcel: TdxBarButton;
+    spDelete_MI: TdsdStoredProc;
+    actDelete_MI: TdsdExecStoredProc;
   private
     { Private declarations }
   public
