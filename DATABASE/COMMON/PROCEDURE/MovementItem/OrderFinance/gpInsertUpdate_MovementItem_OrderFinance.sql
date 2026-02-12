@@ -41,28 +41,69 @@ BEGIN
 
 
      -- нашли
-     vbOrderFinanceId := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = MovementItem.MovementId AND MLO.DescId = zc_MovementLinkObject_OrderFinance());
+     vbOrderFinanceId := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_OrderFinance());
 
      -- Проверка - <Ожидание Согласования-1>
      IF EXISTS (SELECT FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_SignWait_1() AND MB.ValueData = TRUE)
         -- НЕ Разрешено изменение плана по дням - в проведенном док. (да/нет)
-        AND NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId  = vbOrderFinanceId AND OB.DescId = zc_ObjectBoolean_OrderFinance_OperDate() AND OB.ValueData = TRUE)
+        AND NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId  = vbOrderFinanceId AND OB.DescId = zc_ObjectBoolean_OrderFinance_Status_off() AND OB.ValueData = TRUE)
      THEN
          RAISE EXCEPTION 'Ошибка.Корректировка заблокирована.В документе установлена <Отправлено на Согласование Руководителю>.';
      END IF;
      -- Проверка - <Согласован-1>
      IF EXISTS (SELECT FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_Sign_1() AND MB.ValueData = TRUE)
         -- НЕ Разрешено изменение плана по дням - в проведенном док. (да/нет)
-        AND NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId  = vbOrderFinanceId AND OB.DescId = zc_ObjectBoolean_OrderFinance_OperDate() AND OB.ValueData = TRUE)
+        AND NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId  = vbOrderFinanceId AND OB.DescId = zc_ObjectBoolean_OrderFinance_Status_off() AND OB.ValueData = TRUE)
      THEN
          RAISE EXCEPTION 'Ошибка.Корректировка заблокирована.В документе установлена <Согласовано Руководителем>.';
      END IF;
      -- Проверка - <Виза СБ>
      IF EXISTS (SELECT FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_SignSB() AND MB.ValueData = TRUE)
         -- НЕ Разрешено изменение плана по дням - в проведенном док. (да/нет)
-        AND NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId  = vbOrderFinanceId AND OB.DescId = zc_ObjectBoolean_OrderFinance_OperDate() AND OB.ValueData = TRUE)
+        AND NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId  = vbOrderFinanceId AND OB.DescId = zc_ObjectBoolean_OrderFinance_Status_off() AND OB.ValueData = TRUE)
      THEN
          RAISE EXCEPTION 'Ошибка.Корректировка заблокирована.В документе установлена <Виза СБ>.';
+     END IF;
+
+     -- проверка что строки child - нет
+     IF (SELECT 1
+         FROM MovementItem
+         WHERE MovementItem.DescId     = zc_MI_Child()
+           AND MovementItem.MovementId = inMovementId
+           AND MovementItem.isErased   = FALSE
+        )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Заполнение возможно только в документе <Палирование по Счетам>.';
+     END IF;
+
+     -- проверка update Юр.лицо
+     IF ioId > 0
+        AND NOT EXISTS (SELECT 1
+                        FROM MovementItem
+                        WHERE MovementItem.MovementId = inMovementId
+                          AND MovementItem.Id         = ioId
+                          AND MovementItem.ObjectId   = inJuridicalId
+                          AND MovementItem.isErased   = FALSE
+                       )
+     THEN
+          RAISE EXCEPTION 'Ошибка.Нет прав изменять Юр.лицо.';
+     END IF;
+
+     -- проверка update Договор
+     IF ioId > 0
+        AND NOT EXISTS (SELECT 1
+                        FROM MovementItem
+                             INNER JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                                               ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                                              AND MILinkObject_Contract.DescId         = zc_MILinkObject_Contract()
+                                                              AND MILinkObject_Contract.ObjectId       = inContractId               
+                        WHERE MovementItem.MovementId = inMovementId
+                          AND MovementItem.Id         = ioId
+                          AND MovementItem.ObjectId   = inJuridicalId
+                          AND MovementItem.isErased   = FALSE
+                       )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав изменять Договор.';
      END IF;
 
      -- замена

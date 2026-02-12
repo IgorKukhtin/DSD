@@ -57,6 +57,11 @@ BEGIN
         AND (COALESCE (vbMovementDescId, 0) <> zc_Movement_BankAccount() OR inDescId <> zc_MI_Detail())
         AND (COALESCE (vbMovementDescId, 0) <> zc_Movement_Promo() OR inDescId <> zc_MI_Detail())
         --AND inUserId <> 5
+        --AND ioId <> 348109907
+        --AND ioId <> 348109908
+        --AND ioId <> 348108390
+        -- AND ioId <> 348110861 
+        -- AND ioId <> 348110862 
      THEN
          RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.(%)', vbInvNumber, lfGet_Object_ValueData (vbStatusId), inMovementId;
      END IF;

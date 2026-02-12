@@ -27,7 +27,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinanceSB(
     IN inComment               TVarChar   , --
     -- child
     IN inGoodsName_child       TVarChar  , -- Товары
-    IN inInvNumber_child       TVarChar  , --   
+    IN inInvNumber_child       TVarChar  , --
     IN inInvNumber_Invoice_child  TVarChar  , --
     IN inSession               TVarChar    -- сессия пользователя
 )
@@ -56,7 +56,7 @@ BEGIN
                                                       ON ObjectBoolean_OperDate.ObjectId  = MovementLinkObject_OrderFinance.ObjectId
                                                      AND ObjectBoolean_OperDate.DescId    = zc_ObjectBoolean_OrderFinance_OperDate()
                                                      AND ObjectBoolean_OperDate.ValueData = TRUE*/
-        
+
                         WHERE MovementLinkObject_OrderFinance.MovementId = inMovementId
                           AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
                           AND MovementLinkObject_OrderFinance.ObjectId   = 13229475 -- Транспортная логистика
@@ -74,7 +74,7 @@ BEGIN
                                                       ON ObjectBoolean_OperDate.ObjectId  = MovementLinkObject_OrderFinance.ObjectId
                                                      AND ObjectBoolean_OperDate.DescId    = zc_ObjectBoolean_OrderFinance_OperDate()
                                                      AND ObjectBoolean_OperDate.ValueData = TRUE*/
-        
+
                         WHERE MovementLinkObject_OrderFinance.MovementId = inMovementId
                           AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
                           AND MovementLinkObject_OrderFinance.ObjectId   = 13229475 -- Транспортная логистика
@@ -82,20 +82,29 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Не заполнено значение <Товар (Заявка ТМЦ)>.';
      END IF;
-    
+
 
      -- Проверка - <Ожидание Согласования-1>
      IF EXISTS (SELECT FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_SignWait_1() AND MB.ValueData = TRUE)
+        --AND ioId <> 348109907
+        --AND ioId <> 348110861 
+        --AND ioId <> 348110862 
      THEN
          RAISE EXCEPTION 'Ошибка.Корректировка заблокирована.В документе установлена <Отправлено на Согласование Руководителю>.';
      END IF;
      -- Проверка - <Согласован-1>
      IF EXISTS (SELECT FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_Sign_1() AND MB.ValueData = TRUE)
+        --AND ioId <> 348109907
+        --AND ioId <> 348110861 
+        --AND ioId <> 348110862 
      THEN
          RAISE EXCEPTION 'Ошибка.Корректировка заблокирована.В документе установлена <Согласовано Руководителем>.';
      END IF;
      -- Проверка - <Виза СБ>
      IF EXISTS (SELECT FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_SignSB() AND MB.ValueData = TRUE)
+        --AND ioId <> 348109907
+        --AND ioId <> 348110861 
+        --AND ioId <> 348110862 
      THEN
          RAISE EXCEPTION 'Ошибка.Корректировка заблокирована.В документе установлена <Виза СБ>.';
      END IF;
@@ -405,11 +414,13 @@ BEGIN
                  vbId_child := lpInsertUpdate_MovementItem (0, zc_MI_Child(), NULL, inMovementId, inAmount, ioId);
             ELSE
                  vbIsInsert_child:= FALSE;
+                 -- сохранили <Элемент документа>
+                 vbId_child := lpInsertUpdate_MovementItem (vbId_child, zc_MI_Child(), NULL, inMovementId, inAmount, ioId);
             END IF;
 
             -- сохранили свойство <>
             PERFORM lpInsertUpdate_MovementItemString (zc_MIString_InvNumber(), vbId_child, inInvNumber_child);
-            
+
             -- сохранили свойство <>
             PERFORM lpInsertUpdate_MovementItemString (zc_MIString_InvNumber_Invoice(), vbId_child, inInvNumber_Invoice_child);
 

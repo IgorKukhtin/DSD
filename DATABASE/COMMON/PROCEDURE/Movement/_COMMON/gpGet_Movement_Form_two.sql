@@ -10,11 +10,13 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Form_two(
 RETURNS TABLE (FormName TVarChar)
 AS
 $BODY$
+    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_ZakazInternal());
+     vbUserId:= lpGetUserBySession (inSession);
 
      IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_PersonalService())
+        AND vbUserId NOT IN (5, 6604558, 2573318)
      THEN
          RAISE EXCEPTION 'Ошибка.Нет Прав.';
      END IF;

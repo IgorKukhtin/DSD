@@ -861,7 +861,7 @@ BEGIN
        SELECT tmpAll.MovementItemId                         AS Id
             , Object_Personal.Id                            AS PersonalId
             , Object_Personal.ObjectCode                    AS PersonalCode
-            , Object_Personal.ValueData                     AS PersonalName
+            , CASE WHEN Object_Personal.isErased = TRUE AND vbUserId = 5 THEN '*удален-' || Object_Personal.ValueData ELSE Object_Personal.ValueData END :: TVarChar AS PersonalName
             , tmpAll.MemberId_Personal
             , ObjectString_Member_INN.ValueData             AS INN
             , Object_Personal.Code1C                        AS Code1C

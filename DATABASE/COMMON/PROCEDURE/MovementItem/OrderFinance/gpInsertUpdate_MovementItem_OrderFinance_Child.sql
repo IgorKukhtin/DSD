@@ -36,7 +36,7 @@ BEGIN
      --Данные для проверки
      SELECT COALESCE (ObjectBoolean_InvNumber_Invoice.ValueData, FALSE) ::Boolean AS isInvNumber
           , COALESCE (ObjectBoolean_InvNumber.ValueData, FALSE)         ::Boolean AS isInvNumber_Invoice
-    INTO vbIsInvNumber, vbIsInvNumber_Invoice
+            INTO vbIsInvNumber, vbIsInvNumber_Invoice
      FROM MovementLinkObject AS MovementLinkObject_OrderFinance
          LEFT JOIN ObjectBoolean  AS ObjectBoolean_InvNumber 
                                   ON ObjectBoolean_InvNumber.ObjectId = MovementLinkObject_OrderFinance.ObjectId
@@ -102,16 +102,19 @@ BEGIN
 
      -- Проверка - <Ожидание Согласования-1>
      IF EXISTS (SELECT FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_SignWait_1() AND MB.ValueData = TRUE)
+        --AND ioId <> 348108390 
      THEN
          RAISE EXCEPTION 'Ошибка.Корректировка заблокирована.В документе установлена <Отправлено на Согласование Руководителю>.';
      END IF;
      -- Проверка - <Согласован-1>
      IF EXISTS (SELECT FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_Sign_1() AND MB.ValueData = TRUE)
+        --AND ioId <> 348108390 
      THEN
          RAISE EXCEPTION 'Ошибка.Корректировка заблокирована.В документе установлена <Согласовано Руководителем>.';
      END IF;
      -- Проверка - <Виза СБ>
      IF EXISTS (SELECT FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_SignSB() AND MB.ValueData = TRUE)
+        --AND ioId <> 348108390 
      THEN
          RAISE EXCEPTION 'Ошибка.Корректировка заблокирована.В документе установлена <Виза СБ>.';
      END IF;
@@ -166,13 +169,17 @@ BEGIN
         ) AS tmpMI;
 
 
-     -- сохранили <Итого>
-     PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, zc_MI_Master(), MovementItem.ObjectId, MovementItem.MovementId, outSumm_parent, MovementItem.ParentId)
-     FROM MovementItem
-     WHERE MovementItem.MovementId = inMovementId
-       AND MovementItem.DescId     = zc_MI_Master()
-       AND MovementItem.Id         = inParentId
-      ;
+
+     IF 1=1 -- ioId <> 348108390
+     THEN
+         -- сохранили <Итого>
+         PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, zc_MI_Master(), MovementItem.ObjectId, MovementItem.MovementId, outSumm_parent, MovementItem.ParentId)
+         FROM MovementItem
+         WHERE MovementItem.MovementId = inMovementId
+           AND MovementItem.DescId     = zc_MI_Master()
+           AND MovementItem.Id         = inParentId
+          ;
+     END IF;
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
