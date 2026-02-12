@@ -2545,11 +2545,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerContactForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerContactForm');
   //exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerForm');
   //exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartner_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartner_ObjectForm');
   //exit;
@@ -4317,6 +4317,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPartnerAddressForm');
   exit;
   // область
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRegionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRegionForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRegionEditForm'));
@@ -4331,7 +4332,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCityKindForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCityKindEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCityKindEditForm');
-    }
+
   // населенный пункт
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCityForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCityForm');

@@ -18,14 +18,16 @@ object StreetForm: TStreetForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 67
     Width = 887
-    Height = 309
+    Height = 268
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitTop = 26
+    ExplicitHeight = 309
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -125,6 +127,38 @@ object StreetForm: TStreetForm
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object PanelSearch: TPanel
+    Left = 0
+    Top = 26
+    Width = 887
+    Height = 41
+    Align = alTop
+    TabOrder = 5
+    ExplicitLeft = 8
+    ExplicitTop = 34
+    ExplicitWidth = 658
+    object lbSearchCode: TcxLabel
+      Left = 15
+      Top = 13
+      Caption = #1055#1086#1080#1089#1082' '#1053#1072#1079#1074#1072#1085#1080#1077': '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchName: TcxTextEdit
+      Left = 136
+      Top = 14
+      TabOrder = 1
+      DesignSize = (
+        195
+        21)
+      Width = 195
     end
   end
   object DataSource: TDataSource
@@ -500,11 +534,28 @@ object StreetForm: TStreetForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
     Left = 368
     Top = 128
+  end
+  object FieldFilter_Search: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = ClientDataSet
+    Column = Name
+    ColumnList = <
+      item
+        Column = Name
+      end>
+    ActionNumber1 = dsdChoiceGuides
+    CheckBoxList = <>
+    Left = 368
+    Top = 24
   end
 end

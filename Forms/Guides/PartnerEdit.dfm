@@ -406,7 +406,7 @@
     Caption = #1053#1072#1089#1077#1083#1077#1085#1085#1099#1081' '#1087#1091#1085#1082#1090
   end
   object ceCity: TcxButtonEdit [53]
-    Left = 484
+    Left = 485
     Top = 100
     Properties.AutoSelect = False
     Properties.Buttons = <
@@ -2758,6 +2758,55 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProvinceId'
+        Value = Null
+        Component = ProvinceGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProvinceName'
+        Value = Null
+        Component = ProvinceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RegionId'
+        Value = Null
+        Component = RegionGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RegionName'
+        Value = Null
+        Component = RegionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CityKindId'
+        Value = Null
+        Component = CityKindGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CityKindName'
+        Value = Null
+        Component = CityKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 640

@@ -20,7 +20,8 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, dxSkinsdxBarPainter, dsdAddOn,
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox;
+  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
+  cxContainer, cxTextEdit, cxLabel, Vcl.ExtCtrls, dsdCommon;
 
 type
   TRegionForm = class(TParentForm)
@@ -57,6 +58,10 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     bbProtocolOpenForm: TdxBarButton;
     ProtocolOpenForm: TdsdOpenForm;
+    FieldFilter_Search: TdsdFieldFilter;
+    PanelSearch: TPanel;
+    lbSearchCode: TcxLabel;
+    edSearchName: TcxTextEdit;
   private
     { Private declarations }
   public

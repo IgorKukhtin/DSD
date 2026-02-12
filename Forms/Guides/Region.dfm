@@ -3,7 +3,7 @@ object RegionForm: TRegionForm
   Top = 0
   Caption = #1054#1073#1083#1072#1089#1090#1100
   ClientHeight = 332
-  ClientWidth = 440
+  ClientWidth = 572
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,14 +19,17 @@ object RegionForm: TRegionForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
-    Width = 440
-    Height = 306
+    Top = 67
+    Width = 572
+    Height = 265
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitTop = 26
+    ExplicitWidth = 440
+    ExplicitHeight = 306
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -73,6 +76,37 @@ object RegionForm: TRegionForm
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object PanelSearch: TPanel
+    Left = 0
+    Top = 26
+    Width = 572
+    Height = 41
+    Align = alTop
+    TabOrder = 5
+    ExplicitLeft = -218
+    ExplicitWidth = 658
+    object lbSearchCode: TcxLabel
+      Left = 15
+      Top = 13
+      Caption = #1055#1086#1080#1089#1082' '#1053#1072#1079#1074#1072#1085#1080#1077': '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchName: TcxTextEdit
+      Left = 136
+      Top = 14
+      TabOrder = 1
+      DesignSize = (
+        195
+        21)
+      Width = 195
     end
   end
   object DataSource: TDataSource
@@ -440,11 +474,28 @@ object RegionForm: TRegionForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
     Left = 368
     Top = 128
+  end
+  object FieldFilter_Search: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = ClientDataSet
+    Column = Name
+    ColumnList = <
+      item
+        Column = Name
+      end>
+    ActionNumber1 = dsdChoiceGuides
+    CheckBoxList = <>
+    Left = 352
+    Top = 48
   end
 end

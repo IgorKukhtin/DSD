@@ -3,7 +3,7 @@ object CityForm: TCityForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1053#1072#1089#1077#1083#1077#1085#1085#1099#1081' '#1087#1091#1085#1082#1090'>'
   ClientHeight = 376
-  ClientWidth = 752
+  ClientWidth = 658
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,14 +18,17 @@ object CityForm: TCityForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
-    Width = 752
-    Height = 350
+    Top = 67
+    Width = 658
+    Height = 309
     Align = alClient
     PopupMenu = pmGrid
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitTop = 26
+    ExplicitWidth = 752
+    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -91,6 +94,38 @@ object CityForm: TCityForm
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object PanelSearch: TPanel
+    Left = 0
+    Top = 26
+    Width = 658
+    Height = 41
+    Align = alTop
+    TabOrder = 5
+    ExplicitLeft = -43
+    ExplicitTop = 0
+    ExplicitWidth = 795
+    object lbSearchCode: TcxLabel
+      Left = 15
+      Top = 13
+      Caption = #1055#1086#1080#1089#1082' '#1053#1072#1079#1074#1072#1085#1080#1077': '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchName: TcxTextEdit
+      Left = 136
+      Top = 14
+      TabOrder = 1
+      DesignSize = (
+        195
+        21)
+      Width = 195
     end
   end
   object DataSource: TDataSource
@@ -346,6 +381,50 @@ object CityForm: TCityForm
           ComponentItem = 'Name_full'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'RegionId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'RegionId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'RegionName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'RegionName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProvinceId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ProvinceId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProvinceName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ProvinceName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CityKindId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'CityKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CityKindName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'CityKindName'
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -483,14 +562,15 @@ object CityForm: TCityForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 48
     Top = 216
   end
   object pmGrid: TPopupMenu
     Images = dmMain.ImageList
-    Left = 328
-    Top = 160
+    Left = 344
+    Top = 128
     object pmAdd: TMenuItem
       Action = actInsert
     end
@@ -506,5 +586,18 @@ object CityForm: TCityForm
     object N4: TMenuItem
       Action = dsdSetUnErased
     end
+  end
+  object FieldFilter_Search: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = ClientDataSet
+    Column = Name
+    ColumnList = <
+      item
+        Column = Name
+      end>
+    ActionNumber1 = dsdChoiceGuides
+    CheckBoxList = <>
+    Left = 496
+    Top = 120
   end
 end
