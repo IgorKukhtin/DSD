@@ -59,8 +59,8 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Не найдено ОКПО <%> для <%>.', inOKPO, inObjectName;
      END IF;  
            
-     --Форма оплаты
-     vbPaidKindId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_PaidKind() AND Object.ValueData = inPaidKindName AND Object.isErased = FALSE);
+     -- Форма оплаты
+     vbPaidKindId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_PaidKind() AND Object.ValueData ILIKE inPaidKindName AND Object.isErased = FALSE);
      --проверка
      IF COALESCE (vbPaidKindId,0) = 0
      THEN
