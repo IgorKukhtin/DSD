@@ -1,6 +1,7 @@
 -- Function: gpInsert_MI_OrderFinanceSB_Load ()
 
-DROP FUNCTION IF EXISTS gpInsert_MI_OrderFinanceSB_Load (Integer, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsert_MI_OrderFinanceSB_Load (Integer, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_MI_OrderFinanceSB_Load (Integer, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_MI_OrderFinanceSB_Load(
     IN inMovementId            Integer   , -- ключ Документа
@@ -12,7 +13,8 @@ CREATE OR REPLACE FUNCTION gpInsert_MI_OrderFinanceSB_Load(
     IN inInfoMoneyName         TVarChar  , -- Статья Project
     IN inCashName              TVarChar  , -- Касса 
     IN inInvNumber_Invoice     TVarChar  , -- № счета
-    IN inComment               TVarChar  , -- Примечание
+    IN inComment               TVarChar  , -- Примечание 
+    IN inComment_Partner       TVarChar  , -- Примечание Контрагента
     IN inAmount                TFloat    , -- Сумма, грн
     IN inSession               TVarChar    -- сессия пользователя
 )                              
@@ -28,6 +30,7 @@ $BODY$
            vbId_child     Integer;
            vbsumm_parent  TFloat;
            vbOperDate     TDateTime;
+           vbComment_Contract TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderFinance());
@@ -90,11 +93,16 @@ BEGIN
 
      --проверка
      IF COALESCE (vbContractId, 0) = 0 AND TRIM (inContractName) <> ''
-     THEN
-         RAISE EXCEPTION 'Ошибка.Не найден Договор <%> для <%> ОКПО <%> .', inContractName, inObjectName, inOKPO;
+     THEN 
+         IF COALESCE (vbPaidKindId,0) <> zc_Enum_PaidKind_FirstForm()
+         THEN
+             vbComment_Contract := COALESCE (inContractName,'');
+         ELSE
+             RAISE EXCEPTION 'Ошибка.Не найден Договор <%> для <%> ОКПО <%> .', inContractName, inObjectName, inOKPO;
+         END IF;
      END IF; 
 
-
+    
      --проверка
      IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.DescId = zc_Object_Infomoney() AND TRIM (Object.ValueData) ILIKE TRIM (inInfoMoneyName))
         AND inInfoMoneyName NOT ILIKE 'Строительные'
@@ -109,7 +117,7 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Не найдена статья УП <%> для <%> ОКПО <%> .', inInfoMoneyName, inObjectName, inOKPO;
      END IF; 
-
+ 
      --Касса
      IF COALESCE (inCashName,'') <> ''
      THEN
@@ -157,6 +165,8 @@ BEGIN
                                                                , ioAmountPlan_4          := 0                     ::TFloat
                                                                , ioAmountPlan_5          := 0                     ::TFloat
                                                                , inComment               := inComment             ::TVarChar 
+                                                               , inComment_Partner       := inComment_Partner     ::TVarChar
+                                                               , inComment_Contract      := COALESCE (vbComment_Contract,'') ::TVarChar
                                                                  -- child
                                                                --, inGoodsName_child       := '' ::TVarChar  
                                                                --, inInvNumber_child       := '' ::TVarChar
@@ -166,8 +176,8 @@ BEGIN
 
 
      ELSE
-     -- Только после сохранения
-     SELECT SUM (COALESCE (MovementItem.Amount,0))          AS Amount
+     -- сумма сохраненных
+     SELECT SUM (COALESCE (MovementItem.Amount,0)) AS Amount
     INTO vbSumm_parent
      FROM MovementItem
      WHERE MovementItem.MovementId = inMovementId
@@ -191,7 +201,9 @@ BEGIN
                                                                , ioAmountPlan_3          := 0                     ::TFloat
                                                                , ioAmountPlan_4          := 0                     ::TFloat
                                                                , ioAmountPlan_5          := 0                     ::TFloat
-                                                               , inComment               := inComment             ::TVarChar 
+                                                               , inComment               := inComment             ::TVarChar
+                                                               , inComment_Partner       := inComment_Partner     ::TVarChar
+                                                               , inComment_Contract      := COALESCE (vbComment_Contract,'') ::TVarChar
                                                                  -- child
                                                                --, inGoodsName_child       := '' ::TVarChar  
                                                                --, inInvNumber_child       := '' ::TVarChar
@@ -203,8 +215,8 @@ BEGIN
 
 
      END IF;
-     
 
+     
      --RAISE EXCEPTION 'Ошибка.Мастер ОК';
 
 
@@ -217,8 +229,6 @@ BEGIN
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbId_child, inComment);
 
-
-    
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (vbId_child, vbUserId, TRUE);

@@ -20,7 +20,8 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, dxSkinsdxBarPainter, dsdAddOn,
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox;
+  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
+  cxContainer, cxTextEdit, cxLabel, Vcl.ExtCtrls, dsdCommon;
 
 type
   TStreetForm = class(TParentForm)
@@ -63,6 +64,10 @@ type
     CityKindName: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    FieldFilter_Search: TdsdFieldFilter;
+    PanelSearch: TPanel;
+    lbSearchCode: TcxLabel;
+    edSearchName: TcxTextEdit;
   private
     { Private declarations }
   public

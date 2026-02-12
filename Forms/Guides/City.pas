@@ -22,7 +22,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  Vcl.Menus;
+  Vcl.Menus, cxContainer, cxTextEdit, cxLabel, Vcl.ExtCtrls, dsdCommon;
 
 type
   TCityForm = class(TParentForm)
@@ -68,6 +68,10 @@ type
     ProvinceName: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    PanelSearch: TPanel;
+    lbSearchCode: TcxLabel;
+    edSearchName: TcxTextEdit;
+    FieldFilter_Search: TdsdFieldFilter;
   private
     { Private declarations }
   public

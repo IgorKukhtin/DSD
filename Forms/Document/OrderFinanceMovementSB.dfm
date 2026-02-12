@@ -1092,6 +1092,22 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
+          object Comment_Partner: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090')'
+            DataBinding.FieldName = 'Comment_Partner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object Comment_Contract: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1044#1086#1075#1086#1074#1086#1088')'
+            DataBinding.FieldName = 'Comment_Contract'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
           object Amount_Child: TcxGridDBColumn
             Caption = '***'#1055#1083#1072#1085' '#1048#1058#1054#1043#1054' ('#1088#1072#1089#1095#1077#1090')'
             DataBinding.FieldName = 'Amount_Child'
@@ -1655,6 +1671,9 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0

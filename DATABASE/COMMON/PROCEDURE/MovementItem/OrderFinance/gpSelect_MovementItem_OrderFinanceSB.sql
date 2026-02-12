@@ -74,6 +74,9 @@ RETURNS TABLE (Id Integer
              , isPlan_5_old         Boolean
 
              , Comment              TVarChar
+             , Comment_Partner      TVarChar
+             , Comment_Contract     TVarChar
+             
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
              , isErased Boolean
@@ -465,7 +468,9 @@ BEGIN
                                          FROM MovementItemString
                                          WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                            AND MovementItemString.DescId IN (zc_MIString_Comment()
-                                                                           )
+                                                                           , zc_MIString_Comment_Partner()
+                                                                           , zc_MIString_Comment_Contract()
+                                                                            )
                                          )
 
              , tmpMovementItemBoolean AS (SELECT *
@@ -526,7 +531,9 @@ BEGIN
                     , COALESCE (MIBoolean_AmountPlan_5.ValueData, TRUE) :: Boolean    AS isAmountPlan_5
 
                     --, MILinkObject_BankAccount.ObjectId AS BankAccountId
-                    , MIString_Comment.ValueData        AS Comment
+                    , MIString_Comment.ValueData          AS Comment
+                    , MIString_Comment_Partner.ValueData  AS Comment_Partner
+                    , MIString_Comment_Contract.ValueData AS Comment_Contract
                     , Object_Insert.ValueData           AS InsertName
                     , Object_Update.ValueData           AS UpdateName
                     , MIDate_Insert.ValueData           AS InsertDate
@@ -595,6 +602,13 @@ BEGIN
                     LEFT JOIN tmpMovementItemString AS MIString_Comment
                                                     ON MIString_Comment.MovementItemId = MovementItem.Id
                                                    AND MIString_Comment.DescId = zc_MIString_Comment()
+
+                    LEFT JOIN tmpMovementItemString AS MIString_Comment_Partner
+                                                    ON MIString_Comment_Partner.MovementItemId = MovementItem.Id
+                                                   AND MIString_Comment_Partner.DescId = zc_MIString_Comment_Partner()
+                    LEFT JOIN tmpMovementItemString AS MIString_Comment_Contract
+                                                    ON MIString_Comment_Contract.MovementItemId = MovementItem.Id
+                                                   AND MIString_Comment_Contract.DescId = zc_MIString_Comment_Contract()
 
                     LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_Contract
                                                         ON MILinkObject_Contract.MovementItemId = MovementItem.Id
@@ -836,7 +850,9 @@ BEGIN
            , vbIsPlan_4_old AS isPlan_4_old
            , vbIsPlan_5_old AS isPlan_5_old
 
-           , COALESCE (tmpMI.Comment, '') ::TVarChar AS Comment
+           , COALESCE (tmpMI.Comment, '')          ::TVarChar AS Comment
+           , COALESCE (tmpMI.Comment_Partner, '')  ::TVarChar AS Comment_Partner
+           , COALESCE (tmpMI.Comment_Contract, '') ::TVarChar AS Comment_Contract
 
            , tmpMI.InsertName
            , tmpMI.UpdateName
@@ -1008,6 +1024,8 @@ BEGIN
                                  FROM MovementItemString
                                  WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                    AND MovementItemString.DescId IN (zc_MIString_Comment()
+                                                                   , zc_MIString_Comment_Contract()
+                                                                   , zc_MIString_Comment_Partner()
                                                                    )
                                 )
        -- Ò‚-‚‡
@@ -1320,7 +1338,9 @@ BEGIN
            , vbIsPlan_4_old AS isPlan_4_old
            , vbIsPlan_5_old AS isPlan_5_old
 
-           , MIString_Comment.ValueData     ::TVarChar AS Comment
+           , MIString_Comment.ValueData          ::TVarChar AS Comment
+           , MIString_Comment_Partner.ValueData  ::TVarChar AS Comment_Partner
+           , MIString_Comment_Contract.ValueData ::TVarChar AS Comment_Contract
 
            , Object_Insert.ValueData          AS InsertName
            , Object_Update.ValueData          AS UpdateName
@@ -1439,6 +1459,13 @@ BEGIN
             LEFT JOIN tmpMovementItemString AS MIString_Comment
                                             ON MIString_Comment.MovementItemId = MovementItem.Id
                                            AND MIString_Comment.DescId = zc_MIString_Comment()
+
+            LEFT JOIN tmpMovementItemString AS MIString_Comment_Partner
+                                            ON MIString_Comment_Partner.MovementItemId = MovementItem.Id
+                                           AND MIString_Comment_Partner.DescId = zc_MIString_Comment_Partner()
+            LEFT JOIN tmpMovementItemString AS MIString_Comment_Contract
+                                            ON MIString_Comment_Contract.MovementItemId = MovementItem.Id
+                                           AND MIString_Comment_Contract.DescId = zc_MIString_Comment_Contract()
 
             LEFT JOIN tmpMovementItemDate AS MIDate_Insert
                                           ON MIDate_Insert.MovementItemId = MovementItem.Id
@@ -1605,6 +1632,8 @@ BEGIN
            , FALSE ::Boolean AS isPlan_5_old
 
            , ''   ::TVarChar AS Comment
+           , ''   ::TVarChar AS Comment_Partner
+           , ''   ::TVarChar AS Comment_Contract
 
            , ''   :: TVarChar           AS InsertName
            , ''   :: TVarChar           AS UpdateName
@@ -1716,6 +1745,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 12.02.26         *
  20.01.26         *
  14.01.26         *
  10.12.25         *

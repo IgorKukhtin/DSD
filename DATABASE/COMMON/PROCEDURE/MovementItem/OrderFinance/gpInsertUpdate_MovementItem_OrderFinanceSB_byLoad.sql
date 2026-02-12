@@ -1,6 +1,9 @@
 -- Function: gpInsertUpdate_MovementItem_OrderFinanceSB_byLoad()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinanceSB_byLoad (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinanceSB_byLoad (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinanceSB_byLoad (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinanceSB_byLoad(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -21,6 +24,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinanceSB_byLoad(
  INOUT ioAmountPlan_5          TFloat    , --
    OUT outAmountPlan_total     TFloat    , --
     IN inComment               TVarChar   , --
+    IN inComment_Partner       TVarChar  , -- Примечание Контрагента
+    IN inComment_Contract      TVarChar  , -- Примечание Договора
     -- child
     --IN inGoodsName_child       TVarChar  , -- Товары
    -- IN inInvNumber_child       TVarChar  , --   
@@ -281,6 +286,13 @@ BEGIN
 
     -- сохранили связь с <касса место выдачи>
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Cash(), ioId, inCashId);
+
+    -- сохранили свойство <>
+    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment_Partner(), ioId, inComment_Partner);
+    -- сохранили свойство <>
+    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment_Contract(), ioId, inComment_Contract);
+
+
 
     -- могут внести данные для чайлд
 

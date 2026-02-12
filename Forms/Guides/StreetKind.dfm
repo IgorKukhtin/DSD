@@ -3,7 +3,7 @@ object StreetKindForm: TStreetKindForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1042#1080#1076' ('#1091#1083#1080#1094#1072','#1087#1088#1086#1089#1087#1077#1082#1090')>'
   ClientHeight = 332
-  ClientWidth = 454
+  ClientWidth = 518
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,14 +19,17 @@ object StreetKindForm: TStreetKindForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
-    Width = 454
-    Height = 306
+    Top = 67
+    Width = 518
+    Height = 265
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitTop = 26
+    ExplicitWidth = 454
+    ExplicitHeight = 306
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -80,6 +83,38 @@ object StreetKindForm: TStreetKindForm
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object PanelSearch: TPanel
+    Left = 0
+    Top = 26
+    Width = 518
+    Height = 41
+    Align = alTop
+    TabOrder = 5
+    ExplicitLeft = -8
+    ExplicitTop = 34
+    ExplicitWidth = 533
+    object lbSearchCode: TcxLabel
+      Left = 15
+      Top = 13
+      Caption = #1055#1086#1080#1089#1082' '#1053#1072#1079#1074#1072#1085#1080#1077': '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchName: TcxTextEdit
+      Left = 136
+      Top = 14
+      TabOrder = 1
+      DesignSize = (
+        195
+        21)
+      Width = 195
     end
   end
   object DataSource: TDataSource
@@ -455,11 +490,28 @@ object StreetKindForm: TStreetKindForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
     Left = 368
     Top = 128
+  end
+  object FieldFilter_Search: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = ClientDataSet
+    Column = Name
+    ColumnList = <
+      item
+        Column = Name
+      end>
+    ActionNumber1 = dsdChoiceGuides
+    CheckBoxList = <>
+    Left = 344
+    Top = 16
   end
 end
