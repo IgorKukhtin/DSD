@@ -259,6 +259,7 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PaidKind_SecondForm(), inDescId:= zc_Object_PaidKind(), inCode:= 2, inName:= 'Нал', inEnumName:= 'zc_Enum_PaidKind_SecondForm');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PaidKind_FirstForm_pav(), inDescId:= zc_Object_PaidKind(), inCode:= 3, inName:= 'БН(павильоны)', inEnumName:= 'zc_Enum_PaidKind_FirstForm_pav');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PaidKind_Balance_no(), inDescId:= zc_Object_PaidKind(), inCode:= 4, inName:= 'Внебаланса', inEnumName:= 'zc_Enum_PaidKind_Balance_no');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PaidKind_FirstForm_kaz(), inDescId:= zc_Object_PaidKind(), inCode:= 5, inName:= 'БН (Казахстан)', inEnumName:= 'zc_Enum_PaidKind_FirstForm_kaz');
 
      -- !!! Типы кассовых аппаратов
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_CashRegisterKind_FP3141(),  inDescId:= zc_Object_CashRegisterKind(), inCode:= 1, inName:= 'Datecs FP 3141', inEnumName:= 'zc_Enum_CashRegisterKind_FP3141');
