@@ -81,7 +81,7 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Service());
 
      -- определяем ключ доступа
-     IF inPaidKindId = zc_Enum_PaidKind_FirstForm_pav()
+     IF inPaidKindId IN (zc_Enum_PaidKind_FirstForm_pav(), zc_Enum_PaidKind_FirstForm_kaz())
      THEN
          vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Service());
          vbAccessKeyId:= zc_Enum_Process_AccessKey_ServicePav();
