@@ -979,6 +979,19 @@ BEGIN
      END IF;
 
 
+
+     -- НЕ Партия-Пересорт
+     IF inGoodsId_out > 0 AND inBranchCode = 1 AND inAmount_in_calc > 0 AND vbMovementDescId <> zc_Movement_ProductionUnion()
+     THEN
+         inGoodsId_out     := 0;
+         inAmount_in_calc  := 0;
+         inGoodsId_out     := 0;
+         inGoodsKindId_out := 0;
+         inPartionDate_out := NULL;
+         inAmount_out_calc := 0;
+     END IF;
+
+
      IF vbMessageText = ''
      THEN
          -- сохранили
