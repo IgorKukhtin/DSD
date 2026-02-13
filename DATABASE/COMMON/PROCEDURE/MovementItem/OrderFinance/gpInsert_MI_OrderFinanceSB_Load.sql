@@ -65,7 +65,7 @@ BEGIN
      -- Форма оплаты
      vbPaidKindId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_PaidKind() AND Object.ValueData ILIKE inPaidKindName AND Object.isErased = FALSE);
      --проверка
-     IF COALESCE (vbPaidKindId,0) = 0
+     IF COALESCE (vbPaidKindId,0) = 0 AND TRIM (inPaidKindName) <> ''
      THEN
          RAISE EXCEPTION 'Ошибка.Не найдена Форма оплаты <%> для <%> ОКПО <%> .', inPaidKindName, inObjectName, inOKPO;
      END IF;   
