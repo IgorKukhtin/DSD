@@ -670,6 +670,8 @@ begin
           //DMMainScaleForm.gpGet_Scale_Movement(ParamsMovement,FALSE,FALSE);//isLast=FALSE,isNext=FALSE
           EmptyValuesParams(ParamsMovement);//!!!кроме даты!!!
           ParamsMovement.ParamByName('OperDatePartner').AsDateTime:=Date;//!!!теперь эта даты!!!
+          // еще эти
+          EmptyValuesParams(ParamsMI)
           //
           gpInitialize_MovementDesc;
           //
