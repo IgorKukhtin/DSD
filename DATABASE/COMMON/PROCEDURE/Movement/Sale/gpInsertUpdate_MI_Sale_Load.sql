@@ -89,7 +89,7 @@ BEGIN
                                              , inGoodsId            := vbGoodsId
                                              , inAmount             := inAmount
                                              , inAmountPartner      := inAmountPartner
-                                             , inAmountChangePercent:= 0
+                                             , inAmountChangePercent:= inAmountPartner
                                              , inChangePercentAmount:= 0
                                              , ioPrice              := vbPrice
                                              , ioCountForPrice      := 1
