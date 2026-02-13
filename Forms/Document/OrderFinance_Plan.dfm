@@ -24,8 +24,6 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 277
-        ExplicitLeft = 3
-        ExplicitTop = -4
         ExplicitWidth = 1020
         ExplicitHeight = 277
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -479,7 +477,7 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             Width = 60
           end
           object Amount: TcxGridDBColumn
-            Caption = '***'#1055#1083#1072#1085' '#1085#1072' '#1085#1077#1076#1077#1083#1102
+            Caption = #1055#1083#1072#1090#1077#1078#1085#1099#1081' '#1087#1083#1072#1085' '#1085#1072' '#1085#1077#1076'.'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4

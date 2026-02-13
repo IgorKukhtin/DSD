@@ -1109,18 +1109,19 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             Width = 100
           end
           object Amount_Child: TcxGridDBColumn
-            Caption = '***'#1055#1083#1072#1085' '#1048#1058#1054#1043#1054' ('#1088#1072#1089#1095#1077#1090')'
+            Caption = #1055#1077#1088#1074#1080#1095#1085#1099#1081' '#1087#1083#1072#1085' '#1085#1072' '#1085#1077#1076'.'
             DataBinding.FieldName = 'Amount_Child'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = '***'#1055#1083#1072#1085' '#1048#1058#1054#1043#1054' ('#1088#1072#1089#1095#1077#1090')'
             Options.Editing = False
             Width = 100
           end
           object Amount: TcxGridDBColumn
-            Caption = '***'#1055#1083#1072#1085' '#1085#1072' '#1085#1077#1076#1077#1083#1102
+            Caption = #1055#1083#1072#1090#1077#1078#1085#1099#1081' '#1087#1083#1072#1085' '#1085#1072' '#1085#1077#1076'.'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
@@ -1128,7 +1129,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1055#1083#1072#1085' '#1085#1072' '#1085#1077#1076#1077#1083#1102
-            Width = 80
+            Width = 85
           end
           object Amount_old: TcxGridDBColumn
             Caption = '***'#1055#1083#1072#1085' '#1085#1072' '#1085#1077#1076#1077#1083#1102' ('#1080#1085#1092#1086'.)'
@@ -1143,7 +1144,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             Width = 70
           end
           object OperDate_Amount: TcxGridDBColumn
-            Caption = '***'#1044#1072#1090#1072' '#1087#1083#1072#1085
+            Caption = #1044#1072#1090#1072' '#1087#1083#1072#1085
             DataBinding.FieldName = 'OperDate_Amount'
             PropertiesClassName = 'TcxDateEditProperties'
             Properties.DisplayFormat = 'DD.MM.YYYY'
@@ -1163,12 +1164,11 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             Width = 70
           end
           object AmountPlan_total: TcxGridDBColumn
-            Caption = #1055#1083#1072#1085' '#1048#1058#1054#1043#1054
+            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' '#1082' '#1086#1087#1083#1072#1090#1077
             DataBinding.FieldName = 'AmountPlan_total'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090' '#1048#1058#1054#1043#1054
@@ -1176,7 +1176,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             Width = 80
           end
           object AmountPlan_1: TcxGridDBColumn
-            Caption = #1055#1083#1072#1085' 1.'#1087#1085'.'
+            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' 1.'#1087#1085'.'
             DataBinding.FieldName = 'AmountPlan_1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
@@ -1190,7 +1190,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             Width = 70
           end
           object AmountPlan_2: TcxGridDBColumn
-            Caption = #1055#1083#1072#1085' 2.'#1074#1090'.'
+            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' 2.'#1074#1090'.'
             DataBinding.FieldName = 'AmountPlan_2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
@@ -1204,7 +1204,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             Width = 70
           end
           object AmountPlan_3: TcxGridDBColumn
-            Caption = #1055#1083#1072#1085' 3.'#1089#1088'.'
+            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' 3.'#1089#1088'.'
             DataBinding.FieldName = 'AmountPlan_3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
@@ -1218,7 +1218,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             Width = 70
           end
           object AmountPlan_4: TcxGridDBColumn
-            Caption = #1055#1083#1072#1085' 4.'#1095#1090'.'
+            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' 4.'#1095#1090'.'
             DataBinding.FieldName = 'AmountPlan_4'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
@@ -1232,7 +1232,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             Width = 70
           end
           object AmountPlan_5: TcxGridDBColumn
-            Caption = #1055#1083#1072#1085' 5.'#1087#1090'.'
+            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' 5.'#1087#1090'.'
             DataBinding.FieldName = 'AmountPlan_5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2

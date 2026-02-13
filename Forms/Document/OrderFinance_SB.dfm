@@ -429,7 +429,7 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
             Width = 100
           end
           object Amount_Child: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072
+            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' '#1082' '#1086#1087#1083#1072#1090#1077
             DataBinding.FieldName = 'Amount_Child'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -441,7 +441,7 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
             Width = 90
           end
           object Amount: TcxGridDBColumn
-            Caption = '***'#1057#1091#1084#1084#1072' '#1055#1083#1072#1085' ('#1080#1090#1086#1075#1086')'
+            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' ('#1080#1090#1086#1075#1086')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
