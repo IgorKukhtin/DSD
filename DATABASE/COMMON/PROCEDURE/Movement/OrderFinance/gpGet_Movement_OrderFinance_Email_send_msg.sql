@@ -15,6 +15,8 @@ $BODY$
    DECLARE vbUserId            Integer;
    DECLARE vbOrderFinanceId    Integer;
    DECLARE vbIsOrderFinance_SB Boolean;
+   DECLARE vbMemberId          Integer;
+   DECLARE vbMemberId_1        Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_XML_Mida());
@@ -30,7 +32,25 @@ BEGIN
      vbOrderFinanceId := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_OrderFinance());
      --
      vbIsOrderFinance_SB := COALESCE ((SELECT OB.ValueData FROM ObjectBoolean AS OB WHERE OB.ObjectId = vbOrderFinanceId AND OB.DescId = zc_ObjectBoolean_OrderFinance_SB()), FALSE);
-     
+
+     -- нашли
+     vbMemberId:= (SELECT ObjectLink_User_Member.ChildObjectId AS MemberId
+                   FROm ObjectLink AS ObjectLink_User_Member
+                   WHERE ObjectLink_User_Member.ObjectId = vbUserId
+                     AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                  );
+     -- нашли
+     vbMemberId_1 := (SELECT MovementLinkObject_Member_1.ObjectId AS MemberId
+                      FROM MovementLinkObject AS MovementLinkObject_Member_1
+                      WHERE MovementLinkObject_Member_1.MovementId = inMovementId
+                        AND MovementLinkObject_Member_1.DescId     = zc_MovementLinkObject_Member_1()
+                     );
+
+     --
+     IF COALESCE (vbMemberId,0) <> COALESCE (vbMemberId_1,0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.У пользователя <%> нет прав устанавливать <Согласован Руководителем>.', lfGet_Object_ValueData_sh (vbMemberId);
+     END IF;
 
 
      -- Результат
@@ -52,8 +72,8 @@ BEGIN
                                AND ((inParam = 1
                                  -- если НЕ СБ
                                  AND vbIsOrderFinance_SB = FALSE
-                                    ) 
-                                   
+                                    )
+
                                  OR (inParam = 2
                                  -- если НЕ СБ
                                  AND vbIsOrderFinance_SB = TRUE
@@ -87,7 +107,7 @@ BEGIN
                             UNION ALL
                              -- ФИО - ФИН
                              SELECT Object.Id AS MemberId
-                             FROM Object 
+                             FROM Object
                              WHERE Object.Id IN (11935982  -- Тіхаєва Ю.В.
                                                , 10352028  -- Павлова О.О.
                                                 )
@@ -96,8 +116,8 @@ BEGIN
                                AND ((inParam = 1
                                  -- если НЕ СБ
                                  AND vbIsOrderFinance_SB = FALSE
-                                    ) 
-                                   
+                                    )
+
                                  OR (inParam = 2
                                  -- если НЕ СБ
                                  AND vbIsOrderFinance_SB = TRUE
@@ -107,7 +127,7 @@ BEGIN
                             UNION ALL
                              -- ФИО - БУХ
                              SELECT Object.Id AS MemberId_buh
-                             FROM Object 
+                             FROM Object
                              WHERE Object.Id IN (12590   -- Рудик Н.В.
                                                , 12504   -- Гриндак И.А.
                                                 )
@@ -261,4 +281,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_OrderFinance_Email_send_msg ( inMovementId := 33230482, inParam:= 1, inSession:= zfCalc_UserAdmin():: TVarChar) 
+-- SELECT * FROM gpGet_Movement_OrderFinance_Email_send_msg ( inMovementId := 33230482, inParam:= 1, inSession:= zfCalc_UserAdmin():: TVarChar)

@@ -233,6 +233,8 @@ BEGIN
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (vbId_child, vbUserId, TRUE);
   
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovementFloat_TotalSummOrderFinance (inMovementId);
                                                   
     -- тест
     --if vbUserId IN (9457) then RAISE EXCEPTION 'Админ.Test Ok. '; end if;

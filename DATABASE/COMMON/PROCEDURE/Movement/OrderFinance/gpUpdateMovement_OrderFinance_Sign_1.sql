@@ -20,23 +20,24 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
+     -- нашли
      vbMemberId:= (SELECT ObjectLink_User_Member.ChildObjectId AS MemberId
                    FROm ObjectLink AS ObjectLink_User_Member
                    WHERE ObjectLink_User_Member.ObjectId = vbUserId
                      AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
                   );
-
-     vbMemberId_1 := (SELECT MovementLinkObject_Member_1.ObjectId
+     -- нашли
+     vbMemberId_1 := (SELECT MovementLinkObject_Member_1.ObjectId AS MemberId
                       FROM MovementLinkObject AS MovementLinkObject_Member_1
                       WHERE MovementLinkObject_Member_1.MovementId = inMovementId
-                        AND MovementLinkObject_Member_1.DescId = zc_MovementLinkObject_Member_1()
+                        AND MovementLinkObject_Member_1.DescId     = zc_MovementLinkObject_Member_1()
                      );
 
-   /*  IF COALESCE (vbMemberId,0) <> COALESCE (vbMemberId_1,0)
+     --
+     IF COALESCE (vbMemberId,0) <> COALESCE (vbMemberId_1,0)
      THEN
-         RAISE EXCEPTION 'Ошибка.У пользователя нет доступа изменять значения <Согласован-1>.';
+         RAISE EXCEPTION 'Ошибка.У пользователя <%> нет прав устанавливать <Согласован Руководителем>.', lfGet_Object_ValueData_sh (vbMemberId);
      END IF;
-     */
 
      -- сохранили свойство  <Согласован-1>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Sign_1(), inMovementId, inisSign_1);

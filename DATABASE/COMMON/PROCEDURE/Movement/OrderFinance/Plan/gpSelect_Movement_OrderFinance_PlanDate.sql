@@ -690,10 +690,21 @@ BEGIN
                              LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
                                                   ON ObjectLink_Contract_InfoMoney.ObjectId = Object_Contract.Id
                                                  AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
-                             LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = CASE WHEN Object_Juridical.DescId = zc_Object_Juridical() THEN ObjectLink_Contract_InfoMoney.ChildObjectId ELSE MovementItem.ObjectId END
+                             LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = CASE WHEN Object_Juridical.DescId IN (zc_Object_Juridical(), zc_Object_Partner()) THEN ObjectLink_Contract_InfoMoney.ChildObjectId ELSE MovementItem.ObjectId END
+
+                             LEFT JOIN MovementLinkObject AS MovementLinkObject_OrderFinance
+                                                          ON MovementLinkObject_OrderFinance.MovementId = MovementItem.MovementId
+                                                         AND MovementLinkObject_OrderFinance.DescId = zc_MovementLinkObject_OrderFinance()
+                             -- «аполнение дата предварительный план (да/нет)
+                             LEFT JOIN ObjectBoolean AS ObjectBoolean_OrderFinance_OperDate
+                                                     ON ObjectBoolean_OrderFinance_OperDate.ObjectId = MovementLinkObject_OrderFinance.ObjectId
+                                                    AND ObjectBoolean_OrderFinance_OperDate.DescId = zc_ObjectBoolean_OrderFinance_OperDate()
 
                              LEFT JOIN tmpContract_View AS View_Contract ON View_Contract.ContractId = Object_Contract.Id
-                             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = View_Contract.PaidKindId
+                             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = CASE WHEN View_Contract.PaidKindId > 0 THEN View_Contract.PaidKindId
+                                                                                              WHEN COALESCE (ObjectBoolean_OrderFinance_OperDate.ValueData, FALSE) = FALSE THEN zc_Enum_PaidKind_FirstForm()
+                                                                                              WHEN Object_InfoMoney.Id = MovementItem.ObjectId THEN zc_Enum_PaidKind_SecondForm()
+                                                                                         END
 
                              LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
                                                   ON ObjectLink_Contract_Personal.ObjectId = View_Contract.ContractId

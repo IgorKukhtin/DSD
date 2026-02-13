@@ -726,8 +726,8 @@ BEGIN
            , 0                                AS ContractId
            , 0                                AS ContractCode
            , '' ::TVarChar                    AS ContractName
-           , 0                                AS PaidKindId
-           , '' ::TVarChar                    AS PaidKindName
+           , Object_PaidKind.Id               AS PaidKindId
+           , Object_PaidKind.ValueData        AS PaidKindName
            , 0                                AS InfoMoneyCode
            , Object_InfoMoney.ValueData       AS InfoMoneyName
            , COALESCE (tmpInfoMoney_OrderF.NumGroup, NULL) ::Integer AS NumGroup
@@ -808,6 +808,7 @@ BEGIN
            , zc_Color_Yelow() ::Integer AS Color_Group
 
        FROM tmpInfoMoney_OrderF
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm()
             LEFT JOIN tmpMI ON tmpMI.JuridicalId = tmpInfoMoney_OrderF.InfoMoneyId --для итогового значения статью записываем в ObjectId
             LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = tmpInfoMoney_OrderF.InfoMoneyId
        WHERE tmpInfoMoney_OrderF.isGroup = TRUE
@@ -1324,8 +1325,8 @@ BEGIN
            , NULL ::Integer                   AS ContractId
            , NULL ::Integer                   AS ContractCode
            , '' ::TVarChar                    AS ContractName
-           , 0                                AS PaidKindId
-           , '' ::TVarChar                    AS PaidKindName
+           , Object_PaidKind.Id               AS PaidKindId
+           , Object_PaidKind.ValueData        AS PaidKindName
            , 0                                AS InfoMoneyCode
            , Object_InfoMoney.ValueData       AS InfoMoneyName
            , COALESCE (tmpInfoMoney_OrderF.NumGroup, NULL) ::Integer AS NumGroup
@@ -1405,6 +1406,7 @@ BEGIN
 
            , zc_Color_Yelow() ::Integer AS Color_Group
        FROM tmpInfoMoney_OrderF
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm()
             -- для итогов статья в ObjectId
             LEFT JOIN tmpMI ON tmpMI.ObjectId = tmpInfoMoney_OrderF.InfoMoneyId
             LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = tmpInfoMoney_OrderF.InfoMoneyId

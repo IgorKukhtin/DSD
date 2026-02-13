@@ -37,7 +37,7 @@ BEGIN
      END IF;
 
      -- проверка
-     IF COALESCE (ioId, 0) = 0 AND EXISTS (SELECT 1
+     IF /*COALESCE (ioId, 0) = 0 AND*/ EXISTS (SELECT 1
                                            FROM Movement
                                                 INNER JOIN MovementFloat AS MovementFloat_WeekNumber
                                                                          ON MovementFloat_WeekNumber.MovementId = Movement.Id
@@ -50,8 +50,9 @@ BEGIN
                                            WHERE Movement.DescId = zc_Movement_OrderFinance()
                                              AND Movement.StatusId <> zc_Enum_Status_Erased()
                                              AND Movement.OperDate BETWEEN inOperDate - INTERVAL '14 DAY' AND inOperDate + INTERVAL '7 DAY'
+                                             AND Movement.Id <> COALESCE (ioId, 0)
                                           )
-        AND inUserId <> 5
+        -- AND inUserId <> 5
      THEN
          RAISE EXCEPTION 'Ошибка.Дублирование запрещено.%Уже существует документ планирования № <%> от <%>%для <%> недели + <%>'
                                         , CHR (13)
@@ -68,6 +69,7 @@ BEGIN
                                            WHERE Movement.DescId = zc_Movement_OrderFinance()
                                              AND Movement.StatusId <> zc_Enum_Status_Erased()
                                              AND Movement.OperDate BETWEEN inOperDate - INTERVAL '14 DAY' AND inOperDate + INTERVAL '7 DAY'
+                                             AND Movement.Id <> COALESCE (ioId, 0)
                                            ORDER BY Movement.Id
                                            LIMIT 1
                                           )
@@ -84,6 +86,7 @@ BEGIN
                                            WHERE Movement.DescId = zc_Movement_OrderFinance()
                                              AND Movement.StatusId <> zc_Enum_Status_Erased()
                                              AND Movement.OperDate BETWEEN inOperDate - INTERVAL '14 DAY' AND inOperDate + INTERVAL '7 DAY'
+                                             AND Movement.Id <> COALESCE (ioId, 0)
                                            ORDER BY Movement.Id
                                            LIMIT 1
                                           )

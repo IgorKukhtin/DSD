@@ -260,6 +260,7 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PaidKind_FirstForm_pav(), inDescId:= zc_Object_PaidKind(), inCode:= 3, inName:= 'БН(павильоны)', inEnumName:= 'zc_Enum_PaidKind_FirstForm_pav');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PaidKind_Balance_no(), inDescId:= zc_Object_PaidKind(), inCode:= 4, inName:= 'Внебаланса', inEnumName:= 'zc_Enum_PaidKind_Balance_no');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PaidKind_FirstForm_kaz(), inDescId:= zc_Object_PaidKind(), inCode:= 5, inName:= 'БН (Казахстан)', inEnumName:= 'zc_Enum_PaidKind_FirstForm_kaz');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PaidKind_FirstForm_eur(), inDescId:= zc_Object_PaidKind(), inCode:= 6, inName:= 'БН (Европа)', inEnumName:= 'zc_Enum_PaidKind_FirstForm_eur');
 
      -- !!! Типы кассовых аппаратов
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_CashRegisterKind_FP3141(),  inDescId:= zc_Object_CashRegisterKind(), inCode:= 1, inName:= 'Datecs FP 3141', inEnumName:= 'zc_Enum_CashRegisterKind_FP3141');
@@ -10892,7 +10893,7 @@ BEGIN
     -- Создаем Тип загрузки данных 
     vbImportTypeId := gpInsertUpdate_Object_ImportType(ioId            := COALESCE(vbImportTypeId,0), 
                                                        inCode          := COALESCE(vbImportTypeCode,0), 
-                                                       inName          := 'Загрузка Нового названия для товара', 
+                                                       inName          := 'Загрузка Нового азвания для товара', 
                                                        inProcedureName := 'gpUpdate_Object_Goods_Name_Load', 
                                                        inSession       := lfGet_User_Session (vbUserId));
     --Создали Enum
@@ -14669,8 +14670,7 @@ BEGIN
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarCHar,
                                                       inSession           := lfGet_User_Session (vbUserId));
-
-    vbImportTypeItemId := 0;
+    
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inContract';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
                                                                 inParamNumber   := 4, 
@@ -15234,8 +15234,6 @@ END $$;
 
 
 
-
-
 --Загрузка Документ <Планирование платежей> (Счета)  из файла   OrderFinanceMovementSB
 DO $$
 DECLARE vbImportTypeId Integer;
@@ -15266,7 +15264,7 @@ BEGIN
                                                               inName         := 'Загрузка <Планирование платежей> (Счета) из файла',
                                                               inJuridicalId  := NULL::Integer,
                                                               inContractId   := NULL::Integer,
-                                                              inFileTypeId   := zc_Enum_FileTypeKind_Excel(),
+                                                              inFileTypeId   := zc_Enum_FileTypeKind_Excel_OLE(),
                                                               inImportTypeId := vbImportTypeId,
                                                               inEmailId      := (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectLink_ImportSettings_Email()),
                                                               inContactPersonId:= (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectLink_ImportSettings_ContactPerson()),
@@ -15313,7 +15311,7 @@ BEGIN
     vbImportSettingsItem := 0;
     Select id INTO vbImportSettingsItem FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId;
     PERFORM gpInsertUpdate_Object_ImportSettingsItems(ioId                := vbImportSettingsItem,
-                                                      inName              := 'H',
+                                                      inName              := 'I',
                                                       inImportSettingsId  := vbImportSettingId,
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarCHar,
@@ -15332,7 +15330,7 @@ BEGIN
     vbImportSettingsItem := 0;
     Select id INTO vbImportSettingsItem FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId;
     PERFORM gpInsertUpdate_Object_ImportSettingsItems(ioId                := vbImportSettingsItem,
-                                                      inName              := 'E',
+                                                      inName              := 'F',
                                                       inImportSettingsId  := vbImportSettingId,
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarCHar,
@@ -15369,7 +15367,7 @@ BEGIN
     vbImportSettingsItem := 0;
     Select id INTO vbImportSettingsItem FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId;
     PERFORM gpInsertUpdate_Object_ImportSettingsItems(ioId                := vbImportSettingsItem,
-                                                      inName              := 'F',
+                                                      inName              := 'G',
                                                       inImportSettingsId  := vbImportSettingId,
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarCHar,
@@ -15387,7 +15385,7 @@ BEGIN
     vbImportSettingsItem := 0;
     Select id INTO vbImportSettingsItem FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId;
     PERFORM gpInsertUpdate_Object_ImportSettingsItems(ioId                := vbImportSettingsItem,
-                                                      inName              := 'K',
+                                                      inName              := 'L',
                                                       inImportSettingsId  := vbImportSettingId,
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarCHar,
@@ -15423,7 +15421,7 @@ BEGIN
     vbImportSettingsItem := 0;
     Select id INTO vbImportSettingsItem FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId;
     PERFORM gpInsertUpdate_Object_ImportSettingsItems(ioId                := vbImportSettingsItem,
-                                                      inName              := 'L',
+                                                      inName              := 'M',
                                                       inImportSettingsId  := vbImportSettingId,
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarCHar,
@@ -15441,7 +15439,7 @@ BEGIN
     vbImportSettingsItem := 0;
     Select id INTO vbImportSettingsItem FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId;
     PERFORM gpInsertUpdate_Object_ImportSettingsItems(ioId                := vbImportSettingsItem,
-                                                      inName              := 'D',
+                                                      inName              := 'E',
                                                       inImportSettingsId  := vbImportSettingId,
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarCHar,
@@ -15459,37 +15457,17 @@ BEGIN
     vbImportSettingsItem := 0;
     Select id INTO vbImportSettingsItem FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId;
     PERFORM gpInsertUpdate_Object_ImportSettingsItems(ioId                := vbImportSettingsItem,
-                                                      inName              := 'G',
+                                                      inName              := 'H',
                                                       inImportSettingsId  := vbImportSettingId,
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarCHar,
                                                       inSession           := lfGet_User_Session (vbUserId)); 
  
- 
- 
-     --12
-    vbImportTypeItemId := 0;
-    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inComment_Partner';
-    vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 11, 
-                                                                inName          := 'inComment_Partner', 
-                                                                inParamType     := 'ftString', 
-                                                                inUserParamName := 'Комментарий контрагента',
-                                                                inImportTypeId  := vbImportTypeId, 
-                                                                inSession       := lfGet_User_Session (vbUserId));
-    vbImportSettingsItem := 0;
-    Select id INTO vbImportSettingsItem FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId;
-    PERFORM gpInsertUpdate_Object_ImportSettingsItems(ioId                := vbImportSettingsItem,
-                                                      inName              := 'M',
-                                                      inImportSettingsId  := vbImportSettingId,
-                                                      inImportTypeItemsId := vbImportTypeItemId,
-                                                      inDefaultValue      := NULL::TVarCHar,
-                                                      inSession           := lfGet_User_Session (vbUserId)); 
     --11
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inAmount';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 12, 
+                                                                inParamNumber   := 11, 
                                                                 inName          := 'inAmount', 
                                                                 inParamType     := 'ftfloat', 
                                                                 inUserParamName := 'Сумма, грн',
@@ -15498,13 +15476,11 @@ BEGIN
     vbImportSettingsItem := 0;
     Select id INTO vbImportSettingsItem FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId;
     PERFORM gpInsertUpdate_Object_ImportSettingsItems(ioId                := vbImportSettingsItem,
-                                                      inName              := 'C',
+                                                      inName              := 'D',
                                                       inImportSettingsId  := vbImportSettingId,
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarCHar,
                                                       inSession           := lfGet_User_Session (vbUserId));
-
-
 END $$;
 
 DO $$
@@ -15528,196 +15504,6 @@ BEGIN
         
     PERFORM gpInsertUpdate_DefaultValue(ioId := COALESCE(vbId,0), inDefaultKeyId := vbDefaultKeyId, inUserKey := 0, inDefaultValue := zc_Enum_ImportSetting_OrderFinanceSB()::TBlob, inSession := ''::TVarChar);
 END $$;
-
-
-            
-
-            
-
---Загрузка Sale из файла    --  Документ <Продажа> из Excel
-DO $$
-DECLARE vbImportTypeId Integer;
-DECLARE vbImportTypeCode Integer;
-DECLARE vbImportTypeItemId Integer;
-DECLARE vbImportSettingId Integer;
-DECLARE vbImportSettingCode Integer;
-DECLARE vbImportSettingsItem Integer;
-DECLARE vbUserId Integer;
-BEGIN
-    SELECT Id INTO vbUserId FROM Object WHERE DescId = zc_Object_User() AND ValueData = 'Админ';
-    
-    SELECT Id, ObjectCode INTO vbImportSettingId, vbImportSettingCode FROM Object WHERE DescId = zc_Object_ImportSettings() AND Id = zc_Enum_ImportSetting_Sale() ;
-
-    SELECT id, ObjectCode INTO vbImportTypeId, vbImportTypeCode FROM Object WHERE DescId = zc_Object_ImportType() AND Id = zc_Enum_ImportType_Sale() ;
-    -- Создаем 
-    vbImportTypeId := gpInsertUpdate_Object_ImportType(ioId            := COALESCE(vbImportTypeId,0), 
-                                                       inCode          := COALESCE(vbImportTypeCode,0), 
-                                                       inName          := 'Загрузка данных в документ Продажа', 
-                                                       inProcedureName := 'gpInsertUpdate_MI_Sale_Load', 
-                                                       inSession       := lfGet_User_Session (vbUserId));
-    --Создали Enum
-    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Enum(), vbImportTypeId, 'zc_Enum_ImportType_Sale');
-    --Создаём настройку загрузки
-    vbImportSettingId := gpInsertUpdate_Object_ImportSettings(ioId           := COALESCE(vbImportSettingId,0),
-                                                              inCode         := COALESCE(vbImportSettingCode,0),
-                                                              inName         := 'Загрузка данных в документ Продажа',
-                                                              inJuridicalId  := NULL::Integer,
-                                                              inContractId   := NULL::Integer,
-                                                              inFileTypeId   := zc_Enum_FileTypeKind_Excel_OLE(),
-                                                              inImportTypeId := vbImportTypeId,
-                                                              inEmailId      := (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectLink_ImportSettings_Email()),
-                                                              inContactPersonId:= (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectLink_ImportSettings_ContactPerson()),
-                                                              inStartRow     := 2,
-                                                              inHDR          := False,
-                                                              inDirectory    := NULL::TVarChar,
-                                                              inQuery        := NULL::TVarChar,
-                                                              inStartTime    := NULL::TVarChar,
-                                                              inEndTime      := NULL::TVarChar,
-                                                              inTime         := 0,
-                                                              inIsMultiLoad  := (SELECT ValueData FROM ObjectBoolean WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectBoolean_ImportSettings_MultiLoad()),
-                                                              inSession      := lfGet_User_Session (vbUserId));
-    --Создали Enum
-    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Enum(), vbImportSettingId, 'zc_Enum_ImportSetting_Sale');
-    --Добавляем Итемы
-    
-    --1
-    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inMovementId';
-    vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 1, 
-                                                                inName          := 'inMovementId', 
-                                                                inParamType     := 'ftInteger', 
-                                                                inUserParamName := 'Идентификатор документа',
-                                                                inImportTypeId  := vbImportTypeId, 
-                                                                inSession       := lfGet_User_Session (vbUserId));
-
-    vbImportSettingsItem := 0;
-    Select id INTO vbImportSettingsItem FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId;
-    PERFORM gpInsertUpdate_Object_ImportSettingsItems(ioId                := vbImportSettingsItem,
-                                                      inName              := '%EXTERNALPARAM%',
-                                                      inImportSettingsId  := vbImportSettingId,
-                                                      inImportTypeItemsId := vbImportTypeItemId,
-                                                      inDefaultValue      := NULL::TVarCHar,
-                                                      inSession           := lfGet_User_Session (vbUserId));
-    --2
-    vbImportTypeItemId := 0;
-    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inGoodsCode';
-    vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 2,
-                                                                inName          := 'inGoodsCode', 
-                                                                inParamType     := 'ftInteger', 
-                                                                inUserParamName := 'Код товару',
-                                                                inImportTypeId  := vbImportTypeId, 
-                                                                inSession       := lfGet_User_Session (vbUserId));
-    vbImportSettingsItem := 0;
-    Select id INTO vbImportSettingsItem FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId;
-    PERFORM gpInsertUpdate_Object_ImportSettingsItems(ioId                := vbImportSettingsItem,
-                                                      inName              := 'A',
-                                                      inImportSettingsId  := vbImportSettingId,
-                                                      inImportTypeItemsId := vbImportTypeItemId,
-                                                      inDefaultValue      := NULL::TVarCHar,
-                                                      inSession           := lfGet_User_Session (vbUserId));
-
-    -- 3
-    vbImportTypeItemId := 0;
-    vbImportTypeItemId:= (SELECT Id FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inGoodsName');
-    vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 3, 
-                                                                inName          := 'inGoodsName', 
-                                                                inParamType     := 'ftString', 
-                                                                inUserParamName := 'Товар',
-                                                                inImportTypeId  := vbImportTypeId, 
-                                                                inSession       := lfGet_User_Session (vbUserId));
-    vbImportSettingsItem := 0;
-    vbImportSettingsItem := (SELECT Id FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId);
-    PERFORM gpInsertUpdate_Object_ImportSettingsItems(ioId                := vbImportSettingsItem,
-                                                      inName              := 'B',
-                                                      inImportSettingsId  := vbImportSettingId,
-                                                      inImportTypeItemsId := vbImportTypeItemId,
-                                                      inDefaultValue      := NULL::TVarCHar,
-                                                      inSession           := lfGet_User_Session (vbUserId));
-
-
-    -- 4
-    vbImportTypeItemId := 0;
-    vbImportTypeItemId:= (SELECT Id FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inGoodsKindName');
-    vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 4, 
-                                                                inName          := 'inGoodsKindName', 
-                                                                inParamType     := 'ftString', 
-                                                                inUserParamName := 'Вид товару',
-                                                                inImportTypeId  := vbImportTypeId, 
-                                                                inSession       := lfGet_User_Session (vbUserId));
-    vbImportSettingsItem := 0;
-    vbImportSettingsItem := (SELECT Id FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId);
-    PERFORM gpInsertUpdate_Object_ImportSettingsItems(ioId                := vbImportSettingsItem,
-                                                      inName              := 'C',
-                                                      inImportSettingsId  := vbImportSettingId,
-                                                      inImportTypeItemsId := vbImportTypeItemId,
-                                                      inDefaultValue      := NULL::TVarCHar,
-                                                      inSession           := lfGet_User_Session (vbUserId));  
-    --5        
-    vbImportTypeItemId := 0;
-    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inAmount';
-    vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 5, 
-                                                                inName          := 'inAmount', 
-                                                                inParamType     := 'ftFloat', 
-                                                                inUserParamName := 'Кількість склад',
-                                                                inImportTypeId  := vbImportTypeId, 
-                                                                inSession       := lfGet_User_Session (vbUserId));
-    vbImportSettingsItem := 0;
-    Select id INTO vbImportSettingsItem FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId;
-    PERFORM gpInsertUpdate_Object_ImportSettingsItems(ioId                := vbImportSettingsItem,
-                                                      inName              := 'D',
-                                                      inImportSettingsId  := vbImportSettingId,
-                                                      inImportTypeItemsId := vbImportTypeItemId,
-                                                      inDefaultValue      := NULL::TVarCHar,
-                                                      inSession           := lfGet_User_Session (vbUserId));
-
-    --6        
-    vbImportTypeItemId := 0;
-    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inAmountPartner';
-    vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 6, 
-                                                                inName          := 'inAmountPartner', 
-                                                                inParamType     := 'ftFloat', 
-                                                                inUserParamName := 'Кількість у покупця',
-                                                                inImportTypeId  := vbImportTypeId, 
-                                                                inSession       := lfGet_User_Session (vbUserId));
-    vbImportSettingsItem := 0;
-    Select id INTO vbImportSettingsItem FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId;
-    PERFORM gpInsertUpdate_Object_ImportSettingsItems(ioId                := vbImportSettingsItem,
-                                                      inName              := 'E',
-                                                      inImportSettingsId  := vbImportSettingId,
-                                                      inImportTypeItemsId := vbImportTypeItemId,
-                                                      inDefaultValue      := NULL::TVarCHar,
-                                                      inSession           := lfGet_User_Session (vbUserId));
-
-END $$;
-
-DO $$
-    DECLARE vbKey TVarChar;
-    DECLARE vbDefaultKeyId Integer;
-    DECLARE vbImportSetting_Price Integer;
-    DECLARE vbId Integer;
-BEGIN
-    vbKey := 'TSaleMovementForm;zc_Object_ImportSetting_Sale';
-
-    -- Добавляем ключ дефолта
-    SELECT Id INTO vbDefaultKeyId FROM DefaultKeys WHERE Key = vbKey; 
-
-    IF COALESCE(vbDefaultKeyId, 0) = 0 THEN
-        INSERT INTO DefaultKeys(Key, KeyData) VALUES(vbKey, '{"FormClassName":"TSaleMovementForm","DescName":"zc_Object_ImportSettings_Sale"}') RETURNING Id INTO vbDefaultKeyId;
-    END IF;
-
-    SELECT ID INTO vbId
-    FROM DefaultValue 
-    WHERE DefaultKeyId = vbDefaultKeyId AND UserKeyId is NULL;
-        
-    PERFORM gpInsertUpdate_DefaultValue(ioId := COALESCE(vbId,0), inDefaultKeyId := vbDefaultKeyId, inUserKey := 0, inDefaultValue := zc_Enum_ImportSetting_Sale()::TBlob, inSession := ''::TVarChar);
-END $$;
-
-
 
 
 

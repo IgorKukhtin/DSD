@@ -24,6 +24,9 @@ BEGIN
      WHERE MovementItem.MovementId = inMovementId;
 
                                                  
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovementFloat_TotalSummOrderFinance (inMovementId);
+
     -- тест
     --if vbUserId IN (9457) then RAISE EXCEPTION 'Админ.Test Ok. '; end if;
                                                   

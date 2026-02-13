@@ -31,8 +31,9 @@ BEGIN
      END IF;
 
      -- проверка
-     IF COALESCE (inAmount,0) = 0 AND COALESCE (inAmountPartner,0) = 0
+     IF COALESCE (inAmount,0) = 0 AND COALESCE (inAmountPartner,0) = 0 AND vbUserId = 5
      THEN
+         RAISE EXCEPTION 'Ошибка.%', inGoodsName;
          RETURN;
      END IF;
 
