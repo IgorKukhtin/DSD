@@ -289,6 +289,17 @@ BEGIN
          PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
      END IF;
 
+
+     -- Test
+     IF inUserId = 5 AND 1=1
+     THEN
+         RAISE EXCEPTION 'Ошибка.Test.<%> <%>  <%>'
+         , (SELECT lfGet_Object_ValueData_sh (MLO.ObjectId) FROM MovementLinkObject AS MLO WHERE MLO.MovementId = ioId AND MLO.DescId = zc_MovementLinkObject_PriceList())
+         , (SELECT lfGet_Object_ValueData_sh (MLO.ObjectId) FROM MovementLinkObject AS MLO WHERE MLO.MovementId = ioId AND MLO.DescId = zc_MovementLinkObject_CurrencyDocument())
+         , (SELECT lfGet_Object_ValueData_sh (MLO.ObjectId) FROM MovementLinkObject AS MLO WHERE MLO.MovementId = ioId AND MLO.DescId = zc_MovementLinkObject_CurrencyPartner())             
+          ;
+     END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
