@@ -30,6 +30,17 @@ BEGIN
 
  --RAISE EXCEPTION 'Ошибка.%  % % % %', inInfoMoneyName, inUnitName, inPositionName, inPersonalServiceListName,inBranchName ;
  
+
+     IF   COALESCE (inAmountPlan_1, 0) = 0
+      AND COALESCE (inAmountPlan_2, 0) = 0
+      AND COALESCE (inAmountPlan_3, 0) = 0
+      AND COALESCE (inAmountPlan_4, 0) = 0
+      AND COALESCE (inAmountPlan_5, 0) = 0
+     THEN
+         RETURN;
+     END IF;
+
+ 
      IF NOT EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.isErased = FALSE)
      THEN
          RAISE EXCEPTION 'Ошибка.Данные отчета не сформированы';
@@ -64,7 +75,7 @@ BEGIN
      FROM ObjectLink AS ObjectLink_Contract_Juridical
           INNER JOIN Object AS Object_Contract ON Object_Contract.Id       = ObjectLink_Contract_Juridical.ObjectId
                                               AND Object_Contract.isErased = FALSE
-                                              AND Object_Contract.ValueData = inContract
+                                              AND Object_Contract.ValueData ILIKE TRIM(inContract)
           LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractStateKind
                                ON ObjectLink_Contract_ContractStateKind.ObjectId      = Object_Contract.Id
                               AND ObjectLink_Contract_ContractStateKind.DescId        = zc_ObjectLink_Contract_ContractStateKind() 
@@ -74,13 +85,13 @@ BEGIN
      WHERE ObjectLink_Contract_Juridical.ChildObjectId = vbJuridicalId
        AND ObjectLink_Contract_Juridical.DescId        = zc_ObjectLink_Contract_Juridical()
        AND ObjectLink_Contract_PaidKind.ChildObjectId  = zc_Enum_PaidKind_FirstForm()
-       AND COALESCE (ObjectLink_Contract_ContractStateKind.ChildObjectId, 0) <> zc_Enum_ContractStateKind_Close()
+     --AND COALESCE (ObjectLink_Contract_ContractStateKind.ChildObjectId, 0) <> zc_Enum_ContractStateKind_Close()
      LIMIT 1;   --
 
      --проверка
      IF COALESCE (vbContractId,0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Не найден Договор № = <%> для Юр.лицо = <%>', inContract, inJuridicalName;
+         RAISE EXCEPTION 'Ошибка.Не найден Договор № = <%> для Юр.лицо = <%> (%)(%)', inContract, inJuridicalName, inOKPO, vbJuridicalId;
      END IF;  
      
      vbId := (SELECT MovementItem.Id
