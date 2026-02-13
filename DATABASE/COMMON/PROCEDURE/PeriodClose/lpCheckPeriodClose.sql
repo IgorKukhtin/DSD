@@ -143,8 +143,8 @@ BEGIN
             INTO vbPeriodCloseId, vbPeriodCloseId_two, vbCloseDate
      FROM _tmpPeriodClose
           LEFT JOIN (WITH tmpDesc AS (SELECT zc_MovementLinkObject_PaidKind() AS DescId UNION SELECT zc_MovementLinkObject_PaidKindFrom() WHERE inMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_TransferDebtOut()) UNION SELECT zc_MovementLinkObject_PaidKindTo() WHERE inMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_TransferDebtOut()))
-                        , tmp1 AS (SELECT DISTINCT MovementLinkObject.ObjectId AS PaidKindId FROM MovementLinkObject JOIN tmpDesc ON tmpDesc.DescId = MovementLinkObject.DescId WHERE MovementLinkObject.MovementId = inMovementId)
-                        , tmp2 AS (SELECT DISTINCT MovementItemLinkObject.ObjectId AS PaidKindId
+                        , tmp1 AS (SELECT DISTINCT CASE WHEN MovementLinkObject.ObjectId = zc_Enum_PaidKind_FirstForm_kaz() THEN zc_Enum_PaidKind_FirstForm() ELSE MovementLinkObject.ObjectId END AS PaidKindId FROM MovementLinkObject JOIN tmpDesc ON tmpDesc.DescId = MovementLinkObject.DescId WHERE MovementLinkObject.MovementId = inMovementId)
+                        , tmp2 AS (SELECT DISTINCT CASE WHEN MovementItemLinkObject.ObjectId = zc_Enum_PaidKind_FirstForm_kaz() THEN zc_Enum_PaidKind_FirstForm() ELSE MovementItemLinkObject.ObjectId END AS PaidKindId
                                    FROM MovementItem
                                         JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.Id
                                                                    AND MovementItemLinkObject.DescId = zc_MILinkObject_PaidKind()
@@ -207,8 +207,8 @@ BEGIN
      THEN
      -- 2.1. Поиск для "Общий"
      WITH tmpData AS (WITH tmpDesc AS (SELECT zc_MovementLinkObject_PaidKind() AS DescId UNION SELECT zc_MovementLinkObject_PaidKindFrom() WHERE inMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_TransferDebtOut()) UNION SELECT zc_MovementLinkObject_PaidKindTo() WHERE inMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_TransferDebtOut()))
-                            , tmp1 AS (SELECT DISTINCT MovementLinkObject.ObjectId AS PaidKindId FROM MovementLinkObject JOIN tmpDesc ON tmpDesc.DescId = MovementLinkObject.DescId WHERE MovementLinkObject.MovementId = inMovementId)
-                            , tmp2 AS (SELECT DISTINCT MovementItemLinkObject.ObjectId AS PaidKindId
+                            , tmp1 AS (SELECT DISTINCT CASE WHEN MovementLinkObject.ObjectId = zc_Enum_PaidKind_FirstForm_kaz() THEN zc_Enum_PaidKind_FirstForm() ELSE MovementLinkObject.ObjectId END AS PaidKindId FROM MovementLinkObject JOIN tmpDesc ON tmpDesc.DescId = MovementLinkObject.DescId WHERE MovementLinkObject.MovementId = inMovementId)
+                            , tmp2 AS (SELECT DISTINCT CASE WHEN MovementItemLinkObject.ObjectId = zc_Enum_PaidKind_FirstForm_kaz() THEN zc_Enum_PaidKind_FirstForm() ELSE MovementItemLinkObject.ObjectId END AS PaidKindId
                                        FROM MovementItem
                                             JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.Id
                                                                        AND MovementItemLinkObject.DescId = zc_MILinkObject_PaidKind()
@@ -319,8 +319,8 @@ BEGIN
             INTO vbPeriodCloseId, vbPeriodCloseId_two, vbCloseDate
      FROM _tmpPeriodClose
           LEFT JOIN (WITH tmpDesc AS (SELECT zc_MovementLinkObject_PaidKind() AS DescId UNION SELECT zc_MovementLinkObject_PaidKindFrom() WHERE inMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_TransferDebtOut()) UNION SELECT zc_MovementLinkObject_PaidKindTo() WHERE inMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_TransferDebtOut()))
-                        , tmp1 AS (SELECT DISTINCT MovementLinkObject.ObjectId AS PaidKindId FROM MovementLinkObject JOIN tmpDesc ON tmpDesc.DescId = MovementLinkObject.DescId WHERE MovementLinkObject.MovementId = inMovementId)
-                        , tmp2 AS (SELECT DISTINCT MovementItemLinkObject.ObjectId AS PaidKindId
+                        , tmp1 AS (SELECT DISTINCT CASE WHEN MovementLinkObject.ObjectId = zc_Enum_PaidKind_FirstForm_kaz() THEN zc_Enum_PaidKind_FirstForm() ELSE MovementLinkObject.ObjectId END AS PaidKindId FROM MovementLinkObject JOIN tmpDesc ON tmpDesc.DescId = MovementLinkObject.DescId WHERE MovementLinkObject.MovementId = inMovementId)
+                        , tmp2 AS (SELECT DISTINCT CASE WHEN MovementItemLinkObject.ObjectId = zc_Enum_PaidKind_FirstForm_kaz() THEN zc_Enum_PaidKind_FirstForm() ELSE MovementItemLinkObject.ObjectId END AS PaidKindId
                                    FROM MovementItem
                                         JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.Id
                                                                    AND MovementItemLinkObject.DescId = zc_MILinkObject_PaidKind()
