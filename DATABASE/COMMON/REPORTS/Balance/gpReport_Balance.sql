@@ -140,7 +140,9 @@ end if;*/
                                    LEFT JOIN (SELECT zc_Enum_PaidKind_FirstForm()     AS PaidKindId
                                     UNION ALL SELECT zc_Enum_PaidKind_SecondForm()    AS PaidKindId
                                     UNION ALL SELECT zc_Enum_PaidKind_FirstForm_pav() AS PaidKindId
-                                             ) AS tmpPaidKind ON tmpAccount_two.AccountDirectionCode_find <> 0 AND ((isFirstForm      = TRUE AND tmpPaidKind.PaidKindId = zc_Enum_PaidKind_FirstForm())
+                                    UNION ALL SELECT zc_Enum_PaidKind_FirstForm_kaz() AS PaidKindId
+                                    UNION ALL SELECT zc_Enum_PaidKind_FirstForm_eur() AS PaidKindId
+                                             ) AS tmpPaidKind ON tmpAccount_two.AccountDirectionCode_find <> 0 AND ((isFirstForm      = TRUE AND tmpPaidKind.PaidKindId IN (zc_Enum_PaidKind_FirstForm(), zc_Enum_PaidKind_FirstForm_kaz(), zc_Enum_PaidKind_FirstForm_eur()))
                                                                                                                  OR (isFirstForm_pav  = TRUE AND tmpPaidKind.PaidKindId = zc_Enum_PaidKind_FirstForm_pav())
                                                                                                                  OR (isSecondForm     = TRUE AND tmpPaidKind.PaidKindId = zc_Enum_PaidKind_SecondForm())
                                                                                                                    )
@@ -342,6 +344,7 @@ end if;*/
                       LEFT JOIN MovementItemContainer AS MIContainer
                                                       ON MIContainer.Containerid = Container.Id
                                                      AND MIContainer.OperDate >= inStartDate
+                                                   --AND MIContainer.OperDate >= inStartDate --  AND vbUserId <> 5
                                                    --AND MIContainer.MovementDescId <> zc_Movement_ProfitLossResult()
                  WHERE Container.DescId = zc_Container_Summ()
                  GROUP BY Container.ObjectId
