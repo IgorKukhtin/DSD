@@ -149,6 +149,9 @@ BEGIN
             WHERE tmpList.OperDate <> inEndDate
            ) AS tmp
            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmp.BranchId
+
+      WHERE Object_Branch.Id = 13257082-- Филиал Казахстан
+      --WHERE Object_Branch.Id = 13261282-- Филиал Европа
       ORDER BY tmp.StartDate
              , CASE WHEN Object_Branch.ObjectCode = 1 THEN 1
                     WHEN Object_Branch.ObjectCode IN (2, 12) THEN 2
