@@ -2161,6 +2161,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbStartLoad_StatePersonal'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarSeparator1'
         end
         item
@@ -2351,6 +2355,10 @@
       Action = macStartLoad_Personal
       Category = 0
     end
+    object bbStartLoad_StatePersonal: TdxBarButton
+      Action = macStartLoad_StatePersonal
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -2417,6 +2425,17 @@
         end>
       Caption = 'actGetImportSetting'
     end
+    object actGetImportSetting_StatePersonal: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId_StatePersonal
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId_StatePersonal
+        end>
+      Caption = 'actGetImportSetting'
+    end
     object actRefreshCCPartner: TdsdDataSetRefresh
       Category = 'CCPartner'
       MoveParams = <>
@@ -2430,6 +2449,25 @@
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object macStartLoad_StatePersonal: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_StatePersonal
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1047#1072#1082#1088#1099#1090#1100' '#1076#1086#1075#1086#1074#1086#1088' + '#1060#1048#1054' '#1086#1090#1074#1077#1090#1089#1090#1074'. '#1080#1079' '#1101#1082#1089#1077#1083#1103'?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#1047#1072#1082#1088#1099#1090#1100' '#1076#1086#1075#1086#1074#1086#1088' + '#1060#1048#1054' '#1086#1090#1074#1077#1090#1089#1090#1074'.'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#1047#1072#1082#1088#1099#1090#1100' '#1076#1086#1075#1086#1074#1086#1088' + '#1060#1048#1054' '#1086#1090#1074#1077#1090#1089#1090#1074'.'
+      ImageIndex = 41
     end
     object macStartLoadPriceList: TMultiAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
@@ -5736,6 +5774,38 @@
       end>
     PackSize = 1
     Left = 920
+    Top = 184
+  end
+  object spGetImportSettingId_StatePersonal: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TContractForm;zc_Object_ImportSetting_Contract_StatePersonal'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 736
     Top = 184
   end
 end
