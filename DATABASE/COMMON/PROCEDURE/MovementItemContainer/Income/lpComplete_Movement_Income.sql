@@ -2551,7 +2551,7 @@ END IF;
                  FROM _tmpItem_SummPersonal
                  WHERE _tmpItem_SummPersonal.OperSumm_Partner <> 0 -- !!!можно ограничивать!!!
                    AND _tmpItem_SummPersonal.FounderId  = 0        -- !!!т.е. не "Учредитель"!!!
-                   AND _tmpItem_SummPersonal.ContractId = 0        -- !!!т.е. не "Перевыставление"!!!
+                 --AND _tmpItem_SummPersonal.ContractId = 0        -- !!!т.е. не "Перевыставление"!!!
                  GROUP BY _tmpItem_SummPersonal.InfoMoneyDestinationId
                 ) AS _tmpItem_group
           ) AS _tmpItem_byAccount
@@ -2587,7 +2587,7 @@ END IF;
                  FROM _tmpItem_SummPersonal
                  WHERE _tmpItem_SummPersonal.OperSumm_Partner <> 0 -- !!!можно ограничивать!!!
                    AND _tmpItem_SummPersonal.FounderId  = 0        -- !!!т.е. не "Учредитель"!!!
-                   AND _tmpItem_SummPersonal.ContractId = 0        -- !!!т.е. не "Перевыставление"!!!
+                 --AND _tmpItem_SummPersonal.ContractId = 0        -- !!!т.е. не "Перевыставление"!!!
                  GROUP BY _tmpItem_SummPersonal.AccountId, _tmpItem_SummPersonal.InfoMoneyId, _tmpItem_SummPersonal.PersonalId, _tmpItem_SummPersonal.BranchId, _tmpItem_SummPersonal.UnitId, _tmpItem_SummPersonal.PositionId, _tmpItem_SummPersonal.ServiceDateId, _tmpItem_SummPersonal.PersonalServiceListId
                 ) AS _tmpItem
           ) AS tmp
@@ -2666,6 +2666,7 @@ END IF;
                              , _tmpItem_SummPersonal.OperSumm_20401
                              , _tmpItem_SummPersonal.OperSumm_21425
                        FROM _tmpItem_SummPersonal
+                       WHERE _tmpItem_SummPersonal.ContractId = 0 -- !!!т.е. не "Перевыставление"!!!
                       ) AS _tmpItem
                 ) AS _tmpItem_byProfitLoss
           ) AS _tmpItem_byContainer
@@ -3663,7 +3664,8 @@ RAISE EXCEPTION '<%>   %'
        FROM _tmpItem_SummPersonal
        -- !!!надо ограничивать!!!
        WHERE _tmpItem_SummPersonal.OperSumm_Partner <> 0
-         AND _tmpItem_SummPersonal.ContainerId_External = 0 -- !!!т.е. сотрудник!!!
+       --AND _tmpItem_SummPersonal.ContainerId_External = 0 -- !!!т.е. Перевыставление!!!
+         AND _tmpItem_SummPersonal.FounderId            = 0 -- !!!т.е. не "Учредитель"!!!
       ;
 
      -- 2.2.3. формируются Проводки - долг "Учредитель" или "Перевыставление" + !!!добавлен MovementItemId!!! + !!!добавлен GoodsId!!!
@@ -3688,6 +3690,8 @@ RAISE EXCEPTION '<%>   %'
        -- !!!надо ограничивать!!!
        WHERE _tmpItem_SummPersonal.OperSumm_Partner <> 0
          AND _tmpItem_SummPersonal.ContainerId_External <> 0 -- !!!т.е. "Учредитель" или "Перевыставление"!!!
+         AND _tmpItem_SummPersonal.FounderId            > 0 -- !!!т.е. "Учредитель"!!!
+
       ;
      -- 2.2.4. формируются Проводки - Прибыль - затраты "Заправка"
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
@@ -3711,6 +3715,8 @@ RAISE EXCEPTION '<%>   %'
        FROM _tmpItem_SummPersonal
        -- !!!можно ограничивать!!!
        WHERE _tmpItem_SummPersonal.OperSumm_20401 <> 0
+         AND _tmpItem_SummPersonal.ContractId     = 0 -- !!!т.е. не "Перевыставление"!!!
+
       UNION ALL
        -- Общефирменные + услуги полученные + амортизация транспорт торговых
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem_SummPersonal.MovementItemId
@@ -3730,6 +3736,29 @@ RAISE EXCEPTION '<%>   %'
        FROM _tmpItem_SummPersonal
        -- !!!можно ограничивать!!!
        WHERE _tmpItem_SummPersonal.OperSumm_21425 <> 0
+         AND _tmpItem_SummPersonal.ContractId     = 0 -- !!!т.е. не "Перевыставление"!!!
+
+    UNION ALL
+       -- 
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, _tmpItem_SummPersonal.MovementItemId
+            , _tmpItem_SummPersonal.ContainerId_External
+            , _tmpItem_SummPersonal.AccountId_External AS AccountId                -- счет есть всегда
+            , 0                                        AS AnalyzerId               -- нет аналитики, т.е. деление ...
+            , _tmpItem_SummPersonal.GoodsId            AS ObjectId_Analyzer        -- Товар
+            , CASE WHEN _tmpItem_SummPersonal.FounderId <> 0 THEN _tmpItem_SummPersonal.FounderId ELSE _tmpItem_SummPersonal.JuridicalId END AS WhereObjectId_Analyzer   -- "Учредитель" или "Перевыставление"
+            , vbContainerId_Analyzer                   AS ContainerId_Analyzer     -- Контейнер - по долгам поставщика
+            , 0                                        AS ObjectIntId_Analyzer     -- !!!нет!!!
+            , vbObjectExtId_Analyzer                   AS ObjectExtId_Analyzer     -- Поставщик или...
+            , _tmpItem_SummPersonal.ContainerId_Goods  AS ContainerIntId_Analyzer  -- Контейнер "товар"
+            , 0                                        AS ParentId
+            , 1 * COALESCE (_tmpItem_SummPersonal.OperSumm_20401, 0) + 1 * COALESCE (_tmpItem_SummPersonal.OperSumm_21425, 0)
+            , vbOperDate                               AS OperDate
+            , TRUE                                     AS isActive
+       FROM _tmpItem_SummPersonal
+       -- !!!надо ограничивать!!!
+       WHERE (_tmpItem_SummPersonal.OperSumm_20401 <> 0 OR _tmpItem_SummPersonal.OperSumm_21425 <> 0)
+         AND _tmpItem_SummPersonal.FounderId  = 0        -- !!!т.е. не "Учредитель"!!!
+         AND _tmpItem_SummPersonal.ContractId > 0        -- !!!т.е. не "Перевыставление"!!!
       ;
 
 
