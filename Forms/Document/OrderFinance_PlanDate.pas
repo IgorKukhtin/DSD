@@ -109,6 +109,7 @@ type
     mactUpdateStatus_Complete: TMultiAction;
     cbDetail: TcxCheckBox;
     actRefreshDetail: TdsdDataSetRefresh;
+    Comment_pay: TcxGridDBColumn;
   private
     { Private declarations }
   public

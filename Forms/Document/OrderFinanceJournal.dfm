@@ -248,20 +248,20 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         Width = 68
       end
       object isSignWait_1: TcxGridDBColumn
-        Caption = #1053#1077' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072
+        Caption = #1053#1077' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086
         DataBinding.FieldName = 'isSignWait_1'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1047#1072#1103#1074#1082#1072' '#1053#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1080
+        HeaderHint = #1047#1072#1103#1074#1082#1072' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1072' '#1085#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1077' '#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1102' ('#1076#1072'/'#1085#1077#1090')'
         Options.Editing = False
         Width = 85
       end
       object isSign_1: TcxGridDBColumn
-        Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072
+        Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086
         DataBinding.FieldName = 'isSign_1'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1047#1072#1103#1074#1082#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072
+        HeaderHint = #1047#1072#1103#1074#1082#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072' '#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1077#1084' ('#1076#1072'/'#1085#1077#1090')'
         Options.Editing = False
         Width = 85
       end
@@ -270,9 +270,9 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         DataBinding.FieldName = 'isSignSB'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1047#1072#1103#1074#1082#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072
+        HeaderHint = #1047#1072#1103#1074#1082#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072' '#1057#1041' ('#1076#1072'/'#1085#1077#1090')'
         Options.Editing = False
-        Width = 85
+        Width = 50
       end
       object WeekNumber: TcxGridDBColumn
         Caption = #1053#1086#1084#1077#1088' '#1085#1077#1076#1077#1083#1080
@@ -376,7 +376,7 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090' '#1048#1058#1054#1043#1054
+        HeaderHint = #1048#1090#1086#1075#1086' '#1055#1083#1072#1085' '#1086#1087#1083#1072#1090' '#1087#1086' '#1076#1085#1103#1084' '#1085#1077#1076#1077#1083#1080
         Options.Editing = False
         Width = 85
       end
@@ -554,20 +554,20 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         Width = 101
       end
       object Date_SignWait_1: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1053#1077' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072
+        Caption = #1044#1072#1090#1072' '#1053#1077' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086
         DataBinding.FieldName = 'Date_SignWait_1'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1047#1072#1103#1074#1082#1072' '#1085#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1080
+        HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1047#1072#1103#1074#1082#1072' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1072' '#1085#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1077' '#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1102
         Options.Editing = False
         Width = 97
       end
       object Date_Sign_1: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072
+        Caption = #1044#1072#1090#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086
         DataBinding.FieldName = 'Date_Sign_1'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1047#1072#1103#1074#1082#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072
+        HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1047#1072#1103#1074#1082#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072' '#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1077#1084
         Options.Editing = False
         Width = 90
       end
@@ -576,7 +576,7 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
         DataBinding.FieldName = 'Date_SignSB'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1047#1072#1103#1074#1082#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072
+        HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1047#1072#1103#1074#1082#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072' '#1057#1041
         Options.Editing = False
         Width = 90
       end

@@ -4,6 +4,7 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
   ClientWidth = 1020
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -126
   ExplicitWidth = 1036
   ExplicitHeight = 438
   PixelsPerInch = 96
@@ -115,11 +116,11 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
             Width = 79
           end
           object isSign_1: TcxGridDBColumn
-            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086'-1'
+            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086
             DataBinding.FieldName = 'isSign_1'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1047#1072#1103#1074#1082#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072' '#1056#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1077#1084
+            HeaderHint = #1047#1072#1103#1074#1082#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072' '#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1077#1084' ('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
             Width = 85
           end
@@ -134,12 +135,12 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
             Width = 80
           end
           object Date_Sign_1: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086'-1'
+            Caption = #1044#1072#1090#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086
             DataBinding.FieldName = 'Date_Sign_1'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1047#1072#1103#1074#1082#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072' '#1056#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1077#1084
+            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1047#1072#1103#1074#1082#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072' '#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1077#1084
             Options.Editing = False
             Width = 80
           end
@@ -148,7 +149,7 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
             DataBinding.FieldName = 'isSignSB'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1047#1072#1103#1074#1082#1072' '#1077#1089#1090#1100' '#1042#1080#1079#1072' '#1057#1041
+            HeaderHint = #1047#1072#1103#1074#1082#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072' '#1057#1041' ('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
             Width = 85
           end
@@ -157,7 +158,7 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
             DataBinding.FieldName = 'Date_SignSB'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1047#1072#1103#1074#1082#1072' '#1077#1089#1090#1100' '#1042#1080#1079#1072' '#1057#1041
+            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1047#1072#1103#1074#1082#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1072' '#1057#1041
             Options.Editing = False
             Width = 72
           end
@@ -438,7 +439,7 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 90
+            Width = 85
           end
           object Amount: TcxGridDBColumn
             Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' ('#1080#1090#1086#1075#1086')'

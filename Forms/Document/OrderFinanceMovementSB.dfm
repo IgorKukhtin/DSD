@@ -1173,7 +1173,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090' '#1048#1058#1054#1043#1054
             Options.Editing = False
-            Width = 80
+            Width = 85
           end
           object AmountPlan_1: TcxGridDBColumn
             Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' 1.'#1087#1085'.'
