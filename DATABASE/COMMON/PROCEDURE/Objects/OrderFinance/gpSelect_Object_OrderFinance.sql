@@ -46,7 +46,34 @@ BEGIN
                              , lfSelect.DateOut
                         FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
                        ) 
-
+        , tmpUserAdmin AS (SELECT UserId
+                           FROM ObjectLink_UserRole_View
+                           WHERE RoleId IN (zc_Enum_Role_Admin()
+                                          , 4629762 -- Планирование платежей (доступ ВСЕ заявки)
+                                           )
+                             AND UserId = vbUserId
+                          )
+        , tmp_OrderFinance_user AS (SELECT DISTINCT Object_OrderFinance.Id AS OrderFinanceId
+                                    FROM Object AS Object_OrderFinance
+                                         INNER JOIN ObjectLink AS OL_OrderFinance_Member_find
+                                                               ON OL_OrderFinance_Member_find.ObjectId = Object_OrderFinance.Id
+                                                              AND OL_OrderFinance_Member_find.DescId   IN (zc_ObjectLink_OrderFinance_Member_insert()
+                                                                                                      , zc_ObjectLink_OrderFinance_Member_insert_2()
+                                                                                                      , zc_ObjectLink_OrderFinance_Member_insert_3()
+                                                                                                      , zc_ObjectLink_OrderFinance_Member_insert_4()
+                                                                                                      , zc_ObjectLink_OrderFinance_Member_insert_5()
+                                                                                                        --
+                                                                                                      , zc_ObjectLink_OrderFinance_Member_1()
+                                                                                                      , zc_ObjectLink_OrderFinance_Member_2()
+                                                                                                       )
+                                         INNER JOIN ObjectLink AS OL_User_Member
+                                                               ON OL_User_Member.ChildObjectId = OL_OrderFinance_Member_find.ChildObjectId
+                                                              AND OL_User_Member.DescId        = zc_ObjectLink_User_Member()
+                                                              AND OL_User_Member.ObjectId      = vbUserId
+                                    WHERE Object_OrderFinance.DescId   = zc_Object_OrderFinance()
+                                      AND Object_OrderFinance.isErased = FALSE
+                                   )
+       -- Результат
        SELECT Object_OrderFinance.Id           AS Id
             , Object_OrderFinance.ObjectCode   AS Code
             , Object_OrderFinance.ValueData    AS Name
@@ -115,6 +142,7 @@ BEGIN
             , Object_OrderFinance.isErased     AS isErased
 
        FROM Object AS Object_OrderFinance
+
            LEFT JOIN ObjectString AS ObjectString_Comment 
                                   ON ObjectString_Comment.ObjectId = Object_OrderFinance.Id
                                  AND ObjectString_Comment.DescId = zc_ObjectString_OrderFinance_Comment()
@@ -218,8 +246,21 @@ BEGIN
                                     ON ObjectBoolean_InvNumber_Invoice.ObjectId = Object_OrderFinance.Id
                                    AND ObjectBoolean_InvNumber_Invoice.DescId = zc_ObjectBoolean_OrderFinance_InvNumber_Invoice()
 
+            -- Ограничение прав
+            LEFT JOIN tmp_OrderFinance_user ON tmp_OrderFinance_user.OrderFinanceId = Object_OrderFinance.Id
+            -- Если нет Ограничения прав
+            LEFT JOIN (SELECT COUNT(*) AS myCount FROM tmp_OrderFinance_user) AS tmp_OrderFinance_check ON tmp_OrderFinance_user.OrderFinanceId IS NULL
+            -- Если разрешили смотреть ВСЕ
+            LEFT JOIN tmpUserAdmin ON tmpUserAdmin.UserId = vbUserId
+
        WHERE Object_OrderFinance.DescId = zc_Object_OrderFinance()
-         AND (Object_OrderFinance.isErased = FALSE OR inisErased = TRUE);
+         AND (Object_OrderFinance.isErased = FALSE OR inisErased = TRUE)
+         -- Ограничения прав 
+         AND (tmp_OrderFinance_user.OrderFinanceId > 0
+           -- или нет Ограничения прав
+           OR (tmp_OrderFinance_check.myCount = 0 AND tmpUserAdmin.UserId > 0)
+             )
+      ;
   
 END;
 $BODY$
