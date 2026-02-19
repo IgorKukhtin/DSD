@@ -47,6 +47,10 @@ RETURNS TABLE (
       , AmountIn            TFloat --Кол-во возврат (факт)
       , AmountInWeight      TFloat --Кол-во возврат (факт) Вес
 
+      , AmountReal_60       TFloat --Объем продаж 60 дней, кг (итого)
+      , AmountRealPromo_60  TFloat --Объем Акционных продаж 60 дней, кг
+      , AmountRetIn_60      TFloat --Кол-во возврат 60 дней, кг
+
       , TaxRetIn            TFloat -- % возврат
       , AmountPlan1         TFloat -- Кол-во план отгрузки за пн.
       , AmountPlan2         TFloat -- Кол-во план отгрузки за вт.
@@ -242,6 +246,10 @@ BEGIN
              , (MIFloat_AmountIn.ValueData
                  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountInWeight      --Кол-во возврат (факт) Вес
 
+             , MIFloat_AmountReal_60.ValueData      ::TFloat AS AmountReal_60                                                                                              --Объем продаж 60 дней, кг (итого)
+             , MIFloat_AmountRealPromo_60.ValueData ::TFloat AS AmountRealPromo_60                                                                                         --Объем Акционных продаж 60 дней, кг
+             , MIFloat_AmountRetIn_60.ValueData     ::TFloat AS AmountRetIn_60                                                                                             --Кол-во возврат 60 дней, кг
+
              , MIFloat_TaxRetIn.ValueData             AS TaxRetIn               -- % возврат
 
              , MIFloat_Plan1.ValueData                AS AmountPlan1
@@ -324,6 +332,16 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_AmountPlanMax
                                          ON MIFloat_AmountPlanMax.MovementItemId = MovementItem.Id
                                         AND MIFloat_AmountPlanMax.DescId = zc_MIFloat_AmountPlanMax()
+
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountReal_60
+                                         ON MIFloat_AmountReal_60.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountReal_60.DescId = zc_MIFloat_AmountReal_60()
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountRealPromo_60
+                                         ON MIFloat_AmountRealPromo_60.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountRealPromo_60.DescId = zc_MIFloat_AmountRealPromo_60()
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountRetIn_60
+                                         ON MIFloat_AmountRetIn_60.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountRetIn_60.DescId = zc_MIFloat_AmountRetIn_60()
 
              LEFT JOIN MovementItemFloat AS MIFloat_TaxRetIn
                                          ON MIFloat_TaxRetIn.MovementItemId = MovementItem.Id
@@ -463,6 +481,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+ 19.02.26         * 
  23.09.25         * 
  22.10.20         * add TaxRetIn
  14.07.20         * add OperPriceList

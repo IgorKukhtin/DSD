@@ -3,7 +3,7 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 707
   ClientWidth = 1540
-  ExplicitLeft = -663
+  ExplicitLeft = -343
   ExplicitWidth = 1556
   ExplicitHeight = 746
   PixelsPerInch = 96
@@ -102,6 +102,21 @@
               Format = ',0.####'
               Kind = skSum
               Column = SummInMarket
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountReal_60
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRealPromo_60
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRetIn_60
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -183,6 +198,21 @@
               Format = ',0.####'
               Kind = skSum
               Column = SummInMarket
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountReal_60
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRealPromo_60
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRetIn_60
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -656,6 +686,42 @@
           inherited colIsErased: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+          end
+          object AmountReal_60: TcxGridDBColumn
+            Caption = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' 60 '#1076#1085#1077#1081', '#1082#1075' ('#1080#1090#1086#1075#1086')'
+            DataBinding.FieldName = 'AmountReal_60'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' 60 '#1076#1085#1077#1081', '#1082#1075' ('#1080#1090#1086#1075#1086')'
+            Options.Editing = False
+            Width = 80
+          end
+          object AmountRealPromo_60: TcxGridDBColumn
+            Caption = #1054#1073#1098#1077#1084' '#1040#1082#1094#1080#1086#1085#1085#1099#1093' '#1087#1088#1086#1076#1072#1078' 60 '#1076#1085#1077#1081', '#1082#1075
+            DataBinding.FieldName = 'AmountRealPromo_60'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1073#1098#1077#1084' '#1040#1082#1094#1080#1086#1085#1085#1099#1093' '#1087#1088#1086#1076#1072#1078' 60 '#1076#1085#1077#1081', '#1082#1075
+            Options.Editing = False
+            Width = 80
+          end
+          object AmountRetIn_60: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090' 60 '#1076#1085#1077#1081', '#1082#1075
+            DataBinding.FieldName = 'AmountRetIn_60'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090' 60 '#1076#1085#1077#1081', '#1082#1075
+            Options.Editing = False
+            Width = 80
           end
           object AmountMarket: TcxGridDBColumn
             Caption = #1050#1086#1084#1087'. '#1079#1072' '#1074#1077#1089', '#1082#1075
@@ -11827,14 +11893,14 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1084
-    Top = 160
+    Left = 1164
+    Top = 136
   end
   object PlanMasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 944
-    Top = 192
+    Left = 952
+    Top = 208
   end
   object PlanMasterDS: TDataSource
     DataSet = PlanMasterCDS
@@ -11922,8 +11988,8 @@
         ValueColumn = Repository
         EditRepository = cxEditRepository1
       end>
-    Left = 1024
-    Top = 207
+    Left = 1032
+    Top = 215
   end
   object PlanChildDS: TDataSource
     DataSet = PlanChildCDS
