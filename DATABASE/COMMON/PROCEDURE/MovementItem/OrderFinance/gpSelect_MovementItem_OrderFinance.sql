@@ -852,14 +852,6 @@ BEGIN
                            -- на дату
                            AND vbOperDate BETWEEN Object_ContractCondition_View.StartDate AND Object_ContractCondition_View.EndDate
                          )
-       -- Договора - только tmpMI
-     , tmpContract_View AS (SELECT * FROM Object_Contract_View WHERE Object_Contract_View.ContractId IN (SELECT DISTINCT tmpMI.ContractId FROM tmpMI))
-       -- Реквизиты
-     , tmpJuridicalDetails_View AS (SELECT * FROM ObjectHistory_JuridicalDetails_View
-                                    -- только эти юр.лица
-                                    WHERE ObjectHistory_JuridicalDetails_View.JuridicalId IN (SELECT DISTINCT tmpMI.ObjectId FROM tmpMI)
-                                   )
-
        -- св-ва
      , tmpMovementItemFloat AS (SELECT *
                                 FROM MovementItemFloat
@@ -1045,6 +1037,53 @@ BEGIN
                       GROUP BY MILinkObject_MoneyPlace.ObjectId
                              , MILinkObject_Contract.ObjectId
                      )
+
+       -- Договора - только tmpMI
+     , tmpContract_View AS (SELECT * FROM Object_Contract_View
+                            WHERE Object_Contract_View.ContractId IN (SELECT DISTINCT tmpMI.ContractId FROM tmpMI
+                                                                     UNION
+                                                                      SELECT DISTINCT tmpMI_bank_old.ContractId
+                                                                      FROM tmpMI_bank_old
+                                                                      WHERE 1=1
+                                                                        -- !!!только такие!!!
+                                                                        AND vbOrderFinanceId IN (3988049  -- Мясо
+                                                                                               , 3988054  -- Сырье, упаковочные и расходные материалы
+                                                                                                )
+
+                                                                     UNION
+                                                                      -- план прошлой недели
+                                                                      SELECT DISTINCT tmpMI_old.ContractId
+                                                                      FROM tmpMI_old
+                                                                      WHERE 1=1
+                                                                        AND vbOrderFinanceId IN (3988049  -- Мясо
+                                                                                               , 3988054  -- Сырье, упаковочные и расходные материалы
+                                                                                                )
+                                                                     )
+                           )
+       -- Реквизиты
+     , tmpJuridicalDetails_View AS (SELECT * FROM ObjectHistory_JuridicalDetails_View
+                                    -- только эти юр.лица
+                                    WHERE ObjectHistory_JuridicalDetails_View.JuridicalId IN (SELECT DISTINCT tmpMI.ObjectId FROM tmpMI
+                                                                                             UNION
+                                                                                              SELECT DISTINCT tmpMI_bank_old.JuridicalId
+                                                                                              FROM tmpMI_bank_old
+                                                                                              WHERE 1=1
+                                                                                                -- !!!только такие!!!
+                                                                                                AND vbOrderFinanceId IN (3988049  -- Мясо
+                                                                                                                       , 3988054  -- Сырье, упаковочные и расходные материалы
+                                                                                                                        )
+
+                                                                                             UNION
+                                                                                              -- план прошлой недели
+                                                                                              SELECT DISTINCT tmpMI_old.JuridicalId
+                                                                                              FROM tmpMI_old
+                                                                                              WHERE 1=1
+                                                                                                AND vbOrderFinanceId IN (3988049  -- Мясо
+                                                                                                                       , 3988054  -- Сырье, упаковочные и расходные материалы
+                                                                                                                        )
+                                                                                             )
+                                   )
+
        -- Результат
        SELECT
              MovementItem.Id                  AS Id
@@ -1304,7 +1343,7 @@ BEGIN
             LEFT JOIN tmpContractCondition ON tmpContractCondition.ContractId = MovementItem.ContractId
 
             LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = View_Contract.InfoMoneyId
-            LEFT JOIN Object AS Object_PaidKind  ON Object_PaidKind.Id  = View_Contract.PaidKindId
+            LEFT JOIN Object AS Object_PaidKind  ON Object_PaidKind.Id  = CASE WHEN Object_Juridical.DescId = zc_Object_InfoMoney() THEN zc_Enum_PaidKind_SecondForm() ELSE View_Contract.PaidKindId END
 
             LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
                                  ON ObjectLink_Contract_Personal.ObjectId = View_Contract.ContractId
@@ -1627,6 +1666,18 @@ BEGIN
             LEFT JOIN tmpInfoMoney_OrderF ON tmpInfoMoney_OrderF.InfoMoneyId = Object_InfoMoney.Id
 
        WHERE tmpMI.ObjectId IS NULL
+          AND (MIFloat_AmountPlan_1_old.ValueData <> 0
+            OR MIFloat_AmountPlan_2_old.ValueData <> 0
+            OR MIFloat_AmountPlan_3_old.ValueData <> 0
+            OR MIFloat_AmountPlan_4_old.ValueData <> 0
+            OR MIFloat_AmountPlan_5_old.ValueData <> 0
+             -- Факт прошлой недели
+            OR tmpMI_bank_old.Amount_1 <> 0
+            OR tmpMI_bank_old.Amount_2 <> 0
+            OR tmpMI_bank_old.Amount_3 <> 0
+            OR tmpMI_bank_old.Amount_4 <> 0
+            OR tmpMI_bank_old.Amount_5 <> 0
+              )
      ;
 
      END IF;

@@ -86,6 +86,7 @@ BEGIN
 
      -- Проверка - <Ожидание Согласования-1>
      IF EXISTS (SELECT FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_SignWait_1() AND MB.ValueData = TRUE)
+        AND 1=0
         --AND ioId <> 348109907
         --AND ioId <> 348110861 
         --AND ioId <> 348110862 

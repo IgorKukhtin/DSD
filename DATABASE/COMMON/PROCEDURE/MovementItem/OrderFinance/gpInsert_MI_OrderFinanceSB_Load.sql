@@ -48,6 +48,31 @@ BEGIN
      END IF;
 
 
+     -- test
+      IF (inComment_Partner ilike 'заправка наличными%'
+       --or inComment_Partner ilike '%КОМПАНІЯ ОККО-БІЗНЕС  ТОВ%'
+         )
+      and inAmount > 0
+      AND 1=0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Test <%> <%> <%> <%> <%> <%> <%> <%> <%> <%> <%> <%>'
+                        ,inMovementId            
+                        ,inInfoMoneyName         
+                        ,inObjectName            
+                        ,inComment_Partner       
+                        ,inAmount                
+                        ,inInvNumber_Invoice     
+                        ,inOKPO                  
+                        ,inContractName          
+                        ,inComment               
+                        ,inOperDate              
+                        ,inPaidKindName          
+                        ,inCashName              
+                         ;
+     END IF;
+
+
+
      -- Поиск
      vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
 
@@ -58,6 +83,14 @@ BEGIN
      IF COALESCE (vbPaidKindId,0) = 0 AND TRIM (inPaidKindName) <> ''
      THEN
          RAISE EXCEPTION 'Ошибка.Не найдена Форма оплаты <%> для <%> ОКПО <%> .', inPaidKindName, inObjectName, inOKPO;
+     END IF;
+     
+
+     -- замена
+     IF COALESCE (vbPaidKindId, 0) <> zc_Enum_PaidKind_FirstForm()
+     THEN
+         -- замена
+         IF TRIM (inObjectName) = '' THEN inOKPO:= ''; END IF;
      END IF;
 
 
@@ -116,7 +149,7 @@ BEGIN
 
 
      -- 4.1. проверка
-     IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.DescId = zc_Object_Infomoney() AND TRIM (Object.ValueData) ILIKE TRIM (inInfoMoneyName))
+     IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.DescId = zc_Object_InfoMoney() AND TRIM (Object.ValueData) ILIKE TRIM (inInfoMoneyName))
         AND inInfoMoneyName NOT ILIKE 'Строительные'
      THEN
          RAISE EXCEPTION 'Ошибка.УП статья = <%> определена больше 1 раза.', inInfoMoneyName;
@@ -152,25 +185,25 @@ BEGIN
                   FROM MovementItem
                        INNER JOIN MovementItemLinkObject AS MILinkObject_Contract
                                                          ON MILinkObject_Contract.MovementItemId = MovementItem.Id
-                                                        AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-                                                        AND MILinkObject_Contract.ObjectId = vbContractId
+                                                        AND MILinkObject_Contract.DescId         = zc_MILinkObject_Contract()
+                                                        AND MILinkObject_Contract.ObjectId       = vbContractId
 
                   WHERE MovementItem.MovementId = inMovementId
-                    AND MovementItem.DescId = zc_MI_Master()
-                    AND MovementItem.isErased = FALSE
-                    AND MovementItem.ObjectId = vbObjectId
-                  );
+                    AND MovementItem.DescId     = zc_MI_Master()
+                    AND MovementItem.isErased   = FALSE
+                    AND MovementItem.ObjectId   = vbObjectId
+                 );
      END IF;
 
      --
      IF COALESCE (vbId,0) = 0
      THEN
-         --сохраняем данные Master
+         -- сохраняем данные Master
          SELECT tmp.ioId
            INTO vbId
          FROM gpInsertUpdate_MovementItem_OrderFinanceSB_byLoad (ioId                    := 0                     ::Integer
                                                                , inMovementId            := inMovementId          ::Integer
-                                                               , inJuridicalId           := vbObjectId            ::Integer
+                                                               , inJuridicalId           := CASE WHEN vbObjectId > 0 THEN vbObjectId ELSE vbInfoMoneyId END
                                                                , inContractId            := vbContractId          ::Integer
                                                                , inCashId_top            := 0                     ::Integer
                                                                , inCashId                := vbCashId              ::Integer

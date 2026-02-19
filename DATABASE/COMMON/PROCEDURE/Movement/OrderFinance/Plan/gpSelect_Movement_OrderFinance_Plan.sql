@@ -338,6 +338,7 @@ BEGIN
                            LEFT JOIN tmpMI_Data_Child AS tmpMI_Child ON tmpMI_Child.ParentId = tmpMI.Id
                       )
             
+        -- Только БН
       , tmpMI_Data AS (SELECT MovementItem.MovementId
                             , MovementItem.Id                  AS Id
                             , Object_Juridical.Id              AS JuridicalId
@@ -347,6 +348,7 @@ BEGIN
                             , Object_Contract.Id               AS ContractId
                             , Object_Contract.ObjectCode       AS ContractCode
                             , Object_Contract.ValueData        AS ContractName
+                            , Object_PaidKind.Id               AS PaidKindId
                             , Object_PaidKind.ValueData        AS PaidKindName
                             , Object_InfoMoney.Id              AS InfoMoneyId
                             , Object_InfoMoney.ObjectCode      AS InfoMoneyCode
@@ -559,6 +561,9 @@ BEGIN
                              LEFT JOIN tmpContract_View AS View_Contract ON View_Contract.ContractId = Object_Contract.Id
                              LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = View_Contract.PaidKindId
                              --LEFT JOIN tmpContractCondition ON tmpContractCondition.ContractId = Object_Contract.Id
+
+                      -- Только БН
+                      WHERE View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm()
                      )
 
        --
@@ -787,7 +792,6 @@ BEGIN
                                    AND Main_BankAccount_View.BankId = inBankMainId
                                    AND inBankMainId <> 0
                                  )
-
    , tmpJuridicalOrderFinance_last AS (SELECT Object_JuridicalOrderFinance.Id  AS JuridicalOrderFinanceId
                                             , OL_JuridicalOrderFinance_Juridical.ChildObjectId       AS JuridicalId
 
@@ -843,9 +847,9 @@ BEGIN
                                                                  ON ObjectDate_OperDate.ObjectId = Object_JuridicalOrderFinance.Id
                                                                 AND ObjectDate_OperDate.DescId = zc_ObjectDate_JuridicalOrderFinance_OperDate()
                                        WHERE Object_JuridicalOrderFinance.DescId = zc_Object_JuridicalOrderFinance()
-                                        AND Object_JuridicalOrderFinance.isErased = FALSE
-                                       -- AND inBankMainId = 0
-                                        )
+                                         AND Object_JuridicalOrderFinance.isErased = FALSE
+                                     -- AND inBankMainId = 0
+                                      )
    -- Результат
    SELECT tmpMovement.MovementId
         , tmpMovement.InvNumber
@@ -1143,7 +1147,7 @@ BEGIN
                                           AND inBankMainId <> 0
                                           AND tmpJuridicalOrderFinance.Ord = 1
 
-        --привязка  юр.лицо + статья + последний платеж
+        -- привязка  юр.лицо + статья + последний платеж
         LEFT JOIN tmpJuridicalOrderFinance_last ON tmpJuridicalOrderFinance_last.JuridicalId = tmpMI.JuridicalId
                                                AND tmpJuridicalOrderFinance_last.InfoMoneyId = tmpMI.InfoMoneyId
                                                AND tmpJuridicalOrderFinance_last.Ord = 1

@@ -47,6 +47,7 @@ BEGIN
      IF EXISTS (SELECT FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_SignWait_1() AND MB.ValueData = TRUE)
         -- НЕ Разрешено изменение плана по дням - в проведенном док. (да/нет)
         AND NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId  = vbOrderFinanceId AND OB.DescId = zc_ObjectBoolean_OrderFinance_Status_off() AND OB.ValueData = TRUE)
+        AND 1=0
      THEN
          RAISE EXCEPTION 'Ошибка.Корректировка заблокирована.В документе установлена <Отправлено на Согласование Руководителю>.';
      END IF;
@@ -73,7 +74,7 @@ BEGIN
            AND MovementItem.isErased   = FALSE
         )
      THEN
-         RAISE EXCEPTION 'Ошибка.Заполнение возможно только в документе <Палирование по Счетам>.';
+         RAISE EXCEPTION 'Ошибка.Заполнение возможно только в документе <Планирование по Счетам>.';
      END IF;
 
      -- проверка update Юр.лицо

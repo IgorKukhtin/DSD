@@ -1502,7 +1502,7 @@ BEGIN
             LEFT JOIN tmpContractCondition ON tmpContractCondition.ContractId = MovementItem.ContractId
 
             LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = View_Contract.InfoMoneyId
-            LEFT JOIN Object AS Object_PaidKind  ON Object_PaidKind.Id  = View_Contract.PaidKindId
+            LEFT JOIN Object AS Object_PaidKind  ON Object_PaidKind.Id  = CASE WHEN Object_Juridical.DescId = zc_Object_InfoMoney() THEN zc_Enum_PaidKind_SecondForm() ELSE View_Contract.PaidKindId END
 
             LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
                                  ON ObjectLink_Contract_Personal.ObjectId = View_Contract.ContractId

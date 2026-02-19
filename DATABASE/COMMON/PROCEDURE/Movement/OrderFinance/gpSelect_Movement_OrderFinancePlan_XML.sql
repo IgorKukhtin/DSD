@@ -276,13 +276,19 @@ BEGIN
                              LEFT JOIN tmpMILO_Contract AS MILinkObject_Contract
                                                         ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                                        AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                             -- Только БН
+                             INNER JOIN ObjectLink AS ObjectLink_Contract_PaidKind
+                                                  ON ObjectLink_Contract_PaidKind.ObjectId      = MILinkObject_Contract.ObjectId
+                                                 AND ObjectLink_Contract_PaidKind.DescId        = zc_ObjectLink_Contract_PaidKind()
+                                                 -- Только БН
+                                                 AND ObjectLink_Contract_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
 
                              LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
                                                   ON ObjectLink_Contract_InfoMoney.ObjectId = MILinkObject_Contract.ObjectId
-                                                 AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+                                                 AND ObjectLink_Contract_InfoMoney.DescId   = zc_ObjectLink_Contract_InfoMoney()
                              LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_Contract_InfoMoney.ChildObjectId
 
-                        WHERE COALESCE (MIBoolean_AmountPlan.ValueData, True) = TRUE
+                        WHERE COALESCE (MIBoolean_AmountPlan.ValueData, TRUE) = TRUE
                           AND COALESCE (MIFloat_AmountPlan.ValueData,0) <> 0 
                           AND (COALESCE (MIFloat_Number.ValueData,0) = inNPP OR COALESCE (inIsNPP, FALSE) = FALSE)
                      )

@@ -218,12 +218,27 @@ BEGIN
              , CAST (NULL AS TDateTime)                         AS Date_SignSB
              , FALSE                                 ::Boolean  AS isSignSB
 
-             , CASE WHEN tmpOrderFinance.OrderFinanceCode = 1 THEN 'Говядина на неделю:'        ELSE 'Группа-0:'   END :: TVarChar AS TotalText_1
-             , CASE WHEN tmpOrderFinance.OrderFinanceCode = 1 THEN 'Живой вес на неделю :'      ELSE 'нет группы:' END :: TVarChar AS TotalText_2
-             , CASE WHEN tmpOrderFinance.OrderFinanceCode = 1 THEN 'Прочее мясн.с. на неделю :' ELSE 'нет группы:' END :: TVarChar AS TotalText_3
-             --
+             , CASE WHEN tmpOrderFinance.OrderFinanceCode = 1
+                         THEN 'Говядина на неделю:'
+                    WHEN tmpOrderFinance.OrderFinanceCode = 2
+                         THEN 'Лимит сырье упак.м-лы:'
+                    ELSE 'нет группы:'
+               END :: TVarChar AS TotalText_1
+
+             , CASE WHEN tmpOrderFinance.OrderFinanceCode = 1
+                         THEN 'Живой вес на неделю :'
+                    ELSE 'нет группы:'
+               END :: TVarChar AS TotalText_2
+
+             , CASE WHEN tmpOrderFinance.OrderFinanceCode = 1
+                         THEN 'Прочее мясн.с. на неделю :'
+                    ELSE 'нет группы:'
+               END :: TVarChar AS TotalText_3
+
+               --
              , 0    ::Integer  AS CashId
              , ''   ::TVarChar AS CashName
+
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
               LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
 
@@ -301,10 +316,24 @@ BEGIN
            , MovementDate_SignSB.ValueData                          ::TDateTime AS Date_SignSB
            , COALESCE (MovementBoolean_SignSB.ValueData, FALSE)     ::Boolean   AS isSignSB
 
-           , CASE WHEN Object_OrderFinance.ObjectCode = 1 THEN 'Говядина на неделю:'        ELSE 'Группа-0:'   END :: TVarChar AS TotalText_1
-           , CASE WHEN Object_OrderFinance.ObjectCode = 1 THEN 'Живой вес на неделю :'      ELSE 'нет группы:' END :: TVarChar AS TotalText_2
-           , CASE WHEN Object_OrderFinance.ObjectCode = 1 THEN 'Прочее мясн.с. на неделю :' ELSE 'нет группы:' END :: TVarChar AS TotalText_3
-           --
+           , CASE WHEN Object_OrderFinance.ObjectCode = 1
+                       THEN 'Говядина на неделю:'
+                  WHEN Object_OrderFinance.ObjectCode = 2
+                       THEN 'Лимит сырье упак.м-лы:'
+                  ELSE 'нет группы:'
+             END :: TVarChar AS TotalText_1
+
+           , CASE WHEN Object_OrderFinance.ObjectCode = 1
+                       THEN 'Живой вес на неделю :'
+                  ELSE 'нет группы:'
+             END :: TVarChar AS TotalText_2
+
+           , CASE WHEN Object_OrderFinance.ObjectCode = 1
+                       THEN 'Прочее мясн.с. на неделю :'
+                  ELSE 'нет группы:'
+             END :: TVarChar AS TotalText_3
+
+             --
            , 0    ::Integer  AS CashId
            , ''   ::TVarChar AS CashName
 
