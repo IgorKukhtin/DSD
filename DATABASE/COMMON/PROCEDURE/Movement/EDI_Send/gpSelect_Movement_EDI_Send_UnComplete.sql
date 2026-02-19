@@ -346,7 +346,7 @@ BEGIN
              --
              AND COALESCE (Movement_Parent.StatusId, 0) <> zc_Enum_Status_UnComplete()
              --
-             AND (-- 1. Этих EDI + Vchasno - Отправляем 55-min
+             AND (-- 1.1. Этих EDI + Vchasno - Отправляем 55-min
                   (Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '55 MIN'
                AND COALESCE (CASE WHEN tmpMovement_WeighingPartner.InsertDate > MovementDate_Update.ValueData THEN tmpMovement_WeighingPartner.InsertDate ELSE MovementDate_Update.ValueData END, zc_DateStart())
                  < CURRENT_TIMESTAMP - INTERVAL '55 MIN'
@@ -354,6 +354,22 @@ BEGIN
                AND (Object_Retail.Id NOT IN (310855) -- !!!Варус!!!
                  OR COALESCE (ObjectBoolean_Juridical_VchasnoEdi.ValueData, FALSE) = FALSE
                    )
+               -- исключение
+               AND MovementLinkObject_To.ObjectId NOT IN (8223447 -- !!!МЕТРО Кеш енд Кері Україна ТОВ с. Мартусівка вул. Промислова буд.75!!!
+                                                        , 8253940 -- !!!МЕТРО Кеш енд Кері Україна ТОВ смт Дударків вул. Незалежності буд.2/2!!!
+                                                      --, 954959  -- !!!МЕТРО Кеш енд Кері Україна ТОВсмт Дударків вул. Незалежності (Леніна) буд.2/2!!!
+                                                         )
+                  )
+
+               OR -- 1.2. Этих EDI + Vchasno - Отправляем 6 HOUR
+                  (Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '6 HOUR'
+               AND COALESCE (CASE WHEN tmpMovement_WeighingPartner.InsertDate > MovementDate_Update.ValueData THEN tmpMovement_WeighingPartner.InsertDate ELSE MovementDate_Update.ValueData END, zc_DateStart())
+                 < CURRENT_TIMESTAMP - INTERVAL '6 HOUR'
+               -- ДЛЯ этих
+               AND MovementLinkObject_To.ObjectId IN (8223447 -- !!!МЕТРО Кеш енд Кері Україна ТОВ с. Мартусівка вул. Промислова буд.75!!!
+                                                    , 8253940 -- !!!МЕТРО Кеш енд Кері Україна ТОВ смт Дударків вул. Незалежності буд.2/2!!!
+                                                  --, 954959  -- !!!МЕТРО Кеш енд Кері Україна ТОВсмт Дударків вул. Незалежності (Леніна) буд.2/2!!!
+                                                     )
                   )
 
                OR -- 2.1. Этих Vchasno - Отправляем 20-min
@@ -367,6 +383,11 @@ BEGIN
                                        -- , 310846 -- !!!ВК!!!
                                           , 310855 -- !!!Варус!!!
                                            )
+               -- Vchasno - без этих
+               AND MovementLinkObject_To.ObjectId NOT IN (8223447 -- !!!МЕТРО Кеш енд Кері Україна ТОВ с. Мартусівка вул. Промислова буд.75!!!
+                                                        , 8253940 -- !!!МЕТРО Кеш енд Кері Україна ТОВ смт Дударків вул. Незалежності буд.2/2!!!
+                                                      --, 954959  -- !!!МЕТРО Кеш енд Кері Україна ТОВсмт Дударків вул. Незалежності (Леніна) буд.2/2!!!
+                                                         )
                   )
 
                OR -- 2.2. Этих Vchasno - Отправляем 6 HOUR
@@ -375,14 +396,14 @@ BEGIN
                    < CURRENT_TIMESTAMP - INTERVAL '6 HOUR'
                -- схема Vchasno - EDI
                AND ObjectBoolean_Juridical_VchasnoEdi.ValueData = TRUE
-               -- Vchasno - без этих
+               -- Vchasno - ДЛЯ этих
                AND Object_Retail.Id IN (310855 -- !!!Варус!!!
                                        )
                   )
 
                -- 3. Этих EDI + Vchasno - 20:49 06.01.2026Отправляем Сразу
                OR (Object_Retail.Id IN (-1 * 310855 -- !!!Варус!!!
-                                      -- , 310846 -- !!!ВК!!!
+                                   -- , 310846 -- !!!ВК!!!
                                        )
                AND Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '1 MIN'
                AND COALESCE (MovementDate_Update.ValueData, zc_DateStart()) < CURRENT_TIMESTAMP - INTERVAL '1 MIN'
