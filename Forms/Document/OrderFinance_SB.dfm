@@ -4,7 +4,6 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
   ClientWidth = 1020
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -126
   ExplicitWidth = 1036
   ExplicitHeight = 438
   PixelsPerInch = 96
@@ -1039,6 +1038,36 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1082#1088#1099#1090#1100' '#1086#1076#1080#1085' '#1042#1080#1076' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1081'?'
       InfoAfterExecute = #1042#1099#1073#1088#1072#1085#1085#1099#1081' '#1042#1080#1076' '#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1086#1090#1082#1088#1099#1090' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1081
     end
+    object actUpdateAll_SignSB_No: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateAll_SignSB_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdateAll_SignSB_No
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' <'#1042#1080#1079#1072' '#1057#1041'>'
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' <'#1042#1080#1079#1072' '#1057#1041'>'
+    end
+    object actUpdateAll_SignSB_Yes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateAll_SignSB_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdateAll_SignSB_Yes
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1042#1080#1079#1072' '#1057#1041'>'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1042#1080#1079#1072' '#1057#1041'>'
+    end
     object actSMTPFile: TdsdSMTPFileAction
       Category = 'Export_file'
       MoveParams = <>
@@ -1347,10 +1376,10 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
       MoveParams = <>
       ActionList = <
         item
-          Action = mactExport_msg
+          Action = actUpdateAll_SignSB_Yes
         end
         item
-          Action = actUpdate_SignSB_Yes
+          Action = mactExport_msg
         end>
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1042#1080#1079#1072' '#1057#1041'>'
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1042#1080#1079#1072' '#1057#1041'>'
@@ -1561,7 +1590,7 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
       Category = 0
     end
     object bbUpdate_SignSB_No: TdxBarButton
-      Action = actUpdate_SignSB_No
+      Action = actUpdateAll_SignSB_No
       Category = 0
     end
   end
@@ -2423,5 +2452,97 @@ inherited OrderFinance_SBForm: TOrderFinance_SBForm
     PackSize = 1
     Left = 776
     Top = 224
+  end
+  object spUpdateAll_SignSB_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_OrderFinance_AllSignSB'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 45658d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 45658d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartWeekNumber'
+        Value = ''
+        Component = edWeekNumber1
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndWeekNumber'
+        Value = ''
+        Component = edWeekNumber2
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsSignSB'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 952
+    Top = 184
+  end
+  object spUpdateAll_SignSB_No: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_OrderFinance_AllSignSB'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 45658d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 45658d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartWeekNumber'
+        Value = ''
+        Component = edWeekNumber1
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndWeekNumber'
+        Value = ''
+        Component = edWeekNumber2
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsSignSB'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 952
+    Top = 136
   end
 end

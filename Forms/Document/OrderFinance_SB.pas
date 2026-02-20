@@ -116,6 +116,10 @@ type
     Comment_SB: TcxGridDBColumn;
     ColorFon_record: TcxGridDBColumn;
     mactSignSB_Yes: TMultiAction;
+    spUpdateAll_SignSB_Yes: TdsdStoredProc;
+    spUpdateAll_SignSB_No: TdsdStoredProc;
+    actUpdateAll_SignSB_Yes: TdsdExecStoredProc;
+    actUpdateAll_SignSB_No: TdsdExecStoredProc;
   private
     { Private declarations }
   public
