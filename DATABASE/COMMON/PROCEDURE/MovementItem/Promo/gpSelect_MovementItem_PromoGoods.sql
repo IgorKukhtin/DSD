@@ -47,9 +47,12 @@ RETURNS TABLE (
       , AmountIn            TFloat --Кол-во возврат (факт)
       , AmountInWeight      TFloat --Кол-во возврат (факт) Вес
 
-      , AmountReal_60       TFloat --Объем продаж 60 дней, кг (итого)
-      , AmountRealPromo_60  TFloat --Объем Акционных продаж 60 дней, кг
-      , AmountRetIn_60      TFloat --Кол-во возврат 60 дней, кг
+      , AmountReal_60             TFloat --Объем продаж 60 дней,  (итого)
+      , AmountReal_60Weight       TFloat --Объем продаж 60 дней, вес (итого)
+      , AmountRealPromo_60        TFloat --Объем Акционных продаж 60 дней, 
+      , AmountRealPromo_60Weight  TFloat --Объем Акционных продаж 60 дней, вес
+      , AmountRetIn_60            TFloat --Кол-во возврат 60 дней,
+      , AmountRetIn_60Weight      TFloat --Кол-во возврат 60 дней, вес
 
       , TaxRetIn            TFloat -- % возврат
       , AmountPlan1         TFloat -- Кол-во план отгрузки за пн.
@@ -246,9 +249,17 @@ BEGIN
              , (MIFloat_AmountIn.ValueData
                  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountInWeight      --Кол-во возврат (факт) Вес
 
-             , MIFloat_AmountReal_60.ValueData      ::TFloat AS AmountReal_60                                                                                              --Объем продаж 60 дней, кг (итого)
-             , MIFloat_AmountRealPromo_60.ValueData ::TFloat AS AmountRealPromo_60                                                                                         --Объем Акционных продаж 60 дней, кг
-             , MIFloat_AmountRetIn_60.ValueData     ::TFloat AS AmountRetIn_60                                                                                             --Кол-во возврат 60 дней, кг
+             , MIFloat_AmountReal_60.ValueData      ::TFloat AS AmountReal_60                                                                                                 --Объем продаж 60 дней,  (итого)
+             , (MIFloat_AmountReal_60.ValueData                                                                                                                               --Объем продаж 60 дней, кг (итого) вес
+               * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END)      ::TFloat AS AmountReal_60Weight                                                                                              --Объем продаж 60 дней, кг (итого)
+
+             , MIFloat_AmountRealPromo_60.ValueData ::TFloat AS AmountRealPromo_60                                                                                            --Объем Акционных продаж 60 дней, 
+             , (MIFloat_AmountRealPromo_60.ValueData 
+               * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END)::TFloat AS AmountRealPromo_60Weight   --Объем Акционных продаж 60 дней, вес                                                                                      --Объем Акционных продаж 60 дней, кг
+
+             , MIFloat_AmountRetIn_60.ValueData     ::TFloat AS AmountRetIn_60                                                                                               --Кол-во возврат 60 дней, 
+             , (MIFloat_AmountRetIn_60.ValueData                                                                                              
+               * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) ::TFloat AS AmountRetIn_60Weight       --Кол-во возврат 60 дней, вес 
 
              , MIFloat_TaxRetIn.ValueData             AS TaxRetIn               -- % возврат
 
