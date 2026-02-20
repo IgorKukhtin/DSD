@@ -71,6 +71,46 @@ inherited Report_PromoForm: TReport_PromoForm
               Format = ',0.####'
               Kind = skSum
               Column = SummaProfit_plan
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRealPromo_Days_Sale_Weight
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = AmountReal_60Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountReal_60Weight
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = AmountRealPromo_60Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRealPromo_60Weight
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = AmountReal_Days_Sale_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountReal_Days_Sale_Weight
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = AmountRealPromo_Days_Sale_Sh
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -122,6 +162,46 @@ inherited Report_PromoForm: TReport_PromoForm
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = RetailName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRealPromo_Days_Sale_Weight
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = AmountReal_60Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountReal_60Weight
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = AmountRealPromo_60Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRealPromo_60Weight
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = AmountReal_Days_Sale_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountReal_Days_Sale_Weight
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = AmountRealPromo_Days_Sale_Sh
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -504,6 +584,98 @@ inherited Report_PromoForm: TReport_PromoForm
             HeaderAlignmentVert = vaCenter
             Width = 69
           end
+          object AmountReal_60Sh: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1085#1086' '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076' 60'#1076#1085'., '#1096#1090
+            DataBinding.FieldName = 'AmountReal_60Sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object AmountReal_60Weight: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1085#1086' '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076' 60'#1076#1085'., '#1074#1077#1089
+            DataBinding.FieldName = 'AmountReal_60Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object AmountRealPromo_60Sh: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1085#1086' '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076' ('#1072#1082#1094#1080#1103') 60 '#1076#1085'., '#1096#1090
+            DataBinding.FieldName = 'AmountRealPromo_60Sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1073#1098#1077#1084' '#1040#1082#1094#1080#1086#1085#1085#1099#1093' '#1087#1088#1086#1076#1072#1078' 60 '#1076#1085#1077#1081', '#1082#1075
+            Options.Editing = False
+            Width = 80
+          end
+          object AmountRealPromo_60Weight: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1085#1086' '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076' ('#1072#1082#1094#1080#1103') 60 '#1076#1085'., '#1074#1077#1089
+            DataBinding.FieldName = 'AmountRealPromo_60Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1073#1098#1077#1084' '#1040#1082#1094#1080#1086#1085#1085#1099#1093' '#1087#1088#1086#1076#1072#1078' 60 '#1076#1085#1077#1081', '#1082#1075
+            Options.Editing = False
+            Width = 80
+          end
+          object AmountReal_Days_Sale_Sh: TcxGridDBColumn
+            Caption = #1054#1073#1097#1080#1077' '#1055#1088#1086#1076#1072#1078#1080' '#1074' '#1087#1088#1077#1076#1099#1076#1091#1097'. '#1087#1077#1088#1080#1086#1076' (60'#1076#1085'), '#1096#1090
+            DataBinding.FieldName = 'AmountReal_Days_Sale_Sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object AmountReal_Days_Sale_Weight: TcxGridDBColumn
+            Caption = #1054#1073#1097#1080#1077' '#1055#1088#1086#1076#1072#1078#1080' '#1074' '#1087#1088#1077#1076#1099#1076#1091#1097'. '#1087#1077#1088#1080#1086#1076' (60'#1076#1085'), '#1074#1077#1089
+            DataBinding.FieldName = 'AmountReal_Days_Sale_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object AmountRealPromo_Days_Sale_Sh: TcxGridDBColumn
+            Caption = #1040#1082#1094#1080#1086#1085#1085#1099#1077' '#1055#1088#1086#1076#1072#1078#1080' '#1074' '#1087#1088#1077#1076#1099#1076#1091#1097'. '#1087#1077#1088#1080#1086#1076' (60'#1076#1085'), '#1096#1090
+            DataBinding.FieldName = 'AmountRealPromo_Days_Sale_Sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1073#1098#1077#1084' '#1040#1082#1094#1080#1086#1085#1085#1099#1093' '#1087#1088#1086#1076#1072#1078' 60 '#1076#1085#1077#1081', '#1082#1075
+            Options.Editing = False
+            Width = 80
+          end
+          object AmountRealPromo_Days_Sale_Weight: TcxGridDBColumn
+            Caption = #1040#1082#1094#1080#1086#1085#1085#1099#1077' '#1055#1088#1086#1076#1072#1078#1080' '#1074' '#1087#1088#1077#1076#1099#1076#1091#1097'. '#1087#1077#1088#1080#1086#1076' (60'#1076#1085'), '#1074#1077#1089
+            DataBinding.FieldName = 'AmountRealPromo_Days_Sale_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1073#1098#1077#1084' '#1040#1082#1094#1080#1086#1085#1085#1099#1093' '#1087#1088#1086#1076#1072#1078' 60 '#1076#1085#1077#1081', '#1082#1075
+            Options.Editing = False
+            Width = 80
+          end
           object AmountOrder: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1082#1072' ('#1092#1072#1082#1090')'
             DataBinding.FieldName = 'AmountOrder'
@@ -545,7 +717,7 @@ inherited Report_PromoForm: TReport_PromoForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 66
+            Width = 81
           end
           object AmountIn: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090' ('#1092#1072#1082#1090')'
