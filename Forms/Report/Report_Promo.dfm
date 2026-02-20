@@ -73,7 +73,7 @@ inherited Report_PromoForm: TReport_PromoForm
               Column = SummaProfit_plan
             end
             item
-              Format = ',0.####'
+              Format = ',0.###'
               Kind = skSum
               Column = AmountRealPromo_Days_Sale_Weight
             end
@@ -83,7 +83,7 @@ inherited Report_PromoForm: TReport_PromoForm
               Column = AmountReal_60Sh
             end
             item
-              Format = ',0.####'
+              Format = ',0.###'
               Kind = skSum
               Column = AmountReal_60Weight
             end
@@ -93,7 +93,7 @@ inherited Report_PromoForm: TReport_PromoForm
               Column = AmountRealPromo_60Sh
             end
             item
-              Format = ',0.####'
+              Format = ',0.###'
               Kind = skSum
               Column = AmountRealPromo_60Weight
             end
@@ -103,7 +103,7 @@ inherited Report_PromoForm: TReport_PromoForm
               Column = AmountReal_Days_Sale_Sh
             end
             item
-              Format = ',0.####'
+              Format = ',0.###'
               Kind = skSum
               Column = AmountReal_Days_Sale_Weight
             end
@@ -164,7 +164,7 @@ inherited Report_PromoForm: TReport_PromoForm
               Column = RetailName
             end
             item
-              Format = ',0.####'
+              Format = ',0.###'
               Kind = skSum
               Column = AmountRealPromo_Days_Sale_Weight
             end
@@ -174,7 +174,7 @@ inherited Report_PromoForm: TReport_PromoForm
               Column = AmountReal_60Sh
             end
             item
-              Format = ',0.####'
+              Format = ',0.###'
               Kind = skSum
               Column = AmountReal_60Weight
             end
@@ -184,7 +184,7 @@ inherited Report_PromoForm: TReport_PromoForm
               Column = AmountRealPromo_60Sh
             end
             item
-              Format = ',0.####'
+              Format = ',0.###'
               Kind = skSum
               Column = AmountRealPromo_60Weight
             end
@@ -194,7 +194,7 @@ inherited Report_PromoForm: TReport_PromoForm
               Column = AmountReal_Days_Sale_Sh
             end
             item
-              Format = ',0.####'
+              Format = ',0.###'
               Kind = skSum
               Column = AmountReal_Days_Sale_Weight
             end
@@ -600,7 +600,7 @@ inherited Report_PromoForm: TReport_PromoForm
             DataBinding.FieldName = 'AmountReal_60Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -623,7 +623,7 @@ inherited Report_PromoForm: TReport_PromoForm
             DataBinding.FieldName = 'AmountRealPromo_60Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1073#1098#1077#1084' '#1040#1082#1094#1080#1086#1085#1085#1099#1093' '#1087#1088#1086#1076#1072#1078' 60 '#1076#1085#1077#1081', '#1082#1075
@@ -646,7 +646,7 @@ inherited Report_PromoForm: TReport_PromoForm
             DataBinding.FieldName = 'AmountReal_Days_Sale_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -669,7 +669,7 @@ inherited Report_PromoForm: TReport_PromoForm
             DataBinding.FieldName = 'AmountRealPromo_Days_Sale_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1073#1098#1077#1084' '#1040#1082#1094#1080#1086#1085#1085#1099#1093' '#1087#1088#1086#1076#1072#1078' 60 '#1076#1085#1077#1081', '#1082#1075
