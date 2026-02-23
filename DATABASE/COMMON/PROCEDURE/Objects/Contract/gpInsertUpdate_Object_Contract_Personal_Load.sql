@@ -21,7 +21,8 @@ $BODY$
     DECLARE vbPersonalSigningId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    vbUserId:= lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_ObjectHistory_PriceListItem());
+    vbUserId:= lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Contract());
+    -- vbUserId:= lpGetUserBySession (inSession);
 
     -- Проверка
     IF COALESCE(inContractCode, 0) = 0
@@ -32,6 +33,12 @@ BEGIN
     --
     IF COALESCE (inContractCode, 0) <> 0
     THEN 
+         -- Проверка
+         IF 1 < (SELECT COUNT(*) FROM Object_Contract_View AS tmp_View WHERE tmp_View.ContractCode = inContractCode)
+         THEN
+             RAISE EXCEPTION 'Ошибка.Договор <%> с таки кодом = <%> не один.', inContractName, inContractCode;
+         END IF;
+
          -- поиск договор
          vbContractId:= (SELECT tmp_View.ContractId
                          FROM Object_Contract_View AS tmp_View
@@ -45,64 +52,77 @@ BEGIN
          END IF;
     END IF;
  
-    --Ответственный (сотрудник)
+    -- 1.1. Ответственный (сотрудник)
     IF COALESCE (TRIM (inPersonalName), '') <> ''
     THEN 
+         -- Проверка
+         IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.DescId = zc_Object_Personal() AND TRIM (Object.ValueData) ILIKE TRIM (inPersonalName) AND Object.isErased = FALSE)
+         THEN
+             RAISE EXCEPTION 'Ошибка.Ответственный (сотрудник) с таким ФИО = <%> не один.', inPersonalName;
+         END IF;
+
          -- поиск
-         vbPersonalId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Personal() AND TRIM (Object.ValueData) ILIKE TRIM (inPersonalName));
+         vbPersonalId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Personal() AND TRIM (Object.ValueData) ILIKE TRIM (inPersonalName) AND Object.isErased = FALSE);
          IF COALESCE (vbPersonalId, 0) = 0
          THEN
-             RAISE EXCEPTION 'Ошибка.Значение <Ответственный (сотрудник)Ю <%> не найдено.', inPersonalName;
+             RAISE EXCEPTION 'Ошибка.Значение <Ответственный (сотрудник) = <%> не найдено.', inPersonalName;
          END IF;
+
+         -- сохранили связь с <Сотрудники (отвественное лицо)>
+         PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_Personal(), vbContractId, vbPersonalId);
+
     END IF;
 
-    --ТП (сотрудник)
+    -- 2.1. ТП (сотрудник)
     IF COALESCE (TRIM (inPersonalTradeName), '') <> ''
     THEN 
          -- поиск
-         vbPersonalTradeId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Personal() AND TRIM (Object.ValueData) ILIKE TRIM (inPersonalTradeName));
+         vbPersonalTradeId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Personal() AND TRIM (Object.ValueData) ILIKE TRIM (inPersonalTradeName) AND Object.isErased = FALSE);
          IF COALESCE (vbPersonalTradeId, 0) = 0
          THEN
              RAISE EXCEPTION 'Ошибка.Значение <ТП (сотрудник)> <%> не найдено.', inPersonalTradeName;
          END IF;
+
+         -- сохранили связь с <Сотрудники (торговый)>
+         PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_PersonalTrade(), vbContractId, vbPersonalTradeId);
+
     END IF;
     
-    --Бухг.сверка (сотрудник)
+    -- 3.1. Бухг.сверка (сотрудник)
     IF COALESCE (TRIM (inPersonalCollationName), '') <> ''
     THEN 
          -- поиск
-         vbPersonalCollationId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Personal() AND TRIM (Object.ValueData) ILIKE TRIM (inPersonalCollationName));
+         vbPersonalCollationId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Personal() AND TRIM (Object.ValueData) ILIKE TRIM (inPersonalCollationName) AND Object.isErased = FALSE);
          IF COALESCE (vbPersonalCollationId, 0) = 0
          THEN
              RAISE EXCEPTION 'Ошибка.Значение <Бухг.сверка (сотрудник)> <%> не найдено.', inPersonalCollationName;
          END IF;
+
+         -- сохранили связь с <Сотрудники (сверка)>
+         PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_PersonalCollation(), vbContractId, vbPersonalCollationId);
+
     END IF;
 
-    --Сотрудник (подписант)
+    -- 4.1. Сотрудник (подписант)
     IF COALESCE (TRIM (inPersonalSigningName), '') <> ''
     THEN 
          -- поиск
-         vbPersonalSigningId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Personal() AND TRIM (Object.ValueData) ILIKE TRIM (inPersonalSigningName));
+         vbPersonalSigningId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Personal() AND TRIM (Object.ValueData) ILIKE TRIM (inPersonalSigningName) AND Object.isErased = FALSE);
          IF COALESCE (vbPersonalSigningId, 0) = 0
          THEN
              RAISE EXCEPTION 'Ошибка.Значение <Сотрудник (подписант)> <%> не найдено.', inPersonalSigningName;
          END IF;
+
+         -- сохранили связь с <Сотрудники (подписант)>
+         PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_PersonalSigning(), vbContractId, vbPersonalSigningId);
+
     END IF;
-
-
-    -- сохранили связь с <Сотрудники (отвественное лицо)>
-    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_Personal(), vbContractId, vbPersonalId);
-    -- сохранили связь с <Сотрудники (торговый)>
-    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_PersonalTrade(), vbContractId, vbPersonalTradeId);
-    -- сохранили связь с <Сотрудники (сверка)>
-    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_PersonalCollation(), vbContractId, vbPersonalCollationId);
-    -- сохранили связь с <Сотрудники (подписант)>
-    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_PersonalSigning(), vbContractId, vbPersonalSigningId);
  
  
-    -- сохранили протокол
+    -- 5. сохранили протокол
     PERFORM lpInsert_ObjectProtocol (inObjectId:= vbContractId, inUserId:= vbUserId, inIsUpdate:= TRUE, inIsErased:= NULL);
  
+
     -- проверка - что б Админ ничего не ломал
     IF vbUserId = 5 OR vbUserId = 9457
     THEN
