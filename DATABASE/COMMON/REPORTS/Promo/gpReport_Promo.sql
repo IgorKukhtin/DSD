@@ -113,12 +113,17 @@ RETURNS TABLE(
     , AmountReal_60Sh                    TFloat --Объем продаж 60 дней, кг (итого)
     , AmountReal_60Weight                TFloat --Объем продаж 60 дней, кг (итого)
     , AmountRealPromo_60Sh               TFloat --Объем Акционных продаж 60 дней, кг
-    , AmountRealPromo_60Weight           TFloat --Объем Акционных продаж 60 дней, кг
+    , AmountRealPromo_60Weight           TFloat --Объем Акционных продаж 60 дней, кг 
+    
+    , AmountRetIn_60Sh                   TFloat --Кол-во возврат 60 дней, шт
+    , AmountRetIn_60Weight               TFloat --Кол-во возврат 60 дней, вес
+    , AmountRetInPromo_60Sh              TFloat --Кол-во Акционных возвратов 60 дней, шт
+    , AmountRetInPromo_60Weight          TFloat --Кол-во Акционных возвратов 60 дней, вес
+    
     , AmountReal_Days_Sale_Sh            TFloat --3)AmountReal_60 / 60 * Days_Sale шт
     , AmountReal_Days_Sale_Weight        TFloat --                                 вес
     , AmountRealPromo_Days_Sale_Sh       TFloat -- 4)AmountRealPromo_60 / 60 * Days_Sale шт                
     , AmountRealPromo_Days_Sale_Weight   TFloat --                                       вес
-
     )
 AS
 $BODY$
@@ -360,7 +365,9 @@ BEGIN
                                                                     , zc_MIFloat_AmountPlanMin()
                                                                     , zc_MIFloat_AmountPlanMax()
                                                                     , zc_MIFloat_AmountReal_60()
-                                                                    , zc_MIFloat_AmountRealPromo_60()
+                                                                    , zc_MIFloat_AmountRealPromo_60() 
+                                                                    , zc_MIFloat_AmountRetIn_60()
+                                                                    , zc_MIFloat_AmountRetInPromo_60()
                                                                       )
                                   )
 
@@ -446,11 +453,24 @@ BEGIN
                                     , SUM (COALESCE (MIFloat_AmountReal_60.ValueData,0)
                                          * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END)                                     ::TFloat AS AmountReal_60Sh                          --Объем продаж 60 дней,  (итого)   шт
                                     , SUM (COALESCE (MIFloat_AmountReal_60.ValueData,0)
-                                         * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END)   ::TFloat AS AmountReal_60Weight                      --Объем продаж 60 дней,  (итого)   вес
+                                         * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END)    ::TFloat AS AmountReal_60Weight                      --Объем продаж 60 дней,  (итого)   вес
+
                                     , SUM (COALESCE (MIFloat_AmountRealPromo_60.ValueData,0)
                                          * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END)                                     ::TFloat AS AmountRealPromo_60Sh                     --Объем Акционных продаж 60 дней, шт
                                     , SUM (COALESCE (MIFloat_AmountRealPromo_60.ValueData,0)
-                                         * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END)   ::TFloat AS AmountRealPromo_60Weight                 --Объем Акционных продаж 60 дней, вес
+                                         * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END)    ::TFloat AS AmountRealPromo_60Weight                 --Объем Акционных продаж 60 дней, вес
+
+
+                                    , SUM (COALESCE (MIFloat_AmountRetIn_60.ValueData,0)
+                                         * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END)                                     ::TFloat AS AmountRetIn_60Sh                          --Объем продаж 60 дней,  (итого)   шт
+                                    , SUM (COALESCE (MIFloat_AmountRetIn_60.ValueData,0)
+                                         * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END)    ::TFloat AS AmountRetIn_60Weight                      --Объем продаж 60 дней,  (итого)   вес
+
+                                    , SUM (COALESCE (MIFloat_AmountRetInPromo_60.ValueData,0)
+                                         * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END)                                     ::TFloat AS AmountRetInPromo_60Sh                          --Объем продаж 60 дней,  (итого)   шт
+                                    , SUM (COALESCE (MIFloat_AmountRetInPromo_60.ValueData,0)
+                                         * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END)    ::TFloat AS AmountRetInPromo_60Weight                      --Объем продаж 60 дней,  (итого)   вес
+
                                FROM tmpMI AS MovementItem
                                       LEFT JOIN tmpMovementItemFloat AS MIFloat_Price
                                                                      ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -488,6 +508,12 @@ BEGIN
                                       LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountRealPromo_60
                                                                      ON MIFloat_AmountRealPromo_60.MovementItemId = MovementItem.Id
                                                                     AND MIFloat_AmountRealPromo_60.DescId = zc_MIFloat_AmountRealPromo_60()
+                                      LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountRetIn_60
+                                                                     ON MIFloat_AmountRetIn_60.MovementItemId = MovementItem.Id
+                                                                    AND MIFloat_AmountRetIn_60.DescId = zc_MIFloat_AmountRetIn_60()
+                                      LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountRetInPromo_60
+                                                                     ON MIFloat_AmountRetInPromo_60.MovementItemId = MovementItem.Id
+                                                                    AND MIFloat_AmountRetInPromo_60.DescId = zc_MIFloat_AmountRetInPromo_60()
 
                                       LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
@@ -837,12 +863,16 @@ COALESCE (-- первый - автоматом сформированные MovementItem - всегда Контрагент
           --                                       
           , MI_PromoGoods.AmountReal_60Sh            ::TFloat                                                                         --Объем продаж 60 дней,  (итого) шт
           , MI_PromoGoods.AmountReal_60Weight        ::TFloat                                                                         --Объем продаж 60 дней,  (итого) вес
-          , MI_PromoGoods.AmountRealPromo_60Sh       ::TFloat                                                                         --Объем Акционных продаж 60 дней, шт
-          , MI_PromoGoods.AmountRealPromo_60Weight   ::TFloat                                                                         --Объем Акционных продаж 60 дней, вес
-          , (COALESCE (MI_PromoGoods.AmountReal_60Sh,0)     / 60 * (EXTRACT (DAY from Movement_Promo.EndSale - Movement_Promo.StartSale) + 1) ::Integer)      ::TFloat AS AmountReal_Days_Sale_Sh         --3)AmountReal_60 / 60 * Days_Sale                                                                                      --Объем продаж 60 дней, кг (итого)
-          , (COALESCE (MI_PromoGoods.AmountReal_60Weight,0) / 60 * (EXTRACT (DAY from Movement_Promo.EndSale - Movement_Promo.StartSale) + 1) ::Integer)      ::TFloat AS AmountReal_Days_Sale_Weight   
-          , (COALESCE (MI_PromoGoods.AmountRealPromo_60Sh,0)     / 60 * (EXTRACT (DAY from Movement_Promo.EndSale - Movement_Promo.StartSale) + 1) ::Integer) ::TFloat AS AmountRealPromo_Days_Sale_Sh    -- 4)AmountRealPromo_60 / 60 * Days_Sale                   
-          , (COALESCE (MI_PromoGoods.AmountRealPromo_60Weight,0) / 60 * (EXTRACT (DAY from Movement_Promo.EndSale - Movement_Promo.StartSale) + 1) ::Integer) ::TFloat AS AmountRealPromo_Days_Sale_Weight
+          , MI_PromoGoods.AmountRealPromo_60Sh       ::TFloat                                                                         --Объем Акционных продаж 60 дней,, шт
+          , MI_PromoGoods.AmountRealPromo_60Weight   ::TFloat                                                                         --Объем Акционных продаж 60 дней,, вес
+          , MI_PromoGoods.AmountRetIn_60Sh           ::TFloat                                                                         --Кол-во возврат 60 дней, шт
+          , MI_PromoGoods.AmountRetIn_60Weight       ::TFloat                                                                         --Кол-во возврат 60 дней, вес
+          , MI_PromoGoods.AmountRetInPromo_60Sh      ::TFloat                                                                         --Кол-во Акционных возвратов 60 дней, шт
+          , MI_PromoGoods.AmountRetInPromo_60Weight  ::TFloat                                                                         --Кол-во Акционных возвратов 60 дней, вес
+          , ((COALESCE (MI_PromoGoods.AmountReal_60Sh,0)         - COALESCE (MI_PromoGoods.AmountRetIn_60Sh,0))          / 60 * (EXTRACT (DAY from Movement_Promo.EndSale - Movement_Promo.StartSale) + 1) ::Integer) ::TFloat AS AmountReal_Days_Sale_Sh         --3)AmountReal_60 / 60 * Days_Sale                                                                                      --Объем продаж 60 дней, кг (итого)
+          , ((COALESCE (MI_PromoGoods.AmountReal_60Weight,0)     - COALESCE (MI_PromoGoods.AmountRetIn_60Weight,0))      / 60 * (EXTRACT (DAY from Movement_Promo.EndSale - Movement_Promo.StartSale) + 1) ::Integer) ::TFloat AS AmountReal_Days_Sale_Weight   
+          , ((COALESCE (MI_PromoGoods.AmountRealPromo_60Sh,0)    - COALESCE (MI_PromoGoods.AmountRetInPromo_60Sh,0))     / 60 * (EXTRACT (DAY from Movement_Promo.EndSale - Movement_Promo.StartSale) + 1) ::Integer) ::TFloat AS AmountRealPromo_Days_Sale_Sh    -- 4)AmountRealPromo_60 / 60 * Days_Sale                   
+          , ((COALESCE (MI_PromoGoods.AmountRealPromo_60Weight,0)- COALESCE (MI_PromoGoods.AmountRetInPromo_60Weight,0)) / 60 * (EXTRACT (DAY from Movement_Promo.EndSale - Movement_Promo.StartSale) + 1) ::Integer) ::TFloat AS AmountRealPromo_Days_Sale_Weight
         FROM
             tmpMovement_Promo AS Movement_Promo
             LEFT OUTER JOIN tmpMI_PromoGoods AS MI_PromoGoods ON MI_PromoGoods.MovementId = Movement_Promo.Id
