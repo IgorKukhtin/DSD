@@ -120,10 +120,10 @@ RETURNS TABLE(
     , AmountRetInPromo_60Sh              TFloat --Кол-во Акционных возвратов 60 дней, шт
     , AmountRetInPromo_60Weight          TFloat --Кол-во Акционных возвратов 60 дней, вес
     
-    , AmountReal_Days_Sale_Sh            TFloat --3)AmountReal_60 / 60 * Days_Sale шт
-    , AmountReal_Days_Sale_Weight        TFloat --                                 вес
-    , AmountRealPromo_Days_Sale_Sh       TFloat -- 4)AmountRealPromo_60 / 60 * Days_Sale шт                
-    , AmountRealPromo_Days_Sale_Weight   TFloat --                                       вес
+    , AmountReal_Sale_Sh            TFloat --3)AmountReal_60 / 60 * Days_Sale шт
+    , AmountReal_Sale_Weight        TFloat --                                 вес
+    , AmountRealPromo_Sale_Sh       TFloat -- 4)AmountRealPromo_60 / 60 * Days_Sale шт                
+    , AmountRealPromo_Sale_Weight   TFloat --                                       вес
     )
 AS
 $BODY$
@@ -869,10 +869,10 @@ COALESCE (-- первый - автоматом сформированные MovementItem - всегда Контрагент
           , MI_PromoGoods.AmountRetIn_60Weight       ::TFloat                                                                         --Кол-во возврат 60 дней, вес
           , MI_PromoGoods.AmountRetInPromo_60Sh      ::TFloat                                                                         --Кол-во Акционных возвратов 60 дней, шт
           , MI_PromoGoods.AmountRetInPromo_60Weight  ::TFloat                                                                         --Кол-во Акционных возвратов 60 дней, вес
-          , ((COALESCE (MI_PromoGoods.AmountReal_60Sh,0)         - COALESCE (MI_PromoGoods.AmountRetIn_60Sh,0))          / 60 * (EXTRACT (DAY from Movement_Promo.EndSale - Movement_Promo.StartSale) + 1) ::Integer) ::TFloat AS AmountReal_Days_Sale_Sh         --3)AmountReal_60 / 60 * Days_Sale                                                                                      --Объем продаж 60 дней, кг (итого)
-          , ((COALESCE (MI_PromoGoods.AmountReal_60Weight,0)     - COALESCE (MI_PromoGoods.AmountRetIn_60Weight,0))      / 60 * (EXTRACT (DAY from Movement_Promo.EndSale - Movement_Promo.StartSale) + 1) ::Integer) ::TFloat AS AmountReal_Days_Sale_Weight   
-          , ((COALESCE (MI_PromoGoods.AmountRealPromo_60Sh,0)    - COALESCE (MI_PromoGoods.AmountRetInPromo_60Sh,0))     / 60 * (EXTRACT (DAY from Movement_Promo.EndSale - Movement_Promo.StartSale) + 1) ::Integer) ::TFloat AS AmountRealPromo_Days_Sale_Sh    -- 4)AmountRealPromo_60 / 60 * Days_Sale                   
-          , ((COALESCE (MI_PromoGoods.AmountRealPromo_60Weight,0)- COALESCE (MI_PromoGoods.AmountRetInPromo_60Weight,0)) / 60 * (EXTRACT (DAY from Movement_Promo.EndSale - Movement_Promo.StartSale) + 1) ::Integer) ::TFloat AS AmountRealPromo_Days_Sale_Weight
+          , ((COALESCE (MI_PromoGoods.AmountReal_60Sh,0)         - COALESCE (MI_PromoGoods.AmountRetIn_60Sh,0))          / 60 * (EXTRACT (DAY from Movement_Promo.EndSale - Movement_Promo.StartSale) + 1) ::Integer) ::TFloat AS AmountReal_Sale_Sh         --3)AmountReal_60 / 60 * Days_Sale                                                                                      --Объем продаж 60 дней, кг (итого)
+          , ((COALESCE (MI_PromoGoods.AmountReal_60Weight,0)     - COALESCE (MI_PromoGoods.AmountRetIn_60Weight,0))      / 60 * (EXTRACT (DAY from Movement_Promo.EndSale - Movement_Promo.StartSale) + 1) ::Integer) ::TFloat AS AmountReal_Sale_Weight   
+          , ((COALESCE (MI_PromoGoods.AmountRealPromo_60Sh,0)    - COALESCE (MI_PromoGoods.AmountRetInPromo_60Sh,0))     / 60 * (EXTRACT (DAY from Movement_Promo.EndSale - Movement_Promo.StartSale) + 1) ::Integer) ::TFloat AS AmountRealPromo_Sale_Sh    -- 4)AmountRealPromo_60 / 60 * Days_Sale                   
+          , ((COALESCE (MI_PromoGoods.AmountRealPromo_60Weight,0)- COALESCE (MI_PromoGoods.AmountRetInPromo_60Weight,0)) / 60 * (EXTRACT (DAY from Movement_Promo.EndSale - Movement_Promo.StartSale) + 1) ::Integer) ::TFloat AS AmountRealPromo_Sale_Weight
         FROM
             tmpMovement_Promo AS Movement_Promo
             LEFT OUTER JOIN tmpMI_PromoGoods AS MI_PromoGoods ON MI_PromoGoods.MovementId = Movement_Promo.Id

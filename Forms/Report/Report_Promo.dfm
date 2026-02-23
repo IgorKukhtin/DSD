@@ -75,7 +75,7 @@ inherited Report_PromoForm: TReport_PromoForm
             item
               Format = ',0.###'
               Kind = skSum
-              Column = AmountRealPromo_Days_Sale_Weight
+              Column = AmountRealPromo_Sale_Weight
             end
             item
               Format = ',0.#'
@@ -100,17 +100,17 @@ inherited Report_PromoForm: TReport_PromoForm
             item
               Format = ',0.#'
               Kind = skSum
-              Column = AmountReal_Days_Sale_Sh
+              Column = AmountReal_Sale_Sh
             end
             item
               Format = ',0.###'
               Kind = skSum
-              Column = AmountReal_Days_Sale_Weight
+              Column = AmountReal_Sale_Weight
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = AmountRealPromo_Days_Sale_Sh
+              Column = AmountRealPromo_Sale_Sh
             end
             item
               Format = ',0.###'
@@ -186,7 +186,7 @@ inherited Report_PromoForm: TReport_PromoForm
             item
               Format = ',0.###'
               Kind = skSum
-              Column = AmountRealPromo_Days_Sale_Weight
+              Column = AmountRealPromo_Sale_Weight
             end
             item
               Format = ',0.#'
@@ -211,17 +211,17 @@ inherited Report_PromoForm: TReport_PromoForm
             item
               Format = ',0.#'
               Kind = skSum
-              Column = AmountReal_Days_Sale_Sh
+              Column = AmountReal_Sale_Sh
             end
             item
               Format = ',0.###'
               Kind = skSum
-              Column = AmountReal_Days_Sale_Weight
+              Column = AmountReal_Sale_Weight
             end
             item
               Format = ',0.#'
               Kind = skSum
-              Column = AmountRealPromo_Days_Sale_Sh
+              Column = AmountRealPromo_Sale_Sh
             end
             item
               Format = ',0.###'
@@ -718,9 +718,9 @@ inherited Report_PromoForm: TReport_PromoForm
             Options.Editing = False
             Width = 80
           end
-          object AmountReal_Days_Sale_Sh: TcxGridDBColumn
+          object AmountReal_Sale_Sh: TcxGridDBColumn
             Caption = #1047#1072#1075#1072#1083#1100#1085#1110' '#1087#1088#1086#1076#1072#1078#1110' '#1087#1086#1087#1077#1088#1077#1076#1085#1110#1081' '#1087#1077#1088#1110#1086#1076', '#1096#1090
-            DataBinding.FieldName = 'AmountReal_Days_Sale_Sh'
+            DataBinding.FieldName = 'AmountReal_Sale_Sh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
@@ -730,9 +730,9 @@ inherited Report_PromoForm: TReport_PromoForm
             Options.Editing = False
             Width = 80
           end
-          object AmountReal_Days_Sale_Weight: TcxGridDBColumn
+          object AmountReal_Sale_Weight: TcxGridDBColumn
             Caption = #1047#1072#1075#1072#1083#1100#1085#1110' '#1087#1088#1086#1076#1072#1078#1110' '#1087#1086#1087#1077#1088#1077#1076#1085#1110#1081' '#1087#1077#1088#1110#1086#1076', '#1074#1072#1075#1072
-            DataBinding.FieldName = 'AmountReal_Days_Sale_Weight'
+            DataBinding.FieldName = 'AmountReal_Sale_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.###;-,0.###; ;'
@@ -742,9 +742,9 @@ inherited Report_PromoForm: TReport_PromoForm
             Options.Editing = False
             Width = 80
           end
-          object AmountRealPromo_Days_Sale_Sh: TcxGridDBColumn
+          object AmountRealPromo_Sale_Sh: TcxGridDBColumn
             Caption = #1040#1082#1094#1110#1081#1085#1110' '#1087#1088#1086#1076#1072#1078#1110' '#1087#1086#1087#1077#1088#1077#1076#1085#1110#1081' '#1087#1077#1088#1110#1086#1076', '#1096#1090
-            DataBinding.FieldName = 'AmountRealPromo_Days_Sale_Sh'
+            DataBinding.FieldName = 'AmountRealPromo_Sale_Sh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
@@ -754,9 +754,9 @@ inherited Report_PromoForm: TReport_PromoForm
             Options.Editing = False
             Width = 80
           end
-          object AmountRealPromo_Days_Sale_Weight: TcxGridDBColumn
+          object AmountRealPromo_Sale_Weight: TcxGridDBColumn
             Caption = #1040#1082#1094#1110#1081#1085#1110' '#1087#1088#1086#1076#1072#1078#1110' '#1087#1086#1087#1077#1088#1077#1076#1085#1110#1081' '#1087#1077#1088#1110#1086#1076', '#1074#1077#1089
-            DataBinding.FieldName = 'AmountRealPromo_Days_Sale_Weight'
+            DataBinding.FieldName = 'AmountRealPromo_Sale_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.###;-,0.###; ;'
