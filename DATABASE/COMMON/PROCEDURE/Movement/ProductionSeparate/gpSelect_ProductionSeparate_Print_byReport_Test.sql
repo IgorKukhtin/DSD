@@ -477,7 +477,9 @@ BEGIN
 
       
       -- Результат 
-      SELECT tmpMain_Group.MovementId  AS MovementId
+      SELECT inStartDate   ::TDateTime AS StartDate
+           , inEndDate     ::TDateTime AS EndDate
+           , tmpMain_Group.MovementId  AS MovementId
            , tmpMain_Group.InvNumber   AS InvNumber
            , tmpMain_Group.OperDate
            , tmpMain_Group.PartionGoods

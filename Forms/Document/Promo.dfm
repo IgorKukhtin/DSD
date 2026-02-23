@@ -3,7 +3,7 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 707
   ClientWidth = 1540
-  ExplicitLeft = -663
+  ExplicitLeft = -338
   ExplicitWidth = 1556
   ExplicitHeight = 746
   PixelsPerInch = 96
@@ -102,6 +102,36 @@
               Format = ',0.####'
               Kind = skSum
               Column = SummInMarket
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountReal_60
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRealPromo_60
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRetIn_60
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountReal_60Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRealPromo_60Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRetIn_60Weight
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -183,6 +213,36 @@
               Format = ',0.####'
               Kind = skSum
               Column = SummInMarket
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountReal_60
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRealPromo_60
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRetIn_60
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountReal_60Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRealPromo_60Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRetIn_60Weight
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -657,6 +717,76 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
+          object AmountReal_60: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1085#1086' '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076' 60'#1076#1085'.'
+            DataBinding.FieldName = 'AmountReal_60'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object AmountReal_60Weight: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1085#1086' '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076' 60'#1076#1085'., '#1074#1077#1089
+            DataBinding.FieldName = 'AmountReal_60Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object AmountRealPromo_60: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1085#1086' '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076' ('#1072#1082#1094#1080#1103') 60 '#1076#1085'.'
+            DataBinding.FieldName = 'AmountRealPromo_60'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1073#1098#1077#1084' '#1040#1082#1094#1080#1086#1085#1085#1099#1093' '#1087#1088#1086#1076#1072#1078' 60 '#1076#1085#1077#1081', '#1082#1075
+            Options.Editing = False
+            Width = 80
+          end
+          object AmountRealPromo_60Weight: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1085#1086' '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076' ('#1072#1082#1094#1080#1103') 60 '#1076#1085'., '#1074#1077#1089
+            DataBinding.FieldName = 'AmountRealPromo_60Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1073#1098#1077#1084' '#1040#1082#1094#1080#1086#1085#1085#1099#1093' '#1087#1088#1086#1076#1072#1078' 60 '#1076#1085#1077#1081', '#1082#1075
+            Options.Editing = False
+            Width = 80
+          end
+          object AmountRetIn_60: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088'. '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076' 60 '#1076#1085'.'
+            DataBinding.FieldName = 'AmountRetIn_60'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090' 60 '#1076#1085#1077#1081', '#1082#1075
+            Options.Editing = False
+            Width = 80
+          end
+          object AmountRetIn_60Weight: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088'. '#1074' '#1072#1085#1072#1083#1086#1075'. '#1087#1077#1088#1080#1086#1076' 60 '#1076#1085', '#1074#1077#1089'.'
+            DataBinding.FieldName = 'AmountRetIn_60Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074#1086#1079#1074#1088#1072#1090' 60 '#1076#1085#1077#1081', '#1082#1075
+            Options.Editing = False
+            Width = 80
+          end
           object AmountMarket: TcxGridDBColumn
             Caption = #1050#1086#1084#1087'. '#1079#1072' '#1074#1077#1089', '#1082#1075
             DataBinding.FieldName = 'AmountMarket'
@@ -1034,6 +1164,9 @@
           object tsPromoPartnerList: TcxTabSheet
             Caption = '2.2. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             ImageIndex = 1
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object grPartnerList: TcxGrid
               Left = 0
               Top = 0
@@ -1536,6 +1669,9 @@
     object TabSheet_out: TcxTabSheet
       Caption = #1055#1088#1086#1084#1086'-'#1084#1077#1093#1072#1085#1080#1082#1072
       ImageIndex = 9
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -1941,6 +2077,9 @@
     object cxTabSheetCalc: TcxTabSheet
       Caption = '2.1.'#1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - '#1089#1082#1080#1076#1082#1072
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridCalc: TcxGrid
         Left = 0
         Top = 0
@@ -2281,6 +2420,9 @@
     object cxTabSheetCalc2: TcxTabSheet
       Caption = '2.2.'#1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridCalc2: TcxGrid
         Left = 0
         Top = 0
@@ -2607,6 +2749,9 @@
     object cxTabSheetSign: TcxTabSheet
       Caption = '3.'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -2700,6 +2845,9 @@
     object cxTabSheetMessage: TcxTabSheet
       Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1103
       ImageIndex = 6
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -2849,6 +2997,9 @@
     object cxTabSheetPromoInvoice: TcxTabSheet
       Caption = '4.'#1057#1095#1077#1090#1072' '#1076#1083#1103' '#1072#1082#1094#1080#1080
       ImageIndex = 6
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GridPromoInvoice: TcxGrid
         Left = 0
         Top = 0
@@ -3042,6 +3193,9 @@
     object cxTabSheetStat: TcxTabSheet
       Caption = '5.1.'#1057#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1087#1088#1086#1076#1072#1078
       ImageIndex = 5
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
@@ -3623,6 +3777,9 @@
     object cxTabSheetPlanSale: TcxTabSheet
       Caption = '5.2.'#1055#1083#1072#1085' '#1087#1088#1086#1076#1072#1078' '#1040#1082#1094#1080#1103
       ImageIndex = 7
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridPlanMaster: TcxGrid
         Left = 0
         Top = 0
@@ -3821,6 +3978,9 @@
     object cxTabSheetPlanProd: TcxTabSheet
       Caption = '5.3.'#1055#1083#1072#1085' '#1087#1088'-'#1074#1072' '#1076#1083#1103' '#1040#1082#1094#1080#1080
       ImageIndex = 8
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridPlanChild: TcxGrid
         Left = 0
         Top = 0
@@ -11827,14 +11987,14 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1084
-    Top = 160
+    Left = 1164
+    Top = 136
   end
   object PlanMasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 944
-    Top = 192
+    Left = 952
+    Top = 208
   end
   object PlanMasterDS: TDataSource
     DataSet = PlanMasterCDS
@@ -11922,8 +12082,8 @@
         ValueColumn = Repository
         EditRepository = cxEditRepository1
       end>
-    Left = 1024
-    Top = 207
+    Left = 1032
+    Top = 215
   end
   object PlanChildDS: TDataSource
     DataSet = PlanChildCDS

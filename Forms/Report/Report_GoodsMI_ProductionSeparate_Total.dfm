@@ -15,17 +15,18 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
     Height = 383
     TabOrder = 3
     ExplicitTop = 124
-    ExplicitWidth = 1508
+    ExplicitWidth = 1498
     ExplicitHeight = 383
     ClientRectBottom = 383
     ClientRectRight = 1498
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1508
+      ExplicitWidth = 1498
       ExplicitHeight = 383
       inherited cxGrid: TcxGrid
         Width = 1498
         Height = 383
-        ExplicitWidth = 1508
+        ExplicitTop = 6
+        ExplicitWidth = 1498
         ExplicitHeight = 383
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -376,7 +377,7 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
   inherited Panel: TPanel
     Width = 1498
     Height = 57
-    ExplicitWidth = 1508
+    ExplicitWidth = 1498
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 108
@@ -551,7 +552,6 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
     Height = 41
     Align = alTop
     TabOrder = 7
-    ExplicitWidth = 1508
     object lbSearchCode: TcxLabel
       Left = 0
       Top = 10
@@ -1196,8 +1196,8 @@ inherited Report_GoodsMI_ProductionSeparate_TotalForm: TReport_GoodsMI_Productio
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4134) '#1086#1090#1095#1077#1090
-      ReportNameParam.Value = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4134) '#1086#1090#1095#1077#1090
+      ReportName = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4134) '#1086#1090#1095#1077#1090'All'
+      ReportNameParam.Value = #1040#1082#1090' '#1086#1073#1074#1072#1083#1082#1080' (4134) '#1086#1090#1095#1077#1090'All'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''

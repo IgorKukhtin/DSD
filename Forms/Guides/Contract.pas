@@ -376,6 +376,10 @@ type
     actGetImportSetting_Personal: TdsdExecStoredProc;
     macStartLoad_Personal: TMultiAction;
     bbStartLoad_Personal: TdxBarButton;
+    spGetImportSettingId_StatePersonal: TdsdStoredProc;
+    actGetImportSetting_StatePersonal: TdsdExecStoredProc;
+    macStartLoad_StatePersonal: TMultiAction;
+    bbStartLoad_StatePersonal: TdxBarButton;
 
   private
     { Private declarations }
