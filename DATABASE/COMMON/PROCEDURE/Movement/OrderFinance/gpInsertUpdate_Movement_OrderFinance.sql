@@ -28,7 +28,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderFinance());
 
-     IF COALESCE (ioId, 0) = 0
+     IF COALESCE (ioId, 0) = 0 AND vbUserId NOT IN (5, 11973291) -- Галеміна О.А.
      THEN
          inOperDate:= CURRENT_DATE;
          inWeekNumber:= CASE WHEN EXTRACT (YEAR FROM inOperDate + INTERVAL '10 DAY') > EXTRACT (YEAR FROM inOperDate) THEN 1 ELSE EXTRACT (WEEK FROM inOperDate) + 1 END;

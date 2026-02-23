@@ -4,7 +4,7 @@
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_OrderFinance_Email_send_msg(
     IN inMovementId           Integer,
-    IN inParam                Integer,    -- 1 - для только СБ или менеджерам + Фин. служба, 2 - после СБ - Фин. служба + руководитель + менеджерам, 3 - после проведения - Бухгалтерия
+    IN inParam                Integer,    -- 1 - после руководителя - или только для СБ или менеджерам + Фин. служба, 2 - после СБ - Фин. служба + руководитель + менеджерам, 3 - после проведения - Бухгалтерия
     IN inSession              TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Subject TVarChar, Body TBlob, AddressFrom TVarChar, AddressTo TVarChar
@@ -48,6 +48,8 @@ BEGIN
 
      --
      IF COALESCE (vbMemberId,0) <> COALESCE (vbMemberId_1,0)
+    -- после руководителя
+    AND inParam = 1
      THEN
          RAISE EXCEPTION 'Ошибка.У пользователя <%> нет прав устанавливать <Согласован Руководителем>.', lfGet_Object_ValueData_sh (vbMemberId);
      END IF;

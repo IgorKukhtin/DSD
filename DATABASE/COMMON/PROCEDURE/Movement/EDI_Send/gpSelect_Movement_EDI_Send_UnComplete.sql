@@ -362,9 +362,9 @@ BEGIN
                   )
 
                OR -- 1.2. Этих EDI + Vchasno - Отправляем 6 HOUR
-                  (Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '6 HOUR'
+                  (Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '12 HOUR'
                AND COALESCE (CASE WHEN tmpMovement_WeighingPartner.InsertDate > MovementDate_Update.ValueData THEN tmpMovement_WeighingPartner.InsertDate ELSE MovementDate_Update.ValueData END, zc_DateStart())
-                 < CURRENT_TIMESTAMP - INTERVAL '6 HOUR'
+                 < CURRENT_TIMESTAMP - INTERVAL '12 HOUR'
                -- ДЛЯ этих
                AND MovementLinkObject_To.ObjectId IN (8223447 -- !!!МЕТРО Кеш енд Кері Україна ТОВ с. Мартусівка вул. Промислова буд.75!!!
                                                     , 8253940 -- !!!МЕТРО Кеш енд Кері Україна ТОВ смт Дударків вул. Незалежності буд.2/2!!!

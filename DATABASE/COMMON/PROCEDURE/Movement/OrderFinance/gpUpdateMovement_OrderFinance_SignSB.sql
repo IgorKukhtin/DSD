@@ -20,7 +20,7 @@ BEGIN
      -- Проверка
      IF NOT EXISTS (SELECT 1
                     FROM Movement
-                        -- временно - Відділ забезбечення - 1
+                        -- 
                         INNER JOIN MovementLinkObject AS MovementLinkObject_OrderFinance
                                                       ON MovementLinkObject_OrderFinance.MovementId = Movement.Id
                                                      AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()

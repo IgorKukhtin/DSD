@@ -370,27 +370,27 @@ BEGIN
                             , MIFloat_AmountPartner_3.ValueData :: TFloat AS AmountPartner_3
                             , MIFloat_AmountPartner_4.ValueData :: TFloat AS AmountPartner_4
 
-                            , CASE WHEN MIFloat_AmountPlan_1.ValueData > 0 AND MovementItem.Amount_Child > 0 THEN MovementItem.Amount_Child
+                            , CASE WHEN MIFloat_AmountPlan_1.ValueData > 0 AND MovementItem.MovementItemId_Child > 0 THEN MovementItem.Amount_Child
                                    ELSE MIFloat_AmountPlan_1.ValueData
                               END :: TFloat AS AmountPlan_1
 
-                            , CASE WHEN (MIFloat_AmountPlan_1.ValueData > 0) AND MovementItem.Amount_Child > 0 THEN 0
-                                   WHEN MIFloat_AmountPlan_2.ValueData > 0 AND MovementItem.Amount_Child > 0 THEN MovementItem.Amount_Child
+                            , CASE WHEN (MIFloat_AmountPlan_1.ValueData > 0) AND MovementItem.MovementItemId_Child > 0 THEN 0
+                                   WHEN MIFloat_AmountPlan_2.ValueData > 0 AND MovementItem.MovementItemId_Child > 0 THEN MovementItem.Amount_Child
                                    ELSE MIFloat_AmountPlan_2.ValueData
                               END :: TFloat AS AmountPlan_2
 
-                            , CASE WHEN (MIFloat_AmountPlan_1.ValueData > 0 OR MIFloat_AmountPlan_2.ValueData > 0) AND MovementItem.Amount_Child > 0 THEN 0
-                                   WHEN MIFloat_AmountPlan_3.ValueData > 0 AND MovementItem.Amount_Child > 0 THEN MovementItem.Amount_Child
+                            , CASE WHEN (MIFloat_AmountPlan_1.ValueData > 0 OR MIFloat_AmountPlan_2.ValueData > 0) AND MovementItem.MovementItemId_Child > 0 THEN 0
+                                   WHEN MIFloat_AmountPlan_3.ValueData > 0 AND MovementItem.MovementItemId_Child > 0 THEN MovementItem.Amount_Child
                                    ELSE MIFloat_AmountPlan_3.ValueData
                               END :: TFloat AS AmountPlan_3
 
-                            , CASE WHEN (MIFloat_AmountPlan_1.ValueData > 0 OR MIFloat_AmountPlan_2.ValueData > 0 OR MIFloat_AmountPlan_3.ValueData > 0) AND MovementItem.Amount_Child > 0 THEN 0
-                                   WHEN MIFloat_AmountPlan_4.ValueData > 0 AND MovementItem.Amount_Child > 0 THEN MovementItem.Amount_Child
+                            , CASE WHEN (MIFloat_AmountPlan_1.ValueData > 0 OR MIFloat_AmountPlan_2.ValueData > 0 OR MIFloat_AmountPlan_3.ValueData > 0) AND MovementItem.MovementItemId_Child > 0 THEN 0
+                                   WHEN MIFloat_AmountPlan_4.ValueData > 0 AND MovementItem.MovementItemId_Child > 0 THEN MovementItem.Amount_Child
                                    ELSE MIFloat_AmountPlan_4.ValueData
                               END :: TFloat AS AmountPlan_4
 
-                            , CASE WHEN (MIFloat_AmountPlan_1.ValueData > 0 OR MIFloat_AmountPlan_2.ValueData > 0 OR MIFloat_AmountPlan_3.ValueData > 0 OR MIFloat_AmountPlan_4.ValueData > 0) AND MovementItem.Amount_Child > 0 THEN 0
-                                   WHEN MIFloat_AmountPlan_5.ValueData > 0 AND MovementItem.Amount_Child > 0 THEN MovementItem.Amount_Child
+                            , CASE WHEN (MIFloat_AmountPlan_1.ValueData > 0 OR MIFloat_AmountPlan_2.ValueData > 0 OR MIFloat_AmountPlan_3.ValueData > 0 OR MIFloat_AmountPlan_4.ValueData > 0) AND MovementItem.MovementItemId_Child > 0 THEN 0
+                                   WHEN MIFloat_AmountPlan_5.ValueData > 0 AND MovementItem.MovementItemId_Child > 0 THEN MovementItem.Amount_Child
                                    ELSE MIFloat_AmountPlan_5.ValueData
                               END :: TFloat AS AmountPlan_5
                             

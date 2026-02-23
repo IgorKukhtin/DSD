@@ -46,9 +46,9 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , Condition TVarChar, ContractStateKindCode Integer
              , StartDate TDateTime, EndDate_real TDateTime, EndDate TVarChar
 
-               -- ***План ИТОГО (расчет)
+               -- Первичный план на нед. - ***План ИТОГО (расчет)
              , Amount_Child TFloat
-               -- Предварительная сумма оплаты на неделю
+               -- Платежный план на нед. - Предварительная сумма оплаты на неделю
              , Amount TFloat
                -- Нач. долг
              , AmountRemains TFloat
@@ -61,14 +61,14 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , AmountPartner_2    TFloat
              , AmountPartner_3    TFloat
              , AmountPartner_4    TFloat
-               -- Итого план оплат
+               -- Согласовано к оплате(итого) - Итого план оплат
              , AmountPlan_total   TFloat
-               -- План оплат на 1.пн-5,пт
+               -- Согласовано к оплате - План оплат на 1.пн-5,пт
              , AmountPlan_day     TFloat
-               -- № в очереди на 1.пн.
+               -- № в очереди на ***
              , Number_day         TFloat
 
-               -- План оплат на 1.пн-5,пт
+               -- Согласовано - План оплат на 1.пн-5,пт
              , AmountPlan_1         TFloat
              , AmountPlan_2         TFloat
              , AmountPlan_3         TFloat
