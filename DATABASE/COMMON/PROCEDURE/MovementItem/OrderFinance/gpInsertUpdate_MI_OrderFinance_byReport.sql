@@ -16,7 +16,7 @@ $BODY$
    DECLARE vbWeekNumber     TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderFinance());
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_MI_OrderFinance_byReport());
 
 
      -- из шапки документа

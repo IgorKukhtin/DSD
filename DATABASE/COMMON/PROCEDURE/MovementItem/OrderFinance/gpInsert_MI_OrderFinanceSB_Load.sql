@@ -151,13 +151,25 @@ BEGIN
      -- 4.1. проверка
      IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.DescId = zc_Object_InfoMoney() AND TRIM (Object.ValueData) ILIKE TRIM (inInfoMoneyName))
         AND inInfoMoneyName NOT ILIKE 'Строительные'
+        AND inInfoMoneyName NOT ILIKE 'Запчасти и Ремонты'
+        AND inInfoMoneyName NOT ILIKE 'Ремонт оборудования'
+        AND inInfoMoneyName NOT ILIKE 'Аренда помещений'
      THEN
          RAISE EXCEPTION 'Ошибка.УП статья = <%> определена больше 1 раза.', inInfoMoneyName;
      END IF;
 
      -- статья УП
      vbInfoMoneyId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Infomoney() AND TRIM (Object.ValueData) ILIKE TRIM (inInfoMoneyName)
-                       ORDER BY Object.Id LIMIT CASE WHEN TRIM (inInfoMoneyName) ILIKE 'Строительные' THEN 1 ELSE 2 END
+                       ORDER BY CASE WHEN TRIM (inInfoMoneyName) ILIKE 'Ремонт оборудования' THEN 0
+                                     ELSE 0
+                                END DESC
+                              , Object.Id ASC
+                       LIMIT CASE WHEN TRIM (inInfoMoneyName) ILIKE 'Строительные'        THEN 1
+                                  WHEN TRIM (inInfoMoneyName) ILIKE 'Запчасти и Ремонты'  THEN 1
+                                  WHEN TRIM (inInfoMoneyName) ILIKE 'Ремонт оборудования' THEN 1
+                                  WHEN TRIM (inInfoMoneyName) ILIKE 'Аренда помещений'    THEN 1
+                                  ELSE 2
+                             END
                       );
      -- проверка
      IF COALESCE (vbInfoMoneyId,0) = 0

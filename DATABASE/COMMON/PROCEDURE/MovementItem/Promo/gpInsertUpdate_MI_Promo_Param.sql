@@ -13,6 +13,14 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Promo_Data());
+     
+
+     IF vbUserId = zc_Enum_Process_Auto_PrimeCost() AND 1=1
+     THEN
+         PERFORM lpUpdate_Movement_Promo_Auto (inMovementId:= inMovementId, inUserId:= vbUserId);
+         RETURN;
+     END IF;
+
 
      -- данные по документам Данные Sale / Order / ReturnIn где установлен признак "акция"
      CREATE TEMP TABLE _tmpData (GoodsId Integer, GoodsKindId Integer, AmountOrder TFloat, AmountOut TFloat, AmountIn TFloat, ChangePercent TFloat) ON COMMIT DROP;

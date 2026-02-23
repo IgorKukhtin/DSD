@@ -48,6 +48,7 @@ $BODY$
 
    DECLARE vbInvNumber TVarChar;
    DECLARE vbParentId Integer;
+   DECLARE vbBranchId Integer;
    DECLARE vbStartWeighing TDateTime;
    DECLARE vbPriceWithVAT  Boolean;
    DECLARE vbVATPercent    TFloat;
@@ -115,6 +116,16 @@ BEGIN
      IF NOT EXISTS (SELECT 1 FROM MovementFloat AS MF WHERE MF.MovementId = ioId AND MF.DescId = zc_MovementFloat_BranchCode())
      THEN
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_BranchCode(), ioId, inBranchCode);
+
+         --
+         vbBranchId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.ObjectCode = inBranchCode);
+         IF inBranchCode BETWEEN 2 AND 32 AND COALESCE (vbBranchId, 0) = 0
+         THEN
+	     RAISE EXCEPTION 'Ошибка.Не найден филиал для код = <%>', inBranchCode;
+         END IF;
+         
+         -- сохранили связь
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Branch(), ioId, COALESCE (vbBranchId, zc_Branch_Basis()));
      END IF;
 
 
