@@ -753,17 +753,19 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             Width = 112
           end
           object isSign_Child: TcxGridDBColumn
-            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' '#1057#1041' ('#1044#1072'/'#1053#1077#1090')'
+            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' '#1057#1041
             DataBinding.FieldName = 'isSign_Child'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1069#1090#1086#1090' '#1087#1083#1072#1090#1077#1078' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085' '#1057#1041' ('#1044#1072'/'#1053#1077#1090')'
             Width = 85
           end
           object TextSign_Child: TcxGridDBColumn
-            Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' '#1057#1041
+            Caption = ' ('#1076'/'#1085')'
             DataBinding.FieldName = 'TextSign_Child'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1069#1090#1086#1090' '#1087#1083#1072#1090#1077#1078' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085' '#1057#1041' ('#1044#1072'/'#1053#1077#1090')'
             Options.Editing = False
             Width = 100
           end
