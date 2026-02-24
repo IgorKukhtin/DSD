@@ -75,6 +75,11 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalCountStick
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalCountKg_parent
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -121,6 +126,11 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalCountStick
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalCountKg_parent
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -339,6 +349,17 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1083#1072#1076#1086#1074#1097#1080#1082
         Width = 67
+      end
+      object TotalCountKg_parent: TcxGridDBColumn
+        Caption = #1042#1077#1089' '#1091' '#1087#1086#1082'. ('#1076#1086#1082'. '#1087#1088#1086#1076#1072#1078#1072')'
+        DataBinding.FieldName = 'TotalCountKg_parent'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
       end
       object CountMI1: TcxGridDBColumn
         Caption = #1050#1086#1083'. '#1089#1090#1088#1086#1082' ('#1082#1083#1076#1074')'
@@ -1255,6 +1276,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 432
     Top = 344
