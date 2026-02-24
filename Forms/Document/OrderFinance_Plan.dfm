@@ -1,29 +1,29 @@
 inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
   Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')'
-  ClientHeight = 374
+  ClientHeight = 534
   ClientWidth = 1020
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1036
-  ExplicitHeight = 413
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 59
+    Top = 88
     Width = 1020
-    Height = 277
+    Height = 248
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 1020
     ExplicitHeight = 277
-    ClientRectBottom = 277
+    ClientRectBottom = 248
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 277
       inherited cxGrid: TcxGrid
         Width = 1020
-        Height = 277
+        Height = 248
         ExplicitWidth = 1020
         ExplicitHeight = 277
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -923,9 +923,9 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
   end
   inherited Panel: TPanel
     Width = 1020
-    Height = 33
+    Height = 62
     ExplicitWidth = 1020
-    ExplicitHeight = 33
+    ExplicitHeight = 62
     inherited deStart: TcxDateEdit
       Left = 129
       EditValue = 45658d
@@ -959,8 +959,8 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       ExplicitWidth = 20
     end
     object cxLabel3: TcxLabel
-      Left = 174
-      Top = 29
+      Left = 30
+      Top = 50
       Caption = #1053#1077#1076#1077#1083#1103' '#1087#1086':'
       Visible = False
     end
@@ -982,8 +982,8 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       Width = 64
     end
     object edWeekNumber2: TcxButtonEdit
-      Left = 221
-      Top = 28
+      Left = 82
+      Top = 50
       Properties.Buttons = <
         item
           Default = True
@@ -1051,16 +1051,38 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       TabOrder = 2
       Width = 265
     end
+    object cxLabel23: TcxLabel
+      Left = 6
+      Top = 35
+      Caption = #1055#1086#1080#1089#1082':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearch: TcxTextEdit
+      Left = 58
+      Top = 34
+      TabOrder = 16
+      DesignSize = (
+        125
+        21)
+      Width = 125
+    end
   end
   object ExportXmlGrid: TcxGrid [2]
     Left = 0
     Top = 336
     Width = 1020
-    Height = 38
+    Height = 198
     Align = alBottom
     Anchors = [akTop, akRight, akBottom]
     TabOrder = 6
     Visible = False
+    ExplicitHeight = 38
     object ExportXmlGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ExportDS
@@ -1622,6 +1644,35 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      Params = <
+        item
+          Name = 'Key'
+          Value = Null
+          ComponentItem = 'Id'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          ComponentItem = 'Code'
+          MultiSelectSeparator = ','
+        end>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ImageIndex = 7
+      DataSource = MasterDS
     end
   end
   inherited MasterDS: TDataSource
@@ -2873,5 +2924,51 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
     PackSize = 1
     Left = 528
     Top = 248
+  end
+  object FieldFilter: TdsdFieldFilter
+    TextEdit = edSearch
+    DataSet = MasterCDS
+    Column = OKPO
+    ColumnList = <
+      item
+        Column = OKPO
+      end
+      item
+        Column = JuridicalName
+      end
+      item
+        Column = ContractName
+      end
+      item
+        Column = Comment_pay
+      end
+      item
+        Column = Comment_jof
+      end
+      item
+        Column = AmountPlan_1
+      end
+      item
+        Column = AmountPlan_2
+      end
+      item
+        Column = AmountPlan_3
+      end
+      item
+        Column = AmountPlan_4
+      end
+      item
+        Column = AmountPlan_5
+      end
+      item
+        Column = InvNumber_Invoice_Child
+      end
+      item
+        Column = GoodsName_Child
+      end>
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 192
+    Top = 32
   end
 end
