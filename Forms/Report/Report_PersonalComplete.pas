@@ -23,7 +23,7 @@ uses
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, dsdGuides,
-  cxButtonEdit, ChoicePeriod, cxLabel, dxBarExtItems, cxCheckBox;
+  cxButtonEdit, ChoicePeriod, cxLabel, dxBarExtItems, cxCheckBox, dsdCommon;
 
 type
   TReport_PersonalCompleteForm = class(TParentForm)
@@ -99,6 +99,7 @@ type
     cbisMonth: TcxCheckBox;
     bbisMonth: TdxBarControlContainerItem;
     actIsMonth: TdsdDataSetRefresh;
+    TotalCountKg_parent: TcxGridDBColumn;
   private
   public
   end;

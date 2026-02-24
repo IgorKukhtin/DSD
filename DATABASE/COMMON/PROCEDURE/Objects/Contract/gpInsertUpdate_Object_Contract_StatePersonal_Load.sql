@@ -32,7 +32,7 @@ BEGIN
          vbContractId:= (SELECT tmp_View.ContractId
                          FROM Object_Contract_View AS tmp_View
                          WHERE tmp_View.ContractCode = inContractCode
-                         );
+                        );
 
          -- Проверка
          IF COALESCE (vbContractId, 0) = 0
@@ -41,11 +41,19 @@ BEGIN
          END IF;
     END IF;
 
-    --Ответственный (сотрудник)
-    IF COALESCE (TRIM (inPersonalName), '') <> COALESCE (TRIM (inPersonalName_new), '')
+    -- Ответственный (сотрудник)
+    IF COALESCE (TRIM (inPersonalName), '') <> COALESCE (TRIM (inPersonalName_new), '') AND COALESCE (TRIM (inPersonalName_new), '') <> ''
+       -- !!!отключено!!!
+       AND 1=0
     THEN 
+         -- Проверка
+         IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.DescId = zc_Object_Personal() AND TRIM (Object.ValueData) ILIKE TRIM (inPersonalName_new) AND Object.isErased = FALSE)
+         THEN
+             RAISE EXCEPTION 'Ошибка.Ответственный (сотрудник) с таким ФИО = <%> не один.', inPersonalName;
+         END IF;
+
          -- поиск
-         vbPersonalId_new := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Personal() AND TRIM (Object.ValueData) ILIKE TRIM (inPersonalName_new));
+         vbPersonalId_new := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Personal() AND TRIM (Object.ValueData) ILIKE TRIM (inPersonalName_new) AND Object.isErased = FALSE);
          IF COALESCE (vbPersonalId_new, 0) = 0
          THEN
              RAISE EXCEPTION 'Ошибка.Значение <Ответственный (сотрудник) новый <%> не найдено.', inPersonalName_new;
@@ -56,8 +64,8 @@ BEGIN
 
     END IF;
 
-    --Состояние договора
-    IF COALESCE (TRIM (inContractStateKindName_new), '') = 'закрити'
+    -- Состояние договора
+    IF TRIM (inContractStateKindName_new) ILIKE 'закрити' OR TRIM (inContractStateKindName_new) ILIKE 'Завершен'
     THEN 
          -- сохранили связь с <Состояние договора>
         PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_ContractStateKind(), vbContractId, zc_Enum_ContractStateKind_Close());
@@ -67,6 +75,7 @@ BEGIN
     -- сохранили протокол
     PERFORM lpInsert_ObjectProtocol (inObjectId:= vbContractId, inUserId:= vbUserId, inIsUpdate:= TRUE, inIsErased:= NULL);
  
+
     -- проверка - что б Админ ничего не ломал
     IF vbUserId = 5 OR vbUserId = 9457
     THEN

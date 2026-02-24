@@ -56,13 +56,27 @@ BEGIN
     IF COALESCE (TRIM (inPersonalName), '') <> ''
     THEN 
          -- Проверка
-         IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.DescId = zc_Object_Personal() AND TRIM (Object.ValueData) ILIKE TRIM (inPersonalName) AND Object.isErased = FALSE)
+         IF 1 < (SELECT COUNT(*)
+                 FROM Object
+                      JOIN ObjectBoolean ON ObjectBoolean.ObjectId = Object.Id AND ObjectBoolean.DescId = zc_ObjectBoolean_Personal_Main() AND ObjectBoolean.ValueData = TRUE
+                      JOIN ObjectLink ON ObjectLink.ObjectId = Object.Id AND ObjectLink.DescId = zc_ObjectLink_Personal_Unit()
+                      JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink.ChildObjectId
+                                                AND Object_Unit.ValueData NOT ILIKE 'ЗСУ'
+                 WHERE Object.DescId = zc_Object_Personal() AND TRIM (Object.ValueData) ILIKE TRIM (inPersonalName) AND Object.isErased = FALSE
+                )
          THEN
              RAISE EXCEPTION 'Ошибка.Ответственный (сотрудник) с таким ФИО = <%> не один.', inPersonalName;
          END IF;
 
          -- поиск
-         vbPersonalId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Personal() AND TRIM (Object.ValueData) ILIKE TRIM (inPersonalName) AND Object.isErased = FALSE);
+         vbPersonalId := (SELECT Object.Id
+                          FROM Object
+                               JOIN ObjectBoolean ON ObjectBoolean.ObjectId = Object.Id AND ObjectBoolean.DescId = zc_ObjectBoolean_Personal_Main() AND ObjectBoolean.ValueData = TRUE
+                               JOIN ObjectLink ON ObjectLink.ObjectId = Object.Id AND ObjectLink.DescId = zc_ObjectLink_Personal_Unit()
+                               JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink.ChildObjectId
+                                                         AND Object_Unit.ValueData NOT ILIKE 'ЗСУ'
+                          WHERE Object.DescId = zc_Object_Personal() AND TRIM (Object.ValueData) ILIKE TRIM (inPersonalName) AND Object.isErased = FALSE
+                         );
          IF COALESCE (vbPersonalId, 0) = 0
          THEN
              RAISE EXCEPTION 'Ошибка.Значение <Ответственный (сотрудник) = <%> не найдено.', inPersonalName;
