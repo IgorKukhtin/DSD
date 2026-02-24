@@ -35,6 +35,8 @@ BEGIN
          RETURN;
      END IF;
      */
+     
+     if vbUserId = 5 then update Movement set StatusId = zc_Enum_Status_UnComplete() where Id = inMovementId; end if;
 
      -- определяем день недели для предыдущей и текущей даты
      vbNumDay     := zfCalc_DayOfWeekNumber (inDateDay);
@@ -94,23 +96,23 @@ BEGIN
          END IF;
 
          -- обнуляем данные прошлой даты
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_1(), inMovementItemId, CASE WHEN inMovementItemId_child > 0
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_1(), inMovementItemId, CASE WHEN inMovementItemId_child > 0 AND vbNumDay = 1
                                                                                                           THEN COALESCE ((SELECT SUM (MovementItem.Amount) FROM MovementItem WHERE MovementItem.ParentId = inMovementItemId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE), 0)
                                                                                                      ELSE 0
                                                                                                 END);
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_2(), inMovementItemId, CASE WHEN inMovementItemId_child > 0
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_2(), inMovementItemId, CASE WHEN inMovementItemId_child > 0 AND vbNumDay = 2
                                                                                                           THEN COALESCE ((SELECT SUM (MovementItem.Amount) FROM MovementItem WHERE MovementItem.ParentId = inMovementItemId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE), 0)
                                                                                                      ELSE 0
                                                                                                 END);
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_3(), inMovementItemId, CASE WHEN inMovementItemId_child > 0
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_3(), inMovementItemId, CASE WHEN inMovementItemId_child > 0 AND vbNumDay = 3
                                                                                                           THEN COALESCE ((SELECT SUM (MovementItem.Amount) FROM MovementItem WHERE MovementItem.ParentId = inMovementItemId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE), 0)
                                                                                                      ELSE 0
                                                                                                 END);
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_4(), inMovementItemId, CASE WHEN inMovementItemId_child > 0
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_4(), inMovementItemId, CASE WHEN inMovementItemId_child > 0 AND vbNumDay = 4
                                                                                                           THEN COALESCE ((SELECT SUM (MovementItem.Amount) FROM MovementItem WHERE MovementItem.ParentId = inMovementItemId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE), 0)
                                                                                                      ELSE 0
                                                                                                 END);
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_5(), inMovementItemId, CASE WHEN inMovementItemId_child > 0
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_5(), inMovementItemId, CASE WHEN inMovementItemId_child > 0 AND vbNumDay = 5
                                                                                                           THEN COALESCE ((SELECT SUM (MovementItem.Amount) FROM MovementItem WHERE MovementItem.ParentId = inMovementItemId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE), 0)
                                                                                                      ELSE 0
                                                                                                 END);
@@ -237,7 +239,13 @@ BEGIN
      ioDateDay_old:= inDateDay;
 
      --
-     if vbUserId IN (9457, 5) AND 1=0 then RAISE EXCEPTION 'Админ.Test Ok. <%>  <%>', outWeekDay, ioAmountPlan_day; end if;
+     if vbUserId IN (9457, 5) AND 1=1
+     then
+         RAISE EXCEPTION 'Админ.Test Ok. <%>  <%>'
+                        , outWeekDay
+                        , COALESCE ((SELECT SUM (MovementItem.Amount) FROM MovementItem WHERE MovementItem.ParentId = inMovementItemId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE), 0)
+                         ;
+     end if;
 
 END;
 $BODY$
