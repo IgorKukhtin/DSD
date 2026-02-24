@@ -354,7 +354,7 @@ BEGIN
         , tmpMovementItemFloat AS (SELECT *
                                    FROM MovementItemFloat
                                    WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
-                                     AND MovementItemFloat.DescId IN (zc_MIFloat_Price()
+                                  /*   AND MovementItemFloat.DescId IN (zc_MIFloat_Price()
                                                                     , zc_MIFloat_PriceWithOutVAT()
                                                                     , zc_MIFloat_PriceWithVAT()
                                                                     , zc_MIFloat_PriceSale()
@@ -369,6 +369,7 @@ BEGIN
                                                                     , zc_MIFloat_AmountRetIn_60()
                                                                     , zc_MIFloat_AmountRetInPromo_60()
                                                                       )
+*/
                                   )
 
         , tmpMovementItemLinkObject AS (SELECT *
@@ -543,12 +544,13 @@ BEGIN
 
                                       LEFT JOIN tmpMICalc ON tmpMICalc.MovementId = MovementItem.MovementId
                                                          AND tmpMICalc.MovementItemId = MovementItem.Id
+ 
                                       LEFT JOIN (SELECT tmpMICalc.*
                                                  FROM tmpMICalc
                                                  WHERE tmpMICalc.Ord = 1) AS tmpMICalc_inf 
                                                                           ON tmpMICalc_inf.MovementId = MovementItem.MovementId
                                                                          AND tmpMICalc_inf.GoodsId = MovementItem.ObjectId
-                                      
+                                     
                                GROUP BY MovementItem.MovementId
                                       , MovementItem.ObjectId
                                       , Object_Goods.ObjectCode
@@ -608,8 +610,8 @@ FROM MovementLinkObject
 WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement_PromoPartner.Id FROM tmpMovement_PromoPartner)
                          AND MovementLinkObject.DescId = zc_MovementLinkObject_Partner()
 )*/
-   
-        --
+ -- отдельно все по документу
+, tmp_Promo AS (
         SELECT
             Movement_Promo.Id                --ИД документа акции
           , Movement_Promo.InvNumber          --№ документа акции
@@ -627,7 +629,8 @@ WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement_PromoPartner
           , Movement_Promo.CheckDate          --Дата Согласования
 
             --------------------------------------
-            
+          , Movement_Promo.VATPercent          
+  
           , (CASE WHEN vbUserId = 5
             THEN LENGTH (
             COALESCE ((SELECT STRING_AGG (DISTINCT COALESCE (MovementString_Retail.ValueData, Object_Retail.ValueData),'; ')
@@ -755,6 +758,63 @@ COALESCE (-- первый - автоматом сформированные MovementItem - всегда Контрагент
                    ) AS tmp
             ) ::TBlob AS JuridicalName_str
 
+      ---MI_PromoGoods.Price
+          , CASE WHEN vbShowAll THEN Movement_Promo.CostPromo END    :: TFloat    AS CostPromo
+
+          , CASE WHEN vbShowAll THEN
+                (SELECT STRING_AGG (Movement_PromoAdvertising.AdvertisingName,'; ')
+                 FROM (SELECT DISTINCT Movement_PromoAdvertising_View.AdvertisingName
+                       FROM Movement_PromoAdvertising_View
+                       WHERE Movement_PromoAdvertising_View.ParentId = Movement_Promo.Id
+                         AND COALESCE (Movement_PromoAdvertising_View.AdvertisingName,'') <> ''
+                         AND Movement_PromoAdvertising_View.isErASed = FALSE
+                      ) AS Movement_PromoAdvertising
+                ) END                                                :: TBlob     AS AdvertisingName
+
+          , CASE WHEN vbShowAll THEN Movement_Promo.OperDate END     :: TDateTime AS OperDate
+          , Movement_Promo.Comment                                                AS Comment
+          , Movement_Promo.CommentMain      :: TVarChar                           AS CommentMain
+          , vbShowAll                                                             AS ShowAll
+          , Movement_Promo.isPromo                                                AS isPromo
+          , Movement_Promo.Checked                                                AS Checked
+
+          , Movement_Promo.PromoStateKindName   ::TVarChar
+          , Movement_Promo.Color_PromoStateKind :: Integer
+          , tmpSign.strSign                     ::TVarChar-- -- эл.подписи  -- 
+          
+          , (EXTRACT (DAY from Movement_Promo.EndSale - Movement_Promo.StartSale) + 1)         ::Integer AS Days_Sale
+          , (EXTRACT (DAY from Movement_Promo.OperDateEnd - Movement_Promo.OperDateStart) + 1) ::Integer AS Days_Real 
+          --                                       
+        FROM
+            tmpMovement_Promo AS Movement_Promo
+             LEFT JOIN tmpSign ON tmpSign.Id = Movement_Promo.Id   -- эл.подписи  --
+     )
+  
+        --
+        SELECT
+            Movement_Promo.Id                --ИД документа акции
+          , Movement_Promo.InvNumber          --№ документа акции
+          , Movement_Promo.StatusCode         --
+          , Movement_Promo.StatusName         --
+
+          , Movement_Promo.UnitName           --Склад
+          , Movement_Promo.PersonalTradeName  --Ответственный представитель коммерческого отдела
+          , Movement_Promo.PersonalName       --Ответственный представитель маркетингового отдела
+          , Movement_Promo.StartSale          --Дата начала отгрузки по акционной цене
+          , Movement_Promo.EndSale            --Дата окончания отгрузки по акционной цене
+          , Movement_Promo.StartPromo         --Дата начала акции
+          , Movement_Promo.EndPromo           --Дата окончания акции
+          , Movement_Promo.MonthPromo         --месяц акции
+          , Movement_Promo.CheckDate          --Дата Согласования
+
+            --------------------------------------
+            
+          , Movement_Promo.RetailName ::TBlob AS RetailName
+            --------------------------------------
+          , Movement_Promo.AreaName ::TBlob AS AreaName
+            
+          , Movement_Promo.JuridicalName_str ::TBlob AS JuridicalName_str
+
           , MI_PromoGoods.GoodsName
           , MI_PromoGoods.GoodsCode
           , MI_PromoGoods.Measure
@@ -772,22 +832,7 @@ COALESCE (-- первый - автоматом сформированные MovementItem - всегда Контрагент
           , MI_PromoGoods.AmountIn           ::TFloat --Кол-во возврат (факт)
           , MI_PromoGoods.AmountInWeight     ::TFloat --Кол-во возврат (факт) Вес
           , MI_PromoGoods.GoodsKindName       --Наименование обьекта <Вид товара>
-         -- , MI_PromoGoods.GoodsKindCompleteName -- --Наименование обьекта <Вид товара (примечание)>
-
-          /*, CASE WHEN inIsGoodsKind = FALSE THEN MI_PromoGoods.GoodsKindCompleteName
-                 ELSE (SELECT STRING_AGG (DISTINCT Object_GoodsKindComplete.ValueData,'; ') AS GoodsKindCompleteName
-                       FROM MovementItem AS MI_Promo
-                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
-                                                             ON MILinkObject_GoodsKindComplete.MovementItemId = MI_Promo.Id
-                                                            AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
-                            LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILinkObject_GoodsKindComplete.ObjectId
-
-                       WHERE MI_Promo.MovementId = Movement_Promo.Id
-                         AND MI_Promo.DescId     = zc_MI_Master()
-                         AND MI_Promo.IsErased   = FALSE
-                      )
-            END  ::TVarChar AS GoodsKindCompleteName
-            */
+   
           , MI_PromoGoods.GoodsKindCompleteName         ::TVarChar AS GoodsKindCompleteName
 
           , MI_PromoGoods.GoodsKindCompleteName_byPrint ::TVarChar AS GoodsKindCompleteName_byPrint
@@ -828,15 +873,7 @@ COALESCE (-- первый - автоматом сформированные MovementItem - всегда Контрагент
           , CASE WHEN vbShowAll THEN ROUND (MI_PromoGoods.Price * ((100 + Movement_Promo.VATPercent)/100), 2) END :: TFloat    AS Price       ---MI_PromoGoods.Price
           , CASE WHEN vbShowAll THEN Movement_Promo.CostPromo END    :: TFloat    AS CostPromo
 
-          , CASE WHEN vbShowAll THEN
-                (SELECT STRING_AGG (Movement_PromoAdvertising.AdvertisingName,'; ')
-                 FROM (SELECT DISTINCT Movement_PromoAdvertising_View.AdvertisingName
-                       FROM Movement_PromoAdvertising_View
-                       WHERE Movement_PromoAdvertising_View.ParentId = Movement_Promo.Id
-                         AND COALESCE (Movement_PromoAdvertising_View.AdvertisingName,'') <> ''
-                         AND Movement_PromoAdvertising_View.isErASed = FALSE
-                      ) AS Movement_PromoAdvertising
-                ) END                                                :: TBlob     AS AdvertisingName
+          , Movement_Promo.AdvertisingName                           :: TBlob     AS AdvertisingName
 
           , CASE WHEN vbShowAll THEN Movement_Promo.OperDate END     :: TDateTime AS OperDate
           , CASE WHEN vbShowAll THEN MI_PromoGoods.PriceSale END     :: TFloat    AS PriceSale
@@ -848,7 +885,7 @@ COALESCE (-- первый - автоматом сформированные MovementItem - всегда Контрагент
 
           , Movement_Promo.PromoStateKindName   ::TVarChar
           , Movement_Promo.Color_PromoStateKind :: Integer
-          , tmpSign.strSign                     ::TVarChar-- -- эл.подписи  -- 
+          , Movement_Promo.strSign                     ::TVarChar-- -- эл.подписи  -- 
           
           , MI_PromoGoods.PriceIn_fact             ::TFloat                     -- с/с факт
           , MI_PromoGoods.PriceIn_plan             ::TFloat                     -- с/с план
@@ -858,8 +895,8 @@ COALESCE (-- первый - автоматом сформированные MovementItem - всегда Контрагент
           , MI_PromoGoods.SummaProfit_fact         ::TFloat                     --прибыль факт
           , MI_PromoGoods.SummaProfit_plan         ::TFloat                     --прибыль план
           
-          , (EXTRACT (DAY from Movement_Promo.EndSale - Movement_Promo.StartSale) + 1)         ::Integer AS Days_Sale
-          , (EXTRACT (DAY from Movement_Promo.OperDateEnd - Movement_Promo.OperDateStart) + 1) ::Integer AS Days_Real 
+          , Movement_Promo.Days_Sale         ::Integer AS Days_Sale
+          , Movement_Promo.Days_Real         ::Integer AS Days_Real 
           --                                       
           , MI_PromoGoods.AmountReal_60Sh            ::TFloat                                                                         --Объем продаж 60 дней,  (итого) шт
           , MI_PromoGoods.AmountReal_60Weight        ::TFloat                                                                         --Объем продаж 60 дней,  (итого) вес
@@ -869,12 +906,12 @@ COALESCE (-- первый - автоматом сформированные MovementItem - всегда Контрагент
           , MI_PromoGoods.AmountRetIn_60Weight       ::TFloat                                                                         --Кол-во возврат 60 дней, вес
           , MI_PromoGoods.AmountRetInPromo_60Sh      ::TFloat                                                                         --Кол-во Акционных возвратов 60 дней, шт
           , MI_PromoGoods.AmountRetInPromo_60Weight  ::TFloat                                                                         --Кол-во Акционных возвратов 60 дней, вес
-          , ((COALESCE (MI_PromoGoods.AmountReal_60Sh,0)         - COALESCE (MI_PromoGoods.AmountRetIn_60Sh,0))          / 60 * (EXTRACT (DAY from Movement_Promo.EndSale - Movement_Promo.StartSale) + 1) ::Integer) ::TFloat AS AmountReal_Sale_Sh         --3)AmountReal_60 / 60 * Days_Sale                                                                                      --Объем продаж 60 дней, кг (итого)
-          , ((COALESCE (MI_PromoGoods.AmountReal_60Weight,0)     - COALESCE (MI_PromoGoods.AmountRetIn_60Weight,0))      / 60 * (EXTRACT (DAY from Movement_Promo.EndSale - Movement_Promo.StartSale) + 1) ::Integer) ::TFloat AS AmountReal_Sale_Weight   
-          , ((COALESCE (MI_PromoGoods.AmountRealPromo_60Sh,0)    - COALESCE (MI_PromoGoods.AmountRetInPromo_60Sh,0))     / 60 * (EXTRACT (DAY from Movement_Promo.EndSale - Movement_Promo.StartSale) + 1) ::Integer) ::TFloat AS AmountRealPromo_Sale_Sh    -- 4)AmountRealPromo_60 / 60 * Days_Sale                   
-          , ((COALESCE (MI_PromoGoods.AmountRealPromo_60Weight,0)- COALESCE (MI_PromoGoods.AmountRetInPromo_60Weight,0)) / 60 * (EXTRACT (DAY from Movement_Promo.EndSale - Movement_Promo.StartSale) + 1) ::Integer) ::TFloat AS AmountRealPromo_Sale_Weight
+          , ((COALESCE (MI_PromoGoods.AmountReal_60Sh,0)         - COALESCE (MI_PromoGoods.AmountRetIn_60Sh,0))          / 60 * Movement_Promo.Days_Sale ::Integer) ::TFloat AS AmountReal_Sale_Sh         --3)AmountReal_60 / 60 * Days_Sale                                                                                      --Объем продаж 60 дней, кг (итого)
+          , ((COALESCE (MI_PromoGoods.AmountReal_60Weight,0)     - COALESCE (MI_PromoGoods.AmountRetIn_60Weight,0))      / 60 * Movement_Promo.Days_Sale ::Integer) ::TFloat AS AmountReal_Sale_Weight   
+          , ((COALESCE (MI_PromoGoods.AmountRealPromo_60Sh,0)    - COALESCE (MI_PromoGoods.AmountRetInPromo_60Sh,0))     / 60 * Movement_Promo.Days_Sale ::Integer) ::TFloat AS AmountRealPromo_Sale_Sh    -- 4)AmountRealPromo_60 / 60 * Days_Sale                   
+          , ((COALESCE (MI_PromoGoods.AmountRealPromo_60Weight,0)- COALESCE (MI_PromoGoods.AmountRetInPromo_60Weight,0)) / 60 * Movement_Promo.Days_Sale ::Integer) ::TFloat AS AmountRealPromo_Sale_Weight
         FROM
-            tmpMovement_Promo AS Movement_Promo
+            tmp_Promo AS Movement_Promo
             LEFT OUTER JOIN tmpMI_PromoGoods AS MI_PromoGoods ON MI_PromoGoods.MovementId = Movement_Promo.Id
             LEFT JOIN tmpSign ON tmpSign.Id = Movement_Promo.Id   -- эл.подписи  --
 

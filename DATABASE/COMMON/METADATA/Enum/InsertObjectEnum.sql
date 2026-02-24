@@ -15650,7 +15650,7 @@ BEGIN
                                                                 inParamNumber   := 4, 
                                                                 inName          := 'inContractStateKindName_new', 
                                                                 inParamType     := 'ftString', 
-                                                                inUserParamName := 'Сотрудник (подписант)', 
+                                                                inUserParamName := 'Состояние договора (новое)', 
                                                                 inImportTypeId  := vbImportTypeId, 
                                                                 inSession       := lfGet_User_Session (vbUserId));
     vbImportSettingsItem := 0;

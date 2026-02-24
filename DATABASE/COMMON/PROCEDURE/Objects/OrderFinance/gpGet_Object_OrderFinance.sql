@@ -125,8 +125,8 @@ BEGIN
             , COALESCE (ObjectBoolean_Plan_5.ValueData, FALSE)     ::Boolean AS isPlan_5
           
             , COALESCE (ObjectBoolean_SB.ValueData, FALSE)         ::Boolean AS isSB
-            , COALESCE (ObjectBoolean_InvNumber_Invoice.ValueData, FALSE) ::Boolean AS isInvNumber
-            , COALESCE (ObjectBoolean_InvNumber.ValueData, FALSE)         ::Boolean AS isInvNumber_Invoice
+            , COALESCE (ObjectBoolean_InvNumber.ValueData, FALSE)         ::Boolean AS isInvNumber
+            , COALESCE (ObjectBoolean_InvNumber_Invoice.ValueData, FALSE) ::Boolean AS isInvNumber_Invoice
 
             , Object_OrderFinance.isErased     AS isErased
            
