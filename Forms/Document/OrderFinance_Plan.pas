@@ -100,6 +100,10 @@ type
     actExport_fileNPP: TdsdStoredProcExportToFile;
     dxBarButton1: TdxBarButton;
     InfoMoneyCode: TcxGridDBColumn;
+    cxLabel23: TcxLabel;
+    edSearch: TcxTextEdit;
+    FieldFilter: TdsdFieldFilter;
+    actChoiceGuides: TdsdChoiceGuides;
   private
     { Private declarations }
   public

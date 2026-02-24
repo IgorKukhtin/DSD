@@ -110,6 +110,10 @@ type
     cbDetail: TcxCheckBox;
     actRefreshDetail: TdsdDataSetRefresh;
     Comment_pay: TcxGridDBColumn;
+    actChoiceGuides: TdsdChoiceGuides;
+    cxLabel23: TcxLabel;
+    edSearch: TcxTextEdit;
+    FieldFilter: TdsdFieldFilter;
   private
     { Private declarations }
   public

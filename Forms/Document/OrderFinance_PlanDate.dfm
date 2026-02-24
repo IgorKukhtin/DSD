@@ -9,21 +9,21 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 59
+    Top = 88
     Width = 1020
-    Height = 277
+    Height = 248
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 1020
     ExplicitHeight = 277
-    ClientRectBottom = 277
+    ClientRectBottom = 248
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 277
       inherited cxGrid: TcxGrid
         Width = 1020
-        Height = 277
+        Height = 248
         ExplicitWidth = 1020
         ExplicitHeight = 277
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -900,9 +900,9 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
   end
   inherited Panel: TPanel
     Width = 1020
-    Height = 33
+    Height = 62
     ExplicitWidth = 1020
-    ExplicitHeight = 33
+    ExplicitHeight = 62
     inherited deStart: TcxDateEdit
       Left = 129
       EditValue = 45658d
@@ -996,6 +996,27 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
       ShowHint = True
       TabOrder = 10
       Width = 127
+    end
+    object cxLabel23: TcxLabel
+      Left = 6
+      Top = 35
+      Caption = #1055#1086#1080#1089#1082':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearch: TcxTextEdit
+      Left = 58
+      Top = 34
+      TabOrder = 12
+      DesignSize = (
+        125
+        21)
+      Width = 125
     end
   end
   object ExportXmlGrid: TcxGrid [2]
@@ -1755,6 +1776,35 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
         end>
       Caption = #1047#1072#1082#1088#1099#1090#1100' '#1042#1057#1045' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1081
       Hint = #1047#1072#1082#1088#1099#1090#1100' '#1042#1057#1045' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1081
+    end
+    object actChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      Params = <
+        item
+          Name = 'Key'
+          Value = Null
+          ComponentItem = 'Id'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          ComponentItem = 'Code'
+          MultiSelectSeparator = ','
+        end>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ImageIndex = 7
+      DataSource = MasterDS
     end
   end
   inherited MasterDS: TDataSource
@@ -2875,5 +2925,50 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
     PackSize = 1
     Left = 288
     Top = 336
+  end
+  object FieldFilter: TdsdFieldFilter
+    TextEdit = edSearch
+    DataSet = MasterCDS
+    Column = OKPO
+    ColumnList = <
+      item
+        Column = OKPO
+      end
+      item
+        Column = JuridicalName
+      end
+      item
+        Column = ContractName
+      end
+      item
+        Column = Comment_pay
+      end
+      item
+      end
+      item
+        Column = AmountPlan_1
+      end
+      item
+        Column = AmountPlan_2
+      end
+      item
+        Column = AmountPlan_3
+      end
+      item
+        Column = AmountPlan_4
+      end
+      item
+        Column = AmountPlan_5
+      end
+      item
+        Column = InvNumber_Invoice_Child
+      end
+      item
+        Column = GoodsName_Child
+      end>
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 192
+    Top = 32
   end
 end
