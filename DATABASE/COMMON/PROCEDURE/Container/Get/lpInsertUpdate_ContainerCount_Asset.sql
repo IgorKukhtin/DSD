@@ -23,7 +23,9 @@ $BODY$
 BEGIN
 
      -- 70000 Инвестиции: Капитальные инвестиции + Капитальный ремонт + Долгосрочные инвестиции + Капитальное строительство
-     IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_70100(), zc_Enum_InfoMoneyDestination_70200(), zc_Enum_InfoMoneyDestination_70300(), zc_Enum_InfoMoneyDestination_70400()
+     IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_70100(), zc_Enum_InfoMoneyDestination_70200(), zc_Enum_InfoMoneyDestination_70300(), zc_Enum_InfoMoneyDestination_70400(), zc_Enum_InfoMoneyDestination_70500()
+                                     -- МНМА
+                                   , zc_Enum_InfoMoneyDestination_20300()
                                     )
     AND inPartionGoodsId <> 0
      THEN

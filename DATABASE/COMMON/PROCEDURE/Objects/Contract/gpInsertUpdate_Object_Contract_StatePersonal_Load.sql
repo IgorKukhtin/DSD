@@ -17,6 +17,7 @@ $BODY$
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Contract());
+    -- vbUserId:= lpGetUserBySession (inSession);
 
     -- Проверка
     IF COALESCE(inContractCode, 0) = 0
