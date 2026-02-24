@@ -10647,6 +10647,86 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actOrderFinanceMov_2: TdsdOpenForm
+      Category = #1055#1083#1072#1085#1080#1088#1086#1074#1085#1080#1077
+      MoveParams = <>
+      Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081
+      FormName = 'TOrderFinanceJournalForm'
+      FormNameParam.Value = 'TOrderFinanceJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'SettingsServiceId'
+          Value = '-3175171'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOrderFinanceSBJournal_3: TdsdOpenForm
+      Category = #1055#1083#1072#1085#1080#1088#1086#1074#1085#1080#1077
+      MoveParams = <>
+      Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1057#1095#1077#1090#1072')'
+      FormName = 'TOrderFinanceSBJournalForm'
+      FormNameParam.Value = 'TOrderFinanceSBJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'SettingsServiceId'
+          Value = '-3175171'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOrderFinance_SB_4: TdsdOpenForm
+      Category = #1055#1083#1072#1085#1080#1088#1086#1074#1085#1080#1077
+      MoveParams = <>
+      Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1042#1080#1079#1072' '#1057#1041')'
+      FormName = 'TOrderFinance_SBForm'
+      FormNameParam.Value = 'TOrderFinance_SBForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'SettingsServiceId'
+          Value = '-3175171'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOrderFinance_PlanDate_5: TdsdOpenForm
+      Category = #1055#1083#1072#1085#1080#1088#1086#1074#1085#1080#1077
+      MoveParams = <>
+      Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1087#1086' '#1076#1072#1090#1072#1084')'
+      FormName = 'TOrderFinance_PlanDateForm'
+      FormNameParam.Value = 'TOrderFinance_PlanDateForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'SettingsServiceId'
+          Value = '-3175171'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOrderFinance_Plan_6: TdsdOpenForm
+      Category = #1055#1083#1072#1085#1080#1088#1086#1074#1085#1080#1077
+      MoveParams = <>
+      Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')'
+      FormName = 'TOrderFinance_PlanForm'
+      FormNameParam.Value = 'TOrderFinance_PlanForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'SettingsServiceId'
+          Value = '-3175171'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 48
