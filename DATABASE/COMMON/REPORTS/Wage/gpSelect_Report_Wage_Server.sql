@@ -91,7 +91,7 @@ BEGIN
     vbUserId := lpGetUserBySession (inSession);
     
 
-if EXTRACT (HOUR FROM CURRENT_TIMESTAMP) between 8 and 11
+if EXTRACT (HOUR FROM CURRENT_TIMESTAMP) between 8 and 11 AND 1=0
 then 
     RAISE EXCEPTION 'Ошибка.Повторите отчет после 12:00';
 end if;

@@ -42,6 +42,8 @@ RETURNS TABLE (InvNumber TVarChar
              , CountMovement1  TFloat   -- Кол. док. (клдв)
 
              , TotalCountStick TFloat   -- Количество шт. (стикеровщик) - Кол-во Упаковок (пакетов)
+             
+             , TotalCountKg_parent TFloat -- 
 
              , BranchName  TVarChar
              , FromId Integer, ToId  Integer
@@ -103,7 +105,7 @@ BEGIN
                            SELECT zc_MovementLinkObject_PersonalStick1()     AS PersonalDescId
                            )
         -- Все документы
-      , tmpMovement_all AS (SELECT Movement.Id AS MovementId
+      , tmpMovement_all AS (SELECT Movement.Id       AS MovementId
                                  , CASE WHEN inIsDetail = TRUE OR inisMovement = TRUE 
                                         THEN Movement.ParentId :: Integer 
                                         ELSE 0 
@@ -123,13 +125,17 @@ BEGIN
                                  , COALESCE (tmpUser_findPersonal.BranchId, zc_Branch_Basis()) AS BranchId
                                  , COALESCE (MovementFloat_TotalCount.ValueData, 0)            AS TotalCount
                                  , COALESCE (MovementFloat_TotalCountKg.ValueData, 0)          AS TotalCountKg
-                                 , COALESCE (MovementLinkObject_From.ObjectId, 0)              AS FromId
+                                 , CASE WHEN inIsDetail = TRUE THEN COALESCE (MovementLinkObject_From.ObjectId, 0) ELSE 0 END AS FromId
                                  , COALESCE (MovementLinkObject_To.ObjectId, 0)                AS ToId
                             FROM Movement
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                               ON MovementLinkObject_From.MovementId = Movement.Id
                                                              AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
                                                              AND inIsDetail = TRUE
+                                 --LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch_From
+                                 --                     ON ObjectLink_Unit_Branch_From.ObjectId =  MovementLinkObject_From.ObjectId
+                                 --                    AND ObjectLink_Unit_Branch_From.DescId   = zc_ObjectLink_Unit_Branch()
+
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                               ON MovementLinkObject_To.MovementId = Movement.Id
                                                              AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
@@ -140,6 +146,11 @@ BEGIN
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_User
                                                               ON MovementLinkObject_User.MovementId = Movement.Id
                                                              AND MovementLinkObject_User.DescId     = zc_MovementLinkObject_User()
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Branch
+                                                              ON MovementLinkObject_Branch.MovementId = Movement.Id
+                                                             AND MovementLinkObject_Branch.DescId     = zc_MovementLinkObject_Branch()
+--,  lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Branch(), Movement.Id, COALESCE (Object.Id, zc_Branch_Basis()))
+
 
                                  LEFT JOIN tmpUser_findPersonal ON tmpUser_findPersonal.UserId = MovementLinkObject_User.ObjectId
 
@@ -159,9 +170,12 @@ BEGIN
                               AND Movement.StatusId = zc_Enum_Status_Complete()
                               AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                               AND (MovementLinkObject_Personal.ObjectId = inPersonalId OR tmpUser_findPersonal.PersonalId = inPersonalId OR inPersonalId = 0)
-                              AND (COALESCE (tmpUser_findPersonal.BranchId, zc_Branch_Basis()) = inBranchId OR inBranchId = 0)
+                              --
+                              AND (COALESCE (tmpUser_findPersonal.BranchId, zc_Branch_Basis()) = inBranchId OR MovementLinkObject_Branch.ObjectId = inBranchId OR inBranchId = 0)
                               -- !!!временное решение!!!
                               AND Movement.ParentId NOT IN (SELECT Movement_Report_Wage_Model_View.Id FROM Movement_Report_Wage_Model_View)
+                            --AND (Movement.Id = 26580530 or vbUserId <> 5)
+                              
                            )
         -- Только если выборка была для одного inPersonalId, надо дотянуть остальных для пропорции
       , tmpMovement_add AS (SELECT MovementLinkObject_Personal.MovementId
@@ -244,6 +258,8 @@ BEGIN
               , SUM (tmp.CountMovement1)    :: TFloat AS CountMovement1
 
               , SUM (tmp.TotalCountStick)   :: TFloat AS TotalCountStick
+
+              , SUM (COALESCE (MovementFloat_TotalCountKg_parent.ValueData, 0)) :: TFloat AS TotalCountKg_parent
 
               , Object_Branch.ValueData AS BranchName
 
@@ -456,6 +472,10 @@ BEGIN
             LEFT JOIN MovementDesc ON MovementDesc.Id   = tmp.MovementDescId
             LEFT JOIN Movement AS Movement_parent ON Movement_parent.Id = tmp.MovementId_parent
 
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg_parent
+                                    ON MovementFloat_TotalCountKg_parent.MovementId = tmp.MovementId_parent
+                                   AND MovementFloat_TotalCountKg_parent.DescId     = zc_MovementFloat_TotalCountKg()
+
         GROUP BY tmp.OperDate
                , tmp.InvNumber
                , Movement_parent.OperDate
@@ -497,6 +517,21 @@ $BODY$
  26.11.17                                        * all
  15.12.15         * add Branch
  27.05.15         *
+*/
+
+/*
+-- !!!Заливка ФИЛИАЛ!!!
+select Movement.*
+,  lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Branch(), Movement.Id, COALESCE (Object.Id, zc_Branch_Basis()))
+                            FROM Movement
+                                 LEFT JOIN MovementFloat ON MovementFloat.MovementId = Movement.Id
+                                                        AND MovementFloat.DescId     = zc_MovementFloat_BranchCode()
+                                 left join Object on Object.DescId = zc_Object_Branch() AND Object.ObjectCode = MovementFloat.ValueData :: Integer
+                            WHERE Movement.DescId   = zc_Movement_WeighingPartner()
+                            -- AND Movement.OperDate BETWEEN '01.10.2017' AND '31.12.2017'
+                            --AND Movement.OperDate BETWEEN '01.07.2017' AND '30.09.2017'
+                            --AND Movement.OperDate BETWEEN '01.04.2017' AND '30.06.2017'
+                             AND Movement.OperDate BETWEEN '01.01.2017' AND '31.03.2017'
 */
 
 -- тест
