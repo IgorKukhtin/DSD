@@ -36,7 +36,8 @@ BEGIN
      END IF;
      */
      
-     if vbUserId = 5 then update Movement set StatusId = zc_Enum_Status_UnComplete() where Id = inMovementId; end if;
+
+     -- if vbUserId = 5 then update Movement set StatusId = zc_Enum_Status_UnComplete() where Id = inMovementId; end if;
 
      -- определяем день недели для предыдущей и текущей даты
      vbNumDay     := zfCalc_DayOfWeekNumber (inDateDay);
@@ -65,7 +66,7 @@ BEGIN
     -- если заменили дату
     AND COALESCE (ioDateDay_old, zc_DateStart()) <> COALESCE (inDateDay, zc_DateStart())
      THEN
-         -- обновляем данные - Child
+         -- обнуление данные - Child
          IF EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.ParentId = inMovementItemId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE)
          THEN
              -- проверка
@@ -79,7 +80,8 @@ BEGIN
                  -- обнуление данные - Child
                  PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, MovementItem.ParentId, MovementItem.ObjectId, MovementItem.MovementId, 0, inMovementItemId)
                  FROM MovementItem
-                 WHERE MovementItem.Id       = inMovementItemId_child
+                 WHERE MovementItem.Id = inMovementItemId_child
+                   AND MovementItem.isErased = FALSE
                 ;
 
              ELSE

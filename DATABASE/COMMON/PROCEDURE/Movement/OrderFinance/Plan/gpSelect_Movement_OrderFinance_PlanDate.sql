@@ -1,4 +1,4 @@
- -- Function: gpSelect_Movement_OrderFinance_PlanDate()
+-- Function: gpSelect_Movement_OrderFinance_PlanDate()
 
 --DROP FUNCTION IF EXISTS gpSelect_Movement_OrderFinance_PlanDate (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_OrderFinance_PlanDate (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
@@ -146,7 +146,7 @@ BEGIN
                           -- есть Juridical
                           AND MovementItem.ObjectId   <> 0
                        )
-       -- Child - Данные с № заявки 1С + № заказа
+       -- Child - Данные с № заявки 1С + № Счета
      , tmpMI_Child AS (WITH
                        tmpMI_Child AS (SELECT MovementItem.*
                                        FROM MovementItem
@@ -551,11 +551,12 @@ BEGIN
                                     AND MovementItem.Ord_child = 1                 --только 1 раз если не один чайлд
                                     THEN COALESCE (MovementItem.AmountPlan_total_child, MovementItem.AmountPlan_total, 0)
                                    ELSE 0 END :: TFloat AS AmountPlan_total
+
                               -- Сумма План оплат на дату
-                            --, MovementItem.AmountPlan_day       :: TFloat 
                             , CASE WHEN inIsShowAll = FALSE THEN COALESCE (MovementItem.AmountPlan_day,0)
                                    ELSE CASE WHEN MovementItem.NumDay = 1 
-                                                 THEN CASE WHEN COALESCE (MovementItem.AmountCalc_1,0) > 0 AND COALESCE (MovementItem.Amount_Child, 0) > 0 THEN MovementItem.Amount_Child
+                                                 THEN CASE WHEN COALESCE (MovementItem.AmountCalc_1,0) > 0 AND COALESCE (MovementItem. , 0) > 0
+                                                                THEN MovementItem.Amount_Child
                                                            ELSE COALESCE (MovementItem.AmountPlan_day,0)
                                                       END
                                              WHEN MovementItem.NumDay = 2 
