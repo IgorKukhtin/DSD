@@ -94,6 +94,8 @@ type
     cePersonalServiceListAvanceF2: TcxButtonEdit;
     cxLabel18: TcxLabel;
     GuidesPersonalServiceListAvanceF2: TdsdGuides;
+    edNumBiz: TcxTextEdit;
+    cxLabel19: TcxLabel;
   private
     { Private declarations }
   public

@@ -155,6 +155,7 @@ type
     macDelete_PersonalByStorageLine: TMultiAction;
     bbDelete_PersonalByStorageLine: TdxBarButton;
     MemberName_FIO: TcxGridDBColumn;
+    NumBiz: TcxGridDBColumn;
   private
     { Private declarations }
   public

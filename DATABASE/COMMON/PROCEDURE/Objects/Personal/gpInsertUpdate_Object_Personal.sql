@@ -3,7 +3,8 @@
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Boolean, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Boolean, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Personal(
@@ -29,7 +30,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Personal(
     IN inDateSEnd                          TDateTime , -- Дата перевода
     IN inIsDateOut                         Boolean   , -- Уволен
     IN inIsDateSend                        Boolean   , -- переведен
-    IN inIsMain                            Boolean   , -- Основное место работы
+    IN inIsMain                            Boolean   , -- Основное место работы 
+    IN inNumBiz                            TVarChar  , -- № для Бицербы
     IN inComment                           TVarChar  ,
     IN inSession                           TVarChar    -- сессия пользователя
 )
@@ -93,7 +95,33 @@ BEGIN
                      ;
    END IF;
    
-
+   -- проверка 
+   IF COALESCE (inNumBiz,'') <> ''   
+   
+   THEN 
+   RAISE EXCEPTION 'Значение № для Бицербы <%> для <%> должно быть в пределах 0-99.' , inNumBiz, vbName;
+   
+       -- проверка или пустая строка или число от 0 до 99 
+       IF inNumBiz :: Integer < 0 OR inNumBiz :: Integer > 99
+       THEN   
+           RAISE EXCEPTION 'Значение № для Бицербы <%> для <%> должно быть в пределах 0-99.' , inNumBiz, vbName;
+       END IF; 
+       --проверка уникальности (среди сотрудников если не удален)
+       IF EXISTS (SELECT 1
+                  FROM ObjectString
+                      INNER JOIN Object ON Object.Id = ObjectString.ObjectId
+                                       AND Object.DescId = zc_Object_Personal()
+                                       AND Object.isErased = FALSE
+                  WHERE ObjectString.DescId = zc_ObjectString_Personal_NumBiz()
+                    AND ObjectString.ObjectId <> ioId
+                    AND ObjectString.ValueData = inNumBiz
+                    AND COALESCE (ObjectString.ValueData,'') <> '' 
+                  )
+       THEN 
+           RAISE EXCEPTION 'Значение № для Бицербы <%> для <%> должно быть уникальным.' , inNumBiz, vbName;
+       END IF;
+   END IF;
+  
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Personal(), vbCode, vbName
@@ -135,6 +163,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_ReasonOut(), ioId, inReasonOutId);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Personal_Comment(), ioId, inComment);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Personal_NumBiz(), ioId, inNumBiz);
 
 
    -- сохранили свойство <Дата увольнения>
@@ -209,7 +239,7 @@ BEGIN
    -- для Админа
    IF vbUserId IN (5, 9457)
    THEN
-      -- RAISE EXCEPTION 'Ошибка.test=ok';
+       RAISE EXCEPTION 'Ошибка.test=ok';
    END IF;
 
 END;
@@ -220,6 +250,7 @@ $BODY$
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.02.26         *
  27.04.23         *
  19.04.23         *
  06.08.21         *

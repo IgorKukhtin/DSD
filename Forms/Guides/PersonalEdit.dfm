@@ -144,8 +144,8 @@
         Width = 92
       end
       object cePersonalGroup: TcxButtonEdit
-        Left = 16
-        Top = 106
+        Left = 124
+        Top = 105
         Properties.Buttons = <
           item
             Default = True
@@ -153,11 +153,11 @@
           end>
         Properties.ReadOnly = True
         TabOrder = 13
-        Width = 305
+        Width = 197
       end
       object cxLabel1: TcxLabel
-        Left = 16
-        Top = 89
+        Left = 124
+        Top = 88
         Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1080' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074' '
       end
       object cxLabel4: TcxLabel
@@ -316,6 +316,17 @@
         Top = 395
         Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'('#1072#1074#1072#1085#1089' '#1050#1072#1088#1090#1072' '#1060'2)'
       end
+      object edNumBiz: TcxTextEdit
+        Left = 16
+        Top = 105
+        TabOrder = 33
+        Width = 97
+      end
+      object cxLabel19: TcxLabel
+        Left = 16
+        Top = 88
+        Caption = #8470' '#1076#1083#1103' '#1041#1080#1094#1077#1088#1073#1099
+      end
     end
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1095#1077#1077
@@ -372,8 +383,8 @@
         Width = 318
       end
       object edComment: TcxTextEdit
-        Left = 8
-        Top = 181
+        Left = 3
+        Top = 186
         TabOrder = 6
         Width = 318
       end
@@ -592,6 +603,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inNumBiz'
+        Value = Null
+        Component = edNumBiz
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = edComment
@@ -617,8 +636,8 @@
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 88
-    Top = 96
+    Left = 65528
+    Top = 208
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Personal'
@@ -905,6 +924,13 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'NumBiz'
+        Value = Null
+        Component = edNumBiz
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 184
@@ -1023,8 +1049,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 279
-    Top = 96
+    Left = 311
+    Top = 88
   end
   object PositionGuides: TdsdGuides
     KeyField = 'Id'
@@ -1270,8 +1296,8 @@
         ComponentItem = 'Code'
         MultiSelectSeparator = ','
       end>
-    Left = 133
-    Top = 48
+    Left = 117
+    Top = 40
   end
   object GuidesMember_Mentor: TdsdGuides
     KeyField = 'Id'
@@ -1307,8 +1333,8 @@
         ComponentItem = 'Code'
         MultiSelectSeparator = ','
       end>
-    Left = 157
-    Top = 88
+    Left = 29
+    Top = 200
   end
   object GuidesReasonOut: TdsdGuides
     KeyField = 'Id'
@@ -1344,8 +1370,8 @@
         ComponentItem = 'Code'
         MultiSelectSeparator = ','
       end>
-    Left = 181
-    Top = 136
+    Left = 253
+    Top = 208
   end
   object GuidesPersonalServiceListAvanceF2: TdsdGuides
     KeyField = 'Id'

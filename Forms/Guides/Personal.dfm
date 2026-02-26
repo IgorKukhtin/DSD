@@ -473,6 +473,14 @@ object PersonalForm: TPersonalForm
         Options.Editing = False
         Width = 70
       end
+      object NumBiz: TcxGridDBColumn
+        Caption = #8470' '#1076#1083#1103' '#1041#1080#1094#1077#1088#1073#1099
+        DataBinding.FieldName = 'NumBiz'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

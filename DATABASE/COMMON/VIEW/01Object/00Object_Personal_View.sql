@@ -55,7 +55,9 @@ CREATE OR REPLACE VIEW Object_Personal_View AS
        , ObjectString_Comment.ValueData                   AS Comment
 
        , ObjectDate_Send.ValueData     AS DateSend
-       , CASE WHEN COALESCE (ObjectDate_Send.ValueData, zc_DateEnd()) = zc_DateEnd() THEN FALSE ELSE TRUE END AS isDateSend  
+       , CASE WHEN COALESCE (ObjectDate_Send.ValueData, zc_DateEnd()) = zc_DateEnd() THEN FALSE ELSE TRUE END AS isDateSend 
+       
+       , ObjectString_NumBiz.ValueData ::TVarChar AS NumBiz 
    FROM Object AS Object_Personal
        LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
                             ON ObjectLink_Personal_Member.ObjectId = Object_Personal.Id
@@ -127,6 +129,10 @@ CREATE OR REPLACE VIEW Object_Personal_View AS
        LEFT JOIN ObjectString AS ObjectString_Comment
                               ON ObjectString_Comment.ObjectId = Object_Personal.Id
                              AND ObjectString_Comment.DescId = zc_ObjectString_Personal_Comment()
+
+       LEFT JOIN ObjectString AS ObjectString_NumBiz
+                              ON ObjectString_NumBiz.ObjectId = Object_Personal.Id
+                             AND ObjectString_NumBiz.DescId = zc_ObjectString_Personal_NumBiz()
 
  WHERE Object_Personal.DescId = zc_Object_Personal();
 

@@ -30,6 +30,7 @@ RETURNS TABLE (MemberId Integer, MemberCode Integer, MemberName TVarChar,
              , ReasonOutCode Integer
              , ReasonOutName TVarChar
              , Comment TVarChar
+             , NumBiz TVarChar
                ) AS
 $BODY$
 BEGIN
@@ -97,6 +98,7 @@ BEGIN
          , Object_Personal_View.ReasonOutCode
          , Object_Personal_View.ReasonOutName
          , Object_Personal_View.Comment
+         , CAST ('' as TVarChar)  AS NumBiz 
     FROM Object_Personal_View
           LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
                                ON ObjectLink_Personal_PersonalServiceList.ObjectId = Object_Personal_View.PersonalId
@@ -181,7 +183,8 @@ BEGIN
            , 0                        AS ReasonOutId
            , 0                        AS ReasonOutCode
            , CAST ('' as TVarChar)    AS ReasonOutName
-           , CAST ('' as TVarChar)    AS Comment           
+           , CAST ('' as TVarChar)    AS Comment
+           , CAST ('' as TVarChar)    AS NumBiz           
            ;
   END IF;
 
@@ -245,6 +248,7 @@ BEGIN
          , Object_Personal_View.ReasonOutCode
          , Object_Personal_View.ReasonOutName
          , Object_Personal_View.Comment
+         , Object_Personal_View.NumBiz
     FROM Object_Personal_View
           LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
                                ON ObjectLink_Personal_PersonalServiceList.ObjectId = Object_Personal_View.PersonalId
