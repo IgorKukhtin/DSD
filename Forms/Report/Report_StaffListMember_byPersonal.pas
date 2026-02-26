@@ -49,6 +49,7 @@ type
     ceUnit: TcxButtonEdit;
     cxLabel7: TcxLabel;
     GuidesUnit: TdsdGuides;
+    NumBiz: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -58,6 +58,7 @@ type
     actOpenStaffListMember_Choice: TdsdOpenForm;
     bbOpenStaffListMember_Choice: TdxBarButton;
     MemberCode: TcxGridDBColumn;
+    NumBiz: TcxGridDBColumn;
   private
     { Private declarations }
   public

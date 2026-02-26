@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_Movement_StaffListMember ()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_StaffListMember (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_StaffListMember (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_StaffListMember(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -16,7 +17,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_StaffListMember(
     IN inReasonOutId         Integer   , --
     IN inStaffListKindId     Integer   , --
     IN inisOfficial          Boolean   , --
-    IN inisMain              Boolean   , --
+    IN inisMain              Boolean   , -- 
+    IN inNumBiz              TVarChar  , --
     IN inComment             TVarChar  , --
     IN inUserId              Integer     -- Пользователь
 )                              
@@ -71,6 +73,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Main(), ioId, inisMain);
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
+     -- сохранили связь с <>
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_NumBiz(), ioId, inNumBiz);
 
      
      IF vbIsInsert = TRUE
@@ -98,6 +102,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.02.26         *
  15.09.25         *
 */
 

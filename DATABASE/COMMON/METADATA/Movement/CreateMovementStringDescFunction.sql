@@ -155,8 +155,13 @@ CREATE OR REPLACE FUNCTION zc_MovementString_InvNumberInvoice() RETURNS Integer 
 INSERT INTO MovementStringDesc (Code, ItemName)
   SELECT 'zc_MovementString_InvNumberInvoice', 'Счет(клиента)' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_InvNumberInvoice');
 
+CREATE OR REPLACE FUNCTION zc_MovementString_NumBiz() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_NumBiz'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementStringDesc (Code, ItemName)
+  SELECT 'zc_MovementString_NumBiz', '№ для Бицербы' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_NumBiz');
 
 
+
+ 
 
   --!!!!!!!!!!!!!!!!!!!!!!!!!!Аптека
 CREATE OR REPLACE FUNCTION zc_MovementString_Bayer() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_Bayer'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -304,6 +309,7 @@ INSERT INTO MovementStringDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 26.02.26         * zc_MovementString_NumBiz
  21.07.25         * zc_MovementString_Code1C 
                     zc_MovementString_INN 
                     zc_MovementString_FIO

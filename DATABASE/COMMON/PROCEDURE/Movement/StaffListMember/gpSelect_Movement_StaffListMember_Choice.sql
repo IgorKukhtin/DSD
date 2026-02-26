@@ -20,8 +20,10 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , UnitId_old Integer, UnitName_old TVarChar
              , ReasonOutId Integer, ReasonOutName TVarChar
              , StaffListKindId Integer, StaffListKindName TVarChar
-             , isOfficial Boolean, isMain Boolean 
+             , isOfficial Boolean, isMain Boolean  
+              
              , isDateOut Boolean
+             , NumBiz TVarChar
              , Comment TVarChar
              , InsertName TVarChar
              , UpdateName TVarChar
@@ -70,6 +72,7 @@ BEGIN
                                 FROM MovementString
                                 WHERE MovementString.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement) 
                                   AND MovementString.DescId IN (zc_MovementString_Comment()
+                                                              , zc_MovementString_NumBiz() 
                                                                 )
                                 )
 
@@ -171,7 +174,8 @@ BEGIN
                   ELSE COALESCE (tmpPersonal.isDateOut, FALSE)
              END ::Boolean AS isDateOut 
 
-           , MovementString_Comment.ValueData                     ::TVarChar AS Comment
+           , MovementString_NumBiz.ValueData        ::TVarChar AS NumBiz
+           , MovementString_Comment.ValueData       ::TVarChar AS Comment
            
            , Object_Insert.ValueData               AS InsertName
            , Object_Update.ValueData               AS UpdateName
@@ -201,6 +205,10 @@ BEGIN
             LEFT JOIN tmpMovementString AS MovementString_Comment
                                         ON MovementString_Comment.MovementId = Movement.Id
                                        AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN tmpMovementString AS MovementString_NumBiz
+                                        ON MovementString_NumBiz.MovementId = Movement.Id
+                                       AND MovementString_NumBiz.DescId = zc_MovementString_NumBiz()
 
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = Movement.MemberId
 

@@ -324,7 +324,7 @@
       end
       object cxLabel19: TcxLabel
         Left = 16
-        Top = 88
+        Top = 90
         Caption = #8470' '#1076#1083#1103' '#1041#1080#1094#1077#1088#1073#1099
       end
     end

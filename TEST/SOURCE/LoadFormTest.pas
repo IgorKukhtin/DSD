@@ -5060,12 +5060,12 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalEditForm');
-  exit;
-  {
+  //exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonal_ChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonal_ChoiceForm');
   exit;
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonal_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonal_ObjectForm');
   //exit;

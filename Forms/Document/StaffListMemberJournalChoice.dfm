@@ -187,6 +187,14 @@ inherited StaffListMemberJournalChoiceForm: TStaffListMemberJournalChoiceForm
             Options.Editing = False
             Width = 100
           end
+          object NumBiz: TcxGridDBColumn
+            Caption = #8470' '#1076#1083#1103' '#1041#1080#1094#1077#1088#1073#1099
+            DataBinding.FieldName = 'NumBiz'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'

@@ -112,6 +112,8 @@ type
     GuidesStorageLine5: TdsdGuides;
     ceStorageLine5: TcxButtonEdit;
     cxLabel28: TcxLabel;
+    cxLabel29: TcxLabel;
+    edNumBiz: TcxTextEdit;
   private
     { Private declarations }
   public

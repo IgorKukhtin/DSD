@@ -34,6 +34,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Member_MentorId Integer, Member_MentorName TVarChar            
              
              , isOfficial Boolean, isMain Boolean
+             , NumBiz TVarChar
              , Comment TVarChar
              , InsertId Integer, InsertName TVarChar
              , UpdateId Integer, UpdateName TVarChar
@@ -103,7 +104,8 @@ BEGIN
              , CAST ('' as TVarChar)    AS Member_MentorName
            
              , CAST (FALSE AS Boolean)                          AS isOfficial
-             , CAST (FALSE AS Boolean)                          AS isMain
+             , CAST (FALSE AS Boolean)                          AS isMain 
+             , CAST ('' AS TVarChar)                            AS NumBiz
              , CAST ('' AS TVarChar)                            AS Comment
              , Object_Insert.Id                                 AS InsertId
              , Object_Insert.ValueData                          AS InsertName
@@ -244,6 +246,7 @@ BEGIN
            , COALESCE (MovementBoolean_Official.ValueData, FALSE) ::Boolean  AS isOfficial
            , COALESCE (MovementBoolean_Main.ValueData, FALSE)     ::Boolean  AS isMain
 
+           , MovementString_NumBiz.ValueData                      ::TVarChar AS NumBiz
            , MovementString_Comment.ValueData                     ::TVarChar AS Comment
 
            , Object_Insert.Id                      AS InsertId
@@ -273,6 +276,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementString AS MovementString_NumBiz
+                                     ON MovementString_NumBiz.MovementId = Movement.Id
+                                    AND MovementString_NumBiz.DescId = zc_MovementString_NumBiz()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Member
                                          ON MovementLinkObject_Member.MovementId = Movement.Id
