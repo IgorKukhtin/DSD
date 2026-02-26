@@ -25,7 +25,7 @@ uses
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
   cxGridBandedTableView, cxGridDBBandedTableView, Vcl.Grids, Vcl.DBGrids,
-  cxSplitter;
+  cxSplitter, dsdCommon;
 
 type
   TSheetWorkTimeForm = class(TParentForm)
@@ -118,6 +118,7 @@ type
     actOpenProtocolPersonal: TdsdOpenForm;
     bbOpenProtocolMember: TdxBarButton;
     bbOpenProtocolPersonal: TdxBarButton;
+    NumBiz: TcxGridDBBandedColumn;
   private
   public
   end;
