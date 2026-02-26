@@ -4,7 +4,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
   ClientWidth = 1091
   AddOnFormData.ExecuteDialogAction = actReport_SheetWorkTimeDialog
   ExplicitWidth = 1107
-  ExplicitHeight = 557
+  ExplicitHeight = 558
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -154,7 +154,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 20
+            Width = 22
             Position.BandIndex = 0
             Position.ColIndex = 2
             Position.RowIndex = 0
@@ -165,7 +165,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 69
+            Width = 61
             Position.BandIndex = 0
             Position.ColIndex = 3
             Position.RowIndex = 0
@@ -176,7 +176,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 62
+            Width = 55
             Position.BandIndex = 0
             Position.ColIndex = 4
             Position.RowIndex = 0
@@ -187,7 +187,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 52
+            Width = 46
             Position.BandIndex = 0
             Position.ColIndex = 5
             Position.RowIndex = 0
@@ -198,7 +198,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 53
             Position.BandIndex = 0
             Position.ColIndex = 6
             Position.RowIndex = 0
@@ -209,7 +209,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 67
+            Width = 59
             Position.BandIndex = 0
             Position.ColIndex = 7
             Position.RowIndex = 0
@@ -227,6 +227,17 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
+          object NumBiz: TcxGridDBBandedColumn
+            Caption = #8470' '#1076#1083#1103' '#1041#1080#1094#1077#1088#1073#1099
+            DataBinding.FieldName = 'NumBiz'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+            Position.BandIndex = 0
+            Position.ColIndex = 14
+            Position.RowIndex = 0
+          end
           object Amount_1: TcxGridDBBandedColumn
             Caption = '1.'#1095#1072#1089#1099
             DataBinding.FieldName = 'Amount_1'
@@ -238,7 +249,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
             MinWidth = 15
             Options.Editing = False
             Options.Moving = False
-            Width = 29
+            Width = 26
             Position.BandIndex = 0
             Position.ColIndex = 8
             Position.RowIndex = 0
@@ -254,7 +265,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
             MinWidth = 15
             Options.Editing = False
             Options.Moving = False
-            Width = 37
+            Width = 33
             Position.BandIndex = 0
             Position.ColIndex = 9
             Position.RowIndex = 0
@@ -270,7 +281,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
             MinWidth = 15
             Options.Editing = False
             Options.Moving = False
-            Width = 29
+            Width = 25
             Position.BandIndex = 0
             Position.ColIndex = 10
             Position.RowIndex = 0
@@ -756,6 +767,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     HeaderDataSet = HeaderCDS
     HeaderColumnName = 'ValueField'
@@ -816,6 +828,7 @@ inherited Report_SheetWorkTimeForm: TReport_SheetWorkTimeForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     HeaderDataSet = HeaderCDS
     HeaderColumnName = 'ValueField'

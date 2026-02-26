@@ -59,7 +59,7 @@ BEGIN
 
      CREATE TEMP TABLE tmpMI ON COMMIT DROP AS
        SELECT tmpOperDate.operdate
-            , SUM (COALESCE (MI_SheetWorkTime.Amount,0)) AS Amount
+            , SUM (COALESCE (MI_SheetWorkTime.Amount,0))    AS Amount
             , COALESCE(MI_SheetWorkTime.ObjectId, 0)        AS MemberId
             , COALESCE(MIObject_Position.ObjectId, 0)       AS PositionId
             , COALESCE(MIObject_PositionLevel.ObjectId, 0)  AS PositionLevelId
@@ -74,6 +74,7 @@ BEGIN
                         THEN CASE WHEN MI_SheetWorkTime.Amount > 0 AND MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Quit() THEN zc_Enum_WorkTimeKind_Work() ELSE COALESCE (MIObject_WorkTimeKind.ObjectId, 0) END
                    ELSE 0
               END AS WorkTimeKindId_key
+            , MIString_NumBiz.ValueData AS NumBiz
        FROM tmpOperDate
             JOIN Movement ON Movement.operDate = tmpOperDate.OperDate
                          AND Movement.DescId = zc_Movement_SheetWorkTime()
@@ -101,6 +102,10 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_NoSheetCalc
                                     ON ObjectBoolean_NoSheetCalc.ObjectId = COALESCE(MIObject_PositionLevel.ObjectId, 0)
                                    AND ObjectBoolean_NoSheetCalc.DescId = zc_ObjectBoolean_PositionLevel_NoSheetCalc()
+
+            LEFT JOIN MovementItemString AS MIString_NumBiz
+                                         ON MIString_NumBiz.MovementItemId = MI_SheetWorkTime.Id
+                                        AND MIString_NumBiz.DescId = zc_MIString_NumBiz()
        WHERE (COALESCE(MI_SheetWorkTime.ObjectId, 0) = inMemberId OR inMemberId = 0)
           AND COALESCE (MIObject_WorkTimeKind.ObjectId,0) <> 0
        GROUP BY tmpOperDate.operdate
@@ -118,6 +123,7 @@ BEGIN
                           THEN CASE WHEN MI_SheetWorkTime.Amount > 0 AND MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Quit() THEN zc_Enum_WorkTimeKind_Work() ELSE COALESCE (MIObject_WorkTimeKind.ObjectId, 0) END
                      ELSE 0
                 END
+              , MIString_NumBiz.ValueData
      ;
 
      CREATE TEMP TABLE tmpPersonal ON COMMIT DROP AS
@@ -133,6 +139,7 @@ BEGIN
                   , ROW_NUMBER() OVER (PARTITION BY Object_Personal_View.UnitId, Object_Personal_View.MemberId, Object_Personal_View.PositionId, Object_Personal_View.PositionLevelId
                                        ORDER BY CASE WHEN Object_Personal_View.isErased = TRUE THEN 1 ELSE 0 END ASC
                                        ) AS Ord_find
+                  , Object_Personal_View.NumBiz
              FROM Object_Personal_View
              WHERE (Object_Personal_View.UnitId = inUnitId OR inUnitId =0)
                AND (Object_Personal_View.MemberId = inMemberId OR inMemberId =0)
@@ -268,7 +275,22 @@ BEGIN
     GROUP BY tmp.OperDate, tmp.MemberId, tmp.PositionId, tmp.PositionLevelId, tmp.PersonalGroupId, tmp.UnitId, tmp.ObjectId, tmp.WorkTimeKindId_key
     ;
 
-
+ -- № для Бицербы 
+ CREATE TEMP TABLE tmpMI_NumBiz ON COMMIT DROP AS
+      SELECT tmpMI.MemberId
+           , tmpMI.PositionId
+           , tmpMI.PositionLevelId
+           , tmpMI.PersonalGroupId
+           , tmpMI.UnitId
+           , MAX (tmpMI.NumBiz::Integer) AS NumBiz
+      FROM tmpMI
+      WHERE COALESCE (tmpMI.NumBiz,'') <> ''
+      GROUP BY tmpMI.MemberId
+             , tmpMI.PositionId
+             , tmpMI.PositionLevelId
+             , tmpMI.PersonalGroupId
+             , tmpMI.UnitId
+      ;
 
      -- возвращаем заголовки столбцов и даты
      OPEN cur1 FOR SELECT tmpOperDate.OperDate::TDateTime, 
@@ -314,7 +336,8 @@ BEGIN
                , tmpTotal.Amount_4 ::TFloat
                , tmpTotal.Amount_5 ::TFloat
                , tmpTotal.Amount_6 ::TFloat
-               , tmpStaffList.StaffListSummKindName ::TVarChar
+               , tmpStaffList.StaffListSummKindName ::TVarChar 
+               , COALESCE (tmpMI_NumBiz.NumBiz ::TVarChar , tmpPersonal.NumBiz)  ::TVarChar AS NumBiz
                '
                || vbFieldNameText ||
         ' FROM
@@ -353,6 +376,12 @@ BEGIN
                               AND tmpPersonal.PositionLevelId = D.Key[3]
                               AND tmpPersonal.PersonalGroupId = D.Key[4]
                               AND tmpPersonal.UnitId          = D.Key[5]
+
+         LEFT JOIN tmpMI_NumBiz ON tmpMI_NumBiz.MemberId                     = D.Key[1]
+                               AND COALESCE(tmpMI_NumBiz.PositionId, 0)      = D.Key[2]
+                               AND COALESCE(tmpMI_NumBiz.PositionLevelId, 0) = D.Key[3]
+                               AND COALESCE(tmpMI_NumBiz.PersonalGroupId, 0) = D.Key[4]
+                               AND tmpMI_NumBiz.UnitId                       = D.Key[5]
 
          LEFT JOIN (SELECT tmpTotal.MemberId
                          , tmpTotal.PositionId
@@ -435,6 +464,7 @@ $BODY$
 /*   
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+ 26.02.26         * NumBiz
  01.09.21         * add inMemberId
  07.01.14                                                          *
 */
@@ -444,4 +474,3 @@ $BODY$
   SELECT * FROM gpReport_SheetWorkTime('20150701', '20150830', 0, '5');
   fetch all "<unnamed portal 10>";
  END;*/
-

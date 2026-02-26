@@ -24,7 +24,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, cxCurrencyEdit, cxSplitter;
+  dxSkinXmas2008Blue, cxCurrencyEdit, cxSplitter, dsdCommon;
 
 type
   TReport_SheetWorkTimeForm = class(TAncestorReportForm)
@@ -57,6 +57,7 @@ type
     Value_ch2: TcxGridDBBandedColumn;
     cxGridLevel1: TcxGridLevel;
     cxSplitter1: TcxSplitter;
+    NumBiz: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

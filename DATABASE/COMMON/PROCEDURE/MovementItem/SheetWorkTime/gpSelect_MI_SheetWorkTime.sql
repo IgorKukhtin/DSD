@@ -678,7 +678,6 @@ BEGIN
              , tmpMI.PositionLevelId
              , tmpMI.PersonalGroupId
              , tmpMI.StorageLineId
-             , tmpMI.NumBiz
       ;
 
 
