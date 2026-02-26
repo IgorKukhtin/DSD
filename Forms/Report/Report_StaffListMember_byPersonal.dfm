@@ -20,6 +20,7 @@ inherited Report_StaffListMember_byPersonalForm: TReport_StaffListMember_byPerso
       inherited cxGrid: TcxGrid
         Width = 998
         Height = 344
+        ExplicitTop = -7
         ExplicitWidth = 998
         ExplicitHeight = 344
         inherited cxGridDBTableView: TcxGridDBTableView
