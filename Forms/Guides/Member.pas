@@ -219,6 +219,7 @@ type
     dxBarButton2: TdxBarButton;
     cbIsNext: TcxCheckBox;
     dxBarControlContainerItem3: TdxBarControlContainerItem;
+    NumBiz: TcxGridDBColumn;
   private
     { Private declarations }
   public

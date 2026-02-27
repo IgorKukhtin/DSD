@@ -168,6 +168,8 @@ type
     GuidesRouteNum: TdsdGuides;
     cxLabel58: TcxLabel;
     ceCode1C: TcxTextEdit;
+    edNumBiz: TcxTextEdit;
+    cxLabel59: TcxLabel;
   private
     { Private declarations }
   public

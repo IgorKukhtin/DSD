@@ -131,8 +131,8 @@ CREATE OR REPLACE VIEW Object_Personal_View AS
                              AND ObjectString_Comment.DescId = zc_ObjectString_Personal_Comment()
 
        LEFT JOIN ObjectString AS ObjectString_NumBiz
-                              ON ObjectString_NumBiz.ObjectId = Object_Personal.Id
-                             AND ObjectString_NumBiz.DescId = zc_ObjectString_Personal_NumBiz()
+                              ON ObjectString_NumBiz.ObjectId = Object_Member.Id
+                             AND ObjectString_NumBiz.DescId = zc_ObjectString_Member_NumBiz()
 
  WHERE Object_Personal.DescId = zc_Object_Personal();
 

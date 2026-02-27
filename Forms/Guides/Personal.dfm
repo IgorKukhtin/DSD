@@ -537,7 +537,7 @@ object PersonalForm: TPersonalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 6
-    Width = 161
+    Width = 137
   end
   object ceServiceListCardSecond: TcxButtonEdit
     Left = 853
@@ -549,7 +549,7 @@ object PersonalForm: TPersonalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 11
-    Width = 161
+    Width = 148
   end
   object cxLabel1: TcxLabel
     Left = 853

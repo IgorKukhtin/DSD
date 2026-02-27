@@ -694,6 +694,14 @@ object MemberForm: TMemberForm
         Options.Editing = False
         Width = 80
       end
+      object NumBiz: TcxGridDBColumn
+        Caption = #8470' '#1076#1083#1103' '#1041#1080#1094#1077#1088#1073#1099
+        DataBinding.FieldName = 'NumBiz'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -723,7 +731,7 @@ object MemberForm: TMemberForm
     Width = 1056
     Height = 70
     Align = alTop
-    TabOrder = 4
+    TabOrder = 3
     object cxLabel13: TcxLabel
       Left = 193
       Top = 9
@@ -863,7 +871,7 @@ object MemberForm: TMemberForm
     Height = 80
     Align = alBottom
     Caption = 'Panel1'
-    TabOrder = 7
+    TabOrder = 6
     Visible = False
     object ExportXmlGrid: TcxGrid
       Left = 599

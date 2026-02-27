@@ -99,21 +99,19 @@ BEGIN
    IF COALESCE (inNumBiz,'') <> ''   
    
    THEN 
-   RAISE EXCEPTION 'Значение № для Бицербы <%> для <%> должно быть в пределах 0-99.' , inNumBiz, vbName;
-   
        -- проверка или пустая строка или число от 0 до 99 
        IF inNumBiz :: Integer < 0 OR inNumBiz :: Integer > 99
        THEN   
            RAISE EXCEPTION 'Значение № для Бицербы <%> для <%> должно быть в пределах 0-99.' , inNumBiz, vbName;
        END IF; 
-       --проверка уникальности (среди сотрудников если не удален)
+       --проверка уникальности (среди физ.лиц если не удален)
        IF EXISTS (SELECT 1
                   FROM ObjectString
                       INNER JOIN Object ON Object.Id = ObjectString.ObjectId
-                                       AND Object.DescId = zc_Object_Personal()
+                                       AND Object.DescId = zc_Object_Member()
                                        AND Object.isErased = FALSE
-                  WHERE ObjectString.DescId = zc_ObjectString_Personal_NumBiz()
-                    AND ObjectString.ObjectId <> ioId
+                  WHERE ObjectString.DescId = zc_ObjectString_Member_NumBiz()
+                    AND ObjectString.ObjectId <> inMemberId
                     AND ObjectString.ValueData = inNumBiz
                     AND COALESCE (ObjectString.ValueData,'') <> '' 
                   )
@@ -163,8 +161,13 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_ReasonOut(), ioId, inReasonOutId);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Personal_Comment(), ioId, inComment);
+
+   --сохранение свойства для физ лица
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Personal_NumBiz(), ioId, inNumBiz);
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Member_NumBiz(), inMemberId, inNumBiz);
+   -- сохранили протоколдля физ лица
+   PERFORM lpInsert_ObjectProtocol (inMemberId, vbUserId);
+
 
 
    -- сохранили свойство <Дата увольнения>

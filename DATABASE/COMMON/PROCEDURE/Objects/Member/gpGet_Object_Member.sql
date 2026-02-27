@@ -67,6 +67,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PSP_W TVarChar
              , PSP_D TVarChar     
              , Phone TVarChar
+             , NumBiz TVarChar
               )
 AS
 $BODY$
@@ -171,6 +172,7 @@ BEGIN
            , CAST ('' as TVarChar) AS PSP_W
            , CAST ('' as TVarChar) AS PSP_D 
            , CAST ('' as TVarChar) AS Phone
+           , CAST ('' as TVarChar) AS NumBiz
            ;
    ELSE
        RETURN QUERY
@@ -307,6 +309,7 @@ BEGIN
             , ObjectString_PSP_D.ValueData                AS PSP_D  
             
             , ObjectString_Phone.ValueData                AS Phone
+            , ObjectString_NumBiz.ValueData   :: TVarChar AS NumBiz
         FROM Object AS Object_Member
              LEFT JOIN tmpPersonal ON tmpPersonal.ord = 1
              LEFT JOIN Object AS Object_Unit                ON Object_Unit.Id                = tmpPersonal.UnitId
@@ -528,6 +531,10 @@ BEGIN
          LEFT JOIN ObjectString AS ObjectString_Phone
                                 ON ObjectString_Phone.ObjectId = Object_Member.Id
                                AND ObjectString_Phone.DescId = zc_ObjectString_Member_Phone()
+
+         LEFT JOIN ObjectString AS ObjectString_NumBiz
+                                ON ObjectString_NumBiz.ObjectId = Object_Member.Id
+                               AND ObjectString_NumBiz.DescId = zc_ObjectString_Member_NumBiz()
         WHERE Object_Member.Id = inId;
      
    END IF;
@@ -539,6 +546,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 27.02.26         *
  28.10.24         * Code1C
  15.03.24         * 
  27.09.21         * UnitMobile
