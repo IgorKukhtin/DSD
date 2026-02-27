@@ -3766,13 +3766,13 @@ end;
 
 procedure TLoadFormTest.LoadReportSheetWorkTimeFormTest;
 begin
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SheetWorkTime_UpdateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SheetWorkTime_UpdateForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SheetWorkTime_UpdateDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SheetWorkTime_UpdateDialogForm');
    exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SheetWorkTimeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SheetWorkTimeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SheetWorkTimeDialogForm'));
