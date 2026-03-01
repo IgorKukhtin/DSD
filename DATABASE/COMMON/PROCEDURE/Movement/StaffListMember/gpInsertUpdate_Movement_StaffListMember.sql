@@ -7,6 +7,10 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_StaffListMember (Integer, TVarCh
                                                                , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                                , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar, TVarChar);
                                                                
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_StaffListMember (Integer, TVarChar, TDateTime, Integer, Integer, Integer
+                                                               , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                               , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_StaffListMember(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
     IN inInvNumber           TVarChar  , -- Номер документа
@@ -38,6 +42,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_StaffListMember(
 
     IN inisOfficial          Boolean   , --
     IN inisMain              Boolean   , --
+    IN inNumBiz              TVarChar  , --
     IN inComment             TVarChar  , --
     IN inSession             TVarChar    -- сессия пользователя
 )     
@@ -200,7 +205,8 @@ BEGIN
                                                     , inReasonOutId         := inReasonOutId        
                                                     , inStaffListKindId     := inStaffListKindId    
                                                     , inisOfficial          := inisOfficial         
-                                                    , inisMain              := inisMain             
+                                                    , inisMain              := inisMain
+                                                    , inNumBiz              := inNumBiz             
                                                     , inComment             := inComment            
                                                     , inUserId              := vbUserId
                                                      );  
@@ -231,6 +237,7 @@ BEGIN
                                                   , inIsDateOut                       := vbIsDateOut                       ::Boolean    -- Уволен
                                                   , inIsDateSend                      := vbIsDateSend                      ::Boolean    -- переведен
                                                   , inIsMain                          := inIsMain                          ::Boolean    -- Основное место работы
+                                                  , inNumBiz                          := inNumBiz                          ::TVarChar   --
                                                   , inComment                         := inComment                         ::TVarChar  
                                                   , inSession                         := inSession                         ::TVarChar   -- сессия пользователя 
                                                   ) ;
@@ -386,7 +393,8 @@ $BODY$
                                                     , inReasonOutId         := 0    ::Integer   
                                                     , inStaffListKindId     := tmp.StaffListKindId    
                                                     , inisOfficial          := tmp.isOfficial         
-                                                    , inisMain              := tmp.isMain             
+                                                    , inisMain              := tmp.isMain
+                                                    , inNumBiz              := tmp.NumBiz             
                                                     , inComment             := 'Авто.' ::TVarChar           
                                                     , inUserId              := inSession
                                                      )

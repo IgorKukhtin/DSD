@@ -43,7 +43,7 @@
       end
       object cxLabel1: TcxLabel
         Left = 14
-        Top = 44
+        Top = 43
         Caption = #1060#1048#1054
       end
       object Код: TcxLabel
@@ -405,7 +405,7 @@
       end
       object cxLabel58: TcxLabel
         Left = 318
-        Top = 44
+        Top = 43
         Caption = #1050#1086#1076' 1'#1057
       end
       object ceCode1C: TcxTextEdit
@@ -413,6 +413,17 @@
         Top = 58
         TabOrder = 57
         Width = 161
+      end
+      object edNumBiz: TcxTextEdit
+        Left = 490
+        Top = 58
+        TabOrder = 58
+        Width = 147
+      end
+      object cxLabel59: TcxLabel
+        Left = 490
+        Top = 43
+        Caption = #8470' '#1076#1083#1103' '#1041#1080#1094#1077#1088#1073#1099
       end
     end
     object tsContact: TcxTabSheet
@@ -1074,6 +1085,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inNumBiz'
+        Value = Null
+        Component = edNumBiz
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = ''
         Component = ceComment
@@ -1712,6 +1731,13 @@
         Component = ceCode1C
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'NumBiz'
+        Value = Null
+        Component = edNumBiz
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 360
     Top = 136
@@ -1837,8 +1863,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 544
-    Top = 31
+    Left = 568
+    Top = 15
   end
   object GuidesBankSecond: TdsdGuides
     KeyField = 'Id'
@@ -1867,8 +1893,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 552
-    Top = 79
+    Left = 576
+    Top = 87
   end
   object BankChildGuides: TdsdGuides
     KeyField = 'Id'

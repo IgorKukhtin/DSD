@@ -1679,14 +1679,14 @@ begin
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemProtocolSWTForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementItemProtocolSWTForm');
- }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTime_lineForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTime_lineForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeJournal_lineForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeJournal_lineForm');
 
   exit;
-  {
+
   //справочники
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDayKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDayKindForm');
@@ -3792,25 +3792,25 @@ end;
 
 procedure TLoadFormTest.LoadReportSheetWorkTimeFormTest;
 begin
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SheetWorkTime_UpdateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SheetWorkTime_UpdateForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SheetWorkTime_UpdateDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SheetWorkTime_UpdateDialogForm');
    exit;
-  {
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SheetWorkTimeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SheetWorkTimeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SheetWorkTimeDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SheetWorkTimeDialogForm');
-  }
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SheetWorkTime_GraphForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SheetWorkTime_GraphForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SheetWorkTime_GraphDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SheetWorkTime_GraphDialogForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SheetWorkTime_OutForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SheetWorkTime_OutForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SheetWorkTime_OutDialogForm'));
@@ -4609,17 +4609,17 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ChoiceForm');
-  exit;
+ // exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalPosition_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalPosition_ObjectForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberPosition_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberPosition_ObjectForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberEditForm');
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberForm');
   exit;
@@ -5086,12 +5086,12 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalEditForm');
-  exit;
-  {
+  //exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonal_ChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonal_ChoiceForm');
   exit;
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonal_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonal_ObjectForm');
   //exit;

@@ -24,6 +24,7 @@ RETURNS TABLE (DateIn TDateTime, DateSend TDateTime, DateOut TDateTime
              , isDateOut Boolean
              , UserId_pr Integer, UserName_pr TVarChar
              , Operdate_pr TDateTime 
+             , NumBiz TVarChar
              , Comment TVarChar
               )
 AS
@@ -97,7 +98,8 @@ BEGIN
                             , tmpViewPersonal.isOfficial         
                             , tmpViewPersonal.isMain 
                             , zc_Enum_StaffListKind_In() AS StaffListKindId
-                            , 1 AS Comment                                                    
+                            , 1 AS Comment
+                            , tmpViewPersonal.NumBiz                                                    
                        FROM tmpViewPersonal
                        WHERE (tmpViewPersonal.isMain = True --основное место работы
                                AND COALESCE (tmpViewPersonal.DateSend,zc_DateStart()) = zc_DateStart()
@@ -119,6 +121,7 @@ BEGIN
                             , tmp.isMain
                             , zc_Enum_StaffListKind_In()  AS StaffListKindId
                             , 1 AS Comment
+                            , tmp.NumBiz
                        FROM (SELECT tmpViewPersonal.DateIn
                                   , tmpViewPersonal.MemberId
                                   , tmpViewPersonal.PersonalId
@@ -127,6 +130,7 @@ BEGIN
                                   , tmpViewPersonal.UnitId 
                                   , tmpViewPersonal.isOfficial         
                                   , tmpViewPersonal.isMain
+                                  , tmpViewPersonal.NumBiz
                                   , ROW_NUMBER() OVER (PARTITION BY tmpViewPersonal.MemberId ORDER BY tmpViewPersonal.DateSend ASC, tmpViewPersonal.PersonalId DESC) AS Ord
                              FROM tmpViewPersonal
                                   LEFT JOIN tmpViewPersonal AS tmpSend 
@@ -158,6 +162,7 @@ BEGIN
                         , tmpViewPersonal.isMain
                         , zc_Enum_StaffListKind_Add() AS StaffListKindId
                         , 1 AS Comment
+                        , tmpViewPersonal.NumBiz
                    FROM tmpViewPersonal
                    WHERE ((tmpViewPersonal.isMain <> True --основное место работы
                            AND COALESCE (tmpViewPersonal.DateSend,zc_DateStart()) = zc_DateStart())
@@ -180,6 +185,7 @@ BEGIN
                         , COALESCE (tmpSend.UnitId,tmpSend_erased.UnitId, tmpSend2.UnitId, tmpSend3.UnitId)                            AS UnitId_old         
                         , tmpViewPersonal.isOfficial         
                         , tmpViewPersonal.isMain
+                        , tmpViewPersonal.NumBiz
                         --, ROW_NUMBER() OVER (PARTITION BY tmpViewPersonal.MemberId ORDER BY tmpViewPersonal.DateSend ASC, COALESCE (tmpSend.PersonalId, tmpSend2.PersonalId, tmpSend3.PersonalId) asc) AS Ord
                    FROM tmpViewPersonal   
                          --ищем должность с которой перевели   
@@ -233,6 +239,7 @@ BEGIN
                         , tmpViewPersonal.isMain
                         , zc_Enum_StaffListKind_Out()  AS StaffListKindId
                         , 3 AS Comment
+                        , tmpViewPersonal.NumBiz
                    FROM tmpViewPersonal
                    WHERE COALESCE (tmpViewPersonal.DateOut, zc_DateEnd()) <> zc_DateEnd()
                    AND tmpViewPersonal.isERased = FALSE
@@ -256,6 +263,7 @@ BEGIN
                         , tmpViewPersonal.isMain
                         , zc_Enum_StaffListKind_Add() AS StaffListKindId
                         , 1 AS Comment
+                        , tmpViewPersonal.NumBiz
                    FROM tmpViewPersonal
                         LEFT JOIN tmpUnion ON tmpUnion.PersonalId = tmpViewPersonal.PersonalId
                                           AND tmpUnion.MemberId = tmpViewPersonal.MemberId
@@ -280,6 +288,7 @@ BEGIN
                     , tmp.isMain
                     , tmp.StaffListKindId
                     , 1 AS Comment
+                    , tmp.NumBiz
                FROM tmpIn AS tmp
              UNION 
                --первый раз прием
@@ -296,6 +305,7 @@ BEGIN
                     , tmp.isMain
                     , zc_Enum_StaffListKind_In() AS StaffListKindId
                     , 1 AS Comment
+                    , tmp.NumBiz
                FROM tmpIn_Send AS tmp 
              UNION 
                --второй раз перевод 
@@ -312,6 +322,7 @@ BEGIN
                     , tmp.isMain
                     , zc_Enum_StaffListKind_Send() AS StaffListKindId
                     , 2 AS Comment
+                    , tmp.NumBiz
                FROM tmpIn_Send AS tmp
              UNION
                SELECT tmp.OperDate
@@ -327,6 +338,7 @@ BEGIN
                     , tmp.isMain
                     , tmp.StaffListKindId
                     , 1 AS Comment
+                    , tmp.NumBiz
                FROM tmpAdd AS tmp
              UNION 
                --уволенные 
@@ -343,6 +355,7 @@ BEGIN
                     , tmp.isMain
                     , tmp.StaffListKindId
                     , 3 AS Comment
+                    , tmp.NumBiz
                FROM tmpOut AS tmp
                )
 
@@ -362,6 +375,7 @@ BEGIN
                           , tmpViewPersonal.isMain
                           , 0 AS StaffListKindId
                           , 4 AS Comment
+                          , tmpViewPersonal.NumBiz
                      FROM tmpViewPersonal
                           LEFT JOIN tmp ON tmp.PersonalId = tmpViewPersonal.PersonalId
                                        AND tmp.MemberId = tmpViewPersonal.MemberId
@@ -385,6 +399,7 @@ BEGIN
                        , tmp.isMain
                        , tmp.StaffListKindId
                        , tmp.Comment
+                       , tmp.NumBiz
                   FROM tmp
                UNION 
                   SELECT tmp.DateIn AS OperDate
@@ -400,6 +415,7 @@ BEGIN
                        , tmp.isMain
                        , zc_Enum_StaffListKind_In() AS StaffListKindId
                        , 1 AS Comment
+                       , tmp.NumBiz
                  FROM tmpErased AS tmp
                UNION 
                   SELECT tmp.DateOut AS OperDate
@@ -415,6 +431,7 @@ BEGIN
                        , tmp.isMain
                        , zc_Enum_StaffListKind_Out() AS StaffListKindId
                        , 3 AS Comment
+                       , tmp.NumBiz
                   FROM tmpErased AS tmp
                  )               
 
@@ -519,8 +536,10 @@ BEGIN
                , CASE WHEN Object_StaffListKind.Id IN (zc_Enum_StaffListKind_In(), zc_Enum_StaffListKind_Add()) THEN tmpProtocol_in.Operdate
                       WHEN Object_StaffListKind.Id = zc_Enum_StaffListKind_Send() THEN tmpProtocol_send.Operdate
                       WHEN Object_StaffListKind.Id = zc_Enum_StaffListKind_Out() THEN tmpProtocol_out.Operdate
-                 END  ::TDateTime AS Operdate_pr
-               , ('јвто.'||tmp.Comment::TVarChar) ::TVarChar 
+                 END  ::TDateTime AS Operdate_pr 
+                 
+               , tmp.NumBiz                       ::TVarChar
+               , ('јвто.'||tmp.Comment::TVarChar) ::TVarChar AS Comment
           FROM tmpAll AS tmp 
                LEFT JOIN Object AS Object_StaffListKind ON Object_StaffListKind.Id = tmp.StaffListKindId
                LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmp.MemberId 
@@ -567,7 +586,7 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_StaffListMember_byPersonal (inMemberId:= 0, inIsErased:=true, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_StaffListMember_byPersonal (inUnitId := 8439, inMemberId:= 0, inIsErased:=true, inSession:= zfCalc_UserAdmin())
 
  /*  
       заполнение документов Ў– сотрудники    

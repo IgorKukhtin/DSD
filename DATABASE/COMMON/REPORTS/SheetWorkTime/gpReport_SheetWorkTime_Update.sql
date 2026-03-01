@@ -27,6 +27,7 @@ CREATE OR REPLACE FUNCTION gpReport_SheetWorkTime_Update(
                , WorkTimeKindId_key Integer
                , WorkTimeKindName   TVarChar
                , ShortName TVarChar
+               , NumBiz_mi TVarChar, NumBiz TVarChar
                , Amount    TFloat  
                , DayOfWeekName TVarChar
                , OperDate   TDateTime
@@ -91,6 +92,8 @@ BEGIN
                     , COALESCE (MovementBoolean_CheckedHead.ValueData, FALSE)     :: Boolean  AS isCheckedHead
                     , COALESCE (MovementBoolean_CheckedPersonal.ValueData, FALSE) :: Boolean  AS isCheckedPersonal
 
+                    , MIString_NumBiz.ValueData AS NumBiz
+
                     , MI_SheetWorkTime.isErased 
                FROM Movement
                     JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -121,6 +124,10 @@ BEGIN
                                                      ON MIObject_StorageLine.MovementItemId = MI_SheetWorkTime.Id
                                                     AND MIObject_StorageLine.DescId         = zc_MILinkObject_StorageLine()
                     LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+                    LEFT JOIN MovementItemString AS MIString_NumBiz
+                                                 ON MIString_NumBiz.MovementItemId = MI_SheetWorkTime.Id
+                                                AND MIString_NumBiz.DescId = zc_MIString_NumBiz()
 
                     LEFT JOIN MovementDate AS MovementDate_CheckedHead
                                            ON MovementDate_CheckedHead.MovementId = Movement.Id
@@ -174,6 +181,7 @@ BEGIN
                           , Object_Personal_View.UnitId
                           , Object_Personal_View.DateIn
                           , CASE WHEN Object_Personal_View.DateOut = zc_DateEnd() THEN NULL ELSE Object_Personal_View.DateOut END ::TDateTime AS DateOut
+                          , Object_Personal_View.NumBiz
                      FROM Object_Personal_View
                      WHERE (Object_Personal_View.UnitId = inUnitId OR inUnitId =0)
                      )
@@ -196,7 +204,9 @@ BEGIN
          , Object_WorkTimeKind.Id          AS WorkTimeKindId
          , Object_WorkTimeKind.Id          AS WorkTimeKindId_key
          , Object_WorkTimeKind.ValueData   AS WorkTimeKindName 
-         , tmpMI.ShortName
+         , tmpMI.ShortName 
+         , tmpMI.NumBiz         ::TVarChar AS NumBiz_mi
+         , tmpPersonal.NumBiz   ::TVarChar AS NumBiz
          , tmpMI.Amount
          , tmpWeekDay.DayOfWeekName ::TVarChar AS DayOfWeekName
          , tmpMI.OperDate
@@ -241,9 +251,9 @@ BEGIN
          LEFT JOIN Object AS Object_StorageLine ON Object_StorageLine.Id = tmpMI.StorageLineId
 
          LEFT JOIN tmpPersonal ON tmpPersonal.MemberId        = tmpMI.MemberId
-                              AND tmpPersonal.PositionId      = tmpMI.PositionId
-                              AND tmpPersonal.PositionLevelId = tmpMI.PositionLevelId
-                              AND tmpPersonal.PersonalGroupId = tmpMI.PersonalGroupId
+                              AND COALESCE (tmpPersonal.PositionId,0)      = COALESCE (tmpMI.PositionId,0)
+                              AND COALESCE (tmpPersonal.PositionLevelId,0) = COALESCE (tmpMI.PositionLevelId,0)
+                              AND COALESCE (tmpPersonal.PersonalGroupId,0) = COALESCE (tmpMI.PersonalGroupId,0)
                               AND tmpPersonal.UnitId          = tmpMI.UnitId
          
          LEFT JOIN zfCalc_DayOfWeekName (tmpMI.OperDate) AS tmpWeekDay ON 1=1
@@ -258,5 +268,8 @@ $BODY$
 /*   
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 27.02.26         *
  04.07.22         *
 */
+
+--select * from gpReport_SheetWorkTime_Update(inStartDate := ('01.02.2026')::TDateTime , inEndDate := ('28.02.2026')::TDateTime , inUnitId := 8442 , inisErased := 'False' ,  inSession := '9457');

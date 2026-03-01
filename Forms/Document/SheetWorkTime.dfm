@@ -461,6 +461,17 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Position.ColIndex = 1
         Position.RowIndex = 0
       end
+      object NumBiz: TcxGridDBBandedColumn
+        Caption = #8470' '#1076#1083#1103' '#1041#1080#1094#1077#1088#1073#1099
+        DataBinding.FieldName = 'NumBiz'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+        Position.BandIndex = 0
+        Position.ColIndex = 15
+        Position.RowIndex = 0
+      end
       object isErased: TcxGridDBBandedColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -1771,6 +1782,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     HeaderDataSet = HeaderCDS
     HeaderColumnName = 'ValueField'
@@ -2068,6 +2080,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     HeaderDataSet = HeaderCDS
     HeaderColumnName = 'ValueField'

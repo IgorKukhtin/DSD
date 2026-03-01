@@ -12,8 +12,12 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar
 /*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                     , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);*/
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                     , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                    , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);*/
+
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                    , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member(
@@ -40,7 +44,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member(
     IN inCardIBANSecondDiff  TVarChar  ,    --
     IN inCardSecondDiff      TVarChar  ,    --
     
-    IN inPhone               TVarChar  ,    --
+    IN inPhone               TVarChar  ,    -- 
+    IN inNumBiz              TVarChar  , -- № для Бицербы
     IN inComment             TVarChar  ,    -- Примечание 
 
     IN inBankId_Top            Integer   ,    --
@@ -121,6 +126,33 @@ BEGIN
        END IF;
    END IF;
 
+   -- проверка 
+   IF COALESCE (inNumBiz,'') <> ''   
+   
+   THEN 
+       -- проверка или пустая строка или число от 0 до 99 
+       IF inNumBiz :: Integer < 0 OR inNumBiz :: Integer > 99
+       THEN   
+           RAISE EXCEPTION 'Значение № для Бицербы <%> для <%> должно быть в пределах 0-99.' , inNumBiz, inName;
+       END IF; 
+       --проверка уникальности (среди физ.лиц если не удален)
+       IF EXISTS (SELECT 1
+                  FROM ObjectString
+                      INNER JOIN Object ON Object.Id = ObjectString.ObjectId
+                                       AND Object.DescId = zc_Object_Member()
+                                       AND Object.isErased = FALSE
+                  WHERE ObjectString.DescId = zc_ObjectString_Member_NumBiz()
+                    AND ObjectString.ObjectId <> ioId
+                    AND ObjectString.ValueData = inNumBiz
+                    AND COALESCE (ObjectString.ValueData,'') <> '' 
+                  )
+       THEN 
+           RAISE EXCEPTION 'Значение № для Бицербы <%> для <%> должно быть уникальным.' , inNumBiz, inName;
+       END IF;
+   END IF;
+
+
+
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Member(), vbCode_calc, inName, inAccessKeyId:= NULL);
 
@@ -170,7 +202,10 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_Phone(), ioId, inPhone);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_Comment(), ioId, inComment);
-   
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Member_NumBiz(), ioId, inNumBiz);
+
+
     -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_InfoMoney(), ioId, inInfoMoneyId);
 

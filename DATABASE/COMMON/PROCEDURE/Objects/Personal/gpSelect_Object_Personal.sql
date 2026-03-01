@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Personal(
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar, MemberName_FIO TVarChar, INN TVarChar
-             , Code1C TVarChar
+             , Code1C TVarChar, NumBiz TVarChar
              , DriverCertificate TVarChar, Card TVarChar, CardSecond TVarChar, BankName TVarChar, BankSecondName TVarChar
              , PositionId Integer, PositionCode Integer, PositionName TVarChar
              , PositionLevelId Integer, PositionLevelCode Integer, PositionLevelName TVarChar
@@ -152,6 +152,7 @@ BEGIN
          , zfConvert_FIO (Object_Personal_View.PersonalName, 2, TRUE) AS MemberName_FIO
          , ObjectString_INN.ValueData               AS INN
          , ObjectString_Code1C.ValueData ::TVarChar AS Code1C
+         , Object_Personal_View.NumBiz   ::TVarChar AS NumBiz
 
          , ObjectString_DriverCertificate.ValueData AS DriverCertificate
          , ObjectString_Card.ValueData              AS Card
@@ -396,7 +397,8 @@ BEGIN
          , CAST ('УДАЛИТЬ' as TVarChar)  AS MemberName
          , CAST ('' as TVarChar)  AS MemberName_FIO
          , CAST ('' as TVarChar) AS INN
-         , CAST ('' as TVarChar) AS Code1C
+         , CAST ('' as TVarChar) AS Code1C  
+         , CAST ('' as TVarChar) AS NumBiz
          , CAST ('' as TVarChar) AS DriverCertificate
          , CAST ('' as TVarChar) AS Card
          , CAST ('' as TVarChar) AS CardSecond
@@ -475,6 +477,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.02.26         *
  25.10.25         *
  31.10.23         *
  19.04.23         *

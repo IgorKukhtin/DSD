@@ -381,6 +381,14 @@ object PersonalForm: TPersonalForm
         Options.Editing = False
         Width = 125
       end
+      object NumBiz: TcxGridDBColumn
+        Caption = #8470' '#1076#1083#1103' '#1041#1080#1094#1077#1088#1073#1099
+        DataBinding.FieldName = 'NumBiz'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -529,7 +537,7 @@ object PersonalForm: TPersonalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 6
-    Width = 161
+    Width = 137
   end
   object ceServiceListCardSecond: TcxButtonEdit
     Left = 853
@@ -541,7 +549,7 @@ object PersonalForm: TPersonalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 11
-    Width = 161
+    Width = 148
   end
   object cxLabel1: TcxLabel
     Left = 853

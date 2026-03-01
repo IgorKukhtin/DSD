@@ -10,19 +10,19 @@ inherited Report_StaffListMember_byPersonalForm: TReport_StaffListMember_byPerso
     Width = 998
     Height = 344
     TabOrder = 3
-    ExplicitTop = 79
     ExplicitWidth = 998
-    ExplicitHeight = 322
+    ExplicitHeight = 344
     ClientRectBottom = 344
     ClientRectRight = 998
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 998
-      ExplicitHeight = 322
+      ExplicitHeight = 344
       inherited cxGrid: TcxGrid
         Width = 998
         Height = 344
+        ExplicitTop = -7
         ExplicitWidth = 998
-        ExplicitHeight = 322
+        ExplicitHeight = 344
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -153,6 +153,12 @@ inherited Report_StaffListMember_byPersonalForm: TReport_StaffListMember_byPerso
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 130
+          end
+          object NumBiz: TcxGridDBColumn
+            Caption = #8470' '#1076#1083#1103' '#1041#1080#1094#1077#1088#1073#1099
+            DataBinding.FieldName = 'NumBiz'
+            Options.Editing = False
+            Width = 70
           end
           object StaffListKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1086#1092#1086#1088#1084#1083#1077#1085#1080#1103' '#1074' '#1096#1090#1072#1090

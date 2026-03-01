@@ -299,7 +299,7 @@ inherited StaffListMemberForm: TStaffListMemberForm
     Width = 331
   end
   object cxButton1: TcxButton [36]
-    Left = 368
+    Left = 367
     Top = 444
     Width = 150
     Height = 26
@@ -538,6 +538,17 @@ inherited StaffListMemberForm: TStaffListMemberForm
     Left = 10
     Top = 544
     Caption = #1051#1080#1085#1080#1103' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072' 5'
+  end
+  object cxLabel29: TcxLabel [64]
+    Left = 179
+    Top = 544
+    Caption = #8470' '#1076#1083#1103' '#1041#1080#1094#1077#1088#1073#1099
+  end
+  object edNumBiz: TcxTextEdit [65]
+    Left = 179
+    Top = 560
+    TabOrder = 65
+    Width = 160
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 291
@@ -982,6 +993,13 @@ inherited StaffListMemberForm: TStaffListMemberForm
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'NumBiz'
+          Value = Null
+          Component = edNumBiz
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1235,6 +1253,14 @@ inherited StaffListMemberForm: TStaffListMemberForm
         Name = 'inComment'
         Value = Null
         Component = ceComment
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNumBiz'
+        Value = Null
+        Component = edNumBiz
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1683,6 +1709,13 @@ inherited StaffListMemberForm: TStaffListMemberForm
         Value = Null
         Component = FormParams
         ComponentItem = 'PersonalId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'NumBiz'
+        Value = Null
+        Component = edNumBiz
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 583

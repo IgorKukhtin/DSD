@@ -129,6 +129,14 @@ object Personal_ChoiceForm: TPersonal_ChoiceForm
         HeaderAlignmentVert = vaCenter
         Width = 120
       end
+      object NumBiz: TcxGridDBColumn
+        Caption = #8470' '#1076#1083#1103' '#1041#1080#1094#1077#1088#1073#1099
+        DataBinding.FieldName = 'NumBiz'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -189,7 +197,7 @@ object Personal_ChoiceForm: TPersonal_ChoiceForm
     EditValue = 42948d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 7
+    TabOrder = 5
     Width = 85
   end
   object Panel: TPanel
@@ -199,7 +207,6 @@ object Personal_ChoiceForm: TPersonal_ChoiceForm
     Height = 33
     Align = alTop
     TabOrder = 9
-    ExplicitLeft = 8
     object cxLabel4: TcxLabel
       Left = 3
       Top = 3
@@ -728,6 +735,14 @@ object Personal_ChoiceForm: TPersonal_ChoiceForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'MemberId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'NumBiz'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'NumBiz'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072

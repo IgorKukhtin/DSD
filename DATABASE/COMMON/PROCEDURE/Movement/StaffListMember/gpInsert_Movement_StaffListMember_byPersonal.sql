@@ -30,7 +30,8 @@ BEGIN
                                                      , inReasonOutId         := 0    ::Integer   
                                                      , inStaffListKindId     := tmp.StaffListKindId    
                                                      , inisOfficial          := tmp.isOfficial         
-                                                     , inisMain              := tmp.isMain             
+                                                     , inisMain              := tmp.isMain
+                                                     , inNumBiz              := tmp.NumBiz                 ::TVarChar           
                                                      , inComment             := ('јвто.'||tmp.Comment::TVarChar) ::TVarChar           
                                                      , inUserId              := vbUserId
                                                       )
@@ -81,7 +82,8 @@ BEGIN
                         , tmpViewPersonal.isOfficial         
                         , tmpViewPersonal.isMain 
                         , zc_Enum_StaffListKind_In() AS StaffListKindId
-                        , 1 AS Comment                                                    
+                        , 1 AS Comment
+                        , tmpViewPersonal.NumBiz                                                    
                    FROM tmpViewPersonal
                    WHERE (tmpViewPersonal.isMain = True --основное место работы
                            AND COALESCE (tmpViewPersonal.DateSend,zc_DateStart()) = zc_DateStart()
@@ -102,7 +104,8 @@ BEGIN
                         , tmp.isOfficial         
                         , tmp.isMain
                         , zc_Enum_StaffListKind_In()  AS StaffListKindId
-                        , 1 AS Comment
+                        , 1 AS Comment 
+                        , tmp.NumBiz
                    FROM (SELECT tmpViewPersonal.DateIn
                               , tmpViewPersonal.MemberId
                               , tmpViewPersonal.PersonalId
@@ -113,7 +116,8 @@ BEGIN
                               --, tmpSend.PositionLevelId AS PositionLevelId_old    
                               --, tmpSend.UnitId AS UnitId_old             
                               , tmpViewPersonal.isOfficial         
-                              , tmpViewPersonal.isMain
+                              , tmpViewPersonal.isMain 
+                              , tmpViewPersonal.NumBiz
                               , ROW_NUMBER() OVER (PARTITION BY tmpViewPersonal.MemberId ORDER BY tmpViewPersonal.DateSend ASC, tmpViewPersonal.PersonalId DESC) AS Ord
                          FROM tmpViewPersonal
                               LEFT JOIN tmpViewPersonal AS tmpSend 
@@ -145,6 +149,7 @@ BEGIN
                         , tmpViewPersonal.isMain
                         , zc_Enum_StaffListKind_Add() AS StaffListKindId
                         , 1 AS Comment
+                        , tmpViewPersonal.NumBiz
                    FROM tmpViewPersonal
                    WHERE ((tmpViewPersonal.isMain <> True --основное место работы
                            AND COALESCE (tmpViewPersonal.DateSend,zc_DateStart()) = zc_DateStart())
@@ -168,6 +173,7 @@ BEGIN
                         , tmp.isMain
                         , zc_Enum_StaffListKind_Send()  AS StaffListKindId
                         , 2 AS Comment
+                        , tmp.NumBiz
                    FROM (SELECT tmpViewPersonal.DateSend
                               , tmpViewPersonal.MemberId 
                               , tmpViewPersonal.PersonalId
@@ -179,6 +185,7 @@ BEGIN
                               , COALESCE (tmpSend.UnitId, tmpSend2.UnitId, tmpSend3.UnitId)                   AS UnitId_old         
                               , tmpViewPersonal.isOfficial         
                               , tmpViewPersonal.isMain
+                              , tmpViewPersonal.NumBiz
                               , ROW_NUMBER() OVER (PARTITION BY tmpViewPersonal.MemberId ORDER BY tmpViewPersonal.DateSend ASC, COALESCE (tmpSend.PersonalId, tmpSend2.PersonalId, tmpSend3.PersonalId) asc) AS Ord
                          FROM tmpViewPersonal
                                LEFT JOIN tmp_PersonalSend AS tmpSend 
@@ -226,6 +233,7 @@ BEGIN
                         , tmpViewPersonal.isMain
                         , zc_Enum_StaffListKind_Out()  AS StaffListKindId
                         , 3 AS Comment
+                        , tmpViewPersonal.NumBiz
                    FROM tmpViewPersonal
                    WHERE COALESCE (tmpViewPersonal.DateOut, zc_DateEnd()) <> zc_DateEnd()
                   AND inParam = 3

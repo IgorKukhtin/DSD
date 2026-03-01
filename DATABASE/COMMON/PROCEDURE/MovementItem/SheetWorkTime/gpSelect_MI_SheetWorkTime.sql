@@ -177,7 +177,9 @@ BEGIN
                                         --     THEN 13816530 -- светло серый  15395562
                                         ELSE tmpOperDate.Color_Calc
                                    END AS Color_Calc
-                                   --  выходн дни - желтым фоном + праздничные - зеленым, определяется в zc_Object_Calendar
+                                   --  выходн дни - желтым фоном + праздничные - зеленым, определяется в zc_Object_Calendar  
+                                   
+                                 , MIString_NumBiz.ValueData AS NumBiz
                             FROM tmpOperDate
                                  JOIN Movement ON Movement.operDate = tmpOperDate.OperDate
                                               AND Movement.DescId = zc_Movement_SheetWorkTime()
@@ -213,6 +215,10 @@ BEGIN
                                                         AND ObjectBoolean_NoSheetCalc.DescId = zc_ObjectBoolean_PositionLevel_NoSheetCalc()
 
                                  LEFT JOIN gpSelect_Object_Calendar (vbStartDate, vbEndDate, inSession) AS tmpCalendar ON tmpCalendar.Value = tmpOperDate.OperDate
+
+                                 LEFT JOIN MovementItemString AS MIString_NumBiz
+                                                              ON MIString_NumBiz.MovementItemId = MI_SheetWorkTime.Id
+                                                             AND MIString_NumBiz.DescId = zc_MIString_NumBiz()
                             WHERE MovementLinkObject_Unit.ObjectId = inUnitId
                               AND (MI_SheetWorkTime.Amount <> 0
                                 OR inUnitId <> 8451 -- ЦЕХ пакування
@@ -242,6 +248,7 @@ BEGIN
                                  , tmpMovement_all_all.ShortName
                                  , tmpMovement_all_all.isErased
                                  , tmpMovement_all_all.Color_Calc
+                                 , tmpMovement_all_all.NumBiz
                            FROM tmpMovement_all_all
                            GROUP BY tmpMovement_all_all.OperDate
                                  , tmpMovement_all_all.MemberId
@@ -256,6 +263,7 @@ BEGIN
                                  , tmpMovement_all_all.ShortName
                                  , tmpMovement_all_all.isErased
                                  , tmpMovement_all_all.Color_Calc
+                                 , tmpMovement_all_all.NumBiz
                           )
           , tmpMovement AS (SELECT tmpMovement_all.OperDate
                                --, CASE WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Quit() THEN 0 ELSE MI_SheetWorkTime.Amount END AS Amount
@@ -294,7 +302,8 @@ BEGIN
                                  , tmpMovement_all.ShortName
                                  , tmpMovement_all.isErased
                                  , tmpMovement_all.Color_Calc AS Color_Calc
-                                   --  выходн дни - желтым фоном + праздничные - зеленым, определяется в zc_Object_Calendar
+                                   --  выходн дни - желтым фоном + праздничные - зеленым, определяется в zc_Object_Calendar 
+                                 , tmpMovement_all.NumBiz
                             FROM tmpMovement_all
                                  -- если в этот день заполнены день 12ч
                                  LEFT JOIN tmpMovement_all AS tmpMovement_all_d
@@ -402,7 +411,8 @@ BEGIN
                  , COALESCE (tmpDateOut.WorkTimeKindId, tmp.ObjectId) AS ObjectId
                  , COALESCE (tmpDateOut.ShortName, tmp.ShortName)     AS ShortName
                  , tmp.isErased
-                 , tmp.Color_Calc
+                 , tmp.Color_Calc 
+                 , tmp.NumBiz
 
             FROM tmpMovement AS tmp
                  -- если был принят не сначала месяца или уволен в течении месяца отмечаем Х
@@ -427,7 +437,8 @@ BEGIN
                  , tmp.WorkTimeKindId AS ObjectId
                  , tmp.ShortName
                  , 1 AS isErased
-                 , tmp.Color_Calc
+                 , tmp.Color_Calc 
+                 , tmpMovement.NumBiz
             FROM tmpDateOut AS tmp
                  LEFT JOIN tmpMovement ON tmpMovement.OperDate   = tmp.OperDate
                                       AND tmpMovement.MemberId   = tmp.MemberId
@@ -651,6 +662,25 @@ BEGIN
               , tmp.WorkTimeKindId_key
               , tmp.ObjectId
       ;
+      
+
+ CREATE TEMP TABLE tmpMI_NumBiz ON COMMIT DROP AS
+      SELECT tmpMI.MemberId
+           , tmpMI.PositionId
+           , tmpMI.PositionLevelId
+           , tmpMI.PersonalGroupId
+           , tmpMI.StorageLineId
+           , MAX (tmpMI.NumBiz::Integer) AS NumBiz
+      FROM tmpMI
+      WHERE COALESCE (tmpMI.NumBiz,'') <> ''
+      GROUP BY tmpMI.MemberId
+             , tmpMI.PositionId
+             , tmpMI.PositionLevelId
+             , tmpMI.PersonalGroupId
+             , tmpMI.StorageLineId
+      ;
+
+
       ----------------------------------------------------------------
 
      vbIndex := 0;
@@ -706,6 +736,9 @@ BEGIN
                , tmpTotal.Amount_5 ::TFloat
                , tmpTotal.Amount_6 ::TFloat
                , tmpListPersonal.PersonalId
+               --, CASE WHEN COALESCE (tmpMI_NumBiz.NumBiz,'') <> '' THEN tmpMI_NumBiz.NumBiz ELSE tmpListPersonal.NumBiz END ::TVarChar AS NumBiz
+               , COALESCE (tmpMI_NumBiz.NumBiz ::TVarChar , tmpListPersonal.NumBiz)  ::TVarChar AS NumBiz
+                
                  '
                || vbFieldNameText ||
         ' FROM
@@ -839,11 +872,17 @@ BEGIN
                              AND COALESCE(tmpListOut.PositionId, 0)         = D.Key[2]
                              AND COALESCE(tmpListOut.PositionLevelId, 0)    = D.Key[3]
          --получить Id сотрудника
-         LEFT JOIN tmpListPersonal ON tmpListPersonal.MemberId        = D.Key[1]
+         LEFT JOIN tmpListPersonal ON tmpListPersonal.MemberId                     = D.Key[1]
                                   AND COALESCE(tmpListPersonal.PositionId, 0)      = D.Key[2]
                                   AND COALESCE(tmpListPersonal.PositionLevelId, 0) = D.Key[3]
                                   AND COALESCE(tmpListPersonal.PersonalGroupId, 0) = D.Key[4]
-                                  AND COALESCE(tmpListPersonal.StorageLineId, 0)   = D.Key[5]
+                                  AND COALESCE(tmpListPersonal.StorageLineId, 0)   = D.Key[5] 
+         
+         LEFT JOIN tmpMI_NumBiz ON tmpMI_NumBiz.MemberId                     = D.Key[1]
+                               AND COALESCE(tmpMI_NumBiz.PositionId, 0)      = D.Key[2]
+                               AND COALESCE(tmpMI_NumBiz.PositionLevelId, 0) = D.Key[3]
+                               AND COALESCE(tmpMI_NumBiz.PersonalGroupId, 0) = D.Key[4]
+                               AND COALESCE(tmpMI_NumBiz.StorageLineId, 0)   = D.Key[5] 
 
         '
       /*ORDER BY Object_Member.ValueData

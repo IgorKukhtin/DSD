@@ -59,6 +59,7 @@ type
     edMember: TcxButtonEdit;
     GuideMember: TdsdGuides;
     MemberCode: TcxGridDBColumn;
+    NumBiz: TcxGridDBColumn;
   private
     { Private declarations }
   public
