@@ -410,6 +410,10 @@ CREATE OR REPLACE FUNCTION zc_MIBoolean_SMS() RETURNS Integer AS $BODY$BEGIN RET
 INSERT INTO MovementItemBooleanDesc (Code, ItemName)
   SELECT 'zc_MIBoolean_SMS', 'Отправлено смс' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_SMS'); 
 
+CREATE OR REPLACE FUNCTION zc_MIBoolean_AmountPlan() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_AmountPlan'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemBooleanDesc (Code, ItemName)
+  SELECT 'zc_MIBoolean_AmountPlan', 'Платим (да/нет)' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_AmountPlan'); 
+  
 CREATE OR REPLACE FUNCTION zc_MIBoolean_AmountPlan_1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_AmountPlan_1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemBooleanDesc (Code, ItemName)
   SELECT 'zc_MIBoolean_AmountPlan_1', 'Платим (да/нет) 1.пн.' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_AmountPlan_1'); 

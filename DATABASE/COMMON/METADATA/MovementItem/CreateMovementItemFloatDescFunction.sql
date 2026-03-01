@@ -1292,9 +1292,9 @@ INSERT INTO MovementItemFloatDesc (Code, ItemName)
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_AmountPlan_next', 'Платежный план на неделю' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountPlan_next');
  
- CREATE OR REPLACE FUNCTION zc_MIFloat_AmountPlan_fin() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountPlan_fin'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-INSERT INTO MovementItemFloatDesc (Code, ItemName)
-  SELECT 'zc_MIFloat_AmountPlan_fin', 'Согласовано к оплате' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountPlan_fin');
+-- CREATE OR REPLACE FUNCTION zc_MIFloat_AmountPlan_fin() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountPlan_fin'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+--INSERT INTO MovementItemFloatDesc (Code, ItemName)
+--  SELECT 'zc_MIFloat_AmountPlan_fin', 'Согласовано к оплате' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountPlan_fin');
  
  
  
