@@ -1,11 +1,13 @@
 -- Function: gpInsert_Object_JuridicalOrderFinance_byBankAccount()
 
-DROP FUNCTION IF EXISTS gpInsert_Object_JuridicalOrderFinance_byBankAccount (TDateTime, TDateTime, Integer, Tvarchar);
+-- DROP FUNCTION IF EXISTS gpInsert_Object_JuridicalOrderFinance_byBankAccount (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Object_JuridicalOrderFinance_byBankAccount (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Object_JuridicalOrderFinance_byBankAccount(
     IN inStartDate               TDateTime   , --
     IN inEndDate                 TDateTime   , --
-    IN inBankAccountId_main       Integer     , --
+    IN inBankAccountId_main      Integer     , --
+    IN inOrderFinanceId          Integer,
     IN inSession                 TVarChar      -- сессия пользователя
 )
 RETURNS VOID
@@ -19,7 +21,43 @@ BEGIN
 
    -- данные из документов zc_Movement_BankAccount за выбранный период
    CREATE TEMP TABLE tmpData ON COMMIT DROP AS (
-     WITH tmpBankAccount AS (SELECT Object_MoneyPlace.Id                                    AS JuridicalId
+       -- УП-Статья или Группа или ...
+     WITH tmpOrderFinanceProperty AS (SELECT DISTINCT
+                                          -- УП - Статья или Группа или ...
+                                          OL_OrderFinanceProperty_Object.ChildObjectId               AS ObjectId
+                                          -- Форма оплаты
+                                        , OL_OrderFinance_PaidKind.ChildObjectId                     AS PaidKindId
+                                   FROM ObjectLink AS OL_OrderFinanceProperty_OrderFinance
+                                        INNER JOIN Object ON Object.Id       = OL_OrderFinanceProperty_OrderFinance.ObjectId
+                                                         -- не удален
+                                                         AND Object.isErased = FALSE
+                                        -- Форма оплаты
+                                        INNER JOIN ObjectLink AS OL_OrderFinance_PaidKind
+                                                              ON OL_OrderFinance_PaidKind.ObjectId      = OL_OrderFinanceProperty_OrderFinance.ChildObjectId
+                                                             AND OL_OrderFinance_PaidKind.DescId        = zc_ObjectLink_OrderFinance_PaidKind()
+                                                             AND OL_OrderFinance_PaidKind.ChildObjectId > 0
+                                        -- УП - Статья или Группа или ...
+                                        INNER JOIN ObjectLink AS OL_OrderFinanceProperty_Object
+                                                              ON OL_OrderFinanceProperty_Object.ObjectId      = OL_OrderFinanceProperty_OrderFinance.ObjectId
+                                                             AND OL_OrderFinanceProperty_Object.DescId        = zc_ObjectLink_OrderFinanceProperty_Object()
+                                                             AND OL_OrderFinanceProperty_Object.ChildObjectId > 0
+                                   WHERE OL_OrderFinanceProperty_OrderFinance.ChildObjectId = inOrderFinanceId
+                                     AND OL_OrderFinanceProperty_OrderFinance.DescId        = zc_ObjectLink_OrderFinanceProperty_OrderFinance()
+                                     AND inOrderFinanceId > 0
+                                  )
+       -- разворачивается по УП-статьям
+     , tmpInfoMoney AS (SELECT DISTINCT
+                               Object_InfoMoney_View.InfoMoneyId
+                        FROM Object_InfoMoney_View
+                             INNER JOIN tmpOrderFinanceProperty ON (tmpOrderFinanceProperty.ObjectId = Object_InfoMoney_View.InfoMoneyId
+                                                                 OR tmpOrderFinanceProperty.ObjectId = Object_InfoMoney_View.InfoMoneyDestinationId
+                                                                 OR tmpOrderFinanceProperty.ObjectId = Object_InfoMoney_View.InfoMoneyGroupId
+                                                                   )
+                        -- БН
+                        WHERE tmpOrderFinanceProperty.PaidKindId = zc_Enum_PaidKind_FirstForm()
+                       )
+          -- Данніе
+        , tmpBankAccount AS (SELECT Object_MoneyPlace.Id                                    AS JuridicalId
                                   , Movement.OperDate                                       AS OperDate
                                   , MILinkObject_InfoMoney.ObjectId                         AS InfoMoneyId
                                     -- с какого р./сч оплата
@@ -69,6 +107,7 @@ BEGIN
                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                                    ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                                                   AND MILinkObject_InfoMoney.DescId         = zc_MILinkObject_InfoMoney()
+                                  LEFT JOIN tmpInfoMoney ON tmpInfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
                                   -- на какой Р/сч
                                   INNER JOIN MovementItemLinkObject AS MILinkObject_BankAccount
                                                                     ON MILinkObject_BankAccount.MovementItemId = MovementItem.Id
@@ -89,7 +128,10 @@ BEGIN
                              WHERE Movement.DescId = zc_Movement_BankAccount()
                                AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                                AND Movement.StatusId = zc_Enum_Status_Complete()
+                               -- по ОДНОМУ р.счету
                                AND (MovementItem.ObjectId = inBankAccountId_main OR inBankAccountId_main = 0)
+                               -- по уп статье
+                               AND (tmpInfoMoney.InfoMoneyId > 0 OR inOrderFinanceId = 0)
                             )
             -- Замена на другой р.сч, если не нашли название Банка
           , tmpBank_find AS (SELECT tmpBankAccount.JuridicalId
@@ -146,6 +188,7 @@ BEGIN
                                      AND tmpBank_find.InfoMoneyId        = tmpBankAccount.InfoMoneyId
                                      AND tmpBank_find.BankAccountId_main = tmpBankAccount.BankAccountId_main
                                      AND tmpBank_find.BankAccountId      = tmpBankAccount.BankAccountId
+                                     AND tmpBank_find.Ord                = 1
           -- берется только ОДИН
           WHERE tmpBankAccount.ord = 1
          );
@@ -153,6 +196,7 @@ BEGIN
    -- данные из справочника
    CREATE TEMP TABLE tmpJuridicalOrderFinance ON COMMIT DROP
       AS (SELECT Object_JuridicalOrderFinance.Id                        AS Id
+               , Object_JuridicalOrderFinance.isErased                  AS isErased
                , OL_JuridicalOrderFinance_Juridical.ChildObjectId       AS JuridicalId
                  --
                , OL_JuridicalOrderFinance_InfoMoney.ChildObjectId       AS InfoMoneyId

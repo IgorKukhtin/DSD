@@ -124,7 +124,11 @@ BEGIN
            UNION SELECT 'isPersonalComplete3'    AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
            UNION SELECT 'isPersonalComplete4'    AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
            UNION SELECT 'isPersonalComplete5'    AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'isPersonalComplete6'    AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'isPersonalComplete7'    AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'isPersonalComplete8'    AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
            UNION SELECT 'isPersonalStick1'       AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+
            UNION SELECT 'isPersonalLoss'         AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
            UNION SELECT 'isTax'                  AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
            UNION SELECT 'isTransport'            AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE

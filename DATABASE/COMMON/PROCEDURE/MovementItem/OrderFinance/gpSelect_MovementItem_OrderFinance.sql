@@ -1,8 +1,8 @@
 -- Function: gpSelect_MovementItem_OrderFinance()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_OrderFinance (Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_OrderFinance_1 (Integer, Boolean, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderFinance(
+CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderFinance_1(
     IN inMovementId  Integer      , -- ключ Документа
     IN inShowAll     Boolean      , --
     IN inIsErased    Boolean      , --
@@ -16,12 +16,17 @@ RETURNS TABLE (Id Integer
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, NumGroup Integer
              , Condition TVarChar, ContractStateKindCode Integer
              , StartDate TDateTime, EndDate_real TDateTime, EndDate TVarChar, PersonalName_contract TVarChar
-               -- *** Предварительный План на неделю
+
+               -- Первичный план на неделю
              , Amount               TFloat
              , Amount_old           TFloat
-               -- *** Дата предварительный план
-             , OperDate_Amount      TDateTime
-             , OperDate_Amount_old  TDateTime
+               -- Платежный план на неделю
+             , AmountPlan_next      TFloat
+             , AmountPlan_next_old  TFloat
+               -- Дата Платежный план на неделю
+             , OperDate_next      TDateTime
+             , OperDate_next_old  TDateTime
+
                --
              , AmountRemains TFloat, AmountPartner TFloat
              , AmountSumm           TFloat
@@ -30,31 +35,31 @@ RETURNS TABLE (Id Integer
              , AmountPartner_3      TFloat
              , AmountPartner_4      TFloat
              , AmountPartner_5      TFloat
-               -- План оплат
+               -- Согласовано к оплате
              , AmountPlan_1         TFloat
              , AmountPlan_2         TFloat
              , AmountPlan_3         TFloat
              , AmountPlan_4         TFloat
              , AmountPlan_5         TFloat
-               -- План оплат - Итог
+               -- Согласовано к оплате - Итог
              , AmountPlan_total     TFloat
 
-               -- План прошлой недели
+               -- План прошлой недели (Согласовано)
              , AmountPlan_1_old     TFloat
              , AmountPlan_2_old     TFloat
              , AmountPlan_3_old     TFloat
              , AmountPlan_4_old     TFloat
              , AmountPlan_5_old     TFloat
-               -- План прошлой недели - Итог
+               -- План прошлой недели (Согласовано) - Итог
              , AmountPlan_total_old TFloat
 
-               -- Факт прошлой недели
+               -- Факт Банк прошлой недели
              , AmountReal_1_old     TFloat
              , AmountReal_2_old     TFloat
              , AmountReal_3_old     TFloat
              , AmountReal_4_old     TFloat
              , AmountReal_5_old     TFloat
-               -- Факт прошлой недели - Итог
+               -- Факт Банк прошлой недели - Итог
              , AmountReal_total_old TFloat
 
                -- Платим да/нет
@@ -71,7 +76,6 @@ RETURNS TABLE (Id Integer
              , isPlan_5_old         Boolean
 
              , Comment              TVarChar
-             , Comment_pay          TVarChar
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
              , isErased Boolean
@@ -197,7 +201,6 @@ BEGIN
 
      RETURN QUERY
      WITH
-
           -- если в справ. назначение платежа пусто, надо для таких договоров на показать все делать поиск последнего из банковской выписки, за последний месяц
           tmp_Comment AS (SELECT *
                           FROM (SELECT DISTINCT
@@ -244,7 +247,7 @@ BEGIN
                                        , tmp.JuridicalId
                                        , tmp.InfoMoneyId
                                        , '' :: TVarChar AS Comment
-                                       , tmp.Comment_pay AS Comment_pay
+                                     --, tmp.Comment_pay AS Comment_pay
                                   FROM gpSelect_Object_JuridicalOrderFinance_choice (inMovementId     := inMovementId
                                                                                    , inOrderFinanceId := COALESCE (vbOrderFinanceId,0)
                                                                                    , inisShowAll      := FALSE
@@ -258,7 +261,7 @@ BEGIN
                       , ObjectLink_Contract_InfoMoney.ObjectId      AS ContractId
                       , ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
                       --, tmpJuridicalOrderFinance.BankAccountId      AS BankAccountId
-                      , CASE WHEN COALESCE (tmpJuridicalOrderFinance.Comment_pay, '') = '' THEN COALESCE (tmp_Comment.Comment,'') ELSE COALESCE (tmpJuridicalOrderFinance.Comment_pay, '') END ::TVarChar AS Comment_pay
+                    --, CASE WHEN COALESCE (tmpJuridicalOrderFinance.Comment_pay, '') = '' THEN COALESCE (tmp_Comment.Comment,'') ELSE COALESCE (tmpJuridicalOrderFinance.Comment_pay, '') END ::TVarChar AS Comment_pay
                  FROM ObjectLink AS ObjectLink_Contract_InfoMoney
                       LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
                                            ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_Contract_InfoMoney.ObjectId
@@ -300,6 +303,7 @@ BEGIN
                                                                          , zc_MIFloat_AmountPlan_3()
                                                                          , zc_MIFloat_AmountPlan_4()
                                                                          , zc_MIFloat_AmountPlan_5()
+                                                                         , zc_MIFloat_AmountPlan_next()
                                                                          )
                                         )
              , tmpMovementItemDate AS (SELECT *
@@ -307,7 +311,7 @@ BEGIN
                                        WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                          AND MovementItemDate.DescId IN (zc_MIDate_Insert()
                                                                        , zc_MIDate_Update()
-                                                                       , zc_MIDate_Amount()
+                                                                       , zc_MIDate_Amount_next()
                                                                         )
                                         )
              , tmpMovementItemLinkObject AS (SELECT *
@@ -318,7 +322,7 @@ BEGIN
                                          FROM MovementItemString
                                          WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                            AND MovementItemString.DescId IN (zc_MIString_Comment()
-                                                                           , zc_MIString_Comment_pay()
+                                                                         --, zc_MIString_Comment_pay()
                                                                            )
                                          )
 
@@ -337,11 +341,13 @@ BEGIN
                SELECT MovementItem.Id                   AS Id
                     , MovementItem.ObjectId             AS JuridicalId
                     , MILinkObject_Contract.ObjectId    AS ContractId
-                      -- Предварительный План на неделю
+
+                      -- Первичный план на неделю
                     , MovementItem.Amount               AS Amount
-                      -- Дата предварительный план
-                    , MIDate_Amount.ValueData           AS OperDate_Amount
-                    , MIDate_Amount.ValueData           AS OperDate_Amount_old
+                      -- Платежный план на неделю
+                    , COALESCE (MIFloat_AmountPlan_next.ValueData, 0) :: TFloat    AS AmountPlan_next
+                      -- Дата Платежный план
+                    , MIDate_Amount_next.ValueData      AS OperDate_next
                       --
                     , MIFloat_AmountRemains.ValueData   AS AmountRemains
                     , MIFloat_AmountPartner.ValueData   AS AmountPartner
@@ -358,14 +364,14 @@ BEGIN
                        - COALESCE (MIFloat_AmountPartner_4.ValueData,0)
                       )   :: TFloat AS AmountPartner_5                -->28дней
 
-                      -- План оплат
+                      -- Согласовано к оплате
                     , MIFloat_AmountPlan_1.ValueData    AS AmountPlan_1
                     , MIFloat_AmountPlan_2.ValueData    AS AmountPlan_2
                     , MIFloat_AmountPlan_3.ValueData    AS AmountPlan_3
                     , MIFloat_AmountPlan_4.ValueData    AS AmountPlan_4
                     , MIFloat_AmountPlan_5.ValueData    AS AmountPlan_5
 
-                      -- План оплат - Итог
+                      -- Согласовано к оплате - Итог
                     , (COALESCE (MIFloat_AmountPlan_1.ValueData, 0)
                      + COALESCE (MIFloat_AmountPlan_2.ValueData, 0)
                      + COALESCE (MIFloat_AmountPlan_3.ValueData, 0)
@@ -373,6 +379,7 @@ BEGIN
                      + COALESCE (MIFloat_AmountPlan_5.ValueData, 0)
                       ) :: TFloat AS AmountPlan_total
 
+                      -- Платим да/нет
                     , COALESCE (MIBoolean_AmountPlan_1.ValueData, TRUE) :: Boolean    AS isAmountPlan_1
                     , COALESCE (MIBoolean_AmountPlan_2.ValueData, TRUE) :: Boolean    AS isAmountPlan_2
                     , COALESCE (MIBoolean_AmountPlan_3.ValueData, TRUE) :: Boolean    AS isAmountPlan_3
@@ -381,7 +388,6 @@ BEGIN
 
                     --, MILinkObject_BankAccount.ObjectId AS BankAccountId
                     , MIString_Comment.ValueData        AS Comment
-                    , MIString_Comment_pay.ValueData    AS Comment_pay
                     , Object_Insert.ValueData           AS InsertName
                     , Object_Update.ValueData           AS UpdateName
                     , MIDate_Insert.ValueData           AS InsertDate
@@ -415,6 +421,16 @@ BEGIN
                                                    ON MIFloat_AmountPartner_4.MovementItemId = MovementItem.Id
                                                   AND MIFloat_AmountPartner_4.DescId = zc_MIFloat_AmountPartner_4()
 
+                    -- Платежный план на неделю
+                    LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_next
+                                                   ON MIFloat_AmountPlan_next.MovementItemId = MovementItem.Id
+                                                  AND MIFloat_AmountPlan_next.DescId         = zc_MIFloat_AmountPlan_next()
+                    -- Дата Платежный план
+                    LEFT JOIN tmpMovementItemDate AS MIDate_Amount_next
+                                                  ON MIDate_Amount_next.MovementItemId = MovementItem.Id
+                                                 AND MIDate_Amount_next.DescId         = zc_MIDate_Amount_next()
+
+                    -- Согласовано к оплате
                     LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_1
                                                    ON MIFloat_AmountPlan_1.MovementItemId = MovementItem.Id
                                                   AND MIFloat_AmountPlan_1.DescId = zc_MIFloat_AmountPlan_1()
@@ -431,6 +447,7 @@ BEGIN
                                                    ON MIFloat_AmountPlan_5.MovementItemId = MovementItem.Id
                                                   AND MIFloat_AmountPlan_5.DescId = zc_MIFloat_AmountPlan_5()
 
+                    -- Платим (да/нет)
                     LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_1
                                                      ON MIBoolean_AmountPlan_1.MovementItemId = MovementItem.Id
                                                     AND MIBoolean_AmountPlan_1.DescId = zc_MIBoolean_AmountPlan_1()
@@ -450,9 +467,6 @@ BEGIN
                     LEFT JOIN tmpMovementItemString AS MIString_Comment
                                                     ON MIString_Comment.MovementItemId = MovementItem.Id
                                                    AND MIString_Comment.DescId = zc_MIString_Comment()
-                    LEFT JOIN tmpMovementItemString AS MIString_Comment_pay
-                                                    ON MIString_Comment_pay.MovementItemId = MovementItem.Id
-                                                   AND MIString_Comment_pay.DescId = zc_MIString_Comment_pay()
 
                     LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_Contract
                                                         ON MILinkObject_Contract.MovementItemId = MovementItem.Id
@@ -464,10 +478,6 @@ BEGIN
                     LEFT JOIN tmpMovementItemDate AS MIDate_Update
                                                   ON MIDate_Update.MovementItemId = MovementItem.Id
                                                  AND MIDate_Update.DescId = zc_MIDate_Update()
-                    -- Дата предварительный план
-                    LEFT JOIN tmpMovementItemDate AS MIDate_Amount
-                                                  ON MIDate_Amount.MovementItemId = MovementItem.Id
-                                                 AND MIDate_Amount.DescId = zc_MIDate_Amount()
 
                     LEFT JOIN tmpMovementItemLinkObject AS MILO_Insert
                                                         ON MILO_Insert.MovementItemId = MovementItem.Id
@@ -584,12 +594,16 @@ BEGIN
                 || (LPAD (EXTRACT (Day FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||LPAD (EXTRACT (Month FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||EXTRACT (YEAR FROM View_Contract.EndDate_term) :: TVarChar)
              ) ::TVarChar AS EndDate
            , Object_Personal.ValueData ::TVarChar AS PersonalName_contract
-             -- Предварительный План на неделю
+
+             -- Первичный план на неделю
            , tmpMI.Amount              ::TFloat AS Amount
            , tmpMI.Amount              ::TFloat AS Amount_old
-             -- Дата предварительный план
-           , tmpMI.OperDate_Amount     :: TDateTime
-           , tmpMI.OperDate_Amount_old :: TDateTime
+             -- Платежный план на неделю
+           , tmpMI.AmountPlan_next     ::TFloat AS AmountPlan_next
+           , tmpMI.AmountPlan_next     ::TFloat AS AmountPlan_next_old
+             -- Дата Платежный план на неделю
+           , tmpMI.OperDate_next       :: TDateTime
+           , tmpMI.OperDate_next       :: TDateTime
              --
            , tmpMI.AmountRemains       ::TFloat
            , tmpMI.AmountPartner       ::TFloat
@@ -601,23 +615,23 @@ BEGIN
            , tmpMI.AmountPartner_4     ::TFloat
            , tmpMI.AmountPartner_5     ::TFloat
 
-             -- План оплат
+             -- Согласовано к оплате
            , tmpMI.AmountPlan_1        ::TFloat
            , tmpMI.AmountPlan_2        ::TFloat
            , tmpMI.AmountPlan_3        ::TFloat
            , tmpMI.AmountPlan_4        ::TFloat
            , tmpMI.AmountPlan_5        ::TFloat
-             -- План оплат - Итог
+             -- Согласовано к оплате - Итог
            , tmpMI.AmountPlan_total    ::TFloat
 
-             -- План прошлой недели
+             -- План прошлой недели (Согласовано)
            , MIFloat_AmountPlan_1_old.ValueData    AS AmountPlan_1_old
            , MIFloat_AmountPlan_2_old.ValueData    AS AmountPlan_2_old
            , MIFloat_AmountPlan_3_old.ValueData    AS AmountPlan_3_old
            , MIFloat_AmountPlan_4_old.ValueData    AS AmountPlan_4_old
            , MIFloat_AmountPlan_5_old.ValueData    AS AmountPlan_5_old
 
-             -- План прошлой недели - Итог
+             -- План прошлой недели (Согласовано) - Итог
            , (COALESCE (MIFloat_AmountPlan_1_old.ValueData, 0)
             + COALESCE (MIFloat_AmountPlan_2_old.ValueData, 0)
             + COALESCE (MIFloat_AmountPlan_3_old.ValueData, 0)
@@ -649,7 +663,7 @@ BEGIN
            , vbIsPlan_5_old AS isPlan_5_old
 
            , COALESCE (tmpMI.Comment, '') ::TVarChar AS Comment
-           , CASE WHEN COALESCE (tmpMI.Comment_pay,'') = '' THEN COALESCE (tmpData.Comment_pay,'') ELSE COALESCE (tmpMI.Comment_pay,'') END ::TVarChar AS Comment_pay
+           --, CASE WHEN COALESCE (tmpMI.Comment_pay,'') = '' THEN COALESCE (tmpData.Comment_pay,'') ELSE COALESCE (tmpMI.Comment_pay,'') END ::TVarChar AS Comment_pay
            --, COALESCE (tmpMI.Comment_pay,'') ::TVarChar AS Comment_pay
 
            , tmpMI.InsertName
@@ -738,12 +752,15 @@ BEGIN
            , ''   ::TVarChar                  AS EndDate
            , ''   ::TVarChar                  AS PersonalName_contract
 
-             -- Предварительный План на неделю
+             -- Первичный план на неделю
            , COALESCE (tmpMI.Amount, 0)::TFloat AS Amount
            , COALESCE (tmpMI.Amount, 0)::TFloat AS Amount_old
-             -- Дата предварительный план
-           , tmpMI.OperDate_Amount     :: TDateTime
-           , tmpMI.OperDate_Amount_old :: TDateTime
+             -- Платежный план на неделю
+           , tmpMI.AmountPlan_next     ::TFloat AS AmountPlan_next
+           , tmpMI.AmountPlan_next     ::TFloat AS AmountPlan_next_old
+             -- Дата Платежный план на неделю
+           , tmpMI.OperDate_next       :: TDateTime
+           , tmpMI.OperDate_next       :: TDateTime
              --
            , 0 ::TFloat       AS AmountRemains
            , 0 ::TFloat       AS AmountPartner
@@ -755,22 +772,22 @@ BEGIN
            , 0 ::TFloat       AS AmountPartner_4
            , 0 ::TFloat       AS AmountPartner_5
 
-             -- План оплат
+             -- Согласовано к оплате
            , 0 ::TFloat       AS AmountPlan_1
            , 0 ::TFloat       AS AmountPlan_2
            , 0 ::TFloat       AS AmountPlan_3
            , 0 ::TFloat       AS AmountPlan_4
            , 0 ::TFloat       AS AmountPlan_5
-             -- План оплат - Итог
+             -- Согласовано к оплате - Итог
            , 0 ::TFloat       AS AmountPlan_total
 
-             -- План прошлой недели
+             -- План прошлой недели (Согласовано)
            , 0 :: TFloat AS AmountPlan_1_old
            , 0 :: TFloat AS AmountPlan_2_old
            , 0 :: TFloat AS AmountPlan_3_old
            , 0 :: TFloat AS AmountPlan_4_old
            , 0 :: TFloat AS AmountPlan_5_old
-             -- План прошлой недели - Итог
+             -- План прошлой недели (Согласовано) - Итог
            , 0 :: TFloat AS AmountPlan_total_old
 
              -- Факт прошлой недели
@@ -796,7 +813,6 @@ BEGIN
            , vbIsPlan_5_old AS isPlan_5_old
 
            , ''   ::TVarChar  AS Comment
-           , ''   ::TVarChar  AS Comment_pay
 
            , tmpMI.InsertName  ::TVarChar
            , tmpMI.UpdateName  ::TVarChar
@@ -809,7 +825,8 @@ BEGIN
 
        FROM tmpInfoMoney_OrderF
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm()
-            LEFT JOIN tmpMI ON tmpMI.JuridicalId = tmpInfoMoney_OrderF.InfoMoneyId --для итогового значения статью записываем в ObjectId
+            -- для итогового значения статью записываем в ObjectId
+            LEFT JOIN tmpMI ON tmpMI.JuridicalId = tmpInfoMoney_OrderF.InfoMoneyId
             LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = tmpInfoMoney_OrderF.InfoMoneyId
        WHERE tmpInfoMoney_OrderF.isGroup = TRUE
       ;
@@ -868,6 +885,7 @@ BEGIN
                                                                  , zc_MIFloat_AmountPlan_3()
                                                                  , zc_MIFloat_AmountPlan_4()
                                                                  , zc_MIFloat_AmountPlan_5()
+                                                                 , zc_MIFloat_AmountPlan_next()
                                                                  )
                                )
        -- св-ва
@@ -876,7 +894,7 @@ BEGIN
                                WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                  AND MovementItemDate.DescId IN (zc_MIDate_Insert()
                                                                , zc_MIDate_Update()
-                                                               , zc_MIDate_Amount()
+                                                               , zc_MIDate_Amount_next()
                                                                  )
                               )
        -- св-ва
@@ -888,7 +906,7 @@ BEGIN
                                  FROM MovementItemString
                                  WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                    AND MovementItemString.DescId IN (zc_MIString_Comment()
-                                                                   , zc_MIString_Comment_pay()
+                                                                 --, zc_MIString_Comment_pay()
                                                                    )
                                 )
        -- св-ва
@@ -1085,6 +1103,7 @@ BEGIN
                                    )
 
        -- Результат
+       -- 1. Планы
        SELECT
              MovementItem.Id                  AS Id
            , Object_Juridical.Id              AS JuridicalId
@@ -1116,12 +1135,15 @@ BEGIN
            , Object_Personal.ValueData ::TVarChar AS PersonalName_contract
 
 
-             -- Предварительный План на неделю
+             -- Первичный план на неделю
            , MovementItem.Amount               :: TFloat AS Amount
            , MovementItem.Amount               :: TFloat AS Amount_old
-             -- Дата предварительный план
-           , MIDate_Amount.ValueData           AS OperDate_Amount
-           , MIDate_Amount.ValueData           AS OperDate_Amount_old
+             -- Платежный план на неделю
+           , MIFloat_AmountPlan_next.ValueData ::TFloat AS AmountPlan_next
+           , MIFloat_AmountPlan_next.ValueData ::TFloat AS AmountPlan_next_old
+             -- Дата Платежный план на неделю
+           , MIDate_Amount_next.ValueData       AS OperDate_Amount
+           , MIDate_Amount_next.ValueData       AS OperDate_Amount_old
 
              -- Нач. долг
            , (COALESCE (MIFloat_AmountRemains.ValueData, 0) /*- CASE WHEN vbIsPlan_1_old = TRUE THEN COALESCE (MIFloat_AmountPlan_1_old.ValueData, 0) ELSE 0 END
@@ -1209,7 +1231,6 @@ BEGIN
            , vbIsPlan_5_old AS isPlan_5_old
 
            , MIString_Comment.ValueData     ::TVarChar AS Comment
-           , MIString_Comment_pay.ValueData ::TVarChar AS Comment_pay
 
            , Object_Insert.ValueData          AS InsertName
            , Object_Update.ValueData          AS UpdateName
@@ -1251,6 +1272,15 @@ BEGIN
                                            ON MIFloat_AmountPartner_4.MovementItemId = MovementItem.Id
                                           AND MIFloat_AmountPartner_4.DescId = zc_MIFloat_AmountPartner_4()
 
+            -- Платежный план на неделю
+            LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_next
+                                           ON MIFloat_AmountPlan_next.MovementItemId = MovementItem.Id
+                                          AND MIFloat_AmountPlan_next.DescId         = zc_MIFloat_AmountPlan_next()
+            -- Дата Платежный план
+            LEFT JOIN tmpMovementItemDate AS MIDate_Amount_next
+                                          ON MIDate_Amount_next.MovementItemId = MovementItem.Id
+                                         AND MIDate_Amount_next.DescId = zc_MIDate_Amount_next()
+            -- Согласовано к оплате
             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_1
                                            ON MIFloat_AmountPlan_1.MovementItemId = MovementItem.Id
                                           AND MIFloat_AmountPlan_1.DescId = zc_MIFloat_AmountPlan_1()
@@ -1266,6 +1296,23 @@ BEGIN
             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_5
                                            ON MIFloat_AmountPlan_5.MovementItemId = MovementItem.Id
                                           AND MIFloat_AmountPlan_5.DescId = zc_MIFloat_AmountPlan_5()
+
+            -- Платим (да/нет)
+            LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_1
+                                             ON MIBoolean_AmountPlan_1.MovementItemId = MovementItem.Id
+                                            AND MIBoolean_AmountPlan_1.DescId = zc_MIBoolean_AmountPlan_1()
+            LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_2
+                                             ON MIBoolean_AmountPlan_2.MovementItemId = MovementItem.Id
+                                            AND MIBoolean_AmountPlan_2.DescId = zc_MIBoolean_AmountPlan_2()
+            LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_3
+                                             ON MIBoolean_AmountPlan_3.MovementItemId = MovementItem.Id
+                                            AND MIBoolean_AmountPlan_3.DescId = zc_MIBoolean_AmountPlan_3()
+            LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_4
+                                             ON MIBoolean_AmountPlan_4.MovementItemId = MovementItem.Id
+                                            AND MIBoolean_AmountPlan_4.DescId = zc_MIBoolean_AmountPlan_4()
+            LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_5
+                                             ON MIBoolean_AmountPlan_5.MovementItemId = MovementItem.Id
+                                            AND MIBoolean_AmountPlan_5.DescId = zc_MIBoolean_AmountPlan_5()
 
             -- Банк предыдущей недели
             LEFT JOIN tmpMI_bank_old ON tmpMI_bank_old.JuridicalId = MovementItem.ObjectId
@@ -1290,28 +1337,10 @@ BEGIN
                                                ON MIFloat_AmountPlan_5_old.MovementItemId = tmpMI_old.MovementItemId
                                               AND MIFloat_AmountPlan_5_old.DescId = zc_MIFloat_AmountPlan_5()
 
-            LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_1
-                                             ON MIBoolean_AmountPlan_1.MovementItemId = MovementItem.Id
-                                            AND MIBoolean_AmountPlan_1.DescId = zc_MIBoolean_AmountPlan_1()
-            LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_2
-                                             ON MIBoolean_AmountPlan_2.MovementItemId = MovementItem.Id
-                                            AND MIBoolean_AmountPlan_2.DescId = zc_MIBoolean_AmountPlan_2()
-            LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_3
-                                             ON MIBoolean_AmountPlan_3.MovementItemId = MovementItem.Id
-                                            AND MIBoolean_AmountPlan_3.DescId = zc_MIBoolean_AmountPlan_3()
-            LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_4
-                                             ON MIBoolean_AmountPlan_4.MovementItemId = MovementItem.Id
-                                            AND MIBoolean_AmountPlan_4.DescId = zc_MIBoolean_AmountPlan_4()
-            LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_5
-                                             ON MIBoolean_AmountPlan_5.MovementItemId = MovementItem.Id
-                                            AND MIBoolean_AmountPlan_5.DescId = zc_MIBoolean_AmountPlan_5()
 
             LEFT JOIN tmpMovementItemString AS MIString_Comment
                                             ON MIString_Comment.MovementItemId = MovementItem.Id
                                            AND MIString_Comment.DescId = zc_MIString_Comment()
-            LEFT JOIN tmpMovementItemString AS MIString_Comment_pay
-                                            ON MIString_Comment_pay.MovementItemId = MovementItem.Id
-                                           AND MIString_Comment_pay.DescId = zc_MIString_Comment_pay()
 
             LEFT JOIN tmpMovementItemDate AS MIDate_Insert
                                           ON MIDate_Insert.MovementItemId = MovementItem.Id
@@ -1319,10 +1348,6 @@ BEGIN
             LEFT JOIN tmpMovementItemDate AS MIDate_Update
                                           ON MIDate_Update.MovementItemId = MovementItem.Id
                                          AND MIDate_Update.DescId = zc_MIDate_Update()
-            -- Дата предварительный план
-            LEFT JOIN tmpMovementItemDate AS MIDate_Amount
-                                          ON MIDate_Amount.MovementItemId = MovementItem.Id
-                                         AND MIDate_Amount.DescId = zc_MIDate_Amount()
 
             LEFT JOIN tmpMovementItemLinkObject AS MILO_Insert
                                                 ON MILO_Insert.MovementItemId = MovementItem.Id
@@ -1353,7 +1378,8 @@ BEGIN
             -- УП-статья + № группы
             LEFT JOIN tmpInfoMoney_OrderF ON tmpInfoMoney_OrderF.InfoMoneyId = Object_InfoMoney.Id
 
-     UNION ALL
+      UNION ALL
+       -- 2. для итогов
        SELECT
              tmpMI.Id                         AS Id
            , Object_InfoMoney.Id              AS JuridicalId
@@ -1376,12 +1402,15 @@ BEGIN
            , ''   ::TVarChar                  AS EndDate
            , ''   ::TVarChar                  AS PersonalName_contract
 
-             -- Предварительный План на неделю
+             -- Первичный план на неделю
            , COALESCE (tmpMI.Amount, 0)::TFloat AS Amount
            , COALESCE (tmpMI.Amount, 0)::TFloat AS Amount_old
-             -- Дата предварительный план
-           , MIDate_Amount.ValueData            AS OperDate_Amount
-           , MIDate_Amount.ValueData            AS OperDate_Amount_old
+             -- Платежный план на неделю
+           , MIFloat_AmountPlan_next.ValueData     ::TFloat AS AmountPlan_next
+           , MIFloat_AmountPlan_next.ValueData     ::TFloat AS AmountPlan_next_old
+             -- Дата Платежный план на неделю
+           , MIDate_Amount_next.ValueData       AS OperDate_Amount
+           , MIDate_Amount_next.ValueData       AS OperDate_Amount_old
              --
            , 0 ::TFloat       AS AmountRemains
            , 0 ::TFloat       AS AmountPartner
@@ -1392,13 +1421,13 @@ BEGIN
            , 0 ::TFloat       AS AmountPartner_3
            , 0 ::TFloat       AS AmountPartner_4
            , 0 ::TFloat       AS AmountPartner_5
-             -- План оплат
+             -- Согласовано к оплате
            , 0 ::TFloat       AS AmountPlan_1
            , 0 ::TFloat       AS AmountPlan_2
            , 0 ::TFloat       AS AmountPlan_3
            , 0 ::TFloat       AS AmountPlan_4
            , 0 ::TFloat       AS AmountPlan_5
-             -- План оплат - Итог
+             -- Согласовано к оплате - Итог
            , 0 ::TFloat       AS AmountPlan_total
 
              -- План прошлой недели
@@ -1434,7 +1463,6 @@ BEGIN
            , vbIsPlan_5_old AS isPlan_5_old
 
            , ''   ::TVarChar  AS Comment
-           , ''   ::TVarChar  AS Comment_pay
 
            , Object_Insert.ValueData          AS InsertName
            , Object_Update.ValueData          AS UpdateName
@@ -1456,10 +1484,14 @@ BEGIN
             LEFT JOIN tmpMovementItemDate AS MIDate_Update
                                           ON MIDate_Update.MovementItemId = tmpMI.Id
                                          AND MIDate_Update.DescId = zc_MIDate_Update()
-            -- Дата предварительный план
-            LEFT JOIN tmpMovementItemDate AS MIDate_Amount
-                                          ON MIDate_Amount.MovementItemId = tmpMI.Id
-                                         AND MIDate_Amount.DescId = zc_MIDate_Amount()
+            -- Платежный план на неделю
+            LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_next
+                                           ON MIFloat_AmountPlan_next.MovementItemId = tmpMI.Id
+                                          AND MIFloat_AmountPlan_next.DescId         = zc_MIFloat_AmountPlan_next()
+            -- Дата Платежный план на неделю
+            LEFT JOIN tmpMovementItemDate AS MIDate_Amount_next
+                                          ON MIDate_Amount_next.MovementItemId = tmpMI.Id
+                                         AND MIDate_Amount_next.DescId = zc_MIDate_Amount_next()
 
             LEFT JOIN tmpMovementItemLinkObject AS MILO_Insert
                                                 ON MILO_Insert.MovementItemId = tmpMI.Id
@@ -1476,8 +1508,8 @@ BEGIN
            OR (Object_InfoMoney.DescId = zc_Object_InfoMoney() AND tmpMI.Id IS NOT NULL)
              )
 
-     UNION ALL
-       -- Данные прошлой недели
+      UNION ALL
+       -- 3. Данные прошлой недели
        SELECT
              0 :: Integer                     AS Id
            , Object_Juridical.Id              AS JuridicalId
@@ -1508,12 +1540,15 @@ BEGIN
              ) ::TVarChar AS EndDate
            , Object_Personal.ValueData ::TVarChar AS PersonalName_contract
 
-             -- Предварительный План на неделю
+             -- Первичный план на неделю
            , 0::TFloat AS Amount
            , 0::TFloat AS Amount_old
-             -- Дата предварительный план
-           , NULL :: TDateTime AS OperDate_Amount
-           , NULL :: TDateTime AS OperDate_Amount_old
+             -- Платежный план на неделю
+           , 0::TFloat AS Amount
+           , 0::TFloat AS Amount_old
+             -- Дата Платежный план на неделю
+           , NULL :: TDateTime AS OperDate_next
+           , NULL :: TDateTime AS OperDate_next_old
 
              -- Нач. долг
            , 0 ::TFloat       AS AmountRemains
@@ -1528,23 +1563,23 @@ BEGIN
            , 0 ::TFloat       AS AmountPartner_3
            , 0 ::TFloat       AS AmountPartner_4
            , 0 ::TFloat       AS AmountPartner_5
-             -- План оплат
+             -- Согласовано к оплате
            , 0 ::TFloat       AS AmountPlan_1
            , 0 ::TFloat       AS AmountPlan_2
            , 0 ::TFloat       AS AmountPlan_3
            , 0 ::TFloat       AS AmountPlan_4
            , 0 ::TFloat       AS AmountPlan_5
-             -- План оплат - Итог
+             -- Согласовано к оплате - Итог
            , 0 ::TFloat       AS AmountPlan_total
 
-             -- План прошлой недели
+             -- План прошлой недели (Согласовано)
            , MIFloat_AmountPlan_1_old.ValueData    AS AmountPlan_1_old
            , MIFloat_AmountPlan_2_old.ValueData    AS AmountPlan_2_old
            , MIFloat_AmountPlan_3_old.ValueData    AS AmountPlan_3_old
            , MIFloat_AmountPlan_4_old.ValueData    AS AmountPlan_4_old
            , MIFloat_AmountPlan_5_old.ValueData    AS AmountPlan_5_old
 
-             -- План прошлой недели - Итог
+             -- План прошлой недели (Согласовано) - Итог
            , (COALESCE (MIFloat_AmountPlan_1_old.ValueData, 0)
             + COALESCE (MIFloat_AmountPlan_2_old.ValueData, 0)
             + COALESCE (MIFloat_AmountPlan_3_old.ValueData, 0)
@@ -1581,7 +1616,6 @@ BEGIN
            , FALSE ::Boolean AS isPlan_5_old
 
            , ''   ::TVarChar AS Comment
-           , ''   ::TVarChar AS Comment_pay
 
            , ''   :: TVarChar           AS InsertName
            , ''   :: TVarChar           AS UpdateName
@@ -1695,5 +1729,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_OrderFinance (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
--- SELECT * FROM gpSelect_MovementItem_OrderFinance (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '9818')
+-- SELECT * FROM gpSelect_MovementItem_OrderFinance_1 (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
+-- SELECT * FROM gpSelect_MovementItem_OrderFinance_1 (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '9818')

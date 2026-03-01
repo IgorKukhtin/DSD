@@ -32,7 +32,7 @@ BEGIN
       SELECT Movement.OperDate
            , COALESCE (MovementLinkObject_BankAccount.ObjectId,0)  AS BankAccountId
            , COALESCE (MovementLinkObject_OrderFinance.ObjectId,0) AS OrderFinanceId
-     INTO vbOperDate, vbBankAccountId, vbOrderFinanceId
+             INTO vbOperDate, vbBankAccountId, vbOrderFinanceId
       FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_BankAccount
                                        ON MovementLinkObject_BankAccount.MovementId = Movement.Id
@@ -42,8 +42,17 @@ BEGIN
                                        ON MovementLinkObject_OrderFinance.MovementId = Movement.Id
                                       AND MovementLinkObject_OrderFinance.DescId = zc_MovementLinkObject_OrderFinance()
       WHERE Movement.Id = inMovementId;
-      --макс. дата документов
-      vbOperDate_max := (SELECT MAX(Movement.OperDate) ::TDateTime
+
+
+                -- если Разрешено изменение плана по дням - в проведенном док. = ДА
+      IF EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId  = vbOrderFinanceId AND OB.DescId = zc_ObjectBoolean_OrderFinance_Status_off() AND OB.ValueData = TRUE)
+      THEN
+          RAISE EXCEPTION 'Ошибка.Нет прав для проведения вида планирования = <%>.', lfGet_Object_ValueData_sh (vbOrderFinanceId);
+      END IF;
+
+
+      -- макс. дата документов
+      /*vbOperDate_max := (SELECT MAX(Movement.OperDate) ::TDateTime
                          FROM Movement
                              INNER JOIN MovementLinkObject AS MovementLinkObject_BankAccount
                                                            ON MovementLinkObject_BankAccount.MovementId = Movement.Id
@@ -59,7 +68,7 @@ BEGIN
                         );
       --Если дата проводимого док = макс, т.е. это последний   документ, следовательно сохраняем примечание в справочник
      
-      /*IF vbOperDate >= vbOperDate_max
+      IF vbOperDate >= vbOperDate_max
       THEN
       -- RAISE EXCEPTION 'Ошибка.Тест.';
           CREATE TEMP TABLE _tmpJuridicalOrderFinance (Id Integer, BankAccountId Integer, JuridicalId Integer, InfoMoneyId Integer) ON COMMIT DROP;

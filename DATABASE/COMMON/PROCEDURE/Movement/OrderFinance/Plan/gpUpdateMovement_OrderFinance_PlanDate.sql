@@ -6,10 +6,10 @@ CREATE OR REPLACE FUNCTION gpUpdateMovement_OrderFinance_PlanDate(
     IN inMovementId              Integer   , -- Ключ объекта <Документ>
     IN inMovementItemId          Integer   , -- Ключ строки
     IN inMovementItemId_child    Integer   , -- Ключ строки
-    IN inDateDay                 TDateTime , -- Дата оплаты
- INOUT ioDateDay_old             TDateTime , --
-    IN inAmount                  TFloat    , -- Предварительный План на неделю
- INOUT ioAmountPlan_day          TFloat    , -- Сумма План оплат на дату
+    IN inDateDay                 TDateTime , -- Дата Согласовано к оплате
+ INOUT ioDateDay_old             TDateTime , -- Дата Согласовано к оплате
+    IN inAmount                  TFloat    , -- Первичный план на неделю
+ INOUT ioAmountPlan_day          TFloat    , -- Согласовано к оплате
    OUT outWeekDay                TVarChar  , -- День недели для <Дата оплаты>
    OUT outAmountPlan_1           TFloat    , --
    OUT outAmountPlan_2           TFloat    , --
@@ -39,15 +39,17 @@ BEGIN
 
      -- if vbUserId = 5 then update Movement set StatusId = zc_Enum_Status_UnComplete() where Id = inMovementId; end if;
 
+
+     -- Всегда
+     ioAmountPlan_day:= CASE WHEN inDateDay IS NULL THEN 0 ELSE ioAmountPlan_day END;
+     -- Всегда
+     inDateDay       := CASE WHEN ioAmountPlan_day > 0 THEN inDateDay ELSE NULL  END;
+
+
      -- определяем день недели для предыдущей и текущей даты
      vbNumDay     := zfCalc_DayOfWeekNumber (inDateDay);
      vbNumDay_old := zfCalc_DayOfWeekNumber (ioDateDay_old);
 
-     -- IF COALESCE (inIsAmountPlan_day,TRUE) = TRUE
-     -- THEN
-
-     -- Всегда
-     ioAmountPlan_day:= (CASE WHEN inDateDay IS NULL THEN 0 WHEN COALESCE (ioAmountPlan_day,0) = 0 THEN inAmount ELSE ioAmountPlan_day END);
 
      -- Вернули
      outAmountPlan_1:= CASE WHEN vbNumDay = 1 THEN ioAmountPlan_day ELSE 0 END;
@@ -56,70 +58,53 @@ BEGIN
      outAmountPlan_4:= CASE WHEN vbNumDay = 4 THEN ioAmountPlan_day ELSE 0 END;
      outAmountPlan_5:= CASE WHEN vbNumDay = 5 THEN ioAmountPlan_day ELSE 0 END;
 
+     -- !!!ВАЖНО!!!
+     vbIsChild:= EXISTS (SELECT 1
+                         FROM MovementLinkObject AS MovementLinkObject_OrderFinance
+                              INNER JOIN ObjectBoolean AS ObjectBoolean_SB
+                                                       ON ObjectBoolean_SB.ObjectId = MovementLinkObject_OrderFinance.ObjectId
+                                                      AND ObjectBoolean_SB.DescId   IN (zc_ObjectBoolean_OrderFinance_InvNumber()
+                                                                                      , zc_ObjectBoolean_OrderFinance_InvNumber_Invoice()
+                                                                                       )
+                                                      AND ObjectBoolean_SB.ValueData = TRUE
+                         WHERE MovementLinkObject_OrderFinance.MovementId = inMovementId
+                           AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
+                        );
 
-     -- ELSE
-     --     ioAmountPlan_day := 0;
-     -- END IF;
+     -- проверка
+     IF vbIsChild = TRUE AND COALESCE (inMovementItemId_child, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Изменение данных возможно только с учетом № счета.';
+     END IF;
+
 
      -- 1.1.
-     IF COALESCE (ioDateDay_old, zc_DateStart()) <> zc_DateStart()
-    -- если заменили дату
-    AND COALESCE (ioDateDay_old, zc_DateStart()) <> COALESCE (inDateDay, zc_DateStart())
+     IF vbIsChild = TRUE
      THEN
-         -- обнуление данные - Child
-         IF EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.ParentId = inMovementItemId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE)
-         THEN
-             -- проверка
-             IF 1 < (SELECT COUNT(*) FROM MovementItem WHERE MovementItem.ParentId = inMovementItemId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE)
-             THEN
-                 IF COALESCE (inMovementItemId_child, 0) = 0
-                 THEN
-                     RAISE EXCEPTION 'Ошибка.Изменение данных возможно только с учетом № счета.';
-                 END IF;
+         -- обновляем данные - Child
+         PERFORM -- Согласовано к оплате
+                 lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_fin(), inMovementItemId, CASE WHEN inMovementItemId_child > 0 AND vbNumDay = 4
+                 -- Дата Согласовано к оплате
+               , lpInsertUpdate_MovementItemDate (zc_MIDate_Amount(), MovementItem.Id, inDateDay)
+         FROM MovementItem
+         WHERE MovementItem.Id = inMovementItemId_child
+        ;
 
-                 -- обнуление данные - Child
-                 PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, MovementItem.ParentId, MovementItem.ObjectId, MovementItem.MovementId, 0, inMovementItemId)
-                 FROM MovementItem
-                 WHERE MovementItem.Id = inMovementItemId_child
-                   AND MovementItem.isErased = FALSE
-                ;
+         -- сохранили протокол
+         PERFORM lpInsert_MovementItemProtocol (MovementItem.Id, vbUserId, FALSE)
+         FROM MovementItem
+         WHERE MovementItem.Id = inMovementItemId_child
+        ;
 
-             ELSE
-                 -- обнуление данные - Child
-                 PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, MovementItem.ParentId, MovementItem.ObjectId, MovementItem.MovementId, 0, inMovementItemId)
-                 FROM MovementItem
-                 WHERE MovementItem.ParentId = inMovementItemId
-                   AND MovementItem.DescId   = zc_MI_Child()
-                   AND MovementItem.isErased = FALSE
-                ;
 
-             END IF;
+         -- обнуляем master
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_1(), inMovementItemId, 0);
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_2(), inMovementItemId, 0);
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_3(), inMovementItemId, 0);
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_4(), inMovementItemId, 0);
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_5(), inMovementItemId, 0);
 
-         END IF;
-
-         -- обнуляем данные прошлой даты
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_1(), inMovementItemId, CASE WHEN inMovementItemId_child > 0 AND vbNumDay = 1
-                                                                                                          THEN COALESCE ((SELECT SUM (MovementItem.Amount) FROM MovementItem WHERE MovementItem.ParentId = inMovementItemId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE), 0)
-                                                                                                     ELSE 0
-                                                                                                END);
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_2(), inMovementItemId, CASE WHEN inMovementItemId_child > 0 AND vbNumDay = 2
-                                                                                                          THEN COALESCE ((SELECT SUM (MovementItem.Amount) FROM MovementItem WHERE MovementItem.ParentId = inMovementItemId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE), 0)
-                                                                                                     ELSE 0
-                                                                                                END);
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_3(), inMovementItemId, CASE WHEN inMovementItemId_child > 0 AND vbNumDay = 3
-                                                                                                          THEN COALESCE ((SELECT SUM (MovementItem.Amount) FROM MovementItem WHERE MovementItem.ParentId = inMovementItemId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE), 0)
-                                                                                                     ELSE 0
-                                                                                                END);
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_4(), inMovementItemId, CASE WHEN inMovementItemId_child > 0 AND vbNumDay = 4
-                                                                                                          THEN COALESCE ((SELECT SUM (MovementItem.Amount) FROM MovementItem WHERE MovementItem.ParentId = inMovementItemId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE), 0)
-                                                                                                     ELSE 0
-                                                                                                END);
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_5(), inMovementItemId, CASE WHEN inMovementItemId_child > 0 AND vbNumDay = 5
-                                                                                                          THEN COALESCE ((SELECT SUM (MovementItem.Amount) FROM MovementItem WHERE MovementItem.ParentId = inMovementItemId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE), 0)
-                                                                                                     ELSE 0
-                                                                                                END);
-
-         -- обнуляем свойство <Дата предварительный план>
+         -- обнуляем свойство <Дата Согласовано к оплате>
          PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Amount(), inMovementItemId, NULL);
 
 

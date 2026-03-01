@@ -19,7 +19,7 @@ RETURNS TABLE (-- Документ продажа - отправка в EDI
              , isEdiComdoc Boolean
                -- Вчасно - Декларация, автоматическая отправка
              , isEdiQuality Boolean
-               --
+
                -- Документ для отправки в EDI
              , InvNumber TVarChar, OperDate TDateTime, UpdateDate TDateTime
                -- Дата/Время когда отправили в EDI
@@ -32,7 +32,9 @@ RETURNS TABLE (-- Документ продажа - отправка в EDI
              , InsertDate_WeighingPartner TDateTime
 
                -- Док заявка
-             , InvNumber_order TVarChar, InvNumberPartner_order TVarChar, OperDate_order TDateTime
+             , MovementId_order Integer, InvNumber_order TVarChar, InvNumberPartner_order TVarChar, OperDate_order TDateTime
+               -- <Дата/Время создания> - заявка
+             , OperDate_order_Insert TDateTime
                -- Док продажа
              , InvNumber_Parent TVarChar, OperDate_Parent TDateTime, OperDatePartner_Parent TDateTime
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, RetailName TVarChar
@@ -196,9 +198,12 @@ BEGIN
                  --
                , tmpMovement_WeighingPartner.InsertDate :: TDateTime AS InsertDate_WeighingPartner
 
+               , Movement_order.Id                              AS MovementId_order
                , Movement_order.InvNumber                       AS InvNumber_order
                , MS_InvNumberPartner_order.ValueData            AS InvNumberPartner_order
                , Movement_order.OperDate                        AS OperDate_order
+                 -- <Дата создания> - заявка
+               , MovementDate_Insert_order.ValueData            AS OperDate_order_Insert
 
                , Movement_Parent.InvNumber                      AS InvNumber_Parent
                , Movement_Parent.OperDate                       AS OperDate_Parent
@@ -324,6 +329,9 @@ BEGIN
                 LEFT JOIN MovementString AS MS_InvNumberPartner_order
                                          ON MS_InvNumberPartner_order.MovementId =  Movement_order.Id
                                         AND MS_InvNumberPartner_order.DescId     = zc_MovementString_InvNumberPartner()
+                LEFT JOIN MovementDate AS MovementDate_Insert_order
+                                       ON MovementDate_Insert_order.MovementId = Movement_order.Id
+                                      AND MovementDate_Insert_order.DescId     = zc_MovementDate_Insert()
 
                 -- док.EDI
                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order_EDI
@@ -360,11 +368,18 @@ BEGIN
                                                       --, 954959  -- !!!МЕТРО Кеш енд Кері Україна ТОВсмт Дударків вул. Незалежності (Леніна) буд.2/2!!!
                                                          )
                   )
+ -- test
+ -- OR Movement.Id = 33606370  
+ -- test
+ -- OR Movement_order.Id = 33603626   
 
-               OR -- 1.2. Этих EDI + Vchasno - Отправляем 6 HOUR
-                  (Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '12 HOUR'
+               OR -- 1.2. Этих EDI + Vchasno - Отправляем 33 HOUR
+                  (/*Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '12 HOUR'
                AND COALESCE (CASE WHEN tmpMovement_WeighingPartner.InsertDate > MovementDate_Update.ValueData THEN tmpMovement_WeighingPartner.InsertDate ELSE MovementDate_Update.ValueData END, zc_DateStart())
                  < CURRENT_TIMESTAMP - INTERVAL '12 HOUR'
+                   */
+                   -- ДЛЯ этих
+                   MovementDate_Insert_order.ValueData < CURRENT_TIMESTAMP - INTERVAL '33 HOUR'
                -- ДЛЯ этих
                AND MovementLinkObject_To.ObjectId IN (8223447 -- !!!МЕТРО Кеш енд Кері Україна ТОВ с. Мартусівка вул. Промислова буд.75!!!
                                                     , 8253940 -- !!!МЕТРО Кеш енд Кері Україна ТОВ смт Дударків вул. Незалежності буд.2/2!!!
