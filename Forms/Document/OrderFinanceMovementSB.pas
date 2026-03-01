@@ -28,7 +28,7 @@ uses
   ExternalLoad, cxSplitter;
 
 type
-  TOrderFinanceMovementSBForm = class(TParentForm)
+  TOrderFinanceMovementSBForm_2 = class(TParentForm)
     FormParams: TdsdFormParams;
     spSelectMI: TdsdStoredProc;
     dxBarManager: TdxBarManager;
@@ -291,8 +291,8 @@ type
     PersonalName_contract: TcxGridDBColumn;
     cxLabel20: TcxLabel;
     edOperDate_Amount: TcxDateEdit;
-    OperDate_Amount: TcxGridDBColumn;
-    OperDate_Amount_old: TcxGridDBColumn;
+    OperDate_next: TcxGridDBColumn;
+    OperDate_next_old: TcxGridDBColumn;
     Amount_old: TcxGridDBColumn;
     AmountPlan_1_old: TcxGridDBColumn;
     AmountPlan_2_old: TcxGridDBColumn;
@@ -356,7 +356,7 @@ type
     actGet_Export_Email_msg: TdsdExecStoredProc;
     mactExport_msg: TMultiAction;
     mactSign_1_Yes: TMultiAction;
-    Amount_Child: TcxGridDBColumn;
+    AmountPlan_next: TcxGridDBColumn;
     bbExport_msg: TdxBarButton;
     InvNumber_Invoice_Child: TcxGridDBColumn;
     InvNumber_Invoice_Child_ch2: TcxGridDBColumn;
@@ -378,6 +378,8 @@ type
     actDelete_MI: TdsdExecStoredProc;
     actMIChildProtocolOpenForm: TdsdOpenForm;
     bbMIChildProtocolOpenForm: TdxBarButton;
+    AmountPlan_next_old: TcxGridDBColumn;
+    Comment_SB_Child: TcxGridDBColumn;
   private
   public
   end;
@@ -386,5 +388,5 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TOrderFinanceMovementSBForm);
+  RegisterClass(TOrderFinanceMovementSBForm_2);
 end.

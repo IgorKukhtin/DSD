@@ -27,7 +27,7 @@ uses
   cxImageComboBox, cxCheckBox, dsdInternetAction;
 
 type
-  TOrderFinance_SBForm = class(TAncestorReportForm)
+  TOrderFinance_SBForm_3 = class(TAncestorReportForm)
     cxLabel3: TcxLabel;
     cxLabel4: TcxLabel;
     GuidesWeek_Date1: TdsdGuides;
@@ -75,7 +75,7 @@ type
     spSelect_ExportNPP: TdsdStoredProc;
     actExport_fileNPP: TdsdStoredProcExportToFile;
     dxBarButton1: TdxBarButton;
-    DateDay: TcxGridDBColumn;
+    OperDate_next_Child: TcxGridDBColumn;
     WeekDay: TcxGridDBColumn;
     MovementItemProtocolOpenForm: TdsdOpenForm;
     bbMovementItemProtocolOpen: TdxBarButton;
@@ -111,7 +111,6 @@ type
     isSign_1: TcxGridDBColumn;
     Date_Sign_1: TcxGridDBColumn;
     UserMember_1: TcxGridDBColumn;
-    Comment_mov: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
     Comment_SB: TcxGridDBColumn;
     ColorFon_record: TcxGridDBColumn;
@@ -130,6 +129,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TOrderFinance_SBForm);
+  RegisterClass(TOrderFinance_SBForm_3);
 
 end.

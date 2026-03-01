@@ -1,5 +1,5 @@
-inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
-  Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1087#1086' '#1076#1072#1090#1072#1084')'
+inherited OrderFinance_PlanDateForm_4: TOrderFinance_PlanDateForm_4
+  Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1087#1086' '#1076#1072#1090#1072#1084')-4'
   ClientHeight = 410
   ClientWidth = 1020
   AddOnFormData.RefreshAction = actRefreshStart
@@ -13,19 +13,19 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
     Width = 1020
     Height = 248
     TabOrder = 3
-    ExplicitTop = 59
+    ExplicitTop = 88
     ExplicitWidth = 1020
-    ExplicitHeight = 277
+    ExplicitHeight = 248
     ClientRectBottom = 248
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
-      ExplicitHeight = 277
+      ExplicitHeight = 248
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 248
         ExplicitWidth = 1020
-        ExplicitHeight = 277
+        ExplicitHeight = 248
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item

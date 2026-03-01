@@ -1,5 +1,5 @@
-inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
-  Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')'
+inherited OrderFinance_PlanForm_5: TOrderFinance_PlanForm_5
+  Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')-5'
   ClientHeight = 534
   ClientWidth = 1020
   AddOnFormData.RefreshAction = actRefreshStart
@@ -13,19 +13,19 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
     Width = 1020
     Height = 248
     TabOrder = 3
-    ExplicitTop = 59
+    ExplicitTop = 88
     ExplicitWidth = 1020
-    ExplicitHeight = 277
+    ExplicitHeight = 248
     ClientRectBottom = 248
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
-      ExplicitHeight = 277
+      ExplicitHeight = 248
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 248
         ExplicitWidth = 1020
-        ExplicitHeight = 277
+        ExplicitHeight = 248
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1082,7 +1082,6 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
     Anchors = [akTop, akRight, akBottom]
     TabOrder = 6
     Visible = False
-    ExplicitHeight = 38
     object ExportXmlGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ExportDS

@@ -28,7 +28,7 @@ uses
   dsdGuides, cxButtonEdit, dsdCommon;
 
 type
-  TOrderFinanceSBJournalForm = class(TParentForm)
+  TOrderFinanceSBJournalForm_2 = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -39,7 +39,7 @@ type
     actRefresh: TdsdDataSetRefresh;
     actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
@@ -124,6 +124,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TOrderFinanceSBJournalForm);
+  RegisterClass(TOrderFinanceSBJournalForm_2);
 
 end.

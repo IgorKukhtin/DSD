@@ -27,7 +27,7 @@ uses
   cxImageComboBox, cxCheckBox, dsdInternetAction;
 
 type
-  TOrderFinance_PlanForm = class(TAncestorReportForm)
+  TOrderFinance_PlanForm_5 = class(TAncestorReportForm)
     cxLabel3: TcxLabel;
     cxLabel4: TcxLabel;
     GuidesWeek_Date1: TdsdGuides;
@@ -114,6 +114,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TOrderFinance_PlanForm);
+  RegisterClass(TOrderFinance_PlanForm_5);
 
 end.

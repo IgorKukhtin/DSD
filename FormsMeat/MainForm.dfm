@@ -10650,9 +10650,9 @@ inherited MainForm: TMainForm
     object actOrderFinanceMov_2: TdsdOpenForm
       Category = #1055#1083#1072#1085#1080#1088#1086#1074#1085#1080#1077
       MoveParams = <>
-      Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081
-      FormName = 'TOrderFinanceJournalForm'
-      FormNameParam.Value = 'TOrderFinanceJournalForm'
+      Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081'-1'
+      FormName = 'TOrderFinanceJournalForm_1'
+      FormNameParam.Value = 'TOrderFinanceJournalForm_1'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -10666,9 +10666,9 @@ inherited MainForm: TMainForm
     object actOrderFinanceSBJournal_3: TdsdOpenForm
       Category = #1055#1083#1072#1085#1080#1088#1086#1074#1085#1080#1077
       MoveParams = <>
-      Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1057#1095#1077#1090#1072')'
-      FormName = 'TOrderFinanceSBJournalForm'
-      FormNameParam.Value = 'TOrderFinanceSBJournalForm'
+      Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1057#1095#1077#1090#1072')-2'
+      FormName = 'TOrderFinanceSBJournalForm_2'
+      FormNameParam.Value = 'TOrderFinanceSBJournalForm_2'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -10682,9 +10682,9 @@ inherited MainForm: TMainForm
     object actOrderFinance_SB_4: TdsdOpenForm
       Category = #1055#1083#1072#1085#1080#1088#1086#1074#1085#1080#1077
       MoveParams = <>
-      Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1042#1080#1079#1072' '#1057#1041')'
-      FormName = 'TOrderFinance_SBForm'
-      FormNameParam.Value = 'TOrderFinance_SBForm'
+      Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1042#1080#1079#1072' '#1057#1041')-3'
+      FormName = 'TOrderFinance_SBForm_3'
+      FormNameParam.Value = 'TOrderFinance_SBForm_3'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -10698,9 +10698,9 @@ inherited MainForm: TMainForm
     object actOrderFinance_PlanDate_5: TdsdOpenForm
       Category = #1055#1083#1072#1085#1080#1088#1086#1074#1085#1080#1077
       MoveParams = <>
-      Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1087#1086' '#1076#1072#1090#1072#1084')'
-      FormName = 'TOrderFinance_PlanDateForm'
-      FormNameParam.Value = 'TOrderFinance_PlanDateForm'
+      Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1087#1086' '#1076#1072#1090#1072#1084')-4'
+      FormName = 'TOrderFinance_PlanDateForm_4'
+      FormNameParam.Value = 'TOrderFinance_PlanDateForm_4'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -10714,9 +10714,9 @@ inherited MainForm: TMainForm
     object actOrderFinance_Plan_6: TdsdOpenForm
       Category = #1055#1083#1072#1085#1080#1088#1086#1074#1085#1080#1077
       MoveParams = <>
-      Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')'
-      FormName = 'TOrderFinance_PlanForm'
-      FormNameParam.Value = 'TOrderFinance_PlanForm'
+      Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')-5'
+      FormName = 'TOrderFinance_PlanForm_5'
+      FormNameParam.Value = 'TOrderFinance_PlanForm_5'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -11547,6 +11547,24 @@ inherited MainForm: TMainForm
       end
       object miJuridicalOrderFinance: TMenuItem
         Action = actJuridicalOrderFinance
+      end
+      object N273: TMenuItem
+        Caption = '-'
+      end
+      object N274: TMenuItem
+        Action = actOrderFinanceMov_2
+      end
+      object N275: TMenuItem
+        Action = actOrderFinanceSBJournal_3
+      end
+      object N276: TMenuItem
+        Action = actOrderFinance_SB_4
+      end
+      object N277: TMenuItem
+        Action = actOrderFinance_PlanDate_5
+      end
+      object N278: TMenuItem
+        Action = actOrderFinance_Plan_6
       end
     end
     object miTaxDocuments: TMenuItem [6]

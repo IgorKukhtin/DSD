@@ -6,6 +6,7 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -192
   ExplicitWidth = 1102
   ExplicitHeight = 598
   PixelsPerInch = 96
@@ -317,7 +318,7 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Text = #1042#1110#1076#1076#1110#1083' '#1079#1072#1073#1077#1079#1073#1077#1095#1077#1085#1085#1103
+      Text = #1052#1103#1089#1085#1086#1077' '#1089#1099#1088#1100#1077
       Width = 175
     end
     object lbSearchName: TcxLabel
@@ -1336,6 +1337,14 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOrderFinanceId'
+        Value = Null
+        Component = GuidesOrderFinance
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 600
@@ -1370,7 +1379,7 @@ inherited JuridicalOrderFinanceForm: TJuridicalOrderFinanceForm
     KeyField = 'Id'
     LookupControl = edOrderFinance
     Key = '3988049'
-    TextValue = #1042#1110#1076#1076#1110#1083' '#1079#1072#1073#1077#1079#1073#1077#1095#1077#1085#1085#1103
+    TextValue = #1052#1103#1089#1085#1086#1077' '#1089#1099#1088#1100#1077
     FormNameParam.Value = 'TOrderFinance_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','

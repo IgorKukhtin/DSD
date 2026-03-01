@@ -28,7 +28,7 @@ uses
   ExternalLoad;
 
 type
-  TOrderFinanceMovementForm = class(TParentForm)
+  TOrderFinanceMovementForm_1 = class(TParentForm)
     FormParams: TdsdFormParams;
     spSelectMI: TdsdStoredProc;
     dxBarManager: TdxBarManager;
@@ -299,8 +299,8 @@ type
     PersonalName_contract: TcxGridDBColumn;
     cxLabel20: TcxLabel;
     edOperDate_Amount: TcxDateEdit;
-    OperDate_Amount: TcxGridDBColumn;
-    OperDate_Amount_old: TcxGridDBColumn;
+    OperDate_next: TcxGridDBColumn;
+    OperDate_next_old: TcxGridDBColumn;
     Amount_old: TcxGridDBColumn;
     AmountPlan_1_old: TcxGridDBColumn;
     AmountPlan_2_old: TcxGridDBColumn;
@@ -329,6 +329,8 @@ type
     mactExport_msg: TMultiAction;
     bbtExport_msg: TdxBarButton;
     mactSign_1_Yes: TMultiAction;
+    AmountPlan_next: TcxGridDBColumn;
+    AmountPlan_next_old: TcxGridDBColumn;
   private
   public
   end;
@@ -337,5 +339,5 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TOrderFinanceMovementForm);
+  RegisterClass(TOrderFinanceMovementForm_1);
 end.

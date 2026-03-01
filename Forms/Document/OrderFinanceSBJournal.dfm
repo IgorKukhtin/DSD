@@ -1,7 +1,7 @@
-object OrderFinanceSBJournalForm: TOrderFinanceSBJournalForm
+object OrderFinanceSBJournalForm_2: TOrderFinanceSBJournalForm_2
   Left = 0
   Top = 0
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081'> ('#1057#1095#1077#1090#1072')'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081'> ('#1057#1095#1077#1090#1072')-2'
   ClientHeight = 374
   ClientWidth = 984
   Color = clBtnFace
@@ -810,10 +810,10 @@ object OrderFinanceSBJournalForm: TOrderFinanceSBJournalForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -893,8 +893,8 @@ object OrderFinanceSBJournalForm: TOrderFinanceSBJournalForm
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
-      FormName = 'TOrderFinanceMovementSBForm'
-      FormNameParam.Value = 'TOrderFinanceMovementSBForm'
+      FormName = 'TOrderFinanceMovementSBForm_2'
+      FormNameParam.Value = 'TOrderFinanceMovementSBForm_2'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -950,8 +950,8 @@ object OrderFinanceSBJournalForm: TOrderFinanceSBJournalForm
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
-      FormName = 'TOrderFinanceMovementSBForm'
-      FormNameParam.Value = 'TOrderFinanceMovementSBForm'
+      FormName = 'TOrderFinanceMovementSBForm_2'
+      FormNameParam.Value = 'TOrderFinanceMovementSBForm_2'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1094,10 +1094,10 @@ object OrderFinanceSBJournalForm: TOrderFinanceSBJournalForm
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
@@ -1311,7 +1311,7 @@ object OrderFinanceSBJournalForm: TOrderFinanceSBJournalForm
           StoredProc = spGet_UserJuridicalBasis
         end
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1319,7 +1319,7 @@ object OrderFinanceSBJournalForm: TOrderFinanceSBJournalForm
       RefreshOnTabSetChanges = False
     end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_OrderFinance'
     DataSet = ClientDataSet
     DataSets = <

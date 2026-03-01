@@ -1,7 +1,7 @@
-object OrderFinanceJournalForm: TOrderFinanceJournalForm
+object OrderFinanceJournalForm_1: TOrderFinanceJournalForm_1
   Left = 0
   Top = 0
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081'>-1'
   ClientHeight = 381
   ClientWidth = 984
   Color = clBtnFace
@@ -893,8 +893,8 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
-      FormName = 'TOrderFinanceMovementForm'
-      FormNameParam.Value = 'TOrderFinanceMovementForm'
+      FormName = 'TOrderFinanceMovementForm_1'
+      FormNameParam.Value = 'TOrderFinanceMovementForm_1'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -950,8 +950,8 @@ object OrderFinanceJournalForm: TOrderFinanceJournalForm
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
-      FormName = 'TOrderFinanceMovementForm'
-      FormNameParam.Value = 'TOrderFinanceMovementForm'
+      FormName = 'TOrderFinanceMovementForm_1'
+      FormNameParam.Value = 'TOrderFinanceMovementForm_1'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
