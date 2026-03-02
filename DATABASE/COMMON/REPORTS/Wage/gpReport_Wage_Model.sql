@@ -851,7 +851,8 @@ AS  (SELECT
            , tmpMovement.PersonalGroupId
 
              -- Общая база, кол-во
-           , CASE WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack() -- Кол-во упаковок приход (расчет)
+           , CASE -- 1.Кол-во упаковок приход (расчет)
+                  WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack()
                   THEN
                       CAST (SUM (CAST (CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
                                            THEN (CASE WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InAmountForm(), zc_Enum_SelectKind_OutAmountForm())
@@ -867,14 +868,17 @@ AS  (SELECT
                                  AS  NUMERIC (16, 0))
                                 ) AS  NUMERIC (16, 0))
                   ELSE
-                      SUM (CASE WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_SatSheetWorkTime() -- по субботам табель
+                      SUM (CASE -- по субботам табель
+                                WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_SatSheetWorkTime()
                                 AND tmpMovement.OperDate_num <> 6 -- суббота
                                     THEN 0
 
-                               WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InHead(), zc_Enum_SelectKind_OutHead()) -- Кол-во голов
+                               -- 2.Кол-во голов
+                               WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InHead(), zc_Enum_SelectKind_OutHead())
                                     THEN tmpMovement_HeadCount.Amount
 
-                               WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack() -- Кол-во упаковок приход (расчет)
+                               -- 3.Кол-во упаковок приход (расчет)
+                               WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack()
                                     THEN CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
                                                    THEN CAST ((CASE WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InAmountForm(), zc_Enum_SelectKind_OutAmountForm())
                                                                          -- формовка
@@ -886,9 +890,15 @@ AS  (SELECT
                                                             / ObjectFloat_WeightTotal.ValueData AS NUMERIC (16, 0))
                                               ELSE 0
                                          END
-                               ELSE CASE WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InAmountForm(), zc_Enum_SelectKind_OutAmountForm())
-                                              -- формовка
+                               ELSE 
+                                    CASE -- 4.формовка
+                                         WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InAmountForm(), zc_Enum_SelectKind_OutAmountForm())
                                               THEN tmpMovement.Amount_form
+                                         -- 5.Кол-во приход с пересчетом в вес + Кол-во расход с пересчетом в вес
+                                         WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InWeight(), zc_Enum_SelectKind_OutWeight())
+                                              THEN tmpMovement.Amount
+                                                 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
+                                         -- 6.все остальное
                                          ELSE tmpMovement.Amount
                                     END
 
@@ -897,7 +907,8 @@ AS  (SELECT
 
              -- Общая сумма, грн
            , ROUND (Setting.Price * Setting.Ratio
-           * CASE WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack() -- Кол-во упаковок приход (расчет)
+           * CASE -- 1.Кол-во упаковок приход (расчет)
+                  WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack()
                   THEN
                       CAST (SUM (CAST (CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
                                            THEN (CASE WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InAmountForm(), zc_Enum_SelectKind_OutAmountForm())
@@ -913,14 +924,17 @@ AS  (SELECT
                                  AS  NUMERIC (16, 0))
                                 ) AS  NUMERIC (16, 0))
                   ELSE
-                      SUM (CASE WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_SatSheetWorkTime() -- по субботам табель
+                      SUM (CASE -- по субботам табель
+                                WHEN Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_SatSheetWorkTime()
                                 AND tmpMovement.OperDate_num <> 6 -- суббота
                                     THEN 0
 
-                               WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InHead(), zc_Enum_SelectKind_OutHead()) -- Кол-во голов
+                               -- 2.Кол-во голов
+                               WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InHead(), zc_Enum_SelectKind_OutHead())
                                     THEN tmpMovement_HeadCount.Amount
 
-                               WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack() -- Кол-во упаковок приход (расчет)
+                               -- 3.Кол-во упаковок приход (расчет)
+                               WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack()
                                     THEN CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
                                                    THEN CAST ((CASE WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InAmountForm(), zc_Enum_SelectKind_OutAmountForm())
                                                                          -- формовка
@@ -932,9 +946,15 @@ AS  (SELECT
                                                             / ObjectFloat_WeightTotal.ValueData AS NUMERIC (16, 0))
                                               ELSE 0
                                          END
-                               ELSE CASE WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InAmountForm(), zc_Enum_SelectKind_OutAmountForm())
-                                              -- формовка
+                               ELSE 
+                                    CASE -- 4.формовка
+                                         WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InAmountForm(), zc_Enum_SelectKind_OutAmountForm())
                                               THEN tmpMovement.Amount_form
+                                         -- 5.Кол-во приход с пересчетом в вес + Кол-во расход с пересчетом в вес
+                                         WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InWeight(), zc_Enum_SelectKind_OutWeight())
+                                              THEN tmpMovement.Amount
+                                                 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
+                                         -- 6.все остальное
                                          ELSE tmpMovement.Amount
                                     END
 
@@ -1229,7 +1249,7 @@ AS  (SELECT
         FROM gpReport_PersonalComplete (inStartDate:= inStartDate, inEndDate:= inEndDate, inPersonalId:= 0, inPositionId:= 0, inBranchId:= 0, inIsDay:= TRUE, inIsMonth:= FALSE, inIsDetail:= FALSE, inisMovement:= FALSE, inSession:= inSession) AS gpReport
         WHERE EXISTS (SELECT 1 FROM Setting_Wage_1 AS Setting WHERE Setting.SelectKindId IN (zc_Enum_SelectKind_MI_Master(), zc_Enum_SelectKind_MI_MasterCount(), zc_Enum_SelectKind_MovementCount()))
           -- Розподільчий комплекс
-          AND inUnitId = 8459
+          AND inUnitId = zc_Unit_RK()
        )
        , tmpMovement_PersonalComplete AS
        (SELECT gpReport.OperDate
@@ -2058,7 +2078,7 @@ AS  (SELECT
 
     WHERE Setting.SelectKindId IN (zc_Enum_SelectKind_MI_Master(), zc_Enum_SelectKind_MI_MasterCount(), zc_Enum_SelectKind_MovementCount())
       -- Розподільчий комплекс
-      AND inUnitId = 8459
+      AND inUnitId = zc_Unit_RK()
 
    UNION ALL
     -- 1.2. WageWarehouseBranch - Кол-во вес по документам компл.  + Кол-во строк по документам компл. + Кол-во документов компл.
@@ -2190,7 +2210,7 @@ AS  (SELECT
 
     WHERE Setting.SelectKindId IN (zc_Enum_SelectKind_MI_Master(), zc_Enum_SelectKind_MI_MasterCount(), zc_Enum_SelectKind_MovementCount())
       -- Розподільчий комплекс
-      AND inUnitId <> 8459
+      AND inUnitId <> zc_Unit_RK()
 
    UNION ALL
     -- 1.3. Данные для - WageWarehouseBranch
