@@ -1,7 +1,5 @@
 -- Function: gpInsert_MI_OrderFinanceSB_Load ()
 
-DROP FUNCTION IF EXISTS gpInsert_MI_OrderFinanceSB_Load (Integer, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsert_MI_OrderFinanceSB_Load (Integer, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsert_MI_OrderFinanceSB_Load (Integer, TVarChar, TVarChar, TVarChar, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_MI_OrderFinanceSB_Load(
@@ -19,7 +17,8 @@ CREATE OR REPLACE FUNCTION gpInsert_MI_OrderFinanceSB_Load(
     IN inCashName              TVarChar  , -- Касса
     IN inSession               TVarChar    -- сессия пользователя
 )
-RETURNS VOID AS
+RETURNS VOID
+AS
 $BODY$
    DECLARE vbUserId       Integer;
    DECLARE vbInfoMoneyId  Integer;
@@ -29,7 +28,6 @@ $BODY$
            vbObjectId     Integer;
            vbId           Integer;
            vbId_child     Integer;
-           vbsumm_parent  TFloat;
            vbOperDate     TDateTime;
            vbComment_Contract TVarChar;
 BEGIN
@@ -207,101 +205,43 @@ BEGIN
                  );
      END IF;
 
-     --
-     IF COALESCE (vbId,0) = 0
-     THEN
-         -- сохраняем данные Master
-         SELECT tmp.ioId
-           INTO vbId
-         FROM gpInsertUpdate_MovementItem_OrderFinanceSB_byLoad (ioId                    := 0                     ::Integer
-                                                               , inMovementId            := inMovementId          ::Integer
-                                                               , inJuridicalId           := CASE WHEN vbObjectId > 0 THEN vbObjectId ELSE vbInfoMoneyId END
-                                                               , inContractId            := vbContractId          ::Integer
-                                                               , inCashId_top            := 0                     ::Integer
-                                                               , inCashId                := vbCashId              ::Integer
-                                                               , inAmount                := inAmount              ::TFloat
-                                                               , ioAmount_old            := 0                     ::TFloat
-                                                               , inOperDate_Amount_top   := inOperDate            ::TDateTime
-                                                               , ioOperDate_Amount       := inOperDate            ::TDateTime
-                                                               , ioOperDate_Amount_old   := zc_DateStart()        ::TDateTime
-                                                               , ioAmountPlan_1          := 0                     ::TFloat
-                                                               , ioAmountPlan_2          := 0                     ::TFloat
-                                                               , ioAmountPlan_3          := 0                     ::TFloat
-                                                               , ioAmountPlan_4          := 0                     ::TFloat
-                                                               , ioAmountPlan_5          := 0                     ::TFloat
-                                                               , inComment               := inComment             ::TVarChar
-                                                               , inComment_Partner       := inComment_Partner     ::TVarChar
-                                                               , inComment_Contract      := COALESCE (vbComment_Contract,'') ::TVarChar
-                                                                 -- child
-                                                               --, inGoodsName_child       := '' ::TVarChar
-                                                               --, inInvNumber_child       := '' ::TVarChar
-                                                               --, inInvNumber_Invoice_child := '' ::TVarChar
-                                                               , inSession               := inSession             ::TVarChar
-                                                                ) AS tmp;
+
+     -- 1.сохраняем Master, не ошибка - в Master все суммы = 0 + Примечание в чайлд
+     SELECT tmp.ioId
+            INTO vbId
+     FROM lpInsertUpdate_MovementItem_OrderFinance (ioId                    := vbId                  ::Integer
+                                                  , inMovementId            := inMovementId          ::Integer
+                                                  , inJuridicalId           := CASE WHEN vbObjectId > 0 THEN vbObjectId ELSE vbInfoMoneyId END
+                                                  , inContractId            := vbContractId          ::Integer
+                                                  , inCashId                := vbCashId              ::Integer
+                                                  , inAmount                := 0
+                                                  , inAmount_next           := 0
+                                                  , inOperDate_Amount_next  := NULL
+                                                  , inAmountPlan_1          := 0                     ::TFloat
+                                                  , inAmountPlan_2          := 0                     ::TFloat
+                                                  , inAmountPlan_3          := 0                     ::TFloat
+                                                  , inAmountPlan_4          := 0                     ::TFloat
+                                                  , inAmountPlan_5          := 0                     ::TFloat
+                                                  , inComment               := ''                    ::TVarChar
+                                                  , inComment_Partner       := inComment_Partner     ::TVarChar
+                                                  , inComment_Contract      := COALESCE (vbComment_Contract,'') ::TVarChar
+                                                  , inUserId                := vbUserId
+                                                   ) AS tmp;
 
 
-     ELSE
-         -- сумма сохраненных
-         SELECT SUM (COALESCE (MovementItem.Amount,0)) AS Amount
-                INTO vbSumm_parent
-         FROM MovementItem
-         WHERE MovementItem.MovementId = inMovementId
-           AND MovementItem.DescId     = zc_MI_Child()
-           AND MovementItem.isErased   = FALSE
-           AND MovementItem.ParentId   = vbId
-         ;
-
-         --
-         PERFORM gpInsertUpdate_MovementItem_OrderFinanceSB_byLoad (ioId                 := MovementItem.Id                     ::Integer
-                                                                  , inMovementId            := inMovementId          ::Integer
-                                                                  , inJuridicalId           := MovementItem.ObjectId            ::Integer
-                                                                  , inContractId            := vbContractId          ::Integer
-                                                                  , inCashId_top            := 0                     ::Integer
-                                                                  , inCashId                := vbCashId              ::Integer
-                                                                  , inAmount                := COALESCE (vbSumm_parent,0) + COALESCE (inAmount,0)  ::TFloat
-                                                                  , ioAmount_old            := 0                     ::TFloat
-                                                                  , inOperDate_Amount_top   := inOperDate            ::TDateTime
-                                                                  , ioOperDate_Amount       := inOperDate            ::TDateTime
-                                                                  , ioOperDate_Amount_old   := zc_DateStart()        ::TDateTime
-                                                                  , ioAmountPlan_1          := 0                     ::TFloat
-                                                                  , ioAmountPlan_2          := 0                     ::TFloat
-                                                                  , ioAmountPlan_3          := 0                     ::TFloat
-                                                                  , ioAmountPlan_4          := 0                     ::TFloat
-                                                                  , ioAmountPlan_5          := 0                     ::TFloat
-                                                                  , inComment               := inComment             ::TVarChar
-                                                                  , inComment_Partner       := inComment_Partner     ::TVarChar
-                                                                  , inComment_Contract      := COALESCE (vbComment_Contract,'') ::TVarChar
-                                                                    -- child
-                                                                  --, inGoodsName_child       := '' ::TVarChar
-                                                                  --, inInvNumber_child       := '' ::TVarChar
-                                                                  --, inInvNumber_Invoice_child := '' ::TVarChar
-                                                                  , inSession               := inSession             ::TVarChar
-                                                                   )
-         FROM MovementItem
-         WHERE MovementItem.Id = vbId;
-
-
-     END IF;
-
-
-     --RAISE EXCEPTION 'Ошибка.Мастер ОК';
-
-
-     -- 7.сохраняем Child
-     vbId_child := lpInsertUpdate_MovementItem (0, zc_MI_Child(), Null, inMovementId, inAmount, vbId);
-
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_InvNumber_Invoice(), vbId_child, inInvNumber_Invoice);
-
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbId_child, inComment);
-
-
-     -- сохранили протокол
-     PERFORM lpInsert_MovementItemProtocol (vbId_child, vbUserId, TRUE);
-
-     -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSummOrderFinance (inMovementId);
+     -- 2.сохраняем Child - Первичный план на неделю
+     vbId_child := lpInsertUpdate_MovementItem_OrderFinance_child (ioId                    := 0
+                                                                 , inMovementId            := inMovementId
+                                                                 , inParentId              := vbId
+                                                                 , inAmount                := inAmount
+                                                                 , inAmount_next           := inAmount
+                                                                 , inOperDate_Amount_next  := inOperDate
+                                                                 , inGoodsName             := ''
+                                                                 , inInvNumber             := ''
+                                                                 , inInvNumber_Invoice     := inInvNumber_Invoice
+                                                                 , inComment               := inComment
+                                                                 , inUserId                := vbUserId
+                                                                  );
 
     -- тест
     --if vbUserId IN (9457) then RAISE EXCEPTION 'Админ.Test Ok. '; end if;

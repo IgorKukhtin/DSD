@@ -17,8 +17,8 @@ $BODY$
   DECLARE vbOrderFinanceId Integer;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
-      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_OrderFinance());
-      vbUserId:= lpGetUserBySession (inSession);
+      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_OrderFinance());
+      -- vbUserId:= lpGetUserBySession (inSession);
 
       -- проводим Документ + сохранили протокол
       PERFORM lpComplete_Movement (inMovementId := inMovementId

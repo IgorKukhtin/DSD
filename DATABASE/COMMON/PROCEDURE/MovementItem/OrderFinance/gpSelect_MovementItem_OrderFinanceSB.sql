@@ -631,11 +631,11 @@ BEGIN
                             , MIFloat_AmountPlan_next.ValueData AS AmountPlan_next
                             , MIDate_Amount_next.ValueData      AS OperDate_next
                               -- Согласовано к оплате
-                            , CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount_next.ValueData) = 1 THEN MIFloat_AmountPlan_next.ValueData ELSE 0 END AS AmountPlan_1
-                            , CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount_next.ValueData) = 2 THEN MIFloat_AmountPlan_next.ValueData ELSE 0 END AS AmountPlan_2
-                            , CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount_next.ValueData) = 3 THEN MIFloat_AmountPlan_next.ValueData ELSE 0 END AS AmountPlan_3
-                            , CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount_next.ValueData) = 4 THEN MIFloat_AmountPlan_next.ValueData ELSE 0 END AS AmountPlan_4
-                            , CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount_next.ValueData) = 5 THEN MIFloat_AmountPlan_next.ValueData ELSE 0 END AS AmountPlan_5
+                            , CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount_next.ValueData) = 1 THEN COALESCE (MIFloat_AmountPlan_next.ValueData, 0) ELSE 0 END AS AmountPlan_1
+                            , CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount_next.ValueData) = 2 THEN COALESCE (MIFloat_AmountPlan_next.ValueData, 0) ELSE 0 END AS AmountPlan_2
+                            , CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount_next.ValueData) = 3 THEN COALESCE (MIFloat_AmountPlan_next.ValueData, 0) ELSE 0 END AS AmountPlan_3
+                            , CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount_next.ValueData) = 4 THEN COALESCE (MIFloat_AmountPlan_next.ValueData, 0) ELSE 0 END AS AmountPlan_4
+                            , CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount_next.ValueData) = 5 THEN COALESCE (MIFloat_AmountPlan_next.ValueData, 0) ELSE 0 END AS AmountPlan_5
                               -- Платим да/нет
                             , COALESCE (MIBoolean_AmountPlan_1.ValueData, TRUE) ::Boolean AS isAmountPlan_1
                             , COALESCE (MIBoolean_AmountPlan_2.ValueData, TRUE) ::Boolean AS isAmountPlan_2

@@ -1,10 +1,10 @@
 -- Function: gpSelect_Movement_OrderFinance_Plan()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_OrderFinance_Plan (TDateTime, TDateTime, Integer, Integer, TVarChar);
---DROP FUNCTION IF EXISTS gpSelect_Movement_OrderFinance_Plan (TDateTime, TDateTime, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_OrderFinance_Plan (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_OrderFinance_Plan_5 (TDateTime, TDateTime, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_OrderFinance_Plan_5 (TDateTime, TDateTime, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_OrderFinance_Plan_5 (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderFinance_Plan(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderFinance_Plan_5(
     IN inStartDate         TDateTime , --
     IN inEndDate           TDateTime , --
     IN inBankMainId        Integer , -- банк  Плательщик
@@ -45,7 +45,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, NumGroup Integer
              , Condition TVarChar, ContractStateKindCode Integer
              , StartDate TDateTime, EndDate_real TDateTime, EndDate TVarChar
-             , Amount TFloat
+
              , AmountRemains TFloat, AmountPartner TFloat
              , AmountSumm         TFloat
              , AmountPartner_1    TFloat
@@ -53,6 +53,12 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , AmountPartner_3    TFloat
              , AmountPartner_4    TFloat
 
+               -- Первичный план на неделю
+             , Amount          TFloat
+               -- Платежный план на неделю
+             , AmountPlan_next TFloat
+
+               -- Согласовано к оплате
              , AmountPlan_1       TFloat
              , AmountPlan_2       TFloat
              , AmountPlan_3       TFloat
@@ -91,14 +97,20 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , BankId_jof Integer
              , BankName_jof TVarChar
              , MFO_jof      TVarChar 
-              -- child
+               -- child
              , MovementItemId_Child Integer
-             , Amount_Child         TFloat
              , InvNumber_Child      TVarChar
              , InvNumber_Invoice_Child   TVarChar
              , GoodsName_Child      TVarChar
              , isSign_Child         Boolean
              , TextSign_Child       TVarChar
+               -- Detail
+             , MovementItemId_Detail_1 Integer
+             , MovementItemId_Detail_2 Integer
+             , MovementItemId_Detail_3 Integer
+             , MovementItemId_Detail_4 Integer
+             , MovementItemId_Detail_5 Integer
+
              , ColorFon_record      Integer
               )
 AS
@@ -198,11 +210,7 @@ BEGIN
                                                                  , zc_MIFloat_AmountPlan_3()
                                                                  , zc_MIFloat_AmountPlan_4()
                                                                  , zc_MIFloat_AmountPlan_5()
-                                                                 , zc_MIFloat_Number_1()
-                                                                 , zc_MIFloat_Number_2()
-                                                                 , zc_MIFloat_Number_3()
-                                                                 , zc_MIFloat_Number_4()
-                                                                 , zc_MIFloat_Number_5()
+                                                                 , zc_MIFloat_AmountPlan_next()
                                                                   )
                                 )
 
@@ -210,7 +218,9 @@ BEGIN
                                FROM MovementItemDate
                                WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                  AND MovementItemDate.DescId IN (zc_MIDate_Insert()
-                                                                , zc_MIDate_Update())
+                                                               , zc_MIDate_Update()
+                                                               , zc_MIDate_Amount_next()
+                                                                )
                                 )
      , tmpMovementItemLinkObject AS (SELECT *
                                      FROM MovementItemLinkObject
@@ -283,34 +293,86 @@ BEGIN
                          AND MovementItem.isErased   = FALSE
                       )
 
+      , tmpMIFloat_Child AS (SELECT *
+                             FROM MovementItemFloat
+                             WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
+                               AND MovementItemFloat.DescId IN (zc_MIFloat_AmountPlan_next()
+                                                               )
+                             )
+       , tmpMIDate_Child AS (SELECT *
+                             FROM MovementItemDate
+                             WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
+                               AND MovementItemDate.DescId IN (zc_MIDate_Amount_next()
+                                                              )
+                             )
      , tmpMIString_Child AS (SELECT *
                              FROM MovementItemString
                              WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
                                AND MovementItemString.DescId IN (zc_MIString_GoodsName()
                                                                , zc_MIString_InvNumber()
                                                                , zc_MIString_InvNumber_Invoice()
+                                                               , zc_MIString_Comment()
                                                                )
                              )
 
-     , tmpMIBoolean AS (SELECT *
-                        FROM MovementItemBoolean
-                        WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
-                          AND MovementItemBoolean.DescId IN (zc_MIBoolean_Sign()
-                                                           )
-                        )
+     , tmpMIBoolean_Child AS (SELECT *
+                              FROM MovementItemBoolean
+                              WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
+                                AND MovementItemBoolean.DescId IN (zc_MIBoolean_Sign()
+                                                                 , zc_MIBoolean_AmountPlan_1()
+                                                                 , zc_MIBoolean_AmountPlan_2()
+                                                                 , zc_MIBoolean_AmountPlan_3()
+                                                                 , zc_MIBoolean_AmountPlan_4()
+                                                                 , zc_MIBoolean_AmountPlan_5()
+                                                                  )
+                              )
 
-     , tmpMI_Data_Child AS (SELECT MovementItem.Id
+     , tmpMI_Data_Child AS (SELECT MovementItem.Id          AS MovementItemId
+                                 , MovementItem.ParentId    AS MovementItemId_parent
                                  , MovementItem.MovementId
+                                   -- Первичный план на неделю
                                  , MovementItem.Amount
-                                 , MovementItem.ParentId
+                                   -- Платежный план на неделю
+                                 , COALESCE (MIFloat_AmountPlan_next.ValueData, 0) AS AmountPlan_next
+                                   -- Дата Платежный план
+                                 , MIDate_Amount_next.ValueData                    AS OperDate_next
+                                   -- Согласовано к оплате
+                                 , CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount_next.ValueData) = 1 THEN COALESCE (MIFloat_AmountPlan_next.ValueData, 0) ELSE 0 END AS AmountPlan_1
+                                 , CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount_next.ValueData) = 2 THEN COALESCE (MIFloat_AmountPlan_next.ValueData, 0) ELSE 0 END AS AmountPlan_2
+                                 , CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount_next.ValueData) = 3 THEN COALESCE (MIFloat_AmountPlan_next.ValueData, 0) ELSE 0 END AS AmountPlan_3
+                                 , CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount_next.ValueData) = 4 THEN COALESCE (MIFloat_AmountPlan_next.ValueData, 0) ELSE 0 END AS AmountPlan_4
+                                 , CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount_next.ValueData) = 5 THEN COALESCE (MIFloat_AmountPlan_next.ValueData, 0) ELSE 0 END AS AmountPlan_5
+                                   -- Платим да/нет
+                                 , COALESCE (MIBoolean_AmountPlan_1.ValueData, TRUE) ::Boolean AS isAmountPlan_1
+                                 , COALESCE (MIBoolean_AmountPlan_2.ValueData, TRUE) ::Boolean AS isAmountPlan_2
+                                 , COALESCE (MIBoolean_AmountPlan_3.ValueData, TRUE) ::Boolean AS isAmountPlan_3
+                                 , COALESCE (MIBoolean_AmountPlan_4.ValueData, TRUE) ::Boolean AS isAmountPlan_4
+                                 , COALESCE (MIBoolean_AmountPlan_5.ValueData, TRUE) ::Boolean AS isAmountPlan_5
+                                   --
                                  , MIString_InvNumber.ValueData               ::TVarChar AS InvNumber
                                  , MIString_InvNumber_Invoice.ValueData       ::TVarChar AS InvNumber_Invoice
                                  , MIString_GoodsName.ValueData               ::TVarChar AS GoodsName
+                                 , COALESCE (MIString_Comment.ValueData, '')             AS Comment
                                  , COALESCE (MIBoolean_Sign.ValueData, FALSE) ::Boolean  AS isSign
+
+                                 , Object_Insert.ValueData          AS InsertName
+                                 , Object_Update.ValueData          AS UpdateName
+                                 , MIDate_Insert.ValueData          AS InsertDate
+                                 , MIDate_Update.ValueData          AS UpdateDate
+
                             FROM tmpMI_Child AS MovementItem
+                                 LEFT JOIN tmpMIFloat_Child AS MIFloat_AmountPlan_next
+                                                            ON MIFloat_AmountPlan_next.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_AmountPlan_next.DescId = zc_MIFloat_AmountPlan_next()
+                                 LEFT JOIN tmpMIDate_Child AS MIDate_Amount_next
+                                                           ON MIDate_Amount_next.MovementItemId = MovementItem.Id
+                                                          AND MIDate_Amount_next.DescId = zc_MIDate_Amount_next()
                                  LEFT JOIN tmpMIString_Child AS MIString_GoodsName
                                                              ON MIString_GoodsName.MovementItemId = MovementItem.Id
                                                             AND MIString_GoodsName.DescId = zc_MIString_GoodsName()
+                                 LEFT JOIN tmpMIString_Child AS MIString_Comment
+                                                             ON MIString_Comment.MovementItemId = MovementItem.Id
+                                                            AND MIString_Comment.DescId = zc_MIString_Comment()
 
                                  LEFT JOIN tmpMIString_Child AS MIString_InvNumber
                                                              ON MIString_InvNumber.MovementItemId = MovementItem.Id
@@ -319,24 +381,215 @@ BEGIN
                                                              ON MIString_InvNumber_Invoice.MovementItemId = MovementItem.Id
                                                             AND MIString_InvNumber_Invoice.DescId = zc_MIString_InvNumber_Invoice()
 
-                                 LEFT JOIN tmpMIBoolean AS MIBoolean_Sign
-                                                        ON MIBoolean_Sign.MovementItemId = MovementItem.Id
-                                                       AND MIBoolean_Sign.DescId = zc_MIBoolean_Sign()
+                                 LEFT JOIN tmpMIBoolean_Child AS MIBoolean_Sign
+                                                              ON MIBoolean_Sign.MovementItemId = MovementItem.Id
+                                                             AND MIBoolean_Sign.DescId = zc_MIBoolean_Sign()
+                                 -- Платим (да/нет)
+                                 LEFT JOIN tmpMIBoolean_Child AS MIBoolean_AmountPlan_1
+                                                              ON MIBoolean_AmountPlan_1.MovementItemId = MovementItem.Id
+                                                             AND MIBoolean_AmountPlan_1.DescId = zc_MIBoolean_AmountPlan_1()
+                                 LEFT JOIN tmpMIBoolean_Child AS MIBoolean_AmountPlan_2
+                                                              ON MIBoolean_AmountPlan_2.MovementItemId = MovementItem.Id
+                                                             AND MIBoolean_AmountPlan_2.DescId = zc_MIBoolean_AmountPlan_2()
+                                 LEFT JOIN tmpMIBoolean_Child AS MIBoolean_AmountPlan_3
+                                                              ON MIBoolean_AmountPlan_3.MovementItemId = MovementItem.Id
+                                                             AND MIBoolean_AmountPlan_3.DescId = zc_MIBoolean_AmountPlan_3()
+                                 LEFT JOIN tmpMIBoolean_Child AS MIBoolean_AmountPlan_4
+                                                              ON MIBoolean_AmountPlan_4.MovementItemId = MovementItem.Id
+                                                             AND MIBoolean_AmountPlan_4.DescId = zc_MIBoolean_AmountPlan_4()
+                                 LEFT JOIN tmpMIBoolean_Child AS MIBoolean_AmountPlan_5
+                                                              ON MIBoolean_AmountPlan_5.MovementItemId = MovementItem.Id
+                                                             AND MIBoolean_AmountPlan_5.DescId = zc_MIBoolean_AmountPlan_5()
+                                                       
+                                 LEFT JOIN MovementItemDate AS MIDate_Insert
+                                                            ON MIDate_Insert.MovementItemId = MovementItem.Id
+                                                           AND MIDate_Insert.DescId = zc_MIDate_Insert()
+                                 LEFT JOIN MovementItemDate AS MIDate_Update
+                                                            ON MIDate_Update.MovementItemId = MovementItem.Id
+                                                           AND MIDate_Update.DescId = zc_MIDate_Update()
+     
+                                 LEFT JOIN MovementItemLinkObject AS MILO_Insert
+                                                                  ON MILO_Insert.MovementItemId = MovementItem.Id
+                                                                 AND MILO_Insert.DescId = zc_MILinkObject_Insert()
+                                 LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MILO_Insert.ObjectId
+                                 LEFT JOIN MovementItemLinkObject AS MILO_Update
+                                                                  ON MILO_Update.MovementItemId = MovementItem.Id
+                                                                 AND MILO_Update.DescId = zc_MILinkObject_Update()
+                                 LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
                             )
-        -- master + Child 
-      , tmpMI_ord AS (SELECT tmpMI.*
-                           , ROW_NUMBER() OVER (PARTITION BY tmpMI.MovementId, tmpMI.Id ORDER BY tmpMI_Child.Id ASC) AS Ord
-                             -- Child
-                           , tmpMI_Child.Id         AS MovementItemId_Child
-                           , tmpMI_Child.Amount     AS Amount_Child
-                           , tmpMI_Child.InvNumber  AS InvNumber_Child
-                           , tmpMI_Child.InvNumber_Invoice  AS InvNumber_Invoice_Child 
-                           , tmpMI_Child.GoodsName  AS GoodsName_Child
-                           , tmpMI_Child.isSign     AS isSign_Child
-                      FROM tmpMI
-                           -- Child
-                           LEFT JOIN tmpMI_Data_Child AS tmpMI_Child ON tmpMI_Child.ParentId = tmpMI.Id
+      -- Detail - Согласовано к оплате
+    , tmpMI_Detail AS (SELECT MovementItem.ParentId AS MovementItemId_parent
+                            , MAX (CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount.ValueData) = 1 THEN MovementItem.Id ELSE 0 END) AS MovementItemId_Detail_1
+                            , MAX (CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount.ValueData) = 2 THEN MovementItem.Id ELSE 0 END) AS MovementItemId_Detail_2
+                            , MAX (CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount.ValueData) = 3 THEN MovementItem.Id ELSE 0 END) AS MovementItemId_Detail_3
+                            , MAX (CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount.ValueData) = 4 THEN MovementItem.Id ELSE 0 END) AS MovementItemId_Detail_4
+                            , MAX (CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount.ValueData) = 5 THEN MovementItem.Id ELSE 0 END) AS MovementItemId_Detail_5
+                              -- Согласовано к оплате
+                            , SUM (CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount.ValueData) = 1 THEN MovementItem.Amount ELSE 0 END) AS AmountPlan_1
+                            , SUM (CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount.ValueData) = 2 THEN MovementItem.Amount ELSE 0 END) AS AmountPlan_2
+                            , SUM (CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount.ValueData) = 3 THEN MovementItem.Amount ELSE 0 END) AS AmountPlan_3
+                            , SUM (CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount.ValueData) = 4 THEN MovementItem.Amount ELSE 0 END) AS AmountPlan_4
+                            , SUM (CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount.ValueData) = 5 THEN MovementItem.Amount ELSE 0 END) AS AmountPlan_5
+
+                              -- Платим да/нет
+                            , MAX (CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount.ValueData) = 1 AND COALESCE (MIBoolean_AmountPlan.ValueData, TRUE) = TRUE THEN 2 ELSE 1 END) AS isAmountPlan_1_value
+                            , MAX (CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount.ValueData) = 2 AND COALESCE (MIBoolean_AmountPlan.ValueData, TRUE) = TRUE THEN 2 ELSE 1 END) AS isAmountPlan_2_value
+                            , MAX (CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount.ValueData) = 3 AND COALESCE (MIBoolean_AmountPlan.ValueData, TRUE) = TRUE THEN 2 ELSE 1 END) AS isAmountPlan_3_value
+                            , MAX (CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount.ValueData) = 4 AND COALESCE (MIBoolean_AmountPlan.ValueData, TRUE) = TRUE THEN 2 ELSE 1 END) AS isAmountPlan_4_value
+                            , MAX (CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount.ValueData) = 5 AND COALESCE (MIBoolean_AmountPlan.ValueData, TRUE) = TRUE THEN 2 ELSE 1 END) AS isAmountPlan_5_value
+
+                            , MAX (COALESCE (MIDate_Update.ValueData, MIDate_Insert.ValueData)) AS UpdateDate
+                            , MAX (COALESCE (MILO_Update.ObjectId,    MILO_Insert.ObjectId))    AS UserId_update
+
+                       FROM MovementItem
+                            -- Дата Согласовано к оплате
+                            LEFT JOIN MovementItemDate AS MIDate_Amount
+                                                       ON MIDate_Amount.MovementItemId = MovementItem.Id
+                                                      AND MIDate_Amount.DescId         = zc_MIDate_Amount()
+                            -- Платим (да/нет)
+                            LEFT JOIN MovementItemBoolean AS MIBoolean_AmountPlan
+                                                          ON MIBoolean_AmountPlan.MovementItemId = MovementItem.Id
+                                                         AND MIBoolean_AmountPlan.DescId         = zc_MIBoolean_AmountPlan()
+
+                            LEFT JOIN MovementItemDate AS MIDate_Insert
+                                                       ON MIDate_Insert.MovementItemId = MovementItem.Id
+                                                      AND MIDate_Insert.DescId = zc_MIDate_Insert()
+                            LEFT JOIN MovementItemDate AS MIDate_Update
+                                                       ON MIDate_Update.MovementItemId = MovementItem.Id
+                                                      AND MIDate_Update.DescId = zc_MIDate_Update()
+
+                            LEFT JOIN MovementItemLinkObject AS MILO_Insert
+                                                             ON MILO_Insert.MovementItemId = MovementItem.Id
+                                                            AND MILO_Insert.DescId = zc_MILinkObject_Insert()
+                            LEFT JOIN MovementItemLinkObject AS MILO_Update
+                                                             ON MILO_Update.MovementItemId = MovementItem.Id
+                                                            AND MILO_Update.DescId = zc_MILinkObject_Update()
+
+                       WHERE MovementItem.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)
+                         AND MovementItem.DescId     = zc_MI_Detail()
+                         AND MovementItem.isErased   = FALSE
+                       GROUP BY MovementItem.ParentId
                       )
+        -- Master + Child  + Detail
+    , tmpMI_ord AS (SELECT tmpMI.Id
+                         , tmpMI.MovementId
+                         , tmpMI.ObjectId
+                           -- Child
+                         , COALESCE (tmpMI_Child.MovementItemId, 0) AS MovementItemId_child
+                         , tmpMI_Child.GoodsName                    AS GoodsName_Child
+                         , tmpMI_Child.InvNumber                    AS InvNumber_Child
+                         , tmpMI_Child.InvNumber_Invoice            AS InvNumber_Invoice_Child 
+                         , tmpMI_Child.Comment                      AS Comment_Child
+                         , tmpMI_Child.isSign                       AS isSign_Child
+                           -- Detail
+                         , COALESCE (tmpMI_Detail_1.MovementItemId_Detail_1, tmpMI_Detail_2.MovementItemId_Detail_1) AS MovementItemId_Detail_1
+                         , COALESCE (tmpMI_Detail_1.MovementItemId_Detail_2, tmpMI_Detail_2.MovementItemId_Detail_2) AS MovementItemId_Detail_2
+                         , COALESCE (tmpMI_Detail_1.MovementItemId_Detail_3, tmpMI_Detail_2.MovementItemId_Detail_3) AS MovementItemId_Detail_3
+                         , COALESCE (tmpMI_Detail_1.MovementItemId_Detail_4, tmpMI_Detail_2.MovementItemId_Detail_4) AS MovementItemId_Detail_4
+                         , COALESCE (tmpMI_Detail_1.MovementItemId_Detail_5, tmpMI_Detail_2.MovementItemId_Detail_5) AS MovementItemId_Detail_5
+
+                           -- Первичный план на неделю
+                         , COALESCE (tmpMI_Child.Amount, tmpMI.Amount) AS Amount
+  
+                           -- Платежный план на неделю
+                         , COALESCE (tmpMI_Child.AmountPlan_next, MIFloat_AmountPlan_next.ValueData) :: TFloat    AS AmountPlan_next
+                           -- Дата Платежный план
+                         , COALESCE (tmpMI_Child.OperDate_next,   MIDate_Amount_next.ValueData)      :: TDateTime AS OperDate_next
+
+                           -- Согласовано к оплате
+                         , COALESCE (tmpMI_Detail_1.AmountPlan_1, tmpMI_Detail_2.AmountPlan_1, tmpMI_Child.AmountPlan_1, MIFloat_AmountPlan_1.ValueData) AS AmountPlan_1
+                         , COALESCE (tmpMI_Detail_1.AmountPlan_2, tmpMI_Detail_2.AmountPlan_2, tmpMI_Child.AmountPlan_2, MIFloat_AmountPlan_2.ValueData) AS AmountPlan_2
+                         , COALESCE (tmpMI_Detail_1.AmountPlan_3, tmpMI_Detail_2.AmountPlan_3, tmpMI_Child.AmountPlan_3, MIFloat_AmountPlan_3.ValueData) AS AmountPlan_3
+                         , COALESCE (tmpMI_Detail_1.AmountPlan_4, tmpMI_Detail_2.AmountPlan_4, tmpMI_Child.AmountPlan_4, MIFloat_AmountPlan_4.ValueData) AS AmountPlan_4
+                         , COALESCE (tmpMI_Detail_1.AmountPlan_5, tmpMI_Detail_2.AmountPlan_5, tmpMI_Child.AmountPlan_5, MIFloat_AmountPlan_5.ValueData) AS AmountPlan_5
+
+                           -- Платим да/нет
+                         , CASE COALESCE (tmpMI_Detail_1.isAmountPlan_1_value, tmpMI_Detail_2.isAmountPlan_1_value) WHEN 2 THEN TRUE WHEN 1 THEN FALSE ELSE COALESCE (tmpMI_Child.isAmountPlan_1, MIBoolean_AmountPlan_1.ValueData, TRUE) END AS isAmountPlan_1
+                         , CASE COALESCE (tmpMI_Detail_1.isAmountPlan_2_value, tmpMI_Detail_2.isAmountPlan_2_value) WHEN 2 THEN TRUE WHEN 1 THEN FALSE ELSE COALESCE (tmpMI_Child.isAmountPlan_2, MIBoolean_AmountPlan_2.ValueData, TRUE) END AS isAmountPlan_2
+                         , CASE COALESCE (tmpMI_Detail_1.isAmountPlan_3_value, tmpMI_Detail_2.isAmountPlan_3_value) WHEN 2 THEN TRUE WHEN 1 THEN FALSE ELSE COALESCE (tmpMI_Child.isAmountPlan_3, MIBoolean_AmountPlan_3.ValueData, TRUE) END AS isAmountPlan_3
+                         , CASE COALESCE (tmpMI_Detail_1.isAmountPlan_4_value, tmpMI_Detail_2.isAmountPlan_4_value) WHEN 2 THEN TRUE WHEN 1 THEN FALSE ELSE COALESCE (tmpMI_Child.isAmountPlan_4, MIBoolean_AmountPlan_4.ValueData, TRUE) END AS isAmountPlan_4
+                         , CASE COALESCE (tmpMI_Detail_1.isAmountPlan_5_value, tmpMI_Detail_2.isAmountPlan_5_value) WHEN 2 THEN TRUE WHEN 1 THEN FALSE ELSE COALESCE (tmpMI_Child.isAmountPlan_5, MIBoolean_AmountPlan_5.ValueData, TRUE) END AS isAmountPlan_5
+
+                         , COALESCE (tmpMI_Child.InsertName, Object_Insert.ValueData) AS InsertName
+                         , COALESCE (tmpMI_Child.InsertDate, MIDate_Insert.ValueData) AS InsertDate
+
+                         , COALESCE (Object_Update_detail.ValueData, tmpMI_Child.UpdateName, Object_Update.ValueData)                       AS UpdateName
+                         , COALESCE (tmpMI_Detail_1.UpdateDate, tmpMI_Detail_2.UpdateDate, tmpMI_Child.UpdateDate, MIDate_Update.ValueData) AS UpdateDate
+
+                             -- № п/п - какие данные мастера выводить 1 раз
+                         , ROW_NUMBER() OVER (PARTITION BY tmpMI.Id ORDER BY tmpMI_Child.MovementItemId ASC) AS Ord_master
+
+                    FROM tmpMI
+                         -- Child - Данные с № заявки 1С + ...
+                         LEFT JOIN tmpMI_Data_Child AS tmpMI_Child ON tmpMI_Child.MovementItemId_parent = tmpMI.Id
+
+                         -- Detail-1 - Согласовано к оплате
+                         LEFT JOIN tmpMI_Detail AS tmpMI_Detail_1 ON tmpMI_Detail_1.MovementItemId_parent = tmpMI.Id
+                         -- Detail-2 - Согласовано к оплате
+                         LEFT JOIN tmpMI_Detail AS tmpMI_Detail_2 ON tmpMI_Detail_2.MovementItemId_parent = tmpMI_Child.MovementItemId
+  
+                         LEFT JOIN Object AS Object_Update_detail ON Object_Update_detail.Id = COALESCE (tmpMI_Detail_1.UserId_update, tmpMI_Detail_2.UserId_update)
+
+                         -- Платежный план на неделю
+                         LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_next
+                                                        ON MIFloat_AmountPlan_next.MovementItemId = tmpMI.Id
+                                                       AND MIFloat_AmountPlan_next.DescId         = zc_MIFloat_AmountPlan_next()
+                         -- Дата Платежный план
+                         LEFT JOIN tmpMovementItemDate AS MIDate_Amount_next
+                                                       ON MIDate_Amount_next.MovementItemId = tmpMI.Id
+                                                      AND MIDate_Amount_next.DescId         = zc_MIDate_Amount_next()
+
+                         -- Согласовано к оплате
+                         LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_1
+                                                        ON MIFloat_AmountPlan_1.MovementItemId = tmpMI.Id
+                                                       AND MIFloat_AmountPlan_1.DescId = zc_MIFloat_AmountPlan_1() 
+                         LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_2
+                                                        ON MIFloat_AmountPlan_2.MovementItemId = tmpMI.Id
+                                                       AND MIFloat_AmountPlan_2.DescId = zc_MIFloat_AmountPlan_2() 
+                         LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_3
+                                                        ON MIFloat_AmountPlan_3.MovementItemId = tmpMI.Id
+                                                       AND MIFloat_AmountPlan_3.DescId = zc_MIFloat_AmountPlan_3()
+                         LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_4
+                                                        ON MIFloat_AmountPlan_4.MovementItemId = tmpMI.Id
+                                                       AND MIFloat_AmountPlan_4.DescId = zc_MIFloat_AmountPlan_4()
+                         LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_5
+                                                        ON MIFloat_AmountPlan_5.MovementItemId = tmpMI.Id
+                                                       AND MIFloat_AmountPlan_5.DescId = zc_MIFloat_AmountPlan_5()
+
+                         -- Платим (да/нет)
+                         LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_1
+                                                          ON MIBoolean_AmountPlan_1.MovementItemId = tmpMI.Id
+                                                         AND MIBoolean_AmountPlan_1.DescId = zc_MIBoolean_AmountPlan_1()
+                         LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_2
+                                                          ON MIBoolean_AmountPlan_2.MovementItemId = tmpMI.Id
+                                                         AND MIBoolean_AmountPlan_2.DescId = zc_MIBoolean_AmountPlan_2()
+                         LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_3
+                                                          ON MIBoolean_AmountPlan_3.MovementItemId = tmpMI.Id
+                                                         AND MIBoolean_AmountPlan_3.DescId = zc_MIBoolean_AmountPlan_3()
+                         LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_4
+                                                          ON MIBoolean_AmountPlan_4.MovementItemId = tmpMI.Id
+                                                         AND MIBoolean_AmountPlan_4.DescId = zc_MIBoolean_AmountPlan_4()
+                         LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_5
+                                                          ON MIBoolean_AmountPlan_5.MovementItemId = tmpMI.Id
+                                                         AND MIBoolean_AmountPlan_5.DescId = zc_MIBoolean_AmountPlan_5()
+
+                         LEFT JOIN tmpMovementItemDate AS MIDate_Insert
+                                                       ON MIDate_Insert.MovementItemId = tmpMI.Id
+                                                      AND MIDate_Insert.DescId = zc_MIDate_Insert()
+                         LEFT JOIN tmpMovementItemDate AS MIDate_Update
+                                                       ON MIDate_Update.MovementItemId = tmpMI.Id
+                                                      AND MIDate_Update.DescId = zc_MIDate_Update()
+                         LEFT JOIN tmpMovementItemLinkObject AS MILO_Insert
+                                                             ON MILO_Insert.MovementItemId = tmpMI.Id
+                                                            AND MILO_Insert.DescId = zc_MILinkObject_Insert()
+                         LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MILO_Insert.ObjectId
+
+                         LEFT JOIN tmpMovementItemLinkObject AS MILO_Update
+                                                             ON MILO_Update.MovementItemId = tmpMI.Id
+                                                            AND MILO_Update.DescId = zc_MILinkObject_Update()
+                         LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
+
+                    )
             
         -- Только БН
       , tmpMI_Data AS (SELECT MovementItem.MovementId
@@ -361,7 +614,6 @@ BEGIN
                                  || (LPAD (EXTRACT (Day FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||LPAD (EXTRACT (Month FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||EXTRACT (YEAR FROM View_Contract.EndDate_term) :: TVarChar)
                               ) ::TVarChar AS EndDate
 
-                            , MovementItem.Amount               :: TFloat AS Amount
                             , MIFloat_AmountRemains.ValueData   :: TFloat AS AmountRemains
                             , MIFloat_AmountPartner.ValueData   :: TFloat AS AmountPartner
                             , MIFloat_AmountSumm.ValueData      :: TFloat AS AmountSumm
@@ -370,186 +622,99 @@ BEGIN
                             , MIFloat_AmountPartner_3.ValueData :: TFloat AS AmountPartner_3
                             , MIFloat_AmountPartner_4.ValueData :: TFloat AS AmountPartner_4
 
-                            , CASE WHEN MIFloat_AmountPlan_1.ValueData > 0 AND MovementItem.Amount_Child > 0 THEN MovementItem.Amount_Child
-                                   ELSE MIFloat_AmountPlan_1.ValueData
-                              END :: TFloat AS AmountPlan_1
+                              -- Первичный план на неделю
+                            , MovementItem.Amount
+                              -- Платежный план на неделю
+                            , MovementItem.AmountPlan_next
+                              -- Дата Платежный план
+                            , MovementItem.OperDate_next
 
-                            , CASE WHEN (MIFloat_AmountPlan_1.ValueData > 0) AND MovementItem.Amount_Child > 0 THEN 0
-                                   WHEN MIFloat_AmountPlan_2.ValueData > 0 AND MovementItem.Amount_Child > 0 THEN MovementItem.Amount_Child
-                                   ELSE MIFloat_AmountPlan_2.ValueData
-                              END :: TFloat AS AmountPlan_2
-
-                            , CASE WHEN (MIFloat_AmountPlan_1.ValueData > 0 OR MIFloat_AmountPlan_2.ValueData > 0) AND MovementItem.Amount_Child > 0 THEN 0
-                                   WHEN MIFloat_AmountPlan_3.ValueData > 0 AND MovementItem.Amount_Child > 0 THEN MovementItem.Amount_Child
-                                   ELSE MIFloat_AmountPlan_3.ValueData
-                              END :: TFloat AS AmountPlan_3
-
-                            , CASE WHEN (MIFloat_AmountPlan_1.ValueData > 0 OR MIFloat_AmountPlan_2.ValueData > 0 OR MIFloat_AmountPlan_3.ValueData > 0) AND MovementItem.Amount_Child > 0 THEN 0
-                                   WHEN MIFloat_AmountPlan_4.ValueData > 0 AND MovementItem.Amount_Child > 0 THEN MovementItem.Amount_Child
-                                   ELSE MIFloat_AmountPlan_4.ValueData
-                              END :: TFloat AS AmountPlan_4
-
-                            , CASE WHEN (MIFloat_AmountPlan_1.ValueData > 0 OR MIFloat_AmountPlan_2.ValueData > 0 OR MIFloat_AmountPlan_3.ValueData > 0 OR MIFloat_AmountPlan_4.ValueData > 0) AND MovementItem.Amount_Child > 0 THEN 0
-                                   WHEN MIFloat_AmountPlan_5.ValueData > 0 AND MovementItem.Amount_Child > 0 THEN MovementItem.Amount_Child
-                                   ELSE MIFloat_AmountPlan_5.ValueData
-                              END :: TFloat AS AmountPlan_5
+                              -- Согласовано к оплате
+                            , MovementItem.AmountPlan_1
+                            , MovementItem.AmountPlan_2
+                            , MovementItem.AmountPlan_3
+                            , MovementItem.AmountPlan_4
+                            , MovementItem.AmountPlan_5
                             
-                            , MIFloat_Number_1.ValueData        :: TFloat AS Number_1
-                            , MIFloat_Number_2.ValueData        :: TFloat AS Number_2
-                            , MIFloat_Number_3.ValueData        :: TFloat AS Number_3
-                            , MIFloat_Number_4.ValueData        :: TFloat AS Number_4
-                            , MIFloat_Number_5.ValueData        :: TFloat AS Number_5
+                            , 0        :: TFloat AS Number_1
+                            , 0        :: TFloat AS Number_2
+                            , 0        :: TFloat AS Number_3
+                            , 0        :: TFloat AS Number_4
+                            , 0        :: TFloat AS Number_5
 
-                            , COALESCE (MIBoolean_AmountPlan_1.ValueData, True) ::Boolean AS isAmountPlan_1
-                            , COALESCE (MIBoolean_AmountPlan_2.ValueData, True) ::Boolean AS isAmountPlan_2
-                            , COALESCE (MIBoolean_AmountPlan_3.ValueData, True) ::Boolean AS isAmountPlan_3
-                            , COALESCE (MIBoolean_AmountPlan_4.ValueData, True) ::Boolean AS isAmountPlan_4
-                            , COALESCE (MIBoolean_AmountPlan_5.ValueData, True) ::Boolean AS isAmountPlan_5
+                              -- Платим да/нет
+                            , MovementItem.isAmountPlan_1
+                            , MovementItem.isAmountPlan_2
+                            , MovementItem.isAmountPlan_3
+                            , MovementItem.isAmountPlan_4
+                            , MovementItem.isAmountPlan_5
 
-                            , MIString_Comment.ValueData       AS Comment
+                            , CASE WHEN MovementItem.Comment_Child <> '' THEN MovementItem.Comment_Child ELSE MIString_Comment.ValueData END ::TVarChar AS Comment
 
-                            , Object_Insert.ValueData          AS InsertName
-                            , Object_Update.ValueData          AS UpdateName
-                            , MIDate_Insert.ValueData          AS InsertDate
-                            , MIDate_Update.ValueData          AS UpdateDate
+                            , MovementItem.InsertName
+                            , MovementItem.UpdateName
+                            , MovementItem.InsertDate
+                            , MovementItem.UpdateDate
 
                               -- Child
                             , MovementItem.MovementItemId_Child
-                            , MovementItem.Amount_Child
                             , MovementItem.InvNumber_Child
                             , MovementItem.InvNumber_Invoice_Child 
                             , MovementItem.GoodsName_Child
                             , MovementItem.isSign_Child
+                              -- Detail
+                            , MovementItem.MovementItemId_Detail_1
+                            , MovementItem.MovementItemId_Detail_2
+                            , MovementItem.MovementItemId_Detail_3
+                            , MovementItem.MovementItemId_Detail_4
+                            , MovementItem.MovementItemId_Detail_5
 
                         FROM tmpMI_ord AS MovementItem
                              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId
-                                                                  AND Object_Juridical.DescId = zc_Object_Juridical()
+                                                                 AND Object_Juridical.DescId = zc_Object_Juridical()
 
                              LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountRemains
                                                             ON MIFloat_AmountRemains.MovementItemId = MovementItem.Id
                                                            AND MIFloat_AmountRemains.DescId = zc_MIFloat_AmountRemains()
-                                                           AND MovementItem.Ord = 1
+                                                           AND MovementItem.Ord_master = 1
 
                              LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPartner
                                                             ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                            AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                                                           AND MovementItem.Ord = 1
+                                                           AND MovementItem.Ord_master = 1
 
                              LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountSumm
                                                             ON MIFloat_AmountSumm.MovementItemId = MovementItem.Id
                                                            AND MIFloat_AmountSumm.DescId = zc_MIFloat_AmountSumm()
-                                                           AND MovementItem.Ord = 1
+                                                           AND MovementItem.Ord_master = 1
                              LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPartner_1
                                                             ON MIFloat_AmountPartner_1.MovementItemId = MovementItem.Id
                                                            AND MIFloat_AmountPartner_1.DescId = zc_MIFloat_AmountPartner_1()
-                                                           AND MovementItem.Ord = 1
+                                                           AND MovementItem.Ord_master = 1
                              LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPartner_2
                                                             ON MIFloat_AmountPartner_2.MovementItemId = MovementItem.Id
                                                            AND MIFloat_AmountPartner_2.DescId = zc_MIFloat_AmountPartner_2()
-                                                           AND MovementItem.Ord = 1
+                                                           AND MovementItem.Ord_master = 1
                              LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPartner_3
                                                             ON MIFloat_AmountPartner_3.MovementItemId = MovementItem.Id
                                                            AND MIFloat_AmountPartner_3.DescId = zc_MIFloat_AmountPartner_3()
-                                                           AND MovementItem.Ord = 1
+                                                           AND MovementItem.Ord_master = 1
                              LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPartner_4
                                                             ON MIFloat_AmountPartner_4.MovementItemId = MovementItem.Id
                                                            AND MIFloat_AmountPartner_4.DescId = zc_MIFloat_AmountPartner_4()
-                                                           AND MovementItem.Ord = 1
-
-                             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_1
-                                                            ON MIFloat_AmountPlan_1.MovementItemId = MovementItem.Id
-                                                           AND MIFloat_AmountPlan_1.DescId = zc_MIFloat_AmountPlan_1() 
-                                                         --AND MovementItem.Ord = 1
-                             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_2
-                                                            ON MIFloat_AmountPlan_2.MovementItemId = MovementItem.Id
-                                                           AND MIFloat_AmountPlan_2.DescId = zc_MIFloat_AmountPlan_2() 
-                                                         --AND MovementItem.Ord = 1
-                             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_3
-                                                            ON MIFloat_AmountPlan_3.MovementItemId = MovementItem.Id
-                                                           AND MIFloat_AmountPlan_3.DescId = zc_MIFloat_AmountPlan_3()
-                                                         --AND MovementItem.Ord = 1
-                             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_4
-                                                            ON MIFloat_AmountPlan_4.MovementItemId = MovementItem.Id
-                                                           AND MIFloat_AmountPlan_4.DescId = zc_MIFloat_AmountPlan_4()
-                                                         --AND MovementItem.Ord = 1
-                             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlan_5
-                                                            ON MIFloat_AmountPlan_5.MovementItemId = MovementItem.Id
-                                                           AND MIFloat_AmountPlan_5.DescId = zc_MIFloat_AmountPlan_5()
-                                                         --AND MovementItem.Ord = 1
-
-                             LEFT JOIN tmpMovementItemFloat AS MIFloat_Number_1
-                                                            ON MIFloat_Number_1.MovementItemId = MovementItem.Id
-                                                           AND MIFloat_Number_1.DescId = zc_MIFloat_Number_1()
-                                                         --AND MovementItem.Ord = 1
-                             LEFT JOIN tmpMovementItemFloat AS MIFloat_Number_2
-                                                            ON MIFloat_Number_2.MovementItemId = MovementItem.Id
-                                                           AND MIFloat_Number_2.DescId = zc_MIFloat_Number_2()
-                                                         --AND MovementItem.Ord = 1
-                             LEFT JOIN tmpMovementItemFloat AS MIFloat_Number_3
-                                                            ON MIFloat_Number_3.MovementItemId = MovementItem.Id
-                                                           AND MIFloat_Number_3.DescId = zc_MIFloat_Number_3()
-                                                         --AND MovementItem.Ord = 1
-                             LEFT JOIN tmpMovementItemFloat AS MIFloat_Number_4
-                                                            ON MIFloat_Number_4.MovementItemId = MovementItem.Id
-                                                           AND MIFloat_Number_4.DescId = zc_MIFloat_Number_4()
-                                                         --AND MovementItem.Ord = 1
-                             LEFT JOIN tmpMovementItemFloat AS MIFloat_Number_5
-                                                            ON MIFloat_Number_5.MovementItemId = MovementItem.Id
-                                                           AND MIFloat_Number_5.DescId = zc_MIFloat_Number_5()
-                                                         --AND MovementItem.Ord = 1
-
-                             LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_1
-                                                              ON MIBoolean_AmountPlan_1.MovementItemId = MovementItem.Id
-                                                             AND MIBoolean_AmountPlan_1.DescId = zc_MIBoolean_AmountPlan_1()
-                                                           --AND MovementItem.Ord = 1
-                             LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_2
-                                                              ON MIBoolean_AmountPlan_2.MovementItemId = MovementItem.Id
-                                                             AND MIBoolean_AmountPlan_2.DescId = zc_MIBoolean_AmountPlan_2()
-                                                           --AND MovementItem.Ord = 1
-                             LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_3
-                                                              ON MIBoolean_AmountPlan_3.MovementItemId = MovementItem.Id
-                                                             AND MIBoolean_AmountPlan_3.DescId = zc_MIBoolean_AmountPlan_3()
-                                                           --AND MovementItem.Ord = 1
-                             LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_4
-                                                              ON MIBoolean_AmountPlan_4.MovementItemId = MovementItem.Id
-                                                             AND MIBoolean_AmountPlan_4.DescId = zc_MIBoolean_AmountPlan_4()
-                                                           --AND MovementItem.Ord = 1
-                             LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan_5
-                                                              ON MIBoolean_AmountPlan_5.MovementItemId = MovementItem.Id
-                                                             AND MIBoolean_AmountPlan_5.DescId = zc_MIBoolean_AmountPlan_5()
-                                                           --AND MovementItem.Ord = 1
+                                                           AND MovementItem.Ord_master = 1
 
                              LEFT JOIN tmpMovementItemString AS MIString_Comment
                                                              ON MIString_Comment.MovementItemId = MovementItem.Id
                                                             AND MIString_Comment.DescId = zc_MIString_Comment()
-                                                          --AND MovementItem.Ord = 1
+                                                          --AND MovementItem.Ord_master = 1
 
                              LEFT JOIN tmpMILO_Contract AS MILinkObject_Contract
                                                         ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                                        AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-                                                     --AND MovementItem.Ord = 1
+                                                     --AND MovementItem.Ord_master = 1
                              LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MILinkObject_Contract.ObjectId
 
-                             LEFT JOIN tmpMovementItemDate AS MIDate_Insert
-                                                           ON MIDate_Insert.MovementItemId = MovementItem.Id
-                                                          AND MIDate_Insert.DescId = zc_MIDate_Insert()
-                                                        --AND MovementItem.Ord = 1
-                             LEFT JOIN tmpMovementItemDate AS MIDate_Update
-                                                           ON MIDate_Update.MovementItemId = MovementItem.Id
-                                                          AND MIDate_Update.DescId = zc_MIDate_Update()
-                                                        --AND MovementItem.Ord = 1
-
-                             LEFT JOIN tmpMovementItemLinkObject AS MILO_Insert
-                                                                 ON MILO_Insert.MovementItemId = MovementItem.Id
-                                                                AND MILO_Insert.DescId = zc_MILinkObject_Insert()
-                                                              --AND MovementItem.Ord = 1
-                             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MILO_Insert.ObjectId
-
-                             LEFT JOIN tmpMovementItemLinkObject AS MILO_Update
-                                                                 ON MILO_Update.MovementItemId = MovementItem.Id
-                                                                AND MILO_Update.DescId = zc_MILinkObject_Update()   
-                                                              --AND MovementItem.Ord = 1
-                             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
 
                              LEFT JOIN tmpJuridicalDetails_View ON tmpJuridicalDetails_View.JuridicalId = Object_Juridical.Id
 
@@ -583,20 +748,8 @@ BEGIN
                                  --, Object_BankAccount_View.BankName
                                  --, (Object_BankAccount_View.BankName || '' || Object_BankAccount_View.Name) :: TVarChar AS BankAccountNameAll
                                  --, Object_BankAccount_View.MFO            AS MFO
+
                                  , Movement.WeekNumber              ::TFloat    AS WeekNumber
-                                   -- Предварительный План на неделю
-                                 , COALESCE (MovementFloat_TotalSumm.Valuedata, 0)    ::TFloat   AS TotalSumm
-                                   -- Согласована сумма на неделю
-                                 , (COALESCE (MovementFloat_TotalSumm_1.Valuedata, 0) + COALESCE (MovementFloat_TotalSumm_2.Valuedata, 0) + COALESCE (MovementFloat_TotalSumm_3.Valuedata, 0)) ::TFloat AS TotalSumm_all
-                                 , COALESCE (MovementFloat_TotalSumm_1.Valuedata, 0)  ::TFloat   AS TotalSumm_1
-                                 , COALESCE (MovementFloat_TotalSumm_2.Valuedata, 0)  ::TFloat   AS TotalSumm_2
-                                 , COALESCE (MovementFloat_TotalSumm_3.Valuedata, 0)  ::TFloat   AS TotalSumm_3
-       
-                                 , COALESCE (MovementFloat_AmountPlan_1.Valuedata, 0) ::TFloat   AS AmountPlan_1
-                                 , COALESCE (MovementFloat_AmountPlan_2.Valuedata, 0) ::TFloat   AS AmountPlan_2
-                                 , COALESCE (MovementFloat_AmountPlan_3.Valuedata, 0) ::TFloat   AS AmountPlan_3
-                                 , COALESCE (MovementFloat_AmountPlan_4.Valuedata, 0) ::TFloat   AS AmountPlan_4
-                                 , COALESCE (MovementFloat_AmountPlan_5.Valuedata, 0) ::TFloat   AS AmountPlan_5
        
                                  , zfCalc_Week_StartDate (Movement.OperDate, MovementFloat_WeekNumber.ValueData) AS StartDate_WeekNumber
                                  , zfCalc_Week_EndDate   (Movement.OperDate, MovementFloat_WeekNumber.ValueData) AS EndDate_WeekNumber
@@ -607,7 +760,7 @@ BEGIN
                                  , Object_Member_2.ValueData            ::TVarChar  AS UserMember_2
        
                                  , MovementString_Comment.ValueData       AS Comment
-       
+
                                  , Object_Insert.ValueData                AS InsertName
                                  , MovementDate_Insert.ValueData          AS InsertDate
                                  , Object_Update.ValueData                AS UpdateName
@@ -628,35 +781,6 @@ BEGIN
                            LEFT JOIN MovementFloat AS MovementFloat_WeekNumber
                                                    ON MovementFloat_WeekNumber.MovementId = Movement.Id
                                                   AND MovementFloat_WeekNumber.DescId = zc_MovementFloat_WeekNumber()
-
-                           LEFT JOIN MovementFloat AS MovementFloat_AmountPlan_1
-                                                   ON MovementFloat_AmountPlan_1.MovementId = Movement.Id
-                                                  AND MovementFloat_AmountPlan_1.DescId = zc_MovementFloat_AmountPlan_1()
-                           LEFT JOIN MovementFloat AS MovementFloat_AmountPlan_2
-                                                   ON MovementFloat_AmountPlan_2.MovementId = Movement.Id
-                                                  AND MovementFloat_AmountPlan_2.DescId = zc_MovementFloat_AmountPlan_2()
-                           LEFT JOIN MovementFloat AS MovementFloat_AmountPlan_3
-                                                   ON MovementFloat_AmountPlan_3.MovementId = Movement.Id
-                                                  AND MovementFloat_AmountPlan_3.DescId = zc_MovementFloat_AmountPlan_3()
-                           LEFT JOIN MovementFloat AS MovementFloat_AmountPlan_4
-                                                   ON MovementFloat_AmountPlan_4.MovementId = Movement.Id
-                                                  AND MovementFloat_AmountPlan_4.DescId = zc_MovementFloat_AmountPlan_4()
-                           LEFT JOIN MovementFloat AS MovementFloat_AmountPlan_5
-                                                   ON MovementFloat_AmountPlan_5.MovementId = Movement.Id
-                                                  AND MovementFloat_AmountPlan_5.DescId = zc_MovementFloat_AmountPlan_5()
-
-                           LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                                   ON MovementFloat_TotalSumm.MovementId = Movement.Id
-                                                  AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-                           LEFT JOIN MovementFloat AS MovementFloat_TotalSumm_1
-                                                   ON MovementFloat_TotalSumm_1.MovementId = Movement.Id
-                                                  AND MovementFloat_TotalSumm_1.DescId = zc_MovementFloat_TotalSumm_1()
-                           LEFT JOIN MovementFloat AS MovementFloat_TotalSumm_2
-                                                   ON MovementFloat_TotalSumm_2.MovementId = Movement.Id
-                                                  AND MovementFloat_TotalSumm_2.DescId = zc_MovementFloat_TotalSumm_2()
-                           LEFT JOIN MovementFloat AS MovementFloat_TotalSumm_3
-                                                   ON MovementFloat_TotalSumm_3.MovementId = Movement.Id
-                                                  AND MovementFloat_TotalSumm_3.DescId = zc_MovementFloat_TotalSumm_3()
 
                            LEFT JOIN MovementString AS MovementString_Comment
                                                     ON MovementString_Comment.MovementId = Movement.Id
@@ -931,8 +1055,6 @@ BEGIN
         , tmpMI.EndDate_real           ::TDateTime
         , tmpMI.EndDate                ::TVarChar
 
-          -- Предварительная сумма оплаты на неделю
-        , tmpMI.Amount          :: TFloat AS Amount
           -- Нач. долг
         , tmpMI.AmountRemains   :: TFloat AS AmountRemains
           -- Долг с отсрочкой
@@ -945,7 +1067,12 @@ BEGIN
         , tmpMI.AmountPartner_3 :: TFloat AS AmountPartner_3
         , tmpMI.AmountPartner_4 :: TFloat AS AmountPartner_4
 
-          -- План оплат на 1.пн
+          -- Первичный план на неделю
+        , tmpMI.Amount          :: TFloat AS Amount
+          -- Платежный план на неделю
+        , tmpMI.AmountPlan_next :: TFloat AS AmountPlan_next
+
+          -- Согласовано к оплате
         , tmpMI.AmountPlan_1    :: TFloat AS AmountPlan_1
         , tmpMI.AmountPlan_2    :: TFloat AS AmountPlan_2
         , tmpMI.AmountPlan_3    :: TFloat AS AmountPlan_3
@@ -1116,16 +1243,22 @@ BEGIN
 
           --  child
         , tmpMI.MovementItemId_Child    ::Integer
-        , tmpMI.Amount_Child            ::TFloat
         , tmpMI.InvNumber_Child         ::TVarChar
         , tmpMI.InvNumber_Invoice_Child ::TVarChar
         , tmpMI.GoodsName_Child         ::TVarChar
-        , tmpMI.isSign_Child            ::Boolean
 
+        , tmpMI.isSign_Child            ::Boolean
         , CASE WHEN tmpMI.isSign_Child = TRUE THEN 'Погоджено'
                WHEN tmpMI.isSign_Child = FALSE THEN 'Не погоджено'
                ELSE ''
-          END                  ::TVarChar AS TextSign_Child
+          END ::TVarChar AS TextSign_Child
+
+          -- Detail
+        , tmpMI.MovementItemId_Detail_1 ::Integer
+        , tmpMI.MovementItemId_Detail_2 ::Integer
+        , tmpMI.MovementItemId_Detail_3 ::Integer
+        , tmpMI.MovementItemId_Detail_4 ::Integer
+        , tmpMI.MovementItemId_Detail_5 ::Integer
 
         , CASE WHEN tmpMI.isSign_Child = FALSE
                     -- подсветили если Не погоджено
@@ -1157,10 +1290,10 @@ BEGIN
       OR tmpMI.AmountPlan_3 <> 0
       OR tmpMI.AmountPlan_4 <> 0
       OR tmpMI.AmountPlan_5 <> 0
-      -- или Предварительный план
+      -- или Первичный план на неделю
       OR (tmpMI.JuridicalId > 0 AND tmpMI.Amount <> 0)
-      -- child
-      OR (tmpMI.JuridicalId > 0 AND tmpMI.Amount_Child <> 0)
+      -- или Платежный план на неделю
+      OR (tmpMI.JuridicalId > 0 AND tmpMI.AmountPlan_next <> 0)
       ;
 
 END;
@@ -1175,5 +1308,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderFinance_Plan (inStartDate:= '01.11.2025', inEndDate:= '30.12.2025', inStartWeekNumber:=47, inEndWeekNumber := 48, inIsDay_1:=FALSE, inIsDay_2:=FALSE, inIsDay_3:=FALSE, inIsDay_4:=FALSE, inIsDay_5:=FALSE, inSession:= '2')
--- SELECT * FROM gpSelect_Movement_OrderFinance_Plan (inStartDate:= '01.11.2025', inEndDate:= '30.12.2025', inBankMainId:=76970, inStartWeekNumber:=47, inEndWeekNumber := 48, inIsDay_1:=FALSE, inIsDay_2:=FALSE, inIsDay_3:=FALSE, inIsDay_4:=FALSE, inIsDay_5:=FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_OrderFinance_Plan_5 (inStartDate:= '01.11.2025', inEndDate:= '30.12.2025', inStartWeekNumber:=47, inEndWeekNumber := 48, inIsDay_1:=FALSE, inIsDay_2:=FALSE, inIsDay_3:=FALSE, inIsDay_4:=FALSE, inIsDay_5:=FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_OrderFinance_Plan_5 (inStartDate:= '01.11.2025', inEndDate:= '30.12.2025', inBankMainId:=76970, inStartWeekNumber:=47, inEndWeekNumber := 48, inIsDay_1:=FALSE, inIsDay_2:=FALSE, inIsDay_3:=FALSE, inIsDay_4:=FALSE, inIsDay_5:=FALSE, inSession:= '2')

@@ -7,7 +7,8 @@ DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer, Bo
 DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer,Boolean, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer,Boolean, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer,Boolean, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer,Boolean, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, Integer, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer,Boolean, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_Plan (Integer, Integer,Boolean, Boolean,Boolean,Boolean,Boolean,Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpUpdateMovement_OrderFinance_Plan(
@@ -40,7 +41,14 @@ CREATE OR REPLACE FUNCTION gpUpdateMovement_OrderFinance_Plan(
    OUT outAmountPlan_calc        TFloat     ,
     IN inNumber_calc             TFloat     ,
    OUT outNumber_calc            TFloat     ,
+
  INOUT ioMovementItemId_Child    Integer    ,
+    IN inMovementItemId_Detail_1 Integer    ,
+    IN inMovementItemId_Detail_2 Integer    ,
+    IN inMovementItemId_Detail_3 Integer    ,
+    IN inMovementItemId_Detail_4 Integer    ,
+    IN inMovementItemId_Detail_5 Integer    ,
+    
     IN inInvNumber_Invoice_Child TVarChar   ,
     IN inSession                 TVarChar    -- сессия пользователя
 )
@@ -69,23 +77,69 @@ BEGIN
      -- Старт
      vbPlan_count:= 0;
 
+
      --строки документа
      IF COALESCE (inisDay_1, FALSE) = TRUE
-      THEN
+     THEN
         -- сохранили свойство <>
-        PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_1(), inMovementItemId, inIsAmountPlan);
+        IF inMovementItemId_Detail_1 > 0 
+        THEN
+            PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_1(), inMovementItemId_Detail_1, inIsAmountPlan);
+
+        ELSEIF ioMovementItemId_Child > 0
+        THEN
+            -- проверка
+            IF EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Detail() AND MI.isErased = FALSE AND MI.ParentId IN (inMovementItemId, ioMovementItemId_Child))
+            THEN
+                RAISE EXCEPTION 'Ошибка.Обновите данные.<%><%>', inMovementItemId, ioMovementItemId_Child;
+            END IF;
+            --
+            PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_1(), ioMovementItemId_Child, inIsAmountPlan);
+        ELSE
+            -- проверка
+            IF EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Detail() AND MI.isErased = FALSE AND MI.ParentId IN (inMovementItemId, ioMovementItemId_Child))
+            THEN
+                RAISE EXCEPTION 'Ошибка.Обновите данные.<%><%>', inMovementItemId, ioMovementItemId_Child;
+            END IF;
+            --
+            PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_1(), inMovementItemId, inIsAmountPlan);
+        END IF;
+        -- вернули
         outisAmountPlan_1 := inIsAmountPlan;
 
         -- сохранили свойство <>
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Number_1(), inMovementItemId, inNumber_calc);
         --
         vbPlan_count:= vbPlan_count + 1;
+
      END IF;
 
      IF COALESCE (inisDay_2, FALSE) = TRUE
       THEN
         -- сохранили свойство <>
-        PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_2(), inMovementItemId, inIsAmountPlan);
+        IF inMovementItemId_Detail_2 > 0 
+        THEN
+            PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_2(), inMovementItemId_Detail_2, inIsAmountPlan);
+
+        ELSEIF ioMovementItemId_Child > 0
+        THEN
+            -- проверка
+            IF EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Detail() AND MI.isErased = FALSE AND MI.ParentId IN (inMovementItemId, ioMovementItemId_Child))
+            THEN
+                RAISE EXCEPTION 'Ошибка.Обновите данные.<%><%>', inMovementItemId, ioMovementItemId_Child;
+            END IF;
+            --
+            PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_2(), ioMovementItemId_Child, inIsAmountPlan);
+        ELSE
+            -- проверка
+            IF EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Detail() AND MI.isErased = FALSE AND MI.ParentId IN (inMovementItemId, ioMovementItemId_Child))
+            THEN
+                RAISE EXCEPTION 'Ошибка.Обновите данные.<%><%>', inMovementItemId, ioMovementItemId_Child;
+            END IF;
+            --
+            PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_2(), inMovementItemId, inIsAmountPlan);
+        END IF;
+        -- вернули
         outisAmountPlan_2 := inIsAmountPlan;
 
         -- сохранили свойство <>
@@ -97,7 +151,29 @@ BEGIN
      IF COALESCE (inisDay_3, FALSE) = TRUE
       THEN
         -- сохранили свойство <>
-        PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_3(), inMovementItemId, inIsAmountPlan);
+        IF inMovementItemId_Detail_3 > 0 
+        THEN
+            PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_3(), inMovementItemId_Detail_3, inIsAmountPlan);
+
+        ELSEIF ioMovementItemId_Child > 0
+        THEN
+            -- проверка
+            IF EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Detail() AND MI.isErased = FALSE AND MI.ParentId IN (inMovementItemId, ioMovementItemId_Child))
+            THEN
+                RAISE EXCEPTION 'Ошибка.Обновите данные.<%><%>', inMovementItemId, ioMovementItemId_Child;
+            END IF;
+            --
+            PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_3(), ioMovementItemId_Child, inIsAmountPlan);
+        ELSE
+            -- проверка
+            IF EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Detail() AND MI.isErased = FALSE AND MI.ParentId IN (inMovementItemId, ioMovementItemId_Child))
+            THEN
+                RAISE EXCEPTION 'Ошибка.Обновите данные.<%><%>', inMovementItemId, ioMovementItemId_Child;
+            END IF;
+            --
+            PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_3(), inMovementItemId, inIsAmountPlan);
+        END IF;
+        -- вернули
         outisAmountPlan_3 := inIsAmountPlan;
 
         -- сохранили свойство <>
@@ -109,7 +185,29 @@ BEGIN
      IF COALESCE (inisDay_4, FALSE) = TRUE
       THEN
         -- сохранили свойство <>
-        PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_4(), inMovementItemId, inIsAmountPlan);
+        IF inMovementItemId_Detail_4 > 0 
+        THEN
+            PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_4(), inMovementItemId_Detail_4, inIsAmountPlan);
+
+        ELSEIF ioMovementItemId_Child > 0
+        THEN
+            -- проверка
+            IF EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Detail() AND MI.isErased = FALSE AND MI.ParentId IN (inMovementItemId, ioMovementItemId_Child))
+            THEN
+                RAISE EXCEPTION 'Ошибка.Обновите данные.<%><%>', inMovementItemId, ioMovementItemId_Child;
+            END IF;
+            --
+            PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_4(), ioMovementItemId_Child, inIsAmountPlan);
+        ELSE
+            -- проверка
+            IF EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Detail() AND MI.isErased = FALSE AND MI.ParentId IN (inMovementItemId, ioMovementItemId_Child))
+            THEN
+                RAISE EXCEPTION 'Ошибка.Обновите данные.<%><%>', inMovementItemId, ioMovementItemId_Child;
+            END IF;
+            --
+            PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_4(), inMovementItemId, inIsAmountPlan);
+        END IF;
+        -- вернули
         outisAmountPlan_4 := inIsAmountPlan;
 
         -- сохранили свойство <>
@@ -121,7 +219,29 @@ BEGIN
      IF COALESCE (inisDay_5, FALSE) = TRUE
       THEN
         -- сохранили свойство <>
-        PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_5(), inMovementItemId, inIsAmountPlan);
+        IF inMovementItemId_Detail_5 > 0 
+        THEN
+            PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_5(), inMovementItemId_Detail_5, inIsAmountPlan);
+
+        ELSEIF ioMovementItemId_Child > 0
+        THEN
+            -- проверка
+            IF EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Detail() AND MI.isErased = FALSE AND MI.ParentId IN (inMovementItemId, ioMovementItemId_Child))
+            THEN
+                RAISE EXCEPTION 'Ошибка.Обновите данные.<%><%>', inMovementItemId, ioMovementItemId_Child;
+            END IF;
+            --
+            PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_5(), ioMovementItemId_Child, inIsAmountPlan);
+        ELSE
+            -- проверка
+            IF EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Detail() AND MI.isErased = FALSE AND MI.ParentId IN (inMovementItemId, ioMovementItemId_Child))
+            THEN
+                RAISE EXCEPTION 'Ошибка.Обновите данные.<%><%>', inMovementItemId, ioMovementItemId_Child;
+            END IF;
+            --
+            PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_5(), inMovementItemId, inIsAmountPlan);
+        END IF;
+        -- вернули
         outisAmountPlan_5 := inIsAmountPlan;
 
         -- сохранили свойство <>
@@ -422,6 +542,9 @@ BEGIN
          --если не сохр. чайлд  и № счета не пусто
          IF COALESCE (inInvNumber_Invoice_Child,'') <> ''
          THEN
+             RAISE EXCEPTION 'Ошибка.Нет прав заполнять № счета для. <%>'
+                            , (SELECT lfGet_Object_ValueData_sh (MLO.ObjectId) FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_OrderFinance())
+                             ;
              -- сохранили <Элемент документа>
              ioMovementItemId_Child := lpInsertUpdate_MovementItem (0, zc_MI_Child(), Null, inMovementId, outAmountPlan_calc, inMovementItemId);
              -- сохранили свойство <>

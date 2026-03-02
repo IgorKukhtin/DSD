@@ -3,15 +3,15 @@ DROP FUNCTION IF EXISTS gpSelect_Movement_OrderFinancePlan_Print (TDateTime, Int
 DROP FUNCTION IF EXISTS gpSelect_Movement_OrderFinancePlan_Print (TDateTime, Integer, Integer, Boolean,Boolean,Boolean,Boolean,Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderFinancePlan_Print(
-    IN inOperDate         TDateTime , -- Дата начю недели (для определения года) 
-    IN inBankMainId       Integer   , --
-    IN inWeekNumber       Integer   , -- Номер недели
+    IN inOperDate        TDateTime , -- Дата начю недели (для определения года) 
+    IN inBankMainId      Integer   , --
+    IN inWeekNumber      Integer   , -- Номер недели
     IN inisDay_1         Boolean    , --
     IN inisDay_2         Boolean    , --
     IN inisDay_3         Boolean    , --
     IN inisDay_4         Boolean    , --
     IN inisDay_5         Boolean    , --
-    IN inSession       TVarChar    -- сессия пользователя
+    IN inSession         TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
 AS
@@ -23,6 +23,7 @@ $BODY$
 
     DECLARE vbDescId Integer;
             vbPlan           TFloat;
+            vbOperDate_day   TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income_Print());
@@ -40,6 +41,14 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Ошибка.Выбрано больше 1 дня.';
     END IF;
+    
+    --
+    vbOperDate_day:= inOperDate + ('' || CASE WHEN COALESCE (inisDay_1,FALSE) = TRUE THEN 0
+                                              WHEN COALESCE (inisDay_2,FALSE) = TRUE THEN 1
+                                              WHEN COALESCE (inisDay_3,FALSE) = TRUE THEN 2
+                                              WHEN COALESCE (inisDay_4,FALSE) = TRUE THEN 3
+                                              WHEN COALESCE (inisDay_5,FALSE) = TRUE THEN 4
+                                         END ||' DAY') ::Interval;
 
     OPEN Cursor1 FOR
          SELECT inWeekNumber AS WeekNumber
@@ -51,13 +60,7 @@ BEGIN
                      WHEN COALESCE (inisDay_4,FALSE) = TRUE THEN 'Четверг'    
                      WHEN COALESCE (inisDay_5,FALSE) = TRUE THEN 'Пятница'    
                 END ::TVarChar AS DayOfWeek
-              , (inOperDate 
-                + (''|| CASE WHEN COALESCE (inisDay_1,FALSE) = TRUE THEN 0
-                             WHEN COALESCE (inisDay_2,FALSE) = TRUE THEN 1
-                             WHEN COALESCE (inisDay_3,FALSE) = TRUE THEN 2
-                             WHEN COALESCE (inisDay_4,FALSE) = TRUE THEN 3
-                             WHEN COALESCE (inisDay_5,FALSE) = TRUE THEN 4
-                        END ||' DAY') ::Interval ) ::TDateTime AS OperDate
+              , vbOperDate_day ::TDateTime AS OperDate
          ;
     RETURN NEXT Cursor1;
      
@@ -87,6 +90,39 @@ BEGIN
                                  AND MovementLinkObject.DescId = zc_MovementLinkObject_OrderFinance()
                                )    
   
+          , tmpMI_Child AS (SELECT MovementItem.Id          AS MovementItemId
+                                 , MovementItem.ParentId    AS MovementItemId_parent
+                                 , MovementItem.MovementId
+                                   -- Согласовано к оплате
+                                 , COALESCE (MIFloat_AmountPlan_next.ValueData, 0) AS AmountPlan_next
+                                   -- Платим да/нет
+                                 , COALESCE (MIBoolean_AmountPlan.ValueData, TRUE) ::Boolean AS isAmountPlan
+
+                            FROM MovementItem
+                                 LEFT JOIN MovementItemFloat AS MIFloat_AmountPlan_next
+                                                             ON MIFloat_AmountPlan_next.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_AmountPlan_next.DescId = zc_MIFloat_AmountPlan_next()
+                                 -- один день
+                                 INNER JOIN MovementItemDate AS MIDate_Amount_next
+                                                             ON MIDate_Amount_next.MovementItemId = MovementItem.Id
+                                                            AND MIDate_Amount_next.DescId         = zc_MIDate_Amount_next()
+                                                            -- один день
+                                                            AND MIDate_Amount_next.ValueData      = vbOperDate_day
+                                 -- Платим (да/нет)
+                                 LEFT JOIN MovementItemBoolean AS MIBoolean_AmountPlan
+                                                               ON MIBoolean_AmountPlan.MovementItemId = MovementItem.Id
+                                                              AND MIBoolean_AmountPlan.DescId IN (CASE WHEN COALESCE (inisDay_1,FALSE) = TRUE THEN zc_MIBoolean_AmountPlan_1()
+                                                                                                       WHEN COALESCE (inisDay_2,FALSE) = TRUE THEN zc_MIBoolean_AmountPlan_2()
+                                                                                                       WHEN COALESCE (inisDay_3,FALSE) = TRUE THEN zc_MIBoolean_AmountPlan_3()
+                                                                                                       WHEN COALESCE (inisDay_4,FALSE) = TRUE THEN zc_MIBoolean_AmountPlan_4()
+                                                                                                       WHEN COALESCE (inisDay_5,FALSE) = TRUE THEN zc_MIBoolean_AmountPlan_5()
+                                                                                                  END
+                                                                                                 )
+
+                            WHERE MovementItem.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)
+                              AND MovementItem.DescId = zc_MI_Child()
+                              AND MovementItem.isErased = FALSE
+                            )
      , tmpMI AS (SELECT MovementItem.MovementId
                       , MovementItem.Id       AS Id
                       , MovementItem.ObjectId AS ObjectId
@@ -245,7 +281,7 @@ BEGIN
                            , Object_InfoMoney.ValueData       AS InfoMoneyName 
                            , Object_Contract.ValueData        AS ContractName
                 
-                           , MIFloat_AmountPlan.ValueData     AS AmountPlan
+                           , COALESCE (tmpMI_Child.AmountPlan_next, MIFloat_AmountPlan.ValueData) AS AmountPlan
                            , MIString_Comment_pay.ValueData   AS Comment_pay 
                            
                            , COALESCE (tmpJuridicalOrderFinance.BankAccountId_main, tmpJuridicalOrderFinance_last.BankAccountId_main)          ::Integer  AS BankAccountId
@@ -254,6 +290,8 @@ BEGIN
                            , COALESCE (tmpJuridicalOrderFinance.BankName_main, tmpJuridicalOrderFinance_last.BankName_main)                    ::TVarChar AS BankName
                            , COALESCE (tmpJuridicalOrderFinance.MFO_main, tmpJuridicalOrderFinance_last.MFO_main)                              ::TVarChar AS MFO
                        FROM tmpMI AS MovementItem
+                            LEFT JOIN tmpMI_Child ON tmpMI_Child.MovementItemId_parent = MovementItem.Id
+
                             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId
                                                                 AND Object_Juridical.DescId = zc_Object_Juridical()
                             LEFT JOIN ObjectHistory_JuridicalDetails_View AS tmpJuridicalDetails_View ON tmpJuridicalDetails_View.JuridicalId = Object_Juridical.Id
@@ -278,6 +316,13 @@ BEGIN
                                                 AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
                             LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_Contract_InfoMoney.ChildObjectId
 
+                            -- !!!Только БН!!!
+                            INNER JOIN ObjectLink AS ObjectLink_Contract_PaidKind
+                                                  ON ObjectLink_Contract_PaidKind.ObjectId      = MILinkObject_Contract.ObjectId
+                                                 AND ObjectLink_Contract_PaidKind.DescId        = zc_ObjectLink_Contract_PaidKind()
+                                                 -- Только БН
+                                                 AND ObjectLink_Contract_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
+
                             --привязка  юр.лицо + статья + выбранный банк (плательщик)
                             LEFT JOIN tmpJuridicalOrderFinance ON tmpJuridicalOrderFinance.JuridicalId = Object_Juridical.Id
                                                               AND tmpJuridicalOrderFinance.InfoMoneyId = Object_InfoMoney.Id
@@ -289,8 +334,8 @@ BEGIN
                                                                    AND tmpJuridicalOrderFinance_last.InfoMoneyId = Object_InfoMoney.Id
                                                                    AND tmpJuridicalOrderFinance_last.Ord = 1
                                                                    --AND inBankMainId = 0                
-                       WHERE COALESCE (MIBoolean_AmountPlan.ValueData, True) = TRUE
-                         AND COALESCE (MIFloat_AmountPlan.ValueData,0) <> 0 
+                       WHERE COALESCE (tmpMI_Child.isAmountPlan, MIBoolean_AmountPlan.ValueData, TRUE) = TRUE
+                         AND COALESCE (tmpMI_Child.AmountPlan_next, MIFloat_AmountPlan.ValueData, 0) <> 0 
                          AND (COALESCE (tmpJuridicalOrderFinance.BankId_main, tmpJuridicalOrderFinance_last.BankId_main) = inBankMainId OR inBankMainId = 0)
                     )
 
@@ -338,5 +383,4 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpSelect_Movement_OrderFinancePlan_Print (inOperDate :='27.10.2025'::TDateTime , inBankMainId:= 76970, inWeekNumber:= 44,  inisDay_1 := TRUE, inisDay_2 := FAlSE, inisDay_3 := FAlSE, inisDay_4 := FAlSE, inisDay_5 := FAlSE, inSession := '3'); 
--- FETCH ALL "<unnamed portal 34>";
+--SELECT * FROM gpSelect_Movement_OrderFinancePlan_Print (inOperDate :='27.10.2025'::TDateTime , inBankMainId:= 76970, inWeekNumber:= 44,  inisDay_1 := TRUE, inisDay_2 := FAlSE, inisDay_3 := FAlSE, inisDay_4 := FAlSE, inisDay_5 := FAlSE, inSession := '3'); -- FETCH ALL "<unnamed portal 34>";

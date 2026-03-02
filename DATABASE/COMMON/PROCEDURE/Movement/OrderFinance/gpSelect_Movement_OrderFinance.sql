@@ -15,7 +15,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , BankAccountId Integer, BankAccountName TVarChar
              , BankId Integer, BankName TVarChar, BankAccountNameAll TVarChar
              , WeekNumber TFloat
-             , TotalSumm TFloat, TotalSumm_all TFloat, TotalSumm_1 TFloat, TotalSumm_2 TFloat, TotalSumm_3 TFloat
+             , TotalSumm TFloat, TotalSumm_next TFloat
+             , TotalSumm_all TFloat, TotalSumm_1 TFloat, TotalSumm_2 TFloat, TotalSumm_3 TFloat
              , AmountPlan_1 TFloat, AmountPlan_2 TFloat, AmountPlan_3 TFloat, AmountPlan_4 TFloat, AmountPlan_5 TFloat, AmountPlan_total TFloat
              , StartDate_WeekNumber TDateTime, EndDate_WeekNumber TDateTime
              , DateUpdate_report TDateTime
@@ -96,20 +97,22 @@ BEGIN
            , (Object_BankAccount_View.BankName || '' || Object_BankAccount_View.Name) :: TVarChar AS BankAccountNameAll
 
            , tmpMovement.WeekNumber                            AS WeekNumber
-             -- Предварительный План на неделю
-           , COALESCE (MovementFloat_TotalSumm.Valuedata, 0)    ::TFloat   AS TotalSumm
-             -- Согласована сумма на неделю
+             -- Первичный план на неделю
+           , COALESCE (MovementFloat_TotalSumm.Valuedata, 0)      ::TFloat   AS TotalSumm
+             -- Платежный план на неделю
+           , COALESCE (MovementFloat_TotalSumm_next.Valuedata, 0) ::TFloat   AS TotalSumm_next
+             -- Итого сумма лимит на неделю
            , (COALESCE (MovementFloat_TotalSumm_1.Valuedata, 0) + COALESCE (MovementFloat_TotalSumm_2.Valuedata, 0) + COALESCE (MovementFloat_TotalSumm_3.Valuedata, 0)) ::TFloat AS TotalSumm_all
            , COALESCE (MovementFloat_TotalSumm_1.Valuedata, 0)  ::TFloat   AS TotalSumm_1
            , COALESCE (MovementFloat_TotalSumm_2.Valuedata, 0)  ::TFloat   AS TotalSumm_2
            , COALESCE (MovementFloat_TotalSumm_3.Valuedata, 0)  ::TFloat   AS TotalSumm_3 
            
+             -- Согласовано к оплате
            , COALESCE (MovementFloat_AmountPlan_1.Valuedata, 0) ::TFloat   AS AmountPlan_1
            , COALESCE (MovementFloat_AmountPlan_2.Valuedata, 0) ::TFloat   AS AmountPlan_2
            , COALESCE (MovementFloat_AmountPlan_3.Valuedata, 0) ::TFloat   AS AmountPlan_3
            , COALESCE (MovementFloat_AmountPlan_4.Valuedata, 0) ::TFloat   AS AmountPlan_4
            , COALESCE (MovementFloat_AmountPlan_5.Valuedata, 0) ::TFloat   AS AmountPlan_5
-
            , (COALESCE (MovementFloat_AmountPlan_1.Valuedata, 0)
             + COALESCE (MovementFloat_AmountPlan_2.Valuedata, 0)
             + COALESCE (MovementFloat_AmountPlan_3.Valuedata, 0)
@@ -185,6 +188,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId = Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm_next
+                                    ON MovementFloat_TotalSumm_next.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSumm_next.DescId = zc_MovementFloat_TotalSumm_next()
+                                   
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm_1
                                     ON MovementFloat_TotalSumm_1.MovementId = Movement.Id
                                    AND MovementFloat_TotalSumm_1.DescId = zc_MovementFloat_TotalSumm_1()

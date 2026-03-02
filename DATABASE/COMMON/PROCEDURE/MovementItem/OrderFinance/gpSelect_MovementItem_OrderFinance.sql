@@ -106,6 +106,36 @@ BEGIN
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_OrderFinance());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- здесь точно должна быть
+     IF EXISTS (SELECT 1
+                   FROM MovementLinkObject AS MovementLinkObject_OrderFinance
+                        -- если Заполнение № заявки 1С (да/нет) = ДА
+                        LEFT JOIN ObjectBoolean AS ObjectBoolean_InvNumber
+                                                ON ObjectBoolean_InvNumber.ObjectId  = MovementLinkObject_OrderFinance.ObjectId
+                                               AND ObjectBoolean_InvNumber.DescId    = zc_ObjectBoolean_OrderFinance_InvNumber()
+                                               AND ObjectBoolean_InvNumber.ValueData = TRUE
+                        -- если Заполнение № счета (да/нет) = ДА
+                        LEFT JOIN ObjectBoolean AS ObjectBoolean_Invoice
+                                                ON ObjectBoolean_Invoice.ObjectId  = MovementLinkObject_OrderFinance.ObjectId
+                                               AND ObjectBoolean_Invoice.DescId    = zc_ObjectBoolean_OrderFinance_InvNumber_Invoice()
+                                               AND ObjectBoolean_Invoice.ValueData = TRUE
+    
+                   WHERE MovementLinkObject_OrderFinance.MovementId = inMovementId
+                     AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
+                     -- если Заполнение № заявки 1С (да/нет) = ДА
+                     AND (ObjectBoolean_InvNumber.ObjectId IS NOT NULL
+                       -- если Заполнение № счета (да/нет) = ДА
+                       OR ObjectBoolean_Invoice.ObjectId IS NOT NULL
+                         )
+                  )
+     THEN
+          RAISE EXCEPTION 'Ошибка.Просмотр планирования доступен в документе <Планирование по Счетам>.';
+     END IF;
+
+
+
+
+
      -- нашли
      vbIsPlan_1_old:= FALSE;
      vbIsPlan_2_old:= FALSE;

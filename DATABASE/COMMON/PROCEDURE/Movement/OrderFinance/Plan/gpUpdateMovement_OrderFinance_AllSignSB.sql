@@ -46,6 +46,19 @@ BEGIN
               AND ObjectBoolean_SB.ValueData = TRUE
            );
 
+
+     -- Проверка
+     IF EXISTS (SELECT 1
+                    FROM MovementItem
+                    WHERE MovementItem.DescId = zc_MI_Detail()
+                      AND MovementItem.MovementId IN (SELECT DISTINCT _tmpMovement.MovementId FROM _tmpMovement)
+                      AND MovementItem.isErased   = FALSE
+                    )
+     THEN
+          RAISE EXCEPTION 'Ошибка.Нет прав для исправлений.В документе найдены исправления финонсовой службой .';
+     END IF;
+
+
      --
      -- сохранили свойство  <Виза СБ>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_SignSB(), _tmpMovement.MovementId, inIsSignSB)
@@ -58,46 +71,15 @@ BEGIN
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_SignSB(), _tmpMovement.MovementId, CURRENT_TIMESTAMP)
          FROM _tmpMovement;
 
-         -- сохранили <Итого>
-         PERFORM lpInsertUpdate_MovementItem (tmpMI.Id, zc_MI_Master(), tmpMI.ObjectId, tmpMI.MovementId, tmpMI.Amount_sum, tmpMI.ParentId)
-                 -- пн.
-               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_1(), tmpMI.Id, CASE WHEN EXTRACT (DOW FROM tmpMI.OperDate_amount) = 1 THEN tmpMI.Amount_sum ELSE 0 END)
-                 -- вт.
-               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_2(), tmpMI.Id, CASE WHEN EXTRACT (DOW FROM tmpMI.OperDate_amount) = 2 THEN tmpMI.Amount_sum ELSE 0 END)
-                 -- ср.
-               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_3(), tmpMI.Id, CASE WHEN EXTRACT (DOW FROM tmpMI.OperDate_amount) = 3 THEN tmpMI.Amount_sum ELSE 0 END)
-                 -- чт.
-               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_4(), tmpMI.Id, CASE WHEN EXTRACT (DOW FROM tmpMI.OperDate_amount) = 4 THEN tmpMI.Amount_sum ELSE 0 END)
-                 -- пт.
-               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_5(), tmpMI.Id, CASE WHEN EXTRACT (DOW FROM tmpMI.OperDate_amount) = 5 THEN tmpMI.Amount_sum ELSE 0 END)
-
-         FROM (WITH tmpMI_child AS (SELECT MovementItem.MovementId
-                                         , MovementItem.ParentId
-                                         , SUM (MovementItem.Amount) AS Amount_sum
-                                    FROM MovementItem
-                                          INNER JOIN MovementItemBoolean AS MIBoolean_Sign
-                                                                         ON MIBoolean_Sign.MovementItemId = MovementItem.Id
-                                                                        AND MIBoolean_Sign.DescId         = zc_MIBoolean_Sign()
-                                                                        AND MIBoolean_Sign.ValueData      = TRUE
-                                    WHERE MovementItem.MovementId IN (SELECT  DISTINCT _tmpMovement.MovementId FROM _tmpMovement)
-                                      AND MovementItem.DescId     = zc_MI_Child()
-                                      AND MovementItem.isErased   = FALSE
-                                    GROUP BY MovementItem.ParentId
-                                           , MovementItem.MovementId
-                                   )
-               SELECT MovementItem.*
-                    , COALESCE (tmpMI_child.Amount_sum, 0) AS Amount_sum
-                    , MovementItemDate_Amount.ValueData AS OperDate_amount
-               FROM MovementItem
-                    LEFT JOIN tmpMI_child ON tmpMI_child.ParentId = MovementItem.Id
-                    LEFT JOIN MovementItemDate AS MovementItemDate_Amount
-                                               ON MovementItemDate_Amount.MovementItemId = MovementItem.Id
-                                              AND MovementItemDate_Amount.DescId         = zc_MIDate_Amount()
-
-               WHERE MovementItem.MovementId IN (SELECT  DISTINCT _tmpMovement.MovementId FROM _tmpMovement)
-                 AND MovementItem.DescId     = zc_MI_Master()
-                 AND MovementItem.iseRased   = FALSE
-              ) AS tmpMI
+         -- сохранили <Платежный план на неделю>
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_next(), MovementItem.Id, CASE WHEN MIBoolean_Sign.ValueData = TRUE THEN MovementItem.Amount ELSE 0 END)
+         FROM MovementItem
+              LEFT JOIN MovementItemBoolean AS MIBoolean_Sign
+                                            ON MIBoolean_Sign.MovementItemId = MovementItem.Id
+                                           AND MIBoolean_Sign.DescId         = zc_MIBoolean_Sign()
+         WHERE MovementItem.MovementId IN (SELECT  DISTINCT _tmpMovement.MovementId FROM _tmpMovement)
+           AND MovementItem.DescId     = zc_MI_Child()
+           AND MovementItem.isErased   = FALSE
           ;
 
      ELSE
@@ -105,23 +87,13 @@ BEGIN
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_SignSB(), _tmpMovement.MovementId, NULL ::TDateTime)
          FROM _tmpMovement;
 
-         -- сохранили <Итого>
-         PERFORM lpInsertUpdate_MovementItem (tmpMI.Id, zc_MI_Master(), tmpMI.ObjectId, tmpMI.MovementId, tmpMI.Amount_child, tmpMI.ParentId)
-         FROM (WITH tmpMI_child AS (SELECT MovementItem.ParentId, SUM (MovementItem.Amount) AS Amount
-                                    FROM MovementItem
-                                    WHERE MovementItem.MovementId IN (SELECT DISTINCT _tmpMovement.MovementId FROM _tmpMovement)
-                                      AND MovementItem.DescId     = zc_MI_Child()
-                                      AND MovementItem.isErased   = FALSE
-                                    GROUP BY MovementItem.ParentId
-                                   )
-               SELECT MovementItem.*
-                    , COALESCE (tmpMI_child.Amount, 0) AS Amount_child
-               FROM MovementItem
-                    LEFT JOIN tmpMI_child ON tmpMI_child.ParentId = MovementItem.Id
-               WHERE MovementItem.MovementId IN (SELECT  DISTINCT _tmpMovement.MovementId FROM _tmpMovement)
-                 AND MovementItem.DescId     = zc_MI_Master()
-                 AND MovementItem.isErased   = FALSE
-              ) AS tmpMI;
+         -- обнулили <Платежный план на неделю>
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_next(), MovementItem.Id, 0)
+         FROM MovementItem
+         WHERE MovementItem.MovementId IN (SELECT  DISTINCT _tmpMovement.MovementId FROM _tmpMovement)
+           AND MovementItem.DescId     = zc_MI_Child()
+           AND MovementItem.isErased   = FALSE
+          ;
 
      END IF;
 
@@ -135,7 +107,20 @@ BEGIN
      FROM _tmpMovement;
 
      --
-     if vbUserId IN (9457) then RAISE EXCEPTION 'Админ.Test Ok. <%>  <%>', inStartWeekNumber, inEndWeekNumber; end if;
+     if vbUserId IN (-5, 9457) THEN RAISE EXCEPTION 'Админ.Test Ok. <%>  <%>  <%>'
+                                                  , inStartWeekNumber
+                                                  , inEndWeekNumber
+                                                  , (SELECT SUM (COALESCE (MIF.ValueData, 0))
+                                                     FROM MovementItem
+                                                          LEFT JOIN MovementItemFloat AS MIF
+                                                                                        ON MIF.MovementItemId = MovementItem.Id
+                                                                                       AND MIF.DescId         = zc_MIFloat_AmountPlan_next()
+                                                     WHERE MovementItem.MovementId IN (SELECT  DISTINCT _tmpMovement.MovementId FROM _tmpMovement)
+                                                       AND MovementItem.DescId     = zc_MI_Child()
+                                                       AND MovementItem.isErased   = FALSE
+                                                    )
+                                                   ;
+     end if;
 
 END;
 $BODY$

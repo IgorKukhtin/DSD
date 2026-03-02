@@ -1,14 +1,15 @@
 -- Function: gpUpdateMovement_OrderFinance_PlanDate()
 
-DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_PlanDate (Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TVarChar);
+-- DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_PlanDate (Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_PlanDate (Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdateMovement_OrderFinance_PlanDate(
     IN inMovementId              Integer   , -- Ключ объекта <Документ>
     IN inMovementItemId          Integer   , -- Ключ строки
     IN inMovementItemId_child    Integer   , -- Ключ строки
+    IN inMovementItemId_detail   Integer   , -- Ключ строки
     IN inDateDay                 TDateTime , -- Дата Согласовано к оплате
  INOUT ioDateDay_old             TDateTime , -- Дата Согласовано к оплате
-    IN inAmount                  TFloat    , -- Первичный план на неделю
  INOUT ioAmountPlan_day          TFloat    , -- Согласовано к оплате
    OUT outWeekDay                TVarChar  , -- День недели для <Дата оплаты>
    OUT outAmountPlan_1           TFloat    , --
@@ -25,6 +26,7 @@ $BODY$
     DECLARE vbNumDay          Integer;
     DECLARE vbNumDay_old      Integer;
     DECLARE vbOperDate_start  TDateTime;
+    DECLARE vbIsChild         Boolean;
 BEGIN
      -- проверка
      -- проверка прав пользователя на вызов процедуры
@@ -71,6 +73,8 @@ BEGIN
                            AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
                         );
 
+     RAISE EXCEPTION 'Ошибка.Режим отладки.';
+
      -- проверка
      IF vbIsChild = TRUE AND COALESCE (inMovementItemId_child, 0) = 0
      THEN
@@ -83,11 +87,7 @@ BEGIN
      THEN
          -- обновляем данные - Child
          PERFORM -- Согласовано к оплате
-                 lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_fin(), inMovementItemId, CASE WHEN inMovementItemId_child > 0 AND vbNumDay = 4
-                 -- Дата Согласовано к оплате
-               , lpInsertUpdate_MovementItemDate (zc_MIDate_Amount(), MovementItem.Id, inDateDay)
-         FROM MovementItem
-         WHERE MovementItem.Id = inMovementItemId_child
+                 lpInsertUpdate_MovementItem (MovementItem.Id, MovementItem.ParentId, MovementItem.ObjectId, MovementItem.MovementId, 0, inMovementItemId)ж
         ;
 
          -- сохранили протокол

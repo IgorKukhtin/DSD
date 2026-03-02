@@ -27,6 +27,7 @@ $BODY$
    DECLARE vbUserId   Integer;
    DECLARE vbMemberId Integer;
            vbPlan     TFloat;
+           vbOperDate_day   TDateTime;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
@@ -60,6 +61,13 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.№ очереди не задан.';
     END IF;
 
+    --
+    vbOperDate_day:= inOperDate + ('' || CASE WHEN COALESCE (inisDay_1,FALSE) = TRUE THEN 0
+                                              WHEN COALESCE (inisDay_2,FALSE) = TRUE THEN 1
+                                              WHEN COALESCE (inisDay_3,FALSE) = TRUE THEN 2
+                                              WHEN COALESCE (inisDay_4,FALSE) = TRUE THEN 3
+                                              WHEN COALESCE (inisDay_5,FALSE) = TRUE THEN 4
+                                         END ||' DAY') ::Interval;
 
   CREATE TEMP TABLE tmpData (DOCUMENTDATE TVarChar, DOCUMENTNO TVarChar
                            , BANKID TVarChar, IBAN TVarChar, CORRBANKID TVarChar, CORRIBAN TVarChar
@@ -113,15 +121,42 @@ BEGIN
                    AND MovementItem.DescId     = zc_MI_Master()
                    AND MovementItem.isErased   = FALSE
                  )
-     , tmpMI_Child AS (SELECT MovementItem.*
+     , tmpMI_Child AS (SELECT MovementItem.Id          AS MovementItemId
+                            , MovementItem.ParentId    AS MovementItemId_parent
+                            , MovementItem.MovementId
+                              -- Согласовано к оплате
+                            , COALESCE (MIFloat_AmountPlan_next.ValueData, 0) AS AmountPlan_next
+                              -- Платим да/нет
+                            , COALESCE (MIBoolean_AmountPlan.ValueData, TRUE) ::Boolean AS isAmountPlan
+
                        FROM MovementItem
-                       WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                         AND MovementItem.DescId     = zc_MI_Child()
-                         AND MovementItem.isErased   = FALSE
+                            LEFT JOIN MovementItemFloat AS MIFloat_AmountPlan_next
+                                                        ON MIFloat_AmountPlan_next.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_AmountPlan_next.DescId = zc_MIFloat_AmountPlan_next()
+                            -- один день
+                            INNER JOIN MovementItemDate AS MIDate_Amount_next
+                                                        ON MIDate_Amount_next.MovementItemId = MovementItem.Id
+                                                       AND MIDate_Amount_next.DescId         = zc_MIDate_Amount_next()
+                                                       -- один день
+                                                       AND MIDate_Amount_next.ValueData      = vbOperDate_day
+                            -- Платим (да/нет)
+                            LEFT JOIN MovementItemBoolean AS MIBoolean_AmountPlan
+                                                          ON MIBoolean_AmountPlan.MovementItemId = MovementItem.Id
+                                                         AND MIBoolean_AmountPlan.DescId IN (CASE WHEN COALESCE (inisDay_1,FALSE) = TRUE THEN zc_MIBoolean_AmountPlan_1()
+                                                                                                  WHEN COALESCE (inisDay_2,FALSE) = TRUE THEN zc_MIBoolean_AmountPlan_2()
+                                                                                                  WHEN COALESCE (inisDay_3,FALSE) = TRUE THEN zc_MIBoolean_AmountPlan_3()
+                                                                                                  WHEN COALESCE (inisDay_4,FALSE) = TRUE THEN zc_MIBoolean_AmountPlan_4()
+                                                                                                  WHEN COALESCE (inisDay_5,FALSE) = TRUE THEN zc_MIBoolean_AmountPlan_5()
+                                                                                             END
+                                                                                            )
+
+                       WHERE MovementItem.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)
+                         AND MovementItem.DescId = zc_MI_Child()
+                         AND MovementItem.isErased = FALSE
                       )
      , tmpMIString_Child AS (SELECT *
                              FROM MovementItemString
-                             WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
+                             WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI_Child.MovementItemId FROM tmpMI_Child)
                                AND MovementItemString.DescId IN (zc_MIString_GoodsName()
                                                                , zc_MIString_InvNumber_Invoice()
                                                                 )
@@ -226,18 +261,19 @@ BEGIN
                                    AND Object_JuridicalOrderFinance.isErased = FALSE
                                  )
 
-     , tmpMI_Data_Child AS (SELECT MovementItem.Id
-                                 , MovementItem.MovementId
-                                 , MovementItem.Amount
-                                 , MovementItem.ParentId
+     , tmpMI_Data_Child AS (SELECT MovementItem.MovementId
+                                 , MovementItem.MovementItemId
+                                 , MovementItem.MovementItemId_parent
+                                 , MovementItem.AmountPlan_next
+                                 , MovementItem.isAmountPlan
                                  , MIString_InvNumber_Invoice.ValueData AS InvNumber_Invoice
                                  , MIString_GoodsName.ValueData         AS GoodsName
                             FROM tmpMI_Child AS MovementItem
                                  LEFT JOIN tmpMIString_Child AS MIString_GoodsName
-                                                             ON MIString_GoodsName.MovementItemId = MovementItem.Id
+                                                             ON MIString_GoodsName.MovementItemId = MovementItem.MovementItemId
                                                             AND MIString_GoodsName.DescId = zc_MIString_GoodsName()
                                  LEFT JOIN tmpMIString_Child AS MIString_InvNumber_Invoice
-                                                             ON MIString_InvNumber_Invoice.MovementItemId = MovementItem.Id
+                                                             ON MIString_InvNumber_Invoice.MovementItemId = MovementItem.MovementItemId
                                                             AND MIString_InvNumber_Invoice.DescId = zc_MIString_InvNumber_Invoice()
                            )
 
@@ -251,14 +287,14 @@ BEGIN
                             , MILinkObject_Contract.ObjectId   AS ContractId
 
                               -- замена
-                            , COALESCE (tmpMI_Child.Amount, MIFloat_AmountPlan.ValueData) AS AmountPlan
+                            , COALESCE (tmpMI_Child.AmountPlan_next, MIFloat_AmountPlan.ValueData) AS AmountPlan
                              -- Child
                            , tmpMI_Child.InvNumber_Invoice  AS InvNumber_Invoice_Child 
                            , tmpMI_Child.GoodsName          AS GoodsName_Child
 
                         FROM tmpMI AS MovementItem
                              -- Child
-                             LEFT JOIN tmpMI_Data_Child AS tmpMI_Child ON tmpMI_Child.ParentId = MovementItem.Id
+                             LEFT JOIN tmpMI_Data_Child AS tmpMI_Child ON tmpMI_Child.MovementItemId_parent = MovementItem.Id
 
                              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId
                                                                  AND Object_Juridical.DescId = zc_Object_Juridical()
@@ -278,18 +314,18 @@ BEGIN
                                                        AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
                              -- Только БН
                              INNER JOIN ObjectLink AS ObjectLink_Contract_PaidKind
-                                                  ON ObjectLink_Contract_PaidKind.ObjectId      = MILinkObject_Contract.ObjectId
-                                                 AND ObjectLink_Contract_PaidKind.DescId        = zc_ObjectLink_Contract_PaidKind()
-                                                 -- Только БН
-                                                 AND ObjectLink_Contract_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
+                                                   ON ObjectLink_Contract_PaidKind.ObjectId      = MILinkObject_Contract.ObjectId
+                                                  AND ObjectLink_Contract_PaidKind.DescId        = zc_ObjectLink_Contract_PaidKind()
+                                                  -- Только БН
+                                                  AND ObjectLink_Contract_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
 
                              LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
                                                   ON ObjectLink_Contract_InfoMoney.ObjectId = MILinkObject_Contract.ObjectId
                                                  AND ObjectLink_Contract_InfoMoney.DescId   = zc_ObjectLink_Contract_InfoMoney()
                              LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_Contract_InfoMoney.ChildObjectId
 
-                        WHERE COALESCE (MIBoolean_AmountPlan.ValueData, TRUE) = TRUE
-                          AND COALESCE (MIFloat_AmountPlan.ValueData,0) <> 0 
+                        WHERE COALESCE (tmpMI_Child.isAmountPlan, MIBoolean_AmountPlan.ValueData, TRUE) = TRUE
+                          AND COALESCE (tmpMI_Child.AmountPlan_next, MIFloat_AmountPlan.ValueData, 0) <> 0 
                           AND (COALESCE (MIFloat_Number.ValueData,0) = inNPP OR COALESCE (inIsNPP, FALSE) = FALSE)
                      )
      , tmpContract_View AS (SELECT * FROM Object_Contract_View WHERE Object_Contract_View.ContractId IN (SELECT DISTINCT tmpMILO_Contract.ObjectId FROM tmpMILO_Contract))
