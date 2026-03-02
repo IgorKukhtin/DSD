@@ -1087,26 +1087,26 @@ end;
 procedure TLoadFormTest.LoadOrderFinanceMovementFormTest;
 begin
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceJournalForm_1'));
-  TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceJournalForm_1');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceMovementForm_1'));
-  TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceMovementForm_1');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceMovementForm');
 
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceSBJournalForm_2'));
-  TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceSBJournalForm_2');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceMovementSBForm_2'));
-  TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceMovementSBForm_2');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceSBJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceSBJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceMovementSBForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceMovementSBForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinance_SBForm_3'));
-  TdsdFormStorageFactory.GetStorage.Load('TOrderFinance_SBForm_3');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinance_SBForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderFinance_SBForm');
 
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinance_PlanDateForm_4'));
-  TdsdFormStorageFactory.GetStorage.Load('TOrderFinance_PlanDateForm_4');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinance_PlanDateForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderFinance_PlanDateForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinance_PlanForm_5'));
-  TdsdFormStorageFactory.GetStorage.Load('TOrderFinance_PlanForm_5');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinance_PlanForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderFinance_PlanForm');
 
   exit;
 
