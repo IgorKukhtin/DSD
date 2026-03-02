@@ -3597,7 +3597,7 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\OrderFinanceJournal.pas">
-				<Form>OrderFinanceJournalForm_1</Form>
+				<Form>OrderFinanceJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\JuridicalOrderFinance.pas">
@@ -5727,7 +5727,7 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\OrderFinanceMovement.pas">
-				<Form>OrderFinanceMovementForm_1</Form>
+				<Form>OrderFinanceMovementForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\OrderFinance_Object.pas">
@@ -5751,7 +5751,7 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\OrderFinance_Plan.pas">
-				<Form>OrderFinance_PlanForm_5</Form>
+				<Form>OrderFinance_PlanForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\WeekPeriodDialog.pas">
@@ -5775,7 +5775,7 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\OrderFinance_PlanDate.pas">
-				<Form>OrderFinance_PlanDateForm_4</Form>
+				<Form>OrderFinance_PlanDateForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\Sale_PartionQEdit.pas">
@@ -5787,11 +5787,11 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\OrderFinance_SB.pas">
-				<Form>OrderFinance_SBForm_3</Form>
+				<Form>OrderFinance_SBForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\OrderFinanceSBJournal.pas">
-				<Form>OrderFinanceSBJournalForm_2</Form>
+				<Form>OrderFinanceSBJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Cash_Branch.pas">
@@ -5807,7 +5807,7 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\OrderFinanceMovementSB.pas">
-				<Form>OrderFinanceMovementSBForm_2</Form>
+				<Form>OrderFinanceMovementSBForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
