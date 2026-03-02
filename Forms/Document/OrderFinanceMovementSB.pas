@@ -28,7 +28,7 @@ uses
   ExternalLoad, cxSplitter;
 
 type
-  TOrderFinanceMovementSBForm_2 = class(TParentForm)
+  TOrderFinanceMovementSBForm = class(TParentForm)
     FormParams: TdsdFormParams;
     spSelectMI: TdsdStoredProc;
     dxBarManager: TdxBarManager;
@@ -388,5 +388,5 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TOrderFinanceMovementSBForm_2);
+  RegisterClass(TOrderFinanceMovementSBForm);
 end.

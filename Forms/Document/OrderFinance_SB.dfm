@@ -1,10 +1,9 @@
-inherited OrderFinance_SBForm_3: TOrderFinance_SBForm_3
-  Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1042#1080#1079#1072' '#1057#1041')-3'
+inherited OrderFinance_SBForm: TOrderFinance_SBForm
+  Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1042#1080#1079#1072' '#1057#1041')*'
   ClientHeight = 399
   ClientWidth = 1020
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -126
   ExplicitWidth = 1036
   ExplicitHeight = 438
   PixelsPerInch = 96
@@ -2161,8 +2160,8 @@ inherited OrderFinance_SBForm_3: TOrderFinance_SBForm_3
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 616
-    Top = 264
+    Left = 600
+    Top = 232
   end
   object spSelect_ExportNPP: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_OrderFinancePlan_XML'

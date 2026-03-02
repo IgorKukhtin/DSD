@@ -27,7 +27,7 @@ uses
   cxImageComboBox, cxCheckBox, dsdInternetAction;
 
 type
-  TOrderFinance_PlanDateForm_4 = class(TAncestorReportForm)
+  TOrderFinance_PlanDateForm = class(TAncestorReportForm)
     cxLabel3: TcxLabel;
     cxLabel4: TcxLabel;
     GuidesWeek_Date1: TdsdGuides;
@@ -79,7 +79,7 @@ type
     spSelect_ExportNPP: TdsdStoredProc;
     actExport_fileNPP: TdsdStoredProcExportToFile;
     dxBarButton1: TdxBarButton;
-    DateDay: TcxGridDBColumn;
+    OperDate_Plan_day: TcxGridDBColumn;
     WeekDay: TcxGridDBColumn;
     MovementItemProtocolOpenForm: TdsdOpenForm;
     bbMovementItemProtocolOpen: TdxBarButton;
@@ -105,7 +105,7 @@ type
     mactExport_msg: TMultiAction;
     bbExport_body: TdxBarButton;
     FonColor_string: TcxGridDBColumn;
-    Amount_Child: TcxGridDBColumn;
+    AmountPlan_next: TcxGridDBColumn;
     mactUpdateStatus_Complete: TMultiAction;
     cbDetail: TcxCheckBox;
     actRefreshDetail: TdsdDataSetRefresh;
@@ -114,6 +114,7 @@ type
     cxLabel23: TcxLabel;
     edSearch: TcxTextEdit;
     FieldFilter: TdsdFieldFilter;
+    OperDate_next: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -124,6 +125,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TOrderFinance_PlanDateForm_4);
+  RegisterClass(TOrderFinance_PlanDateForm);
 
 end.

@@ -28,7 +28,7 @@ uses
   ExternalLoad;
 
 type
-  TOrderFinanceMovementForm_1 = class(TParentForm)
+  TOrderFinanceMovementForm = class(TParentForm)
     FormParams: TdsdFormParams;
     spSelectMI: TdsdStoredProc;
     dxBarManager: TdxBarManager;
@@ -339,5 +339,5 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TOrderFinanceMovementForm_1);
+  RegisterClass(TOrderFinanceMovementForm);
 end.

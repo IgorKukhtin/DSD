@@ -28,7 +28,7 @@ uses
   dsdGuides, cxButtonEdit, dsdCommon;
 
 type
-  TOrderFinanceJournalForm_1 = class(TParentForm)
+  TOrderFinanceJournalForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -115,6 +115,7 @@ type
     isSignWait_1: TcxGridDBColumn;
     TotalSumm_all: TcxGridDBColumn;
     AmountPlan_total: TcxGridDBColumn;
+    TotalSumm_next: TcxGridDBColumn;
   private
   public
   end;
@@ -124,6 +125,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TOrderFinanceJournalForm_1);
+  RegisterClass(TOrderFinanceJournalForm);
 
 end.

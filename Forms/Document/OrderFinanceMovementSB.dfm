@@ -1,7 +1,7 @@
-object OrderFinanceMovementSBForm_2: TOrderFinanceMovementSBForm_2
+object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081'> ('#1057#1095#1077#1090#1072')-2'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081'> ('#1057#1095#1077#1090#1072')*'
   ClientHeight = 612
   ClientWidth = 1164
   Color = clBtnFace
@@ -1701,9 +1701,6 @@ object OrderFinanceMovementSBForm_2: TOrderFinanceMovementSBForm_2
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -5283,6 +5280,14 @@ object OrderFinanceMovementSBForm_2: TOrderFinanceMovementSBForm_2
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioId_child'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementItemId_child'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inMovementId'
         Value = Null
         Component = FormParams
@@ -5341,6 +5346,24 @@ object OrderFinanceMovementSBForm_2: TOrderFinanceMovementSBForm_2
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioAmountPlan_next'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountPlan_next'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioAmountPlan_next_old'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountPlan_next_old'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inOperDate_Amount_top'
         Value = Null
         Component = edOperDate_Amount
@@ -5352,7 +5375,7 @@ object OrderFinanceMovementSBForm_2: TOrderFinanceMovementSBForm_2
         Name = 'ioOperDate_Amount'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'OperDate_Amount'
+        ComponentItem = 'OperDate_next'
         DataType = ftDateTime
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
@@ -5361,7 +5384,7 @@ object OrderFinanceMovementSBForm_2: TOrderFinanceMovementSBForm_2
         Name = 'ioOperDate_Amount_old'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'OperDate_Amount_old'
+        ComponentItem = 'OperDate_next_old'
         DataType = ftDateTime
         ParamType = ptInputOutput
         MultiSelectSeparator = ','

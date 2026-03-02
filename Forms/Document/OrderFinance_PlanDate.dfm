@@ -1,9 +1,10 @@
-inherited OrderFinance_PlanDateForm_4: TOrderFinance_PlanDateForm_4
-  Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1087#1086' '#1076#1072#1090#1072#1084')-4'
+inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
+  Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1087#1086' '#1076#1072#1090#1072#1084')*'
   ClientHeight = 410
   ClientWidth = 1020
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -126
   ExplicitWidth = 1036
   ExplicitHeight = 449
   PixelsPerInch = 96
@@ -31,7 +32,7 @@ inherited OrderFinance_PlanDateForm_4: TOrderFinance_PlanDateForm_4
             item
               Format = ',0.00'
               Kind = skSum
-              Column = AmountPlan_day
+              Column = Amount_Plan_day
             end
             item
               Format = ',0.00'
@@ -106,7 +107,7 @@ inherited OrderFinance_PlanDateForm_4: TOrderFinance_PlanDateForm_4
             item
               Format = ',0.00'
               Kind = skSum
-              Column = Amount_Child
+              Column = AmountPlan_next
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -117,7 +118,7 @@ inherited OrderFinance_PlanDateForm_4: TOrderFinance_PlanDateForm_4
             item
               Format = ',0.00'
               Kind = skSum
-              Column = AmountPlan_day
+              Column = Amount_Plan_day
             end
             item
               Format = ',0.00'
@@ -192,7 +193,12 @@ inherited OrderFinance_PlanDateForm_4: TOrderFinance_PlanDateForm_4
             item
               Format = ',0.00'
               Kind = skSum
-              Column = Amount_Child
+              Column = AmountPlan_next
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = JuridicalName
             end>
           OptionsData.Deleting = False
           OptionsView.GroupByBox = True
@@ -587,20 +593,8 @@ inherited OrderFinance_PlanDateForm_4: TOrderFinance_PlanDateForm_4
             VisibleForCustomization = False
             Width = 60
           end
-          object Amount_Child: TcxGridDBColumn
-            Caption = #1055#1077#1088#1074#1080#1095#1085#1099#1081' '#1087#1083#1072#1085' '#1085#1072' '#1085#1077#1076'.'
-            DataBinding.FieldName = 'Amount_Child'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = '***'#1055#1083#1072#1085' '#1048#1058#1054#1043#1054' ('#1088#1072#1089#1095#1077#1090')'
-            Options.Editing = False
-            Width = 100
-          end
           object Amount: TcxGridDBColumn
-            Caption = #1055#1083#1072#1090#1077#1078#1085#1099#1081' '#1087#1083#1072#1085' '#1085#1072' '#1085#1077#1076'.'
+            Caption = #1055#1077#1088#1074#1080#1095#1085#1099#1081' '#1087#1083#1072#1085' '#1085#1072' '#1085#1077#1076'.'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -611,6 +605,26 @@ inherited OrderFinance_PlanDateForm_4: TOrderFinance_PlanDateForm_4
             Options.Editing = False
             Width = 80
           end
+          object AmountPlan_next: TcxGridDBColumn
+            Caption = #1055#1083#1072#1090#1077#1078#1085#1099#1081' '#1087#1083#1072#1085' '#1085#1072' '#1085#1077#1076'.'
+            DataBinding.FieldName = 'AmountPlan_next'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object OperDate_next: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1083#1072#1085
+            DataBinding.FieldName = 'OperDate_next'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1055#1083#1072#1090#1077#1078#1085#1099#1081' '#1087#1083#1072#1085' '#1085#1072' '#1085#1077#1076#1077#1083#1102
+            Options.Editing = False
+            Width = 70
+          end
           object WeekDay: TcxGridDBColumn
             Caption = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080
             DataBinding.FieldName = 'WeekDay'
@@ -620,18 +634,19 @@ inherited OrderFinance_PlanDateForm_4: TOrderFinance_PlanDateForm_4
             Options.Editing = False
             Width = 55
           end
-          object DateDay: TcxGridDBColumn
+          object OperDate_Plan_day: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'DateDay'
+            DataBinding.FieldName = 'OperDate_Plan_day'
             PropertiesClassName = 'TcxDateEditProperties'
             Properties.DisplayFormat = 'DD.MM.YYYY'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' '#1082' '#1086#1087#1083#1072#1090#1077
             Width = 70
           end
-          object AmountPlan_day: TcxGridDBColumn
+          object Amount_Plan_day: TcxGridDBColumn
             Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' '#1082' '#1086#1087#1083#1072#1090#1077
-            DataBinding.FieldName = 'AmountPlan_day'
+            DataBinding.FieldName = 'Amount_Plan_day'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -711,16 +726,6 @@ inherited OrderFinance_PlanDateForm_4: TOrderFinance_PlanDateForm_4
             Options.Editing = False
             Width = 70
           end
-          object isAmountPlan_day: TcxGridDBColumn
-            Caption = #1055#1083#1072#1090#1080#1084' ('#1076#1072'/'#1085#1077#1090')'
-            DataBinding.FieldName = 'isAmountPlan_day'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1083#1072#1090#1080#1084' ('#1076#1072'/'#1085#1077#1090')'
-            Options.Editing = False
-            Width = 70
-          end
           object AmountRemains: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1076#1086#1083#1075
             DataBinding.FieldName = 'AmountRemains'
@@ -731,6 +736,16 @@ inherited OrderFinance_PlanDateForm_4: TOrderFinance_PlanDateForm_4
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object isAmountPlan_day: TcxGridDBColumn
+            Caption = #1055#1083#1072#1090#1080#1084' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isAmountPlan_day'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1090#1080#1084' ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 70
           end
           object AmountPartner: TcxGridDBColumn
             Caption = #1044#1086#1083#1075' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081
@@ -1816,7 +1831,7 @@ inherited OrderFinance_PlanDateForm_4: TOrderFinance_PlanDateForm_4
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_OrderFinance_PlanDate'
+    StoredProcName = 'gpSelect_Movement_OrderFinance_PlanDate_4'
     Params = <
       item
         Name = 'inStartDate'
@@ -2122,10 +2137,18 @@ inherited OrderFinance_PlanDateForm_4: TOrderFinance_PlanDateForm_4
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementItemId_Detail'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementItemId_Detail'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inDateDay'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'DateDay'
+        ComponentItem = 'OperDate_Plan_day'
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2134,25 +2157,16 @@ inherited OrderFinance_PlanDateForm_4: TOrderFinance_PlanDateForm_4
         Name = 'ioDateDay_old'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'DateDay_old'
+        ComponentItem = 'OperDate_Plan_day_old'
         DataType = ftDateTime
         ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmount'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Amount'
-        DataType = ftFloat
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'ioAmountPlan_day'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'AmountPlan_day'
+        ComponentItem = 'Amount_Plan_day'
         DataType = ftFloat
         ParamType = ptInputOutput
         MultiSelectSeparator = ','

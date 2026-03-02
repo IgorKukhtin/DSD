@@ -1,7 +1,7 @@
-object OrderFinanceJournalForm_1: TOrderFinanceJournalForm_1
+object OrderFinanceJournalForm: TOrderFinanceJournalForm
   Left = 0
   Top = 0
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081'>-1'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081'>*'
   ClientHeight = 381
   ClientWidth = 984
   Color = clBtnFace
@@ -28,7 +28,7 @@ object OrderFinanceJournalForm_1: TOrderFinanceJournalForm_1
     object deStart: TcxDateEdit
       Left = 107
       Top = 5
-      EditValue = 45658d
+      EditValue = 46023d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -37,7 +37,7 @@ object OrderFinanceJournalForm_1: TOrderFinanceJournalForm_1
     object deEnd: TcxDateEdit
       Left = 316
       Top = 5
-      EditValue = 45658d
+      EditValue = 46023d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -129,6 +129,11 @@ object OrderFinanceJournalForm_1: TOrderFinanceJournalForm_1
           Format = ',0.####'
           Kind = skSum
           Column = AmountPlan_total
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSumm_next
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -194,6 +199,11 @@ object OrderFinanceJournalForm_1: TOrderFinanceJournalForm_1
           Format = ',0.####'
           Kind = skSum
           Column = AmountPlan_total
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSumm_next
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -309,7 +319,7 @@ object OrderFinanceJournalForm_1: TOrderFinanceJournalForm_1
         Width = 154
       end
       object TotalSumm: TcxGridDBColumn
-        Caption = #1055#1083#1072#1090#1077#1078#1085#1099#1081' '#1087#1083#1072#1085' '#1085#1072' '#1085#1077#1076'.'
+        Caption = #1055#1077#1088#1074#1080#1095#1085#1099#1081' '#1087#1083#1072#1085' '#1085#1072' '#1085#1077#1076'.'
         DataBinding.FieldName = 'TotalSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -320,51 +330,62 @@ object OrderFinanceJournalForm_1: TOrderFinanceJournalForm_1
         Options.Editing = False
         Width = 80
       end
+      object TotalSumm_next: TcxGridDBColumn
+        Caption = #1055#1083#1072#1090#1077#1078#1085#1099#1081' '#1087#1083#1072#1085' '#1085#1072' '#1085#1077#1076'.'
+        DataBinding.FieldName = 'TotalSumm_next'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1083#1072#1090#1077#1078#1085#1099#1081' '#1087#1083#1072#1085' '#1085#1072' '#1085#1077#1076#1077#1083#1102' '#1089' '#1091#1095#1077#1090#1086#1084' '#1087#1088#1072#1074#1086#1082' '#1057#1041
+        Width = 80
+      end
       object TotalSumm_all: TcxGridDBColumn
-        Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' '#1085#1072' '#1085#1077#1076#1077#1083#1102
+        Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085' '#1083#1080#1084#1080#1090' '#1085#1072' '#1085#1077#1076'.'
         DataBinding.FieldName = 'TotalSumm_all'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1085#1072#1103' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102' '#1087#1086' '#1043#1088#1091#1087#1087#1072#1084
+        HeaderHint = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1085#1072#1103' '#1089#1091#1084#1084#1072' '#1083#1080#1084#1080#1090#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102' '#1087#1086' '#1074#1089#1077#1084' '#1043#1088#1091#1087#1087#1072#1084
         Options.Editing = False
         Width = 85
       end
       object TotalSumm_1: TcxGridDBColumn
-        Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' '#1043#1088'.1'
+        Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085' '#1083#1080#1084#1080#1090' '#1043#1088'.1'
         DataBinding.FieldName = 'TotalSumm_1'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1085#1072#1103' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102
+        HeaderHint = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1085#1072#1103' '#1089#1091#1084#1084#1072' '#1083#1080#1084#1080#1090#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102
         Options.Editing = False
         Width = 85
       end
       object TotalSumm_2: TcxGridDBColumn
-        Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' '#1043#1088'.2'
+        Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' '#1083#1080#1084#1080#1090' '#1043#1088'.2'
         DataBinding.FieldName = 'TotalSumm_2'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1085#1072#1103' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102
+        HeaderHint = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1085#1072#1103' '#1089#1091#1084#1084#1072' '#1083#1080#1084#1080#1090#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102
         Options.Editing = False
         Width = 85
       end
       object TotalSumm_3: TcxGridDBColumn
-        Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' '#1043#1088'.3'
+        Caption = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1086' '#1083#1080#1084#1080#1090' '#1043#1088'.3'
         DataBinding.FieldName = 'TotalSumm_3'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1085#1072#1103' '#1089#1091#1084#1084#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102
+        HeaderHint = #1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1085#1072#1103' '#1089#1091#1084#1084#1072' '#1083#1080#1084#1080#1090#1072' '#1085#1072' '#1085#1077#1076#1077#1083#1102
         Options.Editing = False
         Width = 85
       end
@@ -893,8 +914,8 @@ object OrderFinanceJournalForm_1: TOrderFinanceJournalForm_1
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
-      FormName = 'TOrderFinanceMovementForm_1'
-      FormNameParam.Value = 'TOrderFinanceMovementForm_1'
+      FormName = 'TOrderFinanceMovementForm'
+      FormNameParam.Value = 'TOrderFinanceMovementForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -950,8 +971,8 @@ object OrderFinanceJournalForm_1: TOrderFinanceJournalForm_1
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
-      FormName = 'TOrderFinanceMovementForm_1'
-      FormNameParam.Value = 'TOrderFinanceMovementForm_1'
+      FormName = 'TOrderFinanceMovementForm'
+      FormNameParam.Value = 'TOrderFinanceMovementForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

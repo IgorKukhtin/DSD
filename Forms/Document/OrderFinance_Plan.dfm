@@ -1,5 +1,5 @@
-inherited OrderFinance_PlanForm_5: TOrderFinance_PlanForm_5
-  Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')-5'
+inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
+  Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')*'
   ClientHeight = 534
   ClientWidth = 1020
   AddOnFormData.RefreshAction = actRefreshStart
@@ -72,6 +72,16 @@ inherited OrderFinance_PlanForm_5: TOrderFinance_PlanForm_5
               Format = ',0.00'
               Kind = skSum
               Column = AmountPartner
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountPlan_next
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -123,6 +133,21 @@ inherited OrderFinance_PlanForm_5: TOrderFinance_PlanForm_5
               Format = ',0.00'
               Kind = skSum
               Column = AmountPartner
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountPlan_next
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = JuridicalName
             end>
           OptionsData.Deleting = False
           OptionsView.GroupByBox = True
@@ -477,7 +502,7 @@ inherited OrderFinance_PlanForm_5: TOrderFinance_PlanForm_5
             Width = 60
           end
           object Amount: TcxGridDBColumn
-            Caption = #1055#1083#1072#1090#1077#1078#1085#1099#1081' '#1087#1083#1072#1085' '#1085#1072' '#1085#1077#1076'.'
+            Caption = #1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1087#1083#1072#1085' '#1085#1072' '#1085#1077#1076'.'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -487,8 +512,20 @@ inherited OrderFinance_PlanForm_5: TOrderFinance_PlanForm_5
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1099#1081' '#1055#1083#1072#1085' '#1085#1072' '#1085#1077#1076#1077#1083#1102
             Options.Editing = False
-            VisibleForCustomization = False
-            Width = 80
+            Width = 100
+          end
+          object AmountPlan_next: TcxGridDBColumn
+            Caption = #1055#1083#1072#1090#1077#1078#1085#1099#1081' '#1087#1083#1072#1085' '#1085#1072' '#1085#1077#1076'.'
+            DataBinding.FieldName = 'AmountPlan_next'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.ReadOnly = False
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
           end
           object AmountRemains: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1076#1086#1083#1075
@@ -789,18 +826,6 @@ inherited OrderFinance_PlanForm_5: TOrderFinance_PlanForm_5
             HeaderHint = #8470' '#1089#1095#1077#1090#1072
             Width = 100
           end
-          object Amount_Child: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072
-            DataBinding.FieldName = 'Amount_Child'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            Properties.ReadOnly = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 90
-          end
           object FonColor_AmountPlan_1: TcxGridDBColumn
             DataBinding.FieldName = 'FonColor_AmountPlan_1'
             Visible = False
@@ -906,6 +931,7 @@ inherited OrderFinance_PlanForm_5: TOrderFinance_PlanForm_5
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #8470' '#1074' '#1086#1095#1077#1088#1077#1076#1080' '#1085#1072' '#1101#1082#1089#1087#1086#1088#1090' '#1074' '#1073#1072#1085#1082
+            Options.Editing = False
             Width = 70
           end
         end
@@ -1683,7 +1709,7 @@ inherited OrderFinance_PlanForm_5: TOrderFinance_PlanForm_5
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_OrderFinance_Plan'
+    StoredProcName = 'gpSelect_Movement_OrderFinance_Plan_5'
     Params = <
       item
         Name = 'inStartDate'
@@ -1938,7 +1964,7 @@ inherited OrderFinance_PlanForm_5: TOrderFinance_PlanForm_5
       item
       end>
     Left = 368
-    Top = 80
+    Top = 48
   end
   object GuidesWeek_Date1: TdsdGuides
     KeyField = 'WeekNumber'
@@ -2220,6 +2246,46 @@ inherited OrderFinance_PlanForm_5: TOrderFinance_PlanForm_5
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementItemId_Detail_1'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementItemId_Detail_1'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementItemId_Detail_2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementItemId_Detail_2'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementItemId_Detail_3'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementItemId_Detail_3'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementItemId_Detail_4'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementItemId_Detail_4'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementItemId_Detail_5'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementItemId_Detail_5'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inInvNumber_Invoice_Child'
         Value = Null
         Component = MasterCDS
@@ -2266,8 +2332,8 @@ inherited OrderFinance_PlanForm_5: TOrderFinance_PlanForm_5
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 448
-    Top = 96
+    Left = 464
+    Top = 56
   end
   object spGet_CurrentWeekDay: TdsdStoredProc
     StoredProcName = 'spGet_CurrentWeekDay'
@@ -2436,8 +2502,8 @@ inherited OrderFinance_PlanForm_5: TOrderFinance_PlanForm_5
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 390
-    Top = 159
+    Left = 398
+    Top = 199
   end
   object ExportCDS: TClientDataSet
     Aggregates = <>

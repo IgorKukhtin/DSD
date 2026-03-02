@@ -28,7 +28,7 @@ uses
   dsdGuides, cxButtonEdit, dsdCommon;
 
 type
-  TOrderFinanceSBJournalForm_2 = class(TParentForm)
+  TOrderFinanceSBJournalForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -124,6 +124,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TOrderFinanceSBJournalForm_2);
+  RegisterClass(TOrderFinanceSBJournalForm);
 
 end.

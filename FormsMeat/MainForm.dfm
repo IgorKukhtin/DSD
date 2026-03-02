@@ -10650,7 +10650,7 @@ inherited MainForm: TMainForm
     object actOrderFinanceMov_2: TdsdOpenForm
       Category = #1055#1083#1072#1085#1080#1088#1086#1074#1085#1080#1077
       MoveParams = <>
-      Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081'-1'
+      Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081'*'
       FormName = 'TOrderFinanceJournalForm_1'
       FormNameParam.Value = 'TOrderFinanceJournalForm_1'
       FormNameParam.DataType = ftString
@@ -10666,7 +10666,7 @@ inherited MainForm: TMainForm
     object actOrderFinanceSBJournal_3: TdsdOpenForm
       Category = #1055#1083#1072#1085#1080#1088#1086#1074#1085#1080#1077
       MoveParams = <>
-      Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1057#1095#1077#1090#1072')-2'
+      Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1057#1095#1077#1090#1072')*'
       FormName = 'TOrderFinanceSBJournalForm_2'
       FormNameParam.Value = 'TOrderFinanceSBJournalForm_2'
       FormNameParam.DataType = ftString
@@ -10682,7 +10682,7 @@ inherited MainForm: TMainForm
     object actOrderFinance_SB_4: TdsdOpenForm
       Category = #1055#1083#1072#1085#1080#1088#1086#1074#1085#1080#1077
       MoveParams = <>
-      Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1042#1080#1079#1072' '#1057#1041')-3'
+      Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1042#1080#1079#1072' '#1057#1041')*'
       FormName = 'TOrderFinance_SBForm_3'
       FormNameParam.Value = 'TOrderFinance_SBForm_3'
       FormNameParam.DataType = ftString
@@ -10698,7 +10698,7 @@ inherited MainForm: TMainForm
     object actOrderFinance_PlanDate_5: TdsdOpenForm
       Category = #1055#1083#1072#1085#1080#1088#1086#1074#1085#1080#1077
       MoveParams = <>
-      Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1087#1086' '#1076#1072#1090#1072#1084')-4'
+      Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1087#1086' '#1076#1072#1090#1072#1084')*'
       FormName = 'TOrderFinance_PlanDateForm_4'
       FormNameParam.Value = 'TOrderFinance_PlanDateForm_4'
       FormNameParam.DataType = ftString
@@ -10714,7 +10714,7 @@ inherited MainForm: TMainForm
     object actOrderFinance_Plan_6: TdsdOpenForm
       Category = #1055#1083#1072#1085#1080#1088#1086#1074#1085#1080#1077
       MoveParams = <>
-      Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')-5'
+      Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')*'
       FormName = 'TOrderFinance_PlanForm_5'
       FormNameParam.Value = 'TOrderFinance_PlanForm_5'
       FormNameParam.DataType = ftString

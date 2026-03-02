@@ -1,7 +1,7 @@
-object OrderFinanceMovementForm_1: TOrderFinanceMovementForm_1
+object OrderFinanceMovementForm: TOrderFinanceMovementForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081'>-1'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1083#1072#1090#1077#1078#1077#1081'>*'
   ClientHeight = 612
   ClientWidth = 1065
   Color = clBtnFace
@@ -4511,6 +4511,24 @@ object OrderFinanceMovementForm_1: TOrderFinanceMovementForm_1
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioAmountPlan_next'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountPlan_next'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioAmountPlan_next_old'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountPlan_next_old'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inOperDate_Amount_top'
         Value = Null
         Component = edOperDate_Amount
@@ -4522,7 +4540,7 @@ object OrderFinanceMovementForm_1: TOrderFinanceMovementForm_1
         Name = 'ioOperDate_Amount'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'OperDate_Amount'
+        ComponentItem = 'OperDate_next'
         DataType = ftDateTime
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
@@ -4531,7 +4549,7 @@ object OrderFinanceMovementForm_1: TOrderFinanceMovementForm_1
         Name = 'ioOperDate_Amount_old'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'OperDate_Amount_old'
+        ComponentItem = 'OperDate_next_old'
         DataType = ftDateTime
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
