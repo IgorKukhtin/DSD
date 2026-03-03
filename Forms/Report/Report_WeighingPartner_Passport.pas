@@ -94,6 +94,8 @@ type
     Amount_sh_inv: TcxGridDBColumn;
     isErased: TcxGridDBColumn;
     bbBranchCode: TcxGridDBColumn;
+    actSelectMIPrintPassport_prod: TdsdPrintAction;
+    actPrintPassport_prod: TdxBarButton;
   private
     { Private declarations }
   public
