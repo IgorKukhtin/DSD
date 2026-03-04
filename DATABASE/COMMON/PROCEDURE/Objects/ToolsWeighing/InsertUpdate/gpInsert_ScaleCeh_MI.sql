@@ -101,6 +101,7 @@ $BODY$
    DECLARE vbUnitId         Integer;
    DECLARE vbMovementDescId Integer;
    DECLARE vbOperDate       TDateTime;
+   DECLARE vbMI_Id_check    Integer;
 
    DECLARE vbWeight_goods              TFloat;
    DECLARE vbWeightTare_goods          TFloat;
@@ -274,6 +275,40 @@ BEGIN
           THEN
               RAISE EXCEPTION 'Ошибка.Кол-во батонов не введено.';
           END IF;
+     END IF;
+     
+     -- проверка
+     IF inPartionCellId > 0
+     THEN
+         vbMI_Id_check:= lpCheck_MI_Send_PartionCell (inPartionCellId   := inPartionCellId
+                                                    , inGoodsId         := inGoodsId
+                                                    , inGoodsKindId     := inGoodsKindId
+                                                    , inPartionGoodsDate:= vbOperDate
+                                                    , inUserId          := vbUserId
+                                                     );
+         IF vbMI_Id_check > 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Для ячейки <%> %уже установлена партия <%> % <%> <%> <%>% <%> <%>.%(%)'
+                           , lfGet_Object_ValueData (inPartionCellId)
+                           , CHR (13)
+                           , zfConvert_DateToString ((SELECT COALESCE (MIDate.ValueData, Movement.OperDate)
+                                                      FROM MovementItem
+                                                           LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                                           LEFT JOIN MovementItemDate AS MIDate ON MIDate.MovementItemId = vbMI_Id_check AND MIDate.DescId = zc_MIDate_PartionGoods()
+                                                      WHERE MovementItem.Id = vbMI_Id_check
+                                                     ))
+                           , CHR (13)
+                           , (SELECT  Movement.InvNumber FROM MovementItem AS MI JOIN Movement ON Movement.Id = MI.MovementId WHERE MI.Id = vbMI_Id_check)
+                           , (SELECT  zfConvert_DateToString (Movement.OperDate) FROM MovementItem AS MI JOIN Movement ON Movement.Id = MI.MovementId WHERE MI.Id = vbMI_Id_check)
+                           , (SELECT  MovementDesc.ItemName FROM MovementItem AS MI JOIN Movement ON Movement.Id = MI.MovementId JOIN MovementDesc ON MovementDesc.Id = Movement.DescId WHERE MI.Id = vbMI_Id_check)
+                           , CHR (13)
+                           , (SELECT lfGet_Object_ValueData (MI.ObjectId) FROM MovementItem AS MI WHERE MI.Id = vbMI_Id_check)
+                           , (SELECT lfGet_Object_ValueData_sh (MILO.Objectid) FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = vbMI_Id_check AND MILO.DescId = zc_MILinkObject_GoodsKind())
+                           , CHR (13)
+                           , vbMI_Id_check
+                            ;
+         END IF;
+
      END IF;
 
      -- сохранили
