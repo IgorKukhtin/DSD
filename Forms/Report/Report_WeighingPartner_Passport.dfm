@@ -1208,6 +1208,38 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actSelectMIPrintPassport_prod: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectMIPrintPassport
+      StoredProcList = <
+        item
+          StoredProc = spSelectMIPrintPassport
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1055#1072#1089#1087#1086#1088#1090#1072' '#1087#1088#1086#1076#1091#1082#1090#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1055#1072#1089#1087#1086#1088#1090#1072' '#1087#1088#1086#1076#1091#1082#1090#1072
+      ImageIndex = 20
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <
+        item
+          Name = 'isPrintTermo'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMI_WeighingProductionPassport_prod'
+      ReportNameParam.Value = 'PrintMI_WeighingProductionPassport_prod'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actSelectMIPrintPassport: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1486,6 +1518,10 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
         end
         item
           Visible = True
+          ItemName = 'actPrintPassport_prod'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1503,6 +1539,10 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
     end
     object bbPrint: TdxBarButton
       Action = actSelectMIPrintPassport
+      Category = 0
+    end
+    object actPrintPassport_prod: TdxBarButton
+      Action = actSelectMIPrintPassport_prod
       Category = 0
     end
   end
@@ -1531,8 +1571,8 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
       end
       item
       end>
-    Left = 224
-    Top = 136
+    Left = 288
+    Top = 200
   end
   object FormParams: TdsdFormParams
     Params = <

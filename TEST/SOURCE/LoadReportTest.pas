@@ -280,8 +280,12 @@ begin
  
   LoadReportFromFile('PrintMovement_WeighingProductionBrutto', ReportPath + '\Товарный Учет\PrintMovement_WeighingProductionBrutto.fr3');
   exit;
+  }
 
+  LoadReportFromFile('PrintMI_WeighingProductionPassport_prod', ReportPath + '\Товарный Учет\PrintMI_WeighingProductionPassport_prod.fr3');
+  exit;
 
+   {
   LoadReportFromFile('PrintMI_WeighingProductionPassport', ReportPath + '\Товарный Учет\PrintMI_WeighingProductionPassport.fr3');
   exit;
 
