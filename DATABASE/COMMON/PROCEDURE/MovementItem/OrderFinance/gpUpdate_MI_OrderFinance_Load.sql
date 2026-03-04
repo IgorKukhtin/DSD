@@ -28,7 +28,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderFinance());
 
- --RAISE EXCEPTION 'Ошибка.%  % % % %', inInfoMoneyName, inUnitName, inPositionName, inPersonalServiceListName,inBranchName ;
+RAISE EXCEPTION 'Ошибка.%  % % % %', inInfoMoneyName, inUnitName, inPositionName, inPersonalServiceListName,inBranchName ;
  
 
      IF   COALESCE (inAmountPlan_1, 0) = 0
