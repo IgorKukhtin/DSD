@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderFinance_PlanDate_4 (
     IN inBankMainId        Integer , -- банк  Плательщик
     IN inStartWeekNumber   Integer , --
     IN inEndWeekNumber     Integer , -- временно, только 1 неделя
-    IN inIsShowAll         Boolean , --показать детально, т.е. показать данные из чайлд 
+    IN inIsShowAll         Boolean , --показать детально, т.е. показать данные из чайлд
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
@@ -68,6 +68,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
 
                -- Согласовано к оплате
              , Amount_Plan_day     TFloat
+             , Amount_Plan_day_old TFloat
 
                -- Дата Согласовано к оплате
              , OperDate_Plan_day TDateTime, OperDate_Plan_day_old TDateTime
@@ -95,9 +96,9 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , BankId_jof Integer
              , BankName_jof TVarChar
              , MFO_jof      TVarChar
-               -- 
+               --
              , MovementItemId_detail   Integer
-               -- 
+               --
              , MovementItemId_child    Integer
              , InvNumber_Child         TVarChar
              , InvNumber_Invoice_Child TVarChar
@@ -162,7 +163,7 @@ BEGIN
                                          AND MovementItem.DescId     = zc_MI_Child()
                                          AND MovementItem.isErased   = FALSE
                                       )
- 
+
                      , tmpMIFloat_Child AS (SELECT *
                                             FROM MovementItemFloat
                                             WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
@@ -180,7 +181,7 @@ BEGIN
                                             WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI_Child.Id FROM tmpMI_Child)
                                               AND MovementItemString.DescId IN (zc_MIString_GoodsName()
                                                                               , zc_MIString_InvNumber()
-                                                                              , zc_MIString_InvNumber_Invoice() 
+                                                                              , zc_MIString_InvNumber_Invoice()
                                                                               , zc_MIString_Comment()
                                                                               , zc_MIString_Comment_SB()
                                                                               )
@@ -245,7 +246,7 @@ BEGIN
                             LEFT JOIN tmpMIString_Child AS MIString_GoodsName
                                                         ON MIString_GoodsName.MovementItemId = MovementItem.Id
                                                        AND MIString_GoodsName.DescId = zc_MIString_GoodsName()
-          
+
                             LEFT JOIN tmpMIString_Child AS MIString_InvNumber
                                                         ON MIString_InvNumber.MovementItemId = MovementItem.Id
                                                        AND MIString_InvNumber.DescId = zc_MIString_InvNumber()
@@ -286,7 +287,7 @@ BEGIN
                             LEFT JOIN MovementItemDate AS MIDate_Update
                                                        ON MIDate_Update.MovementItemId = MovementItem.Id
                                                       AND MIDate_Update.DescId = zc_MIDate_Update()
-     
+
                             LEFT JOIN MovementItemLinkObject AS MILO_Insert
                                                              ON MILO_Insert.MovementItemId = MovementItem.Id
                                                             AND MILO_Insert.DescId = zc_MILinkObject_Insert()
@@ -304,7 +305,7 @@ BEGIN
                                                AND MovementItem.DescId     = zc_MI_Detail()
                                                AND MovementItem.isErased   = FALSE
                                             )
- 
+
                       , tmpMIDate_d AS (SELECT *
                                             FROM MovementItemDate
                                             WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpMI_Detail.Id FROM tmpMI_Detail)
@@ -1170,7 +1171,8 @@ BEGIN
         , tmpMI.OperDate_next   :: TDateTime AS OperDate_next
 
           -- Согласовано к оплате
-        , tmpMI.Amount_Plan_day    :: TFloat
+        , tmpMI.Amount_Plan_day    :: TFloat AS Amount_Plan_day
+        , tmpMI.Amount_Plan_day    :: TFloat AS Amount_Plan_day_old
 
           -- Дата Согласовано к оплате
         , tmpMI.OperDate_Plan_day ::TDateTime AS OperDate_Plan_day

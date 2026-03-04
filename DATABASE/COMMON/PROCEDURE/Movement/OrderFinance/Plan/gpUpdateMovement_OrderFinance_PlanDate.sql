@@ -1,22 +1,28 @@
 -- Function: gpUpdateMovement_OrderFinance_PlanDate()
 
 -- DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_PlanDate (Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_PlanDate (Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TVarChar);
+-- DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_PlanDate (Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TVarChar);
+-- DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_PlanDate (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_PlanDate (Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_PlanDate (Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdateMovement_OrderFinance_PlanDate (Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdateMovement_OrderFinance_PlanDate(
     IN inMovementId              Integer   , -- Ключ объекта <Документ>
     IN inMovementItemId          Integer   , -- Ключ строки
     IN inMovementItemId_child    Integer   , -- Ключ строки
-    IN inMovementItemId_detail   Integer   , -- Ключ строки
-    IN inDateDay                 TDateTime , -- Дата Согласовано к оплате
- INOUT ioDateDay_old             TDateTime , -- Дата Согласовано к оплате
+ INOUT ioMovementItemId_detail   Integer   , -- Ключ строки
+
+ INOUT ioDateDay                 TDateTime , -- Дата Согласовано к оплате
+ INOUT ioDateDay_old             TDateTime , -- ***Дата Согласовано к оплате
  INOUT ioAmountPlan_day          TFloat    , -- Согласовано к оплате
+ INOUT ioAmountPlan_day_old      TFloat    , -- Согласовано к оплате
    OUT outWeekDay                TVarChar  , -- День недели для <Дата оплаты>
-   OUT outAmountPlan_1           TFloat    , --
-   OUT outAmountPlan_2           TFloat    , --
-   OUT outAmountPlan_3           TFloat    , --
-   OUT outAmountPlan_4           TFloat    , --
-   OUT outAmountPlan_5           TFloat    , --
+ INOUT ioAmountPlan_1            TFloat    , --
+ INOUT ioAmountPlan_2            TFloat    , --
+ INOUT ioAmountPlan_3            TFloat    , --
+ INOUT ioAmountPlan_4            TFloat    , --
+ INOUT ioAmountPlan_5            TFloat    , --
     IN inSession                 TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -24,41 +30,91 @@ AS
 $BODY$
     DECLARE vbUserId          Integer;
     DECLARE vbNumDay          Integer;
-    DECLARE vbNumDay_old      Integer;
+    DECLARE vbDay_count       Integer;
     DECLARE vbOperDate_start  TDateTime;
     DECLARE vbIsChild         Boolean;
+
+    DECLARE vbMovementItemId_Detail_1 Integer;
+    DECLARE vbMovementItemId_Detail_2 Integer;
+    DECLARE vbMovementItemId_Detail_3 Integer;
+    DECLARE vbMovementItemId_Detail_4 Integer;
+    DECLARE vbMovementItemId_Detail_5 Integer;
 BEGIN
      -- проверка
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-     /*IF COALESCE (inDateDay, zc_DateStart()) = COALESCE (ioDateDay_old, zc_DateStart())
+     /*IF COALESCE (ioDateDay, zc_DateStart()) = COALESCE (ioDateDay_old, zc_DateStart())
      THEN
          RETURN;
      END IF;
      */
-     
+
 
      -- if vbUserId = 5 then update Movement set StatusId = zc_Enum_Status_UnComplete() where Id = inMovementId; end if;
 
 
-     -- Всегда
-     ioAmountPlan_day:= CASE WHEN inDateDay IS NULL THEN 0 ELSE ioAmountPlan_day END;
-     -- Всегда
-     inDateDay       := CASE WHEN ioAmountPlan_day > 0 THEN inDateDay ELSE NULL  END;
+     -- нашли дату начала недели
+     vbOperDate_start:= (SELECT zfCalc_Week_StartDate (Movement.OperDate, MovementFloat_WeekNumber.ValueData)
+                         FROM Movement
+                              LEFT JOIN MovementFloat AS MovementFloat_WeekNumber
+                                                      ON MovementFloat_WeekNumber.MovementId = Movement.Id
+                                                     AND MovementFloat_WeekNumber.DescId     = zc_MovementFloat_WeekNumber()
+                         WHERE Movement.Id = inMovementId
+                        );
+
+     -- Если заменили сумму или дату - Режим 1 день + 1 сумма
+     IF COALESCE (ioAmountPlan_day, 0) <> COALESCE (ioAmountPlan_day_old, 0)
+     OR COALESCE (ioDateDay, zc_DateStart()) <> COALESCE (ioDateDay_old, zc_DateStart())
+     THEN
+         -- Всегда
+         ioAmountPlan_day:= CASE WHEN ioDateDay IS NULL THEN 0 ELSE ioAmountPlan_day END;
+         -- Всегда
+         ioDateDay       := CASE WHEN ioAmountPlan_day > 0 THEN ioDateDay ELSE NULL  END;
+
+         -- определяем день недели для предыдущей и текущей даты
+         vbNumDay     := zfCalc_DayOfWeekNumber (ioDateDay);
+
+         -- Вернули
+         ioAmountPlan_1:= CASE WHEN vbNumDay = 1 THEN ioAmountPlan_day ELSE 0 END;
+         ioAmountPlan_2:= CASE WHEN vbNumDay = 2 THEN ioAmountPlan_day ELSE 0 END;
+         ioAmountPlan_3:= CASE WHEN vbNumDay = 3 THEN ioAmountPlan_day ELSE 0 END;
+         ioAmountPlan_4:= CASE WHEN vbNumDay = 4 THEN ioAmountPlan_day ELSE 0 END;
+         ioAmountPlan_5:= CASE WHEN vbNumDay = 5 THEN ioAmountPlan_day ELSE 0 END;
+
+         -- проверка
+         IF COALESCE (ioDateDay, zc_DateStart()) NOT BETWEEN vbOperDate_start + INTERVAL '0 DAY' AND vbOperDate_start + INTERVAL '4 DAY'
+            AND ioAmountPlan_day <> 0
+         THEN
+     	   RAISE EXCEPTION 'Ошибка.Дата Согласовано к оплате = <%>%.Должна быть в периоде с <%> по <%>.'
+                            , zfConvert_DateToString (ioDateDay)
+                            , CHR (13)
+                            , zfConvert_DateToString (vbOperDate_start)
+                            , zfConvert_DateToString (vbOperDate_start + INTERVAL '4 DAY')
+                             ;
+         END IF;
+
+     ELSE
+         -- сколько заполненных дней
+         vbDay_count:= 0;
+
+         --
+         IF ioAmountPlan_1 > 0 THEN ioDateDay:= vbOperDate_start + INTERVAL '0 DAY'; vbDay_count:= vbDay_count + 1; END IF;
+         IF ioAmountPlan_2 > 0 THEN ioDateDay:= vbOperDate_start + INTERVAL '1 DAY'; vbDay_count:= vbDay_count + 1; END IF;
+         IF ioAmountPlan_3 > 0 THEN ioDateDay:= vbOperDate_start + INTERVAL '2 DAY'; vbDay_count:= vbDay_count + 1; END IF;
+         IF ioAmountPlan_4 > 0 THEN ioDateDay:= vbOperDate_start + INTERVAL '3 DAY'; vbDay_count:= vbDay_count + 1; END IF;
+         IF ioAmountPlan_5 > 0 THEN ioDateDay:= vbOperDate_start + INTERVAL '4 DAY'; vbDay_count:= vbDay_count + 1; END IF;
+
+         -- меняется в гриде на пусто
+         IF vbDay_count > 1 THEN ioDateDay:= NULL; END IF;
+         -- меняется в гриде на пусто
+         IF vbDay_count > 1 THEN ioMovementItemId_detail:= 0; END IF;
+
+     END IF;
 
 
-     -- определяем день недели для предыдущей и текущей даты
-     vbNumDay     := zfCalc_DayOfWeekNumber (inDateDay);
-     vbNumDay_old := zfCalc_DayOfWeekNumber (ioDateDay_old);
 
 
-     -- Вернули
-     outAmountPlan_1:= CASE WHEN vbNumDay = 1 THEN ioAmountPlan_day ELSE 0 END;
-     outAmountPlan_2:= CASE WHEN vbNumDay = 2 THEN ioAmountPlan_day ELSE 0 END;
-     outAmountPlan_3:= CASE WHEN vbNumDay = 3 THEN ioAmountPlan_day ELSE 0 END;
-     outAmountPlan_4:= CASE WHEN vbNumDay = 4 THEN ioAmountPlan_day ELSE 0 END;
-     outAmountPlan_5:= CASE WHEN vbNumDay = 5 THEN ioAmountPlan_day ELSE 0 END;
 
      -- !!!ВАЖНО!!!
      vbIsChild:= EXISTS (SELECT 1
@@ -73,7 +129,6 @@ BEGIN
                            AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
                         );
 
-     RAISE EXCEPTION 'Ошибка.Режим отладки.';
 
      -- проверка
      IF vbIsChild = TRUE AND COALESCE (inMovementItemId_child, 0) = 0
@@ -82,139 +137,206 @@ BEGIN
      END IF;
 
 
-     -- 1.1.
-     IF vbIsChild = TRUE
+     -- RAISE EXCEPTION 'Ошибка.Режим отладки.';
+
+
+     -- нашли
+     vbMovementItemId_Detail_1:= (SELECT MovementItem.Id
+                                  FROM MovementItem
+                                       INNER JOIN MovementItemDate AS MIDate_Amount
+                                                                   ON MIDate_Amount.MovementItemId = MovementItem.Id
+                                                                  AND MIDate_Amount.DescId         = zc_MIDate_Amount()
+                                                                  AND MIDate_Amount.ValueData      = vbOperDate_start + INTERVAL '0 DAY'
+
+                                  WHERE MovementItem.MovementId = inMovementId
+                                    AND MovementItem.DescId     = zc_MI_Detail()
+                                    AND MovementItem.ParentId   = CASE WHEN inMovementItemId_child > 0 THEN inMovementItemId_child ELSE inMovementItemId END
+                                    AND MovementItem.isErased   = FALSE
+                                 );
+     -- нашли
+     vbMovementItemId_Detail_2:= (SELECT MovementItem.Id
+                                  FROM MovementItem
+                                       INNER JOIN MovementItemDate AS MIDate_Amount
+                                                                   ON MIDate_Amount.MovementItemId = MovementItem.Id
+                                                                  AND MIDate_Amount.DescId         = zc_MIDate_Amount()
+                                                                  AND MIDate_Amount.ValueData      = vbOperDate_start + INTERVAL '1 DAY'
+
+                                  WHERE MovementItem.MovementId = inMovementId
+                                    AND MovementItem.DescId     = zc_MI_Detail()
+                                    AND MovementItem.ParentId   = CASE WHEN inMovementItemId_child > 0 THEN inMovementItemId_child ELSE inMovementItemId END
+                                    AND MovementItem.isErased   = FALSE
+                                 );
+
+     -- нашли
+     vbMovementItemId_Detail_3:= (SELECT MovementItem.Id
+                                  FROM MovementItem
+                                       INNER JOIN MovementItemDate AS MIDate_Amount
+                                                                   ON MIDate_Amount.MovementItemId = MovementItem.Id
+                                                                  AND MIDate_Amount.DescId         = zc_MIDate_Amount()
+                                                                  AND MIDate_Amount.ValueData      = vbOperDate_start + INTERVAL '2 DAY'
+
+                                  WHERE MovementItem.MovementId = inMovementId
+                                    AND MovementItem.DescId     = zc_MI_Detail()
+                                    AND MovementItem.ParentId   = CASE WHEN inMovementItemId_child > 0 THEN inMovementItemId_child ELSE inMovementItemId END
+                                    AND MovementItem.isErased   = FALSE
+                                 );
+     -- нашли
+     vbMovementItemId_Detail_4:= (SELECT MovementItem.Id
+                                  FROM MovementItem
+                                       INNER JOIN MovementItemDate AS MIDate_Amount
+                                                                   ON MIDate_Amount.MovementItemId = MovementItem.Id
+                                                                  AND MIDate_Amount.DescId         = zc_MIDate_Amount()
+                                                                  AND MIDate_Amount.ValueData      = vbOperDate_start + INTERVAL '3 DAY'
+
+                                  WHERE MovementItem.MovementId = inMovementId
+                                    AND MovementItem.DescId     = zc_MI_Detail()
+                                    AND MovementItem.ParentId   = CASE WHEN inMovementItemId_child > 0 THEN inMovementItemId_child ELSE inMovementItemId END
+                                    AND MovementItem.isErased   = FALSE
+                                 );
+
+     -- нашли
+     vbMovementItemId_Detail_5:= (SELECT MovementItem.Id
+                                  FROM MovementItem
+                                       INNER JOIN MovementItemDate AS MIDate_Amount
+                                                                   ON MIDate_Amount.MovementItemId = MovementItem.Id
+                                                                  AND MIDate_Amount.DescId         = zc_MIDate_Amount()
+                                                                  AND MIDate_Amount.ValueData      = vbOperDate_start + INTERVAL '4 DAY'
+
+                                  WHERE MovementItem.MovementId = inMovementId
+                                    AND MovementItem.DescId     = zc_MI_Detail()
+                                    AND MovementItem.ParentId   = CASE WHEN inMovementItemId_child > 0 THEN inMovementItemId_child ELSE inMovementItemId END
+                                    AND MovementItem.isErased   = FALSE
+                                 );
+
+
+     -- обновляем данные - Detail - 1
+     IF ioAmountPlan_1 > 0 OR (vbMovementItemId_Detail_1 > 0 AND vbMovementItemId_Detail_1 = ioMovementItemId_detail) OR vbDay_count > 1
      THEN
-         -- обновляем данные - Child
-         PERFORM -- Согласовано к оплате
-                 lpInsertUpdate_MovementItem (MovementItem.Id, MovementItem.ParentId, MovementItem.ObjectId, MovementItem.MovementId, 0, inMovementItemId)ж
-        ;
-
-         -- сохранили протокол
-         PERFORM lpInsert_MovementItemProtocol (MovementItem.Id, vbUserId, FALSE)
-         FROM MovementItem
-         WHERE MovementItem.Id = inMovementItemId_child
-        ;
-
-
-         -- обнуляем master
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_1(), inMovementItemId, 0);
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_2(), inMovementItemId, 0);
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_3(), inMovementItemId, 0);
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_4(), inMovementItemId, 0);
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_5(), inMovementItemId, 0);
-
-         -- обнуляем свойство <Дата Согласовано к оплате>
-         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Amount(), inMovementItemId, NULL);
-
-
+         -- 
+         IF vbMovementItemId_Detail_1 <> ioMovementItemId_detail AND ioMovementItemId_detail > 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Нельзя дублировать данные за <%>.', zfConvert_DateToString (vbOperDate_start + INTERVAL '0 DAY');
+         END IF;
+         -- Согласовано к оплате
+         vbMovementItemId_Detail_1:= lpInsertUpdate_MovementItem_OrderFinance_detail (ioId             := vbMovementItemId_Detail_1
+                                                                , inMovementId     := inMovementId
+                                                                , inParentId       := CASE WHEN inMovementItemId_child > 0 THEN inMovementItemId_child ELSE inMovementItemId END
+                                                                , inAmount         := ioAmountPlan_1
+                                                                , inOperDate_Amount:= vbOperDate_start + INTERVAL '0 DAY'
+                                                                , inUserId         := vbUserId
+                                                                 );
      END IF;
 
 
-     -- 1.2.
-     IF COALESCE (inDateDay, zc_DateStart()) <> zc_DateStart() -- AND COALESCE (ioDateDay_old, zc_DateStart()) <> COALESCE (inDateDay, zc_DateStart())
+     -- обновляем данные - Detail - 2
+     IF ioAmountPlan_2 > 0 OR (vbMovementItemId_Detail_2 > 0 AND vbMovementItemId_Detail_2 = ioMovementItemId_detail) OR vbDay_count > 1
      THEN
-         -- нашли дату начала недели
-         vbOperDate_start:= (SELECT zfCalc_Week_StartDate (Movement.OperDate, MovementFloat_WeekNumber.ValueData)
-                             FROM Movement
-                                  LEFT JOIN MovementFloat AS MovementFloat_WeekNumber
-                                                          ON MovementFloat_WeekNumber.MovementId = Movement.Id
-                                                         AND MovementFloat_WeekNumber.DescId     = zc_MovementFloat_WeekNumber()
-                             WHERE Movement.Id = inMovementId
-                            );
-         -- проверка
-         IF inDateDay NOT BETWEEN vbOperDate_start AND vbOperDate_start + INTERVAL '4 DAY'
+         -- 
+         IF vbMovementItemId_Detail_2 <> ioMovementItemId_detail AND ioMovementItemId_detail > 0
          THEN
-             RAISE EXCEPTION 'Ошибка.Дата План = <%>%.Должна быть в периоде с <%> по <%>.'
-                            , zfConvert_DateToString (inDateDay)
-                            , CHR (13)
-                            , zfConvert_DateToString (vbOperDate_start)
-                            , zfConvert_DateToString (vbOperDate_start + INTERVAL '4 DAY')
-                             ;
+             RAISE EXCEPTION 'Ошибка.Нельзя дублировать данные за <%>.', zfConvert_DateToString (vbOperDate_start + INTERVAL '1 DAY');
          END IF;
+         -- Согласовано к оплате
+         vbMovementItemId_Detail_2:= lpInsertUpdate_MovementItem_OrderFinance_detail (ioId             := vbMovementItemId_Detail_2
+                                                                , inMovementId     := inMovementId
+                                                                , inParentId       := CASE WHEN inMovementItemId_child > 0 THEN inMovementItemId_child ELSE inMovementItemId END
+                                                                , inAmount         := ioAmountPlan_2
+                                                                , inOperDate_Amount:= vbOperDate_start + INTERVAL '1 DAY'
+                                                                , inUserId         := vbUserId
+                                                                 );
+     END IF;
 
-
-         -- обновляем данные - Child
-         IF EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.ParentId = inMovementItemId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE)
+     -- обновляем данные - Detail - 3
+     IF ioAmountPlan_3 > 0 OR (vbMovementItemId_Detail_3 > 0 AND vbMovementItemId_Detail_3 = ioMovementItemId_detail) OR vbDay_count > 1
+     THEN
+         -- 
+         IF vbMovementItemId_Detail_3 <> ioMovementItemId_detail AND ioMovementItemId_detail > 0
          THEN
-             -- проверка
-             IF 1 < (SELECT COUNT(*) FROM MovementItem WHERE MovementItem.ParentId = inMovementItemId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE)
-             THEN
-                 IF COALESCE (inMovementItemId_child, 0) = 0
-                 THEN
-                     RAISE EXCEPTION 'Ошибка.Изменение данных возможно только с учетом № счета.';
-                 END IF;
-
-                 -- обновляем данные - Child
-                 PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, MovementItem.ParentId, MovementItem.ObjectId, MovementItem.MovementId, ioAmountPlan_day, inMovementItemId)
-                 FROM MovementItem
-                 WHERE MovementItem.Id = inMovementItemId_child
-                ;
-
-                 -- сохранили протокол
-                 PERFORM lpInsert_MovementItemProtocol (MovementItem.Id, vbUserId, FALSE)
-                 FROM MovementItem
-                 WHERE MovementItem.Id = inMovementItemId_child
-                ;
-
-             ELSE
-                 -- обновляем данные - Child
-                 PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, MovementItem.ParentId, MovementItem.ObjectId, MovementItem.MovementId, ioAmountPlan_day, inMovementItemId)
-                 FROM MovementItem
-                 WHERE MovementItem.ParentId = inMovementItemId
-                   AND MovementItem.DescId   = zc_MI_Child()
-                   AND MovementItem.isErased = FALSE
-                ;
-
-                 -- сохранили протокол
-                 PERFORM lpInsert_MovementItemProtocol (MovementItem.Id, vbUserId, FALSE)
-                 FROM MovementItem
-                 WHERE MovementItem.ParentId = inMovementItemId
-                   AND MovementItem.DescId   = zc_MI_Child()
-                   AND MovementItem.isErased = FALSE
-                ;
-
-             END IF;
-
+             RAISE EXCEPTION 'Ошибка.Нельзя дублировать данные за <%>.', zfConvert_DateToString (vbOperDate_start + INTERVAL '2 DAY');
          END IF;
+         -- Согласовано к оплате
+         vbMovementItemId_Detail_3:= lpInsertUpdate_MovementItem_OrderFinance_detail (ioId             := vbMovementItemId_Detail_3
+                                                                , inMovementId     := inMovementId
+                                                                , inParentId       := CASE WHEN inMovementItemId_child > 0 THEN inMovementItemId_child ELSE inMovementItemId END
+                                                                , inAmount         := ioAmountPlan_3
+                                                                , inOperDate_Amount:= vbOperDate_start + INTERVAL '2 DAY'
+                                                                , inUserId         := vbUserId
+                                                                 );
+     END IF;
 
-         -- обновляем новые данные
-         PERFORM lpInsertUpdate_MovementItemFloat (CASE vbNumDay
-                                                        WHEN 1 THEN zc_MIFloat_AmountPlan_1()
-                                                        WHEN 2 THEN zc_MIFloat_AmountPlan_2()
-                                                        WHEN 3 THEN zc_MIFloat_AmountPlan_3()
-                                                        WHEN 4 THEN zc_MIFloat_AmountPlan_4()
-                                                        WHEN 5 THEN zc_MIFloat_AmountPlan_5()
-                                                   END
-                                                 , inMovementItemId
-                                                 , CASE WHEN inMovementItemId_child > 0
-                                                             THEN COALESCE ((SELECT SUM (MovementItem.Amount) FROM MovementItem WHERE MovementItem.ParentId = inMovementItemId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE), 0)
-                                                        ELSE ioAmountPlan_day
-                                                   END
-                                                  );
+     -- обновляем данные - Detail - 4
+     IF ioAmountPlan_4 > 0 OR (vbMovementItemId_Detail_4 > 0 AND vbMovementItemId_Detail_4 = ioMovementItemId_detail) OR vbDay_count > 1
+     THEN
+         IF vbMovementItemId_Detail_4 <> ioMovementItemId_detail AND ioMovementItemId_detail > 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Нельзя дублировать данные за <%>.', zfConvert_DateToString (vbOperDate_start + INTERVAL '3 DAY');
+         END IF;
+         -- Согласовано к оплате
+         vbMovementItemId_Detail_4:= lpInsertUpdate_MovementItem_OrderFinance_detail (ioId             := vbMovementItemId_Detail_4
+                                                                , inMovementId     := inMovementId
+                                                                , inParentId       := CASE WHEN inMovementItemId_child > 0 THEN inMovementItemId_child ELSE inMovementItemId END
+                                                                , inAmount         := ioAmountPlan_4
+                                                                , inOperDate_Amount:= vbOperDate_start + INTERVAL '3 DAY'
+                                                                , inUserId         := vbUserId
+                                                                 );
+     END IF;
 
-         -- сохранили свойство <Дата предварительный план>
-         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Amount(), inMovementItemId, inDateDay);
-
-
+     -- обновляем данные - Detail - 5
+     IF ioAmountPlan_5 > 0 OR (vbMovementItemId_Detail_5 > 0 AND vbMovementItemId_Detail_5 = ioMovementItemId_detail) OR vbDay_count > 1
+     THEN
+         IF vbMovementItemId_Detail_5 <> ioMovementItemId_detail AND ioMovementItemId_detail > 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Нельзя дублировать данные за <%>.', zfConvert_DateToString (vbOperDate_start + INTERVAL '4 DAY');
+         END IF;
+         -- Согласовано к оплате
+         vbMovementItemId_Detail_5:= lpInsertUpdate_MovementItem_OrderFinance_detail (ioId             := vbMovementItemId_Detail_5
+                                                                , inMovementId     := inMovementId
+                                                                , inParentId       := CASE WHEN inMovementItemId_child > 0 THEN inMovementItemId_child ELSE inMovementItemId END
+                                                                , inAmount         := ioAmountPlan_5
+                                                                , inOperDate_Amount:= vbOperDate_start + INTERVAL '4 DAY'
+                                                                , inUserId         := vbUserId
+                                                                 );
      END IF;
 
 
-     -- сохранили связь с <протокол>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Update(), inMovementItemId, vbUserId);
-     -- сохранили свойство <протокол>
-     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Update(), inMovementItemId, CURRENT_TIMESTAMP);
+     -- проверка дублируемости
+     IF EXISTS (SELECT 1
+                FROM MovementItem
+                     INNER JOIN MovementItemDate AS MIDate_Amount
+                                                 ON MIDate_Amount.MovementItemId = MovementItem.Id
+                                                AND MIDate_Amount.DescId         = zc_MIDate_Amount()
+                WHERE MovementItem.MovementId = inMovementId
+                  AND MovementItem.DescId     = zc_MI_Detail()
+                  AND MovementItem.ParentId   = CASE WHEN inMovementItemId_child > 0 THEN inMovementItemId_child ELSE inMovementItemId END
+                  AND MovementItem.isErased   = FALSE
+                GROUP BY MIDate_Amount.ValueData
+                HAVING COUNT(*) > 1
+               )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нельзя дублировать данные за <%>.'
+                        , (SELECT zfConvert_DateToString (MIDate_Amount.ValueData)
+                           FROM MovementItem
+                                INNER JOIN MovementItemDate AS MIDate_Amount
+                                                            ON MIDate_Amount.MovementItemId = MovementItem.Id
+                                                           AND MIDate_Amount.DescId         = zc_MIDate_Amount()
+                           WHERE MovementItem.MovementId = inMovementId
+                             AND MovementItem.DescId     = zc_MI_Detail()
+                             AND MovementItem.ParentId   = CASE WHEN inMovementItemId_child > 0 THEN inMovementItemId_child ELSE inMovementItemId END
+                             AND MovementItem.isErased   = FALSE
+                           GROUP BY MIDate_Amount.ValueData
+                           HAVING COUNT(*) > 1
+                           LIMIT 1
+                          )
+                         ;
+     END IF;
 
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSummOrderFinance (inMovementId);
 
-     -- сохранили протокол
-     PERFORM lpInsert_MovementItemProtocol (inMovementItemId, vbUserId, FALSE);
-
 
      -- вернули
-     outWeekDay := (CASE EXTRACT (DOW FROM inDateDay)
+     outWeekDay := (CASE zfCalc_DayOfWeekNumber (ioDateDay)
                          WHEN 1 THEN '1.Пн.'
                          WHEN 2 THEN '2.Вт.'
                          WHEN 3 THEN '3.Ср.'
@@ -222,15 +344,35 @@ BEGIN
                          WHEN 5 THEN '5.Пт.'
                          ELSE ''
                     END :: TVarChar);
+
      -- вернули
-     ioDateDay_old:= inDateDay;
+     ioDateDay_old:= ioDateDay;
+     -- вернули
+     ioAmountPlan_day:= COALESCE (ioAmountPlan_1, 0) + COALESCE (ioAmountPlan_2, 0) + COALESCE (ioAmountPlan_3, 0) + COALESCE (ioAmountPlan_4, 0) + COALESCE (ioAmountPlan_5, 0);
+     ioAmountPlan_day_old:= ioAmountPlan_day;
+     -- вернули
+     ioMovementItemId_detail:= CASE WHEN vbDay_count > 1
+                                         THEN 0
+                                    WHEN zfCalc_DayOfWeekNumber (ioDateDay) = 1
+                                         THEN vbMovementItemId_Detail_1
+                                    WHEN zfCalc_DayOfWeekNumber (ioDateDay) = 2
+                                         THEN vbMovementItemId_Detail_2
+                                    WHEN zfCalc_DayOfWeekNumber (ioDateDay) = 3
+                                         THEN vbMovementItemId_Detail_3
+                                    WHEN zfCalc_DayOfWeekNumber (ioDateDay) = 4
+                                         THEN vbMovementItemId_Detail_4
+                                    WHEN zfCalc_DayOfWeekNumber (ioDateDay) = 5
+                                         THEN vbMovementItemId_Detail_5
+
+                                    ELSE 0
+                               END;
 
      --
-     if vbUserId IN (9457, 5) AND 1=1
+     if vbUserId IN (9457, 5) AND 1=0
      then
          RAISE EXCEPTION 'Админ.Test Ok. <%>  <%>'
                         , outWeekDay
-                        , COALESCE ((SELECT SUM (MovementItem.Amount) FROM MovementItem WHERE MovementItem.ParentId = inMovementItemId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE), 0)
+                        , COALESCE ((SELECT SUM (MovementItem.Amount) FROM MovementItem WHERE MovementItem.ParentId = inMovementItemId AND MovementItem.DescId = zc_MI_Detail() AND MovementItem.isErased = FALSE), 0)
                          ;
      end if;
 
@@ -246,4 +388,4 @@ $BODY$
 
 
 -- тест
--- select * from gpUpdateMovement_OrderFinance_PlanDate(inMovementId := 32907603 , inMovementItemId := 341774314 , inDateDay := ('27.10.2025')::TDateTime , ioDateDay_old := ('27.10.2025')::TDateTime , inAmount := 15000 , ioAmountPlan_day := 23 , inIsAmountPlan_day := 'True' ,  inSession := '9457');
+-- select * from gpUpdateMovement_OrderFinance_PlanDate(inMovementId := 32907603 , inMovementItemId := 341774314 , ioDateDay := ('27.10.2025')::TDateTime , ioDateDay_old := ('27.10.2025')::TDateTime , inAmount := 15000 , ioAmountPlan_day := 23 , inIsAmountPlan_day := 'True' ,  inSession := '9457');
