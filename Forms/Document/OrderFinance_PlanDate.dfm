@@ -4,7 +4,6 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
   ClientWidth = 1020
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -126
   ExplicitWidth = 1036
   ExplicitHeight = 449
   PixelsPerInch = 96
@@ -667,7 +666,6 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090' '#1085#1072' 1.'#1087#1085'.'
-            Options.Editing = False
             Width = 70
           end
           object AmountPlan_2: TcxGridDBColumn
@@ -681,7 +679,6 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090' '#1085#1072' 2.'#1074#1090'.'
-            Options.Editing = False
             Width = 70
           end
           object AmountPlan_3: TcxGridDBColumn
@@ -695,7 +692,6 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090' '#1085#1072' 3.'#1089#1088'.'
-            Options.Editing = False
             Width = 70
           end
           object AmountPlan_4: TcxGridDBColumn
@@ -709,7 +705,6 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090' '#1085#1072' 4.'#1095#1090'.'
-            Options.Editing = False
             Width = 70
           end
           object AmountPlan_5: TcxGridDBColumn
@@ -723,7 +718,6 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1083#1072#1085' '#1086#1087#1083#1072#1090' '#1085#1072' 5.'#1087#1090'.'
-            Options.Editing = False
             Width = 70
           end
           object AmountRemains: TcxGridDBColumn
@@ -2137,20 +2131,20 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMovementItemId_Detail'
+        Name = 'ioMovementItemId_detail'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'MovementItemId_Detail'
-        ParamType = ptInput
+        ComponentItem = 'MovementItemId_detail'
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDateDay'
+        Name = 'ioDateDay'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDate_Plan_day'
         DataType = ftDateTime
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -2172,6 +2166,15 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioAmountPlan_day_old'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount_Plan_day_old'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outWeekDay'
         Value = Null
         Component = MasterCDS
@@ -2180,43 +2183,48 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outAmountPlan_1'
+        Name = 'ioAmountPlan_1'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountPlan_1'
         DataType = ftFloat
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outAmountPlan_2'
+        Name = 'ioAmountPlan_2'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountPlan_2'
         DataType = ftFloat
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outAmountPlan_3'
+        Name = 'ioAmountPlan_3'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountPlan_3'
         DataType = ftFloat
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outAmountPlan_4'
+        Name = 'ioAmountPlan_4'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountPlan_4'
         DataType = ftFloat
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outAmountPlan_5'
+        Name = 'ioAmountPlan_5'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountPlan_5'
         DataType = ftFloat
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
     PackSize = 1

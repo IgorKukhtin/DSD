@@ -224,14 +224,6 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0
