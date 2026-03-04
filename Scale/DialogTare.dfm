@@ -1124,7 +1124,7 @@ inherited DialogTareForm: TDialogTareForm
       Left = 0
       Top = 49
       Width = 170
-      Height = 49
+      Height = 108
       Align = alTop
       Alignment = taLeftJustify
       TabOrder = 3
@@ -1154,7 +1154,6 @@ inherited DialogTareForm: TDialogTareForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        Properties.OnButtonClick = EditPartionCellPropertiesButtonClick
         Style.Font.Charset = RUSSIAN_CHARSET
         Style.Font.Color = clBlack
         Style.Font.Height = -11
@@ -1264,5 +1263,35 @@ inherited DialogTareForm: TDialogTareForm
     Params = <>
     Left = 272
     Top = 384
+  end
+  object GuidesPartionCell: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = EditPartionCell
+    FormNameParam.Value = 'TPartionCellChoice_scaleForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPartionCellChoice_scaleForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPartionCell
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPartionCell
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 504
+    Top = 120
   end
 end

@@ -1647,7 +1647,8 @@ uses
   Cash_Branch in '..\..\Forms\Guides\Cash_Branch.pas' {Cash_BranchForm: TParentForm},
   SummDialog in '..\..\Forms\System\SummDialog.pas' {SummDialogForm: TParentForm},
   InfoMoney_OrderFinance in '..\..\Forms\Guides\InfoMoney_OrderFinance.pas' {InfoMoney_OrderFinanceForm: TParentForm},
-  OrderFinanceMovementSB in '..\..\Forms\Document\OrderFinanceMovementSB.pas' {OrderFinanceMovementSBForm: TParentForm};
+  OrderFinanceMovementSB in '..\..\Forms\Document\OrderFinanceMovementSB.pas' {OrderFinanceMovementSBForm: TParentForm},
+  PartionCellChoice_scale in '..\..\Forms\Guides\PartionCellChoice_scale.pas' {PartionCellChoice_scaleForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
