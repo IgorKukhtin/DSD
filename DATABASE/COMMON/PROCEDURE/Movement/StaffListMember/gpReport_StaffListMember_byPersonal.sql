@@ -591,7 +591,8 @@ $BODY$
  /*  
       заполнение документов ШР сотрудники    
       
-      -- inUnitId = 8439    -- "Участок мясного сырья"
+      -- inUnitId = 8439    -- "Участок мясного сырья" 
+      -- inUnitId = 8459    --"Розподільчий комплекс"
  WITH 
  tmpData AS (
             SELECT tmp.*
@@ -612,7 +613,8 @@ $BODY$
                                               , inReasonOutId         := 0    ::Integer   
                                               , inStaffListKindId     := tmp.StaffListKindId    
                                               , inisOfficial          := tmp.isOfficial         
-                                              , inisMain              := tmp.isMain             
+                                              , inisMain              := tmp.isMain
+                                              , inNumBiz              := tmp.NumBiz             
                                               , inComment             := tmp.Comment::TVarChar
                                               , inUserId_protocol     := tmp.UserId_pr       ::Integer
                                               , inOperDate_protocol   := tmp.Operdate_pr     ::TDateTime          

@@ -37,7 +37,7 @@ BEGIN
                                                              AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
                                                              AND MovementLinkObject_Member.ObjectId = vbMemberId
                            WHERE Movement.DescId = zc_Movement_StaffListMember()
-                             AND Movement.OperDate >= vbOperDate
+                             AND Movement.OperDate > vbOperDate
                              AND Movement.StatusId = zc_Enum_Status_Complete()
                              AND Movement.Id <> inMovementId
                            LIMIT 1
@@ -45,7 +45,7 @@ BEGIN
 
      IF COALESCE (vbMovementId_last,0) <> 0
      THEN
-          RAISE EXCEPTION 'Ошибка.Проведение запрещено. Есть более поздние документы. ';  
+          RAISE EXCEPTION 'Ошибка.Проведение запрещено. Есть более поздние документы.';  
      END IF;  
 
 
