@@ -56,6 +56,7 @@ BEGIN
         AND (COALESCE (vbMovementDescId, 0) <> zc_Movement_ChangePercent() OR inDescId <> zc_MI_Child())
         AND (COALESCE (vbMovementDescId, 0) <> zc_Movement_BankAccount() OR inDescId <> zc_MI_Detail())
         AND (COALESCE (vbMovementDescId, 0) <> zc_Movement_Promo() OR inDescId <> zc_MI_Detail())
+        AND (COALESCE (vbMovementDescId, 0) <> zc_Movement_OrderFinance() OR inDescId <> zc_MI_Detail())
         --AND inUserId <> 5
         --AND ioId <> 348109907
         --AND ioId <> 348109908

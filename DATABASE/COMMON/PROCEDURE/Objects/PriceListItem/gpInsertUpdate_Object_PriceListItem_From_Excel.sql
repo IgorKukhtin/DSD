@@ -19,14 +19,29 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_ObjectHistory_PriceListItem());
 
+
     -- Проверка
-    IF COALESCE(inPriceListId,0) = 0
+    IF COALESCE (inGoodsCode, 0) = 0 AND COALESCE (TRIM (inGoodsKindName), '') = '' AND COALESCE (inPriceValue, 0) = 0
+    THEN
+        RETURN;
+    END IF;
+
+
+    -- Проверка
+    IF COALESCE(inPriceListId, 0) = 0
     THEN
         RAISE EXCEPTION 'Ошибка.Не выбран Прайс-лист.';
     END IF;
-    
+
+    -- Проверка
+    IF COALESCE(inGoodsCode, 0) = 0
+    THEN
+        RAISE EXCEPTION 'Ошибка.Не установлено код товара.Код = (%) + Вид = (%) + Цена = (%)', inGoodsCode, inGoodsKindName, inPriceValue;
+    END IF;
+
+
     IF COALESCE (TRIM (inGoodsKindName), '') <> ''
-    THEN 
+    THEN
          -- Проверка
          IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.DescId = zc_Object_GoodsKind() AND TRIM (Object.ValueData) ILIKE TRIM (inGoodsKindName))
          THEN
@@ -39,7 +54,7 @@ BEGIN
              RAISE EXCEPTION 'Ошибка.Значение вид товара = <%> не найден.', inGoodsKindName;
          END IF;
     END IF;
-    
+
     -- Проверка
     IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.DescId = zc_Object_Goods() AND Object.ObjectCode = inGoodsCode)
     THEN
@@ -54,14 +69,14 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Значение код товара = <%> не найден.', inGoodsCode;
     END IF;
 
- 
+
     -- Проверка
     IF inPriceValue < 0
     THEN
         RAISE EXCEPTION 'Ошибка. Цена = <%> не может быть меньше нуля.', inPriceValue;
     END IF;
-   
-    -- 
+
+    --
     PERFORM lpInsertUpdate_ObjectHistory_PriceListItem (ioId          := 0
                                                       , inPriceListId := inPriceListId
                                                       , inGoodsId     := vbGoodsId

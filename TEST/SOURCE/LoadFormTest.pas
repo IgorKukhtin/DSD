@@ -1087,6 +1087,10 @@ end;
 procedure TLoadFormTest.LoadOrderFinanceMovementFormTest;
 begin
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinance_PlanDateForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderFinance_PlanDateForm');
+  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceMovementForm'));
@@ -1102,8 +1106,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TOrderFinance_SBForm');
 
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinance_PlanDateForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TOrderFinance_PlanDateForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinance_PlanForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderFinance_PlanForm');
@@ -2332,8 +2334,8 @@ end;
 
 procedure TLoadFormTest.LoadPartionCellFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellCheckisManyEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TPartionCellCheckisManyEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellChoice_scaleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartionCellChoice_scaleForm');
   exit;
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellCheckEditForm'));

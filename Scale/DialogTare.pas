@@ -19,7 +19,8 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
   dxSkinXmas2008Blue, Vcl.ComCtrls, dxCore, cxDateUtils, cxButtonEdit,
-  cxMaskEdit, cxDropDownEdit, cxCalendar, Data.DB, Datasnap.DBClient, dsdCommon;
+  cxMaskEdit, cxDropDownEdit, cxCalendar, Data.DB, Datasnap.DBClient, dsdCommon,
+  dsdGuides;
 
 type
   TDialogTareForm = class(TAncestorDialogScaleForm)
@@ -122,6 +123,7 @@ type
     Panel4: TPanel;
     Label4: TLabel;
     PanelShGoods_total: TPanel;
+    GuidesPartionCell: TdsdGuides;
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormCreate(Sender: TObject);
     procedure EditTare1KeyDown(Sender: TObject; var Key: Word;
@@ -248,7 +250,9 @@ begin
      EditTare10.Text:=FloatToStr(execParamsMI.ParamByName('CountTare10').AsFloat);
      //
      PartionCellId:=execParamsMI.ParamByName('PartionCellId').AsInteger;
-     EditPartionCell.Text:= execParamsMI.ParamByName('PartionCellName').AsString;
+     //EditPartionCell.Text:= execParamsMI.ParamByName('PartionCellName').AsString;
+     GuidesPartionCell.Key:=IntToStr(execParamsMI.ParamByName('PartionCellId').AsInteger);
+     GuidesPartionCell.TextValue:=execParamsMI.ParamByName('PartionCellName').AsString;
      //
      PartionDateEdit.Text:= DateToStr(execParamsMovement.ParamByName('OperDate').AsDateTime);
      //
@@ -262,8 +266,8 @@ begin
      //
      if Result then
      begin
-          execParamsMI.ParamByName('PartionCellId').AsInteger:= PartionCellId;
-          execParamsMI.ParamByName('PartionCellName').AsString:= EditPartionCell.Text;
+          execParamsMI.ParamByName('PartionCellId').AsInteger:= StrToInt(GuidesPartionCell.Key);//PartionCellId;
+          execParamsMI.ParamByName('PartionCellName').AsString:= GuidesPartionCell.TextValue;//EditPartionCell.Text;
           //
           if CountTare1 > 0 then SettingMain.WeightTare1:= WeightTare1 else SettingMain.WeightTare1:= 0;
           if CountTare2 > 0 then SettingMain.WeightTare2:= WeightTare2 else SettingMain.WeightTare2:= 0;

@@ -158,6 +158,10 @@ BEGIN
      -- пересчитали »тоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSummOrderFinance (ioId);
 
+
+     -- проверка после сохранени€
+     PERFORM lpCheck_Movement_OrderFinance (inMovementId:= ioId, inUserId:= inUserId);
+
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
 
