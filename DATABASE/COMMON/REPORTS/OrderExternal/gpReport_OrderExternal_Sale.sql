@@ -627,65 +627,62 @@ BEGIN
 
 
       -- данные MI - заявки
- , tmpOrder AS (SELECT tmpMovementAll.* FROM tmpMovementAll WHERE tmpMovementAll.MovementId_Order > 0 AND tmpMovementAll.Ord = 1)
- , tmpMI_All AS (SELECT MovementItem.*
-                                    FROM MovementItem
-                                         INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
-                                    WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpOrder.MovementId_Order FROM tmpOrder)
-                                      AND MovementItem.DescId = zc_MI_Master()
-                                      AND MovementItem.isErased   = FALSE
-                                    ) 
- , tmpMIFloat_AmountManual_Order AS (SELECT MovementItemFloat.*
-                                     FROM MovementItemFloat
-                                     WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_All.Id FROM tmpMI_All)
-                                       AND MovementItemFloat.DescId IN (zc_MIFloat_AmountManual()
-                                                                      )
-                                      AND  COALESCE (MovementItemFloat.ValueData,0) <> 0
-                                    )
+    , tmpOrder AS (SELECT tmpMovementAll.* FROM tmpMovementAll WHERE tmpMovementAll.MovementId_Order > 0 AND tmpMovementAll.Ord = 1)
+    , tmpMI_All AS (SELECT MovementItem.*
+                    FROM MovementItem
+                         INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
+                    WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpOrder.MovementId_Order FROM tmpOrder)
+                      AND MovementItem.DescId = zc_MI_Master()
+                      AND MovementItem.isErased   = FALSE
+                    ) 
+    , tmpMIFloat_AmountManual_Order AS (SELECT MovementItemFloat.*
+                                        FROM MovementItemFloat
+                                        WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_All.Id FROM tmpMI_All)
+                                          AND MovementItemFloat.DescId = zc_MIFloat_AmountManual()
+                                          AND COALESCE (MovementItemFloat.ValueData,0) <> 0
+                                        )
 
-, tmpMIFloat_AmountSecond_Order AS (SELECT MovementItemFloat.*
-                                     FROM MovementItemFloat
-                                     WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_All.Id FROM tmpMI_All)
-                                       AND MovementItemFloat.DescId IN (zc_MIFloat_AmountSecond()
-                                                                      )
-                                      AND  COALESCE (MovementItemFloat.ValueData,0) <> 0
-                                    )
- , tmpMIFloat_Price_Order AS (SELECT MovementItemFloat.*
-                                     FROM MovementItemFloat
-                                     WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_All.Id FROM tmpMI_All)
-                                       AND MovementItemFloat.DescId IN ( zc_MIFloat_Price()
-                                                                      )
-                                      AND  COALESCE (MovementItemFloat.ValueData,0) <> 0
-                                    )
- , tmpMIFloat_CountForPrice_Order AS (SELECT MovementItemFloat.*
-                                     FROM MovementItemFloat
-                                     WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_All.Id FROM tmpMI_All)
-                                       AND MovementItemFloat.DescId =zc_MIFloat_CountForPrice()
-                                                                      
-                                    )
+   , tmpMIFloat_AmountSecond_Order AS (SELECT MovementItemFloat.*
+                                        FROM MovementItemFloat
+                                        WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_All.Id FROM tmpMI_All)
+                                          AND MovementItemFloat.DescId = zc_MIFloat_AmountSecond()
+                                          AND COALESCE (MovementItemFloat.ValueData,0) <> 0
+                                       )
+
+    , tmpMIFloat_Price_Order AS (SELECT MovementItemFloat.*
+                                 FROM MovementItemFloat
+                                 WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_All.Id FROM tmpMI_All)
+                                   AND MovementItemFloat.DescId = zc_MIFloat_Price()
+                                   AND COALESCE (MovementItemFloat.ValueData,0) <> 0
+                                )
+    , tmpMIFloat_CountForPrice_Order AS (SELECT MovementItemFloat.*
+                                         FROM MovementItemFloat
+                                         WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_All.Id FROM tmpMI_All)
+                                           AND MovementItemFloat.DescId = zc_MIFloat_CountForPrice()
+                                        )
 
  , tmpMILO_GoodsKind_Order AS (SELECT MovementItemLinkObject.*
-                                            FROM MovementItemLinkObject
-                                            WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_All.Id FROM tmpMI_All)
-                                              AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
-                                           )
+                               FROM MovementItemLinkObject
+                               WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_All.Id FROM tmpMI_All)
+                                 AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
+                              )
  , tmpMI_Order_0 AS (SELECT tmpOrder.*
-                                     , MovementItem.Id       AS MovementItemId
-                                     , MovementItem.ObjectId
-                                       -- Если есть Заказ-0
-                                     , CASE WHEN /*tmpOrder.isManual_Order = TRUE AND*/ MIFloat_AmountManual.ValueData > MovementItem.Amount THEN MIFloat_AmountManual.ValueData ELSE MovementItem.Amount END AS Amount
-                                       -- Если есть Заказ-0
-                                     , CASE WHEN MIFloat_AmountManual.ValueData > MovementItem.Amount THEN TRUE ELSE FALSE END AS isManual_Order
-                                       -- Если есть Заказ-0
-                                     , CASE WHEN MIFloat_AmountManual.ValueData > MovementItem.Amount THEN MovementItem.Amount ELSE 0 END AS Amount_inf
-                                FROM  tmpOrder
-                                       -- строки
-                                        INNER JOIN tmpMI_All AS MovementItem
-                                                             ON MovementItem.MovementId = tmpOrder.MovementId_Order
-                                        LEFT JOIN tmpMIFloat_AmountManual_Order AS MIFloat_AmountManual
-                                                             ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual() 
-                                )
+                          , MovementItem.Id       AS MovementItemId
+                          , MovementItem.ObjectId
+                            -- Если есть Заказ-0
+                          , CASE WHEN /*tmpOrder.isManual_Order = TRUE AND*/ MIFloat_AmountManual.ValueData > MovementItem.Amount THEN MIFloat_AmountManual.ValueData ELSE MovementItem.Amount END AS Amount
+                            -- Если есть Заказ-0
+                          , CASE WHEN MIFloat_AmountManual.ValueData > MovementItem.Amount THEN TRUE ELSE FALSE END AS isManual_Order
+                            -- Если есть Заказ-0
+                          , CASE WHEN MIFloat_AmountManual.ValueData > MovementItem.Amount THEN MovementItem.Amount ELSE 0 END AS Amount_inf
+                     FROM  tmpOrder
+                            -- строки
+                             INNER JOIN tmpMI_All AS MovementItem
+                                                  ON MovementItem.MovementId = tmpOrder.MovementId_Order
+                             LEFT JOIN tmpMIFloat_AmountManual_Order AS MIFloat_AmountManual
+                                                  ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
+                                                 AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual() 
+                     )
 
  , tmpOrder_1 AS (SELECT tmpOrder.*
                        , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())  AS GoodsKindId
@@ -697,24 +694,24 @@ BEGIN
  , tmpOrder_2 AS (SELECT tmpOrder.*
                        , COALESCE (MIFloat_AmountSecond.ValueData, 0)  AS AmountSecond
                   FROM tmpOrder_1 AS tmpOrder
-                                 LEFT JOIN tmpMIFloat_AmountSecond_Order AS MIFloat_AmountSecond
-                                                             ON MIFloat_AmountSecond.MovementItemId = tmpOrder.MovementItemId
+                       LEFT JOIN tmpMIFloat_AmountSecond_Order AS MIFloat_AmountSecond
+                                                               ON MIFloat_AmountSecond.MovementItemId = tmpOrder.MovementItemId
                   )
 
  , tmpOrder_3 AS (SELECT tmpOrder.*
                        , COALESCE (MIFloat_Price.ValueData, 0)  AS Price
                   FROM tmpOrder_2 AS tmpOrder
-                                 LEFT JOIN tmpMIFloat_Price_Order AS MIFloat_Price
-                                                             ON MIFloat_Price.MovementItemId = tmpOrder.MovementItemId
+                       LEFT JOIN tmpMIFloat_Price_Order AS MIFloat_Price
+                                                        ON MIFloat_Price.MovementItemId = tmpOrder.MovementItemId
                   )
 
 , tmpOrder_4 AS (SELECT tmpOrder.*
                        , COALESCE (MIFloat_CountForPrice.ValueData, 0)  AS CountForPrice
                   FROM tmpOrder_3 AS tmpOrder
-                                 LEFT JOIN tmpMIFloat_CountForPrice_Order AS MIFloat_CountForPrice
-                                                             ON MIFloat_CountForPrice.MovementItemId = tmpOrder.MovementItemId
+                       LEFT JOIN tmpMIFloat_CountForPrice_Order AS MIFloat_CountForPrice
+                                                                ON MIFloat_CountForPrice.MovementItemId = tmpOrder.MovementItemId
                   )
-
+  --промежуточная таблица
 , tmpMovement2 AS (
                             SELECT tmpOrder.MovementId_Sale
                                  , tmpOrder.OperDate_Sale
@@ -1553,12 +1550,13 @@ BEGIN
                            ;
 
          --RAISE INFO vbScript;
-
+         /*
          -- Результат
          vb1:= (SELECT *
                 FROM dblink_exec ('host=192.168.0.219 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'
                                    -- Результат
-                                , vbScript));
+                                , vbScript)); 
+         */
 
 END;
 $BODY$
@@ -1577,3 +1575,13 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_OrderExternal_Sale (inStartDate:= '10.10.2025', inEndDate:= '10.10.2025', inFromId := 0, inToId := 0, inRouteId := 0, inRouteSortingId := 0, inGoodsGroupId := 0, inIsByDoc := false, inIsByPromo:= false, inSession:= '2')
+
+/*
+  
+select * from gpReport_OrderExternal_Sale 
+ (inStartDate := ('01.02.2026')::TDateTime , inEndDate := ('02.02.2026')::TDateTime 
+, inFromId := 0 , inToId := 8459 , inRouteId := 0 , inRouteSortingId := 0 
+, inGoodsGroupId := 1832 , inIsByDoc := 'False' , inIsByPromo := 'False' 
+, inSession := '5');
+
+*/
