@@ -5,6 +5,7 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -421
   ExplicitWidth = 1314
   ExplicitHeight = 690
   PixelsPerInch = 96
@@ -2097,13 +2098,13 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
         MultiSelectSeparator = ','
       end
       item
-        Name = 'isParam'
+        Name = 'inParam'
         Value = '1'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisList'
+        Name = 'inIsList'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
@@ -2117,7 +2118,7 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPartion'
+        Name = 'inIsNotPartion'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
@@ -2175,13 +2176,13 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
         MultiSelectSeparator = ','
       end
       item
-        Name = 'isParam'
+        Name = 'inParam'
         Value = '2'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisList'
+        Name = 'inIsList'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
@@ -2195,7 +2196,7 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPartion'
+        Name = 'inIsNotPartion'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
@@ -2304,13 +2305,13 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
         MultiSelectSeparator = ','
       end
       item
-        Name = 'isParam'
+        Name = 'inParam'
         Value = '1'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisList'
+        Name = 'inIsList'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
@@ -2324,7 +2325,7 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPartion'
+        Name = 'inIsNotPartion'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
@@ -2382,13 +2383,13 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
         MultiSelectSeparator = ','
       end
       item
-        Name = 'isParam'
+        Name = 'inParam'
         Value = '2'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisList'
+        Name = 'inIsList'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
@@ -2402,7 +2403,7 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPartion'
+        Name = 'inIsNotPartion'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput

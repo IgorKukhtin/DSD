@@ -12,7 +12,6 @@ object PartionCellChoice_scaleForm: TPartionCellChoice_scaleForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = actChoiceGuides
   PixelsPerInch = 96

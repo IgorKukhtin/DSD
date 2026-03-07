@@ -573,12 +573,10 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
           object EndDate: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088' '#1076#1086
             DataBinding.FieldName = 'EndDate'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1086#1075#1086#1074#1086#1088' '#1076#1086
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 79
           end
           object EndDate_real: TcxGridDBColumn
@@ -589,7 +587,6 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1086#1075#1086#1074#1086#1088' '#1076#1086' ('#1080#1085#1092'.)'
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 60
           end
           object Amount: TcxGridDBColumn
