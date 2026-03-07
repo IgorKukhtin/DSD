@@ -1550,13 +1550,11 @@ BEGIN
                            ;
 
          --RAISE INFO vbScript;
-         /*
          -- Результат
          vb1:= (SELECT *
                 FROM dblink_exec ('host=192.168.0.219 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'
                                    -- Результат
                                 , vbScript)); 
-         */
 
 END;
 $BODY$
