@@ -1,6 +1,7 @@
 -- Function: lpInsert_Movement_StaffListMember ()
 
 DROP FUNCTION IF EXISTS lpInsert_Movement_StaffListMember (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar,Integer, TDateTime, Integer);
+DROP FUNCTION IF EXISTS lpInsert_Movement_StaffListMember (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar, TVarChar,Integer, TDateTime, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsert_Movement_StaffListMember(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -17,6 +18,7 @@ CREATE OR REPLACE FUNCTION lpInsert_Movement_StaffListMember(
     IN inStaffListKindId     Integer   , --
     IN inisOfficial          Boolean   , --
     IN inisMain              Boolean   , --
+    IN inNumBiz              TVarChar  , --
     IN inComment             TVarChar  , -- 
     IN inUserId_protocol     Integer  ,
     IN inOperDate_protocol   TDateTime,
@@ -73,7 +75,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Main(), ioId, inisMain);
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
-
+     -- сохранили связь с <>
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_NumBiz(), ioId, inNumBiz);
      
      IF vbIsInsert = TRUE
      THEN
