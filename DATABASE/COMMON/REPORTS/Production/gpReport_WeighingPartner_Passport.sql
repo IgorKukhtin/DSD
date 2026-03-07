@@ -271,7 +271,7 @@ BEGIN
                                                        , zc_MILinkObject_Box10()
 
                                                        , zc_MILinkObject_GoodsKind()
-                                                       , zc_MILinkObject_PartionCell()
+                                                       , zc_MILinkObject_PartionCell_1()
                                                        , zc_MILinkObject_Insert()
                                                         )
                )
@@ -641,7 +641,7 @@ BEGIN
                                       AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                      LEFT JOIN tmpMILO AS MILinkObject_PartionCell
                                        ON MILinkObject_PartionCell.MovementItemId = MovementItem.Id
-                                      AND MILinkObject_PartionCell.DescId = zc_MILinkObject_PartionCell()
+                                      AND MILinkObject_PartionCell.DescId = zc_MILinkObject_PartionCell_1()
 
                      LEFT JOIN tmpMILO AS MILinkObject_Box1
                                        ON MILinkObject_Box1.MovementItemId = MovementItem.Id

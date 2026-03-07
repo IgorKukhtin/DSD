@@ -24,7 +24,7 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_WorkTim
                                   , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_WorkTimeKind())||'> - изменение данных.'
                                   , inEnumName:= 'zc_Enum_Process_Update_Object_WorkTimeKind_Summ');
 
-PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_WorkTimeKind_Summ()
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_WorkTimeKind_NoSheetChoice()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 4
                                   , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_WorkTimeKind())||'> - изменение данных.'
