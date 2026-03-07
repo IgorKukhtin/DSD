@@ -33,6 +33,8 @@ InfoMoneyName
 --Прайс-лист
 PriceListId
 PriceListName
+PriceListId_real
+PriceListName_real
 --Прайс для возвратов по "старым ценам" - если не "1опт"
 PriceListId_Prior
 PriceListName_Prior
@@ -126,8 +128,10 @@ AS
           , Object_InfoMoney_View.InfoMoneyDestinationName
 
           --Прайс-лист
-          , Object_PriceList.Id         AS PriceListId
-          , Object_PriceList.ValueData  AS PriceListName
+          , COALESCE (Object_PriceList.Id, Object_PriceList_Basis.Id)                AS PriceListId
+          , COALESCE (Object_PriceList.ValueData, Object_PriceList_Basis.ValueData)  AS PriceListName
+        --, Object_PriceList.Id         AS PriceListId_real
+        --, Object_PriceList.ValueData  AS PriceListName_real
           --Прайс для возвратов по "старым ценам" - если не "1опт"
           , Object_PriceList_Prior.Id         AS PriceListId_Prior
           , Object_PriceList_Prior.ValueData  AS PriceListName_Prior
@@ -217,6 +221,7 @@ AS
                                ON ObjectLink_Juridical_PriceList.ObjectId = Object_Juridical.Id
                               AND ObjectLink_Juridical_PriceList.DescId = zc_ObjectLink_Juridical_PriceList()
           LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = ObjectLink_Juridical_PriceList.ChildObjectId
+          LEFT JOIN Object AS Object_PriceList_Basis ON Object_PriceList_Basis.Id = zc_PriceList_Basis()
           --Прайс для возвратов по "старым ценам" - если не "1опт"
           LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList_Prior
                                ON ObjectLink_Juridical_PriceList_Prior.ObjectId = Object_Juridical.Id
