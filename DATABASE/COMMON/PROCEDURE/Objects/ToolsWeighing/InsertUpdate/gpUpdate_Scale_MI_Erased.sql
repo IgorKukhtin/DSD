@@ -62,6 +62,7 @@ BEGIN
                                                            , zc_MILinkObject_PartionCell_21()
                                                            , zc_MILinkObject_PartionCell_22()
                                                             ))
+           AND vbUserId <> 5
         THEN
             RAISE EXCEPTION 'Ошибка.Нет прав удалять.Установлена ячейка хранения <%>.'
                           , (SELECT lfGet_Object_ValueData_sh (MILO_PartionCell.ObjectId)

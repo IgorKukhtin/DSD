@@ -168,7 +168,9 @@ BEGIN
          END IF;
 
          -- ячейка хранени€
-         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell(), ioId, inPartionCellId);
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_1(), ioId, inPartionCellId);
+         -- открыли
+         PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_1(), ioId, FALSE);
 
          -- јвтоматически
          PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_isAuto(), ioId, TRUE);

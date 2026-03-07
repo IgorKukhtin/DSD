@@ -152,6 +152,7 @@ BEGIN
         AND inInfoMoneyName NOT ILIKE 'Запчасти и Ремонты'
         AND inInfoMoneyName NOT ILIKE 'Ремонт оборудования'
         AND inInfoMoneyName NOT ILIKE 'Аренда помещений'
+        AND inInfoMoneyName NOT ILIKE 'Аренда оборудования'
      THEN
          RAISE EXCEPTION 'Ошибка.УП статья = <%> определена больше 1 раза.', inInfoMoneyName;
      END IF;
@@ -166,6 +167,8 @@ BEGIN
                                   WHEN TRIM (inInfoMoneyName) ILIKE 'Запчасти и Ремонты'  THEN 1
                                   WHEN TRIM (inInfoMoneyName) ILIKE 'Ремонт оборудования' THEN 1
                                   WHEN TRIM (inInfoMoneyName) ILIKE 'Аренда помещений'    THEN 1
+                                  WHEN TRIM (inInfoMoneyName) ILIKE 'Аренда оборудования' THEN 1
+                                  
                                   ELSE 2
                              END
                       );

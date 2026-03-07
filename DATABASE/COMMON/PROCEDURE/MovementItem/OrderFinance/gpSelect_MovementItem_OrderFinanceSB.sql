@@ -1147,7 +1147,7 @@ BEGIN
             -- Условия договора
             LEFT JOIN tmpContractCondition ON tmpContractCondition.ContractId = MovementItem.ContractId
 
-            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = View_Contract.InfoMoneyId
+            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = CASE WHEN Object_Juridical.DescId = zc_Object_InfoMoney() THEN Object_Juridical.Id ELSE View_Contract.InfoMoneyId END
             LEFT JOIN Object AS Object_PaidKind  ON Object_PaidKind.Id  = CASE WHEN Object_Juridical.DescId = zc_Object_InfoMoney() THEN zc_Enum_PaidKind_SecondForm() ELSE View_Contract.PaidKindId END
 
             LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal

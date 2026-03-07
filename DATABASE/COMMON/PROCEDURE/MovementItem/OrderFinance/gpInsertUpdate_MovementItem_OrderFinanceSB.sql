@@ -99,6 +99,25 @@ BEGIN
      END IF;
 
 
+     -- такой мастер уже есть
+     IF inContractId > 0 AND inJuridicalId > 0
+     THEN
+         ioId := (SELECT MovementItem.Id
+                  FROM MovementItem
+                       INNER JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                                         ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                                        AND MILinkObject_Contract.DescId         = zc_MILinkObject_Contract()
+                                                        AND MILinkObject_Contract.ObjectId       = inContractId
+
+                  WHERE MovementItem.MovementId = inMovementId
+                    AND MovementItem.DescId     = zc_MI_Master()
+                    AND MovementItem.isErased   = FALSE
+                    AND MovementItem.ObjectId   = inJuridicalId
+                 );
+     END IF;
+
+
+
      -- 1.сохраняем Master, не ошибка - в Master все суммы = 0 + Примечание в чайлд
      SELECT tmp.ioId
             INTO ioId

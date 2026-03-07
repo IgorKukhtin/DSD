@@ -238,7 +238,7 @@ BEGIN
 
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell
                                                     ON MILinkObject_PartionCell.MovementItemId = MovementItem.Id
-                                                   AND MILinkObject_PartionCell.DescId = zc_MILinkObject_PartionCell()
+                                                   AND MILinkObject_PartionCell.DescId = zc_MILinkObject_PartionCell_1()
                    LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = MILinkObject_PartionCell.ObjectId
 
                    LEFT JOIN MovementLinkObject AS MLO_From

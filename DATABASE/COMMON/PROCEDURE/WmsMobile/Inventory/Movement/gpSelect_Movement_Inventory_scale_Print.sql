@@ -113,7 +113,7 @@ BEGIN
                                                                    , zc_MILinkObject_Box3()
                                                                    , zc_MILinkObject_Box4()
                                                                    , zc_MILinkObject_Box5()
-                                                                   , zc_MILinkObject_PartionCell()
+                                                                   , zc_MILinkObject_PartionCell_1()
                                                                     )
                             )
 
@@ -343,7 +343,7 @@ BEGIN
            -- Ячейка хранения
            LEFT JOIN tmpMILO_passport AS tmpMILO_PartionCell_passport
                                       ON tmpMILO_PartionCell_passport.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
-                                     AND tmpMILO_PartionCell_passport.DescId         = zc_MILinkObject_PartionCell()
+                                     AND tmpMILO_PartionCell_passport.DescId         = zc_MILinkObject_PartionCell_1()
            LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = tmpMILO_PartionCell_passport.ObjectId
 
            -- данные в Партии - Паспорта

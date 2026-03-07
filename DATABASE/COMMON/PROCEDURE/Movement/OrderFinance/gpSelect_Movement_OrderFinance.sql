@@ -50,7 +50,7 @@ BEGIN
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                        )
-        , tmpUserAdmin AS (SELECT UserId
+        , tmpUserAdmin AS (SELECT DISTINCT UserId
                            FROM ObjectLink_UserRole_View
                            WHERE RoleId IN (zc_Enum_Role_Admin()
                                           , 4629762 -- Планирование платежей (доступ ВСЕ заявки)
