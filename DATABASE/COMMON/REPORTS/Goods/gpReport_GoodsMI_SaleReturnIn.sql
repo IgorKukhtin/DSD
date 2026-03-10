@@ -350,7 +350,7 @@ BEGIN
        RETURN QUERY
        WITH -- данные только из олап
             tmpReport_olap AS (SELECT gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
-                                    , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName, 'gpReport.GoodsName_ukr
+                                    , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName, gpReport.GoodsName_ukr
                                     , CASE WHEN inIsGoodsKind = TRUE THEN gpReport.GoodsKindId   ELSE 0 END AS GoodsKindId
                                     , CASE WHEN inIsGoodsKind = TRUE THEN gpReport.GoodsKindName ELSE '' END AS GoodsKindName
                                     , gpReport.GoodsKindName AS GoodsKindName_str_agg
@@ -596,7 +596,7 @@ BEGIN
           OR vbUserId <> 1058530 -- Няйко В.И.
 
        GROUP BY gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
-              , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName
+              , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName, gpReport.GoodsName_ukr
               , gpReport.GoodsKindId
               , gpReport.GoodsKindName
               , gpReport.MeasureName
