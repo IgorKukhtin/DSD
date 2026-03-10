@@ -48,39 +48,39 @@ $BODY$
                                -- Полное название товара (отображается при долгом нажатии на товаре в таблице заказа на мобильном клиенте)
                                || ' FULLNAME="' || TRIM (Object_Goods.ValueData)  ||'"'
                                -- Внешний код бренда товара
-                               || ' BRANDEXTID="' || Object_TradeMark.Id||'"'
+                               || ' BRANDEXTID="' || COALESCE(Object_TradeMark.Id ::TVarchar ,'')||'"'
                                -- Название бренда товара
-                               || ' BRANDNAME="' || TRIM (Object_TradeMark.ValueData)  ||'"'
+                               || ' BRANDNAME="' || TRIM (COALESCE(Object_TradeMark.ValueData,''))  ||'"'
                                -- Внешний код бренда товара
-                               || ' SUBBRANDEXTID="' || Object_GoodsGroupDirection.Id  ||'"'
+                              || ' SUBBRANDEXTID="' || COALESCE(Object_GoodsGroupDirection.Id::TVarchar ,'')  ||'"'
                                -- Название бренда товара
-                               || ' SUBBRANDNAME="' || TRIM (Object_GoodsGroupDirection.ValueData)  ||'"'
+                               || ' SUBBRANDNAME="' || TRIM (COALESCE(Object_GoodsGroupDirection.ValueData,''))  ||'"'
                                -- Количество в упаковке
                                || ' PACK_QTY="' || '0' ||'"'
                                -- Внешний код производителя товара
-                               || ' MANUFACTUREREXTID="' || Object_GoodsPlatform.Id  ||'"'
+                               || ' MANUFACTUREREXTID="' || COALESCE(Object_GoodsPlatform.Id::TVarchar ,'')  ||'"'
                                -- Название производителя товара
-                               || ' MANUFACTURERNAME="' || TRIM (Object_GoodsPlatform.ValueData)  ||'"'
+                               || ' MANUFACTURERNAME="' || TRIM (COALESCE(Object_GoodsPlatform.ValueData,''))  ||'"'
                                -- Внешний код категории товара
-                               || ' CATEGORYEXTID="' || Object_GoodsGroupPropertyParent.Id ||'"'
+                               || ' CATEGORYEXTID="' || COALESCE(Object_GoodsGroupPropertyParent.Id::TVarchar ,'') ||'"'
                                -- Название категории товара
-                               || ' CATEGORYNAME="' || TRIM (Object_GoodsGroupPropertyParent.ValueData)  ||'"'
+                               || ' CATEGORYNAME="' || TRIM (COALESCE(Object_GoodsGroupPropertyParent.ValueData,''))  ||'"'
                                -- Внешний код сабкатегории товара
-                               || ' SUBCATEGORYEXTID="' || Object_GoodsGroupProperty.Id ||'"'
+                               || ' SUBCATEGORYEXTID="' || COALESCE(Object_GoodsGroupProperty.Id::TVarchar ,'') ||'"'
                                -- Название сабкатегории товара
-                               || ' SUBCATEGORYNAME="' || TRIM (Object_GoodsGroupProperty.ValueData)  ||'"'
+                               || ' SUBCATEGORYNAME="' || TRIM (COALESCE(Object_GoodsGroupProperty.ValueData,''))  ||'"'
                                -- Внешний код линейки товара
-                               || ' SUBCATEGORYLINEEXTID="' || Object_GoodsKind.Id ||'"'
+                               || ' SUBCATEGORYLINEEXTID="' || COALESCE(Object_GoodsKind.Id::TVarchar ,'') ||'"'
                                -- Название линейки товара
-                               || ' SUBCATEGORYLINENAME="' || TRIM (Object_GoodsKind.ValueData)  ||'"'
+                               || ' SUBCATEGORYLINENAME="' || TRIM (COALESCE(Object_GoodsKind.ValueData,''))  ||'"'
                                -- Статус (2 - активный, 9 - расформирован, удален, деактивирован)
                                || ' STATUS="' || CASE WHEN Object_Goods.isErased = FALSE THEN '2' ELSE 'удален' END  ||'"'
                                -- Внешний код группы товаров
-                               || ' GroupExtId="' || Object_GoodsGroup.Id ||'"'
+                               || ' GroupExtId="' || COALESCE(Object_GoodsGroup.Id::TVarchar ,'') ||'"'
                                -- Признак вагового товару
                                || ' UNITFACTOR="' || (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN '0' ELSE '1' END) ||'"'
                                -- Глобальний код товару
-                               || ' GLOBALCODE="' || tmpGoodsByGoodsKind.ObjectId ||'"'
+                               || ' GLOBALCODE="' || COALESCE(tmpGoodsByGoodsKind.ObjectId::TVarchar ,'') ||'"'
                                -- Необходимость лицензии у товара: 0 = Нет / 1 = Да
                                || ' NeedLicense="' || '0' ||'"'
                                -- Кол-во в упаковке
