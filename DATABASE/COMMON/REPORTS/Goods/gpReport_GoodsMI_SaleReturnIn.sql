@@ -350,7 +350,8 @@ BEGIN
        RETURN QUERY
        WITH -- данные только из олап
             tmpReport_olap AS (SELECT gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
-                                    , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName, gpReport.GoodsName_ukr
+                                    , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName
+                                    , CASE WHEN gpReport.GoodsName_ukr <> ''  THEN gpReport.GoodsName_ukr ELSE gpReport.GoodsName END :: TVarChar AS GoodsName_ukr
                                     , CASE WHEN inIsGoodsKind = TRUE THEN gpReport.GoodsKindId   ELSE 0 END AS GoodsKindId
                                     , CASE WHEN inIsGoodsKind = TRUE THEN gpReport.GoodsKindName ELSE '' END AS GoodsKindName
                                     , gpReport.GoodsKindName AS GoodsKindName_str_agg
@@ -419,7 +420,8 @@ BEGIN
                               )
            -- данные из проводок - открываются долго, по идее здесь будет 1 день
          , tmpReport_after AS (SELECT gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
-                                    , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName, gpReport.GoodsName_ukr
+                                    , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName
+                                    , CASE WHEN gpReport.GoodsName_ukr <> ''  THEN gpReport.GoodsName_ukr ELSE gpReport.GoodsName END :: TVarChar AS GoodsName_ukr
                                     , CASE WHEN inIsGoodsKind = TRUE THEN gpReport.GoodsKindId   ELSE 0 END AS GoodsKindId
                                     , CASE WHEN inIsGoodsKind = TRUE THEN gpReport.GoodsKindName ELSE '' END AS GoodsKindName
                                     , gpReport.GoodsKindName AS GoodsKindName_str_agg
@@ -494,7 +496,8 @@ BEGIN
 
        --
        SELECT gpReport.GoodsGroupName, gpReport.GoodsGroupNameFull
-            , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName, gpReport.GoodsName_ukr
+            , gpReport.GoodsId, gpReport.GoodsCode, gpReport.GoodsName
+            , CASE WHEN gpReport.GoodsName_ukr <> ''  THEN gpReport.GoodsName_ukr ELSE gpReport.GoodsName END :: TVarChar AS GoodsName_ukr
             , gpReport.GoodsKindId :: Integer AS GoodsKindId
             , CASE WHEN inIsGoodsKind = TRUE THEN gpReport.GoodsKindName ELSE STRING_AGG (COALESCE (gpReport.GoodsKindName_str_agg,'') , '; ') END ::TVarChar AS GoodsKindName
             , gpReport.MeasureName
@@ -1148,7 +1151,7 @@ BEGIN
           , Object_Goods.Id                    AS GoodsId
           , Object_Goods.ObjectCode            AS GoodsCode
           , Object_Goods.ValueData             AS GoodsName
-          , COALESCE (tmpObject_GoodsPropertyValue.Name, '') ::TVarChar  AS GoodsName_ukr
+          , CASE WHEN tmpObject_GoodsPropertyValue.Name <> ''  THEN tmpObject_GoodsPropertyValue.Name ELSE Object_Goods.ValueData END :: TVarChar AS GoodsName_ukr
           --, Object_GoodsKind.Id                AS GoodsKindId
           --, Object_GoodsKind.ValueData         AS GoodsKindName
           , tmpOperationGroup.GoodsKindId    ::Integer AS GoodsKindId
