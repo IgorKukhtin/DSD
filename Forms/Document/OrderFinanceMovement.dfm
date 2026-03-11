@@ -4762,8 +4762,8 @@ object OrderFinanceMovementForm: TOrderFinanceMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 322
-    Top = 208
+    Left = 466
+    Top = 288
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
