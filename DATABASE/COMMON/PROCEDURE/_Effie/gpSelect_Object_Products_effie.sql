@@ -9,44 +9,44 @@ RETURNS TABLE (extId                  TVarChar   -- Уникальный идентификатор про
              , globalCode             TVarChar   -- Глобальный код товара
              , productName            TVarChar   -- Название продукта
              , groupExtId             TVarChar   -- Идентификатор группы товаров
-             , groupName              TVarChar   -- Название группы товаров     
-             , manufacturerId         TVarChar   -- Идентификатор производителя 
-             , manufacturerName       TVarChar   -- Название производителя      
-             , brandId                TVarChar   -- Идентификатор бренда        
-             , brandName              TVarChar   -- Название бренда             
-             , subBrandId             TVarChar   -- Идентификатор бренда        
-             , subBrandName           TVarChar   -- Название саб-бренда         
-             , categoryExtId          TVarChar   -- Идентификатор категории     
-             , categoryName           TVarChar   -- Название категории          
-             , subCategoryExtId       TVarChar   -- Идентификатор саб-категории 
-             , subCategoryName        TVarChar   -- Название саб-категории      
-             , subCategoryLineExtId   TVarChar   -- Идентификатор линейки       
-             , subCategoryLineName    TVarChar   -- Название линейки            
+             , groupName              TVarChar   -- Название группы товаров
+             , manufacturerId         TVarChar   -- Идентификатор производителя
+             , manufacturerName       TVarChar   -- Название производителя
+             , brandId                TVarChar   -- Идентификатор бренда
+             , brandName              TVarChar   -- Название бренда
+             , subBrandId             TVarChar   -- Идентификатор бренда
+             , subBrandName           TVarChar   -- Название саб-бренда
+             , categoryExtId          TVarChar   -- Идентификатор категории
+             , categoryName           TVarChar   -- Название категории
+             , subCategoryExtId       TVarChar   -- Идентификатор саб-категории
+             , subCategoryName        TVarChar   -- Название саб-категории
+             , subCategoryLineExtId   TVarChar   -- Идентификатор линейки
+             , subCategoryLineName    TVarChar   -- Название линейки
              , unitId                 Integer    --"Id единицы измерения.Пример: 1 - метры, 2 - сантиметры, 3 - киллограммы, 4 - штуки, 5 - литры, 6 - граммы, 7 - денежные единици, 8 - декалитр (10л), 9 - упаковка"
              , additionalUnitId       Integer    -- Id единицы измерения.Пример: 4 - штуки при unitId 9 - упаковка"
              , typeId                 Integer    -- Id типа продукта. Пример: 1 - SKU, 2 - POSM, 3- ДМП
              , unitFactor             TFloat     -- 1 - Весовой/0 - невесовой товар
              , quantity               TFloat     -- Кол-во товара в единице измерения (для весового товара unitFactor= 1, количество будет равно 1)
-             , length                 TFloat     -- Длина                          
-             , width                  TFloat     -- Ширина                         
-             , height                 TFloat     -- Высота                         
-             , vatRate                TFloat     -- Размер НДС. Пример: 0.2        
-             , basePrice              TFloat     -- Базовая цена                   
+             , length                 TFloat     -- Длина
+             , width                  TFloat     -- Ширина
+             , height                 TFloat     -- Высота
+             , vatRate                TFloat     -- Размер НДС. Пример: 0.2
+             , basePrice              TFloat     -- Базовая цена
              , needLicense            Boolean    -- Необходима ли продукту лицензия
-             , ean                    TVarChar   -- EAN (Штрих код)                
-             , photoName              TVarChar   -- Название фото                  
-             , photoChangeDateTime    TVarChar   -- Дата обновления фото           
+             , ean                    TVarChar   -- EAN (Штрих код)
+             , photoName              TVarChar   -- Название фото
+             , photoChangeDateTime    TVarChar   -- Дата обновления фото
              , isCompetitor           Boolean    -- Признак компании производителя продукта: false - свой/true - чужой (в случае не заполнения поля будет проставлено false)
              , qntPerPack             TFloat     -- Кол-во в упаковке
-             , qntPerCase             TFloat     -- Кол-во в коробке 
-             , qntPerPall             TFloat     -- Кол-во в паллете 
+             , qntPerCase             TFloat     -- Кол-во в коробке
+             , qntPerPall             TFloat     -- Кол-во в паллете
              , multiplicity           TFloat     -- Кратность (кратно какому кол-ву можно набивать этот товар в заказе. Пример: Кратность 3 - можем набить 3 или 6 или 9 и т.д.)
              , sortId                 TFloat     -- Порядок сортировки продукта при формировании заказа
              , fullName               TVarChar   -- Полное название
-             , enableSellByPack       Boolean    -- Продажа товаров упаковками false = Нет / true = да     
-             , IsPromoGift            Boolean    -- Подарочный товар false = Нет / true = да               
-             , minOrder               TFloat     -- Минимальное кол-во для заказа                          
-             , grossWeight            TFloat     -- Вес товара, брутто (кг)                                
+             , enableSellByPack       Boolean    -- Продажа товаров упаковками false = Нет / true = да
+             , IsPromoGift            Boolean    -- Подарочный товар false = Нет / true = да
+             , minOrder               TFloat     -- Минимальное кол-во для заказа
+             , grossWeight            TFloat     -- Вес товара, брутто (кг)
              , isDeleted              Boolean    -- Признак активности: false = активен / true = не активен
 ) AS
 
@@ -63,36 +63,73 @@ $BODY$
                                           ObjectLink_GoodsByGoodsKind_Goods.ObjectId                        AS ObjectId
                                         , ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId                   AS GoodsId
                                         , COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0) AS GoodsKindId
-                                   FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
-                                        LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
-                                                             ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
-                                                            AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
-                                   WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
-                                  )                   
+                                   FROM Object AS Object_GoodsByGoodsKind
+                                        JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                                        ON ObjectLink_GoodsByGoodsKind_Goods.ObjectId = Object_GoodsByGoodsKind.Id
+                                                       AND ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                                       AND ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId > 0
+                                        -- Ограничим - есть Вид товара
+                                        INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                              ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                             AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                                             AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId > 0
+                                       --
+                                        JOIN ObjectBoolean AS ObjectBoolean_GoodsByGoodsKind_Order
+                                                           ON ObjectBoolean_GoodsByGoodsKind_Order.ObjectId  = Object_GoodsByGoodsKind.Id
+                                                          AND ObjectBoolean_GoodsByGoodsKind_Order.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+                                                          AND (ObjectBoolean_GoodsByGoodsKind_Order.ValueData = TRUE -- условие что разрешен
+                                                            OR (ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId     = 9505524 -- 457 - Сосиски ФІЛЕЙКИ вар 1 ґ ТМ Наші Ковбаси
+                                                            AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId = 8344    -- Б/В 0,5кг
+                                                              ))
+                                        LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsByGoodsKind_NotMobile
+                                                                ON ObjectBoolean_GoodsByGoodsKind_NotMobile.ObjectId  = Object_GoodsByGoodsKind.Id
+                                                               AND ObjectBoolean_GoodsByGoodsKind_NotMobile.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_NotMobile()
+                                                               AND ObjectBoolean_GoodsByGoodsKind_NotMobile.ValueData = TRUE -- условие что НЕ разрешен
+
+                                        -- Ограничим - если НЕ удален
+                                        JOIN Object AS Object_Goods ON Object_Goods.Id       = ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId
+                                                                   AND Object_Goods.isErased = FALSE
+                                        -- Ограничим - если НЕ удален
+                                        JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id       = ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId
+                                                                       AND Object_GoodsKind.isErased = FALSE
+                                        -- Ограничим - ТОЛЬКО если ГП
+                                        LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                             ON ObjectLink_Goods_InfoMoney.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId
+                                                            AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                                        INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                                        AND Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
+                                                                                                                           , zc_Enum_InfoMoneyDestination_21000() -- Общефирменные + Чапли
+                                                                                                                           , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                                                                                            )
+
+                                   WHERE Object_GoodsByGoodsKind.DescId = zc_Object_GoodsByGoodsKind()
+                                     AND Object_GoodsByGoodsKind.isErased = FALSE
+                                     AND ObjectBoolean_GoodsByGoodsKind_NotMobile.ObjectId IS NULL
+                                  )
 
          , tmpGoodsPropertyValue AS (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId          AS GoodsId
                                           , ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId      AS GoodsKindId
-      
+
                                           , ObjectString_BarCode.ValueData         AS BarCode
-                  
+
                                      FROM ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                                         INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
                                                               ON ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
                                                              AND ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId = ObjectLink_GoodsPropertyValue_Goods.ObjectId
                                                              AND ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = 83955
-      
+
                                         LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
                                                              ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_Goods.ObjectId
                                                             AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
-      
+
                                         LEFT JOIN Object AS Object_GoodsPropertyValue
                                                          ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_Goods.ObjectId
                                                         AND Object_GoodsPropertyValue.DescId = zc_Object_GoodsPropertyValue()
-                                                        AND Object_GoodsPropertyValue.isErased = FALSE 
-      
+                                                        AND Object_GoodsPropertyValue.isErased = FALSE
+
                                         LEFT JOIN ObjectString AS ObjectString_BarCode
                                                                ON ObjectString_BarCode.ObjectId = ObjectLink_GoodsPropertyValue_Goods.ObjectId
-                                                              AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode() 
+                                                              AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
                                      WHERE ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
                                        AND COALESCE (ObjectString_BarCode.ValueData ,'') <> ''
                                     )
@@ -111,7 +148,7 @@ $BODY$
                         , TRIM (COALESCE(Object_GoodsGroupDirection.ValueData,'')) ::TVarChar AS subBrandName
                         , COALESCE(Object_GoodsGroupPropertyParent.Id::TVarchar ,'')    ::TVarChar AS categoryExtId
                         , TRIM (COALESCE(Object_GoodsGroupPropertyParent.ValueData,'')) ::TVarChar AS categoryName
-                        , COALESCE(Object_GoodsGroupProperty.Id::TVarchar ,'')          ::TVarChar AS subCategoryExtId 
+                        , COALESCE(Object_GoodsGroupProperty.Id::TVarchar ,'')          ::TVarChar AS subCategoryExtId
                         , TRIM (COALESCE(Object_GoodsGroupProperty.ValueData,''))       ::TVarChar AS subCategoryName
                         , COALESCE(Object_GoodsKind.Id::TVarchar ,'')                   ::TVarChar AS subCategoryLineExtId
                         , TRIM (COALESCE(Object_GoodsKind.ValueData,''))                ::TVarChar AS subCategoryLineName
@@ -123,8 +160,8 @@ $BODY$
                         , 0   ::TFloat AS length
                         , 0   ::TFloat AS width
                         , 0   ::TFloat AS height
-                        , 0.2 ::TFloat AS vatRate 
-                        , 0   ::TFloat AS basePrice 
+                        , 0.2 ::TFloat AS vatRate
+                        , 0   ::TFloat AS basePrice
                         , FALSE ::Boolean AS needLicense
                         , tmpGoodsPropertyValue.BarCode ::TVarChar AS ean
                         , '' ::TVarChar AS photoName
@@ -135,16 +172,17 @@ $BODY$
                         , 0     ::TFloat   AS qntPerPall
                         , 0     ::TFloat   AS multiplicity
                         , 0     ::TFloat   AS sortId
-                        , TRIM (Object_Goods.ValueData) ::TVarChar AS fullName
-                        , FALSE ::Boolean  AS enableSellByPack 
+                        , (TRIM (Object_Goods.ValueData) || ' ' || TRIM (COALESCE(Object_GoodsKind.ValueData,''))) ::TVarChar AS fullName
+                        , FALSE ::Boolean  AS enableSellByPack
                         , FALSE ::Boolean  AS IsPromoGift
                         , 0     ::TFloat   AS minOrder
                         , (COALESCE (ObjectFloat_Weight.ValueData,0) + COALESCE (ObjectFloat_WeightTare.ValueData,0)) ::TFloat AS grossWeight
                         , Object_Goods.isErased ::Boolean AS isDeleted
-                        
-                  
-                                      
-                   FROM Object AS Object_Goods
+
+                   FROM tmpGoodsByGoodsKind
+                        INNER JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoodsByGoodsKind.GoodsId
+                        LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoodsByGoodsKind.GoodsKindId
+
                         LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
                                              ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id
                                             AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
@@ -170,9 +208,6 @@ $BODY$
                                             AND ObjectLink_GoodsGroupProperty_Parent.DescId = zc_ObjectLink_GoodsGroupProperty_Parent()
                         LEFT JOIN Object AS Object_GoodsGroupPropertyParent ON Object_GoodsGroupPropertyParent.Id = ObjectLink_GoodsGroupProperty_Parent.ChildObjectId
 
-                        LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId = Object_Goods.Id
-                        LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoodsByGoodsKind.GoodsKindId
-
                         LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                              ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                                             AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
@@ -193,12 +228,11 @@ $BODY$
                         LEFT JOIN tmpGoodsPropertyValue ON tmpGoodsPropertyValue.GoodsId = Object_Goods.Id
                                                        AND tmpGoodsPropertyValue.GoodsKindId = Object_GoodsKind.Id
 
-                   WHERE Object_Goods.DescId = zc_Object_Goods()
-                  --LIMIT 10 
+                  --LIMIT 10
                   ;
 
-    
-    
+
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
