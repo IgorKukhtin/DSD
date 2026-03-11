@@ -20,7 +20,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn_OLD_TWO (
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsName_ukr TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar, MeasureName TVarChar
              , TradeMarkId Integer, TradeMarkName TVarChar, GoodsGroupAnalystName TVarChar
              , GoodsTagName TVarChar, GoodsGroupStatName TVarChar
@@ -446,6 +446,7 @@ BEGIN
           , Object_Goods.Id                    AS GoodsId
           , Object_Goods.ObjectCode            AS GoodsCode
           , Object_Goods.ValueData             AS GoodsName
+          , ''::TVarChar                       AS GoodsName_ukr
           , Object_GoodsKind.Id                AS GoodsKindId
           , Object_GoodsKind.ValueData         AS GoodsKindName
           , Object_Measure.ValueData           AS MeasureName

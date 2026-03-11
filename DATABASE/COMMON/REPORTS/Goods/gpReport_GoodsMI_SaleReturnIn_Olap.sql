@@ -29,7 +29,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn_Olap (
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsName_ukr TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar, MeasureName TVarChar
              , TradeMarkId Integer, TradeMarkName TVarChar, GoodsGroupAnalystName TVarChar
              , GoodsTagName TVarChar, GoodsGroupStatName TVarChar
@@ -359,7 +359,9 @@ BEGIN
                               , SUM (CASE WHEN inIsCost = TRUE THEN SoldTable.Return_SummCost_40200 ELSE 0 END) AS Return_SummCost_40200
                               -- сумма вх (схема павильоны)
                               , SUM (SoldTable.Sale_SummIn_pav)     AS Sale_SummIn_pav
-                              , SUM (SoldTable.ReturnIn_SummIn_pav) AS ReturnIn_SummIn_pav
+                              , SUM (SoldTable.ReturnIn_SummIn_pav) AS ReturnIn_SummIn_pav  
+                              
+                              , zfCalc_GoodsPropertyId (SoldTable.ContractId, SoldTable.JuridicalId, SoldTable.PartnerId) AS GoodsPropertyId
                          FROM SoldTable
                               LEFT JOIN _tmpJuridical ON _tmpJuridical.JuridicalId = SoldTable.JuridicalId
                               -- Юр лица для Физ.лица Филиала
@@ -414,6 +416,7 @@ BEGIN
                               , CASE WHEN inIsPartner  = FALSE THEN 0 ELSE SoldTable.StreetId       END
                               , SoldTable.PaidKindId
                               , CASE WHEN inIsDate = TRUE THEN SoldTable.OperDate ELSE NULL END
+                              , zfCalc_GoodsPropertyId (SoldTable.ContractId, SoldTable.JuridicalId, SoldTable.PartnerId) 
                          HAVING SUM (SoldTable.Actions_Summ) <> 0
                              OR SUM (SoldTable.Sale_Summ)    <> 0
                              OR SUM (SoldTable.Return_Summ)  <> 0
@@ -461,12 +464,83 @@ BEGIN
                      WHERE ObjectBoolean.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Top()
                        AND COALESCE (ObjectBoolean.ValueData, FALSE) = TRUE
                      )
+
+
+, tmpObject_GoodsPropertyValue AS (SELECT tmpGoodsProperty.GoodsPropertyId
+                                  , ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                  , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
+                                  , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+                                  , Object_GoodsPropertyValue.ValueData  AS Name
+                             FROM (SELECT DISTINCT tmpOperationGroup.GoodsPropertyId FROM tmpOperationGroup WHERE tmpOperationGroup.GoodsPropertyId <> 0
+                                  ) AS tmpGoodsProperty
+                                  INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                                        ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                                                       AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                                  LEFT JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                     
+                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                                       ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                      AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                                       ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                      AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+                             WHERE COALESCE (Object_GoodsPropertyValue.ValueData,'') <> ''
+                             )
+ , tmpObject_GoodsPropertyValueGroup AS (SELECT tmpObject_GoodsPropertyValue.GoodsPropertyId
+                                              , tmpObject_GoodsPropertyValue.GoodsId
+                                              , tmpObject_GoodsPropertyValue.Name
+                                         FROM (SELECT tmpObject_GoodsPropertyValue.GoodsPropertyId
+                                                    , MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId
+                                                    , tmpObject_GoodsPropertyValue.GoodsId
+                                               FROM tmpObject_GoodsPropertyValue
+                                               WHERE tmpObject_GoodsPropertyValue.Name <> ''
+                                               GROUP BY tmpObject_GoodsPropertyValue.GoodsPropertyId
+                                                      , tmpObject_GoodsPropertyValue.GoodsId
+                                              ) AS tmpGoodsProperty_find
+                                              LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId = tmpGoodsProperty_find.ObjectId
+                                                                                    AND tmpObject_GoodsPropertyValue.GoodsPropertyId = tmpGoodsProperty_find.GoodsPropertyId
+                                        )
+
+ , tmpObject_GoodsPropertyValue_basis AS (SELECT tmpGoodsProperty.GoodsPropertyId
+                                               , ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                               , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId AS GoodsId
+                                               , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+                                               , Object_GoodsPropertyValue.ValueData  AS Name
+                                          FROM (SELECT vbGoodsPropertyId_basis AS GoodsPropertyId
+                                               ) AS tmpGoodsProperty
+                                               INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                                                     ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                                                                    AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                                               INNER JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                                             -- AND Object_GoodsPropertyValue.ValueData <> ''
+                                               LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                                                    ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                   AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                                               LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                                                    ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                   AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+                                          WHERE COALESCE (Object_GoodsPropertyValue.ValueData,'') <> ''
+                                          )
+
+ , tmpObject_GoodsPropertyValueGroup_basis AS (SELECT tmpObject_GoodsPropertyValue.GoodsId
+                                                    , tmpObject_GoodsPropertyValue.Name
+                                               FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, tmpObject_GoodsPropertyValue.GoodsId FROM tmpObject_GoodsPropertyValue_basis AS tmpObject_GoodsPropertyValue WHERE tmpObject_GoodsPropertyValue.Name <> '' GROUP BY tmpObject_GoodsPropertyValue.GoodsId
+                                                    ) AS tmpGoodsProperty_find
+                                                    LEFT JOIN tmpObject_GoodsPropertyValue_basis AS tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
+                                              )
+
      -- Результат
      SELECT Object_GoodsGroup.ValueData        AS GoodsGroupName
           , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
           , Object_Goods.Id                    AS GoodsId
           , Object_Goods.ObjectCode            AS GoodsCode
-          , Object_Goods.ValueData             AS GoodsName
+          , Object_Goods.ValueData             AS GoodsName 
+          , (CASE WHEN tmpObject_GoodsPropertyValue.Name            <> '' THEN tmpObject_GoodsPropertyValue.Name
+                  WHEN tmpObject_GoodsPropertyValueGroup.Name       <> '' THEN tmpObject_GoodsPropertyValueGroup.Name
+                  WHEN tmpObject_GoodsPropertyValue_basis.Name      <> '' THEN tmpObject_GoodsPropertyValue_basis.Name
+                  WHEN tmpObject_GoodsPropertyValueGroup_basis.Name <> '' THEN tmpObject_GoodsPropertyValueGroup_basis.Name
+                  ELSE ''
+             END) ::TVarChar  AS GoodsName_ukr
           , Object_GoodsKind.Id                AS GoodsKindId
           , Object_GoodsKind.ValueData         AS GoodsKindName
           , Object_Measure.ValueData           AS MeasureName
@@ -631,6 +705,18 @@ BEGIN
                            AND COALESCE (_tmpTOP.GoodsKindId,0) = COALESCE (tmpOperationGroup.GoodsKindId,0)
 
           LEFT JOIN zfCalc_DayOfWeekName (tmpOperationGroup.OperDate) AS tmpWeekDay ON 1=1
+
+          LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsPropertyId = tmpOperationGroup.GoodsPropertyId
+                                                AND tmpObject_GoodsPropertyValue.GoodsId = tmpOperationGroup.GoodsId
+                                                AND tmpObject_GoodsPropertyValue.GoodsKindId = tmpOperationGroup.GoodsKindId 
+          LEFT JOIN tmpObject_GoodsPropertyValueGroup ON tmpObject_GoodsPropertyValueGroup.GoodsPropertyId = tmpOperationGroup.GoodsPropertyId
+                                                     AND tmpObject_GoodsPropertyValueGroup.GoodsId =tmpOperationGroup.GoodsId
+                                                     AND tmpObject_GoodsPropertyValue.GoodsId IS NULL and  1=0
+          LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = tmpOperationGroup.GoodsId
+                                                      AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = tmpOperationGroup.GoodsKindId and 1=0
+          LEFT JOIN tmpObject_GoodsPropertyValueGroup_basis ON tmpObject_GoodsPropertyValueGroup_basis.GoodsId =tmpOperationGroup.GoodsId and 1=0
+
+
     ;
 
 END;
@@ -659,4 +745,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_SaleReturnIn_Olap (inStartDate:= '01.01.2025', inEndDate:= '01.01.2025', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsContract:= FALSE, inIsJuridical_Branch:= FALSE, inIsJuridical_where:= FALSE, inIsPartner_where:= FALSE, inIsGoods_where:= FALSE, inIsCost:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_SaleReturnIn_Olap (inStartDate:= '01.01.2025', inEndDate:= '01.01.2025', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsContract:= FALSE, inIsJuridical_Branch:= FALSE, inIsJuridical_where:= FALSE, inIsPartner_where:= FALSE, inIsGoods_where:= FALSE, inIsCost:= FALSE,  inisMonth := 'False'  inSession:= zfCalc_UserAdmin());

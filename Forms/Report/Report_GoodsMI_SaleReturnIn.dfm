@@ -4,7 +4,6 @@
   ClientWidth = 1362
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -468
   ExplicitWidth = 1378
   ExplicitHeight = 459
   PixelsPerInch = 96
@@ -725,6 +724,14 @@
           object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object goodsname_ukr: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088' ('#1091#1082#1088'.)'
+            DataBinding.FieldName = 'goodsname_ukr'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
