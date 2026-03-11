@@ -327,8 +327,8 @@ BEGIN
                                 , MovementLinkObject_To.ObjectId
                         );
 
- RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from tmpVirt);
- RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from tmpContainer);
+-- RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from tmpVirt);
+-- RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from tmpContainer);
 
 
    CREATE TEMP TABLE DD ON COMMIT DROP
