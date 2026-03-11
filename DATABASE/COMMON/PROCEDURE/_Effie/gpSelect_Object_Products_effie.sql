@@ -5,27 +5,59 @@ DROP FUNCTION IF EXISTS gpSelect_Object_Products_effie ( TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_Products_effie(
     IN inSession              TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (RowData Text)
-AS
+RETURNS TABLE (extId                  TVarChar   -- Уникальный идентификатор продукта
+             , globalCode             TVarChar   -- Глобальный код товара
+             , productName            TVarChar   -- Название продукта
+             , groupExtId             TVarChar   -- Идентификатор группы товаров
+             , groupName              TVarChar   -- Название группы товаров     
+             , manufacturerId         TVarChar   -- Идентификатор производителя 
+             , manufacturerName       TVarChar   -- Название производителя      
+             , brandId                TVarChar   -- Идентификатор бренда        
+             , brandName              TVarChar   -- Название бренда             
+             , subBrandId             TVarChar   -- Идентификатор бренда        
+             , subBrandName           TVarChar   -- Название саб-бренда         
+             , categoryExtId          TVarChar   -- Идентификатор категории     
+             , categoryName           TVarChar   -- Название категории          
+             , subCategoryExtId       TVarChar   -- Идентификатор саб-категории 
+             , subCategoryName        TVarChar   -- Название саб-категории      
+             , subCategoryLineExtId   TVarChar   -- Идентификатор линейки       
+             , subCategoryLineName    TVarChar   -- Название линейки            
+             , unitId                 Integer    --"Id единицы измерения.Пример: 1 - метры, 2 - сантиметры, 3 - киллограммы, 4 - штуки, 5 - литры, 6 - граммы, 7 - денежные единици, 8 - декалитр (10л), 9 - упаковка"
+             , additionalUnitId       Integer    -- Id единицы измерения.Пример: 4 - штуки при unitId 9 - упаковка"
+             , typeId                 Integer    -- Id типа продукта. Пример: 1 - SKU, 2 - POSM, 3- ДМП
+             , unitFactor             TFloat     -- 1 - Весовой/0 - невесовой товар
+             , quantity               TFloat     -- Кол-во товара в единице измерения (для весового товара unitFactor= 1, количество будет равно 1)
+             , length                 TFloat     -- Длина                          
+             , width                  TFloat     -- Ширина                         
+             , height                 TFloat     -- Высота                         
+             , vatRate                TFloat     -- Размер НДС. Пример: 0.2        
+             , basePrice              TFloat     -- Базовая цена                   
+             , needLicense            Boolean    -- Необходима ли продукту лицензия
+             , ean                    TVarChar   -- EAN (Штрих код)                
+             , photoName              TVarChar   -- Название фото                  
+             , photoChangeDateTime    TVarChar   -- Дата обновления фото           
+             , isCompetitor           Boolean    -- Признак компании производителя продукта: false - свой/true - чужой (в случае не заполнения поля будет проставлено false)
+             , qntPerPack             TFloat     -- Кол-во в упаковке
+             , qntPerCase             TFloat     -- Кол-во в коробке 
+             , qntPerPall             TFloat     -- Кол-во в паллете 
+             , multiplicity           TFloat     -- Кратность (кратно какому кол-ву можно набивать этот товар в заказе. Пример: Кратность 3 - можем набить 3 или 6 или 9 и т.д.)
+             , sortId                 TFloat     -- Порядок сортировки продукта при формировании заказа
+             , fullName               TVarChar   -- Полное название
+             , enableSellByPack       Boolean    -- Продажа товаров упаковками false = Нет / true = да     
+             , IsPromoGift            Boolean    -- Подарочный товар false = Нет / true = да               
+             , minOrder               TFloat     -- Минимальное кол-во для заказа                          
+             , grossWeight            TFloat     -- Вес товара, брутто (кг)                                
+             , isDeleted              Boolean    -- Признак активности: false = активен / true = не активен
+) AS
+
 $BODY$
    DECLARE vbUserId Integer;
  BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-    CREATE TEMP TABLE _tmpResult (NPP Integer, RowData Text) ON COMMIT DROP;
-  
-        -- первые строчки XML
-         INSERT INTO _tmpResult (NPP, RowData) VALUES (-30, '<?xml version="1.0" encoding="windows-1251"?>');
-         INSERT INTO _tmpResult (NPP, RowData) VALUES (-20, '<ROOT>');
-         
-           -- товары
-           INSERT INTO _tmpResult(NPP, RowData) VALUES (-10, '<LocalProducts>');
-           --
-           INSERT INTO _tmpResult (NPP, RowData
-                                   
-                                   )       
-                                   
+     -- Результат
+     RETURN QUERY
            WITH
            tmpGoodsByGoodsKind AS (SELECT DISTINCT
                                           ObjectLink_GoodsByGoodsKind_Goods.ObjectId                        AS ObjectId
@@ -38,63 +70,80 @@ $BODY$
                                    WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
                                   )                   
 
-                   SELECT ROW_NUMBER() OVER (ORDER BY Object_Goods.ObjectCode) AS NPP
-                        , '<LocalProduct'
-                               -- Внешний код товара
-                               ||  ' LOCALCODE="' || (Object_Goods.ObjectCODE)::TVarChar || '"'
+         , tmpGoodsPropertyValue AS (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId          AS GoodsId
+                                          , ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId      AS GoodsKindId
+      
+                                          , ObjectString_BarCode.ValueData         AS BarCode
+                  
+                                     FROM ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                        INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                                              ON ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                                                             AND ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId = ObjectLink_GoodsPropertyValue_Goods.ObjectId
+                                                             AND ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = 83955
+      
+                                        LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                                             ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_Goods.ObjectId
+                                                            AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+      
+                                        LEFT JOIN Object AS Object_GoodsPropertyValue
+                                                         ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_Goods.ObjectId
+                                                        AND Object_GoodsPropertyValue.DescId = zc_Object_GoodsPropertyValue()
+                                                        AND Object_GoodsPropertyValue.isErased = FALSE 
+      
+                                        LEFT JOIN ObjectString AS ObjectString_BarCode
+                                                               ON ObjectString_BarCode.ObjectId = ObjectLink_GoodsPropertyValue_Goods.ObjectId
+                                                              AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode() 
+                                     WHERE ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                                       AND COALESCE (ObjectString_BarCode.ValueData ,'') <> ''
+                                    )
 
-                               -- Название товара (отображается в таблице заказа на мобильном клиенте)
-                               || ' NAME="' || TRIM (Object_Goods.ValueData)  ||'"' 
-                               -- Полное название товара (отображается при долгом нажатии на товаре в таблице заказа на мобильном клиенте)
-                               || ' FULLNAME="' || TRIM (Object_Goods.ValueData)  ||'"'
-                               -- Внешний код бренда товара
-                               || ' BRANDEXTID="' || COALESCE(Object_TradeMark.Id ::TVarchar ,'')||'"'
-                               -- Название бренда товара
-                               || ' BRANDNAME="' || TRIM (COALESCE(Object_TradeMark.ValueData,''))  ||'"'
-                               -- Внешний код бренда товара
-                              || ' SUBBRANDEXTID="' || COALESCE(Object_GoodsGroupDirection.Id::TVarchar ,'')  ||'"'
-                               -- Название бренда товара
-                               || ' SUBBRANDNAME="' || TRIM (COALESCE(Object_GoodsGroupDirection.ValueData,''))  ||'"'
-                               -- Количество в упаковке
-                               || ' PACK_QTY="' || '0' ||'"'
-                               -- Внешний код производителя товара
-                               || ' MANUFACTUREREXTID="' || COALESCE(Object_GoodsPlatform.Id::TVarchar ,'')  ||'"'
-                               -- Название производителя товара
-                               || ' MANUFACTURERNAME="' || TRIM (COALESCE(Object_GoodsPlatform.ValueData,''))  ||'"'
-                               -- Внешний код категории товара
-                               || ' CATEGORYEXTID="' || COALESCE(Object_GoodsGroupPropertyParent.Id::TVarchar ,'') ||'"'
-                               -- Название категории товара
-                               || ' CATEGORYNAME="' || TRIM (COALESCE(Object_GoodsGroupPropertyParent.ValueData,''))  ||'"'
-                               -- Внешний код сабкатегории товара
-                               || ' SUBCATEGORYEXTID="' || COALESCE(Object_GoodsGroupProperty.Id::TVarchar ,'') ||'"'
-                               -- Название сабкатегории товара
-                               || ' SUBCATEGORYNAME="' || TRIM (COALESCE(Object_GoodsGroupProperty.ValueData,''))  ||'"'
-                               -- Внешний код линейки товара
-                               || ' SUBCATEGORYLINEEXTID="' || COALESCE(Object_GoodsKind.Id::TVarchar ,'') ||'"'
-                               -- Название линейки товара
-                               || ' SUBCATEGORYLINENAME="' || TRIM (COALESCE(Object_GoodsKind.ValueData,''))  ||'"'
-                               -- Статус (2 - активный, 9 - расформирован, удален, деактивирован)
-                               || ' STATUS="' || CASE WHEN Object_Goods.isErased = FALSE THEN '2' ELSE 'удален' END  ||'"'
-                               -- Внешний код группы товаров
-                               || ' GroupExtId="' || COALESCE(Object_GoodsGroup.Id::TVarchar ,'') ||'"'
-                               -- Признак вагового товару
-                               || ' UNITFACTOR="' || (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN '0' ELSE '1' END) ||'"'
-                               -- Глобальний код товару
-                               || ' GLOBALCODE="' || COALESCE(tmpGoodsByGoodsKind.ObjectId::TVarchar ,'') ||'"'
-                               -- Необходимость лицензии у товара: 0 = Нет / 1 = Да
-                               || ' NeedLicense="' || '0' ||'"'
-                               -- Кол-во в упаковке
-                               || ' QntPerPack="' || '0' ||'"'
-                               -- Возможность продавать упаковками: 0 = Нет / 1 = Да
-                               || ' EnableSellByPack="' || '0' ||'"'
-                               -- Вес товара, брутто (кг)
-                               || ' GrossWeight="' || COALESCE (ObjectFloat_Weight.ValueData,0) + COALESCE (ObjectFloat_WeightTare.ValueData,0) ||'"'
-                               -- Подарочный товар 0 = Нет / 1 = да
-                               || ' IsPromoGift="' || '0' ||'"'
 
-                               || '/>'
-
-                    
+                   SELECT COALESCE(tmpGoodsByGoodsKind.ObjectId::TVarchar ,'') ::TVarChar AS extId
+                        , (Object_Goods.ObjectCODE)                   ::TVarChar AS globalCode
+                        , TRIM (Object_Goods.ValueData)               ::TVarChar AS productName
+                        , COALESCE(Object_GoodsGroup.Id::TVarchar ,'')  ::TVarChar AS groupExtId
+                        , TRIM (Object_GoodsGroup.ValueData ,'')      ::TVarChar AS groupName
+                        , COALESCE(Object_GoodsPlatform.Id::TVarchar ,'')    ::TVarChar AS manufacturerId
+                        , TRIM (COALESCE(Object_GoodsPlatform.ValueData,'')) ::TVarChar AS manufacturerName
+                        , COALESCE(Object_TradeMark.Id ::TVarchar ,'')       ::TVarChar AS brandId
+                        , TRIM (COALESCE(Object_TradeMark.ValueData,''))     ::TVarChar AS brandName
+                        , COALESCE(Object_GoodsGroupDirection.Id::TVarchar ,'')    ::TVarChar AS subBrandId
+                        , TRIM (COALESCE(Object_GoodsGroupDirection.ValueData,'')) ::TVarChar AS subBrandName
+                        , COALESCE(Object_GoodsGroupPropertyParent.Id::TVarchar ,'')    ::TVarChar AS categoryExtId
+                        , TRIM (COALESCE(Object_GoodsGroupPropertyParent.ValueData,'')) ::TVarChar AS categoryName
+                        , COALESCE(Object_GoodsGroupProperty.Id::TVarchar ,'')          ::TVarChar AS subCategoryExtId 
+                        , TRIM (COALESCE(Object_GoodsGroupProperty.ValueData,''))       ::TVarChar AS subCategoryName
+                        , COALESCE(Object_GoodsKind.Id::TVarchar ,'')                   ::TVarChar AS subCategoryLineExtId
+                        , TRIM (COALESCE(Object_GoodsKind.ValueData,''))                ::TVarChar AS subCategoryLineName
+                        , (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 4 ELSE 3 END) ::Integer AS unitId
+                        , 1 ::Integer AS additionalUnitId
+                        , 1 ::Integer AS typeId
+                        , (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 0 ELSE 1 END) ::TFloat AS unitFactor
+                        , 1   ::TFloat AS quantity
+                        , 0   ::TFloat AS length
+                        , 0   ::TFloat AS width
+                        , 0   ::TFloat AS height
+                        , 0.2 ::TFloat AS vatRate 
+                        , 0   ::TFloat AS basePrice 
+                        , FALSE ::Boolean AS needLicense
+                        , tmpGoodsPropertyValue.BarCode ::TVarChar AS ean
+                        , '' ::TVarChar AS photoName
+                        , '' ::TVarChar AS photoChangeDateTime
+                        , FALSE ::Boolean  AS isCompetitor
+                        , 0     ::TFloat   AS qntPerPack
+                        , 0     ::TFloat   AS qntPerCase
+                        , 0     ::TFloat   AS qntPerPall
+                        , 0     ::TFloat   AS multiplicity
+                        , 0     ::TFloat   AS sortId
+                        , TRIM (Object_Goods.ValueData) ::TVarChar AS fullName
+                        , FALSE ::Boolean  AS enableSellByPack 
+                        , FALSE ::Boolean  AS IsPromoGift
+                        , 0     ::TFloat   AS minOrder
+                        , (COALESCE (ObjectFloat_Weight.ValueData,0) + COALESCE (ObjectFloat_WeightTare.ValueData,0)) ::TFloat AS grossWeight
+                        , Object_Goods.isErased ::Boolean AS isDeleted
+                        
+                  
+                                      
                    FROM Object AS Object_Goods
                         LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
                                              ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id
@@ -140,19 +189,16 @@ $BODY$
                                               ON ObjectFloat_WeightTare.ObjectId = Object_Goods.Id
                                              AND ObjectFloat_WeightTare.DescId   = zc_ObjectFloat_Goods_WeightTare()
 
+
+                        LEFT JOIN tmpGoodsPropertyValue ON tmpGoodsPropertyValue.GoodsId = Object_Goods.Id
+                                                       AND tmpGoodsPropertyValue.GoodsKindId = Object_GoodsKind.Id
+
                    WHERE Object_Goods.DescId = zc_Object_Goods()
-                  -- LIMIT 10 
+                  --LIMIT 10 
                   ;
 
-  
-           -- последние строчки XML
-           INSERT INTO _tmpResult (NPP, RowData) VALUES ((SELECT COUNT(*) FROM _tmpResult) + 1, '</LocalProducts>');
-           INSERT INTO _tmpResult (NPP, RowData) VALUES ((SELECT COUNT(*) FROM _tmpResult) + 1, '</ROOT>');
-  
-     -- Результат
-     RETURN QUERY
-        SELECT _tmpResult.RowData FROM _tmpResult ORDER BY NPP;
-
+    
+    
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
