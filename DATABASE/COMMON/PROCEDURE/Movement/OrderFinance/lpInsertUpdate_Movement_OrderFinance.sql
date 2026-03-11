@@ -53,6 +53,7 @@ BEGIN
                                              AND Movement.Id <> COALESCE (ioId, 0)
                                           )
         -- AND inUserId <> 5
+        -- AND 1=0
      THEN
          RAISE EXCEPTION 'Ошибка.Дублирование запрещено.%Уже существует документ планирования № <%> от <%>%для <%> недели + <%>'
                                         , CHR (13)
