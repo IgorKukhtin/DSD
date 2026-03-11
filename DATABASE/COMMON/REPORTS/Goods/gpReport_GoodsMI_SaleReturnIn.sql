@@ -1063,9 +1063,7 @@ BEGIN
                                 , tmpOperationGroup2.OperDate
                                 , tmpOperationGroup2.OperDate_month
                                -- , CASE WHEN tmpOperationGroup2.Ord = 1 THEN 1 ELSE 0 END
-                        )
-
-           -- выбираем данные по признаку товара ТОП из GoodsByGoodsKind
+                                , zfCalc_GoodsPropertyId (ContainerLinkObject_Contract.ObjectId, COALESCE (tmpOperationGroup2.JuridicalId, tmpOperationGroup2.PartnerId), tmpOperationGroup2.PartnerId)
           , _tmpTOP AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
                              , Object_GoodsByGoodsKind_View.GoodsKindId
                         FROM ObjectBoolean
