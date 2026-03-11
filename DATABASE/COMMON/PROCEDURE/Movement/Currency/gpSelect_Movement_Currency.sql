@@ -69,10 +69,10 @@ BEGIN
                               AND MIString_Comment.DescId = zc_MIString_Comment()
                             )
           , tmpMILinkObject AS (SELECT MovementItemLinkObject.*
-                                FROM MovementItemLinkObject 
+                                FROM MovementItemLinkObject
                                 WHERE MovementItemLinkObject.MovementItemId IN (SELECT tmpMI.Id FROM tmpMI)
                                   AND MovementItemLinkObject.DescId IN ( zc_MILinkObject_Currency(), zc_MILinkObject_PaidKind())
-                                 )
+                               )
 
        SELECT
              Movement.Id
