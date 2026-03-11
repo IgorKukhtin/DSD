@@ -31,13 +31,14 @@ THEN RETURN; END IF;
      
 
 
-if CURRENT_TIMESTAMP between '20.02.2026 7:55' and '20.02.2026 10:00' AND 1=0
+if CURRENT_TIMESTAMP between '05.03.2026 7:55' and '05.03.2026 10:00' AND 1=1
 then
     RAISE EXCEPTION 'Ошибка.ok-pause';
 end if;
 
 
-IF EXTRACT (HOUR FROM CURRENT_TIMESTAMP) IN (23, 0, 1,2,3,4) AND vbMovementDescId IN (zc_Movement_Inventory()) AND 1=0
+-- IF EXTRACT (HOUR FROM CURRENT_TIMESTAMP) IN (23, 0, 1,2,3,4) AND vbMovementDescId IN (zc_Movement_Inventory()) AND 1=1
+IF EXTRACT (HOUR FROM CURRENT_TIMESTAMP) BETWEEN 17 AND 22 AND vbMovementDescId IN (zc_Movement_Inventory()) AND 1=0
 THEN
     RETURN;
 END IF;
