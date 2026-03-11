@@ -280,12 +280,10 @@ begin
  
   LoadReportFromFile('PrintMovement_WeighingProductionBrutto', ReportPath + '\Товарный Учет\PrintMovement_WeighingProductionBrutto.fr3');
   exit;
-  }
 
   LoadReportFromFile('PrintMI_WeighingProductionPassport_prod', ReportPath + '\Товарный Учет\PrintMI_WeighingProductionPassport_prod.fr3');
   exit;
 
-   {
   LoadReportFromFile('PrintMI_WeighingProductionPassport', ReportPath + '\Товарный Учет\PrintMI_WeighingProductionPassport.fr3');
   exit;
 
@@ -409,7 +407,10 @@ begin
   exit;
 
   LoadReportFromFile('Продажа и возврат контрагенты', ReportPath + '\Отчеты (товарные)\Продажа и возврат контрагенты.fr3');
-
+  }
+  LoadReportFromFile('Продажа и возврат контрагенты (укр)', ReportPath + '\Отчеты (товарные)\Продажа и возврат контрагенты (укр).fr3');
+  exit;
+  {
   LoadReportFromFile('Отчет движение по товару (для всех)', ReportPath + '\Отчеты (товарные)\Отчет движение по товару (для всех).fr3');
   LoadReportFromFile('Отчет движение по товару (склад ГП)', ReportPath + '\Отчеты (товарные)\Отчет движение по товару (склад ГП).fr3');
   exit;
