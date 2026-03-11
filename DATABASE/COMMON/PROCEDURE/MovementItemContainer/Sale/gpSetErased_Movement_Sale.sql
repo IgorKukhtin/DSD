@@ -26,8 +26,14 @@ BEGIN
      PERFORM lpSetErased_Movement (inMovementId := inMovementId
                                  , inUserId     := vbUserId);
 
+     IF 1 < (SELECT COUNT(*) FROM MovementLinkMovement AS MLM JOIN Movement ON Movement.Id =  MLM.MovementId AND  Movement.StatusId <> zc_Enum_Status_Erased() WHERE MLM.MovementChildId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Production())
+     THEN
+         RAISE EXCEPTION 'Ошибка.Несколько документов пересотрица.';
+     END IF;
+
+
      -- Поиск "Пересортица"
-     vbMovementId_Peresort:= (SELECT MLM.MovementId FROM MovementLinkMovement AS MLM WHERE MLM.MovementChildId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Production());
+     vbMovementId_Peresort:= (SELECT MLM.MovementId FROM MovementLinkMovement AS MLM JOIN Movement ON Movement.Id =  MLM.MovementId AND  Movement.StatusId <> zc_Enum_Status_Erased() WHERE MLM.MovementChildId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Production());
      -- Синхронно - Удалили
      IF vbMovementId_Peresort <> 0
      THEN
