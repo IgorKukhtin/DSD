@@ -383,6 +383,7 @@ BEGIN
                      LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
                                            ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
                                           AND ObjectFloat_WeightTotal.DescId   = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
+                     WHERE COALESCE (tmpMI.AmountPartnerWeight,0) <> 0
                      )
 
      , tmpCar_all AS (SELECT DISTINCT tmpTransportGoods.CarId AS CarId FROM tmpTransportGoods UNION SELECT tmpTransportGoods.CarTrailerId AS CarId FROM tmpTransportGoods)
