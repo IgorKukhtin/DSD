@@ -240,7 +240,7 @@ $BODY$
 -- SELECT ContainerId, Amount_1, Amount_2, Amount_3, Amount_4, Amount_5, VerId_1, VerId_2, VerId_3, VerId_4, VerId_5, Amount_data_real_1, Amount_data_real_2, Amount_data_real_3, Amount_data_real_4, Amount_data_real_5 FROM gpReport_Container_data (inStartDate:= '01.01.2023', inSession:= '5')
 -- SELECT ContainerId, Amount_1, Amount_2, Amount_3, Amount_4, Amount_5, VerId_1, VerId_2, VerId_3, VerId_4, VerId_5, Amount_data_real_1, Amount_data_real_2, Amount_data_real_3, Amount_data_real_4, Amount_data_real_5 FROM gpReport_Container_data (inStartDate:= '01.01.2022', inSession:= '5')
 -- SELECT ContainerId, Amount_1, Amount_2, Amount_3, Amount_4, Amount_5, VerId_1, VerId_2, VerId_3, VerId_4, VerId_5, Amount_data_real_1, Amount_data_real_2, Amount_data_real_3, Amount_data_real_4, Amount_data_real_5 FROM gpReport_Container_data (inStartDate:= '01.12.2024', inSession:= '5')
-WITH tmp AS (SELECT ContainerId, Amount_1, Amount_2, Amount_3, Amount_4, Amount_5, VerId_1, VerId_2, VerId_3, VerId_4, VerId_5, Amount_data_real_1, Amount_data_real_2, Amount_data_real_3, Amount_data_real_4, Amount_data_real_5 FROM gpReport_Container_data (inStartDate:= '01.02.2026', inSession:= '5'))
+WITH tmp AS (SELECT ContainerId, Amount_1, Amount_2, Amount_3, Amount_4, Amount_5, VerId_1, VerId_2, VerId_3, VerId_4, VerId_5, Amount_data_real_1, Amount_data_real_2, Amount_data_real_3, Amount_data_real_4, Amount_data_real_5 FROM gpReport_Container_data (inStartDate:= '01.03.2026', inSession:= '5'))
    , rem AS (select tmp.ContainerId, Container.Amount,  Container.Amount - coalesce (sum (coalesce (MovementItemContainer.Amount, 0)), 0) as calcAmount
              from tmp
                   left join Container on Container.Id = tmp.ContainerId
