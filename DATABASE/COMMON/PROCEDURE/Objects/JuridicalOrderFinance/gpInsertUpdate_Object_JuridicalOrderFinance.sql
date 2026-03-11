@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_JuridicalOrderFinance(
     IN inOperDate                TDateTime ,    --
     IN inJuridicalId             Integer   ,    --
     IN inInfoMoneyId             Integer   ,    --     
-    IN inBankMainId             Integer    , 
+    IN inBankMainId              Integer    , 
     IN inBankId                  Integer    ,
     IN inBankAccountMainName     TVarChar   ,    --
     IN inBankAccountName         TVarChar   ,    --
@@ -68,7 +68,7 @@ BEGIN
              -- сохранили <Объект>
              vbBankAccountMainId := lpInsertUpdate_Object(vbBankAccountMainId, zc_Object_BankAccount(), 0, TRIM (inBankAccountMainName));
 
-             PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_BankAccount_Juridical(), vbBankAccountMainId, 9399);      --9399   "АЛАН ТОВ"
+             PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_BankAccount_Juridical(), vbBankAccountMainId, zc_Juridical_Basis());      --9399   "АЛАН ТОВ"
              PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_BankAccount_Bank(), vbBankAccountMainId, inBankMainId);
 
              -- сохранили протокол
@@ -135,6 +135,8 @@ BEGIN
    -- проверка уникальности
    IF EXISTS (SELECT 1
               FROM ObjectLink AS ObjectLink_JuridicalOrderFinance_Juridical
+                   JOIN Object AS Object_JuridicalOrderFinance ON Object_JuridicalOrderFinance.Id       = ObjectLink_JuridicalOrderFinance_Juridical.ObjectId
+                                                              AND Object_JuridicalOrderFinance.isErased = FALSE
 
                    LEFT JOIN ObjectLink AS OL_JuridicalOrderFinance_BankAccountMain
                                         ON OL_JuridicalOrderFinance_BankAccountMain.ObjectId = ObjectLink_JuridicalOrderFinance_Juridical.ObjectId
@@ -155,10 +157,30 @@ BEGIN
                 AND COALESCE (ObjectLink_JuridicalOrderFinance_InfoMoney.ChildObjectId, 0) = COALESCE (inInfoMoneyId, 0)
                 AND ObjectLink_JuridicalOrderFinance_Juridical.ObjectId <> COALESCE (ioId, 0))
    THEN
-       RAISE EXCEPTION 'Ошибка.Значение  <%> + <%> + <%> уже есть в справочнике. Дублирование запрещено.', lfGet_Object_ValueData (inJuridicalId), lfGet_Object_ValueData (inBankAccountId), lfGet_Object_ValueData (inInfoMoneyId);
+       RAISE EXCEPTION 'Ошибка.Значение <%> + <%> + <%>(%) + <%>(%) уже есть в справочнике. Дублирование запрещено.'
+                    , lfGet_Object_ValueData_sh (inJuridicalId)
+                    , lfGet_Object_ValueData_sh (inInfoMoneyId)
+                    , lfGet_Object_ValueData_sh (vbBankAccountMainId)
+                    , lfGet_Object_ValueData_sh (inBankMainId)
+                    , lfGet_Object_ValueData_sh (vbBankAccountId)
+                    , lfGet_Object_ValueData_sh (inBankId)
+                     ;
    END IF;
 
+
    -- проверка
+   IF EXISTS (SELECT 1 FROM Object WHERE Object.Id = ioId AND Object.isErased = TRUE)
+   THEN
+       -- восстановили
+       PERFORM lpUpdate_Object_isErased (inObjectId:= ioId, inUserId:= vbUserId);
+
+       /*if ioId = 7113837 
+       then RAISE EXCEPTION 'Ошибка.-1';
+       end if;*/
+
+   END IF;
+
+
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_JuridicalOrderFinance(), 0, '');
 

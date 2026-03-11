@@ -136,9 +136,14 @@ BEGIN
             -- Замена на другой р.сч, если не нашли название Банка
           , tmpBank_find AS (SELECT tmpBankAccount.JuridicalId
                                   , tmpBankAccount.InfoMoneyId
+                                    --
                                   , tmpBankAccount.BankAccountId_main
+                                  , tmpBankAccount.BankId_main
                                   , tmpBankAccount.BankAccountId
+                                  , tmpBankAccount.BankId
+                                    --
                                   , Object_BankAccount_find.Id AS BankAccountId_find
+                                  , Object_Bank.Id             AS BankId_find
                                     -- № п/п
                                   , ROW_NUMBER() OVER (PARTITION BY tmpBankAccount.JuridicalId
                                                                   , tmpBankAccount.InfoMoneyId
@@ -168,10 +173,12 @@ BEGIN
           SELECT tmpBankAccount.OperDate
                , tmpBankAccount.JuridicalId
                , tmpBankAccount.InfoMoneyId
+                 --
                , tmpBankAccount.BankAccountId_main
                , tmpBankAccount.BankId_main
                  -- Замена на другой р.сч
                , COALESCE (tmpBank_find.BankAccountId_find, tmpBankAccount.BankAccountId) AS BankAccountId
+               , COALESCE (tmpBank_find.BankId_find, tmpBankAccount.BankId) AS BankId
                  --
                , tmpBankAccount.Amount
                , tmp.Comment
@@ -275,36 +282,54 @@ BEGIN
      AND Object.DescId   = zc_Object_JuridicalOrderFinance()
      AND Object.isErased = FALSE
   ;
+   -- удаляем если платили с разных счетов одного банка
+   UPDATE Object SET isErased = FALSE
+   FROM tmpJuridicalOrderFinance AS tmpJuridical
+   WHERE tmpJuridical.Id  = Object.Id
+     AND tmpJuridical.Ord > 1
+     --
+     AND Object.DescId   = zc_Object_JuridicalOrderFinance()
+     AND Object.isErased = FALSE
+  ;
 
 
    -- сохраняем или обновляем данные в справочнике
-   PERFORM gpInsertUpdate_Object_JuridicalOrderFinance(ioId                := COALESCE (tmp.Id,0)        :: Integer   ,   -- ключ объекта <>
-                                                       inOperDate          := tmpData.OperDate,
-                                                       inJuridicalId       := tmpData.JuridicalId        :: Integer   ,
-                                                       inBankAccountMainId := tmpData.BankAccountId_main :: Integer   ,
-                                                       inBankAccountId     := tmpData.BankAccountId      :: Integer   ,
-                                                       inInfoMoneyId       := tmpData.InfoMoneyId        :: Integer   ,
-                                                       inSummOrderFinance  := COALESCE ((SELECT OFl.ValueData FROM ObjectFloat AS OFl
-                                                                                         WHERE OFl.ObjectId = tmp.Id
-                                                                                           AND OFl.DescId = zc_ObjectFloat_JuridicalOrderFinance_SummOrderFinance()
-                                                                                        ), 0),
-                                                       inAmount            := tmpData.Amount,
-                                                       inComment           := tmpData.Comment            :: TVarChar  ,
-                                                       inSession           := inSession                  :: TVarChar
+   PERFORM gpInsertUpdate_Object_JuridicalOrderFinance(ioId                  := COALESCE (tmp.Id, tmp_2.Id, 0)        :: Integer   ,   -- ключ объекта <>
+                                                       inOperDate            := tmpData.OperDate :: TDateTime,
+                                                       inJuridicalId         := tmpData.JuridicalId        :: Integer   ,
+                                                       inInfoMoneyId         := tmpData.InfoMoneyId        :: Integer   ,
+                                                       inBankMainId          := tmpData.BankId_main        :: Integer   ,
+                                                       inBankId              := tmpData.BankId             :: Integer   ,
+                                                       inBankAccountMainName := (SELECT Object.ValueData FROM Object WHERE Object.Id = tmpData.BankAccountId_main) :: TVarChar,
+                                                       inBankAccountName     := (SELECT Object.ValueData FROM Object WHERE Object.Id = tmpData.BankAccountId) :: TVarChar,
+                                                       inSummOrderFinance    := COALESCE ((SELECT OFl.ValueData FROM ObjectFloat AS OFl
+                                                                                           WHERE OFl.ObjectId = tmp.Id
+                                                                                             AND OFl.DescId = zc_ObjectFloat_JuridicalOrderFinance_SummOrderFinance()
+                                                                                          ), 0) :: TFloat,
+                                                       inAmount              := tmpData.Amount,
+                                                       inComment             := tmpData.Comment            :: TVarChar  ,
+                                                       inSession             := inSession                  :: TVarChar
                                                       )
    FROM tmpData
         LEFT JOIN (SELECT tmpJuridical.*
                    FROM tmpJuridicalOrderFinance AS tmpJuridical
-                        INNER JOIN Object ON Object.Id       = tmpJuridical.Id
-                                         AND Object.DescId   = zc_Object_JuridicalOrderFinance()
-                                         AND Object.isErased = FALSE
-                   WHERE tmpJuridical.Ord = 1
+                   WHERE tmpJuridical.Ord      = 1
+                     AND tmpJuridical.isErased = FALSE
                   ) AS tmp
                     ON tmp.BankId_main = tmpData.BankId_main
                    AND tmp.JuridicalId = tmpData.JuridicalId
                    AND tmp.InfoMoneyId = tmpData.InfoMoneyId
+        LEFT JOIN (SELECT tmpJuridical.*
+                   FROM tmpJuridicalOrderFinance AS tmpJuridical
+                   WHERE tmpJuridical.Ord      = 1
+                     AND tmpJuridical.isErased = TRUE
+                  ) AS tmp_2
+                    ON tmp_2.BankId_main = tmpData.BankId_main
+                   AND tmp_2.JuridicalId = tmpData.JuridicalId
+                   AND tmp_2.InfoMoneyId = tmpData.InfoMoneyId
    -- только новые
    WHERE tmp.JuridicalId IS NULL
+     AND tmpData.BankId > 0
   ;
 
 END;$BODY$

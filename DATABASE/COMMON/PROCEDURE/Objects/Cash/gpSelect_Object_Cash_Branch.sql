@@ -71,7 +71,8 @@ BEGIN
    WHERE Object.DescId = zc_Object_Cash()
      AND (Cash_Branch.ChildObjectId > 0 OR Object.Id = 14462)
      AND (Cash_Branch.ChildObjectId NOT IN (zc_Branch_Basis(), zc_Branch_Irna(), 10895481) -- Фірмова торгівля
-       OR Object.Id = 14462 -- 
+       OR Object.Id = 14462     -- Касса Днепр
+       OR Object.Id = 10575421  -- Касса карта Сохбатовой Е.
          )
      AND Object.isErased = FALSE
   ;
