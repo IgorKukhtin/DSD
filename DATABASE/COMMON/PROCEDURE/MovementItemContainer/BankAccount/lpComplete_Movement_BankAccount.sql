@@ -797,7 +797,7 @@ BEGIN
                                  );
 
      --
-     IF inUserId = 5 AND 1=0
+     IF inUserId = 5 AND 1=1
      THEN
          RAISE EXCEPTION 'Ошибка.Test Admin = OK';
      END IF;
