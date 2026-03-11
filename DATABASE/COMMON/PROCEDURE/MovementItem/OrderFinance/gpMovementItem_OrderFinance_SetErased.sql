@@ -30,9 +30,22 @@ BEGIN
                        );
 
   -- проверка прав пользователя на вызов процедуры
+  IF EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.Id = inMovementItemId AND MovementItem.DescId = zc_MI_Child())
+  THEN 
+       RAISE EXCEPTION 'Ошибка.Нет Прав.';
+  END IF;
+
+
+  -- проверка прав пользователя на вызов процедуры
   IF EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.Id = inMovementItemId AND MovementItem.DescId = zc_MI_Master())
-     -- НЕ СЧЕТА
-     AND NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = vbOrderFinanceId AND OB.DescId = zc_ObjectBoolean_OrderFinance_SB() AND OB.ValueData = TRUE)
+     -- НЕ СЧЕТА + НЕ № заявки 1С, т.е. надо для Мяса + Материалы - там заливка долгов
+     AND NOT EXISTS (SELECT 1
+                     FROM ObjectBoolean AS OB
+                     WHERE OB.ObjectId = vbOrderFinanceId AND OB.DescId IN (zc_ObjectBoolean_OrderFinance_InvNumber()
+                                                                          , zc_ObjectBoolean_OrderFinance_InvNumber_Invoice()
+                                                                           )
+                       AND OB.ValueData = TRUE
+                    )
   THEN vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_MI_OrderFinance());
   ELSE vbUserId:= lpGetUserBySession (inSession);
   END IF;

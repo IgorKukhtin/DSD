@@ -63,6 +63,7 @@ BEGIN
                                                         , zc_MILinkObject_PartionCell_21()
                                                         , zc_MILinkObject_PartionCell_22()
                                                          ))
+        -- AND 1=0
      THEN
          RAISE EXCEPTION 'Ошибка.Нет прав удалять.Установлена ячейка хранения <%>.'
                        , (SELECT lfGet_Object_ValueData_sh (MILO_PartionCell.ObjectId)
@@ -70,8 +71,7 @@ BEGIN
                           WHERE MILO_PartionCell.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                             AND MILO_PartionCell.ObjectId       > 0
                             AND MILO_PartionCell.ObjectId       NOT IN (zc_PartionCell_Err()) -- ,zc_PartionCell_RK()
-                            AND MILO_PartionCell.DescId         IN (zc_MILinkObject_PartionCell_1()
-                                                                  , zc_MILinkObject_PartionCell_2()
+                            AND MILO_PartionCell.DescId         IN (zc_MILinkObject_PartionCell_2()
                                                                   , zc_MILinkObject_PartionCell_3()
                                                                   , zc_MILinkObject_PartionCell_4()
                                                                   , zc_MILinkObject_PartionCell_5()

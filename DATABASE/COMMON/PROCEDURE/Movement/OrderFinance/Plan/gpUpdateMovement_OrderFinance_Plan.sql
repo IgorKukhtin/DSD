@@ -553,7 +553,7 @@ BEGIN
      END IF;
           
 
-     if vbUserId = 9457 then RAISE EXCEPTION 'Админ.Test Ok. <%>', ioJuridicalOrderFinanceId ; end if;
+     if vbUserId IN (5, 9457) then RAISE EXCEPTION 'Админ.Test Ok. <%>', ioJuridicalOrderFinanceId ; end if;
 
 END;
 $BODY$

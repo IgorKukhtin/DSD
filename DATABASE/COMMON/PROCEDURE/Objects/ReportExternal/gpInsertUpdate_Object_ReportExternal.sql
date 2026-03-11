@@ -55,6 +55,9 @@ $BODY$
  25.04.17                                                        *
 */
 
+-- 24.02.2026
+-- !!!! +++ UPDATE Object SET ValueData = '' WHERE DescId = zc_Object_ReportExternal() AND ValueData ilike 'gpReport_OrderExternal_Sale';
+
 -- 27.11.2025
 -- !!!! +++ UPDATE Object SET ValueData = '' WHERE DescId = zc_Object_ReportExternal() AND ValueData ilike 'gpSelect_Movement_WeighingProduction_Item';
 

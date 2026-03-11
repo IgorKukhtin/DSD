@@ -10,14 +10,14 @@ $BODY$
   DECLARE vbProtocolXML TBlob;
 BEGIN
 
+  vbMovementDescId:= (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId);
+
   -- Просмотр - без прав корректировки + Только просмотр Аудитор
-  IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId IN (7797111, 10597056))
+  IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId IN (7797111, 10597056)) AND vbMovementDescId <> zc_Movement_OrderFinance()
   THEN
       RAISE EXCEPTION 'Ошибка.У пользователя <%> нет прав для изменения данных.', lfGet_Object_ValueData_sh (inUserId);
   END IF;
   
-  --
-  vbMovementDescId:= (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId);
 
   -- Подготавливаем XML для записи в протокол
   SELECT '<XML>' || STRING_AGG (D.FieldXML, '') || '</XML>' INTO vbProtocolXML

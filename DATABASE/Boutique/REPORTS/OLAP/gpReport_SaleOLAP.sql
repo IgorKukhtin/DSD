@@ -1697,7 +1697,7 @@ BEGIN
                -- Сумма Остаток - "долг"
              , tmpData.Debt_Summ            :: TFloat
 
-               -- Кол-во продажа - с учетом "долга"
+               -- Кол-во продажа - с учетом "долга" - !!!!!!!!!!!!!!
              , (tmpData.Sale_Amount + tmpData.Debt_Amount) :: TFloat AS Sale_Amount
                -- Кол-во продажа - без учета "долга"
              , tmpData.Sale_Amount          :: TFloat AS Sale_Amount_real
@@ -1720,7 +1720,7 @@ BEGIN
                                             
                -- С\с продажа - без учета "долга"
              , tmpData.Sale_SummCost_calc   :: TFloat AS Sale_SummCost      -- calc из валюты в Грн
-             , tmpData.Sale_SummCost_curr   :: TFloat AS Sale_SummCost_curr -- валюта
+             , (tmpData.Sale_SummCost_curr) :: TFloat AS Sale_SummCost_curr -- валюта
              
 
                -- Курс. разн продажа
@@ -1758,7 +1758,7 @@ BEGIN
              , tmpData.Return_Summ_10200      :: TFloat
              , tmpData.Return_Summ_10200_curr :: TFloat
 
-               -- Кол. Итог - с учетом "долга"
+               -- Кол. Итог - с учетом "долга" - !!!!!!!!!!!
              , (tmpData.Result_Amount + tmpData.Debt_Amount)     :: TFloat AS Result_Amount
                -- Кол. Итог - без учета "долга"
              , tmpData.Result_Amount                             :: TFloat AS Result_Amount_real
@@ -1769,7 +1769,8 @@ BEGIN
 
                -- С\с Итог - без учета "долга"
              , (tmpData.Sale_SummCost_calc - tmpData.Return_SummCost_calc)  :: TFloat AS Result_SummCost
-             , (tmpData.Sale_SummCost_curr - tmpData.Return_SummCost_curr)  :: TFloat AS Result_SummCost_curr
+               -- С\с Итог - с учетом "долга" - !!!!!!!!!!!!
+             , (tmpData.Sale_SummCost_curr - tmpData.Return_SummCost_curr + tmpData.Debt_Summ)  :: TFloat AS Result_SummCost_curr
 
                -- Курс. разн. Итог
              , (tmpData.Sale_SummCost - tmpData.Sale_SummCost_calc - tmpData.Return_SummCost + tmpData.Return_SummCost_calc) :: TFloat AS Result_SummCost_diff
