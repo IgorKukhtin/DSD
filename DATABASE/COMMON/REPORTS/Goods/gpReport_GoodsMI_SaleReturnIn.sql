@@ -1064,6 +1064,8 @@ BEGIN
                                 , tmpOperationGroup2.OperDate_month
                                -- , CASE WHEN tmpOperationGroup2.Ord = 1 THEN 1 ELSE 0 END
                                 , zfCalc_GoodsPropertyId (ContainerLinkObject_Contract.ObjectId, COALESCE (tmpOperationGroup2.JuridicalId, tmpOperationGroup2.PartnerId), tmpOperationGroup2.PartnerId)
+                          )
+          -- выбираем данные по признаку товара ТОП из GoodsByGoodsKind
           , _tmpTOP AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
                              , Object_GoodsByGoodsKind_View.GoodsKindId
                         FROM ObjectBoolean
@@ -1072,7 +1074,7 @@ BEGIN
                           AND COALESCE (ObjectBoolean.ValueData, FALSE) = TRUE
                         )
 
- , tmpGoodsPropertyValue AS (SELECT tmpGoodsProperty.GoodsPropertyId
+ , tmpobject_goodspropertyvalue AS (SELECT tmpGoodsProperty.GoodsPropertyId
                                   , ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                   , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
                                   , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
@@ -1097,9 +1099,9 @@ BEGIN
                                               , tmpObject_GoodsPropertyValue.Name
                                          FROM (SELECT tmpObject_GoodsPropertyValue.GoodsPropertyId
                                                     , MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId
-                                                    , GoodsId
+                                                    , tmpObject_GoodsPropertyValue.GoodsId
                                                FROM tmpObject_GoodsPropertyValue
-                                               WHERE Name <> ''
+                                               WHERE tmpObject_GoodsPropertyValue.Name <> ''
                                                GROUP BY tmpObject_GoodsPropertyValue.GoodsPropertyId
                                                       , tmpObject_GoodsPropertyValue.GoodsId
                                               ) AS tmpGoodsProperty_find
@@ -1130,11 +1132,14 @@ BEGIN
 
  , tmpObject_GoodsPropertyValueGroup_basis AS (SELECT tmpObject_GoodsPropertyValue.GoodsId
                                                     , tmpObject_GoodsPropertyValue.Name
-                                               FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue_basis AS tmpObject_GoodsPropertyValue WHERE BarCode <> '' OR Name <> '' GROUP BY GoodsId
+                                               FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, tmpObject_GoodsPropertyValue.GoodsId 
+                                                     FROM tmpObject_GoodsPropertyValue_basis AS tmpObject_GoodsPropertyValue
+                                                     WHERE tmpObject_GoodsPropertyValue.Name <> '' 
+                                                     GROUP BY tmpObject_GoodsPropertyValue.GoodsId
                                                     ) AS tmpGoodsProperty_find
-                                                    LEFT JOIN tmpObject_GoodsPropertyValue_basis AS tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId = tmpGoodsProperty_find.ObjectId 
-                                                                                                                                AND tmpObject_GoodsPropertyValue.GoodsPropertyId = tmpGoodsProperty_find.GoodsPropertyId
-                                              )
+                                                    LEFT JOIN tmpObject_GoodsPropertyValue_basis AS tmpObject_GoodsPropertyValue
+                                                                                                 ON tmpObject_GoodsPropertyValue.ObjectId = tmpGoodsProperty_find.ObjectId 
+                                               )
 
 
      -----
@@ -1392,16 +1397,16 @@ BEGIN
                               AND ObjectLink_GoodsGroupProperty_Parent.DescId = zc_ObjectLink_GoodsGroupProperty_Parent()
           LEFT JOIN Object AS Object_GoodsGroupPropertyParent ON Object_GoodsGroupPropertyParent.Id = ObjectLink_GoodsGroupProperty_Parent.ChildObjectId
 
-
+          --
           LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsPropertyId = tmpOperationGroup.GoodsPropertyId
                                                 AND tmpObject_GoodsPropertyValue.GoodsId = tmpOperationGroup.GoodsId
                                                 AND tmpObject_GoodsPropertyValue.GoodsKindId = tmpOperationGroup.GoodsKindId
           LEFT JOIN tmpObject_GoodsPropertyValueGroup ON tmpObject_GoodsPropertyValueGroup.GoodsPropertyId = tmpOperationGroup.GoodsPropertyId
-                                                     AND tmpObject_GoodsPropertyValueGroup.GoodsId = tmpMI.GoodsId
+                                                     AND tmpObject_GoodsPropertyValueGroup.GoodsId = tmpOperationGroup.GoodsId
                                                      AND tmpObject_GoodsPropertyValue.GoodsId IS NULL
-          LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = tmpMI.GoodsId
-                                                      AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = tmpMI.GoodsKindId
-          LEFT JOIN tmpObject_GoodsPropertyValueGroup_basis ON tmpObject_GoodsPropertyValueGroup_basis.GoodsId = tmpMI.GoodsId
+          LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = tmpOperationGroup.GoodsId
+                                                      AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = tmpOperationGroup.GoodsKindId
+          LEFT JOIN tmpObject_GoodsPropertyValueGroup_basis ON tmpObject_GoodsPropertyValueGroup_basis.GoodsId = tmpOperationGroup.GoodsId
 
 
        WHERE tmpOperationGroup.InfoMoneyId = zc_Enum_InfoMoney_30201() -- Мясное сырье
@@ -1466,3 +1471,8 @@ select * FROM gpReport_GoodsMI_SaleReturnIn(inStartDate := ('01.10.2025')::TDate
     , inTradeMarkId := 0 , inGoodsGroupId := 0 , inInfoMoneyId := 8962 , inIsPartner := 'True' , inIsTradeMark := 'False' , inIsGoods := 'False' , inIsGoodsKind := 'False' , inisContract := 'False' , inIsOLAP := FALSE
     , inIsDate :=  'False' , inIsMonth  :=  'False',  inSession :=  '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');
 */
+
+
+
+-- select * from gpReport_GoodsMI_SaleReturnIn (inStartDate := ('01.03.2026')::TDateTime , inEndDate := ('11.03.2026')::TDateTime , inBranchId := 8374 , inAreaId := 0 , inRetailId := 0 , inJuridicalId := 0 , inPaidKindId := 3 , inTradeMarkId := 0 , inGoodsGroupId := 0 , inInfoMoneyId := 0 , inIsPartner := 'True' , inIsTradeMark := 'False' , inIsGoods := 'True' , inIsGoodsKind := 'True' , inisContract := 'False' , inIsOLAP := 'True' , inIsDate := 'False' , inisMonth := 'False' ,  inSession := '351808');
+-- select * from gpReport_GoodsMI_SaleReturnIn (inStartDate := ('02.11.2025')::TDateTime , inEndDate := ('31.12.2025')::TDateTime , inBranchId := 0 , inAreaId := 0 , inRetailId := 0 , inJuridicalId := 0 , inPaidKindId := 0 , inTradeMarkId := 0 , inGoodsGroupId := 633112 , inInfoMoneyId := 0 , inIsPartner := 'True' , inIsTradeMark := 'False' , inIsGoods := 'True' , inIsGoodsKind := 'True' , inisContract := 'False' , inIsOLAP := 'False' , inIsDate := 'False' , inisMonth := 'False' ,  inSession := '9457');
