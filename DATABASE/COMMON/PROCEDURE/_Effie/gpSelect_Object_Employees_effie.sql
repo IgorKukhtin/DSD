@@ -36,8 +36,8 @@ $BODY$
           , ''                                           ::TVarChar AS orgStructExtId
           , '4ADBB652-F1EE-427E-AAE4-96C41A25C97B'       ::TVarChar AS groupId
           , 'AC86FF1D-78F8-4D0A-A0F9-3422C6BBA570'       ::TVarChar AS roles
-          , ''                                           ::TVarChar AS login
-          , (Object_User.ValueData||Object_Member.Id::TVarChar||'@alan.ua')  ::TVarChar AS email           --user+zc_Object_Member.Id@alan.ua
+          , ('User'||Object_Member.Id::TVarChar||'@alan.ua')  ::TVarChar AS login
+          , ('User'||Object_Member.Id::TVarChar||'@alan.ua')  ::TVarChar AS email           --user+zc_Object_Member.Id@alan.ua
           , ObjectString_User_.ValueData                 ::TVarChar AS password
           , '01.01.2026'                                 ::TVarChar AS activationDate
           , ''                                           ::TVarChar AS phone
