@@ -13,7 +13,7 @@ RETURNS TABLE (extId           TVarChar   -- Идентификатор канала продаж
              , regDate         TVarChar   -- Дата регистрации
              , subjCode        TVarChar   -- Код клиента
              , bankInfo        TVarChar   -- Банковские реквизиты клиента
-             , corporationCode TVarChar   -- 
+             , corporationCode TVarChar   -- Код корпорации
              , isDeleted       Boolean    -- Признак активности записи: 0 = активна / 1 = не активна
 ) AS
 
