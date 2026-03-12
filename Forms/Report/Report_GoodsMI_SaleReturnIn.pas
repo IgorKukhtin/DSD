@@ -142,6 +142,8 @@ type
     DayOfWeekName_full: TcxGridDBColumn;
     Count_TT: TcxGridDBColumn;
     sbisMonth: TcxCheckBox;
+    actPrint_byPartner_ukr: TdsdPrintAction;
+    bbPrint_byPartner_ukr: TdxBarButton;
   private
     { Private declarations }
   public

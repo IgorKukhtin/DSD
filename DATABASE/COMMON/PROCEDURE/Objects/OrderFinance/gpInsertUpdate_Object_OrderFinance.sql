@@ -8,6 +8,10 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinance (Integer, Integer, TV
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinance (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean,Boolean,Boolean,Boolean,Boolean,Boolean,Boolean, TVarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinance (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean,Boolean,Boolean,Boolean,Boolean,Boolean,Boolean,Boolean, TVarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinance (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean,Boolean,Boolean,Boolean,Boolean,Boolean,Boolean,Boolean,Boolean,Boolean, TVarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderFinance (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                          , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                          , Boolean,Boolean,Boolean,Boolean,Boolean,Boolean,Boolean,Boolean,Boolean,Boolean, TVarchar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_OrderFinance(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Договор>
@@ -21,6 +25,16 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_OrderFinance(
     IN inMemberId_insert_3       Integer   ,    -- ФИО - Автор заявки 3
     IN inMemberId_insert_4       Integer   ,    -- ФИО - Автор заявки 4
     IN inMemberId_insert_5       Integer   ,    -- ФИО - Автор заявки 5
+    IN inMemberId_insert_6       Integer   ,    -- ФИО - Автор заявки 6 
+    IN inMemberId_insert_7       Integer   ,    -- ФИО - Автор заявки 7 
+    IN inMemberId_insert_8       Integer   ,    -- ФИО - Автор заявки 8 
+    IN inMemberId_insert_9       Integer   ,    -- ФИО - Автор заявки 9 
+    IN inMemberId_insert_10      Integer   ,    -- ФИО - Автор заявки 10
+    IN inMemberId_insert_11      Integer   ,    -- ФИО - Автор заявки 11
+    IN inMemberId_insert_12      Integer   ,    -- ФИО - Автор заявки 12
+    IN inMemberId_insert_13      Integer   ,    -- ФИО - Автор заявки 13
+    IN inMemberId_insert_14      Integer   ,    -- ФИО - Автор заявки 14
+    IN inMemberId_insert_15      Integer   ,    -- ФИО - Автор заявки 15
     IN inMemberId_1              Integer   ,    -- ФИО - на контроле-1
     IN inMemberId_2              Integer   ,    -- ФИО - на контроле-2 
     IN inisStatus_off            Boolean   , 
@@ -76,6 +90,16 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OrderFinance_Member_insert_4(), ioId, inMemberId_insert_4);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OrderFinance_Member_insert_5(), ioId, inMemberId_insert_5);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OrderFinance_Member_insert_6(), ioId, inMemberId_insert_6);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OrderFinance_Member_insert_7(), ioId, inMemberId_insert_7);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OrderFinance_Member_insert_8(), ioId, inMemberId_insert_8);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OrderFinance_Member_insert_9(), ioId, inMemberId_insert_9);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OrderFinance_Member_insert_10(), ioId, inMemberId_insert_10);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OrderFinance_Member_insert_11(), ioId, inMemberId_insert_11);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OrderFinance_Member_insert_12(), ioId, inMemberId_insert_12);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OrderFinance_Member_insert_13(), ioId, inMemberId_insert_13);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OrderFinance_Member_insert_14(), ioId, inMemberId_insert_14);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OrderFinance_Member_insert_15(), ioId, inMemberId_insert_15);
 
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OrderFinance_Member_1(), ioId, inMemberId_1);
@@ -115,6 +139,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.03.26         *
  05.02.26         *
  14.01.26         *
  24.12.25         *

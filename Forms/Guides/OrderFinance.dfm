@@ -219,6 +219,256 @@ inherited OrderFinanceForm: TOrderFinanceForm
             Options.Editing = False
             Width = 107
           end
+          object MemberName_insert_6: TcxGridDBColumn
+            Caption = #1060#1048#1054'-6 - '#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080
+            DataBinding.FieldName = 'MemberName_insert_6'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 110
+          end
+          object UnitName_insert_6: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080'-6)'
+            DataBinding.FieldName = 'UnitName_insert_6'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 98
+          end
+          object PositionName_insert_6: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080'-6)'
+            DataBinding.FieldName = 'PositionName_insert_6'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 107
+          end
+          object MemberName_insert_7: TcxGridDBColumn
+            Caption = #1060#1048#1054'-7 - '#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080
+            DataBinding.FieldName = 'MemberName_insert_7'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 110
+          end
+          object UnitName_insert_7: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080'-7)'
+            DataBinding.FieldName = 'UnitName_insert_7'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 98
+          end
+          object PositionName_insert_7: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080'-7)'
+            DataBinding.FieldName = 'PositionName_insert_7'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 107
+          end
+          object MemberName_insert_8: TcxGridDBColumn
+            Caption = #1060#1048#1054'-8 - '#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080
+            DataBinding.FieldName = 'MemberName_insert_8'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 110
+          end
+          object UnitName_insert_8: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080'-8)'
+            DataBinding.FieldName = 'UnitName_insert_8'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 98
+          end
+          object PositionName_insert_8: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080'-8)'
+            DataBinding.FieldName = 'PositionName_insert_8'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 107
+          end
+          object MemberName_insert_9: TcxGridDBColumn
+            Caption = #1060#1048#1054'-9 - '#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080
+            DataBinding.FieldName = 'MemberName_insert_9'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 110
+          end
+          object UnitName_insert_9: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080'-9)'
+            DataBinding.FieldName = 'UnitName_insert_9'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 98
+          end
+          object PositionName_insert_9: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080'-9)'
+            DataBinding.FieldName = 'PositionName_insert_9'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 107
+          end
+          object MemberName_insert_10: TcxGridDBColumn
+            Caption = #1060#1048#1054'-10 - '#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080
+            DataBinding.FieldName = 'MemberName_insert_10'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 110
+          end
+          object UnitName_insert_10: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080'-10)'
+            DataBinding.FieldName = 'UnitName_insert_10'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 98
+          end
+          object PositionName_insert_10: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080'-10)'
+            DataBinding.FieldName = 'PositionName_insert_10'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 107
+          end
+          object MemberName_insert_11: TcxGridDBColumn
+            Caption = #1060#1048#1054'-11 - '#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080
+            DataBinding.FieldName = 'MemberName_insert_11'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 110
+          end
+          object UnitName_insert_11: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080'-11)'
+            DataBinding.FieldName = 'UnitName_insert_11'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 98
+          end
+          object PositionName_insert_11: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080'-11)'
+            DataBinding.FieldName = 'PositionName_insert_11'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 107
+          end
+          object MemberName_insert_12: TcxGridDBColumn
+            Caption = #1060#1048#1054'-12 - '#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080
+            DataBinding.FieldName = 'MemberName_insert_12'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 110
+          end
+          object UnitName_insert_12: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080'-12)'
+            DataBinding.FieldName = 'UnitName_insert_12'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 98
+          end
+          object PositionName_insert_12: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080'-12)'
+            DataBinding.FieldName = 'PositionName_insert_12'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 107
+          end
+          object MemberName_insert_13: TcxGridDBColumn
+            Caption = #1060#1048#1054'-13 - '#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080
+            DataBinding.FieldName = 'MemberName_insert_13'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 110
+          end
+          object UnitName_insert_13: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080'-13)'
+            DataBinding.FieldName = 'UnitName_insert_13'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 98
+          end
+          object PositionName_insert_13: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080'-13)'
+            DataBinding.FieldName = 'PositionName_insert_13'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 107
+          end
+          object MemberName_insert_14: TcxGridDBColumn
+            Caption = #1060#1048#1054'-14 - '#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080
+            DataBinding.FieldName = 'MemberName_insert_14'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 110
+          end
+          object UnitName_insert_14: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080'-14)'
+            DataBinding.FieldName = 'UnitName_insert_14'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 98
+          end
+          object PositionName_insert_14: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080'-14)'
+            DataBinding.FieldName = 'PositionName_insert_14'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 107
+          end
+          object MemberName_insert_15: TcxGridDBColumn
+            Caption = #1060#1048#1054'-15 - '#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080
+            DataBinding.FieldName = 'MemberName_insert_15'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 110
+          end
+          object UnitName_insert_15: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080'-15)'
+            DataBinding.FieldName = 'UnitName_insert_15'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 98
+          end
+          object PositionName_insert_15: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080'-15)'
+            DataBinding.FieldName = 'PositionName_insert_15'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 107
+          end
           object MemberName_1: TcxGridDBColumn
             Caption = #1060#1048#1054' - '#1085#1072' '#1082#1086#1085#1090#1088#1086#1083#1077'-1'
             DataBinding.FieldName = 'MemberName_1'

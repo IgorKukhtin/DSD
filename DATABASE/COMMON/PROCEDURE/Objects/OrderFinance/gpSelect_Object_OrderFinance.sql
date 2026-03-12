@@ -21,6 +21,28 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , UnitName_insert_4 TVarChar, PositionName_insert_4 TVarChar
              , MemberId_insert_5 Integer, MemberCode_insert_5 Integer, MemberName_insert_5 TVarChar
              , UnitName_insert_5 TVarChar, PositionName_insert_5 TVarChar
+
+             , MemberId_insert_6 Integer, MemberCode_insert_6 Integer, MemberName_insert_6 TVarChar
+             , UnitName_insert_6 TVarChar, PositionName_insert_6 TVarChar
+             , MemberId_insert_7 Integer, MemberCode_insert_7 Integer, MemberName_insert_7 TVarChar
+             , UnitName_insert_7 TVarChar, PositionName_insert_7 TVarChar
+             , MemberId_insert_8 Integer, MemberCode_insert_8 Integer, MemberName_insert_8 TVarChar
+             , UnitName_insert_8 TVarChar, PositionName_insert_8 TVarChar
+             , MemberId_insert_9 Integer, MemberCode_insert_9 Integer, MemberName_insert_9 TVarChar
+             , UnitName_insert_9 TVarChar, PositionName_insert_9 TVarChar
+             , MemberId_insert_10 Integer, MemberCode_insert_10 Integer, MemberName_insert_10 TVarChar
+             , UnitName_insert_10 TVarChar, PositionName_insert_10 TVarChar
+             , MemberId_insert_11 Integer, MemberCode_insert_11 Integer, MemberName_insert_11 TVarChar
+             , UnitName_insert_11 TVarChar, PositionName_insert_11 TVarChar
+             , MemberId_insert_12 Integer, MemberCode_insert_12 Integer, MemberName_insert_12 TVarChar
+             , UnitName_insert_12 TVarChar, PositionName_insert_12 TVarChar
+             , MemberId_insert_13 Integer, MemberCode_insert_13 Integer, MemberName_insert_13 TVarChar
+             , UnitName_insert_13 TVarChar, PositionName_insert_13 TVarChar
+             , MemberId_insert_14 Integer, MemberCode_insert_14 Integer, MemberName_insert_14 TVarChar
+             , UnitName_insert_14 TVarChar, PositionName_insert_14 TVarChar
+             , MemberId_insert_15 Integer, MemberCode_insert_15 Integer, MemberName_insert_15 TVarChar
+             , UnitName_insert_15 TVarChar, PositionName_insert_15 TVarChar
+             
              , MemberId_1 Integer, MemberCode_1 Integer, MemberName_1 TVarChar
              , MemberId_2 Integer, MemberCode_2 Integer, MemberName_2 TVarChar
              , Comment TVarChar
@@ -46,7 +68,7 @@ BEGIN
                              , lfSelect.DateOut
                         FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
                        ) 
-        , tmpUserAdmin AS (SELECT UserId
+        , tmpUserAdmin AS (SELECT DISTINCT UserId
                            FROM ObjectLink_UserRole_View
                            WHERE RoleId IN (zc_Enum_Role_Admin()
                                           , 4629762 -- œÎ‡ÌËÓ‚‡ÌËÂ ÔÎ‡ÚÂÊÂÈ (‰ÓÒÚÛÔ ¬—≈ Á‡ˇ‚ÍË)
@@ -62,6 +84,16 @@ BEGIN
                                                                                                       , zc_ObjectLink_OrderFinance_Member_insert_3()
                                                                                                       , zc_ObjectLink_OrderFinance_Member_insert_4()
                                                                                                       , zc_ObjectLink_OrderFinance_Member_insert_5()
+                                                                                                      , zc_ObjectLink_OrderFinance_Member_insert_6()
+                                                                                                      , zc_ObjectLink_OrderFinance_Member_insert_7()
+                                                                                                      , zc_ObjectLink_OrderFinance_Member_insert_8()
+                                                                                                      , zc_ObjectLink_OrderFinance_Member_insert_9()
+                                                                                                      , zc_ObjectLink_OrderFinance_Member_insert_10()
+                                                                                                      , zc_ObjectLink_OrderFinance_Member_insert_11()
+                                                                                                      , zc_ObjectLink_OrderFinance_Member_insert_12()
+                                                                                                      , zc_ObjectLink_OrderFinance_Member_insert_13()
+                                                                                                      , zc_ObjectLink_OrderFinance_Member_insert_14()
+                                                                                                      , zc_ObjectLink_OrderFinance_Member_insert_15()
                                                                                                         --
                                                                                                       , zc_ObjectLink_OrderFinance_Member_1()
                                                                                                       , zc_ObjectLink_OrderFinance_Member_2()
@@ -116,6 +148,67 @@ BEGIN
             , CASE WHEN vbUserId = 5 AND 1=0 THEN '‘»Œ' ELSE Object_Member_insert_5.ValueData END :: TVarChar   AS MemberName_insert_5   
             , Object_Unit_5.ValueData      ::TVarChar AS UnitName_insert_5
             , Object_Position_5.ValueData  ::TVarChar AS PositionName_insert_5
+
+            , Object_Member_insert_6.Id          AS MemberId_insert_6
+            , Object_Member_insert_6.ObjectCode  AS MemberCode_insert_6
+            , CASE WHEN vbUserId = 6 AND 1=0 THEN '‘»Œ' ELSE Object_Member_insert_6.ValueData END :: TVarChar   AS MemberName_insert_6   
+            , Object_Unit_6.ValueData      ::TVarChar AS UnitName_insert_6
+            , Object_Position_6.ValueData  ::TVarChar AS PositionName_insert_6
+
+            , Object_Member_insert_7.Id          AS MemberId_insert_7
+            , Object_Member_insert_7.ObjectCode  AS MemberCode_insert_7
+            , CASE WHEN vbUserId = 5 AND 1=0 THEN '‘»Œ' ELSE Object_Member_insert_7.ValueData END :: TVarChar   AS MemberName_insert_7   
+            , Object_Unit_7.ValueData      ::TVarChar AS UnitName_insert_7
+            , Object_Position_7.ValueData  ::TVarChar AS PositionName_insert_7
+
+            , Object_Member_insert_8.Id          AS MemberId_insert_8
+            , Object_Member_insert_8.ObjectCode  AS MemberCode_insert_8
+            , CASE WHEN vbUserId = 5 AND 1=0 THEN '‘»Œ' ELSE Object_Member_insert_8.ValueData END :: TVarChar   AS MemberName_insert_8   
+            , Object_Unit_8.ValueData      ::TVarChar AS UnitName_insert_8
+            , Object_Position_8.ValueData  ::TVarChar AS PositionName_insert_8
+
+            , Object_Member_insert_9.Id          AS MemberId_insert_9
+            , Object_Member_insert_9.ObjectCode  AS MemberCode_insert_9
+            , CASE WHEN vbUserId = 5 AND 1=0 THEN '‘»Œ' ELSE Object_Member_insert_9.ValueData END :: TVarChar   AS MemberName_insert_9   
+            , Object_Unit_9.ValueData      ::TVarChar AS UnitName_insert_9
+            , Object_Position_9.ValueData  ::TVarChar AS PositionName_insert_9
+
+            , Object_Member_insert_10.Id          AS MemberId_insert_10
+            , Object_Member_insert_10.ObjectCode  AS MemberCode_insert_10
+            , CASE WHEN vbUserId = 5 AND 1=0 THEN '‘»Œ' ELSE Object_Member_insert_10.ValueData END :: TVarChar   AS MemberName_insert_10   
+            , Object_Unit_10.ValueData      ::TVarChar AS UnitName_insert_10
+            , Object_Position_10.ValueData  ::TVarChar AS PositionName_insert_10
+
+            , Object_Member_insert_11.Id          AS MemberId_insert_11
+            , Object_Member_insert_11.ObjectCode  AS MemberCode_insert_11
+            , CASE WHEN vbUserId = 5 AND 1=0 THEN '‘»Œ' ELSE Object_Member_insert_11.ValueData END :: TVarChar   AS MemberName_insert_11   
+            , Object_Unit_11.ValueData      ::TVarChar AS UnitName_insert_11
+            , Object_Position_11.ValueData  ::TVarChar AS PositionName_insert_11
+
+            , Object_Member_insert_12.Id          AS MemberId_insert_12
+            , Object_Member_insert_12.ObjectCode  AS MemberCode_insert_12
+            , CASE WHEN vbUserId = 5 AND 1=0 THEN '‘»Œ' ELSE Object_Member_insert_12.ValueData END :: TVarChar   AS MemberName_insert_12   
+            , Object_Unit_12.ValueData      ::TVarChar AS UnitName_insert_12
+            , Object_Position_12.ValueData  ::TVarChar AS PositionName_insert_12
+
+            , Object_Member_insert_13.Id          AS MemberId_insert_13
+            , Object_Member_insert_13.ObjectCode  AS MemberCode_insert_13
+            , CASE WHEN vbUserId = 5 AND 1=0 THEN '‘»Œ' ELSE Object_Member_insert_13.ValueData END :: TVarChar   AS MemberName_insert_13   
+            , Object_Unit_13.ValueData      ::TVarChar AS UnitName_insert_13
+            , Object_Position_13.ValueData  ::TVarChar AS PositionName_insert_13
+
+            , Object_Member_insert_14.Id          AS MemberId_insert_14
+            , Object_Member_insert_14.ObjectCode  AS MemberCode_insert_14
+            , CASE WHEN vbUserId = 5 AND 1=0 THEN '‘»Œ' ELSE Object_Member_insert_14.ValueData END :: TVarChar   AS MemberName_insert_14   
+            , Object_Unit_14.ValueData      ::TVarChar AS UnitName_insert_14
+            , Object_Position_14.ValueData  ::TVarChar AS PositionName_insert_14
+
+            , Object_Member_insert_15.Id          AS MemberId_insert_15
+            , Object_Member_insert_15.ObjectCode  AS MemberCode_insert_15
+            , CASE WHEN vbUserId = 5 AND 1=0 THEN '‘»Œ' ELSE Object_Member_insert_15.ValueData END :: TVarChar   AS MemberName_insert_15   
+            , Object_Unit_15.ValueData      ::TVarChar AS UnitName_insert_15
+            , Object_Position_15.ValueData  ::TVarChar AS PositionName_insert_15
+
 
             , Object_Member_1.Id               AS MemberId_1
             , Object_Member_1.ObjectCode       AS MemberCode_1
@@ -197,6 +290,97 @@ BEGIN
            LEFT JOIN Object AS Object_Position_5 ON Object_Position_5.Id = tmpPersonal_5.PositionId
            LEFT JOIN Object AS Object_Unit_5 ON Object_Unit_5.Id = tmpPersonal_5.UnitId
 
+           LEFT JOIN ObjectLink AS OrderFinance_Member_insert_6
+                                ON OrderFinance_Member_insert_6.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_Member_insert_6.DescId = zc_ObjectLink_OrderFinance_Member_insert_6()
+           LEFT JOIN Object AS Object_Member_insert_6 ON Object_Member_insert_6.Id = OrderFinance_Member_insert_6.ChildObjectId
+
+           LEFT JOIN tmpPersonal AS tmpPersonal_6 ON tmpPersonal_6.MemberId = Object_Member_insert_6.Id
+           LEFT JOIN Object AS Object_Position_6 ON Object_Position_6.Id = tmpPersonal_6.PositionId
+           LEFT JOIN Object AS Object_Unit_6 ON Object_Unit_6.Id = tmpPersonal_6.UnitId
+
+           LEFT JOIN ObjectLink AS OrderFinance_Member_insert_7
+                                ON OrderFinance_Member_insert_7.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_Member_insert_7.DescId = zc_ObjectLink_OrderFinance_Member_insert_7()
+           LEFT JOIN Object AS Object_Member_insert_7 ON Object_Member_insert_7.Id = OrderFinance_Member_insert_7.ChildObjectId
+
+           LEFT JOIN tmpPersonal AS tmpPersonal_7 ON tmpPersonal_7.MemberId = Object_Member_insert_7.Id
+           LEFT JOIN Object AS Object_Position_7 ON Object_Position_7.Id = tmpPersonal_7.PositionId
+           LEFT JOIN Object AS Object_Unit_7 ON Object_Unit_7.Id = tmpPersonal_7.UnitId
+
+           LEFT JOIN ObjectLink AS OrderFinance_Member_insert_8
+                                ON OrderFinance_Member_insert_8.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_Member_insert_8.DescId = zc_ObjectLink_OrderFinance_Member_insert_8()
+           LEFT JOIN Object AS Object_Member_insert_8 ON Object_Member_insert_8.Id = OrderFinance_Member_insert_8.ChildObjectId
+
+           LEFT JOIN tmpPersonal AS tmpPersonal_8 ON tmpPersonal_8.MemberId = Object_Member_insert_8.Id
+           LEFT JOIN Object AS Object_Position_8 ON Object_Position_8.Id = tmpPersonal_8.PositionId
+           LEFT JOIN Object AS Object_Unit_8 ON Object_Unit_8.Id = tmpPersonal_8.UnitId
+
+           LEFT JOIN ObjectLink AS OrderFinance_Member_insert_9
+                                ON OrderFinance_Member_insert_9.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_Member_insert_9.DescId = zc_ObjectLink_OrderFinance_Member_insert_9()
+           LEFT JOIN Object AS Object_Member_insert_9 ON Object_Member_insert_9.Id = OrderFinance_Member_insert_9.ChildObjectId
+
+           LEFT JOIN tmpPersonal AS tmpPersonal_9 ON tmpPersonal_9.MemberId = Object_Member_insert_9.Id
+           LEFT JOIN Object AS Object_Position_9 ON Object_Position_9.Id = tmpPersonal_9.PositionId
+           LEFT JOIN Object AS Object_Unit_9 ON Object_Unit_9.Id = tmpPersonal_9.UnitId
+
+           LEFT JOIN ObjectLink AS OrderFinance_Member_insert_10
+                                ON OrderFinance_Member_insert_10.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_Member_insert_10.DescId = zc_ObjectLink_OrderFinance_Member_insert_10()
+           LEFT JOIN Object AS Object_Member_insert_10 ON Object_Member_insert_10.Id = OrderFinance_Member_insert_10.ChildObjectId
+
+           LEFT JOIN tmpPersonal AS tmpPersonal_10 ON tmpPersonal_10.MemberId = Object_Member_insert_10.Id
+           LEFT JOIN Object AS Object_Position_10 ON Object_Position_10.Id = tmpPersonal_10.PositionId
+           LEFT JOIN Object AS Object_Unit_10 ON Object_Unit_10.Id = tmpPersonal_10.UnitId
+
+           LEFT JOIN ObjectLink AS OrderFinance_Member_insert_11
+                                ON OrderFinance_Member_insert_11.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_Member_insert_11.DescId = zc_ObjectLink_OrderFinance_Member_insert_11()
+           LEFT JOIN Object AS Object_Member_insert_11 ON Object_Member_insert_11.Id = OrderFinance_Member_insert_11.ChildObjectId
+
+           LEFT JOIN tmpPersonal AS tmpPersonal_11 ON tmpPersonal_11.MemberId = Object_Member_insert_11.Id
+           LEFT JOIN Object AS Object_Position_11 ON Object_Position_11.Id = tmpPersonal_11.PositionId
+           LEFT JOIN Object AS Object_Unit_11 ON Object_Unit_11.Id = tmpPersonal_11.UnitId
+
+           LEFT JOIN ObjectLink AS OrderFinance_Member_insert_12
+                                ON OrderFinance_Member_insert_12.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_Member_insert_12.DescId = zc_ObjectLink_OrderFinance_Member_insert_12()
+           LEFT JOIN Object AS Object_Member_insert_12 ON Object_Member_insert_12.Id = OrderFinance_Member_insert_12.ChildObjectId
+
+           LEFT JOIN tmpPersonal AS tmpPersonal_12 ON tmpPersonal_12.MemberId = Object_Member_insert_12.Id
+           LEFT JOIN Object AS Object_Position_12 ON Object_Position_12.Id = tmpPersonal_12.PositionId
+           LEFT JOIN Object AS Object_Unit_12 ON Object_Unit_12.Id = tmpPersonal_12.UnitId
+
+           LEFT JOIN ObjectLink AS OrderFinance_Member_insert_13
+                                ON OrderFinance_Member_insert_13.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_Member_insert_13.DescId = zc_ObjectLink_OrderFinance_Member_insert_13()
+           LEFT JOIN Object AS Object_Member_insert_13 ON Object_Member_insert_13.Id = OrderFinance_Member_insert_13.ChildObjectId
+
+           LEFT JOIN tmpPersonal AS tmpPersonal_13 ON tmpPersonal_13.MemberId = Object_Member_insert_13.Id
+           LEFT JOIN Object AS Object_Position_13 ON Object_Position_13.Id = tmpPersonal_13.PositionId
+           LEFT JOIN Object AS Object_Unit_13 ON Object_Unit_13.Id = tmpPersonal_13.UnitId
+
+           LEFT JOIN ObjectLink AS OrderFinance_Member_insert_14
+                                ON OrderFinance_Member_insert_14.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_Member_insert_14.DescId = zc_ObjectLink_OrderFinance_Member_insert_14()
+           LEFT JOIN Object AS Object_Member_insert_14 ON Object_Member_insert_14.Id = OrderFinance_Member_insert_14.ChildObjectId
+
+           LEFT JOIN tmpPersonal AS tmpPersonal_14 ON tmpPersonal_14.MemberId = Object_Member_insert_14.Id
+           LEFT JOIN Object AS Object_Position_14 ON Object_Position_14.Id = tmpPersonal_14.PositionId
+           LEFT JOIN Object AS Object_Unit_14 ON Object_Unit_14.Id = tmpPersonal_14.UnitId
+
+           LEFT JOIN ObjectLink AS OrderFinance_Member_insert_15
+                                ON OrderFinance_Member_insert_15.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_Member_insert_15.DescId = zc_ObjectLink_OrderFinance_Member_insert_15()
+           LEFT JOIN Object AS Object_Member_insert_15 ON Object_Member_insert_15.Id = OrderFinance_Member_insert_15.ChildObjectId
+
+           LEFT JOIN tmpPersonal AS tmpPersonal_15 ON tmpPersonal_15.MemberId = Object_Member_insert_15.Id
+           LEFT JOIN Object AS Object_Position_15 ON Object_Position_15.Id = tmpPersonal_15.PositionId
+           LEFT JOIN Object AS Object_Unit_15 ON Object_Unit_15.Id = tmpPersonal_15.UnitId
+
+
            LEFT JOIN ObjectLink AS OrderFinance_Member_1
                                 ON OrderFinance_Member_1.ObjectId = Object_OrderFinance.Id
                                AND OrderFinance_Member_1.DescId = zc_ObjectLink_OrderFinance_Member_1()
@@ -270,6 +454,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 11.03.26         *
  14.01.26         *
  24.12.25         *
  08.12.25         *

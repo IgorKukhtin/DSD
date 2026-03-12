@@ -80,6 +80,36 @@ type
     cbSB: TcxCheckBox;
     cbisInvNumber_Invoice: TcxCheckBox;
     cbisInvNumber: TcxCheckBox;
+    cxLabel13: TcxLabel;
+    edInsertUser_6: TcxButtonEdit;
+    GuidesInsert_6: TdsdGuides;
+    cxLabel14: TcxLabel;
+    edInsertUser_7: TcxButtonEdit;
+    GuidesInsert_7: TdsdGuides;
+    cxLabel15: TcxLabel;
+    edInsertUser_8: TcxButtonEdit;
+    GuidesInsert_8: TdsdGuides;
+    cxLabel16: TcxLabel;
+    edInsertUser_9: TcxButtonEdit;
+    GuidesInsert_9: TdsdGuides;
+    cxLabel17: TcxLabel;
+    edInsertUser_10: TcxButtonEdit;
+    GuidesInsert_10: TdsdGuides;
+    cxLabel18: TcxLabel;
+    edInsertUser_11: TcxButtonEdit;
+    GuidesInsert_11: TdsdGuides;
+    edInsertUser_12: TcxButtonEdit;
+    GuidesInsert_12: TdsdGuides;
+    cxLabel19: TcxLabel;
+    edInsertUser_13: TcxButtonEdit;
+    GuidesInsert_13: TdsdGuides;
+    cxLabel20: TcxLabel;
+    edInsertUser_14: TcxButtonEdit;
+    GuidesInsert_14: TdsdGuides;
+    cxLabel21: TcxLabel;
+    edInsertUser_15: TcxButtonEdit;
+    GuidesInsert_15: TdsdGuides;
+    cxLabel22: TcxLabel;
   private
     { Private declarations }
   public

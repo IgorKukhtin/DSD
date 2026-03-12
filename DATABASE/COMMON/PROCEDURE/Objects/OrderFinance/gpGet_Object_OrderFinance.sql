@@ -15,6 +15,16 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MemberId_insert_3 Integer, MemberName_insert_3 TVarChar
              , MemberId_insert_4 Integer, MemberName_insert_4 TVarChar
              , MemberId_insert_5 Integer, MemberName_insert_5 TVarChar
+             , MemberId_insert_6  Integer, MemberName_insert_6  TVarChar
+             , MemberId_insert_7  Integer, MemberName_insert_7  TVarChar
+             , MemberId_insert_8  Integer, MemberName_insert_8  TVarChar
+             , MemberId_insert_9  Integer, MemberName_insert_9  TVarChar
+             , MemberId_insert_10 Integer, MemberName_insert_10 TVarChar
+             , MemberId_insert_11 Integer, MemberName_insert_11 TVarChar
+             , MemberId_insert_12 Integer, MemberName_insert_12 TVarChar
+             , MemberId_insert_13 Integer, MemberName_insert_13 TVarChar
+             , MemberId_insert_14 Integer, MemberName_insert_14 TVarChar
+             , MemberId_insert_15 Integer, MemberName_insert_15 TVarChar
              , MemberId_1 Integer, MemberName_1 TVarChar
              , MemberId_2 Integer, MemberName_2 TVarChar
              , Comment TVarChar
@@ -58,6 +68,27 @@ BEGIN
            , CAST ('' as TVarChar)  AS MemberName_insert_4
            , 0                      AS MemberId_insert_5
            , CAST ('' as TVarChar)  AS MemberName_insert_5
+           
+           , 0                      AS MemberId_insert_6
+           , CAST ('' as TVarChar)  AS MemberName_insert_6
+           , 0                      AS MemberId_insert_7
+           , CAST ('' as TVarChar)  AS MemberName_insert_7
+           , 0                      AS MemberId_insert_8
+           , CAST ('' as TVarChar)  AS MemberName_insert_8
+           , 0                      AS MemberId_insert_9
+           , CAST ('' as TVarChar)  AS MemberName_insert_9
+           , 0                      AS MemberId_insert_10
+           , CAST ('' as TVarChar)  AS MemberName_insert_10
+           , 0                      AS MemberId_insert_11
+           , CAST ('' as TVarChar)  AS MemberName_insert_11
+           , 0                      AS MemberId_insert_12
+           , CAST ('' as TVarChar)  AS MemberName_insert_12
+           , 0                      AS MemberId_insert_13
+           , CAST ('' as TVarChar)  AS MemberName_insert_13
+           , 0                      AS MemberId_insert_14
+           , CAST ('' as TVarChar)  AS MemberName_insert_14
+           , 0                      AS MemberId_insert_15
+           , CAST ('' as TVarChar)  AS MemberName_insert_15
            
            , 0                      AS MemberId_1
            , CAST ('' as TVarChar)  AS MemberName_1
@@ -107,6 +138,27 @@ BEGIN
             , Object_Member_insert_4.ValueData AS MemberName_insert_4
             , Object_Member_insert_5.Id        AS MemberId_insert_5
             , Object_Member_insert_5.ValueData AS MemberName_insert_5
+            
+            , Object_Member_insert_6.Id        AS MemberId_insert_6
+            , Object_Member_insert_6.ValueData AS MemberName_insert_6
+            , Object_Member_insert_7.Id        AS MemberId_insert_7
+            , Object_Member_insert_7.ValueData AS MemberName_insert_7
+            , Object_Member_insert_8.Id        AS MemberId_insert_8
+            , Object_Member_insert_8.ValueData AS MemberName_insert_8
+            , Object_Member_insert_9.Id        AS MemberId_insert_9
+            , Object_Member_insert_9.ValueData AS MemberName_insert_9
+            , Object_Member_insert_10.Id        AS MemberId_insert_10
+            , Object_Member_insert_10.ValueData AS MemberName_insert_10
+            , Object_Member_insert_11.Id        AS MemberId_insert_11
+            , Object_Member_insert_11.ValueData AS MemberName_insert_11
+            , Object_Member_insert_12.Id        AS MemberId_insert_12
+            , Object_Member_insert_12.ValueData AS MemberName_insert_12
+            , Object_Member_insert_13.Id        AS MemberId_insert_13
+            , Object_Member_insert_13.ValueData AS MemberName_insert_13
+            , Object_Member_insert_14.Id        AS MemberId_insert_14
+            , Object_Member_insert_14.ValueData AS MemberName_insert_14
+            , Object_Member_insert_15.Id        AS MemberId_insert_15
+            , Object_Member_insert_15.ValueData AS MemberName_insert_15
 
             , Object_Member_1.Id               AS MemberId_1
             , Object_Member_1.ValueData        AS MemberName_1
@@ -175,6 +227,56 @@ BEGIN
                                AND OrderFinance_Member_insert_5.DescId = zc_ObjectLink_OrderFinance_Member_insert_5()
            LEFT JOIN Object AS Object_Member_insert_5 ON Object_Member_insert_5.Id = OrderFinance_Member_insert_5.ChildObjectId
 
+           LEFT JOIN ObjectLink AS OrderFinance_Member_insert_6
+                                ON OrderFinance_Member_insert_6.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_Member_insert_6.DescId = zc_ObjectLink_OrderFinance_Member_insert_6()
+           LEFT JOIN Object AS Object_Member_insert_6 ON Object_Member_insert_6.Id = OrderFinance_Member_insert_6.ChildObjectId
+
+           LEFT JOIN ObjectLink AS OrderFinance_Member_insert_7
+                                ON OrderFinance_Member_insert_7.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_Member_insert_7.DescId = zc_ObjectLink_OrderFinance_Member_insert_7()
+           LEFT JOIN Object AS Object_Member_insert_7 ON Object_Member_insert_7.Id = OrderFinance_Member_insert_7.ChildObjectId
+
+           LEFT JOIN ObjectLink AS OrderFinance_Member_insert_8
+                                ON OrderFinance_Member_insert_8.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_Member_insert_8.DescId = zc_ObjectLink_OrderFinance_Member_insert_8()
+           LEFT JOIN Object AS Object_Member_insert_8 ON Object_Member_insert_8.Id = OrderFinance_Member_insert_8.ChildObjectId
+
+           LEFT JOIN ObjectLink AS OrderFinance_Member_insert_9
+                                ON OrderFinance_Member_insert_9.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_Member_insert_9.DescId = zc_ObjectLink_OrderFinance_Member_insert_9()
+           LEFT JOIN Object AS Object_Member_insert_9 ON Object_Member_insert_9.Id = OrderFinance_Member_insert_9.ChildObjectId
+
+           LEFT JOIN ObjectLink AS OrderFinance_Member_insert_10
+                                ON OrderFinance_Member_insert_10.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_Member_insert_10.DescId = zc_ObjectLink_OrderFinance_Member_insert_10()
+           LEFT JOIN Object AS Object_Member_insert_10 ON Object_Member_insert_10.Id = OrderFinance_Member_insert_10.ChildObjectId
+
+           LEFT JOIN ObjectLink AS OrderFinance_Member_insert_11
+                                ON OrderFinance_Member_insert_11.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_Member_insert_11.DescId = zc_ObjectLink_OrderFinance_Member_insert_11()
+           LEFT JOIN Object AS Object_Member_insert_11 ON Object_Member_insert_11.Id = OrderFinance_Member_insert_11.ChildObjectId
+
+           LEFT JOIN ObjectLink AS OrderFinance_Member_insert_12
+                                ON OrderFinance_Member_insert_12.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_Member_insert_12.DescId = zc_ObjectLink_OrderFinance_Member_insert_12()
+           LEFT JOIN Object AS Object_Member_insert_12 ON Object_Member_insert_12.Id = OrderFinance_Member_insert_12.ChildObjectId
+
+           LEFT JOIN ObjectLink AS OrderFinance_Member_insert_13
+                                ON OrderFinance_Member_insert_13.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_Member_insert_13.DescId = zc_ObjectLink_OrderFinance_Member_insert_13()
+           LEFT JOIN Object AS Object_Member_insert_13 ON Object_Member_insert_13.Id = OrderFinance_Member_insert_13.ChildObjectId
+
+           LEFT JOIN ObjectLink AS OrderFinance_Member_insert_14
+                                ON OrderFinance_Member_insert_14.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_Member_insert_14.DescId = zc_ObjectLink_OrderFinance_Member_insert_14()
+           LEFT JOIN Object AS Object_Member_insert_14 ON Object_Member_insert_14.Id = OrderFinance_Member_insert_14.ChildObjectId
+
+           LEFT JOIN ObjectLink AS OrderFinance_Member_insert_15
+                                ON OrderFinance_Member_insert_15.ObjectId = Object_OrderFinance.Id
+                               AND OrderFinance_Member_insert_15.DescId = zc_ObjectLink_OrderFinance_Member_insert_15()
+           LEFT JOIN Object AS Object_Member_insert_15 ON Object_Member_insert_15.Id = OrderFinance_Member_insert_15.ChildObjectId
+
            LEFT JOIN ObjectLink AS OrderFinance_Member_1
                                 ON OrderFinance_Member_1.ObjectId = Object_OrderFinance.Id
                                AND OrderFinance_Member_1.DescId = zc_ObjectLink_OrderFinance_Member_1()
@@ -231,6 +333,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.03.26         *
  14.01.26         *
  24.12.25         *
  08.12.25         *

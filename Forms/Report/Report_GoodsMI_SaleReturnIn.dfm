@@ -1684,6 +1684,42 @@
     inherited actGridToExcel: TdsdGridToExcel
       ExportType = cxegExportToXlsx
     end
+    object actPrint_byPartner_ukr: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1091#1082#1088'.)'
+      Hint = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1091#1082#1088'.)'
+      ImageIndex = 23
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'juridicalname;partnername;GoodsGroupName;GoodsName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1091#1082#1088')'
+      ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1091#1082#1088')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrint_byPartner: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -2340,6 +2376,14 @@
         end
         item
           Visible = True
+          ItemName = 'bbPrint_byPartner_ukr'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefreshReal'
         end
         item
@@ -2412,6 +2456,10 @@
     end
     object bbRefreshReal: TdxBarButton
       Action = actRefreshReal
+      Category = 0
+    end
+    object bbPrint_byPartner_ukr: TdxBarButton
+      Action = actPrint_byPartner_ukr
       Category = 0
     end
   end
