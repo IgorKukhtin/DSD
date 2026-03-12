@@ -38,7 +38,8 @@ BEGIN
      RETURN QUERY
        WITH -- ВСЕ заполненные места хранения - ячейки + ячейка "Отбор"
             tmpPartionCell_mi AS (SELECT DISTINCT lpSelect.PartionCellId, lpSelect.GoodsId, lpSelect.GoodsKindId, lpSelect.PartionGoodsDate
-                                  FROM lpSelect_Object_PartionCell_mi (inGoodsId:= 0, inGoodsKindId:= 0) AS lpSelect
+                                  FROM lpSelect_Object_PartionCell_mi (inGoodsId:= CASE WHEN inShowAll = TRUE THEN -1 ELSE 0 END, inGoodsKindId:= 0) AS lpSelect
+                                  WHERE inShowAll = FALSE
                                  )
             -- найдем последнюю партию в ячейка "Отбор"
           , tmpPartionCell_RK AS (SELECT tmpMI.GoodsId, tmpMI.GoodsKindId, tmpMI.PartionGoodsDate
