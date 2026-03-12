@@ -63,11 +63,18 @@ $BODY$
                                           ObjectLink_GoodsByGoodsKind_Goods.ObjectId                        AS ObjectId
                                         , ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId                   AS GoodsId
                                         , COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+                                        , COALESCE (ObjectLink_Goods_GoodsGroup.ChildObjectId, 0)           AS GoodsGroupId
+                                        , TRIM (COALESCE (Object_GoodsGroup.ValueData, ''))                 AS GoodsGroupName
                                    FROM Object AS Object_GoodsByGoodsKind
                                         JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
                                                         ON ObjectLink_GoodsByGoodsKind_Goods.ObjectId = Object_GoodsByGoodsKind.Id
                                                        AND ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
                                                        AND ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId > 0
+                                        LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                                             ON ObjectLink_Goods_GoodsGroup.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId
+                                                            AND ObjectLink_Goods_GoodsGroup.DescId   = zc_ObjectLink_Goods_GoodsGroup()
+                                        LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
                                         -- Ограничим - есть Вид товара
                                         INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
                                                               ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
@@ -106,6 +113,11 @@ $BODY$
                                      AND Object_GoodsByGoodsKind.isErased = FALSE
                                      AND ObjectBoolean_GoodsByGoodsKind_NotMobile.ObjectId IS NULL
                                   )
+           , tmpGoodsGroupName AS (SELECT MIN (tmpGoodsByGoodsKind.GoodsGroupId)     AS GoodsGroupId
+                                        , UPPER (tmpGoodsByGoodsKind.GoodsGroupName) AS GoodsGroupName
+                                   FROM tmpGoodsByGoodsKind
+                                   GROUP BY UPPER (tmpGoodsByGoodsKind.GoodsGroupName)
+                                  )
 
          , tmpGoodsPropertyValue AS (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId          AS GoodsId
                                           , ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId      AS GoodsKindId
@@ -133,8 +145,7 @@ $BODY$
                                      WHERE ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
                                        AND COALESCE (ObjectString_BarCode.ValueData ,'') <> ''
                                     )
-
-
+                   -- Результат
                    SELECT COALESCE(tmpGoodsByGoodsKind.ObjectId::TVarchar ,'') ::TVarChar AS extId
                         , (Object_Goods.ObjectCODE)                   ::TVarChar AS globalCode
                         , TRIM (Object_Goods.ValueData)               ::TVarChar AS productName
@@ -153,7 +164,7 @@ $BODY$
                         , COALESCE(Object_GoodsKind.Id::TVarchar ,'')                   ::TVarChar AS subCategoryLineExtId
                         , TRIM (COALESCE(Object_GoodsKind.ValueData,''))                ::TVarChar AS subCategoryLineName
                         , (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 4 ELSE 3 END) ::Integer AS unitId
-                        , 1 ::Integer AS additionalUnitId
+                        , NULL ::Integer AS additionalUnitId
                         , 1 ::Integer AS typeId
                         , (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 0 ELSE 1 END) ::TFloat AS unitFactor
                         , 1   ::TFloat AS quantity
@@ -183,6 +194,10 @@ $BODY$
                         INNER JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoodsByGoodsKind.GoodsId
                         LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoodsByGoodsKind.GoodsKindId
 
+                        LEFT JOIN tmpGoodsGroupName ON tmpGoodsGroupName.GoodsGroupName ILIKE tmpGoodsByGoodsKind.GoodsGroupName
+                        LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = tmpGoodsGroupName.GoodsGroupId
+
+
                         LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
                                              ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id
                                             AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
@@ -207,11 +222,6 @@ $BODY$
                                              ON ObjectLink_GoodsGroupProperty_Parent.ObjectId = Object_GoodsGroupProperty.Id
                                             AND ObjectLink_GoodsGroupProperty_Parent.DescId = zc_ObjectLink_GoodsGroupProperty_Parent()
                         LEFT JOIN Object AS Object_GoodsGroupPropertyParent ON Object_GoodsGroupPropertyParent.Id = ObjectLink_GoodsGroupProperty_Parent.ChildObjectId
-
-                        LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                             ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
-                                            AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-                        LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
                         LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                              ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
