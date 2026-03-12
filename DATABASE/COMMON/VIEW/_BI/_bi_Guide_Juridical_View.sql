@@ -340,5 +340,6 @@ ALTER TABLE _bi_Guide_Juridical_View OWNER TO postgres;
  08.05.25                                        *
 */
 
+
 -- тест
 -- SELECT * FROM _bi_Guide_Juridical_View

@@ -1,6 +1,6 @@
 -- View: _bi_Guide_Asset_View
 
- DROP VIEW IF EXISTS _bi_Guide_Asset_View;
+DROP VIEW IF EXISTS _bi_Guide_Asset_View;
 
 -- Справочник Основные средства
 /*
