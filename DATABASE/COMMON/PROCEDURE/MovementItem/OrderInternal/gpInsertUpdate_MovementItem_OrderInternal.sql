@@ -103,6 +103,7 @@ BEGIN
          END IF;
      END IF;
 
+
      -- проверка
      IF COALESCE (vbMovementItemId, 0) = 0 AND 1=0
      THEN
@@ -137,6 +138,12 @@ BEGIN
      ELSE
          ioId:= lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inGoodsId, inMovementId, ioAmount, NULL);
          vbMovementItemId:= ioId;
+
+         -- сохранили связь с <товар>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(), ioId, inGoodsId);
+         -- сохранили связь с <Виды товаров>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKindComplete(), ioId, inGoodsKindId);
+
      END IF;
 
      -- сохранили свойство <Количество дозаказ>
