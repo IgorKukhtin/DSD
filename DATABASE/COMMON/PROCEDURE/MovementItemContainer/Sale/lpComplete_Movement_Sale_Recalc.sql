@@ -24,6 +24,7 @@ BEGIN
           OR (EXTRACT (DOW FROM CURRENT_DATE) = 7 -- AND EXTRACT (HOUR FROM CURRENT_TIMESTAMP) <= 17
              )
             )
+        AND 1=0
      THEN
          -- ничего не делаем
          inUserId:= zc_Enum_Process_Auto_Peresort();
