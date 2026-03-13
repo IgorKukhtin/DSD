@@ -116,7 +116,7 @@ BEGIN
                     ELSE 1
                END * MovementItem.Amount                                                                              AS OperSumm
 
-             , COALESCE (MovementFloat_AmountCurrency.ValueData, 0)                                                   AS OperSumm_Currency
+             , CASE WHEN MIFloat_AmountCurrency.ValueData <> 0 THEN MIFloat_AmountCurrency.ValueData ELSE COALESCE (MovementFloat_AmountCurrency.ValueData, 0) END AS OperSumm_Currency
 
              , CASE WHEN Movement.OperDate >= zc_DateStart_Asset() AND View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() AND vbMovementDescId = zc_Movement_Service()
                          THEN 1
@@ -194,6 +194,10 @@ BEGIN
              LEFT JOIN MovementFloat AS MovementFloat_AmountCurrency
                                      ON MovementFloat_AmountCurrency.MovementId = Movement.Id
                                     AND MovementFloat_AmountCurrency.DescId     = zc_MovementFloat_AmountCurrency()
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountCurrency
+                                         ON MIFloat_AmountCurrency.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountCurrency.DescId         = zc_MIFloat_AmountCurrency()
+
              LEFT JOIN MovementLinkObject AS MLO_Currency
                                           ON MLO_Currency.MovementId = Movement.Id
                                          AND MLO_Currency.DescId     = zc_MovementLinkObject_CurrencyPartner()
