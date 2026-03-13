@@ -49,12 +49,12 @@ $BODY$
      RETURN QUERY
      SELECT Object_Partner.Id                             ::TVarChar AS extId
           , TRIM (Object_Partner.ValueData)               ::TVarChar AS Name
-          , ObjectHistoryString_JuridicalDetails_JuridicalAddress.ValueData  ::TVarChar AS legalAddress
-          , ObjectString_Address.ValueData                                   ::TVarChar AS streetAddress
+          , TRIM (ObjectHistoryString_JuridicalDetails_JuridicalAddress.ValueData)  ::TVarChar AS legalAddress
+          , TRIM (ObjectString_Address.ValueData)         ::TVarChar AS streetAddress
           , ''                                            ::TVarChar AS latitude
           , ''                                            ::TVarChar AS longitude
           , 0                                             ::Integer  AS recurrence
-          ,  ObjectLink_Partner_PartnerTag.ChildObjectId  ::TVarChar AS channelSaleId    
+          ,  COALESCE (ObjectLink_Partner_PartnerTag.ChildObjectId ::TVarChar, zfCalc_UserAdmin() ::TVarChar)  ::TVarChar AS channelSaleId    
           , ''                                            ::TVarChar AS salePointDistributorName
           , ''                                            ::TVarChar AS salePointDistributorExtId
           , ''                                            ::TVarChar AS customer
@@ -68,8 +68,8 @@ $BODY$
           , ''                                            ::TVarChar AS recTimeBeg
           , ''                                            ::TVarChar AS recTimeEnd
           , NULL                                          ::Integer  AS timeInTT
-          , Object_Retail.ValueData                       ::TVarChar AS retailerName 
-          , Object_Retail.Id                              ::TVarChar AS retailerExtId
+          , '' /*COALESCE (Object_Retail.ValueData, 'нет')*/     ::TVarChar AS retailerName 
+          , '' /*COALESCE (Object_Retail.Id ::TVarChar, zfCalc_UserAdmin() ::TVarChar)*/ ::TVarChar AS retailerExtId
           , ''                                            ::TVarChar AS territorialFeatureExtId
           , Object_Region.Id                              ::TVarChar AS salePointDistrictExtId
           , Object_Region.ValueData                       ::TVarChar AS salePointDistrictName

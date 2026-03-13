@@ -23,6 +23,12 @@ $BODY$
           , CASE WHEN Object_PartnerTag.isErased = FALSE THEN 0 ELSE 1 END ::Integer AS isDeleted
      FROM Object AS Object_PartnerTag
      WHERE Object_PartnerTag.DescId = zc_Object_PartnerTag()
+
+    UNION ALL
+     SELECT zfCalc_UserAdmin()  ::TVarChar AS Id
+          , 'канал відсутній'   ::TVarChar AS Name
+            -- FALSE
+          , 0  ::Integer AS isDeleted
     ;
 
 END;
