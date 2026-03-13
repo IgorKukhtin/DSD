@@ -130,7 +130,8 @@ $BODY$
                                  ON ObjectString_HouseNumber.ObjectId = Object_Partner.Id
                                 AND ObjectString_HouseNumber.DescId = zc_ObjectString_Partner_HouseNumber()
 
-     WHERE Object_Partner.DescId = zc_Object_Partner()
+     WHERE Object_Partner.DescId   = zc_Object_Partner()
+       AND Object_Partner.isErased = FALSE
 --limit 200
     ;
 
