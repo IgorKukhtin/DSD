@@ -53,6 +53,7 @@ $BODY$
                                         ON ObjectHistoryString_JuridicalDetails_JuridicalAddress.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
                                        AND ObjectHistoryString_JuridicalDetails_JuridicalAddress.DescId = zc_ObjectHistoryString_JuridicalDetails_JuridicalAddress()
      WHERE Object_Partner.DescId = zc_Object_Partner()
+       AND Object_Partner.isErased = FALSE
     ;
 
 END;

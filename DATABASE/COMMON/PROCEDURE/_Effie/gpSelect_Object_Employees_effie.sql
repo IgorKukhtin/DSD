@@ -45,6 +45,7 @@ $BODY$
           , '0'                                          ::TVarChar AS leadExtId
           , ''                                           ::TVarChar AS notificationLanguage
           , Object_Member.isErased                       ::Boolean  AS isDeleted
+
      FROM Object AS Object_Member 
           LEFT JOIN ObjectLink AS ObjectLink_User_Member
                                ON ObjectLink_User_Member.ChildObjectId = Object_Member.Id
@@ -61,6 +62,7 @@ $BODY$
                                 AND ObjectString_User_.DescId = zc_ObjectString_User_Password()
 
      WHERE Object_Member.DescId = zc_Object_Member() 
+       AND Object_Member.isErased = FALSE
     ;
 
 
