@@ -1,8 +1,8 @@
--- View: TT
+-- View: ContractHeaders
 
-DROP VIEW IF EXISTS TT;
+DROP VIEW IF EXISTS ContractHeaders;
 
-CREATE OR REPLACE VIEW TT
+CREATE OR REPLACE VIEW ContractHeaders
 AS 
   WITH _tmpresult AS (SELECT extId
                            , Name
@@ -16,7 +16,7 @@ AS
                            , isDeleted
                       FROM dblink ('host=192.168.0.228 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
                                  , ('SELECT *
-                                    FROM gpSelect_Object_TT_effie(zfCalc_UserAdmin())'
+                                    FROM gpSelect_Object_ContractHeaders_effie(zfCalc_UserAdmin())'
                                     ) :: Text
                                   ) AS gpSelect (extId            TVarChar   -- Уникальный идентификатор договора
                                                , Name             TVarChar   -- Название Договора  
@@ -44,10 +44,10 @@ AS
    FROM _tmpresult
   ;
 
-ALTER TABLE TT  OWNER TO postgres;
+ALTER TABLE ContractHeaders  OWNER TO postgres;
 
-GRANT ALL ON TABLE PUBLIC.TT TO admin;
-GRANT ALL ON TABLE PUBLIC.TT TO project;
+GRANT ALL ON TABLE PUBLIC.ContractHeaders TO admin;
+GRANT ALL ON TABLE PUBLIC.ContractHeaders TO project;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -57,4 +57,4 @@ GRANT ALL ON TABLE PUBLIC.TT TO project;
 */
 
 -- тест
--- SELECT * FROM TT ORDER BY 1
+-- SELECT * FROM ContractHeaders ORDER BY 1
