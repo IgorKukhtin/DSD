@@ -15,11 +15,11 @@ RETURNS TABLE (extId            TVarChar   -- Уникальный идентификатор договора
              , paymentDelay     Integer    -- Отсрочка оплаты в днях
              , creditLimit      TFloat     -- Кредитный лимит 
              , isDeleted        Boolean    -- Признак активности: false = активен / true = не активен
-) AS
-
+              )
+AS
 $BODY$
    DECLARE vbUserId Integer;
- BEGIN
+BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
@@ -32,7 +32,7 @@ $BODY$
                                     , MAX (COALESCE (ObjectFloat_Value.ValueData,0)) :: TFloat AS Value
                                     
                              FROM ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
-                               -- Условие договора НЕ удалено
+                                    -- Условие договора НЕ удалено
                                     INNER JOIN Object AS Object_ContractCondition ON Object_ContractCondition.Id       = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
                                                                                  AND Object_ContractCondition.isErased = FALSE
                                     -- Значение для условия
@@ -44,7 +44,7 @@ $BODY$
                                     INNER JOIN ObjectLink AS ObjectLink_ContractCondition_Contract
                                                           ON ObjectLink_ContractCondition_Contract.ObjectId = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
                                                          AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
-                              -- Период для условия с ....
+                                    -- Период для условия с ....
                                     LEFT JOIN ObjectDate AS ObjectDate_StartDate
                                                          ON ObjectDate_StartDate.ObjectId = Object_ContractCondition.Id
                                                         AND ObjectDate_StartDate.DescId = zc_ObjectDate_ContractCondition_StartDate()
@@ -53,12 +53,12 @@ $BODY$
                                                          ON ObjectDate_EndDate.ObjectId = Object_ContractCondition.Id
                                                         AND ObjectDate_EndDate.DescId = zc_ObjectDate_ContractCondition_EndDate()
                              WHERE ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = zc_Enum_ContractConditionKind_DelayCreditLimit()
-                                                         AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
-                             AND (COALESCE (ObjectDate_StartDate.ValueData, zc_DateStart())) :: TDateTime <= CURRENT_DATE
-                             AND (COALESCE (ObjectDate_EndDate.ValueData, zc_DateEnd())) >= CURRENT_DATE
+                               AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
+                               AND (COALESCE (ObjectDate_StartDate.ValueData, zc_DateStart())) :: TDateTime <= CURRENT_DATE
+                               AND (COALESCE (ObjectDate_EndDate.ValueData, zc_DateEnd())) >= CURRENT_DATE
                              
                              GROUP BY ObjectLink_ContractCondition_Contract.ChildObjectId
-                             )
+                            )
               
      --
      SELECT Object_Contract_View.ContractId                                ::TVarChar AS extId

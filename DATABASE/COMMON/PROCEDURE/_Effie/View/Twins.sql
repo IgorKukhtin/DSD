@@ -8,7 +8,7 @@ AS
                            , Name
                            , isDeleted
                       FROM dblink ('host=192.168.0.228 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
-                                 , ('SELECT *
+                                 , ('SELECT extId, Name, isDeleted
                                     FROM gpSelect_Object_Clients_effie(zfCalc_UserAdmin())'
                                     ) :: Text
                                   ) AS gpSelect (extId           TVarChar   -- Идентификатор канала продаж
