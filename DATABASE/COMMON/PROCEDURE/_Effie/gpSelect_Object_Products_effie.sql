@@ -103,6 +103,7 @@ $BODY$
                                         LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                              ON ObjectLink_Goods_InfoMoney.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId
                                                             AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                                        -- ограничили
                                         INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
                                                                         AND Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
                                                                                                                            , zc_Enum_InfoMoneyDestination_21000() -- Общефирменные + Чапли

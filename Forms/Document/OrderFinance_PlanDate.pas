@@ -115,6 +115,7 @@ type
     edSearch: TcxTextEdit;
     FieldFilter: TdsdFieldFilter;
     OperDate_next: TcxGridDBColumn;
+    CashName: TcxGridDBColumn;
   private
     { Private declarations }
   public

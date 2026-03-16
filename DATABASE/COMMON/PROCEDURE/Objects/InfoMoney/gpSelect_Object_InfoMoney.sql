@@ -91,4 +91,5 @@ ALTER FUNCTION gpSelect_Object_InfoMoney (TVarChar) OWNER TO postgres;
 */
 
 -- тест
+-- select Name from gpSelect_Object_InfoMoney( inSession := '5') as a  where isErased = false group by Name having count(*) > 1 order by 1
 -- SELECT * FROM gpSelect_Object_InfoMoney('2')

@@ -25,10 +25,17 @@ $BODY$
           , Object_Unit.isErased         ::Boolean  AS isDeleted
      FROM Object AS Object_Unit 
            INNER JOIN ObjectLink AS ObjectLink_Unit_Branch
-                                 ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
-                                AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-                                AND COALESCE (ObjectLink_Unit_Branch.ChildObjectId,0) > 0
+                                 ON ObjectLink_Unit_Branch.ObjectId       = Object_Unit.Id
+                                AND ObjectLink_Unit_Branch.DescId         = zc_ObjectLink_Unit_Branch()
+                                AND ObjectLink_Unit_Branch.ChildObjectId  > 0
      WHERE Object_Unit.DescId = zc_Object_Unit() 
+       AND ObjectLink_Unit_Branch.ChildObjectId NOT IN (10895481 -- Фірмова торгівля
+                                                      , 13257082 -- Казахстан
+                                                      , 13261282 -- Европа
+                                                      , 8380     -- филиал Днепр
+                                                      , 8109544  -- Ирна
+                                                       )
+
    UNION 
     SELECT Object_Unit.Id               ::TVarChar AS extId
           , TRIM (Object_Unit.ValueData) ::TVarChar AS Name 
@@ -37,6 +44,7 @@ $BODY$
      FROM Object AS Object_Unit 
      WHERE Object_Unit.DescId = zc_Object_Unit() 
        AND Object_Unit.Id = zc_Unit_RK()
+
    UNION 
     SELECT Object_Unit.Id               ::TVarChar AS extId
           , TRIM (Object_Unit.ValueData) ::TVarChar AS Name 
