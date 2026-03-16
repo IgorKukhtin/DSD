@@ -106,6 +106,9 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , Comment_Child           TVarChar
              , Comment_SB_Child        TVarChar
              , isSign_Child            Boolean
+               -- касса (место выдачи)
+             , CashId                  Integer
+             , CashName                TVarChar
               )
 
 AS
@@ -197,7 +200,7 @@ BEGIN
                                                                            , zc_MIBoolean_AmountPlan_4()
                                                                            , zc_MIBoolean_AmountPlan_5()
                                                                             )
-                                        )
+                                       )
                        -- Результат
                        SELECT MovementItem.Id
                             , MovementItem.ParentId
@@ -430,6 +433,7 @@ BEGIN
                                      WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_Master.Id FROM tmpMI_Master)
                                        AND MovementItemLinkObject.DescId IN (zc_MILinkObject_Insert()
                                                                            , zc_MILinkObject_Update()
+                                                                           , zc_MILinkObject_Cash()
                                                                             )
                                     )
      , tmpMovementItemString AS (SELECT *
@@ -617,6 +621,10 @@ BEGIN
                          , tmpMI_Child.Comment_SB        AS Comment_SB_Child
                          , tmpMI_Child.isSign            AS isSign_Child
 
+                           -- касса (место выдачи)
+                         , Object_Cash.Id                AS CashId
+                         , Object_Cash.ValueData         AS CashName
+
                            -- № п/п - какие данные мастера выводить 1 раз
                          , ROW_NUMBER() OVER (PARTITION BY tmpMI_Master.Id ORDER BY tmpMI_Child.Id ASC) AS Ord_master
 
@@ -642,6 +650,11 @@ BEGIN
                          LEFT JOIN tmpMovementItemDate AS MIDate_Amount_next
                                                        ON MIDate_Amount_next.MovementItemId = tmpMI_Master.Id
                                                       AND MIDate_Amount_next.DescId         = zc_MIDate_Amount_next()
+
+                         LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_Cash
+                                                             ON MILinkObject_Cash.MovementItemId = tmpMI_Master.Id
+                                                            AND MILinkObject_Cash.DescId = zc_MILinkObject_Cash()
+                         LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = MILinkObject_Cash.ObjectId
 
                          LEFT JOIN tmpMovementItemDate AS MIDate_Insert
                                                        ON MIDate_Insert.MovementItemId = tmpMI_Master.Id
@@ -734,6 +747,9 @@ BEGIN
                            , MovementItem.Comment_Child
                            , MovementItem.Comment_SB_Child
                            , MovementItem.isSign_Child
+                             -- касса (место выдачи)
+                           , MovementItem.CashId
+                           , MovementItem.CashName
 
                         FROM tmpMI AS MovementItem
                              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId
@@ -1245,6 +1261,9 @@ BEGIN
         , tmpMI.Comment_Child     ::TVarChar
         , tmpMI.Comment_SB_Child  ::TVarChar
         , tmpMI.isSign_Child      ::Boolean
+          -- касса (место выдачи)
+        , tmpMI.CashId
+        , tmpMI.CashName
 
    FROM tmpMovement_Data AS tmpMovement
 
