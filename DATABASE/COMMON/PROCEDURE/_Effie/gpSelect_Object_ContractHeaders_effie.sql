@@ -55,7 +55,7 @@ BEGIN
                              WHERE ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = zc_Enum_ContractConditionKind_DelayCreditLimit()
                                AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
                                AND (COALESCE (ObjectDate_StartDate.ValueData, zc_DateStart())) :: TDateTime <= CURRENT_DATE
-                               AND (COALESCE (ObjectDate_EndDate.ValueData, zc_DateEnd())) >= CURRENT_DATE
+                               AND (COALESCE (ObjectDate_EndDate.ValueData, zc_DateEnd())) > CURRENT_DATE
                              
                              GROUP BY ObjectLink_ContractCondition_Contract.ChildObjectId
                             )
