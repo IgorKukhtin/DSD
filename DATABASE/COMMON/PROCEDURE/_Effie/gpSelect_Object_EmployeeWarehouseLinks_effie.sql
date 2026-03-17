@@ -47,9 +47,13 @@ $BODY$
                                           ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
                                          AND Object_Member.isErased = FALSE
 
-                         LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
-                                             ON ObjectLink_Unit_Branch.ObjectId = lfSelect.UnitId
-                                            AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
+                        LEFT JOIN lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                                                                                  ON lfSelect.MemberId = ObjectLink_User_Member.ChildObjectId
+                                                                                 AND lfSelect.Ord      = 1
+
+                        LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                            ON ObjectLink_Unit_Branch.ObjectId = lfSelect.UnitId
+                                           AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
                    WHERE ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
                    )
      --
