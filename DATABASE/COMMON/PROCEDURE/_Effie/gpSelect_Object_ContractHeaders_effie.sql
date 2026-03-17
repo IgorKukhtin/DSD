@@ -81,6 +81,7 @@ BEGIN
         LEFT JOIN tmpDelayCreditLimit ON tmpDelayCreditLimit.ContractId = Object_Contract_View.ContractId
         
      WHERE Object_Contract_View.isErased = FALSE 
+       -- !!!рнкэйн цо!!!
        AND Object_Contract_View.InfoMoneyId = zc_Enum_InfoMoney_30101() 
        AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
     ;

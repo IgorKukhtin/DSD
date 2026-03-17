@@ -154,16 +154,22 @@ $BODY$
                         , TRIM (Object_GoodsGroup.ValueData ,'')      ::TVarChar AS groupName
                         , COALESCE(Object_GoodsPlatform.Id::TVarchar ,'')    ::TVarChar AS manufacturerId
                         , TRIM (COALESCE(Object_GoodsPlatform.ValueData,'')) ::TVarChar AS manufacturerName
-                        , COALESCE(Object_TradeMark.Id ::TVarchar ,'')       ::TVarChar AS brandId
-                        , TRIM (COALESCE(Object_TradeMark.ValueData,''))     ::TVarChar AS brandName
-                        , COALESCE(Object_GoodsGroupDirection.Id::TVarchar ,'')    ::TVarChar AS subBrandId
-                        , TRIM (COALESCE(Object_GoodsGroupDirection.ValueData,'')) ::TVarChar AS subBrandName
-                        , COALESCE(Object_GoodsGroupPropertyParent.Id::TVarchar ,'')    ::TVarChar AS categoryExtId
-                        , TRIM (COALESCE(Object_GoodsGroupPropertyParent.ValueData,'')) ::TVarChar AS categoryName
-                        , COALESCE(Object_GoodsGroupProperty.Id::TVarchar ,'')          ::TVarChar AS subCategoryExtId
-                        , TRIM (COALESCE(Object_GoodsGroupProperty.ValueData,''))       ::TVarChar AS subCategoryName
+
+                        , COALESCE(Object_TradeMark.Id ::TVarchar ,'5')       ::TVarChar AS brandId
+                        , TRIM (COALESCE(Object_TradeMark.ValueData,'000'))     ::TVarChar AS brandName
+
+                        , COALESCE(Object_GoodsGroupDirection.Id::TVarchar,'5')       ::TVarChar AS subBrandId
+                        , TRIM (COALESCE(Object_GoodsGroupDirection.ValueData,'000')) ::TVarChar AS subBrandName
+
+                        , COALESCE(Object_GoodsGroupPropertyParent.Id::TVarchar ,'5')    ::TVarChar AS categoryExtId
+                        , TRIM (COALESCE(Object_GoodsGroupPropertyParent.ValueData,'000')) ::TVarChar AS categoryName
+
+                        , COALESCE(Object_GoodsGroupProperty.Id::TVarchar ,'5')          ::TVarChar AS subCategoryExtId
+                        , TRIM (COALESCE(Object_GoodsGroupProperty.ValueData,'000'))       ::TVarChar AS subCategoryName
+
                         , COALESCE(Object_GoodsKind.Id::TVarchar ,'')                   ::TVarChar AS subCategoryLineExtId
                         , TRIM (COALESCE(Object_GoodsKind.ValueData,''))                ::TVarChar AS subCategoryLineName
+
                         , (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 4 ELSE 3 END) ::Integer AS unitId
                         , NULL ::Integer AS additionalUnitId
                         , 1 ::Integer AS typeId

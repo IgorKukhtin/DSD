@@ -33,16 +33,16 @@ $BODY$
      RETURN QUERY
      SELECT Object_Member.Id                             ::TVarChar AS extId
           , TRIM (Object_Member.ValueData)               ::TVarChar AS Name 
-          , ''                                           ::TVarChar AS orgStructExtId
+          , '1'                                          ::TVarChar AS orgStructExtId
           , '4ADBB652-F1EE-427E-AAE4-96C41A25C97B'       ::TVarChar AS groupId
           , 'AC86FF1D-78F8-4D0A-A0F9-3422C6BBA570'       ::TVarChar AS roles
           , ('User'||Object_Member.Id::TVarChar||'@alan.ua')  ::TVarChar AS login
           , ('User'||Object_Member.Id::TVarChar||'@alan.ua')  ::TVarChar AS email           --user+zc_Object_Member.Id@alan.ua
-          , ObjectString_User_.ValueData                 ::TVarChar AS password
+          , (ObjectString_User_.ValueData||'SFA')            ::TVarChar AS password
           , '01.01.2026'                                 ::TVarChar AS activationDate
           , ''                                           ::TVarChar AS phone
           , Object_Member.ObjectCode                     ::TVarChar AS personalNumber
-          , '0'                                          ::TVarChar AS leadExtId
+          , NULL                                         ::TVarChar AS leadExtId
           , ''                                           ::TVarChar AS notificationLanguage
           , Object_Member.isErased                       ::Boolean  AS isDeleted
 
@@ -50,12 +50,13 @@ $BODY$
           LEFT JOIN ObjectLink AS ObjectLink_User_Member
                                ON ObjectLink_User_Member.ChildObjectId = Object_Member.Id
                               AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-          LEFT JOIN Object AS Object_User ON Object_User.Id = ObjectLink_User_Member.ObjectId  
+          INNER JOIN Object AS Object_User ON Object_User.Id       = ObjectLink_User_Member.ObjectId  
+                                          AND Object_User.isErased = FALSE
         
           INNER JOIN ObjectBoolean AS ObjectBoolean_ProjectMobile
-                                   ON ObjectBoolean_ProjectMobile.ObjectId = ObjectLink_User_Member.ObjectId
-                                  AND ObjectBoolean_ProjectMobile.DescId = zc_ObjectBoolean_User_ProjectMobile()
-                                  AND COALESCE (ObjectBoolean_ProjectMobile.ValueData, FALSE) = TRUE
+                                   ON ObjectBoolean_ProjectMobile.ObjectId  = ObjectLink_User_Member.ObjectId
+                                  AND ObjectBoolean_ProjectMobile.DescId    = zc_ObjectBoolean_User_ProjectMobile()
+                                  AND ObjectBoolean_ProjectMobile.ValueData = TRUE
 
           LEFT JOIN ObjectString AS ObjectString_User_
                                  ON ObjectString_User_.ObjectId = Object_User.Id
@@ -63,6 +64,7 @@ $BODY$
 
      WHERE Object_Member.DescId = zc_Object_Member() 
        AND Object_Member.isErased = FALSE
+       AND Object_Member.Id NOT IN (13165, 1122130, 7015073)
     ;
 
 
