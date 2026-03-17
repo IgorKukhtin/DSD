@@ -72,7 +72,7 @@ BEGIN
          -- Всегда
          ioDateDay       := CASE WHEN ioAmountPlan_day > 0 THEN ioDateDay ELSE NULL  END;
 
-         -- определяем день недели для предыдущей и текущей даты
+         -- определяем день недели для даты
          vbNumDay     := zfCalc_DayOfWeekNumber (ioDateDay);
 
          -- Вернули
@@ -81,6 +81,22 @@ BEGIN
          ioAmountPlan_3:= CASE WHEN vbNumDay = 3 THEN ioAmountPlan_day ELSE 0 END;
          ioAmountPlan_4:= CASE WHEN vbNumDay = 4 THEN ioAmountPlan_day ELSE 0 END;
          ioAmountPlan_5:= CASE WHEN vbNumDay = 5 THEN ioAmountPlan_day ELSE 0 END;
+
+         -- если надо обнулить
+         IF COALESCE (ioAmountPlan_day, 0) <> COALESCE (ioAmountPlan_day_old, 0) AND COALESCE (ioAmountPlan_day, 0) = 0
+         THEN
+             -- определяем день недели для даты-old
+             vbNumDay     := zfCalc_DayOfWeekNumber (ioDateDay_old);
+             --
+             vbNumDay:= CASE WHEN vbNumDay = 1 THEN -1
+                             WHEN vbNumDay = 2 THEN -2
+                             WHEN vbNumDay = 3 THEN -3
+                             WHEN vbNumDay = 4 THEN -4
+                             WHEN vbNumDay = 5 THEN -5
+                             ELSE 0
+                        END;
+
+         END IF;
 
          -- проверка
          IF COALESCE (ioDateDay, zc_DateStart()) NOT BETWEEN vbOperDate_start + INTERVAL '0 DAY' AND vbOperDate_start + INTERVAL '4 DAY'
@@ -109,6 +125,22 @@ BEGIN
          IF vbDay_count > 1 THEN ioDateDay:= NULL; END IF;
          -- меняется в гриде на пусто
          IF vbDay_count > 1 THEN ioMovementItemId_detail:= 0; END IF;
+
+         -- если надо обнулить
+         IF vbDay_count = 0
+         THEN
+             -- определяем день недели для даты-old
+             vbNumDay     := zfCalc_DayOfWeekNumber (ioDateDay_old);
+             --
+             vbNumDay:= CASE WHEN vbNumDay = 1 THEN -1
+                             WHEN vbNumDay = 2 THEN -2
+                             WHEN vbNumDay = 3 THEN -3
+                             WHEN vbNumDay = 4 THEN -4
+                             WHEN vbNumDay = 5 THEN -5
+                             ELSE 0
+                        END;
+
+         END IF;
 
      END IF;
 
@@ -211,6 +243,8 @@ BEGIN
 
      -- обновляем данные - Detail - 1
      IF ioAmountPlan_1 > 0 OR (vbMovementItemId_Detail_1 > 0 AND vbMovementItemId_Detail_1 = ioMovementItemId_detail) OR vbDay_count > 1
+        -- если надо обнулить
+        OR vbNumDay = -1
      THEN
          -- 
          IF vbMovementItemId_Detail_1 <> ioMovementItemId_detail AND ioMovementItemId_detail > 0
@@ -230,6 +264,8 @@ BEGIN
 
      -- обновляем данные - Detail - 2
      IF ioAmountPlan_2 > 0 OR (vbMovementItemId_Detail_2 > 0 AND vbMovementItemId_Detail_2 = ioMovementItemId_detail) OR vbDay_count > 1
+        -- если надо обнулить
+        OR vbNumDay = -2
      THEN
          -- 
          IF vbMovementItemId_Detail_2 <> ioMovementItemId_detail AND ioMovementItemId_detail > 0
@@ -248,6 +284,8 @@ BEGIN
 
      -- обновляем данные - Detail - 3
      IF ioAmountPlan_3 > 0 OR (vbMovementItemId_Detail_3 > 0 AND vbMovementItemId_Detail_3 = ioMovementItemId_detail) OR vbDay_count > 1
+        -- если надо обнулить
+        OR vbNumDay = -3
      THEN
          -- 
          IF vbMovementItemId_Detail_3 <> ioMovementItemId_detail AND ioMovementItemId_detail > 0
@@ -266,6 +304,8 @@ BEGIN
 
      -- обновляем данные - Detail - 4
      IF ioAmountPlan_4 > 0 OR (vbMovementItemId_Detail_4 > 0 AND vbMovementItemId_Detail_4 = ioMovementItemId_detail) OR vbDay_count > 1
+        -- если надо обнулить
+        OR vbNumDay = -4
      THEN
          IF vbMovementItemId_Detail_4 <> ioMovementItemId_detail AND ioMovementItemId_detail > 0
          THEN
@@ -283,6 +323,8 @@ BEGIN
 
      -- обновляем данные - Detail - 5
      IF ioAmountPlan_5 > 0 OR (vbMovementItemId_Detail_5 > 0 AND vbMovementItemId_Detail_5 = ioMovementItemId_detail) OR vbDay_count > 1
+        -- если надо обнулить
+        OR vbNumDay = -5
      THEN
          IF vbMovementItemId_Detail_5 <> ioMovementItemId_detail AND ioMovementItemId_detail > 0
          THEN
