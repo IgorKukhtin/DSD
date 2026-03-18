@@ -100,6 +100,7 @@ type
     ceComment: TcxTextEdit;
     cbHeadCount: TcxCheckBox;
     cbisPartionDate: TcxCheckBox;
+    cbisPLM: TcxCheckBox;
   private
     { Private declarations }
   public
