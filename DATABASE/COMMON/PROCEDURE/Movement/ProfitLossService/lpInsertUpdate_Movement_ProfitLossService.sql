@@ -112,7 +112,7 @@ BEGIN
      -- 
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ParPartnerValue(), ioId, vbParPartnerValue);
      -- 
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountCurrency(), vbMovementItemId, inAmountCurrency);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountCurrency(), vbMovementItemId, CASE WHEN vbAmount > 0 THEN 1 * ABS (inAmountCurrency) ELSE -1 * ABS (inAmountCurrency) END);
 
      -- счет клиента
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberInvoice(), ioId, inInvNumberInvoice);
