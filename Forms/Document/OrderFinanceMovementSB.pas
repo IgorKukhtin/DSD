@@ -118,7 +118,7 @@ type
     cxTabSheetDetail: TcxTabSheet;
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
-    chisErased: TcxGridDBColumn;
+    isErased_ch3: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     DetailCDS: TClientDataSet;
     DetailDS: TDataSource;
@@ -380,6 +380,20 @@ type
     bbMIChildProtocolOpenForm: TdxBarButton;
     AmountPlan_next_old: TcxGridDBColumn;
     Comment_SB_Child: TcxGridDBColumn;
+    AmountPlan_next_ch2: TcxGridDBColumn;
+    OperDate_next_ch2: TcxGridDBColumn;
+    AmountPlan_1_ch2: TcxGridDBColumn;
+    AmountPlan_2_ch2: TcxGridDBColumn;
+    AmountPlan_3_ch2: TcxGridDBColumn;
+    AmountPlan_4_ch2: TcxGridDBColumn;
+    AmountPlan_5_ch2: TcxGridDBColumn;
+    isAmountPlan_1_ch2: TcxGridDBColumn;
+    isAmountPlan_2_ch2: TcxGridDBColumn;
+    isAmountPlan_3_ch2: TcxGridDBColumn;
+    isAmountPlan_4_ch2: TcxGridDBColumn;
+    isAmountPlan_5_ch2: TcxGridDBColumn;
+    OperDate_Detail_ch3: TcxGridDBColumn;
+    Comment_master_ch3: TcxGridDBColumn;
   private
   public
   end;
