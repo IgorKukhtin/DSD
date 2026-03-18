@@ -222,6 +222,7 @@ BEGIN
                                                           ON MIString_Comment.MovementItemId = MIContainer.MovementItemId
                                                          AND MIString_Comment.DescId = zc_MIString_Comment()
                         WHERE (MovementBoolean_Peresort.ValueData = inIsPeresort OR inIsPeresort = FALSE)
+                          AND inIsMonth = FALSE
                         GROUP BY CASE WHEN inIsMovement = FALSE THEN 0 ELSE MIContainer.MovementId END
                                , MIContainer.DescId
                                , MovementBoolean_Peresort.ValueData
