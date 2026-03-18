@@ -170,7 +170,7 @@ BEGIN
            , Object_CurrencyPartner.ValueData                              AS CurrencyPartnerName  
            , MovementFloat_CurrencyPartnerValue.ValueData         ::TFloat AS CurrencyPartnerValue
            , COALESCE (MovementFloat_ParPartnerValue.ValueData,1) ::TFloat AS ParPartnerValue
-           , COALESCE (MIFloat_AmountCurrency.ValueData,0)        ::TFloat AS AmountCurrency
+           , COALESCE (ABS (MIFloat_AmountCurrency.ValueData), 0 )::TFloat AS AmountCurrency
 
            , COALESCE (MovementBoolean_isLoad.ValueData, FALSE) AS isLoad
 
