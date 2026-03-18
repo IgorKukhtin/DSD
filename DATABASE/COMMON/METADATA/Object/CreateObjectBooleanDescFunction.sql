@@ -237,6 +237,12 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Goods_PartionDate() RETURNS Integer 
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectBoolean_Goods_PartionDate', 'Учет по дате партии' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_PartionDate');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Goods_PLM() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_PLM'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectBoolean_Goods_PLM', 'Признак "Полиамид"' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_PLM');
+
+
+
 
 
 
@@ -1637,6 +1643,7 @@ INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 17.03.26         * zc_ObjectBoolean_Goods_PLM
  05.02.26         * zc_ObjectBoolean_OrderFinance_InvNumber
                     zc_ObjectBoolean_OrderFinance_InvNumber_Invoice
  14.01.26         * zc_ObjectBoolean_OrderFinance_SB

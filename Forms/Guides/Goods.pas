@@ -191,6 +191,10 @@ type
     actGetImportSetting_Stat: TdsdExecStoredProc;
     macStartLoad_Stat: TMultiAction;
     bbStartLoad_Stat: TdxBarButton;
+    isPLM: TcxGridDBColumn;
+    spUpdate_isPLM: TdsdStoredProc;
+    actUpdate_isPLM: TdsdExecStoredProc;
+    bbUpdate_isPLM: TdxBarButton;
   private
     { Private declarations }
   public

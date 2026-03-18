@@ -36,6 +36,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar, Name
              , isAsset Boolean
              , isHeadCount Boolean
              , isPartionDate Boolean
+             , isPLM Boolean
              , isErased Boolean
              , Comment TVarChar
               )
@@ -133,6 +134,7 @@ BEGIN
             , COALESCE (ObjectBoolean_Goods_Asset.ValueData, FALSE)      :: Boolean AS isAsset
             , COALESCE (ObjectBoolean_Goods_HeadCount.ValueData, FALSE)  :: Boolean AS isHeadCount 
             , COALESCE (ObjectBoolean_Goods_PartionDate.ValueData, FALSE):: Boolean AS isPartionDate
+            , COALESCE (ObjectBoolean_Goods_PLM.ValueData, FALSE)        :: Boolean AS isPLM
 
             , Object_Goods.isErased       AS isErased
             
@@ -261,6 +263,10 @@ BEGIN
                                      ON ObjectBoolean_Goods_PartionDate.ObjectId = Object_Goods.Id 
                                     AND ObjectBoolean_Goods_PartionDate.DescId = zc_ObjectBoolean_Goods_PartionDate()
 
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_PLM
+                                     ON ObjectBoolean_Goods_PLM.ObjectId = Object_Goods.Id 
+                                    AND ObjectBoolean_Goods_PLM.DescId = zc_ObjectBoolean_Goods_PLM()
+
              LEFT JOIN ObjectDate AS ObjectDate_BUH
                                   ON ObjectDate_BUH.ObjectId = Object_Goods.Id
                                  AND ObjectDate_BUH.DescId = zc_ObjectDate_Goods_BUH()
@@ -388,8 +394,9 @@ BEGIN
             , FALSE                           AS isAsset
             , FALSE                           AS isHeadCount
             , FALSE                           AS isPartionDate
+            , FALSE                           AS isPLM
             , FALSE                           AS isErased
-            , NULL                ::TVarChar AS Comment
+            , NULL                 ::TVarChar AS Comment
       ;
 
 END;
@@ -401,6 +408,7 @@ ALTER FUNCTION gpSelect_Object_Goods (Boolean, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 17.03.26         * isPLM
  09.01.25         * isPartionDate
  12.11.24         *
  18.10.24         * Comment

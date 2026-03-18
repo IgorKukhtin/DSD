@@ -656,11 +656,11 @@ begin
 { TdsdFormStorageFactory.GetStorage.Save(GetForm('TScale_GofroForm'));
   TdsdFormStorageFactory.GetStorage.Load('TScale_GofroForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKindPeresortForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKindPeresortForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_ScaleDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_ScaleDialogForm');
 
@@ -682,12 +682,12 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_Name_BUHDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_Name_BUHDialogForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
 
   exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_AssetProdForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_AssetProdForm');
   exit;

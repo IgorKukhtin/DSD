@@ -472,6 +472,14 @@ object GoodsForm: TGoodsForm
         HeaderHint = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' '#1080' '#1089#1082#1080#1076#1082#1086#1081' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1087#1086#1089#1083#1077#1076#1085#1080#1081')'
         Width = 70
       end
+      object isPLM: TcxGridDBColumn
+        Caption = #1055#1088#1080#1079#1085#1072#1082' "'#1055#1086#1083#1080#1072#1084#1080#1076'"'
+        DataBinding.FieldName = 'isPLM'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -870,6 +878,14 @@ object GoodsForm: TGoodsForm
         item
           Visible = True
           ItemName = 'bbUpdate_isIrna'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_isPLM'
         end>
     end
     object bbStartLoad_Group: TdxBarButton
@@ -926,6 +942,10 @@ object GoodsForm: TGoodsForm
     end
     object bbStartLoad_Stat: TdxBarButton
       Action = macStartLoad_Stat
+      Category = 0
+    end
+    object bbUpdate_isPLM: TdxBarButton
+      Action = actUpdate_isPLM
       Category = 0
     end
   end
@@ -1077,6 +1097,22 @@ object GoodsForm: TGoodsForm
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actUpdate_isPLM: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isPLM
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isPLM
+        end
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1080#1079#1085#1072#1082' '#1055#1086#1083#1080#1072#1084#1080#1076' ('#1076#1072'/'#1085#1077#1090')"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1080#1079#1085#1072#1082' '#1055#1086#1083#1080#1072#1084#1080#1076' ('#1076#1072'/'#1085#1077#1090')"'
+      ImageIndex = 80
     end
     object mactUpdate_ScaleGrid_list: TMultiAction
       Category = 'Scale'
@@ -2675,5 +2711,31 @@ object GoodsForm: TGoodsForm
     PackSize = 1
     Left = 304
     Top = 312
+  end
+  object spUpdate_isPLM: TdsdStoredProc
+    StoredProcName = 'gpUpdateObject_Goods_isPLM'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId '
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPLM'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isPLM'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 104
+    Top = 299
   end
 end

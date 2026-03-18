@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar , ShortName TVarChar
              , Comment TVarChar 
              , isHeadCount Boolean
              , isPartionDate Boolean
+             , isPLM Boolean
               )
 AS
 $BODY$
@@ -99,6 +100,7 @@ BEGIN
            , NULL              ::TVarChar  AS Comment
            , FALSE             ::Boolean   AS isHeadCount
            , FALSE             ::Boolean   AS isPartionDate
+           , FALSE             ::Boolean   AS isPLM
       
        ;
    ELSE
@@ -159,6 +161,7 @@ BEGIN
 
            , COALESCE (ObjectBoolean_Goods_HeadCount.ValueData, FALSE)  :: Boolean AS isHeadCount
            , COALESCE (ObjectBoolean_Goods_PartionDate.ValueData, FALSE):: Boolean AS isPartionDate
+           , COALESCE (ObjectBoolean_Goods_PLM.ValueData, FALSE)        :: Boolean AS isPLM
        FROM Object AS Object_Goods
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
@@ -220,6 +223,10 @@ BEGIN
                                   ON ObjectBoolean_Goods_PartionDate.ObjectId = Object_Goods.Id 
                                  AND ObjectBoolean_Goods_PartionDate.DescId = zc_ObjectBoolean_Goods_PartionDate()
 
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_PLM
+                                  ON ObjectBoolean_Goods_PLM.ObjectId = Object_Goods.Id 
+                                 AND ObjectBoolean_Goods_PLM.DescId = zc_ObjectBoolean_Goods_PLM()
+
           LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
@@ -272,6 +279,7 @@ ALTER FUNCTION gpGet_Object_Goods (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 17.03.26         * isPLM
  04.08.21         * _BUH
  23.10.19         * CountForWeight
  09.10.19         * add WeightTare
