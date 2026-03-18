@@ -93,7 +93,9 @@ BEGIN
           , tmpMI_Child AS (SELECT MovementItem.Id          AS MovementItemId
                                  , MovementItem.ParentId    AS MovementItemId_parent
                                  , MovementItem.MovementId
-                                   -- Согласовано к оплате
+                                   -- Дата Платежный план
+                                 , MIDate_Amount_next.ValueData AS OperDate_day
+                                   -- Платежный план = Согласовано к оплате (если нет корректировок)
                                  , COALESCE (MIFloat_AmountPlan_next.ValueData, 0) AS AmountPlan_next
                                    -- Платим да/нет
                                  , COALESCE (MIBoolean_AmountPlan.ValueData, TRUE) ::Boolean AS isAmountPlan
@@ -106,8 +108,8 @@ BEGIN
                                  INNER JOIN MovementItemDate AS MIDate_Amount_next
                                                              ON MIDate_Amount_next.MovementItemId = MovementItem.Id
                                                             AND MIDate_Amount_next.DescId         = zc_MIDate_Amount_next()
-                                                            -- один день
-                                                            AND MIDate_Amount_next.ValueData      = vbOperDate_day
+                                                            -- НЕ один день
+                                                            -- AND MIDate_Amount_next.ValueData      = vbOperDate_day
                                  -- Платим (да/нет)
                                  LEFT JOIN MovementItemBoolean AS MIBoolean_AmountPlan
                                                                ON MIBoolean_AmountPlan.MovementItemId = MovementItem.Id
@@ -132,7 +134,7 @@ BEGIN
                    AND MovementItem.isErased = FALSE
                  )                         
 
-     , tmpMovementItemFloat AS (SELECT *
+    , tmpMIFloat_AmountPlan AS (SELECT *
                                 FROM MovementItemFloat
                                 WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                   AND MovementItemFloat.DescId IN (CASE WHEN COALESCE (inisDay_1,FALSE) = TRUE THEN zc_MIFloat_AmountPlan_1()
@@ -270,7 +272,66 @@ BEGIN
                                        WHERE Object_JuridicalOrderFinance.DescId = zc_Object_JuridicalOrderFinance()
                                         AND Object_JuridicalOrderFinance.isErased = FALSE
                                         )
+      -- Detail - Согласовано к оплате
+    , tmpMI_Detail AS (SELECT MovementItem.ParentId AS MovementItemId_parent
+                              -- Дата Согласовано к оплате
+                            , MIDate_Amount.ValueData AS OperDate_day
+                              -- Согласовано к оплате
+                            , SUM (MovementItem.Amount) AS AmountPlan
+                              -- Платим да/нет
+                            , COALESCE (MIBoolean_AmountPlan.ValueData, TRUE) AS isAmountPlan
 
+                       FROM MovementItem
+                            -- один день - Дата Согласовано к оплате
+                            INNER JOIN MovementItemDate AS MIDate_Amount
+                                                        ON MIDate_Amount.MovementItemId = MovementItem.Id
+                                                       AND MIDate_Amount.DescId         = zc_MIDate_Amount()
+                                                        -- НЕ один день
+                                                       -- AND MIDate_Amount.ValueData      = vbOperDate_day
+                            -- Платим (да/нет)
+                            LEFT JOIN MovementItemBoolean AS MIBoolean_AmountPlan
+                                                          ON MIBoolean_AmountPlan.MovementItemId = MovementItem.Id
+                                                         AND MIBoolean_AmountPlan.DescId         = zc_MIBoolean_AmountPlan()
+
+                       WHERE MovementItem.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)
+                         AND MovementItem.DescId     = zc_MI_Detail()
+                         AND MovementItem.isErased   = FALSE
+                       GROUP BY MovementItem.ParentId
+                              , MIDate_Amount.ValueData
+                              , COALESCE (MIBoolean_AmountPlan.ValueData, TRUE)
+                      )
+
+        -- один день - данные Master + Detail
+      , tmpMaster_Detail AS (SELECT MovementItem.Id
+                                    -- Согласовано к оплате
+                                  , COALESCE (tmpMI_Detail_1.AmountPlan, MIFloat_AmountPlan.ValueData) AS AmountPlan
+                                    -- Платим да/нет
+                                  , COALESCE (tmpMI_Detail_1.isAmountPlan, MIBoolean_AmountPlan.ValueData, TRUE) AS isAmountPlan
+
+                             FROM tmpMI AS MovementItem
+                                  -- Согласовано к оплате (если нет корректировок)
+                                  LEFT JOIN tmpMIFloat_AmountPlan AS MIFloat_AmountPlan
+                                                                  ON MIFloat_AmountPlan.MovementItemId = MovementItem.Id
+                                  LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan
+                                                                   ON MIBoolean_AmountPlan.MovementItemId = MovementItem.Id
+                                  -- Detail-1 - Согласовано к оплате (корректировки)
+                                  LEFT JOIN tmpMI_Detail AS tmpMI_Detail_1 ON tmpMI_Detail_1.MovementItemId_parent = MovementItem.Id
+                             -- один день
+                             WHERE COALESCE (tmpMI_Detail_1.OperDate_day, vbOperDate_day) = vbOperDate_day
+                            )
+         -- один день - данные Child + Detail
+       , tmpChild_Detail AS (SELECT tmpMI_Child.MovementItemId_parent
+                                    -- Согласовано к оплате
+                                  , COALESCE (tmpMI_Detail_2.AmountPlan, tmpMI_Child.AmountPlan_next) AS AmountPlan
+                                    -- Платим да/нет
+                                  , COALESCE (tmpMI_Detail_2.isAmountPlan, tmpMI_Child.isAmountPlan) AS isAmountPlan
+
+                             FROM tmpMI_Child
+                                  -- Detail-2 - Согласовано к оплате
+                                  LEFT JOIN tmpMI_Detail AS tmpMI_Detail_2 ON tmpMI_Detail_2.MovementItemId_parent = tmpMI_Child.MovementItemId
+                             -- один день
+                             WHERE COALESCE (tmpMI_Detail_2.OperDate_day, tmpMI_Child.OperDate_day) = vbOperDate_day
+                            )
 
      , tmpMI_Data AS (SELECT MovementItem.MovementId
                            , MovementItem.Id                  AS Id
@@ -281,7 +342,7 @@ BEGIN
                            , Object_InfoMoney.ValueData       AS InfoMoneyName 
                            , Object_Contract.ValueData        AS ContractName
                 
-                           , COALESCE (tmpMI_Child.AmountPlan_next, MIFloat_AmountPlan.ValueData) AS AmountPlan
+                           , COALESCE (tmpChild_Detail.AmountPlan, tmpMaster_Detail.AmountPlan) AS AmountPlan
                            , MIString_Comment_pay.ValueData   AS Comment_pay 
                            
                            , COALESCE (tmpJuridicalOrderFinance.BankAccountId_main, tmpJuridicalOrderFinance_last.BankAccountId_main)          ::Integer  AS BankAccountId
@@ -289,19 +350,18 @@ BEGIN
                            , COALESCE (tmpJuridicalOrderFinance.BankId_main, tmpJuridicalOrderFinance_last.BankId_main)                        ::Integer  AS BankId
                            , COALESCE (tmpJuridicalOrderFinance.BankName_main, tmpJuridicalOrderFinance_last.BankName_main)                    ::TVarChar AS BankName
                            , COALESCE (tmpJuridicalOrderFinance.MFO_main, tmpJuridicalOrderFinance_last.MFO_main)                              ::TVarChar AS MFO
+
                        FROM tmpMI AS MovementItem
-                            LEFT JOIN tmpMI_Child ON tmpMI_Child.MovementItemId_parent = MovementItem.Id
+                            -- 1
+                            INNER JOIN tmpMaster_Detail ON tmpMaster_Detail.Id = MovementItem.Id
+                            -- 2
+                            LEFT JOIN tmpChild_Detail ON tmpChild_Detail.MovementItemId_parent = MovementItem.Id
+                            -- LEFT JOIN tmpMI_Child ON tmpMI_Child.MovementItemId_parent = MovementItem.Id
 
                             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId
                                                                 AND Object_Juridical.DescId = zc_Object_Juridical()
                             LEFT JOIN ObjectHistory_JuridicalDetails_View AS tmpJuridicalDetails_View ON tmpJuridicalDetails_View.JuridicalId = Object_Juridical.Id
                 
-                            LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlan
-                                                           ON MIFloat_AmountPlan.MovementItemId = MovementItem.Id
-
-                            LEFT JOIN tmpMovementItemBoolean AS MIBoolean_AmountPlan
-                                                             ON MIBoolean_AmountPlan.MovementItemId = MovementItem.Id
-
                             LEFT JOIN tmpMovementItemString AS MIString_Comment_pay
                                                             ON MIString_Comment_pay.MovementItemId = MovementItem.Id
                                                            AND MIString_Comment_pay.DescId = zc_MIString_Comment_pay()
@@ -334,12 +394,12 @@ BEGIN
                                                                    AND tmpJuridicalOrderFinance_last.InfoMoneyId = Object_InfoMoney.Id
                                                                    AND tmpJuridicalOrderFinance_last.Ord = 1
                                                                    --AND inBankMainId = 0                
-                       WHERE COALESCE (tmpMI_Child.isAmountPlan, MIBoolean_AmountPlan.ValueData, TRUE) = TRUE
-                         AND COALESCE (tmpMI_Child.AmountPlan_next, MIFloat_AmountPlan.ValueData, 0) <> 0 
+
+                       WHERE COALESCE (tmpChild_Detail.isAmountPlan, tmpMaster_Detail.isAmountPlan) = TRUE
+                         AND COALESCE (tmpChild_Detail.AmountPlan, tmpMaster_Detail.AmountPlan, 0) <> 0 
                          AND (COALESCE (tmpJuridicalOrderFinance.BankId_main, tmpJuridicalOrderFinance_last.BankId_main) = inBankMainId OR inBankMainId = 0)
                     )
-
-
+        -- Результат
         SELECT tmpMI.JuridicalName       AS JuridicalName
              , tmpMI.ContractName        AS ContractName
              , tmpMI.OKPO                AS OKPO
