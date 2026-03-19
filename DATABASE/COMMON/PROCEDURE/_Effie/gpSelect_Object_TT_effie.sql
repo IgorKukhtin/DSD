@@ -121,6 +121,7 @@ $BODY$
                 
      WHERE Object_Partner.DescId   = zc_Object_Partner()
       AND Object_Partner.isErased = FALSE
+      AND COALESCE (ObjectLink_Partner_Street.ChildObjectId,0) > 0
     ;                               
      
      --нужно записать в таблица Object_TT_effie.Id - ключ StreetId, HouseNumber, CaseNumber, RoomNumber  те элементы , которых нет
