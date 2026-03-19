@@ -50,6 +50,7 @@ $BODY$
                                                 , zc_ObjectLink_Partner_PersonalTrade()
                                                 , zc_ObjectLink_Partner_PersonalMerch()
                                                 ) 
+       AND ObjectLink_Personal_Member.ChildObjectId  > 0
       ;
 
 END;
