@@ -97,9 +97,9 @@ $BODY$
                        )
      --
      SELECT DISTINCT 
-            Object_TT_effie.Id           ::TVarChar AS employeeExtId
-          , tmpPartner_TT.PersonalId     ::TVarChar AS ttExtId
-          , 0                            ::Integer  AS isDeleted
+            tmpPartner_TT.PersonalId   ::TVarChar AS employeeExtId
+          , Object_TT_effie.Id         ::TVarChar AS ttExtId
+          , 0                          ::Integer  AS isDeleted
      FROM tmpPartner_TT
           INNER JOIN Object_TT_effie ON Object_TT_effie.StreetId   = tmpPartner_TT.StreetId
                                     AND Object_TT_effie.HouseNumber= tmpPartner_TT.HouseNumber
