@@ -25,6 +25,24 @@ $BODY$
 
      -- Результат
      RETURN QUERY
+             WITH tmpPartner AS (-- если vbPersonalId - Сотрудник (торговый)
+                                 SELECT OL.ObjectId AS PartnerId
+                                 FROM ObjectLink AS OL
+                                 WHERE OL.ChildObjectId > 0
+                                   AND OL.DescId        = zc_ObjectLink_Partner_PersonalTrade()
+                                UNION
+                                 -- если vbPersonalId - Сотрудник (супервайзер)
+                                 SELECT OL.ObjectId AS PartnerId
+                                 FROM ObjectLink AS OL
+                                 WHERE OL.ChildObjectId > 0
+                                   AND OL.DescId        = zc_ObjectLink_Partner_Personal()
+                                UNION
+                                 -- если vbPersonalId - Сотрудник (мерчандайзер)
+                                 SELECT OL.ObjectId AS PartnerId
+                                 FROM ObjectLink AS OL
+                                 WHERE OL.ChildObjectId > 0
+                                   AND OL.DescId        = zc_ObjectLink_Partner_PersonalMerch()
+                                )
      SELECT Object_Partner.Id                             ::TVarChar AS extId
           , TRIM (Object_Partner.ValueData)               ::TVarChar AS Name
           , ObjectHistoryString_JuridicalDetails_JuridicalAddress.ValueData  ::TVarChar AS legalAddress
@@ -36,6 +54,7 @@ $BODY$
           , ''                                            ::TVarChar AS corporationCode
           , Object_Partner.isErased                       ::Boolean  AS isDeleted
      FROM Object AS Object_Partner
+          INNER JOIN tmpPartner ON tmpPartner.PartnerId = Object_Partner.Id
 
           LEFT JOIN ObjectString AS ObjectString_Address
                                  ON ObjectString_Address.ObjectId = Object_Partner.Id

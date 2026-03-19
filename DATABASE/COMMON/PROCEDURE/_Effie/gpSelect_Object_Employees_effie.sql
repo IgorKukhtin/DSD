@@ -64,7 +64,7 @@ $BODY$
 
      WHERE Object_Member.DescId = zc_Object_Member() 
        AND Object_Member.isErased = FALSE
-       AND Object_Member.Id NOT IN (13165, 1122130, 7015073)
+       AND Object_Member.Id NOT IN (13165, 1122130, 7015073) -- "Махов Тарас Володимирович"
     ;
 
 
@@ -80,4 +80,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Employees_effie (zfCalc_UserAdmin()::TVarChar);
+-- SELECT * FROM gpSelect_Object_Employees_effie (zfCalc_UserAdmin()::TVarChar) -- WHERE extId IN (13165, 1122130, 7015073)
