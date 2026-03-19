@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-  ClientHeight = 405
+  ClientHeight = 418
   ClientWidth = 643
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 213
-    Top = 372
+    Top = 382
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 353
-    Top = 372
+    Top = 382
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -417,12 +417,23 @@
   end
   object cbisPartionDate: TcxCheckBox
     Left = 40
-    Top = 345
+    Top = 346
     Hint = #1057#1083#1091#1078#1077#1073#1085#1072#1103' '#1079#1072#1087#1080#1089#1082#1072
     Caption = #1059#1095#1077#1090' '#1087#1086' '#1076#1072#1090#1077' '#1087#1072#1088#1090#1080#1080
     ParentShowHint = False
     ShowHint = True
     TabOrder = 51
+    Width = 134
+  end
+  object cbisPLM: TcxCheckBox
+    Left = 40
+    Top = 375
+    Hint = #1057#1083#1091#1078#1077#1073#1085#1072#1103' '#1079#1072#1087#1080#1089#1082#1072
+    Caption = #1055#1088#1080#1079#1085#1072#1082' "'#1055#1086#1083#1080#1072#1084#1080#1076'"'
+    ParentShowHint = False
+    Properties.ReadOnly = True
+    ShowHint = True
+    TabOrder = 52
     Width = 134
   end
   object ActionList: TActionList
@@ -965,6 +976,13 @@
         Name = 'isPartionDate'
         Value = Null
         Component = cbisPartionDate
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPLM'
+        Value = Null
+        Component = cbisPLM
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
