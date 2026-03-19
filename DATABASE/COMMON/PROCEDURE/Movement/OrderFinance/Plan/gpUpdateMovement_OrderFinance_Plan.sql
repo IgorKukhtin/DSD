@@ -84,7 +84,7 @@ BEGIN
         -- сохранили свойство <>
         IF inMovementItemId_Detail_1 > 0 
         THEN
-            PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_1(), inMovementItemId_Detail_1, inIsAmountPlan);
+            PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan(), inMovementItemId_Detail_1, inIsAmountPlan);
 
         ELSEIF ioMovementItemId_Child > 0
         THEN
@@ -119,7 +119,7 @@ BEGIN
         -- сохранили свойство <>
         IF inMovementItemId_Detail_2 > 0 
         THEN
-            PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_2(), inMovementItemId_Detail_2, inIsAmountPlan);
+            PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan(), inMovementItemId_Detail_2, inIsAmountPlan);
 
         ELSEIF ioMovementItemId_Child > 0
         THEN
@@ -153,7 +153,7 @@ BEGIN
         -- сохранили свойство <>
         IF inMovementItemId_Detail_3 > 0 
         THEN
-            PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_3(), inMovementItemId_Detail_3, inIsAmountPlan);
+            PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan(), inMovementItemId_Detail_3, inIsAmountPlan);
 
         ELSEIF ioMovementItemId_Child > 0
         THEN
@@ -187,7 +187,7 @@ BEGIN
         -- сохранили свойство <>
         IF inMovementItemId_Detail_4 > 0 
         THEN
-            PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_4(), inMovementItemId_Detail_4, inIsAmountPlan);
+            PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan(), inMovementItemId_Detail_4, inIsAmountPlan);
 
         ELSEIF ioMovementItemId_Child > 0
         THEN
@@ -221,7 +221,7 @@ BEGIN
         -- сохранили свойство <>
         IF inMovementItemId_Detail_5 > 0 
         THEN
-            PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan_5(), inMovementItemId_Detail_5, inIsAmountPlan);
+            PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_AmountPlan(), inMovementItemId_Detail_5, inIsAmountPlan);
 
         ELSEIF ioMovementItemId_Child > 0
         THEN

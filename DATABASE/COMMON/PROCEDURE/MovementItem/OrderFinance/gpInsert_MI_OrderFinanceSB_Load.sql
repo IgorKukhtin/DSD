@@ -1,9 +1,10 @@
 -- Function: gpInsert_MI_OrderFinanceSB_Load ()
 
-DROP FUNCTION IF EXISTS gpInsert_MI_OrderFinanceSB_Load (Integer, TVarChar, TVarChar, TVarChar, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_MI_OrderFinanceSB_Load (Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_MI_OrderFinanceSB_Load(
     IN inMovementId            Integer   , -- ключ Документа
+    IN inInfoMoneyCode         TVarChar  , -- Статья Project
     IN inInfoMoneyName         TVarChar  , -- Статья Project
     IN inObjectName            TVarChar  , -- Контрагент / Назначение
     IN inComment_Partner       TVarChar  , -- Примечание Контрагент
@@ -148,42 +149,50 @@ BEGIN
 
      -- 4.1. проверка
      IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.DescId = zc_Object_InfoMoney() AND TRIM (Object.ValueData) ILIKE TRIM (inInfoMoneyName))
-        AND inInfoMoneyName NOT ILIKE 'Строительные'
-        AND inInfoMoneyName NOT ILIKE 'Запчасти и Ремонты'
-        AND inInfoMoneyName NOT ILIKE 'Ремонт оборудования'
-        AND inInfoMoneyName NOT ILIKE 'Аренда помещений'
-        AND inInfoMoneyName NOT ILIKE 'Аренда оборудования'
+        -- нет кода
+        AND zfConvert_StringToNumber (COALESCE (inInfoMoneyCode, '')) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.УП статья = <%> определена больше 1 раза.', inInfoMoneyName;
+         RAISE EXCEPTION 'Ошибка.УП статья = <%> определена больше 1 раза.%Необходимо заполнить ячейку <Код Статья Project>.', inInfoMoneyName, CHR (13);
+     END IF;
+     -- 4.2. проверка
+     IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.DescId = zc_Object_InfoMoney() AND Object.ObjectCode = zfConvert_StringToNumber (COALESCE (inInfoMoneyCode, '')))
+        -- есть кода
+        AND zfConvert_StringToNumber (inInfoMoneyCode) > 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.УП статья Код = <%>  <%> определена больше 1 раза.', zfConvert_StringToNumber (inInfoMoneyCode), inInfoMoneyName;
      END IF;
 
-     -- статья УП
-     vbInfoMoneyId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Infomoney() AND TRIM (Object.ValueData) ILIKE TRIM (inInfoMoneyName)
-                       ORDER BY CASE WHEN TRIM (inInfoMoneyName) ILIKE 'Ремонт оборудования' THEN 0
-                                     ELSE 0
-                                END DESC
-                              , Object.Id ASC
-                       LIMIT CASE WHEN TRIM (inInfoMoneyName) ILIKE 'Строительные'        THEN 1
-                                  WHEN TRIM (inInfoMoneyName) ILIKE 'Запчасти и Ремонты'  THEN 1
-                                  WHEN TRIM (inInfoMoneyName) ILIKE 'Ремонт оборудования' THEN 1
-                                  WHEN TRIM (inInfoMoneyName) ILIKE 'Аренда помещений'    THEN 1
-                                  WHEN TRIM (inInfoMoneyName) ILIKE 'Аренда оборудования' THEN 1
-                                  
-                                  ELSE 2
-                             END
-                      );
-     -- проверка
-     IF COALESCE (vbInfoMoneyId,0) = 0
+
+     IF zfConvert_StringToNumber (inInfoMoneyCode) > 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Не найдена статья УП <%> для <%> ОКПО <%> .', inInfoMoneyName, inObjectName, inOKPO;
+         -- статья УП
+         vbInfoMoneyId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_InfoMoney() AND Object.ObjectCode = zfConvert_StringToNumber (inInfoMoneyCode)
+                          );
+         -- проверка
+         IF COALESCE (vbInfoMoneyId,0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Не найдена статья УП Код = <%> <%> для <%> ОКПО <%> .', zfConvert_StringToNumber (inInfoMoneyCode), inInfoMoneyName, inObjectName, inOKPO;
+         END IF;
+
+     ELSE
+         -- статья УП
+         vbInfoMoneyId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_InfoMoney() AND TRIM (Object.ValueData) ILIKE TRIM (inInfoMoneyName) AND TRIM (inInfoMoneyName) <> ''
+                          );
+         -- проверка
+         IF COALESCE (vbInfoMoneyId,0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Не найдена статья УП <%> для <%> ОКПО <%> .', inInfoMoneyName, inObjectName, inOKPO;
+         END IF;
+
      END IF;
+
 
 
      -- 5.1.Касса
-     IF COALESCE (inCashName,'') <> ''
+     IF TRIM (COALESCE (inCashName,'')) <> ''
      THEN
          vbCashId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Cash() AND TRIM (Object.ValueData) = TRIM (inCashName) AND Object.isErased = FALSE);
-         --проверка
+         -- проверка
          IF COALESCE (vbCashId,0) = 0
          THEN
              RAISE EXCEPTION 'Ошибка.Не найдена Касса <%> для <%> ОКПО <%>.', inCashName, inObjectName, inOKPO;

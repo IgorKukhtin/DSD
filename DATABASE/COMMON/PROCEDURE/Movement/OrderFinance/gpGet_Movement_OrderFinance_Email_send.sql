@@ -37,24 +37,14 @@ BEGIN
                              WHERE ObjectLink_ImportSettings_ContactPerson.ChildObjectId > 0
                                AND ObjectLink_ImportSettings_ContactPerson.DescId = zc_ObjectLink_ImportSettings_ContactPerson()
                             )
-     , tmpContactPerson AS (SELECT -- Не НАЗНАЧЕНО
-                                   '' :: TVarChar AS ContactPersonMail
-                                 --STRING_AGG (ObjectString_Mail.ValueData, '; ')  AS ContactPersonMail
-                            FROM Object AS Object_ContactPerson
-                                 INNER JOIN ObjectString AS ObjectString_Mail
-                                                        ON ObjectString_Mail.ObjectId = Object_ContactPerson.Id
-                                                       AND ObjectString_Mail.DescId = zc_ObjectString_ContactPerson_Mail()
-                                                       AND COALESCE (ObjectString_Mail.ValueData,'') <> ''
-
-                                 INNER JOIN ObjectLink AS ObjectLink_ContactPerson_ContactPersonKind
-                                                       ON ObjectLink_ContactPerson_ContactPersonKind.ObjectId = Object_ContactPerson.Id
-                                                      AND ObjectLink_ContactPerson_ContactPersonKind.DescId = zc_ObjectLink_ContactPerson_ContactPersonKind()
-                                                      AND ObjectLink_ContactPerson_ContactPersonKind.ChildObjectId = zc_Enum_ContactPersonKind_Member()
-                                                      -- Не НАЗНАЧЕНО
-                                                      AND 1=0
-
-                            WHERE Object_ContactPerson.DescId = zc_Object_ContactPerson()
-                              AND Object_ContactPerson.isErased = FALSE
+          -- кому отправка Сообщения - ФИО - на контроле-1, Руководитель
+        , tmpList_Member AS (SELECT OL_Member_1.ChildObjectId AS MemberId
+                             FROM MovementLinkObject AS MLO_OrderFinance
+                                  INNER JOIN ObjectLink AS OL_Member_1
+                                                        ON OL_Member_1.ObjectId = MLO_OrderFinance.ObjectId
+                                                       AND OL_Member_1.DescId   = zc_ObjectLink_OrderFinance_Member_1()
+                             WHERE MLO_OrderFinance.MovementId = inMovementId
+                               AND MLO_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
                             )
        -- ВСЕ параметры - откуда отправлять
      , tmpEmail AS (SELECT * FROM gpSelect_Object_EmailSettings (inEmailKindId:= (SELECT DISTINCT ObjectLink_EmailKind.ChildObjectId AS EmailKindId
@@ -74,13 +64,12 @@ BEGIN
 
      SELECT (tmp.outFileName || '.xls') :: TVarChar AS Subject
 
-          , ''                   :: TBlob    AS Body
+          , CASE WHEN vbUserId = 5 AND 1=1 THEN 'send to:' || COALESCE (tmpList_Email.Email_to, '') ELSE '' END :: TBlob AS Body
           , gpGet_Mail.Value     :: TVarChar AS AddressFrom
 
           , CASE WHEN vbUserId = 5    AND 1=1 THEN 'ashtu@ua.fm'
                  WHEN vbUserId = 9457 AND 1=1 THEN 'innafelon@gmail.com'
-                 WHEN COALESCE (tmpContactPerson.ContactPersonMail, '') = '' AND 1=1 THEN 'ashtu@ua.fm;t.hordienko@alan.ua'
-                 ELSE tmpContactPerson.ContactPersonMail
+                 ELSE COALESCE ('ashtu@ua.fm;' || tmpList_Email.Email_to, 'ashtu@ua.fm')
             END :: TVarChar AS AddressTo
 
           , gpGet_Host.Value     :: TVarChar AS Host
@@ -89,12 +78,23 @@ BEGIN
           , gpGet_Password.Value :: TVarChar AS Password
 
      FROM gpGet_Movement_OrderFinance_FileName_xls (inMovementId , inSession) AS tmp
-          LEFT JOIN tmpContactPerson ON 1= 1
           LEFT JOIN tmpEmail AS gpGet_Host      ON gpGet_Host.EmailToolsId      = zc_Enum_EmailTools_Host()
           LEFT JOIN tmpEmail AS gpGet_Port      ON gpGet_Port.EmailToolsId      = zc_Enum_EmailTools_Port()
           LEFT JOIN tmpEmail AS gpGet_Mail      ON gpGet_Mail.EmailToolsId      = zc_Enum_EmailTools_Mail()
           LEFT JOIN tmpEmail AS gpGet_User      ON gpGet_User.EmailToolsId      = zc_Enum_EmailTools_User()
           LEFT JOIN tmpEmail AS gpGet_Password  ON gpGet_Password.EmailToolsId  = zc_Enum_EmailTools_Password()
+          -- кому отправка Сообщения
+          LEFT JOIN (SELECT STRING_AGG (DISTINCT ObjectString_User_Email.ValueData, ';') AS Email_to
+                     FROM tmpList_Member
+                          JOIN ObjectLink AS ObjectLink_User_Member
+                                          ON ObjectLink_User_Member.ChildObjectId = tmpList_Member.MemberId
+                                         AND ObjectLink_User_Member.DescId        = zc_ObjectLink_User_Member()
+                          INNER JOIN ObjectString AS ObjectString_User_Email
+                                                  ON ObjectString_User_Email.ObjectId  = ObjectLink_User_Member.ObjectId
+                                                 AND ObjectString_User_Email.DescId    = zc_ObjectString_User_Email()
+                                                 AND ObjectString_User_Email.ValueData <> ''
+                    ) AS tmpList_Email
+                      ON TRIM (tmpList_Email.Email_to) <> ''
     ;
 
 
