@@ -14,25 +14,32 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_OrderFinance_FileName_xls(
   RETURNS RECORD
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId         Integer;
+   DECLARE vbOrderFinanceId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- нашли
+     vbOrderFinanceId := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_OrderFinance());
 
      -- Результат
-     SELECT COALESCE (Object_OrderFinance.ValueData, '')
+     SELECT CASE WHEN vbUserId = 5 AND vbOrderFinanceId NOT IN (3988049, 3988054, 13069438)
+                      -- ВСЕМ, кроме : Мясное сырье + Сырье, упаковочные и расходные материалы + Техническое Обслуживание и Основные Средства
+                      THEN ''
+                 ELSE COALESCE (Object_OrderFinance.ValueData, '')
             || '-' || zfConvert_FloatToString (MovementFloat_WeekNumber.ValueData )    --  , MovementFloat_WeekNumber.ValueData   ::TFloat    AS WeekNumber
             || '-' || zfConvert_DateShortToString (zfCalc_Week_StartDate (Movement.OperDate, MovementFloat_WeekNumber.ValueData)
                                                   ) ::TVarChar
            -- || '_' || REPLACE (zfConvert_DateShortToString (Movement.OperDate), '.', '')
             || '_' || COALESCE (Object_Insert.ValueData,'' )
           --  || '_' || Movement.InvNumber  
-                           AS outFileName
+            END AS outFileName
           , 'xls'                         AS outDefaultFileExt
           , FALSE                         AS outEncodingANSI
           , 'cxegExportToExcel'           AS outExportType
-   INTO outFileName, outDefaultFileExt, outEncodingANSI, outExportType
+
+            INTO outFileName, outDefaultFileExt, outEncodingANSI, outExportType
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_OrderFinance
                                        ON MovementLinkObject_OrderFinance.MovementId = Movement.Id

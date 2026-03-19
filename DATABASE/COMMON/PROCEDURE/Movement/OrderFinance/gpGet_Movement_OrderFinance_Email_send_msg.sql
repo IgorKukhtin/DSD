@@ -12,11 +12,12 @@ RETURNS TABLE (Subject TVarChar, Body TBlob, AddressFrom TVarChar, AddressTo TVa
               )
 AS
 $BODY$
-   DECLARE vbUserId            Integer;
-   DECLARE vbOrderFinanceId    Integer;
-   DECLARE vbIsOrderFinance_SB Boolean;
-   DECLARE vbMemberId          Integer;
-   DECLARE vbMemberId_1        Integer;
+   DECLARE vbUserId                           Integer;
+   DECLARE vbOrderFinanceId                   Integer;
+   DECLARE vbIsOrderFinance_SB                Boolean;
+   DECLARE vbIsOrderFinance_InvNumber_Invoice Boolean;
+   DECLARE vbMemberId                         Integer;
+   DECLARE vbMemberId_1                       Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_XML_Mida());
@@ -30,8 +31,10 @@ BEGIN
 
      -- нашли
      vbOrderFinanceId := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_OrderFinance());
-     --
+     -- Подтверждение СБ (да/нет)
      vbIsOrderFinance_SB := COALESCE ((SELECT OB.ValueData FROM ObjectBoolean AS OB WHERE OB.ObjectId = vbOrderFinanceId AND OB.DescId = zc_ObjectBoolean_OrderFinance_SB()), FALSE);
+     -- Заполнение № счета (да/нет)
+     vbIsOrderFinance_InvNumber_Invoice := COALESCE ((SELECT OB.ValueData FROM ObjectBoolean AS OB WHERE OB.ObjectId = vbOrderFinanceId AND OB.DescId = zc_ObjectBoolean_OrderFinance_InvNumber_Invoice()), FALSE);
 
      -- нашли
      vbMemberId:= (SELECT ObjectLink_User_Member.ChildObjectId AS MemberId
@@ -50,6 +53,7 @@ BEGIN
      IF COALESCE (vbMemberId,0) <> COALESCE (vbMemberId_1,0)
     -- после руководителя
     AND inParam = 1
+    AND vbUserId <> 5
      THEN
          RAISE EXCEPTION 'Ошибка.У пользователя <%> нет прав устанавливать <Согласован Руководителем>.', lfGet_Object_ValueData_sh (vbMemberId);
      END IF;
@@ -77,7 +81,7 @@ BEGIN
                                     )
 
                                  OR (inParam = 2
-                                 -- если НЕ СБ
+                                 -- если СБ
                                  AND vbIsOrderFinance_SB = TRUE
                                     )
                                    )
@@ -88,10 +92,17 @@ BEGIN
                              FROM ObjectLink AS OL
                              WHERE OL.ObjectId = vbOrderFinanceId
                                AND OL.DescId   = zc_ObjectLink_OrderFinance_Member_1()
-                               -- 1 - руководитель - для только СБ или менеджерам + Фин. служба, 2 - после СБ - Фин. служба + руководитель + менеджерам, 3 - после проведения - Бухгалтерия
-                               AND (inParam = 2
+                               -- 0 - для Руководителя 1 - руководитель - для только СБ или менеджерам + Фин. служба, 2 - после СБ - Фин. служба + руководитель + менеджерам, 3 - после проведения - Бухгалтерия
+                               AND ((inParam = 2
+                                  -- если СБ
+                                  AND vbIsOrderFinance_SB = TRUE
+                                    )
+                                 OR (inParam = 0
                                  -- если НЕ СБ
-                                 AND vbIsOrderFinance_SB = TRUE
+                                 AND vbIsOrderFinance_SB = FALSE
+                                 -- Заполнение № счета = ДА
+                                 AND vbIsOrderFinance_InvNumber_Invoice = TRUE
+                                    )
                                    )
 
                             UNION ALL
@@ -102,7 +113,7 @@ BEGIN
                                AND OL.DescId   = zc_ObjectLink_OrderFinance_Member_2()
                                -- 1 - руководитель - для только СБ или менеджерам + Фин. служба, 2 - после СБ - Фин. служба + руководитель + менеджерам, 3 - после проведения - Бухгалтерия
                                AND (inParam = 1
-                                 -- если НЕ СБ
+                                 -- если СБ
                                  AND vbIsOrderFinance_SB = TRUE
                                    )
 
@@ -121,7 +132,7 @@ BEGIN
                                     )
 
                                  OR (inParam = 2
-                                 -- если НЕ СБ
+                                 -- если СБ
                                  AND vbIsOrderFinance_SB = TRUE
                                     )
                                    )
@@ -183,7 +194,10 @@ BEGIN
                                                                , inSession    := inSession)
                     )
      , tmpMovement AS (
-                       SELECT CASE WHEN inParam = 1 THEN 'Согласовано Начальником отдела снабжения.За '|| zfConvert_FloatToString (tmp.WeekNumber)
+                       SELECT CASE WHEN inParam = 0 THEN 'Уведомление для Руководителя за '|| zfConvert_FloatToString (tmp.WeekNumber)
+                                                       ||' неделю c '|| zfConvert_DateShortToString (tmp.StartDate_WeekNumber)
+                                                       ||' по '|| zfConvert_DateShortToString (tmp.EndDate_WeekNumber)
+                                   WHEN inParam = 1 THEN 'Согласовано Руководителем.За '|| zfConvert_FloatToString (tmp.WeekNumber)
                                                        ||' неделю c '|| zfConvert_DateShortToString (tmp.StartDate_WeekNumber)
                                                        ||' по '|| zfConvert_DateShortToString (tmp.EndDate_WeekNumber)
                                    WHEN inParam = 2 THEN 'Уведомление от СБ за '|| zfConvert_FloatToString (tmp.WeekNumber)
@@ -195,7 +209,12 @@ BEGIN
                                    ELSE ''
                               END ::TVarChar AS Subject
 
-                            , CASE WHEN inParam = 1 AND vbIsOrderFinance_SB = TRUE
+                            , CASE WHEN inParam = 0 THEN 'Заявка "' || tmp.OrderFinanceName || '" за '|| zfConvert_FloatToString (tmp.WeekNumber)
+                                                       ||' неделю c '|| zfConvert_DateShortToString (tmp.StartDate_WeekNumber)
+                                                       ||' по '|| zfConvert_DateShortToString (tmp.EndDate_WeekNumber)
+                                                       ||' готова для согласования руководителем подразделения.'
+
+                                   WHEN inParam = 1 AND vbIsOrderFinance_SB = TRUE
                                                     THEN 'От СБ требуется проверка заявок в системе «Project» за '|| zfConvert_FloatToString (tmp.WeekNumber)
                                                        ||' неделю c '|| zfConvert_DateShortToString (tmp.StartDate_WeekNumber)
                                                        ||' по '|| zfConvert_DateShortToString (tmp.EndDate_WeekNumber)
@@ -205,7 +224,7 @@ BEGIN
                                    WHEN inParam = 1 THEN 'Заявка "' || tmp.OrderFinanceName || '" за '|| zfConvert_FloatToString (tmp.WeekNumber)
                                                        ||' неделю c '|| zfConvert_DateShortToString (tmp.StartDate_WeekNumber)
                                                        ||' по '|| zfConvert_DateShortToString (tmp.EndDate_WeekNumber)
-                                                       ||' успешно согласована руководителем подразделения'
+                                                       ||' успешно согласована руководителем подразделения.'
 
                                    WHEN inParam = 2 THEN 'Завершена проверка заявок департаментом безопасности за '|| zfConvert_FloatToString (tmp.WeekNumber)
                                                        ||' неделю c '|| zfConvert_DateShortToString (tmp.StartDate_WeekNumber)
@@ -232,7 +251,7 @@ BEGIN
      --РЕЗУЛЬТАТ
      SELECT tmpMovement.Subject :: TVarChar AS Subject
           , CASE WHEN vbUserId = 5 AND 1=1
-                      THEN tmpMovement.Body || CHR (13) || COALESCE ('ashtu@ua.fm;' || tmpList_Email.Email_to, 'ashtu@ua.fm')
+                      THEN tmpMovement.Body || CHR (13) || 'send to: ' || COALESCE (tmpList_Email.Email_to, 'ashtu@ua.fm')
                  ELSE tmpMovement.Body
             END :: TBlob    AS Body
 

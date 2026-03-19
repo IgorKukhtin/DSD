@@ -84,10 +84,10 @@ BEGIN
 
              -- Платим да/нет
            , CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount_next.ValueData) = 1 THEN COALESCE (MIBoolean_AmountPlan_1.ValueData, TRUE) ELSE FALSE END ::Boolean AS isAmountPlan_1
-           , CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount_next.ValueData) = 1 THEN COALESCE (MIBoolean_AmountPlan_2.ValueData, TRUE) ELSE FALSE END ::Boolean AS isAmountPlan_2
-           , CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount_next.ValueData) = 1 THEN COALESCE (MIBoolean_AmountPlan_3.ValueData, TRUE) ELSE FALSE END ::Boolean AS isAmountPlan_3
-           , CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount_next.ValueData) = 1 THEN COALESCE (MIBoolean_AmountPlan_4.ValueData, TRUE) ELSE FALSE END ::Boolean AS isAmountPlan_4
-           , CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount_next.ValueData) = 1 THEN COALESCE (MIBoolean_AmountPlan_5.ValueData, TRUE) ELSE FALSE END ::Boolean AS isAmountPlan_5
+           , CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount_next.ValueData) = 2 THEN COALESCE (MIBoolean_AmountPlan_2.ValueData, TRUE) ELSE FALSE END ::Boolean AS isAmountPlan_2
+           , CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount_next.ValueData) = 3 THEN COALESCE (MIBoolean_AmountPlan_3.ValueData, TRUE) ELSE FALSE END ::Boolean AS isAmountPlan_3
+           , CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount_next.ValueData) = 4 THEN COALESCE (MIBoolean_AmountPlan_4.ValueData, TRUE) ELSE FALSE END ::Boolean AS isAmountPlan_4
+           , CASE WHEN zfCalc_DayOfWeekNumber (MIDate_Amount_next.ValueData) = 5 THEN COALESCE (MIBoolean_AmountPlan_5.ValueData, TRUE) ELSE FALSE END ::Boolean AS isAmountPlan_5
 
            , 0 ::Integer AS MovementItemId_OrderIncome
 

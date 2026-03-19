@@ -35,6 +35,7 @@ BEGIN
 
      --
      IF COALESCE (vbMemberId,0) <> COALESCE (vbMemberId_1,0)
+        AND vbUserId <> 5
      THEN
          RAISE EXCEPTION 'Ошибка.У пользователя <%> нет прав устанавливать <Согласован Руководителем>.', lfGet_Object_ValueData_sh (vbMemberId);
      END IF;

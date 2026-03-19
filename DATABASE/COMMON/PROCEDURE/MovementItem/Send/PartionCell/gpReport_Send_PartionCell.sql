@@ -943,20 +943,32 @@ BEGIN
                                    )
       --проверка что дл€ 1 €чейки несколько товаров, видов товара или разные партии 
     , tmpError AS (WITH
-                    --€чейки отбор и ошибка исключить , т.к. они повтор€ютс€ дл€ разных товаров и партий
-                   tmpCell AS (SELECT Object.Id
-                               FROM Object
-                               WHERE Object.Descid = zc_Object_PartionCell()
-                                 AND Object.ObjectCode IN (0,1)
-                               ) 
+                        -- €чейки отбор и ошибка исключить , т.к. они повтор€ютс€ дл€ разных товаров и партий
+                       tmpCell AS (SELECT Object.Id
+                                   FROM Object
+                                   WHERE Object.DescId = zc_Object_PartionCell()
+                                     AND Object.ObjectCode IN (0,1)
+                                   ) 
+                      , tmpFind_err AS (SELECT DISTINCT tmp.PartionCellId, tmp.GoodsId, tmp.GoodsKindId, COALESCE (tmp.PartionGoodsDate, zc_DateStart()) AS PartionGoodsDate
+                                        FROM tmpData_PartionCell_All_All AS tmp
+                                        WHERE tmp.PartionCellId NOT IN (SELECT tmpCell.Id FROM tmpCell)
+                                       )
+                   -- 
+                   SELECT tmpFind_err.PartionCellId
+                   FROM tmpFind_err
+                   GROUP BY tmpFind_err.PartionCellId
+                   HAVING COUNT (*) > 1
 
+                  /*
+                   --
                    SELECT tmp.PartionCellId    
                    FROM tmpData_PartionCell_All_All AS tmp
                    WHERE tmp.PartionCellId NOT IN (SELECT tmpCell.Id FROM tmpCell)
                    GROUP BY tmp.PartionCellId
                    HAVING COUNT (DISTINCT tmp.GoodsId) > 1
                        OR COUNT (DISTINCT tmp.GoodsKindId) > 1
-                       OR COUNT (DISTINCT COALESCE (tmp.PartionGoodsDate, zc_DateStart()) ) > 1 
+                       OR COUNT (DISTINCT COALESCE (tmp.PartionGoodsDate, zc_DateStart()) ) > 1*/
+
                    )
 
       -- “олько заполненные €чейки - є п/п
