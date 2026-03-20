@@ -1648,7 +1648,8 @@ uses
   SummDialog in '..\..\Forms\System\SummDialog.pas' {SummDialogForm: TParentForm},
   InfoMoney_OrderFinance in '..\..\Forms\Guides\InfoMoney_OrderFinance.pas' {InfoMoney_OrderFinanceForm: TParentForm},
   OrderFinanceMovementSB in '..\..\Forms\Document\OrderFinanceMovementSB.pas' {OrderFinanceMovementSBForm: TParentForm},
-  PartionCellChoice_scale in '..\..\Forms\Guides\PartionCellChoice_scale.pas' {PartionCellChoice_scaleForm: TParentForm};
+  PartionCellChoice_scale in '..\..\Forms\Guides\PartionCellChoice_scale.pas' {PartionCellChoice_scaleForm: TParentForm},
+  Report_GoodsMI_IncomeByPartnerDialog in '..\..\Forms\Report\Report_GoodsMI_IncomeByPartnerDialog.pas' {Report_GoodsMI_IncomeByPartnerDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -181,6 +181,7 @@ BEGIN
                                                                        , inUnitId            := 0
                                                                        , inGoodsGroupId      := inGoodsGroupId
                                                                        , inisDate            := FALSE
+                                                                       , inIsMonth           := FALSE
                                                                        , inisMovement        := FALSE
                                                                        , inSession           := ''
                                                                         ) AS gpReport)
@@ -194,6 +195,7 @@ BEGIN
                                                                        , inUnitId            := 0
                                                                        , inGoodsGroupId      := inGoodsGroupId
                                                                        , inisDate            := FALSE
+                                                                       , inIsMonth           := FALSE
                                                                        , inisMovement        := FALSE
                                                                        , inSession           := ''
                                                                         ) AS gpReport)

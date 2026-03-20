@@ -1,31 +1,31 @@
 inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1090#1086#1074#1072#1088#1072#1084'>'
   ClientHeight = 466
-  ClientWidth = 1185
+  ClientWidth = 1223
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1201
+  ExplicitWidth = 1239
   ExplicitHeight = 505
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 86
-    Width = 1185
+    Width = 1223
     Height = 380
     TabOrder = 3
     ExplicitTop = 86
-    ExplicitWidth = 1185
+    ExplicitWidth = 1223
     ExplicitHeight = 380
     ClientRectBottom = 380
-    ClientRectRight = 1185
+    ClientRectRight = 1223
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1185
+      ExplicitWidth = 1223
       ExplicitHeight = 380
       inherited cxGrid: TcxGrid
-        Width = 1185
+        Width = 1223
         Height = 380
-        ExplicitWidth = 1185
+        ExplicitWidth = 1223
         ExplicitHeight = 380
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -449,6 +449,17 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
             Options.Editing = False
             Width = 56
           end
+          object OperDate_month: TcxGridDBColumn
+            Caption = #1052#1077#1089#1103#1094
+            DataBinding.FieldName = 'OperDate_month'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'MMMM YYYY'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 58
+          end
           object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'OperDate'
@@ -470,9 +481,9 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
     end
   end
   inherited Panel: TPanel
-    Width = 1185
+    Width = 1223
     Height = 60
-    ExplicitWidth = 1185
+    ExplicitWidth = 1223
     ExplicitHeight = 60
     inherited deStart: TcxDateEdit
       Left = 55
@@ -520,7 +531,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
       Width = 205
     end
     object edInDescName: TcxTextEdit
-      Left = 1019
+      Left = 989
       Top = 5
       Enabled = False
       ParentFont = False
@@ -534,7 +545,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
       TabOrder = 6
-      Width = 222
+      Width = 252
     end
     object cxLabel3: TcxLabel
       Left = 466
@@ -571,7 +582,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
       Width = 201
     end
     object cbDate: TcxCheckBox
-      Left = 847
+      Left = 815
       Top = 5
       Caption = #1087#1086' '#1044#1072#1090#1072#1084
       Properties.ReadOnly = False
@@ -579,12 +590,19 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
       Width = 71
     end
     object cbMovement: TcxCheckBox
-      Left = 920
+      Left = 888
       Top = 5
       Caption = #1087#1086#1082#1072#1079'.'#8470' '#1076#1086#1082'.'
       Properties.ReadOnly = False
       TabOrder = 12
       Width = 95
+    end
+    object sbisMonth: TcxCheckBox
+      Left = 731
+      Top = 5
+      Caption = #1055#1086' '#1084#1077#1089#1103#1094#1072#1084
+      TabOrder = 13
+      Width = 82
     end
   end
   object cxLabel6: TcxLabel [2]
@@ -606,12 +624,12 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
   end
   object cxLabel7: TcxLabel [4]
     Left = 731
-    Top = 6
+    Top = 33
     Caption = #1060'. '#1086#1087#1083#1072#1090#1099':'
   end
   object edPaidKind: TcxButtonEdit [5]
-    Left = 793
-    Top = 5
+    Left = 794
+    Top = 32
     Properties.Buttons = <
       item
         Default = True
@@ -622,12 +640,12 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
     Width = 50
   end
   object cxLabel8: TcxLabel [6]
-    Left = 732
+    Left = 851
     Top = 33
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103':'
   end
   object ceInfoMoney: TcxButtonEdit [7]
-    Left = 793
+    Left = 912
     Top = 32
     Properties.Buttons = <
       item
@@ -636,7 +654,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
       end>
     Properties.ReadOnly = True
     TabOrder = 11
-    Width = 448
+    Width = 329
   end
   object cbGoodsKind: TcxCheckBox [8]
     Left = 188
@@ -981,8 +999,8 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_GoodsMI_IncomeDialogForm'
-      FormNameParam.Value = 'TReport_GoodsMI_IncomeDialogForm'
+      FormName = 'TReport_GoodsMI_IncomeByPartnerDialogForm'
+      FormNameParam.Value = 'TReport_GoodsMI_IncomeByPartnerDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1116,6 +1134,14 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
           Name = 'isMovement'
           Value = Null
           Component = cbMovement
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMonth'
+          Value = Null
+          Component = sbisMonth
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1315,6 +1341,14 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         Name = 'inisDate'
         Value = Null
         Component = cbDate
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMonth'
+        Value = Null
+        Component = sbisMonth
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1649,8 +1683,8 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 760
-    Top = 40
+    Left = 752
+    Top = 56
   end
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
