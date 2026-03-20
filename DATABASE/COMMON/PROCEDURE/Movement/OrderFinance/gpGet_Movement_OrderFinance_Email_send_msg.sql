@@ -197,9 +197,10 @@ BEGIN
                        SELECT CASE WHEN inParam = 0 THEN 'Уведомление для Руководителя за '|| zfConvert_FloatToString (tmp.WeekNumber)
                                                        ||' неделю c '|| zfConvert_DateShortToString (tmp.StartDate_WeekNumber)
                                                        ||' по '|| zfConvert_DateShortToString (tmp.EndDate_WeekNumber)
-                                   WHEN inParam = 1 THEN 'Согласовано Руководителем.За '|| zfConvert_FloatToString (tmp.WeekNumber)
-                                                       ||' неделю c '|| zfConvert_DateShortToString (tmp.StartDate_WeekNumber)
-                                                       ||' по '|| zfConvert_DateShortToString (tmp.EndDate_WeekNumber)
+                                   WHEN inParam = 1 THEN 'Согласовано Руководителем <'|| tmp.OrderFinanceName || '>.За '|| zfConvert_FloatToString (tmp.WeekNumber)
+                                                       ||' неделю.'
+--                                                     || ' c ' || zfConvert_DateShortToString (tmp.StartDate_WeekNumber)
+--                                                     ||' по '|| zfConvert_DateShortToString (tmp.EndDate_WeekNumber)
                                    WHEN inParam = 2 THEN 'Уведомление от СБ за '|| zfConvert_FloatToString (tmp.WeekNumber)
                                                        ||' неделю c '|| zfConvert_DateShortToString (tmp.StartDate_WeekNumber)
                                                        ||' по '|| zfConvert_DateShortToString (tmp.EndDate_WeekNumber)
