@@ -45,42 +45,135 @@ $BODY$
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- временная таблица PriceListItem
+     CREATE TEMP TABLE _tmpPartner (PartnerId            Integer,
+                                    StreetId             Integer,
+                                    PartnerTagId         Integer,
+                                    AreaId               Integer,
+                                    HouseNumber          TVarChar,
+                                    CaseNumber           TVarChar,
+                                    RoomNumber           TVarChar,
+                                    isErased             Boolean)  ON COMMIT DROP;
+     
+     INSERT INTO _tmpPartner (PartnerId,
+                              StreetId,
+                              PartnerTagId,
+                              AreaId,
+                              HouseNumber,
+                              CaseNumber,
+                              RoomNumber,
+                              isErased) 
+     
+     WITH 
+     tmpPartner AS (-- если vbPersonalId - Сотрудник (торговый)
+                    SELECT OL.ObjectId AS PartnerId
+                    FROM ObjectLink AS OL
+                    WHERE OL.ChildObjectId > 0
+                      AND OL.DescId        = zc_ObjectLink_Partner_PersonalTrade()
+                   UNION
+                    -- если vbPersonalId - Сотрудник (супервайзер)
+                    SELECT OL.ObjectId AS PartnerId
+                    FROM ObjectLink AS OL
+                    WHERE OL.ChildObjectId > 0
+                      AND OL.DescId        = zc_ObjectLink_Partner_Personal()
+                   UNION
+                    -- если vbPersonalId - Сотрудник (мерчандайзер)
+                    SELECT OL.ObjectId AS PartnerId
+                    FROM ObjectLink AS OL
+                    WHERE OL.ChildObjectId > 0
+                      AND OL.DescId        = zc_ObjectLink_Partner_PersonalMerch()
+                    ) 
+      --
+     SELECT Object_Partner.Id                                           AS PartnerId
+          , ObjectLink_Partner_Street.ChildObjectId                     AS StreetId
+          , ObjectLink_Partner_PartnerTag.ChildObjectId                 AS PartnerTagId
+          , COALESCE (ObjectLink_Partner_Area.ChildObjectId,0)::Integer AS AreaId
+          , COALESCE (ObjectString_HouseNumber.ValueData,'') ::TVarChar AS HouseNumber
+          , COALESCE (ObjectString_CaseNumber.ValueData,'')  ::TVarChar AS CaseNumber
+          , COALESCE (ObjectString_RoomNumber.ValueData,'')  ::TVarChar AS RoomNumber
+          , Object_Partner.isErased                          ::Boolean  AS isErased
+     FROM Object AS Object_Partner
+         INNER JOIN tmpPartner ON tmpPartner.PartnerId = Object_Partner.Id
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_Street
+                              ON ObjectLink_Partner_Street.ObjectId = Object_Partner.Id
+                             AND ObjectLink_Partner_Street.DescId = zc_ObjectLink_Partner_Street()
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_PartnerTag
+                              ON ObjectLink_Partner_PartnerTag.ObjectId = Object_Partner.Id
+                             AND ObjectLink_Partner_PartnerTag.DescId = zc_ObjectLink_Partner_PartnerTag()
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_Area
+                              ON ObjectLink_Partner_Area.ObjectId = Object_Partner.Id
+                             AND ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
+         
+         LEFT JOIN ObjectString AS ObjectString_HouseNumber
+                                ON ObjectString_HouseNumber.ObjectId = Object_Partner.Id
+                               AND ObjectString_HouseNumber.DescId = zc_ObjectString_Partner_HouseNumber()          
+
+         LEFT JOIN ObjectString AS ObjectString_CaseNumber
+                                ON ObjectString_CaseNumber.ObjectId = Object_Partner.Id
+                               AND ObjectString_CaseNumber.DescId = zc_ObjectString_Partner_CaseNumber()
+
+         LEFT JOIN ObjectString AS ObjectString_RoomNumber
+                                ON ObjectString_RoomNumber.ObjectId = Object_Partner.Id
+                               AND ObjectString_RoomNumber.DescId = zc_ObjectString_Partner_RoomNumber()
+                
+     WHERE Object_Partner.DescId   = zc_Object_Partner()
+      AND Object_Partner.isErased = FALSE
+      AND COALESCE (ObjectLink_Partner_Street.ChildObjectId,0) > 0
+    ;                               
+     
+     --нужно записать в таблица Object_TT_effie.Id - ключ StreetId, HouseNumber, CaseNumber, RoomNumber  те элементы , которых нет
+     INSERT INTO Object_TT_effie (StreetId, PartnerTagId, AreaId, HouseNumber, CaseNumber, RoomNumber, InsertDate, isErased)
+     SELECT DISTINCT
+            tmpPartner.StreetId
+          , COALESCE (tmpPartner.PartnerTagId,0) AS PartnerTagId
+          , COALESCE (tmpPartner.AreaId,0)  AS AreaId
+          , tmpPartner.HouseNumber
+          , tmpPartner.CaseNumber
+          , tmpPartner.RoomNumber
+          , CURRENT_TIMESTAMP AS InsertDate
+          , FALSE             AS isErased
+      FROM (SELECT DISTINCT 
+                  _tmpPartner.StreetId, _tmpPartner.HouseNumber, _tmpPartner.CaseNumber, _tmpPartner.RoomNumber
+                , MAX (_tmpPartner.PartnerTagId) AS PartnerTagId, MAX (_tmpPartner.AreaId) AS AreaId
+            FROM _tmpPartner
+            GROUP BY _tmpPartner.StreetId, _tmpPartner.HouseNumber, _tmpPartner.CaseNumber, _tmpPartner.RoomNumber
+          -- limit 150
+           ) AS tmpPartner
+        LEFT JOIN Object_TT_effie ON Object_TT_effie.StreetId   = tmpPartner.StreetId
+                                   AND Object_TT_effie.HouseNumber= tmpPartner.HouseNumber
+                                   AND Object_TT_effie.CaseNumber = tmpPartner.CaseNumber 
+                                   AND Object_TT_effie.RoomNumber = tmpPartner.RoomNumber
+     WHERE Object_TT_effie.Id IS NULL;
+
+
      -- Результат
      RETURN QUERY
-             WITH tmpPartner AS (-- если vbPersonalId - Сотрудник (торговый)
-                                 SELECT OL.ObjectId AS PartnerId
-                                 FROM ObjectLink AS OL
-                                 WHERE OL.ChildObjectId > 0
-                                   AND OL.DescId        = zc_ObjectLink_Partner_PersonalTrade()
-                                UNION
-                                 -- если vbPersonalId - Сотрудник (супервайзер)
-                                 SELECT OL.ObjectId AS PartnerId
-                                 FROM ObjectLink AS OL
-                                 WHERE OL.ChildObjectId > 0
-                                   AND OL.DescId        = zc_ObjectLink_Partner_Personal()
-                                UNION
-                                 -- если vbPersonalId - Сотрудник (мерчандайзер)
-                                 SELECT OL.ObjectId AS PartnerId
-                                 FROM ObjectLink AS OL
-                                 WHERE OL.ChildObjectId > 0
-                                   AND OL.DescId        = zc_ObjectLink_Partner_PersonalMerch()
-                                )
-     SELECT Object_Partner.Id                             ::TVarChar AS extId
-          , TRIM (Object_Partner.ValueData)               ::TVarChar AS Name
-          , TRIM (ObjectHistoryString_JuridicalDetails_JuridicalAddress.ValueData)  ::TVarChar AS legalAddress
-          , TRIM (ObjectString_Address.ValueData)         ::TVarChar AS streetAddress
+     --
+     SELECT Object_TT_effie.Id                            ::TVarChar AS extId
+          , (Object_TT_effie.StreetId 
+            || ' ' ||COALESCE (Object_TT_effie.HouseNumber,'')
+            || ' ' ||COALESCE (Object_TT_effie.CaseNumber,'') 
+            || ' ' ||COALESCE (Object_TT_effie.RoomNumber,''))          ::TVarChar AS Name       --StreetId + HouseNumber + CaseNumber + RoomNumber
+          , ''                         ::TVarChar AS legalAddress
+          , (Object_TT_effie.StreetId 
+            || ' ' ||Object_TT_effie.HouseNumber
+            || ' ' ||Object_TT_effie.CaseNumber 
+            || ' ' ||Object_TT_effie.RoomNumber)          ::TVarChar AS streetAddress
           , ''                                            ::TVarChar AS latitude
           , ''                                            ::TVarChar AS longitude
           , 0                                             ::Integer  AS recurrence
-          ,  COALESCE (ObjectLink_Partner_PartnerTag.ChildObjectId ::TVarChar, zfCalc_UserAdmin() ::TVarChar)  ::TVarChar AS channelSaleId    
+          ,  COALESCE (Object_TT_effie.PartnerTagId ::TVarChar, zfCalc_UserAdmin() ::TVarChar)  ::TVarChar AS channelSaleId    
           , ''                                            ::TVarChar AS salePointDistributorName
           , ''                                            ::TVarChar AS salePointDistributorExtId
           , ''                                            ::TVarChar AS customer
           , ''                                            ::TVarChar AS customerIsis
-          , Object_Retail.ValueData                       ::TVarChar AS banner
+          , ''                                            ::TVarChar AS banner
           , Object_City.ValueData                         ::TVarChar AS address2
           , Object_Street.ValueData                       ::TVarChar AS address3
-          , ObjectString_HouseNumber.ValueData            ::TVarChar AS address4
+          , COALESCE (Object_TT_effie.HouseNumber,'')     ::TVarChar AS address4
           , 0                                             ::TFloat   AS segment
           , 1                                             ::Integer  AS recDays
           , ''                                            ::TVarChar AS recTimeBeg
@@ -96,47 +189,14 @@ $BODY$
           , Object_Area.Id                                ::TVarChar AS salePointRegionExtId
           , Object_Area.ValueData                         ::TVarChar AS salePointRegionName
           , ''                                            ::TVarChar AS defaultOrderPaymentFormExtId
-          , CASE WHEN Object_Partner.isErased = FALSE THEN 0 ELSE 1 END  ::Integer  AS isDeleted
-     FROM Object AS Object_Partner
-          INNER JOIN tmpPartner ON tmpPartner.PartnerId = Object_Partner.Id
+          , CASE WHEN Object_TT_effie.isErased = FALSE THEN 0 ELSE 1 END  ::Integer  AS isDeleted
+     FROM Object_TT_effie
+          LEFT JOIN Object AS Object_Area ON Object_Area.Id = Object_TT_effie.AreaId
 
-          LEFT JOIN ObjectString AS ObjectString_Address
-                                 ON ObjectString_Address.ObjectId = Object_Partner.Id
-                                AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
-
-          LEFT JOIN ObjectLink AS ObjectLink_Partner_PartnerTag
-                               ON ObjectLink_Partner_PartnerTag.ObjectId = Object_Partner.Id
-                              AND ObjectLink_Partner_PartnerTag.DescId = zc_ObjectLink_Partner_PartnerTag()
-
-          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                               ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
-                              AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
-
-          LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                               ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
-
-          LEFT JOIN ObjectLink AS ObjectLink_Partner_Area
-                               ON ObjectLink_Partner_Area.ObjectId = Object_Partner.Id
-                              AND ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
-          LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Partner_Area.ChildObjectId
-
-          LEFT JOIN ObjectHistory AS ObjectHistory_JuridicalDetails 
-                                  ON ObjectHistory_JuridicalDetails.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                                 AND ObjectHistory_JuridicalDetails.DescId = zc_ObjectHistory_JuridicalDetails()
-                                 AND CURRENT_DATE >= ObjectHistory_JuridicalDetails.StartDate AND CURRENT_DATE < ObjectHistory_JuridicalDetails.EndDate  
-          LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_JuridicalAddress
-                                        ON ObjectHistoryString_JuridicalDetails_JuridicalAddress.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
-                                       AND ObjectHistoryString_JuridicalDetails_JuridicalAddress.DescId = zc_ObjectHistoryString_JuridicalDetails_JuridicalAddress()
-
-          LEFT JOIN ObjectLink AS ObjectLink_Partner_Street
-                               ON ObjectLink_Partner_Street.ObjectId = Object_Partner.Id
-                              AND ObjectLink_Partner_Street.DescId = zc_ObjectLink_Partner_Street()
-          LEFT JOIN Object AS Object_Street ON Object_Street.Id = ObjectLink_Partner_Street.ChildObjectId
+          LEFT JOIN Object AS Object_Street ON Object_Street.Id = Object_TT_effie.StreetId
 
           LEFT JOIN ObjectLink AS ObjectLink_Street_City 
-                               ON ObjectLink_Street_City.ObjectId = ObjectLink_Partner_Street.ChildObjectId
+                               ON ObjectLink_Street_City.ObjectId = Object_TT_effie.StreetId
                               AND ObjectLink_Street_City.DescId = zc_ObjectLink_Street_City()
           LEFT JOIN Object AS Object_City ON Object_City.Id = ObjectLink_Street_City.ChildObjectId
 
@@ -145,12 +205,6 @@ $BODY$
                               AND ObjectLink_City_Region.DescId = zc_ObjectLink_City_Region()
           LEFT JOIN Object AS Object_Region ON Object_Region.Id = ObjectLink_City_Region.ChildObjectId
 
-          LEFT JOIN ObjectString AS ObjectString_HouseNumber
-                                 ON ObjectString_HouseNumber.ObjectId = Object_Partner.Id
-                                AND ObjectString_HouseNumber.DescId = zc_ObjectString_Partner_HouseNumber()
-
-     WHERE Object_Partner.DescId   = zc_Object_Partner()
-       AND Object_Partner.isErased = FALSE
 --limit 200
     ;
 
