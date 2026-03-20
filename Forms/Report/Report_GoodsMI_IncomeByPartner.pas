@@ -91,6 +91,7 @@ type
     ddReport_Goods: TdxBarButton;
     cbDate: TcxCheckBox;
     cbMovement: TcxCheckBox;
+    sbisMonth: TcxCheckBox;
   private
     { Private declarations }
   public

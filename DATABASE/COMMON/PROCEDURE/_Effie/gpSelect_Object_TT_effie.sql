@@ -152,15 +152,36 @@ $BODY$
      RETURN QUERY
      --
      SELECT Object_TT_effie.Id                            ::TVarChar AS extId
-          , (Object_TT_effie.StreetId 
-            || ' ' ||Object_TT_effie.HouseNumber,'')
-            || ' ' ||COALESCE (Object_TT_effie.CaseNumber,'') 
-            || ' ' ||COALESCE (Object_TT_effie.RoomNumber,''))          ::TVarChar AS Name       --StreetId + HouseNumber + CaseNumber + RoomNumber
-          , ''                         ::TVarChar AS legalAddress
-          , (Object_TT_effie.StreetId 
-            || ' ' ||Object_TT_effie.HouseNumber
-            || ' ' ||Object_TT_effie.CaseNumber 
-            || ' ' ||Object_TT_effie.RoomNumber)          ::TVarChar AS streetAddress
+
+          , TRIM (COALESCE (ObjectString_CityKind_ShortName.ValueData, '')
+              || ' ' || COALESCE (Object_City.ValueData, '')
+              || ' ' || COALESCE (ObjectString_StreetKind_ShortName.ValueData, '')
+              || ' ' || COALESCE (Object_Street.ValueData, '')
+                     || CASE WHEN COALESCE (Object_TT_effie.HouseNumber, '') <> ''
+                                  THEN ' буд.' || COALESCE (Object_TT_effie.HouseNumber, '')
+                             ELSE ''
+                        END
+                     || CASE WHEN COALESCE (Object_TT_effie.CaseNumber, '') <> ''
+                                  THEN ' корп.' || COALESCE (Object_TT_effie.CaseNumber, '')
+                             ELSE ''
+                        END
+                       )                                  ::TVarChar AS Name       --StreetId + HouseNumber + CaseNumber + RoomNumber  
+                       
+          , ''                                            ::TVarChar AS legalAddress
+
+          , TRIM (COALESCE (ObjectString_CityKind_ShortName.ValueData, '')
+              || ' ' || COALESCE (Object_City.ValueData, '')
+              || ' ' || COALESCE (ObjectString_StreetKind_ShortName.ValueData, '')
+              || ' ' || COALESCE (Object_Street.ValueData, '')
+                     || CASE WHEN COALESCE (Object_TT_effie.HouseNumber, '') <> ''
+                                  THEN ' буд.' || COALESCE (Object_TT_effie.HouseNumber, '')
+                             ELSE ''
+                        END
+                     || CASE WHEN COALESCE (Object_TT_effie.CaseNumber, '') <> ''
+                                  THEN ' корп.' || COALESCE (Object_TT_effie.CaseNumber, '')
+                             ELSE ''
+                        END
+                       )                                  ::TVarChar AS streetAddress
           , ''                                            ::TVarChar AS latitude
           , ''                                            ::TVarChar AS longitude
           , 0                                             ::Integer  AS recurrence
@@ -203,6 +224,24 @@ $BODY$
                                ON ObjectLink_City_Region.ObjectId = Object_City.Id
                               AND ObjectLink_City_Region.DescId = zc_ObjectLink_City_Region()
           LEFT JOIN Object AS Object_Region ON Object_Region.Id = ObjectLink_City_Region.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_City_CityKind
+                               ON ObjectLink_City_CityKind.ObjectId = Object_City.Id
+                              AND ObjectLink_City_CityKind.DescId = zc_ObjectLink_City_CityKind()
+          --LEFT JOIN Object AS Object_CityKind ON Object_CityKind.Id = ObjectLink_City_CityKind.ChildObjectId
+
+          LEFT JOIN ObjectString AS ObjectString_CityKind_ShortName
+                                 ON ObjectString_CityKind_ShortName.ObjectId = ObjectLink_City_CityKind.ChildObjectId
+                                AND ObjectString_CityKind_ShortName.DescId = zc_ObjectString_CityKind_ShortName() 
+ 
+          LEFT JOIN ObjectLink AS Street_StreetKind 
+                               ON Street_StreetKind.ObjectId = Object_Street.Id
+                              AND Street_StreetKind.DescId = zc_ObjectLink_Street_StreetKind()
+          --LEFT JOIN Object AS Object_StreetKind ON Object_StreetKind.Id = Street_StreetKind.ChildObjectId
+
+          LEFT JOIN ObjectString AS ObjectString_StreetKind_ShortName
+                                 ON ObjectString_StreetKind_ShortName.ObjectId = Street_StreetKind.ChildObjectId 
+                                AND ObjectString_StreetKind_ShortName.DescId = zc_ObjectString_StreetKind_ShortName()
 
 --limit 200
     ;
