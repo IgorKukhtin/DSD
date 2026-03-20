@@ -352,12 +352,12 @@ type
     ceCash: TcxButtonEdit;
     GuidesCash: TdsdGuides;
     Comment_SB: TcxGridDBColumn;
-    spGet_Export_Email_msg: TdsdStoredProc;
-    actGet_Export_Email_msg: TdsdExecStoredProc;
-    mactExport_msg: TMultiAction;
+    spGet_Export_Email_msg_1: TdsdStoredProc;
+    actGet_Export_Email_msg_1: TdsdExecStoredProc;
+    mactExport_msg_1: TMultiAction;
     mactSign_1_Yes: TMultiAction;
     AmountPlan_next: TcxGridDBColumn;
-    bbExport_msg: TdxBarButton;
+    bbExport_msg_1: TdxBarButton;
     InvNumber_Invoice_Child: TcxGridDBColumn;
     InvNumber_Invoice_Child_ch2: TcxGridDBColumn;
     actInfoMoney_OrderFinanceChoiceForm: TOpenChoiceForm;
@@ -394,6 +394,11 @@ type
     isAmountPlan_5_ch2: TcxGridDBColumn;
     OperDate_Detail_ch3: TcxGridDBColumn;
     Comment_master_ch3: TcxGridDBColumn;
+    spGet_Export_Email_msg_0: TdsdStoredProc;
+    actGet_Export_Email_msg_0: TdsdExecStoredProc;
+    mactExport_msg_0: TMultiAction;
+    mactUpdate_SignWait_1_Yes: TMultiAction;
+    bbExport_msg_0: TdxBarButton;
   private
   public
   end;
