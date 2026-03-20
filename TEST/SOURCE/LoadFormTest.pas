@@ -1087,8 +1087,8 @@ end;
 procedure TLoadFormTest.LoadOrderFinanceMovementFormTest;
 begin
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinance_PlanDateForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TOrderFinance_PlanDateForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceMovementSBForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderFinanceMovementSBForm');
   exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinanceJournalForm'));
@@ -1109,6 +1109,8 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinance_PlanForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderFinance_PlanForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderFinance_PlanDateForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderFinance_PlanDateForm');
 
   exit;
 
