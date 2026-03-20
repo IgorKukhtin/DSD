@@ -84,14 +84,14 @@ $BODY$
                       AND OL.DescId        = zc_ObjectLink_Partner_PersonalMerch()
                     ) 
       --
-     SELECT Object_Partner.Id                                           AS PartnerId
-          , ObjectLink_Partner_Street.ChildObjectId                     AS StreetId
-          , ObjectLink_Partner_PartnerTag.ChildObjectId                 AS PartnerTagId
-          , COALESCE (ObjectLink_Partner_Area.ChildObjectId,0)::Integer AS AreaId
-          , COALESCE (ObjectString_HouseNumber.ValueData,'') ::TVarChar AS HouseNumber
-          , COALESCE (ObjectString_CaseNumber.ValueData,'')  ::TVarChar AS CaseNumber
-          , COALESCE (ObjectString_RoomNumber.ValueData,'')  ::TVarChar AS RoomNumber
-          , Object_Partner.isErased                          ::Boolean  AS isErased
+     SELECT Object_Partner.Id                                        AS PartnerId
+          , COALESCE (ObjectLink_Partner_Street.ChildObjectId, 0)    AS StreetId
+          , ObjectLink_Partner_PartnerTag.ChildObjectId              AS PartnerTagId
+          , COALESCE (ObjectLink_Partner_Area.ChildObjectId, 0)      AS AreaId
+          , COALESCE (TRIM (ObjectString_HouseNumber.ValueData), '') AS HouseNumber
+          , COALESCE (TRIM (ObjectString_CaseNumber.ValueData), '')  AS CaseNumber
+          , COALESCE (TRIM (ObjectString_RoomNumber.ValueData), '')  AS RoomNumber
+          , Object_Partner.isErased                                  AS isErased
      FROM Object AS Object_Partner
          INNER JOIN tmpPartner ON tmpPartner.PartnerId = Object_Partner.Id
 
@@ -121,7 +121,7 @@ $BODY$
                 
      WHERE Object_Partner.DescId   = zc_Object_Partner()
       AND Object_Partner.isErased = FALSE
-      AND COALESCE (ObjectLink_Partner_Street.ChildObjectId,0) > 0
+    --AND ObjectLink_Partner_Street.ChildObjectId > 0
     ;                               
      
      --нужно записать в таблица Object_TT_effie.Id - ключ StreetId, HouseNumber, CaseNumber, RoomNumber  те элементы , которых нет
@@ -135,17 +135,16 @@ $BODY$
           , tmpPartner.RoomNumber
           , CURRENT_TIMESTAMP AS InsertDate
           , FALSE             AS isErased
-      FROM (SELECT DISTINCT 
-                  _tmpPartner.StreetId, _tmpPartner.HouseNumber, _tmpPartner.CaseNumber, _tmpPartner.RoomNumber
-                , MAX (_tmpPartner.PartnerTagId) AS PartnerTagId, MAX (_tmpPartner.AreaId) AS AreaId
+      FROM (SELECT _tmpPartner.StreetId, _tmpPartner.HouseNumber, _tmpPartner.CaseNumber, _tmpPartner.RoomNumber
+                 , MAX (_tmpPartner.PartnerTagId) AS PartnerTagId, MAX (_tmpPartner.AreaId) AS AreaId
             FROM _tmpPartner
             GROUP BY _tmpPartner.StreetId, _tmpPartner.HouseNumber, _tmpPartner.CaseNumber, _tmpPartner.RoomNumber
           -- limit 150
            ) AS tmpPartner
-        LEFT JOIN Object_TT_effie ON Object_TT_effie.StreetId   = tmpPartner.StreetId
-                                   AND Object_TT_effie.HouseNumber= tmpPartner.HouseNumber
-                                   AND Object_TT_effie.CaseNumber = tmpPartner.CaseNumber 
-                                   AND Object_TT_effie.RoomNumber = tmpPartner.RoomNumber
+           LEFT JOIN Object_TT_effie ON Object_TT_effie.StreetId   = tmpPartner.StreetId
+                                    AND Object_TT_effie.HouseNumber= tmpPartner.HouseNumber
+                                    AND Object_TT_effie.CaseNumber = tmpPartner.CaseNumber 
+                                    AND Object_TT_effie.RoomNumber = tmpPartner.RoomNumber
      WHERE Object_TT_effie.Id IS NULL;
 
 
@@ -154,7 +153,7 @@ $BODY$
      --
      SELECT Object_TT_effie.Id                            ::TVarChar AS extId
           , (Object_TT_effie.StreetId 
-            || ' ' ||COALESCE (Object_TT_effie.HouseNumber,'')
+            || ' ' ||Object_TT_effie.HouseNumber,'')
             || ' ' ||COALESCE (Object_TT_effie.CaseNumber,'') 
             || ' ' ||COALESCE (Object_TT_effie.RoomNumber,''))          ::TVarChar AS Name       --StreetId + HouseNumber + CaseNumber + RoomNumber
           , ''                         ::TVarChar AS legalAddress

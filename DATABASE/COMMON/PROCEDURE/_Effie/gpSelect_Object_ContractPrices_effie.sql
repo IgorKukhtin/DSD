@@ -10,7 +10,7 @@ RETURNS TABLE (priceHeaderExtId      TVarChar   -- Идентификатор прайса
              , validFrom             TVarChar   -- Дата начала (минимальная дата 1753-01-01)
              , validTo               TVarChar   -- Дата окончания (максимальная дата 9999-12-31)
              , isDeleted             Boolean    -- Признак активности: false = активна / true = не активна. По умолчанию false = активна. 
-             , PartnerId             Integer    --Контрагент инф.
+             , PartnerId             Integer    -- Контрагент инф.
              , defaultPrice          Boolean    --
 ) AS
 
