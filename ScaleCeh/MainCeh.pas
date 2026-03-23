@@ -992,6 +992,15 @@ begin
                 end;
            end;
        //
+       // доопределили параметр
+       if ParamsMovement.ParamByName('isPartionGoodsDate').AsBoolean = TRUE
+       then
+         try ParamsMI.ParamByName('PartionGoodsDate').AsDateTime:=StrToDate(PartionDateEdit.Text)
+         except ParamsMI.ParamByName('PartionGoodsDate').AsDateTime:=ParamsMovement.ParamByName('OperDate').AsDateTime + 1;
+         end
+       else
+         ParamsMI.ParamByName('PartionGoodsDate').AsDateTime:=ParamsMovement.ParamByName('OperDate').AsDateTime;
+       //
        //
        if (cbPartionPasspor.Checked = TRUE) and (isPartionPassportPanel.Visible = TRUE) then
        begin
@@ -1145,10 +1154,6 @@ begin
        then ParamsMI.ParamByName('GoodsKindId').AsInteger:= GoodsKind_Array[GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex)].Id
        else ParamsMI.ParamByName('GoodsKindId').AsInteger:= 0;
 
-       // доопределили параметр
-       try ParamsMI.ParamByName('PartionGoodsDate').AsDateTime:=StrToDate(PartionDateEdit.Text)
-       except ParamsMI.ParamByName('PartionGoodsDate').AsDateTime:=ParamsMovement.ParamByName('OperDate').AsDateTime + 1;
-       end;
        // проверка
        if (PanelPartionDate.Visible) then
        begin

@@ -254,7 +254,7 @@ begin
      GuidesPartionCell.Key:=IntToStr(execParamsMI.ParamByName('PartionCellId').AsInteger);
      GuidesPartionCell.TextValue:=execParamsMI.ParamByName('PartionCellName').AsString;
      //
-     PartionDateEdit.Text:= DateToStr(execParamsMovement.ParamByName('OperDate').AsDateTime);
+     PartionDateEdit.Text:= DateToStr(execParamsMI.ParamByName('PartionGoodsDate').AsDateTime);
      //
      RealWeight:= execParamsMI.ParamByName('RealWeight').AsFloat;
      RealWeight_Get:= execParamsMI.ParamByName('RealWeight_Get').AsFloat;
@@ -268,6 +268,11 @@ begin
      begin
           execParamsMI.ParamByName('PartionCellId').AsInteger:= StrToInt(GuidesPartionCell.Key);//PartionCellId;
           execParamsMI.ParamByName('PartionCellName').AsString:= GuidesPartionCell.TextValue;//EditPartionCell.Text;
+          //
+          // доопределили параметр
+          try execParamsMI.ParamByName('PartionGoodsDate').AsDateTime:=StrToDate(PartionDateEdit.Text)
+          except execParamsMI.ParamByName('PartionGoodsDate').AsDateTime:=ParamsMovement.ParamByName('OperDate').AsDateTime;
+          end;
           //
           if CountTare1 > 0 then SettingMain.WeightTare1:= WeightTare1 else SettingMain.WeightTare1:= 0;
           if CountTare2 > 0 then SettingMain.WeightTare2:= WeightTare2 else SettingMain.WeightTare2:= 0;

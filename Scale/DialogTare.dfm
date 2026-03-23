@@ -1107,7 +1107,7 @@ inherited DialogTareForm: TDialogTareForm
         EditValue = 41640d
         ParentFont = False
         Properties.DateButtons = [btnToday]
-        Properties.ReadOnly = True
+        Properties.ReadOnly = False
         Properties.SaveTime = False
         Properties.ShowTime = False
         Style.Font.Charset = RUSSIAN_CHARSET
