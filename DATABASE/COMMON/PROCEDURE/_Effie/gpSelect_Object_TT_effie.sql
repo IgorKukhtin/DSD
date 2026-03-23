@@ -212,7 +212,10 @@ $BODY$
           , Object_Area.ValueData                         ::TVarChar AS salePointRegionName
 
           , ''                                            ::TVarChar AS defaultOrderPaymentFormExtId
-          , CASE WHEN Object_TT_effie.isErased = FALSE THEN 0 ELSE 1 END  ::Integer  AS isDeleted
+
+--          , CASE WHEN Object_TT_effie.isErased = FALSE THEN 0 ELSE 1 END  ::Integer  AS isDeleted
+          , 0  ::Integer  AS isDeleted
+
      FROM Object_TT_effie
           LEFT JOIN Object AS Object_Area ON Object_Area.Id = Object_TT_effie.AreaId
 

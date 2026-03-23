@@ -22,7 +22,8 @@ $BODY$
      -- Результат
      RETURN QUERY
      WITH
-     tmpMember AS (SELECT ObjectLink_User_Member.ChildObjectId AS MemberId
+     tmp_employee AS (SELECT DISTINCT gpSelect.employeeExtId :: Integer AS MemberId FROM gpSelect_Object_EmployeesTT_effie('') AS gpSelect)
+   , tmpMember AS (SELECT ObjectLink_User_Member.ChildObjectId AS MemberId
               
                         , CASE WHEN ObjectLink_User_Member.ObjectId = 5866615 -- Матіюк В.Ю.
                                     THEN 8379 -- филиал Киев
@@ -38,14 +39,15 @@ $BODY$
                           END AS BranchId
               
                    FROM ObjectLink AS ObjectLink_User_Member
-                        INNER JOIN ObjectBoolean AS ObjectBoolean_ProjectMobile
+                        INNER JOIN tmp_employee ON tmp_employee.MemberId = ObjectLink_User_Member.ChildObjectId
+                        /*INNER JOIN ObjectBoolean AS ObjectBoolean_ProjectMobile
                                                  ON ObjectBoolean_ProjectMobile.ObjectId = ObjectLink_User_Member.ObjectId
                                                 AND ObjectBoolean_ProjectMobile.DescId = zc_ObjectBoolean_User_ProjectMobile()
-                                                AND COALESCE (ObjectBoolean_ProjectMobile.ValueData, FALSE) = TRUE
+                                                AND COALESCE (ObjectBoolean_ProjectMobile.ValueData, FALSE) = TRUE*/
 
                         INNER JOIN Object AS Object_Member 
                                           ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
-                                         AND Object_Member.isErased = FALSE
+                                       --AND Object_Member.isErased = FALSE
 
                         LEFT JOIN lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
                                                                                   ON lfSelect.MemberId = ObjectLink_User_Member.ChildObjectId

@@ -31,7 +31,9 @@ $BODY$
 
      -- Результат
      RETURN QUERY
-     SELECT Object_Member.Id                             ::TVarChar AS extId
+     WITH tmp_employee AS (SELECT DISTINCT gpSelect.employeeExtId :: Integer AS MemberId FROM gpSelect_Object_EmployeesTT_effie('') AS gpSelect)
+     SELECT DISTINCT
+            Object_Member.Id                             ::TVarChar AS extId
           , TRIM (Object_Member.ValueData)               ::TVarChar AS Name 
           , '1'                                          ::TVarChar AS orgStructExtId
           , '4ADBB652-F1EE-427E-AAE4-96C41A25C97B'       ::TVarChar AS groupId
@@ -44,26 +46,28 @@ $BODY$
           , Object_Member.ObjectCode                     ::TVarChar AS personalNumber
           , NULL                                         ::TVarChar AS leadExtId
           , ''                                           ::TVarChar AS notificationLanguage
-          , Object_Member.isErased                       ::Boolean  AS isDeleted
+          ,  FALSE  ::Boolean  AS isDeleted
 
      FROM Object AS Object_Member 
+          INNER JOIN tmp_employee ON tmp_employee.MemberId = Object_Member.Id
+
           LEFT JOIN ObjectLink AS ObjectLink_User_Member
                                ON ObjectLink_User_Member.ChildObjectId = Object_Member.Id
                               AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
           INNER JOIN Object AS Object_User ON Object_User.Id       = ObjectLink_User_Member.ObjectId  
-                                          AND Object_User.isErased = FALSE
+                                        --AND Object_User.isErased = FALSE
         
-          INNER JOIN ObjectBoolean AS ObjectBoolean_ProjectMobile
+        /*INNER JOIN ObjectBoolean AS ObjectBoolean_ProjectMobile
                                    ON ObjectBoolean_ProjectMobile.ObjectId  = ObjectLink_User_Member.ObjectId
                                   AND ObjectBoolean_ProjectMobile.DescId    = zc_ObjectBoolean_User_ProjectMobile()
-                                  AND ObjectBoolean_ProjectMobile.ValueData = TRUE
+                                  AND ObjectBoolean_ProjectMobile.ValueData = TRUE*/
 
           LEFT JOIN ObjectString AS ObjectString_User_
                                  ON ObjectString_User_.ObjectId = Object_User.Id
                                 AND ObjectString_User_.DescId = zc_ObjectString_User_Password()
 
      WHERE Object_Member.DescId = zc_Object_Member() 
-       AND Object_Member.isErased = FALSE
+     --AND Object_Member.isErased = FALSE
        AND Object_Member.Id NOT IN (13165, 1122130, 7015073) -- "Махов Тарас Володимирович"
     ;
 
