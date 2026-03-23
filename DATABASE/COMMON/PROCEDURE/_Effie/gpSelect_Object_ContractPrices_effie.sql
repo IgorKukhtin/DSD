@@ -106,7 +106,7 @@ $BODY$
  
    -- Остальные контргагенты и прайсы
    , tmpIts AS (SELECT tmp.PartnerId                                AS PartnerId
-                     , ObjectLink_Juridical_PriceList.ChildObjectId AS PriceListId
+                     , COALESCE (ObjectLink_Juridical_PriceList.ChildObjectId, zc_PriceList_Basis()) AS PriceListId
                      , ObjectLink_Contract_Juridical.ObjectId       AS ContractId
                      , FALSE                                        AS defaultPrice
                 FROM (SELECT tmpPartner.Id AS PartnerId

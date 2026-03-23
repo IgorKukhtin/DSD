@@ -25,8 +25,10 @@ $BODY$
 
      -- Результат
      RETURN QUERY
-             WITH tmpPartner AS (-- если vbPersonalId - Сотрудник (торговый)
-                                 SELECT OL.ObjectId AS PartnerId
+             WITH tmpPartner AS (-- Идентификатор контрагента.
+                                 SELECT DISTINCT gpSelect.clientExtId :: Integer AS PartnerId FROM gpSelect_Object_Twins_effie (inSession) AS gpSelect
+                                 -- если vbPersonalId - Сотрудник (торговый)
+                               /*SELECT OL.ObjectId AS PartnerId
                                  FROM ObjectLink AS OL
                                  WHERE OL.ChildObjectId > 0
                                    AND OL.DescId        = zc_ObjectLink_Partner_PersonalTrade()
@@ -42,6 +44,7 @@ $BODY$
                                  FROM ObjectLink AS OL
                                  WHERE OL.ChildObjectId > 0
                                    AND OL.DescId        = zc_ObjectLink_Partner_PersonalMerch()
+                               */
                                 )
      SELECT Object_Partner.Id                             ::TVarChar AS extId
           , TRIM (Object_Partner.ValueData)               ::TVarChar AS Name
