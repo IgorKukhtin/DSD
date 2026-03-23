@@ -89,18 +89,20 @@ $BODY$
          LEFT JOIN tmpPrice AS tmpPrice_GoodsKind
                             ON tmpPrice_GoodsKind.GoodsId = tmpGoods.GoodsId
                            AND tmpPrice_GoodsKind.GoodsKindId = tmpGoods.GoodsKindId -- and 1 = 0
+                           AND COALESCE (tmpPrice_GoodsKind.GoodsKindId, 0) > 0
 
         -- связь товар + вид товара  или вид товара вес 
          LEFT JOIN tmpPrice AS tmpPrice_Basis
                             ON tmpPrice_Basis.GoodsId = tmpGoods.GoodsId
-                           AND tmpPrice_Basis.GoodsKindId = zc_GoodsKind_Basis()  -- and 1 = 0
+                           AND tmpPrice_Basis.GoodsKindId = zc_GoodsKind_Basis()   and 1 = 0
                            AND tmpPrice_GoodsKind.PriceListId IS NULL
 
          -- связь товар + вид товара пусто
          LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpGoods.GoodsId
                            AND tmpPrice.GoodsKindId IS NULL
                            AND (tmpPrice_Basis.PriceListId IS NULL
-                                AND tmpPrice_GoodsKind.PriceListId IS NULL)      --and 1 = 0
+                                AND tmpPrice_GoodsKind.PriceListId IS NULL)      and 1 = 0
+    WHERE COALESCE (tmpPrice_GoodsKind.PriceListId, tmpPrice_Basis.PriceListId,tmpPrice.PriceListId, 0) > 0
      ;
 
      --нужно записать в таблица Object_PriceListItem_effie.Id - по ключу Това+Вид+Прайс  те элементы , которых нет
@@ -112,8 +114,9 @@ $BODY$
      FROM _tmpResult
           LEFT JOIN Object_PriceListItem_effie ON Object_PriceListItem_effie.PriceListId = _tmpResult.PriceListId
                                               AND Object_PriceListItem_effie.GoodsId     = _tmpResult.GoodsId
-                                              AND Object_PriceListItem_effie.GoodsKindId = _tmpResult.GoodsKindId
-     WHERE Object_PriceListItem_effie.Id IS NULL;
+                                              AND COALESCE (Object_PriceListItem_effie.GoodsKindId,0) = COALESCE (_tmpResult.GoodsKindId,0)
+     WHERE Object_PriceListItem_effie.Id IS NULL
+       AND COALESCE (_tmpResult.PriceListId,0) > 0;
  
       
 
