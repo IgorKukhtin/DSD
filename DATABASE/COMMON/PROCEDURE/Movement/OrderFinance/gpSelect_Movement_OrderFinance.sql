@@ -292,6 +292,8 @@ BEGIN
        WHERE tmp_OrderFinance_user.OrderFinanceId > 0
           -- нет Ограничения прав
           OR (tmp_OrderFinance_check.myCount = 0 AND tmpUserAdmin.UserId > 0)
+          --OR vbUserId IN (11935986)
+          OR tmpUserAdmin.UserId > 0
       ;
 
 END;
