@@ -1,10 +1,11 @@
--- Function: lpCheck_MI_Send_PartionCell()
+-- Function: lpCheck_MI_Send_PartionCell_mi()
 
-DROP FUNCTION IF EXISTS lpCheck_MI_Send_PartionCell (Integer, Integer, Integer, TDateTime, Integer);
+DROP FUNCTION IF EXISTS lpCheck_MI_Send_PartionCell_mi (Integer, Integer, Integer, Integer, TDateTime, Integer);
 
 
-CREATE OR REPLACE FUNCTION lpCheck_MI_Send_PartionCell(
+CREATE OR REPLACE FUNCTION lpCheck_MI_Send_PartionCell_mi(
     IN inPartionCellId         Integer  ,
+    IN inMovementItemId        Integer  ,
     IN inGoodsId               Integer  ,
     IN inGoodsKindId           Integer  ,
     IN inPartionGoodsDate      TDateTime , --
@@ -103,7 +104,8 @@ BEGIN
                    -- партия открыта
                    AND MIBoolean_PartionCell_Close.MovementItemId IS NULL
                    -- в ячейке другой товар или вид или Партия ...
-                   AND (MovementItem.ObjectId   <> inGoodsId
+                   AND (MovementItem.Id         <> inMovementItemId
+                     OR MovementItem.ObjectId   <> inGoodsId
                      OR MILO_GoodsKind.ObjectId <> inGoodsKindId
                      OR COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate) <> inPartionGoodsDate
                        )
@@ -123,4 +125,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpCheck_MI_Send_PartionCell (inPartionCellId:= 10239266 , inGoodsId:= 2116, inGoodsKindId:= 8346 , inPartionGoodsDate:= CURRENT_DATE, inUserId:= 5)
+-- SELECT * FROM lpCheck_MI_Send_PartionCell_mi (inPartionCellId:= 10239266 , inMovementItemId:= 1, inGoodsId:= 2116, inGoodsKindId:= 8346 , inPartionGoodsDate:= CURRENT_DATE, inUserId:= 5)

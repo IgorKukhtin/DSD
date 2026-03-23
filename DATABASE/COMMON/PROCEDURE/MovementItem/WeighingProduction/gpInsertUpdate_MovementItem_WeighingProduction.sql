@@ -160,6 +160,7 @@ BEGIN
         OR inCountTare8  > 0
         OR inCountTare9  > 0
         OR inCountTare10 > 0
+        OR inPartionCellId > 0
      THEN
          -- Еще сохранили № паспорта
          IF vbIsInsert = TRUE
