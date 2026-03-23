@@ -10,7 +10,7 @@ AS
                            , isDeleted
                       FROM dblink ('host=192.168.0.228 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
                                  , ('SELECT *
-                                    FROM gpSelect_Object_Clients_effie(zfCalc_UserAdmin())'
+                                    FROM gpSelect_Object_Twins_effie(zfCalc_UserAdmin())'
                                     ) :: Text
                                   ) AS gpSelect (ttExtId          TVarChar   -- Идентификатор торговой точки
                                                , clientExtId      TVarChar   -- Идентификатор контрагента.

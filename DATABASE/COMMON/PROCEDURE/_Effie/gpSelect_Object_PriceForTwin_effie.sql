@@ -23,15 +23,18 @@ $BODY$
 
      -- Результат
      RETURN QUERY
+     WITH tmp_tt AS (SELECT DISTINCT gpSelect.ttExtId, gpSelect.clientExtId FROM gpSelect_Object_Twins_effie('') AS gpSelect)
+     --
      SELECT DISTINCT
             tmp.contractHeaderExtId          ::TVarChar AS extId
           , tmp.PartnerId                    ::TVarChar AS clientExtID
           , tmp.priceHeaderExtId             ::TVarChar AS priceHeaderExtId
-          , tmp.PartnerId                    ::TVarChar AS ttExtID
+          , tmp_tt.ttExtId                   ::TVarChar AS ttExtId
           , NULL                             ::TVarChar AS employeeExtId
           , tmp.defaultPrice                 ::Boolean  AS defaultPrice
           , FALSE                            ::Boolean  AS isDeleted
      FROM gpSelect_Object_ContractPrices_effie (inSession) AS tmp
+          INNER JOIN tmp_tt ON tmp_tt.clientExtId = tmp.PartnerId :: TVarChar
      ;
 
 END;
@@ -47,4 +50,3 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Object_PriceForTwin_effie (zfCalc_UserAdmin()::TVarChar);
-
