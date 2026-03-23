@@ -10,17 +10,17 @@ RETURNS TABLE (extId           TVarChar   -- Идентификатор канала продаж
              , legalAddress    TVarChar   -- Юр. адрес клиента
              , streetAddress   TVarChar   -- Физ. адрес клиента
              , latitude        TVarChar   -- Широта
-             , longitude       TVarChar   -- Довгота 
-             , recurrence      Integer    -- Частота посещения торговой точки	
+             , longitude       TVarChar   -- Довгота
+             , recurrence      Integer    -- Частота посещения торговой точки
              , channelSaleId   TVarChar   -- Идентификатор канала продаж
-             , salePointDistributorName  TVarChar -- Название дистрибьютера	
-             , salePointDistributorExtId TVarChar -- Код дистрибьютера	
-             , customer        TVarChar   -- Название корпорации          
-             , customerIsis    TVarChar   -- Код корпорации	
-             , banner          TVarChar   -- Торговая сеть	
-             , address2        TVarChar   -- Город	
+             , salePointDistributorName  TVarChar -- Название дистрибьютера
+             , salePointDistributorExtId TVarChar -- Код дистрибьютера
+             , customer        TVarChar   -- Название корпорации
+             , customerIsis    TVarChar   -- Код корпорации
+             , banner          TVarChar   -- Торговая сеть
+             , address2        TVarChar   -- Город
              , address3        TVarChar   -- Улица
-             , address4        TVarChar   -- Дом/корпус	
+             , address4        TVarChar   -- Дом/корпус
              , segment         TFloat     -- Средняя продажа в месяц в MSU
              , recDays         Integer    -- Рекомендуемые дни посещения (битовая маска: пн - 1, вт - 2, ср - 4, чт - 8, пт - 16, сб - 32, вс - 64)
              , recTimeBeg      TVarChar   -- Рекомендуемое время начала визита
@@ -29,9 +29,9 @@ RETURNS TABLE (extId           TVarChar   -- Идентификатор канала продаж
              , retailerName    TVarChar   -- "Название торговой сети
              , retailerExtId   TVarChar   -- "Внешний ид торговой сети
              , territorialFeatureExtId TVarChar -- Внешний идентификатор территориального признака
-             , salePointDistrictExtId  TVarChar -- Внешний идентификатор области 
+             , salePointDistrictExtId  TVarChar -- Внешний идентификатор области
              , salePointDistrictName   TVarChar -- Название области
-             , salePointFormatExtId	   TVarChar -- Внешний идентификатор формата магазина	
+             , salePointFormatExtId	   TVarChar -- Внешний идентификатор формата магазина
              , salePointFormatName     TVarChar -- Название формата магазина
              , salePointRegionExtId    TVarChar -- Внешний идентификатор региона
              , salePointRegionName     TVarChar -- Название региона
@@ -54,7 +54,7 @@ $BODY$
                                     CaseNumber           TVarChar,
                                     RoomNumber           TVarChar,
                                     isErased             Boolean)  ON COMMIT DROP;
-     
+
      INSERT INTO _tmpPartner (PartnerId,
                               StreetId,
                               PartnerTagId,
@@ -62,9 +62,9 @@ $BODY$
                               HouseNumber,
                               CaseNumber,
                               RoomNumber,
-                              isErased) 
-     
-     WITH 
+                              isErased)
+
+     WITH
      tmpPartner AS (-- если vbPersonalId - Сотрудник (торговый)
                     SELECT OL.ObjectId AS PartnerId
                     FROM ObjectLink AS OL
@@ -82,11 +82,11 @@ $BODY$
                     FROM ObjectLink AS OL
                     WHERE OL.ChildObjectId > 0
                       AND OL.DescId        = zc_ObjectLink_Partner_PersonalMerch()
-                    ) 
-      --
+                    )
+     --
      SELECT Object_Partner.Id                                        AS PartnerId
           , COALESCE (ObjectLink_Partner_Street.ChildObjectId, 0)    AS StreetId
-          , ObjectLink_Partner_PartnerTag.ChildObjectId              AS PartnerTagId
+          , COALESCE (ObjectLink_Partner_PartnerTag.ChildObjectId, 0)AS PartnerTagId
           , COALESCE (ObjectLink_Partner_Area.ChildObjectId, 0)      AS AreaId
           , COALESCE (TRIM (ObjectString_HouseNumber.ValueData), '') AS HouseNumber
           , COALESCE (TRIM (ObjectString_CaseNumber.ValueData), '')  AS CaseNumber
@@ -106,10 +106,10 @@ $BODY$
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Area
                               ON ObjectLink_Partner_Area.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_Area.DescId = zc_ObjectLink_Partner_Area()
-         
+
          LEFT JOIN ObjectString AS ObjectString_HouseNumber
                                 ON ObjectString_HouseNumber.ObjectId = Object_Partner.Id
-                               AND ObjectString_HouseNumber.DescId = zc_ObjectString_Partner_HouseNumber()          
+                               AND ObjectString_HouseNumber.DescId = zc_ObjectString_Partner_HouseNumber()
 
          LEFT JOIN ObjectString AS ObjectString_CaseNumber
                                 ON ObjectString_CaseNumber.ObjectId = Object_Partner.Id
@@ -118,18 +118,18 @@ $BODY$
          LEFT JOIN ObjectString AS ObjectString_RoomNumber
                                 ON ObjectString_RoomNumber.ObjectId = Object_Partner.Id
                                AND ObjectString_RoomNumber.DescId = zc_ObjectString_Partner_RoomNumber()
-                
+
      WHERE Object_Partner.DescId   = zc_Object_Partner()
       AND Object_Partner.isErased = FALSE
     --AND ObjectLink_Partner_Street.ChildObjectId > 0
-    ;                               
-     
+    ;
+
      --нужно записать в таблица Object_TT_effie.Id - ключ StreetId, HouseNumber, CaseNumber, RoomNumber  те элементы , которых нет
      INSERT INTO Object_TT_effie (StreetId, PartnerTagId, AreaId, HouseNumber, CaseNumber, RoomNumber, InsertDate, isErased)
      SELECT DISTINCT
             tmpPartner.StreetId
-          , COALESCE (tmpPartner.PartnerTagId,0) AS PartnerTagId
-          , COALESCE (tmpPartner.AreaId,0)  AS AreaId
+          , tmpPartner.PartnerTagId
+          , tmpPartner.AreaId
           , tmpPartner.HouseNumber
           , tmpPartner.CaseNumber
           , tmpPartner.RoomNumber
@@ -143,7 +143,7 @@ $BODY$
            ) AS tmpPartner
            LEFT JOIN Object_TT_effie ON Object_TT_effie.StreetId   = tmpPartner.StreetId
                                     AND Object_TT_effie.HouseNumber= tmpPartner.HouseNumber
-                                    AND Object_TT_effie.CaseNumber = tmpPartner.CaseNumber 
+                                    AND Object_TT_effie.CaseNumber = tmpPartner.CaseNumber
                                     AND Object_TT_effie.RoomNumber = tmpPartner.RoomNumber
      WHERE Object_TT_effie.Id IS NULL;
 
@@ -165,8 +165,8 @@ $BODY$
                                   THEN ' корп.' || COALESCE (Object_TT_effie.CaseNumber, '')
                              ELSE ''
                         END
-                       )                                  ::TVarChar AS Name       --StreetId + HouseNumber + CaseNumber + RoomNumber  
-                       
+                       )                                  ::TVarChar AS Name       --StreetId + HouseNumber + CaseNumber + RoomNumber
+
           , ''                                            ::TVarChar AS legalAddress
 
           , TRIM (COALESCE (ObjectString_CityKind_ShortName.ValueData, '')
@@ -185,7 +185,7 @@ $BODY$
           , ''                                            ::TVarChar AS latitude
           , ''                                            ::TVarChar AS longitude
           , 0                                             ::Integer  AS recurrence
-          ,  COALESCE (Object_TT_effie.PartnerTagId ::TVarChar, zfCalc_UserAdmin() ::TVarChar)  ::TVarChar AS channelSaleId    
+          ,  CASE WHEN Object_TT_effie.PartnerTagId > 0 THEN Object_TT_effie.PartnerTagId ::TVarChar ELSE zfCalc_UserAdmin() ::TVarChar END ::TVarChar AS channelSaleId
           , ''                                            ::TVarChar AS salePointDistributorName
           , ''                                            ::TVarChar AS salePointDistributorExtId
           , ''                                            ::TVarChar AS customer
@@ -199,15 +199,18 @@ $BODY$
           , ''                                            ::TVarChar AS recTimeBeg
           , ''                                            ::TVarChar AS recTimeEnd
           , NULL                                          ::Integer  AS timeInTT
-          , '' /*COALESCE (Object_Retail.ValueData, 'нет')*/     ::TVarChar AS retailerName 
+          , '' /*COALESCE (Object_Retail.ValueData, 'нет')*/     ::TVarChar AS retailerName
           , '' /*COALESCE (Object_Retail.Id ::TVarChar, zfCalc_UserAdmin() ::TVarChar)*/ ::TVarChar AS retailerExtId
           , ''                                            ::TVarChar AS territorialFeatureExtId
           , Object_Region.Id                              ::TVarChar AS salePointDistrictExtId
           , Object_Region.ValueData                       ::TVarChar AS salePointDistrictName
           , ''                                            ::TVarChar AS salePointFormatExtId
           , ''                                            ::TVarChar AS salePointFormatName
+        --, COALESCE (Object_Area.Id ::TVarChar, zfCalc_UserAdmin() ::TVarChar) ::TVarChar AS salePointRegionExtId
+        --, COALESCE (Object_Area.ValueData, '')          ::TVarChar AS salePointRegionName
           , Object_Area.Id                                ::TVarChar AS salePointRegionExtId
           , Object_Area.ValueData                         ::TVarChar AS salePointRegionName
+
           , ''                                            ::TVarChar AS defaultOrderPaymentFormExtId
           , CASE WHEN Object_TT_effie.isErased = FALSE THEN 0 ELSE 1 END  ::Integer  AS isDeleted
      FROM Object_TT_effie
@@ -215,7 +218,7 @@ $BODY$
 
           LEFT JOIN Object AS Object_Street ON Object_Street.Id = Object_TT_effie.StreetId
 
-          LEFT JOIN ObjectLink AS ObjectLink_Street_City 
+          LEFT JOIN ObjectLink AS ObjectLink_Street_City
                                ON ObjectLink_Street_City.ObjectId = Object_TT_effie.StreetId
                               AND ObjectLink_Street_City.DescId = zc_ObjectLink_Street_City()
           LEFT JOIN Object AS Object_City ON Object_City.Id = ObjectLink_Street_City.ChildObjectId
@@ -232,18 +235,20 @@ $BODY$
 
           LEFT JOIN ObjectString AS ObjectString_CityKind_ShortName
                                  ON ObjectString_CityKind_ShortName.ObjectId = ObjectLink_City_CityKind.ChildObjectId
-                                AND ObjectString_CityKind_ShortName.DescId = zc_ObjectString_CityKind_ShortName() 
- 
-          LEFT JOIN ObjectLink AS Street_StreetKind 
+                                AND ObjectString_CityKind_ShortName.DescId = zc_ObjectString_CityKind_ShortName()
+
+          LEFT JOIN ObjectLink AS Street_StreetKind
                                ON Street_StreetKind.ObjectId = Object_Street.Id
                               AND Street_StreetKind.DescId = zc_ObjectLink_Street_StreetKind()
           --LEFT JOIN Object AS Object_StreetKind ON Object_StreetKind.Id = Street_StreetKind.ChildObjectId
 
           LEFT JOIN ObjectString AS ObjectString_StreetKind_ShortName
-                                 ON ObjectString_StreetKind_ShortName.ObjectId = Street_StreetKind.ChildObjectId 
+                                 ON ObjectString_StreetKind_ShortName.ObjectId = Street_StreetKind.ChildObjectId
                                 AND ObjectString_StreetKind_ShortName.DescId = zc_ObjectString_StreetKind_ShortName()
 
---limit 200
+     -- есть Адрес
+     WHERE Object_TT_effie.StreetId > 0
+     --limit 200
     ;
 
 END;
