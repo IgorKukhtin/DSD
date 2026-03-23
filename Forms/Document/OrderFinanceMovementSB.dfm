@@ -1896,6 +1896,9 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -3207,8 +3210,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       View = cxGridDBTableView
       Action = actPartnerChoiceForm
       Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1085#1090#1072#1075#1077#1085#1090#1072'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1085#1090#1072#1075#1077#1085#1090#1072'>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090'>'
       ImageIndex = 0
     end
     object actGetImportSetting: TdsdExecStoredProc
@@ -3227,8 +3230,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       TabSheet = cxTabSheetMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1090#1072#1075#1077#1085#1090#1072'>'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090'>'
       ImageIndex = 1
       FormName = 'TContractChoicePartnerForm'
       FormNameParam.Value = 'TContractChoicePartnerForm'
@@ -3556,8 +3559,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       View = cxGridDBTableView
       Action = actInfoMoney_OrderFinanceChoiceForm
       Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1059#1055' '#1089#1090#1072#1090#1100#1102'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1059#1055' '#1089#1090#1072#1090#1100#1102'>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1059#1055' '#1089#1090#1072#1090#1100#1103'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1059#1055' '#1089#1090#1072#1090#1100#1103'>'
       ImageIndex = 0
     end
     object actInfoMoney_OrderFinanceChoiceForm: TOpenChoiceForm
@@ -3565,8 +3568,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       TabSheet = cxTabSheetMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1059#1055' '#1089#1090#1072#1090#1100#1102'>'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1059#1055' '#1089#1090#1072#1090#1100#1102'>'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1059#1055' '#1089#1090#1072#1090#1100#1103'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1059#1055' '#1089#1090#1072#1090#1100#1103'>'
       ImageIndex = 1
       FormName = 'TInfoMoney_OrderFinanceForm'
       FormNameParam.Value = 'TInfoMoney_OrderFinanceForm'
