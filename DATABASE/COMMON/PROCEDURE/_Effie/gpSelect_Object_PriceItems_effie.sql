@@ -48,7 +48,7 @@ $BODY$
                                                                               , zc_Enum_InfoMoney_20901() -- Ирна
                                                                                )
      WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
-     --LIMIT 
+     --LIMIT 10
      ;
 
     INSERT INTO tmpPrice (PriceListId,GoodsId, GoodsKindId,  ValuePrice)
@@ -182,19 +182,27 @@ $BODY$
      ;
 
      --нужно записать в таблица Object_PriceListItem_effie.Id - по ключу Това+Вид+Прайс  те элементы , которых нет
-     INSERT INTO Object_PriceListItem_effie (PriceListId, GoodsId, GoodsKindId, InsertDate)
+     INSERT INTO Object_PriceListItem_effie (PriceListId, GoodsId, GoodsKindId, InsertDate, Price)
      SELECT _tmpResult.PriceListId
           , _tmpResult.GoodsId
           , _tmpResult.GoodsKindId
           , CURRENT_TIMESTAMP AS InsertDate
+          , _tmpResult.Price
      FROM _tmpResult
           LEFT JOIN Object_PriceListItem_effie ON Object_PriceListItem_effie.PriceListId = _tmpResult.PriceListId
                                               AND Object_PriceListItem_effie.GoodsId     = _tmpResult.GoodsId
                                               AND COALESCE (Object_PriceListItem_effie.GoodsKindId,0) = COALESCE (_tmpResult.GoodsKindId,0)
      WHERE Object_PriceListItem_effie.Id IS NULL
        AND COALESCE (_tmpResult.PriceListId,0) > 0;
- 
-      
+
+    --актуализация цен в таблице
+    UPDATE Object_PriceListItem_effie
+    SET Price = _tmpResult.Price
+    FROM _tmpResult 
+    WHERE Object_PriceListItem_effie.PriceListId = _tmpResult.PriceListId
+                                              AND Object_PriceListItem_effie.GoodsId     = _tmpResult.GoodsId
+                                              AND COALESCE (Object_PriceListItem_effie.GoodsKindId,0) = COALESCE (_tmpResult.GoodsKindId,0) 
+    ; 
 
      -- Результат
      RETURN QUERY
