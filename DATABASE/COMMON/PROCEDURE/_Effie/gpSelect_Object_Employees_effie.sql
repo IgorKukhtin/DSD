@@ -46,7 +46,9 @@ $BODY$
           , Object_Member.ObjectCode                     ::TVarChar AS personalNumber
           , NULL                                         ::TVarChar AS leadExtId
           , ''                                           ::TVarChar AS notificationLanguage
-          ,  FALSE  ::Boolean  AS isDeleted
+
+        --, CASE WHEN Object_Member.isErased = TRUE OR Object_User.isErased = TRUE THEN TRUE ELSE FALSE END ::Boolean  AS isDeleted
+          , FALSE  ::Boolean  AS isDeleted
 
      FROM Object AS Object_Member 
           INNER JOIN tmp_employee ON tmp_employee.MemberId = Object_Member.Id
@@ -55,7 +57,6 @@ $BODY$
                                ON ObjectLink_User_Member.ChildObjectId = Object_Member.Id
                               AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
           INNER JOIN Object AS Object_User ON Object_User.Id       = ObjectLink_User_Member.ObjectId  
-                                        --AND Object_User.isErased = FALSE
         
         /*INNER JOIN ObjectBoolean AS ObjectBoolean_ProjectMobile
                                    ON ObjectBoolean_ProjectMobile.ObjectId  = ObjectLink_User_Member.ObjectId

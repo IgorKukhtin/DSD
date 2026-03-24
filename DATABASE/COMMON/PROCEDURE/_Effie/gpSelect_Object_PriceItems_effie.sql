@@ -223,7 +223,7 @@ $BODY$
 
 /*
 with a as (
-                          SELECT distinct Object_PriceList.Id AS PriceListId_doc
+                          SELECT distinct Object_PriceList.Id AS PriceListId
                                , MovementItem.ObjectId           AS GoodsId
                                , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId
 
@@ -257,8 +257,16 @@ with a as (
                             AND Movement.StatusId = zc_Enum_Status_Complete()
                             AND Object_InfoMoney.Id = zc_Enum_InfoMoney_30101()
 )                            
+-- select count(*) from a
+select *
+from a
+     left join Object_PriceListItem_effie on Object_PriceListItem_effie.PriceListId = a.PriceListId
+                                         and Object_PriceListItem_effie.GoodsId = a.GoodsId
+                                         and Object_PriceListItem_effie.GoodsKindId = a.GoodsKindId
+where Object_PriceListItem_effie.PriceListId is null
+  AND a.PriceListId IN (SELECT DISTINCT tmp.priceHeaderExtId ::Integer AS PriceListId FROM gpSelect_Object_ContractPrices_effie ('') AS tmp)
 
-select count(*) from a
 */
+
 -- тест
 -- SELECT * FROM gpSelect_Object_PriceItems_effie (zfCalc_UserAdmin()::TVarChar);

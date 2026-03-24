@@ -13,6 +13,7 @@ CREATE TABLE Object_PriceListItem_effie(
    PriceListId            Integer   NOT NULL,
    GoodsId                Integer   NOT NULL,
    GoodsKindId            Integer   NOT NULL,
+   Price                  TFloat    NOT NULL,
    InsertDate             TDateTime NOT NULL 
    );
 /*-------------------------------------------------------------------------------*/
