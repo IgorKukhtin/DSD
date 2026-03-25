@@ -27,6 +27,7 @@ AS
       , price
       , isDeleted
    FROM _tmpresult
+   WHERE extId <> '0'
   ;
 
 ALTER TABLE PriceItems  OWNER TO postgres;
