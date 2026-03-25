@@ -6,56 +6,70 @@ CREATE OR REPLACE VIEW DiscountPrograms
 AS 
   WITH _tmpresult AS (SELECT extId
                            , Name
-                           , startDate
-                           , endDate
                            , description
+                           , typeId
+                           , linkTypeId
                            , priority
-                           , promoActionTypeId 
-                           , totalQnt
-                           , needBuy
-                           , giftChoiseAbility
+                           , сontractHeaderExtId
+                           , beginDate
+                           , endDate
                            , shortName
-                           , form
-                           , changeNeedOrderToMinValue
-                           , quantityLimitInTt
+                           , isAutoUse
+                           , beforeDiscountQuestHeaderId
+                           , afterDiscountQuestHeaderId
                            , isDeleted
+                           , customTypeExtId
+                           , clientExtId
+                           , isPreDiscountCheckSkipped
+                           , linkDiscounts_extId
+                           , linkDiscounts_discount
                       FROM dblink ('host=192.168.0.228 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
                                  , ('SELECT *
                                     FROM gpSelect_Object_DiscountPrograms_effie(zfCalc_UserAdmin())'
                                     ) :: Text
                                   ) AS gpSelect (extId                      TVarChar   --Уникальный идентификатор промо акции
-                                               , Name                       TVarChar   --Название промо акции
-                                               , startDate                  TVarChar   --Дата старта промо акции
-                                               , endDate                    TVarChar   --Дата окончания промо акции
-                                               , description                TVarChar   --Описание акции
-                                               , priority                   Integer    --Приоритет промоакции (используется для определения порядка применения скидок по промоакциям и программам скидок)
-                                               , promoActionTypeId          Integer    --"Механика промоакции:
-                                               , totalQnt                   TFloat     --"Количество для срабатывания акции (логика работы с полями описана для БА здесь Настройка промо-акций )"
-                                               , needBuy                    TFloat     --"Количество уникальных товаров для срабатывания акции (для акций типа 1-4 и 6)
-                                               , giftChoiseAbility          Boolean    --Возможность выбора подарка: false = нет / true = да
-                                               , shortName                  TVarChar   --Короткое название (аббревиатура)
-                                               , form                       TVarChar   --Форма заказа для срабатывания (Корректные значения 1, 2 или null)
-                                               , changeNeedOrderToMinValue  Boolean    --Не применять цикличность расчета количества товаров
-                                               , quantityLimitInTt          Boolean    --Лимит на количество срабатываний акции в каждой торговой точке, где доступна эта акция. (По умолчанию null, т.е. лимит отсутствует)
-                                               , isDeleted                  Boolean    -- Признак активности         
+                                               , Name                       TVarChar   --Описание программы скидок
+                                               , description                TVarChar   --Описание программы скидок
+                                               , typeId                     TFloat     --Тип расчета
+                                               , linkTypeId                 TFloat     --Тип связи
+                                               , priority                   Integer    --Приоритет программы скидок при применении в заказе. От высшего = 1 до низшего = 255 
+                                               , сontractHeaderExtId        TVarChar   -- Внешний идентификатор контракта, к которому привязана программа скидок
+                                               , beginDate                  TVarChar   --Дата начала действия программы скидок
+                                               , endDate                    TVarChar   --Дата окончания действия программы скидок
+                                               , shortName                  TVarChar   --короткое название 
+                                               , isAutoUse                  Boolean    --Авто применение программы скидок (признак false = не активен / true = активен) 
+                                               , beforeDiscountQuestHeaderId TVarChar  --Id Анкеты Контроль цены до скидки
+                                               , afterDiscountQuestHeaderId TVarChar   --Id Анкеты Контроль цены после скидки  
+                                               , isDeleted                  Boolean    --Признак активности 
+                                               , customTypeExtId            TVarChar   --Внешний идентификатор типа скидки.
+                                               
+                                               , clientExtId                TVarChar   --Внешний идентификатор контрагента
+                                               , isPreDiscountCheckSkipped  Boolean    --Признак пропуска контроля цены до скидки
+                                               
+                                               , linkDiscounts_extId        TVarChar   --Идентификатор единицы связи. К примеру, типа связи по продуктам это будет значение внешнего идентификатора продукта.
+                                               , linkDiscounts_discount     TFloat     --"Объём скидки, используется только для типа программы скидок 1 - фиксированная.Допустимо отрицательное значение.    
                                                 )
                      )
  --
  SELECT extId
       , Name
-      , startDate
-      , endDate
       , description
+      , typeId
+      , linkTypeId
       , priority
-      , promoActionTypeId
-      , totalQnt
-      , needBuy
-      , giftChoiseAbility
+      , сontractHeaderExtId
+      , beginDate
+      , endDate
       , shortName
-      , form
-      , changeNeedOrderToMinValue
-      , quantityLimitInTt
+      , isAutoUse
+      , beforeDiscountQuestHeaderId
+      , afterDiscountQuestHeaderId
       , isDeleted
+      , customTypeExtId
+      , clientExtId
+      , isPreDiscountCheckSkipped
+      , linkDiscounts_extId
+      , linkDiscounts_discount
    FROM _tmpresult
   ;
 
