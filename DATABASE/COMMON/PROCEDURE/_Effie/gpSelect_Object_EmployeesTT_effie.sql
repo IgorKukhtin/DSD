@@ -123,8 +123,8 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM EmployeesTT (zfCalc_UserAdmin()::TVarChar) where employeeExtId not in (SELECT ExtId FROM gpSelect_Object_Employees_effie (zfCalc_UserAdmin()::TVarChar) where isDeleted = FALSE)
--- SELECT * FROM EmployeesTT (zfCalc_UserAdmin()::TVarChar) where ttExtId not in (SELECT ExtId FROM gpSelect_Object_TT_effie (zfCalc_UserAdmin()::TVarChar) where isDeleted = 0)
+-- SELECT * FROM EmployeesTT where employeeExtId not in (SELECT ExtId FROM Employees where isDeleted = FALSE)
+-- SELECT * FROM EmployeesTT where ttExtId not in (SELECT ExtId FROM TT where isDeleted = 0)
 
 -- тест
 -- SELECT * FROM gpSelect_Object_EmployeesTT_effie (zfCalc_UserAdmin()::TVarChar);
