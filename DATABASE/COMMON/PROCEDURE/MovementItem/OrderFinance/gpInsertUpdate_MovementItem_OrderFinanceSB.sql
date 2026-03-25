@@ -55,6 +55,12 @@ BEGIN
 
 
      -- Проверка
+     IF COALESCE (inMovementId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Документ не сохранен.Выберите сохранение - <F2>.';
+     END IF;
+
+     -- Проверка
      IF ioId > 0 AND COALESCE (ioId_child, 0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка.Заполнение возможно только в документе <Планирование платежей>.';

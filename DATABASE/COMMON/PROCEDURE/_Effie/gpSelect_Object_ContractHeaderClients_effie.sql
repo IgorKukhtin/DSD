@@ -13,50 +13,31 @@ RETURNS TABLE (contractHeaderExtId  TVarChar   -- Уникальный идентификатор контр
 
 $BODY$
    DECLARE vbUserId Integer;
- BEGIN
+BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
 
      --
      RETURN QUERY
-     WITH 
-     tmpObject_Contract_View AS (SELECT *
-                                 FROM Object_Contract_View
-                                 WHERE Object_Contract_View.isErased = FALSE 
-                                       AND Object_Contract_View.InfoMoneyId = zc_Enum_InfoMoney_30101() 
-                                       AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
-                                 )
-         
+     WITH
+          tmpClient AS (SELECT DISTINCT gpSelect.clientExtId :: Integer AS PartnerId FROM gpSelect_Object_Twins_effie (inSession) AS gpSelect)
+        , tmpContract AS (SELECT DISTINCT gpSelect.extId FROM gpSelect_Object_ContractHeaders_effie (inSession) AS gpSelect)
+        , tmpContract_Client AS (SELECT DISTINCT
+                                        gpSelect.contractHeaderExtId
+                                      , gpSelect.PartnerId AS clientExtId
+                                 FROM gpSelect_Object_ContractPrices_effie (inSession) AS gpSelect
+                                 WHERE gpSelect.PartnerId IN (SELECT tmpClient.PartnerId FROM tmpClient)
+                                   AND gpSelect.contractHeaderExtId IN (SELECT tmpContract.extId FROM tmpContract)
+                                )
+     -- Результат
+     SELECT DISTINCT
+           tmpContract_Client.contractHeaderExtId  ::TVarChar AS contractHeaderExtId
+         , tmpContract_Client.clientExtId          ::TVarChar AS clientExtId
+         , TRUE                                    ::Boolean  AS isDefault
+         , FALSE                                   ::Boolean  AS isDeleted
 
-   -- Результат
-   SELECT DISTINCT
-         Object_Contract_View.ContractId   ::TVarChar AS contractHeaderExtId
-       , Object_Partner.Id                 ::TVarChar AS clientExtId
-       , TRUE                              ::Boolean  AS isDefault
-       , FALSE                             ::Boolean  AS isDeleted
-  
-   FROM Object AS Object_Partner
-         LEFT JOIN ObjectLink AS ObjectLink_ContractPartner_Partner
-                              ON ObjectLink_ContractPartner_Partner.ChildObjectId = Object_Partner.Id
-                             AND ObjectLink_ContractPartner_Partner.DescId = zc_ObjectLink_ContractPartner_Partner()
-         LEFT JOIN Object AS Object_ContractPartner ON Object_ContractPartner.Id = ObjectLink_ContractPartner_Partner.ObjectId
-                                                   AND Object_ContractPartner.isErased = FALSE
-         LEFT JOIN ObjectLink AS ObjectLink_ContractPartner_Contract
-                              ON ObjectLink_ContractPartner_Contract.ObjectId = Object_ContractPartner.Id
-                             AND ObjectLink_ContractPartner_Contract.DescId = zc_ObjectLink_ContractPartner_Contract()
-
-         LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                              ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
-                             AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-
-         INNER JOIN tmpObject_Contract_View AS Object_Contract_View
-                                            ON Object_Contract_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
-
-   WHERE Object_Partner.DescId = zc_Object_Partner()
-     AND Object_Partner.isErased = FALSE
-     AND (Object_Contract_View.ContractId = ObjectLink_ContractPartner_Contract.ChildObjectId)
- 
+     FROM tmpContract_Client
     ;
 
 END;

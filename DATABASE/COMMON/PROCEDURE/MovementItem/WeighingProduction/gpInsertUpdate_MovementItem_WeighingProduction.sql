@@ -10,11 +10,17 @@
                                                                       , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                                       , TDateTime, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar
                                                                        );*/
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WeighingProduction (Integer, Integer, Integer, TFloat, Boolean
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WeighingProduction (Integer, Integer, Integer, TFloat, Boolean
                                                                       , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                       , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                       , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                                       , TDateTime, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar
+                                                                       );*/
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WeighingProduction (Integer, Integer, Integer, TFloat, Boolean
+                                                                      , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                      , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                                      , TDateTime, TDateTime, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar
                                                                        );
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_WeighingProduction(
@@ -70,7 +76,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_WeighingProduction(
 
     IN inPartionCellId         Integer   , --
 
-    IN inPartionGoodsDate    TDateTime , -- ѕарти€ товара (дата)
+    IN inPartionGoodsDate             TDateTime , -- ѕарти€ товара (дата)
+    IN inPartionGoodsDate_PartionCell TDateTime , -- ѕарти€ товара (дата)
+
     IN inPartionGoods        TVarChar  , -- ѕарти€ товара
     IN inNumberKVK           TVarChar  , -- є  ¬ 
     IN inMovementItemId      Integer   , --
@@ -84,6 +92,8 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbDescId_MILO_PartionCell Integer;
+   DECLARE vbDescId_MIBoolean_PartionCell Integer;
 BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_WeighingProduction());
@@ -168,16 +178,173 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionNum(), ioId, CAST (NEXTVAL ('MI_PartionPassport_seq') AS TFloat));
          END IF;
 
+         IF inPartionCellId > 0
+         THEN
+             -- находим свободную €чейку
+             vbDescId_MILO_PartionCell:=
+                (WITH tmpDesc_MILO AS (SELECT MovementItemLinkObjectDesc.Id AS DescId FROM MovementItemLinkObjectDesc
+                                       WHERE MovementItemLinkObjectDesc.Id IN (zc_MILinkObject_PartionCell_1(), zc_MILinkObject_PartionCell_2(), zc_MILinkObject_PartionCell_3(), zc_MILinkObject_PartionCell_4(), zc_MILinkObject_PartionCell_5()
+                                                                             , zc_MILinkObject_PartionCell_6(), zc_MILinkObject_PartionCell_7(), zc_MILinkObject_PartionCell_8(), zc_MILinkObject_PartionCell_9(), zc_MILinkObject_PartionCell_10()
+                                                                             , zc_MILinkObject_PartionCell_11(), zc_MILinkObject_PartionCell_12(), zc_MILinkObject_PartionCell_13(), zc_MILinkObject_PartionCell_14(), zc_MILinkObject_PartionCell_15()
+                                                                             , zc_MILinkObject_PartionCell_16(), zc_MILinkObject_PartionCell_17(), zc_MILinkObject_PartionCell_18(), zc_MILinkObject_PartionCell_19(), zc_MILinkObject_PartionCell_20()
+                                                                             , zc_MILinkObject_PartionCell_21(), zc_MILinkObject_PartionCell_22()
+                                                                              )
+                                      )
+                 , tmpMIBoolean AS (SELECT DISTINCT MIBoolean.MovementItemId
+                                    FROM MovementItemBoolean AS MIBoolean
+                                    WHERE MIBoolean.DescId IN (zc_MIBoolean_PartionCell_Close_1()
+                                                             , zc_MIBoolean_PartionCell_Close_2()
+                                                             , zc_MIBoolean_PartionCell_Close_3()
+                                                             , zc_MIBoolean_PartionCell_Close_4()
+                                                             , zc_MIBoolean_PartionCell_Close_5()
+                                                             , zc_MIBoolean_PartionCell_Close_6()
+                                                             , zc_MIBoolean_PartionCell_Close_7()
+                                                             , zc_MIBoolean_PartionCell_Close_8()
+                                                             , zc_MIBoolean_PartionCell_Close_9()
+                                                             , zc_MIBoolean_PartionCell_Close_10()
+                                                             , zc_MIBoolean_PartionCell_Close_11()
+                                                             , zc_MIBoolean_PartionCell_Close_12()
+                                                             , zc_MIBoolean_PartionCell_Close_13()
+                                                             , zc_MIBoolean_PartionCell_Close_14()
+                                                             , zc_MIBoolean_PartionCell_Close_15()
+                                                             , zc_MIBoolean_PartionCell_Close_16()
+                                                             , zc_MIBoolean_PartionCell_Close_17()
+                                                             , zc_MIBoolean_PartionCell_Close_18()
+                                                             , zc_MIBoolean_PartionCell_Close_19()
+                                                             , zc_MIBoolean_PartionCell_Close_20()
+                                                             , zc_MIBoolean_PartionCell_Close_21()
+                                                             , zc_MIBoolean_PartionCell_Close_22()
+                                                              )
+                                      -- парти€ открыта
+                                      AND MIBoolean.ValueData = FALSE
+                                   )
+
+                      -- нашли
+                    , tmpMI AS (SELECT MovementItem.Id AS MovementItemId, MovementItem.MovementId
+                                FROM MovementItem
+                                WHERE MovementItem.Id IN (SELECT tmpMIBoolean.MovementItemId FROM tmpMIBoolean)
+                                  AND MovementItem.DescId     = zc_MI_Master()
+                                  -- в €чейке товар
+                                  AND MovementItem.ObjectId   = inGoodsId
+                                  AND MovementItem.isErased   = FALSE
+                               )
+                 , tmpMILO_GoodsKind AS (SELECT MILO.*
+                                         FROM MovementItemLinkObject AS MILO
+                                         WHERE MILO.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
+                                           -- в €чейке вид
+                                           AND MILO.ObjectId       = inGoodsKindId
+                                           AND MILO.DescId         = zc_MILinkObject_GoodsKind()
+                                        )
+               , tmpMILO_PartionCell AS (SELECT MILO.*
+                                         FROM MovementItemLinkObject AS MILO
+                                         WHERE MILO.MovementItemId IN (SELECT DISTINCT tmpMILO_GoodsKind.MovementItemId FROM tmpMILO_GoodsKind)
+                                           AND MILO.ObjectId       > 0
+                                           AND MILO.DescId         IN (zc_MILinkObject_PartionCell_1(), zc_MILinkObject_PartionCell_2(), zc_MILinkObject_PartionCell_3(), zc_MILinkObject_PartionCell_4(), zc_MILinkObject_PartionCell_5()
+                                                                     , zc_MILinkObject_PartionCell_6(), zc_MILinkObject_PartionCell_7(), zc_MILinkObject_PartionCell_8(), zc_MILinkObject_PartionCell_9(), zc_MILinkObject_PartionCell_10()
+                                                                     , zc_MILinkObject_PartionCell_11(), zc_MILinkObject_PartionCell_12(), zc_MILinkObject_PartionCell_13(), zc_MILinkObject_PartionCell_14(), zc_MILinkObject_PartionCell_15()
+                                                                     , zc_MILinkObject_PartionCell_16(), zc_MILinkObject_PartionCell_17(), zc_MILinkObject_PartionCell_18(), zc_MILinkObject_PartionCell_19(), zc_MILinkObject_PartionCell_20()
+                                                                     , zc_MILinkObject_PartionCell_21(), zc_MILinkObject_PartionCell_22()
+                                                                      )
+                                        )
+            , tmpMIDate_PartionGoods AS (SELECT MID.*
+                                         FROM MovementItemDate AS MID
+                                         WHERE MID.MovementItemId IN (SELECT DISTINCT tmpMILO_PartionCell.MovementItemId FROM tmpMILO_PartionCell)
+                                           AND MID.DescId         = zc_MIDate_PartionGoods()
+                                           AND MID.ValueData      > zc_DateStart()
+                                        )
+              , tmpMovement AS (SELECT Movement.*
+                                FROM Movement
+                                WHERE Movement.Id IN (SELECT DISTINCT tmpMI.MovementId FROM tmpMI)
+                               )
+
+                , tmpMLO_To AS (SELECT MLO_To.*
+                                FROM MovementLinkObject AS MLO_To
+                                WHERE MLO_To.MovementId IN (SELECT DISTINCT tmpMI.MovementId FROM tmpMI)
+                                  AND MLO_To.DescId     = zc_MovementLinkObject_To()
+                                  AND MLO_To.ObjectId   = zc_Unit_RK()
+                               )
+                   -- нашли зан€тые €чейки
+                 , tmp_find AS (SELECT DISTINCT MILO.DescId
+                                FROM tmpMILO_PartionCell AS MILO
+                                     LEFT JOIN tmpMIDate_PartionGoods AS MIDate_PartionGoods
+                                                                      ON MIDate_PartionGoods.MovementItemId = MILO.MovementItemId
+                                                                   --AND MIDate_PartionGoods.DescId         = zc_MIDate_PartionGoods()
+                           
+                                     INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementItemId = MILO.MovementItemId
+                                     INNER JOIN tmpMILO_GoodsKind AS MILO_GoodsKind
+                                                                  ON MILO_GoodsKind.MovementItemId = MILO.MovementItemId
+                                                               --AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+
+                                     LEFT JOIN tmpMovement AS Movement ON Movement.Id = MovementItem.MovementId
+                           
+                                     INNER JOIN tmpMLO_To AS MovementLinkObject_To
+                                                          ON MovementLinkObject_To.MovementId = Movement.Id
+                                                       --AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                                       --AND MovementLinkObject_To.ObjectId   = zc_Unit_RK()
+               
+                                WHERE -- ѕеремещение + ¬звешивание
+                                      ((Movement.DescId = zc_Movement_Send() AND Movement.StatusId <> zc_Enum_Status_Erased())
+                                    OR (Movement.DescId = zc_Movement_WeighingProduction() AND Movement.StatusId = zc_Enum_Status_UnComplete())
+                                      )
+                                  -- в €чейке ѕарти€ ...
+                                  AND COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate) = inPartionGoodsDate_PartionCell
+                               )
+                 -- –езультат - находим свободную €чейку
+                 SELECT tmpDesc_MILO.DescId
+                 FROM tmpDesc_MILO
+                      LEFT JOIN tmp_find ON tmp_find.DescId = tmpDesc_MILO.DescId
+                 WHERE tmp_find.DescId IS NULL
+                 ORDER BY tmpDesc_MILO.DescId ASC
+                 LIMIT 1
+                );
+                       
+             -- ѕроверка
+             IF COALESCE (vbDescId_MILO_PartionCell, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'ќшибка.¬се €чейки зан€ты.';
+             END IF;
+
+             -- находим свободную €чейку
+             vbDescId_MIBoolean_PartionCell:= CASE vbDescId_MILO_PartionCell WHEN zc_MILinkObject_PartionCell_1()  THEN zc_MIBoolean_PartionCell_Close_1()
+                                                                             WHEN zc_MILinkObject_PartionCell_2()  THEN zc_MIBoolean_PartionCell_Close_2()
+                                                                             WHEN zc_MILinkObject_PartionCell_3()  THEN zc_MIBoolean_PartionCell_Close_3()
+                                                                             WHEN zc_MILinkObject_PartionCell_4()  THEN zc_MIBoolean_PartionCell_Close_4()
+                                                                             WHEN zc_MILinkObject_PartionCell_5()  THEN zc_MIBoolean_PartionCell_Close_5()
+                                                                             WHEN zc_MILinkObject_PartionCell_6()  THEN zc_MIBoolean_PartionCell_Close_6()
+                                                                             WHEN zc_MILinkObject_PartionCell_7()  THEN zc_MIBoolean_PartionCell_Close_7()
+                                                                             WHEN zc_MILinkObject_PartionCell_8()  THEN zc_MIBoolean_PartionCell_Close_8()
+                                                                             WHEN zc_MILinkObject_PartionCell_9()  THEN zc_MIBoolean_PartionCell_Close_9()
+                                                                             WHEN zc_MILinkObject_PartionCell_10() THEN zc_MIBoolean_PartionCell_Close_10()
+                                                                             WHEN zc_MILinkObject_PartionCell_11() THEN zc_MIBoolean_PartionCell_Close_11()
+                                                                             WHEN zc_MILinkObject_PartionCell_12() THEN zc_MIBoolean_PartionCell_Close_12()
+                                                                             WHEN zc_MILinkObject_PartionCell_13() THEN zc_MIBoolean_PartionCell_Close_13()
+                                                                             WHEN zc_MILinkObject_PartionCell_14() THEN zc_MIBoolean_PartionCell_Close_14()
+                                                                             WHEN zc_MILinkObject_PartionCell_15() THEN zc_MIBoolean_PartionCell_Close_15()
+                                                                             WHEN zc_MILinkObject_PartionCell_16() THEN zc_MIBoolean_PartionCell_Close_16()
+                                                                             WHEN zc_MILinkObject_PartionCell_17() THEN zc_MIBoolean_PartionCell_Close_17()
+                                                                             WHEN zc_MILinkObject_PartionCell_18() THEN zc_MIBoolean_PartionCell_Close_18()
+                                                                             WHEN zc_MILinkObject_PartionCell_19() THEN zc_MIBoolean_PartionCell_Close_19()
+                                                                             WHEN zc_MILinkObject_PartionCell_20() THEN zc_MIBoolean_PartionCell_Close_20()
+                                                                             WHEN zc_MILinkObject_PartionCell_21() THEN zc_MIBoolean_PartionCell_Close_21()
+                                                                             WHEN zc_MILinkObject_PartionCell_22() THEN zc_MIBoolean_PartionCell_Close_22()
+                                              END;
+
+         END IF;
+
          -- ячейка хранени€
-         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_1(), ioId, inPartionCellId);
-         -- открыли
-         PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_1(), ioId, FALSE);
+         IF inPartionCellId > 0
+         THEN
+             PERFORM lpInsertUpdate_MovementItemLinkObject (vbDescId_MILO_PartionCell, ioId, inPartionCellId);
+             -- открыли
+             PERFORM lpInsertUpdate_MovementItemBoolean (vbDescId_MIBoolean_PartionCell, ioId, FALSE);
+         END IF;
+
 
          -- јвтоматически
          PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_isAuto(), ioId, TRUE);
 
 
-         -- можно заполнить 5 параметров
+         -- можно заполнить 9 параметров
          IF (CASE WHEN inCountTare1  > 0 THEN 1 ELSE 0 END
            + CASE WHEN inCountTare2  > 0 THEN 1 ELSE 0 END
            + CASE WHEN inCountTare3  > 0 THEN 1 ELSE 0 END

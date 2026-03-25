@@ -108,6 +108,37 @@ BEGIN
                                                   ON OrderFinance_Member_insert_5.ObjectId = Object_OrderFinance.Id
                                                  AND OrderFinance_Member_insert_5.DescId = zc_ObjectLink_OrderFinance_Member_insert_5()
 
+                             LEFT JOIN ObjectLink AS OrderFinance_Member_insert_6
+                                                  ON OrderFinance_Member_insert_6.ObjectId = Object_OrderFinance.Id
+                                                 AND OrderFinance_Member_insert_6.DescId = zc_ObjectLink_OrderFinance_Member_insert_6()
+                             LEFT JOIN ObjectLink AS OrderFinance_Member_insert_7
+                                                  ON OrderFinance_Member_insert_7.ObjectId = Object_OrderFinance.Id
+                                                 AND OrderFinance_Member_insert_7.DescId = zc_ObjectLink_OrderFinance_Member_insert_7()
+                             LEFT JOIN ObjectLink AS OrderFinance_Member_insert_8
+                                                  ON OrderFinance_Member_insert_8.ObjectId = Object_OrderFinance.Id
+                                                 AND OrderFinance_Member_insert_8.DescId = zc_ObjectLink_OrderFinance_Member_insert_8()
+                             LEFT JOIN ObjectLink AS OrderFinance_Member_insert_9
+                                                  ON OrderFinance_Member_insert_9.ObjectId = Object_OrderFinance.Id
+                                                 AND OrderFinance_Member_insert_9.DescId = zc_ObjectLink_OrderFinance_Member_insert_9()
+                             LEFT JOIN ObjectLink AS OrderFinance_Member_insert_10
+                                                  ON OrderFinance_Member_insert_10.ObjectId = Object_OrderFinance.Id
+                                                 AND OrderFinance_Member_insert_10.DescId = zc_ObjectLink_OrderFinance_Member_insert_10()
+                             LEFT JOIN ObjectLink AS OrderFinance_Member_insert_11
+                                                  ON OrderFinance_Member_insert_11.ObjectId = Object_OrderFinance.Id
+                                                 AND OrderFinance_Member_insert_11.DescId = zc_ObjectLink_OrderFinance_Member_insert_11()
+                             LEFT JOIN ObjectLink AS OrderFinance_Member_insert_12
+                                                  ON OrderFinance_Member_insert_12.ObjectId = Object_OrderFinance.Id
+                                                 AND OrderFinance_Member_insert_12.DescId = zc_ObjectLink_OrderFinance_Member_insert_12()
+                             LEFT JOIN ObjectLink AS OrderFinance_Member_insert_13
+                                                  ON OrderFinance_Member_insert_13.ObjectId = Object_OrderFinance.Id
+                                                 AND OrderFinance_Member_insert_13.DescId = zc_ObjectLink_OrderFinance_Member_insert_13()
+                             LEFT JOIN ObjectLink AS OrderFinance_Member_insert_14
+                                                  ON OrderFinance_Member_insert_14.ObjectId = Object_OrderFinance.Id
+                                                 AND OrderFinance_Member_insert_14.DescId = zc_ObjectLink_OrderFinance_Member_insert_14()
+                             LEFT JOIN ObjectLink AS OrderFinance_Member_insert_15
+                                                  ON OrderFinance_Member_insert_15.ObjectId = Object_OrderFinance.Id
+                                                 AND OrderFinance_Member_insert_15.DescId = zc_ObjectLink_OrderFinance_Member_insert_15()
+
                              LEFT JOIN ObjectLink AS OrderFinance_Member_1
                                                   ON OrderFinance_Member_1.ObjectId = Object_OrderFinance.Id
                                                  AND OrderFinance_Member_1.DescId = zc_ObjectLink_OrderFinance_Member_1()
@@ -147,6 +178,16 @@ BEGIN
                              OR OrderFinance_Member_insert_3.ChildObjectId = vbMemberId
                              OR OrderFinance_Member_insert_4.ChildObjectId = vbMemberId
                              OR OrderFinance_Member_insert_5.ChildObjectId = vbMemberId
+                             OR OrderFinance_Member_insert_6.ChildObjectId = vbMemberId
+                             OR OrderFinance_Member_insert_7.ChildObjectId = vbMemberId
+                             OR OrderFinance_Member_insert_8.ChildObjectId = vbMemberId
+                             OR OrderFinance_Member_insert_9.ChildObjectId = vbMemberId
+                             OR OrderFinance_Member_insert_10.ChildObjectId = vbMemberId
+                             OR OrderFinance_Member_insert_11.ChildObjectId = vbMemberId
+                             OR OrderFinance_Member_insert_12.ChildObjectId = vbMemberId
+                             OR OrderFinance_Member_insert_13.ChildObjectId = vbMemberId
+                             OR OrderFinance_Member_insert_14.ChildObjectId = vbMemberId
+                             OR OrderFinance_Member_insert_15.ChildObjectId = vbMemberId
                                )
                          -- временно
                          ORDER BY Object_OrderFinance.ObjectCode ASC
