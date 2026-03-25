@@ -6,27 +6,31 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_DiscountPrograms_effie(
     IN inSession              TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (extId                      TVarChar   --Уникальный идентификатор промо акции
-             , Name                       TVarChar   --Название промо акции
-             , startDate                  TVarChar   --Дата старта промо акции
-             , endDate                    TVarChar   --Дата окончания промо акции
-             , description                TVarChar   --Описание акции
-             , priority                   Integer    --Приоритет промоакции (используется для определения порядка применения скидок по промоакциям и программам скидок)
-             , promoActionTypeId          Integer    --"Механика промоакции:
-                                                     /* 1 - Купи N штук товаров из списка и получи скидку на эти товары 
-                                                        2 - Купи N штук товаров из списка товаров и получи подарок
-                                                        3 - Купи N уникальных товаров в количестве M каждого товара и получи подарок
-                                                        4 - Купи P единицы измерения (литров\кг) товаров из списка товаров и получи подарок
-                                                        5 - Купи товары из списка на сумму N+ и получи товар в подарок
-                                                        6 - Купи N уникальных товаров в количестве M в каждой группе товаров (количество групп > 1) и получи подарок"
-                                                     */
-             , totalQnt                   TFloat     --"Количество для срабатывания акции (логика работы с полями описана для БА здесь Настройка промо-акций )"
-             , needBuy                    TFloat     --"Количество уникальных товаров для срабатывания акции (для акций типа 1-4 и 6)
-             , giftChoiseAbility          Boolean    --Возможность выбора подарка: false = нет / true = да
-             , shortName                  TVarChar   --Короткое название (аббревиатура)
-             , form                       TVarChar   --Форма заказа для срабатывания (Корректные значения 1, 2 или null)
-             , changeNeedOrderToMinValue  Boolean    --Не применять цикличность расчета количества товаров
-             , quantityLimitInTt          Boolean    --Лимит на количество срабатываний акции в каждой торговой точке, где доступна эта акция. (По умолчанию null, т.е. лимит отсутствует)
-             , isDeleted                  Boolean    -- Признак активности 
+             , Name                       TVarChar   --Описание программы скидок
+             , description                TVarChar   --Описание программы скидок
+             , typeId                     TFloat     --Тип расчета
+             , linkTypeId                 TFloat     --Тип связи
+             , priority                   Integer    --Приоритет программы скидок при применении в заказе. От высшего = 1 до низшего = 255 
+             , сontractHeaderExtId        TVarChar   -- Внешний идентификатор контракта, к которому привязана программа скидок
+             , beginDate                  TVarChar   --Дата начала действия программы скидок
+             , endDate                    TVarChar   --Дата окончания действия программы скидок
+             , shortName                  TVarChar   --короткое название 
+             , isAutoUse                  Boolean    --Авто применение программы скидок (признак false = не активен / true = активен) 
+             , beforeDiscountQuestHeaderId TVarChar  --Id Анкеты Контроль цены до скидки
+             , afterDiscountQuestHeaderId TVarChar   --Id Анкеты Контроль цены после скидки  
+             , isDeleted                  Boolean    --Признак активности 
+             , customTypeExtId            TVarChar   --Внешний идентификатор типа скидки.
+             
+             , clientExtId                TVarChar   --Внешний идентификатор контрагента
+             , isPreDiscountCheckSkipped  Boolean    --Признак пропуска контроля цены до скидки
+             
+             , linkDiscounts_extId        TVarChar   --Идентификатор единицы связи. К примеру, типа связи по продуктам это будет значение внешнего идентификатора продукта.
+             , linkDiscounts_discount     TFloat     --"Объём скидки, используется только для типа программы скидок 1 - фиксированная.Допустимо отрицательное значение."
+             --для проверки
+             , Price_orig                 TFloat     --цена без НДС из док.
+             , Price_effie                TFloat     --цена из effie
+             , Price                      TFloat     --цена соскидкой без НДС             
+             
 ) AS
 
 $BODY$
@@ -36,19 +40,63 @@ $BODY$
      vbUserId:= lpGetUserBySession (inSession);
 
      -- временная таблица PriceListItem
-     CREATE TEMP TABLE _tmpPromo (MovementId      Integer,
-                                  MovementItemId  Integer,
-                                  GoodsId         Integer,
-                                  GoodsKindId     Integer)  ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpPromo (MovementId Integer, ContractId Integer)  ON COMMIT DROP;
      
-     INSERT INTO _tmpPromo (MovementId,
-                            MovementItemId,
-                            GoodsId,
-                            GoodsKindId) 
-     
+     INSERT INTO _tmpPromo (MovementId, ContractId)     
      WITH 
+     tmpPromo AS (SELECT Movement_Promo.*
+                  FROM Movement AS Movement_Promo
+                       INNER JOIN MovementDate AS MovementDate_StartSale
+                                               ON MovementDate_StartSale.MovementId = Movement_Promo.Id
+                                              AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
+                       INNER JOIN MovementDate AS MovementDate_EndSale
+                                               ON MovementDate_EndSale.MovementId = Movement_Promo.Id
+                                              AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
+
+                  WHERE Movement_Promo.DescId = zc_Movement_Promo()
+                    AND Movement_Promo.StatusId = zc_Enum_Status_Complete()
+                    AND (MovementDate_StartSale.ValueData <= CURRENT_DATE
+                         AND MovementDate_EndSale.ValueData >= CURRENT_DATE
+                        )
+                 )
+   , tmpPromoPartner AS (SELECT DISTINCT
+                                Movement_PromoPartner.ParentId
+                              , MovementLinkObject_Contract.ObjectId AS ContractId
+                         FROM Movement AS Movement_PromoPartner
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                     ON MovementLinkObject_Contract.MovementId = Movement_PromoPartner.Id
+                                    AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()                         
+                         WHERE Movement_PromoPartner.ParentId IN (SELECT DISTINCT tmpPromo.Id FROM tmpPromo)
+                           AND Movement_PromoPartner.DescId = zc_Movement_PromoPartner()
+                           AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
+                         )
+
+    SELECT DISTINCT
+           tmpPromo.Id AS MovementId
+         , COALESCE (tmpPromoPartner.ContractId, 0) AS ContractId
+    FROM tmpPromo
+        LEFT JOIN tmpPromoPartner ON tmpPromoPartner.ParentId = tmpPromo.Id 
+    ;  
+      
+    
+     --нужно записать в таблицу Object_Promo_effie  те элементы , которых нет - ключ MovementItemId, GoodsKindId 
+     INSERT INTO Object_Promo_effie (MovementId, ContractId, InsertDate)
+     SELECT DISTINCT
+            _tmpPromo.MovementId
+          , _tmpPromo.ContractId
+          , CURRENT_TIMESTAMP AS InsertDate
+      FROM _tmpPromo
+           LEFT JOIN Object_Promo_effie ON Object_Promo_effie.MovementId = _tmpPromo.MovementId
+                                       AND COALESCE (Object_Promo_effie.ContractId,0) = COALESCE (_tmpPromo.ContractId,0)
+     WHERE Object_Promo_effie.Id IS NULL;
+
+
+     -- Результат
+     RETURN QUERY
+     WITH
      tmpGoodsByGoodsKind AS (SELECT DISTINCT
-                                    ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId                   AS GoodsId
+                                    Object_GoodsByGoodsKind.Id                                        AS GoodsByGoodsKindId
+                                  , ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId                   AS GoodsId
                                   , COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0) AS GoodsKindId
                              FROM Object AS Object_GoodsByGoodsKind
                                   JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
@@ -95,27 +143,43 @@ $BODY$
                                AND ObjectBoolean_GoodsByGoodsKind_NotMobile.ObjectId IS NULL
                             )
 
-   , tmpMovement AS (SELECT Movement_Promo.*
-                          , MovementDate_StartSale.ValueData            AS StartSale
-                          , MovementDate_EndSale.ValueData              AS EndSale
-                     FROM Movement AS Movement_Promo
-                          INNER JOIN MovementDate AS MovementDate_StartSale
-                                                  ON MovementDate_StartSale.MovementId = Movement_Promo.Id
-                                                 AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
-                          INNER JOIN MovementDate AS MovementDate_EndSale
-                                                  ON MovementDate_EndSale.MovementId = Movement_Promo.Id
-                                                 AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
+   , tmpObject_Promo_effie AS (SELECT * FROM Object_Promo_effie
+                               LIMIT 1
+                               )
+   , tmpMovementDate AS (
+                         SELECT MovementDate.* 
+                         FROM MovementDate
+                         WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpObject_Promo_effie.MovementId FROM tmpObject_Promo_effie)
+                           AND MovementDate.DescId IN (zc_MovementDate_StartSale()
+                                                     , zc_MovementDate_EndSale() 
+                                                      )
+                         )
+   , tmpMLO_PriceList AS (SELECT MovementLinkObject.*
+                          FROM MovementLinkObject 
+                          WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpObject_Promo_effie.MovementId FROM tmpObject_Promo_effie)
+                             AND MovementLinkObject.DescId = zc_MovementLinkObject_PriceList()
+                          )
+   
 
-                     WHERE Movement_Promo.DescId = zc_Movement_Promo()
-                       AND Movement_Promo.StatusId = zc_Enum_Status_Complete()
-                       AND (MovementDate_StartSale.ValueData <= CURRENT_DATE
-                            AND MovementDate_EndSale.ValueData >= CURRENT_DATE
-                           )
-                    ) 
+   , tmpPromoPartner AS (SELECT DISTINCT
+                                Movement_PromoPartner.ParentId
+                              , MI_PromoPartner.ObjectId        AS PartnerId
+                              ,  MILinkObject_Contract.ObjectId AS ContractId
+                         FROM Movement AS Movement_PromoPartner
+                              INNER JOIN MovementItem AS MI_PromoPartner
+                                                      ON MI_PromoPartner.MovementId = Movement_PromoPartner.Id
+                                                     AND MI_PromoPartner.DescId = zc_MI_Master()
+                              LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                                               ON MILinkObject_Contract.MovementItemId = MI_PromoPartner.Id
+                                                              AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                         WHERE Movement_PromoPartner.ParentId IN (SELECT DISTINCT tmpObject_Promo_effie.MovementId FROM tmpObject_Promo_effie)
+                           AND Movement_PromoPartner.DescId = zc_Movement_PromoPartner()
+                           AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
+                         )
 
    , tmpMI AS (SELECT MovementItem.* 
                FROM MovementItem
-               WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+               WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpObject_Promo_effie.MovementId FROM tmpObject_Promo_effie)
                  AND MovementItem.DescId = zc_MI_Master()
                  AND MovementItem.isErased   = FALSE
                )
@@ -124,78 +188,126 @@ $BODY$
                            WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                              AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
                           )
+   , tmpMIFloat_Price AS (SELECT MovementItemFloat.*
+                          FROM MovementItemFloat
+                          WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                            AND MovementItemFloat.DescId IN (zc_MIFloat_PriceWithOutVAT()
+                                                           , zc_MIFloat_OperPriceList()
+                                                            )
+                          )
 
-    -- все данные по Акциям + виды товара
-    SELECT tmpMI.MovementId  AS MovementId
-         , tmpMI.Id          AS MovementItemId
-         , tmpMI.ObjectId    AS GoodsId
-         , COALESCE (MILinkObject_GoodsKind.ObjectId, tmpGoodsByGoodsKind.GoodsKindId) AS GoodsKindId
-         , CURRENT_TIMESTAMP AS InsertDate
-    FROM tmpMI
-         LEFT JOIN tmpMILO_GoodsKind AS MILinkObject_GoodsKind
-                                     ON MILinkObject_GoodsKind.MovementItemId = tmpMI.Id
-                                    AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-         LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId = tmpMI.ObjectId
-                                      AND COALESCE (MILinkObject_GoodsKind.ObjectId,0) = 0
-    ;
-    
-     /* Код	Название	Название функции
-1	Скидка в грн для цены с НДС	zc_Enum_PromoDiscountKind_Summ
-2	Скидка в % для цены без НДС	zc_Enum_PromoDiscountKind_Tax                                  
-       */
-     
-     --нужно записать в таблицу Object_Promo_effie  те элементы , которых нет - ключ MovementItemId, GoodsKindId 
-     INSERT INTO Movement_DiscountPrograms_effie (MovementId, MovementItemId, GoodsId, GoodsKindId, InsertDate)
-     SELECT DISTINCT
-            _tmpPromo.MovementId
-          , _tmpPromo.MovementItemId
-          , _tmpPromo.GoodsId
-          , _tmpPromo.GoodsKindId
-          , CURRENT_TIMESTAMP AS InsertDate
-      FROM _tmpPromo
-           LEFT JOIN Object_Promo_effie ON Object_Promo_effie.MovementItemId = _tmpPromo.MovementItemId
-                                       AND Object_Promo_effie.GoodsKindId = _tmpPromo.GoodsKindId
-     WHERE Object_Promo_effie.Id IS NULL;
+     --все товары + виды товаров  + цены
+   , tmpMI_ByGoodsKind AS (SELECT tmpMI.MovementId
+                                , tmpMI.ObjectId AS GoodsId
+                                , COALESCE (tmpGoodsByGoodsKind_GoodsKind.GoodsKindId, tmpGoodsByGoodsKind.GoodsKindId) AS GoodsKindId
+                                , COALESCE (tmpGoodsByGoodsKind_GoodsKind.GoodsByGoodsKindId, tmpGoodsByGoodsKind.GoodsByGoodsKindId) AS GoodsByGoodsKindId
+                                , MIFloat_PriceWithOutVAT.ValueData ::TFloat AS Price              --Цена с учетом скидки
+                                , MIFloat_OperPriceList.ValueData   ::TFloat AS OperPriceList     -- Цена в прайсе
+                           FROM tmpMI 
+                               LEFT JOIN tmpMILO_GoodsKind AS MILinkObject_GoodsKind
+                                                           ON MILinkObject_GoodsKind.MovementItemId = tmpMI.Id
+                                                          AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+                               LEFT JOIN tmpMIFloat_Price AS MIFloat_PriceWithOutVAT
+                                                          ON MIFloat_PriceWithOutVAT.MovementItemId = tmpMI.Id
+                                                         AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
+
+                               LEFT JOIN tmpMIFloat_Price AS MIFloat_OperPriceList
+                                                          ON MIFloat_OperPriceList.MovementItemId = tmpMI.Id
+                                                         AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
+
+                               LEFT JOIN tmpGoodsByGoodsKind AS tmpGoodsByGoodsKind_GoodsKind
+                                                             ON tmpGoodsByGoodsKind_GoodsKind.GoodsId = tmpMI.ObjectId
+                                                            AND tmpGoodsByGoodsKind_GoodsKind.GoodsKindId = MILinkObject_GoodsKind.ObjectId
+                                                            AND COALESCE (MILinkObject_GoodsKind.ObjectId,0) <> 0
+                                                          
+                               LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId = tmpMI.ObjectId
+                                                            AND COALESCE (MILinkObject_GoodsKind.ObjectId,0) = 0
+                           )
 
 
-     -- Результат
-     RETURN QUERY
-     --
+   --прайсы
+   , tmpPriceForTwin_effie AS (SELECT gpSelect.extId        ::Integer    AS ContractId
+                                    , gpSelect.clientExtID  ::Integer    AS PartnerId
+                                    , CASE WHEN COALESCE (gpSelect.priceHeaderExtId ::Integer,0) <> 0 THEN gpSelect.priceHeaderExtId ::Integer
+                                           ELSE gpSelect.defaultPrice ::Integer
+                                      END ::Integer AS PriceListId
+                                    , gpSelect.defaultPrice     AS PriceListId_default
+                               FROM gpSelect_Object_PriceForTwin_effie (zfCalc_UserAdmin()::TVarChar) AS gpSelect
+                                    INNER JOIN (SELECT DISTINCT tmpPromoPartner.PartnerId, tmpPromoPartner.ContractId
+                                                FROM tmpPromoPartner) AS tmp 
+                                                                 ON tmp.PartnerId = gpSelect.clientExtID ::Integer
+                                                               AND ((tmp.ContractId = gpSelect.extId ::Integer AND COALESCE (tmp.ContractId,0)  <> 0)
+                                                                 OR COALESCE (tmp.ContractId,0)  = 0 
+                                                                     )
+                               )
+   --цены по прайсам без скидки
+   , tmpPriceListItem_effie AS (SELECT Object_PriceListItem_effie.*
+                                FROM Object_PriceListItem_effie
+                                WHERE Object_PriceListItem_effie.PriceListId IN (SELECT DISTINCT tmpPriceForTwin_effie.PriceListId FROM tmpPriceForTwin_effie)
+                                )
+   , tmpData AS (SELECT Movement.MovementId
+                      , tmpPromoPartner.PartnerId
+                      , tmpPromoPartner.ContractId
+                      , tmpMI.GoodsByGoodsKindId
+                      , tmpMI.Price                   AS Price
+                      , tmpMI.OperPriceList           AS Price_orig
+                      , tmpPriceListItem_effie.Price  AS Price_effie
+                      , CASE WHEN COALESCE (tmpPriceListItem_effie.Price,0) <> 0 
+                             THEN 100 - (tmpMI.Price * 100 / tmpPriceListItem_effie.Price)
+                             ELSE 0
+                        END AS TaxPersent
+                 FROM tmpObject_Promo_effie AS Movement
+                      LEFT JOIN tmpPromoPartner ON tmpPromoPartner.ParentId = Movement.MovementId
+                      LEFT JOIN tmpPriceForTwin_effie ON tmpPriceForTwin_effie.PartnerId = tmpPromoPartner.PartnerId
+                                                     AND tmpPriceForTwin_effie.ContractId = tmpPromoPartner.ContractId
+                      LEFT JOIN tmpPriceForTwin_effie AS tmpPriceForTwin_effie_All
+                                                      ON tmpPriceForTwin_effie_All.PartnerId = tmpPromoPartner.PartnerId
+                                                     AND tmpPriceForTwin_effie.PriceListId IS NULL
+                      
+                      LEFT JOIN tmpMI_ByGoodsKind AS tmpMI ON tmpMI.MovementId = Movement.MovementId
+                      LEFT JOIN tmpPriceListItem_effie ON tmpPriceListItem_effie.PriceListId = COALESCE (tmpPriceForTwin_effie.PriceListId, tmpPriceForTwin_effie_All.PriceListId)
+                                                      AND tmpPriceListItem_effie.GoodsId = tmpMI.GoodsId
+                                                      AND tmpPriceListItem_effie.GoodsKindId = tmpMI.GoodsKindId
+                 )
+
+    --
      SELECT Object_Promo_effie.Id                ::TVarChar AS extId
-          , ''                                   ::TVarChar AS Name
-          , MovementDate_StartPromo.ValueData    ::TVarChar AS startDate
-          , MovementDate_EndPromo.ValueData      ::TVarChar AS endDate
-          , Object_PromoDiscountKind.ValueData   ::TVarChar AS description
-          , 0                                    ::Integer  AS priority
-          , 0                                    ::Integer  AS promoActionTypeId
-          , MIFloat_Value_m.ValueData            ::TFloat   AS totalQnt
-          , MIFloat_Value_n.ValueData            ::TFloat   AS needBuy
-          , FALSE                                ::Boolean  AS giftChoiseAbility
-          , ''                                   ::TVarChar AS shortName
-          , ''                                   ::TVarChar AS form
-          , FALSE                                ::Boolean  AS changeNeedOrderToMinValue
-          , NULL                                 ::Boolean  AS quantityLimitInTt
+          , (Movement_Promo.InvNumber||'_'||zfConvert_DateToString (Movement_Promo.OperDate)) ::TVarChar AS Name
+          , (Movement_Promo.InvNumber||'_'||zfConvert_DateToString (Movement_Promo.OperDate)) ::TVarChar AS description 
+          , 1                                    ::TFloat   AS typeId
+          , 1                                    ::TFloat   AS linkTypeId
+          , 1                                    ::Integer  AS priority
+          , Object_Promo_effie.ContractId        ::TVarChar AS сontractHeaderExtId
+          , MovementDate_StartSale.ValueData     ::TVarChar AS beginDate
+          , MovementDate_EndSale.ValueData       ::TVarChar AS endDate
+          , (Movement_Promo.InvNumber||'_'||zfConvert_DateToString (Movement_Promo.OperDate)) ::TVarChar AS shortName
+          , TRUE                                 ::Boolean  AS isAutoUse
+          , NULL                                 ::TVarChar AS beforeDiscountQuestHeaderId
+          , NULL                                 ::TVarChar AS afterDiscountQuestHeaderId
           , FALSE                                ::Boolean  AS isDeleted
-     FROM Object_Promo_effie
-          LEFT JOIN MovementDate AS MovementDate_StartPromo
-                                 ON MovementDate_StartPromo.MovementId = Object_Promo_effie.MovementId
-                                AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
-          LEFT JOIN MovementDate AS MovementDate_EndPromo
-                                 ON MovementDate_EndPromo.MovementId = Object_Promo_effie.MovementId
-                                AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
+          , NULL                                 ::TVarChar AS customTypeExtId
+          
+          , tmpData.PartnerId                    ::TVarChar AS clientExtId 
+          , FALSE                                ::Boolean  AS isPreDiscountCheckSkipped
 
-          LEFT JOIN MovementItemLinkObject AS MILinkObject_PromoDiscountKind
-                                           ON MILinkObject_PromoDiscountKind.MovementItemId = Object_Promo_effie.MovementItemId
-                                          AND MILinkObject_PromoDiscountKind.DescId = zc_MILinkObject_PromoDiscountKind()
-          LEFT JOIN Object AS Object_PromoDiscountKind ON Object_PromoDiscountKind.Id = COALESCE (MILinkObject_PromoDiscountKind.ObjectId, zc_Enum_PromoDiscountKind_Tax())
-             
-          LEFT JOIN MovementItemFloat AS MIFloat_Value_m
-                                      ON MIFloat_Value_m.MovementItemId = Object_Promo_effie.MovementItemId
-                                     AND MIFloat_Value_m.DescId = zc_MIFloat_Value_m()
+          , tmpData.GoodsByGoodsKindId           ::TVarChar AS linkDiscounts_extId
+          , tmpData.TaxPersent                   ::TFloat   AS linkDiscounts_discount 
+          , tmpData.Price_orig                   ::TFloat   AS Price_orig   --цена без НДС из док.
+          , tmpData.Price_effie                  ::TFloat   AS Price_effie  --цена из effie
+          , tmpData.Price                        ::TFloat   AS Price        --цена соскидкой без НДС
+                                                               
+     FROM tmpObject_Promo_effie AS Object_Promo_effie
+          LEFT JOIN Movement AS Movement_Promo ON Movement_Promo.Id = Object_Promo_effie.MovementId
+          LEFT JOIN tmpMovementDate AS MovementDate_StartSale
+                                    ON MovementDate_StartSale.MovementId = Object_Promo_effie.MovementId
+                                   AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
+          LEFT JOIN tmpMovementDate AS MovementDate_EndSale
+                                    ON MovementDate_EndSale.MovementId = Object_Promo_effie.MovementId
+                                   AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
 
-          LEFT JOIN MovementItemFloat AS MIFloat_Value_n
-                                      ON MIFloat_Value_n.MovementItemId = Object_Promo_effie.MovementItemId
-                                     AND MIFloat_Value_n.DescId = zc_MIFloat_Value_n()
+          LEFT JOIN tmpData ON tmpData.MovementId = Object_Promo_effie.MovementId
+
           
  --limit 200
     ;
