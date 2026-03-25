@@ -144,7 +144,7 @@ $BODY$
                             )
 
    , tmpObject_Promo_effie AS (SELECT * FROM Object_Promo_effie
-                               LIMIT 1
+                              -- LIMIT 1
                                )
    , tmpMovementDate AS (
                          SELECT MovementDate.* 
@@ -169,6 +169,7 @@ $BODY$
                               INNER JOIN MovementItem AS MI_PromoPartner
                                                       ON MI_PromoPartner.MovementId = Movement_PromoPartner.Id
                                                      AND MI_PromoPartner.DescId = zc_MI_Master()
+                                                     AND MI_PromoPartner.isErased = FALSE
                               LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                                                ON MILinkObject_Contract.MovementItemId = MI_PromoPartner.Id
                                                               AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
@@ -306,9 +307,7 @@ $BODY$
                                     ON MovementDate_EndSale.MovementId = Object_Promo_effie.MovementId
                                    AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
 
-          LEFT JOIN tmpData ON tmpData.MovementId = Object_Promo_effie.MovementId
-
-          
+          LEFT JOIN tmpData ON tmpData.MovementId = Object_Promo_effie.MovementId   
  --limit 200
     ;
 
