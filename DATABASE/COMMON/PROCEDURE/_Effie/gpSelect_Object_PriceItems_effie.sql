@@ -145,40 +145,41 @@ $BODY$
 
     INSERT INTO _tmpResult (GoodsByGoodsKindId, GoodsId, GoodsKindId, PriceListId, Price) 
      -- 
-     SELECT _tmp1.GoodsByGoodsKindId
-          , _tmp1.GoodsId
-          , _tmp1.GoodsKindId
-          , _tmp1.PriceListId
-          , _tmp1.Price
-     FROM _tmp1
-  UNION 
-     SELECT _tmp2.GoodsByGoodsKindId
-          , _tmp2.GoodsId
-          , _tmp2.GoodsKindId
-          , _tmp2.PriceListId AS PriceListId
-          , _tmp2.Price
-     FROM _tmp2
-         LEFT JOIN _tmp1 ON _tmp1.GoodsByGoodsKindId = _tmp2.GoodsByGoodsKindId 
-                        AND _tmp1.PriceListId = _tmp2.PriceListId
-     WHERE _tmp1.PriceListId IS NULL 
-  UNION 
-     SELECT _tmp2.GoodsByGoodsKindId
-          , _tmp2.GoodsId
-          , _tmp2.GoodsKindId
-          , _tmp2.PriceListId AS PriceListId
-          , _tmp2.Price
-     FROM _tmp3
-         LEFT JOIN _tmp1 ON _tmp1.GoodsByGoodsKindId = _tmp3.GoodsByGoodsKindId 
-                        AND _tmp1.PriceListId = _tmp3.PriceListId
-                       
-         LEFT JOIN _tmp2 ON _tmp2.GoodsByGoodsKindId = _tmp3.GoodsByGoodsKindId 
-                        AND _tmp2.PriceListId = _tmp3.PriceListId
-                        AND _tmp1.PriceListId IS NULL
-         
-     WHERE _tmp2.PriceListId IS NULL    
-     AND _tmp1.PriceListId IS NULL
-     
-
+    SELECT *
+    FROM (SELECT _tmp1.GoodsByGoodsKindId
+               , _tmp1.GoodsId
+               , _tmp1.GoodsKindId
+               , _tmp1.PriceListId
+               , _tmp1.Price
+          FROM _tmp1
+       UNION 
+          SELECT _tmp2.GoodsByGoodsKindId
+               , _tmp2.GoodsId
+               , _tmp2.GoodsKindId
+               , _tmp2.PriceListId AS PriceListId
+               , _tmp2.Price
+          FROM _tmp2
+              LEFT JOIN _tmp1 ON _tmp1.GoodsByGoodsKindId = _tmp2.GoodsByGoodsKindId 
+                             AND _tmp1.PriceListId = _tmp2.PriceListId
+          WHERE _tmp1.PriceListId IS NULL 
+       UNION 
+          SELECT _tmp2.GoodsByGoodsKindId
+               , _tmp2.GoodsId
+               , _tmp2.GoodsKindId
+               , _tmp2.PriceListId AS PriceListId
+               , _tmp2.Price
+          FROM _tmp3
+              LEFT JOIN _tmp1 ON _tmp1.GoodsByGoodsKindId = _tmp3.GoodsByGoodsKindId 
+                             AND _tmp1.PriceListId = _tmp3.PriceListId
+                            
+              LEFT JOIN _tmp2 ON _tmp2.GoodsByGoodsKindId = _tmp3.GoodsByGoodsKindId 
+                             AND _tmp2.PriceListId = _tmp3.PriceListId
+                             AND _tmp1.PriceListId IS NULL
+              
+          WHERE _tmp2.PriceListId IS NULL    
+          AND _tmp1.PriceListId IS NULL
+          ) AS tmp
+    WHERE COALESCE (tmp.PriceListId,0) <> 0
      ;
 
      --нужно записать в таблица Object_PriceListItem_effie.Id - по ключу Това+Вид+Прайс  те элементы , которых нет
@@ -215,6 +216,7 @@ $BODY$
           LEFT JOIN Object_PriceListItem_effie ON Object_PriceListItem_effie.PriceListId = _tmpResult.PriceListId
                                               AND Object_PriceListItem_effie.GoodsId     = _tmpResult.GoodsId
                                               AND Object_PriceListItem_effie.GoodsKindId = _tmpResult.GoodsKindId
+     
     ;
 
 
