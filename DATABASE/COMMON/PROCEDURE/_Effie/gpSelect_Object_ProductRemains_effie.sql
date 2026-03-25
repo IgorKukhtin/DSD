@@ -87,14 +87,41 @@ $BODY$
            UNION SELECT 3080691   AS UnitId -- филиал Львов     - Склад ГП ф.Львов
            UNION SELECT 11921035  AS UnitId -- Филиал Винница   - Склад ГП ф.Вінниця
                  )
-            
+
+
+
+   , tmpRemains AS (SELECT CLO_Unit.ObjectId                    AS UnitId
+                         , Container.ObjectId                   AS GoodsId
+                         , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
+                         , SUM (COALESCE (Container.Amount, 0)) AS Amount
+                    FROM ContainerLinkObject AS CLO_Unit
+                         INNER JOIN Container ON Container.Id = CLO_Unit.ContainerId AND Container.DescId = zc_Container_Count() AND COALESCE (Container.Amount,0) <> 0
+                         LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                                       ON CLO_GoodsKind.ContainerId = CLO_Unit.ContainerId
+                                                      AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                         LEFT JOIN ContainerLinkObject AS CLO_Account
+                                                       ON CLO_Account.ContainerId = CLO_Unit.ContainerId
+                                                      AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
+                    WHERE CLO_Unit.ObjectId IN(SELECT DISTINCT tmpUnit.UnitId FROM tmpUnit)
+                      AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                      AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
+                    GROUP BY Container.ObjectId
+                           , COALESCE (CLO_GoodsKind.ObjectId, 0)
+                           , CLO_Unit.ObjectId
+                    )
+                           
      --
      SELECT tmpUnit.UnitId                   ::TVarChar AS warehouseExtId
           , tmpGoodsByGoodsKind.ObjectId     ::TVarChar AS productExtId
-          , 0                                ::TFloat   AS amount
+          , CASE WHEN COALESCE (tmpRemains.Amount,0) > 0 THEN tmpRemains.Amount
+                 ELSE 0
+            END                              ::TFloat   AS amount
           , FALSE                            ::Boolean  AS isDeleted
      FROM tmpUnit
          LEFT JOIN tmpGoodsByGoodsKind ON 1 = 1
+         LEFT JOIN tmpRemains ON tmpRemains.UnitId = tmpUnit.UnitId
+                             AND tmpRemains.GoodsId = tmpGoodsByGoodsKind.GoodsId
+                             AND tmpRemains.GoodsKindId = tmpGoodsByGoodsKind.GoodsKindId
      ;
 
 END;
