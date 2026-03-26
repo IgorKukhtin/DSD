@@ -12,6 +12,7 @@ CREATE TABLE Object_Promo_effie(
    Id                     BIGSERIAL NOT NULL PRIMARY KEY, 
    MovementId             Integer   NOT NULL,
    ContractId             Integer   NOT NULL,
+   PriceListId            Integer   NOT NULL,
    InsertDate             TDateTime NOT NULL 
    );
 /*-------------------------------------------------------------------------------*/
@@ -34,5 +35,9 @@ CREATE UNIQUE INDEX idx_Object_Promo_effie_MovementId_ContractId ON Object_Promo
             UPDATE Object_Promo_effie SET ContractId = 0;
             ALTER TABLE Object_Promo_effie ALTER COLUMN ContractId SET NOT NULL;
    
+            ALTER TABLE Object_Promo_effie ADD COLUMN PriceListId Integer;
+            UPDATE Object_Promo_effie SET PriceListId = 0;
+            ALTER TABLE Object_Promo_effie ALTER COLUMN PriceListId SET NOT NULL;
+
 
 */
