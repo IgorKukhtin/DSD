@@ -63,8 +63,8 @@ $BODY$
                                 AND ObjectLink_Partner_PriceList.ChildObjectId > 0
                               )
 
-    -- прайсы из ContractPriceList для
-   , tmpContractPriceList AS (SELECT ObjectLink_ContractPartner_Partner.ChildObjectId      AS PartnerId
+     -- прайсы из ContractPriceList для
+   , tmpContractPriceList AS (SELECT ObjectLink_Partner_Juridical.ObjectId                 AS PartnerId
                                    , ObjectLink_ContractPriceList_PriceList.ChildObjectId  AS PriceListId
                                    , ObjectLink_ContractPriceList_Contract.ChildObjectId   AS ContractId
                                    , ObjectDate_StartDate.ValueData           :: TDateTime AS StartDate
@@ -75,13 +75,17 @@ $BODY$
                                    INNER JOIN ObjectLink AS ObjectLink_ContractPriceList_Contract
                                                          ON ObjectLink_ContractPriceList_Contract.ObjectId = Object_ContractPriceList.Id
                                                         AND ObjectLink_ContractPriceList_Contract.DescId = zc_ObjectLink_ContractPriceList_Contract()
+                                                        -- Кроме таких Договоров
+                                                        AND ObjectLink_ContractPriceList_Contract.ChildObjectId NOT IN (SELECT DISTINCT tmpPartner_PriceList.ContractId FROM tmpPartner_PriceList)
+
                                    LEFT JOIN tmpContract ON tmpContract.ContractId = ObjectLink_ContractPriceList_Contract.ChildObjectId
 
                                    LEFT JOIN ObjectLink AS ObjectLink_ContractPriceList_PriceList
                                                         ON ObjectLink_ContractPriceList_PriceList.ObjectId = Object_ContractPriceList.Id
                                                        AND ObjectLink_ContractPriceList_PriceList.DescId = zc_ObjectLink_ContractPriceList_PriceList()
+                                   -- удаленные прайсы - пусть пока участвуют
                                    INNER JOIN Object AS Object_PriceList ON Object_PriceList.Id = ObjectLink_ContractPriceList_PriceList.ChildObjectId
-                                                    AND Object_PriceList.isErased = FALSE
+                                                  --AND Object_PriceList.isErased = FALSE
 
                                    LEFT JOIN ObjectDate AS ObjectDate_StartDate
                                                         ON ObjectDate_StartDate.ObjectId = Object_ContractPriceList.Id
@@ -90,15 +94,16 @@ $BODY$
                                                         ON ObjectDate_EndDate.ObjectId = Object_ContractPriceList.Id
                                                        AND ObjectDate_EndDate.DescId = zc_ObjectDate_ContractPriceList_EndDate()
 
-                                   INNER JOIN ObjectLink AS ObjectLink_ContractPartner_Contract
-                                                         ON ObjectLink_ContractPartner_Contract.ChildObjectId = ObjectLink_ContractPriceList_Contract.ChildObjectId
-                                                        AND ObjectLink_ContractPartner_Contract.DescId = zc_ObjectLink_ContractPartner_Contract()
-
-                                   INNER JOIN ObjectLink AS ObjectLink_ContractPartner_Partner
-                                                         ON ObjectLink_ContractPartner_Partner.ObjectId = ObjectLink_ContractPartner_Contract.ObjectId
-                                                        AND ObjectLink_ContractPartner_Partner.DescId = zc_ObjectLink_ContractPartner_Partner()
-                                                        AND ObjectLink_ContractPartner_Partner.ChildObjectId NOT IN (SELECT DISTINCT tmpPartner_PriceList.PartnerId FROM tmpPartner_PriceList)
-                                   INNER JOIN tmpPartner ON tmpPartner.Id = ObjectLink_ContractPartner_Partner.ChildObjectId
+                                   INNER JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                                         ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_ContractPriceList_Contract.ChildObjectId
+                                                        AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                                   -- ВСЕ Контрагенты
+                                   INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                         ON ObjectLink_Partner_Juridical.ChildObjectId = ObjectLink_Contract_Juridical.ChildObjectId
+                                                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                   -- удаленные Контрагентв - НЕ участвуют
+                                   INNER JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Partner_Juridical.ObjectId
+                                                    AND Object_Partner.isErased = FALSE
 
                               WHERE Object_ContractPriceList.DescId = zc_Object_ContractPriceList()
                                 AND Object_ContractPriceList.isErased = FALSE
