@@ -1,4 +1,5 @@
 -- Function: gpSelect_Object_PriceForTwin_effie
+-- Перевязки: Контрагент-прайс-Договор : Тип цен - Контрагент (- Торговая точка - Сотрудник)
  
 DROP FUNCTION IF EXISTS gpSelect_Object_PriceForTwin_effie ( TVarChar);
 
@@ -54,6 +55,8 @@ $BODY$
 -- SELECT * FROM gpSelect_Object_PriceForTwin_effie (zfCalc_UserAdmin()::TVarChar) where extId not in (SELECT ExtId FROM gpSelect_Object_ContractHeaders_effie (zfCalc_UserAdmin()::TVarChar) where isDeleted = FALSE)
 -- SELECT * FROM gpSelect_Object_PriceForTwin_effie (zfCalc_UserAdmin()::TVarChar) where clientExtID not in (SELECT ExtId FROM gpSelect_Object_clients_effie (zfCalc_UserAdmin()::TVarChar) where isDeleted = FALSE)
 -- SELECT * FROM gpSelect_Object_PriceForTwin_effie (zfCalc_UserAdmin()::TVarChar) where ttExtId not in (SELECT ExtId FROM gpSelect_Object_TT_effie (zfCalc_UserAdmin()::TVarChar) where isDeleted = 0)
+-- тест
+-- SELECT * FROM gpSelect_Object_PriceForTwin_effie (zfCalc_UserAdmin()::TVarChar) where priceHeaderExtId not in (SELECT priceHeaderExtId FROM gpSelect_Object_ContractPrices_effie (zfCalc_UserAdmin()::TVarChar))
 
 -- тест
 -- SELECT * FROM gpSelect_Object_PriceForTwin_effie (zfCalc_UserAdmin()::TVarChar);

@@ -60,7 +60,7 @@ BEGIN
                              GROUP BY ObjectLink_ContractCondition_Contract.ChildObjectId
                             )
               
-     --
+     -- Результат
      SELECT Object_Contract_View.ContractId                                ::TVarChar AS extId
           , TRIM (Object_Contract_View.InvNumber)                          ::TVarChar AS Name
           , Object_Contract_View.ContractCode                              ::TVarChar AS code
@@ -83,6 +83,7 @@ BEGIN
      WHERE Object_Contract_View.isErased = FALSE 
        -- !!!ТОЛЬКО ГП!!!
        AND Object_Contract_View.InfoMoneyId = zc_Enum_InfoMoney_30101() 
+       -- !!!НЕ закрытые!!!
        AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
     ;
 

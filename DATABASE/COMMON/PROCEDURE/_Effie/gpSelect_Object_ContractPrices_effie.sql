@@ -1,4 +1,5 @@
 -- Function: gpSelect_Object_ContractPrices_effie
+-- Перевязки: Договор-прайс
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ContractPrices_effie ( TVarChar);
 
@@ -31,6 +32,7 @@ $BODY$
                      WHERE Object_Contract_View.isErased = FALSE
                        -- !!!ТОЛЬКО ГП!!!
                        AND Object_Contract_View.InfoMoneyId = zc_Enum_InfoMoney_30101()
+                       -- !!!Не закрытые!!!
                        AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                        )
    , tmpPartner AS (SELECT Object_Partner.*
@@ -38,7 +40,7 @@ $BODY$
                     WHERE Object_Partner.DescId = zc_Object_Partner()
                       AND Object_Partner.isErased = FALSE
                     )
-     --прайс контрагента
+     -- прайс только этих Контрагентов
    , tmpPartner_PriceList AS (SELECT ObjectLink_Partner_PriceList.ObjectId      AS PartnerId
                                    , ObjectLink_Partner_PriceList.ChildObjectId AS PriceListId
                                    , ObjectLink_Contract_Juridical.ObjectId     AS ContractId
@@ -58,7 +60,7 @@ $BODY$
                                   INNER JOIN tmpContract ON tmpContract.ContractId = ObjectLink_Contract_Juridical.ObjectId
 
                               WHERE ObjectLink_Partner_PriceList.DescId = zc_ObjectLink_Partner_PriceList()
-                                AND COALESCE (ObjectLink_Partner_PriceList.ChildObjectId,0) <> 0
+                                AND ObjectLink_Partner_PriceList.ChildObjectId > 0
                               )
 
     -- прайсы из ContractPriceList для
@@ -193,6 +195,8 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_Object_ContractPrices_effie (zfCalc_UserAdmin()::TVarChar) where priceHeaderExtId not in (SELECT priceHeaderExtId FROM gpSelect_Object_ContractPrices_effie (zfCalc_UserAdmin()::TVarChar) where isDeleted = FALSE)
 -- SELECT * FROM gpSelect_Object_ContractPrices_effie (zfCalc_UserAdmin()::TVarChar) where contractHeaderExtId not in (SELECT ExtId FROM gpSelect_Object_ContractHeaders_effie (zfCalc_UserAdmin()::TVarChar) where isDeleted = FALSE)
+-- тест
+-- SELECT * FROM gpSelect_Object_ContractPrices_effie (zfCalc_UserAdmin()::TVarChar) where priceHeaderExtId not in (SELECT priceHeaderExtId FROM gpSelect_Object_PriceForTwin_effie (zfCalc_UserAdmin()::TVarChar))
 
 -- тест
 -- SELECT * FROM gpSelect_Object_ContractPrices_effie (zfCalc_UserAdmin()::TVarChar);

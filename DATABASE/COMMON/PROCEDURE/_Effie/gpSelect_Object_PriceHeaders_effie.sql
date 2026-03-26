@@ -18,12 +18,18 @@ $BODY$
 
      -- Результат
      RETURN QUERY
+     WITH tmpContractPrices AS (SELECT DISTINCT
+                                       tmp.priceHeaderExtId ::Integer AS PriceListId
+                                FROM gpSelect_Object_ContractPrices_effie (inSession) AS tmp
+                               )
+
      SELECT Object_PriceList.Id                             ::TVarChar AS extId
           , TRIM (Object_PriceList.ValueData)               ::TVarChar AS Name
           , Object_PriceList.isErased                       ::Boolean  AS isDeleted
      FROM Object AS Object_PriceList
+          INNER JOIN tmpContractPrices ON tmpContractPrices.PriceListId = Object_PriceList.Id
      WHERE Object_PriceList.DescId = zc_Object_PriceList()
-       AND Object_PriceList.isErased = FALSE
+     --AND Object_PriceList.isErased = FALSE
     ;
 
 END;
