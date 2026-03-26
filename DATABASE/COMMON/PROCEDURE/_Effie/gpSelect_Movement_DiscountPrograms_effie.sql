@@ -143,7 +143,9 @@ $BODY$
                                AND ObjectBoolean_GoodsByGoodsKind_NotMobile.ObjectId IS NULL
                             )
 
-   , tmpObject_Promo_effie AS (SELECT * FROM Object_Promo_effie
+   , tmpObject_Promo_effie AS (SELECT * 
+                               FROM Object_Promo_effie 
+                               WHERE COALESCE (Object_Promo_effie.MovementId,0) > 0
                               -- LIMIT 1
                                )
    , tmpMovementDate AS (

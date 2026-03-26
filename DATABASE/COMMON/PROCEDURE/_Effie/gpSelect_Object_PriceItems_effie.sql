@@ -82,8 +82,8 @@ $BODY$
                               AND ObjectLink_PriceListItem_GoodsKind.DescId   = zc_ObjectLink_PriceListItem_GoodsKind()
 
           INNER JOIN ObjectHistory AS ObjectHistory_PriceListItem
-                                  ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
-                                 AND ObjectHistory_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
+                                   ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                  AND ObjectHistory_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
          
           LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
                                        ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
@@ -182,6 +182,11 @@ $BODY$
     WHERE COALESCE (tmp.PriceListId,0) <> 0
      ;
 
+    --обнуляем все цены в таблице
+    UPDATE Object_PriceListItem_effie
+    SET Price = 0
+    ;
+
      --нужно записать в таблица Object_PriceListItem_effie.Id - по ключу Това+Вид+Прайс  те элементы , которых нет
      INSERT INTO Object_PriceListItem_effie (PriceListId, GoodsId, GoodsKindId, InsertDate, Price)
      SELECT _tmpResult.PriceListId
@@ -201,9 +206,9 @@ $BODY$
     SET Price = _tmpResult.Price
     FROM _tmpResult 
     WHERE Object_PriceListItem_effie.PriceListId = _tmpResult.PriceListId
-                                              AND Object_PriceListItem_effie.GoodsId     = _tmpResult.GoodsId
-                                              AND COALESCE (Object_PriceListItem_effie.GoodsKindId,0) = COALESCE (_tmpResult.GoodsKindId,0) 
-    ; 
+      AND Object_PriceListItem_effie.GoodsId     = _tmpResult.GoodsId
+      AND COALESCE (Object_PriceListItem_effie.GoodsKindId,0) = COALESCE (_tmpResult.GoodsKindId,0) 
+    ;
 
      -- Результат
      RETURN QUERY
