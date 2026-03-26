@@ -18,7 +18,8 @@ CREATE TABLE Object_Promo_effie(
 /*-------------------------------------------------------------------------------*/
 
 /*                                  »Ì‰ÂÍÒ˚                                      */
-CREATE UNIQUE INDEX idx_Object_Promo_effie_MovementId_ContractId ON Object_Promo_effie (MovementId, ContractId); 
+CREATE UNIQUE INDEX idx_Object_Promo_effie_MovementId_ContractId_PriceListId ON Object_Promo_effie (MovementId, ContractId, PriceListId); 
+CREATE UNIQUE INDEX idx_Object_Promo_effie_ContractId_PriceListId_MovementId ON Object_Promo_effie (ContractId, PriceListId, MovementId); 
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
