@@ -23,15 +23,33 @@ AS
                            , isPreDiscountCheckSkipped
                            , linkDiscounts_extId
                            , linkDiscounts_discount
-                      FROM dblink ('host=192.168.0.228 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
-                                 , ('SELECT *
-                                    FROM gpSelect_Object_DiscountPrograms_effie(zfCalc_UserAdmin())'
+                      FROM dblink ('host=192.168.0.219 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
+                                 , ('SELECT extId
+                                          , Name
+                                          , description
+                                          , typeId
+                                          , linkTypeId
+                                          , priority
+                                          , сontractHeaderExtId
+                                          , beginDate
+                                          , endDate
+                                          , shortName
+                                          , isAutoUse
+                                          , beforeDiscountQuestHeaderId
+                                          , afterDiscountQuestHeaderId
+                                          , isDeleted
+                                          , customTypeExtId
+                                          , clientExtId
+                                          , isPreDiscountCheckSkipped
+                                          , linkDiscounts_extId
+                                          , linkDiscounts_discount
+                                    FROM gpSelect_Movement_DiscountPrograms_effie (zfCalc_UserAdmin())'
                                     ) :: Text
                                   ) AS gpSelect (extId                      TVarChar   --Уникальный идентификатор промо акции
                                                , Name                       TVarChar   --Описание программы скидок
                                                , description                TVarChar   --Описание программы скидок
-                                               , typeId                     TFloat     --Тип расчета
-                                               , linkTypeId                 TFloat     --Тип связи
+                                               , typeId                     Integer    --Тип расчета
+                                               , linkTypeId                 Integer    --Тип связи
                                                , priority                   Integer    --Приоритет программы скидок при применении в заказе. От высшего = 1 до низшего = 255 
                                                , сontractHeaderExtId        TVarChar   -- Внешний идентификатор контракта, к которому привязана программа скидок
                                                , beginDate                  TVarChar   --Дата начала действия программы скидок
