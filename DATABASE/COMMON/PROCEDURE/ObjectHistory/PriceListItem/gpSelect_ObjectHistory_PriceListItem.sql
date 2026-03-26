@@ -475,7 +475,7 @@ BEGIN
            , ObjectDesc_Goods.ItemName  AS DescName
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
-           , Object_Goods.isErased   AS isErased
+           , Object_Goods.isErased      AS isErased
 
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData     AS MeasureName
@@ -638,6 +638,7 @@ BEGIN
        WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
          AND (ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId OR inPriceListId = 0)
          AND (ObjectHistoryFloat_PriceListItem_Value.ValueData > 0 OR inPriceListId > 0)
+         AND ObjectHistoryFloat_PriceListItem_Value.ValueData > 0
          -- AND (ObjectHistoryFloat_PriceListItem_Value.ValueData <> 0 OR ObjectHistory_PriceListItem.StartDate <> zc_DateStart())
        ;
 
