@@ -48,6 +48,8 @@ RETURNS TABLE (extId                  TVarChar   -- Уникальный идентификатор про
              , minOrder               TFloat     -- Минимальное кол-во для заказа
              , grossWeight            TFloat     -- Вес товара, брутто (кг)
              , isDeleted              Boolean    -- Признак активности: false = активен / true = не активен
+             , GoodsId                Integer
+             , GoodsKindId            Integer
 ) AS
 
 $BODY$
@@ -196,6 +198,9 @@ $BODY$
                         , 0     ::TFloat   AS minOrder
                         , (COALESCE (ObjectFloat_Weight.ValueData,0) + COALESCE (ObjectFloat_WeightTare.ValueData,0)) ::TFloat AS grossWeight
                         , Object_Goods.isErased ::Boolean AS isDeleted
+
+                        , tmpGoodsByGoodsKind.GoodsId      :: Integer
+                        , tmpGoodsByGoodsKind.GoodsKindId  :: Integer
 
                    FROM tmpGoodsByGoodsKind
                         INNER JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoodsByGoodsKind.GoodsId
