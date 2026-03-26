@@ -21,7 +21,7 @@ $BODY$
 
      -- временная таблица PriceListItem 
      CREATE TEMP TABLE tmpGoodsByGoodsKind (GoodsByGoodsKindId Integer, GoodsId Integer, GoodsKindId Integer)  ON COMMIT DROP;
-     CREATE TEMP TABLE tmpPrice (PriceListId Integer, GoodsId Integer, GoodsKindId Integer, ValuePrice Integer)  ON COMMIT DROP;
+     CREATE TEMP TABLE tmpPrice (PriceListId Integer, GoodsId Integer, GoodsKindId Integer, ValuePrice TFloat)  ON COMMIT DROP;
      CREATE TEMP TABLE _tmp1 (GoodsByGoodsKindId Integer, GoodsId Integer, GoodsKindId Integer, PriceListId Integer, Price TFloat)  ON COMMIT DROP;
      CREATE TEMP TABLE _tmp2 (GoodsByGoodsKindId Integer, GoodsId Integer, GoodsKindId Integer, PriceListId Integer, Price TFloat)  ON COMMIT DROP;
      CREATE TEMP TABLE _tmp3 (GoodsByGoodsKindId Integer, GoodsId Integer, GoodsKindId Integer, PriceListId Integer, Price TFloat)  ON COMMIT DROP;
