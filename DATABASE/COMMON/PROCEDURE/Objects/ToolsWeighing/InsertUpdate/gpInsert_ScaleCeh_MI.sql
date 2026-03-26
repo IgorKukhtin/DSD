@@ -163,7 +163,7 @@ BEGIN
         AND vbToId = 8459 -- Розподільчий комплекс
         AND inGoodsKindId = zc_GoodsKind_Basis()
         AND EXISTS (SELECT 1 FROM ObjectLink AS OL_Measure WHERE OL_Measure.ChildObjectId IN (zc_Measure_Kg(), zc_Measure_Sh()) AND OL_Measure.ObjectId = inGoodsId AND OL_Measure.DescId = zc_ObjectLink_Goods_Measure())
-        
+        AND vbUserId <> 5
      THEN
          RAISE EXCEPTION 'Ошибка.Нет прав для перемещения вида <%>.', lfGet_Object_ValueData_sh (inGoodsKindId);
      END IF;
@@ -280,12 +280,18 @@ BEGIN
      -- проверка
      IF inPartionCellId > 0
      THEN
-         vbMI_Id_check:= lpCheck_MI_Send_PartionCell (inPartionCellId   := inPartionCellId
-                                                    , inGoodsId         := inGoodsId
-                                                    , inGoodsKindId     := inGoodsKindId
-                                                    , inPartionGoodsDate:= vbOperDate
-                                                    , inUserId          := vbUserId
-                                                     );
+         vbMI_Id_check:= lpCheck_MI_Send_PartionCell_mi (inPartionCellId   := inPartionCellId
+                                                       , inMovementItemId  := 0
+                                                       , inGoodsId         := inGoodsId
+                                                       , inGoodsKindId     := inGoodsKindId
+                                                       , inPartionGoodsDate:= CASE WHEN inIsPartionGoodsDate = TRUE AND COALESCE (vbDocumentKindId, 0) = 0
+                                                                                        THEN inPartionGoodsDate
+                                                                                   WHEN EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = inGoodsId AND OB.DescId = zc_ObjectBoolean_Goods_PLM() AND OB.ValueData = TRUE)
+                                                                                        THEN inPartionGoodsDate
+                                                                                   ELSE vbOperDate
+                                                                              END
+                                                       , inUserId          := vbUserId
+                                                        );
          IF vbMI_Id_check > 0
          THEN
              RAISE EXCEPTION 'Ошибка.Для ячейки <%> %уже установлена партия <%> % <%> <%> <%>% <%> <%>.%(%)'
@@ -364,10 +370,20 @@ BEGIN
 
                                                           , inPartionCellId       := inPartionCellId
 
-                                                          , inPartionGoodsDate    := CASE WHEN inIsPartionGoodsDate = TRUE AND COALESCE (vbDocumentKindId, 0) = 0
-                                                                                               THEN inPartionGoodsDate
-                                                                                          ELSE NULL
-                                                                                     END :: TDateTime
+                                                          , inPartionGoodsDate            := CASE WHEN inIsPartionGoodsDate = TRUE AND COALESCE (vbDocumentKindId, 0) = 0
+                                                                                                       THEN inPartionGoodsDate
+                                                                                                  WHEN inPartionCellId > 0 AND EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = inGoodsId AND OB.DescId = zc_ObjectBoolean_Goods_PLM() AND OB.ValueData = TRUE)
+                                                                                                       THEN inPartionGoodsDate
+                                                                                                  ELSE NULL
+                                                                                             END :: TDateTime
+
+                                                          , inPartionGoodsDate_PartionCell:= CASE WHEN inIsPartionGoodsDate = TRUE AND COALESCE (vbDocumentKindId, 0) = 0
+                                                                                                       THEN inPartionGoodsDate
+                                                                                                  WHEN inPartionCellId > 0 AND EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = inGoodsId AND OB.DescId = zc_ObjectBoolean_Goods_PLM() AND OB.ValueData = TRUE)
+                                                                                                       THEN inPartionGoodsDate
+                                                                                                  ELSE vbOperDate
+                                                                                             END :: TDateTime
+
                                                           , inPartionGoods        := CASE WHEN vbDocumentKindId IN (zc_Enum_DocumentKind_CuterWeight(), zc_Enum_DocumentKind_RealWeight(), zc_Enum_DocumentKind_RealDelicShp(), zc_Enum_DocumentKind_RealDelicMsg()
                                                                                                                   , zc_Enum_DocumentKind_LakTo(), zc_Enum_DocumentKind_LakFrom()
                                                                                                                    )
