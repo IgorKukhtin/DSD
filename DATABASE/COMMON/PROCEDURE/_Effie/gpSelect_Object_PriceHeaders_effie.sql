@@ -22,7 +22,7 @@ $BODY$
                                        tmp.priceHeaderExtId ::Integer AS PriceListId
                                 FROM gpSelect_Object_ContractPrices_effie (inSession) AS tmp
                                )
-
+     -- Результат
      SELECT Object_PriceList.Id                             ::TVarChar AS extId
           , TRIM (Object_PriceList.ValueData)               ::TVarChar AS Name
           , Object_PriceList.isErased                       ::Boolean  AS isDeleted
