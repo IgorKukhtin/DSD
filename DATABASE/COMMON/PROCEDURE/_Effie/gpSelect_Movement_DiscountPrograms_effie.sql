@@ -58,7 +58,7 @@ $BODY$
                     AND (MovementDate_StartSale.ValueData <= CURRENT_DATE
                          AND MovementDate_EndSale.ValueData >= CURRENT_DATE
                         ) 
-                 limit 10
+                --limit 10
                  )
 
     SELECT DISTINCT
