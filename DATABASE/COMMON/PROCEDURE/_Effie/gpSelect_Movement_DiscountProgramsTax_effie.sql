@@ -153,10 +153,10 @@ $BODY$
                     , (tmpPriceListItem_effie.Price * (1 + tmpContractPrice.ChangePercent / 100))  AS Price_promo
                FROM tmpContractPrice
                     
-                    LEFT JOIN tmpPriceListItem_effie ON tmpPriceListItem_effie.PriceListId = tmpContractPrice.PriceListId
+                    INNER JOIN tmpPriceListItem_effie ON tmpPriceListItem_effie.PriceListId = tmpContractPrice.PriceListId
 
-                    LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId = tmpPriceListItem_effie.GoodsId
-                                                 AND tmpGoodsByGoodsKind.GoodsKindId = tmpPriceListItem_effie.GoodsKindId
+                    INNER JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId = tmpPriceListItem_effie.GoodsId
+                                                  AND tmpGoodsByGoodsKind.GoodsKindId = tmpPriceListItem_effie.GoodsKindId
                )
 
 
