@@ -1272,6 +1272,36 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementItemId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object dsdChoiceGuides1: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
@@ -1526,6 +1556,14 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
         end
         item
           Visible = True
+          ItemName = 'bbProtocolOpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1543,6 +1581,10 @@ inherited Report_WeighingPartner_PassportForm: TReport_WeighingPartner_PassportF
     end
     object actPrintPassport_prod: TdxBarButton
       Action = actSelectMIPrintPassport_prod
+      Category = 0
+    end
+    object bbProtocolOpenForm: TdxBarButton
+      Action = actProtocolOpenForm
       Category = 0
     end
   end

@@ -76,7 +76,7 @@ type
     InsertName: TcxGridDBColumn;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
-    MovementProtocolOpenForm: TdsdOpenForm;
+    actMovementProtocolOpenForm: TdsdOpenForm;
     bbMovementProtocol: TdxBarButton;
     spSelectPrint: TdsdStoredProc;
     bbPrint: TdxBarButton;
