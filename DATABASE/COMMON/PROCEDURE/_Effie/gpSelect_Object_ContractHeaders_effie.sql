@@ -66,7 +66,7 @@ BEGIN
           , Object_Contract_View.ContractCode                              ::TVarChar AS code
           , zfConvert_DateToString (ObjectDate_Signing.ValueData)          ::TVarChar AS contractDate
           , zfConvert_DateToString (Object_Contract_View.StartDate)        ::TVarChar AS validFrom
-          , zfConvert_DateToString (Object_Contract_View.EndDate)          ::TVarChar AS validTo
+          , zfConvert_DateToString (/*Object_Contract_View.EndDate*/ zc_DateEnd())          ::TVarChar AS validTo
           , CASE WHEN Object_Contract_View.PaidKindId = zc_Enum_PaidKind_FirstForm() THEN 1
                  WHEN Object_Contract_View.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN 2
             END                                                            ::Integer  AS form
