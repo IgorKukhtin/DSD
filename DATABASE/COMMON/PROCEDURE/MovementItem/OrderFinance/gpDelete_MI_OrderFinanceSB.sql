@@ -8,19 +8,28 @@ CREATE OR REPLACE FUNCTION gpDelete_MI_OrderFinanceSB(
 )                              
 RETURNS VOID AS
 $BODY$
-   DECLARE vbUserId       Integer; 
+   DECLARE vbUserId Integer; 
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderFinance());
 
-     --помечаем на даление все строки чайлд и мастер
-     UPDATE MovementItem 
-     SET isErased = TRUE 
-     WHERE MovementItem.MovementId = inMovementId;
+     -- удаление все строки чайлд и мастер
+     UPDATE MovementItem  SET isErased = TRUE 
+     FROM MovementItemLinkObject AS MILO_Insert
+     WHERE MovementItem.MovementId    = inMovementId
+       AND MovementItem.isErased      = FALSE
+       AND MILO_Insert.MovementItemId = MovementItem.Id
+       AND MILO_Insert.DescId         = zc_MILinkObject_Insert()
+       AND MILO_Insert.ObjectId       = vbUserId
+    ;
      
      -- Протокол
      PERFORM lpInsert_MovementItemProtocol (MovementItem.Id, vbUserId, TRUE)
      FROM MovementItem
+          INNER JOIN MovementItemLinkObject AS MILO_Insert
+                                            ON MILO_Insert.MovementItemId = MovementItem.Id
+                                           AND MILO_Insert.DescId         = zc_MILinkObject_Insert()
+                                           AND MILO_Insert.ObjectId       = vbUserId
      WHERE MovementItem.MovementId = inMovementId;
 
                                                  

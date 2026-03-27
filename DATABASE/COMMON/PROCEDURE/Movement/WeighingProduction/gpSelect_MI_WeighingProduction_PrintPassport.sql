@@ -33,16 +33,16 @@ BEGIN
           , Movement.OperDate
             -- кладовщик
           , CASE WHEN Object_User.Id = 5 THEN 'Морозенко А.А.' ELSE Object_User.ValueData END
-          , zfConvert_FloatToString (MovementFloat_BranchCode.ValueData) ::TVarChar AS BranchCode 
+          , zfConvert_FloatToString (MovementFloat_BranchCode.ValueData) ::TVarChar AS BranchCode
 
             INTO vbDescId, vbStatusId, vbOperDate, vbStoreKeeperName, vbBranchCode
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_User
                                        ON MovementLinkObject_User.MovementId = Movement.Id
                                       AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
-          LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId 
-          
-          LEFT JOIN MovementFloat AS MovementFloat_BranchCode 
+          LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
+
+          LEFT JOIN MovementFloat AS MovementFloat_BranchCode
                                   ON MovementFloat_BranchCode.MovementId = Movement.Id
                                  AND MovementFloat_BranchCode.DescId = zc_MovementFloat_BranchCode()
      WHERE Movement.Id = inMovementId;
@@ -135,7 +135,7 @@ BEGIN
                                                                  AND Object_GoodsKind.Id = 8349 -- Флоу-пак
                                                                      THEN 0
                                                                 -- коробка
-                                                                WHEN Object_GoodsKind.Id =  412895 
+                                                                WHEN Object_GoodsKind.Id =  412895
                                                                      THEN 0
 
                                                                 ELSE COALESCE (tmpGoodsByGoodsKind.WeightPackageSticker, 0)
@@ -161,9 +161,9 @@ BEGIN
                                                                          AND Object_GoodsKind.Id = 8349 -- Флоу-пак
                                                                              THEN 0
                                                                         -- коробка
-                                                                        WHEN Object_GoodsKind.Id =  412895 
+                                                                        WHEN Object_GoodsKind.Id =  412895
                                                                              THEN 0
-        
+
                                                                         ELSE COALESCE (tmpGoodsByGoodsKind.WeightPackageSticker, 0)
                                                                    END
                                                                   )
@@ -209,15 +209,15 @@ BEGIN
                    , tmpBox.BoxName_6 ::TVarChar, tmpBox.BoxName_7 ::TVarChar, tmpBox.BoxName_8 ::TVarChar, tmpBox.BoxName_9 ::TVarChar, tmpBox.BoxName_10 ::TVarChar
 
                    , Object_PartionCell.Id                   AS PartionCellId
-                   , Object_PartionCell.ValueData ::TVarChar AS PartionCellName   
-                   
+                   , Object_PartionCell.ValueData ::TVarChar AS PartionCellName
+
                    , vbBranchCode ::TVarChar AS BranchCode
 
               FROM MovementItem
                    LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.MovementItemId = MovementItem.Id
 
-                   LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId  
-                   
+                   LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+
                    LEFT JOIN MovementItemFloat AS MIFloat_PartionNum
                                                ON MIFloat_PartionNum.MovementItemId = MovementItem.Id
                                               AND MIFloat_PartionNum.DescId = zc_MIFloat_PartionNum()
@@ -236,10 +236,97 @@ BEGIN
                                                    AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                    LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
 
-                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell
-                                                    ON MILinkObject_PartionCell.MovementItemId = MovementItem.Id
-                                                   AND MILinkObject_PartionCell.DescId = zc_MILinkObject_PartionCell_1()
-                   LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = MILinkObject_PartionCell.ObjectId
+
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_1
+                                                    ON MILinkObject_PartionCell_1.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_PartionCell_1.DescId = zc_MILinkObject_PartionCell_1()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_2
+                                                    ON MILinkObject_PartionCell_2.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_PartionCell_2.DescId = zc_MILinkObject_PartionCell_2()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_3
+                                                    ON MILinkObject_PartionCell_3.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_PartionCell_3.DescId = zc_MILinkObject_PartionCell_3()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_4
+                                                    ON MILinkObject_PartionCell_4.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_PartionCell_4.DescId = zc_MILinkObject_PartionCell_4()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_5
+                                                    ON MILinkObject_PartionCell_5.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_PartionCell_5.DescId = zc_MILinkObject_PartionCell_5()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_6
+                                                    ON MILinkObject_PartionCell_6.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_PartionCell_6.DescId = zc_MILinkObject_PartionCell_6()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_7
+                                                    ON MILinkObject_PartionCell_7.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_PartionCell_7.DescId = zc_MILinkObject_PartionCell_7()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_8
+                                                    ON MILinkObject_PartionCell_8.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_PartionCell_8.DescId = zc_MILinkObject_PartionCell_8()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_9
+                                                    ON MILinkObject_PartionCell_9.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_PartionCell_9.DescId = zc_MILinkObject_PartionCell_9()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_10
+                                                    ON MILinkObject_PartionCell_10.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_PartionCell_10.DescId = zc_MILinkObject_PartionCell_10()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_11
+                                                    ON MILinkObject_PartionCell_11.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_PartionCell_11.DescId = zc_MILinkObject_PartionCell_11()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_12
+                                                    ON MILinkObject_PartionCell_12.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_PartionCell_12.DescId = zc_MILinkObject_PartionCell_12()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_13
+                                                    ON MILinkObject_PartionCell_13.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_PartionCell_13.DescId = zc_MILinkObject_PartionCell_13()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_14
+                                                    ON MILinkObject_PartionCell_14.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_PartionCell_14.DescId = zc_MILinkObject_PartionCell_14()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_15
+                                                    ON MILinkObject_PartionCell_15.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_PartionCell_15.DescId = zc_MILinkObject_PartionCell_15()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_16
+                                                    ON MILinkObject_PartionCell_16.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_PartionCell_16.DescId = zc_MILinkObject_PartionCell_16()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_17
+                                                    ON MILinkObject_PartionCell_17.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_PartionCell_17.DescId = zc_MILinkObject_PartionCell_17()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_18
+                                                    ON MILinkObject_PartionCell_18.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_PartionCell_18.DescId = zc_MILinkObject_PartionCell_18()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_19
+                                                    ON MILinkObject_PartionCell_19.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_PartionCell_19.DescId = zc_MILinkObject_PartionCell_19()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_20
+                                                    ON MILinkObject_PartionCell_20.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_PartionCell_20.DescId = zc_MILinkObject_PartionCell_20()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_21
+                                                    ON MILinkObject_PartionCell_21.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_PartionCell_21.DescId = zc_MILinkObject_PartionCell_21()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_22
+                                                    ON MILinkObject_PartionCell_22.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_PartionCell_22.DescId = zc_MILinkObject_PartionCell_22()
+
+                   LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = CASE WHEN MILinkObject_PartionCell_1.ObjectId > 0 THEN MILinkObject_PartionCell_1.ObjectId
+                                                                                          WHEN MILinkObject_PartionCell_2.ObjectId > 0 THEN MILinkObject_PartionCell_2.ObjectId
+                                                                                          WHEN MILinkObject_PartionCell_3.ObjectId > 0 THEN MILinkObject_PartionCell_3.ObjectId
+                                                                                          WHEN MILinkObject_PartionCell_4.ObjectId > 0 THEN MILinkObject_PartionCell_4.ObjectId
+                                                                                          WHEN MILinkObject_PartionCell_5.ObjectId > 0 THEN MILinkObject_PartionCell_5.ObjectId
+                                                                                          WHEN MILinkObject_PartionCell_6.ObjectId > 0 THEN MILinkObject_PartionCell_6.ObjectId
+                                                                                          WHEN MILinkObject_PartionCell_7.ObjectId > 0 THEN MILinkObject_PartionCell_7.ObjectId
+                                                                                          WHEN MILinkObject_PartionCell_8.ObjectId > 0 THEN MILinkObject_PartionCell_8.ObjectId
+                                                                                          WHEN MILinkObject_PartionCell_9.ObjectId > 0 THEN MILinkObject_PartionCell_9.ObjectId
+                                                                                          WHEN MILinkObject_PartionCell_10.ObjectId > 0 THEN MILinkObject_PartionCell_10.ObjectId
+                                                                                          WHEN MILinkObject_PartionCell_11.ObjectId > 0 THEN MILinkObject_PartionCell_11.ObjectId
+                                                                                          WHEN MILinkObject_PartionCell_12.ObjectId > 0 THEN MILinkObject_PartionCell_12.ObjectId
+                                                                                          WHEN MILinkObject_PartionCell_13.ObjectId > 0 THEN MILinkObject_PartionCell_13.ObjectId
+                                                                                          WHEN MILinkObject_PartionCell_14.ObjectId > 0 THEN MILinkObject_PartionCell_14.ObjectId
+                                                                                          WHEN MILinkObject_PartionCell_15.ObjectId > 0 THEN MILinkObject_PartionCell_15.ObjectId
+                                                                                          WHEN MILinkObject_PartionCell_16.ObjectId > 0 THEN MILinkObject_PartionCell_16.ObjectId
+                                                                                          WHEN MILinkObject_PartionCell_17.ObjectId > 0 THEN MILinkObject_PartionCell_17.ObjectId
+                                                                                          WHEN MILinkObject_PartionCell_18.ObjectId > 0 THEN MILinkObject_PartionCell_18.ObjectId
+                                                                                          WHEN MILinkObject_PartionCell_19.ObjectId > 0 THEN MILinkObject_PartionCell_19.ObjectId
+                                                                                          WHEN MILinkObject_PartionCell_20.ObjectId > 0 THEN MILinkObject_PartionCell_20.ObjectId
+                                                                                          WHEN MILinkObject_PartionCell_21.ObjectId > 0 THEN MILinkObject_PartionCell_21.ObjectId
+                                                                                          WHEN MILinkObject_PartionCell_22.ObjectId > 0 THEN MILinkObject_PartionCell_22.ObjectId
+                                                                                     END
 
                    LEFT JOIN MovementLinkObject AS MLO_From
                                                 ON MLO_From.MovementId = MovementItem.MovementId
@@ -281,5 +368,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MI_WeighingProduction_PrintPassport(inMovementId := 15745229 , inId := 162901040 ,  inSession := '5'); --FETCH ALL "<unnamed portal 12>";
---select * from gpSelect_MI_WeighingProduction_PrintPassport(inMovementId := 31803509 , inId := 330863209 ,  inSession := '9457'); FETCH ALL "<unnamed portal 9>";
+-- SELECT * FROM gpSelect_MI_WeighingProduction_PrintPassport(inMovementId := 31803509 , inId := 330863209 ,  inSession := '9457'); -- FETCH ALL "<unnamed portal 9>";
