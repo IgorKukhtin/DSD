@@ -153,6 +153,21 @@ BEGIN
                         ;
      END IF;
 
+     -- проверка
+     IF COALESCE (inJuridicalId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'ќшибка.ячейка <ёр.лицо> не заполнена.%ƒл€ —умма = <%> %договор = <%> %<%> %<%>.'
+                       , CHR (13)
+                       , inAmount
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh (inContractId)
+                       , CHR (13)
+                       , inComment_Partner
+                       , CHR (13)
+                       , inComment_Contract
+                        ;
+     END IF;
+
      -- сохранили <Ёлемент документа> - ѕервичный план на неделю
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inJuridicalId, inMovementId, inAmount, NULL);
 
