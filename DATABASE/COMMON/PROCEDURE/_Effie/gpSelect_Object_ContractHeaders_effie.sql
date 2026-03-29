@@ -1,4 +1,5 @@
 -- Function: gpSelect_Object_Warehouse_effie
+-- возвращает только договора ObjectLink_Contract_InfoMoney = zc_Enum_InfoMoney_30101() +  не закрытые zc_Enum_ContractStateKind_Close + не удаленные
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ContractHeaders_effie ( TVarChar);
                   
@@ -100,9 +101,7 @@ $BODY$
 */
 
 -- тест
+-- возвращает только договора ObjectLink_Contract_InfoMoney = zc_Enum_InfoMoney_30101() +  не закрытые zc_Enum_ContractStateKind_Close + не удаленные
 -- SELECT * FROM gpSelect_Object_ContractHeaders_effie (zfCalc_UserAdmin()::TVarChar);
 
 
-/*
-  возвращает только договора ObjectLink_Contract_InfoMoney = zc_Enum_InfoMoney_30101() +  не закрытые zc_Enum_ContractStateKind_Close + не удаленные
-*/

@@ -5,10 +5,6 @@ DROP FUNCTION IF EXISTS gpSelect_Object_EmployeesTT_effie ( TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_EmployeesTT_effie(
     IN inSession              TVarChar    -- сессия пользователя
 )
-
----zc_ObjectLink_Partner_Personal union zc_ObjectLink_Partner_PersonalTrade union zc_ObjectLink_Partner_PersonalMerch
---zc_Object_Member.Id - НЕ ВСЕ СОТРУДНИКИ!!! - только zc_ObjectBoolean_User_ProjectMobile = TRUE
-
 RETURNS TABLE (employeeExtId    TVarChar   -- Идентификатор сотрудника
              , ttExtId          TVarChar   -- Идентификатор торговой точки
              , isDeleted        Integer    -- Признак активности
@@ -25,7 +21,7 @@ $BODY$
      RETURN QUERY
      WITH 
      tmpPartner AS (-- Идентификатор контрагента.
-                    SELECT DISTINCT gpSelect.clientExtId :: Integer AS PartnerId FROM gpSelect_Object_Twins_effie (inSession) AS gpSelect
+                    SELECT DISTINCT gpSelect.clientExtId :: Integer AS PartnerId FROM gpSelect_Object_ContractPrices_effie (inSession) AS gpSelect
                     -- если vbPersonalId - Сотрудник (торговый)
                   /*SELECT OL.ObjectId AS PartnerId
                     FROM ObjectLink AS OL
