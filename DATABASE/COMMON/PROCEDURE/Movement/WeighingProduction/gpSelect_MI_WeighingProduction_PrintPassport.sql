@@ -349,10 +349,38 @@ BEGIN
               WHERE MovementItem.MovementId = inMovementId
                 AND MovementItem.Id         = inId
              )
+   --место отбора
+   , tmpChoiceCell AS (SELECT Object_ChoiceCell.Id               AS Id
+                            , Object_ChoiceCell.ObjectCode       AS Code
+                            , Object_ChoiceCell.ValueData        AS Name
+                            , ObjectLink_Goods.ChildObjectId     AS GoodsId
+                            , ObjectLink_GoodsKind.ChildObjectId AS GoodsKindId
+                       FROM Object AS Object_ChoiceCell
+                           LEFT JOIN ObjectLink AS ObjectLink_Goods
+                                                ON ObjectLink_Goods.ObjectId = Object_ChoiceCell.Id
+                                               AND ObjectLink_Goods.DescId = zc_ObjectLink_ChoiceCell_Goods()  
+                            
+                           LEFT JOIN ObjectLink AS ObjectLink_GoodsKind
+                                                ON ObjectLink_GoodsKind.ObjectId = Object_ChoiceCell.Id
+                                               AND ObjectLink_GoodsKind.DescId = zc_ObjectLink_ChoiceCell_GoodsKind()
+                           --ограничиваем нашим товаром и видом товара
+                           INNER JOIN tmpMI ON tmpMI.GoodsId = ObjectLink_Goods.ChildObjectId 
+                                           AND COALESCE (tmpMI.GoodsKindId, 0) = COALESCE (ObjectLink_GoodsKind.ChildObjectId,0)
+
+                       WHERE Object_ChoiceCell.DescId = zc_Object_ChoiceCell()
+                         AND Object_ChoiceCell.isErased = FALSE 
+                       LIMIT 1 
+                      )
 
        --результат
-       SELECT *
+       SELECT tmpMI.* 
+             -- Место отбора
+            , tmpChoiceCell.Id            ::Integer  AS ChoiceCellId
+            , tmpChoiceCell.Code          ::Integer  AS ChoiceCellCode
+            , tmpChoiceCell.Name          ::TVarChar AS ChoiceCellName
        FROM tmpMI
+         LEFT JOIN tmpChoiceCell ON tmpChoiceCell.GoodsId = tmpMI.GoodsId 
+                                AND COALESCE (tmpChoiceCell.GoodsKindId,0) = COALESCE (tmpMI.GoodsKindId, 0)
         ;
 
     RETURN NEXT Cursor1;
