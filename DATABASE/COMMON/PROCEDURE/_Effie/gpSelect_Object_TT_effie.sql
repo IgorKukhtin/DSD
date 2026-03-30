@@ -65,8 +65,10 @@ $BODY$
                               isErased)
 
      WITH
-     tmpPartner AS (-- если vbPersonalId - Сотрудник (торговый)
-                    SELECT OL.ObjectId AS PartnerId
+     tmpPartner AS (-- Идентификатор контрагента.
+                    SELECT DISTINCT gpSelect.PartnerId FROM gpSelect_Object_ContractPrices_effie (inSession) AS gpSelect
+                    -- если vbPersonalId - Сотрудник (торговый)
+                  /*SELECT OL.ObjectId AS PartnerId
                     FROM ObjectLink AS OL
                     WHERE OL.ChildObjectId > 0
                       AND OL.DescId        = zc_ObjectLink_Partner_PersonalTrade()
@@ -82,6 +84,7 @@ $BODY$
                     FROM ObjectLink AS OL
                     WHERE OL.ChildObjectId > 0
                       AND OL.DescId        = zc_ObjectLink_Partner_PersonalMerch()
+                  */
                     )
      --
      SELECT Object_Partner.Id                                        AS PartnerId

@@ -21,7 +21,7 @@ BEGIN
      --
      RETURN QUERY
      WITH
-          tmpClient AS (SELECT DISTINCT gpSelect.clientExtId :: Integer AS PartnerId FROM gpSelect_Object_Twins_effie (inSession) AS gpSelect)
+          tmpClient AS (SELECT DISTINCT gpSelect.PartnerId FROM gpSelect_Object_ContractPrices_effie (inSession) AS gpSelect)
         , tmpContract AS (SELECT DISTINCT gpSelect.extId FROM gpSelect_Object_ContractHeaders_effie (inSession) AS gpSelect)
         , tmpContract_Client AS (SELECT DISTINCT
                                         gpSelect.contractHeaderExtId

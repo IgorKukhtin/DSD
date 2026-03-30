@@ -9,6 +9,10 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Twins_effie(
 RETURNS TABLE (ttExtId          TVarChar   -- Идентификатор торговой точки
              , clientExtId      TVarChar   -- Идентификатор контрагента.
              , IsDefaultClient  Boolean    -- Контрагент по умолчанию
+             , StreetId         Integer
+             , HouseNumber      TVarChar
+             , CaseNumber       TVarChar
+             , RoomNumber       TVarChar
              , isDeleted        Boolean    -- Признак активности
 ) AS
 
@@ -21,8 +25,10 @@ $BODY$
      --
      RETURN QUERY
      WITH 
-     tmpPartner AS (-- если vbPersonalId - Сотрудник (торговый)
-                    SELECT OL.ObjectId AS PartnerId
+     tmpPartner AS (-- Идентификатор контрагента.
+                    SELECT DISTINCT gpSelect.PartnerId FROM gpSelect_Object_ContractPrices_effie (inSession) AS gpSelect
+                    -- если vbPersonalId - Сотрудник (торговый)
+                  /*SELECT OL.ObjectId AS PartnerId
                     FROM ObjectLink AS OL
                     WHERE OL.ChildObjectId > 0
                       AND OL.DescId        = zc_ObjectLink_Partner_PersonalTrade()
@@ -38,6 +44,7 @@ $BODY$
                     FROM ObjectLink AS OL
                     WHERE OL.ChildObjectId > 0
                       AND OL.DescId        = zc_ObjectLink_Partner_PersonalMerch()
+                  */
                     ) 
       --
    , tmpPartner_TT AS (SELECT Object_Partner.Id                                           AS PartnerId
@@ -72,18 +79,27 @@ $BODY$
    SELECT tmp.ttExtId     ::TVarChar AS ttExtId
         , tmp.PartnerId   ::TVarChar AS clientExtId
         , CASE WHEN tmp.Ord = 1 THEN TRUE ELSE FALSE END ::Boolean AS IsDefaultClient
+        , tmp.StreetId    :: Integer
+        , tmp.HouseNumber ::TVarChar
+        , tmp.CaseNumber  ::TVarChar
+        , tmp.RoomNumber  ::TVarChar
         , FALSE           ::Boolean AS isDeleted
-   FROM (SELECT tmpPartner_TT.PartnerId  AS PartnerId
-              , Object_TT_effie.Id       AS ttExtId
+
+   FROM (SELECT Object_TT_effie.Id       AS ttExtId
+              , tmpPartner_TT.PartnerId  AS PartnerId
+              , tmpPartner_TT.StreetId
+              , tmpPartner_TT.HouseNumber
+              , tmpPartner_TT.CaseNumber 
+              , tmpPartner_TT.RoomNumber
               , ROW_NUMBER() OVER (PARTITION BY Object_TT_effie.Id ORDER BY tmpPartner_TT.PartnerId DESC) AS Ord
          FROM tmpPartner_TT
-              INNER JOIN Object_TT_effie ON Object_TT_effie.StreetId   = tmpPartner_TT.StreetId
-                                        AND Object_TT_effie.HouseNumber= tmpPartner_TT.HouseNumber
-                                        AND Object_TT_effie.CaseNumber = tmpPartner_TT.CaseNumber 
-                                        AND Object_TT_effie.RoomNumber = tmpPartner_TT.RoomNumber
-                                        -- есть Адрес
-                                        AND Object_TT_effie.StreetId   > 0
-         ) AS tmp
+              LEFT JOIN Object_TT_effie ON Object_TT_effie.StreetId   = tmpPartner_TT.StreetId
+                                       AND Object_TT_effie.HouseNumber= tmpPartner_TT.HouseNumber
+                                       AND Object_TT_effie.CaseNumber = tmpPartner_TT.CaseNumber 
+                                       AND Object_TT_effie.RoomNumber = tmpPartner_TT.RoomNumber
+         -- есть Адрес
+         WHERE tmpPartner_TT.StreetId > 0
+        ) AS tmp
    ;
 
 END;

@@ -12,6 +12,7 @@ RETURNS TABLE (priceHeaderExtId      TVarChar   -- Идентификатор прайса
              , validTo               TVarChar   -- Дата окончания (максимальная дата 9999-12-31)
              , isDeleted             Boolean    -- Признак активности: false = активна / true = не активна. По умолчанию false = активна.
              , PartnerId             Integer    -- Контрагент инф.
+             , StreetId              Integer    -- Street инф.
              , defaultPrice          Boolean    --
 ) AS
 
@@ -34,25 +35,31 @@ $BODY$
                        AND Object_Contract_View.InfoMoneyId = zc_Enum_InfoMoney_30101()
                        -- !!!Не закрытые!!!
                        AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
-                       )
-   , tmpPartner AS (SELECT Object_Partner.*
-                    FROM Object AS Object_Partner
-                    WHERE Object_Partner.DescId = zc_Object_Partner()
-                      AND Object_Partner.isErased = FALSE
                     )
-     -- прайс только этих Контрагентов
+    , tmpPartner AS (SELECT Object_Partner.*
+                          , COALESCE (ObjectLink_Partner_Street.ChildObjectId, 0) AS StreetId
+                     FROM Object AS Object_Partner
+                          -- есть Адрес
+                          INNER JOIN ObjectLink AS ObjectLink_Partner_Street
+                                               ON ObjectLink_Partner_Street.ObjectId      = Object_Partner.Id
+                                              AND ObjectLink_Partner_Street.DescId        = zc_ObjectLink_Partner_Street()
+                                              AND ObjectLink_Partner_Street.ChildObjectId > 0
+                     WHERE Object_Partner.DescId = zc_Object_Partner()
+                       AND Object_Partner.isErased = FALSE
+                    )
+     -- прайс только в Контрагенте
    , tmpPartner_PriceList AS (SELECT ObjectLink_Partner_PriceList.ObjectId      AS PartnerId
                                    , ObjectLink_Partner_PriceList.ChildObjectId AS PriceListId
                                    , ObjectLink_Contract_Juridical.ObjectId     AS ContractId
+                                   , tmpPartner.StreetId                        AS StreetId
                                    , TRUE                                       AS defaultPrice
                               FROM ObjectLink AS ObjectLink_Partner_PriceList
                                   INNER JOIN tmpPartner ON tmpPartner.Id = ObjectLink_Partner_PriceList.ObjectId
-
                                   -- нашли Юр.лицо
                                   INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                         ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_PriceList.ObjectId
                                                        AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
-
+                                  -- на ВСЕ договора
                                   INNER JOIN ObjectLink AS ObjectLink_Contract_Juridical
                                                         ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                                        AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
@@ -60,15 +67,17 @@ $BODY$
                                   INNER JOIN tmpContract ON tmpContract.ContractId = ObjectLink_Contract_Juridical.ObjectId
 
                               WHERE ObjectLink_Partner_PriceList.DescId = zc_ObjectLink_Partner_PriceList()
+                                -- сть прайс
                                 AND ObjectLink_Partner_PriceList.ChildObjectId > 0
                               )
 
-     -- прайсы из ContractPriceList для
+     -- прайсы из ContractPriceList для Остальных
    , tmpContractPriceList AS (SELECT ObjectLink_Partner_Juridical.ObjectId                 AS PartnerId
                                    , ObjectLink_ContractPriceList_PriceList.ChildObjectId  AS PriceListId
                                    , ObjectLink_ContractPriceList_Contract.ChildObjectId   AS ContractId
-                                   , ObjectDate_StartDate.ValueData           :: TDateTime AS StartDate
-                                   , ObjectDate_EndDate.ValueData             :: TDateTime AS EndDate
+                                   , ObjectDate_StartDate.ValueData                        AS StartDate
+                                   , ObjectDate_EndDate.ValueData                          AS EndDate
+                                   , tmpPartner.StreetId                                   AS StreetId
                                    , FALSE                                                 AS defaultPrice
 
                               FROM Object AS Object_ContractPriceList
@@ -78,7 +87,8 @@ $BODY$
                                                         -- Кроме таких Договоров
                                                         AND ObjectLink_ContractPriceList_Contract.ChildObjectId NOT IN (SELECT DISTINCT tmpPartner_PriceList.ContractId FROM tmpPartner_PriceList)
 
-                                   LEFT JOIN tmpContract ON tmpContract.ContractId = ObjectLink_ContractPriceList_Contract.ChildObjectId
+                                   -- только такие договора
+                                   INNER JOIN tmpContract ON tmpContract.ContractId = ObjectLink_ContractPriceList_Contract.ChildObjectId
 
                                    LEFT JOIN ObjectLink AS ObjectLink_ContractPriceList_PriceList
                                                         ON ObjectLink_ContractPriceList_PriceList.ObjectId = Object_ContractPriceList.Id
@@ -101,9 +111,8 @@ $BODY$
                                    INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                          ON ObjectLink_Partner_Juridical.ChildObjectId = ObjectLink_Contract_Juridical.ChildObjectId
                                                         AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                                   -- удаленные Контрагентв - НЕ участвуют
-                                   INNER JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Partner_Juridical.ObjectId
-                                                    AND Object_Partner.isErased = FALSE
+                                   -- удаленные Контрагенты - НЕ участвуют
+                                   INNER JOIN tmpPartner ON tmpPartner.Id = ObjectLink_Partner_Juridical.ObjectId
 
                               WHERE Object_ContractPriceList.DescId = zc_Object_ContractPriceList()
                                 AND Object_ContractPriceList.isErased = FALSE
@@ -111,63 +120,80 @@ $BODY$
                                 AND ObjectDate_EndDate.ValueData > CURRENT_DATE
                              )
 
-   -- Остальные контргагенты и прайсы
-   , tmpIts AS (SELECT tmp.PartnerId                                AS PartnerId
-                     , COALESCE (ObjectLink_Juridical_PriceList.ChildObjectId, zc_PriceList_Basis()) AS PriceListId
-                     , ObjectLink_Contract_Juridical.ObjectId       AS ContractId
-                     , FALSE                                        AS defaultPrice
-                FROM (SELECT tmpPartner.Id AS PartnerId
+     -- Остальные - у Юр лица - все его контрагенты + если у него есть прайс
+   , tmpIts AS (SELECT tmpPartner.PartnerId                                 AS PartnerId
+                       -- всегда будет прайс
+                     , COALESCE (Object_PriceList.Id, zc_PriceList_Basis()) AS PriceListId
+                       --
+                     , ObjectLink_Contract_Juridical.ObjectId               AS ContractId
+                     , tmpPartner.StreetId                                  AS StreetId
+                     , FALSE                                                AS defaultPrice
+
+                FROM (SELECT tmpPartner.Id AS PartnerId, tmpPartner.StreetId
                       FROM tmpPartner
-                          LEFT JOIN (SELECT DISTINCT tmpPartner_PriceList.PartnerId FROM tmpPartner_PriceList
-                               UNION SELECT DISTINCT tmpContractPriceList.PartnerId FROM tmpContractPriceList) AS tmp ON tmp.PartnerId = tmpPartner.Id
+                           -- этим контрагентам уже определили прайс
+                           LEFT JOIN (SELECT DISTINCT tmpPartner_PriceList.PartnerId FROM tmpPartner_PriceList
+                                UNION SELECT DISTINCT tmpContractPriceList.PartnerId FROM tmpContractPriceList
+                                      ) AS tmp
+                                        ON tmp.PartnerId = tmpPartner.Id
+                      -- исключили таких
                       WHERE tmp.PartnerId IS NULL
-                      ) AS tmp
+                     ) AS tmpPartner
 
                     -- нашли Юр.лицо
                     INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                          ON ObjectLink_Partner_Juridical.ObjectId = tmp.PartnerId
+                                          ON ObjectLink_Partner_Juridical.ObjectId = tmpPartner.PartnerId
                                          AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
 
                     INNER JOIN ObjectLink AS ObjectLink_Contract_Juridical
                                           ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                          AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
 
+                    -- только такие договора
                     INNER JOIN tmpContract ON tmpContract.ContractId = ObjectLink_Contract_Juridical.ObjectId
 
+                    -- нашли прайс
                     LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList
                                          ON ObjectLink_Juridical_PriceList.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                         AND ObjectLink_Juridical_PriceList.DescId = zc_ObjectLink_Juridical_PriceList()
-                    LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = ObjectLink_Juridical_PriceList.ChildObjectId
+                    -- все прайсы
+                    LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id       = ObjectLink_Juridical_PriceList.ChildObjectId
+                                                      --AND Object_PriceList.isErased = FALSE
                 )
+
+          -- только такие договора
         , tmp_Contract AS (SELECT DISTINCT gpSelect.extId :: Integer AS ContractId FROM gpSelect_Object_ContractHeaders_effie (inSession) AS gpSelect)
 
      -- Результат
      SELECT tmp.PriceListId         ::TVarChar AS priceHeaderExtId
           , tmp.ContractId          ::TVarChar AS contractHeaderExtId
-          , zc_DateStart()          ::TVarChar AS validFrom
-          , zc_DateEnd()            ::TVarChar AS validTo
+          , zfConvert_DateToString (zc_DateStart()) ::TVarChar AS validFrom
+          , zfConvert_DateToString (zc_DateEnd())   ::TVarChar AS validTo
           , FALSE                   ::Boolean  AS isDeleted
           , tmp.PartnerId           ::Integer  AS PartnerId
+          , tmp.StreetId            ::Integer  AS StreetId
           , tmp.defaultPrice        ::Boolean  AS defaultPrice
      FROM tmpPartner_PriceList AS tmp
           INNER JOIN tmp_Contract ON tmp_Contract.ContractId = tmp.ContractId
    UNION
      SELECT tmp.PriceListId         ::TVarChar AS priceHeaderExtId
           , tmp.ContractId          ::TVarChar AS contractHeaderExtId
-          , tmp.StartDate           ::TVarChar AS validFrom
-          , tmp.EndDate             ::TVarChar AS validTo
+          , zfConvert_DateToString (tmp.StartDate)                  ::TVarChar AS validFrom
+          , zfConvert_DateToString (/*tmp.EndDate*/ zc_DateEnd())   ::TVarChar AS validTo
           , FALSE                   ::Boolean  AS isDeleted
           , tmp.PartnerId           ::Integer  AS PartnerId
+          , tmp.StreetId            ::Integer  AS StreetId
           , tmp.defaultPrice        ::Boolean  AS defaultPrice
      FROM tmpContractPriceList AS tmp
           INNER JOIN tmp_Contract ON tmp_Contract.ContractId = tmp.ContractId
    UNION
      SELECT tmp.PriceListId         ::TVarChar AS priceHeaderExtId
           , tmp.ContractId          ::TVarChar AS contractHeaderExtId
-          , zc_DateStart()          ::TVarChar AS validFrom
-          , zc_DateEnd()            ::TVarChar AS validTo
+          , zfConvert_DateToString (zc_DateStart()) ::TVarChar AS validFrom
+          , zfConvert_DateToString (zc_DateEnd())   ::TVarChar AS validTo
           , FALSE                   ::Boolean  AS isDeleted
           , tmp.PartnerId           ::Integer  AS PartnerId
+          , tmp.StreetId            ::Integer  AS StreetId
           , tmp.defaultPrice        ::Boolean  AS defaultPrice
      FROM tmpIts AS tmp
           INNER JOIN tmp_Contract ON tmp_Contract.ContractId = tmp.ContractId

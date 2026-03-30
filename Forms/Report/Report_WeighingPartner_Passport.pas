@@ -96,6 +96,8 @@ type
     bbBranchCode: TcxGridDBColumn;
     actSelectMIPrintPassport_prod: TdsdPrintAction;
     actPrintPassport_prod: TdxBarButton;
+    actProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public

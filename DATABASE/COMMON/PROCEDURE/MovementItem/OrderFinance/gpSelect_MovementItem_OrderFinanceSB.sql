@@ -1067,12 +1067,8 @@ BEGIN
            , MovementItem.Sign_Child              :: Boolean  AS Sign_Child
 
        FROM tmpMI_all AS MovementItem
-            INNER JOIN Object AS Object_Juridical ON Object_Juridical.Id      = MovementItem.ObjectId
-                                                    -- Только Юр.л.
-                                                 AND (Object_Juridical.DescId = zc_Object_Juridical()
-                                                   OR Object_Juridical.DescId = zc_Object_InfoMoney() --или статья УП
-                                                   OR Object_Juridical.DescId = zc_Object_Partner()   --или Контагент
-                                                     )
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id      = MovementItem.ObjectId
+
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Juridical.DescId
 
             LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountRemains
@@ -1164,6 +1160,13 @@ BEGIN
                                 AND ObjectLink_Partner_Juridical.DescId        = zc_ObjectLink_Partner_Juridical()
                                 AND Object_Juridical.DescId = zc_Object_Partner()
             LEFT JOIN Object AS Object_Juridical_inf ON Object_Juridical_inf.Id = ObjectLink_Partner_Juridical.ObjectId
+
+      -- Только Юр.л.
+      /*WHERE (Object_Juridical.DescId = zc_Object_Juridical()
+          OR Object_Juridical.DescId = zc_Object_InfoMoney() --или статья УП
+          OR Object_Juridical.DescId = zc_Object_Partner()   --или Контагент
+          OR Object_Juridical.DescId IS NULL
+            )*/
 
      UNION ALL
        -- Данные прошлой недели

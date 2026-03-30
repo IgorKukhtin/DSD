@@ -1,4 +1,5 @@
 -- Function: gpSelect_Object_Warehouse_effie
+-- возвращает только договора ObjectLink_Contract_InfoMoney = zc_Enum_InfoMoney_30101() +  не закрытые zc_Enum_ContractStateKind_Close + не удаленные
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ContractHeaders_effie ( TVarChar);
                   
@@ -66,7 +67,7 @@ BEGIN
           , Object_Contract_View.ContractCode                              ::TVarChar AS code
           , zfConvert_DateToString (ObjectDate_Signing.ValueData)          ::TVarChar AS contractDate
           , zfConvert_DateToString (Object_Contract_View.StartDate)        ::TVarChar AS validFrom
-          , zfConvert_DateToString (Object_Contract_View.EndDate)          ::TVarChar AS validTo
+          , zfConvert_DateToString (/*Object_Contract_View.EndDate*/ zc_DateEnd())          ::TVarChar AS validTo
           , CASE WHEN Object_Contract_View.PaidKindId = zc_Enum_PaidKind_FirstForm() THEN 1
                  WHEN Object_Contract_View.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN 2
             END                                                            ::Integer  AS form
@@ -100,9 +101,7 @@ $BODY$
 */
 
 -- тест
+-- возвращает только договора ObjectLink_Contract_InfoMoney = zc_Enum_InfoMoney_30101() +  не закрытые zc_Enum_ContractStateKind_Close + не удаленные
 -- SELECT * FROM gpSelect_Object_ContractHeaders_effie (zfCalc_UserAdmin()::TVarChar);
 
 
-/*
-  возвращает только договора ObjectLink_Contract_InfoMoney = zc_Enum_InfoMoney_30101() +  не закрытые zc_Enum_ContractStateKind_Close + не удаленные
-*/
