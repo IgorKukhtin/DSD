@@ -21,7 +21,7 @@ $BODY$
      RETURN QUERY
      WITH 
      tmpPartner AS (-- Идентификатор контрагента.
-                    SELECT DISTINCT gpSelect.clientExtId :: Integer AS PartnerId FROM gpSelect_Object_ContractPrices_effie (inSession) AS gpSelect
+                    SELECT DISTINCT gpSelect.PartnerId FROM gpSelect_Object_ContractPrices_effie (inSession) AS gpSelect
                     -- если vbPersonalId - Сотрудник (торговый)
                   /*SELECT OL.ObjectId AS PartnerId
                     FROM ObjectLink AS OL

@@ -22,22 +22,46 @@ $BODY$
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
+     CREATE TEMP TABLE _tmp1 (extId Integer, clientExtID Integer, priceHeaderExtId Integer, defaultPrice Boolean)  ON COMMIT DROP;
+
+     INSERT INTO _tmp1 (extId, clientExtID, priceHeaderExtId, defaultPrice)
+         WITH tmp_tt AS (SELECT DISTINCT gpSelect.ttExtId, gpSelect.clientExtId FROM gpSelect_Object_Twins_effie('') AS gpSelect)
+            , tmp_Contract AS (SELECT DISTINCT gpSelect.extId FROM gpSelect_Object_ContractHeaders_effie (inSession) AS gpSelect)
+         SELECT DISTINCT
+                tmp.contractHeaderExtId          :: Integer AS extId
+              , tmp.PartnerId                    :: Integer AS clientExtID
+              , tmp.priceHeaderExtId             :: Integer AS priceHeaderExtId
+              , tmp.defaultPrice                 :: Boolean AS defaultPrice
+         FROM gpSelect_Object_ContractPrices_effie (inSession) AS tmp
+              INNER JOIN tmp_tt       ON tmp_tt.clientExtId = tmp.PartnerId           :: TVarChar
+              INNER JOIN tmp_Contract ON tmp_Contract.ExtId = tmp.contractHeaderExtId :: TVarChar
+        ;
+
+
+   INSERT INTO Object_PriceForTwin_effie (clientExtID, priceHeaderExtId)
+     SELECT _tmp1.clientExtID, _tmp1.priceHeaderExtId
+     FROM _tmp1
+          LEFT JOIN Object_PriceForTwin_effie ON Object_PriceForTwin_effie.clientExtID      = _tmp1.clientExtID
+                                             AND Object_PriceForTwin_effie.priceHeaderExtId = _tmp1.priceHeaderExtId
+     WHERE Object_PriceForTwin_effie.clientExtID IS NULL
+    ;
+
+
      -- Результат
      RETURN QUERY
-     WITH tmp_tt AS (SELECT DISTINCT gpSelect.ttExtId, gpSelect.clientExtId FROM gpSelect_Object_Twins_effie('') AS gpSelect)
-        , tmp_Contract AS (SELECT DISTINCT gpSelect.extId FROM gpSelect_Object_ContractHeaders_effie (inSession) AS gpSelect)
      --
      SELECT DISTINCT
-            tmp.contractHeaderExtId          ::TVarChar AS extId
+            Object_PriceForTwin_effie.Id     ::TVarChar AS extId
           , tmp.PartnerId                    ::TVarChar AS clientExtID
           , tmp.priceHeaderExtId             ::TVarChar AS priceHeaderExtId
-          , tmp_tt.ttExtId                   ::TVarChar AS ttExtId
+        --, tmp_tt.ttExtId                   ::TVarChar AS ttExtId
+          , NULL                             ::TVarChar AS ttExtId
           , NULL                             ::TVarChar AS employeeExtId
           , tmp.defaultPrice                 ::Boolean  AS defaultPrice
           , FALSE                            ::Boolean  AS isDeleted
-     FROM gpSelect_Object_ContractPrices_effie (inSession) AS tmp
-          INNER JOIN tmp_tt       ON tmp_tt.clientExtId = tmp.PartnerId           :: TVarChar
-          INNER JOIN tmp_Contract ON tmp_Contract.ExtId = tmp.contractHeaderExtId :: TVarChar
+     FROM _tmp1 AS tmp
+          LEFT JOIN Object_PriceForTwin_effie ON Object_PriceForTwin_effie.clientExtID      = tmp.clientExtID
+                                             AND Object_PriceForTwin_effie.priceHeaderExtId = tmp.priceHeaderExtId
      ;
 
 END;

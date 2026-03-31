@@ -63,7 +63,7 @@ BEGIN
               
      -- Результат
      SELECT Object_Contract_View.ContractId                                ::TVarChar AS extId
-          , TRIM (Object_Contract_View.InvNumber)                          ::TVarChar AS Name
+          , (TRIM (Object_Contract_View.InvNumber) || ' ' || COALESCE (Object_PaidKind.ValueData, '') || COALESCE (' ' || Object_Contract_View.ContractTagName, '')) :: TVarChar AS Name
           , Object_Contract_View.ContractCode                              ::TVarChar AS code
           , zfConvert_DateToString (ObjectDate_Signing.ValueData)          ::TVarChar AS contractDate
           , zfConvert_DateToString (Object_Contract_View.StartDate)        ::TVarChar AS validFrom
@@ -81,6 +81,8 @@ BEGIN
 
         LEFT JOIN tmpDelayCreditLimit ON tmpDelayCreditLimit.ContractId = Object_Contract_View.ContractId
         
+        LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
+
      WHERE Object_Contract_View.isErased = FALSE 
        -- !!!ТОЛЬКО ГП!!!
        AND Object_Contract_View.InfoMoneyId = zc_Enum_InfoMoney_30101() 
@@ -103,5 +105,3 @@ $BODY$
 -- тест
 -- возвращает только договора ObjectLink_Contract_InfoMoney = zc_Enum_InfoMoney_30101() +  не закрытые zc_Enum_ContractStateKind_Close + не удаленные
 -- SELECT * FROM gpSelect_Object_ContractHeaders_effie (zfCalc_UserAdmin()::TVarChar);
-
-

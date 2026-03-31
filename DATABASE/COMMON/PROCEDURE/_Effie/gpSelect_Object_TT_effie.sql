@@ -53,7 +53,9 @@ $BODY$
                                     HouseNumber          TVarChar,
                                     CaseNumber           TVarChar,
                                     RoomNumber           TVarChar,
-                                    isErased             Boolean)  ON COMMIT DROP;
+                                    EDIId                Integer,  -- Признак 1=EDI 2=VHASNO 0-нет
+                                    isErased             Boolean
+                                   )  ON COMMIT DROP;
 
      INSERT INTO _tmpPartner (PartnerId,
                               StreetId,
@@ -62,8 +64,9 @@ $BODY$
                               HouseNumber,
                               CaseNumber,
                               RoomNumber,
-                              isErased)
-
+                              EDIId,
+                              isErased
+                             )
      WITH
      tmpPartner AS (-- Идентификатор контрагента.
                     SELECT DISTINCT gpSelect.PartnerId FROM gpSelect_Object_ContractPrices_effie (inSession) AS gpSelect
@@ -94,9 +97,50 @@ $BODY$
           , COALESCE (TRIM (ObjectString_HouseNumber.ValueData), '') AS HouseNumber
           , COALESCE (TRIM (ObjectString_CaseNumber.ValueData), '')  AS CaseNumber
           , COALESCE (TRIM (ObjectString_RoomNumber.ValueData), '')  AS RoomNumber
+          , CASE WHEN ObjectBoolean_Juridical_VchasnoEdi.ValueData  = TRUE
+                      THEN 2
+                 WHEN ObjectBoolean_Partner_EdiOrdspr.ValueData  = TRUE
+                   OR ObjectBoolean_Partner_EdiInvoice.ValueData = TRUE
+                   OR ObjectBoolean_Partner_EdiDesadv.ValueData  = TRUE
+                      THEN 1
+               /*WHEN ObjectBoolean_Partner_EdiOrdspr_vch.ValueData  = TRUE
+                   OR ObjectBoolean_Partner_EdiInvoice_vch.ValueData = TRUE
+                   OR ObjectBoolean_Partner_EdiDesadv_vch.ValueData  = TRUE
+                      THEN 2*/
+                 ELSE 10
+            END AS EDIId
           , Object_Partner.isErased                                  AS isErased
+
      FROM Object AS Object_Partner
          INNER JOIN tmpPartner ON tmpPartner.PartnerId = Object_Partner.Id
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                              ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
+                             AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_Juridical_VchasnoEdi
+                                 ON ObjectBoolean_Juridical_VchasnoEdi.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                AND ObjectBoolean_Juridical_VchasnoEdi.DescId = zc_ObjectBoolean_Juridical_VchasnoEdi()
+
+       /*LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiOrdspr_vch
+                                 ON ObjectBoolean_Partner_EdiOrdspr_vch.ObjectId = Object_Partner.Id
+                                AND ObjectBoolean_Partner_EdiOrdspr_vch.DescId = zc_ObjectBoolean_Partner_EdiOrdspr_vch()
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiInvoice_vch
+                                 ON ObjectBoolean_Partner_EdiInvoice_vch.ObjectId = Object_Partner.Id
+                                AND ObjectBoolean_Partner_EdiInvoice_vch.DescId = zc_ObjectBoolean_Partner_EdiInvoice_vch()
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiDesadv_vch
+                                 ON ObjectBoolean_Partner_EdiDesadv_vch.ObjectId = Object_Partner.Id
+                                AND ObjectBoolean_Partner_EdiDesadv_vch.DescId = zc_ObjectBoolean_Partner_EdiDesadv_vch()*/
+
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiOrdspr
+                                 ON ObjectBoolean_Partner_EdiOrdspr.ObjectId = Object_Partner.Id
+                                AND ObjectBoolean_Partner_EdiOrdspr.DescId = zc_ObjectBoolean_Partner_EdiOrdspr()
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiInvoice
+                                 ON ObjectBoolean_Partner_EdiInvoice.ObjectId = Object_Partner.Id
+                                AND ObjectBoolean_Partner_EdiInvoice.DescId = zc_ObjectBoolean_Partner_EdiInvoice()
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_Partner_EdiDesadv
+                                 ON ObjectBoolean_Partner_EdiDesadv.ObjectId = Object_Partner.Id
+                                AND ObjectBoolean_Partner_EdiDesadv.DescId = zc_ObjectBoolean_Partner_EdiDesadv()
 
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Street
                               ON ObjectLink_Partner_Street.ObjectId = Object_Partner.Id
@@ -127,8 +171,23 @@ $BODY$
     --AND ObjectLink_Partner_Street.ChildObjectId > 0
     ;
 
+     UPDATE Object_TT_effie SET PartnerTagId = tmpPartner.PartnerTagId
+                              , AreaId       = tmpPartner.AreaId
+                              , EDIId        = tmpPartner.EDIId
+
+     FROM (SELECT _tmpPartner.StreetId, _tmpPartner.HouseNumber, _tmpPartner.CaseNumber, _tmpPartner.RoomNumber
+                , MAX (_tmpPartner.PartnerTagId) AS PartnerTagId, MAX (_tmpPartner.AreaId) AS AreaId, MAX (_tmpPartner.EDIId) AS EDIId
+           FROM _tmpPartner
+           GROUP BY _tmpPartner.StreetId, _tmpPartner.HouseNumber, _tmpPartner.CaseNumber, _tmpPartner.RoomNumber
+           ) AS tmpPartner
+     WHERE Object_TT_effie.StreetId   = tmpPartner.StreetId
+       AND Object_TT_effie.HouseNumber= tmpPartner.HouseNumber
+       AND Object_TT_effie.CaseNumber = tmpPartner.CaseNumber
+       AND Object_TT_effie.RoomNumber = tmpPartner.RoomNumber
+    ;
+
      --нужно записать в таблица Object_TT_effie.Id - ключ StreetId, HouseNumber, CaseNumber, RoomNumber  те элементы , которых нет
-     INSERT INTO Object_TT_effie (StreetId, PartnerTagId, AreaId, HouseNumber, CaseNumber, RoomNumber, InsertDate, isErased)
+     INSERT INTO Object_TT_effie (StreetId, PartnerTagId, AreaId, HouseNumber, CaseNumber, RoomNumber, EDIId, InsertDate, isErased)
      SELECT DISTINCT
             tmpPartner.StreetId
           , tmpPartner.PartnerTagId
@@ -136,13 +195,13 @@ $BODY$
           , tmpPartner.HouseNumber
           , tmpPartner.CaseNumber
           , tmpPartner.RoomNumber
+          , tmpPartner.EDIId
           , CURRENT_TIMESTAMP AS InsertDate
           , FALSE             AS isErased
       FROM (SELECT _tmpPartner.StreetId, _tmpPartner.HouseNumber, _tmpPartner.CaseNumber, _tmpPartner.RoomNumber
-                 , MAX (_tmpPartner.PartnerTagId) AS PartnerTagId, MAX (_tmpPartner.AreaId) AS AreaId
+                 , MAX (_tmpPartner.PartnerTagId) AS PartnerTagId, MAX (_tmpPartner.AreaId) AS AreaId, MAX (_tmpPartner.EDIId) AS EDIId
             FROM _tmpPartner
             GROUP BY _tmpPartner.StreetId, _tmpPartner.HouseNumber, _tmpPartner.CaseNumber, _tmpPartner.RoomNumber
-          -- limit 150
            ) AS tmpPartner
            LEFT JOIN Object_TT_effie ON Object_TT_effie.StreetId   = tmpPartner.StreetId
                                     AND Object_TT_effie.HouseNumber= tmpPartner.HouseNumber
@@ -207,8 +266,17 @@ $BODY$
           , ''                                            ::TVarChar AS territorialFeatureExtId
           , Object_Region.Id                              ::TVarChar AS salePointDistrictExtId
           , Object_Region.ValueData                       ::TVarChar AS salePointDistrictName
-          , ''                                            ::TVarChar AS salePointFormatExtId
-          , ''                                            ::TVarChar AS salePointFormatName
+
+            -- Внешний идентификатор формата магазина
+          , Object_TT_effie.EDIId                         ::TVarChar AS salePointFormatExtId
+            -- Название формата магазина
+          , CASE WHEN Object_TT_effie.EDIId = 1
+                      THEN 'EDI'
+                 WHEN Object_TT_effie.EDIId = 2
+                      THEN 'VCHASNO'
+                 ELSE 'нет EDI'
+            END ::TVarChar AS salePointFormatName
+
         --, COALESCE (Object_Area.Id ::TVarChar, zfCalc_UserAdmin() ::TVarChar) ::TVarChar AS salePointRegionExtId
         --, COALESCE (Object_Area.ValueData, '')          ::TVarChar AS salePointRegionName
           , Object_Area.Id                                ::TVarChar AS salePointRegionExtId
