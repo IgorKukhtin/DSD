@@ -55,8 +55,18 @@ BEGIN
                       AND MovementItem.isErased   = FALSE
                     )
      THEN
-          RAISE EXCEPTION 'Ошибка.Нет прав для исправлений.В документе найдены исправления финонсовой службой .';
+         IF 1=0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Нет прав для исправлений.В документе найдены исправления финансовой службой .';
+         ELSE
+             UPDATE MovementItem SET isErased = TRUE
+             WHERE MovementItem.DescId = zc_MI_Detail()
+               AND MovementItem.MovementId IN (SELECT DISTINCT _tmpMovement.MovementId FROM _tmpMovement)
+               AND MovementItem.isErased   = FALSE
+              ;
+         END IF;
      END IF;
+
 
 
      --
