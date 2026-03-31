@@ -671,7 +671,7 @@ begin
           EmptyValuesParams(ParamsMovement);//!!!кроме даты!!!
           ParamsMovement.ParamByName('OperDatePartner').AsDateTime:=Date;//!!!теперь эта даты!!!
           // еще эти
-          EmptyValuesParams(ParamsMI)
+          EmptyValuesParams(ParamsMI);
           //
           gpInitialize_MovementDesc;
           //

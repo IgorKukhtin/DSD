@@ -2207,7 +2207,7 @@ object GuideGoodsForm: TGuideGoodsForm
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           ParentFont = False
-          ExplicitWidth = 95
+          ExplicitLeft = -4
         end
         object EditPartionCell: TcxButtonEdit
           Left = 4

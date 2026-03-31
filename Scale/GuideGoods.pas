@@ -315,6 +315,7 @@ type
     procedure EditWeightTare1KeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
   private
+    count_Insert_Scale_MI:Integer;
     oldParam1, oldParam2:Integer;
     oldParam3:TDateTime;
     fCloseOK : Boolean;
@@ -726,6 +727,8 @@ begin
      Application.ProcessMessages;
      Application.ProcessMessages;
      fStartWrite:=false;
+
+     count_Insert_Scale_MI:= 0;
 
      if isDialog = false then result:=ShowModal=mrOk;
 end;
@@ -1598,9 +1601,19 @@ begin
                              else begin Result:=FALSE; exit;end; // из двух вариантов ничего не выбрали, остаемся в форме
                         end;
           end;
+          // Проверка
+          if count_Insert_Scale_MI > 0 then
+          begin
+               ShowMessage('Ошибка.Повторное сохранение № <'+IntToStr(count_Insert_Scale_MI+1)+'>');
+               Result:= true;
+               exit;
+          end;
+
+
           //сохранение MovementItem
           Result:=DMMainScaleForm.gpInsert_Scale_MI(ParamsMovement,ParamsMI);
-          if not Result then ShowMessage('Error.not Result');
+          if not Result then ShowMessage('Error.not Result')
+          else count_Insert_Scale_MI:= count_Insert_Scale_MI+1;
           //
           if (Result) and (SettingMain.BranchCode = 115)
           then
@@ -1848,7 +1861,7 @@ end;
 procedure TGuideGoodsForm.EditPartionCellKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-    if Key=13
+    if (Key=13) and (count_Insert_Scale_MI = 0)
     then
         actSaveExecute(Self);
 end;
