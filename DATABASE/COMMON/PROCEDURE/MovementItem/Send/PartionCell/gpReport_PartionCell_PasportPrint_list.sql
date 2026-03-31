@@ -218,16 +218,39 @@ BEGIN
                              ) AS tmp
                            )
 
-        -- ячейки отбора
-      , tmpChoiceCell AS (SELECT tmp.*
+        -- ячейки отбора  (место отбора)
+ /*     , tmpChoiceCell AS (SELECT tmp.*
                                , LEFT (tmp.Name, 1)::TVarChar AS CellName_shot
                                , ROW_NUMBER() OVER (PARTITION BY tmp.GoodsId, tmp.GoodsKindId ORDER BY tmp.NPP) AS Ord
                           FROM gpSelect_Object_ChoiceCell (FALSE, inSession) AS tmp
                           WHERE tmp.GoodsId = inGoodsId
                             AND COALESCE (tmp.GoodsKindId,0) = COALESCE (inGoodsKindId,0)
                           )
+ */ 
+  , tmpChoiceCell AS (SELECT Object_ChoiceCell.Id               AS Id
+                           , Object_ChoiceCell.ObjectCode       AS Code
+                           , Object_ChoiceCell.ValueData        AS Name
+                           , ObjectLink_Goods.ChildObjectId     AS GoodsId
+                           , ObjectLink_GoodsKind.ChildObjectId AS GoodsKindId
+                           
+                           , LEFT (Object_ChoiceCell.ValueData, 1)::TVarChar AS CellName_shot
+                           , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Goods.ChildObjectId, ObjectLink_GoodsKind.ChildObjectId ORDER BY Object_ChoiceCell.ObjectCode) AS Ord
+                      FROM Object AS Object_ChoiceCell
+                          LEFT JOIN ObjectLink AS ObjectLink_Goods
+                                               ON ObjectLink_Goods.ObjectId = Object_ChoiceCell.Id
+                                              AND ObjectLink_Goods.DescId = zc_ObjectLink_ChoiceCell_Goods()  
+                           
+                          LEFT JOIN ObjectLink AS ObjectLink_GoodsKind
+                                               ON ObjectLink_GoodsKind.ObjectId = Object_ChoiceCell.Id
+                                              AND ObjectLink_GoodsKind.DescId = zc_ObjectLink_ChoiceCell_GoodsKind()
+                          --ограничиваем товаром и видом товара
+                          INNER JOIN tmpPartionCell_gr ON tmpPartionCell_gr.GoodsId = ObjectLink_Goods.ChildObjectId 
+                                                      AND COALESCE (tmpPartionCell_gr.GoodsKindId, 0) = COALESCE (ObjectLink_GoodsKind.ChildObjectId,0)
 
-
+                      WHERE Object_ChoiceCell.DescId = zc_Object_ChoiceCell()
+                        AND Object_ChoiceCell.isErased = FALSE 
+                    --  LIMIT 1 
+                     )
      --
      SELECT Object_Goods.ObjectCode            AS GoodsCode
           , Object_Goods.ValueData             AS GoodsName
