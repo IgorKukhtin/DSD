@@ -292,11 +292,17 @@ begin
        Params.AddParam('inPersonalId3', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PersonalId3').AsInteger);
        Params.AddParam('inPersonalId4', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PersonalId4').AsInteger);
        Params.AddParam('inPersonalId5', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PersonalId5').AsInteger);
+       Params.AddParam('inPersonalId6', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PersonalId6').AsInteger);
+       Params.AddParam('inPersonalId7', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PersonalId7').AsInteger);
+       Params.AddParam('inPersonalId8', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PersonalId8').AsInteger);
        Params.AddParam('inPositionId1', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PositionId1').AsInteger);
        Params.AddParam('inPositionId2', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PositionId2').AsInteger);
        Params.AddParam('inPositionId3', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PositionId3').AsInteger);
        Params.AddParam('inPositionId4', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PositionId4').AsInteger);
        Params.AddParam('inPositionId5', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PositionId5').AsInteger);
+       Params.AddParam('inPositionId6', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PositionId6').AsInteger);
+       Params.AddParam('inPositionId7', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PositionId7').AsInteger);
+       Params.AddParam('inPositionId8', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PositionId8').AsInteger);
        Params.AddParam('inPersonalId1_Stick', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PersonalId1_Stick').AsInteger);
        Params.AddParam('inPositionId1_Stick', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PositionId1_Stick').AsInteger);
        //try

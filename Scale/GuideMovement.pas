@@ -161,6 +161,9 @@ type
     cbIncome_sklad: TCheckBox;
     bbPrintGofro: TSpeedButton;
     bbPrintGofro_Goods: TSpeedButton;
+    PersonalCode6: TcxGridDBColumn;
+    PersonalName6: TcxGridDBColumn;
+    PositionName6: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -684,6 +687,27 @@ begin
     execParams.ParamByName('PositionId5').AsInteger:=CDS.FieldByName('PositionId5').AsInteger;
     execParams.ParamByName('PositionCode5').AsInteger:=CDS.FieldByName('PositionCode5').AsInteger;
     execParams.ParamByName('PositionName5').AsString:=CDS.FieldByName('PositionName5').AsString;
+    //
+    execParams.ParamByName('PersonalId6').AsInteger:=CDS.FieldByName('PersonalId6').AsInteger;
+    execParams.ParamByName('PersonalCode6').AsInteger:=CDS.FieldByName('PersonalCode6').AsInteger;
+    execParams.ParamByName('PersonalName6').AsString:=CDS.FieldByName('PersonalName6').AsString;
+    execParams.ParamByName('PositionId6').AsInteger:=CDS.FieldByName('PositionId6').AsInteger;
+    execParams.ParamByName('PositionCode6').AsInteger:=CDS.FieldByName('PositionCode6').AsInteger;
+    execParams.ParamByName('PositionName6').AsString:=CDS.FieldByName('PositionName6').AsString;
+    //
+    execParams.ParamByName('PersonalId7').AsInteger:=CDS.FieldByName('PersonalId7').AsInteger;
+    execParams.ParamByName('PersonalCode7').AsInteger:=CDS.FieldByName('PersonalCode7').AsInteger;
+    execParams.ParamByName('PersonalName7').AsString:=CDS.FieldByName('PersonalName7').AsString;
+    execParams.ParamByName('PositionId7').AsInteger:=CDS.FieldByName('PositionId7').AsInteger;
+    execParams.ParamByName('PositionCode7').AsInteger:=CDS.FieldByName('PositionCode7').AsInteger;
+    execParams.ParamByName('PositionName7').AsString:=CDS.FieldByName('PositionName7').AsString;
+    //
+    execParams.ParamByName('PersonalId8').AsInteger:=CDS.FieldByName('PersonalId8').AsInteger;
+    execParams.ParamByName('PersonalCode8').AsInteger:=CDS.FieldByName('PersonalCode8').AsInteger;
+    execParams.ParamByName('PersonalName8').AsString:=CDS.FieldByName('PersonalName8').AsString;
+    execParams.ParamByName('PositionId8').AsInteger:=CDS.FieldByName('PositionId8').AsInteger;
+    execParams.ParamByName('PositionCode8').AsInteger:=CDS.FieldByName('PositionCode8').AsInteger;
+    execParams.ParamByName('PositionName8').AsString:=CDS.FieldByName('PositionName8').AsString;
     //
     execParams.ParamByName('PersonalId1_Stick').AsInteger:=CDS.FieldByName('PersonalId1_Stick').AsInteger;
     execParams.ParamByName('PersonalCode1_Stick').AsInteger:=CDS.FieldByName('PersonalCode1_Stick').AsInteger;

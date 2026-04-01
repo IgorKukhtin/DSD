@@ -925,6 +925,9 @@ begin
      Create_ParamsPersonal(Params, '3');
      Create_ParamsPersonal(Params, '4');
      Create_ParamsPersonal(Params, '5');
+     Create_ParamsPersonal(Params, '6');
+     Create_ParamsPersonal(Params, '7');
+     Create_ParamsPersonal(Params, '8');
      Create_ParamsPersonal_Stick(Params, '1');
      ParamAdd(Params,'MovementId', ftInteger);
      ParamAdd(Params,'InvNumber',ftString);

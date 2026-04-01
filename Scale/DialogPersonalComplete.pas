@@ -96,7 +96,7 @@ type
     Panel4: TPanel;
     Label2: TLabel;
     gbPersonalCode8: TGroupBox;
-    cxCurrencyEdit1: TcxCurrencyEdit;
+    EditPersonalCode8: TcxCurrencyEdit;
     gbPersonalName8: TGroupBox;
     EditPersonalName8: TcxButtonEdit;
     infoPanelPersona7: TPanel;
@@ -107,7 +107,7 @@ type
     Panel8: TPanel;
     Label4: TLabel;
     gbPersonalCode7: TGroupBox;
-    cxCurrencyEdit2: TcxCurrencyEdit;
+    EditPersonalCode7: TcxCurrencyEdit;
     gbPersonalName7: TGroupBox;
     EditPersonalName7: TcxButtonEdit;
     infoPanelPersona6: TPanel;
@@ -118,7 +118,7 @@ type
     Panel12: TPanel;
     Label6: TLabel;
     gbPersonalCode6: TGroupBox;
-    cxCurrencyEdit3: TcxCurrencyEdit;
+    EditPersonalCode6: TcxCurrencyEdit;
     gbPersonalName6: TGroupBox;
     EditPersonalName6: TcxButtonEdit;
 
@@ -190,6 +190,18 @@ begin
           EditPersonalName5.Text:=ParamByName('PersonalName5').AsString;
           PanelPositionName5.Caption:=ParamByName('PositionName5').AsString;
 
+          EditPersonalCode6.Text:=ParamByName('PersonalCode6').AsString;
+          EditPersonalName6.Text:=ParamByName('PersonalName6').AsString;
+          PanelPositionName6.Caption:=ParamByName('PositionName6').AsString;
+
+          EditPersonalCode7.Text:=ParamByName('PersonalCode7').AsString;
+          EditPersonalName7.Text:=ParamByName('PersonalName7').AsString;
+          PanelPositionName7.Caption:=ParamByName('PositionName7').AsString;
+
+          EditPersonalCode8.Text:=ParamByName('PersonalCode8').AsString;
+          EditPersonalName8.Text:=ParamByName('PersonalName8').AsString;
+          PanelPositionName8.Caption:=ParamByName('PositionName8').AsString;
+
           EditPersonalStickCode1.Text:=ParamByName('PersonalCode1_Stick').AsString;
           EditPersonalStickName1.Text:=ParamByName('PersonalName1_Stick').AsString;
           PanelPositionStickName1.Caption:=ParamByName('PositionName1_Stick').AsString;
@@ -201,6 +213,9 @@ begin
           else if infoPanelPersona3.Visible = true then ActiveControl:=EditPersonalCode3
                else if infoPanelPersona4.Visible = true then ActiveControl:=EditPersonalCode4
                     else if infoPanelPersona5.Visible = true then ActiveControl:=EditPersonalCode5
+                    else if infoPanelPersona6.Visible = true then ActiveControl:=EditPersonalCode6
+                    else if infoPanelPersona7.Visible = true then ActiveControl:=EditPersonalCode7
+                    else if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
                           else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else bbOkClick(self);
 
      fStartWrite:=false;
@@ -218,6 +233,9 @@ var PersonalCode1:Integer;
     PersonalCode3:Integer;
     PersonalCode4:Integer;
     PersonalCode5:Integer;
+    PersonalCode6:Integer;
+    PersonalCode7:Integer;
+    PersonalCode8:Integer;
 begin
      Result:=false;
      //
@@ -226,6 +244,9 @@ begin
      try PersonalCode3:= StrToInt(EditPersonalCode3.Text); except PersonalCode3:= 0;end;
      try PersonalCode4:= StrToInt(EditPersonalCode4.Text); except PersonalCode4:= 0;end;
      try PersonalCode5:= StrToInt(EditPersonalCode5.Text); except PersonalCode5:= 0;end;
+     try PersonalCode6:= StrToInt(EditPersonalCode6.Text); except PersonalCode6:= 0;end;
+     try PersonalCode7:= StrToInt(EditPersonalCode7.Text); except PersonalCode7:= 0;end;
+     try PersonalCode8:= StrToInt(EditPersonalCode8.Text); except PersonalCode8:= 0;end;
      try PersonalStickCode1:= StrToInt(EditPersonalStickCode1.Text); except PersonalStickCode1:= 0;end;
      //
      EditPersonalCode1Exit(EditPersonalCode1);
@@ -233,6 +254,9 @@ begin
      EditPersonalCode1Exit(EditPersonalCode3);
      EditPersonalCode1Exit(EditPersonalCode4);
      EditPersonalCode1Exit(EditPersonalCode5);
+     EditPersonalCode1Exit(EditPersonalCode6);
+     EditPersonalCode1Exit(EditPersonalCode7);
+     EditPersonalCode1Exit(EditPersonalCode8);
      EditPersonalCode1Exit(EditPersonalStickCode1);
 
      //
@@ -249,7 +273,7 @@ begin
      //
      Result:=((PersonalCode2<>0)and(trim(EditPersonalName2.Text)<>'')and(ParamsPersonalComplete_local.ParamByName('PersonalId2').AsInteger<>0))
           or ((PersonalCode2=0)and(trim(EditPersonalName2.Text)='')and(ParamsPersonalComplete_local.ParamByName('PersonalId2').AsInteger=0)
-              and(PersonalCode3=0)and(PersonalCode4=0)and(PersonalCode5=0)
+              and(PersonalCode3=0)and(PersonalCode4=0)and(PersonalCode5=0)and(PersonalCode6=0)and(PersonalCode7=0)and(PersonalCode8=0)
              )
           or (infoPanelPersona2.Visible = false);
      if not Result then
@@ -262,7 +286,7 @@ begin
      //
      Result:=((PersonalCode3<>0)and(trim(EditPersonalName3.Text)<>'')and(ParamsPersonalComplete_local.ParamByName('PersonalId3').AsInteger<>0))
           or ((PersonalCode3=0)and(trim(EditPersonalName3.Text)='')and(ParamsPersonalComplete_local.ParamByName('PersonalId3').AsInteger=0)
-              and(PersonalCode4=0)and(PersonalCode5=0)
+              and(PersonalCode4=0)and(PersonalCode5=0)and(PersonalCode6=0)and(PersonalCode7=0)and(PersonalCode8=0)
              )
           or (infoPanelPersona3.Visible = false);
      if not Result then
@@ -275,7 +299,7 @@ begin
      //
      Result:=((PersonalCode4<>0)and(trim(EditPersonalName4.Text)<>'')and(ParamsPersonalComplete_local.ParamByName('PersonalId4').AsInteger<>0))
           or ((PersonalCode4=0)and(trim(EditPersonalName4.Text)='')and(ParamsPersonalComplete_local.ParamByName('PersonalId4').AsInteger=0)
-           and(PersonalCode5=0)
+           and(PersonalCode5=0)and(PersonalCode6=0)and(PersonalCode7=0)and(PersonalCode8=0)
              )
           or (infoPanelPersona4.Visible = false);
      if not Result then
@@ -285,15 +309,51 @@ begin
            exit;
      end;
      //
-     //
+     //5
      Result:=((PersonalCode5<>0)and(trim(EditPersonalName5.Text)<>'')and(ParamsPersonalComplete_local.ParamByName('PersonalId5').AsInteger<>0))
           or ((PersonalCode5=0)and(trim(EditPersonalName5.Text)='')and(ParamsPersonalComplete_local.ParamByName('PersonalId5').AsInteger=0)
+           and(PersonalCode6=0)and(PersonalCode7=0)and(PersonalCode8=0)
              )
           or (infoPanelPersona5.Visible = false);
      if not Result then
      begin
            ActiveControl:=EditPersonalCode5;
            ShowMessage('Введите Комплектовщик 5.');
+           exit;
+     end;
+     //6
+     Result:=((PersonalCode6<>0)and(trim(EditPersonalName6.Text)<>'')and(ParamsPersonalComplete_local.ParamByName('PersonalId6').AsInteger<>0))
+          or ((PersonalCode6=0)and(trim(EditPersonalName6.Text)='')and(ParamsPersonalComplete_local.ParamByName('PersonalId6').AsInteger=0)
+           and(PersonalCode7=0)and(PersonalCode8=0)
+             )
+          or (infoPanelPersona6.Visible = false);
+     if not Result then
+     begin
+           ActiveControl:=EditPersonalCode6;
+           ShowMessage('Введите Комплектовщик 6.');
+           exit;
+     end;
+     //7
+     Result:=((PersonalCode7<>0)and(trim(EditPersonalName7.Text)<>'')and(ParamsPersonalComplete_local.ParamByName('PersonalId7').AsInteger<>0))
+          or ((PersonalCode7=0)and(trim(EditPersonalName7.Text)='')and(ParamsPersonalComplete_local.ParamByName('PersonalId7').AsInteger=0)
+           and(PersonalCode8=0)
+             )
+          or (infoPanelPersona7.Visible = false);
+     if not Result then
+     begin
+           ActiveControl:=EditPersonalCode6;
+           ShowMessage('Введите Комплектовщик 7.');
+           exit;
+     end;
+     //8
+     Result:=((PersonalCode8<>0)and(trim(EditPersonalName8.Text)<>'')and(ParamsPersonalComplete_local.ParamByName('PersonalId8').AsInteger<>0))
+          or ((PersonalCode8=0)and(trim(EditPersonalName8.Text)='')and(ParamsPersonalComplete_local.ParamByName('PersonalId8').AsInteger=0)
+             )
+          or (infoPanelPersona8.Visible = false);
+     if not Result then
+     begin
+           ActiveControl:=EditPersonalCode6;
+           ShowMessage('Введите Комплектовщик 8.');
            exit;
      end;
      //
@@ -322,6 +382,9 @@ begin
     infoPanelPersona3.Visible:= GetArrayList_Value_byName(Default_Array,'isPersonalComplete3') = AnsiUpperCase('TRUE');
     infoPanelPersona4.Visible:= GetArrayList_Value_byName(Default_Array,'isPersonalComplete4') = AnsiUpperCase('TRUE');
     infoPanelPersona5.Visible:= GetArrayList_Value_byName(Default_Array,'isPersonalComplete5') = AnsiUpperCase('TRUE');
+    infoPanelPersona5.Visible:= GetArrayList_Value_byName(Default_Array,'isPersonalComplete6') = AnsiUpperCase('TRUE');
+    infoPanelPersona5.Visible:= GetArrayList_Value_byName(Default_Array,'isPersonalComplete7') = AnsiUpperCase('TRUE');
+    infoPanelPersona5.Visible:= GetArrayList_Value_byName(Default_Array,'isPersonalComplete8') = AnsiUpperCase('TRUE');
     infoPanelPersonaStick1.Visible:= GetArrayList_Value_byName(Default_Array,'isPersonalStick1') = AnsiUpperCase('TRUE');
 
 end;
@@ -358,9 +421,30 @@ begin
                      then
                           // 5...
                           if infoPanelPersona5.Visible = true then ActiveControl:=EditPersonalCode5
+                          else if infoPanelPersona6.Visible = true then ActiveControl:=EditPersonalCode6
+                                else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else bbOkClick(self)
+
+                else if (ActiveControl=EditPersonalCode5)or(ActiveControl=EditPersonalName5)
+                     then
+                          // 6...
+                          if infoPanelPersona6.Visible = true then ActiveControl:=EditPersonalCode6
+                          else if infoPanelPersona7.Visible = true then ActiveControl:=EditPersonalCode7
+                                else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else bbOkClick(self)
+
+                else if (ActiveControl=EditPersonalCode6)or(ActiveControl=EditPersonalName6)
+                     then
+                          // 7...
+                          if infoPanelPersona7.Visible = true then ActiveControl:=EditPersonalCode7
+                          else if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
+                                else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else bbOkClick(self)
+
+                else if (ActiveControl=EditPersonalCode7)or(ActiveControl=EditPersonalName7)
+                     then
+                          // 8...
+                          if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
                           else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else bbOkClick(self)
 
-                     else if (ActiveControl=EditPersonalCode5)or(ActiveControl=EditPersonalName5)
+                     else if (ActiveControl=EditPersonalCode8)or(ActiveControl=EditPersonalName8)
                           then
                                // 1...
                                if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else bbOkClick(self)
@@ -383,6 +467,9 @@ begin
                 else if infoPanelPersona3.Visible = true then ActiveControl:=EditPersonalCode3
                      else if infoPanelPersona4.Visible = true then ActiveControl:=EditPersonalCode4
                           else if infoPanelPersona5.Visible = true then ActiveControl:=EditPersonalCode5
+                          else if infoPanelPersona6.Visible = true then ActiveControl:=EditPersonalCode6
+                          else if infoPanelPersona7.Visible = true then ActiveControl:=EditPersonalCode7
+                          else if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
                                 else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else begin ActiveControl:=EditPersonalName1;if ActiveControl=EditPersonalName1 then bbOkClick(self);end
 
          else if (TcxCurrencyEdit(Sender).Tag = 2) then if Value = 0 then ActiveControl:=EditPersonalName2
@@ -390,23 +477,49 @@ begin
                      if infoPanelPersona3.Visible = true then ActiveControl:=EditPersonalCode3
                      else if infoPanelPersona4.Visible = true then ActiveControl:=EditPersonalCode4
                           else if infoPanelPersona5.Visible = true then ActiveControl:=EditPersonalCode5
+                          else if infoPanelPersona6.Visible = true then ActiveControl:=EditPersonalCode6
+                          else if infoPanelPersona7.Visible = true then ActiveControl:=EditPersonalCode7
+                          else if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
                                 else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else begin ActiveControl:=EditPersonalName2;if ActiveControl=EditPersonalName2 then bbOkClick(self);end
 
               else if (TcxCurrencyEdit(Sender).Tag = 3) then if Value = 0 then ActiveControl:=EditPersonalName3
                    else   // 4...
                           if infoPanelPersona4.Visible = true then ActiveControl:=EditPersonalCode4
                           else if infoPanelPersona5.Visible = true then ActiveControl:=EditPersonalCode5
+                          else if infoPanelPersona6.Visible = true then ActiveControl:=EditPersonalCode6
+                          else if infoPanelPersona7.Visible = true then ActiveControl:=EditPersonalCode7
+                          else if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
                                 else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else begin ActiveControl:=EditPersonalName3;if ActiveControl=EditPersonalName3 then bbOkClick(self);end
 
                    else if (TcxCurrencyEdit(Sender).Tag = 4) then if Value = 0 then ActiveControl:=EditPersonalName4
                         else    // 5...
                                 if infoPanelPersona5.Visible = true then ActiveControl:=EditPersonalCode5
+                                else if infoPanelPersona6.Visible = true then ActiveControl:=EditPersonalCode6
+                                else if infoPanelPersona7.Visible = true then ActiveControl:=EditPersonalCode7
+                                else if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
                                 else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else begin ActiveControl:=EditPersonalName4;if ActiveControl=EditPersonalName4 then bbOkClick(self);end
 
                         else if (TcxCurrencyEdit(Sender).Tag = 5) then if Value = 0 then ActiveControl:=EditPersonalName5
-                             else    // 1...
-                                     if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else begin ActiveControl:=EditPersonalName5;if ActiveControl=EditPersonalName5 then bbOkClick(self);end
+                             else    // 6...
+                                if infoPanelPersona6.Visible = true then ActiveControl:=EditPersonalCode6
+                                else if infoPanelPersona7.Visible = true then ActiveControl:=EditPersonalCode7
+                                else if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
+                                else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else begin ActiveControl:=EditPersonalName5;if ActiveControl=EditPersonalName5 then bbOkClick(self);end
 
+                        else if (TcxCurrencyEdit(Sender).Tag = 6) then if Value = 0 then ActiveControl:=EditPersonalName6
+                             else    // 7...
+                                if infoPanelPersona7.Visible = true then ActiveControl:=EditPersonalCode7
+                                else if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
+                                else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else begin ActiveControl:=EditPersonalName6;if ActiveControl=EditPersonalName6 then bbOkClick(self);end
+
+                        else if (TcxCurrencyEdit(Sender).Tag = 7) then if Value = 0 then ActiveControl:=EditPersonalName7
+                             else    // 8...
+                                if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
+                                else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else begin ActiveControl:=EditPersonalName7;if ActiveControl=EditPersonalName7 then bbOkClick(self);end
+
+                        else if (TcxCurrencyEdit(Sender).Tag = 8) then if Value = 0 then ActiveControl:=EditPersonalName8
+                             else    // 1...
+                                     if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else begin ActiveControl:=EditPersonalName8;if ActiveControl=EditPersonalName8 then bbOkClick(self);end
                              else if (TcxCurrencyEdit(Sender).Tag = 11) then if Value = 0 then ActiveControl:=EditPersonalStickName1 else begin ActiveControl:=EditPersonalStickName1;if ActiveControl=EditPersonalStickName1 then bbOkClick(self);end;
     end;
 end;
@@ -421,6 +534,9 @@ begin
                 else if infoPanelPersona3.Visible = true then ActiveControl:=EditPersonalCode3
                      else if infoPanelPersona4.Visible = true then ActiveControl:=EditPersonalCode4
                           else if infoPanelPersona5.Visible = true then ActiveControl:=EditPersonalCode5
+                          else if infoPanelPersona6.Visible = true then ActiveControl:=EditPersonalCode6
+                          else if infoPanelPersona7.Visible = true then ActiveControl:=EditPersonalCode7
+                          else if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
                                 else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else bbOkClick(self)
 
          else if (TcxCurrencyEdit(Sender).Tag = 2)
@@ -428,20 +544,47 @@ begin
                      if infoPanelPersona3.Visible = true then ActiveControl:=EditPersonalCode3
                      else if infoPanelPersona4.Visible = true then ActiveControl:=EditPersonalCode4
                           else if infoPanelPersona5.Visible = true then ActiveControl:=EditPersonalCode5
+                          else if infoPanelPersona6.Visible = true then ActiveControl:=EditPersonalCode6
+                          else if infoPanelPersona7.Visible = true then ActiveControl:=EditPersonalCode7
+                          else if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
                                 else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else bbOkClick(self)
 
               else if (TcxCurrencyEdit(Sender).Tag = 3)
                    then   // 4...
                           if infoPanelPersona4.Visible = true then ActiveControl:=EditPersonalCode4
                           else if infoPanelPersona5.Visible = true then ActiveControl:=EditPersonalCode5
+                          else if infoPanelPersona6.Visible = true then ActiveControl:=EditPersonalCode6
+                          else if infoPanelPersona7.Visible = true then ActiveControl:=EditPersonalCode7
+                          else if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
                                 else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else bbOkClick(self)
 
                    else if (TcxCurrencyEdit(Sender).Tag = 4)
                         then    // 5...
                                 if infoPanelPersona5.Visible = true then ActiveControl:=EditPersonalCode5
+                                else if infoPanelPersona6.Visible = true then ActiveControl:=EditPersonalCode6
+                                else if infoPanelPersona7.Visible = true then ActiveControl:=EditPersonalCode7
+                                else if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
                                 else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else bbOkClick(self)
 
                         else if (TcxCurrencyEdit(Sender).Tag = 5)
+                             then    // 6...
+                                    if infoPanelPersona6.Visible = true then ActiveControl:=EditPersonalCode6
+                                    else if infoPanelPersona7.Visible = true then ActiveControl:=EditPersonalCode7
+                                    else if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
+                                    else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else bbOkClick(self)
+
+                        else if (TcxCurrencyEdit(Sender).Tag = 6)
+                             then    // 7...
+                                    if infoPanelPersona7.Visible = true then ActiveControl:=EditPersonalCode7
+                                    else if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
+                                    else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else bbOkClick(self)
+
+                        else if (TcxCurrencyEdit(Sender).Tag = 7)
+                             then    // 8...
+                                    if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
+                                    else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else bbOkClick(self)
+
+                        else if (TcxCurrencyEdit(Sender).Tag = 8)
                              then    // 1...
                                      if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else bbOkClick(self)
 
@@ -465,6 +608,9 @@ begin
     if idx = '3'  then try PersonalCode:= StrToInt(EditPersonalCode3.Text);      except PersonalCode:= 0;end;
     if idx = '4'  then try PersonalCode:= StrToInt(EditPersonalCode4.Text);      except PersonalCode:= 0;end;
     if idx = '5'  then try PersonalCode:= StrToInt(EditPersonalCode5.Text);      except PersonalCode:= 0;end;
+    if idx = '6'  then try PersonalCode:= StrToInt(EditPersonalCode6.Text);      except PersonalCode:= 0;end;
+    if idx = '7'  then try PersonalCode:= StrToInt(EditPersonalCode7.Text);      except PersonalCode:= 0;end;
+    if idx = '8'  then try PersonalCode:= StrToInt(EditPersonalCode8.Text);      except PersonalCode:= 0;end;
     if idx = '11' then begin
                        try PersonalCode:= StrToInt(EditPersonalStickCode1.Text); except PersonalCode:= 0;end;
                        idx2:=IntToStr(TcxButtonEdit(Sender).Tag-10);
@@ -496,6 +642,9 @@ begin
          if idx = '3'  then begin EditPersonalName3.Text:='';      PanelPositionName3.Caption:=''; end;
          if idx = '4'  then begin EditPersonalName4.Text:='';      PanelPositionName4.Caption:=''; end;
          if idx = '5'  then begin EditPersonalName5.Text:='';      PanelPositionName5.Caption:=''; end;
+         if idx = '6'  then begin EditPersonalName6.Text:='';      PanelPositionName6.Caption:=''; end;
+         if idx = '7'  then begin EditPersonalName7.Text:='';      PanelPositionName7.Caption:=''; end;
+         if idx = '8'  then begin EditPersonalName8.Text:='';      PanelPositionName8.Caption:=''; end;
          if idx = '11' then begin EditPersonalStickName1.Text:=''; PanelPositionStickName1.Caption:=''; end;
          fStartWrite:=false;
          //
@@ -557,6 +706,24 @@ begin
                               EditPersonalName5.Text:=execParams.ParamByName('PersonalName').AsString;
                               PanelPositionName5.Caption:=execParams.ParamByName('PositionName').AsString;
                          end;
+                         if idx = '6' then
+                         begin
+                              EditPersonalCode6.Text:=execParams.ParamByName('PersonalCode').AsString;
+                              EditPersonalName6.Text:=execParams.ParamByName('PersonalName').AsString;
+                              PanelPositionName6.Caption:=execParams.ParamByName('PositionName').AsString;
+                         end;
+                         if idx = '7' then
+                         begin
+                              EditPersonalCode7.Text:=execParams.ParamByName('PersonalCode').AsString;
+                              EditPersonalName7.Text:=execParams.ParamByName('PersonalName').AsString;
+                              PanelPositionName7.Caption:=execParams.ParamByName('PositionName').AsString;
+                         end;
+                         if idx = '8' then
+                         begin
+                              EditPersonalCode8.Text:=execParams.ParamByName('PersonalCode').AsString;
+                              EditPersonalName8.Text:=execParams.ParamByName('PersonalName').AsString;
+                              PanelPositionName8.Caption:=execParams.ParamByName('PositionName').AsString;
+                         end;
                          if idx = '11' then
                          begin
                               EditPersonalStickCode1.Text:=execParams.ParamByName('PersonalCode').AsString;
@@ -584,6 +751,9 @@ begin
                                else if infoPanelPersona3.Visible = true then ActiveControl:=EditPersonalCode3
                                     else if infoPanelPersona4.Visible = true then ActiveControl:=EditPersonalCode4
                                          else if infoPanelPersona5.Visible = true then ActiveControl:=EditPersonalCode5
+                                         else if infoPanelPersona6.Visible = true then ActiveControl:=EditPersonalCode6
+                                         else if infoPanelPersona7.Visible = true then ActiveControl:=EditPersonalCode7
+                                         else if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
                                                else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 //else bbOkClick(self)
                         end;
                         if idx = '2'  then begin EditPersonalName2.Text:='';      PanelPositionName2.Caption:='';
@@ -592,6 +762,9 @@ begin
                           else if infoPanelPersona3.Visible = true then ActiveControl:=EditPersonalCode3
                                else if infoPanelPersona4.Visible = true then ActiveControl:=EditPersonalCode4
                                     else if infoPanelPersona5.Visible = true then ActiveControl:=EditPersonalCode5
+                                    else if infoPanelPersona6.Visible = true then ActiveControl:=EditPersonalCode6
+                                    else if infoPanelPersona7.Visible = true then ActiveControl:=EditPersonalCode7
+                                    else if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
                                           else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 //else bbOkClick(self)
                         end;
                         if idx = '3'  then begin EditPersonalName3.Text:='';      PanelPositionName3.Caption:='';
@@ -599,17 +772,45 @@ begin
                           if infoPanelPersona3.Visible = true then ActiveControl:=EditPersonalCode3
                           else if infoPanelPersona4.Visible = true then ActiveControl:=EditPersonalCode4
                                else if infoPanelPersona5.Visible = true then ActiveControl:=EditPersonalCode5
+                               else if infoPanelPersona6.Visible = true then ActiveControl:=EditPersonalCode6
+                               else if infoPanelPersona7.Visible = true then ActiveControl:=EditPersonalCode7
+                               else if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
                                      else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 //else bbOkClick(self)
                         end;
                         if idx = '4'  then begin EditPersonalName4.Text:='';      PanelPositionName4.Caption:='';
                           // 4...
                           if infoPanelPersona4.Visible = true then ActiveControl:=EditPersonalCode4
                           else if infoPanelPersona5.Visible = true then ActiveControl:=EditPersonalCode5
+                          else if infoPanelPersona6.Visible = true then ActiveControl:=EditPersonalCode6
+                          else if infoPanelPersona7.Visible = true then ActiveControl:=EditPersonalCode7
+                          else if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
                                 else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 //else bbOkClick(self)
                         end;
                         if idx = '5'  then begin EditPersonalName5.Text:='';      PanelPositionName5.Caption:='';
                           // 5...
                           if infoPanelPersona5.Visible = true then ActiveControl:=EditPersonalCode5
+                          else if infoPanelPersona6.Visible = true then ActiveControl:=EditPersonalCode6
+                          else if infoPanelPersona7.Visible = true then ActiveControl:=EditPersonalCode7
+                          else if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
+                          else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 //else bbOkClick(self)
+                        end;
+                        if idx = '6'  then begin EditPersonalName6.Text:='';      PanelPositionName6.Caption:='';
+                          // 6...
+                          if infoPanelPersona6.Visible = true then ActiveControl:=EditPersonalCode6
+                          else if infoPanelPersona7.Visible = true then ActiveControl:=EditPersonalCode7
+                          else if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
+                          else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 //else bbOkClick(self)
+                        end;
+                        if idx = '7'  then begin EditPersonalName7.Text:='';      PanelPositionName7.Caption:='';
+                          // 7...
+                          if infoPanelPersona7.Visible = true then ActiveControl:=EditPersonalCode7
+                          else if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
+                          else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 //else bbOkClick(self)
+                        end;
+
+                        if idx = '8'  then begin EditPersonalName5.Text:='';      PanelPositionName5.Caption:='';
+                          // 8...
+                          if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
                           else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 //else bbOkClick(self)
                         end;
                         if idx = '11' then begin EditPersonalStickName1.Text:=''; PanelPositionStickName1.Caption:='';
@@ -683,6 +884,9 @@ begin
                     else if infoPanelPersona3.Visible = true then ActiveControl:=EditPersonalCode3
                          else if infoPanelPersona4.Visible = true then ActiveControl:=EditPersonalCode4
                               else if infoPanelPersona5.Visible = true then ActiveControl:=EditPersonalCode5
+                              else if infoPanelPersona6.Visible = true then ActiveControl:=EditPersonalCode6
+                              else if infoPanelPersona7.Visible = true then ActiveControl:=EditPersonalCode7
+                              else if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
                                     else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else bbOkClick(self)
                end;
                if idx = '2' then
@@ -694,6 +898,9 @@ begin
                     if infoPanelPersona3.Visible = true then ActiveControl:=EditPersonalCode3
                     else if infoPanelPersona4.Visible = true then ActiveControl:=EditPersonalCode4
                          else if infoPanelPersona5.Visible = true then ActiveControl:=EditPersonalCode5
+                         else if infoPanelPersona6.Visible = true then ActiveControl:=EditPersonalCode6
+                         else if infoPanelPersona7.Visible = true then ActiveControl:=EditPersonalCode7
+                         else if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
                                else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else bbOkClick(self)
                end;
                if idx = '3' then
@@ -704,6 +911,9 @@ begin
                     // 4...
                     if infoPanelPersona4.Visible = true then ActiveControl:=EditPersonalCode4
                     else if infoPanelPersona5.Visible = true then ActiveControl:=EditPersonalCode5
+                    else if infoPanelPersona6.Visible = true then ActiveControl:=EditPersonalCode6
+                    else if infoPanelPersona7.Visible = true then ActiveControl:=EditPersonalCode7
+                    else if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
                          else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else bbOkClick(self)
                end;
                if idx = '4' then
@@ -713,6 +923,9 @@ begin
                     PanelPositionName4.Caption:=execParams.ParamByName('PositionName').AsString;
                     // 5...
                     if infoPanelPersona5.Visible = true then ActiveControl:=EditPersonalCode5
+                    else if infoPanelPersona6.Visible = true then ActiveControl:=EditPersonalCode6
+                    else if infoPanelPersona7.Visible = true then ActiveControl:=EditPersonalCode7
+                    else if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
                     else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else bbOkClick(self)
                end;
                if idx = '5' then
@@ -720,9 +933,41 @@ begin
                     EditPersonalCode5.Text:=execParams.ParamByName('PersonalCode').AsString;
                     EditPersonalName5.Text:=execParams.ParamByName('PersonalName').AsString;
                     PanelPositionName5.Caption:=execParams.ParamByName('PositionName').AsString;
+                    // 6..
+                    if infoPanelPersona6.Visible = true then ActiveControl:=EditPersonalCode6
+                    else if infoPanelPersona7.Visible = true then ActiveControl:=EditPersonalCode7
+                    else if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
+                    else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else bbOkClick(self)
+               end;
+               if idx = '6' then
+               begin
+                    EditPersonalCode6.Text:=execParams.ParamByName('PersonalCode').AsString;
+                    EditPersonalName6.Text:=execParams.ParamByName('PersonalName').AsString;
+                    PanelPositionName6.Caption:=execParams.ParamByName('PositionName').AsString;
+                    // 7..
+                    if infoPanelPersona7.Visible = true then ActiveControl:=EditPersonalCode7
+                    else if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
+                    else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else bbOkClick(self)
+               end;
+               if idx = '7' then
+               begin
+                    EditPersonalCode7.Text:=execParams.ParamByName('PersonalCode').AsString;
+                    EditPersonalName7.Text:=execParams.ParamByName('PersonalName').AsString;
+                    PanelPositionName7.Caption:=execParams.ParamByName('PositionName').AsString;
+                    // 8..
+                    if infoPanelPersona8.Visible = true then ActiveControl:=EditPersonalCode8
+                    else if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else bbOkClick(self)
+               end;
+
+               if idx = '8' then
+               begin
+                    EditPersonalCode8.Text:=execParams.ParamByName('PersonalCode').AsString;
+                    EditPersonalName8.Text:=execParams.ParamByName('PersonalName').AsString;
+                    PanelPositionName8.Caption:=execParams.ParamByName('PositionName').AsString;
                     // 1...
                     if infoPanelPersonaStick1.Visible = true then ActiveControl:=EditPersonalStickCode1 else bbOkClick(self)
                end;
+
                if idx = '11' then
                begin
                     EditPersonalStickCode1.Text:=execParams.ParamByName('PersonalCode').AsString;

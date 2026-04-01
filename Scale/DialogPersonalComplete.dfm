@@ -16,8 +16,8 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
     Top = 475
     Width = 530
     TabOrder = 4
-    ExplicitTop = 325
-    ExplicitWidth = 506
+    ExplicitTop = 475
+    ExplicitWidth = 530
     inherited bbOk: TBitBtn
       Default = False
     end
@@ -30,7 +30,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 506
     object PanelPosition1: TPanel
       Left = 320
       Top = 0
@@ -39,7 +38,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 186
       object LabelPositionName1: TLabel
         Left = 0
         Top = 0
@@ -63,7 +61,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Height = 39
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 186
         object PanelPositionName1: TPanel
           Left = 2
           Top = 16
@@ -79,7 +76,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitWidth = 182
         end
       end
     end
@@ -165,7 +161,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 506
     object PanelPosition2: TPanel
       Left = 320
       Top = 0
@@ -174,7 +169,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 186
       object LabelPositionName2: TLabel
         Left = 0
         Top = 0
@@ -198,7 +192,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Height = 39
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 186
         object PanelPositionName2: TPanel
           Left = 2
           Top = 16
@@ -214,7 +207,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitWidth = 182
         end
       end
     end
@@ -300,7 +292,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitWidth = 506
     object PanelPosition3: TPanel
       Left = 320
       Top = 0
@@ -309,7 +300,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 186
       object LabelPositionName3: TLabel
         Left = 0
         Top = 0
@@ -333,7 +323,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Height = 39
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 186
         object PanelPositionName3: TPanel
           Left = 2
           Top = 16
@@ -349,7 +338,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitWidth = 182
         end
       end
     end
@@ -435,7 +423,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 3
-    ExplicitWidth = 506
     object PanelPosition4: TPanel
       Left = 320
       Top = 0
@@ -444,7 +431,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 186
       object LabelPositionName4: TLabel
         Left = 0
         Top = 0
@@ -468,7 +454,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Height = 39
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 186
         object PanelPositionName4: TPanel
           Left = 2
           Top = 16
@@ -484,7 +469,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitWidth = 182
         end
       end
     end
@@ -570,7 +554,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 5
-    ExplicitWidth = 506
     object PanelPosition5: TPanel
       Left = 320
       Top = 0
@@ -579,7 +562,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 186
       object LabelPositionName5: TLabel
         Left = 0
         Top = 0
@@ -603,7 +585,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Height = 39
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 186
         object PanelPositionName5: TPanel
           Left = 2
           Top = 16
@@ -619,7 +600,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitWidth = 182
         end
       end
     end
@@ -705,8 +685,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 6
-    ExplicitTop = 273
-    ExplicitWidth = 506
     object PanelPositionStick1: TPanel
       Left = 320
       Top = 0
@@ -715,7 +693,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 186
       object LabelPositionStickName1: TLabel
         Left = 0
         Top = 0
@@ -739,7 +716,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Height = 39
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 186
         object PanelPositionStickName1: TPanel
           Left = 2
           Top = 16
@@ -755,7 +731,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitWidth = 182
         end
       end
     end
@@ -841,7 +816,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 7
-    ExplicitTop = 216
     object Panel2: TPanel
       Left = 320
       Top = 0
@@ -888,8 +862,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitLeft = 3
-          ExplicitTop = 19
         end
       end
     end
@@ -925,8 +897,8 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Align = alLeft
         Caption = #1050#1086#1076
         TabOrder = 0
-        object cxCurrencyEdit1: TcxCurrencyEdit
-          Tag = 5
+        object EditPersonalCode8: TcxCurrencyEdit
+          Tag = 8
           Left = 6
           Top = 14
           Properties.Alignment.Horz = taRightJustify
@@ -949,7 +921,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Caption = #1060#1048#1054
         TabOrder = 1
         object EditPersonalName8: TcxButtonEdit
-          Tag = 5
+          Tag = 8
           Left = 5
           Top = 14
           Properties.Buttons = <
@@ -975,7 +947,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 8
-    ExplicitTop = 216
     object Panel6: TPanel
       Left = 320
       Top = 0
@@ -1057,8 +1028,8 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Align = alLeft
         Caption = #1050#1086#1076
         TabOrder = 0
-        object cxCurrencyEdit2: TcxCurrencyEdit
-          Tag = 5
+        object EditPersonalCode7: TcxCurrencyEdit
+          Tag = 7
           Left = 6
           Top = 14
           Properties.Alignment.Horz = taRightJustify
@@ -1081,7 +1052,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Caption = #1060#1048#1054
         TabOrder = 1
         object EditPersonalName7: TcxButtonEdit
-          Tag = 5
+          Tag = 7
           Left = 5
           Top = 14
           Properties.Buttons = <
@@ -1107,7 +1078,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 9
-    ExplicitTop = 216
     object Panel10: TPanel
       Left = 320
       Top = 0
@@ -1189,10 +1159,8 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Align = alLeft
         Caption = #1050#1086#1076
         TabOrder = 0
-        ExplicitLeft = -1
-        ExplicitTop = 19
-        object cxCurrencyEdit3: TcxCurrencyEdit
-          Tag = 5
+        object EditPersonalCode6: TcxCurrencyEdit
+          Tag = 6
           Left = 6
           Top = 14
           Properties.Alignment.Horz = taRightJustify
@@ -1215,7 +1183,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Caption = #1060#1048#1054
         TabOrder = 1
         object EditPersonalName6: TcxButtonEdit
-          Tag = 5
+          Tag = 6
           Left = 5
           Top = 14
           Properties.Buttons = <
