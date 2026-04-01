@@ -450,6 +450,8 @@ BEGIN
        WITH tmpData AS (SELECT _tmpData.* FROM _tmpData  WHERE _tmpData.GroupNum = 1)
 
        SELECT *
+       FROM
+      (SELECT *
             , CAST (ROW_NUMBER() OVER ( ORDER BY tmp.Num, tmp.Num2) AS Integer) AS NumLine
             , FALSE AS BoldRecord
        FROM
@@ -592,14 +594,17 @@ BEGIN
           WHERE tmpData.GoodsPlatformId = 416935 ---'%Алан%'
           GROUP BY Object_GoodsTag.ValueData, COALESCE (ObjectFloat_ColorReport.ValueData, zc_Color_Black())
 
-          ) AS tmp;
+          ) AS tmp
+          ) AS tmp
+          WHERE tmp.NumLine IN (1, 2, 3, 4)
+          ;
 
     RETURN NEXT Cursor1;
 
 
     -- Результат для 2-ой страницы
     OPEN Cursor2 FOR
-       WITH tmpData AS (SELECT _tmpData.* FROM _tmpData  WHERE _tmpData.GroupNum = 2)
+       WITH tmpData AS (SELECT _tmpData.* FROM _tmpData  WHERE _tmpData.GroupNum = 2 AND 1=0)
 
        SELECT * 
             , CAST (ROW_NUMBER() OVER (ORDER BY tmp.Num, tmp.Num2) AS Integer) AS NumLine
@@ -831,7 +836,9 @@ BEGIN
                                     WHEN inWeek  = TRUE THEN (_tmpData.OperDate + ((7-(DATE_PART ('DoW', _tmpData.OperDate)::int))|| 'day')::interval)
                                     ELSE _tmpData.OperDate
                                END  :: tdatetime AS EndDate
-                        FROM _tmpData)
+                        FROM _tmpData
+                        WHERE 1=0
+                        )
      , tmp_All AS ( 
                     SELECT tmp.*
                          , CAST (ROW_NUMBER() OVER (PARTITION BY tmp.GroupNum, tmp.StartDate, tmp.EndDate  ORDER BY tmp.StartDate, tmp.EndDate, tmp.GroupNum, tmp.Num, tmp.Num2 , GroupName) AS Integer) AS NumLine

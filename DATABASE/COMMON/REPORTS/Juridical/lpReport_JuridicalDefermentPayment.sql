@@ -193,7 +193,7 @@ BEGIN
                                 , tmpConainer_all_0.ContractDate_calc
                             FROM tmpConainer_all_0
                             -- !!!оптимизация!!!
-                            WHERE tmpConainer_all_0.ContractDate >= inOperDate - INTERVAL '4 MONTH'
+                            WHERE tmpConainer_all_0.ContractDate >= inOperDate - INTERVAL '12 MONTH'
                           )
    , tmpMIConainer_all AS (SELECT MIContainer.*
                            FROM tmpConainer_all
@@ -202,7 +202,7 @@ BEGIN
                                                                 AND MIContainer.OperDate    >= tmpConainer_all.ContractDate_calc
                          )
 
-, RESULT_all AS (SELECT Container.ContainerId
+, RESULT_all AS (SELECT Container.ContainerId	
                       , Container.AccountId
                       , Container.ContractId -- CLO_Contract.ObjectId AS ContractId
                       , Container.JuridicalId
@@ -568,9 +568,10 @@ BEGIN
 
          ) as a
        where a.DebetRemains <> 0 or a.KreditRemains <> 0
-         or  a.SaleSumm <> 0 or a.DefermentPaymentRemains <> 0
-         or  a.SaleSumm1 <> 0 or a.SaleSumm2 <> 0 or a.SaleSumm3 <> 0 or a.SaleSumm4 <> 0 or a.SaleSumm5 <> 0
-         or  a.Remains <> 0
+          or a.SaleSumm <> 0 or a.DefermentPaymentRemains <> 0
+          or a.SaleSumm1 <> 0 or a.SaleSumm2 <> 0 or a.SaleSumm3 <> 0 or a.SaleSumm4 <> 0 or a.SaleSumm5 <> 0
+          or a.Remains <> 0
+          -- or inUserId = 5
     ;
     -- Конец. Добавили строковые данные.
     -- КОНЕЦ ЗАПРОСА
