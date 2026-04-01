@@ -372,6 +372,11 @@ BEGIN
 
                                                           , inPartionGoodsDate            := CASE WHEN inIsPartionGoodsDate = TRUE AND COALESCE (vbDocumentKindId, 0) = 0
                                                                                                        THEN inPartionGoodsDate
+
+                                                                                                  -- Склад Поклейки этикетки
+                                                                                                  WHEN inPartionCellId > 0 AND vbUnitId = 9073781
+                                                                                                       THEN inPartionGoodsDate
+
                                                                                                   WHEN inPartionCellId > 0 AND EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = inGoodsId AND OB.DescId = zc_ObjectBoolean_Goods_PLM() AND OB.ValueData = TRUE)
                                                                                                        THEN inPartionGoodsDate
                                                                                                   ELSE NULL

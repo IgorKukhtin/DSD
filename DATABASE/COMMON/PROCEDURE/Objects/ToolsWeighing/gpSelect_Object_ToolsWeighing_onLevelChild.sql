@@ -79,7 +79,7 @@ BEGIN
                                                     OR ((STRPOS (tmp.Name, 'isPersonalComplete') > 0)
                                                     AND (LENGTH (tmp.Name) = LENGTH ('isPersonalComplete1'))
                                                        )
-                                                       THEN 'TRUE'
+                                                       THEN 'FALSE' -- TRUE
 
                                                   -- !!! всем остальным
                                                   WHEN SUBSTRING (tmp.Name FROM 1 FOR 2) = 'is'

@@ -22,7 +22,7 @@ $BODY$
     DECLARE vbJuridicalDoc_NextId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    vbUserId:= lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_ObjectHistory_PriceListItem());
+    vbUserId:= lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Contract());
 
     -- Проверка
     IF COALESCE(inContractCode, 0) = 0
