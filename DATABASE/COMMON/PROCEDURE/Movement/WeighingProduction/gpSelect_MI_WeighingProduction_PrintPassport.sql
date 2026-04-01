@@ -355,6 +355,9 @@ BEGIN
                             , Object_ChoiceCell.ValueData        AS Name
                             , ObjectLink_Goods.ChildObjectId     AS GoodsId
                             , ObjectLink_GoodsKind.ChildObjectId AS GoodsKindId
+                            
+                            , LEFT (Object_ChoiceCell.ValueData, 1)::TVarChar AS Name_shot
+                            , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Goods.ChildObjectId, ObjectLink_GoodsKind.ChildObjectId ORDER BY Object_ChoiceCell.ObjectCode) AS Ord
                        FROM Object AS Object_ChoiceCell
                            LEFT JOIN ObjectLink AS ObjectLink_Goods
                                                 ON ObjectLink_Goods.ObjectId = Object_ChoiceCell.Id
@@ -369,7 +372,7 @@ BEGIN
 
                        WHERE Object_ChoiceCell.DescId = zc_Object_ChoiceCell()
                          AND Object_ChoiceCell.isErased = FALSE 
-                       LIMIT 1 
+                     --  LIMIT 1 
                       )
 
        --результат
@@ -378,9 +381,11 @@ BEGIN
             , tmpChoiceCell.Id            ::Integer  AS ChoiceCellId
             , tmpChoiceCell.Code          ::Integer  AS ChoiceCellCode
             , tmpChoiceCell.Name          ::TVarChar AS ChoiceCellName
+            , tmpChoiceCell.Name_shot     ::TVarChar AS choicecellname_shot
        FROM tmpMI
          LEFT JOIN tmpChoiceCell ON tmpChoiceCell.GoodsId = tmpMI.GoodsId 
                                 AND COALESCE (tmpChoiceCell.GoodsKindId,0) = COALESCE (tmpMI.GoodsKindId, 0)
+                                AND tmpChoiceCell.Ord = 1
         ;
 
     RETURN NEXT Cursor1;
