@@ -75,12 +75,15 @@ AS
                                                 )
                      )
  --
- SELECT extId
-      , Name
-      , legalAddress
-      , streetAddress
-      , latitude
-      , longitude
+ SELECT _tmpresult.extId
+      , _tmpresult.Name
+      , _tmpresult.legalAddress
+      , _tmpresult.streetAddress
+        -- замена
+      , tt_geo.latitude
+        -- замена
+      , tt_geo.longitude
+        -- 
       , recurrence
       , channelSaleId    
       , salePointDistributorName
@@ -108,6 +111,7 @@ AS
       , defaultOrderPaymentFormExtId
       , isDeleted
    FROM _tmpresult
+        LEFT JOIN tt_geo ON tt_geo.extid = _tmpresult.extId
   ;
 
 ALTER TABLE TT  OWNER TO postgres;

@@ -11,6 +11,7 @@
 CREATE TABLE Object_PromoItem_effie(
    Id                     BIGSERIAL NOT NULL PRIMARY KEY, 
    MovementId             Integer   NOT NULL,
+   MovementItemId         Integer   NOT NULL,
    StartSale              TDateTime NOT NULL,
    EndSale                TDateTime NOT NULL,
    ContractId             Integer   NOT NULL,
