@@ -382,9 +382,9 @@ begin
     infoPanelPersona3.Visible:= GetArrayList_Value_byName(Default_Array,'isPersonalComplete3') = AnsiUpperCase('TRUE');
     infoPanelPersona4.Visible:= GetArrayList_Value_byName(Default_Array,'isPersonalComplete4') = AnsiUpperCase('TRUE');
     infoPanelPersona5.Visible:= GetArrayList_Value_byName(Default_Array,'isPersonalComplete5') = AnsiUpperCase('TRUE');
-    infoPanelPersona5.Visible:= GetArrayList_Value_byName(Default_Array,'isPersonalComplete6') = AnsiUpperCase('TRUE');
-    infoPanelPersona5.Visible:= GetArrayList_Value_byName(Default_Array,'isPersonalComplete7') = AnsiUpperCase('TRUE');
-    infoPanelPersona5.Visible:= GetArrayList_Value_byName(Default_Array,'isPersonalComplete8') = AnsiUpperCase('TRUE');
+    infoPanelPersona6.Visible:= GetArrayList_Value_byName(Default_Array,'isPersonalComplete6') = AnsiUpperCase('TRUE');
+    infoPanelPersona7.Visible:= GetArrayList_Value_byName(Default_Array,'isPersonalComplete7') = AnsiUpperCase('TRUE');
+    infoPanelPersona8.Visible:= GetArrayList_Value_byName(Default_Array,'isPersonalComplete8') = AnsiUpperCase('TRUE');
     infoPanelPersonaStick1.Visible:= GetArrayList_Value_byName(Default_Array,'isPersonalStick1') = AnsiUpperCase('TRUE');
 
 end;
