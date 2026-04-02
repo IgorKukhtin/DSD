@@ -188,10 +188,11 @@ $BODY$
     ;
 
      --нужно записать в таблица Object_PriceListItem_effie.Id - по ключу Това+Вид+Прайс  те элементы , которых нет
-     INSERT INTO Object_PriceListItem_effie (PriceListId, GoodsId, GoodsKindId, InsertDate, Price)
+     INSERT INTO Object_PriceListItem_effie (PriceListId, GoodsId, GoodsKindId, GoodsByGoodsKindId, InsertDate, Price)
      SELECT _tmpResult.PriceListId
           , _tmpResult.GoodsId
           , _tmpResult.GoodsKindId
+          , _tmpResult.GoodsByGoodsKindId
           , CURRENT_TIMESTAMP AS InsertDate
           , _tmpResult.Price
      FROM _tmpResult
@@ -203,7 +204,8 @@ $BODY$
 
     --актуализация цен в таблице
     UPDATE Object_PriceListItem_effie
-    SET Price = _tmpResult.Price
+    SET Price              = _tmpResult.Price
+      , GoodsByGoodsKindId = _tmpResult.GoodsByGoodsKindId
     FROM _tmpResult 
     WHERE Object_PriceListItem_effie.PriceListId = _tmpResult.PriceListId
       AND Object_PriceListItem_effie.GoodsId     = _tmpResult.GoodsId
