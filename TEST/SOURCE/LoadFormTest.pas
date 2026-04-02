@@ -1067,6 +1067,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyPlace_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyPlace_ObjectForm');
 end;
+
 procedure TLoadFormTest.LoadOrderGoodsFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderGoodsJournalForm'));
@@ -1076,6 +1077,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderPeriodKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderPeriodKindForm');
+  // справочник
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderGoods_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderGoods_ObjectForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderGoodsEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderGoodsEditForm');
 end;
 
 procedure TLoadFormTest.LoadOrderSaleFormTest;

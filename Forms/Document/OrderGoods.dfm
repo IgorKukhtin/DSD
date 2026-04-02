@@ -3,7 +3,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
   ClientHeight = 638
   ClientWidth = 1100
   ExplicitWidth = 1116
-  ExplicitHeight = 676
+  ExplicitHeight = 677
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1268,15 +1268,15 @@ inherited OrderGoodsForm: TOrderGoodsForm
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object cxLabel22: TcxLabel
-      Left = 467
+      Left = 620
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 467
+      Left = 620
       Top = 63
       TabOrder = 11
-      Width = 294
+      Width = 145
     end
     object cxLabel8: TcxLabel
       Left = 777
@@ -1313,12 +1313,12 @@ inherited OrderGoodsForm: TOrderGoodsForm
       Width = 146
     end
     object cxLabel27: TcxLabel
-      Left = 467
+      Left = 463
       Top = 5
       Caption = #1055#1088#1072#1081#1089' '#1083#1080#1089#1090
     end
     object edPriceList: TcxButtonEdit
-      Left = 467
+      Left = 463
       Top = 23
       Properties.Buttons = <
         item
@@ -1329,7 +1329,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
       Properties.HideSelection = False
       Properties.ReadOnly = False
       TabOrder = 17
-      Width = 294
+      Width = 302
     end
     object cxLabel6: TcxLabel
       Left = 777
@@ -1378,6 +1378,25 @@ inherited OrderGoodsForm: TOrderGoodsForm
     Left = 909
     Top = 45
     Caption = #1044#1072#1090#1072' '#1089#1090#1072#1090'. ('#1082#1086#1085#1077#1095#1085'.)'
+  end
+  object cxLabel10: TcxLabel [6]
+    Left = 463
+    Top = 45
+    Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088
+  end
+  object edOrderGoods: TcxButtonEdit [7]
+    Left = 463
+    Top = 63
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ClickKey = 0
+    Properties.HideSelection = False
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 149
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 363
@@ -2395,6 +2414,21 @@ inherited OrderGoodsForm: TOrderGoodsForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OrderGoodsId'
+        Value = Null
+        Component = GuidesOrderGoods
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OrderGoodsName'
+        Value = Null
+        Component = GuidesOrderGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -2451,6 +2485,14 @@ inherited OrderGoodsForm: TOrderGoodsForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inOrderGoodsId'
+        Value = Null
+        Component = GuidesOrderGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = 'False'
         Component = ceComment
@@ -2497,6 +2539,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
         Control = edPriceList
       end
       item
+        Control = edOrderGoods
       end
       item
       end
@@ -2743,8 +2786,8 @@ inherited OrderGoodsForm: TOrderGoodsForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 312
-    Top = 16
+    Left = 304
+    Top = 8
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -2847,6 +2890,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 206
     Top = 545
@@ -2896,6 +2940,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 790
     Top = 209
@@ -2929,6 +2974,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 918
     Top = 193
@@ -3074,5 +3120,32 @@ inherited OrderGoodsForm: TOrderGoodsForm
     DateEnd = edOperDateEnd
     Left = 896
     Top = 96
+  end
+  object GuidesOrderGoods: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edOrderGoods
+    FormNameParam.Value = 'TOrderGoods_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TOrderGoods_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesOrderGoods
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesOrderGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 548
+    Top = 48
   end
 end

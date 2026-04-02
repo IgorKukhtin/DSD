@@ -24,7 +24,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxSplitter, ChoicePeriod;
+  cxSplitter, ChoicePeriod, dsdCommon;
 
 type
   TOrderGoodsForm = class(TAncestorDocumentForm)
@@ -152,6 +152,9 @@ type
     DetailMasterProtocolOpenForm: TdsdOpenForm;
     bbDetailMasterProtocolOpen: TdxBarButton;
     bbDetailChildProtocolOpen: TdxBarButton;
+    cxLabel10: TcxLabel;
+    edOrderGoods: TcxButtonEdit;
+    GuidesOrderGoods: TdsdGuides;
   private
     { Private declarations }
   public

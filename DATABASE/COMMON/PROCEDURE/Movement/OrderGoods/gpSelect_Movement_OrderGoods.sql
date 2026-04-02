@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, MonthName TVa
              , OrderPeriodKindId Integer, OrderPeriodKindName TVarChar
              , PriceListId Integer, PriceListName TVarChar
              , UnitId Integer, UnitName TVarChar
+             , OrderGoodsId Integer, OrderGoodsName TVarChar
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSummVAT TFloat
              , Comment TVarChar
@@ -55,6 +56,9 @@ BEGIN
  
            , Object_Unit.Id                         AS UnitId
            , Object_Unit.ValueData                  AS UnitName
+
+           , Object_OrderGoods.Id                   AS OrderGoodsId
+           , Object_OrderGoods.ValueData            AS OrderGoodsName
 
            , MovementFloat_TotalCountKg.ValueData   ::TFloat   AS TotalCountKg
            , MovementFloat_TotalCountSh.ValueData   ::TFloat   AS TotalCountSh
@@ -110,6 +114,11 @@ BEGIN
                                         AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_OrderGoods
+                                         ON MovementLinkObject_.MovementId = Movement.Id
+                                        AND MovementLinkObject_.DescId = zc_MovementLinkObject_OrderGoods()
+            LEFT JOIN Object AS Object_OrderGoods ON Object_OrderGoods.Id = MovementLinkObject_OrderGoods.ObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
@@ -140,6 +149,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 02.04.26         *
  08.06.21         *
 */
 
