@@ -959,6 +959,7 @@
       item
         Name = 'MemberName_insert_6'
         Value = Null
+        Component = GuidesInsert_6
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
