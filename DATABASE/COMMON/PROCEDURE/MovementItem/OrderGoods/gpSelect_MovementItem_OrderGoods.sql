@@ -403,35 +403,35 @@ BEGIN
 
      , tmpMI_Float AS (SELECT MovementItemFloat.*
                        FROM MovementItemFloat
-                       WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                       WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
                          AND MovementItemFloat.DescId IN (zc_MIFloat_Price(), zc_MIFloat_AmountSecond())
                       )
      , tmpMI_String AS (SELECT MovementItemString.*
                         FROM MovementItemString
-                        WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                        WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
                           AND MovementItemString.DescId IN (zc_MIString_Comment())
                        )
 
      , tmpMILO_GoodsKind AS (SELECT MovementItemLinkObject.*
                              FROM MovementItemLinkObject
-                             WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                             WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
                                AND MovementItemLinkObject.DescId IN (zc_MILinkObject_GoodsKind())
                             )
      , tmpMILO AS (SELECT MovementItemLinkObject.*
                    FROM MovementItemLinkObject
-                   WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                   WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
                      AND MovementItemLinkObject.DescId IN (zc_MILinkObject_Insert()
                                                          , zc_MILinkObject_Update()
                                                          )
                   )
 
-     , tmpMI_Date AS (SELECT MovementItemDate.*
-                      FROM MovementItemDate
-                      WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
-                        AND MovementItemDate.DescId IN (zc_MILinkObject_Insert()
-                                                            , zc_MILinkObject_Update()
-                                                            )
-                     )
+     , tmpMovementItemDate AS (SELECT MovementItemDate.*
+                               FROM MovementItemDate
+                               WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
+                                 AND MovementItemDate.DescId IN (zc_MILinkObject_Insert()
+                                                               , zc_MILinkObject_Update()
+                                                               )
+                              )
 
         SELECT
              tmpMI.MovementItemId    :: Integer AS Id
@@ -522,12 +522,12 @@ BEGIN
                                   ON MIString_Comment.MovementItemId = tmpMI.MovementItemId
                                  AND MIString_Comment.DescId = zc_MIString_Comment()
 
-           LEFT JOIN MovementItemDate AS MIDate_Insert
-                                      ON MIDate_Insert.MovementItemId = tmpMI.MovementItemId
-                                     AND MIDate_Insert.DescId = zc_MIDate_Insert()
-           LEFT JOIN MovementItemDate AS MIDate_Update
-                                      ON MIDate_Update.MovementItemId = tmpMI.MovementItemId
-                                     AND MIDate_Update.DescId = zc_MIDate_Update()
+           LEFT JOIN tmpMovementItemDate AS MIDate_Insert
+                                         ON MIDate_Insert.MovementItemId = tmpMI.MovementItemId
+                                        AND MIDate_Insert.DescId = zc_MIDate_Insert()
+           LEFT JOIN tmpMovementItemDate AS MIDate_Update
+                                         ON MIDate_Update.MovementItemId = tmpMI.MovementItemId
+                                        AND MIDate_Update.DescId = zc_MIDate_Update()
 
            LEFT JOIN tmpMILO AS MILO_Insert
                              ON MILO_Insert.MovementItemId = tmpMI.MovementItemId
