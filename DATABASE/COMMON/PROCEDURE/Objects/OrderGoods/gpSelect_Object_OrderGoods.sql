@@ -1,13 +1,15 @@
 -- Function: gpSelect_Object_OrderGoods()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_OrderGoods(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_OrderGoods (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_OrderGoods (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_OrderGoods(
+    IN inIsErased    Boolean ,
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Comment TVarChar
-             , isErased boolean) AS
+             , isErased Boolean) AS
 $BODY$
 BEGIN
 
@@ -26,6 +28,7 @@ BEGIN
                                  ON ObjectString_Comment.ObjectId = Object_OrderGoods.Id
                                 AND ObjectString_Comment.DescId = zc_ObjectString_OrderGoods_Comment()  
      WHERE Object_OrderGoods.DescId = zc_Object_OrderGoods()
+       AND (Object_OrderGoods.isErased = FALSE OR inIsErased = TRUE)
 
       UNION ALL
        SELECT
@@ -47,4 +50,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_OrderGoods (zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_OrderGoods (FALSE, zfCalc_UserAdmin())

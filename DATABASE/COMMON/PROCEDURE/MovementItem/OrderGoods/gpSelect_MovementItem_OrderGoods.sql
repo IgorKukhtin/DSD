@@ -13,7 +13,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_OrderGoods(
 RETURNS TABLE (Id Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar             
-             , MeasureName TVarChar
+             , MeasureName TVarChar 
+             , GoodsKindId Integer, GoodsKindName  TVarChar
              , Amount TFloat       --кг
              , AmountSecond TFloat --штуки
              , Total_kg TFloat     -- итого вес
@@ -118,8 +119,15 @@ BEGIN
                           AND MovementItemString.DescId IN (zc_MIString_Comment())
                        )
 
+     , tmpMILO_GoodsKind AS (SELECT MovementItemLinkObject.*
+                             FROM MovementItemLinkObject
+                             WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_G.Id FROM tmpMI_G)
+                               AND MovementItemLinkObject.DescId IN (zc_MILinkObject_GoodsKind())
+                            )
+
      , tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
                       , MovementItem.GoodsId                          AS GoodsId
+                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                       , MovementItem.Amount                           AS Amount
                       , COALESCE (MIFloat_AmountSecond.ValueData, 0)  AS AmountSecond
                       , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
@@ -136,7 +144,12 @@ BEGIN
                       LEFT JOIN tmpMI_String AS MIString_Comment
                                              ON MIString_Comment.MovementItemId = MovementItem.Id
                                             AND MIString_Comment.DescId = zc_MIString_Comment()
+
+                      LEFT JOIN tmpMILO_GoodsKind AS MILinkObject_GoodsKind
+                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                  )
+
      , tmpGoodsParam AS (SELECT tmp.GoodsId
                               , Object_TradeMark.ValueData      AS TradeMarkName
                               , Object_GoodsTag.ValueData       AS GoodsTagName
@@ -186,6 +199,8 @@ BEGIN
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
            , Object_Measure.ValueData           AS MeasureName
+           , COALESCE (Object_GoodsKind.Id, 0)  AS GoodsKindId
+           , Object_GoodsKind.ValueData         AS GoodsKindName
            , 0 :: TFloat AS Amount
            , 0 :: TFloat AS AmountSecond
            , 0 :: TFloat AS Total_kg
@@ -211,10 +226,11 @@ BEGIN
        FROM tmpGoodsByGoodsKind AS tmpGoods
 
             LEFT JOIN tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
-                           --AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
+                           AND COALESCE (tmpMI.GoodsKindId,0) = COALESCE (tmpGoods.GoodsKindId,0)
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoods.GoodsId
-
+            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
+            
             -- привязываем 2 раза по виду товара и без
             LEFT JOIN tmpPriceList AS tmpPriceList_Kind 
                                    ON tmpPriceList_Kind.GoodsId                   = tmpGoods.GoodsId
@@ -244,6 +260,9 @@ BEGIN
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
            , Object_Measure.ValueData           AS MeasureName
+
+           , COALESCE (Object_GoodsKind.Id, 0)  AS GoodsKindId
+           , Object_GoodsKind.ValueData         AS GoodsKindName
 
            , tmpMI.Amount            :: TFloat  AS Amount
            , tmpMI.AmountSecond      :: TFloat  AS AmountSecond
@@ -293,6 +312,7 @@ BEGIN
 
        FROM tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
+            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
@@ -391,6 +411,9 @@ BEGIN
 
            , Object_Measure.ValueData           AS MeasureName
 
+           , COALESCE (Object_GoodsKind.Id, 0)  AS GoodsKindId
+           , Object_GoodsKind.ValueData         AS GoodsKindName
+
            , tmpMI.Amount                   :: TFloat AS Amount
            , MIFloat_AmountSecond.ValueData :: TFloat AS AmountSecond
 
@@ -450,6 +473,11 @@ BEGIN
                                         ON MIFloat_AmountSecond.MovementItemId = tmpMI.MovementItemId
                                        AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                             ON MILinkObject_GoodsKind.MovementItemId = tmpMI.MovementItemId
+                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -493,6 +521,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.04.26         *
  25.06.21         *
  08.06.21         *
 */

@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_PositionLevel (TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Object_PositionLevel (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_PositionLevel (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_PositionLevel(
+    IN inIsErased       Boolean ,
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
@@ -27,12 +29,14 @@ $BODY$BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_NoSheetCalc
                                 ON ObjectBoolean_NoSheetCalc.ObjectId = Object_PositionLevel.Id
                                AND ObjectBoolean_NoSheetCalc.DescId = zc_ObjectBoolean_PositionLevel_NoSheetCalc()
-       WHERE Object_PositionLevel.DescId = zc_Object_PositionLevel();
+       WHERE Object_PositionLevel.DescId = zc_Object_PositionLevel()
+        AND (Object_PositionLevel.isErased = FALSE OR inIsErased = TRUE)
+       ;
   
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_PositionLevel (TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_PositionLevel (TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
@@ -45,4 +49,4 @@ ALTER FUNCTION gpSelect_Object_PositionLevel (TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_PositionLevel('2')
+-- SELECT * FROM gpSelect_Object_PositionLevel(FALSE, '2')
