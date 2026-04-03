@@ -155,6 +155,7 @@ type
     cxLabel10: TcxLabel;
     edOrderGoods: TcxButtonEdit;
     GuidesOrderGoods: TdsdGuides;
+    GoodsKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

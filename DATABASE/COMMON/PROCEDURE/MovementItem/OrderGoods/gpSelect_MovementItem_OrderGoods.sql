@@ -401,6 +401,37 @@ BEGIN
                     AND COALESCE (ObjectBoolean.ValueData, FALSE) = TRUE
                    )
 
+     , tmpMI_Float AS (SELECT MovementItemFloat.*
+                       FROM MovementItemFloat
+                       WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                         AND MovementItemFloat.DescId IN (zc_MIFloat_Price(), zc_MIFloat_AmountSecond())
+                      )
+     , tmpMI_String AS (SELECT MovementItemString.*
+                        FROM MovementItemString
+                        WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                          AND MovementItemString.DescId IN (zc_MIString_Comment())
+                       )
+
+     , tmpMILO_GoodsKind AS (SELECT MovementItemLinkObject.*
+                             FROM MovementItemLinkObject
+                             WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                               AND MovementItemLinkObject.DescId IN (zc_MILinkObject_GoodsKind())
+                            )
+     , tmpMILO AS (SELECT MovementItemLinkObject.*
+                   FROM MovementItemLinkObject
+                   WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                     AND MovementItemLinkObject.DescId IN (zc_MILinkObject_Insert()
+                                                         , zc_MILinkObject_Update()
+                                                         )
+                  )
+
+     , tmpMI_Date AS (SELECT MovementItemDate.*
+                      FROM MovementItemDate
+                      WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                        AND MovementItemDate.DescId IN (zc_MILinkObject_Insert()
+                                                            , zc_MILinkObject_Update()
+                                                            )
+                     )
 
         SELECT
              tmpMI.MovementItemId    :: Integer AS Id
@@ -466,16 +497,16 @@ BEGIN
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
-            LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                        ON MIFloat_Price.MovementItemId = tmpMI.MovementItemId
-                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
-            LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
-                                        ON MIFloat_AmountSecond.MovementItemId = tmpMI.MovementItemId
-                                       AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+            LEFT JOIN tmpMI_Float AS MIFloat_Price
+                                  ON MIFloat_Price.MovementItemId = tmpMI.MovementItemId
+                                 AND MIFloat_Price.DescId = zc_MIFloat_Price()
+            LEFT JOIN tmpMI_Float AS MIFloat_AmountSecond
+                                  ON MIFloat_AmountSecond.MovementItemId = tmpMI.MovementItemId
+                                 AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                             ON MILinkObject_GoodsKind.MovementItemId = tmpMI.MovementItemId
-                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+            LEFT JOIN tmpMILO_GoodsKind AS MILinkObject_GoodsKind
+                                        ON MILinkObject_GoodsKind.MovementItemId = tmpMI.MovementItemId
+                                       AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
@@ -487,9 +518,9 @@ BEGIN
                                   ON ObjectFloat_Weight.ObjectId = tmpMI.GoodsId
                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
-           LEFT JOIN MovementItemString AS MIString_Comment
-                                        ON MIString_Comment.MovementItemId = tmpMI.MovementItemId
-                                       AND MIString_Comment.DescId = zc_MIString_Comment()
+           LEFT JOIN tmpMI_String AS MIString_Comment
+                                  ON MIString_Comment.MovementItemId = tmpMI.MovementItemId
+                                 AND MIString_Comment.DescId = zc_MIString_Comment()
 
            LEFT JOIN MovementItemDate AS MIDate_Insert
                                       ON MIDate_Insert.MovementItemId = tmpMI.MovementItemId
@@ -498,14 +529,14 @@ BEGIN
                                       ON MIDate_Update.MovementItemId = tmpMI.MovementItemId
                                      AND MIDate_Update.DescId = zc_MIDate_Update()
 
-           LEFT JOIN MovementItemLinkObject AS MILO_Insert
-                                            ON MILO_Insert.MovementItemId = tmpMI.MovementItemId
-                                           AND MILO_Insert.DescId = zc_MILinkObject_Insert()
+           LEFT JOIN tmpMILO AS MILO_Insert
+                             ON MILO_Insert.MovementItemId = tmpMI.MovementItemId
+                            AND MILO_Insert.DescId = zc_MILinkObject_Insert()
            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MILO_Insert.ObjectId
 
-           LEFT JOIN MovementItemLinkObject AS MILO_Update
-                                            ON MILO_Update.MovementItemId = tmpMI.MovementItemId
-                                           AND MILO_Update.DescId = zc_MILinkObject_Update()
+           LEFT JOIN tmpMILO AS MILO_Update
+                             ON MILO_Update.MovementItemId = tmpMI.MovementItemId
+                            AND MILO_Update.DescId = zc_MILinkObject_Update()
            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
 
            LEFT JOIN tmpGoodsParam ON tmpGoodsParam.GoodsId = tmpMI.GoodsId
