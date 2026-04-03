@@ -138,7 +138,7 @@ BEGIN
                                         AND Movement.StatusId = zc_Enum_Status_Complete()
                       WHERE MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
                         AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-                        AND vbUserId NOT IN (5, 6604558)
+                        AND vbUserId NOT IN (5, 6604558, 10352030)
                      ) AS Movement
                      LEFT JOIN MovementLinkObject AS MovementLO_DocumentTaxKind
                                                   ON MovementLO_DocumentTaxKind.MovementId = Movement.Id
@@ -320,7 +320,7 @@ BEGIN
                                                   AND MovementFloat_ChangePercent.DescId     = zc_MovementFloat_ChangePercent()
                       WHERE MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
                         AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-                        AND vbUserId NOT IN (5, 6604558)
+                        AND vbUserId NOT IN (5, 6604558, 10352030)
                      ) AS Movement
                      INNER JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = Movement.Id
                                                     AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master()
@@ -466,7 +466,7 @@ BEGIN
                                                   AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
                       WHERE MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
                         AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-                        AND vbUserId NOT IN (5, 6604558)
+                        AND vbUserId NOT IN (5, 6604558, 10352030)
                      ) AS Movement
                      LEFT JOIN MovementLinkObject AS MovementLO_DocumentTaxKind
                                                   ON MovementLO_DocumentTaxKind.MovementId = Movement.Id
@@ -638,7 +638,7 @@ BEGIN
                 WHERE Movement.DescId = zc_Movement_TransferDebtOut()
                   AND Movement.StatusId = zc_Enum_Status_Complete()
                   AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-                  AND vbUserId NOT IN (5, 6604558)
+                  AND vbUserId NOT IN (5, 6604558, 10352030)
                 GROUP BY MovementLinkObject_To.ObjectId
                        , ObjectLink_Contract_JuridicalBasis.ChildObjectId
                        , MovementBoolean_PriceWithVAT.ValueData
@@ -729,7 +729,7 @@ BEGIN
                   AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                   AND (MovementLO_DocumentTaxKind.ObjectId = inDocumentTaxKindId OR COALESCE (inDocumentTaxKindId, 0) = 0)
                   AND (tmpPartner_Corrective.PartnerId > 0 OR tmpJuridical_Corrective.JuridicalId > 0 OR MovementLO_DocumentTaxKind.ObjectId > 0)
-                  AND vbUserId NOT IN (5, 6604558)
+                  AND vbUserId NOT IN (5, 6604558, 10352030)
 
                 GROUP BY MovementLinkObject_From.ObjectId
                        , ObjectLink_Contract_JuridicalBasis.ChildObjectId
@@ -824,7 +824,7 @@ BEGIN
                   AND Movement.StatusId = zc_Enum_Status_Complete() 
                   AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                   AND (MovementLO_DocumentTaxKind.ObjectId = inDocumentTaxKindId OR COALESCE (inDocumentTaxKindId, 0) = 0)
-                  AND vbUserId NOT IN (5, 6604558)
+                  AND vbUserId NOT IN (5, 6604558, 10352030)
                   
                 GROUP BY MovementLinkObject_From.ObjectId
                        , MovementLinkObject_To.ObjectId
@@ -1011,7 +1011,7 @@ BEGIN
           )
 
        OR (Movement_TaxCorrective.OperDate < Movement_DocumentChild.OperDate)
-       OR vbUserId IN (5, 6604558)
+       OR vbUserId IN (5, 6604558, 10352030)
 
    ;
 
