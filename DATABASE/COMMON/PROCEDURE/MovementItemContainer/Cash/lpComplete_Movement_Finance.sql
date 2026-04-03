@@ -13,6 +13,14 @@ $BODY$
   DECLARE vbPartnerId_min Integer;
   DECLARE vbPartnerId_max Integer;
 BEGIN
+
+/*IF inUserId = 5 THEN
+         RAISE EXCEPTION 'Ошибка. (%) (%)'
+         , (SELECT SUM (OperSumm + COALESCE (OperSumm_Diff, 0)) FROM _tmpItem WHERE IsMaster = TRUE)
+         , (SELECT SUM (OperSumm + COALESCE (OperSumm_Diff, 0)) FROM _tmpItem WHERE IsMaster = FALSE)
+         ;
+END IF;*
+
      -- Проверка
      IF EXISTS (SELECT SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END)
                 FROM _tmpItem /*WHERE MovementDescId = zc_Movement_ProfitLossService()*/
