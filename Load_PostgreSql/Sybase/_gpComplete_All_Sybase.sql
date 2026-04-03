@@ -19,7 +19,7 @@ BEGIN
      -- сразу запомнили время начала выполнения Проц.
      --***vbOperDate_Begin1:= CLOCK_TIMESTAMP();
 
-if inMovementId  = 31802046 AND 1=0
+if inMovementId  = 33851842 AND 1=1
 THEN RETURN; END IF;
 	
      -- нашли
@@ -31,7 +31,7 @@ THEN RETURN; END IF;
      
 
 
-if CURRENT_TIMESTAMP between '17.03.2026 7:55' and '17.03.2026 10:00' AND 1=0
+if CURRENT_TIMESTAMP between '31.03.2026 7:55' and '31.03.2026 10:00' AND 1=0
 then
     RAISE EXCEPTION 'Ошибка.ok-pause';
 end if;

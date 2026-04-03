@@ -269,7 +269,12 @@ BEGIN
                     ELSE COALESCE (Object.DescId, 0)
                END AS ObjectDescId
 
-             , CASE WHEN -- _tmpItem.CurrencyId = zc_Enum_Currency_Basis()
+             , CASE -- ЗП, даже если в валюте
+                    WHEN COALESCE (MILinkObject_PersonalServiceList.ObjectId, tmpPersonal.PersonalServiceListId, 0) > 0
+                     AND MI_Child.Amount IS NOT NULL
+                         THEN MI_Child.Amount
+
+                    WHEN -- _tmpItem.CurrencyId = zc_Enum_Currency_Basis()
                          _tmpItem.isActive = TRUE
                      AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
                          THEN -1 * COALESCE (MovementFloat_Amount.ValueData, 0)
@@ -308,7 +313,12 @@ BEGIN
                     ELSE 0
                END AS OperSumm_Currency
 
-             , CASE -- Перевыставление
+             , CASE -- ЗП, даже если в валюте
+                    WHEN COALESCE (MILinkObject_PersonalServiceList.ObjectId, tmpPersonal.PersonalServiceListId, 0) > 0
+                     AND MI_Child.Amount IS NOT NULL
+                         THEN 0
+
+                    -- Перевыставление
                     WHEN ObjectLink_Unit_Contract.ChildObjectId > 0
                          THEN 0
 
@@ -399,7 +409,7 @@ BEGIN
                          THEN COALESCE (MILinkObject_MoneyPlace.ObjectId, 0)
                     ELSE COALESCE (MLO_PersonalServiceList.ObjectId, 0)
                END AS PersonalServiceListId*/
-             , COALESCE (MILinkObject_PersonalServiceList.ObjectId, COALESCE (tmpPersonal.PersonalServiceListId, 0)) AS PersonalServiceListId
+             , COALESCE (MILinkObject_PersonalServiceList.ObjectId, tmpPersonal.PersonalServiceListId, 0) AS PersonalServiceListId
 
                -- Филиал Баланс: всегда из р/сч. (а значение кстати=0) !!!но для ЗП - как в начислениях!!!
              , CASE WHEN MI_Child.Id > 0 OR tmpPersonal.MemberId > 0

@@ -41,6 +41,18 @@ BEGIN
           LEFT JOIN Object AS Object_PositionProperty ON Object_PositionProperty.Id = ObjectLink_Position_PositionProperty.ChildObjectId
      WHERE Object_Position.DescId = zc_Object_Position()
        AND (Object_Position.isErased = inIsShowAll OR inIsShowAll = TRUE)
+
+  /*UNION ALL
+     SELECT 
+           NULL:: Integer        AS Id
+         , NULL:: Integer        AS Code
+         , '<ÏÓÑÒÎ>' :: TVarChar AS Name
+         , 0  :: Integer         AS SheetWorkTimeId 
+         , '' :: TVarChar        AS SheetWorkTimeName
+         , 0  :: Integer         AS PositionPropertyId 
+         , '' :: TVarChar        AS PositionPropertyName
+         , TRUE :: Boolean       AS isErased*/
+
      ;
   
 END;
@@ -59,4 +71,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- òåñò
--- SELECT * FROM gpSelect_Object_Position('2')
+-- SELECT * FROM gpSelect_Object_Position (FALSE, '2')

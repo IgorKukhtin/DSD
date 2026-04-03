@@ -112,6 +112,8 @@ $BODY$
   DECLARE vbIsPlan_3_old      Boolean;
   DECLARE vbIsPlan_4_old      Boolean;
   DECLARE vbIsPlan_5_old      Boolean;
+
+  DECLARE vbIsUser_where      Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_OrderFinance());
@@ -141,6 +143,43 @@ BEGIN
                       WHERE MovementFloat.MovementId = inMovementId
                         AND MovementFloat.DescId     = zc_MovementFloat_WeekNumber()
                      );
+     -- нашли
+     vbIsUser_where:= -- Если много Авторов
+                      EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = vbOrderFinanceId AND OL.DescId = zc_ObjectLink_OrderFinance_Member_insert_8() AND OL.ChildObjectId > 0)
+                  -- он есть в Авторах
+                  AND vbUserId IN (SELECT OL_User.ObjectId
+                                   FROM ObjectLink AS OL
+                                        INNER JOIN ObjectLink AS OL_User
+                                                              ON OL_User.ChildObjectId = OL.ChildObjectId
+                                                             AND OL_User.DescId        =  zc_ObjectLink_User_Member()
+                                   WHERE OL.ObjectId = vbOrderFinanceId AND OL.DescId IN (zc_ObjectLink_OrderFinance_Member_insert()
+                                                                                        , zc_ObjectLink_OrderFinance_Member_insert_2()
+                                                                                        , zc_ObjectLink_OrderFinance_Member_insert_3()
+                                                                                        , zc_ObjectLink_OrderFinance_Member_insert_4()
+                                                                                        , zc_ObjectLink_OrderFinance_Member_insert_5()
+                                                                                        , zc_ObjectLink_OrderFinance_Member_insert_6()
+                                                                                        , zc_ObjectLink_OrderFinance_Member_insert_7()
+                                                                                        , zc_ObjectLink_OrderFinance_Member_insert_8()
+                                                                                        , zc_ObjectLink_OrderFinance_Member_insert_9()
+                                                                                        , zc_ObjectLink_OrderFinance_Member_insert_10()
+                                                                                        , zc_ObjectLink_OrderFinance_Member_insert_11()
+                                                                                        , zc_ObjectLink_OrderFinance_Member_insert_12()
+                                                                                        , zc_ObjectLink_OrderFinance_Member_insert_13()
+                                                                                        , zc_ObjectLink_OrderFinance_Member_insert_14()
+                                                                                        , zc_ObjectLink_OrderFinance_Member_insert_15()
+                                                                                         )
+                                  )
+                  -- его нет в Руководителях
+                  AND vbUserId NOT IN (SELECT OL_User.ObjectId
+                                       FROM ObjectLink AS OL
+                                            INNER JOIN ObjectLink AS OL_User
+                                                                  ON OL_User.ChildObjectId = OL.ChildObjectId
+                                                                 AND OL_User.DescId        =  zc_ObjectLink_User_Member()
+                                       WHERE OL.ObjectId = vbOrderFinanceId AND OL.DescId IN (zc_ObjectLink_OrderFinance_Member_1()
+                                                                                            , zc_ObjectLink_OrderFinance_Member_2()
+                                                                                             )
+                                      )
+                 ;
 
      -- начало недели
      vbStartDate:= zfCalc_Week_StartDate (vbOperDate, vbWeekNumber);
@@ -643,6 +682,7 @@ BEGIN
                             , COALESCE (MIBoolean_AmountPlan_4.ValueData, TRUE) ::Boolean AS isAmountPlan_4
                             , COALESCE (MIBoolean_AmountPlan_5.ValueData, TRUE) ::Boolean AS isAmountPlan_5
 
+                            , Object_Insert.Id                 AS InsertId
                             , Object_Insert.ValueData          AS InsertName
                             , Object_Update.ValueData          AS UpdateName
                             , MIDate_Insert.ValueData          AS InsertDate
@@ -799,6 +839,8 @@ BEGIN
                          , CASE COALESCE (tmpMI_Detail_1.isAmountPlan_4_value, tmpMI_Detail_2.isAmountPlan_4_value) WHEN 2 THEN TRUE WHEN 1 THEN FALSE ELSE COALESCE (tmpMI_Child.isAmountPlan_4, MIBoolean_AmountPlan_4.ValueData, TRUE) END AS isAmountPlan_4
                          , CASE COALESCE (tmpMI_Detail_1.isAmountPlan_5_value, tmpMI_Detail_2.isAmountPlan_5_value) WHEN 2 THEN TRUE WHEN 1 THEN FALSE ELSE COALESCE (tmpMI_Child.isAmountPlan_5, MIBoolean_AmountPlan_5.ValueData, TRUE) END AS isAmountPlan_5
 
+                         
+                         , COALESCE (tmpMI_Child.InsertId,   Object_Insert.Id)        AS InsertId
                          , COALESCE (tmpMI_Child.InsertName, Object_Insert.ValueData) AS InsertName
                          , COALESCE (tmpMI_Child.InsertDate, MIDate_Insert.ValueData) AS InsertDate
 
@@ -1160,6 +1202,9 @@ BEGIN
                                 AND ObjectLink_Partner_Juridical.DescId        = zc_ObjectLink_Partner_Juridical()
                                 AND Object_Juridical.DescId = zc_Object_Partner()
             LEFT JOIN Object AS Object_Juridical_inf ON Object_Juridical_inf.Id = ObjectLink_Partner_Juridical.ObjectId
+
+        WHERE vbIsUser_where = FALSE
+           OR MovementItem.InsertId = vbUserId
 
       -- Только Юр.л.
       /*WHERE (Object_Juridical.DescId = zc_Object_Juridical()

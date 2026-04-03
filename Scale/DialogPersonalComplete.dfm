@@ -41,7 +41,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       object LabelPositionName1: TLabel
         Left = 0
         Top = 0
-        Width = 210
+        Width = 79
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -52,7 +52,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 79
       end
       object gbPositionName1: TGroupBox
         Left = 0
@@ -90,7 +89,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       object LabelPersonalName1: TLabel
         Left = 0
         Top = 0
-        Width = 320
+        Width = 108
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -101,7 +100,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 108
       end
       object gbPersonalCode1: TGroupBox
         Left = 0
@@ -172,7 +170,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       object LabelPositionName2: TLabel
         Left = 0
         Top = 0
-        Width = 210
+        Width = 79
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -183,7 +181,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 79
       end
       object gbPositionName2: TGroupBox
         Left = 0
@@ -221,7 +218,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       object LabelPersonalName2: TLabel
         Left = 0
         Top = 0
-        Width = 320
+        Width = 108
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -232,7 +229,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 108
       end
       object gbPersonalCode2: TGroupBox
         Left = 0
@@ -303,7 +299,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       object LabelPositionName3: TLabel
         Left = 0
         Top = 0
-        Width = 210
+        Width = 79
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -314,7 +310,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 79
       end
       object gbPositionName3: TGroupBox
         Left = 0
@@ -352,7 +347,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       object LabelPersonalName3: TLabel
         Left = 0
         Top = 0
-        Width = 320
+        Width = 108
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -363,7 +358,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 108
       end
       object gbPersonalCode3: TGroupBox
         Left = 0
@@ -434,7 +428,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       object LabelPositionName4: TLabel
         Left = 0
         Top = 0
-        Width = 210
+        Width = 79
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -445,7 +439,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 79
       end
       object gbPositionName4: TGroupBox
         Left = 0
@@ -483,7 +476,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       object LabePersonalName4: TLabel
         Left = 0
         Top = 0
-        Width = 320
+        Width = 108
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -494,7 +487,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 108
       end
       object gbPersonalCode4: TGroupBox
         Left = 0
@@ -565,7 +557,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       object LabelPositionName5: TLabel
         Left = 0
         Top = 0
-        Width = 210
+        Width = 79
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -576,7 +568,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 79
       end
       object gbPositionName5: TGroupBox
         Left = 0
@@ -614,7 +605,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       object LabePersonalName5: TLabel
         Left = 0
         Top = 0
-        Width = 320
+        Width = 108
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -625,7 +616,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 108
       end
       object gbPersonalCode5: TGroupBox
         Left = 0
@@ -696,7 +686,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       object LabelPositionStickName1: TLabel
         Left = 0
         Top = 0
-        Width = 210
+        Width = 79
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -707,7 +697,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 79
       end
       object gbPositionStickName1: TGroupBox
         Left = 0
@@ -745,7 +734,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       object LabelPersonalStickName1: TLabel
         Left = 0
         Top = 0
-        Width = 320
+        Width = 92
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -756,7 +745,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 92
       end
       object gbPersonalStickCode1: TGroupBox
         Left = 0
@@ -827,7 +815,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       object Label1: TLabel
         Left = 0
         Top = 0
-        Width = 210
+        Width = 79
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -838,7 +826,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 79
       end
       object GroupBox1: TGroupBox
         Left = 0
@@ -876,7 +863,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       object Label2: TLabel
         Left = 0
         Top = 0
-        Width = 320
+        Width = 108
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -887,7 +874,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 108
       end
       object gbPersonalCode8: TGroupBox
         Left = 0
@@ -958,7 +944,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       object Label3: TLabel
         Left = 0
         Top = 0
-        Width = 210
+        Width = 79
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -969,7 +955,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 79
       end
       object GroupBox4: TGroupBox
         Left = 0
@@ -1007,7 +992,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       object Label4: TLabel
         Left = 0
         Top = 0
-        Width = 320
+        Width = 108
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -1018,7 +1003,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 108
       end
       object gbPersonalCode7: TGroupBox
         Left = 0
@@ -1089,7 +1073,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       object Label5: TLabel
         Left = 0
         Top = 0
-        Width = 210
+        Width = 79
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -1100,7 +1084,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 79
       end
       object GroupBox7: TGroupBox
         Left = 0
@@ -1138,7 +1121,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       object Label6: TLabel
         Left = 0
         Top = 0
-        Width = 320
+        Width = 108
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -1149,7 +1132,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 108
       end
       object gbPersonalCode6: TGroupBox
         Left = 0

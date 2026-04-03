@@ -61,9 +61,9 @@ BEGIN
                                                         , inAccountId    := inAccountId
                                                         , inCashId       := inCashId
                                                         , inCurrencyId   := 0
-                                                        , inisDate       := CASE WHEN vbUserId IN (5, 6604558) THEN TRUE ELSE FALSE END
+                                                        , inisDate       := CASE WHEN vbUserId IN (6604558, 10352030) THEN TRUE ELSE FALSE END
                                                         , inSession      := inSession
-                                                                         ) AS gpReport)
+                                                         ) AS gpReport)
         , tmpResult AS (SELECT tmpReport_BankAccount.ContainerId 
                              , tmpReport_BankAccount.BankName , tmpReport_BankAccount.BankAccountName, tmpReport_BankAccount.JuridicalName 
                              , tmpReport_BankAccount.CurrencyName_BankAccount, tmpReport_BankAccount.CurrencyName

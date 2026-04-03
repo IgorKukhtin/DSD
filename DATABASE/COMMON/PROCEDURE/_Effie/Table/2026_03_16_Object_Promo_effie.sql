@@ -30,7 +30,7 @@ CREATE UNIQUE INDEX idx_Object_Promo_effie_ContractId_PriceListId_MovementId ON 
 /*
             ALTER TABLE Object_Promo_effie ADD COLUMN MovementId Integer;
             UPDATE Object_Promo_effie SET MovementId = 0;
-            ALTER TABLE Object_Promo_effie ALTER COLUMN MovementIdSET NOT NULL;
+            ALTER TABLE Object_Promo_effie ALTER COLUMN MovementId SET NOT NULL;
 
             ALTER TABLE Object_Promo_effie ADD COLUMN ContractId Integer;
             UPDATE Object_Promo_effie SET ContractId = 0;

@@ -159,7 +159,8 @@ BEGIN
      CREATE TEMP TABLE _tmpRemains (GoodsId Integer, GoodsKindId Integer, Amount TFloat) ON COMMIT DROP;
      --
      INSERT INTO _tmpRemains (GoodsId, GoodsKindId, Amount)
-        WITH tmpMIContainer AS (SELECT MIContainer.ObjectId_Analyzer    AS GoodsId
+        WITH -- существующий пересорт
+             tmpMIContainer AS (SELECT MIContainer.ObjectId_Analyzer    AS GoodsId
                                      , MIContainer.ObjectIntId_Analyzer AS GoodsKindId
                                      , SUM (MIContainer.Amount)         AS Amount
                                 FROM MovementItemContainer AS MIContainer
@@ -175,8 +176,10 @@ BEGIN
                                 GROUP BY MIContainer.ObjectId_Analyzer
                                        , MIContainer.ObjectIntId_Analyzer
                                )
+               -- Остатки нач. месяца
              , tmpRemains AS (SELECT _tmpItem.GoodsId
                                    , _tmpItem.GoodsKindId
+                                     -- остаток
                                    , RemainsOLAPTable.AmountStart AS Amount
                               FROM (SELECT DISTINCT _tmpItem.GoodsId, _tmpItem.GoodsKindId FROM _tmpItem) AS _tmpItem
                                    INNER JOIN RemainsOLAPTable ON RemainsOLAPTable.GoodsId     = _tmpItem.GoodsId
@@ -189,10 +192,11 @@ BEGIN
                                 -- !!!без ЦЕХ Тушенка
                                 AND inUnitId <> 2790412
                              )
+         -- только эти Товары
        , tmpGoods AS (SELECT DISTINCT _tmpItem.GoodsId FROM _tmpItem)
-       , tmpContainer_all_1 AS (SELECT _tmpItem.GoodsId
-                                     , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
-                                     , Container.Id AS ContainerId
+
+          -- только эти ContainerId
+        , tmpContainer_list AS (SELECT DISTINCT Container.Id AS ContainerId
                                 FROM tmpGoods AS _tmpItem
                                      INNER JOIN Container ON Container.ObjectId = _tmpItem.GoodsId
                                                          AND Container.DescId   = zc_Container_Count()
@@ -200,20 +204,40 @@ BEGIN
                                                                     ON CLO_Unit.ContainerId = Container.Id
                                                                    AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
                                                                    AND CLO_Unit.ObjectId    = inUnitId
-                                     LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
-                                                                   ON CLO_GoodsKind.ContainerId = Container.Id
-                                                                  AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
+
+                                     INNER JOIN MovementItemContainer AS MIContainer
+                                             ON MIContainer.ContainerId = Container.Id
+                                            AND MIContainer.DescId      = zc_MIContainer_Count()
+                                            AND MIContainer.OperDate    BETWEEN DATE_TRUNC ('MONTH', vbOperDate) AND vbOperDate
+                                            AND (MIContainer.MovementDescId <> zc_Movement_Inventory()
+                                              OR MIContainer.OperDate <> vbOperDate
+                                                )
+                                          --AND (MIContainer.OperDate < vbOperDate OR tmpContainer_all.GoodsId <> 2383)
+
                                      LEFT JOIN ContainerLinkObject AS CLO_Account
                                                                    ON CLO_Account.ContainerId = Container.Id
                                                                   AND CLO_Account.DescId      = zc_ContainerLinkObject_Account()
                                 -- без Товар в пути
                                 WHERE CLO_Account.ObjectId IS NULL
                                   AND vbOperDate >= '01.01.2023'
-                                -- !!!без ЦЕХ Тушенка
-                                AND inUnitId <> 2790412
-                                --!!!Розподільчий комплекс!!!
-                                --AND inUnitId = 8459
+                                  -- !!!без ЦЕХ Тушенка
+                                  AND inUnitId <> 2790412
+                                  --!!!Розподільчий комплекс!!!
+                                  --AND inUnitId = 8459
                                )
+
+         -- только эти ContainerId
+       , tmpContainer_all_1 AS (SELECT Container.ObjectId AS GoodsId
+                                     , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
+                                     , Container.Id AS ContainerId
+                                FROM tmpContainer_list
+                                     INNER JOIN Container ON Container.Id = tmpContainer_list.ContainerId
+                                                       --AND Container.DescId   = zc_Container_Count()
+                                     LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                                                   ON CLO_GoodsKind.ContainerId = Container.Id
+                                                                  AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
+                               )
+         -- еще ошраничили нужными GoodsKindId
        , tmpContainer_all AS (SELECT DISTINCT
                                      _tmpItem.GoodsId
                                    , _tmpItem.GoodsKindId
@@ -222,25 +246,8 @@ BEGIN
                                    INNER JOIN tmpContainer_all_1 ON tmpContainer_all_1.GoodsId     = _tmpItem.GoodsId
                                                                 AND tmpContainer_all_1.GoodsKindId = _tmpItem.GoodsKindId
                              )
-   /*, tmpMIContainer_all_1 AS (SELECT tmpContainer_all.ContainerId
-                                     , tmpContainer_all.GoodsId
-                                     , tmpContainer_all.GoodsKindId
-                                     , COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) AS Amount
-                                FROM tmpContainer_all
-                                     LEFT JOIN MovementItemContainer AS MIContainer
-                                                                     ON MIContainer.ContainerId = tmpContainer_all.ContainerId
-                                                                    AND MIContainer.DescId      = zc_MIContainer_Count()
-                                                                    AND MIContainer.OperDate    BETWEEN DATE_TRUNC ('MONTH', vbOperDate) AND vbOperDate
-                                                                    AND (MIContainer.MovementDescId <> zc_Movement_Inventory()
-                                                                      OR MIContainer.OperDate <> vbOperDate
-                                                                        )
-                                                                  --AND (MIContainer.OperDate < vbOperDate OR tmpContainer_all.GoodsId <> 2383)
-                                GROUP BY tmpContainer_all.ContainerId
-                                       , tmpContainer_all.GoodsId
-                                       , tmpContainer_all.GoodsKindId
-                               )*/
-       -- оптимизация
-     , tmpMIContainer_all_1 AS (SELECT MIContainer.ContainerId
+         -- оптимизация
+       , tmpMIContainer_all AS (SELECT MIContainer.ContainerId
                                      , SUM (MIContainer.Amount) AS Amount
                                 FROM MovementItemContainer AS MIContainer
                                 WHERE MIContainer.ContainerId IN (SELECT DISTINCT tmpContainer_all.ContainerId FROM tmpContainer_all)
@@ -252,16 +259,9 @@ BEGIN
                                 --AND (MIContainer.OperDate < vbOperDate OR tmpContainer_all.GoodsId <> 2383)
                                 GROUP BY MIContainer.ContainerId
                                )
-         -- оптимизация
-       , tmpMIContainer_all AS (SELECT tmpContainer_all.ContainerId
-                                     , tmpContainer_all.GoodsId
-                                     , tmpContainer_all.GoodsKindId
-                                     , COALESCE (tmpMIContainer_all_1.Amount, 0) AS Amount
-                                FROM tmpContainer_all
-                                     LEFT JOIN tmpMIContainer_all_1 ON tmpMIContainer_all_1.ContainerId = tmpContainer_all.ContainerId
-                               )
-           , tmpContainer AS (SELECT tmpContainer.GoodsId
-                                   , tmpContainer.GoodsKindId
+             -- оптимизация
+           , tmpContainer AS (SELECT COALESCE (tmpContainer.GoodsId, tmpRemains.GoodsId)                 AS GoodsId
+                                   , COALESCE (tmpContainer.GoodsKindId, tmpRemains.GoodsKindId)         AS GoodsKindId
                                    , COALESCE (tmpRemains.Amount, 0) + COALESCE (tmpContainer.Amount, 0) AS Amount
                               FROM (SELECT tmpContainer_all.GoodsId
                                          , tmpContainer_all.GoodsKindId
@@ -271,7 +271,7 @@ BEGIN
                                     GROUP BY tmpContainer_all.GoodsId
                                            , tmpContainer_all.GoodsKindId
                                    ) AS tmpContainer
-                                   LEFT JOIN tmpRemains ON tmpRemains.GoodsId     = tmpContainer.GoodsId
+                                   FULL JOIN tmpRemains ON tmpRemains.GoodsId     = tmpContainer.GoodsId
                                                        AND tmpRemains.GoodsKindId = tmpContainer.GoodsKindId
                              )
         --
@@ -279,6 +279,7 @@ BEGIN
              , tmpContainer.GoodsKindId
              , tmpContainer.Amount - COALESCE (tmpMIContainer.Amount, 0) AS Amount
         FROM tmpContainer
+             -- существующий пересорт - его вычитаеи
              LEFT JOIN tmpMIContainer ON tmpMIContainer.GoodsId     = tmpContainer.GoodsId
                                      AND tmpMIContainer.GoodsKindId = tmpContainer.GoodsKindId
         WHERE tmpContainer.Amount - COALESCE (tmpMIContainer.Amount, 0) > 0

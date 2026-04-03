@@ -1128,10 +1128,10 @@ BEGIN
 
         , tmpMovement.Comment           ::TVarChar  AS Comment_mov
 
-        , CASE WHEN vbUserId = 5 AND 1=0 THEN 'ÔÈÎ Àגעמנ' ELSE tmpMovement.InsertName END :: TVarChar AS InsertName
-        , tmpMovement.InsertDate
-        , tmpMovement.UpdateName
-        , tmpMovement.UpdateDate
+        , CASE WHEN vbUserId = 5 AND 1=0 THEN 'ÔÈÎ Àגעמנ' ELSE COALESCE (tmpMI.InsertName, tmpMovement.InsertName) END :: TVarChar AS InsertName
+        , COALESCE (tmpMI.InsertDate, tmpMovement.InsertDate) :: TDateTime
+        , COALESCE (tmpMI.UpdateName, tmpMovement.UpdateName) :: TVarChar
+        , COALESCE (tmpMI.UpdateDate, tmpMovement.UpdateDate) :: TDateTime
 
         , tmpMovement.UnitName_insert      ::TVarChar
         , tmpMovement.PositionName_insert  ::TVarChar
