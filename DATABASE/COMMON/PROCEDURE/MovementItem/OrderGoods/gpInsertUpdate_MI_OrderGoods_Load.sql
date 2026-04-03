@@ -125,7 +125,7 @@ BEGIN
 
      IF vbUserId = 9457
      THEN
-       --  RAISE EXCEPTION 'Ошибка.ok.';
+         RAISE EXCEPTION 'Ошибка.ok.';
      END IF;
 
 
