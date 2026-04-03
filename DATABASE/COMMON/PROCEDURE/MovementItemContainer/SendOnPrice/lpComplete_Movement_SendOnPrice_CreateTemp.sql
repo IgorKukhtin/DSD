@@ -14,7 +14,9 @@ BEGIN
      THEN
          DELETE FROM _tmpItemSumm;
          DELETE FROM _tmpItem;
+         DELETE FROM _tmpList_CLO;
      ELSE
+     
          -- таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
          CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, isLossMaterials Boolean, isRestoreAccount_60000 Boolean, isAccount_60000 Boolean, MIContainerId_To BigInt
                                        , ContainerId_GoodsFrom Integer
@@ -43,6 +45,8 @@ BEGIN
                                    , OperCount_start TFloat, OperCount_ChangePercent_start TFloat, OperCount_Partner_start TFloat
                                    , tmpOperSumm_PriceList_start TFloat, tmpOperSumm_Partner_start TFloat, tmpOperSumm_PartnerVirt_start TFloat
                                     ) ON COMMIT DROP;
+         -- таблица - оптимизация
+         CREATE TEMP TABLE _tmpList_CLO (ContainerId_From Integer) ON COMMIT DROP;
      END IF;
 
 END;$BODY$
