@@ -133,7 +133,7 @@ BEGIN
 
 
     -- ускорение - ОЛАП + Голота К.О. + Только просмотр Аудитор + Просмотр СБ
-    vb_IsContainer_OLAP:= inEndDate < '01.01.2024' AND (inUserId IN (5, 6604558)
+    vb_IsContainer_OLAP:= inEndDate < '01.01.2024' AND (inUserId IN (5, 6604558, 10352030)
                                                      OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId IN (10597056, 447972))
                                                        )
                                                    --AND inUserId <> 5
