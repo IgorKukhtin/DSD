@@ -502,6 +502,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
   inherited Panel: TPanel
     Width = 982
     Height = 57
+    ExplicitTop = -6
     ExplicitWidth = 982
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
@@ -578,6 +579,15 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
       Properties.ReadOnly = True
       TabOrder = 9
       Width = 107
+    end
+    object cbDetail: TcxCheckBox
+      Left = 819
+      Top = 30
+      Hint = #1055#1086' '#1076#1072#1090#1072#1084
+      Caption = #1055#1086' '#1076#1072#1090#1072#1084
+      State = cbsChecked
+      TabOrder = 10
+      Width = 78
     end
   end
   object cxLabel6: TcxLabel [2]
@@ -916,6 +926,14 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDetail'
+          Value = Null
+          Component = cbDetail
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -983,6 +1001,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
       item
         Name = 'inIsDetail'
         Value = True
+        Component = cbDetail
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

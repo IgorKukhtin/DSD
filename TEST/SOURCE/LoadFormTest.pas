@@ -1067,6 +1067,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyPlace_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyPlace_ObjectForm');
 end;
+
 procedure TLoadFormTest.LoadOrderGoodsFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderGoodsJournalForm'));
@@ -1076,6 +1077,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderPeriodKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderPeriodKindForm');
+  // справочник
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderGoods_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderGoods_ObjectForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderGoodsEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderGoodsEditForm');
 end;
 
 procedure TLoadFormTest.LoadOrderSaleFormTest;
@@ -5047,19 +5053,19 @@ begin
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionMember_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPositionMember_ObjectForm');
-  }
+
   // должности
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPositionForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPositionEditForm');
-  {
+   }
   // Разряд должности
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionLevelForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPositionLevelForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionLevelEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPositionLevelEditForm');
-  }
+  exit;
   // Классификатор должности
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionPropertyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPositionPropertyForm');

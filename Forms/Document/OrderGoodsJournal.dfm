@@ -5,7 +5,7 @@ inherited OrderGoodsJournalForm: TOrderGoodsJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 892
-  ExplicitHeight = 573
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -209,6 +209,15 @@ inherited OrderGoodsJournalForm: TOrderGoodsJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 121
+          end
+          object OrderGoodsName: TcxGridDBColumn
+            Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088
+            DataBinding.FieldName = 'OrderGoodsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1055#1088#1086#1076#1072#1078' '#1087#1086' '#1090#1086#1074#1072#1088#1072#1084
+            Options.Editing = False
+            Width = 104
           end
           object OrderPeriodKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1087#1077#1088#1080#1086#1076#1072' '#1087#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103

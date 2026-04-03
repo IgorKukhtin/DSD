@@ -1,16 +1,19 @@
 -- Function: gpSelect_Object_PositionLevel (TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Object_PositionLevel (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_PositionLevel (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_PositionLevel(
+    IN inIsErased       Boolean ,
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isNoSheetCalc Boolean
              , isErased Boolean
-             ) AS
-$BODY$BEGIN
-
+             )
+AS
+$BODY$
+BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_PositionLevel());
 
@@ -28,6 +31,8 @@ $BODY$BEGIN
                                 ON ObjectBoolean_NoSheetCalc.ObjectId = Object_PositionLevel.Id
                                AND ObjectBoolean_NoSheetCalc.DescId = zc_ObjectBoolean_PositionLevel_NoSheetCalc()
        WHERE Object_PositionLevel.DescId = zc_Object_PositionLevel()
+        AND (Object_PositionLevel.isErased = FALSE OR inIsErased = TRUE)
+
     UNION ALL
      SELECT
            NULL:: Integer        AS Id
@@ -50,4 +55,4 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_PositionLevel('2')
+-- SELECT * FROM gpSelect_Object_PositionLevel(FALSE, '2')

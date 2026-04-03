@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, MonthName TVa
              , OrderPeriodKindId Integer, OrderPeriodKindName TVarChar
              , PriceListId Integer, PriceListName TVarChar
              , UnitId Integer, UnitName TVarChar
+             , OrderGoodsId Integer, OrderGoodsName TVarChar
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              )
@@ -43,8 +44,11 @@ BEGIN
 
              , Object_Unit.Id                                   AS UnitId
              , Object_Unit.ValueData                            AS UnitName
+             
+             , 0                                                AS OrderGoodsId
+             , CAST ('' AS TVarChar) 		                    AS OrderGoodsName             
 
-             , CAST ('' AS TVarChar) 		                AS Comment
+             , CAST ('' AS TVarChar) 		                    AS Comment
              , Object_Insert.ValueData                          AS InsertName
              , CURRENT_TIMESTAMP        ::TDateTime             AS InsertDate
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
@@ -73,6 +77,9 @@ BEGIN
            , Object_Unit.Id                         AS UnitId
            , Object_Unit.ValueData                  AS UnitName
 
+           , Object_OrderGoods.Id                   AS OrderGoodsId
+           , Object_OrderGoods.ValueData            AS OrderGoodsName
+
            , MovementString_Comment.ValueData       AS Comment
 
            , Object_Insert.ValueData                AS InsertName
@@ -99,6 +106,11 @@ BEGIN
                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_OrderGoods
+                                         ON MovementLinkObject_OrderGoods.MovementId = Movement.Id
+                                        AND MovementLinkObject_OrderGoods.DescId = zc_MovementLinkObject_OrderGoods()
+            LEFT JOIN Object AS Object_OrderGoods ON Object_OrderGoods.Id = MovementLinkObject_OrderGoods.ObjectId
+
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id
                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
@@ -119,6 +131,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 02.04.26         *
  08.06.21         * 
 */
 

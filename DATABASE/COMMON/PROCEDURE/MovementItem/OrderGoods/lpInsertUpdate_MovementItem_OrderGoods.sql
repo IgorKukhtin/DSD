@@ -2,12 +2,14 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderGoods (Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_OrderGoods(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта
-    IN inGoodsId             Integer   , -- Товары
+    IN inGoodsId             Integer   , -- Товары 
+    IN inGoodsKindId         Integer   , -- Виды товаров
     IN inAmount              TFloat    , -- Количество кг
     IN inAmountSecond        TFloat    , -- Количество шт
     IN inPrice               TFloat    , --
@@ -50,7 +52,7 @@ BEGIN
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
 
      -- сохранили связь с <Виды товаров>
-     --PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);

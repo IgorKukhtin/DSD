@@ -3,7 +3,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
   ClientHeight = 638
   ClientWidth = 1100
   ExplicitWidth = 1116
-  ExplicitHeight = 676
+  ExplicitHeight = 677
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -124,7 +124,21 @@ inherited OrderGoodsForm: TOrderGoodsForm
             Options.Editing = False
             Width = 182
           end
-          object MeasureName: TcxGridDBColumn [3]
+          object GoodsKindName: TcxGridDBColumn [3]
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsKindName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsKindChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 112
+          end
+          object MeasureName: TcxGridDBColumn [4]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -132,7 +146,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
             Options.Editing = False
             Width = 45
           end
-          object Price: TcxGridDBColumn [4]
+          object Price: TcxGridDBColumn [5]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -144,7 +158,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
             Options.Editing = False
             Width = 70
           end
-          object Amount: TcxGridDBColumn [5]
+          object Amount: TcxGridDBColumn [6]
             Caption = #1050#1086#1083'-'#1074#1086', '#1074#1077#1089
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -154,7 +168,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object AmountSecond: TcxGridDBColumn [6]
+          object AmountSecond: TcxGridDBColumn [7]
             Caption = #1050#1086#1083'-'#1074#1086', '#1096#1090
             DataBinding.FieldName = 'AmountSecond'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -164,7 +178,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object Total_kg: TcxGridDBColumn [7]
+          object Total_kg: TcxGridDBColumn [8]
             Caption = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086', '#1074#1077#1089
             DataBinding.FieldName = 'Total_kg'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -176,7 +190,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
             Options.Editing = False
             Width = 80
           end
-          object Total_sh: TcxGridDBColumn [8]
+          object Total_sh: TcxGridDBColumn [9]
             Caption = #1048#1058#1054#1043#1054' '#1050#1086#1083'-'#1074#1086', '#1096#1090
             DataBinding.FieldName = 'Total_sh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -187,7 +201,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
             Options.Editing = False
             Width = 80
           end
-          object Summa: TcxGridDBColumn [9]
+          object Summa: TcxGridDBColumn [10]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'Summa'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -199,14 +213,14 @@ inherited OrderGoodsForm: TOrderGoodsForm
             Options.Editing = False
             Width = 70
           end
-          object Comment: TcxGridDBColumn [10]
+          object Comment: TcxGridDBColumn [11]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 110
           end
-          object msUpdateName: TcxGridDBColumn [11]
+          object msUpdateName: TcxGridDBColumn [12]
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
             DataBinding.FieldName = 'UpdateName'
             Visible = False
@@ -215,7 +229,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
             Options.Editing = False
             Width = 97
           end
-          object msUpdateDate: TcxGridDBColumn [12]
+          object msUpdateDate: TcxGridDBColumn [13]
             Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088'.)'
             DataBinding.FieldName = 'UpdateDate'
             Visible = False
@@ -224,7 +238,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
             Options.Editing = False
             Width = 67
           end
-          object msInsertName: TcxGridDBColumn [13]
+          object msInsertName: TcxGridDBColumn [14]
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'
             HeaderAlignmentHorz = taCenter
@@ -232,7 +246,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
             Options.Editing = False
             Width = 97
           end
-          object msInsertDate: TcxGridDBColumn [14]
+          object msInsertDate: TcxGridDBColumn [15]
             Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
@@ -1268,15 +1282,15 @@ inherited OrderGoodsForm: TOrderGoodsForm
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object cxLabel22: TcxLabel
-      Left = 467
+      Left = 620
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 467
+      Left = 620
       Top = 63
       TabOrder = 11
-      Width = 294
+      Width = 145
     end
     object cxLabel8: TcxLabel
       Left = 777
@@ -1313,12 +1327,12 @@ inherited OrderGoodsForm: TOrderGoodsForm
       Width = 146
     end
     object cxLabel27: TcxLabel
-      Left = 467
+      Left = 463
       Top = 5
       Caption = #1055#1088#1072#1081#1089' '#1083#1080#1089#1090
     end
     object edPriceList: TcxButtonEdit
-      Left = 467
+      Left = 463
       Top = 23
       Properties.Buttons = <
         item
@@ -1329,7 +1343,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
       Properties.HideSelection = False
       Properties.ReadOnly = False
       TabOrder = 17
-      Width = 294
+      Width = 302
     end
     object cxLabel6: TcxLabel
       Left = 777
@@ -1378,6 +1392,25 @@ inherited OrderGoodsForm: TOrderGoodsForm
     Left = 909
     Top = 45
     Caption = #1044#1072#1090#1072' '#1089#1090#1072#1090'. ('#1082#1086#1085#1077#1095#1085'.)'
+  end
+  object cxLabel10: TcxLabel [6]
+    Left = 463
+    Top = 45
+    Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088
+  end
+  object edOrderGoods: TcxButtonEdit [7]
+    Left = 463
+    Top = 63
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ClickKey = 0
+    Properties.HideSelection = False
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 149
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 363
@@ -2395,6 +2428,21 @@ inherited OrderGoodsForm: TOrderGoodsForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OrderGoodsId'
+        Value = Null
+        Component = GuidesOrderGoods
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OrderGoodsName'
+        Value = Null
+        Component = GuidesOrderGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -2451,6 +2499,14 @@ inherited OrderGoodsForm: TOrderGoodsForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inOrderGoodsId'
+        Value = Null
+        Component = GuidesOrderGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = 'False'
         Component = ceComment
@@ -2497,6 +2553,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
         Control = edPriceList
       end
       item
+        Control = edOrderGoods
       end
       item
       end
@@ -2554,6 +2611,14 @@ inherited OrderGoodsForm: TOrderGoodsForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2743,8 +2808,8 @@ inherited OrderGoodsForm: TOrderGoodsForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 312
-    Top = 16
+    Left = 304
+    Top = 8
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -2847,6 +2912,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 206
     Top = 545
@@ -2896,6 +2962,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 790
     Top = 209
@@ -2929,6 +2996,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 918
     Top = 193
@@ -3074,5 +3142,32 @@ inherited OrderGoodsForm: TOrderGoodsForm
     DateEnd = edOperDateEnd
     Left = 896
     Top = 96
+  end
+  object GuidesOrderGoods: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edOrderGoods
+    FormNameParam.Value = 'TOrderGoods_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TOrderGoods_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesOrderGoods
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesOrderGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 548
+    Top = 48
   end
 end

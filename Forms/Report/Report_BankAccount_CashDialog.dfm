@@ -130,6 +130,14 @@ object Report_BankAccount_CashDialogForm: TReport_BankAccount_CashDialogForm
     TabOrder = 13
     Width = 220
   end
+  object cbDetail: TcxCheckBox
+    Left = 250
+    Top = 145
+    Hint = #1055#1086' '#1076#1072#1090#1072#1084
+    Caption = #1055#1086' '#1076#1072#1090#1072#1084
+    TabOrder = 14
+    Width = 78
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -161,6 +169,7 @@ object Report_BankAccount_CashDialogForm: TReport_BankAccount_CashDialogForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
@@ -168,6 +177,7 @@ object Report_BankAccount_CashDialogForm: TReport_BankAccount_CashDialogForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyId'
@@ -175,6 +185,7 @@ object Report_BankAccount_CashDialogForm: TReport_BankAccount_CashDialogForm
         Component = CurrencyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyName'
@@ -183,6 +194,7 @@ object Report_BankAccount_CashDialogForm: TReport_BankAccount_CashDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BankAccountId'
@@ -190,6 +202,7 @@ object Report_BankAccount_CashDialogForm: TReport_BankAccount_CashDialogForm
         Component = BankAccountGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BankAccountName'
@@ -198,6 +211,7 @@ object Report_BankAccount_CashDialogForm: TReport_BankAccount_CashDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountId'
@@ -205,6 +219,7 @@ object Report_BankAccount_CashDialogForm: TReport_BankAccount_CashDialogForm
         Component = AccountGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountName'
@@ -213,6 +228,7 @@ object Report_BankAccount_CashDialogForm: TReport_BankAccount_CashDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CashId'
@@ -220,6 +236,7 @@ object Report_BankAccount_CashDialogForm: TReport_BankAccount_CashDialogForm
         Component = GuidesCash
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CashName'
@@ -228,6 +245,15 @@ object Report_BankAccount_CashDialogForm: TReport_BankAccount_CashDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDetail'
+        Value = Null
+        Component = cbDetail
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 48
     Top = 166
@@ -237,6 +263,7 @@ object Report_BankAccount_CashDialogForm: TReport_BankAccount_CashDialogForm
     LookupControl = ceBankAccount
     FormNameParam.Value = 'TBankAccount_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBankAccount_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -246,6 +273,7 @@ object Report_BankAccount_CashDialogForm: TReport_BankAccount_CashDialogForm
         Component = BankAccountGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -254,12 +282,14 @@ object Report_BankAccount_CashDialogForm: TReport_BankAccount_CashDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
         Value = 42005d
         Component = deEnd
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 90
     Top = 72
@@ -269,6 +299,7 @@ object Report_BankAccount_CashDialogForm: TReport_BankAccount_CashDialogForm
     LookupControl = edAccount
     FormNameParam.Value = 'TAccount_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TAccount_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -278,6 +309,7 @@ object Report_BankAccount_CashDialogForm: TReport_BankAccount_CashDialogForm
         Component = AccountGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValueAll'
@@ -286,6 +318,7 @@ object Report_BankAccount_CashDialogForm: TReport_BankAccount_CashDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 312
     Top = 80
@@ -295,6 +328,7 @@ object Report_BankAccount_CashDialogForm: TReport_BankAccount_CashDialogForm
     LookupControl = edCurrency
     FormNameParam.Value = 'TCurrency_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCurrency_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -305,6 +339,7 @@ object Report_BankAccount_CashDialogForm: TReport_BankAccount_CashDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -313,6 +348,7 @@ object Report_BankAccount_CashDialogForm: TReport_BankAccount_CashDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 288
     Top = 8
@@ -322,6 +358,7 @@ object Report_BankAccount_CashDialogForm: TReport_BankAccount_CashDialogForm
     LookupControl = ceCash
     FormNameParam.Value = 'TCash_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCash_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -330,6 +367,7 @@ object Report_BankAccount_CashDialogForm: TReport_BankAccount_CashDialogForm
         Value = ''
         Component = GuidesCash
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -337,39 +375,46 @@ object Report_BankAccount_CashDialogForm: TReport_BankAccount_CashDialogForm
         Component = GuidesCash
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyId'
         Value = ''
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName_all'
         Value = ''
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractId'
         Value = ''
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractName'
         Value = ''
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PositionId'
         Value = ''
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PositionName'
         Value = ''
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 120
     Top = 125

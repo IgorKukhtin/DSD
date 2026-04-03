@@ -1,4 +1,4 @@
-unit PositionLevel;
+unit OrderGoods_Object;
 
 interface
 
@@ -22,10 +22,10 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dsdCommon;
+  cxBlobEdit, dsdCommon;
 
 type
-  TPositionLevelForm = class(TParentForm)
+  TOrderGoods_ObjectForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -36,13 +36,10 @@ type
     ActionList: TActionList;
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
-    actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
     bbSetErased: TdxBarButton;
     bbSetUnErased: TdxBarButton;
     dsdGridToExcel: TdsdGridToExcel;
@@ -57,7 +54,10 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    isNoSheetCalc: TcxGridDBColumn;
+    actInsert: TdsdInsertUpdateAction;
+    dsdSetErased: TdsdUpdateErased;
+    dsdSetUnErased: TdsdUpdateErased;
+    Comment: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
   private
@@ -71,6 +71,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TPositionLevelForm);
+  RegisterClass(TOrderGoods_ObjectForm);
 
 end.

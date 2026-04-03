@@ -2,13 +2,14 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderGoods (Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderGoods(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId             Integer   , -- Ключ объекта <Документ Возврат покупателя>
     IN inGoodsId                Integer   , -- Товары
-    --IN inGoodsKindId            Integer   , -- Виды товаров
+    IN inGoodsKindId            Integer   , -- Виды товаров
     IN inAmount                 TFloat    , -- Количество кг
     IN inAmountSecond           TFloat    , -- Количество шт
     IN inPrice                  TFloat    , --
@@ -61,14 +62,15 @@ BEGIN
      
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem_OrderGoods (ioId           := ioId
-                                                     , inMovementId   := inMovementId
-                                                     , inGoodsId      := inGoodsId
-                                                     , inAmount       := inAmount
-                                                     , inAmountSecond := inAmountSecond
-                                                     , inPrice        := inPrice
-                                                     , inComment      := inComment
-                                                     , inUserId       := vbUserId
-                                                      ) AS tmp;
+                                                   , inMovementId   := inMovementId
+                                                   , inGoodsId      := inGoodsId
+                                                   , inGoodsKindId  := inGoodsKindId
+                                                   , inAmount       := inAmount
+                                                   , inAmountSecond := inAmountSecond
+                                                   , inPrice        := inPrice
+                                                   , inComment      := inComment
+                                                   , inUserId       := vbUserId
+                                                    ) AS tmp;
 
 END;
 $BODY$
@@ -77,6 +79,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.04.26         *
  08.06.21         *
 */
 
