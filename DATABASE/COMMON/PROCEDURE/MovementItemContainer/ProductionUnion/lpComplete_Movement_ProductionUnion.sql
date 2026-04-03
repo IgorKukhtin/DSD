@@ -350,6 +350,11 @@ BEGIN
                                                 )
                                THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
 
+                          WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_30102()) -- Тушенка
+                           AND MILinkObject_GoodsKind.ObjectId <> zc_GoodsKind_Basis()
+                           AND MILinkObject_GoodsKind.ObjectId <> zc_GoodsKind_WorkProgress()
+                               THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+
                           -- Основное сырье + Мясное сырье + ...
                           WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                            AND vbIsPartionGoodsKind_Unit_To = TRUE
@@ -2277,6 +2282,7 @@ END IF;
                                                                                          , inCarId                  := NULL
                                                                                          , inMemberId               := vbMemberId_From
                                                                                          , inInfoMoneyDestinationId := _tmpItemChild.InfoMoneyDestinationId
+                                                                                         , inInfoMoneyId            := _tmpItemChild.InfoMoneyId
                                                                                          , inGoodsId                := _tmpItemChild.GoodsId
                                                                                          , inGoodsKindId            := _tmpItemChild.GoodsKindId
                                                                                          , inIsPartionCount         := _tmpItemChild.isPartionCount
@@ -2325,6 +2331,7 @@ END IF;
                                                                                      , inCarId                  := NULL
                                                                                      , inMemberId               := vbMemberId_To
                                                                                      , inInfoMoneyDestinationId := _tmpItem_pr.InfoMoneyDestinationId
+                                                                                     , inInfoMoneyId            := _tmpItem_pr.InfoMoneyId
                                                                                      , inGoodsId                := _tmpItem_pr.GoodsId
                                                                                      , inGoodsKindId            := _tmpItem_pr.GoodsKindId
                                                                                      , inIsPartionCount         := _tmpItem_pr.isPartionCount
