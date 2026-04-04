@@ -33,7 +33,7 @@ BEGIN
                     AND (MovementDate_StartSale.ValueData <= CURRENT_DATE
                          AND MovementDate_EndSale.ValueData >= CURRENT_DATE
                         ) 
-            limit 1
+        --    limit 1
                  )
 
    , tmpGoodsByGoodsKind AS (SELECT DISTINCT
@@ -180,7 +180,7 @@ BEGIN
                       , tmpMI.GoodsKindId
                  FROM tmpPromo AS Movement
                       LEFT JOIN tmpPromoPartner ON tmpPromoPartner.ParentId = Movement.Id
-                      LEFT JOIN tmpMI_ByGoodsKind AS tmpMI ON tmpMI.MovementId = Movement.Id
+                      INNER JOIN tmpMI_ByGoodsKind AS tmpMI ON tmpMI.MovementId = Movement.Id       --только те строки что соотв. условию выгрузки товара (ByGoodsKind)
                  )
 
      SELECT tmpData.MovementId
@@ -219,7 +219,7 @@ BEGIN
             _tmpPromo.MovementId
           , _tmpPromo.MovementItemId
           , _tmpPromo.StartSale
-          , _tmpPromo.EndSale
+          , _tmpPromo.EndSale                 
           , _tmpPromo.ContractId
           , 0                 AS PriceListId
           , _tmpPromo.PartnerId

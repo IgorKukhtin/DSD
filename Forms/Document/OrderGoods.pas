@@ -24,7 +24,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxSplitter, ChoicePeriod, dsdCommon;
+  cxSplitter, ChoicePeriod, dsdCommon, ExternalLoad;
 
 type
   TOrderGoodsForm = class(TAncestorDocumentForm)
@@ -156,6 +156,11 @@ type
     edOrderGoods: TcxButtonEdit;
     GuidesOrderGoods: TdsdGuides;
     GoodsKindName: TcxGridDBColumn;
+    spGetImportSetting: TdsdStoredProc;
+    actGetImportSetting: TdsdExecStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actLoadExcel: TMultiAction;
+    bbLoadExcel: TdxBarButton;
   private
     { Private declarations }
   public
