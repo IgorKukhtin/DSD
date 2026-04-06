@@ -153,6 +153,9 @@ $BODY$
                                 WHERE Object_PriceListItem_effie.PriceListId IN (SELECT DISTINCT tmpPriceForTwin_effie.PriceListId FROM tmpPriceForTwin_effie)
                                 )
 
+     -- Идентификатор контрагента
+   , tmpPartner AS (SELECT DISTINCT gpSelect.PartnerId FROM gpSelect_Object_ContractPrices_effie (inSession) AS gpSelect)
+     --
    , tmpData AS (SELECT tmpMI.MovementId
                       , tmpMI.StartSale
                       , tmpMI.EndSale
@@ -167,6 +170,9 @@ $BODY$
                              ELSE 0
                         END AS TaxPersent
                  FROM tmpMI_ByGoodsKind AS tmpMI
+                      -- Ограничение - только эти Контрагенты
+                      INNER JOIN tmpPartner ON tmpPartner.PartnerId = tmpMI.PartnerId
+
                       LEFT JOIN tmpPriceForTwin_effie ON tmpPriceForTwin_effie.PartnerId = tmpMI.PartnerId
                                                      AND tmpPriceForTwin_effie.ContractId = tmpMI.ContractId
                       LEFT JOIN tmpPriceForTwin_effie AS tmpPriceForTwin_effie_All
@@ -223,6 +229,48 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  20.03.26         *
 */
+
+truncate table _tmpDiscountPrograms_effie;
+
+insert into _tmpDiscountPrograms_effie (extId
+                                          , Name
+                                          , description
+                                          , typeId
+                                          , linkTypeId
+                                          , priority
+                                          , сontractHeaderExtId
+                                          , beginDate
+                                          , endDate
+                                          , shortName
+                                          , isAutoUse
+                                          , beforeDiscountQuestHeaderId
+                                          , afterDiscountQuestHeaderId
+                                          , isDeleted
+                                          , customTypeExtId
+                                          , clientExtId
+                                          , isPreDiscountCheckSkipped
+                                          , linkDiscounts_extId
+                                          , linkDiscounts_discount)
+SELECT extId
+                                          , Name
+                                          , description
+                                          , typeId
+                                          , linkTypeId
+                                          , priority
+                                          , сontractHeaderExtId
+                                          , beginDate
+                                          , endDate
+                                          , shortName
+                                          , isAutoUse
+                                          , beforeDiscountQuestHeaderId
+                                          , afterDiscountQuestHeaderId
+                                          , isDeleted
+                                          , customTypeExtId
+                                          , clientExtId
+                                          , isPreDiscountCheckSkipped
+                                          , linkDiscounts_extId
+                                          , linkDiscounts_discount
+FROM gpSelect_Movement_DiscountPrograms_effie (zfCalc_UserAdmin()::TVarChar)
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_DiscountPrograms_effie (zfCalc_UserAdmin()::TVarChar);

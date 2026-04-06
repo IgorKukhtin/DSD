@@ -23,7 +23,7 @@ AS
                            , isPreDiscountCheckSkipped
                            , linkDiscounts_extId
                            , linkDiscounts_discount
-                      FROM dblink ('host=192.168.0.219 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
+                      FROM dblink ('host=192.168.0.228 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
                                  , ('SELECT extId
                                           , Name
                                           , description
@@ -43,7 +43,7 @@ AS
                                           , isPreDiscountCheckSkipped
                                           , linkDiscounts_extId
                                           , linkDiscounts_discount
-                                    FROM gpSelect_Movement_DiscountPrograms_effie (zfCalc_UserAdmin())'
+                                    FROM _tmpDiscountPrograms_effie'
                                     ) :: Text
                                   ) AS gpSelect (extId                      TVarChar   --Уникальный идентификатор промо акции
                                                , Name                       TVarChar   --Описание программы скидок
