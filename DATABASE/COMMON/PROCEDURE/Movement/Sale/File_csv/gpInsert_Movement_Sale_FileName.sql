@@ -16,6 +16,10 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
       vbUserId:= lpGetUserBySession (inSession);
 
+
+      --
+      -- IF vbUserId = 5 THEN RETURN; END IF;
+
       -- сохранили свойство <>
       PERFORM lpInsertUpdate_MovementString (zc_MovementString_FileName()
                                            , inMovementId
