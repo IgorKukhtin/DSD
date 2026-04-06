@@ -889,9 +889,6 @@ inherited OrderGoodsForm: TOrderGoodsForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1089#1099#1088#1100#1077
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridDetailChild: TcxGrid
         Left = 0
         Top = 0
@@ -947,6 +944,13 @@ inherited OrderGoodsForm: TOrderGoodsForm
             Options.Editing = False
             Width = 39
           end
+          object GoodsGroupNameFull_parent: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1043#1055' ('#1074#1089#1077')'
+            DataBinding.FieldName = 'GoodsGroupNameFull_parent'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object GoodsPlatformName_ch3: TcxGridDBColumn
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' '#1087#1083#1086#1097#1072#1076#1082#1072
             DataBinding.FieldName = 'GoodsPlatformName'
@@ -981,13 +985,6 @@ inherited OrderGoodsForm: TOrderGoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
-          end
-          object GoodsGroupNameFull_parent: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' '#1043#1055' ('#1074#1089#1077')'
-            DataBinding.FieldName = 'GoodsGroupNameFull_parent'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object GoodsCode_parent_ch3: TcxGridDBColumn

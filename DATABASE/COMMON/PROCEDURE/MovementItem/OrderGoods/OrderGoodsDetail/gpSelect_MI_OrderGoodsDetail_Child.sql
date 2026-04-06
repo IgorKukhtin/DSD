@@ -189,7 +189,7 @@ BEGIN
           , Object_Goods.Id          		AS GoodsId
           , Object_Goods.ObjectCode  		AS GoodsCode
           , Object_Goods.ValueData   		AS GoodsName
-          , Object_GoodsKind.ValueData          AS GoodsKindName
+          , Object_GoodsKind.ValueData      AS GoodsKindName
           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
           , Object_Measure.ValueData            AS MeasureName
 
