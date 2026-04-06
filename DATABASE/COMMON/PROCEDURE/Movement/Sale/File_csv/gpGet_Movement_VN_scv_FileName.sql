@@ -1,12 +1,14 @@
 -- Function: gpGet_Movement_VN_scv_FileName(Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpGet_Movement_VN_scv_FileName (TDateTime, TDateTime, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Movement_VN_scv_FileName (TDateTime, TDateTime, TVarChar);
+-- DROP FUNCTION IF EXISTS gpGet_Movement_VN_scv_FileName (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_VN_scv_FileName (TDateTime, TDateTime, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_VN_scv_FileName(
    OUT outFileName            TVarChar  ,
     IN inStartDate            TDateTime , --
     IN inEndDate              TDateTime , --
+    IN inDesc                 TVarChar  , --
     IN inSession              TVarChar
 )
   RETURNS TVarChar
@@ -23,7 +25,7 @@ BEGIN
      SELECT tmp.outFileName
             INTO outFileName
      FROM
-         (SELECT   'VN_'|| zfConvert_DateToString (inStartDate)||'_'||zfConvert_DateToString(inEndDate)||' '
+         (SELECT   inDesc||'_'|| zfConvert_DateToString (inStartDate)||'_'||zfConvert_DateToString(inEndDate)||' '
                  ||(zfConvert_DateToString (CURRENT_TIMESTAMP)
                  || ' ' || CASE WHEN EXTRACT (HOUR   FROM CURRENT_TIMESTAMP) < 10 THEN '0' ELSE '' END || EXTRACT (HOUR   FROM CURRENT_TIMESTAMP) :: TVarChar
                  || '_' || CASE WHEN EXTRACT (MINUTE FROM CURRENT_TIMESTAMP) < 10 THEN '0' ELSE '' END || EXTRACT (MINUTE FROM CURRENT_TIMESTAMP) :: TVarChar
@@ -48,4 +50,4 @@ $BODY$
 
 
 -- тест
--- SELECT * FROM gpGet_Movement_VN_scv_FileName (inStartDate := '01.02.2025', inEndDate:= '03.02.2025', inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Mida35273055()
+-- SELECT * FROM gpGet_Movement_VN_scv_FileName (inStartDate := '01.02.2025', inEndDate:= '03.02.2025', inDesc:='VN', inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Mida35273055()

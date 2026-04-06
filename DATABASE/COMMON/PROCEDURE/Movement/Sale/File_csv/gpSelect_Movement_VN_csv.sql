@@ -56,12 +56,12 @@ BEGIN
                                                       AND MovementString_FileName.ValueData = inFileName
                         WHERE inIsPartnerDate = FALSE
                           AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-                          AND Movement.DescId = zc_Movement_Sale()
+                          AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                           AND Movement.StatusId <> zc_Enum_Status_Erased()
                        UNION ALL
                         SELECT Movement.*
                         FROM MovementDate AS MovementDate_OperDatePartner
-                             JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId AND Movement.DescId = zc_Movement_Sale()
+                             JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                                           AND Movement.StatusId <> zc_Enum_Status_Erased()
                              INNER JOIN MovementString AS MovementString_FileName
                                                        ON MovementString_FileName.MovementId = Movement.Id
@@ -112,7 +112,10 @@ BEGIN
                                   , Object_JuridicalTo.*
                              FROM ObjectLink AS ObjectLink_Partner_Juridical
                                   LEFT JOIN Object AS Object_JuridicalTo ON Object_JuridicalTo.Id = ObjectLink_Partner_Juridical.ChildObjectId
-                             WHERE ObjectLink_Partner_Juridical.ObjectId IN (SELECT DISTINCT tmpMLO.ObjectId FROM tmpMLO WHERE tmpMLO.DescId = zc_MovementLinkObject_To())
+                             WHERE ObjectLink_Partner_Juridical.ObjectId IN (SELECT DISTINCT tmpMLO.ObjectId FROM tmpMLO WHERE tmpMLO.DescId = zc_MovementLinkObject_To() AND inFileName ILIKE 'ÏÍ%'
+                                                                            UNION 
+                                                                             SELECT DISTINCT tmpMLO.ObjectId FROM tmpMLO WHERE tmpMLO.DescId = zc_MovementLinkObject_From() AND inFileName ILIKE 'ÂÍ%'
+                                                                            )
                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                              )
            --, tmpContract_InvNumber AS (SELECT * FROM Object_Contract_InvNumber_Sale_View)
@@ -128,13 +131,14 @@ BEGIN
                                  --, 348483738 AS OKPO
                                  , ObjectHistory_JuridicalDetails_to.OKPO    AS OKPO_to --
                                  , ObjectHistory_JuridicalDetails_from.OKPO  AS OKPO_from--
-                                 , CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm() THEN 1 ELSE 2 END AS PaidKind
+                                 , CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm() THEN '1' ELSE '2' END AS PaidKind_str
 
                                  , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
                                  , MovementFloat_VATPercent.ValueData             AS VATPercent
 
                                  , tmpContract_InvNumber.InfoMoneyName            AS InfoMoneyName
-                                 , ObjectString_Address.ValueData                 AS Address_to
+                                 , tmpContract_InvNumber.InvNumber                AS InvNumber_contract
+                                 , ObjectString_Address.ValueData                 AS Address_client
 
                             FROM tmpMovement AS Movement
                                      LEFT JOIN tmpMovementBoolean AS MovementBoolean_PriceWithVAT
@@ -168,23 +172,29 @@ BEGIN
                                                      AND MovementLinkObject_Contract.DescId    = zc_MovementLinkObject_Contract()
                                      LEFT JOIN tmpContract_InvNumber ON tmpContract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
 
-                                     LEFT JOIN tmpMLO AS MovementLinkObject_To
-                                                      ON MovementLinkObject_To.MovementId = Movement.Id
-                                                     AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
-                                     LEFT JOIN ObjectString AS ObjectString_Address
-                                                            ON ObjectString_Address.ObjectId = MovementLinkObject_To.ObjectId
-                                                           AND ObjectString_Address.DescId   = zc_ObjectString_Partner_Address()
-
-                                     LEFT JOIN tmpJuridical AS Object_Juridical_to ON Object_Juridical_to.PartnerId = MovementLinkObject_To.ObjectId
-                                     LEFT JOIN tmpJuridicalDetails AS ObjectHistory_JuridicalDetails_to ON ObjectHistory_JuridicalDetails_to.JuridicalId = Object_Juridical_to.Id
-
                                      LEFT JOIN tmpMLO AS MovementLinkObject_From
                                                       ON MovementLinkObject_From.MovementId = Movement.Id
                                                      AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                                     LEFT JOIN Object AS Object_from ON Object_from.Id = MovementLinkObject_From.ObjectId
+
+                                     LEFT JOIN tmpMLO AS MovementLinkObject_To
+                                                      ON MovementLinkObject_To.MovementId = Movement.Id
+                                                     AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                     LEFT JOIN Object AS Object_to ON Object_to.Id = MovementLinkObject_To.ObjectId
+
+
                                      LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
-                                                          ON ObjectLink_Unit_Juridical.ObjectId = MovementLinkObject_From.ObjectId
+                                                          ON ObjectLink_Unit_Juridical.ObjectId = CASE WHEN Object_from.DescId =zc_Object_Unit() THEN MovementLinkObject_From.ObjectId ELSE MovementLinkObject_To.ObjectId END
                                                          AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                                      LEFT JOIN ObjectHistory_JuridicalDetails_View AS ObjectHistory_JuridicalDetails_from ON ObjectHistory_JuridicalDetails_from.JuridicalId = ObjectLink_Unit_Juridical.ChildObjectId
+
+                                     LEFT JOIN tmpJuridical AS Object_Juridical_to ON Object_Juridical_to.PartnerId = CASE WHEN Object_from.DescId = zc_Object_Partner() THEN MovementLinkObject_From.ObjectId ELSE MovementLinkObject_To.ObjectId END
+                                     LEFT JOIN tmpJuridicalDetails AS ObjectHistory_JuridicalDetails_to ON ObjectHistory_JuridicalDetails_to.JuridicalId = Object_Juridical_to.Id
+                                     LEFT JOIN ObjectString AS ObjectString_Address
+                                                            ON ObjectString_Address.ObjectId = CASE WHEN Object_from.DescId = zc_Object_Partner() THEN MovementLinkObject_From.ObjectId ELSE MovementLinkObject_To.ObjectId END
+                                                           AND ObjectString_Address.DescId   = zc_ObjectString_Partner_Address()
+
+
                                )
 
 
@@ -240,10 +250,11 @@ BEGIN
                               , Movement.TotalSummMVAT
                               , Movement.OKPO_to
                               , Movement.OKPO_from
-                              , Movement.PaidKind
+                              , Movement.PaidKind_str
                                 --
                               , Movement.InfoMoneyName
-                              , Movement.Address_to
+                              , Movement.InvNumber_contract
+                              , Movement.Address_client
                               --
                               , 0 AS Ord
                               , '' AS GoodsName
@@ -268,9 +279,10 @@ BEGIN
                               , 0  AS TotalSummMVAT
                               , '' AS OKPO_to
                               , '' AS OKPO_from
-                              , 0  AS PaidKind
+                              , '' AS PaidKind_str
                               , '' AS InfoMoneyName
-                              , '' AS Address_to
+                              , '' AS InvNumber_contract
+                              , '' AS Address_client
                               --
                               , tmpMI.Ord
                               , tmpMI.GoodsName
@@ -289,26 +301,33 @@ BEGIN
                          )
            -- Ðåçóëüòàò
            SELECT CASE WHEN tmpData.Ord = 0
-                       THEN 'ÏÍ;'||tmpData.InvNumber
-                            ||';'||tmpData.OperDatePartner
-                            ||';'||CAST (tmpData.TotalSummMVAT AS NUMERIC (16,2)) ::TVarChar
-                            ||';'||CAST (tmpData.TotalSummVat AS NUMERIC (16,2)) ::TVarChar
-                            ||';'||CAST (tmpData.TotalSummPVAT AS NUMERIC (16,2)) ::TVarChar
-                            ||';'||tmpData.OKPO_to
-                            ||';'||tmpData.OKPO_from
-                            ||';'||tmpData.PaidKind
-                            ||';'||tmpData.Address_to
-                            ||';'||tmpData.InfoMoneyName
-                            ||CASE WHEN vbUserId = 5 THEN ';'|| (ROW_NUMBER() OVER (ORDER BY tmpData.MovementId, tmpData.Ord)) :: TVarChar ELSE '' END
+                       THEN 
+                            CASE WHEN inFileName ILIKE 'ÏÍ%' THEN 'ÏÍ'
+                                 WHEN inFileName ILIKE 'ÂÍ%' THEN 'ÂÍ'
+                                 ELSE ''
+                            END
+                     ||';'||tmpData.InvNumber
+                     ||';'||tmpData.OperDatePartner
+                     ||';'||CAST (tmpData.TotalSummMVAT AS NUMERIC (16,2)) ::TVarChar
+                     ||';'||CAST (tmpData.TotalSummVat AS NUMERIC (16,2)) ::TVarChar
+                     ||';'||CAST (tmpData.TotalSummPVAT AS NUMERIC (16,2)) ::TVarChar
+                     ||';'||COALESCE (tmpData.OKPO_to, '')
+                     ||';'||COALESCE (tmpData.OKPO_from, '')
+                     ||';'||COALESCE (tmpData.PaidKind_str, '')
+                     ||';'||COALESCE (tmpData.Address_client, '')
+                     ||';'||COALESCE (tmpData.InfoMoneyName, '')
+                     ||';'||COALESCE (tmpData.InvNumber_contract, '')
+                     ||CASE WHEN vbUserId = 5 THEN ';'|| (ROW_NUMBER() OVER (ORDER BY tmpData.MovementId, tmpData.Ord)) :: TVarChar ELSE '' END
+  
                        ELSE
-                                   tmpData.Ord ::TVarChar
-                            ||';'||tmpData.GoodsName
-                            ||';'||tmpData.GoodsCOde
-                            ||';'||tmpData.GoodsKindName
-                            ||';'||tmpData.GoodsKindCOde
-                            ||';'||CAST (tmpData.AmountPartner AS NUMERIC (16,4)) ::TVarChar
-                            ||';'||CAST (tmpData.Price AS NUMERIC (16,2)) ::TVarChar
-                            ||';'||CAST (tmpData.SummPVAT AS NUMERIC (16,2)) ::TVarChar
+                            tmpData.Ord ::TVarChar
+                     ||';'||tmpData.GoodsName
+                     ||';'||tmpData.GoodsCOde
+                     ||';'||tmpData.GoodsKindName
+                     ||';'||tmpData.GoodsKindCOde
+                     ||';'||CAST (tmpData.AmountPartner AS NUMERIC (16,4)) ::TVarChar
+                     ||';'||CAST (tmpData.Price AS NUMERIC (16,2)) ::TVarChar
+                     ||';'||CAST (tmpData.SummPVAT AS NUMERIC (16,2)) ::TVarChar
                   END :: TBlob AS RowData
            FROM tmpData
            ORDER BY tmpData.MovementId

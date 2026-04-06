@@ -23,7 +23,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, dsdCommon;
 
 type
   TPeriodCloseForm = class(TAncestorDBGridForm)
@@ -64,6 +64,7 @@ type
     UserByGroupName_excl: TcxGridDBColumn;
     actUserByGroupForm_excl: TOpenChoiceForm;
     UserByGroupCode_excl: TcxGridDBColumn;
+    mactUpdate_CloseDate_grid: TMultiAction;
   private
     { Private declarations }
   public

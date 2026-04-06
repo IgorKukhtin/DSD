@@ -2998,7 +2998,7 @@ end;
 procedure TMainCehForm.rgGoodsKindClick(Sender: TObject);
 var findIndex:Integer;
 begin
-     if rgGoodsKind.Items.Count>1
+     if (rgGoodsKind.Items.Count > 1)and(ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger > 0)
      then begin
          findIndex:=GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex);
          EditGoodsKindCode.Text:=IntToStr(GoodsKind_Array[findIndex].Code);

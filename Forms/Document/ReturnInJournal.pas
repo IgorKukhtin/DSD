@@ -176,6 +176,19 @@ type
     macUpdate_TotalLines_list: TMultiAction;
     macUpdate_TotalLines: TMultiAction;
     bbUpdate_TotalLines: TdxBarButton;
+    spSelectFileName_csv: TdsdStoredProc;
+    spGetFileName_csv: TdsdStoredProc;
+    spInsertFileName_csv: TdsdStoredProc;
+    actExport_file_csv: TdsdStoredProcExportToFile;
+    actGetFileName_csv: TdsdExecStoredProc;
+    actInsertFileName_csv: TdsdExecStoredProc;
+    macInsertFileName_csv_list: TMultiAction;
+    macInsertFileName_csv: TMultiAction;
+    macInsertFileName_csv_one: TMultiAction;
+    bbsUnLoad: TdxBarSubItem;
+    bbInsertFileName_csv: TdxBarButton;
+    bbInsertFileName_csv_one: TdxBarButton;
+    FileName: TcxGridDBColumn;
   private
     { Private declarations }
   public

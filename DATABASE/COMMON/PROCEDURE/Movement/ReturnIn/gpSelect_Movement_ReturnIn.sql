@@ -76,6 +76,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , UnitName_Collation TVarChar
              , BranchName_Collation TVarChar
              , RouteName TVarChar
+
+             , FileName TVarChar
               )
 AS
 $BODY$
@@ -461,8 +463,11 @@ WHERE 1=0
            , tmpContract_param.PersonalName_Collation  ::TVarChar
            , tmpContract_param.UnitName_Collation      ::TVarChar
            , tmpContract_param.BranchName_Collation    ::TVarChar
-           --
+             --
            , Object_Route.ValueData                    ::TVarChar  AS RouteName
+             --
+           , MovementString_FileName.ValueData         ::TVarChar  AS FileName
+
        FROM tmpMovement
 
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
@@ -518,6 +523,10 @@ WHERE 1=0
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementString AS MovementString_FileName
+                                     ON MovementString_FileName.MovementId = Movement.Id
+                                    AND MovementString_FileName.DescId = zc_MovementString_FileName()
 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId = Movement.Id
@@ -897,4 +906,4 @@ having  MIFloat_AmountPartner.ValueData <>  SUM (coalesce (MovementItem_Child.Am
 */
 -- тест
 -- SELECT * FROM gpSelect_Movement_ReturnIn (inStartDate:= '01.12.2015', inEndDate:= '01.12.2015', inIsPartnerDate:=FALSE, inIsErased :=TRUE, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_Movement_ReturnIn (instartdate := ('28.03.2022')::TDateTime , inenddate := ('28.03.2022')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inSession := '9457');
+-- SELECT * FROM gpSelect_Movement_ReturnIn (instartdate := ('28.03.2026')::TDateTime , inenddate := ('28.03.2026')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inSession := '9457');

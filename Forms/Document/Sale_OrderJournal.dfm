@@ -973,12 +973,12 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     ExplicitHeight = 55
     inherited deStart: TcxDateEdit
       Left = 112
-      EditValue = 43466d
+      EditValue = 46023d
       ExplicitLeft = 112
     end
     inherited deEnd: TcxDateEdit
       Left = 312
-      EditValue = 43466d
+      EditValue = 46023d
       ExplicitLeft = 312
     end
     inherited cxLabel1: TcxLabel
@@ -8237,6 +8237,13 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         Value = 42614d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDesc'
+        Value = #1055#1053
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

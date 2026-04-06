@@ -4,6 +4,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
   ClientWidth = 1114
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -237
   ExplicitWidth = 1130
   ExplicitHeight = 574
   PixelsPerInch = 96
@@ -830,6 +831,14 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             Options.Editing = False
             Width = 80
           end
+          object FileName: TcxGridDBColumn
+            Caption = #1048#1084#1103' '#1092#1072#1081#1083#1072' scv'
+            DataBinding.FieldName = 'FileName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end
@@ -840,10 +849,10 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     ExplicitWidth = 1114
     ExplicitHeight = 50
     inherited deStart: TcxDateEdit
-      EditValue = 42370d
+      EditValue = 46023d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42370d
+      EditValue = 46023d
     end
     object edIsPartnerDate: TcxCheckBox
       Left = 10
@@ -1178,11 +1187,34 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
       ImageIndex = 44
     end
-    inherited actInsert: TdsdInsertUpdateAction [6]
+    object actExport_file_csv: TdsdStoredProcExportToFile [6]
+      Category = 'Export_Csv'
+      MoveParams = <>
+      dsdStoredProcName = spSelectFileName_csv
+      FilePathParam.Value = ''
+      FilePathParam.DataType = ftString
+      FilePathParam.MultiSelectSeparator = ','
+      FileNameParam.Value = ''
+      FileNameParam.Component = FormParams
+      FileNameParam.ComponentItem = 'FileName'
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      FileExt = '.csv'
+      FileExtParam.Value = '.csv'
+      FileExtParam.DataType = ftString
+      FileExtParam.MultiSelectSeparator = ','
+      FileNamePrefixParam.Value = ''
+      FileNamePrefixParam.DataType = ftString
+      FileNamePrefixParam.MultiSelectSeparator = ','
+      FieldDefs = <>
+      Left = 1208
+      Top = 168
+    end
+    inherited actInsert: TdsdInsertUpdateAction [7]
       FormName = 'TReturnInForm'
       FormNameParam.Value = 'TReturnInForm'
     end
-    object macPrint_Pack_list3: TMultiAction [7]
+    object macPrint_Pack_list3: TMultiAction [8]
       Category = 'PrintPack'
       MoveParams = <
         item
@@ -1206,7 +1238,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
       ImageIndex = 44
     end
-    inherited actUpdate: TdsdInsertUpdateAction [8]
+    inherited actUpdate: TdsdInsertUpdateAction [9]
       FormName = 'TReturnInForm'
       FormNameParam.Value = 'TReturnInForm'
       GuiParams = <
@@ -1232,7 +1264,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    object macPrint_Grid3: TMultiAction [9]
+    object macPrint_Grid3: TMultiAction [10]
       Category = 'PrintPack'
       MoveParams = <
         item
@@ -1260,7 +1292,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' (3 '#1082#1086#1087#1080#1080')'
       ImageIndex = 44
     end
-    object macPrint_Grid2: TMultiAction [10]
+    object macPrint_Grid2: TMultiAction [11]
       Category = 'PrintPack'
       MoveParams = <
         item
@@ -1288,15 +1320,15 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' (2 '#1082#1086#1087#1080#1080')'
       ImageIndex = 44
     end
-    inherited actRefresh: TdsdDataSetRefresh [11]
+    inherited actRefresh: TdsdDataSetRefresh [12]
     end
-    inherited actUnComplete: TdsdChangeMovementStatus [12]
+    inherited actUnComplete: TdsdChangeMovementStatus [13]
     end
-    inherited actComplete: TdsdChangeMovementStatus [13]
+    inherited actComplete: TdsdChangeMovementStatus [14]
     end
-    inherited actSetErased: TdsdChangeMovementStatus [14]
+    inherited actSetErased: TdsdChangeMovementStatus [15]
     end
-    object actTaxCorrective: TdsdExecStoredProc [15]
+    object actTaxCorrective: TdsdExecStoredProc [16]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1315,7 +1347,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1089' '#1087#1088 +
         #1080#1074#1103#1079#1082#1086#1081')>.'
     end
-    object actCorrective: TdsdExecStoredProc [16]
+    object actCorrective: TdsdExecStoredProc [17]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1334,9 +1366,9 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1073#1077#1079' ' +
         #1087#1088#1080#1074#1103#1079#1082#1080')>.'
     end
-    inherited actMovementItemContainer: TdsdOpenForm [17]
+    inherited actMovementItemContainer: TdsdOpenForm [18]
     end
-    object actPrintAkt: TdsdPrintAction [18]
+    object actPrintAkt: TdsdPrintAction [19]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -1386,7 +1418,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintPack: TdsdPrintAction [19]
+    object actPrintPack: TdsdPrintAction [20]
       Category = 'PrintPack'
       MoveParams = <
         item
@@ -1439,9 +1471,9 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    inherited actShowErased: TBooleanStoredProcAction [20]
+    inherited actShowErased: TBooleanStoredProcAction [21]
     end
-    object actPrint: TdsdPrintAction [21]
+    object actPrint: TdsdPrintAction [22]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -1494,27 +1526,27 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    inherited mactReCompleteList: TMultiAction [22]
+    inherited mactReCompleteList: TMultiAction [23]
     end
-    inherited actGridToExcel: TdsdGridToExcel [23]
+    inherited actGridToExcel: TdsdGridToExcel [24]
     end
-    inherited mactCompleteList: TMultiAction [24]
+    inherited mactCompleteList: TMultiAction [25]
     end
-    inherited actInsertMask: TdsdInsertUpdateAction [25]
+    inherited actInsertMask: TdsdInsertUpdateAction [26]
     end
-    inherited mactUnCompleteList: TMultiAction [26]
+    inherited mactUnCompleteList: TMultiAction [27]
     end
-    inherited spReCompete: TdsdExecStoredProc [27]
+    inherited spReCompete: TdsdExecStoredProc [28]
     end
-    inherited MovementProtocolOpenForm: TdsdOpenForm [29]
+    inherited MovementProtocolOpenForm: TdsdOpenForm [30]
     end
-    inherited mactSimpleReCompleteList: TMultiAction [30]
+    inherited mactSimpleReCompleteList: TMultiAction [31]
     end
-    inherited mactSimpleCompleteList: TMultiAction [31]
+    inherited mactSimpleCompleteList: TMultiAction [32]
     end
-    inherited mactSimpleUncompleteList: TMultiAction [32]
+    inherited mactSimpleUncompleteList: TMultiAction [33]
     end
-    inherited mactSimpleErasedList: TMultiAction [33]
+    inherited mactSimpleErasedList: TMultiAction [34]
     end
     object actSPPrintProcNamePriceCorr: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -2290,6 +2322,74 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' <'#1048#1090#1086#1075#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1089#1090#1088#1086#1082'>'
       ImageIndex = 79
     end
+    object actGetFileName_csv: TdsdExecStoredProc
+      Category = 'Export_Csv'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetFileName_csv
+      StoredProcList = <
+        item
+          StoredProc = spGetFileName_csv
+        end>
+      Caption = 'actGetFileName_csv'
+    end
+    object actInsertFileName_csv: TdsdExecStoredProc
+      Category = 'Export_Csv'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertFileName_csv
+      StoredProcList = <
+        item
+          StoredProc = spInsertFileName_csv
+        end>
+      Caption = 'actUpdate_TotalLines'
+    end
+    object macInsertFileName_csv_list: TMultiAction
+      Category = 'Export_Csv'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertFileName_csv
+        end>
+      View = cxGridDBTableView
+      Caption = 'macInsertFileName_csv_list'
+    end
+    object macInsertFileName_csv: TMultiAction
+      Category = 'Export_Csv'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetFileName_csv
+        end
+        item
+          Action = macInsertFileName_csv_list
+        end
+        item
+          Action = actExport_file_csv
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1042#1089#1077' '#1053#1072#1082#1083#1072#1076#1085#1099#1077' 1'#1057'-'#1055#1072#1074#1080#1083#1100#1086#1085#1099'?'
+      InfoAfterExecute = #1053#1072#1082#1083#1072#1076#1085#1099#1077' 1'#1057'-'#1055#1072#1074#1080#1083#1100#1086#1085#1099' '#1074#1099#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1042#1089#1077' '#1053#1072#1082#1083#1072#1076#1085#1099#1077' 1'#1057'-'#1055#1072#1074#1080#1083#1100#1086#1085#1099
+      ImageIndex = 90
+    end
+    object macInsertFileName_csv_one: TMultiAction
+      Category = 'Export_Csv'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetFileName_csv
+        end
+        item
+          Action = actInsertFileName_csv
+        end
+        item
+          Action = actExport_file_csv
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1054#1076#1085#1091' '#1053#1072#1082#1083#1072#1076#1085#1091#1102' 1'#1057'-'#1055#1072#1074#1080#1083#1100#1086#1085#1099'?'
+      InfoAfterExecute = #1053#1072#1082#1083#1072#1076#1085#1072#1103' 1'#1057'-'#1055#1072#1074#1080#1083#1100#1086#1085#1099' '#1074#1099#1075#1088#1091#1078#1077#1085#1072
+      Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1054#1076#1085#1091' '#1053#1072#1082#1083#1072#1076#1085#1091#1102' 1'#1057'-'#1055#1072#1074#1080#1083#1100#1086#1085#1099
+      ImageIndex = 89
+    end
   end
   inherited MasterDS: TDataSource
     Left = 80
@@ -2439,6 +2539,14 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbsUnLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrintReturnIn'
         end
         item
@@ -2477,6 +2585,10 @@ inherited ReturnInJournalForm: TReturnInJournalForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      Caption = ''
+      Hint = ''
     end
     object bbTaxCorrective: TdxBarButton
       Action = actTaxCorrective
@@ -2617,6 +2729,29 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     end
     object bbUpdate_TotalLines: TdxBarButton
       Action = macUpdate_TotalLines
+      Category = 0
+    end
+    object bbsUnLoad: TdxBarSubItem
+      Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 5
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertFileName_csv'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertFileName_csv_one'
+        end>
+    end
+    object bbInsertFileName_csv: TdxBarButton
+      Action = macInsertFileName_csv
+      Category = 0
+    end
+    object bbInsertFileName_csv_one: TdxBarButton
+      Action = macInsertFileName_csv_one
       Category = 0
     end
   end
@@ -3216,8 +3351,8 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 392
-    Top = 480
+    Left = 288
+    Top = 432
   end
   object spGet_Export_FileName: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Email_FileName'
@@ -3265,8 +3400,8 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 168
-    Top = 456
+    Left = 160
+    Top = 432
   end
   object spSelect_Export: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Email_Send'
@@ -3285,8 +3420,8 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 280
-    Top = 472
+    Left = 232
+    Top = 440
   end
   object ExportDS: TDataSource
     DataSet = ExportCDS
@@ -3544,5 +3679,116 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     PackSize = 1
     Left = 1007
     Top = 272
+  end
+  object spSelectFileName_csv: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_VN_csv'
+    DataSet = ExportCDS
+    DataSets = <
+      item
+        DataSet = ExportCDS
+      end>
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 46023d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 46023d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsPartnerDate'
+        Value = False
+        Component = edIsPartnerDate
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFileName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FileName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 171
+    Top = 477
+  end
+  object spGetFileName_csv: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_VN_scv_FileName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 46023d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 46023d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDesc'
+        Value = #1042#1053
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 211
+    Top = 485
+  end
+  object spInsertFileName_csv: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_Sale_FileName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFileName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FileName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 275
+    Top = 469
   end
 end

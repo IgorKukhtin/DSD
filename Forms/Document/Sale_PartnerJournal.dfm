@@ -953,12 +953,12 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     ExplicitHeight = 50
     inherited deStart: TcxDateEdit
       Left = 96
-      EditValue = 45658d
+      EditValue = 46023d
       ExplicitLeft = 96
     end
     inherited deEnd: TcxDateEdit
       Left = 301
-      EditValue = 45658d
+      EditValue = 46023d
       ExplicitLeft = 301
     end
     inherited cxLabel1: TcxLabel
@@ -3916,6 +3916,10 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
           ItemName = 'dxBarStatic'
         end>
     end
+    inherited dxBarStatic: TdxBarStatic
+      Caption = ''
+      Hint = ''
+    end
     object bbTax: TdxBarButton
       Action = actTax
       Category = 0
@@ -5845,8 +5849,8 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 144
-    Top = 568
+    Left = 136
+    Top = 536
   end
   object spGetFileName_csv: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_VN_scv_FileName'
@@ -5866,6 +5870,13 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         Value = 42614d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDesc'
+        Value = #1055#1053
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

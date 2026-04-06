@@ -11,17 +11,17 @@ inherited PeriodCloseForm: TPeriodCloseForm
     Width = 894
     Height = 248
     ExplicitTop = 58
-    ExplicitWidth = 798
+    ExplicitWidth = 894
     ExplicitHeight = 248
     ClientRectBottom = 248
     ClientRectRight = 894
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 798
+      ExplicitWidth = 894
       ExplicitHeight = 248
       inherited cxGrid: TcxGrid
         Width = 894
         Height = 248
-        ExplicitWidth = 798
+        ExplicitWidth = 894
         ExplicitHeight = 248
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsCustomize.DataRowSizing = False
@@ -264,11 +264,10 @@ inherited PeriodCloseForm: TPeriodCloseForm
     Height = 32
     Align = alTop
     TabOrder = 5
-    ExplicitWidth = 798
     object deOperDate: TcxDateEdit
       Left = 183
       Top = 5
-      EditValue = 42370d
+      EditValue = 46023d
       Properties.DateOnError = deToday
       Properties.DisplayFormat = 'dd.mm.yyyy'
       Properties.EditFormat = 'dd.mm.yyyy'
@@ -499,14 +498,25 @@ inherited PeriodCloseForm: TPeriodCloseForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actUpdate_CloseDate
+          Action = mactUpdate_CloseDate_grid
         end
         item
           Action = actRefresh
         end>
-      View = cxGridDBTableView
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1082#1088#1099#1090#1100' '#1087#1077#1088#1080#1086#1076' '#1076#1083#1103' '#1042#1089#1077#1093' '#1076#1086' '#1074#1099#1073#1088#1072#1085#1085#1086#1081' '#1076#1072#1090#1099'?'
       InfoAfterExecute = #1059#1088#1072'! '#1055#1077#1088#1080#1086#1076' '#1079#1072#1082#1088#1099#1090' '#1076#1083#1103' '#1042#1089#1077#1093' '#1076#1086' '#1074#1099#1073#1088#1072#1085#1085#1086#1081' '#1076#1072#1090#1099' '
+      Caption = #1047#1072#1082#1088#1099#1090#1100' '#1087#1077#1088#1080#1086#1076' '#1076#1083#1103' '#1042#1089#1077#1093
+      Hint = #1047#1072#1082#1088#1099#1090#1100' '#1087#1077#1088#1080#1086#1076' '#1076#1083#1103' '#1042#1089#1077#1093
+      ImageIndex = 38
+    end
+    object mactUpdate_CloseDate_grid: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_CloseDate
+        end>
+      View = cxGridDBTableView
       Caption = #1047#1072#1082#1088#1099#1090#1100' '#1087#1077#1088#1080#1086#1076' '#1076#1083#1103' '#1042#1089#1077#1093
       Hint = #1047#1072#1082#1088#1099#1090#1100' '#1087#1077#1088#1080#1086#1076' '#1076#1083#1103' '#1042#1089#1077#1093
       ImageIndex = 38
