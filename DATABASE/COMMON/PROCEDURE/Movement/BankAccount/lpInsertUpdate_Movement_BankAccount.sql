@@ -277,7 +277,7 @@ BEGIN
                                               , inUserId        := inUserId
                                                )
               FROM MovementItem
-              WHERE MovementItem.MovementId = inMovementId
+              WHERE MovementItem.MovementId = ioId
                 AND MovementItem.DescId = zc_MI_Child()
                 AND MovementItem.isErased = FALSE;
 
