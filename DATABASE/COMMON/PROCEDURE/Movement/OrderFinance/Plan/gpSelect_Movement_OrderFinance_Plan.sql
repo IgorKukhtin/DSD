@@ -158,7 +158,7 @@ BEGIN
 
                        WHERE Movement.DescId = zc_Movement_OrderFinance()
                          AND Movement.StatusId IN (SELECT tmpStatus.StatusId FROM tmpStatus)
-                         AND Movement.OperDate BETWEEN inStartDate - INTERVAL '14 DAY' AND inEndDate
+                         AND Movement.OperDate BETWEEN inStartDate - INTERVAL '1 MONTH' AND inEndDate
                        )
 
      , tmpMI AS ( SELECT MovementItem.*
