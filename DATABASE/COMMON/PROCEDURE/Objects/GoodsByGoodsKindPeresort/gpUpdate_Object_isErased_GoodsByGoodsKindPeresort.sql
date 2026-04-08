@@ -11,7 +11,7 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_isErased_GoodsByGoodsKindPeresort());
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_isErased_GK_Peresort());
 
    -- изменили
    PERFORM lpUpdate_Object_isErased (inObjectId:= inObjectId, inUserId:= vbUserId);

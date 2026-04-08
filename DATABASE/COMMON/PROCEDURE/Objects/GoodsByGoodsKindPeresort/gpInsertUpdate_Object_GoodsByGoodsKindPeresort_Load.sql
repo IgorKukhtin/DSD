@@ -24,7 +24,7 @@ BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    --vbUserId:= lpGetUserBySession (inSession);
-   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsByGoodsKindPeresort());
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GK_Peresort());
    
    IF COALESCE (inGoodsCode_in,0) = 0
    THEN
