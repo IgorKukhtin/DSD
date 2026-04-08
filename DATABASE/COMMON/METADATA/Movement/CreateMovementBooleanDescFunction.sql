@@ -563,12 +563,16 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_SignSB() RETURNS integer AS $BODY$
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_SignSB', 'Виза СБ'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_SignSB');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_Effie() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_Effie'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_Effie', 'Effie (да/нет)'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_Effie');
 
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 08.04.26         * zc_MovementBoolean_Effie
  14.01.26         * zc_MovementBoolean_SignSB
  14.11.25         * zc_MovementBoolean_SignWait_1
                     zc_MovementBoolean_Sign_1
