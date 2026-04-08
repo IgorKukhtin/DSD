@@ -114,8 +114,11 @@ BEGIN
      -- проверка
      IF COALESCE (inInfoMoneyId, 0) = 0 -- AND inSummService <> 0
      THEN
-         IF inSummService = 0 THEN RETURN; END IF;
-         RAISE EXCEPTION 'Ошибка.Не заполнено значение <УП статья> для Сумма начислено = <%>.', zfConvert_FloatToString (inSummService);
+         -- IF inSummService = 0 AND inSummCardRecalc = 0 THEN RETURN; END IF;
+         IF inSummCardRecalc <> 0
+         THEN RAISE EXCEPTION 'Ошибка.Не заполнено значение <УП статья> для Карта БН ввод 1ф = <%>.', zfConvert_FloatToString (inSummCardRecalc);
+         ELSE RAISE EXCEPTION 'Ошибка.Не заполнено значение <УП статья> для Сумма начислено = <%>.', zfConvert_FloatToString (inSummService);
+         END IF;
      END IF;
      -- проверка
      IF COALESCE (inUnitId, 0) = 0
