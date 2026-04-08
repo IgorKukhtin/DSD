@@ -19,7 +19,20 @@ AS
                            , notificationLanguage
                            , isDeleted
                       FROM dblink ('host=192.168.0.228 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
-                                 , ('SELECT *
+                                 , ('SELECT extId
+                                          , Name 
+                                          , orgStructExtId
+                                          , groupId
+                                          , roles
+                                          , login
+                                          , email
+                                          , password
+                                          , activationDate
+                                          , phone
+                                          , personalNumber
+                                          , leadExtId
+                                          , notificationLanguage
+                                          , isDeleted
                                     FROM gpSelect_Object_Employees_effie(zfCalc_UserAdmin())'
                                     ) :: Text
                                   ) AS gpSelect (extId           TVarChar   -- ”никальный идентификатор сотрудника

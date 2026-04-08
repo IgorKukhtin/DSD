@@ -3,17 +3,19 @@
 DROP VIEW IF EXISTS EmployeesTT;
 
 CREATE OR REPLACE VIEW EmployeesTT
-AS 
+AS
   WITH _tmpresult AS (SELECT employeeExtId
                            , ttExtId
                            , isDeleted
                       FROM dblink ('host=192.168.0.228 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
-                                 , ('SELECT *
+                                 , ('SELECT employeeExtId
+                                          , ttExtId
+                                          , isDeleted
                                     FROM gpSelect_Object_EmployeesTT_effie(zfCalc_UserAdmin())'
                                     ) :: Text
                                   ) AS gpSelect (employeeExtId    TVarChar   -- Идентификатор сотрудника
                                                , ttExtId          TVarChar   -- Идентификатор торговой точки
-                                               , isDeleted        Integer    -- Признак активности              
+                                               , isDeleted        Integer    -- Признак активности
                                                 )
                      )
  --

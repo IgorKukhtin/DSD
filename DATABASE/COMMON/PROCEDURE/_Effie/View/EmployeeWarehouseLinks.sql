@@ -3,7 +3,7 @@
 DROP VIEW IF EXISTS EmployeeWarehouseLinks;
 
 CREATE OR REPLACE VIEW EmployeeWarehouseLinks
-AS 
+AS
   WITH _tmpresult AS (SELECT employeeExtId
                            , warehouseExtId
                            , linkItemTypeId
@@ -11,7 +11,12 @@ AS
                            , isDefaultWarehouse
                            , isDeleted
                       FROM dblink ('host=192.168.0.228 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
-                                 , ('SELECT *
+                                 , ('SELECT employeeExtId
+                                          , warehouseExtId
+                                          , linkItemTypeId
+                                          , linkItemExtId
+                                          , isDefaultWarehouse
+                                          , isDeleted
                                     FROM gpSelect_Object_EmployeeWarehouseLinks_effie(zfCalc_UserAdmin())'
                                     ) :: Text
                                   ) AS gpSelect (employeeExtId       TVarChar   -- Идентификатор сотрудника
@@ -19,7 +24,7 @@ AS
                                                , linkItemTypeId      TFloat     -- "Тип связи : null - все товары, доступные на складе
                                                , linkItemExtId       TVarChar   -- "Идентификатор связи. В зависимости от типа связи соответствующий идентификатор."
                                                , isDefaultWarehouse  Boolean    -- Признак того, что текущий склад для сотрудника - склад по умолчанию. true - склад по умолчанию, false - обычный склад
-                                               , isDeleted           Boolean    -- Признак активности: false = активна / true = не активна. По умолчанию false = активна.                           
+                                               , isDeleted           Boolean    -- Признак активности: false = активна / true = не активна. По умолчанию false = активна.
                                                 )
                      )
  --

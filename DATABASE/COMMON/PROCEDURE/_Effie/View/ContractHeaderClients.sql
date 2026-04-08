@@ -9,7 +9,10 @@ AS
                            , isDefault
                            , isDeleted
                       FROM dblink ('host=192.168.0.228 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
-                                 , ('SELECT *
+                                 , ('SELECT contractHeaderExtId
+                                          , clientExtId
+                                          , isDefault
+                                          , isDeleted
                                     FROM gpSelect_Object_ContractHeaderClients_effie(zfCalc_UserAdmin())'
                                     ) :: Text
                                   ) AS gpSelect (contractHeaderExtId  TVarChar   -- ”никальный идентификатор контракта

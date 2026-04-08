@@ -3,7 +3,7 @@
 DROP VIEW IF EXISTS Clients;
 
 CREATE OR REPLACE VIEW Clients
-AS 
+AS
   WITH _tmpresult AS (SELECT extId
                            , Name
                            , legalAddress
@@ -15,7 +15,16 @@ AS
                            , corporationCode
                            , isDeleted
                       FROM dblink ('host=192.168.0.228 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
-                                 , ('SELECT *
+                                 , ('SELECT extId
+                                          , Name
+                                          , legalAddress
+                                          , streetAddress
+                                          , regNumb
+                                          , regDate
+                                          , subjCode
+                                          , bankInfo
+                                          , corporationCode
+                                          , isDeleted
                                     FROM gpSelect_Object_Clients_effie(zfCalc_UserAdmin())'
                                     ) :: Text
                                   ) AS gpSelect (extId           TVarChar   -- Идентификатор канала продаж
@@ -27,7 +36,7 @@ AS
                                                , subjCode        TVarChar   -- Код клиента
                                                , bankInfo        TVarChar   -- Банковские реквизиты клиента
                                                , corporationCode TVarChar   -- Код корпорации
-                                               , isDeleted       Boolean    -- Признак активности записи: 0 = активна / 1 = не активна                            
+                                               , isDeleted       Boolean    -- Признак активности записи: 0 = активна / 1 = не активна
                                                 )
                      )
  --

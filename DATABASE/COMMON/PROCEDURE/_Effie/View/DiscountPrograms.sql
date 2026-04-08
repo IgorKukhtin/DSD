@@ -4,7 +4,19 @@ DROP VIEW IF EXISTS DiscountPrograms;
 
 CREATE OR REPLACE VIEW DiscountPrograms
 AS 
-  WITH _tmpresult AS (SELECT extId
+  WITH /*_tmpTT AS AS (SELECT ttExtId
+                           , clientExtId
+                      FROM dblink ('host=192.168.0.228 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
+                                 , ('SELECT ttExtId
+                                          , clientExtId
+                                    FROM gpSelect_Object_Twins_effie(zfCalc_UserAdmin())
+                                    WHERE ttExtId :: Integer > 0'
+                                    ) :: Text
+                                  ) AS gpSelect (ttExtId          TVarChar   -- Идентификатор торговой точки
+                                               , clientExtId      TVarChar   -- Идентификатор контрагента.
+                                                )
+                     )*/
+     , _tmpresult AS (SELECT extId
                            , Name
                            , description
                            , typeId
@@ -69,7 +81,7 @@ AS
                                                 )
                      )
  --
- SELECT extId
+ SELECT _tmpresult.extId
       , Name
       , description
       , typeId
@@ -84,11 +96,13 @@ AS
       , afterDiscountQuestHeaderId
       , isDeleted
       , customTypeExtId
-      , clientExtId
+      , _tmpresult.clientExtId -- _tmpTT.ttExtId  AS clientExtId-- _tmpresult.clientExtId
       , isPreDiscountCheckSkipped
       , linkDiscounts_extId
       , linkDiscounts_discount
    FROM _tmpresult
+        -- join _tmpTT ON _tmpTT.clientExtId = _tmpresult.clientExtId
+
   ;
 
 ALTER TABLE DiscountPrograms  OWNER TO postgres;

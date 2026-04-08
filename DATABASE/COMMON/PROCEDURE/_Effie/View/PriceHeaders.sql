@@ -3,23 +3,25 @@
 DROP VIEW IF EXISTS PriceHeaders;
 
 CREATE OR REPLACE VIEW PriceHeaders
-AS 
-  WITH _tmpresult AS (SELECT extId                  
-                           , Name            
-                           , isDeleted        
+AS
+  WITH _tmpresult AS (SELECT extId
+                           , Name
+                           , isDeleted
                       FROM dblink ('host=192.168.0.228 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
-                                 , ('SELECT *
+                                 , ('SELECT extId
+                                          , Name
+                                          , isDeleted
                                     FROM gpSelect_Object_PriceHeaders_effie(zfCalc_UserAdmin())'
                                     ) :: Text
                                   ) AS gpSelect (extId           TVarChar   -- Идентификатор прайса
                                                , Name            TVarChar   -- Название прайса
-                                               , isDeleted       Boolean    -- Признак активности: false = активен / true = не активен                 
+                                               , isDeleted       Boolean    -- Признак активности: false = активен / true = не активен
                                                 )
                      )
  --
- SELECT extId                  
-      , Name            
-      , isDeleted              
+ SELECT extId
+      , Name
+      , isDeleted
    FROM _tmpresult
   ;
 
