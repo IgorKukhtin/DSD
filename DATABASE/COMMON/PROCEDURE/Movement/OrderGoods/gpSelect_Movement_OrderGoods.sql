@@ -115,8 +115,8 @@ BEGIN
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_OrderGoods
-                                         ON MovementLinkObject_.MovementId = Movement.Id
-                                        AND MovementLinkObject_.DescId = zc_MovementLinkObject_OrderGoods()
+                                         ON MovementLinkObject_OrderGoods.MovementId = Movement.Id
+                                        AND MovementLinkObject_OrderGoods.DescId = zc_MovementLinkObject_OrderGoods()
             LEFT JOIN Object AS Object_OrderGoods ON Object_OrderGoods.Id = MovementLinkObject_OrderGoods.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
