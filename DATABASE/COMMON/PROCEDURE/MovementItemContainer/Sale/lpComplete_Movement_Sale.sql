@@ -5310,7 +5310,9 @@ end if;
 
      -- 6.3. ФИНИШ - перепроводим Налоговую
      IF inUserId <> zc_Enum_Process_Auto_PrimeCost()
+        --AND inMovementId <> 33900715 
         AND inUserId <> 343013  -- Нагорная Я.Г.
+        
         -- AND inUserId <> 6604558 -- Голота К.О.
         -- AND inUserId <> 9459   -- Малахова Т.Н.
         -- AND inUserId <> zfCalc_UserMain()
