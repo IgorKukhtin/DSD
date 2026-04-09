@@ -195,7 +195,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_OrderGoodsDetail_Olap: TdsdOpenForm [3]
+    object actReport_OrderGoodsGP_Olap: TdsdOpenForm [3]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1055#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1086#1082' ('#1043#1055')'
@@ -12453,7 +12453,7 @@ inherited MainForm: TMainForm
         Action = actReport_OrderGoods_Olap
       end
       object miReport_OrderGoodsDetail_Olap: TMenuItem
-        Action = actReport_OrderGoodsDetail_Olap
+        Action = actReport_OrderGoodsGP_Olap
       end
       object N25: TMenuItem
         Caption = '-'
