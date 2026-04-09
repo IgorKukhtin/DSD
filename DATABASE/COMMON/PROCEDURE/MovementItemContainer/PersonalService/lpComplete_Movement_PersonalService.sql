@@ -149,7 +149,8 @@ BEGIN
                             AND MovementDate_ServiceDate.MovementId <> inMovementId
                            LIMIT 1
                           );
-     IF vbMovementId_check <> 0 -- AND inUserId <> 5
+     IF vbMovementId_check <> 0 AND inUserId <> 5
+        -- AND inUserId <> 6604558
      THEN
          RAISE EXCEPTION 'Ошибка.Найдена другая <Ведомость начисления> № <%> от <%> %для <%> за <%>.%Ведомость не создана № <%> от <%> %для <%> за <%>.% <%> <%> '
                        , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_check)
@@ -417,6 +418,8 @@ BEGIN
                 )*/
         )
     AND inUserId > 0
+  --AND inUserId <> 5
+  --AND inUserId <> 6604558
      THEN
           PERFORM lpComplete_Movement_PersonalService_Recalc (inMovementId := inMovementId
                                                             , inUserId     := inUserId

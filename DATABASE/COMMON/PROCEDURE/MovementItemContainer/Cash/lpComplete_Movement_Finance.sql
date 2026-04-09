@@ -19,7 +19,7 @@ BEGIN
          , (SELECT SUM (OperSumm + COALESCE (OperSumm_Diff, 0)) FROM _tmpItem WHERE IsMaster = TRUE)
          , (SELECT SUM (OperSumm + COALESCE (OperSumm_Diff, 0)) FROM _tmpItem WHERE IsMaster = FALSE)
          ;
-END IF;*
+END IF;*/
 
      -- Проверка
      IF EXISTS (SELECT SUM (OperSumm + CASE WHEN _tmpItem.MovementDescId = zc_Movement_Cash() THEN 0 ELSE COALESCE (OperSumm_Diff, 0) END)
@@ -100,14 +100,16 @@ END IF;*
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_BankAccount()
                                                            THEN zc_Enum_AccountDirection_40300() -- рассчетный счет
 
+
+                                                      WHEN _tmpItem.ObjectDescId = zc_Object_Cash() AND ObjectLink_Cash_Branch.ChildObjectId IS NOT NULL
+                                                           THEN zc_Enum_AccountDirection_40200() -- касса филиалов !!!важно до "касса БН"!!!
+
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Cash() AND _tmpItem.BusinessId_Balance <> 0
                                                            THEN zc_Enum_AccountDirection_40600() -- касса Павильонов !!!важно до "касса БН"!!!
 
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Cash() AND _tmpItem.PaidKindId = zc_Enum_PaidKind_FirstForm()
                                                            THEN zc_Enum_AccountDirection_40500() -- касса БН
 
-                                                      WHEN _tmpItem.ObjectDescId = zc_Object_Cash() AND ObjectLink_Cash_Branch.ChildObjectId IS NOT NULL
-                                                           THEN zc_Enum_AccountDirection_40200() -- касса филиалов
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Cash() AND ObjectLink_Cash_Branch.ChildObjectId IS NULL
                                                            THEN zc_Enum_AccountDirection_40100() -- касса
 
