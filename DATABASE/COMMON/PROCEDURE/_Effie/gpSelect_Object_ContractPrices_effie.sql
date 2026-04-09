@@ -14,8 +14,10 @@ RETURNS TABLE (priceHeaderExtId      TVarChar   -- Идентификатор прайса
              , PartnerId             Integer    -- Контрагент инф.
              , StreetId              Integer    -- Street инф.
              , defaultPrice          Boolean    --
-) AS
-
+             , PaidKindId            Integer    -- Форма оплата - для внутреннего использования
+             , PaidKindName          TVarChar   -- Форма оплата - для внутреннего использования
+              )
+AS
 $BODY$
    DECLARE vbUserId Integer;
  BEGIN
@@ -162,8 +164,7 @@ $BODY$
                 )
 
           -- только такие договора
-        , tmp_Contract AS (SELECT DISTINCT gpSelect.extId :: Integer AS ContractId FROM gpSelect_Object_ContractHeaders_effie (inSession) AS gpSelect)
-
+        , tmp_Contract AS (SELECT DISTINCT gpSelect.extId :: Integer AS ContractId, gpSelect.PaidKindId, gpSelect.PaidKindName FROM gpSelect_Object_ContractHeaders_effie (inSession) AS gpSelect)
      -- Результат
      SELECT tmp.PriceListId         ::TVarChar AS priceHeaderExtId
           , tmp.ContractId          ::TVarChar AS contractHeaderExtId
@@ -173,6 +174,8 @@ $BODY$
           , tmp.PartnerId           ::Integer  AS PartnerId
           , tmp.StreetId            ::Integer  AS StreetId
           , tmp.defaultPrice        ::Boolean  AS defaultPrice
+          , tmp_Contract.PaidKindId
+          , tmp_Contract.PaidKindName
      FROM tmpPartner_PriceList AS tmp
           INNER JOIN tmp_Contract ON tmp_Contract.ContractId = tmp.ContractId
    UNION
@@ -184,6 +187,8 @@ $BODY$
           , tmp.PartnerId           ::Integer  AS PartnerId
           , tmp.StreetId            ::Integer  AS StreetId
           , tmp.defaultPrice        ::Boolean  AS defaultPrice
+          , tmp_Contract.PaidKindId
+          , tmp_Contract.PaidKindName
      FROM tmpContractPriceList AS tmp
           INNER JOIN tmp_Contract ON tmp_Contract.ContractId = tmp.ContractId
    UNION
@@ -195,6 +200,8 @@ $BODY$
           , tmp.PartnerId           ::Integer  AS PartnerId
           , tmp.StreetId            ::Integer  AS StreetId
           , tmp.defaultPrice        ::Boolean  AS defaultPrice
+          , tmp_Contract.PaidKindId
+          , tmp_Contract.PaidKindName
      FROM tmpIts AS tmp
           INNER JOIN tmp_Contract ON tmp_Contract.ContractId = tmp.ContractId
      ;

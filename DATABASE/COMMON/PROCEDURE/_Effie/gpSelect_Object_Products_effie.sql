@@ -150,8 +150,10 @@ $BODY$
                                     )
                    -- Результат
                    SELECT COALESCE(tmpGoodsByGoodsKind.ObjectId::TVarchar ,'') ::TVarChar AS extId
-                        , (Object_Goods.ObjectCODE)                   ::TVarChar AS globalCode
-                        , TRIM (Object_Goods.ValueData)               ::TVarChar AS productName
+                        , (Object_Goods.ObjectCode)                   ::TVarChar AS globalCode
+                      --, TRIM (Object_Goods.ValueData)               ::TVarChar AS productName
+                        , (Object_Goods.ObjectCode :: TVarChar || ' ' || TRIM (Object_Goods.ValueData) || ' ' || TRIM (COALESCE(Object_GoodsKind.ValueData,''))) ::TVarChar AS productName
+
                         , COALESCE(Object_GoodsGroup.Id::TVarchar ,'')  ::TVarChar AS groupExtId
                         , TRIM (Object_GoodsGroup.ValueData ,'')      ::TVarChar AS groupName
                         , COALESCE(Object_GoodsPlatform.Id::TVarchar ,'')    ::TVarChar AS manufacturerId
@@ -192,7 +194,7 @@ $BODY$
                         , 0     ::TFloat   AS qntPerPall
                         , 0     ::TFloat   AS multiplicity
                         , 0     ::TFloat   AS sortId
-                        , (TRIM (Object_Goods.ValueData) || ' ' || TRIM (COALESCE(Object_GoodsKind.ValueData,''))) ::TVarChar AS fullName
+                        , (Object_Goods.ObjectCode :: TVarChar || ' ' || TRIM (Object_Goods.ValueData) || ' ' || TRIM (COALESCE(Object_GoodsKind.ValueData,''))) ::TVarChar AS fullName
                         , FALSE ::Boolean  AS enableSellByPack
                         , FALSE ::Boolean  AS IsPromoGift
                         , 0     ::TFloat   AS minOrder
