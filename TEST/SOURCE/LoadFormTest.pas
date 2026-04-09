@@ -2924,17 +2924,16 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingProduction_KVKDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingProduction_KVKDialogForm');
   exit;
+  }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderGoodsGP_OlapForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_OrderGoodsGP_OlapForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderGoodsGP_OlapDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_OrderGoodsGP_OlapDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderGoods_OlapForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderGoods_OlapForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderGoods_OlapDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderGoods_OlapDialogForm');
-  exit;
-  }
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderGoodsDetail_OlapForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_OrderGoodsDetail_OlapForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderGoodsDetail_OlapDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_OrderGoodsDetail_OlapDialogForm');
   exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemains_byPackForm'));

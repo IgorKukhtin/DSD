@@ -4266,12 +4266,12 @@
 				<Form>Report_Balance_gridForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_OrderGoods_Olap.pas">
-				<Form>Report_OrderGoods_OlapForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_OrderGoodsGP_Olap.pas">
+				<Form>Report_OrderGoodsGP_OlapForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_OrderGoods_OlapDialog.pas">
-				<Form>Report_OrderGoods_OlapDialogForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_OrderGoodsGP_OlapDialog.pas">
+				<Form>Report_OrderGoodsGP_OlapDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_Transport_Cost.pas">
@@ -5826,12 +5826,12 @@
 				<Form>OrderGoodsEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_OrderGoodsDetail_Olap.pas">
-				<Form>Report_OrderGoodsDetail_OlapForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_OrderGoods_Olap.pas">
+				<Form>Report_OrderGoods_OlapForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_OrderGoodsDetail_OlapDialog.pas">
-				<Form>Report_OrderGoodsDetail_OlapDialogForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_OrderGoods_OlapDialog.pas">
+				<Form>Report_OrderGoods_OlapDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

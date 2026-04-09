@@ -1249,8 +1249,8 @@ uses
   ReasonEdit in '..\..\Forms\Guides\ReasonEdit.pas' {ReasonEditForm: TParentForm},
   Report_ProfitLoss_grid in '..\..\Forms\Report\Report_ProfitLoss_grid.pas' {Report_ProfitLoss_gridForm: TParentForm},
   Report_Balance_grid in '..\..\Forms\Report\Report_Balance_grid.pas' {Report_Balance_gridForm: TParentForm},
-  Report_OrderGoods_Olap in '..\..\Forms\Report\Report_OrderGoods_Olap.pas' {Report_OrderGoods_OlapForm: TParentForm},
-  Report_OrderGoods_OlapDialog in '..\..\Forms\Report\Report_OrderGoods_OlapDialog.pas' {Report_OrderGoods_OlapDialogForm: TParentForm},
+  Report_OrderGoodsGP_Olap in '..\..\Forms\Report\Report_OrderGoodsGP_Olap.pas' {Report_OrderGoodsGP_OlapForm: TParentForm},
+  Report_OrderGoodsGP_OlapDialog in '..\..\Forms\Report\Report_OrderGoodsGP_OlapDialog.pas' {Report_OrderGoodsGP_OlapDialogForm: TParentForm},
   Report_Transport_Cost in '..\..\Forms\Report\Report_Transport_Cost.pas' {Report_Transport_CostForm: TParentForm},
   ReturnDescKind in '..\..\Forms\Kind\ReturnDescKind.pas' {ReturnDescKindForm: TParentForm},
   Report_ProfitLoss_gridDialog in '..\..\Forms\Report\Report_ProfitLoss_gridDialog.pas' {Report_ProfitLoss_gridDialogForm: TParentForm},
@@ -1652,8 +1652,8 @@ uses
   Report_GoodsMI_IncomeByPartnerDialog in '..\..\Forms\Report\Report_GoodsMI_IncomeByPartnerDialog.pas' {Report_GoodsMI_IncomeByPartnerDialogForm: TParentForm},
   OrderGoods_Object in '..\..\Forms\Guides\OrderGoods_Object.pas' {OrderGoods_ObjectForm: TParentForm},
   OrderGoodsEdit in '..\..\Forms\Guides\OrderGoodsEdit.pas' {OrderGoodsEditForm: TParentForm},
-  Report_OrderGoodsDetail_Olap in '..\..\Forms\Report\Report_OrderGoodsDetail_Olap.pas' {Report_OrderGoodsDetail_OlapForm: TParentForm},
-  Report_OrderGoodsDetail_OlapDialog in '..\..\Forms\Report\Report_OrderGoodsDetail_OlapDialog.pas' {Report_OrderGoodsDetail_OlapDialogForm: TParentForm};
+  Report_OrderGoods_Olap in '..\..\Forms\Report\Report_OrderGoods_Olap.pas' {Report_OrderGoods_OlapForm: TParentForm},
+  Report_OrderGoods_OlapDialog in '..\..\Forms\Report\Report_OrderGoods_OlapDialog.pas' {Report_OrderGoods_OlapDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
