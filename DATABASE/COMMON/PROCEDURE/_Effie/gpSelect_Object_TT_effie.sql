@@ -45,7 +45,7 @@ $BODY$
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- временная таблица PriceListItem
+     -- временная таблица Partner
      CREATE TEMP TABLE _tmpPartner (PartnerId            Integer,
                                     StreetId             Integer,
                                     PartnerTagId         Integer,
@@ -57,6 +57,7 @@ $BODY$
                                     isErased             Boolean
                                    )  ON COMMIT DROP;
 
+     -- Данные Partner
      INSERT INTO _tmpPartner (PartnerId,
                               StreetId,
                               PartnerTagId,
@@ -186,7 +187,7 @@ $BODY$
        AND Object_TT_effie.RoomNumber = tmpPartner.RoomNumber
     ;
 
-     --нужно записать в таблица Object_TT_effie.Id - ключ StreetId, HouseNumber, CaseNumber, RoomNumber  те элементы , которых нет
+     -- нужно записать в таблица Object_TT_effie.Id - ключ StreetId, HouseNumber, CaseNumber, RoomNumber  те элементы , которых нет
      INSERT INTO Object_TT_effie (StreetId, PartnerTagId, AreaId, HouseNumber, CaseNumber, RoomNumber, EDIId, InsertDate, isErased)
      SELECT DISTINCT
             tmpPartner.StreetId

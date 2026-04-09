@@ -58,10 +58,10 @@ $BODY$
                               AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
           INNER JOIN Object AS Object_User ON Object_User.Id       = ObjectLink_User_Member.ObjectId  
         
-        /*INNER JOIN ObjectBoolean AS ObjectBoolean_ProjectMobile
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_ProjectMobile
                                    ON ObjectBoolean_ProjectMobile.ObjectId  = ObjectLink_User_Member.ObjectId
                                   AND ObjectBoolean_ProjectMobile.DescId    = zc_ObjectBoolean_User_ProjectMobile()
-                                  AND ObjectBoolean_ProjectMobile.ValueData = TRUE*/
+                                  AND ObjectBoolean_ProjectMobile.ValueData = TRUE
 
           LEFT JOIN ObjectString AS ObjectString_User_
                                  ON ObjectString_User_.ObjectId = Object_User.Id
@@ -70,6 +70,7 @@ $BODY$
      WHERE Object_Member.DescId = zc_Object_Member() 
      --AND Object_Member.isErased = FALSE
        AND Object_Member.Id NOT IN (13165, 1122130, 7015073) -- "Махов Тарас Володимирович"
+     --AND ObjectBoolean_ProjectMobile.ObjectId IS NULL
     ;
 
 

@@ -38,7 +38,8 @@ $BODY$
 
      -- временная таблица PriceListItem
      CREATE TEMP TABLE _tmpPromo (ContractId Integer, PartnerId Integer, PriceListId Integer, GoodsByGoodsKindId Integer
-                               , ChangePercent TFloat, Price_promo TFloat, Price_effie TFloat)  ON COMMIT DROP;
+                                , ChangePercent TFloat, Price_promo TFloat, Price_effie TFloat
+                                 )  ON COMMIT DROP;
 
      INSERT INTO _tmpPromo (ContractId, PartnerId, PriceListId, GoodsByGoodsKindId, ChangePercent, Price_promo, Price_effie)
      WITH
@@ -72,19 +73,19 @@ $BODY$
                      --LIMIT 1
                     )
 
-   --связь договор + прайс
-   , tmpPriceForTwin_effie AS (SELECT tmp.priceHeaderExtId  ::Integer AS PriceListId   -- Идентификатор прайса
-                                    , tmp.extId             ::Integer AS ContractId    -- Идентификатор контракта
-                                    , tmp.clientExtID       ::Integer AS PartnerId     -- Контрагент инф.
-                               FROM gpSelect_Object_PriceForTwin_effie (inSession) AS tmp
-                               )
+     -- связь договор + прайс
+   , tmpContractPrices_effie AS (SELECT tmp.priceHeaderExtId    ::Integer AS PriceListId   -- Идентификатор прайса
+                                      , tmp.contractHeaderExtId ::Integer AS ContractId    -- Идентификатор контракта
+                                      , tmp.PartnerId           ::Integer AS PartnerId     -- Контрагент инф.
+                                 FROM gpSelect_Object_ContractPrices_effie (inSession) AS tmp
+                                )
 
    , tmpContractPrice AS (SELECT tmpContract.ContractId
                                , tmpContract.ChangePercent
-                               , tmpPriceForTwin_effie.PriceListId
-                               , tmpPriceForTwin_effie.PartnerId
+                               , tmpContractPrices_effie.PriceListId
+                               , tmpContractPrices_effie.PartnerId
                           FROM tmpContract
-                               INNER JOIN tmpPriceForTwin_effie ON tmpPriceForTwin_effie.ContractId = tmpContract.ContractId
+                               INNER JOIN tmpContractPrices_effie ON tmpContractPrices_effie.ContractId = tmpContract.ContractId
                          )
    --цены по прайсам без скидки
    , tmpPriceListItem_effie AS (SELECT Object_PriceListItem_effie.*

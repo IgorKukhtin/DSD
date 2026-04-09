@@ -9,6 +9,8 @@ RETURNS TABLE (contractHeaderExtId  TVarChar   -- Уникальный идентификатор контр
              , clientExtId          TVarChar   -- Идентификатор контрагента
              , isDefault            Boolean    -- true - контракт по умолчанию, false - обычный контракт
              , isDeleted            Boolean    -- Признак активности
+             , PaidKindId           Integer    -- Форма оплата - для внутреннего использования
+             , PaidKindName         TVarChar   -- Форма оплата - для внутреннего использования
 ) AS
 
 $BODY$
@@ -26,6 +28,8 @@ BEGIN
         , tmpContract_Client AS (SELECT DISTINCT
                                         gpSelect.contractHeaderExtId
                                       , gpSelect.PartnerId AS clientExtId
+                                      , gpSelect.PaidKindId
+                                      , gpSelect.PaidKindName
                                  FROM gpSelect_Object_ContractPrices_effie (inSession) AS gpSelect
                                  WHERE gpSelect.PartnerId IN (SELECT tmpClient.PartnerId FROM tmpClient)
                                    AND gpSelect.contractHeaderExtId IN (SELECT tmpContract.extId FROM tmpContract)
@@ -36,6 +40,8 @@ BEGIN
          , tmpContract_Client.clientExtId          ::TVarChar AS clientExtId
          , TRUE                                    ::Boolean  AS isDefault
          , FALSE                                   ::Boolean  AS isDeleted
+         , tmpContract_Client.PaidKindId
+         , tmpContract_Client.PaidKindName
 
      FROM tmpContract_Client
     ;

@@ -16,6 +16,8 @@ RETURNS TABLE (extId            TVarChar   -- Уникальный идентификатор договора
              , paymentDelay     Integer    -- Отсрочка оплаты в днях
              , creditLimit      TFloat     -- Кредитный лимит 
              , isDeleted        Boolean    -- Признак активности: false = активен / true = не активен
+             , PaidKindId       Integer    -- Форма оплата - для внутреннего использования
+             , PaidKindName     TVarChar   -- Форма оплата - для внутреннего использования
               )
 AS
 $BODY$
@@ -74,14 +76,18 @@ BEGIN
           , (COALESCE (Object_Contract_View.DayCalendar,0) + COALESCE (Object_Contract_View.DayBank,0)) ::Integer AS paymentDelay
           , tmpDelayCreditLimit.Value                                      ::TFloat   AS creditLimit
           , Object_Contract_View.isErased                                  ::Boolean  AS isDeleted
-     FROM Object_Contract_View
-        LEFT JOIN ObjectDate AS ObjectDate_Signing
-                             ON ObjectDate_Signing.ObjectId = Object_Contract_View.ContractId
-                            AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
 
-        LEFT JOIN tmpDelayCreditLimit ON tmpDelayCreditLimit.ContractId = Object_Contract_View.ContractId
-        
-        LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
+          , Object_PaidKind.Id        AS PaidKindId
+          , Object_PaidKind.ValueData AS PaidKindName
+
+     FROM Object_Contract_View
+          LEFT JOIN ObjectDate AS ObjectDate_Signing
+                               ON ObjectDate_Signing.ObjectId = Object_Contract_View.ContractId
+                              AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
+
+          LEFT JOIN tmpDelayCreditLimit ON tmpDelayCreditLimit.ContractId = Object_Contract_View.ContractId
+
+          LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
 
      WHERE Object_Contract_View.isErased = FALSE 
        -- !!!ТОЛЬКО ГП!!!
