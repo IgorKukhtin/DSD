@@ -129,7 +129,8 @@ BEGIN
            , Object_From.ValueData                     AS FromName
            , Object_To.ValueData                       AS ToName
            , MovementFloat_TotalCountKg.ValueData      AS TotalCountKg
-           , MovementFloat_TotalSumm.ValueData         AS TotalSumm
+           --, MovementFloat_TotalSumm.ValueData         AS TotalSumm
+           , (COALESCE (MovementFloat_TotalSumm.ValueData, 0) + COALESCE (MovementFloat_CorrSumm.ValueData, 0)) :: TFloat AS TotalSumm
            , Object_PaidKind.ValueData                 AS PaidKindName
            , View_Contract_InvNumber.ContractCode      AS ContractCode
            , View_Contract_InvNumber.InvNumber         AS ContractName
@@ -337,6 +338,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId = Movement_Sale.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+            -- Корректировка суммы
+            LEFT JOIN MovementFloat AS MovementFloat_CorrSumm
+                                         ON MovementFloat_CorrSumm.MovementId = Movement_Sale.Id
+                                        AND MovementFloat_CorrSumm.DescId     = zc_MovementFloat_CorrSumm()
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
                                     ON MovementFloat_TotalCountKg.MovementId = Movement_Sale.Id
                                    AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
@@ -428,4 +433,4 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpSelect_Movement_Reestr (inStartDate:= '20.10.2023', inEndDate:= '21.10.2023', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+--SELECT * FROM gpSelect_Movement_Reestr (inStartDate:= '08.04.2026', inEndDate:= '08.04.2026', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

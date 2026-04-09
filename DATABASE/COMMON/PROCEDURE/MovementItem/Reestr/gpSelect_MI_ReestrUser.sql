@@ -183,7 +183,8 @@ BEGIN
             , Object_Status_Sale.ValueData              AS StatusName_Sale
     
             , MovementFloat_TotalCountKg.ValueData      AS TotalCountKg
-            , MovementFloat_TotalSumm.ValueData         AS TotalSumm
+            --, MovementFloat_TotalSumm.ValueData         AS TotalSumm
+            , (COALESCE (MovementFloat_TotalSumm.ValueData, 0) + COALESCE (MovementFloat_CorrSumm.ValueData, 0)) :: TFloat AS TotalSumm
 
             , Object_From.ValueData                     AS FromName
             , Object_To.ValueData                       AS ToName   
@@ -368,6 +369,11 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId = Movement_Sale.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+            -- Корректировка суммы
+            LEFT JOIN MovementFloat AS MovementFloat_CorrSumm
+                                    ON MovementFloat_CorrSumm.MovementId = Movement_Sale.Id
+                                   AND MovementFloat_CorrSumm.DescId     = zc_MovementFloat_CorrSumm()
+
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
                                     ON MovementFloat_TotalCountKg.MovementId = Movement_Sale.Id
                                    AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()

@@ -146,7 +146,7 @@ BEGIN
            , Object_PaidKind.ValueData              AS PaidKindName
 
            , MovementFloat_TotalCountKg.ValueData           AS TotalCountKg
-           , MovementFloat_TotalSumm.ValueData              AS TotalSumm
+           , (COALESCE (MovementFloat_TotalSumm.ValueData, 0) + COALESCE (MovementFloat_CorrSumm.ValueData, 0)) :: TFloat AS TotalSumm
 
            , Movement_TransportGoods.InvNumber              AS InvNumber_TransportGoods
            , COALESCE (Movement_TransportGoods.OperDate, NULL) ::TDateTime  AS OperDate_TransportGoods
@@ -282,6 +282,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId = Movement_Sale.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+            -- Корректировка суммы
+            LEFT JOIN MovementFloat AS MovementFloat_CorrSumm
+                                    ON MovementFloat_CorrSumm.MovementId = Movement_Sale.Id
+                                   AND MovementFloat_CorrSumm.DescId     = zc_MovementFloat_CorrSumm()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement_Sale.Id
