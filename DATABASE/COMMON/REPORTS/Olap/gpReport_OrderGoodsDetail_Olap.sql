@@ -19,14 +19,16 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , UnitName TVarChar
              , OrderGoodsName TVarChar
 
-             , MovementItemId Integer
-             , ParentId Integer
+             --, MovementItemId Integer
+             --, ParentId Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsKindName      TVarChar
              , GoodsGroupNameFull TVarChar
+             , GoodsGroupName     TVarChar
              , MeasureName        TVarChar
              , Amount             TFloat  
              , Amount_master      TFloat
+             , Weight_master      TFloat
 
              , GoodsGroupNameFull_parent TVarChar
              , GoodsCode_parent Integer, GoodsName_parent TVarChar
@@ -42,6 +44,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , GoodsTagName          TVarChar
              , GoodsPlatformName     TVarChar
              , GoodsGroupAnalystName TVarChar
+             , InfoMoneyName_all     TVarChar
              , isTop Boolean
              )   
 AS
@@ -114,7 +117,7 @@ BEGIN
          , tmpMI_parent AS (SELECT *
                             FROM MovementItem
                                  --ограничиваем по товару ГП
-                                 INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItemId.ObjectId
+                                 INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
                             WHERE MovementItem.Id IN (SELECT DISTINCT tmpMI_Child.ParentId FROM tmpMI_Child)
                               AND MovementItem.isErased   = FALSE
                               AND MovementItem.DescId     = zc_MI_Master()
@@ -155,7 +158,11 @@ BEGIN
                             , Object_InfoMoney_View.InfoMoneyId
 
                             , (COALESCE (MovementItem.Amount,0)) :: TFloat AS Amount
-                            , (COALESCE (MI_parent.Amount,0))    :: TFloat AS Amount_master
+                            , CAST (CASE WHEN Object_Measure_parent.Id = zc_Measure_Sh() 
+                                         THEN CASE WHEN COALESCE (ObjectFloat_Weight_parent.ValueData,0) <> 0 THEN COALESCE (MI_parent.Amount,0) / ObjectFloat_Weight_parent.ValueData ELSE COALESCE (MI_parent.Amount,0) END 
+                                         ELSE 0
+                                    END AS NUMERIC (16,0))       :: TFloat AS Amount_master
+                            , (COALESCE (MI_parent.Amount,0))    :: TFloat AS Weight_master
 
                             , ObjectString_Goods_GoodsGroupFull_parent.ValueData ::TVarChar AS GoodsGroupNameFull_parent
                             , Object_Goods_parent.Id                                        AS GoodsId_parent
@@ -207,6 +214,10 @@ BEGIN
                                                  ON ObjectLink_Goods_Measure_parent.ObjectId =  Object_Goods_parent.Id
                                                 AND ObjectLink_Goods_Measure_parent.DescId = zc_ObjectLink_Goods_Measure()
                             LEFT JOIN Object AS Object_Measure_parent ON Object_Measure_parent.Id = ObjectLink_Goods_Measure_parent.ChildObjectId
+
+                            LEFT JOIN ObjectFloat AS ObjectFloat_Weight_parent
+                                                  ON ObjectFloat_Weight_parent.ObjectId = Object_Goods_parent.Id
+                                                 AND ObjectFloat_Weight_parent.DescId = zc_ObjectFloat_Goods_Weight()
            
                             LEFT JOIN tmpMILO_parent AS MILO_Receipt
                                                      ON MILO_Receipt.MovementItemId = MI_parent.Id
@@ -246,6 +257,14 @@ BEGIN
                               , Object_GoodsTag.ValueData       AS GoodsTagName
                               , Object_GoodsPlatform.ValueData  AS GoodsPlatformName
                               , Object_GoodsGroupAnalyst.ValueData AS GoodsGroupAnalystName
+
+                              , Object_InfoMoney_View.InfoMoneyCode
+                              , Object_InfoMoney_View.InfoMoneyGroupName
+                              , Object_InfoMoney_View.InfoMoneyDestinationName
+                              , Object_InfoMoney_View.InfoMoneyDestinationId
+                              , Object_InfoMoney_View.InfoMoneyName_all
+                              , Object_InfoMoney_View.InfoMoneyName
+                              , Object_InfoMoney_View.InfoMoneyId
                          FROM (SELECT DISTINCT tmpData.GoodsId_parent AS GoodsId FROM tmpData) AS tmp
 
                              LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
@@ -267,6 +286,12 @@ BEGIN
                                                   ON ObjectLink_Goods_GoodsTag.ObjectId = tmp.GoodsId
                                                  AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
                              LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_Goods_GoodsTag.ChildObjectId
+
+                             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                  ON ObjectLink_Goods_InfoMoney.ObjectId = tmp.GoodsId
+                                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
                         )
 
       --
@@ -287,10 +312,12 @@ BEGIN
            , Object_Goods.ValueData   		        AS GoodsName
            , Object_GoodsKind.ValueData             AS GoodsKindName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+           , Object_GoodsGroup.ValueData ::TVarChar AS GoodsGroupName
            , Object_Measure.ValueData               AS MeasureName
 
            , SUM (COALESCE (MovementItem.Amount,0))  :: TFloat AS Amount
-           , SUM (CASE WHEN MovementItem.Ord = 1 THEN COALESCE (MovementItem.Amount_master,0) ELSE 0 END)  :: TFloat AS Amount_master
+           , SUM (CASE WHEN MovementItem.Ord = 1 THEN COALESCE (MovementItem.Amount_master,0) ELSE 0 END)  ::TFloat AS Amount_master 
+           , SUM (CASE WHEN MovementItem.Ord = 1 THEN COALESCE (MovementItem.Weight_master,0) ELSE 0 END)  ::TFloat AS Weight_master
 
            , MovementItem.GoodsGroupNameFull_parent ::TVarChar AS GoodsGroupNameFull_parent
            , MovementItem.GoodsCode_parent                     AS GoodsCode_parent
@@ -314,6 +341,7 @@ BEGIN
            , tmpGoodsParam.GoodsTagName          :: TVarChar
            , tmpGoodsParam.GoodsPlatformName     :: TVarChar
            , tmpGoodsParam.GoodsGroupAnalystName :: TVarChar
+           , tmpGoodsParam.InfoMoneyName_all     :: TVarChar AS InfoMoneyName_all_parent 
            , CASE WHEN tmpTOP.GoodsId IS NULL THEN FALSE ELSE TRUE END :: Boolean AS isTop
 
      FROM tmpMovement AS Movement
@@ -338,6 +366,11 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                 ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId =  Object_Goods.Id
@@ -390,6 +423,8 @@ BEGIN
            , tmpGoodsParam.GoodsPlatformName
            , tmpGoodsParam.GoodsGroupAnalystName
            , CASE WHEN tmpTOP.GoodsId IS NULL THEN FALSE ELSE TRUE END
+           , Object_GoodsGroup.ValueData
+           , tmpGoodsParam.InfoMoneyName_all
   ;
          
 END;
