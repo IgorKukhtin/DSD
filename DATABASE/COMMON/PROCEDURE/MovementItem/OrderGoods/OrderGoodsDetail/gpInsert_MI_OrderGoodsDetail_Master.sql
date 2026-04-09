@@ -35,10 +35,11 @@ BEGIN
                                                              , inUserId        := vbUserId
                                                               );
 
-     -- Элементы - План без вида упаковки
-     CREATE TEMP TABLE tmpMI_plan (GoodsId Integer, Amount TFloat) ON COMMIT DROP;
-     INSERT INTO tmpMI_plan (GoodsId, Amount)
-       SELECT MovementItem.ObjectId AS GoodsId
+     -- Элементы - План + вид упаковки
+     CREATE TEMP TABLE tmpMI_plan (GoodsId Integer, GoodsKindId Integer, Amount TFloat, ReceiptId Integer) ON COMMIT DROP;
+     INSERT INTO tmpMI_plan (GoodsId, GoodsKindId, Amount, ReceiptId)
+       SELECT MovementItem.ObjectId                 AS GoodsId
+            , COALESCE (MILO_GoodsKind.ObjectId, 0) AS GoodsKindId
               -- Переводим в нужную Ед.изм.
             , SUM (CAST (CASE -- если это Штучный товар
                               WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
@@ -56,8 +57,15 @@ BEGIN
                                         ELSE COALESCE (MIFloat_AmountSecond.ValueData, 0) * COALESCE (ObjectFloat_Weight.ValueData, 1)
                                    END
                          END AS NUMERIC (16,0))
-                   )AS Amount
+                   ) AS Amount
+              -- найдем потом
+            , 0 AS ReceiptId
+
        FROM MovementItem
+            LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
+                                             ON MILO_GoodsKind.MovementItemId = MovementItem.Id
+                                            AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+            -- ШТ
             LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
                                         ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                        AND MIFloat_AmountSecond.DescId         = zc_MIFloat_AmountSecond()
@@ -71,235 +79,16 @@ BEGIN
          AND MovementItem.DescId     = zc_MI_Master()
          AND MovementItem.isErased   = FALSE
        GROUP BY MovementItem.ObjectId
+              , MILO_GoodsKind.ObjectId
       ;
-
-     -- Статистика Заявки + Продажи
-     CREATE TEMP TABLE tmpMI_stat (GoodsId Integer, GoodsKindId Integer, AmountOrder TFloat, AmountOrderPromo TFloat, AmountSale TFloat, AmountSalePromo TFloat, Amount_calc TFloat, ReceiptId Integer) ON COMMIT DROP;
-     --
-     WITH -- Список ГП - определился isGoodsKind
-          tmpGoods AS (SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
-                            , CASE WHEN Object_InfoMoney_View.InfoMoneyId            = zc_Enum_InfoMoney_30101()            -- Готовая продукция
-                                     OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
-                                        THEN TRUE
-                                   ELSE FALSE
-                              END AS isGoodsKind
-                            , Object_InfoMoney_View.InfoMoneyId
-                       FROM Object_InfoMoney_View
-                            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                                 ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
-                                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-                       WHERE (Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция + Готовая продукция and Тушенка and Хлеб
-                           OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
-                         --OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье : запечена...
-                             )
-                      )
-         -- Заявки - информативно
-      /*, tmpMovOrder AS (SELECT Movement.Id AS MovementId
-                          FROM MovementDate AS MD_OperDatePartner
-                               INNER JOIN Movement ON Movement.Id       = MD_OperDatePartner.MovementId
-                                                  AND Movement.DescId   = zc_Movement_OrderExternal()
-                                                  AND Movement.StatusId = zc_Enum_Status_Complete()
-                               LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                                            ON MovementLinkObject_From.MovementId = Movement.Id
-                                                           AND MovementLinkObject_From.DescId         = zc_MovementLinkObject_From()
-                               -- если это Заявка с Филиала
-                               LEFT JOIN Object AS Object_From ON Object_From.Id     = MovementLinkObject_From.ObjectId
-                                                              AND Object_From.DescId = zc_Object_Unit()
-                          WHERE MD_OperDatePartner.ValueData BETWEEN inOperDateStart AND inOperDateEnd
-                            AND MD_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-                            -- без Заявок с Филиала
-                            AND Object_From.Id IS NULL
-                            --AND 1=0
-                         )*/
-        , tmpMovOrder AS (SELECT Movement.Id AS MovementId
-                          FROM Movement
-                               LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                                            ON MovementLinkObject_From.MovementId = Movement.Id
-                                                           AND MovementLinkObject_From.DescId         = zc_MovementLinkObject_From()
-                               -- если это Заявка с Филиала
-                               LEFT JOIN Object AS Object_From ON Object_From.Id     = MovementLinkObject_From.ObjectId
-                                                              AND Object_From.DescId = zc_Object_Unit()
-                          WHERE Movement.OperDate BETWEEN inOperDateStart AND inOperDateEnd
-                            AND Movement.DescId   = zc_Movement_OrderExternal()
-                            AND Movement.StatusId = zc_Enum_Status_Complete()
-                            -- без Заявок с Филиала
-                            AND Object_From.Id IS NULL
-                            --AND 1=0
-                         )
-     , tmpMIOrder_all AS (SELECT MovementItem.*
-                          FROM MovementItem 
-                          WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovOrder.MovementId FROM tmpMovOrder)
-                            AND MovementItem.DescId     = zc_MI_Master()
-                            AND MovementItem.isErased   = FALSE
-                         )
-         , tmpMIOrder AS (SELECT tmpMIOrder_all.*
-                          FROM tmpMIOrder_all
-                               INNER JOIN tmpMI_plan ON tmpMI_plan.GoodsId = tmpMIOrder_all.ObjectId
-                         )
-       , tmpMIFloat_o AS (SELECT MovementItemFloat.*
-                           FROM MovementItemFloat
-                          WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMIOrder.Id FROM tmpMIOrder)
-                         )
-          , tmpMILO_o AS (SELECT MovementItemLinkObject.*
-                          FROM MovementItemLinkObject
-                          WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMIOrder.Id FROM tmpMIOrder)
-                            AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
-                         )
-        , tmpOrder AS (SELECT MovementItem.Id
-                            , MovementItem.ObjectId AS GoodsId
-                            , CASE WHEN tmpGoods.InfoMoneyId = zc_Enum_InfoMoney_30102() -- Тушенка
-                                        THEN zc_GoodsKind_Basis()
-                                   WHEN tmpGoods.isGoodsKind = TRUE
-                                        THEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())
-                                   ELSE 0
-                              END AS GoodsKindId
-                              -- Статистика(заявка)  - БЕЗ акций
-                            , (CASE WHEN COALESCE (MIFloat_PromoMovementId.ValueData, 0) = 0 THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS Amount
-                              -- Статистика(заявка)  - ТОЛЬКО Акции
-                            , (CASE WHEN COALESCE (MIFloat_PromoMovementId.ValueData, 0) > 0 THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountPromo
-                       FROM tmpMovOrder
-                            INNER JOIN tmpMIOrder AS MovementItem
-                                                  ON MovementItem.MovementId = tmpMovOrder.MovementId
-                                                  AND MovementItem.DescId     = zc_MI_Master()
-                                                  AND MovementItem.isErased   = FALSE
-                          --INNER JOIN tmpMI_plan ON tmpMI_plan.GoodsId = MovementItem.ObjectId
-
-                            LEFT JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
-
-                            LEFT JOIN tmpMILO_o AS MILinkObject_GoodsKind
-                                                ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                               AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
-                                               AND tmpGoods.isGoodsKind                  = TRUE
-                            LEFT JOIN tmpMIFloat_o AS MIFloat_AmountSecond
-                                                   ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
-                                                  AND MIFloat_AmountSecond.DescId         = zc_MIFloat_AmountSecond()
-
-                            LEFT JOIN tmpMIFloat_o AS MIFloat_PromoMovementId
-                                                   ON MIFloat_PromoMovementId.MovementItemId = MovementItem.Id
-                                                  AND MIFloat_PromoMovementId.DescId         = zc_MIFloat_PromoMovementId()
-                     --GROUP BY MovementItem.ObjectId
-                     --       , CASE WHEN tmpGoods.isGoodsKind = TRUE THEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) ELSE 0 END
-                      )
-           -- Продажи - по ним и распределяем
-         , tmpMovSale AS (SELECT Movement.Id AS MovementId
-                          FROM MovementDate AS MD_OperDatePartner
-                               INNER JOIN Movement ON Movement.Id       = MD_OperDatePartner.MovementId
-                                                  AND Movement.DescId   = zc_Movement_Sale()
-                                                  AND Movement.StatusId = zc_Enum_Status_Complete()
-                          WHERE MD_OperDatePartner.ValueData BETWEEN inOperDateStart AND inOperDateEnd
-                            AND MD_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-                         )
-      , tmpMISale_all AS (SELECT MovementItem.*
-                          FROM MovementItem
-                          WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovSale.MovementId FROM tmpMovSale)
-                            AND MovementItem.DescId     = zc_MI_Master()
-                            AND MovementItem.isErased   = FALSE
-                         )
-          , tmpMISale AS (SELECT tmpMISale_all.*
-                          FROM tmpMISale_all
-                               INNER JOIN tmpMI_plan ON tmpMI_plan.GoodsId = tmpMISale_all.ObjectId
-                         )
-         , tmpMIFloat AS (SELECT MovementItemFloat.*
-                          FROM MovementItemFloat
-                          WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMISale.Id FROM tmpMISale)
-                         )
-            , tmpMILO AS (SELECT MovementItemLinkObject.*
-                          FROM MovementItemLinkObject
-                          WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMISale.Id FROM tmpMISale)
-                            AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
-                         )
-         , tmpSale AS (SELECT MovementItem.Id
-                            , MovementItem.ObjectId AS GoodsId
-                            , CASE WHEN tmpGoods.InfoMoneyId = zc_Enum_InfoMoney_30102() -- Тушенка
-                                        THEN zc_GoodsKind_Basis()
-                                   WHEN tmpGoods.isGoodsKind = TRUE
-                                        THEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())
-                                   ELSE 0
-                              END AS GoodsKindId
-                              -- Статистика(заявка)  - БЕЗ акций
-                            , (CASE WHEN COALESCE (MIFloat_PromoMovementId.ValueData, 0) = 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) AS Amount
-                              -- Статистика(заявка)  - ТОЛЬКО Акции
-                            , (CASE WHEN COALESCE (MIFloat_PromoMovementId.ValueData, 0) > 0 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) AS AmountPromo
-                       FROM tmpMovSale
-                            INNER JOIN tmpMISale AS MovementItem
-                                                 ON MovementItem.MovementId = tmpMovSale.MovementId
-                                                AND MovementItem.DescId     = zc_MI_Master()
-                                                AND MovementItem.isErased   = FALSE
-                          --INNER JOIN tmpMI_plan ON tmpMI_plan.GoodsId = MovementItem.ObjectId
-
-                            LEFT JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
-
-                            LEFT JOIN tmpMILO AS MILinkObject_GoodsKind
-                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                             AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
-                                             AND tmpGoods.isGoodsKind                  = TRUE
-                            LEFT JOIN tmpMIFloat AS MIFloat_AmountPartner
-                                                 ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                                AND MIFloat_AmountPartner.DescId         = zc_MIFloat_AmountPartner()
-
-                            LEFT JOIN tmpMIFloat AS MIFloat_PromoMovementId
-                                                 ON MIFloat_PromoMovementId.MovementItemId = MovementItem.Id
-                                                AND MIFloat_PromoMovementId.DescId         = zc_MIFloat_PromoMovementId()
-                     --GROUP BY MovementItem.ObjectId
-                     --       , CASE WHEN tmpGoods.isGoodsKind = TRUE THEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) ELSE 0 END
-                      )
-        , tmpMI_all AS (-- 1.1 Заявки
-                       SELECT tmpOrder.GoodsId
-                            , tmpOrder.GoodsKindId
-                            , SUM (tmpOrder.Amount)      AS AmountOrder
-                            , SUM (tmpOrder.AmountPromo) AS AmountOrderPromo
-                            , 0                          AS AmountSale
-                            , 0                          AS AmountSalePromo
-                       FROM tmpOrder
-                       WHERE tmpOrder.Amount > 0 OR tmpOrder.AmountPromo > 0
-                       GROUP BY tmpOrder.GoodsId
-                              , tmpOrder.GoodsKindId
-
-                      UNION ALL
-                       -- 1.2 Продажи
-                       SELECT tmpSale.GoodsId
-                            , tmpSale.GoodsKindId
-                            , 0                         AS AmountOrder
-                            , 0                         AS AmountOrderPromo
-                            , SUM (tmpSale.Amount)      AS AmountSale
-                            , SUM (tmpSale.AmountPromo) AS AmountSalePromo
-                       FROM tmpSale
-                       WHERE tmpSale.Amount > 0 OR tmpSale.AmountPromo > 0
-                       GROUP BY tmpSale.GoodsId
-                              , tmpSale.GoodsKindId
-                      )
-     -- Результат - Статистика Заявки + Продажи
-     INSERT INTO tmpMI_stat (GoodsId, GoodsKindId, AmountOrder, AmountOrderPromo, AmountSale, AmountSalePromo, Amount_calc, ReceiptId)
-        SELECT tmpMI_all.GoodsId
-             , tmpMI_all.GoodsKindId
-             , SUM (tmpMI_all.AmountOrder)        AS AmountOrder
-             , SUM (tmpMI_all.AmountOrderPromo)   AS AmountOrderPromo
-             , SUM (tmpMI_all.AmountSale)         AS AmountSale
-             , SUM (tmpMI_all.AmountSalePromo)    AS AmountSalePromo
-               -- По этому значению - РАСПРЕДЕЛЯЕМ
-             , SUM (tmpMI_all.AmountSale + tmpMI_all.AmountSalePromo) AS Amount_calc
-               --
-             , 0 AS ReceiptId
-
-        FROM tmpMI_all
-        GROUP BY tmpMI_all.GoodsId
-               , tmpMI_all.GoodsKindId
-        HAVING SUM (tmpMI_all.AmountOrder)      <> 0
-            OR SUM (tmpMI_all.AmountOrderPromo) <> 0
-            OR SUM (tmpMI_all.AmountSale)       <> 0
-            OR SUM (tmpMI_all.AmountSalePromo)  <> 0
-    ;
-
--- RAISE EXCEPTION 'end ';
--- RAISE EXCEPTION ' %', (select sum(AmountOrder +  AmountOrderPromo) from tmpMI_stat where tmpMI_stat.GoodsId = );
 
 
      -- нашли Receipt
-     UPDATE tmpMI_stat SET ReceiptId = tmpReceipt.ReceiptId
-     FROM (WITH tmpReceipt AS (SELECT tmpMI_stat.GoodsId, tmpMI_stat.GoodsKindId, ObjectLink_Receipt_Goods.ObjectId AS ReceiptId
-                               FROM tmpMI_stat
+     UPDATE tmpMI_plan SET ReceiptId = tmpReceipt.ReceiptId
+     FROM (WITH tmpReceipt AS (SELECT tmpMI_plan.GoodsId, tmpMI_plan.GoodsKindId, ObjectLink_Receipt_Goods.ObjectId AS ReceiptId
+                               FROM tmpMI_plan
                                     INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
-                                                          ON ObjectLink_Receipt_Goods.ChildObjectId = tmpMI_stat.GoodsId
+                                                          ON ObjectLink_Receipt_Goods.ChildObjectId = tmpMI_plan.GoodsId
                                                          AND ObjectLink_Receipt_Goods.DescId        = zc_ObjectLink_Receipt_Goods()
                                     INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id       = ObjectLink_Receipt_Goods.ObjectId
                                                                        AND Object_Receipt.isErased = FALSE
@@ -310,12 +99,12 @@ BEGIN
                                     LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
                                                          ON ObjectLink_Receipt_GoodsKind.ObjectId = Object_Receipt.Id
                                                         AND ObjectLink_Receipt_GoodsKind.DescId   = zc_ObjectLink_Receipt_GoodsKind()
-                               WHERE COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0) = tmpMI_stat.GoodsKindId
+                               WHERE COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0) = tmpMI_plan.GoodsKindId
                               )
-             , tmpReceipt_oth AS (SELECT tmpMI_stat.GoodsId, tmpMI_stat.GoodsKindId, ObjectLink_Receipt_Goods.ObjectId AS ReceiptId
-                                  FROM tmpMI_stat
+             , tmpReceipt_oth AS (SELECT tmpMI_plan.GoodsId, tmpMI_plan.GoodsKindId, ObjectLink_Receipt_Goods.ObjectId AS ReceiptId
+                                  FROM tmpMI_plan
                                        INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
-                                                             ON ObjectLink_Receipt_Goods.ChildObjectId = tmpMI_stat.GoodsId
+                                                             ON ObjectLink_Receipt_Goods.ChildObjectId = tmpMI_plan.GoodsId
                                                             AND ObjectLink_Receipt_Goods.DescId        = zc_ObjectLink_Receipt_Goods()
                                        INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id       = ObjectLink_Receipt_Goods.ObjectId
                                                                           AND Object_Receipt.isErased = FALSE
@@ -323,10 +112,10 @@ BEGIN
                                                             ON ObjectLink_Receipt_GoodsKind.ObjectId = Object_Receipt.Id
                                                            AND ObjectLink_Receipt_GoodsKind.DescId   = zc_ObjectLink_Receipt_GoodsKind()
    
-                                       LEFT JOIN tmpReceipt ON tmpReceipt.GoodsId     = tmpMI_stat.GoodsId
-                                                           AND tmpReceipt.GoodsKindId = tmpMI_stat.GoodsKindId
+                                       LEFT JOIN tmpReceipt ON tmpReceipt.GoodsId     = tmpMI_plan.GoodsId
+                                                           AND tmpReceipt.GoodsKindId = tmpMI_plan.GoodsKindId
 
-                                  WHERE COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0) = tmpMI_stat.GoodsKindId
+                                  WHERE COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0) = tmpMI_plan.GoodsKindId
                                        -- если не нашли Receipt_Main = TRUE
                                        AND tmpReceipt.GoodsId IS NULL
                                  )
@@ -338,16 +127,16 @@ BEGIN
            FROM tmpReceipt_oth AS tmpReceipt
            WHERE tmpReceipt.ReceiptId IN (SELECT tmpReceipt_oth.ReceiptId FROM tmpReceipt_oth GROUP BY tmpReceipt_oth.ReceiptId HAVING COUNT(*) = 1)
           ) AS tmpReceipt
-     WHERE tmpMI_stat.GoodsId     = tmpReceipt.GoodsId
-       AND tmpMI_stat.GoodsKindId = tmpReceipt.GoodsKindId
+     WHERE tmpMI_plan.GoodsId     = tmpReceipt.GoodsId
+       AND tmpMI_plan.GoodsKindId = tmpReceipt.GoodsKindId
     ;
 
      -- Проверка
-     IF EXISTS (SELECT 1 FROM tmpMI_stat WHERE COALESCE (tmpMI_stat.ReceiptId, 0) = 0) AND 1=0
+     IF EXISTS (SELECT 1 FROM tmpMI_plan WHERE COALESCE (tmpMI_plan.ReceiptId, 0) = 0) AND 1=0
      THEN
          RAISE EXCEPTION 'Ошибка.Значение рецепт не установлено <%> <%>.'
-                      , lfGet_Object_ValueData ((SELECT tmpMI_stat.GoodsId FROM tmpMI_stat WHERE COALESCE (tmpMI_stat.ReceiptId, 0) = 0 ORDER BY tmpMI_stat.GoodsId, tmpMI_stat.GoodsKindId LIMIT 1))
-                      , lfGet_Object_ValueData_sh ((SELECT tmpMI_stat.GoodsKindId FROM tmpMI_stat WHERE COALESCE (tmpMI_stat.ReceiptId, 0) = 0 ORDER BY tmpMI_stat.GoodsId, tmpMI_stat.GoodsKindId LIMIT 1))
+                      , lfGet_Object_ValueData ((SELECT tmpMI_plan.GoodsId FROM tmpMI_plan WHERE COALESCE (tmpMI_plan.ReceiptId, 0) = 0 ORDER BY tmpMI_plan.GoodsId, tmpMI_plan.GoodsKindId LIMIT 1))
+                      , lfGet_Object_ValueData_sh ((SELECT tmpMI_plan.GoodsKindId FROM tmpMI_plan WHERE COALESCE (tmpMI_plan.ReceiptId, 0) = 0 ORDER BY tmpMI_plan.GoodsId, tmpMI_plan.GoodsKindId LIMIT 1))
                        ;
      END IF;
 
@@ -368,9 +157,9 @@ BEGIN
         ;
 
 
-/*RAISE EXCEPTION ' %', (select distinct tmpMI_stat.GoodsKindId from tmpMI_Master
-          LEFT JOIN tmpMI_stat ON tmpMI_stat.GoodsId     = tmpMI_Master.GoodsId
-                              AND tmpMI_stat.GoodsKindId = tmpMI_Master.GoodsKindId
+/*RAISE EXCEPTION ' %', (select distinct tmpMI_plan.GoodsKindId from tmpMI_Master
+          LEFT JOIN tmpMI_plan ON tmpMI_plan.GoodsId     = tmpMI_Master.GoodsId
+                              AND tmpMI_plan.GoodsKindId = tmpMI_Master.GoodsKindId
 
      );*/
 
@@ -379,153 +168,31 @@ BEGIN
      PERFORM gpMovementItem_OrderGoodsDetail_SetErased_Master (inMovementItemId := tmpMI_Master.Id
                                                              , inSession := inSession)
      FROM tmpMI_Master
-          LEFT JOIN tmpMI_stat ON tmpMI_stat.GoodsId     = tmpMI_Master.GoodsId
-                              AND tmpMI_stat.GoodsKindId = tmpMI_Master.GoodsKindId
-     WHERE tmpMI_stat.GoodsId IS NULL
+          LEFT JOIN tmpMI_plan ON tmpMI_plan.GoodsId     = tmpMI_Master.GoodsId
+                              AND tmpMI_plan.GoodsKindId = tmpMI_Master.GoodsKindId
+     WHERE tmpMI_plan.GoodsId IS NULL
     ;
 
 
-
-     IF EXISTS (SELECT 1
-                FROM tmpMI_plan
-                     -- Статистика Заявки + Продажи по видам упаковки
-                     LEFT JOIN (SELECT tmpMI_stat.*
-                                       -- № п/п, т.к. если продаж нет - запишем в первый
-                                     , ROW_NUMBER() OVER (PARTITION BY tmpMI_stat.GoodsId ORDER BY tmpMI_stat.AmountOrder DESC, tmpMI_stat.AmountOrderPromo DESC) AS Ord
-                                FROM tmpMI_stat
-                                ORDER BY tmpMI_stat.AmountSale DESC
-                              --LIMIT 1
-                               ) AS tmpMI_stat ON tmpMI_stat.GoodsId = tmpMI_plan.GoodsId
-                     -- Статистика Заявки + Продажи ИТОГО
-                     LEFT JOIN (SELECT tmpMI_stat.GoodsId, SUM (tmpMI_stat.Amount_calc) AS Amount_calc FROM tmpMI_stat GROUP BY tmpMI_stat.GoodsId
-                               ) AS tmpMI_stat_total ON tmpMI_stat_total.GoodsId = tmpMI_plan.GoodsId
-                     -- уже сохраненные - нужен Id
-                     LEFT JOIN tmpMI_Master ON tmpMI_Master.GoodsId     = tmpMI_stat.GoodsId
-                                           AND tmpMI_Master.GoodsKindId = tmpMI_stat.GoodsKindId
-                                         --AND 1=0
-                     -- округление для ШТ.
-                     LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                          ON ObjectLink_Goods_Measure.ObjectId = tmpMI_plan.GoodsId
-                                         AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
-                WHERE CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
-                           THEN
-                              CAST (CASE -- есть продажи - распределяем tmpMI_plan
-                                         WHEN tmpMI_stat_total.Amount_calc <> 0
-                                              THEN tmpMI_plan.Amount * tmpMI_stat.Amount_calc / tmpMI_stat_total.Amount_calc
-                                         -- запишем в первый
-                                         WHEN tmpMI_stat.Ord = 1
-                                              THEN tmpMI_plan.Amount
-                                         ELSE 0
-                                    END AS NUMERIC (16,0))
-                           ELSE
-                              CAST (CASE -- есть продажи - распределяем
-                                         WHEN tmpMI_stat_total.Amount_calc <> 0
-                                              THEN tmpMI_plan.Amount * tmpMI_stat.Amount_calc / tmpMI_stat_total.Amount_calc
-                                         -- запишем в первый
-                                         WHEN tmpMI_stat.Ord = 1
-                                              THEN tmpMI_plan.Amount
-                                         ELSE 0
-                                    END AS NUMERIC (16,2))
-                      END IS NULL)
-     THEN
-         RAISE EXCEPTION 'Ошибка. Пустое расчетное значение для <%>.'
-                       , (SELECT lfGet_Object_ValueData (tmpMI_plan.GoodsId) || '  ' || lfGet_Object_ValueData_sh (CASE WHEN tmpMI_stat.GoodsKindId > 0 THEN tmpMI_stat.GoodsKindId ELSE zc_GoodsKind_Basis() END)
-                          FROM tmpMI_plan
-                               -- Статистика Заявки + Продажи по видам упаковки
-                               LEFT JOIN (SELECT tmpMI_stat.*
-                                                 -- № п/п, т.к. если продаж нет - запишем в первый
-                                               , ROW_NUMBER() OVER (PARTITION BY tmpMI_stat.GoodsId ORDER BY tmpMI_stat.AmountOrder DESC, tmpMI_stat.AmountOrderPromo DESC) AS Ord
-                                          FROM tmpMI_stat
-                                          ORDER BY tmpMI_stat.AmountSale DESC
-                                        --LIMIT 1
-                                         ) AS tmpMI_stat ON tmpMI_stat.GoodsId = tmpMI_plan.GoodsId
-                               -- Статистика Заявки + Продажи ИТОГО
-                               LEFT JOIN (SELECT tmpMI_stat.GoodsId, SUM (tmpMI_stat.Amount_calc) AS Amount_calc FROM tmpMI_stat GROUP BY tmpMI_stat.GoodsId
-                                         ) AS tmpMI_stat_total ON tmpMI_stat_total.GoodsId = tmpMI_plan.GoodsId
-                               -- уже сохраненные - нужен Id
-                               LEFT JOIN tmpMI_Master ON tmpMI_Master.GoodsId     = tmpMI_stat.GoodsId
-                                                     AND tmpMI_Master.GoodsKindId = tmpMI_stat.GoodsKindId
-                                                   --AND 1=0
-                               -- округление для ШТ.
-                               LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                                    ON ObjectLink_Goods_Measure.ObjectId = tmpMI_plan.GoodsId
-                                                   AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
-                          WHERE CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
-                                     THEN
-                                        CAST (CASE -- есть продажи - распределяем tmpMI_plan
-                                                   WHEN tmpMI_stat_total.Amount_calc <> 0
-                                                        THEN tmpMI_plan.Amount * tmpMI_stat.Amount_calc / tmpMI_stat_total.Amount_calc
-                                                   -- запишем в первый
-                                                   WHEN tmpMI_stat.Ord = 1
-                                                        THEN tmpMI_plan.Amount
-                                                   ELSE 0
-                                              END AS NUMERIC (16,0))
-                                     ELSE
-                                        CAST (CASE -- есть продажи - распределяем
-                                                   WHEN tmpMI_stat_total.Amount_calc <> 0
-                                                        THEN tmpMI_plan.Amount * tmpMI_stat.Amount_calc / tmpMI_stat_total.Amount_calc
-                                                   -- запишем в первый
-                                                   WHEN tmpMI_stat.Ord = 1
-                                                        THEN tmpMI_plan.Amount
-                                                   ELSE 0
-                                              END AS NUMERIC (16,2))
-                                END IS NULL
-                          LIMIT 1
-                         );
-     END IF;
 
 
      -- MI_Master - распределяем - План по видам упаковки (детализация)
      PERFORM lpInsert_MI_OrderGoodsDetail_Master(inId                       := tmpMI_Master.Id
                                                , inMovementId               := vbMovementId
                                                , inGoodsId                  := tmpMI_plan.GoodsId
-                                               , inGoodsKindId              := CASE WHEN tmpMI_stat.GoodsKindId > 0 THEN tmpMI_stat.GoodsKindId ELSE zc_GoodsKind_Basis() END
-                                               , inAmount                   := CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
-                                                                                    THEN
-                                                                                       CAST (CASE -- есть продажи - распределяем tmpMI_plan
-                                                                                                  WHEN tmpMI_stat_total.Amount_calc <> 0
-                                                                                                       THEN tmpMI_plan.Amount * tmpMI_stat.Amount_calc / tmpMI_stat_total.Amount_calc
-                                                                                                  -- запишем в первый
-                                                                                                  WHEN tmpMI_stat.Ord = 1
-                                                                                                       THEN tmpMI_plan.Amount
-                                                                                                  ELSE 0
-                                                                                             END AS NUMERIC (16,0))
-                                                                                    ELSE
-                                                                                       CAST (CASE -- есть продажи - распределяем
-                                                                                                  WHEN tmpMI_stat_total.Amount_calc <> 0
-                                                                                                       THEN tmpMI_plan.Amount * tmpMI_stat.Amount_calc / tmpMI_stat_total.Amount_calc
-                                                                                                  -- запишем в первый
-                                                                                                  WHEN tmpMI_stat.Ord = 1
-                                                                                                       THEN tmpMI_plan.Amount
-                                                                                                  ELSE 0
-                                                                                             END AS NUMERIC (16,2))
-                                                                               END
-                                               , inAmountForecast           := COALESCE (tmpMI_stat.AmountSale,0)       ::TFloat
-                                               , inAmountForecastOrder      := COALESCE (tmpMI_stat.AmountOrder,0)      ::TFloat
-                                               , inAmountForecastPromo      := COALESCE (tmpMI_stat.AmountSalePromo,0)  ::TFloat
-                                               , inAmountForecastOrderPromo := COALESCE (tmpMI_stat.AmountOrderPromo,0) ::TFloat
+                                               , inGoodsKindId              := CASE WHEN tmpMI_plan.GoodsKindId > 0 THEN tmpMI_plan.GoodsKindId ELSE zc_GoodsKind_Basis() END
+                                               , inAmount                   := tmpMI_plan.Amount
+                                               , inAmountForecast           := 0
+                                               , inAmountForecastOrder      := 0
+                                               , inAmountForecastPromo      := 0
+                                               , inAmountForecastOrderPromo := 0
                                                , inUserId                   := vbUserId
                                                 )
      FROM tmpMI_plan
-          -- Статистика Заявки + Продажи по видам упаковки
-          LEFT JOIN (SELECT tmpMI_stat.*
-                            -- № п/п, т.к. если продаж нет - запишем в первый
-                          , ROW_NUMBER() OVER (PARTITION BY tmpMI_stat.GoodsId ORDER BY tmpMI_stat.AmountOrder DESC, tmpMI_stat.AmountOrderPromo DESC) AS Ord
-                     FROM tmpMI_stat
-                     ORDER BY tmpMI_stat.AmountSale DESC
-                   --LIMIT 1
-                    ) AS tmpMI_stat ON tmpMI_stat.GoodsId = tmpMI_plan.GoodsId
-          -- Статистика Заявки + Продажи ИТОГО
-          LEFT JOIN (SELECT tmpMI_stat.GoodsId, SUM (tmpMI_stat.Amount_calc) AS Amount_calc FROM tmpMI_stat GROUP BY tmpMI_stat.GoodsId
-                    ) AS tmpMI_stat_total ON tmpMI_stat_total.GoodsId = tmpMI_plan.GoodsId
           -- уже сохраненные - нужен Id
-          LEFT JOIN tmpMI_Master ON tmpMI_Master.GoodsId     = tmpMI_stat.GoodsId
-                                AND tmpMI_Master.GoodsKindId = tmpMI_stat.GoodsKindId
+          LEFT JOIN tmpMI_Master ON tmpMI_Master.GoodsId     = tmpMI_plan.GoodsId
+                                AND tmpMI_Master.GoodsKindId = tmpMI_plan.GoodsKindId
                               --AND 1=0
-          -- округление для ШТ.
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                               ON ObjectLink_Goods_Measure.ObjectId = tmpMI_plan.GoodsId
-                              AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
     ;
 
      -- еще раз - Элементы - План по видам упаковки (детализация)
@@ -587,12 +254,12 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Receipt(),      tmpMI_Master.Id, tmpChildReceiptTable.ReceiptId)
            , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ReceiptBasis(), tmpMI_Master.Id, tmpChildReceiptTable.ReceiptId_parent)
      FROM tmpMI_Master
-          LEFT JOIN tmpMI_stat ON tmpMI_stat.GoodsId     = tmpMI_Master.GoodsId
-                              AND tmpMI_stat.GoodsKindId = tmpMI_Master.GoodsKindId
+          LEFT JOIN tmpMI_plan ON tmpMI_plan.GoodsId     = tmpMI_Master.GoodsId
+                              AND tmpMI_plan.GoodsKindId = tmpMI_Master.GoodsKindId
           LEFT JOIN (SELECT DISTINCT tmpChildReceiptTable.ReceiptId_parent
                                    , tmpChildReceiptTable.ReceiptId
                      FROM tmpChildReceiptTable
-                    ) AS tmpChildReceiptTable ON tmpChildReceiptTable.ReceiptId = tmpMI_stat.ReceiptId
+                    ) AS tmpChildReceiptTable ON tmpChildReceiptTable.ReceiptId = tmpMI_plan.ReceiptId
     ;
 
      -- zc_MI_Child - Элементы - План по видам упаковки (детализация)
@@ -620,9 +287,9 @@ BEGIN
                                                , inUserId     := vbUserId
                                                 )
      FROM tmpMI_Master
-          LEFT JOIN tmpMI_stat ON tmpMI_stat.GoodsId     = tmpMI_Master.GoodsId
-                              AND tmpMI_stat.GoodsKindId = tmpMI_Master.GoodsKindId
-          LEFT JOIN tmpChildReceiptTable ON tmpChildReceiptTable.ReceiptId = tmpMI_stat.ReceiptId
+          LEFT JOIN tmpMI_plan ON tmpMI_plan.GoodsId     = tmpMI_Master.GoodsId
+                              AND tmpMI_plan.GoodsKindId = tmpMI_Master.GoodsKindId
+          LEFT JOIN tmpChildReceiptTable ON tmpChildReceiptTable.ReceiptId = tmpMI_plan.ReceiptId
     ;
 
 
@@ -657,5 +324,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsert_MI_OrderGoodsDetail_Master (inParentId := 21114328 , inOperDateStart := ('28.07.2021')::TDateTime , inOperDateEnd := ('31.08.2021')::TDateTime ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');
--- SELECT * FROM gpInsert_MI_OrderGoodsDetail_Master (inParentId := 20228197 , inOperDateStart := ('27.05.2021')::TDateTime , inOperDateEnd := ('30.06.2021')::TDateTime ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');
+-- SELECT * FROM gpInsert_MI_OrderGoodsDetail_Master (inParentId := 34004540 , inOperDateStart := ('25.02.2026')::TDateTime , inOperDateEnd := ('31.03.2026')::TDateTime ,  inSession := '5');

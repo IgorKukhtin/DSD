@@ -85,7 +85,13 @@ BEGIN
                       );
 
      -- Определяется <Физическое лицо> - кто сформировал визу inReestrKindId
-     vbMemberId_user:= CASE WHEN vbUserId = 5 THEN 9457 ELSE
+     vbMemberId_user:= CASE WHEN vbUserId = 5
+                            THEN (SELECT ObjectLink_User_Member.ChildObjectId
+                                  FROM ObjectLink AS ObjectLink_User_Member
+                                  WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                                    AND ObjectLink_User_Member.ObjectId = 10355814
+                                 )
+                            ELSE
                        (SELECT ObjectLink_User_Member.ChildObjectId
                         FROM ObjectLink AS ObjectLink_User_Member
                         WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
@@ -109,7 +115,9 @@ BEGIN
                         INNER JOIN MovementItemLinkObject AS MILinkObject_PartnerIn
                                                           ON MILinkObject_PartnerIn.MovementItemId = MIDate.MovementItemId
                                                          AND MILinkObject_PartnerIn.DescId         = vbMILinkObjectId 
-                                                         AND MILinkObject_PartnerIn.ObjectId       = vbMemberId_user 
+                                                         AND (MILinkObject_PartnerIn.ObjectId       = vbMemberId_user
+                                                           OR vbUserId IN (5, 9457)
+                                                             )
                         LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
                                                 ON MovementFloat_MovementItemId.ValueData = MIDate.MovementItemId  
                                                AND MovementFloat_MovementItemId.DescId    = zc_MovementFloat_MovementItemId()
