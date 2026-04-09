@@ -73,7 +73,7 @@ BEGIN
            , MovementString_InvNumberPartner.ValueData     AS InvNumberPartner
 
            , MovementFloat_TotalCountKg.ValueData          AS TotalCountKg
-           , MovementFloat_TotalSumm.ValueData             AS TotalSumm
+           , (COALESCE (MovementFloat_TotalSumm.ValueData, 0) + COALESCE (MovementFloat_CorrSumm.ValueData, 0)) :: TFloat AS TotalSumm
 
            , MovementString_InvNumberOrder.ValueData   AS InvNumberOrder
            , Object_RouteGroup.ValueData               AS RouteGroupName
@@ -115,6 +115,11 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId = Movement_Sale.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+            -- Корректировка суммы
+            LEFT JOIN MovementFloat AS MovementFloat_CorrSumm
+                                    ON MovementFloat_CorrSumm.MovementId = Movement_Sale.Id
+                                   AND MovementFloat_CorrSumm.DescId     = zc_MovementFloat_CorrSumm()
+
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
                                     ON MovementFloat_TotalCountKg.MovementId = Movement_Sale.Id
                                    AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
