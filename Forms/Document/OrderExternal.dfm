@@ -2,6 +2,7 @@ inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')>'
   ClientHeight = 460
   ClientWidth = 1434
+  ExplicitLeft = -253
   ExplicitWidth = 1450
   ExplicitHeight = 499
   PixelsPerInch = 96
@@ -340,12 +341,14 @@ inherited OrderExternalForm: TOrderExternalForm
             Options.Editing = False
             Width = 55
           end
-          object isPriceEDIDiff: TcxGridDBColumn [17]
-            Caption = #1054#1090#1082#1083'.  '#1094'. EDI'
-            DataBinding.FieldName = 'isPriceEDIDiff'
+          object PriceEffie: TcxGridDBColumn [17]
+            Caption = #1062#1077#1085#1072' '#1080#1079' Effie'
+            DataBinding.FieldName = 'PriceEffie'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1089' '#1094#1077#1085#1086#1081' EDI'
             Options.Editing = False
             Width = 55
           end
@@ -564,6 +567,15 @@ inherited OrderExternalForm: TOrderExternalForm
             DataBinding.FieldName = 'ColorB_promo'
             Visible = False
             VisibleForCustomization = False
+            Width = 55
+          end
+          object isPriceEDIDiff: TcxGridDBColumn [41]
+            Caption = #1054#1090#1082#1083'.  '#1094'. EDI'
+            DataBinding.FieldName = 'isPriceEDIDiff'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1089' '#1094#1077#1085#1086#1081' EDI'
+            Options.Editing = False
             Width = 55
           end
         end
@@ -941,11 +953,19 @@ inherited OrderExternalForm: TOrderExternalForm
       Width = 130
     end
     object cbManual: TcxCheckBox
-      Left = 395
+      Left = 392
       Top = 85
       Caption = #1047#1040#1071#1042#1050#1040'-0 ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True
       TabOrder = 46
+      Width = 126
+    end
+    object cbEffie: TcxCheckBox
+      Left = 519
+      Top = 85
+      Caption = 'Effie ('#1076#1072'/'#1085#1077#1090')'
+      Properties.ReadOnly = True
+      TabOrder = 47
       Width = 126
     end
   end
@@ -2687,6 +2707,13 @@ inherited OrderExternalForm: TOrderExternalForm
         Name = 'isManual'
         Value = Null
         Component = cbManual
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isEffie'
+        Value = Null
+        Component = cbEffie
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
