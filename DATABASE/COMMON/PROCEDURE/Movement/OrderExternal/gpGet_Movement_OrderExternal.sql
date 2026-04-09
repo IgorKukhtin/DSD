@@ -36,7 +36,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isAuto Boolean
              , isMask Boolean  -- вернуть обратно False 
              , IsRemains Boolean
-             , isManual Boolean 
+             , isManual Boolean
+             , isEffie Boolean 
              , Comment TVarChar
               )
 AS
@@ -135,6 +136,7 @@ BEGIN
              , CAST (FALSE AS Boolean)                          AS isMask
              , CAST (FALSE AS Boolean)                          AS IsRemains
              , CAST (FALSE AS Boolean)                          AS isManual
+             , CAST (FALSE AS Boolean)                          AS isEffie
              , CAST ('' as TVarChar) 		                    AS Comment 
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
@@ -241,6 +243,7 @@ BEGIN
            , CAST (FALSE AS Boolean)                AS isMask
            , COALESCE (MovementBoolean_Remains.ValueData, FALSE) ::Boolean AS IsRemains
            , COALESCE (MovementBoolean_Manual.ValueData, FALSE)  ::Boolean AS isManual
+           , COALESCE (MovementBoolean_Effie.ValueData, FALSE)   ::Boolean AS isEffie
            , MovementString_Comment.ValueData       AS Comment
 
        FROM Movement
@@ -291,6 +294,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Manual
                                       ON MovementBoolean_Manual.MovementId = Movement.Id
                                      AND MovementBoolean_Manual.DescId = zc_MovementBoolean_Manual()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Effie
+                                      ON MovementBoolean_Effie.MovementId = Movement.Id
+                                     AND MovementBoolean_Effie.DescId = zc_MovementBoolean_Effie()
 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
@@ -392,6 +399,7 @@ ALTER FUNCTION gpGet_Movement_OrderExternal (Integer, TDateTime, TVarChar) OWNER
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 09.04.26         *
  10.10.25         * isManual
  14.06.22         * CarInfo
  25.06.21         * add inMask

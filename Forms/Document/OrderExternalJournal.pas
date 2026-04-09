@@ -147,6 +147,7 @@ type
     bbPrint_OrderCell_Pak_copy2: TdxBarButton;
     bbPrint_OrderCell_Pak_copy3: TdxBarButton;
     isManual: TcxGridDBColumn;
+    isEffie: TcxGridDBColumn;
   private
     { Private declarations }
   public
