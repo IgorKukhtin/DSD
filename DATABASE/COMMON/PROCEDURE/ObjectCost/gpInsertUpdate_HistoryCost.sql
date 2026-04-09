@@ -4266,21 +4266,35 @@ RAISE INFO ' end INSERT INTO HistoryCost .<%>', CLOCK_TIMESTAMP();
                                                                               )
                                             );
 
-         delete FROM HistoryCost WHERE HistoryCost.StartDate = inStartDate and HistoryCost.ContainerId
-         in (
-         select Container_2.Id
-         from Container
-         join ContainerLinkObject as CLO_1 on CLO_1.ContainerId = Container.Id and CLO_1.DescId = zc_ContainerLinkObject_Unit() and CLO_1.ObjectId = zc_Unit_rk()
-         left join ContainerLinkObject as CLO_2 on CLO_2.ContainerId = Container.Id and CLO_2.DescId = zc_ContainerLinkObject_PartionGoods()
-         join Container as Container_2 on Container_2.ParentId = Container.Id
-                                      and Container_2.DescId = 2
-         left join ContainerLinkObject as CLO_22 on CLO_22.ContainerId = Container_2.Id and CLO_22.DescId = zc_ContainerLinkObject_PartionGoods()
-         where Container.DescId = 1
-         and coalesce (CLO_22.ObjectId, 0) <> coalesce (CLO_2.ObjectId, 0)
-         );
+         DELETE FROM HistoryCost WHERE HistoryCost.StartDate = inStartDate and HistoryCost.ContainerId
+         IN (select Container_2.Id
+             from Container
+             join ContainerLinkObject as CLO_1 on CLO_1.ContainerId = Container.Id and CLO_1.DescId = zc_ContainerLinkObject_Unit() and CLO_1.ObjectId = zc_Unit_rk()
+             left join ContainerLinkObject as CLO_2 on CLO_2.ContainerId = Container.Id and CLO_2.DescId = zc_ContainerLinkObject_PartionGoods()
+             join Container as Container_2 on Container_2.ParentId = Container.Id
+                                          and Container_2.DescId = 2
+             left join ContainerLinkObject as CLO_22 on CLO_22.ContainerId = Container_2.Id and CLO_22.DescId = zc_ContainerLinkObject_PartionGoods()
+             where Container.DescId = 1
+             and coalesce (CLO_22.ObjectId, 0) <> coalesce (CLO_2.ObjectId, 0)
+            );
 
 
          RAISE INFO ' end all HistoryCost.<%>', CLOCK_TIMESTAMP();
+
+         DELETE FROM HistoryCost WHERE HistoryCost.StartDate = inStartDate and HistoryCost.Id
+         IN (-- select distinct HistoryCost.ContainerId
+             select distinct HistoryCost.Id
+             from HistoryCost 
+                  JOIN Container AS Container_Summ on Container_Summ.Id = HistoryCost.ContainerId
+                  LEFT JOIN ContainerLinkObject AS CLO_GoodsKind ON CLO_GoodsKind.ContainerId = Container_Summ.Id
+                                                                AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
+                  -- проверка GoodsKindId
+                  LEFT JOIN ContainerLinkObject AS CLO_GoodsKind_count ON CLO_GoodsKind_count.ContainerId = Container_Summ.ParentId
+                                                                      AND CLO_GoodsKind_count.DescId      = zc_ContainerLinkObject_GoodsKind()
+             WHERE inStartDate = StartDate 
+              AND COALESCE (CLO_GoodsKind.ObjectId, 0) <> COALESCE (CLO_GoodsKind_count.ObjectId, 0)
+            );
+
 
      END IF;
 
