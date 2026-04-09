@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_OrderFinance_Email_send_msg(
     IN inParam                Integer,    -- 1 - после руководителя - или только для СБ или менеджерам + Фин. служба, 2 - после СБ - Фин. служба + руководитель + менеджерам, 3 - после проведения - Бухгалтерия
     IN inSession              TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Subject TVarChar, Body TBlob, AddressFrom TVarChar, AddressTo TVarChar
+RETURNS TABLE (Subject TVarChar, Body TBlob, AddressFrom TVarChar, AddressTo Text
              , Host TVarChar, Port TVarChar, UserName TVarChar, Password TVarChar
               )
 AS
@@ -273,7 +273,7 @@ BEGIN
 
                  ELSE COALESCE ('ashtu@ua.fm;' || tmpList_Email.Email_to, 'ashtu@ua.fm')
 
-            END :: TVarChar AS AddressTo
+            END :: Text AS AddressTo
 
           , gpGet_Host.Value     :: TVarChar AS Host
           , gpGet_Port.Value     :: TVarChar AS Port
