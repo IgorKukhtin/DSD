@@ -1,4 +1,4 @@
-unit Report_OrderGoodsDetail_OlapDialog;
+unit Report_OrderGoodsGP_OlapDialog;
 
 interface
 
@@ -22,7 +22,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
 
 type
-  TReport_OrderGoodsDetail_OlapDialogForm = class(TParentForm)
+  TReport_OrderGoodsGP_OlapDialogForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     deEnd: TcxDateEdit;
@@ -57,6 +57,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_OrderGoodsDetail_OlapDialogForm);
+  RegisterClass(TReport_OrderGoodsGP_OlapDialogForm);
 
 end.

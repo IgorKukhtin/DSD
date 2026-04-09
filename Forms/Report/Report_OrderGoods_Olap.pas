@@ -24,7 +24,7 @@ uses
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, cxCustomPivotGrid,
   cxDBPivotGrid, cxLabel, ChoicePeriod, dxBarExtItems, cxCheckBox, dsdGuides,
-  cxButtonEdit, dsdPivotGrid;
+  cxButtonEdit, dsdPivotGrid, dsdCommon;
 
 type
   TReport_OrderGoods_OlapForm = class(TParentForm)
@@ -56,7 +56,6 @@ type
     bbExecuteDialog: TdxBarButton;
     dxBarStatic: TdxBarStatic;
     pvMeasureName: TcxDBPivotGridField;
-    pvSumm: TcxDBPivotGridField;
     cxLabel3: TcxLabel;
     edUnitGroup: TcxButtonEdit;
     cxLabel4: TcxLabel;

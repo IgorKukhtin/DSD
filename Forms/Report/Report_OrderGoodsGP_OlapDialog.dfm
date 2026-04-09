@@ -1,8 +1,8 @@
-object Report_OrderGoodsDetail_OlapDialogForm: TReport_OrderGoodsDetail_OlapDialogForm
+object Report_OrderGoodsGP_OlapDialogForm: TReport_OrderGoodsGP_OlapDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1086#1082' ('#1054#1051#1040#1055')> '#1044#1077#1090#1072#1083#1100#1085#1086' '#1089#1099#1088#1100#1077
+  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1086#1082' ('#1043#1055')>'
   ClientHeight = 289
   ClientWidth = 398
   Color = clBtnFace
@@ -39,7 +39,7 @@ object Report_OrderGoodsDetail_OlapDialogForm: TReport_OrderGoodsDetail_OlapDial
   object deEnd: TcxDateEdit
     Left = 121
     Top = 27
-    EditValue = 42005d
+    EditValue = 46023d
     Properties.ShowTime = False
     TabOrder = 2
     Width = 90
@@ -47,7 +47,7 @@ object Report_OrderGoodsDetail_OlapDialogForm: TReport_OrderGoodsDetail_OlapDial
   object deStart: TcxDateEdit
     Left = 11
     Top = 27
-    EditValue = 42005d
+    EditValue = 46023d
     Properties.ShowTime = False
     TabOrder = 3
     Width = 90

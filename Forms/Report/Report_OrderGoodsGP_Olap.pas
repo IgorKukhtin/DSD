@@ -1,4 +1,4 @@
-unit Report_OrderGoodsDetail_Olap;
+unit Report_OrderGoodsGP_Olap;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   cxButtonEdit, dsdPivotGrid, dsdCommon;
 
 type
-  TReport_OrderGoodsDetail_OlapForm = class(TParentForm)
+  TReport_OrderGoodsGP_OlapForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -56,6 +56,7 @@ type
     bbExecuteDialog: TdxBarButton;
     dxBarStatic: TdxBarStatic;
     pvMeasureName: TcxDBPivotGridField;
+    pvSumm: TcxDBPivotGridField;
     cxLabel3: TcxLabel;
     edUnitGroup: TcxButtonEdit;
     cxLabel4: TcxLabel;
@@ -79,6 +80,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_OrderGoodsDetail_OlapForm);
+  RegisterClass(TReport_OrderGoodsGP_OlapForm);
 
 end.

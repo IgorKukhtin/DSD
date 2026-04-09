@@ -198,9 +198,9 @@ inherited MainForm: TMainForm
     object actReport_OrderGoodsDetail_Olap: TdsdOpenForm [3]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1055#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1086#1082' ('#1044#1077#1090#1072#1083#1100#1085#1086' '#1089#1099#1088#1100#1077')'
-      FormName = 'TReport_OrderGoodsDetail_OlapForm'
-      FormNameParam.Value = 'TReport_OrderGoodsDetail_OlapForm'
+      Caption = #1054#1090#1095#1077#1090' '#1055#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1086#1082' ('#1043#1055')'
+      FormName = 'TReport_OrderGoodsGP_OlapForm'
+      FormNameParam.Value = 'TReport_OrderGoodsGP_OlapForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -734,7 +734,7 @@ inherited MainForm: TMainForm
     object actReport_OrderGoods_Olap: TdsdOpenForm [38]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1055#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1086#1082
+      Caption = #1054#1090#1095#1077#1090' '#1055#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1086#1082' ('#1057#1099#1088#1100#1077')'
       FormName = 'TReport_OrderGoods_OlapForm'
       FormNameParam.Value = 'TReport_OrderGoods_OlapForm'
       FormNameParam.DataType = ftString
