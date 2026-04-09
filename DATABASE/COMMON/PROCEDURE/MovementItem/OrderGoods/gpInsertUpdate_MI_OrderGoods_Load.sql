@@ -72,7 +72,7 @@ BEGIN
                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                WHERE MovementItem.MovementId = 33897276 --inMovementId
+                WHERE MovementItem.MovementId = inMovementId
                    AND MovementItem.DescId = zc_MI_Master()
                    AND MovementItem.isErased = FALSE
                    AND MovementItem.ObjectId = vbGoodsId
@@ -100,16 +100,16 @@ BEGIN
 
      -- сохранили <Ёлемент документа>
      PERFORM lpInsertUpdate_MovementItem_OrderGoods (ioId            := COALESCE (vbMIId,0) ::Integer
-                                                   , inMovementId    := 33897276  -- inMovementId
+                                                   , inMovementId    := inMovementId
                                                    , inGoodsId       := vbGoodsId
                                                    , inGoodsKindId   := vbGoodsKindId
-                                                   , inAmount        := CASE WHEN ObjectLink_Measure.ChildObjectId = zc_Measure_Sh()      -- дл€ шт надо из веса переводить в шт и сохран€ть Amount
-                                                                             THEN CASE WHEN COALESCE (inAmount,0) <> 0 THEN inAmount 
-                                                                                        ELSE CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 THEN inAmountWeight / ObjectFloat_Weight.ValueData ELSE inAmountWeight END 
-                                                                                  END
-                                                                             ELSE inAmountWeight
-                                                                        END       ::TFloat
-                                                   , inAmountSecond  := 0         ::TFloat
+                                                   , inAmount        := inAmountWeight ::TFloat
+                                                   , inAmountSecond  := CAST (CASE WHEN ObjectLink_Measure.ChildObjectId = zc_Measure_Sh()      -- дл€ шт надо из веса переводить в шт и сохран€ть Amount
+                                                                                   THEN CASE WHEN COALESCE (inAmount,0) <> 0 THEN inAmount 
+                                                                                              ELSE CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0 THEN inAmountWeight / ObjectFloat_Weight.ValueData ELSE inAmountWeight END 
+                                                                                        END
+                                                                                   ELSE 0
+                                                                              END AS NUMERIC(16,0))       ::TFloat
                                                    , inPrice         := vbPrice   ::TFloat
                                                    , inComment       := ''        ::TVarChar
                                                    , inUserId        := vbUserId
@@ -127,7 +127,7 @@ BEGIN
      THEN
          RAISE EXCEPTION 'ќшибка.ok.';
      END IF;
-
+      
 
 END;
 $BODY$
