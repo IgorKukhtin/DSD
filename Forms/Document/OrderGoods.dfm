@@ -417,9 +417,6 @@ inherited OrderGoodsForm: TOrderGoodsForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1043#1055
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridDetailMaster: TcxGrid
         Left = 0
         Top = 0
@@ -1217,6 +1214,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
     Width = 1100
     Height = 100
     TabOrder = 3
+    ExplicitTop = 4
     ExplicitWidth = 1100
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
@@ -1253,12 +1251,12 @@ inherited OrderGoodsForm: TOrderGoodsForm
       Width = 165
     end
     object cxLabel3: TcxLabel
-      Left = 269
+      Left = 277
       Top = 5
       Caption = #1042#1080#1076' '#1087#1077#1088#1080#1086#1076#1072' '#1087#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103
     end
     object edOrderPeriodKind: TcxButtonEdit
-      Left = 269
+      Left = 277
       Top = 23
       Properties.Buttons = <
         item
@@ -1266,7 +1264,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
           Kind = bkEllipsis
         end>
       TabOrder = 7
-      Width = 185
+      Width = 177
     end
     object edUnit: TcxButtonEdit
       Left = 179
@@ -1366,20 +1364,23 @@ inherited OrderGoodsForm: TOrderGoodsForm
       TabOrder = 19
       Width = 119
     end
+    object edServiceDate: TcxDateEdit
+      Left = 179
+      Top = 23
+      EditValue = 41640d
+      Properties.DisplayFormat = 'mmmm yyyy'
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 20
+      Width = 89
+    end
   end
   object cxLabel5: TcxLabel [2]
     Left = 179
     Top = 5
-    Caption = #1052#1077#1089#1103#1094
+    Caption = #1052#1077#1089#1103#1094' '#1087#1083#1072#1085'-'#1080#1103
   end
-  object edMonth: TcxTextEdit [3]
-    Left = 179
-    Top = 23
-    Properties.ReadOnly = True
-    TabOrder = 7
-    Width = 82
-  end
-  object edOperDateEnd: TcxDateEdit [4]
+  object edOperDateEnd: TcxDateEdit [3]
     Left = 909
     Top = 63
     Hint = #1044#1072#1090#1072' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1072' ('#1082#1086#1085#1077#1095#1085'.)'
@@ -1388,20 +1389,20 @@ inherited OrderGoodsForm: TOrderGoodsForm
     Properties.SaveTime = False
     Properties.ShowTime = False
     ShowHint = True
-    TabOrder = 8
+    TabOrder = 7
     Width = 146
   end
-  object cxLabel9: TcxLabel [5]
+  object cxLabel9: TcxLabel [4]
     Left = 909
     Top = 45
     Caption = #1044#1072#1090#1072' '#1089#1090#1072#1090'. ('#1082#1086#1085#1077#1095#1085'.)'
   end
-  object cxLabel10: TcxLabel [6]
+  object cxLabel10: TcxLabel [5]
     Left = 463
     Top = 45
     Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088
   end
-  object edOrderGoods: TcxButtonEdit [7]
+  object edOrderGoods: TcxButtonEdit [6]
     Left = 463
     Top = 63
     Properties.Buttons = <
@@ -1412,7 +1413,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
     Properties.ClickKey = 0
     Properties.HideSelection = False
     Properties.ReadOnly = True
-    TabOrder = 11
+    TabOrder = 10
     Width = 149
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -2403,10 +2404,10 @@ inherited OrderGoodsForm: TOrderGoodsForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'MonthName'
+        Name = 'ServiceDate'
         Value = Null
-        Component = edMonth
-        DataType = ftString
+        Component = edServiceDate
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
@@ -2537,6 +2538,14 @@ inherited OrderGoodsForm: TOrderGoodsForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inServiceDate'
+        Value = Null
+        Component = edServiceDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inOrderPeriodKindId'
         Value = ''
         Component = GuidesOrderPeriodKind
@@ -2618,6 +2627,7 @@ inherited OrderGoodsForm: TOrderGoodsForm
         Control = edOrderGoods
       end
       item
+        Control = edServiceDate
       end
       item
       end
@@ -2870,8 +2880,8 @@ inherited OrderGoodsForm: TOrderGoodsForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 304
-    Top = 8
+    Left = 312
+    Top = 32
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'

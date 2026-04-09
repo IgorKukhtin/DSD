@@ -13,7 +13,8 @@ CREATE OR REPLACE FUNCTION gpReport_OrderGoodsDetail_Olap (
     IN inSession            TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
-             , MonthDate TDateTime
+             --, MonthDate TDateTime 
+             , ServiceDate TDateTime
              , OrderPeriodKindName TVarChar
              , PriceListName TVarChar
              , UnitName TVarChar
@@ -76,7 +77,7 @@ BEGIN
          , tmpMovement AS (SELECT Movement.*
                                 , MovementLinkObject_PriceList.ObjectId  AS PriceListId
                                 , MovementLinkObject_Unit.ObjectId       AS UnitId
-                                , DATE_TRUNC ('Month',Movement.OperDate) AS MonthDate
+                                --, DATE_TRUNC ('Month',Movement.OperDate) AS MonthDate
                            FROM Movement
                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
                                                              ON MovementLinkObject_PriceList.MovementId = Movement.Id
@@ -99,7 +100,11 @@ BEGIN
                                        AND MovementLinkObject.DescId IN (zc_MovementLinkObject_OrderPeriodKind()
                                                                        , zc_MovementLinkObject_OrderGoods())
                                     )
-
+         , tmpMovementDate AS (SELECT MovementDate.*
+                               FROM MovementDate
+                               WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                 AND MovementDate.DescId IN (zc_MovementDate_ServiceDate())
+                              )
           --
          , tmpMovementDetail AS (SELECT Movement.* 
                                  FROM Movement
@@ -298,7 +303,8 @@ BEGIN
       SELECT Movement.Id                            AS MovementId
            , Movement.InvNumber                     AS InvNumber
            , Movement.OperDate  ::TDateTime         AS OperDate
-           , Movement.MonthDate ::TDateTime         AS MonthDate
+           --, Movement.MonthDate ::TDateTime         AS MonthDate
+           , COALESCE (MovementDate_ServiceDate.ValueData, DATE_TRUNC ('Month', Movement.OperDate)) ::TDateTime AS ServiceDate
 
            , Object_OrderPeriodKind.ValueData       AS OrderPeriodKindName
            , Object_PriceList.ValueData  ::TVarChar AS PriceListName
@@ -358,6 +364,10 @@ BEGIN
                                            AND MovementLinkObject_OrderGoods.DescId = zc_MovementLinkObject_OrderGoods()
             LEFT JOIN Object AS Object_OrderGoods ON Object_OrderGoods.Id = MovementLinkObject_OrderGoods.ObjectId
 
+            LEFT JOIN tmpMovementDate AS MovementDate_ServiceDate
+                                      ON MovementDate_ServiceDate.MovementId = Movement.Id
+                                     AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
+
             INNER JOIN tmpData AS MovementItem ON MovementItem.MovementId_Parent = Movement.Id
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.GoodsId
@@ -384,7 +394,7 @@ BEGIN
      GROUP BY Movement.Id
            , Movement.InvNumber
            , Movement.OperDate
-           , Movement.MonthDate
+           , COALESCE (MovementDate_ServiceDate.ValueData, DATE_TRUNC ('Month', Movement.OperDate))
            , Object_OrderPeriodKind.Id
            , Object_OrderPeriodKind.ValueData
            , Object_PriceList.Id

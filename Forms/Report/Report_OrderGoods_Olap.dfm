@@ -141,12 +141,14 @@ object Report_OrderGoods_OlapForm: TReport_OrderGoods_OlapForm
     Groups = <>
     OptionsView.RowGrandTotalWidth = 456
     TabOrder = 1
-    object pvMonthDate: TcxDBPivotGridField
+    object pvServiceDate: TcxDBPivotGridField
       Area = faColumn
       AreaIndex = 0
       IsCaptionAssigned = True
-      Caption = #1052#1077#1089#1103#1094
-      DataBinding.FieldName = 'MonthDate'
+      Caption = #1052#1077#1089#1103#1094' '#1087#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103
+      DataBinding.FieldName = 'ServiceDate'
+      PropertiesClassName = 'TcxDateEditProperties'
+      Properties.DisplayFormat = 'mmmm yyyy'
       Visible = True
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end

@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_OrderGoods(
     IN inOperDate          TDateTime, -- дата Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, MonthName TVarChar
+RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, ServiceDate TDateTime --MonthName TVarChar
              , StatusCode Integer, StatusName TVarChar
              , OrderPeriodKindId Integer, OrderPeriodKindName TVarChar
              , PriceListId Integer, PriceListName TVarChar
@@ -33,7 +33,8 @@ BEGIN
                0 AS Id
              , CAST (NEXTVAL ('Movement_OrderGoods_seq') AS TVarChar) AS InvNumber
              , DATE_TRUNC ('Month',inOperDate)       ::TDateTime AS OperDate
-             , zfCalc_MonthName (inOperDate)         ::TVarChar AS MonthName
+             , DATE_TRUNC ('Month',inOperDate)       ::TDateTime AS ServiceDate
+             --, zfCalc_MonthName (inOperDate)         ::TVarChar AS MonthName
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
 
@@ -64,7 +65,8 @@ BEGIN
              Movement.Id                            AS Id
            , Movement.InvNumber                     AS InvNumber
            , Movement.OperDate ::TDateTime          AS OperDate
-           , zfCalc_MonthName (Movement.OperDate) ::TVarChar AS MonthName
+           --, zfCalc_MonthName (Movement.OperDate) ::TVarChar AS MonthName 
+           , COALESCE (MovementDate_ServiceDate.ValueData, DATE_TRUNC ('Month',inOperDate)) ::TDateTime AS ServiceDate
            , Object_Status.ObjectCode               AS StatusCode
            , Object_Status.ValueData                AS StatusName
 
@@ -86,6 +88,10 @@ BEGIN
            , MovementDate_Insert.ValueData          AS InsertDate
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN MovementDate AS MovementDate_ServiceDate
+                                   ON MovementDate_ServiceDate.MovementId = Movement.Id
+                                  AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
 
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
@@ -131,6 +137,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.04.26         *
  02.04.26         *
  08.06.21         * 
 */

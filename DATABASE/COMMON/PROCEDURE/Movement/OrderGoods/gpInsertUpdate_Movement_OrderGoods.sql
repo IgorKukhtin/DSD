@@ -2,12 +2,14 @@
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderGoods (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderGoods (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderGoods (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderGoods (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderGoods (Integer, TVarChar, TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderGoods(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
  INOUT ioInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
+    IN inServiceDate         TDateTime , -- Месяц планирования
     IN inOrderPeriodKindId   Integer   , --
     IN inPriceListId         Integer   , --
     IN inUnitId              Integer   , --
@@ -28,6 +30,7 @@ BEGIN
       FROM lpInsertUpdate_Movement_OrderGoods (ioId          := ioId
                                             , ioInvNumber    := ioInvNumber
                                             , inOperDate     := inOperDate
+                                            , inServiceDate  := inServiceDate
                                             , inOrderPeriodKindId := inOrderPeriodKindId
                                             , inPriceListId  := inPriceListId
                                             , inUnitId       := inUnitId
@@ -43,6 +46,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.04.26         *
  02.04.26         *
  24.06.21         *
  08.06.21         *

@@ -190,13 +190,17 @@ inherited OrderGoodsJournalForm: TOrderGoodsJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 97
           end
-          object MonthName: TcxGridDBColumn [2]
-            Caption = #1052#1077#1089#1103#1094
-            DataBinding.FieldName = 'MonthName'
+          object ServiceDate: TcxGridDBColumn [2]
+            Caption = #1052#1077#1089#1103#1094' '#1087#1083#1072#1085'-'#1080#1103
+            DataBinding.FieldName = 'ServiceDate'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DisplayFormat = 'mmmm yyyy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1052#1077#1089#1103#1094' '#1087#1083#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103
             Options.Editing = False
-            Width = 70
+            Width = 90
           end
           inherited colInvNumber: TcxGridDBColumn [3]
             Caption = #8470' '#1076#1086#1082'.'
