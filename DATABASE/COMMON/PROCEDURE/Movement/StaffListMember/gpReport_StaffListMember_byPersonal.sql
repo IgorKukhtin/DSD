@@ -223,7 +223,8 @@ BEGIN
                                                            
                      WHERE (tmpViewPersonal.isMain = True --основное место работы и есть дата перевода
                            AND COALESCE (tmpViewPersonal.DateSend,zc_DateStart()) <> zc_DateStart()
-                          )      
+                          )  
+and  COALESCE (tmpSend.PersonalId,tmpSend_erased.PersonalId, tmpSend2.PersonalId, tmpSend3.PersonalId) IS NOT NULL    
                   )
      , tmpOut AS ( --уволенные - не удаленные
                    SELECT tmpViewPersonal.DateOut AS OperDate
@@ -586,7 +587,8 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_StaffListMember_byPersonal (inUnitId := 8439, inMemberId:= 0, inIsErased:=true, inSession:= zfCalc_UserAdmin())
+-- 
+SELECT * FROM gpReport_StaffListMember_byPersonal (inUnitId := 8428, inMemberId:= 7659382, inIsErased:=true, inSession:= zfCalc_UserAdmin())
 
  /*  
       заполнение документов ШР сотрудники    
@@ -596,7 +598,7 @@ $BODY$
  WITH 
  tmpData AS (
             SELECT tmp.*
-            FROM gpReport_StaffListMember_byPersonal (inUnitId := 8439, inMemberId:= 0 , inIsErased:=true, inSession:= zfCalc_UserAdmin())  AS tmp
+            FROM gpReport_StaffListMember_byPersonal (inUnitId := 8428, inMemberId:= 7659382 , inIsErased:=true, inSession:= zfCalc_UserAdmin())  AS tmp
            -- WHERE tmp.MemberId <> 11121446 
             )
 
@@ -642,5 +644,15 @@ $BODY$
 select *--lpDelete_Movement (tmpMovement22.Id , '9457') 
 from tmpMovement22
 limit 1
+
+34023769 
+34023768 
      
+select lpDelete_Movement (34037286 , '9457') 
+
+34037283 
+34037284 
+34037285 
+34037286 
+
      */

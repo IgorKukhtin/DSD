@@ -45,7 +45,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , GoodsTagName          TVarChar
              , GoodsPlatformName     TVarChar
              , GoodsGroupAnalystName TVarChar
-             , InfoMoneyName_all     TVarChar
+             , InfoMoneyName_parent  TVarChar
              , isTop Boolean
              )   
 AS
@@ -434,7 +434,7 @@ BEGIN
            , tmpGoodsParam.GoodsGroupAnalystName
            , CASE WHEN tmpTOP.GoodsId IS NULL THEN FALSE ELSE TRUE END
            , Object_GoodsGroup.ValueData
-           , tmpGoodsParam.InfoMoneyName_all
+           , tmpGoodsParam.InfoMoneyName AS InfoMoneyName_parent
   ;
          
 END;

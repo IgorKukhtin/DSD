@@ -294,51 +294,19 @@ object Report_OrderGoods_OlapForm: TReport_OrderGoods_OlapForm
       Width = 80
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
-    object pvInfoMoneyCode: TcxDBPivotGridField
-      AreaIndex = 22
-      IsCaptionAssigned = True
-      Caption = #1050#1086#1076' '#1059#1055
-      DataBinding.FieldName = 'InfoMoneyCode'
-      Width = 55
-      UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
-    end
-    object pvInfoMoneyGroupName: TcxDBPivotGridField
-      AreaIndex = 23
-      IsCaptionAssigned = True
-      Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-      DataBinding.FieldName = 'InfoMoneyGroupName'
-      Width = 55
-      UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
-    end
-    object pvInfoMoneyDestinationName: TcxDBPivotGridField
-      AreaIndex = 24
-      IsCaptionAssigned = True
-      Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
-      DataBinding.FieldName = 'InfoMoneyDestinationName'
-      Width = 55
-      UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
-    end
     object pvInfoMoneyName: TcxDBPivotGridField
-      AreaIndex = 25
+      AreaIndex = 22
       IsCaptionAssigned = True
       Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
       DataBinding.FieldName = 'InfoMoneyName'
       Width = 55
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
-    object pvInfoMoneyName_all: TcxDBPivotGridField
-      AreaIndex = 26
+    object pvInfoMoneyName_parent: TcxDBPivotGridField
+      AreaIndex = 23
       IsCaptionAssigned = True
-      Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
-      DataBinding.FieldName = 'InfoMoneyName_all'
-      Width = 55
-      UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
-    end
-    object pvInfoMoneyName_all_parent: TcxDBPivotGridField
-      AreaIndex = 27
-      IsCaptionAssigned = True
-      Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1043#1055
-      DataBinding.FieldName = 'InfoMoneyName_all_parent'
+      Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' '#1043#1055
+      DataBinding.FieldName = 'InfoMoneyName_parent'
       Width = 55
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
