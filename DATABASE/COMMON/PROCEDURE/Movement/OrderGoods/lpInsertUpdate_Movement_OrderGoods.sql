@@ -2,12 +2,15 @@
 
 --DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderGoods (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderGoods (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TVarChar, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderGoods (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TVarChar, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderGoods (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderGoods (Integer, TVarChar, TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar, Integer);
+
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderGoods(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
  INOUT ioInvNumber           TVarChar  , -- Номер документа
-    IN inOperDate            TDateTime , -- Дата документа
+    IN inOperDate            TDateTime , -- Дата документа 
+    IN inServiceDate         TDateTime , -- Месяц планирования
     IN inOrderPeriodKindId   Integer   , --
     IN inPriceListId         Integer   , --
     IN inUnitId              Integer   , --
@@ -25,6 +28,9 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
      END IF;
+
+     -- расчет - 1-ое число месяца
+     inServiceDate:= DATE_TRUNC ('MONTH', inServiceDate);
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -45,6 +51,9 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, inUnitId);
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_OrderGoods(), ioId, inOrderGoodsId);
+
+     -- сохранили свойство <Месяц планирования>
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_ServiceDate(), ioId, inServiceDate);
 
      -- Комментарий
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
@@ -72,6 +81,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.04.26         *
  02.04.26         *
  24.06.21         *
  08.06.21         *

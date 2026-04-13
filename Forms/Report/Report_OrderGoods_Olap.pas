@@ -47,7 +47,7 @@ type
     pvGoodsName: TcxDBPivotGridField;
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
-    pvMonthDate: TcxDBPivotGridField;
+    pvServiceDate: TcxDBPivotGridField;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
     PivotAddOn: TPivotAddOn;

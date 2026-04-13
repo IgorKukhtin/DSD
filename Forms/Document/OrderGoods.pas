@@ -88,7 +88,6 @@ type
     ChildDBViewAddOn: TdsdDBViewAddOn;
     spSelect_Child: TdsdStoredProc;
     cxLabel5: TcxLabel;
-    edMonth: TcxTextEdit;
     cxTabSheet1: TcxTabSheet;
     cxTabSheet2: TcxTabSheet;
     DSDetailMaster: TDataSource;
@@ -161,6 +160,7 @@ type
     actDoLoad: TExecuteImportSettingsAction;
     actLoadExcel: TMultiAction;
     bbLoadExcel: TdxBarButton;
+    edServiceDate: TcxDateEdit;
   private
     { Private declarations }
   public
