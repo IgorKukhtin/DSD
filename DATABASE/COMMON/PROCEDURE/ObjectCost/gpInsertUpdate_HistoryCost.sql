@@ -4281,22 +4281,23 @@ RAISE INFO ' end INSERT INTO HistoryCost .<%>', CLOCK_TIMESTAMP();
 
          RAISE INFO ' end all HistoryCost.<%>', CLOCK_TIMESTAMP();
 
-         DELETE FROM HistoryCost WHERE HistoryCost.StartDate = inStartDate and HistoryCost.Id
-         IN (-- select distinct HistoryCost.ContainerId
-             select distinct HistoryCost.Id
-             from HistoryCost 
-                  JOIN Container AS Container_Summ on Container_Summ.Id = HistoryCost.ContainerId
-                  LEFT JOIN ContainerLinkObject AS CLO_GoodsKind ON CLO_GoodsKind.ContainerId = Container_Summ.Id
-                                                                AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
-                  -- проверка GoodsKindId
-                  LEFT JOIN ContainerLinkObject AS CLO_GoodsKind_count ON CLO_GoodsKind_count.ContainerId = Container_Summ.ParentId
-                                                                      AND CLO_GoodsKind_count.DescId      = zc_ContainerLinkObject_GoodsKind()
-             WHERE inStartDate = StartDate 
-              AND COALESCE (CLO_GoodsKind.ObjectId, 0) <> COALESCE (CLO_GoodsKind_count.ObjectId, 0)
-            );
-
-
      END IF;
+
+     -- ДЛЯ ВСЕХ
+     DELETE FROM HistoryCost WHERE HistoryCost.StartDate = inStartDate and HistoryCost.Id
+     IN (-- select distinct HistoryCost.ContainerId
+         select distinct HistoryCost.Id
+         from HistoryCost 
+              JOIN Container AS Container_Summ on Container_Summ.Id = HistoryCost.ContainerId
+              LEFT JOIN ContainerLinkObject AS CLO_GoodsKind ON CLO_GoodsKind.ContainerId = Container_Summ.Id
+                                                            AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
+              -- проверка GoodsKindId
+              LEFT JOIN ContainerLinkObject AS CLO_GoodsKind_count ON CLO_GoodsKind_count.ContainerId = Container_Summ.ParentId
+                                                                  AND CLO_GoodsKind_count.DescId      = zc_ContainerLinkObject_GoodsKind()
+         WHERE inStartDate = StartDate 
+          AND COALESCE (CLO_GoodsKind.ObjectId, 0) <> COALESCE (CLO_GoodsKind_count.ObjectId, 0)
+        );
+
 
 --    RAISE EXCEPTION 'Ошибка.<ok>';
 
