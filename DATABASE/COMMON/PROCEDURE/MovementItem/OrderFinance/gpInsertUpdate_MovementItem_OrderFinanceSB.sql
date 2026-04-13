@@ -60,17 +60,17 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Документ не сохранен.Выберите сохранение - <F2>.';
      END IF;
 
-     -- Проверка
-     IF ioId > 0 AND COALESCE (ioId_child, 0) = 0
-     THEN
-         RAISE EXCEPTION 'Ошибка.Заполнение возможно только в документе <Планирование платежей>.';
-     END IF;
      -- если НЕ Заполнено дата предварительный план = ДА
      IF NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId  = vbOrderFinanceld AND OB.DescId = zc_ObjectBoolean_OrderFinance_OperDate() AND OB.ValueData = TRUE)
      THEN
          RAISE EXCEPTION 'Ошибка.Заполнение возможно только в документе <Планирование платежей>.';
      END IF;
 
+     -- Проверка
+     IF ioId > 0 AND COALESCE (ioId_child, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не выбран элемент для заполнения.(ioId_child=%)', ioId_child;
+     END IF;
 
      -- замена
      IF ioOperDate_Amount IS NULL THEN ioOperDate_Amount:= inOperDate_Amount_top; END IF;

@@ -23,7 +23,7 @@ AS
                                           , balanceOverdue
                                           , balanceDate
                                           , limitOverdue
-                                    FROM _tmpImportBalances_effie'
+                                    FROM gpSelect_Object_ClientBalance_effie (zfCalc_UserAdmin()::TVarChar)'
                                     ) :: Text
                                   ) AS gpSelect (ExtId                TVarChar   -- Идентификатор записи по долгам
                                                , employeeExtId        TVarChar   -- Идентификатор сотрудников
