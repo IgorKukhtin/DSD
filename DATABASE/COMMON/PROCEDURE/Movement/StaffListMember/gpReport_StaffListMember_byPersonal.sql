@@ -587,10 +587,15 @@ $BODY$
 */
 
 -- тест
--- 
-SELECT * FROM gpReport_StaffListMember_byPersonal (inUnitId := 8428, inMemberId:= 7659382, inIsErased:=true, inSession:= zfCalc_UserAdmin())
+--  SELECT * FROM gpReport_StaffListMember_byPersonal (inUnitId := 8428, inMemberId:= 7659382, inIsErased:=true, inSession:= zfCalc_UserAdmin())
 
- /*  
+ /*     
+ 
+ Проверить почему нет документа
+ 
+ SELECT * FROM gpReport_StaffListMember_byPersonal (inUnitId := 9316729, inMemberId:= 81171, inIsErased:=true, inSession:= zfCalc_UserAdmin())
+
+
       заполнение документов ШР сотрудники    
       
       -- inUnitId = 8439    -- "Участок мясного сырья" 
@@ -636,12 +641,12 @@ SELECT * FROM gpReport_StaffListMember_byPersonal (inUnitId := 8428, inMemberId:
 удаление Осторожно 
 
  WITH  tmpMovement22 AS (SELECT Movement.Id
-                        --FROM Movement
+                        FROM Movement
                         WHERE Movement.DescId = zc_Movement_StaffListMember()
                                          -- AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                                           --AND Movement.StatusId = tmpStatus.StatusId
                         )
-select *--lpDelete_Movement (tmpMovement22.Id , '9457') 
+select lpDelete_Movement (tmpMovement22.Id , '9457') 
 from tmpMovement22
 limit 1
 

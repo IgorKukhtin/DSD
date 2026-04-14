@@ -1653,7 +1653,9 @@ uses
   OrderGoods_Object in '..\..\Forms\Guides\OrderGoods_Object.pas' {OrderGoods_ObjectForm: TParentForm},
   OrderGoodsEdit in '..\..\Forms\Guides\OrderGoodsEdit.pas' {OrderGoodsEditForm: TParentForm},
   Report_OrderGoods_OlapDialog in '..\..\Forms\Report\Report_OrderGoods_OlapDialog.pas' {Report_OrderGoods_OlapDialogForm: TParentForm},
-  Report_OrderGoods_Olap in '..\..\Forms\Report\Report_OrderGoods_Olap.pas' {Report_OrderGoods_OlapForm: TParentForm};
+  Report_OrderGoods_Olap in '..\..\Forms\Report\Report_OrderGoods_Olap.pas' {Report_OrderGoods_OlapForm: TParentForm},
+  Report_StaffListMember_control in '..\..\Forms\Report\Report_StaffListMember_control.pas' {Report_StaffListMember_controlForm: TParentForm},
+  Report_StaffListMember_controlDialog in '..\..\Forms\Report\Report_StaffListMember_controlDialog.pas' {Report_StaffListMember_controlDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

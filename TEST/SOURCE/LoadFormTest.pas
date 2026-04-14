@@ -2692,6 +2692,7 @@ end;
 
 procedure TLoadFormTest.LoadReportBonusFormTest;
 begin
+
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossService_bySaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossService_bySaleForm');
@@ -4834,6 +4835,11 @@ end;
 
 procedure TLoadFormTest.LoadStaffListMemberFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StaffListMember_controlForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_StaffListMember_controlForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StaffListMember_controlDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_StaffListMember_controlDialogForm');
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StaffListMember_byPersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_StaffListMember_byPersonalForm');
