@@ -21,9 +21,13 @@ BEGIN
                                       , inUserId     := vbUserId);
      END IF;
 
+     -- создаютс€ временные таблицы - дл€ формирование данных дл€ проводок
+     PERFORM lpComplete_Movement_Finance_CreateTemp();
+
      -- ѕроводим ƒокумент
      PERFORM lpComplete_Movement_MobileBills (inMovementId     := inMovementId
-                                           , inUserId         := vbUserId);
+                                            , inUserId         := vbUserId
+                                             );
 
 END;
 $BODY$
@@ -37,5 +41,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 122175 , inSession:= '2')
--- SELECT * FROM gpReComplete_Movement_MobileBills (inMovementId:= 122175, inIsLastComplete:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReComplete_Movement_MobileBills (inMovementId:= 122175, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 122175 , inSession:= '2')

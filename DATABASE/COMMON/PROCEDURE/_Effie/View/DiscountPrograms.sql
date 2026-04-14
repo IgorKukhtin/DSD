@@ -4,18 +4,18 @@ DROP VIEW IF EXISTS DiscountPrograms;
 
 CREATE OR REPLACE VIEW DiscountPrograms
 AS 
-  WITH /*_tmpTT AS AS (SELECT ttExtId
-                           , clientExtId
-                      FROM dblink ('host=192.168.0.228 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
-                                 , ('SELECT ttExtId
-                                          , clientExtId
-                                    FROM gpSelect_Object_Twins_effie(zfCalc_UserAdmin())
-                                    WHERE ttExtId :: Integer > 0'
-                                    ) :: Text
-                                  ) AS gpSelect (ttExtId          TVarChar   -- Идентификатор торговой точки
-                                               , clientExtId      TVarChar   -- Идентификатор контрагента.
-                                                )
-                     )*/
+  WITH _tmpTT AS (SELECT ttExtId
+                       , clientExtId
+                  FROM dblink ('host=192.168.0.219 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
+                             , ('SELECT ttExtId
+                                      , clientExtId
+                                FROM gpSelect_Object_Twins_effie(zfCalc_UserAdmin())
+                                WHERE ttExtId :: Integer > 0'
+                                ) :: Text
+                              ) AS gpSelect (ttExtId          TVarChar   -- Идентификатор торговой точки
+                                           , clientExtId      TVarChar   -- Идентификатор контрагента.
+                                            )
+                 )
      , _tmpresult AS (SELECT extId
                            , Name
                            , description
@@ -35,7 +35,7 @@ AS
                            , isPreDiscountCheckSkipped
                            , linkDiscounts_extId
                            , linkDiscounts_discount
-                      FROM dblink ('host=192.168.0.228 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
+                      FROM dblink ('host=192.168.0.219 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
                                  , ('SELECT extId
                                           , Name
                                           , description
@@ -55,7 +55,28 @@ AS
                                           , isPreDiscountCheckSkipped
                                           , linkDiscounts_extId
                                           , linkDiscounts_discount
-                                    FROM _tmpDiscountPrograms_effie'
+                                     FROM gpSelect_Movement_DiscountPrograms_effie (zfCalc_UserAdmin()::TVarChar) AS gpSelect
+                                    UNION ALL
+                                     SELECT extId
+                                          , Name
+                                          , description
+                                          , typeId
+                                          , linkTypeId
+                                          , priority
+                                          , сontractHeaderExtId
+                                          , beginDate
+                                          , endDate
+                                          , shortName
+                                          , isAutoUse
+                                          , beforeDiscountQuestHeaderId
+                                          , afterDiscountQuestHeaderId
+                                          , isDeleted
+                                          , customTypeExtId
+                                          , clientExtId
+                                          , isPreDiscountCheckSkipped
+                                          , linkDiscounts_extId
+                                          , linkDiscounts_discount
+                                     FROM gpSelect_Movement_DiscountProgramsTax_effie (zfCalc_UserAdmin()::TVarChar) AS gpSelect'
                                     ) :: Text
                                   ) AS gpSelect (extId                      TVarChar   --Уникальный идентификатор промо акции
                                                , Name                       TVarChar   --Описание программы скидок
@@ -80,30 +101,29 @@ AS
                                                , linkDiscounts_discount     TFloat     --"Объём скидки, используется только для типа программы скидок 1 - фиксированная.Допустимо отрицательное значение.    
                                                 )
                      )
- --
- SELECT _tmpresult.extId
-      , Name
-      , description
-      , typeId
-      , linkTypeId
-      , priority
-      , сontractHeaderExtId
-      , beginDate
-      , endDate
-      , shortName
-      , isAutoUse
-      , beforeDiscountQuestHeaderId
-      , afterDiscountQuestHeaderId
-      , isDeleted
-      , customTypeExtId
-      , _tmpresult.clientExtId -- _tmpTT.ttExtId  AS clientExtId-- _tmpresult.clientExtId
-      , isPreDiscountCheckSkipped
-      , linkDiscounts_extId
-      , linkDiscounts_discount
-   FROM _tmpresult
-        -- join _tmpTT ON _tmpTT.clientExtId = _tmpresult.clientExtId
-
-  ;
+      --
+      SELECT _tmpresult.extId
+           , Name
+           , description
+           , typeId
+           , linkTypeId
+           , priority
+           , сontractHeaderExtId
+           , beginDate
+           , endDate
+           , shortName
+           , isAutoUse
+           , beforeDiscountQuestHeaderId
+           , afterDiscountQuestHeaderId
+           , isDeleted
+           , customTypeExtId
+           , _tmpresult.clientExtId -- _tmpTT.ttExtId  AS clientExtId-- _tmpresult.clientExtId
+           , isPreDiscountCheckSkipped
+           , linkDiscounts_extId
+           , linkDiscounts_discount
+      FROM _tmpresult
+           INNER JOIN _tmpTT ON _tmpTT.clientExtId = _tmpresult.clientExtId
+     ;
 
 ALTER TABLE DiscountPrograms  OWNER TO postgres;
 

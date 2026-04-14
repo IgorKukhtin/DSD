@@ -243,7 +243,7 @@ BEGIN
              , _tmpItem.OperDate
              , COALESCE (ObjectLink_Contract_Juridical.ChildObjectId, 0) AS ObjectId
              , COALESCE (Object.DescId, 0) AS ObjectDescId
-             , -1 * _tmpItem.OperSumm
+             , -1 * _tmpItem.OperSumm - 1 * COALESCE (MIFloat_Overlimit.ValueData, 0)
              , _tmpItem.MovementItemId
 
              , 0 AS ContainerId                                               -- сформируем позже
@@ -300,8 +300,12 @@ BEGIN
              LEFT JOIN Object AS Object_Employee ON Object_Employee.Id     = _tmpItem.ObjectIntId_Analyzer
                                                 AND Object_Employee.DescId = zc_Object_Founder()
 
-        WHERE ObjectLink_Unit_Contract.ChildObjectId > 0
-          AND Object_Employee.Id IS NULL
+             LEFT JOIN MovementItemFloat AS MIFloat_Overlimit
+                                         ON MIFloat_Overlimit.MovementItemId = _tmpItem.MovementItemId
+                                        AND MIFloat_Overlimit.DescId = zc_MIFloat_Overlimit()
+
+        WHERE Object_Employee.Id IS NULL
+          AND ObjectLink_Unit_Contract.ChildObjectId > 0
 
        UNION ALL
          -- 1.2.3. Перевыставление затрат на Учредителя
@@ -423,7 +427,8 @@ BEGIN
              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_60101() -- 60101 Заработная плата + Заработная плата
 
         WHERE MIFloat_Overlimit.ValueData <> 0
-          AND ObjectLink_Unit_Contract.ChildObjectId IS NULL
+        -- !!!даже если перевыставление!!!
+        --AND ObjectLink_Unit_Contract.ChildObjectId IS NULL
        ;
 
 

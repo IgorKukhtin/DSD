@@ -231,6 +231,19 @@ $BODY$
 */
 
 /*
+SELECT OperDate
+ -- , UnitId, Object.ValueData -- , GoodsKindId
+, sum (Amount) FROM project.public._bi_Table_Remains 
+left join Object on Object.Id =  UnitId 
+where GoodsId = 4038 -- kod = 185
+-- 2493 -- kod = 119
+   and OperDate >= '09.04.2026'
+ and UnitId = 8459
+group by OperDate
+ -- , UnitId , Object.ValueData -- , GoodsKindId
+order by 1 desc
+
+
 SELECT *
 FROM _bi_Table_Remains
      LEFT JOIN Object AS Object_Unit      ON Object_Unit.Id      = _bi_Table_Remains.UnitId
