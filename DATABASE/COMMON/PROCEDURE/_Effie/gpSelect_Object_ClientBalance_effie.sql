@@ -136,6 +136,7 @@ BEGIN
           -- Сотрудник не удален
           INNER JOIN Object AS Object_Member ON Object_Member.Id       = ObjectLink_Personal_Member.ChildObjectId
                                             AND Object_Member.isErased = FALSE
+     WHERE tmpContainer.Amount <> 0 AND tmpTwins.ttExtId :: Integer > 0
     ;
 
 END;

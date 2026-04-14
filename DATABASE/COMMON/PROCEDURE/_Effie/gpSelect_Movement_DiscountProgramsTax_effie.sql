@@ -37,11 +37,11 @@ $BODY$
      vbUserId:= lpGetUserBySession (inSession);
 
      -- временная таблица PriceListItem
-     CREATE TEMP TABLE _tmpPromo (ContractId Integer, PartnerId Integer, PriceListId Integer, GoodsByGoodsKindId Integer
+     CREATE TEMP TABLE _tmpPromoTax (ContractId Integer, PartnerId Integer, PriceListId Integer, GoodsByGoodsKindId Integer
                                 , ChangePercent TFloat, Price_promo TFloat, Price_effie TFloat
                                  )  ON COMMIT DROP;
 
-     INSERT INTO _tmpPromo (ContractId, PartnerId, PriceListId, GoodsByGoodsKindId, ChangePercent, Price_promo, Price_effie)
+     INSERT INTO _tmpPromoTax (ContractId, PartnerId, PriceListId, GoodsByGoodsKindId, ChangePercent, Price_promo, Price_effie)
      WITH
      tmpContract_effie AS (SELECT DISTINCT gpSelect.extId ::Integer FROM gpSelect_Object_ContractHeaders_effie (inSession) AS gpSelect)
    , tmpContract AS (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId     AS ContractId
@@ -177,12 +177,12 @@ $BODY$
      INSERT INTO Object_Promo_effie (MovementId, ContractId, PriceListId, InsertDate)
      SELECT DISTINCT
             0 AS MovementId
-          , _tmpPromo.ContractId
-          , _tmpPromo.PriceListId
+          , _tmpPromoTax.ContractId
+          , _tmpPromoTax.PriceListId
           , CURRENT_TIMESTAMP AS InsertDate
-      FROM _tmpPromo
-           LEFT JOIN Object_Promo_effie ON Object_Promo_effie.ContractId = _tmpPromo.ContractId
-                                       AND Object_Promo_effie.PriceListId = _tmpPromo.PriceListId
+      FROM _tmpPromoTax
+           LEFT JOIN Object_Promo_effie ON Object_Promo_effie.ContractId = _tmpPromoTax.ContractId
+                                       AND Object_Promo_effie.PriceListId = _tmpPromoTax.PriceListId
      WHERE Object_Promo_effie.Id IS NULL;
 
 
@@ -205,21 +205,21 @@ $BODY$
           , FALSE                                ::Boolean  AS isDeleted
           , NULL                                 ::TVarChar AS customTypeExtId
 
-          , _tmpPromo.PartnerId                  ::TVarChar AS clientExtId
+          , _tmpPromoTax.PartnerId                  ::TVarChar AS clientExtId
           , FALSE                                ::Boolean  AS isPreDiscountCheckSkipped
 
-          , _tmpPromo.GoodsByGoodsKindId         ::TVarChar AS linkDiscounts_extId
-          , _tmpPromo.ChangePercent              ::TFloat   AS linkDiscounts_discount
+          , _tmpPromoTax.GoodsByGoodsKindId         ::TVarChar AS linkDiscounts_extId
+          , _tmpPromoTax.ChangePercent              ::TFloat   AS linkDiscounts_discount
 
-          , _tmpPromo.Price_effie                ::TFloat   AS Price_effie  -- цена из effie
-          , _tmpPromo.Price_promo                ::TFloat   AS Price_promo  -- цена Promo - со кидкой без НДС
+          , _tmpPromoTax.Price_effie                ::TFloat   AS Price_effie  -- цена из effie
+          , _tmpPromoTax.Price_promo                ::TFloat   AS Price_promo  -- цена Promo - со кидкой без НДС
 
-     FROM _tmpPromo 
-          LEFT JOIN Object_Promo_effie ON Object_Promo_effie.ContractId = _tmpPromo.ContractId
-                                      AND Object_Promo_effie.PriceListId = _tmpPromo.PriceListId
+     FROM _tmpPromoTax 
+          LEFT JOIN Object_Promo_effie ON Object_Promo_effie.ContractId = _tmpPromoTax.ContractId
+                                      AND Object_Promo_effie.PriceListId = _tmpPromoTax.PriceListId
 
-          LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = _tmpPromo.ContractId
-          LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = _tmpPromo.PriceListId
+          LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = _tmpPromoTax.ContractId
+          LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = _tmpPromoTax.PriceListId
  --limit 200
     ;
 

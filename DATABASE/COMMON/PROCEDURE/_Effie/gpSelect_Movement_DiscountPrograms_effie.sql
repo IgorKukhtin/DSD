@@ -40,6 +40,9 @@ $BODY$
      vbUserId:= lpGetUserBySession (inSession);
 
      -- Результат
+     PERFORM gpInsert_Movement_DiscountPrograms_effie (zfCalc_UserAdmin()::TVarChar);
+
+     -- Результат
      RETURN QUERY
      WITH
      tmpGoodsByGoodsKind AS (SELECT DISTINCT
@@ -229,7 +232,7 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  20.03.26         *
 */
-
+/*
 truncate table _tmpDiscountPrograms_effie;
 
 insert into _tmpDiscountPrograms_effie (extId
@@ -271,6 +274,6 @@ SELECT extId
                                           , linkDiscounts_extId
                                           , linkDiscounts_discount
 FROM gpSelect_Movement_DiscountPrograms_effie (zfCalc_UserAdmin()::TVarChar)
-
+*/
 -- тест
 -- SELECT * FROM gpSelect_Movement_DiscountPrograms_effie (zfCalc_UserAdmin()::TVarChar);
