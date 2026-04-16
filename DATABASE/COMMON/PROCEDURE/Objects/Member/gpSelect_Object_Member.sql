@@ -51,6 +51,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , CityId_Real Integer
              , CityName_Real TVarChar 
              , RouteNumId Integer, RouteNumName TVarChar
+             , MemberGoodsId_month Integer, MemberGoodsName_month TVarChar
+             , MemberGoodsId_holiday Integer, MemberGoodsName_holiday TVarChar
              , Birthday_Date TDateTime
              , Children1_Date TDateTime
              , Children2_Date TDateTime
@@ -235,6 +237,11 @@ end if;
          
          , Object_RouteNum.Id            AS RouteNumId
          , Object_RouteNum.ValueData     AS RouteNumName
+
+         , Object_MemberGoods_month.Id          ::Integer   AS MemberGoodsId_month
+         , Object_MemberGoods_month.ValueData   ::TVarChar  AS MemberGoodsName_month
+         , Object_MemberGoods_holiday.Id        ::Integer   AS MemberGoodsId_holiday
+         , Object_MemberGoods_holiday.ValueData ::TVarChar  AS MemberGoodsName_holiday
          
          , COALESCE(ObjectDate_Birthday.ValueData, Null)   ::TDateTime  AS Birthday_Date
          , COALESCE(ObjectDate_Children1.ValueData, Null)  ::TDateTime  AS Children1_Date
@@ -405,6 +412,16 @@ end if;
                               ON ObjectLink_Member_RouteNum.ObjectId = Object_Member.Id
                              AND ObjectLink_Member_RouteNum.DescId = zc_ObjectLink_Member_RouteNum()
          LEFT JOIN Object AS Object_RouteNum ON Object_RouteNum.Id = ObjectLink_Member_RouteNum.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_MemberGoods_month
+                              ON ObjectLink_MemberGoods_month.ObjectId = Object_Member.Id
+                             AND ObjectLink_MemberGoods_month.DescId = zc_ObjectLink_Member_MemberGoods_month()
+         LEFT JOIN Object AS Object_MemberGoods_month ON Object_MemberGoods_month.Id = ObjectLink_MemberGoods_month.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_MemberGoods_holiday
+                              ON ObjectLink_MemberGoods_holiday.ObjectId = Object_Member.Id
+                             AND ObjectLink_MemberGoods_holiday.DescId = zc_ObjectLink_Member_MemberGoods_holiday()
+         LEFT JOIN Object AS Object_MemberGoods_holiday ON Object_MemberGoods_holiday.Id = ObjectLink_MemberGoods_holiday.ChildObjectId
 
          LEFT JOIN ObjectDate AS ObjectDate_StartSummer
                               ON ObjectDate_StartSummer.ObjectId = Object_Member.Id
@@ -660,6 +677,11 @@ end if;
            , CAST ('' as TVarChar) AS CityName_Real  
            , CAST (0 as Integer)   AS RouteNumId
            , CAST ('' as TVarChar) AS RouteNumName 
+
+           , CAST (0 as Integer)   AS MemberGoodsId_month
+           , CAST ('' as TVarChar) AS MemberGoodsName_month
+           , CAST (0 as Integer)   AS MemberGoodsId_holiday
+           , CAST ('' as TVarChar) AS MemberGoodsName_holiday
 
            , CAST (Null as TDateTime) AS Birthday_Date
            , CAST (Null as TDateTime) AS Children1_Date

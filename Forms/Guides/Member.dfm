@@ -702,6 +702,22 @@ object MemberForm: TMemberForm
         Options.Editing = False
         Width = 70
       end
+      object MemberGoodsName_month: TcxGridDBColumn
+        Caption = #1054#1090#1086#1074#1072#1088#1082#1072' '#1097#1086#1084#1110#1089#1103#1095#1085#1072
+        DataBinding.FieldName = 'MemberGoodsName_month'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object MemberGoodsName_holiday: TcxGridDBColumn
+        Caption = #1054#1090#1086#1074#1072#1088#1082#1072' '#1089#1074#1103#1090#1082#1086#1074#1072
+        DataBinding.FieldName = 'MemberGoodsName_holiday'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -871,7 +887,7 @@ object MemberForm: TMemberForm
     Height = 80
     Align = alBottom
     Caption = 'Panel1'
-    TabOrder = 6
+    TabOrder = 5
     Visible = False
     object ExportXmlGrid: TcxGrid
       Left = 599

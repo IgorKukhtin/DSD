@@ -3,7 +3,11 @@
 /*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberIts (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, 
                                                          TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, 
                                                          TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar); */
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberIts (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, 
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberIts (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, 
+                                                         TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, 
+                                                         TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+*/
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberIts (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, 
                                                          TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, 
                                                          TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
@@ -17,6 +21,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MemberIts(
     IN inCityId              Integer   ,    --
     IN inCityId_Real         Integer   ,    -- 
     IN inRouteNumId          Integer   ,
+    IN inMemberGoodsId_month   Integer   ,  --отоварка щомісячна
+    IN inMemberGoodsId_holiday Integer   ,  --отоварка святкова
 
     IN inBirthday_date       TDateTime ,
     IN inChildren1_date      TDateTime ,
@@ -153,6 +159,11 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_RouteNum(), inId, inRouteNumId);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_MemberGoods_month(), inId, inMemberGoodsId_month);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_MemberGoods_holiday(), inId, inMemberGoodsId_holiday);
+
    -- IF vbUserId = 9457 THEN RAISE EXCEPTION 'Test. OK'; END IF;
    
 END;$BODY$
@@ -162,6 +173,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.04.26         *
  05.08.21         * 
 */
 

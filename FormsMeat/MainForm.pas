@@ -1622,6 +1622,8 @@ type
     actReport_StaffListMember_control: TdsdOpenForm;
     miReport_StaffListMember_control: TMenuItem;
     N279: TMenuItem;
+    actMemberGoods: TdsdOpenForm;
+    N280: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

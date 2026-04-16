@@ -4590,7 +4590,11 @@ end;
 
 procedure TLoadFormTest.LoadMemberFormTest;
 begin
-
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberGoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberGoodsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberGoodsEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberGoodsEditForm');
+  //exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberGLNDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberGLNDialogForm');

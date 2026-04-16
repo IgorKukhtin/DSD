@@ -220,6 +220,8 @@ type
     cbIsNext: TcxCheckBox;
     dxBarControlContainerItem3: TdxBarControlContainerItem;
     NumBiz: TcxGridDBColumn;
+    MemberGoodsName_month: TcxGridDBColumn;
+    MemberGoodsName_holiday: TcxGridDBColumn;
   private
     { Private declarations }
   public

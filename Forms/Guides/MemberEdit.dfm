@@ -851,7 +851,7 @@
       end
       object cxLabel57: TcxLabel
         Left = 10
-        Top = 199
+        Top = 200
         Caption = #1052#1072#1088#1096#1088#1091#1090#1082#1072
       end
       object edRouteNum: TcxButtonEdit
@@ -864,6 +864,40 @@
           end>
         Properties.ReadOnly = True
         TabOrder = 9
+        Width = 303
+      end
+      object cxLabel60: TcxLabel
+        Left = 10
+        Top = 243
+        Caption = #1054#1090#1086#1074#1072#1088#1082#1072' '#1097#1086#1084#1110#1089#1103#1095#1085#1072
+      end
+      object edMemberGoods_month: TcxButtonEdit
+        Left = 10
+        Top = 262
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 11
+        Width = 303
+      end
+      object cxLabel61: TcxLabel
+        Left = 10
+        Top = 289
+        Caption = #1054#1090#1086#1074#1072#1088#1082#1072' '#1089#1074#1103#1090#1082#1086#1074#1072
+      end
+      object edMemberGoods_holiday: TcxButtonEdit
+        Left = 10
+        Top = 308
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 13
         Width = 303
       end
     end
@@ -1738,6 +1772,36 @@
         Component = edNumBiz
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberGoodsId_month'
+        Value = Null
+        Component = GuidesMemberGoods_month
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberGoodsName_month'
+        Value = Null
+        Component = GuidesMemberGoods_month
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberGoodsId_holiday'
+        Value = Null
+        Component = GuidesMemberGoods_holiday
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberGoodsName_holiday'
+        Value = Null
+        Component = GuidesMemberGoods_holiday
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 360
     Top = 136
@@ -2184,6 +2248,22 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMemberGoodsId_month'
+        Value = Null
+        Component = GuidesMemberGoods_month
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberGoodsId_holiday'
+        Value = Null
+        Component = GuidesMemberGoods_holiday
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inBirthday_date'
         Value = Null
         Component = edBirthday
@@ -2518,7 +2598,67 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 141
-    Top = 238
+    Left = 197
+    Top = 214
+  end
+  object GuidesMemberGoods_month: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMemberGoods_month
+    FormNameParam.Value = 'TMemberGoodsForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMemberGoodsForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesMemberGoods_month
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesMemberGoods_month
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 173
+    Top = 270
+  end
+  object GuidesMemberGoods_holiday: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMemberGoods_holiday
+    FormNameParam.Value = 'TMemberGoodsForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMemberGoodsForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesMemberGoods_holiday
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesMemberGoods_holiday
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 173
+    Top = 334
   end
 end
