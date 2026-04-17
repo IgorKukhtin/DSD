@@ -27,6 +27,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCount TFloat, TotalCountSecond TFloat
              , isEDI Boolean, isPromo Boolean
+             , isEffie Boolean
              , MovementPromo TVarChar
              , GUID    TVarChar
              , Comment TVarChar
@@ -206,9 +207,10 @@ BEGIN
            , MovementFloat_TotalCount.ValueData             AS TotalCount
            , MovementFloat_TotalCountSecond.ValueData       AS TotalCountSecond
 
-           , COALESCE (MovementLinkMovement_Order.MovementId, 0) <> 0 AS isEDI
-
-           , COALESCE (MovementBoolean_Promo.ValueData, FALSE) AS isPromo
+           , COALESCE (MovementLinkMovement_Order.MovementId, 0) <> 0     AS isEDI
+           , COALESCE (MovementBoolean_Promo.ValueData, FALSE)  ::Boolean AS isPromo
+           , COALESCE (MovementBoolean_Effie.ValueData, FALSE)  ::Boolean AS isEffie
+           
            , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndSale.ValueData) AS MovementPromo
 
            , MovementString_GUID.ValueData          AS GUID
@@ -334,31 +336,35 @@ BEGIN
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                      ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                      ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Print
-                                      ON MovementBoolean_Print.MovementId =  Movement.Id
+                                      ON MovementBoolean_Print.MovementId = Movement.Id
                                      AND MovementBoolean_Print.DescId = zc_MovementBoolean_Print()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Promo
-                                      ON MovementBoolean_Promo.MovementId =  Movement.Id
+                                      ON MovementBoolean_Promo.MovementId = Movement.Id
                                      AND MovementBoolean_Promo.DescId = zc_MovementBoolean_Promo()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Effie
+                                      ON MovementBoolean_Effie.MovementId = Movement.Id
+                                     AND MovementBoolean_Effie.DescId = zc_MovementBoolean_Effie()
 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
-                                    ON MovementFloat_ChangePercent.MovementId =  Movement.Id
+                                    ON MovementFloat_ChangePercent.MovementId = Movement.Id
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountSh
-                                    ON MovementFloat_TotalCountSh.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalCountSh.MovementId = Movement.Id
                                    AND MovementFloat_TotalCountSh.DescId = zc_MovementFloat_TotalCountSh()
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
-                                    ON MovementFloat_TotalCountKg.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalCountKg.MovementId = Movement.Id
                                    AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountSecond
-                                    ON MovementFloat_TotalCountSecond.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalCountSecond.MovementId = Movement.Id
                                    AND MovementFloat_TotalCountSecond.DescId = zc_MovementFloat_TotalCountSecond()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
@@ -406,6 +412,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 16.04.26         *
  10.07.17         * add inIsMobileDate
  22.04.17         *
  07.03.17         * add inMemberId

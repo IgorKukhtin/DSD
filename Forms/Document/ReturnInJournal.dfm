@@ -4,7 +4,6 @@ inherited ReturnInJournalForm: TReturnInJournalForm
   ClientWidth = 1114
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -237
   ExplicitWidth = 1130
   ExplicitHeight = 574
   PixelsPerInch = 96
@@ -663,6 +662,14 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 67
+          end
+          object isEffie: TcxGridDBColumn
+            Caption = 'Effie ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isEffie'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object isPrinted: TcxGridDBColumn
             Caption = #1056#1072#1089#1087#1077#1095#1072#1090#1072#1085

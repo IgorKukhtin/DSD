@@ -441,6 +441,14 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             Options.Editing = False
             Width = 55
           end
+          object isEffie: TcxGridDBColumn
+            Caption = 'Effie ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isEffie'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object isEDI: TcxGridDBColumn
             Caption = 'EDI'
             DataBinding.FieldName = 'isEDI'

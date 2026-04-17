@@ -302,7 +302,18 @@ inherited ReturnInForm: TReturnInForm
             Options.Editing = False
             Width = 70
           end
-          object Price: TcxGridDBColumn [17]
+          object PriceEffie: TcxGridDBColumn [17]
+            Caption = #1062#1077#1085#1072' '#1080#1079' Effie'
+            DataBinding.FieldName = 'PriceEffie'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object Price: TcxGridDBColumn [18]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -312,7 +323,7 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 63
           end
-          object PriceIn: TcxGridDBColumn [18]
+          object PriceIn: TcxGridDBColumn [19]
             Caption = #1062#1077#1085#1072' '#1074#1093'.'
             DataBinding.FieldName = 'PriceIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -321,17 +332,6 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1074#1093'. ('#1089#1093#1077#1084#1072' '#1055#1072#1074#1080#1083#1100#1086#1085#1099')'
-            Options.Editing = False
-            Width = 70
-          end
-          object PricePromo: TcxGridDBColumn [19]
-            Caption = #1062#1077#1085#1072' '#1072#1082#1094#1080#1103
-            DataBinding.FieldName = 'PricePromo'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
@@ -415,6 +415,17 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
+          end
+          object PricePromo: TcxGridDBColumn [28]
+            Caption = #1062#1077#1085#1072' '#1072#1082#1094#1080#1103
+            DataBinding.FieldName = 'PricePromo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object Value5: TcxGridDBColumn
             Caption = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1076#1110#1073
@@ -804,9 +815,6 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object l: TcxGrid
         Left = 0
         Top = 0
@@ -1807,6 +1815,7 @@ inherited ReturnInForm: TReturnInForm
     Width = 1304
     Height = 169
     TabOrder = 3
+    ExplicitTop = -3
     ExplicitWidth = 1304
     ExplicitHeight = 169
     inherited edInvNumber: TcxTextEdit
@@ -2076,7 +2085,7 @@ inherited ReturnInForm: TReturnInForm
     end
     object cbPartner: TcxCheckBox
       Left = 213
-      Top = 103
+      Top = 118
       Hint = #1040#1082#1090' '#1085#1077#1076#1086#1074#1086#1079#1072
       Caption = #1040#1082#1090' '#1085#1077#1076#1086#1074#1086#1079#1072
       Properties.ReadOnly = False
@@ -2215,6 +2224,14 @@ inherited ReturnInForm: TReturnInForm
       Properties.ReadOnly = False
       TabOrder = 51
       Width = 97
+    end
+    object cbEffie: TcxCheckBox
+      Left = 213
+      Top = 92
+      Caption = 'Effie ('#1076#1072'/'#1085#1077#1090')'
+      Properties.ReadOnly = True
+      TabOrder = 52
+      Width = 95
     end
   end
   object edDocumentTaxKind: TcxButtonEdit [2]

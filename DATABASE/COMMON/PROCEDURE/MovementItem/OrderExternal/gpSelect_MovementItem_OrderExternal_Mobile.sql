@@ -14,7 +14,9 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , GoodsGroupNameFull TVarChar
              , AmountRemains TFloat, Amount TFloat, AmountEDI TFloat, AmountSecond TFloat
              , GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
-             , Price TFloat, PriceEDI TFloat, CountForPrice TFloat, AmountSumm TFloat, AmountSumm_Partner TFloat
+             , Price TFloat, PriceEDI TFloat, PriceEffie TFloat
+             , CountForPrice TFloat
+             , AmountSumm TFloat, AmountSumm_Partner TFloat
              , AmountRecommended TFloat
              , ChangePercent TFloat
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
@@ -274,6 +276,7 @@ BEGIN
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                                  , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
                                  , COALESCE (MIFloat_PriceEDI.ValueData, 0)      AS PriceEDI
+                                 , COALESCE (MIFloat_PriceEffie.ValueData, 0)    AS PriceEffie
                                  , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
                                  , COALESCE (MIFloat_ChangePercent.ValueData, 0) AS ChangePercent
                                  , MIFloat_AmountSecond.ValueData                AS AmountSecond
@@ -293,6 +296,10 @@ BEGIN
                                  LEFT JOIN MovementItemFloat AS MIFloat_PriceEDI
                                                              ON MIFloat_PriceEDI.MovementItemId = MovementItem.Id
                                                             AND MIFloat_PriceEDI.DescId = zc_MIFloat_PriceEDI()
+
+                                 LEFT JOIN MovementItemFloat AS MIFloat_PriceEffie
+                                                             ON MIFloat_PriceEffie.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_PriceEffie.DescId = zc_MIFloat_PriceEffie()
 
                                  LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                              ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
@@ -361,6 +368,7 @@ BEGIN
                            , COALESCE (tmpMI_Goods.GoodsKindId, tmpRemains.GoodsKindId) AS GoodsKindId
                            , COALESCE (tmpMI_Goods.Price, 0)                            AS Price
                            , COALESCE (tmpMI_Goods.PriceEDI, 0)                         AS PriceEDI
+                           , COALESCE (tmpMI_Goods.PriceEffie,0)                        AS PriceEffie
                            , COALESCE (tmpMI_Goods.CountForPrice, 1)                    AS CountForPrice
                            , COALESCE (tmpMI_Goods.AmountSecond, 0)                     AS AmountSecond
                            , COALESCE (tmpMI_Goods.Summ, 0)                             AS Summ
@@ -487,6 +495,7 @@ BEGIN
                                , COALESCE (tmpMI.GoodsKindId, tmpMI_EDI_find.GoodsKindId)     AS GoodsKindId
                                , COALESCE (tmpMI.Price, tmpMI_EDI_find.PriceListPrice)        AS Price
                                , COALESCE (tmpMI.PriceEDI, tmpMI_EDI_find.PriceEDI)           AS PriceEDI
+                               , COALESCE (tmpMI.PriceEffie,0)                                AS PriceEffie
                                , COALESCE (tmpMI.CountForPrice, tmpMI_EDI_find.CountForPrice) AS CountForPrice
 
                                , tmpMI.ChangePercent                                          AS ChangePercent
@@ -558,7 +567,8 @@ BEGIN
                   WHEN /*tmpPromo.TaxPromo <> 0*/ tmpPromo.GoodsId > 0 AND 1=1 THEN tmpPromo.PriceWithOutVAT
                   ELSE COALESCE (tmpPriceList_Kind.Price_Pricelist, tmpPriceList.Price_Pricelist)
              END :: TFloat              AS Price
-           , 0 :: TFloat                AS PriceEDI
+           , 0 :: TFloat                AS PriceEDI 
+           , 0 :: TFloat                AS PriceEffie
            , 1 :: TFloat                AS CountForPrice
            , NULL :: TFloat             AS AmountSumm
            , NULL :: TFloat             AS AmountSumm_Partner
@@ -673,20 +683,21 @@ BEGIN
            , Object_Goods.ValueData             AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
-           , tmpMI.AmountRemains :: TFloat      AS AmountRemains
-           , tmpMI.Amount :: TFloat             AS Amount
-           , tmpMI.AmountEDI :: TFloat          AS AmountEDI
-           , tmpMI.AmountSecond :: TFloat       AS AmountSecond
-           , Object_GoodsKind.Id                AS GoodsKindId
-           , Object_GoodsKind.ValueData         AS GoodsKindName
-           , Object_Measure.ValueData           AS MeasureName
-           , tmpMI.Price :: TFloat              AS Price
-           , tmpMI.PriceEDI :: TFloat           AS PriceEDI
-           , tmpMI.CountForPrice :: TFloat      AS CountForPrice
+           , tmpMI.AmountRemains ::TFloat      AS AmountRemains
+           , tmpMI.Amount        ::TFloat      AS Amount
+           , tmpMI.AmountEDI     ::TFloat      AS AmountEDI
+           , tmpMI.AmountSecond  ::TFloat      AS AmountSecond
+           , Object_GoodsKind.Id               AS GoodsKindId
+           , Object_GoodsKind.ValueData        AS GoodsKindName
+           , Object_Measure.ValueData          AS MeasureName
+           , tmpMI.Price         ::TFloat      AS Price
+           , tmpMI.PriceEDI      ::TFloat      AS PriceEDI
+           , tmpMI.PriceEffie    ::TFloat      AS PriceEffie
+           , tmpMI.CountForPrice ::TFloat      AS CountForPrice
            , CAST ((tmpMI.Amount + tmpMI.AmountSecond) * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2)) :: TFloat AS AmountSumm
-           , tmpMI.Summ               :: TFloat AS AmountSumm_Partner
+           , tmpMI.Summ          ::TFloat      AS AmountSumm_Partner
            , COALESCE (_tmpRecommended.Amount,0)   ::TFloat AS AmountRecommended
-           , tmpMI.ChangePercent      :: TFloat AS ChangePercent
+           , tmpMI.ChangePercent ::TFloat      AS ChangePercent
 
            , Object_InfoMoney_View.InfoMoneyCode
            , Object_InfoMoney_View.InfoMoneyGroupName
@@ -770,6 +781,7 @@ BEGIN
                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                            , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
                            , COALESCE (MIFloat_PriceEDI.ValueData, 0)      AS PriceEDI
+                           , COALESCE (MIFloat_PriceEffie.ValueData,0)     AS PriceEffie
                            , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
                            , COALESCE (MIFloat_ChangePercent.ValueData, 0) AS ChangePercent
                            , MIFloat_AmountSecond.ValueData                AS AmountSecond
@@ -789,6 +801,9 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_PriceEDI
                                                         ON MIFloat_PriceEDI.MovementItemId = MovementItem.Id
                                                        AND MIFloat_PriceEDI.DescId = zc_MIFloat_PriceEDI()
+                            LEFT JOIN MovementItemFloat AS MIFloat_PriceEffie
+                                                        ON MIFloat_PriceEffie.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_PriceEffie.DescId = zc_MIFloat_PriceEffie()
                             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
@@ -859,6 +874,7 @@ BEGIN
                            , COALESCE (tmpMI_Goods.GoodsKindId, 0)                      AS GoodsKindId
                            , COALESCE (tmpMI_Goods.Price, 0)                            AS Price
                            , COALESCE (tmpMI_Goods.PriceEDI, 0)                         AS PriceEDI
+                           , COALESCE (tmpMI_Goods.PriceEffie, 0)                       AS PriceEffie
                            , COALESCE (tmpMI_Goods.CountForPrice, 1)                    AS CountForPrice
                            , COALESCE (tmpMI_Goods.AmountSecond, 0)                     AS AmountSecond
                            , COALESCE (tmpMI_Goods.Summ, 0)                             AS Summ
@@ -969,6 +985,7 @@ BEGIN
                                , COALESCE (tmpMI.GoodsKindId, tmpMI_EDI_find.GoodsKindId)     AS GoodsKindId
                                , COALESCE (tmpMI.Price, tmpMI_EDI_find.PriceListPrice)        AS Price
                                , COALESCE (tmpMI.PriceEDI, tmpMI_EDI_find.PriceEDI)           AS PriceEDI
+                               , COALESCE (tmpMI.PriceEffie,0)                                AS PriceEffie
                                , COALESCE (tmpMI.CountForPrice, tmpMI_EDI_find.CountForPrice) AS CountForPrice
 
                                , tmpMI.MovementId_Promo                                       AS MovementId_Promo
@@ -1021,27 +1038,28 @@ BEGIN
                         )*/
 
        SELECT
-             tmpMI.MovementItemId :: Integer    AS Id
+             tmpMI.MovementItemId  :: Integer   AS Id
            , CAST (row_number() OVER (ORDER BY tmpMI.MovementItemId) AS Integer) AS LineNum
            , Object_Goods.Id                    AS GoodsId
            , Object_Goods.ObjectCode            AS GoodsCode
            , Object_Goods.ValueData             AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
-           , tmpMI.AmountRemains :: TFloat      AS AmountRemains
-           , tmpMI.Amount :: TFloat             AS Amount
-           , tmpMI.AmountEDI :: TFloat          AS AmountEDI
-           , tmpMI.AmountSecond :: TFloat       AS AmountSecond
+           , tmpMI.AmountRemains   ::TFloat     AS AmountRemains
+           , tmpMI.Amount          ::TFloat     AS Amount
+           , tmpMI.AmountEDI       ::TFloat     AS AmountEDI
+           , tmpMI.AmountSecond    ::TFloat     AS AmountSecond
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
            , Object_Measure.ValueData           AS MeasureName
-           , tmpMI.Price :: TFloat              AS Price
-           , tmpMI.PriceEDI :: TFloat           AS PriceEDI
-           , tmpMI.CountForPrice :: TFloat      AS CountForPrice
+           , tmpMI.Price           ::TFloat     AS Price
+           , tmpMI.PriceEDI        ::TFloat     AS PriceEDI
+           , tmpMI.PriceEffie      ::TFloat     AS PriceEffie
+           , tmpMI.CountForPrice   ::TFloat     AS CountForPrice
            , CAST ((tmpMI.Amount + tmpMI.AmountSecond) * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2)) :: TFloat AS AmountSumm
-           , tmpMI.Summ               :: TFloat AS AmountSumm_Partner
+           , tmpMI.Summ            ::TFloat     AS AmountSumm_Partner
            , COALESCE (_tmpRecommended.Amount,0)   ::TFloat AS AmountRecommended
-           , tmpMI.ChangePercent      :: TFloat AS ChangePercent
+           , tmpMI.ChangePercent   ::TFloat     AS ChangePercent
 
            , Object_InfoMoney_View.InfoMoneyCode
            , Object_InfoMoney_View.InfoMoneyGroupName
@@ -1117,6 +1135,7 @@ ALTER FUNCTION gpSelect_MovementItem_OrderExternal_Mobile (Integer, Integer, TDa
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 16.04.26         *
  23.03.17         * add _tmpRecommended
  28.07.16         * add PriceEDI, isPriceEDIDiff
  17.06.15                                        * add vbIsOrderDnepr

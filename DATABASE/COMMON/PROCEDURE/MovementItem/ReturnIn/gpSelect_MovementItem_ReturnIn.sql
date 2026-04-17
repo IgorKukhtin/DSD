@@ -18,7 +18,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ReturnIn(
 RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar             
              , Amount TFloat, AmountPartner TFloat, Amount_find TFloat
-             , Price TFloat, PriceIn TFloat
+             , Price TFloat, PriceIn TFloat, PriceEffie TFloat
              , CountForPrice TFloat, ChangePercent TFloat, Price_Pricelist TFloat, Price_Pricelist_vat TFloat, isCheck_Pricelist Boolean
              , Count TFloat, HeadCount TFloat
              , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
@@ -126,6 +126,7 @@ BEGIN
                            , COALESCE (MIFloat_AmountPartner.ValueData, 0) AS AmountPartner
                            , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
                            , COALESCE (MIFloat_PriceIn.ValueData, 0)       AS PriceIn
+                           , COALESCE (MIFloat_PriceEffie.ValueData, 0)    AS PriceEffie
                            , MIFloat_CountForPrice.ValueData               AS CountForPrice
                            , COALESCE (MIFloat_ChangePercent.ValueData, 0) AS ChangePercent
                            , MIFloat_Count.ValueData                       AS Count
@@ -151,6 +152,9 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_PriceIn
                                                        ON MIFloat_PriceIn.MovementItemId = MovementItem.Id
                                                       AND MIFloat_PriceIn.DescId = zc_MIFloat_PriceIn()
+                           LEFT JOIN MovementItemFloat AS MIFloat_PriceEffie
+                                                       ON MIFloat_PriceEffie.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_PriceEffie.DescId = zc_MIFloat_PriceEffie()
                            LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
@@ -219,6 +223,7 @@ BEGIN
                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                            , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
                            , COALESCE (MIFloat_PriceIn.ValueData, 0)       AS PriceIn
+                           , COALESCE (MIFloat_PriceEffie.ValueData,0)     AS PriceEffie
                            , COALESCE (MIFloat_ChangePercent.ValueData, 0) AS ChangePercent
                       FROM MovementItem
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
@@ -230,6 +235,10 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_PriceIn
                                                        ON MIFloat_PriceIn.MovementItemId = MovementItem.Id
                                                       AND MIFloat_PriceIn.DescId = zc_MIFloat_PriceIn()
+                           LEFT JOIN MovementItemFloat AS MIFloat_PriceEffie
+                                                       ON MIFloat_PriceEffie.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_PriceEffie.DescId = zc_MIFloat_PriceEffie()
+
                            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                        ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
                                                       AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
@@ -241,6 +250,7 @@ BEGIN
                              , MIFloat_Price.ValueData
                              , MIFloat_ChangePercent.ValueData
                              , COALESCE (MIFloat_PriceIn.ValueData, 0)
+                             , COALESCE (MIFloat_PriceEffie.ValueData,0)
                      )
    , tmpMI_parent_find AS (SELECT tmp.MovementItemId
                                 , tmpMI_parent.GoodsId
@@ -248,12 +258,13 @@ BEGIN
                                 , tmpMI_parent.GoodsKindId
                                 , tmpMI_parent.Price
                                 , tmpMI_parent.PriceIn
+                                , tmpMI_parent.PriceEffie
                                 , tmpMI_parent.ChangePercent
                            FROM tmpMI_parent
-                                LEFT JOIN (SELECT MAX (tmpMI.MovementItemId) AS MovementItemId, tmpMI.GoodsId, tmpMI.GoodsKindId, tmpMI.Price, tmpMI.PriceIn
+                                LEFT JOIN (SELECT MAX (tmpMI.MovementItemId) AS MovementItemId, tmpMI.GoodsId, tmpMI.GoodsKindId, tmpMI.Price, tmpMI.PriceIn, tmpMI.PriceEffie
                                            FROM tmpMI
                                            WHERE tmpMI.isErased = FALSE
-                                           GROUP BY tmpMI.GoodsId, tmpMI.GoodsKindId, tmpMI.Price, tmpMI.PriceIn
+                                           GROUP BY tmpMI.GoodsId, tmpMI.GoodsKindId, tmpMI.Price, tmpMI.PriceIn, tmpMI.PriceEffie
                                           ) AS tmp ON tmp.GoodsId     = tmpMI_parent.GoodsId
                                                   AND tmp.GoodsKindId = tmpMI_parent.GoodsKindId
                                                   AND tmp.Price       = tmpMI_parent.Price
@@ -267,6 +278,7 @@ BEGIN
                         , COALESCE (tmpMI.GoodsKindId, tmpMI_parent_find.GoodsKindId) AS GoodsKindId
                         , COALESCE (tmpMI.Price, tmpMI_parent_find.Price)             AS Price
                         , COALESCE (tmpMI.PriceIn, tmpMI_parent_find.PriceIn)         AS PriceIn
+                        , COALESCE (tmpMI.PriceEffie, tmpMI_parent_find.PriceEffie)   AS PriceEffie
                         , COALESCE (tmpMI.CountForPrice, 1)                           AS CountForPrice
                         , COALESCE (tmpMI.ChangePercent, tmpMI_parent_find.ChangePercent) AS ChangePercent 
                         , COALESCE (tmpMI.Count,0)                                    AS Count
@@ -435,7 +447,9 @@ BEGIN
 
            , CASE WHEN vbPriceWithVAT = FALSE THEN COALESCE (tmpPriceListIn_kind.Price_Pricelist, tmpPriceListIn.Price_Pricelist)
                   WHEN vbPriceWithVAT = TRUE  THEN COALESCE (tmpPriceListIn_kind.Price_Pricelist_vat, tmpPriceListIn.Price_Pricelist_vat)
-             END :: TFloat              AS PriceIn 
+             END :: TFloat              AS PriceIn
+           
+           , NULL ::TFloat              AS PriceEffie 
 
            , CAST (1 AS TFloat)         AS CountForPrice
 
@@ -536,6 +550,7 @@ BEGIN
            , tmpResult.Amount_find   :: TFloat  AS Amount_find
            , tmpResult.Price         :: TFloat  AS Price
            , tmpResult.PriceIn       :: TFloat  AS PriceIn
+           , tmpResult.PriceEffie    :: TFloat  AS PriceEffie
            , tmpResult.CountForPrice :: TFloat  AS CountForPrice
            , tmpResult.ChangePercent :: TFloat  AS ChangePercent
 
@@ -683,6 +698,7 @@ BEGIN
                            , COALESCE (MIFloat_AmountPartner.ValueData, 0) AS AmountPartner
                            , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
                            , COALESCE (MIFloat_PriceIn.ValueData, 0)       AS PriceIn
+                           , COALESCE (MIFloat_PriceEffie.ValueData, 0)    AS PriceEffie
                            , MIFloat_CountForPrice.ValueData               AS CountForPrice
                            , COALESCE (MIFloat_ChangePercent.ValueData, 0) AS ChangePercent 
                            , MIFloat_Count.ValueData                       AS Count
@@ -709,6 +725,9 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_PriceIn
                                                        ON MIFloat_PriceIn.MovementItemId = MovementItem.Id
                                                       AND MIFloat_PriceIn.DescId = zc_MIFloat_PriceIn()
+                           LEFT JOIN MovementItemFloat AS MIFloat_PriceEffie
+                                                       ON MIFloat_PriceEffie.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_PriceEffie.DescId = zc_MIFloat_PriceEffie()
                            LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
@@ -777,6 +796,7 @@ BEGIN
                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                            , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
                            , COALESCE (MIFloat_PriceIn.ValueData, 0)       AS PriceIn
+                           , COALESCE (MIFloat_PriceEffie.ValueData, 0)    AS PriceEffie
                            , COALESCE (MIFloat_ChangePercent.ValueData, 0) AS ChangePercent
                       FROM MovementItem
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
@@ -788,6 +808,9 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_PriceIn
                                                        ON MIFloat_PriceIn.MovementItemId = MovementItem.Id
                                                       AND MIFloat_PriceIn.DescId = zc_MIFloat_PriceIn()
+                           LEFT JOIN MovementItemFloat AS MIFloat_PriceEffie
+                                                       ON MIFloat_PriceEffie.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_PriceEffie.DescId = zc_MIFloat_PriceEffie() 
                            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                        ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
                                                       AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
@@ -799,6 +822,7 @@ BEGIN
                              , MIFloat_Price.ValueData
                              , MIFloat_ChangePercent.ValueData
                              , COALESCE (MIFloat_PriceIn.ValueData, 0)
+                             , COALESCE (MIFloat_PriceEffie.ValueData, 0)
                      )
    , tmpMI_parent_find AS (SELECT tmp.MovementItemId
                                 , tmpMI_parent.GoodsId
@@ -806,12 +830,13 @@ BEGIN
                                 , tmpMI_parent.GoodsKindId
                                 , tmpMI_parent.Price
                                 , tmpMI_parent.PriceIn
+                                , tmpMI_parent.PriceEffie
                                 , tmpMI_parent.ChangePercent
                            FROM tmpMI_parent
-                                LEFT JOIN (SELECT MAX (tmpMI.MovementItemId) AS MovementItemId, tmpMI.GoodsId, tmpMI.GoodsKindId, tmpMI.Price, tmpMI.PriceIn
+                                LEFT JOIN (SELECT MAX (tmpMI.MovementItemId) AS MovementItemId, tmpMI.GoodsId, tmpMI.GoodsKindId, tmpMI.Price, tmpMI.PriceIn, tmpMI.PriceEffie
                                            FROM tmpMI 
                                            WHERE tmpMI.isErased = FALSE
-                                           GROUP BY tmpMI.GoodsId, tmpMI.GoodsKindId, tmpMI.Price, tmpMI.PriceIn
+                                           GROUP BY tmpMI.GoodsId, tmpMI.GoodsKindId, tmpMI.Price, tmpMI.PriceIn , tmpMI.PriceEffie
                                           ) AS tmp ON tmp.GoodsId     = tmpMI_parent.GoodsId
                                                   AND tmp.GoodsKindId = tmpMI_parent.GoodsKindId
                                                   AND tmp.Price       = tmpMI_parent.Price
@@ -825,6 +850,7 @@ BEGIN
                         , COALESCE (tmpMI.GoodsKindId, tmpMI_parent_find.GoodsKindId) AS GoodsKindId
                         , COALESCE (tmpMI.Price, tmpMI_parent_find.Price)             AS Price
                         , COALESCE (tmpMI.PriceIn, tmpMI_parent_find.PriceIn)         AS PriceIn
+                        , COALESCE (tmpMI.PriceEffie, tmpMI_parent_find.PriceEffie)   AS PriceEffie
                         , COALESCE (tmpMI.CountForPrice, 1)                           AS CountForPrice
                         , COALESCE (tmpMI.ChangePercent, tmpMI_parent_find.ChangePercent) AS ChangePercent
                         , COALESCE (tmpMI.Count,0)                                    AS Count
@@ -982,6 +1008,7 @@ BEGIN
            
            , tmpResult.Price         :: TFloat  AS Price
            , tmpResult.PriceIn       :: TFloat  AS PriceIn
+           , tmpResult.PriceEffie    :: TFloat  AS PriceEffie
            , tmpResult.CountForPrice :: TFloat  AS CountForPrice
            , tmpResult.ChangePercent :: TFloat  AS ChangePercent
 
@@ -1123,6 +1150,7 @@ ALTER FUNCTION gpSelect_MovementItem_ReturnIn (Integer, Integer, TDateTime, Bool
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 16.04.26         *
  26.07.22         * add Count
  06.12.19         *
  10.10.16         * add tmpGoods ËÁ GoodsListSale

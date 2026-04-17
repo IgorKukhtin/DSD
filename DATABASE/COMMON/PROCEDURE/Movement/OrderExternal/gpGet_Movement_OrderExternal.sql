@@ -39,6 +39,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isManual Boolean
              , isEffie Boolean 
              , Comment TVarChar
+             , InsertMobileDate TDateTime
+             , UpdateMobileDate TDateTime
               )
 AS
 $BODY$
@@ -137,7 +139,10 @@ BEGIN
              , CAST (FALSE AS Boolean)                          AS IsRemains
              , CAST (FALSE AS Boolean)                          AS isManual
              , CAST (FALSE AS Boolean)                          AS isEffie
-             , CAST ('' as TVarChar) 		                    AS Comment 
+             , CAST ('' as TVarChar) 		                    AS Comment
+             
+             , NULL :: TDateTime                                AS InsertMobileDate
+             , NULL :: TDateTime                                AS UpdateMobileDate
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_To ON Object_To.Id = CASE WHEN (SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbObjectId_Branch_Constraint) = 11 -- филиал Запорожье
@@ -246,6 +251,8 @@ BEGIN
            , COALESCE (MovementBoolean_Effie.ValueData, FALSE)   ::Boolean AS isEffie
            , MovementString_Comment.ValueData       AS Comment
 
+           , COALESCE (MovementDate_InsertMobile.ValueData, NULL)::TDateTime AS InsertMobileDate
+           , COALESCE (MovementDate_UpdateMobile.ValueData, NULL)::TDateTime AS UpdateMobileDate
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -267,6 +274,13 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_CarInfo
                                    ON MovementDate_CarInfo.MovementId = Movement.Id
                                   AND MovementDate_CarInfo.DescId = zc_MovementDate_CarInfo()
+
+            LEFT JOIN MovementDate AS MovementDate_InsertMobile
+                                   ON MovementDate_InsertMobile.MovementId = Movement.Id
+                                  AND MovementDate_InsertMobile.DescId = zc_MovementDate_InsertMobile()
+            LEFT JOIN MovementDate AS MovementDate_UpdateMobile
+                                   ON MovementDate_UpdateMobile.MovementId = Movement.Id
+                                  AND MovementDate_UpdateMobile.DescId = zc_MovementDate_UpdateMobile()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
@@ -416,4 +430,4 @@ ALTER FUNCTION gpGet_Movement_OrderExternal (Integer, TDateTime, TVarChar) OWNER
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_OrderExternal (inMovementId:= 1, inOperDate:= CURRENT_TIMESTAMP, inMask := false, inSession:= '9818')
+-- SELECT * FROM gpGet_Movement_OrderExternal (inMovementId:= 33104280, inOperDate:= CURRENT_TIMESTAMP, inMask := false, inSession:= '9818')

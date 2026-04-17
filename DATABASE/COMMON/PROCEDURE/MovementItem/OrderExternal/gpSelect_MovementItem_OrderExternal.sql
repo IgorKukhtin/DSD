@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , AmountEDI TFloat, AmountSecond TFloat
              , AmountManual TFloat, AmountManual_old TFloat
              , GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
-             , Price TFloat, PriceEDI TFloat , PriceEffie TFloat
+             , Price TFloat, PriceEDI TFloat, PriceEffie TFloat
              , CountForPrice TFloat, AmountSumm TFloat, AmountSumm_Partner TFloat, ChangePercent TFloat
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
              , ArticleGLN TVarChar

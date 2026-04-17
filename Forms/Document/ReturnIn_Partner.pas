@@ -279,6 +279,7 @@ type
     bbsUpdate: TdxBarSubItem;
     bbsOpernForm: TdxBarSubItem;
     bbsPrint: TdxBarSubItem;
+    cbEffie: TcxCheckBox;
   private
     { Private declarations }
   public

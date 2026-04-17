@@ -340,6 +340,7 @@ type
     Separator: TdxBarSeparator;
     actUpdateMIChildDialog: TdsdInsertUpdateAction;
     actInsertMIChildDialog: TdsdInsertUpdateAction;
+    cbEffie: TcxCheckBox;
   private
     { Private declarations }
   public
