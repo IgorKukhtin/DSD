@@ -4,7 +4,6 @@ inherited EDIJournalForm: TEDIJournalForm
   ClientWidth = 1368
   AddOnFormData.OnLoadAction = actSetDefaults
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -474
   ExplicitWidth = 1384
   ExplicitHeight = 492
   PixelsPerInch = 96
@@ -48,6 +47,16 @@ inherited EDIJournalForm: TEDIJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = clTotalSumm_Sale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clTotalAmountOrder
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clTotalAmountOrderEDI
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -74,6 +83,16 @@ inherited EDIJournalForm: TEDIJournalForm
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = clUnitName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clTotalAmountOrder
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clTotalAmountOrderEDI
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -419,6 +438,28 @@ inherited EDIJournalForm: TEDIJournalForm
           object clTotalSumm_Sale: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1076#1086#1082'.)'
             DataBinding.FieldName = 'TotalSumm_Sale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object clTotalAmountOrder: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074'.'
+            DataBinding.FieldName = 'AmountOrder'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object clTotalAmountOrderEDI: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074'. (EDI)'
+            DataBinding.FieldName = 'AmountOrderEDI'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
