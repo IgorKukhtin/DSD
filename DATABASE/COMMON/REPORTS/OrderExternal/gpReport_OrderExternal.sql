@@ -67,6 +67,10 @@ RETURNS TABLE (MovementId             Integer
              , AmountZakaz_Weight TFloat, Amount_Sh TFloat, AmountZakaz_Sh TFloat
              , Amount_WeightSK TFloat
              , AmountWeight_calc   TFloat, AmountWeight_calc1  TFloat, AmountWeight_calc2  TFloat, AmountWeight_calc3  TFloat
+             
+             --Количество Заявка EDI
+             , AmountOrderEDI_Sh      TFloat
+             , AmountOrderEDI_Weight  TFloat
 
              , Amount_Child_one    TFloat       -- с Остатка
              , Amount_Child_sec    TFloat       -- с Прихода
@@ -543,6 +547,44 @@ BEGIN
                                                                 , zc_MIFloat_AmountManual()
                                                                 )
                               )
+    -- Количество Заявка EDI
+    , tmpMLM_EDI AS (SELECT *
+                     FROM MovementLinkMovement 
+                     WHERE MovementLinkMovement.MovementId IN (SELECT DISTINCT tmpMov.Id FROM tmpMov)
+                       AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
+                    )
+
+    , tmpMI_EDI AS (SELECT MovementItem.*
+                    FROM MovementItem
+                    WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMLM_EDI.MovementChildId FROM tmpMLM_EDI)
+                      AND MovementItem.DescId = zc_MI_Master()
+                      AND MovementItem.isErased = FALSE
+                   )
+    , tmpMILO_GoodsKind_EDI AS (SELECT *
+                                FROM MovementItemLinkObject
+                                WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_EDI.Id FROM tmpMI_EDI)
+                                  AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
+                                )
+    , tmpEDI AS (SELECT Movement.Id                                         AS MovementId_order
+                      , MovementItem.ObjectId                               AS GoodsId
+                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
+                      , SUM (COALESCE (MovementItem.Amount,0))              AS AmountOrderEDI
+                 FROM tmpMov AS Movement
+                      INNER JOIN tmpMLM_EDI AS MovementLinkMovement_Order
+                                            ON MovementLinkMovement_Order.MovementId = Movement.Id
+                                           AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+                      --LEFT JOIN Movement AS Movement_EDI ON Movement_EDI.Id = MovementLinkMovement_Order.MovementChildId
+                                              --AND Movement_EDI.StatusId = zc_Enum_Status_Complete()
+                      INNER JOIN tmpMI_EDI AS MovementItem ON MovementItem.MovementId = MovementLinkMovement_Order.MovementChildId
+                      
+                      LEFT JOIN tmpMILO_GoodsKind_EDI AS MILinkObject_GoodsKind
+                                                      ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                     AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                 GROUP BY Movement.Id
+                        , MovementItem.ObjectId
+                        , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                 )
+    --------------------
                    
      , tmpMovement2 AS (SELECT CASE WHEN inIsByDoc = TRUE THEN Movement.Id ELSE 0 END   AS MovementId
                              , CASE WHEN inIsRemains = FALSE THEN MovementLinkObject_Contract.ObjectId ELSE 0 END AS ContractId
@@ -573,6 +615,8 @@ BEGIN
                              , SUM (CASE WHEN COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) = vbStartDate_1  THEN COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS Amount_calc1
                              , SUM (CASE WHEN COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) = vbStartDate_2  THEN COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS Amount_calc2
                              , SUM (CASE WHEN COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= vbStartDate_3 THEN COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS Amount_calc3 
+                             --Количество Заявка EDI
+                             , SUM (COALESCE (tmpEDI.AmountOrderEDI,0)) AS AmountOrderEDI
                              --сhild
                              , SUM (tmpMI_Child.Amount)       AS Amount_child_one -- с Остатка
                              , SUM (tmpMI_Child.AmountSecond) AS Amount_child_sec -- с Прихода
@@ -703,6 +747,11 @@ BEGIN
  
                             -- Резервы
                             LEFT JOIN tmpChild AS tmpMI_Child ON tmpMI_Child.ParentId = MovementItem.Id
+
+                            --Количество Заявка EDI
+                            LEFT JOIN tmpEDI ON tmpEDI.MovementId_Order = Movement.Id
+                                            AND tmpEDI.GoodsId = MovementItem.ObjectId
+                                            AND COALESCE (tmpEDI.GoodsKindId,0) = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                         GROUP BY
                               CASE WHEN inIsByDoc = TRUE THEN Movement.Id ELSE 0 END
                             , CASE WHEN inIsRemains = FALSE THEN MovementLinkObject_Contract.ObjectId ELSE 0 END
@@ -797,6 +846,9 @@ BEGIN
                             , SUM (tmpMovement2.AmountSecond1 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)  AS AmountSecond_Weight1
                             , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMovement2.AmountSecond2 ELSE 0 END)                    AS AmountSecond_Sh2
                             , SUM (tmpMovement2.AmountSecond2 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)  AS AmountSecond_Weight2        
+                            --Количество Заявка EDI
+                            , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMovement2.AmountOrderEDI ELSE 0 END)                                 AS AmountOrderEDI_Sh
+                            , SUM (tmpMovement2.AmountOrderEDI * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)  AS AmountOrderEDI_Weight
                             -- child
                             , SUM (tmpMovement2.Amount_child_one) AS Amount_child_one
                             , SUM (tmpMovement2.Amount_child_sec) AS Amount_child_sec
@@ -959,7 +1011,7 @@ BEGIN
                        ,  tmpOrder.Amount_calc2          ::TFloat  AS AmountOrder_calc2
                        ,  tmpOrder.Amount_Sh_calc2       ::TFloat  AS AmountOrder_Sh_calc2
                        ,  tmpOrder.Amount_Weight_calc2   ::TFloat  AS AmountOrder_Weight_calc2
-            
+
                         --заказ дата пок = выбр дате, а дата заявки < выбр даты   , те. заказы прошлого дня 
                        --разница остаток и заказ     (к отгрузке)
                        ,  CASE WHEN COALESCE (tmpMovement.Amount_Sh,0) + COALESCE (tmpOrder.Amount_Sh,0) > COALESCE (tmpRemains.Amount_Sh,0)
@@ -1153,7 +1205,11 @@ BEGIN
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountWeight_calc1 ELSE 0 END  :: TFloat AS AmountWeight_calc1         
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountWeight_calc2 ELSE 0 END  :: TFloat AS AmountWeight_calc2             
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountWeight_calc3 ELSE 0 END  :: TFloat AS AmountWeight_calc3  
-                 
+            
+             --Количество Заявка EDI
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountOrderEDI_Sh ELSE 0 END      :: TFloat AS AmountOrderEDI_Sh
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountOrderEDI_Weight ELSE 0 END  :: TFloat AS AmountOrderEDI_Weight
+                            
               -- child
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.Amount_Child_one  ELSE 0 END        ::TFloat AS Amount_Child_one              -- с Остатка
            , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.Amount_Child_sec  ELSE 0 END        ::TFloat AS Amount_Child_sec        -- с Прихода
