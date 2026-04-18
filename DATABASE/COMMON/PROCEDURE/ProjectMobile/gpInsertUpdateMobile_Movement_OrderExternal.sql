@@ -128,6 +128,7 @@ BEGIN
 
       -- !!! бпелеммн - 04.07.17 !!!
       IF vbStatusId = zc_Enum_Status_Complete()
+      --AND vbId <> 34072184 
       THEN
            -- !!! бпелеммн !!!
            RETURN vbId;
