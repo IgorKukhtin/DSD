@@ -28,6 +28,10 @@ BEGIN
 
         -- сформировали связь у расходной накл. с EDI (такую же как и у заявки)
         PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Sale(), inId, vbMovementId_EDI);
+
+    ELSEIF EXISTS (SELECT 1 FROM MovementLinkMovement WHERE MovementId = inId AND DescId = zc_MovementLinkMovement_Sale() AND MovementChildId <> 0)
+    THEN
+        PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Sale(), inId, NULL);
     END IF;
 
 
