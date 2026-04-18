@@ -34,7 +34,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ProfitLossService(
     IN inIsLoad                   Boolean   , -- Сформирован автоматически (по отчету)
     IN inUserId                   Integer     -- Пользователь
 )
-RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbMovementItemId Integer;
@@ -57,12 +58,14 @@ BEGIN
         RAISE EXCEPTION 'Должна быть введена только одна сумма: <Дебет> или <Кредит>.';
      END IF;
 
-     IF COALESCE (ioId,0) = 0 
+     IF COALESCE (ioId, 0) = 0
+        OR (inCurrencyPartnerId <> zc_Enum_Currency_Basis() AND NOT EXISTS (SELECT 1 FROM MovementFloat AS MF WHERE MF.MovementId = ioId AND MF.DescId = zc_MovementFloat_CurrencyPartnerValue() AND MF.ValueData <> 0)
+           )
      THEN
           IF inCurrencyPartnerId <> zc_Enum_Currency_Basis()
           THEN 
               SELECT Amount, ParValue
-             INTO vbCurrencyPartnerValue, vbParPartnerValue
+                     INTO vbCurrencyPartnerValue, vbParPartnerValue
                FROM lfSelect_Movement_Currency_byDate (inOperDate:= inOperDate, inCurrencyFromId:= zc_Enum_Currency_Basis(), inCurrencyToId:= inCurrencyPartnerId, inPaidKindId:= inPaidKindId);
           ELSE 
                vbCurrencyPartnerValue:= 0;
@@ -161,6 +164,11 @@ BEGIN
                                                                   , inUserId    := inUserId
                                                                    );
      END IF;*/
+
+     IF inUserId = 5 AND 1=1
+     THEN
+          RAISE EXCEPTION 'Ошибка.Admin.';
+     END IF;
 
      IF inUserId <> 5 OR 1=1
      THEN
