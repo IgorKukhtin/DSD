@@ -247,6 +247,16 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountManual
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountOrderEDI_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountOrderEDI_Weight
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -468,6 +478,16 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountManual
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountOrderEDI_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountOrderEDI_Weight
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -1133,6 +1153,28 @@ inherited Report_GoodsMI_OrderExternalForm: TReport_GoodsMI_OrderExternalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object AmountOrderEDI_Sh: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074'. (EDI), '#1096#1090'.'
+            DataBinding.FieldName = 'AmountOrderEDI_Sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object AmountOrderEDI_Weight: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074'. (EDI), '#1074#1077#1089
+            DataBinding.FieldName = 'AmountOrderEDI_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object Amount_child_one: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074'-1'

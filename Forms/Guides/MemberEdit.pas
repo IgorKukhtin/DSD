@@ -170,6 +170,12 @@ type
     ceCode1C: TcxTextEdit;
     edNumBiz: TcxTextEdit;
     cxLabel59: TcxLabel;
+    cxLabel60: TcxLabel;
+    edMemberGoods_month: TcxButtonEdit;
+    cxLabel61: TcxLabel;
+    edMemberGoods_holiday: TcxButtonEdit;
+    GuidesMemberGoods_month: TdsdGuides;
+    GuidesMemberGoods_holiday: TdsdGuides;
   private
     { Private declarations }
   public

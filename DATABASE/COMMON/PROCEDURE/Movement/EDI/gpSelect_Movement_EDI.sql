@@ -54,6 +54,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , DocId_vch_Condra TVarChar
              , isVchasno      Boolean
              , isEdiComdoc    Boolean
+             --
+             , AmountOrderEDI  TFloat
+             , AmountOrder     TFloat
               )
 AS
 $BODY$
@@ -76,7 +79,7 @@ BEGIN
    end if;
 
      -- определяется
-     SELECT CASE WHEN ObjectString_UserSign.ValueData <> '' THEN ObjectString_UserSign.ValueData ELSE '24447183_3524907224_SS181220125402.ZS2' /*'Ключ - Неграш О.В..ZS2'*/                                                  END AS UserSign
+     SELECT CASE WHEN ObjectString_UserSign.ValueData <> '' THEN ObjectString_UserSign.ValueData ELSE '24447183_3524907224_SS181220125402.ZS2' /*'Ключ - Неграш О.В..ZS2'*/                                       END AS UserSign
           , CASE WHEN ObjectString_UserSeal.ValueData <> '' THEN ObjectString_UserSeal.ValueData ELSE '24447183_S181220141414.ZS2' /*'Ключ - для в_дтиску - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2'*/   END AS UserSeal
           , CASE WHEN ObjectString_UserKey.ValueData  <> '' THEN ObjectString_UserKey.ValueData  ELSE '24447183_C181220141414.ZS2' /*'Ключ - для шифрування - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2'*/ END AS UserKey
             INTO vbUserSign, vbUserSeal, vbUserKey
@@ -95,6 +98,43 @@ BEGIN
 
      --
      RETURN QUERY
+     WITH
+     tmpMovement AS (SELECT Movement.*
+                     FROM Movement
+                     WHERE Movement.DescId = zc_Movement_EDI()
+                       AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                       AND (Movement.StatusId <> zc_Enum_Status_Erased() OR vbUserId = 5)
+                     )
+
+   , tmpMLM_Order AS (SELECT *
+                      FROM MovementLinkMovement 
+                      WHERE MovementLinkMovement.MovementChildId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                        AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
+                     )
+
+   , tmpMI_Order AS (SELECT MovementItem.MovementId
+                          , SUM (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) AS AmountOrder
+                         FROM MovementItem
+                              LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                                          ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                         WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMLM_Order.MovementId FROM tmpMLM_Order)
+                           AND MovementItem.DescId = zc_MI_Master()
+                           AND MovementItem.isErased = FALSE
+                           AND MovementItem.ObjectId > 0
+                         GROUP BY MovementItem.MovementId
+                        )
+   , tmpMI AS (SELECT MovementItem.MovementId
+                    , SUM (COALESCE (MovementItem.Amount, 0))   AS AmountOrderEDI
+               FROM MovementItem
+               WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                 AND MovementItem.DescId = zc_MI_Master()
+                 AND MovementItem.isErased = FALSE
+               GROUP BY MovementItem.MovementId
+              )
+
+
+
        SELECT
              Movement.Id
            , Movement.InvNumber
@@ -186,6 +226,8 @@ BEGIN
              -- Загрузка ComDoc Вчасно-EDI
            , COALESCE(MovementBoolean_EdiComdoc.ValueData, FALSE) AS isEdiComdoc
 
+           , tmpMI.AmountOrderEDI    ::TFloat
+           , tmpMI_Order.AmountOrder ::TFloat
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -337,9 +379,9 @@ BEGIN
                                      ON MovementString_InvNumberPartner_Tax.MovementId =  Movement_Tax.Id
                                     AND MovementString_InvNumberPartner_Tax.DescId = zc_MovementString_InvNumberPartner()
 
-            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
-                                           ON MovementLinkMovement_Order.MovementChildId = Movement.Id
-                                          AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+            LEFT JOIN tmpMLM_Order AS MovementLinkMovement_Order
+                                   ON MovementLinkMovement_Order.MovementChildId = Movement.Id
+                                  AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
             LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementId
                                               --AND Movement_Order.StatusId = zc_Enum_Status_Complete()
 
@@ -383,6 +425,10 @@ BEGIN
                                       ON MovementBoolean_EdiComdoc.MovementId =  Movement.Id
                                      AND MovementBoolean_EdiComdoc.DescId     = zc_MovementBoolean_EdiComdoc()
 
+            -- 
+            LEFT JOIN tmpMI       ON tmpMI.MovementId       = Movement.Id
+            LEFT JOIN tmpMI_Order ON tmpMI_Order.MovementId = MovementLinkMovement_Order.MovementId
+            
        WHERE Movement.DescId = zc_Movement_EDI()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
          AND (Movement.StatusId <> zc_Enum_Status_Erased() OR vbUserId = 5)

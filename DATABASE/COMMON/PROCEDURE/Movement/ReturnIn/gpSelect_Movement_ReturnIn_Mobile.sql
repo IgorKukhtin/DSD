@@ -41,6 +41,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , isEDI Boolean
              , isList Boolean
              , isPromo Boolean
+             , isEffie Boolean
              , MovementPromo TVarChar
 
              , InsertName TVarChar
@@ -187,9 +188,10 @@ BEGIN
            , MovementBoolean_Error.ValueData            AS isError
            , COALESCE (MovementLinkMovement_MasterEDI.MovementChildId, 0) <> 0 AS isEDI
 
-           , COALESCE (MovementBoolean_List.ValueData, FALSE) :: Boolean AS isList
+           , COALESCE (MovementBoolean_List.ValueData, FALSE)  ::Boolean AS isList
 
-           , COALESCE(MovementBoolean_Promo.ValueData, FALSE) AS isPromo
+           , COALESCE (MovementBoolean_Promo.ValueData, FALSE) ::Boolean AS isPromo
+           , COALESCE (MovementBoolean_Effie.ValueData, FALSE) ::Boolean AS isEffie
            , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndReturn.ValueData) AS MovementPromo
 
            , Object_User.ValueData                  AS InsertName
@@ -271,6 +273,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_List
                                       ON MovementBoolean_List.MovementId = Movement.Id
                                      AND MovementBoolean_List.DescId = zc_MovementBoolean_List()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Effie
+                                      ON MovementBoolean_Effie.MovementId = Movement.Id
+                                     AND MovementBoolean_Effie.DescId = zc_MovementBoolean_Effie()
 
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id
@@ -430,6 +436,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 16.04.26         *
  10.07.17         * add inIsMobileDate
  22.04.17         *
 */

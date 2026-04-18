@@ -1,5 +1,5 @@
 inherited StaffListItemChoiceForm: TStaffListItemChoiceForm
-  Caption = #1042#1067#1073#1086#1088' '#1083#1072#1085#1085#1099#1093' '#1087#1086' <'#1064#1090#1072#1090#1085#1086#1084#1091' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1102' ('#1080#1079#1084#1077#1085#1077#1085#1080#1077')>'
+  Caption = #1042#1099#1073#1086#1088' '#1076#1072#1085#1085#1099#1093' '#1087#1086' <'#1064#1090#1072#1090#1085#1086#1084#1091' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1102' ('#1080#1079#1084#1077#1085#1077#1085#1080#1077')>'
   ClientHeight = 401
   ClientWidth = 849
   AddOnFormData.ChoiceAction = actChoiceGuides
@@ -13,19 +13,19 @@ inherited StaffListItemChoiceForm: TStaffListItemChoiceForm
     Width = 849
     Height = 289
     TabOrder = 3
-    ExplicitTop = 79
+    ExplicitTop = 112
     ExplicitWidth = 849
-    ExplicitHeight = 322
+    ExplicitHeight = 289
     ClientRectBottom = 289
     ClientRectRight = 849
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 849
-      ExplicitHeight = 322
+      ExplicitHeight = 289
       inherited cxGrid: TcxGrid
         Width = 849
         Height = 289
         ExplicitWidth = 849
-        ExplicitHeight = 322
+        ExplicitHeight = 289
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -109,7 +109,6 @@ inherited StaffListItemChoiceForm: TStaffListItemChoiceForm
   inherited Panel: TPanel
     Width = 849
     Height = 53
-    ExplicitTop = -1
     ExplicitWidth = 849
     ExplicitHeight = 53
     inherited deStart: TcxDateEdit
@@ -195,14 +194,11 @@ inherited StaffListItemChoiceForm: TStaffListItemChoiceForm
   end
   object Panel1: TPanel [2]
     Left = 0
-    Top = 53
+    Top = 79
     Width = 849
     Height = 33
     Align = alTop
     TabOrder = 6
-    ExplicitLeft = -34
-    ExplicitTop = 0
-    ExplicitWidth = 883
     object cxLabel3: TcxLabel
       Left = 3
       Top = 3
@@ -702,6 +698,19 @@ inherited StaffListItemChoiceForm: TStaffListItemChoiceForm
       Action = actChoiceGuides
       Category = 0
     end
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = actChoiceGuides
+      end>
+    ActionItemList = <
+      item
+        Action = actChoiceGuides
+        ShortCut = 13
+      end
+      item
+      end>
   end
   inherited PeriodChoice: TPeriodChoice
     DateStart = nil

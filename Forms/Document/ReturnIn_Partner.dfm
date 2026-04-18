@@ -312,19 +312,7 @@
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object PriceIn: TcxGridDBColumn [18]
-            Caption = #1062#1077#1085#1072' '#1074#1093'.'
-            DataBinding.FieldName = 'PriceIn'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1062#1077#1085#1072' '#1074#1093'.'
-            Options.Editing = False
-            Width = 70
-          end
-          object PricePromo: TcxGridDBColumn [19]
+          object PricePromo: TcxGridDBColumn [18]
             Caption = #1062#1077#1085#1072' '#1072#1082#1094#1080#1103
             DataBinding.FieldName = 'PricePromo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -334,6 +322,17 @@
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object PriceEffie: TcxGridDBColumn [19]
+            Caption = #1062#1077#1085#1072' '#1080#1079' Effie'
+            DataBinding.FieldName = 'PriceEffie'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
           object Price_Pricelist: TcxGridDBColumn [20]
             Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' ('#1073#1077#1079' '#1053#1044#1057')'
@@ -408,6 +407,18 @@
             Options.Editing = False
             Width = 91
           end
+          object PriceIn: TcxGridDBColumn [27]
+            Caption = #1062#1077#1085#1072' '#1074#1093'.'
+            DataBinding.FieldName = 'PriceIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1074#1093'.'
+            Options.Editing = False
+            Width = 70
+          end
           object SubjectDocName: TcxGridDBColumn
             Caption = #1054#1089#1085'. '#1076#1083#1103' '#1074#1086#1079#1074#1088'.'
             DataBinding.FieldName = 'SubjectDocName'
@@ -423,6 +434,9 @@
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -1024,7 +1038,7 @@
     end
     object cbPartner: TcxCheckBox
       Left = 236
-      Top = 103
+      Top = 113
       Hint = #1040#1082#1090' '#1085#1077#1076#1086#1074#1086#1079#1072
       Caption = #1040#1082#1090' '#1085#1077#1076#1086#1074#1086#1079#1072
       Properties.ReadOnly = False
@@ -1213,6 +1227,14 @@
       Properties.ReadOnly = False
       TabOrder = 53
       Width = 97
+    end
+    object cbEffie: TcxCheckBox
+      Left = 238
+      Top = 88
+      Caption = 'Effie ('#1076#1072'/'#1085#1077#1090')'
+      Properties.ReadOnly = True
+      TabOrder = 54
+      Width = 95
     end
   end
   object edDocumentTaxKind: TcxButtonEdit [2]
@@ -3351,6 +3373,7 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1088#1080#1074#1103#1079#1082#1091'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1088#1080#1074#1103#1079#1082#1091'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DetailDS
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
@@ -3367,9 +3390,10 @@
         item
           StoredProc = spSelect_MI_Child
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1055#1088#1080#1074#1103#1079#1082#1091'>'
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1055#1088#1080#1074#1103#1079#1082#1091'>'
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DetailDS

@@ -2990,6 +2990,16 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Member_RouteNum() RETURNS Integer AS $B
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Member_RouteNum', 'Связь Физ. лица Маршрутка', zc_Object_Member(), zc_Object_City() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_RouteNum');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Member_MemberGoods_month() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_MemberGoods_month'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Member_MemberGoods_month', 'Связь Физ. лица с отоварка щомісячна', zc_Object_Member(), zc_Object_MemberGoods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_MemberGoods_month');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Member_MemberGoods_holiday() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_MemberGoods_holiday'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Member_MemberGoods_holiday', 'Связь Физ. лица с отоварка святкова', zc_Object_Member(), zc_Object_MemberGoods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_MemberGoods_holiday');
+
+
+
 
 --
 

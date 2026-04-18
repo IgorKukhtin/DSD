@@ -47,6 +47,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , isPrinted Boolean
              , isPromo Boolean
              , isWeighing_inf Boolean
+             , isEffie Boolean
              , MovementPromo TVarChar
 
              , MovementId_OrderReturnTare Integer
@@ -415,8 +416,9 @@ WHERE 1=0
            , COALESCE (MovementBoolean_List.ValueData, FALSE) :: Boolean AS isList
            , COALESCE (MovementBoolean_Print.ValueData, False):: Boolean AS isPrinted
 
-           , COALESCE(MovementBoolean_Promo.ValueData, FALSE) AS isPromo
+           , COALESCE (MovementBoolean_Promo.ValueData, FALSE) ::Boolean AS isPromo
            , CASE WHEN tmpWeighingPartner.ParentId IS NULL THEN FALSE ELSE TRUE END ::Boolean AS isWeighing_inf
+           , COALESCE (MovementBoolean_Effie.ValueData, FALSE) ::Boolean AS isEffie
 
            , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndReturn.ValueData) AS MovementPromo
            , Movement_OrderReturnTare.Id                                                                                                    AS MovementId_OrderReturnTare
@@ -495,6 +497,10 @@ WHERE 1=0
             LEFT JOIN MovementBoolean AS MovementBoolean_List
                                       ON MovementBoolean_List.MovementId = Movement.Id
                                      AND MovementBoolean_List.DescId = zc_MovementBoolean_List()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Effie
+                                      ON MovementBoolean_Effie.MovementId = Movement.Id
+                                     AND MovementBoolean_Effie.DescId = zc_MovementBoolean_Effie()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Print
                                       ON MovementBoolean_Print.MovementId = Movement.Id
@@ -749,6 +755,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 16.04.26         *
  06.06.25         * CorrSumm
  01.05.25         * TotalLines
  07.11.24         *

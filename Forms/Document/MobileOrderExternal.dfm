@@ -2,8 +2,9 @@ inherited MobileOrderExternalForm: TMobileOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')>'
   ClientHeight = 411
   ClientWidth = 1362
+  ExplicitLeft = -181
   ExplicitWidth = 1378
-  ExplicitHeight = 449
+  ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -259,7 +260,18 @@ inherited MobileOrderExternalForm: TMobileOrderExternalForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object PriceEDI: TcxGridDBColumn [15]
+          object PriceEffie: TcxGridDBColumn [15]
+            Caption = #1062#1077#1085#1072' '#1080#1079' Effie'
+            DataBinding.FieldName = 'PriceEffie'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object PriceEDI: TcxGridDBColumn [16]
             Caption = #1062#1077#1085#1072' EDI'
             DataBinding.FieldName = 'PriceEDI'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -270,7 +282,7 @@ inherited MobileOrderExternalForm: TMobileOrderExternalForm
             Options.Editing = False
             Width = 55
           end
-          object isPriceEDIDiff: TcxGridDBColumn [16]
+          object isPriceEDIDiff: TcxGridDBColumn [17]
             Caption = #1054#1090#1082#1083'.  '#1094'. EDI'
             DataBinding.FieldName = 'isPriceEDIDiff'
             HeaderAlignmentHorz = taCenter
@@ -279,7 +291,7 @@ inherited MobileOrderExternalForm: TMobileOrderExternalForm
             Options.Editing = False
             Width = 55
           end
-          object AmountSumm: TcxGridDBColumn [17]
+          object AmountSumm: TcxGridDBColumn [18]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -290,7 +302,7 @@ inherited MobileOrderExternalForm: TMobileOrderExternalForm
             Options.Editing = False
             Width = 80
           end
-          object AmountSumm_Partner: TcxGridDBColumn [18]
+          object AmountSumm_Partner: TcxGridDBColumn [19]
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'AmountSumm_Partner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -302,7 +314,7 @@ inherited MobileOrderExternalForm: TMobileOrderExternalForm
             Options.Editing = False
             Width = 100
           end
-          object InfoMoneyCode: TcxGridDBColumn [19]
+          object InfoMoneyCode: TcxGridDBColumn [20]
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -311,7 +323,7 @@ inherited MobileOrderExternalForm: TMobileOrderExternalForm
             Options.Editing = False
             Width = 45
           end
-          object InfoMoneyGroupName: TcxGridDBColumn [20]
+          object InfoMoneyGroupName: TcxGridDBColumn [21]
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -320,7 +332,7 @@ inherited MobileOrderExternalForm: TMobileOrderExternalForm
             Options.Editing = False
             Width = 70
           end
-          object InfoMoneyDestinationName: TcxGridDBColumn [21]
+          object InfoMoneyDestinationName: TcxGridDBColumn [22]
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -329,7 +341,7 @@ inherited MobileOrderExternalForm: TMobileOrderExternalForm
             Options.Editing = False
             Width = 70
           end
-          object InfoMoneyName: TcxGridDBColumn [22]
+          object InfoMoneyName: TcxGridDBColumn [23]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
@@ -338,7 +350,7 @@ inherited MobileOrderExternalForm: TMobileOrderExternalForm
             Options.Editing = False
             Width = 100
           end
-          object PricePromo: TcxGridDBColumn [23]
+          object PricePromo: TcxGridDBColumn [24]
             Caption = #1062#1077#1085#1072' '#1072#1082#1094#1080#1103
             DataBinding.FieldName = 'PricePromo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -349,7 +361,7 @@ inherited MobileOrderExternalForm: TMobileOrderExternalForm
             Options.Editing = False
             Width = 55
           end
-          object MovementPromo: TcxGridDBColumn [24]
+          object MovementPromo: TcxGridDBColumn [25]
             Caption = #8470' '#1076#1086#1082'. '#1072#1082#1094#1080#1080
             DataBinding.FieldName = 'MovementPromo'
             HeaderAlignmentHorz = taCenter
@@ -679,6 +691,60 @@ inherited MobileOrderExternalForm: TMobileOrderExternalForm
       TabOrder = 40
       Width = 128
     end
+    object cbEffie: TcxCheckBox
+      Left = 793
+      Top = 87
+      Caption = 'Effie ('#1076#1072'/'#1085#1077#1090')'
+      Properties.ReadOnly = True
+      TabOrder = 41
+      Width = 95
+    end
+    object cxLabel20: TcxLabel
+      Left = 1083
+      Top = 85
+      Hint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1087#1088#1086#1074#1077#1076#1077#1085' '#1085#1072' '#1084#1086#1073'.'#1091#1089#1090#1088')'
+      Caption = #1055#1088#1086#1074#1077#1076#1077#1085'. '#1085#1072' '#1084#1086#1073'.'#1091#1089#1090#1088'.'
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object edInsertMobileDate: TcxDateEdit
+      Left = 1083
+      Top = 103
+      Hint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1087#1088#1086#1074#1077#1076#1077#1085' '#1085#1072' '#1084#1086#1073'.'#1091#1089#1090#1088')'
+      EditValue = 42132d
+      ParentShowHint = False
+      Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+      Properties.EditFormat = 'dd.mm.yyyy hh:mm'
+      Properties.Kind = ckDateTime
+      Properties.ReadOnly = True
+      Properties.ValidateOnEnter = False
+      ShowHint = True
+      TabOrder = 43
+      Width = 130
+    end
+    object cxLabel22: TcxLabel
+      Left = 1223
+      Top = 85
+      Hint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1080#1085#1093#1088#1086#1085'. '#1089' '#1084#1086#1073'.'#1091#1089#1090#1088')'
+      Caption = #1057#1080#1085#1093#1088#1086#1085'. '#1089' '#1084#1086#1073'.'#1091#1089#1090#1088'.'
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object edUpdateMobileDate: TcxDateEdit
+      Left = 1223
+      Top = 103
+      Hint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1080#1085#1093#1088#1086#1085'. '#1089' '#1084#1086#1073'.'#1091#1089#1090#1088')'
+      EditValue = 42132d
+      ParentShowHint = False
+      Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+      Properties.EditFormat = 'dd.mm.yyyy hh:mm'
+      Properties.Kind = ckDateTime
+      Properties.ReadOnly = True
+      Properties.ValidateOnEnter = False
+      ShowHint = True
+      TabOrder = 45
+      Width = 130
+    end
   end
   object cxLabel21: TcxLabel [2]
     Left = 1223
@@ -737,7 +803,7 @@ inherited MobileOrderExternalForm: TMobileOrderExternalForm
         end
         item
           Name = 'inIsJuridical'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1120,18 +1186,25 @@ inherited MobileOrderExternalForm: TMobileOrderExternalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InvNumber'
-        Value = ''
-        Component = edInvNumber
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMask'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber'
+        Value = ''
+        Component = edInvNumber
         MultiSelectSeparator = ','
       end
       item
@@ -1166,7 +1239,7 @@ inherited MobileOrderExternalForm: TMobileOrderExternalForm
       end
       item
         Name = 'OperDatePartner_sale'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDatePartner_sale
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -1315,7 +1388,7 @@ inherited MobileOrderExternalForm: TMobileOrderExternalForm
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -1369,6 +1442,27 @@ inherited MobileOrderExternalForm: TMobileOrderExternalForm
         Component = cbPromo
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isEffie'
+        Value = Null
+        Component = cbEffie
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InsertMobileDate'
+        Value = Null
+        Component = edInsertMobileDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UpdateMobileDate'
+        Value = Null
+        Component = edUpdateMobileDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1417,7 +1511,7 @@ inherited MobileOrderExternalForm: TMobileOrderExternalForm
       end
       item
         Name = 'outOperDatePartner_sale'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDatePartner_sale
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -1432,7 +1526,7 @@ inherited MobileOrderExternalForm: TMobileOrderExternalForm
       end
       item
         Name = 'outPriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -1549,7 +1643,7 @@ inherited MobileOrderExternalForm: TMobileOrderExternalForm
         MultiSelectSeparator = ','
       end
       item
-        Value = 'TRUE'
+        Value = True
         DataType = ftBoolean
         ParamType = ptUnknown
         MultiSelectSeparator = ','
@@ -1772,14 +1866,14 @@ inherited MobileOrderExternalForm: TMobileOrderExternalForm
       end
       item
         Name = 'inAmount'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inAmountSecond'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1873,7 +1967,7 @@ inherited MobileOrderExternalForm: TMobileOrderExternalForm
       end
       item
         Name = 'inIsJuridical'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2101,7 +2195,7 @@ inherited MobileOrderExternalForm: TMobileOrderExternalForm
       end
       item
         Name = 'ChangePercent'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = edChangePercent
         DataType = ftFloat
         ParamType = ptInput
@@ -2171,8 +2265,8 @@ inherited MobileOrderExternalForm: TMobileOrderExternalForm
         Value = 81178
         MultiSelectSeparator = ','
       end>
-    Left = 1138
-    Top = 67
+    Left = 1114
+    Top = 43
   end
   object PriceListGuides: TdsdGuides
     KeyField = 'Id'

@@ -472,6 +472,14 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 54
           end
+          object isEffie: TcxGridDBColumn
+            Caption = 'Effie ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isEffie'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object Checked: TcxGridDBColumn
             Caption = #1055#1088#1086#1074#1077#1088#1077#1085
             DataBinding.FieldName = 'Checked'

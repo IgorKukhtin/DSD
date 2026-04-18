@@ -37,6 +37,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNum
              , isList Boolean
              , isPrinted Boolean
              , isWeighing_inf Boolean
+             , isEffie Boolean
              , MovementId_OrderReturnTare Integer
              , InvNumber_OrderReturnTare  TVarChar
 
@@ -136,6 +137,7 @@ BEGIN
              , CAST (FALSE AS Boolean)                  AS isList
              , CAST (FALSE AS Boolean)                  AS isPrinted
              , CAST (FALSE AS Boolean)                  AS isWeighing_inf
+             , CAST (FALSE AS Boolean)                  AS isEffie
              ,  0                                       AS MovementId_OrderReturnTare
              , '' :: TVarChar                           AS InvNumber_OrderReturnTare
 
@@ -325,6 +327,7 @@ BEGIN
            , COALESCE (MovementBoolean_List.ValueData, FALSE) :: Boolean AS isList
            , COALESCE (MovementBoolean_Print.ValueData, False):: Boolean AS isPrinted
            , CASE WHEN tmpWeighingPartner.ParentId IS NULL THEN FALSE ELSE TRUE END ::Boolean AS isWeighing_inf
+           , COALESCE (MovementBoolean_Effie.ValueData, FALSE):: Boolean AS isEffie
 
            , Movement_OrderReturnTare.Id                                                                                                    AS MovementId_OrderReturnTare
            , ('π ' || Movement_OrderReturnTare.InvNumber || ' ÓÚ ' || Movement_OrderReturnTare.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_OrderReturnTare
@@ -372,6 +375,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Print
                                       ON MovementBoolean_Print.MovementId = inMovementId
                                      AND MovementBoolean_Print.DescId = zc_MovementBoolean_Print()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Effie
+                                      ON MovementBoolean_Effie.MovementId = inMovementId
+                                     AND MovementBoolean_Effie.DescId = zc_MovementBoolean_Effie()
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  inMovementId
@@ -510,6 +517,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».     Ã‡Ì¸ÍÓ ƒ.¿.
+ 16.04.26         *
  06.06.25         * CorrSumm
  16.02.23         * TransportGoods
  14.03.22         *

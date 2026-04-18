@@ -212,8 +212,8 @@ BEGIN
                                                      );  
  --  записываем только админ (5, 9457)
         --сохранение обновлени сотрудника
-   IF vbUserId IN (5, 9457)
-   THEN
+   --IF vbUserId IN (5, 9457)
+   --THEN
      vbPersonalId := gpInsertUpdate_Object_Personal(ioId                              := COALESCE (vbPersonalId,0)         ::Integer    -- ключ объекта <Сотрудники>
                                                   , inMemberId                        := inMemberId                        ::Integer    -- ссылка на Физ.лица
                                                   , inPositionId                      := inPositionId                      ::Integer    -- ссылка на Должность
@@ -311,7 +311,7 @@ BEGIN
         ) AS tmp
         ;
 
-     END IF;    
+    -- END IF;    
  
      -- !!! ВРЕМЕННО !!!
    -- IF  vbUserId = 9457 THEN RAISE EXCEPTION 'Admin - Test = OK'; END IF;
