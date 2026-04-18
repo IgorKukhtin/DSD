@@ -170,18 +170,19 @@ $BODY$
          , tmpData.Price_promo
          , tmpData.Price_effie
     FROM tmpData
-    ;
+   ;
 
 
      --нужно записать в таблицу Object_Promo_effie  те элементы , которых нет - Договор + Прайс
-     INSERT INTO Object_Promo_effie (MovementId, ContractId, PriceListId, InsertDate)
+     INSERT INTO Object_Promo_effie (MovementId, PartnerId, ContractId, PriceListId, InsertDate)
      SELECT DISTINCT
             0 AS MovementId
+          , 0 AS PartnerId
           , _tmpPromoTax.ContractId
           , _tmpPromoTax.PriceListId
           , CURRENT_TIMESTAMP AS InsertDate
       FROM _tmpPromoTax
-           LEFT JOIN Object_Promo_effie ON Object_Promo_effie.ContractId = _tmpPromoTax.ContractId
+           LEFT JOIN Object_Promo_effie ON Object_Promo_effie.ContractId  = _tmpPromoTax.ContractId
                                        AND Object_Promo_effie.PriceListId = _tmpPromoTax.PriceListId
      WHERE Object_Promo_effie.Id IS NULL;
 
@@ -198,7 +199,8 @@ $BODY$
           , Object_Promo_effie.ContractId        ::TVarChar AS сontractHeaderExtId
           , zc_DateStart()                       ::TVarChar AS beginDate
           , zc_DateEnd()                         ::TVarChar AS endDate
-          , ('Прайс ' || Object_PriceList.ValueData||' Договір № '||Object_Contract.ValueData) ::TVarChar AS shortName
+        --, ('Прайс ' || Object_PriceList.ValueData||' Договір № '||Object_Contract.ValueData) ::TVarChar AS shortName
+          , 'Прайс'                                                                            ::TVarChar AS shortName
           , TRUE                                 ::Boolean  AS isAutoUse
           , NULL                                 ::TVarChar AS beforeDiscountQuestHeaderId
           , NULL                                 ::TVarChar AS afterDiscountQuestHeaderId

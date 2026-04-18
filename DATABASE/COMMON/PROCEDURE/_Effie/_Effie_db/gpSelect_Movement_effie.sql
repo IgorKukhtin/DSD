@@ -17,6 +17,7 @@ RETURNS TABLE (extId                      TVarChar   -- Идентификатор заказа
              , employeeName               TVarChar   -- ФИО сотрудника
              , createDate_ch	          TDateTime  -- Дата и время создания документа на мобильном устройстве
              , dbCreateDate_ch	          TDateTime  -- Дата и время (в UTC) записи документа в БД Effie
+             , docdate                    TDateTime  -- Желаемая дата поставки товара
              , priceHeaderExtId	          Integer    -- Идентификатор прайса
              , priceHeaderName	          TVarChar   -- Название прайса
              , contractHeaderExtId        Integer    -- Идентификатор контракта
@@ -24,7 +25,7 @@ RETURNS TABLE (extId                      TVarChar   -- Идентификатор заказа
              , orderForm                  TVarChar   -- W - 1 Форма, B - 2 форма
              , warehouseExtId             Integer    -- Идентификатор склада
              , warehouseName              TVarChar   -- Название склада
-             , MovementDescId             Integer    -- 
+             , MovementDescId             Integer    --
 
            --, productExtId               Integer    -- Идентификатор товара
            --, productName                TVarChar   -- Название товара
@@ -34,11 +35,18 @@ RETURNS TABLE (extId                      TVarChar   -- Идентификатор заказа
 
 $BODY$
    DECLARE vb1 Boolean;
+   DECLARE zc_Movement_OrderExternal Integer;
+   DECLARE zc_Movement_ReturnIn      Integer;
 BEGIN
+     -- Дата и время создания документа на мобильном устройстве
+     zc_Movement_OrderExternal:= zc_Movement_OrderExternal();
+     zc_Movement_ReturnIn:= zc_Movement_ReturnIn();
+
+
      -- Дата и время создания документа на мобильном устройстве
      vb1:= (SELECT gpSelect.Res
             FROM dblink ('host=192.168.251.33 dbname=effie_api port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
-                                 , ('SELECT Res 
+                                 , ('SELECT Res
                                     FROM gpUpdatet_Movement_Orders()'
                                     ) :: Text
                                   ) AS gpSelect (Res Boolean)
@@ -54,6 +62,7 @@ BEGIN
                               , gpSelect.employeeName         -- ФИО сотрудника
                               , gpSelect.createDate_ch        -- Дата и время создания документа на мобильном устройстве
                               , gpSelect.dbCreateDate_ch      -- Дата и время (в UTC) записи документа в БД Effie
+                              , gpSelect.docdate              -- Желаемая дата поставки товара
                               , gpSelect.priceHeaderExtId     -- Идентификатор прайса
                               , gpSelect.priceHeaderName      -- Название прайса
                               , gpSelect.contractHeaderExtId  -- Идентификатор контракта
@@ -61,23 +70,47 @@ BEGIN
                               , gpSelect.orderForm            -- W - 1 Форма, B - 2 форма
                               , gpSelect.warehouseExtId       -- Идентификатор склада
                               , gpSelect.warehouseName        -- Название склада
+                              , gpSelect.MovementDescId
                          FROM dblink ('host=192.168.251.33 dbname=effie_api port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
                                     , ('SELECT Orders.extId                ::TVarChar
-                                             , Orders.clientExtId          ::Integer 
+                                             , Orders.clientExtId          ::Integer
                                              , Orders.clientName           ::TVarChar
-                                             , Orders.employeeExtId        ::Integer 
+                                             , Orders.employeeExtId        ::Integer
                                              , Orders.employeeName         ::TVarChar
                                              , Orders.createDate_ch        ::TDateTime
                                              , Orders.dbCreateDate_ch      ::TDateTime
-                                             , Orders.priceHeaderExtId     ::Integer  
-                                             , Orders.priceHeaderName      ::TVarChar 
-                                             , Orders.contractHeaderExtId  ::Integer  
-                                             , Orders.comments	           ::TVarChar 
-                                             , Orders.orderForm            ::TVarChar 
-                                             , Orders.warehouseExtId       ::Integer  
-                                             , Orders.warehouseName        ::TVarChar 
-                                       FROM Orders
-                                       WHERE Orders.OperDate_get IS NULL'
+                                             , Orders.docdate              ::TDateTime -- Желаемая дата поставки товара
+                                             , Orders.priceHeaderExtId     ::Integer
+                                             , Orders.priceHeaderName      ::TVarChar
+                                             , Orders.contractHeaderExtId  ::Integer
+                                             , Orders.comments	           ::TVarChar
+                                             , Orders.orderForm            ::TVarChar
+                                             , Orders.warehouseExtId       ::Integer
+                                             , Orders.warehouseName        ::TVarChar
+                                             , ' || zc_Movement_OrderExternal ||' ::Integer AS MovementDescId
+                                        FROM Orders
+                                        WHERE Orders.OperDate_get IS NULL
+
+                                       UNION ALL
+                                        SELECT order_returns.extId         ::TVarChar
+                                             , order_returns.clientExtId   ::Integer
+                                             , order_returns.clientName    ::TVarChar
+                                             , order_returns.employeeExtId        ::Integer
+                                             , order_returns.employeeName         ::TVarChar
+                                             , order_returns.createDate_ch        ::TDateTime
+                                             , order_returns.dbCreateDate_ch      ::TDateTime
+                                             , NULL                        ::TDateTime
+                                             , NULL                        ::Integer   AS priceHeaderExtId
+                                             , NULL                        ::TVarChar  AS priceHeaderName
+                                             , NULL                        ::Integer   AS contractHeaderExtId
+                                             , order_returns.comments	   ::TVarChar
+                                             , order_returns.documentform  ::TVarChar
+                                             , NULL                        ::Integer   AS warehouseExtId
+                                             , NULL                        ::TVarChar  AS warehouseName
+                                             , ' || zc_Movement_ReturnIn ||' ::Integer AS MovementDescId
+                                        FROM order_returns
+                                        WHERE 1=0 AND order_returns.OperDate_get IS NULL
+                                       '
                                        ) :: Text
                                      ) AS gpSelect (extId                TVarChar   -- Идентификатор заказа
                                                   , clientExtId          Integer    -- Идентификатор контрагента, по которому сделан заказ
@@ -86,6 +119,7 @@ BEGIN
                                                   , employeeName         TVarChar   -- ФИО сотрудника
                                                   , createDate_ch        TDateTime  -- Дата и время создания документа на мобильном устройстве
                                                   , dbCreateDate_ch      TDateTime  -- Дата и время (в UTC) записи документа в БД Effie
+                                                  , docdate              TDateTime  -- Желаемая дата поставки товара
                                                   , priceHeaderExtId     Integer    -- Идентификатор прайса
                                                   , priceHeaderName      TVarChar   -- Название прайса
                                                   , contractHeaderExtId  Integer    -- Идентификатор контракта
@@ -93,6 +127,7 @@ BEGIN
                                                   , orderForm            TVarChar   -- W - 1 Форма, B - 2 форма
                                                   , warehouseExtId       Integer    -- Идентификатор склада
                                                   , warehouseName        TVarChar   -- Название склада
+                                                  , MovementDescId       Integer
                                                    )
                         )
      --
@@ -101,8 +136,11 @@ BEGIN
           , Orders.clientName           ::TVarChar   -- Название контрагента
           , Orders.employeeExtId        ::Integer    -- Идентификатор сотрудника, сделавшего заказ
           , Orders.employeeName         ::TVarChar   -- ФИО сотрудника
+
           , Orders.createDate_ch        ::TDateTime  -- Дата и время создания документа на мобильном устройстве
           , Orders.dbCreateDate_ch      ::TDateTime  -- Дата и время (в UTC) записи документа в БД Effie
+          , Orders.docdate              ::TDateTime  -- 
+
           , Orders.priceHeaderExtId     ::Integer    -- Идентификатор прайса
           , Orders.priceHeaderName      ::TVarChar   -- Название прайса
           , Orders.contractHeaderExtId  ::Integer    -- Идентификатор контракта
@@ -110,18 +148,11 @@ BEGIN
           , Orders.orderForm            ::TVarChar   -- W - 1 Форма, B - 2 форма
           , Orders.warehouseExtId       ::Integer    -- Идентификатор склада
           , Orders.warehouseName        ::TVarChar   -- Название склада
-          
-          , zc_Movement_OrderExternal() :: Integer AS MovementDescId
 
-        /*, orders_items.productExtId   ::Integer    -- Идентификатор товара
-          , orders_items.productName    ::TVarChar   -- Название товара
-          , orders_items.quantity	::TFloat     -- Количество товара
-          , orders_items.price	        ::TFloat     -- Цена за единицу товара с учетом всех скидок
-          */
+          , Orders.MovementDescId       ::Integer
+
 
      FROM _tmpresult AS Orders
-          -- JOIN orders_items ON orders_items.orderextId = Orders.extId
-     -- WHERE Orders.createDate_ch >= inStartDate - INTERVAL '1 DAY' AND Orders.createDate_ch < inEndDate + INTERVAL '1 DAY'
     ;
 
 END;

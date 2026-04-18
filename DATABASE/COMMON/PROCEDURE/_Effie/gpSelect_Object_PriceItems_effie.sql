@@ -217,7 +217,7 @@ $BODY$
      SELECT Object_PriceListItem_effie.Id    ::TVarChar AS extId
           , _tmpResult.PriceListId           ::TVarChar AS priceHeaderExtId
           , _tmpResult.GoodsByGoodsKindId    ::TVarChar AS productExtId
-          , _tmpResult.Price                 ::TVarChar AS price
+          , (_tmpResult.Price * 1.2)           ::TVarChar AS price
           , FALSE                            ::Boolean  AS isDeleted
      FROM _tmpResult
           LEFT JOIN Object_PriceListItem_effie ON Object_PriceListItem_effie.PriceListId = _tmpResult.PriceListId

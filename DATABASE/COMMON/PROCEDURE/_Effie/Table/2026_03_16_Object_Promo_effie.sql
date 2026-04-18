@@ -7,10 +7,13 @@
 
 
 /*-------------------------------------------------------------------------------*/
-
+-- drop table Object_Promo_effie;
+-- truncate table Object_Promo_effie;
+-- 
 CREATE TABLE Object_Promo_effie(
    Id                     BIGSERIAL NOT NULL PRIMARY KEY, 
    MovementId             Integer   NOT NULL,
+   PartnerId              Integer   NOT NULL,
    ContractId             Integer   NOT NULL,
    PriceListId            Integer   NOT NULL,
    InsertDate             TDateTime NOT NULL 
@@ -18,8 +21,8 @@ CREATE TABLE Object_Promo_effie(
 /*-------------------------------------------------------------------------------*/
 
 /*                                  »Ì‰ÂÍÒ˚                                      */
-CREATE UNIQUE INDEX idx_Object_Promo_effie_MovementId_ContractId_PriceListId ON Object_Promo_effie (MovementId, ContractId, PriceListId); 
-CREATE UNIQUE INDEX idx_Object_Promo_effie_ContractId_PriceListId_MovementId ON Object_Promo_effie (ContractId, PriceListId, MovementId); 
+CREATE UNIQUE INDEX idx_Object_Promo_effie_MovementId_ContractId_PriceListId ON Object_Promo_effie (MovementId, PartnerId, ContractId, PriceListId); 
+CREATE UNIQUE INDEX idx_Object_Promo_effie_ContractId_PriceListId_MovementId ON Object_Promo_effie (ContractId, PartnerId, PriceListId, MovementId); 
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

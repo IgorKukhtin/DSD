@@ -17,7 +17,6 @@ BEGIN
      -- временная таблица PriceListItem
      CREATE TEMP TABLE _tmpPromo (MovementId Integer, MovementItemId Integer, StartSale TDateTime, EndSale TDateTime, ContractId Integer, PartnerId Integer, GoodsId Integer, GoodsKindId Integer)  ON COMMIT DROP;
 
-     INSERT INTO _tmpPromo (MovementId, MovementItemId, StartSale, EndSale, ContractId, PartnerId, GoodsId, GoodsKindId)
      WITH
      tmpPromo AS (SELECT Movement_Promo.*
                   FROM Movement AS Movement_Promo
@@ -32,8 +31,7 @@ BEGIN
                     AND Movement_Promo.StatusId = zc_Enum_Status_Complete()
                     AND (MovementDate_StartSale.ValueData <= CURRENT_DATE
                          AND MovementDate_EndSale.ValueData >= CURRENT_DATE
-                        ) 
-        --    limit 1
+                        )
                  )
 
    , tmpGoodsByGoodsKind AS (SELECT DISTINCT
@@ -169,8 +167,6 @@ BEGIN
                                                             AND COALESCE (MILinkObject_GoodsKind.ObjectId,0) = 0
                            WHERE COALESCE (tmpGoodsByGoodsKind_GoodsKind.GoodsByGoodsKindId, tmpGoodsByGoodsKind.GoodsByGoodsKindId) <> 0
                            )
-
-
    , tmpData AS (SELECT Movement.Id    AS MovementId
                       , tmpMI.MovementItemId
                       , tmpPromoPartner.PartnerId
@@ -182,58 +178,65 @@ BEGIN
                       LEFT JOIN tmpPromoPartner ON tmpPromoPartner.ParentId = Movement.Id
                       INNER JOIN tmpMI_ByGoodsKind AS tmpMI ON tmpMI.MovementId = Movement.Id       --только те строки что соотв. условию выгрузки товара (ByGoodsKind)
                  )
+     -- Результат
+     INSERT INTO _tmpPromo (MovementId, MovementItemId, StartSale, EndSale, ContractId, PartnerId, GoodsId, GoodsKindId)
+        SELECT tmpData.MovementId
+             , tmpData.MovementItemId
+             , MovementDate_StartSale.ValueData     AS StartSale
+             , MovementDate_EndSale.ValueData       AS EndSale
+             , tmpData.ContractId
+             , tmpData.PartnerId
+             , tmpData.GoodsId
+             , tmpData.GoodsKindId
+        FROM tmpData
+             LEFT JOIN tmpMovementDate AS MovementDate_StartSale
+                                       ON MovementDate_StartSale.MovementId = tmpData.MovementId
+                                      AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
+             LEFT JOIN tmpMovementDate AS MovementDate_EndSale
+                                       ON MovementDate_EndSale.MovementId = tmpData.MovementId
+                                      AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
+       ;
 
-     SELECT tmpData.MovementId
-          , tmpData.MovementItemId
-          , MovementDate_StartSale.ValueData     AS StartSale
-          , MovementDate_EndSale.ValueData       AS EndSale
-          , tmpData.ContractId
-          , tmpData.PartnerId                    
-          , tmpData.GoodsId           
-          , tmpData.GoodsKindId                   
-     FROM tmpData
-          LEFT JOIN tmpMovementDate AS MovementDate_StartSale
-                                    ON MovementDate_StartSale.MovementId = tmpData.MovementId
-                                   AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
-          LEFT JOIN tmpMovementDate AS MovementDate_EndSale
-                                    ON MovementDate_EndSale.MovementId = tmpData.MovementId
-                                   AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
-     ;
- 
- 
+
      --нужно записать в таблицу Object_Promo_effie  те элементы , которых нет - ключ MovementItemId, GoodsKindId
-     INSERT INTO Object_Promo_effie (MovementId, ContractId, PriceListId, InsertDate)
+     INSERT INTO Object_Promo_effie (MovementId, PartnerId, ContractId, PriceListId, InsertDate)
      SELECT DISTINCT
             _tmpPromo.MovementId
-          , 0 AS ContractId
+          , _tmpPromo.PartnerId
+          , _tmpPromo.ContractId
           , 0 AS PriceListId
           , CURRENT_TIMESTAMP AS InsertDate
       FROM _tmpPromo
            LEFT JOIN Object_Promo_effie ON Object_Promo_effie.MovementId = _tmpPromo.MovementId
+                                       AND Object_Promo_effie.PartnerId  = _tmpPromo.PartnerId
+                                       AND Object_Promo_effie.ContractId = _tmpPromo.ContractId
      WHERE Object_Promo_effie.Id IS NULL;
 
 
+-- RAISE EXCEPTION 'Ошибка.<%>', (select COUNT(*) from _tmpPromo where _tmpPromo.MovementId = 33648201);
+
      --записываем в таблицу Object_PromoItem_effie  те элементы , которых нет
      INSERT INTO Object_PromoItem_effie (MovementId, MovementItemId, StartSale, EndSale, ContractId, PriceListId, PartnerId, GoodsId, GoodsKindId, InsertDate)
-     SELECT DISTINCT
-            _tmpPromo.MovementId
-          , _tmpPromo.MovementItemId
-          , _tmpPromo.StartSale
-          , _tmpPromo.EndSale                 
-          , _tmpPromo.ContractId
-          , 0                 AS PriceListId
-          , _tmpPromo.PartnerId
-          , _tmpPromo.GoodsId
-          , _tmpPromo.GoodsKindId
-          , CURRENT_TIMESTAMP AS InsertDate
-      FROM _tmpPromo
-           LEFT JOIN Object_PromoItem_effie ON Object_PromoItem_effie.MovementId  = _tmpPromo.MovementId
-                                           AND Object_PromoItem_effie.MovementItemId  = _tmpPromo.MovementItemId
-                                           AND Object_PromoItem_effie.ContractId  = _tmpPromo.ContractId
-                                           AND Object_PromoItem_effie.PartnerId   = _tmpPromo.PartnerId
-                                           AND Object_PromoItem_effie.GoodsId     = _tmpPromo.GoodsId
-                                           AND COALESCE (Object_PromoItem_effie.GoodsKindId,0) = COALESCE (_tmpPromo.GoodsKindId,0)
-     WHERE Object_PromoItem_effie.Id IS NULL;
+        SELECT DISTINCT
+               _tmpPromo.MovementId
+             , _tmpPromo.MovementItemId
+             , _tmpPromo.StartSale
+             , _tmpPromo.EndSale
+             , _tmpPromo.ContractId
+             , 0                 AS PriceListId
+             , _tmpPromo.PartnerId
+             , _tmpPromo.GoodsId
+             , _tmpPromo.GoodsKindId
+             , CURRENT_TIMESTAMP AS InsertDate
+         FROM _tmpPromo
+              LEFT JOIN Object_PromoItem_effie ON Object_PromoItem_effie.MovementId  = _tmpPromo.MovementId
+                                              AND Object_PromoItem_effie.MovementItemId  = _tmpPromo.MovementItemId
+                                              AND Object_PromoItem_effie.ContractId  = _tmpPromo.ContractId
+                                              AND Object_PromoItem_effie.PartnerId   = _tmpPromo.PartnerId
+                                              AND Object_PromoItem_effie.GoodsId     = _tmpPromo.GoodsId
+                                              AND COALESCE (Object_PromoItem_effie.GoodsKindId,0) = COALESCE (_tmpPromo.GoodsKindId,0)
+        WHERE Object_PromoItem_effie.Id IS NULL
+       ;
 
 END;
 $BODY$
@@ -247,4 +250,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM  gpInsert_Movement_DiscountPrograms_effie (zfCalc_UserAdmin()::TVarChar); ;
+-- SELECT * FROM  gpInsert_Movement_DiscountPrograms_effie (zfCalc_UserAdmin()::TVarChar);

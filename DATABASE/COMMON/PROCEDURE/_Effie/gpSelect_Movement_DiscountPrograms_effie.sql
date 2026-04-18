@@ -5,7 +5,8 @@ DROP FUNCTION IF EXISTS gpSelect_Movement_DiscountPrograms_effie ( TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Movement_DiscountPrograms_effie(
     IN inSession              TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (extId                      TVarChar   --Уникальный идентификатор промо акции
+RETURNS TABLE (MovementId                 Integer
+             , extId                      TVarChar   --Уникальный идентификатор промо акции
              , Name                       TVarChar   --Описание программы скидок
              , description                TVarChar   --Описание программы скидок
              , typeId                     Integer    --Тип расчета
@@ -25,6 +26,8 @@ RETURNS TABLE (extId                      TVarChar   --Уникальный идентификатор 
              , isPreDiscountCheckSkipped  Boolean    --Признак пропуска контроля цены до скидки
 
              , linkDiscounts_extId        TVarChar   --Идентификатор единицы связи. К примеру, типа связи по продуктам это будет значение внешнего идентификатора продукта.
+             , GoodsId                    Integer
+             , GoodsKindId                Integer
              , linkDiscounts_discount     TFloat     --"Объём скидки, используется только для типа программы скидок 1 - фиксированная.Допустимо отрицательное значение."
                -- для проверки
              , Price_orig                 TFloat     -- цена без НДС из док.Promo
@@ -150,7 +153,7 @@ $BODY$
                                                                      )
                                )
 
-   --цены по прайсам без скидки
+     -- цены по прайсам без скидки
    , tmpPriceListItem_effie AS (SELECT Object_PriceListItem_effie.*
                                 FROM Object_PriceListItem_effie
                                 WHERE Object_PriceListItem_effie.PriceListId IN (SELECT DISTINCT tmpPriceForTwin_effie.PriceListId FROM tmpPriceForTwin_effie)
@@ -165,6 +168,8 @@ $BODY$
                       , tmpMI.PartnerId
                       , COALESCE (tmpMI.ContractId, tmpPriceForTwin_effie_All.ContractId) AS ContractId
                       , tmpMI.GoodsByGoodsKindId
+                      , tmpMI.GoodsId
+                      , tmpMI.GoodsKindId
                       , tmpMI.Price                   AS Price
                       , tmpMI.OperPriceList           AS Price_orig
                       , tmpPriceListItem_effie.Price  AS Price_effie
@@ -188,7 +193,9 @@ $BODY$
                  )
 
     --
-     SELECT Object_Promo_effie.Id                ::TVarChar AS extId
+     SELECT DISTINCT
+            tmpData.MovementId                   ::Integer  AS MovementId
+          , Object_Promo_effie.Id                ::TVarChar AS extId
           , ('№ ' || Movement_Promo.InvNumber||' от '||zfConvert_DateToString (Movement_Promo.OperDate)) ::TVarChar AS Name
           , ('№ ' || Movement_Promo.InvNumber||' от '||zfConvert_DateToString (Movement_Promo.OperDate)) ::TVarChar AS description
           , 1                                    ::Integer  AS typeId
@@ -197,7 +204,8 @@ $BODY$
           , tmpData.ContractId                   ::TVarChar AS сontractHeaderExtId
           , tmpData.StartSale                    ::TVarChar AS beginDate
           , tmpData.EndSale                      ::TVarChar AS endDate
-          , ('№ ' || Movement_Promo.InvNumber||' от '||zfConvert_DateToString (Movement_Promo.OperDate)) ::TVarChar AS shortName
+        --, ('№ ' || Movement_Promo.InvNumber||' от '||zfConvert_DateToString (Movement_Promo.OperDate)) ::TVarChar AS shortName
+          , 'Акция'                                                                                      ::TVarChar AS shortName
           , TRUE                                 ::Boolean  AS isAutoUse
           , NULL                                 ::TVarChar AS beforeDiscountQuestHeaderId
           , NULL                                 ::TVarChar AS afterDiscountQuestHeaderId
@@ -208,6 +216,8 @@ $BODY$
           , FALSE                                ::Boolean  AS isPreDiscountCheckSkipped
 
           , tmpData.GoodsByGoodsKindId           ::TVarChar AS linkDiscounts_extId
+          , tmpData.GoodsId                      ::Integer
+          , tmpData.GoodsKindId                  ::Integer
           , tmpData.TaxPersent                   ::TFloat   AS linkDiscounts_discount
 
           , tmpData.Price_orig                   ::TFloat   AS Price_orig   -- цена без НДС из док.Promo
@@ -216,6 +226,8 @@ $BODY$
 
      FROM tmpData
           LEFT JOIN Object_Promo_effie ON Object_Promo_effie.MovementId = tmpData.MovementId
+                                      AND Object_Promo_effie.PartnerId  = tmpData.PartnerId
+                                      AND Object_Promo_effie.ContractId = tmpData.ContractId
           
           LEFT JOIN Movement AS Movement_Promo ON Movement_Promo.Id = tmpData.MovementId
 
@@ -232,48 +244,6 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  20.03.26         *
 */
-/*
-truncate table _tmpDiscountPrograms_effie;
 
-insert into _tmpDiscountPrograms_effie (extId
-                                          , Name
-                                          , description
-                                          , typeId
-                                          , linkTypeId
-                                          , priority
-                                          , сontractHeaderExtId
-                                          , beginDate
-                                          , endDate
-                                          , shortName
-                                          , isAutoUse
-                                          , beforeDiscountQuestHeaderId
-                                          , afterDiscountQuestHeaderId
-                                          , isDeleted
-                                          , customTypeExtId
-                                          , clientExtId
-                                          , isPreDiscountCheckSkipped
-                                          , linkDiscounts_extId
-                                          , linkDiscounts_discount)
-SELECT extId
-                                          , Name
-                                          , description
-                                          , typeId
-                                          , linkTypeId
-                                          , priority
-                                          , сontractHeaderExtId
-                                          , beginDate
-                                          , endDate
-                                          , shortName
-                                          , isAutoUse
-                                          , beforeDiscountQuestHeaderId
-                                          , afterDiscountQuestHeaderId
-                                          , isDeleted
-                                          , customTypeExtId
-                                          , clientExtId
-                                          , isPreDiscountCheckSkipped
-                                          , linkDiscounts_extId
-                                          , linkDiscounts_discount
-FROM gpSelect_Movement_DiscountPrograms_effie (zfCalc_UserAdmin()::TVarChar)
-*/
 -- тест
 -- SELECT * FROM gpSelect_Movement_DiscountPrograms_effie (zfCalc_UserAdmin()::TVarChar);

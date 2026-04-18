@@ -8,7 +8,9 @@
 
 /*-------------------------------------------------------------------------------*/
 
-CREATE TABLE _tmpDiscountPrograms_effie         (extId                      TVarChar   --Уникальный идентификатор промо акции
+-- DROP TABLE _tmpDiscountPrograms_effie 
+CREATE TABLE _tmpDiscountPrograms_effie         (MovementId                 Integer
+                                               , extId                      TVarChar   --Уникальный идентификатор промо акции
                                                , Name                       TVarChar   --Описание программы скидок
                                                , description                TVarChar   --Описание программы скидок
                                                , typeId                     Integer    --Тип расчета
@@ -28,7 +30,13 @@ CREATE TABLE _tmpDiscountPrograms_effie         (extId                      TVar
                                                , isPreDiscountCheckSkipped  Boolean    --Признак пропуска контроля цены до скидки
                                                
                                                , linkDiscounts_extId        TVarChar   --Идентификатор единицы связи. К примеру, типа связи по продуктам это будет значение внешнего идентификатора продукта.
+                                               , GoodsId                    Integer
+                                               , GoodsKindId                Integer
                                                , linkDiscounts_discount     TFloat     --"Объём скидки, используется только для типа программы скидок 1 - фиксированная.Допустимо отрицательное значение.    
+                                                 -- для проверки
+                                               , Price_orig                 TFloat     -- цена без НДС из док.Promo
+                                               , Price_effie                TFloat     -- цена из effie
+                                               , Price_promo                TFloat     -- цена Promo - со кидкой без НДС
                                                 );
 /*-------------------------------------------------------------------------------*/
 
@@ -41,8 +49,10 @@ CREATE TABLE _tmpDiscountPrograms_effie         (extId                      TVar
 */
 
 /*
+-- truncate table _tmpDiscountPrograms_effie;
 -- 1
-INSERT INTO _tmpDiscountPrograms_effie         (extId
+INSERT INTO _tmpDiscountPrograms_effie (MovementId                 
+                           , extId
                            , Name
                            , description
                            , typeId
@@ -60,26 +70,38 @@ INSERT INTO _tmpDiscountPrograms_effie         (extId
                            , clientExtId
                            , isPreDiscountCheckSkipped
                            , linkDiscounts_extId
-                           , linkDiscounts_discount)
-                      SELECT extId
-                           , Name
-                           , description
-                           , typeId
-                           , linkTypeId
-                           , priority
-                           , сontractHeaderExtId
-                           , beginDate
-                           , endDate
-                           , shortName
-                           , isAutoUse
-                           , beforeDiscountQuestHeaderId
-                           , afterDiscountQuestHeaderId
-                           , isDeleted
-                           , customTypeExtId
-                           , clientExtId
-                           , isPreDiscountCheckSkipped
-                           , linkDiscounts_extId
+                           , GoodsId
+                           , GoodsKindId
                            , linkDiscounts_discount
+                           , Price_orig
+                           , Price_effie
+                           , Price_promo
+                            )
+                      SELECT MovementId                 
+                           , extId
+                           , Name
+                           , description
+                           , typeId
+                           , linkTypeId
+                           , priority
+                           , сontractHeaderExtId
+                           , beginDate
+                           , endDate
+                           , shortName
+                           , isAutoUse
+                           , beforeDiscountQuestHeaderId
+                           , afterDiscountQuestHeaderId
+                           , isDeleted
+                           , customTypeExtId
+                           , clientExtId
+                           , isPreDiscountCheckSkipped
+                           , linkDiscounts_extId
+                           , GoodsId
+                           , GoodsKindId
+                           , linkDiscounts_discount
+                           , Price_orig
+                           , Price_effie
+                           , Price_promo
                     FROM gpSelect_Movement_DiscountPrograms_effie (zfCalc_UserAdmin()::TVarChar)
 
 -- 2

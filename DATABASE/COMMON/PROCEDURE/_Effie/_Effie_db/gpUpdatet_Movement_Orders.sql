@@ -10,12 +10,20 @@ BEGIN
 
      -- Результат
      UPDATE Orders SET -- Дата и время создания документа на мобильном устройстве
-                       createDate_ch = (LEFT (Orders.createDate, 10) || ' ' || SUBSTRING (Orders.createDate FROM 12)) :: TDateTime
+                       createDate_ch = (LEFT (createDate, 10) || ' ' || SUBSTRING (createDate FROM 12)) :: TDateTime
                        -- Дата и время (в UTC) записи документа в БД Effie
-                     , dbCreateDate_ch = (((LEFT (Orders.dbCreateDate, 10) || ' ' || SUBSTRING (Orders.dbCreateDate FROM 12)):: TIMESTAMP AT TIME ZONE 'UTC') AT TIME ZONE 'Europe/Kiev') :: TDateTime
-     WHERE Orders.createDate_ch IS NULL
+                     , dbCreateDate_ch = (((LEFT (dbCreateDate, 10) || ' ' || SUBSTRING (dbCreateDate FROM 12)):: TIMESTAMP AT TIME ZONE 'UTC') AT TIME ZONE 'Europe/Kiev') :: TDateTime
+     WHERE createDate_ch IS NULL
     ;
     
+     -- Результат
+     UPDATE order_returns SET -- Дата и время создания документа на мобильном устройстве
+                              createDate_ch = (LEFT (createDate, 10) || ' ' || SUBSTRING (createDate FROM 12)) :: TDateTime
+                              -- Дата и время (в UTC) записи документа в БД Effie
+                            , dbCreateDate_ch = (((LEFT (dbCreateDate, 10) || ' ' || SUBSTRING (dbCreateDate FROM 12)):: TIMESTAMP AT TIME ZONE 'UTC') AT TIME ZONE 'Europe/Kiev') :: TDateTime
+     WHERE createDate_ch IS NULL
+    ;
+
      RETURN QUERY
      SELECT TRUE :: Boolean;
 

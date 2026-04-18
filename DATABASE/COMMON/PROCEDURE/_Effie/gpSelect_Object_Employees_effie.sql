@@ -51,7 +51,7 @@ $BODY$
           , FALSE  ::Boolean  AS isDeleted
 
      FROM Object AS Object_Member 
-          INNER JOIN tmp_employee ON tmp_employee.MemberId = Object_Member.Id
+          LEFT JOIN tmp_employee ON tmp_employee.MemberId = Object_Member.Id
 
           LEFT JOIN ObjectLink AS ObjectLink_User_Member
                                ON ObjectLink_User_Member.ChildObjectId = Object_Member.Id
@@ -68,8 +68,15 @@ $BODY$
                                 AND ObjectString_User_.DescId = zc_ObjectString_User_Password()
 
      WHERE Object_Member.DescId = zc_Object_Member() 
+       AND (tmp_employee.MemberId > 0
+           OR Object_User.Id IN (106593  -- Галат Е.Н.
+                               , 7474984 -- Бородінчік Р.В.
+                                )
+           )
      --AND Object_Member.isErased = FALSE
-       AND Object_Member.Id NOT IN (13165, 1122130, 7015073) -- "Махов Тарас Володимирович"
+       AND Object_User.Id IN (106593  -- Галат Е.Н.
+                            , 7474984 -- Бородінчік Р.В.
+                             )
      --AND ObjectBoolean_ProjectMobile.ObjectId IS NULL
     ;
 
