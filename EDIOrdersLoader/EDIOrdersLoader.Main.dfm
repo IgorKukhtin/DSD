@@ -156,6 +156,14 @@ object MainForm: TMainForm
       Caption = #1090#1086#1083#1100#1082#1086' Excel'
       TabOrder = 10
     end
+    object cbEffie: TCheckBox
+      Left = 315
+      Top = 0
+      Width = 62
+      Height = 17
+      Caption = 'Effie'
+      TabOrder = 11
+    end
   end
   object ExportXmlGrid: TcxGrid
     Left = 0
@@ -12614,5 +12622,81 @@ object MainForm: TMainForm
     PackSize = 1
     Left = 112
     Top = 268
+  end
+  object Movement_effieCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 380
+    Top = 510
+  end
+  object spSelectMovement_effie: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_effie'
+    DataSet = Movement_effieCDS
+    DataSets = <
+      item
+        DataSet = Movement_effieCDS
+      end>
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 416
+    Top = 480
+  end
+  object spInsert_Movement_effie: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_effie'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inExtId'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementDescId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 504
+    Top = 528
+  end
+  object spUpdatet_effie_OperDate_get: TdsdStoredProc
+    StoredProcName = 'gpUpdatet_Movement_Orders_OperDate_get'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inExtId'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementDescId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 456
+    Top = 584
   end
 end

@@ -142,6 +142,11 @@ type
     mactVchasnoEDISignCondra: TMultiAction;
     actUpdateEdiCONDRASignTrue: TdsdExecStoredProc;
     spUpdateEdiCondraSign: TdsdStoredProc;
+    cbEffie: TCheckBox;
+    Movement_effieCDS: TClientDataSet;
+    spSelectMovement_effie: TdsdStoredProc;
+    spInsert_Movement_effie: TdsdStoredProc;
+    spUpdatet_effie_OperDate_get: TdsdStoredProc;
     procedure TrayIconClick(Sender: TObject);
     procedure AppMinimize(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -158,6 +163,8 @@ type
     FIntervalVal: Integer;
     FProccessing: Boolean;
     FProccessingEmail: Boolean;
+    FProccessingEffie: Boolean;
+
     isPrevDay_begin: Boolean;
     gErr: Boolean;
     Hour_onDel: Integer;
@@ -169,11 +176,13 @@ type
     procedure StopEDI;
     procedure ProccessEDI;
     procedure ProccessEmail;
+    procedure ProccessEffie;
     function fGet_Movement_Edi_stat : Integer;
     function fEdi_LoadData_from : Boolean;
     function fEdi_LoadDataVchasno_from : Boolean;
     function fEdi_SendData_to : Boolean;
     function fSale_SendEmail : Boolean;
+    function fOrder_LoadEffie : Boolean;
 
     procedure pSendReport_VchasnoEDI_err (MovementId_send_Edi: Integer;
                                           InvNumberPartner_order: String;
@@ -187,10 +196,11 @@ type
                                          );
   public
     { Public declarations }
-    procedure MyDelay_two(mySec:Integer);
+    procedure MyDelay_two(MSec_go:Integer);
     property IntervalVal: Integer read FIntervalVal;
     property Proccessing: Boolean read FProccessing write FProccessing;
     property ProccessingEmail: Boolean read FProccessingEmail write FProccessingEmail;
+    property ProccessingEffie: Boolean read FProccessingEffie write FProccessingEffie;
   end;
 
 var
@@ -200,7 +210,7 @@ implementation
 
 {$R *.dfm}
 
-procedure TMainForm.MyDelay_two(mySec:Integer);
+procedure TMainForm.MyDelay_two(MSec_go:Integer);
 var
   Present: TDateTime;
   Year, Month, Day, Hour, Min, Sec, MSec: Word;
@@ -213,7 +223,7 @@ begin
      //calcSec2:=Year*12*31*24*60*60+Month*31*24*60*60+Day*24*60*60+Hour*60*60+Min*60+Sec;
      calcSec:=Day*24*60*60*1000+Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
      calcSec2:=Day*24*60*60*1000+Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
-     while abs(calcSec-calcSec2)<mySec do
+     while abs(calcSec-calcSec2)<MSec_go do
      begin
           Present:=Now;
           DecodeDate(Present, Year, Month, Day);
@@ -246,6 +256,8 @@ begin
           //
           Hour_onSendEmail:=-1;
           ProccessEmail;
+          //
+          ProccessEffie;
       finally
           Timer.Enabled:=True;
       end;
@@ -368,10 +380,13 @@ begin
   actVchasnoEDIDelnot.ShowErrorMessages.Value:= FALSE;
   actVchasnoEDIComDoc.ShowErrorMessages.Value:= FALSE;
   //
-  cbEmailExcel.Checked:= TRUE; // ParamStr(3) = 'Excel';
-  cbLoad.Checked:=  TRUE; // ParamStr(3) = '';
-  cbSend.Checked:=  TRUE; // ParamStr(3) = '';
-  cbEmail.Checked:= TRUE; // ParamStr(3) = '';
+  cbEmailExcel.Checked:= ParamStr(3) <> 'Effie';//TRUE; // ParamStr(3) = 'Excel';
+  cbLoad.Checked:=  ParamStr(3) <> 'Effie';//TRUE; // ParamStr(3) = '';
+  cbSend.Checked:=  ParamStr(3) <> 'Effie';//TRUE; // ParamStr(3) = '';
+  cbEmail.Checked:= ParamStr(3) <> 'Effie';//TRUE; // ParamStr(3) = '';
+  cbEffie.Checked:= ParamStr(3) = 'Effie'; // ParamStr(3) = '';
+  if ParamStr(3) = 'Effie' then Self.Caption:= 'Загрузка заказов Effie';
+
 
   // При запуске считаем что пред день НЕ надо, т.е. он уже обработан
   isPrevDay_begin:= false;
@@ -922,12 +937,96 @@ begin
 
 end;
 
+function TMainForm.fOrder_LoadEffie : Boolean;
+var Err_str: String;
+    i, i_ok : Integer;
+    Present_1, Present_2: TDateTime;
+    Hour, Min, Sec, MSec: Word;
+    calcSec:LongInt;
+begin
+     Present_1:=Now;
+     //
+     if (cbEffie.Checked = FALSE) then
+     begin
+          AddToLog('.....');
+          AddToLog('ОТКЛЮЧИЛИ загрузку Effie');
+          Result:= true;
+          exit
+     end;
+
+     Result:= false;
+
+     spSelectMovement_effie.ParamByName('inStartDate').Value:= Date;
+     spSelectMovement_effie.ParamByName('inEndDate').Value:= Date;
+     spSelectMovement_effie.Execute;
+     Movement_effieCDS.First;
+     if Movement_effieCDS.RecordCount = 0 then
+     begin
+          AddToLog('.....');
+          AddToLog('Нет загрузки Effie <' + IntToStr(Movement_effieCDS.RecordCount) + '>');
+
+          Result:= true;
+          exit
+     end;
+
+     AddToLog('.....');
+     AddToLog('Началась загрузка Effie итого : <' + IntToStr(Movement_effieCDS.RecordCount) + '>');
+     i:= 1;
+     i_ok:=0;
+
+     with Movement_effieCDS do
+     while (not EOF) do
+     begin
+          Application.ProcessMessages;
+          Application.ProcessMessages;
+          // Попробовали
+          try
+              spInsert_Movement_effie.ParamByName('inExtId').Value:= FieldByName('extId').AsString;
+              spInsert_Movement_effie.ParamByName('inMovementDescId').Value:= FieldByName('MovementDescId').AsString;
+              spInsert_Movement_effie.Execute;
+              //
+              spUpdatet_effie_OperDate_get.ParamByName('inExtId').Value:= FieldByName('extId').AsString;
+              spUpdatet_effie_OperDate_get.ParamByName('inMovementDescId').Value:= FieldByName('MovementDescId').AsString;
+              spUpdatet_effie_OperDate_get.Execute;
+              //
+              i_ok:= i_ok + 1;
+              Application.ProcessMessages;
+              // Сохранили что Загрузка прошла
+              AddToLog('Загрузка Effie без ошибки № : <' + IntToStr(i) + '> <' + FieldByName('extId').AsString + '> <' + FieldByName('clientName').AsString + '> <' + FieldByName('warehouseName').AsString + '> <' + FieldByName('createDate_ch').AsString + '>' + '> <' + FieldByName('dbCreateDate_ch').AsString + '>');
+          except
+              // FormParams.ParamByName('Err_str_Email').Value := 'Ошибка при отправке';
+              AddToLog('Ошибка при загрузке Effie: <' + IntToStr(i) + '> <' + FieldByName('extId').AsString + '> <' + FieldByName('clientName').AsString + '> <' + FieldByName('warehouseName').AsString + '> <' + FieldByName('createDate_ch').AsString + '>' + '> <' + FieldByName('dbCreateDate_ch').AsString + '>');
+              //
+              Application.ProcessMessages;
+              // Сохранили что ошибка
+              //actUpdate_Email_Send_err.Execute;
+          end;
+          //
+          //AddToLog('завершен № : <' + IntToStr(i) + '> из <' + IntToStr(RecordCount) + '>');
+          //
+          Next;
+          i:= i+1;
+     end;
+
+     //
+     Present_2:=Now-Present_1;
+     DecodeTime(Present_2, Hour, Min, Sec, MSec);
+     //calcSec2:=Year*12*31*24*60*60+Month*31*24*60*60+Day*24*60*60+Hour*60*60+Min*60+Sec;
+     calcSec:= Hour*60*60 + Min*60 + Sec + ROUND (MSec / 1000);
+     //
+     AddToLog('Завершилась загрузка Effie ('+IntToStr(calcSec)+' sec) : <' + IntToStr(i_ok) + '> из <' + IntToStr(Movement_effieCDS.RecordCount) + '>');
+     AddToLog('.....');
+
+end;
+
+
 procedure TMainForm.ProccessEDI;
 var Present: TDateTime;
     Hour, Min, Sec, MSec: Word;
     IntervalStr: string;
 begin
 if ParamStr(1) <> 'alan_dp_ua' then exit;
+if ParamStr(3) = 'Effie'       then exit;
 
   ActiveControl:= cbPrevDay;
 
@@ -1021,6 +1120,7 @@ var Present: TDateTime;
     IntervalStr: string;
 begin
 if ParamStr(1) <> 'alan_dp_ua' then exit;
+if ParamStr(3) = 'Effie'       then exit;
 
   ActiveControl:= cbPrevDay;
 //exit;
@@ -1057,6 +1157,36 @@ finally
 end;
 
 end;
+
+procedure TMainForm.ProccessEffie;
+var Present: TDateTime;
+    Hour, Min, Sec, MSec: Word;
+    IntervalStr: string;
+begin
+  //if ParamStr(1) <> 'alan_dp_ua' then exit;
+
+  //если уже работает, повторно НЕ запускаем
+  if ProccessingEffie then
+    Exit;
+
+
+  try
+    ProccessingEffie := True;
+    //
+    // !!! Только Отправка !!!
+    try fOrder_LoadEffie;
+    except
+          on E: Exception do begin
+             AddToLog('**** Ошибка *** Order_Load Effie *** : ' + E.Message);
+          end;
+    end;
+
+  finally
+    ProccessingEffie := False;
+  end;
+
+end;
+
 
 procedure TMainForm.StartEDI;
 begin
@@ -1097,6 +1227,8 @@ begin
     ProccessEDI;
     //
     ProccessEmail;
+    //
+    ProccessEffie;
 
   finally
     Timer.Enabled:= true;
