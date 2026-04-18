@@ -86,7 +86,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 -- test
--- if inMovementId= 31430956  then update Movement set StatusId = zc_Enum_Status_Complete() where Id= 31430956; end if;
+ -- if inMovementId= 31430956  and vbUserId  = 5 then update Movement set StatusId = zc_Enum_Status_UnComplete() where Id= inMovementId; end if;
 
      -- сразу запомнили время начала выполнения Проц.
      vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
