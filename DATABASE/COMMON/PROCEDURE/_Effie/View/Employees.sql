@@ -18,7 +18,7 @@ AS
                            , leadExtId
                            , notificationLanguage
                            , isDeleted
-                      FROM dblink ('host=192.168.0.228 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
+                      FROM dblink ('host=192.168.0.219 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
                                  , ('SELECT extId
                                           , Name 
                                           , orgStructExtId
@@ -52,7 +52,7 @@ AS
                                                 )
                      )
  --
- SELECT extId
+ SELECT _tmpresult.extId
       , Name 
       , orgStructExtId
       , groupId
@@ -67,6 +67,9 @@ AS
       , notificationLanguage
       , isDeleted
    FROM _tmpresult
+        --INNER JOIN Employees_new ON Employees_new.extId = _tmpresult.extId
+                                -- только новые
+                                --AND Employees_new.isNew = TRUE
   ;
 
 ALTER TABLE Employees  OWNER TO postgres;

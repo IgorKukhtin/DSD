@@ -33,7 +33,14 @@ BEGIN
      END IF;
 
 
-     IF inMovementDescId = zc_Movement_OrderExternal()
+     IF inMovementDescId = zc_Movement_ReturnIn()
+     THEN
+         --
+         PERFORM gpInsert_Movement_ReturnIn_effie (inExtId   := inExtId
+                                                 , inSession := inSession
+                                                  );
+
+     ELSEIF inMovementDescId = zc_Movement_OrderExternal()
      THEN
          -- Результат
          CREATE TEMP TABLE _tmpItem ON COMMIT DROP AS
@@ -189,6 +196,7 @@ BEGIN
         FROM _tmpItem
        ;
 
+        -- Удаление
         PERFORM gpSetMobileErased_Movement_OrderExternal (inMovementGUID:= (SELECT DISTINCT _tmpItem.extId FROM _tmpItem)
                                                         , inSession     := (SELECT DISTINCT OL.ObjectId FROM ObjectLink AS OL JOIN _tmpItem ON _tmpItem.employeeExtId = OL.ChildObjectId WHERE OL.DescId = zc_ObjectLink_User_Member()) :: TVarChar
                                                          );

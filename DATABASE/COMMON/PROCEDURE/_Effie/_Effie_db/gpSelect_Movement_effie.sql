@@ -47,9 +47,10 @@ BEGIN
      vb1:= (SELECT gpSelect.Res
             FROM dblink ('host=192.168.251.33 dbname=effie_api port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
                                  , ('SELECT Res
-                                    FROM gpUpdatet_Movement_Orders()'
-                                    ) :: Text
-                                  ) AS gpSelect (Res Boolean)
+                                     FROM gpUpdatet_Movement_Orders()
+                                    '
+                                   ) :: Text
+                        ) AS gpSelect (Res Boolean)
            );
 
 
@@ -109,7 +110,7 @@ BEGIN
                                              , NULL                        ::TVarChar  AS warehouseName
                                              , ' || zc_Movement_ReturnIn ||' ::Integer AS MovementDescId
                                         FROM order_returns
-                                        WHERE 1=0 AND order_returns.OperDate_get IS NULL
+                                        WHERE 1=1 AND order_returns.OperDate_get IS NULL
                                        '
                                        ) :: Text
                                      ) AS gpSelect (extId                TVarChar   -- Идентификатор заказа

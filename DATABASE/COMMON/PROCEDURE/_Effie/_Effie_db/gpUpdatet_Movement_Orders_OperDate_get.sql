@@ -24,6 +24,18 @@ BEGIN
                 FROM dblink_exec ('host=192.168.251.33 dbname=effie_api port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
                                    -- Результат
                                 , vbScript));
+
+     ELSEIF inMovementDescId = zc_Movement_ReturnIn()
+     THEN 
+         -- Результат
+         vbScript:= 'UPDATE order_returns SET OperDate_get = CURRENT_TIMESTAMP WHERE extId = ' || CHR (39) ||  inExtId || CHR (39);
+    
+         -- Результат
+         vb1:= (SELECT *
+                FROM dblink_exec ('host=192.168.251.33 dbname=effie_api port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
+                                   -- Результат
+                                , vbScript));
+
      END IF;
 
 END;

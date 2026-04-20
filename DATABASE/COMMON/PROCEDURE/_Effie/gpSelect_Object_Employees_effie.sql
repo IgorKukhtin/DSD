@@ -25,13 +25,69 @@ RETURNS TABLE (extId           TVarChar   -- Уникальный идентификатор сотрудника
 
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbR RECORD;
+   DECLARE vbScript      TEXT;
+   DECLARE vb1           TEXT;
  BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
+
+     -- Результат
+     CREATE TEMP TABLE _tmpEmployee ON COMMIT DROP AS
+       WITH tmpList AS (SELECT DISTINCT gpSelect.employeeExtId :: Integer AS MemberId FROM gpSelect_Object_EmployeesTT_effie('') AS gpSelect
+                       UNION
+                        SELECT ObjectLink_User_Member.ChildObjectId AS MemberId
+                        FROM ObjectLink AS ObjectLink_User_Member
+                        WHERE ObjectLink_User_Member.ObjectId IN (106593  -- Галат Е.Н. -- 149837
+                                                                , 7474984 -- Бородінчік Р.В. -- 7470987
+                                                                 )
+                           AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                       )
+       --
+       SELECT tmpList.MemberId, Object_User.Id AS UserId
+       FROM tmpList
+            LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                 ON ObjectLink_User_Member.ChildObjectId = tmpList.MemberId
+                                AND ObjectLink_User_Member.DescId       = zc_ObjectLink_User_Member()
+            INNER JOIN Object AS Object_User ON Object_User.Id = ObjectLink_User_Member.ObjectId  
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_ProjectMobile
+                                    ON ObjectBoolean_ProjectMobile.ObjectId  = ObjectLink_User_Member.ObjectId
+                                   AND ObjectBoolean_ProjectMobile.DescId    = zc_ObjectBoolean_User_ProjectMobile()
+                                   AND ObjectBoolean_ProjectMobile.ValueData = TRUE
+       -- WHERE ObjectBoolean_ProjectMobile.ObjectId IS NULL
+      ;
+        
+
+     -- Все кто есть больше не передаются
+     UPDATE Object_Employees_effie SET isNew = FALSE;
+
+     -- Новые для этой сессии
+     INSERT INTO Object_Employees_effie (MemberId, isNew, InsertDate)
+        SELECT _tmpEmployee.MemberId, TRUE, CURRENT_TIMESTAMP
+        FROM _tmpEmployee
+             LEFT JOIN Object_Employees_effie ON Object_Employees_effie.MemberId = _tmpEmployee.MemberId
+        -- только новые     
+        WHERE Object_Employees_effie.MemberId IS NULL
+       ;
+        
+     -- Заливаем только новые в базу Effie
+     FOR vbR IN (SELECT Object_Employees_effie.MemberId FROM Object_Employees_effie WHERE Object_Employees_effie.isNew = TRUE)
+     LOOP
+         vbScript:= 'INSERT INTO Employees_new (extId, isNew) SELECT ' || CHR (39) || vbR.MemberId :: TVarChar || CHR (39) || ', TRUE '
+                 || ' WHERE NOT EXISTS (SELECT 1 FROM Employees_new WHERE Employees_new.extId = ' || CHR (39) || vbR.MemberId :: TVarChar || CHR (39) || ' ) '
+                   ;
+         -- Результат
+         vb1:= (SELECT *
+                FROM dblink_exec ('host=192.168.251.33 dbname=effie_api port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
+                                   -- Результат
+                                , vbScript
+                                 ));
+     END LOOP;
+
+
      -- Результат
      RETURN QUERY
-     WITH tmp_employee AS (SELECT DISTINCT gpSelect.employeeExtId :: Integer AS MemberId FROM gpSelect_Object_EmployeesTT_effie('') AS gpSelect)
      SELECT DISTINCT
             Object_Member.Id                             ::TVarChar AS extId
           , TRIM (Object_Member.ValueData)               ::TVarChar AS Name 
@@ -51,33 +107,13 @@ $BODY$
           , FALSE  ::Boolean  AS isDeleted
 
      FROM Object AS Object_Member 
-          LEFT JOIN tmp_employee ON tmp_employee.MemberId = Object_Member.Id
-
-          LEFT JOIN ObjectLink AS ObjectLink_User_Member
-                               ON ObjectLink_User_Member.ChildObjectId = Object_Member.Id
-                              AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-          INNER JOIN Object AS Object_User ON Object_User.Id       = ObjectLink_User_Member.ObjectId  
-        
-          LEFT JOIN ObjectBoolean AS ObjectBoolean_ProjectMobile
-                                   ON ObjectBoolean_ProjectMobile.ObjectId  = ObjectLink_User_Member.ObjectId
-                                  AND ObjectBoolean_ProjectMobile.DescId    = zc_ObjectBoolean_User_ProjectMobile()
-                                  AND ObjectBoolean_ProjectMobile.ValueData = TRUE
+          INNER JOIN _tmpEmployee ON _tmpEmployee.MemberId = Object_Member.Id
 
           LEFT JOIN ObjectString AS ObjectString_User_
-                                 ON ObjectString_User_.ObjectId = Object_User.Id
+                                 ON ObjectString_User_.ObjectId = _tmpEmployee.UserId
                                 AND ObjectString_User_.DescId = zc_ObjectString_User_Password()
 
      WHERE Object_Member.DescId = zc_Object_Member() 
-       AND (tmp_employee.MemberId > 0
-           OR Object_User.Id IN (106593  -- Галат Е.Н.
-                               , 7474984 -- Бородінчік Р.В.
-                                )
-           )
-     --AND Object_Member.isErased = FALSE
-       AND Object_User.Id IN (106593  -- Галат Е.Н.
-                            , 7474984 -- Бородінчік Р.В.
-                             )
-     --AND ObjectBoolean_ProjectMobile.ObjectId IS NULL
     ;
 
 
