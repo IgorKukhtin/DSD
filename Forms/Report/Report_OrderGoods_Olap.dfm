@@ -22,7 +22,7 @@ object Report_OrderGoods_OlapForm: TReport_OrderGoods_OlapForm
     Left = 0
     Top = 0
     Width = 977
-    Height = 55
+    Height = 89
     Align = alTop
     TabOrder = 0
     object deStart: TcxDateEdit
@@ -130,10 +130,64 @@ object Report_OrderGoods_OlapForm: TReport_OrderGoods_OlapForm
       TabOrder = 12
       Width = 213
     end
-    object edSearchBarCode: TcxTextEdit
-      Left = 808
-      Top = 27
+    object edSearchGoodsName: TcxTextEdit
+      Left = 128
+      Top = 56
       TabOrder = 13
+      DesignSize = (
+        138
+        21)
+      Width = 138
+    end
+    object cxLabel6: TcxLabel
+      Left = 5
+      Top = 56
+      Caption = #1055#1086#1080#1089#1082' '#1087#1086' '#1090#1086#1074#1072#1088#1091':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchGoodsCode: TcxTextEdit
+      Left = 360
+      Top = 56
+      TabOrder = 15
+      DesignSize = (
+        138
+        21)
+      Width = 138
+    end
+    object cxLabel7: TcxLabel
+      Left = 272
+      Top = 56
+      Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object cxLabel9: TcxLabel
+      Left = 504
+      Top = 56
+      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchPartnerInName: TcxTextEdit
+      Left = 592
+      Top = 56
+      TabOrder = 18
       DesignSize = (
         138
         21)
@@ -142,14 +196,16 @@ object Report_OrderGoods_OlapForm: TReport_OrderGoods_OlapForm
   end
   object cxDBPivotGrid: TcxDBPivotGrid
     Left = 0
-    Top = 81
+    Top = 115
     Width = 977
-    Height = 336
+    Height = 302
     Align = alClient
     DataSource = MasterDS
     Groups = <>
     OptionsView.RowGrandTotalWidth = 456
     TabOrder = 1
+    ExplicitTop = 81
+    ExplicitHeight = 336
     object pvServiceDate: TcxDBPivotGridField
       Area = faColumn
       AreaIndex = 0
@@ -443,8 +499,6 @@ object Report_OrderGoods_OlapForm: TReport_OrderGoods_OlapForm
     Align = alBottom
     TabOrder = 6
     Visible = False
-    ExplicitTop = 321
-    ExplicitHeight = 127
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -656,6 +710,14 @@ object Report_OrderGoods_OlapForm: TReport_OrderGoods_OlapForm
         Options.Editing = False
         Width = 33
       end
+      object PartnerInName: TcxGridDBColumn
+        Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+        DataBinding.FieldName = 'PartnerInName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 101
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -663,14 +725,14 @@ object Report_OrderGoods_OlapForm: TReport_OrderGoods_OlapForm
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
-    Left = 120
-    Top = 208
+    Left = 160
+    Top = 216
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 80
-    Top = 208
+    Left = 128
+    Top = 224
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -732,7 +794,7 @@ object Report_OrderGoods_OlapForm: TReport_OrderGoods_OlapForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 176
+    Left = 216
     Top = 216
     DockControlHeights = (
       0
@@ -805,8 +867,8 @@ object Report_OrderGoods_OlapForm: TReport_OrderGoods_OlapForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 40
-    Top = 200
+    Left = 112
+    Top = 208
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1141,8 +1203,8 @@ object Report_OrderGoods_OlapForm: TReport_OrderGoods_OlapForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 600
-    Top = 27
+    Left = 544
+    Top = 3
   end
   object cfPrice: TdsdPivotGridCalcFields
     PivotGrid = cxDBPivotGrid
@@ -1186,12 +1248,20 @@ object Report_OrderGoods_OlapForm: TReport_OrderGoods_OlapForm
     Top = 6
   end
   object FieldFilter_Name: TdsdFieldFilter
-    TextEdit = edSearchBarCode
+    TextEdit = edSearchGoodsName
     DataSet = MasterCDS
     Column = GoodsName
     ColumnList = <
       item
         Column = GoodsName
+      end
+      item
+        Column = GoodsCode
+        TextEdit = edSearchGoodsCode
+      end
+      item
+        Column = PartnerInName
+        TextEdit = edSearchPartnerInName
       end>
     CheckBoxList = <>
     Left = 832

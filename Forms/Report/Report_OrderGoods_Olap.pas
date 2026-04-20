@@ -70,7 +70,7 @@ type
     cxLabel5: TcxLabel;
     edPriceList: TcxButtonEdit;
     GuidesPriceList: TdsdGuides;
-    edSearchBarCode: TcxTextEdit;
+    edSearchGoodsName: TcxTextEdit;
     FieldFilter_Name: TdsdFieldFilter;
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
@@ -80,6 +80,12 @@ type
     GoodsKindName: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
+    cxLabel6: TcxLabel;
+    edSearchGoodsCode: TcxTextEdit;
+    cxLabel7: TcxLabel;
+    cxLabel9: TcxLabel;
+    edSearchPartnerInName: TcxTextEdit;
+    PartnerInName: TcxGridDBColumn;
   private
   public
   end;
