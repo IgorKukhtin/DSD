@@ -2932,13 +2932,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderGoodsGP_OlapForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderGoodsGP_OlapDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderGoodsGP_OlapDialogForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderGoods_OlapForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderGoods_OlapForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderGoods_OlapDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderGoods_OlapDialogForm');
   exit;
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemains_byPackForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsRemains_byPackForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemains_byPackDialogForm'));
