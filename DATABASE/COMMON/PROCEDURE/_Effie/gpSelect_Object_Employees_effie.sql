@@ -37,25 +37,24 @@ $BODY$
      CREATE TEMP TABLE _tmpEmployee ON COMMIT DROP AS
        WITH tmpList AS (SELECT DISTINCT gpSelect.employeeExtId :: Integer AS MemberId FROM gpSelect_Object_EmployeesTT_effie('') AS gpSelect
                        UNION
-                        SELECT ObjectLink_User_Member.ChildObjectId AS MemberId
-                        FROM ObjectLink AS ObjectLink_User_Member
-                        WHERE ObjectLink_User_Member.ObjectId IN (106593  -- Галат Е.Н. -- 149837
-                                                                , 7474984 -- Бородінчік Р.В. -- 7470987
-                                                                 )
-                           AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                        SELECT ObjectBoolean_Member_Effie.ObjectId AS MemberId
+                        FROM ObjectBoolean AS ObjectBoolean_Member_Effie
+                        WHERE ObjectBoolean_Member_Effie.ValueData = TRUE
+                           AND ObjectBoolean_Member_Effie.DescId = zc_ObjectBoolean_Member_Effie()
                        )
        --
-       SELECT tmpList.MemberId, Object_User.Id AS UserId
+       SELECT tmpList.MemberId, MAX (Object_User.Id) AS UserId
        FROM tmpList
             LEFT JOIN ObjectLink AS ObjectLink_User_Member
                                  ON ObjectLink_User_Member.ChildObjectId = tmpList.MemberId
                                 AND ObjectLink_User_Member.DescId       = zc_ObjectLink_User_Member()
-            INNER JOIN Object AS Object_User ON Object_User.Id = ObjectLink_User_Member.ObjectId  
+            LEFT JOIN Object AS Object_User ON Object_User.Id = ObjectLink_User_Member.ObjectId  
             LEFT JOIN ObjectBoolean AS ObjectBoolean_ProjectMobile
                                     ON ObjectBoolean_ProjectMobile.ObjectId  = ObjectLink_User_Member.ObjectId
                                    AND ObjectBoolean_ProjectMobile.DescId    = zc_ObjectBoolean_User_ProjectMobile()
                                    AND ObjectBoolean_ProjectMobile.ValueData = TRUE
        -- WHERE ObjectBoolean_ProjectMobile.ObjectId IS NULL
+       GROUP BY tmpList.MemberId
       ;
         
 
@@ -96,7 +95,7 @@ $BODY$
           , 'AC86FF1D-78F8-4D0A-A0F9-3422C6BBA570'       ::TVarChar AS roles
           , ('User'||Object_Member.Id::TVarChar||'@alan.ua')  ::TVarChar AS login
           , ('User'||Object_Member.Id::TVarChar||'@alan.ua')  ::TVarChar AS email           --user+zc_Object_Member.Id@alan.ua
-          , (ObjectString_User_.ValueData||'SFA')            ::TVarChar AS password
+          , COALESCE (ObjectString_User_.ValueData||'SFA', 'sfa12345SFA')  ::TVarChar AS password
           , '01.01.2026'                                 ::TVarChar AS activationDate
           , ''                                           ::TVarChar AS phone
           , Object_Member.ObjectCode                     ::TVarChar AS personalNumber

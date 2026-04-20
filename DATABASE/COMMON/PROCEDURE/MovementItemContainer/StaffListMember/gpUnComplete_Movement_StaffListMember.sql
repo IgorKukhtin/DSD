@@ -29,19 +29,19 @@ BEGIN
      WHERE Movement.Id = inMovementId
      ;
 
-     vbMovementId_last := (--проверка на наличие хоть одного документа после текущего
-                           SELECT Movement.Id
+     --проверка на наличие хоть одного документа после текущего
+     vbMovementId_last := (SELECT Movement.Id
                            FROM Movement 
                                 INNER JOIN MovementLinkObject AS MovementLinkObject_Member
                                                               ON MovementLinkObject_Member.MovementId = Movement.Id
                                                              AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
                                                              AND MovementLinkObject_Member.ObjectId = vbMemberId
                            WHERE Movement.DescId = zc_Movement_StaffListMember()
-                             AND Movement.OperDate >= vbOperDate
+                             AND Movement.OperDate > vbOperDate
                              AND Movement.StatusId = zc_Enum_Status_Complete()
                              AND Movement.Id <> inMovementId
                            LIMIT 1
-                           );
+                          );
 
      IF COALESCE (vbMovementId_last,0) <> 0
      THEN
