@@ -70,7 +70,7 @@ BEGIN
                      , SUM (CASE WHEN tmpWeekDay.Number = 7 THEN 1 ELSE 0 END) AS Count_7
                 FROM tmpDate
                      LEFT JOIN zfCalc_DayOfWeekName (tmpDate.OperDate) AS tmpWeekDay ON 1=1
-                ) 
+               ) 
        SELECT 0 AS Id
             , CAST (NEXTVAL ('Movement_StaffList_seq') as TVarChar) AS InvNumber
             , inOperDate            AS OperDate                            --CURRENT_DATE

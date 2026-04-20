@@ -392,6 +392,7 @@ BEGIN
           LEFT JOIN Object AS Object_Member_Mentor ON Object_Member_Mentor.Id = ObjectLink_Personal_Member_Mentor.ChildObjectId
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_StaffListMember()
+       LIMIT 1
       ;
       END IF;
   
