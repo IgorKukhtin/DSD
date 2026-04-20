@@ -1226,7 +1226,7 @@ inherited StaffListMemberForm: TStaffListMemberForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMember_ReferId'
+        Name = 'inMember_MentorId'
         Value = Null
         Component = GuidesMember_Mentor
         ComponentItem = 'Key'
