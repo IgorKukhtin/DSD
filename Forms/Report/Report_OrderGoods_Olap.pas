@@ -70,6 +70,8 @@ type
     cxLabel5: TcxLabel;
     edPriceList: TcxButtonEdit;
     GuidesPriceList: TdsdGuides;
+    edSearchBarCode: TcxTextEdit;
+    FieldFilter_Name: TdsdFieldFilter;
   private
   public
   end;
