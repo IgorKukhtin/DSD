@@ -18,6 +18,8 @@ BEGIN
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_StaffList());
       vbUserId:= lpGetUserBySession (inSession);
 
+      RAISE EXCEPTION 'Ошибка.Проведение заблокировано.Проведение возможно через функцию изменить+сохранить.';  
+
      -- проверить нет ли документа после 
      SELECT Movement.OperDate
           , MovementLinkObject_Member.ObjectId AS MemberId

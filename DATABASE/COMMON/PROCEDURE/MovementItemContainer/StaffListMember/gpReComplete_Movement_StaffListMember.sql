@@ -14,6 +14,8 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_StaffListMember());
 
+     RAISE EXCEPTION 'Ошибка.Проведение заблокировано.Проведение возможно через функцию изменить+сохранить.';  
+
      IF vbUserId = lpCheckRight(inSession, zc_Enum_Process_UnComplete_StaffListMember())
      THEN
          -- Распроводим Документ
