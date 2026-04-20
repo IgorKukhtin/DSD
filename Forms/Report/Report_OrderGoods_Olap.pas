@@ -28,8 +28,8 @@ uses
 
 type
   TReport_OrderGoods_OlapForm = class(TParentForm)
-    DataSource: TDataSource;
-    ClientDataSet: TClientDataSet;
+    MasterDS: TDataSource;
+    MasterCDS: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
@@ -72,6 +72,14 @@ type
     GuidesPriceList: TdsdGuides;
     edSearchBarCode: TcxTextEdit;
     FieldFilter_Name: TdsdFieldFilter;
+    cxGrid: TcxGrid;
+    cxGridDBTableView: TcxGridDBTableView;
+    GoodsGroupNameFull: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
+    cxGridLevel: TcxGridLevel;
   private
   public
   end;
