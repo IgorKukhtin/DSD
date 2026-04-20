@@ -57,6 +57,8 @@ AND NOT EXISTS (SELECT 1
                 WHERE MLO.MovementId = inMovementId
                   AND MLO.DescId = zc_MovementLinkObject_From()
                )
+    AND inUserId > 0
+
 -- AND inUserId IN (5, 6604558, 8056474)
      THEN
          -- если товара и вид товара нет в zc_ObjectBoolean_GoodsByGoodsKind_Order - тогда ошиибка
@@ -175,7 +177,7 @@ AND NOT EXISTS (SELECT 1
                                                    , inGoodsKindId           := inGoodsKindId
                                                    , inPrice                 := ioPrice
                                                    , inCountForPrice         := 1
-                                                   , inUserId                := inUserId
+                                                   , inUserId                := ABS (inUserId)
                                                     );
      END IF;*/
 
@@ -275,7 +277,7 @@ AND NOT EXISTS (SELECT 1
      /*IF inGoodsId <> 0
      THEN
          -- создали объект <Связи Товары и Виды товаров>
-         PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, inUserId);
+         PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, ABS (inUserId));
      END IF;*/
 
      -- расчитали сумму по элементу, для грида
@@ -287,10 +289,10 @@ AND NOT EXISTS (SELECT 1
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
-     IF 1 = 1 -- NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+     IF 1 = 1 -- NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = ABS (inUserId) AND RoleId = zc_Enum_Role_Admin())
      THEN
          -- сохранили протокол
-         PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
+         PERFORM lpInsert_MovementItemProtocol (ioId, ABS (inUserId), vbIsInsert);
      END IF;
 
 END;
