@@ -27,6 +27,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , GoodsGroupNameFull TVarChar
              , GoodsGroupName     TVarChar
              , MeasureName        TVarChar
+             , PartnerInName      TVarChar
              , Amount             TFloat  
              , Amount_master      TFloat
              , Weight_master      TFloat
@@ -296,7 +297,6 @@ BEGIN
                                                   ON ObjectLink_Goods_InfoMoney.ObjectId = tmp.GoodsId
                                                  AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                              LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
-
                         )
 
       --
@@ -320,6 +320,7 @@ BEGIN
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_GoodsGroup.ValueData ::TVarChar AS GoodsGroupName
            , Object_Measure.ValueData               AS MeasureName
+           , Object_PartnerIn.ValueData  ::TVarChar AS PartnerInName
 
            , SUM (COALESCE (MovementItem.Amount,0))  :: TFloat AS Amount
            , SUM (CASE WHEN MovementItem.Ord = 1 THEN COALESCE (MovementItem.Amount_master,0) ELSE 0 END)  ::TFloat AS Amount_master 
@@ -347,7 +348,7 @@ BEGIN
            , tmpGoodsParam.GoodsTagName          :: TVarChar
            , tmpGoodsParam.GoodsPlatformName     :: TVarChar
            , tmpGoodsParam.GoodsGroupAnalystName :: TVarChar
-           , tmpGoodsParam.InfoMoneyName_all     :: TVarChar AS InfoMoneyName_all_parent 
+           , tmpGoodsParam.InfoMoneyName_all     :: TVarChar AS InfoMoneyName_all_parent
            , CASE WHEN tmpTOP.GoodsId IS NULL THEN FALSE ELSE TRUE END :: Boolean AS isTop
 
      FROM tmpMovement AS Movement
@@ -386,6 +387,11 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId =  Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_PartnerIn
+                                 ON ObjectLink_Goods_PartnerIn.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_PartnerIn.DescId = zc_ObjectLink_Goods_PartnerIn()
+            LEFT JOIN Object AS Object_PartnerIn ON Object_PartnerIn.Id = ObjectLink_Goods_PartnerIn.ChildObjectId
 
             LEFT JOIN tmpGoodsParam ON tmpGoodsParam.GoodsId = MovementItem.GoodsId_parent
             LEFT JOIN tmpTOP ON tmpTOP.GoodsId = MovementItem.GoodsId_parent
@@ -434,9 +440,10 @@ BEGIN
            , tmpGoodsParam.GoodsGroupAnalystName
            , CASE WHEN tmpTOP.GoodsId IS NULL THEN FALSE ELSE TRUE END
            , Object_GoodsGroup.ValueData
-           , tmpGoodsParam.InfoMoneyName AS InfoMoneyName_parent
+           , tmpGoodsParam.InfoMoneyName_all
+           , Object_PartnerIn.ValueData
   ;
-         
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -448,4 +455,4 @@ $BODY$
 */
 
 -- тест-
--- SELECT * FROM gpReport_OrderGoodsDetail_Olap (inStartDate:= '01.02.2026', inEndDate:= '01.05.2026', inIsMovement:= true, inGoodsGroupId:= 0, inGoodsId:= 0, inUnitId:= 0, inPriceListId:= 0, inSession:= zfCalc_UserAdmin()) 
+--  SELECT * FROM gpReport_OrderGoodsDetail_Olap (inStartDate:= '01.04.2026', inEndDate:= '02.04.2026', inIsMovement:= true, inGoodsGroupId:= 0, inGoodsId:= 0, inUnitId:= 0, inPriceListId:= 0, inSession:= zfCalc_UserAdmin()) 

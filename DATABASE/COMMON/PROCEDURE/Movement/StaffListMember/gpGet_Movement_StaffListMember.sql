@@ -127,6 +127,9 @@ BEGIN
                             , ObjectLink_Personal_PositionLevel.ChildObjectId AS PositionLevelId
                             , COALESCE (ObjectBoolean_Main.ValueData, FALSE)  AS isMain
                             , ROW_NUMBER() OVER(PARTITION BY Object_Personal.Id, ObjectLink_Personal_Unit.ChildObjectId, ObjectLink_Personal_Position.ChildObjectId, COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId,0), COALESCE (ObjectBoolean_Main.ValueData, FALSE) ) AS Ord
+                            --если 2 сотрудника с одинаковыми подразделением,  должностью , разрядом - берем последнего
+                            , ROW_NUMBER() OVER(PARTITION BY ObjectLink_Personal_Unit.ChildObjectId, ObjectLink_Personal_Position.ChildObjectId, COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId,0), COALESCE (ObjectBoolean_Main.ValueData, FALSE)
+                                                ORDER BY COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE) ASC, Object_Personal.Id ASC) AS Ord_personal
                        FROM Object AS Object_Personal
                             INNER JOIN ObjectLink AS ObjectLink_Personal_Member
                                                   ON ObjectLink_Personal_Member.ObjectId = Object_Personal.Id
@@ -145,6 +148,10 @@ BEGIN
                             LEFT JOIN ObjectBoolean AS ObjectBoolean_Main
                                                     ON ObjectBoolean_Main.ObjectId = Object_Personal.Id
                                                    AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Personal_Main()                            
+
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Guide_Irna
+                                  ON ObjectBoolean_Guide_Irna.ObjectId = Object_Personal.Id
+                                 AND ObjectBoolean_Guide_Irna.DescId = zc_ObjectBoolean_Guide_Irna()
                       WHERE Object_Personal.DescId = zc_Object_Personal()
                         AND Object_Personal.isErased = FALSE 
                        ) 
@@ -341,6 +348,7 @@ BEGIN
                                  AND COALESCE (tmpPersonal.PositionLevelId,0) = COALESCE (MovementLinkObject_PositionLevel.ObjectId,0)
                                  AND tmpPersonal.isMain = COALESCE (MovementBoolean_Main.ValueData, FALSE)
                                  AND tmpPersonal.Ord = 1
+                                 AND tmpPersonal.Ord_personal = 1
             
           LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
                                ON ObjectLink_Personal_PersonalServiceList.ObjectId = tmpPersonal.PersonalId
@@ -407,4 +415,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpGet_Movement_StaffListMember(inMovementId := 32266687 , inOperDate := ('16.09.2025')::TDateTime ,  inSession := '9457');
+-- select * from gpGet_Movement_StaffListMember(inMovementId := 34057076 , inOperDate := ('16.09.2025')::TDateTime ,  inSession := '9457');
