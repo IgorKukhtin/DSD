@@ -443,7 +443,7 @@ BEGIN
            , tmpGoodsParam.InfoMoneyName_all
            , Object_PartnerIn.ValueData
   ;
-         
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
