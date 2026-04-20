@@ -92,6 +92,18 @@ BEGIN
        IF COALESCE (inJobSourceId,0) = 0 THEN RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <Источник информации о вакансии>.' ; END IF; 
    END IF;
 
+ 
+   --проверка поля inMemberGoodsId_month inMemberGoodsId_holiday должны быть заполнены
+   IF COALESCE (inMemberGoodsId_month,0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <Отоварка щомісячна>.' ;
+   END IF;
+   --
+   IF COALESCE (inMemberGoodsId_holiday,0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <Отоварка святкова>.' ;
+   END IF;
+   
    
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_Street(), inId, inStreet);

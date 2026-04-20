@@ -28,6 +28,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , isOfficial Boolean
              , isNotCompensation Boolean
+             , isEffie Boolean
              , GenderId Integer
              , GenderName TVarChar
              , MemberSkillId Integer
@@ -130,7 +131,9 @@ BEGIN
            , CAST ('' AS TVarChar)  AS PersonalServiceListName
 
            , FALSE                  AS isOfficial
-           , FALSE                  AS isNotCompensation
+           , FALSE                  AS isNotCompensation 
+           , FALSE                  AS isEffie
+
            , CAST (0 as Integer)   AS GenderId
            , CAST ('' as TVarChar) AS GenderName
            , CAST (0 as Integer)   AS MemberSkillId
@@ -270,6 +273,7 @@ BEGIN
       
             , ObjectBoolean_Official.ValueData         AS isOfficial
             , COALESCE (ObjectBoolean_NotCompensation.ValueData,FALSE) ::Boolean  AS isNotCompensation
+            , COALESCE (ObjectBoolean_Effie.ValueData, FALSE)          ::Boolean  AS isEffie
 --
             , Object_Gender.Id       AS GenderId
             , Object_Gender.ValueData       AS GenderName
@@ -333,6 +337,9 @@ BEGIN
              LEFT JOIN ObjectBoolean AS ObjectBoolean_NotCompensation
                                      ON ObjectBoolean_NotCompensation.ObjectId = Object_Member.Id
                                     AND ObjectBoolean_NotCompensation.DescId = zc_ObjectBoolean_Member_NotCompensation()
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_Effie
+                                     ON ObjectBoolean_Effie.ObjectId = Object_Member.Id
+                                    AND ObjectBoolean_Effie.DescId = zc_ObjectBoolean_Member_Effie()
 
              LEFT JOIN ObjectString AS ObjectString_INN 
                                     ON ObjectString_INN.ObjectId = Object_Member.Id 
@@ -567,6 +574,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 20.04.26         *
  16.02.26         * 
  27.02.26         *
  28.10.24         * Code1C

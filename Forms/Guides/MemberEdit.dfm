@@ -425,6 +425,13 @@
         Top = 43
         Caption = #8470' '#1076#1083#1103' '#1041#1080#1094#1077#1088#1073#1099
       end
+      object cbEffie: TcxCheckBox
+        Left = 464
+        Top = 22
+        Caption = #1056#1072#1073#1086#1090#1072#1077#1090' '#1089' Effie'
+        TabOrder = 60
+        Width = 113
+      end
     end
     object tsContact: TcxTabSheet
       Caption = #1050#1086#1085#1090#1072#1082#1090#1099
@@ -978,6 +985,14 @@
         Name = 'inisNotCompensation'
         Value = Null
         Component = cbNotCompensation
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisEffie'
+        Value = Null
+        Component = cbEffie
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1802,6 +1817,13 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isEffie'
+        Value = Null
+        Component = cbEffie
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 360
     Top = 136
@@ -1927,8 +1949,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 568
-    Top = 15
+    Left = 352
+    Top = 23
   end
   object GuidesBankSecond: TdsdGuides
     KeyField = 'Id'
@@ -2107,8 +2129,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 477
-    Top = 30
+    Left = 373
+    Top = 86
   end
   object GuidesMemberSkill: TdsdGuides
     KeyField = 'Id'

@@ -18,7 +18,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , CardBank_search TVarChar, CardIBAN_search TVarChar, Card_search TVarChar
              , Comment TVarChar
              , isOfficial Boolean
-             , isNotCompensation Boolean
+             , isNotCompensation Boolean 
+             , isEffie Boolean
              , BankId Integer, BankName TVarChar
              , BankSecondId Integer, BankSecondName TVarChar
              , BankChildId Integer, BankChildName TVarChar
@@ -170,6 +171,7 @@ end if;
 
          , ObjectBoolean_Official.ValueData         AS isOfficial
          , COALESCE (ObjectBoolean_NotCompensation.ValueData, FALSE) :: Boolean  AS isNotCompensation
+         , COALESCE (ObjectBoolean_Effie.ValueData, FALSE)           :: Boolean  AS isEffie
 
          , Object_Bank.Id               AS BankId
          , Object_Bank.ValueData        AS BankName
@@ -302,6 +304,9 @@ end if;
           LEFT JOIN ObjectBoolean AS ObjectBoolean_NotCompensation
                                   ON ObjectBoolean_NotCompensation.ObjectId = Object_Member.Id
                                  AND ObjectBoolean_NotCompensation.DescId = zc_ObjectBoolean_Member_NotCompensation()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Effie
+                                  ON ObjectBoolean_Effie.ObjectId = Object_Member.Id
+                                 AND ObjectBoolean_Effie.DescId = zc_ObjectBoolean_Member_Effie()
           LEFT JOIN ObjectString AS ObjectString_INN
                                  ON ObjectString_INN.ObjectId = Object_Member.Id
                                 AND ObjectString_INN.DescId = zc_ObjectString_Member_INN()
@@ -614,6 +619,7 @@ end if;
            
            , FALSE                  AS isOfficial
            , FALSE                  AS isNotCompensation
+           , FALSE                  AS isEffie
 
            , CAST (0 as Integer)    AS BankId
            , CAST ('' as TVarChar)  AS BankName
@@ -720,6 +726,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 20.04.26         *
  27.02.26         *
  28.10.24         *
  26.02.24         *

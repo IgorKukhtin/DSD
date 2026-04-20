@@ -222,6 +222,7 @@ type
     NumBiz: TcxGridDBColumn;
     MemberGoodsName_month: TcxGridDBColumn;
     MemberGoodsName_holiday: TcxGridDBColumn;
+    isEffie: TcxGridDBColumn;
   private
     { Private declarations }
   public
