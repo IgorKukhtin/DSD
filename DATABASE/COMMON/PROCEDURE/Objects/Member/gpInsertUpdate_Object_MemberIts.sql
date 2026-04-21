@@ -94,14 +94,9 @@ BEGIN
 
  
    --проверка поля inMemberGoodsId_month inMemberGoodsId_holiday должны быть заполнены
-   IF COALESCE (inMemberGoodsId_month,0) = 0
+   IF COALESCE (inMemberGoodsId_month,0) = 0 AND COALESCE (inMemberGoodsId_holiday,0) = 0
    THEN
-       RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <Отоварка щомісячна>.' ;
-   END IF;
-   --
-   IF COALESCE (inMemberGoodsId_holiday,0) = 0
-   THEN
-       RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <Отоварка святкова>.' ;
+       RAISE EXCEPTION 'Ошибка.Не заполнен реквизит <Отоварка щомісячна> или <Отоварка святкова>.' ;
    END IF;
    
    

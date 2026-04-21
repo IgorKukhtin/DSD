@@ -39,11 +39,24 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbSession_s TVarChar;
    DECLARE vbCode Integer;
    DECLARE vbName TVarChar;
 BEGIN
+   IF zfConvert_StringToNumber (inSession) < 0
+   THEN
+       vbSession_s:= inSession;
+       inSession:= (-1 * zfConvert_StringToNumber (inSession)) :: TVarChar;
+   END IF;
+
    -- проверка прав пользователя на вызов процедуры
-   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Personal());
+   vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Personal());
+
+   -- проверка
+   IF zfConvert_StringToNumber (vbSession_s) >= 0 AND vbUserId <> 5
+   THEN
+       RAISE EXCEPTION 'Ошибка.Нет прав.';
+   END IF;
 
    -- проверка
    IF COALESCE (inMemberId, 0) = 0
@@ -97,8 +110,13 @@ BEGIN
    
    -- проверка 
    IF COALESCE (inNumBiz,'') <> ''   
-   
    THEN 
+       -- проверка или пустая строка или число от 0 до 99 
+       IF zfConvert_StringToNumber (inNumBiz) = 0
+       THEN   
+           RAISE EXCEPTION 'Ошибка.Значение № для Бицербы = <%>.' , inNumBiz;
+       END IF; 
+
        -- проверка или пустая строка или число от 0 до 99 
        IF inNumBiz :: Integer < 0 OR inNumBiz :: Integer > 99
        THEN   
@@ -240,7 +258,7 @@ BEGIN
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
    -- для Админа
-   IF vbUserId IN (5, 9457)
+   IF vbUserId IN (9457)
    THEN
        RAISE EXCEPTION 'Ошибка.test=ok';
    END IF;
