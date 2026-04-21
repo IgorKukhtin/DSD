@@ -110,8 +110,13 @@ BEGIN
    
    -- проверка 
    IF COALESCE (inNumBiz,'') <> ''   
-   
    THEN 
+       -- проверка или пустая строка или число от 0 до 99 
+       IF zfConvert_StringToNumber (inNumBiz) = 0
+       THEN   
+           RAISE EXCEPTION 'Ошибка.Значение № для Бицербы = <%>.' , inNumBiz;
+       END IF; 
+
        -- проверка или пустая строка или число от 0 до 99 
        IF inNumBiz :: Integer < 0 OR inNumBiz :: Integer > 99
        THEN   
