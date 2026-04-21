@@ -298,6 +298,8 @@ BEGIN
      END IF;
 
 
+     -- RAISE EXCEPTION 'Ошибка.<%>.', vbPersonalId;
+
      /*
      --
      IF COALESCE (vbPersonalId,0) <> 0
