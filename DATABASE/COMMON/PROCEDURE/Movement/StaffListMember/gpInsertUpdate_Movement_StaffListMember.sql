@@ -67,7 +67,13 @@ BEGIN
      --проверка
      IF COALESCE (inMemberId,0) = 0
      THEN
-          RAISE EXCEPTION 'Ошибка.<ФИз. лицо> должно быть заполнено.';
+          RAISE EXCEPTION 'Ошибка.<Физ.лицо> должно быть заполнено.';
+     END IF;                                                  
+
+     --проверка
+     IF COALESCE (inStaffListKindId,0) = 0
+     THEN
+          RAISE EXCEPTION 'Ошибка.<Вид офориления> должно быть заполнено.';
      END IF;                                                  
 
      --проверка есть ли уже такой документ
