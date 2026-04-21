@@ -50,7 +50,7 @@ type
     UnitName: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     isErased: TcxGridDBColumn;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
+    DBViewAddOn: TdsdDBViewAddOn;
     PersonalGroupName: TcxGridDBColumn;
     PositionLevelName: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
@@ -66,14 +66,13 @@ type
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
     PersonalServiceListName: TcxGridDBColumn;
-    StorageLineName: TcxGridDBColumn;
+    StorageLineName_all: TcxGridDBColumn;
     actMember_UpdateDialog: TExecuteDialog;
     bbUser_UpdateDialog: TdxBarButton;
     FormParams: TdsdFormParams;
     MemberId: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    ScalePSW_forPrint: TcxGridDBColumn;
     spGet_ScalePSW: TdsdStoredProc;
     mactMember_UpdateDialog: TMultiAction;
     actGet_ScalePSW: TdsdExecStoredProc;
@@ -87,6 +86,7 @@ type
     FieldFilter: TdsdFieldFilter;
     cxLabel1: TcxLabel;
     edPositionLevel_serch: TcxTextEdit;
+    isMain: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -68,13 +68,13 @@ object Personal_ChoiceForm: TPersonal_ChoiceForm
         HeaderAlignmentVert = vaCenter
         Width = 200
       end
-      object PersonalServiceListName: TcxGridDBColumn
-        Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' ('#1075#1083#1072#1074#1085#1072#1103')'
-        DataBinding.FieldName = 'PersonalServiceListName'
+      object isMain: TcxGridDBColumn
+        Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088'.'
+        DataBinding.FieldName = 'isMain'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 150
+        Width = 70
       end
       object PositionName: TcxGridDBColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
@@ -109,6 +109,7 @@ object Personal_ChoiceForm: TPersonal_ChoiceForm
       object DepartmentName: TcxGridDBColumn
         Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' 1 '#1088#1110#1074#1085#1103
         DataBinding.FieldName = 'DepartmentName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -117,14 +118,15 @@ object Personal_ChoiceForm: TPersonal_ChoiceForm
       object Department_twoName: TcxGridDBColumn
         Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' 2 '#1088#1110#1074#1085#1103
         DataBinding.FieldName = 'Department_twoName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 88
       end
-      object StorageLineName: TcxGridDBColumn
-        Caption = #1051#1080#1085#1080#1103' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
-        DataBinding.FieldName = 'StorageLineName'
+      object StorageLineName_all: TcxGridDBColumn
+        Caption = '***'#1051#1080#1085#1080#1103' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
+        DataBinding.FieldName = 'StorageLineName_all'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 120
@@ -136,6 +138,14 @@ object Personal_ChoiceForm: TPersonal_ChoiceForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 70
+      end
+      object PersonalServiceListName: TcxGridDBColumn
+        Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' ('#1075#1083#1072#1074#1085#1072#1103')'
+        DataBinding.FieldName = 'PersonalServiceListName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 150
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -150,12 +160,6 @@ object Personal_ChoiceForm: TPersonal_ChoiceForm
         DataBinding.FieldName = 'MemberId'
         Visible = False
         Options.Editing = False
-        VisibleForCustomization = False
-        Width = 30
-      end
-      object ScalePSW_forPrint: TcxGridDBColumn
-        DataBinding.FieldName = 'ScalePSW_forPrint'
-        Visible = False
         VisibleForCustomization = False
         Width = 30
       end
@@ -197,7 +201,7 @@ object Personal_ChoiceForm: TPersonal_ChoiceForm
     EditValue = 42948d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 5
+    TabOrder = 4
     Width = 85
   end
   object Panel: TPanel
@@ -946,7 +950,7 @@ object Personal_ChoiceForm: TPersonal_ChoiceForm
     Left = 168
     Top = 160
   end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
+  object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <

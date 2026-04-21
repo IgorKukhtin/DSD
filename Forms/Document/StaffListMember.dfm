@@ -1817,69 +1817,10 @@ inherited StaffListMemberForm: TStaffListMemberForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'isMain'
-        Value = Null
-        Component = cbMain
-        DataType = ftBoolean
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'isOfficial'
         Value = Null
         Component = cbOfficial
         DataType = ftBoolean
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitId'
-        Value = Null
-        Component = GuidesUnit
-        ComponentItem = 'Key'
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitName'
-        Value = Null
-        Component = GuidesUnit
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionId'
-        Value = Null
-        Component = GuidesPosition
-        ComponentItem = 'Key'
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionName'
-        Value = Null
-        Component = GuidesPosition
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionLevelId'
-        Value = Null
-        Component = GuidesPositionLevel
-        ComponentItem = 'Key'
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionLevelName'
-        Value = Null
-        Component = GuidesPositionLevel
-        ComponentItem = 'TextValue'
-        DataType = ftString
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
