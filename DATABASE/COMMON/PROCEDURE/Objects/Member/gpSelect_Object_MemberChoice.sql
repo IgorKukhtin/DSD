@@ -86,7 +86,7 @@ BEGIN
          , Object_Member.ObjectCode AS Code
          , Object_Member.ValueData  AS Name
 
-         , tmpPersonal.isMain                      ::Boolean AS isMain
+         , COALESCE (tmpPersonal.isMain, TRUE)     ::Boolean AS isMain
          , ObjectBoolean_Official.ValueData        ::Boolean AS isOfficial
          , COALESCE (ObjectBoolean_NotCompensation.ValueData, FALSE) :: Boolean  AS isNotCompensation
 
@@ -98,7 +98,7 @@ BEGIN
          , Object_Position.Id         AS PositionId
          , Object_Position.ObjectCode AS PositionCode
          , Object_Position.ValueData  AS PositionName
-         , Object_Position.Id              AS PositionLevelId
+         , Object_PositionLevel.Id         AS PositionLevelId
          , Object_PositionLevel.ValueData  AS PositionLevelName
          , ObjectDate_DateIn.ValueData AS DateIn
          , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN NULL ELSE ObjectDate_DateOut.ValueData END :: TDateTime AS DateOut
