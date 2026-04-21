@@ -6,7 +6,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_TT_effie(
     IN inSession              TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (extId           TVarChar   -- Идентификатор канала продаж
-             , Name            TVarChar   -- Название канала продаж
+             , PartnerId       Integer    -- для Отладки
+             , Name            TVarChar   -- Название канала продаж 
              , legalAddress    TVarChar   -- Юр. адрес клиента
              , streetAddress   TVarChar   -- Физ. адрес клиента
              , latitude        TVarChar   -- Широта
@@ -176,21 +177,23 @@ $BODY$
                               , AreaId       = tmpPartner.AreaId
                               , EDIId        = tmpPartner.EDIId
 
-     FROM (SELECT _tmpPartner.StreetId, _tmpPartner.HouseNumber, _tmpPartner.CaseNumber, _tmpPartner.RoomNumber
+     FROM (SELECT _tmpPartner.PartnerId, _tmpPartner.StreetId, _tmpPartner.HouseNumber, _tmpPartner.CaseNumber, _tmpPartner.RoomNumber
                 , MAX (_tmpPartner.PartnerTagId) AS PartnerTagId, MAX (_tmpPartner.AreaId) AS AreaId, MAX (_tmpPartner.EDIId) AS EDIId
            FROM _tmpPartner
-           GROUP BY _tmpPartner.StreetId, _tmpPartner.HouseNumber, _tmpPartner.CaseNumber, _tmpPartner.RoomNumber
+           GROUP BY _tmpPartner.PartnerId, _tmpPartner.StreetId, _tmpPartner.HouseNumber, _tmpPartner.CaseNumber, _tmpPartner.RoomNumber
            ) AS tmpPartner
-     WHERE Object_TT_effie.StreetId   = tmpPartner.StreetId
+     WHERE Object_TT_effie.PartnerId  = tmpPartner.PartnerId
+   /*WHERE Object_TT_effie.StreetId   = tmpPartner.StreetId
        AND Object_TT_effie.HouseNumber= tmpPartner.HouseNumber
        AND Object_TT_effie.CaseNumber = tmpPartner.CaseNumber
-       AND Object_TT_effie.RoomNumber = tmpPartner.RoomNumber
+       AND Object_TT_effie.RoomNumber = tmpPartner.RoomNumber*/
     ;
 
      -- нужно записать в таблица Object_TT_effie.Id - ключ StreetId, HouseNumber, CaseNumber, RoomNumber  те элементы , которых нет
-     INSERT INTO Object_TT_effie (StreetId, PartnerTagId, AreaId, HouseNumber, CaseNumber, RoomNumber, EDIId, InsertDate, isErased)
+     INSERT INTO Object_TT_effie (PartnerId, StreetId, PartnerTagId, AreaId, HouseNumber, CaseNumber, RoomNumber, EDIId, InsertDate, isErased)
      SELECT DISTINCT
-            tmpPartner.StreetId
+            tmpPartner.PartnerId
+          , tmpPartner.StreetId
           , tmpPartner.PartnerTagId
           , tmpPartner.AreaId
           , tmpPartner.HouseNumber
@@ -199,15 +202,16 @@ $BODY$
           , tmpPartner.EDIId
           , CURRENT_TIMESTAMP AS InsertDate
           , FALSE             AS isErased
-      FROM (SELECT _tmpPartner.StreetId, _tmpPartner.HouseNumber, _tmpPartner.CaseNumber, _tmpPartner.RoomNumber
+      FROM (SELECT _tmpPartner.PartnerId, _tmpPartner.StreetId, _tmpPartner.HouseNumber, _tmpPartner.CaseNumber, _tmpPartner.RoomNumber
                  , MAX (_tmpPartner.PartnerTagId) AS PartnerTagId, MAX (_tmpPartner.AreaId) AS AreaId, MAX (_tmpPartner.EDIId) AS EDIId
             FROM _tmpPartner
-            GROUP BY _tmpPartner.StreetId, _tmpPartner.HouseNumber, _tmpPartner.CaseNumber, _tmpPartner.RoomNumber
+            GROUP BY _tmpPartner.PartnerId, _tmpPartner.StreetId, _tmpPartner.HouseNumber, _tmpPartner.CaseNumber, _tmpPartner.RoomNumber
            ) AS tmpPartner
-           LEFT JOIN Object_TT_effie ON Object_TT_effie.StreetId   = tmpPartner.StreetId
+           LEFT JOIN Object_TT_effie ON Object_TT_effie.PartnerId  = tmpPartner.PartnerId
+                                  /*AND Object_TT_effie.StreetId   = tmpPartner.StreetId
                                     AND Object_TT_effie.HouseNumber= tmpPartner.HouseNumber
                                     AND Object_TT_effie.CaseNumber = tmpPartner.CaseNumber
-                                    AND Object_TT_effie.RoomNumber = tmpPartner.RoomNumber
+                                    AND Object_TT_effie.RoomNumber = tmpPartner.RoomNumber*/
      WHERE Object_TT_effie.Id IS NULL;
 
 
@@ -215,20 +219,25 @@ $BODY$
      RETURN QUERY
      --
      SELECT Object_TT_effie.Id                            ::TVarChar AS extId
+          , Object_TT_effie.PartnerId                     ::Integer  AS PartnerId
 
-          , TRIM (COALESCE (ObjectString_CityKind_ShortName.ValueData, '')
-              || ' ' || COALESCE (Object_City.ValueData, '')
-              || ' ' || COALESCE (ObjectString_StreetKind_ShortName.ValueData, '')
-              || ' ' || COALESCE (Object_Street.ValueData, '')
-                     || CASE WHEN COALESCE (Object_TT_effie.HouseNumber, '') <> ''
-                                  THEN ' буд.' || COALESCE (Object_TT_effie.HouseNumber, '')
-                             ELSE ''
-                        END
-                     || CASE WHEN COALESCE (Object_TT_effie.CaseNumber, '') <> ''
-                                  THEN ' корп.' || COALESCE (Object_TT_effie.CaseNumber, '')
-                             ELSE ''
-                        END
-                       )                                  ::TVarChar AS Name       --StreetId + HouseNumber + CaseNumber + RoomNumber
+          , COALESCE (Object_Juridical.ValueData
+            || ' ' || TRIM (COALESCE (ObjectString_CityKind_ShortName.ValueData, '')
+                        || ' ' || COALESCE (Object_City.ValueData, '')
+                        || ' ' || COALESCE (ObjectString_StreetKind_ShortName.ValueData, '')
+                        || ' ' || COALESCE (Object_Street.ValueData, '')
+                               || CASE WHEN COALESCE (Object_TT_effie.HouseNumber, '') <> ''
+                                            THEN ' буд.' || COALESCE (Object_TT_effie.HouseNumber, '')
+                                       ELSE ''
+                                  END
+                               || CASE WHEN COALESCE (Object_TT_effie.CaseNumber, '') <> ''
+                                            THEN ' корп.' || COALESCE (Object_TT_effie.CaseNumber, '')
+                                       ELSE ''
+                                  END
+                                 )
+                      ,  Object_Partner.ValueData
+                      , ''
+                      )                                 ::TVarChar AS Name       --StreetId + HouseNumber + CaseNumber + RoomNumber
 
           , ''                                            ::TVarChar AS legalAddress
 
@@ -289,6 +298,12 @@ $BODY$
           , 0  ::Integer  AS isDeleted
 
      FROM Object_TT_effie
+          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                               ON ObjectLink_Partner_Juridical.ObjectId = Object_TT_effie.PartnerId
+                              AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
+          LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = Object_TT_effie.PartnerId
+
           LEFT JOIN Object AS Object_Area ON Object_Area.Id = Object_TT_effie.AreaId
 
           LEFT JOIN Object AS Object_Street ON Object_Street.Id = Object_TT_effie.StreetId
@@ -322,7 +337,8 @@ $BODY$
                                 AND ObjectString_StreetKind_ShortName.DescId = zc_ObjectString_StreetKind_ShortName()
 
      -- есть Адрес
-     WHERE Object_TT_effie.StreetId > 0
+     WHERE Object_TT_effie.StreetId  > 0
+       AND Object_TT_effie.PartnerId > 0
      --limit 200
     ;
 

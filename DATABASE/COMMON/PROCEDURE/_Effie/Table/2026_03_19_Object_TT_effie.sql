@@ -10,6 +10,7 @@
 
 CREATE TABLE Object_TT_effie(
    Id                   BIGSERIAL NOT NULL PRIMARY KEY, 
+   PartnerId            Integer   NOT NULL,
    StreetId             Integer   NOT NULL,
    PartnerTagId         Integer   NOT NULL,
    AreaId               Integer   NOT NULL,
@@ -23,7 +24,8 @@ CREATE TABLE Object_TT_effie(
 /*-------------------------------------------------------------------------------*/
 
 /*                                  »Ì‰ÂÍÒ˚                                      */
-CREATE UNIQUE INDEX idx_Object_TT_effie_StreetId_HouseNumber_CaseNumber_RoomNumber ON Object_TT_effie (StreetId, HouseNumber, CaseNumber, RoomNumber);
+-- CREATE UNIQUE INDEX idx_Object_TT_effie_StreetId_HouseNumber_CaseNumber_RoomNumber ON Object_TT_effie (StreetId, HouseNumber, CaseNumber, RoomNumber);
+CREATE UNIQUE INDEX idx_Object_TT_effie_StreetId_HouseNumber_CaseNumber_RoomNumber ON Object_TT_effie (PartnerId);
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -35,4 +37,9 @@ CREATE UNIQUE INDEX idx_Object_TT_effie_StreetId_HouseNumber_CaseNumber_RoomNumb
             ALTER TABLE Object_TT_effie ADD COLUMN EDIId Integer;
             UPDATE Object_TT_effie SET EDIId = 0;
             ALTER TABLE Object_TT_effie ALTER COLUMN EDIId SET NOT NULL;
+
+            ALTER TABLE Object_TT_effie ADD COLUMN PartnerId Integer;
+            UPDATE Object_TT_effie SET PartnerId = 0;
+            ALTER TABLE Object_TT_effie ALTER COLUMN PartnerId SET NOT NULL;
+
 */

@@ -3,19 +3,22 @@
 DROP VIEW IF EXISTS Warehouse;
 
 CREATE OR REPLACE VIEW Warehouse
-AS 
+AS
   WITH _tmpresult AS (SELECT extId
                            , Name
                            , warehouseTypeId
                            , isDeleted
                       FROM dblink ('host=192.168.0.228 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
-                                 , ('SELECT *
+                                 , ('SELECT extId
+                                          , Name
+                                          , warehouseTypeId
+                                          , isDeleted
                                     FROM gpSelect_Object_Warehouse_effie(zfCalc_UserAdmin())'
                                     ) :: Text
                                   ) AS gpSelect (extId            TVarChar   -- Уникальный идентификатор склада
                                                , Name             TVarChar   -- Название склада
                                                , warehouseTypeId  TVarChar  -- "Тип склада:1 - Stationary 2 - Mobile , по умолчанию 1"
-                                               , isDeleted        Boolean    -- Признак активности: false = активен / true = не активен                             
+                                               , isDeleted        Boolean    -- Признак активности: false = активен / true = не активен
                                                 )
                      )
  --
