@@ -40,8 +40,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_StaffListMember(
     IN inMember_ReferId                    Integer   , -- Фамилия рекомендателя
     IN inMember_MentorId                   Integer   , -- Фамилия наставника
 
-    IN inisOfficial          Boolean   , --
-    IN inisMain              Boolean   , --
+    IN inIsOfficial          Boolean   , --
+    IN inIsMain              Boolean   , --
     IN inNumBiz              TVarChar  , --
     IN inComment             TVarChar  , --
     IN inSession             TVarChar    -- сессия пользователя
@@ -75,7 +75,7 @@ BEGIN
           RAISE EXCEPTION 'Ошибка.<Вид офориления> должно быть заполнено.';
      END IF;
 
-     --проверка есть ли уже такой документ
+     -- проверка есть ли уже такой документ
      vbMovementId := (SELECT Movement.Id
                       FROM Movement
                            INNER JOIN MovementLinkObject AS MovementLinkObject_Member
@@ -112,10 +112,14 @@ BEGIN
                         AND COALESCE (MovementLinkObject_ReasonOut.ObjectId,0) = COALESCE (inReasonOutId,0)
                         AND COALESCE (MovementLinkObject_StaffListKind.ObjectId,0) = COALESCE (inStaffListKindId,0)
                       );
+
+     -- проверка
      IF COALESCE (vbMovementId,0) <> 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Существует аналогичный документ <%> для <%>.', (SELECT Movement.InvNumber||' от '||Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId)
-                                                                              , (SELECT Object.ValueData FROM Object WHERE Object.Id = inMemberId);
+         RAISE EXCEPTION 'Ошибка.Существует аналогичный документ <%> для <%>.'
+                       , (SELECT '№ <' || Movement.InvNumber || '> от <' || zfConvert_DateToString (Movement.OperDate) || '>' FROM Movement WHERE Movement.Id = vbMovementId)
+                       , lfGet_Object_ValueData_sh (inMemberId)
+                        ;
      END IF;
 
 
@@ -128,14 +132,24 @@ BEGIN
                      INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
                                            ON ObjectLink_Personal_Unit.ObjectId = Object_Personal.Id
                                           AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
-                                          AND ObjectLink_Personal_Unit.ChildObjectId = inUnitId
+                                          AND (ObjectLink_Personal_Unit.ChildObjectId = inUnitId
+                                            -- любое Подразделение
+                                            OR inIsMain = TRUE
+                                              )
                      INNER JOIN ObjectLink AS ObjectLink_Personal_Position
                                            ON ObjectLink_Personal_Position.ObjectId = Object_Personal.Id
                                           AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
-                                          AND ObjectLink_Personal_Position.ChildObjectId = inPositionId
+                                          AND (ObjectLink_Personal_Position.ChildObjectId = inPositionId
+                                            -- любая Должность
+                                            OR inIsMain = TRUE
+                                              )
                      LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
                                           ON ObjectLink_Personal_PositionLevel.ObjectId = Object_Personal.Id
                                          AND ObjectLink_Personal_PositionLevel.DescId = zc_ObjectLink_Personal_PositionLevel()
+                     -- Основное место р.
+                     LEFT JOIN ObjectBoolean AS ObjectBoolean_Main
+                                             ON ObjectBoolean_Main.ObjectId = Object_Personal.Id
+                                            AND ObjectBoolean_Main.DescId   = zc_ObjectBoolean_Personal_Main()
 
                      -- Конвеер
                      INNER JOIN ObjectLink AS ObjectLink_PersonalByStorageLine_Personal
@@ -150,7 +164,13 @@ BEGIN
 
                 WHERE Object_Personal.DescId = zc_Object_Personal()
                   AND Object_Personal.isErased = FALSE
-                  AND COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId,0) = COALESCE (inPositionLevelId,0)
+                  -- Основное место р.
+                  AND COALESCE (ObjectBoolean_Main.ValueData, FALSE) = inIsMain
+                  --
+                  AND (COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId,0) = COALESCE (inPositionLevelId,0)
+                       -- любой Разряд
+                    OR inIsMain = TRUE
+                      )
                )
      THEN
          -- так Для  Конвеера
@@ -164,15 +184,25 @@ BEGIN
                             INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
                                                   ON ObjectLink_Personal_Unit.ObjectId = Object_Personal.Id
                                                  AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
-                                                 AND ObjectLink_Personal_Unit.ChildObjectId = inUnitId
+                                                 AND (ObjectLink_Personal_Unit.ChildObjectId = inUnitId
+                                                   -- любое Подразделение
+                                                   OR inIsMain = TRUE
+                                                     )
                             INNER JOIN ObjectLink AS ObjectLink_Personal_Position
                                                   ON ObjectLink_Personal_Position.ObjectId = Object_Personal.Id
                                                  AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
-                                                 AND ObjectLink_Personal_Position.ChildObjectId = inPositionId
+                                                 AND (ObjectLink_Personal_Position.ChildObjectId = inPositionId
+                                                   -- любая Должность
+                                                   OR inIsMain = TRUE
+                                                     )
                             LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
                                                  ON ObjectLink_Personal_PositionLevel.ObjectId = Object_Personal.Id
                                                 AND ObjectLink_Personal_PositionLevel.DescId = zc_ObjectLink_Personal_PositionLevel()
 
+                           -- Основное место р.
+                           LEFT JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                   ON ObjectBoolean_Main.ObjectId = Object_Personal.Id
+                                                  AND ObjectBoolean_Main.DescId   = zc_ObjectBoolean_Personal_Main()
                            -- Конвеер
                            INNER JOIN ObjectLink AS ObjectLink_PersonalByStorageLine_Personal
                                                  ON ObjectLink_PersonalByStorageLine_Personal.ChildObjectId = Object_Personal.Id
@@ -186,11 +216,17 @@ BEGIN
 
                        WHERE Object_Personal.DescId = zc_Object_Personal()
                          AND Object_Personal.isErased = FALSE
-                         AND COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId,0) = COALESCE (inPositionLevelId,0)
+                         -- Основное место р.
+                         AND COALESCE (ObjectBoolean_Main.ValueData, FALSE) = inIsMain
+                         --
+                         AND (COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId,0) = COALESCE (inPositionLevelId,0)
+                              -- любой Разряд
+                           OR inIsMain = TRUE
+                             )
                       ) AS tmp
                 )
          THEN
-             RAISE EXCEPTION 'Ошибка.Найдено несколько сотрудников с такой должностью %<%> %<%> %<%> %<%>.'
+             RAISE EXCEPTION 'Ошибка.Найдено несколько сотрудников с такой должностью %<%> %<%> %<%> %<%> %Основное место работы = %.'
                             , CHR (13)
                             , lfGet_Object_ValueData_sh (inUnitId)
                             , CHR (13)
@@ -199,10 +235,12 @@ BEGIN
                             , lfGet_Object_ValueData_sh (inPositionId)
                             , CHR (13)
                             , lfGet_Object_ValueData_sh (inPositionLevelId)
+                            , CHR (13)
+                            , CASE WHEN inIsMain = TRUE THEN 'ДА' ELSE 'НЕТ' END
                              ;
          END IF;
 
-         -- проверка существования сотрудника
+         -- нашли сотрудника
          vbPersonalId := (SELECT DISTINCT Object_Personal.Id
                           FROM Object AS Object_Personal
                                INNER JOIN ObjectLink AS ObjectLink_Personal_Member
@@ -212,15 +250,25 @@ BEGIN
                                INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
                                                      ON ObjectLink_Personal_Unit.ObjectId = Object_Personal.Id
                                                     AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
-                                                    AND ObjectLink_Personal_Unit.ChildObjectId = inUnitId
+                                                    AND (ObjectLink_Personal_Unit.ChildObjectId = inUnitId
+                                                      -- любое Подразделение
+                                                      OR inIsMain = TRUE
+                                                        )
                                INNER JOIN ObjectLink AS ObjectLink_Personal_Position
                                                      ON ObjectLink_Personal_Position.ObjectId = Object_Personal.Id
                                                     AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
-                                                    AND ObjectLink_Personal_Position.ChildObjectId = inPositionId
+                                                    AND (ObjectLink_Personal_Position.ChildObjectId = inPositionId
+                                                      -- любая Должность
+                                                      OR inIsMain = TRUE
+                                                        )
                                LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
                                                     ON ObjectLink_Personal_PositionLevel.ObjectId = Object_Personal.Id
                                                    AND ObjectLink_Personal_PositionLevel.DescId = zc_ObjectLink_Personal_PositionLevel()
 
+                               -- Основное место р.
+                               LEFT JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                       ON ObjectBoolean_Main.ObjectId = Object_Personal.Id
+                                                      AND ObjectBoolean_Main.DescId   = zc_ObjectBoolean_Personal_Main()
                                -- Конвеер
                                INNER JOIN ObjectLink AS ObjectLink_PersonalByStorageLine_Personal
                                                      ON ObjectLink_PersonalByStorageLine_Personal.ChildObjectId = Object_Personal.Id
@@ -234,8 +282,14 @@ BEGIN
 
                           WHERE Object_Personal.DescId = zc_Object_Personal()
                             AND Object_Personal.isErased = FALSE
-                            AND COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId,0) = COALESCE (inPositionLevelId,0)
-                          );
+                            -- Основное место р.
+                            AND COALESCE (ObjectBoolean_Main.ValueData, FALSE) = inIsMain
+                            --
+                            AND (COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId,0) = COALESCE (inPositionLevelId,0)
+                                 -- любой Разряд
+                              OR inIsMain = TRUE
+                                )
+                         );
 
      ELSE
          -- Без Конвеера
@@ -248,20 +302,36 @@ BEGIN
                                INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
                                                      ON ObjectLink_Personal_Unit.ObjectId = Object_Personal.Id
                                                     AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
-                                                    AND ObjectLink_Personal_Unit.ChildObjectId = inUnitId
+                                                    AND (ObjectLink_Personal_Unit.ChildObjectId = inUnitId
+                                                      -- любое Подразделение
+                                                      OR inIsMain = TRUE
+                                                        )
                                INNER JOIN ObjectLink AS ObjectLink_Personal_Position
                                                      ON ObjectLink_Personal_Position.ObjectId = Object_Personal.Id
                                                     AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
-                                                    AND ObjectLink_Personal_Position.ChildObjectId = inPositionId
+                                                    AND (ObjectLink_Personal_Position.ChildObjectId = inPositionId
+                                                      -- любая Должность
+                                                      OR inIsMain = TRUE
+                                                        )
                                LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
                                                     ON ObjectLink_Personal_PositionLevel.ObjectId = Object_Personal.Id
                                                    AND ObjectLink_Personal_PositionLevel.DescId = zc_ObjectLink_Personal_PositionLevel()
+                               -- Основное место р.
+                               LEFT JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                       ON ObjectBoolean_Main.ObjectId = Object_Personal.Id
+                                                      AND ObjectBoolean_Main.DescId   = zc_ObjectBoolean_Personal_Main()
                           WHERE Object_Personal.DescId = zc_Object_Personal()
                             AND Object_Personal.isErased = FALSE
-                            AND COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId,0) = COALESCE (inPositionLevelId,0)
+                            -- Основное место р.
+                            AND COALESCE (ObjectBoolean_Main.ValueData, FALSE) = inIsMain
+                            --
+                            AND (COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId,0) = COALESCE (inPositionLevelId,0)
+                                 -- любой Разряд
+                              OR inIsMain = TRUE
+                                )
                           )
          THEN
-             RAISE EXCEPTION 'Ошибка.Найдено несколько сотрудников с такой должностью %<%> %<%> %<%> %<%>.'
+             RAISE EXCEPTION 'Ошибка.Найдено несколько сотрудников с такой должностью %<%> %<%> %<%> %<%> %Основное место работы = %..'
                             , CHR (13)
                             , lfGet_Object_ValueData_sh (inUnitId)
                             , CHR (13)
@@ -270,6 +340,8 @@ BEGIN
                             , lfGet_Object_ValueData_sh (inPositionId)
                             , CHR (13)
                             , lfGet_Object_ValueData_sh (inPositionLevelId)
+                            , CHR (13)
+                            , CASE WHEN inIsMain = TRUE THEN 'ДА' ELSE 'НЕТ' END
                              ;
          END IF;
 
@@ -283,18 +355,35 @@ BEGIN
                                INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
                                                      ON ObjectLink_Personal_Unit.ObjectId = Object_Personal.Id
                                                     AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
-                                                    AND ObjectLink_Personal_Unit.ChildObjectId = inUnitId
+                                                    AND (ObjectLink_Personal_Unit.ChildObjectId = inUnitId
+                                                      -- любое Подразделение
+                                                      OR inIsMain = TRUE
+                                                        )
                                INNER JOIN ObjectLink AS ObjectLink_Personal_Position
                                                      ON ObjectLink_Personal_Position.ObjectId = Object_Personal.Id
                                                     AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
-                                                    AND ObjectLink_Personal_Position.ChildObjectId = inPositionId
+                                                    AND (ObjectLink_Personal_Position.ChildObjectId = inPositionId
+                                                      -- любая Должность
+                                                      OR inIsMain = TRUE
+                                                        )
                                LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
                                                     ON ObjectLink_Personal_PositionLevel.ObjectId = Object_Personal.Id
                                                    AND ObjectLink_Personal_PositionLevel.DescId = zc_ObjectLink_Personal_PositionLevel()
+                               -- Основное место р.
+                               LEFT JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                       ON ObjectBoolean_Main.ObjectId = Object_Personal.Id
+                                                      AND ObjectBoolean_Main.DescId   = zc_ObjectBoolean_Personal_Main()
+
                           WHERE Object_Personal.DescId = zc_Object_Personal()
                             AND Object_Personal.isErased = FALSE
-                            AND COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId,0) = COALESCE (inPositionLevelId,0)
-                          );
+                            -- Основное место р.
+                            AND COALESCE (ObjectBoolean_Main.ValueData, FALSE) = inIsMain
+                            --
+                            AND (COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId,0) = COALESCE (inPositionLevelId,0)
+                                 -- любой Разряд
+                              OR inIsMain = TRUE
+                                )
+                         );
      END IF;
 
 
@@ -367,8 +456,8 @@ BEGIN
                                                     , inUnitId_old          := inUnitId_old
                                                     , inReasonOutId         := inReasonOutId
                                                     , inStaffListKindId     := inStaffListKindId
-                                                    , inisOfficial          := inisOfficial
-                                                    , inisMain              := inisMain
+                                                    , inIsOfficial          := inIsOfficial
+                                                    , inIsMain              := inIsMain
                                                     , inNumBiz              := inNumBiz
                                                     , inComment             := inComment
                                                     , inUserId              := vbUserId
@@ -555,8 +644,8 @@ $BODY$
                                                     , inUnitId_old          := 0    ::Integer
                                                     , inReasonOutId         := 0    ::Integer
                                                     , inStaffListKindId     := tmp.StaffListKindId
-                                                    , inisOfficial          := tmp.isOfficial
-                                                    , inisMain              := tmp.isMain
+                                                    , inIsOfficial          := tmp.isOfficial
+                                                    , inIsMain              := tmp.isMain
                                                     , inNumBiz              := tmp.NumBiz
                                                     , inComment             := 'Авто.' ::TVarChar
                                                     , inUserId              := inSession

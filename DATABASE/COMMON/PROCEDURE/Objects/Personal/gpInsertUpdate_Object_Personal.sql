@@ -16,21 +16,21 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Personal(
     IN inPersonalGroupId                   Integer   , -- Группировки Сотрудников
     IN inPersonalServiceListId             Integer   , -- Ведомость начисления(главная)
     IN inPersonalServiceListOfficialId     Integer   , -- Ведомость начисления(БН)
-    IN inPersonalServiceListCardSecondId   Integer   , -- Ведомость начисления(Карта Ф2) 
+    IN inPersonalServiceListCardSecondId   Integer   , -- Ведомость начисления(Карта Ф2)
     IN inPersonalServiceListId_AvanceF2    Integer   , --  Ведомость начисления(аванс Карта Ф2)
     IN inSheetWorkTimeId                   Integer   , -- Режим работы (Шаблон табеля р.вр.)
     IN inStorageLineId                     Integer   , -- ссылка на линию производства
-    
+
     IN inMember_ReferId                    Integer   , -- Фамилия рекомендателя
-    IN inMember_MentorId                   Integer   , -- Фамилия наставника 	
-    IN inReasonOutId                       Integer   , -- Причина увольнения 	
-    
+    IN inMember_MentorId                   Integer   , -- Фамилия наставника
+    IN inReasonOutId                       Integer   , -- Причина увольнения
+
     IN inDateIn                            TDateTime , -- Дата принятия
-    IN inDateOut                           TDateTime , -- Дата увольнения 
+    IN inDateOut                           TDateTime , -- Дата увольнения
     IN inDateSEnd                          TDateTime , -- Дата перевода
     IN inIsDateOut                         Boolean   , -- Уволен
     IN inIsDateSend                        Boolean   , -- переведен
-    IN inIsMain                            Boolean   , -- Основное место работы 
+    IN inIsMain                            Boolean   , -- Основное место работы
     IN inNumBiz                            TVarChar  , -- № для Бицербы
     IN inComment                           TVarChar  ,
     IN inSession                           TVarChar    -- сессия пользователя
@@ -112,21 +112,21 @@ BEGIN
                     , lfGet_Object_ValueData_sh ((SELECT View_Personal.PositionLevelId FROM Object_Personal_View AS View_Personal WHERE View_Personal.MemberId = inMemberId AND View_Personal.isMain = TRUE ORDER BY View_Personal.PersonalId LIMIT 1))
                      ;
    END IF;
-   
-   -- проверка 
-   IF COALESCE (inNumBiz,'') <> ''   
-   THEN 
-       -- проверка или пустая строка или число от 0 до 99 
-       IF zfConvert_StringToNumber (inNumBiz) = 0
-       THEN   
-           RAISE EXCEPTION 'Ошибка.Значение № для Бицербы = <%>.' , inNumBiz;
-       END IF; 
 
-       -- проверка или пустая строка или число от 0 до 99 
+   -- проверка
+   IF COALESCE (inNumBiz,'') <> ''
+   THEN
+       -- проверка или пустая строка или число от 0 до 99
+       IF zfConvert_StringToNumber (inNumBiz) = 0
+       THEN
+           RAISE EXCEPTION 'Ошибка.Значение № для Бицербы = <%>.' , inNumBiz;
+       END IF;
+
+       -- проверка или пустая строка или число от 0 до 99
        IF inNumBiz :: Integer < 0 OR inNumBiz :: Integer > 99
-       THEN   
+       THEN
            RAISE EXCEPTION 'Значение № для Бицербы <%> для <%> должно быть в пределах 0-99.' , inNumBiz, vbName;
-       END IF; 
+       END IF;
        --проверка уникальности (среди физ.лиц если не удален)
        IF EXISTS (SELECT 1
                   FROM ObjectString
@@ -136,13 +136,13 @@ BEGIN
                   WHERE ObjectString.DescId = zc_ObjectString_Member_NumBiz()
                     AND ObjectString.ObjectId <> inMemberId
                     AND ObjectString.ValueData = inNumBiz
-                    AND COALESCE (ObjectString.ValueData,'') <> '' 
+                    AND COALESCE (ObjectString.ValueData,'') <> ''
                   )
-       THEN 
+       THEN
            RAISE EXCEPTION 'Значение № для Бицербы <%> для <%> должно быть уникальным.' , inNumBiz, vbName;
        END IF;
    END IF;
-  
+
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Personal(), vbCode, vbName
@@ -210,16 +210,16 @@ BEGIN
                         AND OL_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
                      )
            THEN
-                -- то галочку "уволен" та "дату звільнення" можуть = 
+                -- то галочку "уволен" та "дату звільнення" можуть =
                 IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 12367417) -- Устанавливать <Дата увольнения> - офіційно оформлений
-                THEN 
+                THEN
                     -- можуть
                     PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Personal_Out(), ioId, inDateOut);
                 ELSE
                     RAISE EXCEPTION 'Ошибка.Сотрудник официально оформлен.%Нет прав устанавливать <Дата увольнения>.', CHR (13);
                 END IF;
            END IF;
-    
+
            -- 2. Якщо співробітник НЕ оформлен офіційно
            IF NOT EXISTS (SELECT 1
                           FROM ObjectLink AS OL_Personal_Member
@@ -231,9 +231,9 @@ BEGIN
                             AND OL_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
                          )
            THEN
-                -- то галочку "уволен" та "дату звільнення" можуть = 
+                -- то галочку "уволен" та "дату звільнення" можуть =
                 IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 12367418) -- Устанавливать <Дата увольнения> - НЕ оформлений офіційно
-                THEN 
+                THEN
                     -- можуть
                     PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Personal_Out(), ioId, inDateOut);
                 ELSE
@@ -245,8 +245,8 @@ BEGIN
 
    ELSE
        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Personal_Out(), ioId, zc_DateEnd());
-   END IF;  
-   
+   END IF;
+
    IF inIsDateSend = TRUE
    THEN
        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Personal_Send(), ioId, inDateSEnd);
