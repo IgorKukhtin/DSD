@@ -102,6 +102,7 @@ BEGIN
                     , (SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Personal())
                      ;
    END IF;
+
    -- Основное место работы - только одно
    IF inIsMain = TRUE
       AND EXISTS (SELECT 1 FROM Object_Personal_View AS View_Personal WHERE View_Personal.MemberId = inMemberId AND View_Personal.isMain = TRUE AND View_Personal.PersonalId <> COALESCE(ioId, 0)) THEN
