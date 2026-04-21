@@ -3,25 +3,29 @@
 DROP VIEW IF EXISTS PriceItems;
 
 CREATE OR REPLACE VIEW PriceItems
-AS 
-  WITH _tmpresult AS (SELECT extId                  
+AS
+  WITH _tmpresult AS (SELECT extId
                            , priceHeaderExtId
                            , productExtId
                            , price
                            , isDeleted
                       FROM dblink ('host=192.168.0.219 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
-                                 , ('SELECT *
+                                 , ('SELECT extId
+                                          , priceHeaderExtId
+                                          , productExtId
+                                          , price
+                                          , isDeleted
                                     FROM gpSelect_Object_PriceItems_effie(zfCalc_UserAdmin())'
                                     ) :: Text
                                   ) AS gpSelect (extId            TVarChar   -- Идентификатор строки прайса (необходим для того, чтобы можно было поменять цену по товару по этому идентификатору при новой загрузке данных)
                                                , priceHeaderExtId TVarChar   -- Идентификатор прайса
                                                , productExtId     TVarChar   -- Идентификатор товара
                                                , price            TVarChar   -- Цена
-                                               , isDeleted        Boolean    -- Признак активности                
+                                               , isDeleted        Boolean    -- Признак активности
                                                 )
                      )
  --
- SELECT extId                  
+ SELECT extId
       , priceHeaderExtId
       , productExtId
       , price

@@ -24,7 +24,7 @@ $BODY$
 
      --
      RETURN QUERY
-     WITH 
+     WITH
      tmpPartner AS (-- Идентификатор контрагента.
                     SELECT DISTINCT gpSelect.PartnerId FROM gpSelect_Object_ContractPrices_effie (inSession) AS gpSelect
                     -- если vbPersonalId - Сотрудник (торговый)
@@ -45,7 +45,7 @@ $BODY$
                     WHERE OL.ChildObjectId > 0
                       AND OL.DescId        = zc_ObjectLink_Partner_PersonalMerch()
                   */
-                    ) 
+                    )
       --
    , tmpPartner_TT AS (SELECT Object_Partner.Id                                           AS PartnerId
                             , ObjectLink_Partner_Street.ChildObjectId                     AS StreetId
@@ -62,7 +62,7 @@ $BODY$
 
                            LEFT JOIN ObjectString AS ObjectString_HouseNumber
                                                   ON ObjectString_HouseNumber.ObjectId = Object_Partner.Id
-                                                 AND ObjectString_HouseNumber.DescId = zc_ObjectString_Partner_HouseNumber()          
+                                                 AND ObjectString_HouseNumber.DescId = zc_ObjectString_Partner_HouseNumber()
 
                            LEFT JOIN ObjectString AS ObjectString_CaseNumber
                                                   ON ObjectString_CaseNumber.ObjectId = Object_Partner.Id
@@ -89,14 +89,15 @@ $BODY$
               , tmpPartner_TT.PartnerId  AS PartnerId
               , tmpPartner_TT.StreetId
               , tmpPartner_TT.HouseNumber
-              , tmpPartner_TT.CaseNumber 
+              , tmpPartner_TT.CaseNumber
               , tmpPartner_TT.RoomNumber
               , ROW_NUMBER() OVER (PARTITION BY Object_TT_effie.Id ORDER BY tmpPartner_TT.PartnerId DESC) AS Ord
          FROM tmpPartner_TT
-              LEFT JOIN Object_TT_effie ON Object_TT_effie.StreetId   = tmpPartner_TT.StreetId
+              LEFT JOIN Object_TT_effie ON Object_TT_effie.PartnerId  = tmpPartner_TT.PartnerId
+                                     /*AND Object_TT_effie.StreetId   = tmpPartner_TT.StreetId
                                        AND Object_TT_effie.HouseNumber= tmpPartner_TT.HouseNumber
-                                       AND Object_TT_effie.CaseNumber = tmpPartner_TT.CaseNumber 
-                                       AND Object_TT_effie.RoomNumber = tmpPartner_TT.RoomNumber
+                                       AND Object_TT_effie.CaseNumber = tmpPartner_TT.CaseNumber
+                                       AND Object_TT_effie.RoomNumber = tmpPartner_TT.RoomNumber*/
          -- есть Адрес
          WHERE tmpPartner_TT.StreetId > 0
         ) AS tmp
