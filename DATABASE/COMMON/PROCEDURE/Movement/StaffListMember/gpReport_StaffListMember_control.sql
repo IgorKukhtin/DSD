@@ -110,43 +110,47 @@ BEGIN
                                                    )
                 )
      --все докум. выбранных для физ.лиц
-   , tmpMov_Data AS (SELECT Movement.*
+   , tmpMovement AS (SELECT tmpMovement_all.*
                           , MovementLinkObject_Member.ObjectId        AS MemberId
                           , MovementLinkObject_StaffListKind.ObjectId AS StaffListKindId        --zc_Enum_StaffListKind_Send()  zc_Enum_StaffListKind_Out() zc_Enum_StaffListKind_Add() zc_Enum_StaffListKind_In()                   
-                     FROM tmpMovement_all AS Movement
-                          INNER JOIN tmpMLO AS MovementLinkObject_Member
-                                            ON MovementLinkObject_Member.MovementId = Movement.Id
-                                           AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
-                                           AND (MovementLinkObject_Member.ObjectId = inMemberId OR inMemberId = 0)
-                          --INNER JOIN (SELECT DISTINCT tmpViewPersonal.MemberId FROM tmpViewPersonal) AS tmpMember ON tmpMember.MemberId = MovementLinkObject_Member.ObjectId
-                          LEFT JOIN tmpMLO AS MovementLinkObject_StaffListKind
-                                           ON MovementLinkObject_StaffListKind.MovementId = Movement.Id
-                                          AND MovementLinkObject_StaffListKind.DescId = zc_MovementLinkObject_StaffListKind()
-                     )
-   -- + должность разряд, главное, офиц.                  
-   , tmpMovement AS (SELECT Movement.*
                           , COALESCE (MovementBoolean_Official.ValueData, FALSE) ::Boolean  AS isOfficial
                           , COALESCE (MovementBoolean_Main.ValueData, FALSE)     ::Boolean  AS isMain
                           , MovementLinkObject_Position.ObjectId AS PositionId
                           , MovementLinkObject_PositionLevel.ObjectId AS PositionLevelId
-                          --, ROW_NUMBER () OVER (PARTITION BY Movement.MemberId ORDER BY Movement.OperDate DESC) AS ord
-                     FROM tmpMov_Data AS Movement
+                     FROM tmpMovement_all 
+                          LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                       ON MovementLinkObject_Unit.MovementId = tmpMovement_all.Id
+                                                      AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                         
+                          LEFT JOIN tmpMLO AS MovementLinkObject_Member
+                                            ON MovementLinkObject_Member.MovementId = tmpMovement_all.Id
+                                           AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member() 
+                                           
                           LEFT JOIN tmpMovementBoolean AS MovementBoolean_Main
-                                                       ON MovementBoolean_Main.MovementId = Movement.Id
-                                                      AND MovementBoolean_Main.DescId = zc_MovementBoolean_Main()
+                                         ON MovementBoolean_Main.MovementId = tmpMovement_all.Id
+                                        AND MovementBoolean_Main.DescId = zc_MovementBoolean_Main()  
+                                        
+                          LEFT JOIN tmpMLO AS MovementLinkObject_StaffListKind
+                                           ON MovementLinkObject_StaffListKind.MovementId = tmpMovement_all.Id
+                                          AND MovementLinkObject_StaffListKind.DescId = zc_MovementLinkObject_StaffListKind() --and 1=0
 
                           LEFT JOIN tmpMovementBoolean AS MovementBoolean_Official
-                                                       ON MovementBoolean_Official.MovementId = Movement.Id
-                                                      AND MovementBoolean_Official.DescId = zc_MovementBoolean_Official()
-
+                                         ON MovementBoolean_Official.MovementId = tmpMovement_all.Id
+                                        AND MovementBoolean_Official.DescId = zc_MovementBoolean_Official()-- and 1=0
+  
                           LEFT JOIN tmpMLO AS MovementLinkObject_Position
-                                           ON MovementLinkObject_Position.MovementId = Movement.Id
-                                          AND MovementLinkObject_Position.DescId = zc_MovementLinkObject_Position()
+                                           ON MovementLinkObject_Position.MovementId = tmpMovement_all.Id
+                                          AND MovementLinkObject_Position.DescId = zc_MovementLinkObject_Position()-- and 1=0
 
                           LEFT JOIN tmpMLO AS MovementLinkObject_PositionLevel
-                                           ON MovementLinkObject_PositionLevel.MovementId = Movement.Id
+                                           ON MovementLinkObject_PositionLevel.MovementId = tmpMovement_all.Id
                                           AND MovementLinkObject_PositionLevel.DescId = zc_MovementLinkObject_PositionLevel()
+                     WHERE (MovementLinkObject_Unit.ObjectId = inUnitId  OR inUnitId = 0)
+                       AND (MovementLinkObject_Member.ObjectId = inMemberId OR inMemberId = 0)
+                       AND COALESCE (MovementBoolean_Main.ValueData, FALSE) = TRUE
                      )
+
+  
    --выбираем для isMain=True последний документ приема (для понимания когда принят на работу) 
    , tmpMovement_main_in AS (SELECT * 
                              FROM (SELECT *
@@ -248,6 +252,7 @@ BEGIN
                   WHEN COALESCE (tmp.DateIn, zc_DateEnd())  <> COALESCE (tmp.DateIn_object, zc_DateEnd()) THEN 'Дата приема'
                   WHEN COALESCE (tmp.DateSend, zc_DateEnd())<> COALESCE (tmp.DateSend_object, zc_DateEnd()) THEN 'Дата перевода'
                   WHEN COALESCE (tmp.DateOut, zc_DateEnd()) <> COALESCE (tmp.DateOut_object, zc_DateEnd()) THEN 'Дата увольнения'
+                  WHEN COALESCE (tmp.isOfficial, FALSE)   <> COALESCE (tmp.isOfficial_object, FALSE) THEN 'Оформлен официально'
                   ELSE ''
              END                            ::TVarChar  AS Text_control
            , tmp.DateIn                     ::TDateTime
