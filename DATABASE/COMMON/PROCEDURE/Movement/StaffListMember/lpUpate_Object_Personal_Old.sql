@@ -23,7 +23,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
      
      --чтоб пока ничего не поломать
-     IF vbUserId NOT IN (5, 9457)
+     IF vbUserId NOT IN (9457)
      THEN
          RETURN;
      END IF;
