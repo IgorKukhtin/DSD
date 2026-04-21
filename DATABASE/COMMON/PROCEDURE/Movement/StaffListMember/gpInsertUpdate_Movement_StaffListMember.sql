@@ -239,7 +239,7 @@ BEGIN
                                                   , inIsMain                          := inIsMain                          ::Boolean    -- Основное место работы
                                                   , inNumBiz                          := inNumBiz                          ::TVarChar   --
                                                   , inComment                         := inComment                         ::TVarChar  
-                                                  , inSession                         := inSession                         ::TVarChar   -- сессия пользователя 
+                                                  , inSession                         := (-1 * vbUserId)                   ::TVarChar   -- сессия пользователя 
                                                   ) ;
     
   
@@ -314,7 +314,7 @@ BEGIN
     -- END IF;    
  
     -- !!! ВРЕМЕННО !!!
-    IF vbUserId IN (5, 9457) THEN RAISE EXCEPTION 'Admin - Test = OK'; END IF;
+    IF vbUserId IN (9457) THEN RAISE EXCEPTION 'Admin - Test = OK'; END IF;
     
 END;
 $BODY$
