@@ -93,7 +93,7 @@ BEGIN
 
      -- 5.2. потом проводим ƒокумент + сохранили протокол
      PERFORM gpComplete_Movement_StaffListMember (inMovementId := ioId
-                                                , inSession    := inUserId :: TVarChar
+                                                , inSession    := (-1 * inUserId) :: TVarChar
                                                  );
 END;
 $BODY$
