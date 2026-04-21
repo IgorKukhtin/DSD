@@ -1250,17 +1250,17 @@ inherited StaffListMemberForm: TStaffListMemberForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inComment'
+        Name = 'inNumBiz'
         Value = Null
-        Component = ceComment
+        Component = edNumBiz
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inNumBiz'
+        Name = 'inComment'
         Value = Null
-        Component = edNumBiz
+        Component = ceComment
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
