@@ -83,8 +83,9 @@ BEGIN
    -- END IF;
 
    -- проверка  уникальности для свойств: <ФИО> + <Подразделение> + <Должность> + <Разряд должности>
-   IF EXISTS (SELECT 1 FROM Object_Personal_View WHERE PersonalName = vbName AND UnitId = inUnitId AND PositionId = COALESCE (inPositionId, 0) AND PositionLevelId = COALESCE (inPositionLevelId, 0) AND StorageLineId = COALESCE (inStorageLineId, 0) AND PersonalId <> COALESCE(ioId, 0)) THEN
-      RAISE EXCEPTION 'Значение <%>%для подразделения: <%>%должность: <%>% % %не уникально в справочнике <%>.'
+   IF EXISTS (SELECT 1 FROM Object_Personal_View WHERE PersonalName = vbName AND isMain = inIsMain AND UnitId = inUnitId AND PositionId = COALESCE (inPositionId, 0) AND PositionLevelId = COALESCE (inPositionLevelId, 0) AND StorageLineId = COALESCE (inStorageLineId, 0) AND PersonalId <> COALESCE(ioId, 0))
+   THEN
+      RAISE EXCEPTION 'Значение <%>%для подразделения: <%>%должность: <%>% % % Основное место работы = % %не уникально в справочнике <%>.'
                     , vbName
                     , CHR (13)
                     , lfGet_Object_ValueData_sh (inUnitId)
@@ -93,6 +94,9 @@ BEGIN
 
                     , CASE WHEN inPositionLevelId > 0 THEN CHR (13) || 'разряд должности: ' || '<' || lfGet_Object_ValueData_sh (inPositionLevelId) || '>' ELSE '' END
                     , CASE WHEN inStorageLineId > 0 THEN CHR (13) || 'линия производства: ' || '<' || lfGet_Object_ValueData_sh (inStorageLineId) || '>' ELSE '' END
+
+                    , CHR (13)
+                    , CASE WHEN inIsMain = TRUE THEN 'ДА' ELSE 'НЕТ' END
 
                     , CHR (13)
                     , (SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Personal())

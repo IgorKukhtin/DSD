@@ -475,7 +475,7 @@ BEGIN
     -- END IF;
 
     -- !!! бпелеммн !!!
-    IF vbUserId IN (5, 9457) THEN RAISE EXCEPTION 'Admin - Test = OK'; END IF;
+    IF vbUserId IN (9457) THEN RAISE EXCEPTION 'Admin - Test = OK'; END IF;
 
 END;
 $BODY$
