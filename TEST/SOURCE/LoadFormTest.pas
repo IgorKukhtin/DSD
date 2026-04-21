@@ -4632,11 +4632,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberHoliday_ChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberHoliday_ChoiceForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ChoiceForm');
- // exit;
-
+  exit;
+ {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalPosition_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalPosition_ObjectForm');
 
@@ -4842,13 +4842,13 @@ end;
 
 procedure TLoadFormTest.LoadStaffListMemberFormTest;
 begin
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StaffListMember_controlForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_StaffListMember_controlForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StaffListMember_controlDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_StaffListMember_controlDialogForm');
   exit;
-
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StaffListMember_byPersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_StaffListMember_byPersonalForm');
  }

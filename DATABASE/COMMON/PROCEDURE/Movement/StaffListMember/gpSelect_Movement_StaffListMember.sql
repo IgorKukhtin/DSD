@@ -105,6 +105,9 @@ BEGIN
                                , ObjectDate_DateIn.ValueData              AS DateIn
                                , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN NULL ELSE ObjectDate_DateOut.ValueData END AS DateOut
                                , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN FALSE ELSE TRUE END AS isDateOut
+                               , ObjectLink_Personal_Unit.ChildObjectId           AS UnitId
+                               , ObjectLink_Personal_Position.ChildObjectId       AS PositionId
+                               , ObjectLink_Personal_PositionLevel.ChildObjectId  AS PositionLevelId
                           FROM Object AS Object_Personal
                                INNER JOIN ObjectLink AS ObjectLink_Personal_Member
                                                      ON ObjectLink_Personal_Member.ObjectId = Object_Personal.Id
@@ -116,6 +119,16 @@ BEGIN
                                                         ON ObjectBoolean_Main.ObjectId = Object_Personal.Id
                                                        AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Personal_Main()
                                                        AND COALESCE (ObjectBoolean_Main.ValueData, FALSE) = TRUE
+
+                               LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
+                                                    ON ObjectLink_Personal_Position.ObjectId = Object_Personal.Id
+                                                   AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+                               LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Personal_Position.ChildObjectId
+
+                               LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
+                                                    ON ObjectLink_Personal_PositionLevel.ObjectId = Object_Personal.Id
+                                                   AND ObjectLink_Personal_PositionLevel.DescId = zc_ObjectLink_Personal_PositionLevel()
+                               LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = ObjectLink_Personal_PositionLevel.ChildObjectId
 
                                LEFT JOIN ObjectDate AS ObjectDate_DateIn
                                                     ON ObjectDate_DateIn.ObjectId = Object_Personal.Id
@@ -276,6 +289,9 @@ BEGIN
             LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = Movement.MemberId
                                  AND tmpPersonal.DateIn <= Movement.OperDate
                                  AND COALESCE (tmpPersonal.DateOut, zc_DateEnd()) >= Movement.OperDate
+                                 AND COALESCE (tmpPersonal.UnitId,0)          = COALESCE (MovementLinkObject_Unit.ObjectId,0) 
+                                 AND COALESCE (tmpPersonal.PositionId,0)      = COALESCE (MovementLinkObject_Position.ObjectId,0) 
+                                 AND COALESCE (tmpPersonal.PositionLevelId,0) = COALESCE (MovementLinkObject_PositionLevel.ObjectId,0) 
                               --   AND Object_StaffListKind.Id IN (zc_Enum_StaffListKind_Send(), zc_Enum_StaffListKind_Out())
       ;
 

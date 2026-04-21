@@ -50,6 +50,7 @@ type
     cxLabel7: TcxLabel;
     GuidesUnit: TdsdGuides;
     Text_control: TcxGridDBColumn;
+    isErased_object: TcxGridDBColumn;
   private
     { Private declarations }
   public
