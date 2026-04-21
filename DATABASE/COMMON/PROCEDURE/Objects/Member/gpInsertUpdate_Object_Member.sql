@@ -16,16 +16,22 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar
                                                     , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);*/
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                     , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+*/
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                    , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                    , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member(
  INOUT ioId	                 Integer   ,    -- ключ объекта <Физические лица> 
     IN inCode                Integer   ,    -- код объекта 
     IN inName                TVarChar  ,    -- Название объекта <
     IN inIsOfficial          Boolean   ,    -- Оформлен официально
-    IN inIsNotCompensation   Boolean   ,    -- Исключить из компенсации отпуска
+    IN inIsNotCompensation   Boolean   ,    -- Исключить из компенсации отпуска 
+    IN inIsEffie             Boolean   ,    -- Работает с Effie
     IN inCode1С              TVarChar  ,    -- Код 1С
     IN inINN                 TVarChar  ,    -- Код ИНН
     IN inDriverCertificate   TVarChar  ,    -- Водительское удостоверение 
@@ -160,6 +166,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Member_Official(), ioId, inIsOfficial);
    -- сохранили свойство <Исключить из компенсации отпуска>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Member_NotCompensation(), ioId, inIsNotCompensation);
+   -- сохранили свойство <Работает с Effie>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Member_Effie(), ioId, inIsEffie);
 
 
    -- сохранили свойство <>
@@ -243,6 +251,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.04.26         *
  28.10.24         * Code1C
  15.03.24         * Phone
  27.09.21         *

@@ -176,6 +176,7 @@ type
     edMemberGoods_holiday: TcxButtonEdit;
     GuidesMemberGoods_month: TdsdGuides;
     GuidesMemberGoods_holiday: TdsdGuides;
+    cbEffie: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -52,6 +52,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
 AS
 $BODY$
     DECLARE vbUserId Integer;
+            vbIsGP   Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
@@ -59,6 +60,8 @@ BEGIN
     -- !!!Только просмотр Аудитор!!!
     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
+    --
+    vbIsGP := EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin());
 
     -- Результат
     RETURN QUERY
@@ -256,6 +259,7 @@ BEGIN
                        LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean.ObjectId
                   WHERE ObjectBoolean.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Top()
                     AND COALESCE (ObjectBoolean.ValueData, FALSE) = TRUE
+                    AND vbIsGP = TRUE
                    )
 
      , tmpGoodsParam AS (SELECT tmp.GoodsId
@@ -297,6 +301,7 @@ BEGIN
                                                   ON ObjectLink_Goods_InfoMoney.ObjectId = tmp.GoodsId
                                                  AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                              LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                         WHERE vbIsGP = TRUE
                         )
 
       --
@@ -326,17 +331,17 @@ BEGIN
            , SUM (CASE WHEN MovementItem.Ord = 1 THEN COALESCE (MovementItem.Amount_master,0) ELSE 0 END)  ::TFloat AS Amount_master 
            , SUM (CASE WHEN MovementItem.Ord = 1 THEN COALESCE (MovementItem.Weight_master,0) ELSE 0 END)  ::TFloat AS Weight_master
 
-           , MovementItem.GoodsGroupNameFull_parent ::TVarChar AS GoodsGroupNameFull_parent
-           , MovementItem.GoodsCode_parent                     AS GoodsCode_parent
-           , MovementItem.GoodsName_parent          ::TVarChar AS GoodsName_parent
-           , MovementItem.GoodsKindName_parent      ::TVarChar AS GoodsKindName_parent
-           , MovementItem.MeasureName_parent        ::TVarChar AS MeasureName_parent
-           , MovementItem.ReceiptCode                          AS ReceiptCode
-           , MovementItem.ReceiptCode_str           ::TVarChar AS ReceiptCode_str
-           , MovementItem.ReceiptName               ::TVarChar AS ReceiptName
-           , MovementItem.ReceiptBasisCode                     AS ReceiptBasisCode
-           , MovementItem.ReceiptBasisCode_str      ::TVarChar AS ReceiptBasisCode_str
-           , MovementItem.ReceiptBasisName          ::TVarChar AS ReceiptBasisName
+           , CASE WHEN vbIsGP = TRUE THEN MovementItem.GoodsGroupNameFull_parent ELSE '' END ::TVarChar AS GoodsGroupNameFull_parent
+           , CASE WHEN vbIsGP = TRUE THEN MovementItem.GoodsCode_parent          ELSE 0  END ::Integer  AS GoodsCode_parent
+           , CASE WHEN vbIsGP = TRUE THEN MovementItem.GoodsName_parent          ELSE '' END ::TVarChar AS GoodsName_parent
+           , CASE WHEN vbIsGP = TRUE THEN MovementItem.GoodsKindName_parent      ELSE '' END ::TVarChar AS GoodsKindName_parent
+           , CASE WHEN vbIsGP = TRUE THEN MovementItem.MeasureName_parent        ELSE '' END ::TVarChar AS MeasureName_parent
+           , CASE WHEN vbIsGP = TRUE THEN MovementItem.ReceiptCode               ELSE 0  END ::Integer  AS ReceiptCode
+           , CASE WHEN vbIsGP = TRUE THEN MovementItem.ReceiptCode_str           ELSE '' END ::TVarChar AS ReceiptCode_str
+           , CASE WHEN vbIsGP = TRUE THEN MovementItem.ReceiptName               ELSE '' END ::TVarChar AS ReceiptName
+           , CASE WHEN vbIsGP = TRUE THEN MovementItem.ReceiptBasisCode          ELSE 0  END ::Integer  AS ReceiptBasisCode
+           , CASE WHEN vbIsGP = TRUE THEN MovementItem.ReceiptBasisCode_str      ELSE '' END ::TVarChar AS ReceiptBasisCode_str
+           , CASE WHEN vbIsGP = TRUE THEN MovementItem.ReceiptBasisName          ELSE '' END ::TVarChar AS ReceiptBasisName
 
            , MovementItem.GroupNumber
            , MovementItem.InfoMoneyCode
@@ -418,7 +423,7 @@ BEGIN
            , Object_GoodsKind.ValueData
            , ObjectString_Goods_GoodsGroupFull.ValueData
            , Object_Measure.ValueData
-           , MovementItem.GoodsGroupNameFull_parent
+           /*, MovementItem.GoodsGroupNameFull_parent
            , MovementItem.GoodsCode_parent
            , MovementItem.GoodsName_parent
            , MovementItem.GoodsKindName_parent
@@ -429,6 +434,18 @@ BEGIN
            , MovementItem.ReceiptBasisCode
            , MovementItem.ReceiptBasisCode_str
            , MovementItem.ReceiptBasisName
+           */
+           , CASE WHEN vbIsGP = TRUE THEN MovementItem.GoodsGroupNameFull_parent ELSE '' END
+           , CASE WHEN vbIsGP = TRUE THEN MovementItem.GoodsCode_parent          ELSE 0  END
+           , CASE WHEN vbIsGP = TRUE THEN MovementItem.GoodsName_parent          ELSE '' END
+           , CASE WHEN vbIsGP = TRUE THEN MovementItem.GoodsKindName_parent      ELSE '' END
+           , CASE WHEN vbIsGP = TRUE THEN MovementItem.MeasureName_parent        ELSE '' END
+           , CASE WHEN vbIsGP = TRUE THEN MovementItem.ReceiptCode               ELSE 0  END
+           , CASE WHEN vbIsGP = TRUE THEN MovementItem.ReceiptCode_str           ELSE '' END
+           , CASE WHEN vbIsGP = TRUE THEN MovementItem.ReceiptName               ELSE '' END
+           , CASE WHEN vbIsGP = TRUE THEN MovementItem.ReceiptBasisCode          ELSE 0  END
+           , CASE WHEN vbIsGP = TRUE THEN MovementItem.ReceiptBasisCode_str      ELSE '' END
+           , CASE WHEN vbIsGP = TRUE THEN MovementItem.ReceiptBasisName          ELSE '' END
            , MovementItem.GroupNumber
            , MovementItem.InfoMoneyCode
            , MovementItem.InfoMoneyGroupName

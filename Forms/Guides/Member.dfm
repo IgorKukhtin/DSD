@@ -718,6 +718,14 @@ object MemberForm: TMemberForm
         Options.Editing = False
         Width = 80
       end
+      object isEffie: TcxGridDBColumn
+        Caption = #1056#1072#1073#1086#1090#1072#1077#1090' '#1089' Effie'
+        DataBinding.FieldName = 'isEffie'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -887,7 +895,7 @@ object MemberForm: TMemberForm
     Height = 80
     Align = alBottom
     Caption = 'Panel1'
-    TabOrder = 5
+    TabOrder = 4
     Visible = False
     object ExportXmlGrid: TcxGrid
       Left = 599
