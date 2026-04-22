@@ -436,8 +436,14 @@ BEGIN
          vbDateIn := (SELECT ObjectDate.ValueData
                       FROM ObjectDate
                       WHERE ObjectDate.ObjectId = inPersonalId_old
-                           AND ObjectDate.DescId = zc_ObjectDate_Personal_In()
+                        AND ObjectDate.DescId = zc_ObjectDate_Personal_In()
                       );
+         vbDateSend := (SELECT ObjectDate.ValueData
+                        FROM ObjectDate
+                        WHERE ObjectDate.ObjectId = inPersonalId_old
+                          AND ObjectDate.DescId = zc_ObjectDate_Personal_Send()
+                        );
+         vbIsDateSend := CASE WHEN COALESCE (vbDateSend, zc_DateEnd()) <> zc_DateEnd() THEN TRUE ELSE FALSE END;
          vbDateOut    := inOperDate;
          vbPersonalId := inPersonalId_old;                    -- если уволен обновляем сущ. сотрудника
          vbIsDateOut  := True;
@@ -589,7 +595,7 @@ BEGIN
     -- END IF;
 
     -- !!! ВРЕМЕННО !!!
-    IF vbUserId IN (9457) THEN RAISE EXCEPTION 'Admin - Test = OK'; END IF;
+    --IF vbUserId IN (9457) THEN RAISE EXCEPTION 'Admin - Test = OK'; END IF;
 
 END;
 $BODY$

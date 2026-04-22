@@ -4847,22 +4847,22 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_StaffListMember_controlForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StaffListMember_controlDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_StaffListMember_controlDialogForm');
-  exit;
+ // exit;
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StaffListMember_byPersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_StaffListMember_byPersonalForm');
- }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListItemChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStaffListItemChoiceForm');
   exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStaffListKindForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListMemberJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStaffListMemberJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListMemberForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStaffListMemberForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListMemberJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStaffListMemberJournalChoiceForm');
 end;

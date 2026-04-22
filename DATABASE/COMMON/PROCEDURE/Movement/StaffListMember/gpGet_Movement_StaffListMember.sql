@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , PositionId Integer, PositionName TVarChar
              , PositionLevelId Integer, PositionLevelName TVarChar
              , UnitId Integer, UnitName TVarChar
-             , PositionId_old Integer, PositionName_old TVarChar
+             , PersonalId_old Integer, PositionId_old Integer, PositionName_old TVarChar
              , PositionLevelId_old Integer, PositionLevelName_old TVarChar
              , UnitId_old Integer, UnitName_old TVarChar
              , ReasonOutId Integer, ReasonOutName TVarChar
@@ -64,7 +64,8 @@ BEGIN
              , 0                                                AS PositionLevelId  
              , CAST ('' AS TVarChar)                            AS PositionLevelName
              , 0                                                AS UnitId           
-             , CAST ('' AS TVarChar)                            AS UnitName         
+             , CAST ('' AS TVarChar)                            AS UnitName 
+             , 0                                                AS PersonalId_old        
              , 0                                                AS PositionId_old       
              , CAST ('' AS TVarChar)                            AS PositionName_old     
              , 0                                                AS PositionLevelId_old  
@@ -205,6 +206,7 @@ BEGIN
            , Object_Unit.Id                        AS UnitId
            , Object_Unit.ValueData                 AS UnitName
 
+           , COALESCE (tmpPersonal.PersonalId,0)::Integer AS PersonalId_old   --всегда 
            , Object_Position_old.Id                AS PositionId_old
            , Object_Position_old.ValueData         AS PositionName_old
            , Object_PositionLevel_old.Id           AS PositionLevelId_old
