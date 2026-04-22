@@ -211,8 +211,11 @@ BEGIN
                  FROM tmpMember_byMovement AS tmpMember
                       LEFT JOIN tmpMovement_main_in   AS Movement_in ON Movement_in.MemberId = tmpMember.MemberId
                       LEFT JOIN tmpMovement_main_send AS Movement_send ON Movement_send.MemberId = tmpMember.MemberId
+                                                     AND Movement_send.OperDate >= Movement_in.OperDate 
                       LEFT JOIN tmpMovement_main_out  AS Movement_out ON Movement_out.MemberId = tmpMember.MemberId
+                                                     AND Movement_out.OperDate > Movement_in.OperDate
                )
+
    , tmpErr AS (
                 SELECT *
                 FROM (SELECT tmpData.MemberId
@@ -280,7 +283,7 @@ BEGIN
            , tmp.DateSend_object                   ::TDateTime AS DateSend_object
            , tmp.DateOut_object                    ::TDateTime AS DateOut_object
            , tmp.isOfficial_object                 ::Boolean   AS isOfficial_object
-           , tmp.isErased_object                   ::Boolean   AS isErased_object
+           , COALESCE (tmp.isErased_object, FALSE) ::Boolean   AS isErased_object
       FROM tmpErr AS tmp
            LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmp.MemberId
            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmp.UnitId
