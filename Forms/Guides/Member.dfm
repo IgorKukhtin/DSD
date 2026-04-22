@@ -726,6 +726,30 @@ object MemberForm: TMemberForm
         Options.Editing = False
         Width = 70
       end
+      object DateIn: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072
+        DataBinding.FieldName = 'DateIn'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
+      object DateOut: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
+        DataBinding.FieldName = 'DateOut'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object DateSend: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1087#1077#1088#1077#1074#1086#1076#1072
+        DataBinding.FieldName = 'DateSend'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
