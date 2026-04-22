@@ -109,12 +109,12 @@ inherited StaffListMemberForm: TStaffListMemberForm
   end
   object cxLabel11: TcxLabel [13]
     Left = 8
-    Top = 85
+    Top = 120
     Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
   end
   object edMember: TcxButtonEdit [14]
     Left = 8
-    Top = 102
+    Top = 138
     Properties.Buttons = <
       item
         Default = True
@@ -137,7 +137,7 @@ inherited StaffListMemberForm: TStaffListMemberForm
   end
   object cxLabel10: TcxLabel [16]
     Left = 368
-    Top = 122
+    Top = 120
     Caption = #1055#1088#1080#1095#1080#1085#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
   end
   object edReasonOut: TcxButtonEdit [17]
@@ -154,16 +154,14 @@ inherited StaffListMemberForm: TStaffListMemberForm
   end
   object cbMain: TcxCheckBox [18]
     Left = 8
-    Top = 58
-    Hint = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
+    Top = 51
     Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088#1072#1073#1086#1090#1099
     TabOrder = 18
     Width = 146
   end
   object cbOfficial: TcxCheckBox [19]
     Left = 184
-    Top = 59
-    Hint = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
+    Top = 51
     Caption = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
     TabOrder = 19
     Width = 146
@@ -272,29 +270,36 @@ inherited StaffListMemberForm: TStaffListMemberForm
   end
   object edStaffListKind: TcxButtonEdit [32]
     Left = 8
-    Top = 138
+    Top = 93
+    ParentFont = False
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
+    Style.Font.Charset = RUSSIAN_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -16
+    Style.Font.Name = 'Arial'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
     TabOrder = 32
     Width = 331
   end
   object cxLabel14: TcxLabel [33]
-    Left = 9
-    Top = 121
+    Left = 8
+    Top = 75
     Caption = #1042#1080#1076' '#1086#1092#1086#1088#1084#1083#1077#1085#1080#1103' '#1074' '#1096#1090#1072#1090
   end
   object cxLabel15: TcxLabel [34]
     Left = 368
-    Top = 86
+    Top = 81
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [35]
     Left = 368
-    Top = 102
+    Top = 98
     TabOrder = 35
     Width = 331
   end
@@ -556,7 +561,7 @@ inherited StaffListMemberForm: TStaffListMemberForm
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 224
-    Top = 83
+    Top = 79
   end
   inherited ActionList: TActionList
     Left = 663
@@ -1825,7 +1830,7 @@ inherited StaffListMemberForm: TStaffListMemberForm
         MultiSelectSeparator = ','
       end>
     Left = 150
-    Top = 86
+    Top = 82
   end
   object GuideUpdate: TdsdGuides
     KeyField = 'Id'
@@ -1885,7 +1890,7 @@ inherited StaffListMemberForm: TStaffListMemberForm
         MultiSelectSeparator = ','
       end>
     Left = 422
-    Top = 107
+    Top = 103
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'UnitId'

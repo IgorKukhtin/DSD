@@ -30,9 +30,9 @@ inherited Report_StaffListMember_controlForm: TReport_StaffListMember_controlFor
               Kind = skCount
               Column = MemberName
             end>
+          OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -42,23 +42,151 @@ inherited Report_StaffListMember_controlForm: TReport_StaffListMember_controlFor
           object Text_control: TcxGridDBColumn
             Caption = #1054#1096#1080#1073#1082#1072
             DataBinding.FieldName = 'Text_control'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 172
+          end
+          object MemberCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'MemberCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1092#1080#1079'.'#1083#1080#1094#1072
+            Options.Editing = False
+            Width = 70
+          end
+          object MemberName: TcxGridDBColumn
+            Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
+            DataBinding.FieldName = 'MemberName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 102
+          end
+          object isMain: TcxGridDBColumn
+            Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088'.'
+            DataBinding.FieldName = 'isMain'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 172
+            Width = 70
           end
           object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 130
+          end
+          object UnitName_object: TcxGridDBColumn
+            Caption = '***'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName_object'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082')'
+            Width = 130
+          end
+          object PositionName: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+            DataBinding.FieldName = 'PositionName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1083#1078#1085#1086#1089#1090#1100' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
+            Width = 90
+          end
+          object PositionName_object: TcxGridDBColumn
+            Caption = '***'#1044#1086#1083#1078#1085#1086#1089#1090#1100
+            DataBinding.FieldName = 'PositionName_object'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082')'
+            Width = 90
+          end
+          object PositionLevelName: TcxGridDBColumn
+            Caption = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
+            DataBinding.FieldName = 'PositionLevelName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object PositionLevelName_object: TcxGridDBColumn
+            Caption = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080'*'
+            DataBinding.FieldName = 'PositionLevelName_object'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080' ('#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082')'
+            Width = 80
           end
           object DateIn: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072
             DataBinding.FieldName = 'DateIn'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 78
+          end
+          object DateIn_object: TcxGridDBColumn
+            Caption = '***'#1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072
+            DataBinding.FieldName = 'DateIn_object'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072' ('#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082')'
             Options.Editing = False
             Width = 78
           end
@@ -70,11 +198,29 @@ inherited Report_StaffListMember_controlForm: TReport_StaffListMember_controlFor
             Options.Editing = False
             Width = 70
           end
+          object DateSend_object: TcxGridDBColumn
+            Caption = '***'#1044#1072#1090#1072' '#1087#1077#1088#1077#1074#1086#1076#1072
+            DataBinding.FieldName = 'DateSend_object'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1087#1077#1088#1077#1074#1086#1076#1072' ('#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082')'
+            Options.Editing = False
+            Width = 70
+          end
           object DateOut: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
             DataBinding.FieldName = 'DateOut'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
+          end
+          object DateOut_object: TcxGridDBColumn
+            Caption = '***'#1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'DateOut_object'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103' ('#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082')'
             Options.Editing = False
             Width = 83
           end
@@ -86,39 +232,6 @@ inherited Report_StaffListMember_controlForm: TReport_StaffListMember_controlFor
             Options.Editing = False
             Width = 70
           end
-          object MemberCode: TcxGridDBColumn
-            Caption = #1050#1086#1076
-            DataBinding.FieldName = 'MemberCode'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1076' '#1092#1080#1079'.'#1083#1080#1094#1072
-            Options.Editing = False
-            Width = 70
-          end
-          object MemberName: TcxGridDBColumn
-            Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
-            DataBinding.FieldName = 'MemberName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 102
-          end
-          object PositionName: TcxGridDBColumn
-            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
-            DataBinding.FieldName = 'PositionName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1086#1083#1078#1085#1086#1089#1090#1100' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
-            Options.Editing = False
-            Width = 90
-          end
-          object PositionLevelName: TcxGridDBColumn
-            Caption = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
-            DataBinding.FieldName = 'PositionLevelName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
           object isOfficial: TcxGridDBColumn
             Caption = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
             DataBinding.FieldName = 'isOfficial'
@@ -127,82 +240,22 @@ inherited Report_StaffListMember_controlForm: TReport_StaffListMember_controlFor
             Options.Editing = False
             Width = 81
           end
-          object isMain: TcxGridDBColumn
-            Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088'.'
-            DataBinding.FieldName = 'isMain'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 130
-          end
-          object UnitName_object: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'*'
-            DataBinding.FieldName = 'UnitName_object'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082')'
-            Width = 130
-          end
-          object DateIn_object: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072'*'
-            DataBinding.FieldName = 'DateIn_object'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072' ('#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082')'
-            Options.Editing = False
-            Width = 78
-          end
-          object DateSend_object: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1087#1077#1088#1077#1074#1086#1076#1072'*'
-            DataBinding.FieldName = 'DateSend_object'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072' '#1087#1077#1088#1077#1074#1086#1076#1072' ('#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082')'
-            Options.Editing = False
-            Width = 70
-          end
-          object DateOut_object: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103'*'
-            DataBinding.FieldName = 'DateOut_object'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103' ('#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082')'
-            Options.Editing = False
-            Width = 83
-          end
-          object PositionName_object: TcxGridDBColumn
-            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100'*'
-            DataBinding.FieldName = 'PositionName_object'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082')'
-            Options.Editing = False
-            Width = 90
-          end
-          object PositionLevelName_object: TcxGridDBColumn
-            Caption = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080'*'
-            DataBinding.FieldName = 'PositionLevelName_object'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080' ('#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082')'
-            Options.Editing = False
-            Width = 80
-          end
           object isOfficial_object: TcxGridDBColumn
-            Caption = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086'*'
+            Caption = '***'#1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
             DataBinding.FieldName = 'isOfficial_object'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086' ('#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082')'
             Options.Editing = False
-            Width = 81
+            Width = 85
           end
           object isErased_object: TcxGridDBColumn
-            Caption = #1059#1076#1072#1083#1077#1085'*'
+            Caption = '***'#1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased_object'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1059#1076#1072#1083#1077#1085' ('#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082')'
+            Options.Editing = False
             Width = 70
           end
         end
