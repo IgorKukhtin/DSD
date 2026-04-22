@@ -399,6 +399,7 @@ type
     mactExport_msg_0: TMultiAction;
     mactUpdate_SignWait_1_Yes: TMultiAction;
     bbExport_msg_0: TdxBarButton;
+    OperDate_Plan_day: TcxGridDBColumn;
   private
   public
   end;
