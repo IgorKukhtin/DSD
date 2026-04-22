@@ -34,6 +34,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , UnitMobileId Integer, UnitMobileName TVarChar
              , PositionCode Integer, PositionName TVarChar
              , ObjectToId Integer, ObjectToName TVarChar, DescName TVarChar
+             , DateIn TDateTime, DateOut TDateTime, DateSend TDateTime    --прием, перемещ., увольн. по основн. месту работы
              , isDateOut Boolean, PersonalId Integer
              , isErased Boolean
              
@@ -121,10 +122,18 @@ end if;
                                 , lfSelect.PositionId
                                 , lfSelect.BranchId
                                 , lfSelect.isDateOut
+                                , lfSelect.DateIn
+                                , lfSelect.DateOut
                                 , lfSelect.Ord
                            FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
                            WHERE lfSelect.Ord = 1
-                          )
+                          ) 
+      , tmpObjectDate_Send AS (SELECT *
+                               FROM ObjectDate
+                               WHERE ObjectDate.ObjectId IN (SELECT DISTINCT tmpPersonal.PersonalId FROM tmpPersonal)
+                                 AND ObjectDate.DescId = zc_ObjectDate_Personal_Send()
+                               )
+ 
       , tmpCar AS (SELECT MAX (ObjectLink_Car_PersonalDriver.ObjectId) AS CarId
                         , View_PersonalDriver.MemberId
                         --, View_PersonalDriver.PersonalId
@@ -216,7 +225,10 @@ end if;
          , ObjectTo.ValueData         AS ObjectToName
          , ObjectDesc.ItemName        AS DescName
 
-         , tmpPersonal.isDateOut :: Boolean AS isDateOut
+         , tmpPersonal.DateIn        ::TDateTime
+         , tmpPersonal.DateOut       ::TDateTime 
+         , ObjectDate_Send.ValueData ::TDateTime  AS DateSend
+         , tmpPersonal.isDateOut     ::Boolean    AS isDateOut
          , tmpPersonal.PersonalId
 
          , Object_Member.isErased                   AS isErased
@@ -581,6 +593,10 @@ end if;
                               ON ObjectLink_Member_UnitMobile.ObjectId = Object_Member.Id
                              AND ObjectLink_Member_UnitMobile.DescId = zc_ObjectLink_Member_UnitMobile()
          LEFT JOIN Object AS Object_UnitMobile ON Object_UnitMobile.Id = ObjectLink_Member_UnitMobile.ChildObjectId
+
+         LEFT JOIN tmpObjectDate_Send AS ObjectDate_Send
+                                      ON ObjectDate_Send.ObjectId = tmpPersonal.PersonalId
+                                     --AND ObjectDate_Send.DescId = zc_ObjectDate_Personal_Send()
      WHERE Object_Member.DescId = zc_Object_Member()
        AND (Object_Member.isErased = FALSE
             OR (Object_Member.isErased = TRUE AND inIsShowAll = TRUE)
@@ -661,6 +677,10 @@ end if;
            , CAST (0 as Integer)   AS ObjectToId
            , CAST ('' as TVarChar) AS ObjectToName
            , CAST ('' as TVarChar) AS DescName
+
+           , CAST (Null as TDateTime) AS DateIn
+           , CAST (Null as TDateTime) AS DateOut
+           , CAST (Null as TDateTime) AS DateSend
 
            , FALSE          AS isDateOut
            , 0              AS PersonalId
