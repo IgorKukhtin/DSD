@@ -63,17 +63,40 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_StaffListMember());
      vbUserId:= lpGetUserBySession (inSession);
 
+
+if vbUserId = 5 then vbUserId:= 7056719; inSession:= '7056719'; end if;
+
+     -- проверка
+     IF COALESCE (inStaffListKindId, 0) = 0
+     THEN
+          RAISE EXCEPTION 'Ошибка.<Вид офориления> должно быть заполнено.';
+     END IF;
+
+     -- временно - Мороз С.В. + Степура В.А.
+     IF vbUserId IN (6633363, 631775) AND inStaffListKindId <> zc_Enum_StaffListKind_Out()
+     THEN
+          RAISE EXCEPTION 'Ошибка.Нет прав проводить <%>.', lfGet_Object_ValueData_sh (inStaffListKindId);
+     END IF;
+
+
+     -- проверка
+     IF inStaffListKindId IN (zc_Enum_StaffListKind_In(), zc_Enum_StaffListKind_Send()) AND inIsMain = FALSE
+     THEN
+          RAISE EXCEPTION 'Ошибка.Для <%> должно быть установлено Основное место работы = <ДА>.', lfGet_Object_ValueData_sh (inStaffListKindId);
+     END IF;
+     -- проверка
+     IF inStaffListKindId = zc_Enum_StaffListKind_Add() AND inIsMain = TRUE
+     THEN
+          RAISE EXCEPTION 'Ошибка.Для <%> должно быть установлено Основное место работы = <НЕТ>.', lfGet_Object_ValueData_sh (inStaffListKindId);
+     END IF;
+
+
      --проверка
      IF COALESCE (inMemberId,0) = 0
      THEN
           RAISE EXCEPTION 'Ошибка.<Физ.лицо> должно быть заполнено.';
      END IF;
 
-     --проверка
-     IF COALESCE (inStaffListKindId,0) = 0
-     THEN
-          RAISE EXCEPTION 'Ошибка.<Вид офориления> должно быть заполнено.';
-     END IF;
 
      -- проверка есть ли уже такой документ
      vbMovementId := (SELECT Movement.Id
