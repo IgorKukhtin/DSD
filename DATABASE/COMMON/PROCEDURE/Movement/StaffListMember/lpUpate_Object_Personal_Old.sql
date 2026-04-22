@@ -23,11 +23,11 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
      
      --чтоб пока ничего не поломать
-     IF vbUserId NOT IN (9457)
+    /* IF vbUserId NOT IN (9457)
      THEN
          RETURN;
      END IF;
-
+    */
      --данные из вх. документа
      SELECT tmp.OperDate
           , tmp.Id 
@@ -90,6 +90,7 @@ BEGIN
                                          , inIsDateOut                       := CASE WHEN tmp.StaffListKindId = zc_Enum_StaffListKind_Out() THEN TRUE ELSE False END         ::Boolean    -- Уволен
                                          , inIsDateSend                      := CASE WHEN tmp.StaffListKindId = zc_Enum_StaffListKind_Send() THEN True ELSE False END        ::Boolean    -- переведен
                                          , inIsMain                          := tmp.IsMain                          ::Boolean    -- Основное место работы
+                                         , inNumBiz                          := tmp.NumBiz                          ::TVarChar
                                          , inComment                         := tmp.Comment                         ::TVarChar  
                                          , inSession                         := inSession                           ::TVarChar   -- сессия пользователя 
                                          )
