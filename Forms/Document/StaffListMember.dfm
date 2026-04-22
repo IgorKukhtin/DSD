@@ -304,7 +304,7 @@ inherited StaffListMemberForm: TStaffListMemberForm
     Width = 331
   end
   object cxButton1: TcxButton [36]
-    Left = 367
+    Left = 369
     Top = 444
     Width = 150
     Height = 26
@@ -1722,6 +1722,13 @@ inherited StaffListMemberForm: TStaffListMemberForm
         Component = edNumBiz
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalId_old'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PersonalId_old'
+        MultiSelectSeparator = ','
       end>
     Left = 583
     Top = 490
@@ -1860,8 +1867,8 @@ inherited StaffListMemberForm: TStaffListMemberForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 416
-    Top = 220
+    Left = 456
+    Top = 284
   end
   object GuidesReasonOut: TdsdGuides
     KeyField = 'Id'
@@ -1889,8 +1896,8 @@ inherited StaffListMemberForm: TStaffListMemberForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 422
-    Top = 103
+    Left = 470
+    Top = 55
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'UnitId'
@@ -2122,7 +2129,7 @@ inherited StaffListMemberForm: TStaffListMemberForm
         MultiSelectSeparator = ','
       end>
     Left = 622
-    Top = 175
+    Top = 401
   end
   object GuidesPosition_old: TdsdGuides
     KeyField = 'Id'
@@ -2152,8 +2159,8 @@ inherited StaffListMemberForm: TStaffListMemberForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 486
-    Top = 206
+    Left = 502
+    Top = 270
   end
   object GuidesUnit_old: TdsdGuides
     KeyField = 'Id'
@@ -2183,8 +2190,8 @@ inherited StaffListMemberForm: TStaffListMemberForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 535
-    Top = 181
+    Left = 559
+    Top = 237
   end
   object GuidesStaffListKind: TdsdGuides
     KeyField = 'Id'
