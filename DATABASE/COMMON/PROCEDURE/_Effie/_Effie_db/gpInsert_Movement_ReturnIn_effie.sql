@@ -125,7 +125,7 @@ BEGIN
     vbUnitId:= (SELECT gpGet.UnitId_ret FROM gpGetMobile_Object_Const (inSession:= vbUserId :: TVarChar) AS gpGet);
 
 
-    -- Поиск - 1
+    -- Поиск - 1.1. - Все параметры
     vbContractId:= (SELECT soldtable.contractid
                     FROM soldtable
                          JOIN _tmpItem ON _tmpItem.GoodsId= soldtable.GoodsId
@@ -136,7 +136,7 @@ BEGIN
                     ORDER BY soldtable.OperDate DESC
                     LIMIT 1
                    );
-    -- Поиск - 2
+    -- Поиск - 1.2. - Все параметры
     IF COALESCE (vbContractId, 0) = 0
     THEN
         vbContractId:= (SELECT soldtable.contractid
@@ -151,7 +151,7 @@ BEGIN
                        );
     END IF;
 
-    -- Поиск - 3
+    -- Поиск - 2.1. - без PaidKindId
     IF COALESCE (vbContractId, 0) = 0
     THEN
         vbContractId:= (SELECT soldtable.contractid
@@ -165,7 +165,7 @@ BEGIN
                         LIMIT 1
                        );
     END IF;
-    -- Поиск - 4
+    -- Поиск - 2.2. - без PaidKindId
     IF COALESCE (vbContractId, 0) = 0
     THEN
         vbContractId:= (SELECT soldtable.contractid
@@ -180,15 +180,42 @@ BEGIN
                        );
     END IF;
 
-/*
-	 RAISE EXCEPTION 'Ошибка.<%>  <%>  <%>  <%>  '
-, (select STRING_AGG (GoodsId :: TVarChar, ',') from (select * from _tmpItem order by GoodsId, GoodsKindId) as _tmpItem)
-, (select STRING_AGG (GoodsKindId :: TVarChar, ',') from (select * from _tmpItem order by GoodsId, GoodsKindId) as _tmpItem)
-, lfGet_Object_ValueData_sh (vbPaidKindId)
-, vbContractId
-;
--- select * from Object where Id in (2116, 11317467)
-*/
+
+    -- Поиск - 3. - для PaidKindId = zc_Enum_PaidKind_SecondForm
+    IF COALESCE (vbContractId, 0) = 0 AND vbPaidKindId = zc_Enum_PaidKind_SecondForm()
+    THEN
+        vbContractId:= (SELECT Object_Contract_View.ContractId
+                        FROM ObjectLink AS ObjectLink_Partner_Juridical
+                             INNER JOIN Object_Contract_View ON Object_Contract_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+                                                            AND Object_Contract_View.PaidKindId = zc_Enum_PaidKind_SecondForm()
+                                                            AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                                                            AND View_Contract.InfoMoneyId IN (zc_Enum_InfoMoney_30101()) -- Готовая продукция
+                        WHERE ObjectLink_Partner_Juridical.ObjectId = vbPartnerId
+                          AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                        ORDER BY Object_Contract_View.EndDate DESC
+                        LIMIT 1
+                       );
+    END IF;
+
+
+    -- Проверка
+    IF COALESCE (vbContractId, 0) = 0
+    THEN
+        RAISE EXCEPTION 'Ошибка.Договор не найден.%<%> %<%> %<%> %<%> %<%>  '
+                       , CHR (13)
+                       , (select STRING_AGG (GoodsId :: TVarChar, ',') from (select * from _tmpItem order by GoodsId, GoodsKindId) as _tmpItem)
+                       , CHR (13)
+                       , (select STRING_AGG (GoodsKindId :: TVarChar, ',') from (select * from _tmpItem order by GoodsId, GoodsKindId) as _tmpItem)
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh (vbPaidKindId)
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh (vbPartnerId)
+                       , CHR (13)
+                       , COALESCE (vbPaidKindId, 0) :: TVarChar || ' ' || COALESCE (vbPartnerId, 0) :: TVarChar
+                        ;
+        -- select * from Object where Id in (2116, 11317467)
+    END IF;
+
 
     -- Документ
     vbMovementId:= (WITH tmpParams AS (SELECT _tmpItem.extId                   AS GUID          -- Идентификатор заказа

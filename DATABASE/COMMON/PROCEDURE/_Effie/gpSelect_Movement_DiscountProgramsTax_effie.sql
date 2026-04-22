@@ -211,7 +211,7 @@ $BODY$
           , FALSE                                ::Boolean  AS isPreDiscountCheckSkipped
 
           , _tmpPromoTax.GoodsByGoodsKindId         ::TVarChar AS linkDiscounts_extId
-          , _tmpPromoTax.ChangePercent              ::TFloat   AS linkDiscounts_discount
+          , (-1 * _tmpPromoTax.ChangePercent)       ::TFloat   AS linkDiscounts_discount
 
           , _tmpPromoTax.Price_effie                ::TFloat   AS Price_effie  -- цена из effie
           , _tmpPromoTax.Price_promo                ::TFloat   AS Price_promo  -- цена Promo - со кидкой без НДС
