@@ -128,7 +128,8 @@ BEGIN
                                                         ON MovementLinkObject_StaffListKind.MovementId = Movement.Id
                                                        AND MovementLinkObject_StaffListKind.DescId = zc_MovementLinkObject_StaffListKind()
 
-                      WHERE Movement.DescId = zc_Movement_StaffListMember()
+                      WHERE Movement.OperDate = inOperDate
+                        AND Movement.DescId = zc_Movement_StaffListMember()
                         AND Movement.StatusId <> zc_Enum_Status_Erased()
                         AND Movement.Id <> COALESCE (ioId,0)
                         AND COALESCE (MovementLinkObject_PositionLevel.ObjectId,0) = COALESCE (inPositionLevelId,0)
@@ -430,7 +431,8 @@ BEGIN
      THEN
          IF COALESCE (inPersonalId_old,0) = 0
          THEN
-             RAISE EXCEPTION 'Ошибка.Сотрудник не выбран.';
+              inPersonalId_old:= vbPersonalId;
+             -- RAISE EXCEPTION 'Ошибка.Сотрудник не выбран.';
          END IF;
 
          vbDateIn := (SELECT ObjectDate.ValueData
@@ -595,7 +597,7 @@ BEGIN
     -- END IF;
 
     -- !!! ВРЕМЕННО !!!
-    --IF vbUserId IN (9457) THEN RAISE EXCEPTION 'Admin - Test = OK'; END IF;
+    IF vbUserId IN (5, 9457) THEN RAISE EXCEPTION 'Admin - Test = OK'; END IF;
 
 END;
 $BODY$
