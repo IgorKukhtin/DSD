@@ -5252,9 +5252,15 @@ end;
 
 procedure TLoadFormTest.LoadChoiceCellMovementFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceCellMobileDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TChoiceCellMobileDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceCellMobileForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TChoiceCellMobileForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceCellJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChoiceCellJournalForm');
-
 end;
 
 procedure TLoadFormTest.LoadClientKindFormTest;
@@ -5312,7 +5318,7 @@ end;
  begin
 
    
-  // exit;
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerJournal_protocolForm'));
    TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerJournal_protocolForm');
    //exit;
