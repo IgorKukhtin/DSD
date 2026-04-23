@@ -29,6 +29,8 @@ RETURNS TABLE (Id Integer, MovementItemId_child Integer
                -- Дата Платежный план на неделю
              , OperDate_next      TDateTime
              , OperDate_next_old  TDateTime
+               -- ДатаСогласовано к оплате
+             , OperDate_plan_day  TDateTime
                --
              , AmountRemains TFloat, AmountPartner TFloat
              , AmountSumm           TFloat
@@ -772,6 +774,8 @@ BEGIN
 
                             , MAX (COALESCE (MIDate_Update.ValueData, MIDate_Insert.ValueData)) AS UpdateDate
                             , MAX (COALESCE (MILO_Update.ObjectId,    MILO_Insert.ObjectId))    AS UserId_update
+                              -- Дата Согласовано к оплате
+                            , MAX (MIDate_Amount.ValueData) AS OperDate
 
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             -- Согласовано к оплате
@@ -800,7 +804,6 @@ BEGIN
                             LEFT JOIN MovementItemLinkObject AS MILO_Update
                                                              ON MILO_Update.MovementItemId = MovementItem.Id
                                                             AND MILO_Update.DescId = zc_MILinkObject_Update()
-
                        GROUP BY MovementItem.ParentId
                       )
       -- Master + Child + Detail
@@ -824,6 +827,8 @@ BEGIN
                          , COALESCE (tmpMI_Child.AmountPlan_next, MIFloat_AmountPlan_next.ValueData) :: TFloat    AS AmountPlan_next
                            -- Дата Платежный план
                          , COALESCE (tmpMI_Child.OperDate_next,   MIDate_Amount_next.ValueData)      :: TDateTime AS OperDate_next
+                           -- ДатаСогласовано к оплате
+                         , COALESCE (tmpMI_Detail_1.OperDate, tmpMI_Detail_2.OperDate, tmpMI_Child.OperDate_next, MIDate_Amount_next.ValueData) AS OperDate_plan_day
 
                            -- Согласовано к оплате
                          , COALESCE (tmpMI_Detail_1.AmountPlan_1, tmpMI_Detail_2.AmountPlan_1, tmpMI_Child.AmountPlan_1, MIFloat_AmountPlan_1.ValueData) AS AmountPlan_1
@@ -967,6 +972,8 @@ BEGIN
              -- Дата Платежный план на неделю
            , MovementItem.OperDate_next        :: TDateTime AS OperDate_next
            , MovementItem.OperDate_next        :: TDateTime AS OperDate_next_old
+             -- ДатаСогласовано к оплате
+           , MovementItem.OperDate_plan_day    :: TDateTime AS OperDate_plan_day
 
              -- Нач. долг
            , (CASE WHEN MovementItem.Ord_master = 1
@@ -1261,6 +1268,8 @@ BEGIN
              -- Дата Платежный план на неделю
            , NULL :: TDateTime AS OperDate_next
            , NULL :: TDateTime AS OperDate_next_old
+             -- ДатаСогласовано к оплате
+           , NULL :: TDateTime AS OperDate_plan_day
 
              -- Нач. долг
            , 0 ::TFloat       AS AmountRemains
