@@ -31,10 +31,10 @@ BEGIN
      -- 1. Распроводим Документ
      IF ioId > 0
      THEN
-         -- сначала распроведение
-         PERFORM gpUnComplete_Movement_StaffListMember (inMovementId := ioId
-                                                      , inSession    := inUserId :: TVarChar
-                                                       );
+         -- Распроводим Документ
+         PERFORM lpUnComplete_Movement (inMovementId := ioId
+                                      , inUserId     := inUserId
+                                       );
      END IF;
      
      -- определяем признак Создание/Корректировка
