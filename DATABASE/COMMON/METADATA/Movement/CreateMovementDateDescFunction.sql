@@ -41,6 +41,10 @@ CREATE OR REPLACE FUNCTION zc_MovementDate_OperDatePartner() RETURNS Integer AS 
 INSERT INTO MovementDateDesc (Code, ItemName)
   SELECT 'zc_MovementDate_OperDatePartner', 'Дата накладной у контрагента' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_OperDatePartner');
 
+CREATE OR REPLACE FUNCTION zc_MovementDate_OperDatePartner_Effie() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_OperDatePartner_Effie'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_OperDatePartner_Effie', 'Дата контрагента (Effie)' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_OperDatePartner_Effie');
+
 CREATE OR REPLACE FUNCTION zc_MovementDate_OperDateSaleLink() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_OperDateSaleLink'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementDateDesc (Code, ItemName)
   SELECT 'zc_MovementDate_OperDateSaleLink', 'Дата накладной продажи контрагенту (привязка возврата)' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_OperDateSaleLink');

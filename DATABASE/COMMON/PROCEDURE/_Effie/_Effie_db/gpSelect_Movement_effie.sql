@@ -91,7 +91,6 @@ BEGIN
                                              , ' || zc_Movement_OrderExternal ||' ::Integer AS MovementDescId
                                         FROM Orders
                                         WHERE Orders.OperDate_get IS NULL
-
                                        UNION ALL
                                         SELECT order_returns.extId         ::TVarChar
                                              , order_returns.clientExtId   ::Integer

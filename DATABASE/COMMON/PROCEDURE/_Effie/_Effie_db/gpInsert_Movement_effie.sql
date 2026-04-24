@@ -51,6 +51,7 @@ BEGIN
                                   , gpSelect.employeeName         -- ФИО сотрудника
                                   , gpSelect.createDate_ch        -- Дата и время создания документа на мобильном устройстве
                                   , gpSelect.dbCreateDate_ch      -- Дата и время (в UTC) записи документа в БД Effie
+                                  , gpSelect.docDate              -- Желаемая дата поставки товара
                                   , gpSelect.priceHeaderExtId     -- Идентификатор прайса
                                   , gpSelect.priceHeaderName      -- Название прайса
                                   , gpSelect.contractHeaderExtId  -- Идентификатор контракта
@@ -72,6 +73,7 @@ BEGIN
                                                  , Orders.employeeName         ::TVarChar
                                                  , Orders.createDate_ch        ::TDateTime
                                                  , Orders.dbCreateDate_ch      ::TDateTime
+                                                 , Orders.docDate              ::TDateTime
                                                  , Orders.priceHeaderExtId     ::Integer
                                                  , Orders.priceHeaderName      ::TVarChar
                                                  , Orders.contractHeaderExtId  ::Integer
@@ -96,6 +98,7 @@ BEGIN
                                                       , employeeName         TVarChar   -- ФИО сотрудника
                                                       , createDate_ch        TDateTime  -- Дата и время создания документа на мобильном устройстве
                                                       , dbCreateDate_ch      TDateTime  -- Дата и время (в UTC) записи документа в БД Effie
+                                                      , docDate              TDateTime  -- Желаемая дата поставки товара
                                                       , priceHeaderExtId     Integer    -- Идентификатор прайса
                                                       , priceHeaderName      TVarChar   -- Название прайса
                                                       , contractHeaderExtId  Integer    -- Идентификатор контракта
@@ -118,6 +121,7 @@ BEGIN
               , Orders.employeeName         ::TVarChar   -- ФИО сотрудника
               , Orders.createDate_ch        ::TDateTime  -- Дата и время создания документа на мобильном устройстве
               , Orders.dbCreateDate_ch      ::TDateTime  -- Дата и время (в UTC) записи документа в БД Effie
+              , Orders.docDate              ::TDateTime  -- Желаемая дата поставки товара
               , Orders.priceHeaderExtId     ::Integer    -- Идентификатор прайса
               , Orders.priceHeaderName      ::TVarChar   -- Название прайса
               , Orders.contractHeaderExtId  ::Integer    -- Идентификатор контракта
@@ -170,6 +174,8 @@ BEGIN
                         FROM tmpParams
                        );
 
+         -- сохранили свойство <Дата покуп.(Effie)>
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner_Effie(), vbMovementId, (SELECT DISTINCT DATE_TRUNC ('DAY', _tmpItem.docDate) FROM _tmpItem));
 
 
          -- Строки Документа
