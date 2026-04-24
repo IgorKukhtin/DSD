@@ -156,6 +156,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085#1086#1074#1072#1103' '#1076#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1089#1086' '#1089#1082#1083#1072#1076#1072
             Width = 70
           end
           object OperDatePartner_sale: TcxGridDBColumn
@@ -163,6 +164,25 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             DataBinding.FieldName = 'OperDatePartner_sale'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085#1086#1074#1072#1103' '#1076#1072#1090#1072' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1091
+            Width = 80
+          end
+          object OperDatePartner_Effie_sale: TcxGridDBColumn
+            Caption = '***'#1044#1072#1090#1072' '#1087#1086#1082'.(Effie)'
+            DataBinding.FieldName = 'OperDatePartner_Effie_sale'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1046#1077#1083#1072#1077#1084#1072#1103' '#1076#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1082#1080' '#1090#1086#1074#1072#1088#1072
+            Width = 80
+          end
+          object OperDatePartner_sale_calc: TcxGridDBColumn
+            Caption = '***'#1044#1072#1090#1072' '#1087#1086#1082'.('#1088#1072#1089#1095#1077#1090')'
+            DataBinding.FieldName = 'OperDatePartner_sale_calc'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085#1086#1074#1072#1103' '#1076#1072#1090#1072' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1091' ('#1088#1072#1089#1095#1077#1090' '#1073#1077#1079' Effie)'
             Width = 80
           end
           object OperDateMark: TcxGridDBColumn

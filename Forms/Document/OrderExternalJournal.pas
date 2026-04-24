@@ -148,6 +148,8 @@ type
     bbPrint_OrderCell_Pak_copy3: TdxBarButton;
     isManual: TcxGridDBColumn;
     isEffie: TcxGridDBColumn;
+    OperDatePartner_Effie_sale: TcxGridDBColumn;
+    OperDatePartner_sale_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public
