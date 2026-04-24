@@ -202,10 +202,19 @@ BEGIN
                  SELECT Movement_in.OperDate     ::TDateTime AS DateIn
                       , Movement_send.OperDate   ::TDateTime AS DateSend
                       , Movement_out.OperDate    ::TDateTime AS DateOut
-                      , COALESCE (Movement_out.UnitId, Movement_send.UnitId, Movement_in.UnitId) AS UnitId 
+                      , CASE WHEN COALESCE (Movement_out.Id,0) <> 0 THEN COALESCE (Movement_out.UnitId, 0)
+                             WHEN COALESCE (Movement_send.Id,0) <> 0 THEN COALESCE (Movement_send.UnitId, 0)
+                             WHEN COALESCE (Movement_in.Id,0) <> 0 THEN COALESCE (Movement_in.UnitId, 0)
+                        END  AS UnitId 
                       , tmpMember.MemberId
-                      , COALESCE (Movement_out.PositionId, Movement_send.PositionId, Movement_in.PositionId) AS PositionId
-                      , COALESCE (Movement_out.PositionLevelId, Movement_send.PositionLevelId, Movement_in.PositionLevelId) AS PositionLevelId
+                      , CASE WHEN COALESCE (Movement_out.Id,0) <> 0 THEN COALESCE (Movement_out.PositionId, 0)
+                             WHEN COALESCE (Movement_send.Id,0) <> 0 THEN COALESCE (Movement_send.PositionId, 0)
+                             WHEN COALESCE (Movement_in.Id,0) <> 0 THEN COALESCE (Movement_in.PositionId, 0)
+                        END  AS PositionId
+                      , CASE WHEN COALESCE (Movement_out.Id,0) <> 0 THEN COALESCE (Movement_out.PositionLevelId, 0)
+                             WHEN COALESCE (Movement_send.Id,0) <> 0 THEN COALESCE (Movement_send.PositionLevelId, 0)
+                             WHEN COALESCE (Movement_in.Id,0) <> 0 THEN COALESCE (Movement_in.PositionLevelId, 0)
+                        END  AS PositionLevelId
                       , Movement_in.isMain
                       , Movement_in.isOfficial
                  FROM tmpMember_byMovement AS tmpMember
