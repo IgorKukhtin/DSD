@@ -59,6 +59,11 @@ type
     bbOpenStaffListMember_Choice: TdxBarButton;
     MemberCode: TcxGridDBColumn;
     NumBiz: TcxGridDBColumn;
+    lbSearchName: TcxLabel;
+    edSearchName: TcxTextEdit;
+    cxLabel3: TcxLabel;
+    edSearchPosition: TcxTextEdit;
+    FieldFilter_Name: TdsdFieldFilter;
   private
     { Private declarations }
   public
