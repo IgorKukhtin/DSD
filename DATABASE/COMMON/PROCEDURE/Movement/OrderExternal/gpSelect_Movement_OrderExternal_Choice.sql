@@ -97,6 +97,7 @@ BEGIN
                               FROM MovementDate
                               WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                                 AND MovementDate.DescId IN (zc_MovementDate_OperDatePartner()
+                                                          , zc_MovementDate_OperDatePartner_Effie()
                                                           , zc_MovementDate_OperDateMark()
                                                             )
                             )
@@ -179,7 +180,7 @@ BEGIN
            , Object_Status.ObjectCode                       AS StatusCode
            , Object_Status.ValueData                        AS StatusName
            , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
-           , (MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_Partner_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDatePartner_Sale
+           , COALESCE (MovementDate_OperDatePartner_Effie.ValueData, MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_Partner_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDatePartner_Sale
            , MovementDate_OperDateMark.ValueData            AS OperDateMark
            , MovementString_InvNumberPartner.ValueData      AS InvNumberPartner
            , CASE WHEN MovementString_InvNumberPartner.ValueData <> '' THEN MovementString_InvNumberPartner.ValueData ELSE '***' || Movement.InvNumber END :: TVarChar AS InvNumber_calc
@@ -232,6 +233,9 @@ BEGIN
             LEFT JOIN tmpMovementDate AS MovementDate_OperDatePartner
                                       ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                      AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+            LEFT JOIN tmpMovementDate AS MovementDate_OperDatePartner_Effie
+                                      ON MovementDate_OperDatePartner_Effie.MovementId =  Movement.Id
+                                     AND MovementDate_OperDatePartner_Effie.DescId = zc_MovementDate_OperDatePartner_Effie()
 
             LEFT JOIN tmpMovementDate AS MovementDate_OperDateMark
                                       ON MovementDate_OperDateMark.MovementId =  Movement.Id
@@ -355,4 +359,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_OrderExternal_Choice (inStartDate:= '01.06.2022', inEndDate:= '01.06.2022', inIsErased := FALSE, inPartnerId:= 0, inSession:= '2')
---select * from gpSelect_Movement_OrderExternal_Choice(instartdate := ('03.03.2025')::TDateTime , inenddate := ('10.03.2025')::TDateTime , inIsErased := 'False' , inPartnerId := 0 ,  inSession := '11750040');
+--select * from gpSelect_Movement_OrderExternal_Choice(instartdate := ('03.03.2026')::TDateTime , inenddate := ('03.03.2026')::TDateTime , inIsErased := 'False' , inPartnerId := 0 ,  inSession := '11750040');

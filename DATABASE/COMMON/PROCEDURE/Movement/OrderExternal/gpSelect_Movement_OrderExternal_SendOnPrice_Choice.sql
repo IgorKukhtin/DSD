@@ -58,7 +58,7 @@ BEGIN
            , Object_Status.ValueData                        AS StatusName
            , MovementDesc.ItemName                          AS DescName
            , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
-           , (MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_Partner_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDatePartner_Sale
+           , COALESCE (MovementDate_OperDatePartner_Effie.ValueData, MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_Partner_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDatePartner_Sale
            , MovementDate_OperDateMark.ValueData            AS OperDateMark
            , MovementString_InvNumberPartner.ValueData      AS InvNumberPartner
            , CASE WHEN MovementString_InvNumberPartner.ValueData <> '' THEN MovementString_InvNumberPartner.ValueData ELSE '***' || Movement.InvNumber END :: TVarChar AS InvNumber_calc
@@ -116,6 +116,9 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner_Effie
+                                   ON MovementDate_OperDatePartner_Effie.MovementId =  Movement.Id
+                                  AND MovementDate_OperDatePartner_Effie.DescId = zc_MovementDate_OperDatePartner_Effie()
 
             LEFT JOIN MovementDate AS MovementDate_OperDateMark
                                    ON MovementDate_OperDateMark.MovementId =  Movement.Id
@@ -231,5 +234,4 @@ ALTER FUNCTION gpSelect_Movement_OrderExternal_SendOnPrice_Choice (TDateTime, TD
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_OrderExternal_SendOnPrice_Choice (inStartDate:= '01.06.2014', inEndDate:= '08.11.2014', inIsErased := FALSE, inPartnerId:= 0, inSession:= '2')
-
- --select * from gpSelect_Movement_OrderExternal_SendOnPrice_Choice(instartdate := ('01.11.2014')::TDateTime , inenddate := ('30.11.2014')::TDateTime , inIsErased := 'False' , inPartnerId:= 0,  inSession := '5');
+-- select * from gpSelect_Movement_OrderExternal_SendOnPrice_Choice(instartdate := ('01.11.2026')::TDateTime , inenddate := ('01.11.2026')::TDateTime , inIsErased := 'False' , inPartnerId:= 0,  inSession := '5');

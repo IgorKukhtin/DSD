@@ -43,7 +43,8 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- !!!Только просмотр Аудитор!!!
-     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+     PERFORM lpCheckPeriodClose_auditor (inOperDate, inOperDate, NULL, NULL, NULL, vbUserId);
+     PERFORM lpCheckPeriodClose_auditor (inOperDatePartner, inOperDatePartner, NULL, NULL, NULL, vbUserId);
 
 
      RETURN QUERY
@@ -120,10 +121,12 @@ BEGIN
                               FROM MovementDate
                               WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                                 AND MovementDate.DescId IN (/*zc_MovementDate_OperDatePartner()
-                                                          , */zc_MovementDate_OperDateMark()
+                                                          , */
+                                                            zc_MovementDate_OperDateMark()
                                                           , zc_MovementDate_CarInfo()
-                                                            )
-                            )
+                                                          , zc_MovementDate_OperDatePartner_Effie()
+                                                           )
+                             )
 
         , tmpMovementLinkMovement AS (SELECT MovementLinkMovement.*
                                       FROM MovementLinkMovement
@@ -170,7 +173,7 @@ BEGIN
            --, MovementDate_OperDatePartner.ValueData         AS OperDatePartner
            , Movement.OperDatePartner
            --, (MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_Partner_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDatePartner_Sale
-           , (Movement.OperDatePartner + (COALESCE (ObjectFloat_Partner_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDatePartner_Sale
+           , COALESCE (MovementDate_OperDatePartner_Effie.ValueData, Movement.OperDatePartner + (COALESCE (ObjectFloat_Partner_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDatePartner_Sale
            , MovementDate_OperDateMark.ValueData            AS OperDateMark
            , MovementDate_CarInfo.ValueData                 AS OperDate_CarInfo
            , MovementString_InvNumberPartner.ValueData      AS InvNumberPartner
@@ -235,6 +238,9 @@ BEGIN
                                       ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                      AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
             */
+            LEFT JOIN tmpMovementDate AS MovementDate_OperDatePartner_Effie
+                                      ON MovementDate_OperDatePartner_Effie.MovementId =  Movement.Id
+                                     AND MovementDate_OperDatePartner_Effie.DescId = zc_MovementDate_OperDatePartner_Effie()
             LEFT JOIN tmpMovementDate AS MovementDate_OperDateMark
                                       ON MovementDate_OperDateMark.MovementId =  Movement.Id
                                      AND MovementDate_OperDateMark.DescId = zc_MovementDate_OperDateMark()
@@ -359,4 +365,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderExternal_byReport(inOperDate := ('29.06.2022')::TDateTime , inOperDatePartner := ('08.07.2022')::TDateTime , inToId := 8459 , inRouteId := 419580 , inRetailId := 0 ,  inSession := '5');
+-- SELECT * FROM gpSelect_Movement_OrderExternal_byReport(inOperDate := ('29.06.2026')::TDateTime , inOperDatePartner := ('08.07.2026')::TDateTime , inToId := 8459 , inRouteId := 419580 , inRetailId := 0 ,  inSession := '5');
