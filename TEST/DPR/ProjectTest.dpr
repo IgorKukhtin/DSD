@@ -1657,7 +1657,9 @@ uses
   Report_StaffListMember_control in '..\..\Forms\Report\Report_StaffListMember_control.pas' {Report_StaffListMember_controlForm: TParentForm},
   Report_StaffListMember_controlDialog in '..\..\Forms\Report\Report_StaffListMember_controlDialog.pas' {Report_StaffListMember_controlDialogForm: TParentForm},
   MemberGoods in '..\..\Forms\Guides\MemberGoods.pas' {MemberGoodsForm: TParentForm},
-  MemberGoodsEdit in '..\..\Forms\Guides\MemberGoodsEdit.pas' {MemberGoodsEditForm: TParentForm};
+  MemberGoodsEdit in '..\..\Forms\Guides\MemberGoodsEdit.pas' {MemberGoodsEditForm: TParentForm},
+  ChoiceCellMobileDialog in '..\..\Forms\Document\ChoiceCellMobileDialog.pas' {ChoiceCellMobileDialogForm: TParentForm},
+  ChoiceCellMobile in '..\..\Forms\Document\ChoiceCellMobile.pas' {ChoiceCellMobileForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
