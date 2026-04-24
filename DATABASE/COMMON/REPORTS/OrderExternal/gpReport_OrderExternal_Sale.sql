@@ -333,7 +333,7 @@ BEGIN
 
                                        WHEN inIsByDoc = TRUE
                                             THEN -- Дата покупателя - Продажа
-                                                (MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL)
+                                                COALESCE (MovementDate_OperDatePartner_Effie.ValueData, MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL)
                                        ELSE NULL
                                   END :: TDateTime AS OperDatePartner_sale
 
@@ -364,6 +364,9 @@ BEGIN
                                 LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                                        ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                                       AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                                LEFT JOIN MovementDate AS MovementDate_OperDatePartner_Effie
+                                                       ON MovementDate_OperDatePartner_Effie.MovementId =  Movement.Id
+                                                      AND MovementDate_OperDatePartner_Effie.DescId = zc_MovementDate_OperDatePartner_Effie()
 
                                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
                                                                ON MovementLinkMovement_Order.MovementChildId = Movement.Id  --  заявка
@@ -1572,7 +1575,7 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_OrderExternal_Sale (inStartDate:= '10.10.2025', inEndDate:= '10.10.2025', inFromId := 0, inToId := 0, inRouteId := 0, inRouteSortingId := 0, inGoodsGroupId := 0, inIsByDoc := false, inIsByPromo:= false, inSession:= '2')
+-- SELECT * FROM gpReport_OrderExternal_Sale (inStartDate:= '10.10.2026', inEndDate:= '10.10.2026', inFromId := 0, inToId := 0, inRouteId := 0, inRouteSortingId := 0, inGoodsGroupId := 0, inIsByDoc := false, inIsByPromo:= false, inSession:= '2')
 
 /*
   

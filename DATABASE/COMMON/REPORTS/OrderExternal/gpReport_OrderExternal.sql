@@ -505,6 +505,7 @@ BEGIN
                           FROM MovementDate
                           WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMov.Id FROM tmpMov)
                             AND MovementDate.DescId IN (zc_MovementDate_OperDatePartner()
+                                                      , zc_MovementDate_OperDatePartner_Effie()
                                                       , zc_MovementDate_CarInfo()
                                                       )
                          )
@@ -650,7 +651,7 @@ BEGIN
                                END AS Price
 
                              , CASE WHEN inIsByDoc = TRUE THEN MovementDate_OperDatePartner.ValueData ELSE Null END  :: TDateTime  AS OperDatePartner_order
-                             , CASE WHEN inIsByDoc = TRUE THEN (MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) ELSE Null END :: TDateTime AS OperDatePartner_sale
+                             , CASE WHEN inIsByDoc = TRUE THEN COALESCE (MovementDate_OperDatePartner_Effie.ValueData, MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) ELSE NULL END :: TDateTime AS OperDatePartner_sale
                              
                              , CASE WHEN inIsByDoc = TRUE THEN COALESCE (MovementString_Comment.ValueData,'') ELSE '' END ::TVarChar AS Comment
                              
@@ -688,8 +689,11 @@ BEGIN
                                                         --AND Object_From.DescId = zc_Object_Unit()
 
                             LEFT JOIN tmpMovementDate AS MovementDate_OperDatePartner
-                                                   ON MovementDate_OperDatePartner.MovementId = Movement.Id
-                                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                                                      ON MovementDate_OperDatePartner.MovementId = Movement.Id
+                                                     AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                            LEFT JOIN tmpMovementDate AS MovementDate_OperDatePartner_Effie
+                                                      ON MovementDate_OperDatePartner_Effie.MovementId = Movement.Id
+                                                     AND MovementDate_OperDatePartner_Effie.DescId = zc_MovementDate_OperDatePartner_Effie()
 
                             LEFT JOIN tmpMovementDate AS MovementDate_CarInfo
                                                    ON MovementDate_CarInfo.MovementId = Movement.Id
@@ -771,7 +775,7 @@ BEGIN
                             , CASE WHEN inIsRemains = FALSE THEN MIFloat_Price.ValueData ELSE 0 END
                             , CASE WHEN inIsRemains = FALSE THEN MovementLinkObject_Partner.ObjectId ELSE 0 END
                             , CASE WHEN inIsByDoc = TRUE THEN MovementDate_OperDatePartner.ValueData ELSE Null END
-                            , CASE WHEN inIsByDoc = TRUE THEN (MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) ELSE Null END
+                            , CASE WHEN inIsByDoc = TRUE THEN COALESCE (MovementDate_OperDatePartner_Effie.ValueData, MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) ELSE Null END
                             , CASE WHEN inIsByDoc = TRUE THEN COALESCE (MovementString_Comment.ValueData,'') ELSE '' END 
                             , CASE WHEN inIsRemains = FALSE THEN MovementLinkObject_CarInfo.ObjectId ELSE 0 END
                             , CASE WHEN inIsRemains = FALSE THEN MovementDate_CarInfo.ValueData ELSE NULL END
@@ -1421,5 +1425,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_OrderExternal (inStartDate:= '21.06.2022', inEndDate:= '21.06.2022', inJuridicalId:=0, inRetailId:= 0, inFromId := 0, inToId := 346093, inRouteId := 0, inRouteSortingId := 0, inGoodsGroupId := 1986, inIsByDoc := False, inIsRemains := TRUE, inSession:= zfCalc_UserAdmin())
- --WHERE GOODSID = 7493  
- --select * from gpReport_OrderExternal(inStartDate := ('11.07.2022')::TDateTime , inEndDate := ('11.07.2022')::TDateTime , inJuridicalId := 0 , inRetailId := 0 , inFromId := 0 , inToId := 8459 , inRouteId := 0 , inRouteSortingId := 0 , inGoodsGroupId := 0 , inIsByDoc := 'True' , inIsRemains := 'False' ,  inSession := '9457');
+--WHERE GOODSID = 7493  
+--select * from gpReport_OrderExternal(inStartDate := ('11.07.2026')::TDateTime , inEndDate := ('11.07.2026')::TDateTime , inJuridicalId := 0 , inRetailId := 0 , inFromId := 0 , inToId := 8459 , inRouteId := 0 , inRouteSortingId := 0 , inGoodsGroupId := 0 , inIsByDoc := 'True' , inIsRemains := 'False' ,  inSession := '9457');
