@@ -192,7 +192,7 @@ BEGIN
              END :: TVarChar AS StatusName
 
            , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
-           , (MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDatePartner_sale
+           , COALESCE(MovementDate_OperDatePartner_Effie.ValueData, MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDatePartner_sale
            , MovementDate_OperDateMark.ValueData        AS OperDateMark
            , COALESCE (MovementDate_OperDateStart.ValueData, Movement.OperDate - (INTERVAL '7 DAY')) :: TDateTime      AS OperDateStart
            , COALESCE (MovementDate_OperDateEnd.ValueData, Movement.OperDate - (INTERVAL '1 DAY')) :: TDateTime        AS OperDateEnd           
@@ -259,6 +259,9 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner_Effie
+                                   ON MovementDate_OperDatePartner_Effie.MovementId =  Movement.Id
+                                  AND MovementDate_OperDatePartner_Effie.DescId = zc_MovementDate_OperDatePartner_Effie()
 
             LEFT JOIN MovementDate AS MovementDate_OperDateMark
                                    ON MovementDate_OperDateMark.MovementId = Movement.Id

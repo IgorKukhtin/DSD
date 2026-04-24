@@ -12,7 +12,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderExternal(
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , OperDatePartner TDateTime, OperDatePartner_sale TDateTime, OperDateMark TDateTime
+             , OperDatePartner TDateTime, OperDatePartner_sale TDateTime, OperDatePartner_Effie_sale TDateTime, OperDatePartner_sale_calc TDateTime
+             , OperDateMark TDateTime
              , InvNumberPartner TVarChar
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
@@ -116,10 +117,14 @@ BEGIN
            , Movement.OperDate                              AS OperDate
            , Object_Status.ObjectCode                       AS StatusCode
            , Object_Status.ValueData                        AS StatusName
+
            , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
            --, (Movement.OperDate + ((COALESCE (ObjectFloat_PrepareDayCount.ValueData, 0) + COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0)) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDatePartner_sale
-           , (MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDatePartner_sale
+           , COALESCE(MovementDate_OperDatePartner_Effie.ValueData, MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDatePartner_sale
+           , MovementDate_OperDatePartner_Effie.ValueData  AS OperDatePartner_Effie_sale
+           , (MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDatePartner_sale_calc
            , MovementDate_OperDateMark.ValueData            AS OperDateMark
+
            , MovementString_InvNumberPartner.ValueData      AS InvNumberPartner
            , Object_From.Id                                 AS FromId
            , Object_From.ValueData                          AS FromName
@@ -211,6 +216,9 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner_Effie
+                                   ON MovementDate_OperDatePartner_Effie.MovementId =  Movement.Id
+                                  AND MovementDate_OperDatePartner_Effie.DescId = zc_MovementDate_OperDatePartner_Effie()
 
             LEFT JOIN MovementDate AS MovementDate_OperDateMark
                                    ON MovementDate_OperDateMark.MovementId =  Movement.Id
@@ -430,4 +438,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderExternal(instartdate := ('20.04.2020')::TDateTime , inenddate := ('22.04.2020')::TDateTime , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inSession := '5');
+-- SELECT * FROM gpSelect_Movement_OrderExternal(instartdate := ('20.04.2026')::TDateTime , inenddate := ('22.04.2026')::TDateTime , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inSession := '5');
