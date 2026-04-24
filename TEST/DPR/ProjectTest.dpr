@@ -1659,7 +1659,9 @@ uses
   MemberGoods in '..\..\Forms\Guides\MemberGoods.pas' {MemberGoodsForm: TParentForm},
   MemberGoodsEdit in '..\..\Forms\Guides\MemberGoodsEdit.pas' {MemberGoodsEditForm: TParentForm},
   ChoiceCellMobileDialog in '..\..\Forms\Document\ChoiceCellMobileDialog.pas' {ChoiceCellMobileDialogForm: TParentForm},
-  ChoiceCellMobile in '..\..\Forms\Document\ChoiceCellMobile.pas' {ChoiceCellMobileForm: TParentForm};
+  ChoiceCellMobile in '..\..\Forms\Document\ChoiceCellMobile.pas' {ChoiceCellMobileForm: TParentForm},
+  StaffListMemberUnit in '..\..\Forms\Document\StaffListMemberUnit.pas' {StaffListMemberUnitForm: TParentForm},
+  Unit_StaffList in '..\..\Forms\Guides\Unit_StaffList.pas' {Unit_StaffListForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

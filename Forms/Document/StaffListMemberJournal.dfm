@@ -332,6 +332,35 @@ inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
     inherited actMovementItemContainer: TdsdOpenForm
       Enabled = False
     end
+    object actInsertUnit: TdsdInsertUpdateAction [5]
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1088#1091#1075#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1088#1091#1075#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+      ShortCut = 16429
+      ImageIndex = 0
+      FormName = 'TStaffListMemberUnitForm'
+      FormNameParam.Value = 'TStaffListMemberUnitForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = 0
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = 44927d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TStaffListMemberForm'
       FormNameParam.Value = 'TStaffListMemberForm'
@@ -348,6 +377,39 @@ inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+    end
+    object actUpdateUnit: TdsdInsertUpdateAction [8]
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1088#1091#1075#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1088#1091#1075#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+      ShortCut = 16499
+      ImageIndex = 1
+      FormName = 'TStaffListMemberUnitForm'
+      FormNameParam.Value = 'TStaffListMemberUnitForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TStaffListMemberForm'
@@ -595,6 +657,22 @@ inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
           ItemName = 'bbEdit'
         end
         item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertUnit'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateUnit'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
@@ -699,6 +777,14 @@ inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
     end
     object bbOpenStaffListMember_Choice: TdxBarButton
       Action = actOpenStaffListMember_Choice
+      Category = 0
+    end
+    object bbInsertUnit: TdxBarButton
+      Action = actInsertUnit
+      Category = 0
+    end
+    object bbUpdateUnit: TdxBarButton
+      Action = actUpdateUnit
       Category = 0
     end
   end

@@ -1,5 +1,5 @@
-inherited StaffListMemberForm: TStaffListMemberForm
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1064#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082#1080')>'
+inherited StaffListMemberUnitForm: TStaffListMemberUnitForm
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1064#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082#1080')> '#1044#1088#1091#1075#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
   ClientHeight = 589
   ClientWidth = 718
   AddOnFormData.isSingle = False
@@ -1256,7 +1256,7 @@ inherited StaffListMemberForm: TStaffListMemberForm
       end
       item
         Name = 'inIsUnit'
-        Value = False
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1874,8 +1874,8 @@ inherited StaffListMemberForm: TStaffListMemberForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 456
-    Top = 284
+    Left = 400
+    Top = 268
   end
   object GuidesReasonOut: TdsdGuides
     KeyField = 'Id'
@@ -1907,16 +1907,16 @@ inherited StaffListMemberForm: TStaffListMemberForm
     Top = 55
   end
   object GuidesUnit: TdsdGuides
-    KeyField = 'UnitId'
+    KeyField = 'Id'
     LookupControl = ceUnit
-    FormNameParam.Value = 'TStaffListItemChoiceForm'
+    FormNameParam.Value = 'TUnit_StaffListForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TStaffListItemChoiceForm'
+    FormName = 'TUnit_StaffListForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'UnitId'
+        Name = 'Key'
         Value = ''
         Component = GuidesUnit
         ComponentItem = 'Key'
@@ -1925,187 +1925,70 @@ inherited StaffListMemberForm: TStaffListMemberForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'UnitName'
+        Name = 'TextValue'
         Value = ''
         Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionId'
-        Value = Null
-        Component = GuidesPosition
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionName'
-        Value = Null
-        Component = GuidesPosition
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionLevelId'
-        Value = Null
-        Component = GuidesPositionLevel
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionLevelName'
-        Value = Null
-        Component = GuidesPositionLevel
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'OperDate'
-        Value = Null
-        Component = edOperDate
-        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 177
   end
   object GuidesPosition: TdsdGuides
-    KeyField = 'PositionId'
+    KeyField = 'Id'
     LookupControl = cePosition
-    FormNameParam.Value = 'TStaffListItemChoiceForm'
+    FormNameParam.Value = 'TPositionForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TStaffListItemChoiceForm'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TPositionForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
-        Name = 'UnitId'
-        Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitName'
-        Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionId'
+        Name = 'Key'
         Value = Null
         Component = GuidesPosition
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PositionName'
+        Name = 'TextValue'
         Value = Null
         Component = GuidesPosition
         ComponentItem = 'TextValue'
         DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionLevelId'
-        Value = Null
-        Component = GuidesPositionLevel
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionLevelName'
-        Value = Null
-        Component = GuidesPositionLevel
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'OperDate'
-        Value = Null
-        Component = edOperDate
-        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 135
     Top = 213
   end
   object GuidesPositionLevel: TdsdGuides
-    KeyField = 'PositionLevelId'
+    KeyField = 'Id'
     LookupControl = cePositionLevel
-    FormNameParam.Value = 'TStaffListItemChoiceForm'
+    FormNameParam.Value = 'TPositionLevelForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TStaffListItemChoiceForm'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TPositionLevelForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
-        Name = 'UnitId'
-        Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitName'
-        Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionId'
-        Value = Null
-        Component = GuidesPosition
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionName'
-        Value = Null
-        Component = GuidesPosition
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionLevelId'
+        Name = 'Key'
         Value = Null
         Component = GuidesPositionLevel
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PositionLevelName'
+        Name = 'TextValue'
         Value = Null
         Component = GuidesPositionLevel
         ComponentItem = 'TextValue'
         DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'OperDate'
-        Value = Null
-        Component = edOperDate
-        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
-    Left = 223
-    Top = 246
+    Left = 207
+    Top = 230
   end
   object GuidesPositionLevel_old: TdsdGuides
     KeyField = 'Id'
@@ -2166,17 +2049,17 @@ inherited StaffListMemberForm: TStaffListMemberForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 502
+    Left = 478
     Top = 270
   end
   object GuidesUnit_old: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit_old
     DisableGuidesOpen = True
-    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.Value = 'TUnit_StaffListForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnit_ObjectForm'
+    FormName = 'TUnit_StaffListForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
