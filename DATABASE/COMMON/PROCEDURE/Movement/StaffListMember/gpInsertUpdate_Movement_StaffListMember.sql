@@ -64,7 +64,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
--- if vbUserId = 5 then vbUserId:= 7056719; inSession:= '7056719'; end if;
+ if vbUserId = 5 then vbUserId:= 7056719; inSession:= '7056719'; end if;
 
      -- проверка
      IF COALESCE (inStaffListKindId, 0) = 0
