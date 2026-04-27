@@ -41,7 +41,7 @@ BEGIN
 
                             WHERE CLO_Member.DescId = zc_ContainerLinkObject_Member()
                               AND ObjectLink_Account_AccountDirection.ChildObjectId = zc_Enum_AccountDirection_30500() -- сотрудники (подотчетные лица)
-                              AND Container.ObjectId <> zc_Enum_Account_30510()
+                              AND Container.ObjectId <> zc_Enum_Account_30510() -- —суды
                            )
           , tmpReport AS (SELECT tmpContainer.ContainerId
                                , tmpContainer.MemberId

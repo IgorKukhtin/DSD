@@ -39,6 +39,7 @@ BEGIN
                              AND Movement.OperDate >= vbOperDate
                              AND Movement.StatusId = zc_Enum_Status_Complete()
                              AND Movement.Id <> inMovementId
+                             AND 1=1
                            LIMIT 1
                            );
 

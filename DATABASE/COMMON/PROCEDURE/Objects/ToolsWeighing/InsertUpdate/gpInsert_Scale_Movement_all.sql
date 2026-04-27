@@ -86,7 +86,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 -- test
- -- if inMovementId= 31430956  and vbUserId  = 5 then update Movement set StatusId = zc_Enum_Status_UnComplete() where Id= inMovementId; end if;
+--  if inMovementId= 34159020 and vbUserId  = 5 then update Movement set StatusId = zc_Enum_Status_UnComplete() where Id= inMovementId; end if;
 
      -- сразу запомнили время начала выполнения Проц.
      vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
@@ -2770,4 +2770,4 @@ order by OperDate
 
 -- тест
 -- SELECT * FROM gpInsert_Scale_Movement_all (inBranchCode:= 18, inMovementId:= 31430956 , inMovementDescId_next:= 0,  inOperDate:= CURRENT_DATE, inOperDatePartner:= CURRENT_DATE, inIsDocInsert         := TRUE ,    inIsOldPeriod         := FALSE ,     inIsDocPartner        := FALSE ,     inIP  :='', inSession:= '539736') -- Чёрный А.А.
--- SELECT * FROM gpInsert_Scale_Movement_all(inBranchCode := 2 , inMovementId := 32717702 , inMovementDescId_next := 0 , inOperDate := ('03.11.2025')::TDateTime , inOperDatePartner := ('03.11.2025')::TDateTime , inIsDocInsert := 'False' , inIsOldPeriod := 'False' , inIsDocPartner := 'False' , inIP := '192.168.20.39' ,  inSession := '5'); -- 539721
+-- SELECT * FROM gpInsert_Scale_Movement_all(inBranchCode := 1 , inMovementId := 34159020 , inMovementDescId_next := 0 , inOperDate := ('27.04.2026')::TDateTime , inOperDatePartner := ('27.04.2026')::TDateTime , inIsDocInsert := 'False' , inIsOldPeriod := 'False' , inIsDocPartner := 'False' , inIP := '192.168.20.39' ,  inSession := '5'); -- 539721

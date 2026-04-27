@@ -120,7 +120,7 @@ BEGIN
     -- Поиск
     vbPartnerId:= (SELECT DISTINCT _tmpItem.clientExtId FROM _tmpItem);
     -- Поиск
-    vbPaidKindId:= (SELECT DISTINCT CASE WHEN _tmpItem.documentform ILIKE 'W' THEN zc_Enum_PaidKind_FirstForm() ELSE zc_Enum_PaidKind_SecondForm() END FROM _tmpItem);
+    vbPaidKindId:= (SELECT DISTINCT CASE WHEN _tmpItem.documentform ILIKE '1' THEN zc_Enum_PaidKind_FirstForm() ELSE zc_Enum_PaidKind_SecondForm() END FROM _tmpItem);
     -- Поиск
     vbUnitId:= (SELECT gpGet.UnitId_ret FROM gpGetMobile_Object_Const (inSession:= vbUserId :: TVarChar) AS gpGet);
 
@@ -295,4 +295,5 @@ $BODY$
 */
 
 -- тест
+-- SELECT * FROM MovementString AS MS JOIN Movement AS Movement_OrderExternal ON Movement_OrderExternal.Id = MS.MovementId      WHERE MS.DescId = zc_MovementString_GUID() AND MS.MovementId = 34162084
 -- SELECT * FROM gpInsert_Movement_ReturnIn_effie ('1cfb0471-9d83-4d81-b5af-23a787596890', zfCalc_UserAdmin()::TVarChar);
