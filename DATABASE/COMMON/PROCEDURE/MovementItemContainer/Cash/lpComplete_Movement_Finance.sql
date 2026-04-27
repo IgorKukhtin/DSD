@@ -120,7 +120,11 @@ END IF;*/
 
 
                                                       WHEN COALESCE (ObjectBoolean_isCorporate.ValueData, FALSE) = TRUE
-                                                           THEN zc_Enum_AccountDirection_30200() -- наши компании
+                                                           THEN CASE WHEN COALESCE (_tmpItem.CurrencyId, zc_Enum_Currency_Basis()) <> zc_Enum_Currency_Basis()
+                                                                      AND _tmpItem.InfoMoneyId <> zc_Enum_InfoMoney_40801() -- Внутренний оборот
+                                                                     THEN zc_Enum_AccountDirection_30150() -- покупатели ВЭД
+                                                                     ELSE zc_Enum_AccountDirection_30200() -- наши компании
+                                                                END
                                                       WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner()) AND Constant_InfoMoney_isCorporate_View.InfoMoneyId IS NOT NULL
                                                            THEN zc_Enum_AccountDirection_30200() -- наши компании
 

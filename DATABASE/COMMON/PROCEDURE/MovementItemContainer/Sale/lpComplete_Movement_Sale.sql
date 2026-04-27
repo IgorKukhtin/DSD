@@ -185,7 +185,7 @@ END IF;*/
 
 
      -- проверка отклонения по кол-ву более чем на vbPersent_check % - Розподільчий комплекс
-     IF EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId = 8459)
+     IF EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId = zc_Unit_RK())
   --AND EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PaidKind() AND MLO.ObjectId = zc_Enum_PaidKind_FirstForm())
     AND EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.OperDate > '12.12.2022')
     -- Есть заявка
@@ -3168,7 +3168,7 @@ end if;
                              WHEN vbIsCorporate_To = TRUE
                                   THEN CASE WHEN vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
                                                  THEN zc_Enum_AccountDirection_30150() -- покупатели ВЭД
-                                            ELSE zc_Enum_AccountDirection_30200() -- наши компании
+                                             ELSE zc_Enum_AccountDirection_30200() -- наши компании
                                        END
 
                              WHEN vbInfoMoneyDestinationId_To IN (zc_Enum_InfoMoneyDestination_10100()  -- Мясное сырье
