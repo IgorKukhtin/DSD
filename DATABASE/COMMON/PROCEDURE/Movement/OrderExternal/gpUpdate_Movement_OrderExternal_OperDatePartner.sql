@@ -32,11 +32,23 @@ BEGIN
      -- сохранили свойство <Дата отгрузки контрагенту>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), inId, inOperDatePartner);
 
+     -- сохранили свойство <Дата отгрузки контрагенту>
+     IF EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inId AND MB.DescId = zc_MovementBoolean_Effie() AND MB.ValueData = TRUE)
+     THEN
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner_Effie(), inId, inOperDatePartner + (COALESCE ((SELECT ValueData FROM ObjectFloat WHERE ObjectId = inFromId AND DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL);
+     END IF;
+
      -- сохранили свойство <Режим расчета>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isAuto(), inId, inIsAuto);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE);
+     
+     IF vbUserId = 5
+     THEN
+         RAISE EXCEPTION 'Ошибка.Test.';
+     END IF;
+     
 
 END;
 $BODY$
