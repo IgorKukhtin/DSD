@@ -534,7 +534,7 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
             Width = 58
           end
           object InsertDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1080#1085#1093#1088'. '#1089' '#1084#1086#1073'.'#1091#1089#1090#1088')'
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

@@ -1895,13 +1895,13 @@ begin
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInChildDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInChildDialogForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalForm');
-  //exit;
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnIn_PartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnIn_PartnerForm');
