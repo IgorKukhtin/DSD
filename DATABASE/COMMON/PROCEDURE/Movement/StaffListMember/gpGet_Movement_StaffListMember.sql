@@ -198,7 +198,7 @@ BEGIN
 
            , Object_Member.Id                      AS MemberId
            , Object_Member.ValueData               AS MemberName
-           , COALESCE (tmpPersonal.PersonalId,0)::Integer AS PersonalId
+           , COALESCE (tmpPersonal.PersonalId, tmpPersonal_old.PersonalId, 0)::Integer AS PersonalId
            , Object_Position.Id                    AS PositionId
            , Object_Position.ValueData             AS PositionName
            , Object_PositionLevel.Id               AS PositionLevelId
@@ -206,7 +206,7 @@ BEGIN
            , Object_Unit.Id                        AS UnitId
            , Object_Unit.ValueData                 AS UnitName
 
-           , COALESCE (tmpPersonal.PersonalId,0)::Integer AS PersonalId_old   --всегда 
+           , COALESCE (tmpPersonal.PersonalId, tmpPersonal_old.PersonalId, 0)::Integer AS PersonalId_old   --всегда 
            , Object_Position_old.Id                AS PositionId_old
            , Object_Position_old.ValueData         AS PositionName_old
            , Object_PositionLevel_old.Id           AS PositionLevelId_old
@@ -351,6 +351,15 @@ BEGIN
                                  AND tmpPersonal.isMain = COALESCE (MovementBoolean_Main.ValueData, FALSE)
                                  AND tmpPersonal.Ord = 1
                                  AND tmpPersonal.Ord_personal = 1
+            --например если не проведенный док. и нужно найти оп старой должности
+            LEFT JOIN tmpPersonal AS tmpPersonal_old
+                                  ON tmpPersonal_old.UnitId = MovementLinkObject_Unit_old.ObjectId
+                                 AND tmpPersonal_old.PositionId = MovementLinkObject_Position_old.ObjectId
+                                 AND COALESCE (tmpPersonal_old.PositionLevelId,0) = COALESCE (MovementLinkObject_PositionLevel_old.ObjectId,0)
+                                 AND tmpPersonal_old.isMain = COALESCE (MovementBoolean_Main.ValueData, FALSE)
+                                 AND tmpPersonal_old.Ord = 1
+                                 AND tmpPersonal_old.Ord_personal = 1
+
             
           LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
                                ON ObjectLink_Personal_PersonalServiceList.ObjectId = tmpPersonal.PersonalId

@@ -9,19 +9,20 @@ inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 93
     Width = 975
-    Height = 480
+    Height = 444
     TabOrder = 3
     ExplicitWidth = 975
     ExplicitHeight = 480
-    ClientRectBottom = 480
+    ClientRectBottom = 444
     ClientRectRight = 975
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 975
       ExplicitHeight = 480
       inherited cxGrid: TcxGrid
         Width = 975
-        Height = 480
+        Height = 444
         ExplicitWidth = 975
         ExplicitHeight = 480
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -249,12 +250,56 @@ inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
   end
   inherited Panel: TPanel
     Width = 975
+    Height = 67
     ExplicitWidth = 975
+    ExplicitHeight = 67
     inherited deStart: TcxDateEdit
       EditValue = 44927d
     end
     inherited deEnd: TcxDateEdit
       EditValue = 44927d
+    end
+    object lbSearchName: TcxLabel
+      Left = 4
+      Top = 35
+      Caption = #1055#1086#1080#1089#1082' '#1060#1048#1054':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchName: TcxTextEdit
+      Left = 88
+      Top = 36
+      TabOrder = 5
+      DesignSize = (
+        135
+        21)
+      Width = 135
+    end
+    object cxLabel3: TcxLabel
+      Left = 231
+      Top = 35
+      Caption = #1044#1086#1078#1085#1086#1089#1090#1100':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchPosition: TcxTextEdit
+      Left = 312
+      Top = 36
+      TabOrder = 7
+      DesignSize = (
+        135
+        21)
+      Width = 135
     end
   end
   object cxLabel27: TcxLabel [2]
@@ -287,6 +332,35 @@ inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
     inherited actMovementItemContainer: TdsdOpenForm
       Enabled = False
     end
+    object actInsertUnit: TdsdInsertUpdateAction [5]
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1088#1091#1075#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1088#1091#1075#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+      ShortCut = 16429
+      ImageIndex = 0
+      FormName = 'TStaffListMemberUnitForm'
+      FormNameParam.Value = 'TStaffListMemberUnitForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = 0
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = 44927d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TStaffListMemberForm'
       FormNameParam.Value = 'TStaffListMemberForm'
@@ -303,6 +377,39 @@ inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+    end
+    object actUpdateUnit: TdsdInsertUpdateAction [8]
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1088#1091#1075#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1044#1088#1091#1075#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+      ShortCut = 16499
+      ImageIndex = 1
+      FormName = 'TStaffListMemberUnitForm'
+      FormNameParam.Value = 'TStaffListMemberUnitForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TStaffListMemberForm'
@@ -550,6 +657,22 @@ inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
           ItemName = 'bbEdit'
         end
         item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertUnit'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateUnit'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
@@ -654,6 +777,14 @@ inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
     end
     object bbOpenStaffListMember_Choice: TdxBarButton
       Action = actOpenStaffListMember_Choice
+      Category = 0
+    end
+    object bbInsertUnit: TdxBarButton
+      Action = actInsertUnit
+      Category = 0
+    end
+    object bbUpdateUnit: TdxBarButton
+      Action = actUpdateUnit
       Category = 0
     end
   end
@@ -834,5 +965,21 @@ inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
     PackSize = 1
     Left = 824
     Top = 48
+  end
+  object FieldFilter_Name: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = MasterCDS
+    Column = MemberName
+    ColumnList = <
+      item
+        Column = MemberName
+      end
+      item
+        Column = PositionName
+        TextEdit = edSearchPosition
+      end>
+    CheckBoxList = <>
+    Left = 560
+    Top = 16
   end
 end

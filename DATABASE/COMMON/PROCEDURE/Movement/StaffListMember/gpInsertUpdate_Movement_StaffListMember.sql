@@ -7,9 +7,15 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_StaffListMember (Integer, TVarCh
                                                                , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                                , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar, TVarChar);
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_StaffListMember (Integer, TVarChar, TDateTime, Integer, Integer, Integer
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_StaffListMember (Integer, TVarChar, TDateTime, Integer, Integer, Integer
                                                                , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                                , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
+*/
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_StaffListMember (Integer, TVarChar, TDateTime, Integer, Integer, Integer
+                                                               , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                               , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                               , Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_StaffListMember(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -42,6 +48,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_StaffListMember(
 
     IN inIsOfficial          Boolean   , --
     IN inIsMain              Boolean   , --
+    IN inIsUnit              Boolean   , -- другие подразделения
     IN inNumBiz              TVarChar  , --
     IN inComment             TVarChar  , --
     IN inSession             TVarChar    -- сессия пользователя

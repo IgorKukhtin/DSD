@@ -15,7 +15,11 @@ $BODY$
            vbMovementId Integer;
            vbMovementId_old  Integer;
            vbStaffListKindId Integer;
-           vbOperDate   TDateTime;
+           vbOperDate        TDateTime;
+           vbUnitId          Integer;
+           vbPositionId      Integer;
+           vbPositionLevelId Integer;
+           vbisMain          Boolean;
            
 BEGIN
 
@@ -34,41 +38,99 @@ BEGIN
           , tmp.PersonalId
           , tmp.MemberId
           , tmp.StaffListKindId
+          , tmp.isMain
+          , tmp.UnitId
+          , tmp.PositionId
+          , tmp.PositionLevelId
+          
     INTO vbOperDate, vbMovementId, vbPersonalId, vbMemberId, vbStaffListKindId
+       , vbisMain, vbUnitId, vbPositionId, vbPositionLevelId
      FROM gpGet_Movement_StaffListMember (inMovementId := inMovementId, inOperDate := CURRENT_DATE ::TDateTime, inSession := inSession ::TVarChar) AS tmp;
  
  
  --RAISE EXCEPTION 'Ошибка.<%>', vbPersonalId; 
      
-    --получаем предыдущий документа
-    SELECT tmp.MovementId
-        -- , tmp.StaffListKindId
-   INTO vbMovementId_old 
-    FROM (SELECT Movement.Id AS  MovementId
-               --, MovementLinkObject_StaffListKind.ObjectId AS StaffListKindId
-               , ROW_NUMBER() OVER (ORDER BY Movement.Id DESC, Movement.OperDate DESC) AS Ord
-          FROM Movement 
-               INNER JOIN MovementLinkObject AS MovementLinkObject_Member
-                                             ON MovementLinkObject_Member.MovementId = Movement.Id
-                                            AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
-                                            AND MovementLinkObject_Member.ObjectId = vbMemberId
+    --получаем предыдущий документа 
+    
+    -- для основного места работы по физ.лицу 
+    -- ищим предудущий документ с признаком гл. место работы 
+    IF COALESCE (vbisMain, FALSE) = TRUE
+    THEN 
+        SELECT tmp.MovementId
+            -- , tmp.StaffListKindId
+       INTO vbMovementId_old 
+        FROM (SELECT Movement.Id AS  MovementId
+                   , ROW_NUMBER() OVER (ORDER BY Movement.Id DESC, Movement.OperDate DESC) AS Ord
+              FROM Movement 
+                   INNER JOIN MovementLinkObject AS MovementLinkObject_Member
+                                                 ON MovementLinkObject_Member.MovementId = Movement.Id
+                                                AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
+                                                AND MovementLinkObject_Member.ObjectId = vbMemberId
 
-               INNER JOIN MovementLinkObject AS MovementLinkObject_StaffListKind
-                                             ON MovementLinkObject_StaffListKind.MovementId = Movement.Id
-                                            AND MovementLinkObject_StaffListKind.DescId = zc_MovementLinkObject_StaffListKind()  --zc_Enum_StaffListKind_Send
-                                            AND ((MovementLinkObject_StaffListKind.ObjectId = vbStaffListKindId AND vbStaffListKindId = zc_Enum_StaffListKind_Add()) 
-                                                 OR (MovementLinkObject_StaffListKind.ObjectId <> zc_Enum_StaffListKind_Add() AND vbStaffListKindId <> zc_Enum_StaffListKind_Add()) 
-                                                 ) 
-          WHERE Movement.DescId = zc_Movement_StaffListMember()
-            AND Movement.OperDate <= vbOperDate
-            AND Movement.StatusId = zc_Enum_Status_Complete()
-            AND Movement.Id <> inMovementId
-          ) AS tmp
-    WHERE  Ord = 1;
-   
-    --перезаписываем элемент справочника
-    PERFORM gpInsertUpdate_Object_Personal(ioId                              := COALESCE (vbPersonalId,0)          ::Integer    -- ключ объекта <Сотрудники>
-                                         , inMemberId                        := vbMemberId                         ::Integer    -- ссылка на Физ.лица
+                   INNER JOIN MovementBoolean AS MovementBoolean_Main
+                                              ON MovementBoolean_Main.MovementId = Movement.Id
+                                             AND MovementBoolean_Main.DescId = zc_MovementBoolean_Main()
+                                             AND COALESCE (MovementBoolean_Main.ValueData, FALSE) = TRUE
+              WHERE Movement.DescId = zc_Movement_StaffListMember()
+                AND Movement.OperDate <= vbOperDate
+                AND Movement.StatusId = zc_Enum_Status_Complete()
+                AND Movement.Id <> inMovementId
+              ) AS tmp
+        WHERE Ord = 1;
+    END IF;
+    
+    -- для совместителя ищем предыдущий документ по физ.лицу +подраз. + должность + разряд 
+    -- если удаляют или отменяют увольнение тогда пересохр. прием, для приема пока ничего не делаем
+    IF COALESCE (vbisMain, FALSE) = FALSE
+    THEN
+        SELECT tmp.MovementId
+       INTO vbMovementId_old 
+        FROM (SELECT Movement.Id AS  MovementId
+                   , ROW_NUMBER() OVER (ORDER BY Movement.Id DESC, Movement.OperDate DESC) AS Ord
+              FROM Movement 
+                   INNER JOIN MovementLinkObject AS MovementLinkObject_Member
+                                                 ON MovementLinkObject_Member.MovementId = Movement.Id
+                                                AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
+                                                AND MovementLinkObject_Member.ObjectId = vbMemberId
+    
+                   LEFT JOIN MovementBoolean AS MovementBoolean_Main
+                                             ON MovementBoolean_Main.MovementId = Movement.Id
+                                            AND MovementBoolean_Main.DescId = zc_MovementBoolean_Main()    
+
+                   INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                 ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                AND MovementLinkObject_Unit.ObjectId = vbUnitId
+
+                   INNER JOIN MovementLinkObject AS MovementLinkObject_Position
+                                                 ON MovementLinkObject_Position.MovementId = Movement.Id
+                                                AND MovementLinkObject_Position.DescId = zc_MovementLinkObject_Position()
+                                                AND MovementLinkObject_Position.ObjectId = vbPositionId
+       
+                   LEFT JOIN MovementLinkObject AS MovementLinkObject_PositionLevel
+                                                ON MovementLinkObject_PositionLevel.MovementId = Movement.Id
+                                               AND MovementLinkObject_PositionLevel.DescId = zc_MovementLinkObject_PositionLevel()
+
+              WHERE Movement.DescId = zc_Movement_StaffListMember()
+                AND Movement.OperDate <= vbOperDate
+                AND Movement.StatusId = zc_Enum_Status_Complete()
+                AND Movement.Id <> inMovementId
+                
+                AND COALESCE (MovementLinkObject_PositionLevel.ObjectId,0) = COALESCE (vbPositionLevelId,0)
+                AND COALESCE (MovementBoolean_Main.ValueData, FALSE) = FALSE  --только совместительство
+              ) AS tmp
+        WHERE  Ord = 1;
+    END IF;
+                 
+    --Если НЕ НАШЛИ предыдущий документ - пока ничего не делаем
+    IF COALESCE (vbMovementId_old, 0) = 0
+    THEN
+        RETURN;
+    END IF; 
+    
+    --Если НАШЛИ предыдущий документ - перезаписываем элемент справочника
+    PERFORM gpInsertUpdate_Object_Personal(ioId                              := COALESCE (vbPersonalId,0)           ::Integer    -- ключ объекта <Сотрудники>
+                                         , inMemberId                        := vbMemberId                          ::Integer    -- ссылка на Физ.лица
                                          , inPositionId                      := tmp.PositionId                      ::Integer    -- ссылка на Должность
                                          , inPositionLevelId                 := tmp.PositionLevelId                 ::Integer    -- ссылка на Разряд должности
                                          , inUnitId                          := tmp.UnitId                          ::Integer    -- ссылка на Подразделение
@@ -76,9 +138,9 @@ BEGIN
                                          , inPersonalServiceListId           := tmp.PersonalServiceListId           ::Integer    -- Ведомость начисления(главная)
                                          , inPersonalServiceListOfficialId   := tmp.PersonalServiceListOfficialId   ::Integer    -- Ведомость начисления(БН)
                                          , inPersonalServiceListCardSecondId := tmp.ServiceListCardSecondId         ::Integer    -- Ведомость начисления(Карта Ф2) 
-                                         , inPersonalServiceListId_AvanceF2  := tmp.ServiceListId_AvanceF2  ::Integer    --  Ведомость начисления(аванс Карта Ф2)
+                                         , inPersonalServiceListId_AvanceF2  := tmp.ServiceListId_AvanceF2          ::Integer    --  Ведомость начисления(аванс Карта Ф2)
                                          , inSheetWorkTimeId                 := tmp.SheetWorkTimeId                 ::Integer    -- Режим работы (Шаблон табеля р.вр.)
-                                         , inStorageLineId                   := tmp.StorageLineId_1                   ::Integer    -- ссылка на линию производства
+                                         , inStorageLineId                   := tmp.StorageLineId_1                 ::Integer    -- ссылка на линию производства
                                          
                                          , inMember_ReferId                  := tmp.Member_ReferId                  ::Integer    -- Фамилия рекомендателя
                                          , inMember_MentorId                 := tmp.Member_MentorId                 ::Integer    -- Фамилия наставника 	
@@ -94,8 +156,10 @@ BEGIN
                                          , inComment                         := tmp.Comment                         ::TVarChar  
                                          , inSession                         := inSession                           ::TVarChar   -- сессия пользователя 
                                          )
-    FROM gpGet_Movement_StaffListMember (inMovementId := vbMovementId_old, inOperDate := CURRENT_DATE ::TDateTime, inSession := inSession ::TVarChar) AS tmp
-       --LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = vbPersonalId --tmp.PersonalId
+    FROM gpGet_Movement_StaffListMember (inMovementId := vbMovementId_old
+                                       , inOperDate := CURRENT_DATE ::TDateTime
+                                       , inSession := inSession ::TVarChar
+                                        ) AS tmp
         LEFT JOIN ObjectDate AS ObjectDate_DateIn
                              ON ObjectDate_DateIn.ObjectId = vbPersonalId
                             AND ObjectDate_DateIn.DescId = zc_ObjectDate_Personal_In()

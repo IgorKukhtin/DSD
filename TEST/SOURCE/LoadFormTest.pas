@@ -3963,6 +3963,10 @@ end;
 
 procedure TLoadFormTest.LoadUnitFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_StaffListForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnit_StaffListForm');
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_PersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_PersonalForm');
@@ -4862,6 +4866,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TStaffListMemberJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListMemberForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStaffListMemberForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListMemberUnitForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStaffListMemberUnitForm');
   exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListMemberJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStaffListMemberJournalChoiceForm');
