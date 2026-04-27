@@ -72,6 +72,8 @@ BEGIN
                -- Филиал Баланс: !!!определяется Филиал по Пользователю!!!, иначе всегда на Главном филиале
              , CASE WHEN inMovementId = 8869232 /*3810 - 31.03.2018 - Івденко Андрій Леонідович*/
                          THEN 0
+                    WHEN ObjectLink_Unit_Branch.ChildObjectId = 13257082 -- Казахстан
+                         THEN ObjectLink_Unit_Branch.ChildObjectId
                     ELSE COALESCE (CLO_Branch.ObjectId, vbBranchId_Member)
                END AS BranchId_Balance
 
@@ -92,6 +94,12 @@ BEGIN
              LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                               ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                              AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = MILinkObject_Unit.ObjectId
+                                                           AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+
              LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
                                          ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
                                         AND MIFloat_ContainerId.DescId         = zc_MIFloat_ContainerId()
