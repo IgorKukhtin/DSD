@@ -5483,6 +5483,12 @@ begin
   // Дата замовлення
   Delnot_Vchasno.InvoiceReference.Order.BuyerOrderDate := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDateOrder').asDateTime);
 
+  // Дата замовлення
+  Delnot_Vchasno.InvoiceReference.Order.BuyerOrderDate := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDateOrder').asDateTime);
+
+  // Номер повідомлення про відвантаження
+  Delnot_Vchasno.InvoiceReference.DespatchAdvice.DespatchAdviceNumber := HeaderDataSet.FieldByName('InvNumber').asString;
+
   //Номер податкової накладної
   if HeaderDataSet.FieldByName('InvNumberPartner_Master').asString <> ''
   then begin
