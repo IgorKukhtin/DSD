@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , StorageName TVarChar
              , Price TFloat
              , AmountRemains TFloat
+             , SubjectDocId Integer, SubjectDocName  TVarChar
              , isErased Boolean
               )
 AS
@@ -86,6 +87,8 @@ BEGIN
 
            , tmpRemains.Amount :: TFloat AS AmountRemains
 
+           , CAST (NULL AS Integer)     AS SubjectDocId
+           , CAST (NULL AS TVarChar)    AS SubjectDocName
            , FALSE                      AS isErased
 
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
@@ -173,6 +176,9 @@ BEGIN
 
            , tmpRemains.Amount :: TFloat           AS AmountRemains
 
+           , Object_SubjectDoc.Id                  AS SubjectDocId
+           , Object_SubjectDoc.ValueData           AS SubjectDocName
+
            , MovementItem.isErased                 AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -216,6 +222,11 @@ BEGIN
                                              ON MILO_GoodsKindComplete.MovementItemId = MovementItem.Id
                                             AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
             LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILO_GoodsKindComplete.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILO_SubjectDoc
+                                             ON MILO_SubjectDoc.MovementItemId = MovementItem.Id
+                                            AND MILO_SubjectDoc.DescId = zc_MILinkObject_SubjectDoc()
+            LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MILO_SubjectDoc.ObjectId
 
             LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = MovementItem.Id
             LEFT JOIN Object AS Object_Unit_partion ON Object_Unit_partion.Id = tmpMIContainer.UnitId
@@ -269,6 +280,7 @@ BEGIN
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                                  , COALESCE (MILO_GoodsKindComplete.ObjectId, 0) AS GoodsKindId_Complete
                                  , COALESCE (MILinkObject_PartionGoods.ObjectId,0) AS PartionGoodsId
+                                 , COALESCE (MILO_SubjectDoc.ObjectId,0)           AS SubjectDocId
                                  , MovementItem.isErased
                             FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                                  INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -285,6 +297,10 @@ BEGIN
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionGoods
                                                                   ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
                                                                  AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
+
+                                 LEFT JOIN MovementItemLinkObject AS MILO_SubjectDoc
+                                                                  ON MILO_SubjectDoc.MovementItemId = MovementItem.Id
+                                                                 AND MILO_SubjectDoc.DescId = zc_MILinkObject_SubjectDoc()
 
                                  LEFT JOIN MovementItemFloat AS MIFloat_CountPack
                                                              ON MIFloat_CountPack.MovementItemId = MovementItem.Id
@@ -366,6 +382,9 @@ BEGIN
 
            , tmpRemains.Amount :: TFloat        AS AmountRemains
 
+           , Object_SubjectDoc.Id               AS SubjectDocId
+           , Object_SubjectDoc.ValueData        AS SubjectDocName
+
            , tmpMI_Goods.isErased               AS isErased
 
        FROM tmpMI_Goods
@@ -375,6 +394,7 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI_Goods.GoodsKindId
             LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = tmpMI_Goods.GoodsKindId_Complete
             LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMI_Goods.PartionGoodsId
+            LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = tmpMI_Goods.SubjectDocId
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                  ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMI_Goods.GoodsId
@@ -406,6 +426,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 27.04.26         *
  28.11.17         *
 */
 

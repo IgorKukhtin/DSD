@@ -261,6 +261,7 @@ type
     macSendJournalChoice: TMultiAction;
     actUpdate_MI_Send_Movement: TdsdExecStoredProc;
     bbSendJournalChoice: TdxBarButton;
+    actSubjectDocFormMaster: TOpenChoiceForm;
   private
     { Private declarations }
   public

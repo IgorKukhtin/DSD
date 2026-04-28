@@ -59,6 +59,7 @@ BEGIN
                                              , inStorageId           := 0              ::Integer
                                              , inPartionModelId      := 0              ::Integer
                                              , inPartionGoodsId      := 0              ::Integer
+                                             , inSubjectDocId        := 0              ::Integer
                                              , inUserId              := vbUserId
                                               ) AS tmp; 
                                            

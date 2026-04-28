@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_Send()
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SendMember (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SendMember (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SendMember (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SendMember (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SendMember(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -18,7 +19,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SendMember(
     IN inUnitId                Integer   , -- Подразделение (для МО)
     IN inStorageId             Integer   , -- Место хранения
     IN inPartionModelId        Integer   , -- Модель
-    IN inPartionGoodsId        Integer   , -- Партии товаров (для партии расхода если с МО)
+    IN inPartionGoodsId        Integer   , -- Партии товаров (для партии расхода если с МО) 
+    IN inSubjectDocId          Integer   , --
     IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -50,6 +52,7 @@ BEGIN
                                           , inStorageId           := inStorageId 
                                           , inPartionModelId      := inPartionModelId
                                           , inPartionGoodsId      := inPartionGoodsId
+                                          , inSubjectDocId        := inSubjectDocId
                                           , inUserId              := vbUserId
                                            ) AS tmp;
 

@@ -2,7 +2,6 @@ inherited SendMemberForm: TSendMemberForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1089' '#1052#1054'>'
   ClientHeight = 602
   ClientWidth = 1013
-  ExplicitTop = -114
   ExplicitWidth = 1029
   ExplicitHeight = 641
   PixelsPerInch = 96
@@ -1692,6 +1691,14 @@ inherited SendMemberForm: TSendMemberForm
         Value = 0
         Component = MasterCDS
         ComponentItem = 'PartionGoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSubjectDocId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SubjectDocId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

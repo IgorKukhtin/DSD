@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , GoodsKindId_Complete Integer, GoodsKindName_Complete  TVarChar
              , InDate TDateTime, PartnerInName TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
+             , SubjectDocId Integer, SubjectDocName  TVarChar
              , AssetId Integer, AssetCode Integer, AssetName TVarChar
              , AssetId_two Integer, AssetCode_two Integer, AssetName_two TVarChar
              , UnitName TVarChar
@@ -188,7 +189,8 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyGroupName
            , Object_InfoMoney_View.InfoMoneyDestinationName
            , Object_InfoMoney_View.InfoMoneyName
-
+           , CAST (NULL AS Integer)     AS SubjectDocId
+           , CAST (NULL AS TVarChar)    AS SubjectDocName
            , CAST (NULL AS Integer)     AS AssetId
            , CAST (NULL AS Integer)     AS AssetCode
            , CAST (NULL AS TVarChar)    AS AssetName
@@ -306,6 +308,9 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyDestinationName
            , Object_InfoMoney_View.InfoMoneyName
 
+           , Object_SubjectDoc.Id                  AS SubjectDocId
+           , Object_SubjectDoc.ValueData           AS SubjectDocName
+                                  
            , Object_Asset.Id                       AS AssetId
            , Object_Asset.ObjectCode               AS AssetCode
            , Object_Asset.ValueData                AS AssetName
@@ -392,6 +397,11 @@ BEGIN
                                             AND MILinkObject_Asset_two.DescId = zc_MILinkObject_Asset_two()
             LEFT JOIN Object AS Object_Asset_two ON Object_Asset_two.Id = MILinkObject_Asset_two.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILO_SubjectDoc
+                                             ON MILO_SubjectDoc.MovementItemId = MovementItem.Id
+                                            AND MILO_SubjectDoc.DescId = zc_MILinkObject_SubjectDoc()
+            LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MILO_SubjectDoc.ObjectId
+
             LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = MovementItem.Id
             LEFT JOIN Object AS Object_Unit_partion ON Object_Unit_partion.Id = tmpMIContainer.UnitId
             LEFT JOIN Object AS Object_Storage      ON Object_Storage.Id      = COALESCE (MILinkObject_Storage.ObjectId,tmpMIContainer.StorageId)
@@ -450,6 +460,7 @@ BEGIN
                                  , MILinkObject_PartionModel.ObjectId              AS PartionModelId
                                  , MILinkObject_Asset.ObjectId                     AS AssetId
                                  , MILinkObject_Asset_two.ObjectId                 AS AssetId_two
+                                 , MILO_SubjectDoc.ObjectId                        AS SubjectDocId
                                  , MovementItem.isErased
                             FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                                  INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -479,6 +490,10 @@ BEGIN
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset_two
                                                                   ON MILinkObject_Asset_two.MovementItemId = MovementItem.Id
                                                                  AND MILinkObject_Asset_two.DescId = zc_MILinkObject_Asset_two()
+
+                                 LEFT JOIN MovementItemLinkObject AS MILO_SubjectDoc
+                                                                  ON MILO_SubjectDoc.MovementItemId = MovementItem.Id
+                                                                 AND MILO_SubjectDoc.DescId = zc_MILinkObject_SubjectDoc()
 
                                  LEFT JOIN MovementItemFloat AS MIFloat_CountPack
                                                              ON MIFloat_CountPack.MovementItemId = MovementItem.Id
@@ -635,6 +650,9 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyDestinationName
            , Object_InfoMoney_View.InfoMoneyName
 
+           , Object_SubjectDoc.Id               AS SubjectDocId
+           , Object_SubjectDoc.ValueData        AS SubjectDocName
+
            , Object_Asset.Id                    AS AssetId
            , Object_Asset.ObjectCode            AS AssetCode
            , Object_Asset.ValueData             AS AssetName
@@ -677,6 +695,7 @@ BEGIN
             LEFT JOIN Object AS Object_PartionModel ON Object_PartionModel.Id = COALESCE (tmpMI_Goods.PartionModelId, tmpMIContainer.PartionModelId)
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = tmpMI_Goods.AssetId
             LEFT JOIN Object AS Object_Asset_two ON Object_Asset_two.Id = tmpMI_Goods.AssetId_two
+            LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = tmpMI_Goods.SubjectDocId
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
@@ -721,6 +740,7 @@ ALTER FUNCTION gpSelect_MovementItem_Send (Integer, Boolean, Boolean, TVarChar) 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 27.04.26         * SubjectDoc
  02.05.23         *
  18.10.22         * AssetId_two
  03.10.22         * asset

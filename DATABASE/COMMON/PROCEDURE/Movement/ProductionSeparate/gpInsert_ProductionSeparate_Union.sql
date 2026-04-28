@@ -258,7 +258,8 @@ BEGIN
                                            , inUnitId              := 0
                                            , inStorageId           := 0
                                            , inPartionModelId      := 0
-                                           , inPartionGoodsId      := 0
+                                           , inPartionGoodsId      := 0 
+                                           , inSubjectDocId        := 0
                                            , inUserId              := vbUserId
                                             )
    FROM tmpListDocSend

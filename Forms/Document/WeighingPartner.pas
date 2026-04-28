@@ -221,6 +221,7 @@ type
     bbUpdatePartionDateQ: TdxBarButton;
     dxBarButton1: TdxBarButton;
     Action1: TAction;
+    SubjectDocName: TcxGridDBColumn;
   private
   public
   end;

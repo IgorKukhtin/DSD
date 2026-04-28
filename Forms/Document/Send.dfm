@@ -2,6 +2,7 @@ inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 658
   ClientWidth = 1186
+  ExplicitTop = -42
   ExplicitWidth = 1202
   ExplicitHeight = 697
   PixelsPerInch = 96
@@ -352,7 +353,22 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 68
           end
-          object AssetCode: TcxGridDBColumn [19]
+          object SubjectDocName: TcxGridDBColumn [19]
+            Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+            DataBinding.FieldName = 'SubjectDocName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actSubjectDocFormMaster
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 143
+          end
+          object AssetCode: TcxGridDBColumn [20]
             Caption = #1050#1086#1076' ('#1074#1099#1088'. '#1085#1072' '#1086#1073#1086#1088#1091#1076'.1)'
             DataBinding.FieldName = 'AssetCode'
             HeaderAlignmentHorz = taCenter
@@ -360,7 +376,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 70
           end
-          object AssetName: TcxGridDBColumn [20]
+          object AssetName: TcxGridDBColumn [21]
             Caption = #1042#1099#1088#1072#1073#1086#1090#1082#1072' '#1085#1072' '#1086#1073#1086#1088#1091#1076#1086#1074#1072#1085#1080#1080' 1'
             DataBinding.FieldName = 'AssetName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -376,7 +392,7 @@ inherited SendForm: TSendForm
             HeaderHint = #1042#1099#1088#1072#1073#1086#1090#1082#1072' '#1085#1072' '#1086#1073#1086#1088#1091#1076#1086#1074#1072#1085#1080#1080' 1'
             Width = 70
           end
-          object AssetCode_two: TcxGridDBColumn [21]
+          object AssetCode_two: TcxGridDBColumn [22]
             Caption = #1050#1086#1076' ('#1074#1099#1088'. '#1085#1072' '#1086#1073#1086#1088#1091#1076'.2)'
             DataBinding.FieldName = 'AssetCode_two'
             HeaderAlignmentHorz = taCenter
@@ -384,7 +400,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 70
           end
-          object AssetName_two: TcxGridDBColumn [22]
+          object AssetName_two: TcxGridDBColumn [23]
             Caption = #1042#1099#1088#1072#1073#1086#1090#1082#1072' '#1085#1072' '#1086#1073#1086#1088#1091#1076#1086#1074#1072#1085#1080#1080' 2'
             DataBinding.FieldName = 'AssetName_two'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -400,7 +416,7 @@ inherited SendForm: TSendForm
             HeaderHint = #1042#1099#1088#1072#1073#1086#1090#1082#1072' '#1085#1072' '#1086#1073#1086#1088#1091#1076#1086#1074#1072#1085#1080#1080' 2'
             Width = 70
           end
-          object InfoMoneyCode: TcxGridDBColumn [23]
+          object InfoMoneyCode: TcxGridDBColumn [24]
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -409,7 +425,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 45
           end
-          object InfoMoneyGroupName: TcxGridDBColumn [24]
+          object InfoMoneyGroupName: TcxGridDBColumn [25]
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -418,7 +434,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 70
           end
-          object InfoMoneyDestinationName: TcxGridDBColumn [25]
+          object InfoMoneyDestinationName: TcxGridDBColumn [26]
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -427,7 +443,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 70
           end
-          object InfoMoneyName: TcxGridDBColumn [26]
+          object InfoMoneyName: TcxGridDBColumn [27]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
@@ -436,7 +452,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 100
           end
-          object Amount_child_sec: TcxGridDBColumn [27]
+          object Amount_child_sec: TcxGridDBColumn [28]
             Caption = #1048#1090#1086#1075#1086' '#1088#1077#1079#1077#1088#1074' '#1076#1083#1103' '#1079#1072#1103#1074#1086#1082
             DataBinding.FieldName = 'Amount_child_sec'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -448,7 +464,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 104
           end
-          object Amount_Diff: TcxGridDBColumn [28]
+          object Amount_Diff: TcxGridDBColumn [29]
             Caption = #1054#1090#1082#1083'. '#1088#1077#1079#1077#1088#1074#1072' '#1086#1090' '#1087#1077#1088#1077#1084'-'#1103
             DataBinding.FieldName = 'Amount_Diff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -460,7 +476,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 87
           end
-          object InDate: TcxGridDBColumn [29]
+          object InDate: TcxGridDBColumn [30]
             Caption = #1044#1072#1090#1072' '#1087#1088'. '#1086#1090' '#1087#1086#1089#1090'. '
             DataBinding.FieldName = 'InDate'
             HeaderAlignmentHorz = taCenter
@@ -469,7 +485,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 80
           end
-          object PartnerInName: TcxGridDBColumn [30]
+          object PartnerInName: TcxGridDBColumn [31]
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
             DataBinding.FieldName = 'PartnerInName'
             HeaderAlignmentHorz = taCenter
@@ -478,7 +494,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 80
           end
-          object PartionGoodsId: TcxGridDBColumn [31]
+          object PartionGoodsId: TcxGridDBColumn [32]
             DataBinding.FieldName = 'PartionGoodsId'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -2940,10 +2956,37 @@ inherited SendForm: TSendForm
         item
         end>
     end
+    object actSubjectDocFormMaster: TOpenChoiceForm [33]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'SubjectDocForm'
+      FormName = 'TSubjectDocForm'
+      FormNameParam.Value = 'TSubjectDocForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'SubjectDocId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'SubjectDocName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     inherited actMovementItemContainer: TdsdOpenForm
       TabSheet = tsMain
     end
-    object actGoodsKindChoicePC: TOpenChoiceForm [35]
+    object actGoodsKindChoicePC: TOpenChoiceForm [36]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2970,7 +3013,7 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actReturnKindOpenForm: TOpenChoiceForm [36]
+    object actReturnKindOpenForm: TOpenChoiceForm [37]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2997,7 +3040,7 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actSubjectDocOpenForm: TOpenChoiceForm [37]
+    object actSubjectDocOpenForm: TOpenChoiceForm [38]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3024,7 +3067,7 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actMICellProtocolOpenForm: TdsdOpenForm [38]
+    object actMICellProtocolOpenForm: TdsdOpenForm [39]
       Category = 'DSDLib'
       TabSheet = cxTabSheet_PartionCell
       MoveParams = <>
@@ -3056,7 +3099,7 @@ inherited SendForm: TSendForm
         end>
       isShowModal = False
     end
-    object actAssetChoiceForm: TOpenChoiceForm [39]
+    object actAssetChoiceForm: TOpenChoiceForm [40]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3083,7 +3126,7 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actGoodsKindChoice: TOpenChoiceForm [40]
+    object actGoodsKindChoice: TOpenChoiceForm [41]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3110,7 +3153,7 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actAsset_twoChoiceForm: TOpenChoiceForm [41]
+    object actAsset_twoChoiceForm: TOpenChoiceForm [42]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3140,7 +3183,7 @@ inherited SendForm: TSendForm
     inherited MovementItemProtocolOpenForm: TdsdOpenForm
       TabSheet = tsMain
     end
-    object actAddMaskDetail: TdsdExecStoredProc [45]
+    object actAddMaskDetail: TdsdExecStoredProc [46]
       Category = 'DSDLib'
       TabSheet = cxTabSheetDetail
       MoveParams = <>
@@ -5642,6 +5685,14 @@ inherited SendForm: TSendForm
         Value = 0
         Component = MasterCDS
         ComponentItem = 'PartionGoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSubjectDocId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SubjectDocId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
