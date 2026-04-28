@@ -101,8 +101,7 @@ BEGIN
    , tmpMLO AS (SELECT MovementLinkObject.*
                 FROM MovementLinkObject
                 WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement_all.Id FROM tmpMovement_all) 
-                  AND MovementLinkObject.DescId IN (zc_MovementLinkObject_ReasonOut()
-                                                  , zc_MovementLinkObject_StaffListKind() 
+                  AND MovementLinkObject.DescId IN (zc_MovementLinkObject_StaffListKind() 
                                                   , zc_MovementLinkObject_Member()
                                                   , zc_MovementLinkObject_Position()
                                                   , zc_MovementLinkObject_PositionLevel()
@@ -127,8 +126,8 @@ BEGIN
                                            AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member() 
                                            
                           LEFT JOIN tmpMovementBoolean AS MovementBoolean_Main
-                                         ON MovementBoolean_Main.MovementId = tmpMovement_all.Id
-                                        AND MovementBoolean_Main.DescId = zc_MovementBoolean_Main()  
+                                                       ON MovementBoolean_Main.MovementId = tmpMovement_all.Id
+                                                      AND MovementBoolean_Main.DescId = zc_MovementBoolean_Main()  
                                         
                           LEFT JOIN tmpMLO AS MovementLinkObject_StaffListKind
                                            ON MovementLinkObject_StaffListKind.MovementId = tmpMovement_all.Id

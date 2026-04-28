@@ -205,14 +205,14 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
             Width = 85
           end
           object AmountFact_add: TcxGridDBColumn
-            Caption = #1060#1072#1082#1090' '#1064#1056' +'#1089#1086#1074#1084'.'
+            Caption = #1057#1086#1074#1084'.'
             DataBinding.FieldName = 'AmountFact_add'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1060#1072#1082#1090' '#1064#1056' + '#1089#1086#1074#1084#1077#1089#1090#1080#1090#1077#1083#1080' ('#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086')'
+            HeaderHint = #1057#1086#1074#1084#1077#1089#1090#1080#1090#1077#1083#1080' ('#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086')'
             Width = 85
           end
           object Amount_diff: TcxGridDBColumn
