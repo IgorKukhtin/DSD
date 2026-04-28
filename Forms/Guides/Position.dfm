@@ -3,7 +3,7 @@ object PositionForm: TPositionForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1044#1086#1083#1078#1085#1086#1089#1090#1080'>'
   ClientHeight = 379
-  ClientWidth = 530
+  ClientWidth = 575
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,14 +19,17 @@ object PositionForm: TPositionForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
-    Width = 530
-    Height = 353
+    Top = 59
+    Width = 575
+    Height = 320
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitTop = 26
+    ExplicitWidth = 530
+    ExplicitHeight = 353
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -91,6 +94,36 @@ object PositionForm: TPositionForm
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel: TPanel
+    Left = 0
+    Top = 26
+    Width = 575
+    Height = 33
+    Align = alTop
+    TabOrder = 5
+    ExplicitTop = 20
+    object cxLabel4: TcxLabel
+      Left = 3
+      Top = 6
+      Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edName_search: TcxTextEdit
+      Left = 115
+      Top = 6
+      TabOrder = 1
+      DesignSize = (
+        120
+        21)
+      Width = 120
     end
   end
   object DataSource: TDataSource
@@ -516,5 +549,17 @@ object PositionForm: TPositionForm
     PropertiesCellList = <>
     Left = 168
     Top = 224
+  end
+  object FieldFilter: TdsdFieldFilter
+    TextEdit = edName_search
+    DataSet = ClientDataSet
+    Column = Name
+    ColumnList = <
+      item
+        Column = Name
+      end>
+    CheckBoxList = <>
+    Left = 272
+    Top = 24
   end
 end

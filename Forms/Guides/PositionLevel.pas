@@ -22,7 +22,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dsdCommon;
+  dsdCommon, cxContainer, cxTextEdit, cxLabel, Vcl.ExtCtrls;
 
 type
   TPositionLevelForm = class(TParentForm)
@@ -60,6 +60,10 @@ type
     isNoSheetCalc: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    Panel: TPanel;
+    cxLabel4: TcxLabel;
+    edName_search: TcxTextEdit;
+    FieldFilter: TdsdFieldFilter;
   private
     { Private declarations }
   public
