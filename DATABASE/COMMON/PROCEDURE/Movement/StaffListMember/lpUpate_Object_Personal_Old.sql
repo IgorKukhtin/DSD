@@ -125,7 +125,31 @@ BEGIN
     --Если НЕ НАШЛИ предыдущий документ - пока ничего не делаем
     IF COALESCE (vbMovementId_old, 0) = 0
     THEN
-        RETURN;
+         -- 
+         /* когда не находит предыдущую инфу, надо удалять в справ. сотрудников - только если это подработка
+           для основного - разрешать удалять если в справ сотрудников нет видимой строчки с основным местом работы (т.е. в справочнике его вручную удалили) иначе сообщение что надо удалить сотрудника в справочнике*/
+        
+        -- совместительство и найден сотрудник, то метим на удаление  -- т.е. отмена проведения приема на работу
+        IF COALESCE (vbisMain, FALSE) = FALSE AND COALESCE (vbPersonalId,0) <> 0
+        THEN
+            PERFORM lpUpdate_Object_isErased (inObjectId:= vbPersonalId, inUserId:= vbUserId); 
+            --RAISE EXCEPTION 'Admin - Test1 = OK';
+        END IF; 
+        
+        --Основное место работы
+        IF COALESCE (vbisMain, FALSE) = TRUE AND COALESCE (vbPersonalId,0) <> 0
+        THEN 
+            --Если еще не помечен на удаление тогда выдем сообщение
+            IF (SELECT Object.isErased FROM Object WHERE Object.Id = vbPersonalId AND Object.DescId = zc_Object_Personal()) = FALSE
+            THEN
+                RAISE EXCEPTION 'Внимание. Не найден предыдущий документ для сотрудника <%>, <%> нужно удалить сотрудника в справочнике.'
+                                 , (SELECT Object.ValueData FROM Object WHERE Object.Id = vbPersonalId AND Object.DescId = zc_Object_Personal())
+                                 , CHR (13);
+            ELSE
+                RETURN;
+            END IF;
+        END IF;
+        
     END IF; 
     
     --Если НАШЛИ предыдущий документ - перезаписываем элемент справочника
@@ -165,7 +189,7 @@ BEGIN
                             AND ObjectDate_DateIn.DescId = zc_ObjectDate_Personal_In()
     ;    
     
-  --  IF  vbUserId = 9457 THEN RAISE EXCEPTION 'Admin - Test = OK'; END IF;
+   IF  vbUserId = 9457 THEN RAISE EXCEPTION 'Admin - Test = OK'; END IF;
 
 END;
 $BODY$
