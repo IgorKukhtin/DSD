@@ -173,7 +173,16 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1046#1077#1083#1072#1077#1084#1072#1103' '#1076#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1082#1080' '#1090#1086#1074#1072#1088#1072
+            HeaderHint = #1046#1077#1083#1072#1077#1084#1072#1103' '#1076#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1082#1080' '#1090#1086#1074#1072#1088#1072' ('#1088#1072#1089#1095#1077#1090')'
+            Width = 80
+          end
+          object OperDatePartner_Effie_sale_orig: TcxGridDBColumn
+            Caption = '***'#1044#1072#1090#1072' '#1087#1086#1082'.(***Effie)'
+            DataBinding.FieldName = 'OperDatePartner_Effie_sale_orig'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1046#1077#1083#1072#1077#1084#1072#1103' '#1076#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1082#1080' '#1090#1086#1074#1072#1088#1072' ('#1092#1072#1082#1090')'
             Width = 80
           end
           object OperDatePartner_sale_calc: TcxGridDBColumn

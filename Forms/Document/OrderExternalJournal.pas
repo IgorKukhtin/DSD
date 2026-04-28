@@ -150,6 +150,7 @@ type
     isEffie: TcxGridDBColumn;
     OperDatePartner_Effie_sale: TcxGridDBColumn;
     OperDatePartner_sale_calc: TcxGridDBColumn;
+    OperDatePartner_Effie_sale_orig: TcxGridDBColumn;
   private
     { Private declarations }
   public
