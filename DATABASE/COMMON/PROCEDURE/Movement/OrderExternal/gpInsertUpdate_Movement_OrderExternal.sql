@@ -69,6 +69,17 @@ BEGIN
      -- расчет от zc_MovementDate_OperDatePartner
      outOperDatePartner_sale:= outOperDatePartner + (COALESCE ((SELECT ValueData FROM ObjectFloat WHERE ObjectId = inFromId AND DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL;
 
+
+     -- сохранили свойство <ƒата отгрузки контрагенту>
+     IF EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = ioId AND MB.DescId = zc_MovementBoolean_Effie() AND MB.ValueData = TRUE)
+        AND ioId > 0
+        AND NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = ioId AND Movement.OperDate = inOperDate)
+     THEN
+         -- PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner_Effie(), ioId, inOperDatePartner + (COALESCE ((SELECT ValueData FROM ObjectFloat WHERE ObjectId = inFromId AND DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL);
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner_Effie(), ioId, NULL);
+     END IF;
+
+
      -- 2. эти параметры всегда из ѕрайс-листа
      IF COALESCE (ioPriceListId, 0) = 0
         OR 1=1 -- !!!всегда расчет!!!

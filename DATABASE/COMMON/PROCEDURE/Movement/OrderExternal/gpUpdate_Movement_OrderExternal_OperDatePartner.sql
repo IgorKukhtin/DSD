@@ -35,7 +35,8 @@ BEGIN
      -- сохранили свойство <Дата отгрузки контрагенту>
      IF EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inId AND MB.DescId = zc_MovementBoolean_Effie() AND MB.ValueData = TRUE)
      THEN
-         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner_Effie(), inId, inOperDatePartner + (COALESCE ((SELECT ValueData FROM ObjectFloat WHERE ObjectId = inFromId AND DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL);
+         -- PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner_Effie(), inId, inOperDatePartner + (COALESCE ((SELECT ValueData FROM ObjectFloat WHERE ObjectId = inFromId AND DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL);
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner_Effie(), inId, NULL);
      END IF;
 
      -- сохранили свойство <Режим расчета>
