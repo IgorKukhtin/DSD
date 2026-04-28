@@ -22,7 +22,7 @@ object Report_OrderGoods_OlapForm: TReport_OrderGoods_OlapForm
     Left = 0
     Top = 0
     Width = 977
-    Height = 89
+    Height = 113
     Align = alTop
     TabOrder = 0
     object deStart: TcxDateEdit
@@ -193,19 +193,62 @@ object Report_OrderGoods_OlapForm: TReport_OrderGoods_OlapForm
         21)
       Width = 138
     end
+    object cxLabel10: TcxLabel
+      Left = 26
+      Top = 82
+      Caption = #1055#1086' '#1090#1086#1074#1072#1088#1091' '#1043#1055':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchGoodsNameParent: TcxTextEdit
+      Left = 128
+      Top = 83
+      TabOrder = 20
+      DesignSize = (
+        138
+        21)
+      Width = 138
+    end
+    object cxLabel11: TcxLabel
+      Left = 272
+      Top = 83
+      Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072' '#1043#1055':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchGoodsCodeParent: TcxTextEdit
+      Left = 381
+      Top = 83
+      TabOrder = 22
+      DesignSize = (
+        117
+        21)
+      Width = 117
+    end
   end
   object cxDBPivotGrid: TcxDBPivotGrid
     Left = 0
-    Top = 115
+    Top = 139
     Width = 977
-    Height = 302
+    Height = 278
     Align = alClient
     DataSource = MasterDS
     Groups = <>
     OptionsView.RowGrandTotalWidth = 456
     TabOrder = 1
-    ExplicitTop = 81
-    ExplicitHeight = 336
+    ExplicitLeft = 128
+    ExplicitTop = 123
+    ExplicitHeight = 254
     object pvServiceDate: TcxDBPivotGridField
       Area = faColumn
       AreaIndex = 0
@@ -276,6 +319,16 @@ object Report_OrderGoods_OlapForm: TReport_OrderGoods_OlapForm
       IsCaptionAssigned = True
       Caption = #1058#1086#1074#1072#1088
       DataBinding.FieldName = 'GoodsName'
+      Visible = True
+      Width = 150
+      UniqueName = #1057#1095#1077#1090'-'#1075#1088#1091#1087#1087#1072
+    end
+    object pvGoodsKindName: TcxDBPivotGridField
+      Area = faRow
+      AreaIndex = 3
+      IsCaptionAssigned = True
+      Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+      DataBinding.FieldName = 'GoodsKindName'
       Visible = True
       Width = 150
       UniqueName = #1057#1095#1077#1090'-'#1075#1088#1091#1087#1087#1072
@@ -718,6 +771,16 @@ object Report_OrderGoods_OlapForm: TReport_OrderGoods_OlapForm
         Options.Editing = False
         Width = 101
       end
+      object GoodsCode_parent: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1043#1055
+        DataBinding.FieldName = 'GoodsCode_parent'
+        Width = 70
+      end
+      object GoodsName_parent: TcxGridDBColumn
+        Caption = #1058#1086#1074#1072#1088' '#1043#1055
+        DataBinding.FieldName = 'GoodsName_parent'
+        Width = 70
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -1069,8 +1132,8 @@ object Report_OrderGoods_OlapForm: TReport_OrderGoods_OlapForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 88
-    Top = 304
+    Left = 128
+    Top = 288
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 544
@@ -1262,6 +1325,14 @@ object Report_OrderGoods_OlapForm: TReport_OrderGoods_OlapForm
       item
         Column = PartnerInName
         TextEdit = edSearchPartnerInName
+      end
+      item
+        Column = GoodsCode_parent
+        TextEdit = edSearchGoodsCodeParent
+      end
+      item
+        Column = GoodsName_parent
+        TextEdit = edSearchGoodsNameParent
       end>
     CheckBoxList = <>
     Left = 832
