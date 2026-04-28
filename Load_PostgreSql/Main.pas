@@ -429,6 +429,7 @@ type
     procedure pCompleteDocument_Diff;
     procedure pCompleteDocument_ReturnIn_Auto;
     procedure pCompleteDocument_Promo;
+    procedure pCompleteDocument_Promo_60;
     procedure pCompleteDocument_Currency;
     procedure pUpdateTransport_PartnerCount;
 
@@ -3911,7 +3912,7 @@ begin
      // ВСЕГДА - UnComplete Для StatusId_next
      if (not fStop)and(GroupId_branch <= 0) then pUnCompleteDocument_StatusId_next;
      // ВСЕГДА - Расчет акций
-     if (not fStop)and(GroupId_branch <= 0) then pCompleteDocument_Promo;
+     if (not fStop)and(GroupId_branch <= 0) then begin pCompleteDocument_Promo; pCompleteDocument_Promo_60; end;
      // ВСЕГДА - загрузка курсов
      if (not fStop)and(GroupId_branch <= 0) then pLoad_https_Currency_all;
      // ВСЕГДА - Расчет Курс разн.
@@ -5088,6 +5089,58 @@ begin
      end;
      //
      myLogMemo_add('end Расчет акций');
+     myDisabledCB(cbPromo);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pCompleteDocument_Promo_60;
+var i,SaveRecord:Integer;
+    MSec_complete:Integer;
+    isSale_str:String;
+begin
+     if (not cbPromo.Checked)or(not cbPromo.Enabled) then exit;
+     //
+     myEnabledCB(cbPromo);
+     //
+     // !!!заливка в сибасе!!!
+     fromZConnection.Connected:=false;
+     with fromZQuery,Sql do begin
+        fOpenFromZQuery ('select * from gpComplete_SelectAll_Sybase_Promo_Auto_60('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+')'
+                       +' order by OperDate,MovementId,InvNumber');
+        //
+        myLogMemo_add('start Расчет акций - 60 дней' + '('+IntToStr(RecordCount)+') ' + StartDateCompleteEdit.Text + ' - ' + EndDateCompleteEdit.Text);
+        cbPromo.Caption:='('+IntToStr(RecordCount)+') Расчет акций 60 дней';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc_two.StoredProcName:='gpInsertUpdate_MI_Promo_Param_60';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
+             if not myExecToStoredProc_two then ;//exit;
+             //
+             Next;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myLogMemo_add('end Расчет акций 60 дней');
      myDisabledCB(cbPromo);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------

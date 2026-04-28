@@ -3548,6 +3548,7 @@ object MainForm: TMainForm
       Host.Value = 'https://api-gateway.kyivstar.ua'
       Host.DataType = ftString
       Host.MultiSelectSeparator = ','
+      Environment.Value = ''
       Environment.DataType = ftString
       Environment.MultiSelectSeparator = ','
       ClientId.Value = '6dbb1a32-ee90-43b8-9cae-adf28d8351a6'
