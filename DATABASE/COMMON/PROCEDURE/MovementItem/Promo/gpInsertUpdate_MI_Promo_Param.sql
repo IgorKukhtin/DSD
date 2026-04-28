@@ -15,7 +15,7 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Promo_Data());
      
 
-     IF vbUserId = zc_Enum_Process_Auto_PrimeCost() AND 1=1
+     IF vbUserId = zc_Enum_Process_Auto_PrimeCost() AND 1=0
      THEN
          PERFORM lpUpdate_Movement_Promo_Auto (inMovementId:= inMovementId, inUserId:= vbUserId);
          RETURN;

@@ -10,8 +10,11 @@ CREATE OR REPLACE FUNCTION gpInsert_Movement_effie(
 RETURNS VOID
 AS
 $BODY$
-   DECLARE vbUserId     Integer;
-   DECLARE vbMovementId Integer;
+   DECLARE vbUserId       Integer;
+   DECLARE vbMovementId   Integer;
+   DECLARE vbPartnerId    Integer;
+   DECLARE vbInsertMobile TDateTime;
+   DECLARE vbDocDate      TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
@@ -141,6 +144,37 @@ BEGIN
         ;
 
 
+         -- Параметры
+         SELECT DISTINCT _tmpItem.clientExtId                       AS PartnerId
+                       , DATE_TRUNC ('DAY', _tmpItem.createDate_ch) AS InsertMobile
+                       , DATE_TRUNC ('DAY', _tmpItem.docDate)       AS docDate
+                         INTO vbPartnerId
+                            , vbInsertMobile
+                            , vbDocDate
+         FROM _tmpItem;
+         
+
+         -- Если Дата Пок должна быть позже Effie
+         IF vbInsertMobile + (COALESCE ((SELECT ValueData FROM ObjectFloat WHERE ObjectId = vbPartnerId AND DescId = zc_ObjectFloat_Partner_PrepareDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL
+                           + (COALESCE ((SELECT ValueData FROM ObjectFloat WHERE ObjectId = vbPartnerId AND DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL
+            > vbDocDate
+         THEN
+             -- меняем дату Effie
+             vbDocDate:= vbInsertMobile + (COALESCE ((SELECT ValueData FROM ObjectFloat WHERE ObjectId = vbPartnerId AND DescId = zc_ObjectFloat_Partner_PrepareDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL
+                                        + (COALESCE ((SELECT ValueData FROM ObjectFloat WHERE ObjectId = vbPartnerId AND DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL
+                                         ;
+         -- Если Дата Заявки должна быть позже Effie
+         ELSEIF vbInsertMobile + (COALESCE ((SELECT ValueData FROM ObjectFloat WHERE ObjectId = vbPartnerId AND DescId = zc_ObjectFloat_Partner_PrepareDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL
+                               + (COALESCE ((SELECT ValueData FROM ObjectFloat WHERE ObjectId = vbPartnerId AND DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL
+              < vbDocDate
+         THEN
+             -- меняем дату Заявки
+             vbInsertMobile:= vbDocDate - (COALESCE ((SELECT ValueData FROM ObjectFloat WHERE ObjectId = vbPartnerId AND DescId = zc_ObjectFloat_Partner_PrepareDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL
+                                        - (COALESCE ((SELECT ValueData FROM ObjectFloat WHERE ObjectId = vbPartnerId AND DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL
+                                         ;
+         END IF;
+
+
          -- Документ
          vbMovementId:= (WITH tmpParams AS (SELECT DISTINCT
                                                    _tmpItem.extId                   AS GUID          -- Идентификатор заказа
@@ -157,7 +191,7 @@ BEGIN
                                            )
                          SELECT gpInsertUpdateMobile_Movement_OrderExternal(inGUID                := tmpParams.GUID
                                                                           , inInvNumber           := CAST (NEXTVAL ('movement_orderexternal_seq') AS TVarChar)
-                                                                          , inOperDate            := DATE_TRUNC ('DAY', tmpParams.InsertMobile)
+                                                                          , inOperDate            := vbInsertMobile -- DATE_TRUNC ('DAY', tmpParams.InsertMobile)
                                                                           , inComment             := tmpParams.Comments
                                                                           , inPartnerId           := tmpParams.PartnerId
                                                                           , inUnitId              := tmpParams.UnitId
@@ -175,7 +209,8 @@ BEGIN
                        );
 
          -- сохранили свойство <Дата покуп.(Effie)>
-         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner_Effie(), vbMovementId, (SELECT DISTINCT DATE_TRUNC ('DAY', _tmpItem.docDate) FROM _tmpItem));
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner_Effie(), vbMovementId, vbDocDate);
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner_Effie_orig(), vbMovementId, (SELECT DISTINCT DATE_TRUNC ('DAY', _tmpItem.docDate) FROM _tmpItem));
 
 
          -- Строки Документа

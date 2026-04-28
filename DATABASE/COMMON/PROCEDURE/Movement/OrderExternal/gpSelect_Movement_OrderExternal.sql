@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderExternal(
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , OperDatePartner TDateTime, OperDatePartner_sale TDateTime, OperDatePartner_Effie_sale TDateTime, OperDatePartner_sale_calc TDateTime
+             , OperDatePartner TDateTime, OperDatePartner_sale TDateTime, OperDatePartner_Effie_sale TDateTime, OperDatePartner_Effie_sale_orig TDateTime, OperDatePartner_sale_calc TDateTime
              , OperDateMark TDateTime
              , InvNumberPartner TVarChar
              , FromId Integer, FromName TVarChar
@@ -121,7 +121,8 @@ BEGIN
            , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
            --, (Movement.OperDate + ((COALESCE (ObjectFloat_PrepareDayCount.ValueData, 0) + COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0)) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDatePartner_sale
            , COALESCE (MovementDate_OperDatePartner_Effie.ValueData, MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDatePartner_sale
-           , MovementDate_OperDatePartner_Effie.ValueData  AS OperDatePartner_Effie_sale
+           , MovementDate_OperDatePartner_Effie.ValueData       AS OperDatePartner_Effie_sale
+           , MovementDate_OperDatePartner_Effie_orig.ValueData  AS OperDatePartner_Effie_sale_orig
            , (MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS OperDatePartner_sale_calc
            , MovementDate_OperDateMark.ValueData            AS OperDateMark
 
@@ -219,6 +220,9 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner_Effie
                                    ON MovementDate_OperDatePartner_Effie.MovementId =  Movement.Id
                                   AND MovementDate_OperDatePartner_Effie.DescId = zc_MovementDate_OperDatePartner_Effie()
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner_Effie_orig
+                                   ON MovementDate_OperDatePartner_Effie_orig.MovementId =  Movement.Id
+                                  AND MovementDate_OperDatePartner_Effie_orig.DescId = zc_MovementDate_OperDatePartner_Effie_orig()
 
             LEFT JOIN MovementDate AS MovementDate_OperDateMark
                                    ON MovementDate_OperDateMark.MovementId =  Movement.Id
@@ -415,6 +419,10 @@ BEGIN
 
        WHERE COALESCE (Object_From.DescId, 0) <> zc_Object_Unit()
          AND (tmpUnit_basis.UnitId > 0  OR vbIsUserOrder_basis = FALSE)
+         AND (vbUserId <> 5
+           OR MovementDate_OperDatePartner_Effie.ValueData <  (MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime 
+           OR MovementDate_OperDatePartner_Effie_orig.ValueData <  (MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime 
+             )
        ;
 
 END;
