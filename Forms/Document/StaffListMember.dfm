@@ -1974,134 +1974,57 @@ inherited StaffListMemberForm: TStaffListMemberForm
     Top = 177
   end
   object GuidesPosition: TdsdGuides
-    KeyField = 'PositionId'
+    KeyField = 'Id'
     LookupControl = cePosition
-    FormNameParam.Value = 'TStaffListItemChoiceForm'
+    FormNameParam.Value = 'TPositionForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TStaffListItemChoiceForm'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TPositionForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
-        Name = 'UnitId'
-        Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitName'
-        Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionId'
+        Name = 'Key'
         Value = Null
         Component = GuidesPosition
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PositionName'
+        Name = 'TextValue'
         Value = Null
         Component = GuidesPosition
         ComponentItem = 'TextValue'
         DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionLevelId'
-        Value = Null
-        Component = GuidesPositionLevel
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionLevelName'
-        Value = Null
-        Component = GuidesPositionLevel
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'OperDate'
-        Value = Null
-        Component = edOperDate
-        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 135
     Top = 213
   end
   object GuidesPositionLevel: TdsdGuides
-    KeyField = 'PositionLevelId'
+    KeyField = 'Id'
     LookupControl = cePositionLevel
-    FormNameParam.Value = 'TStaffListItemChoiceForm'
+    FormNameParam.Value = 'TPositionLevelForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TStaffListItemChoiceForm'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TPositionLevelForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
-        Name = 'UnitId'
+        Name = 'Key'
         Value = ''
-        Component = GuidesUnit
+        Component = GuidesPositionLevel
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'UnitName'
+        Name = 'TextValue'
         Value = ''
-        Component = GuidesUnit
+        Component = GuidesPositionLevel
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionId'
-        Value = Null
-        Component = GuidesPosition
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionName'
-        Value = Null
-        Component = GuidesPosition
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionLevelId'
-        Value = Null
-        Component = GuidesPositionLevel
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PositionLevelName'
-        Value = Null
-        Component = GuidesPositionLevel
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'OperDate'
-        Value = Null
-        Component = edOperDate
-        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 223
@@ -2294,7 +2217,7 @@ inherited StaffListMemberForm: TStaffListMemberForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 199
+    Left = 103
     Top = 272
   end
   object GuidesSheetWorkTime: TdsdGuides
