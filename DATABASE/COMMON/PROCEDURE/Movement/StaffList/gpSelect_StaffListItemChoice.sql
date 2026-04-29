@@ -42,7 +42,7 @@ BEGIN
                     FROM (SELECT Movement.* 
                                , MovementLinkObject_Unit.ObjectId AS UnitId
                                , ObjectLink_Unit_Department.ChildObjectId AS DepartmentId
-                               , ROW_NUMBER() OVER (PARTITION BY MovementLinkObject_Unit.ObjectId, MovementLinkObject_Unit.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
+                               , ROW_NUMBER() OVER (PARTITION BY MovementLinkObject_Unit.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
                           FROM Movement
                                LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                             ON MovementLinkObject_Unit.MovementId = Movement.Id

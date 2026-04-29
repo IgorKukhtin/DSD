@@ -18,6 +18,9 @@ RETURNS TABLE (extId            TVarChar   -- Уникальный идентификатор договора
              , isDeleted        Boolean    -- Признак активности: false = активен / true = не активен
              , PaidKindId       Integer    -- Форма оплата - для внутреннего использования
              , PaidKindName     TVarChar   -- Форма оплата - для внутреннего использования
+             , JuridicalId      Integer
+             , JuridicalName    TVarChar
+             , EndDate_Term     TDateTime
               )
 AS
 $BODY$
@@ -80,6 +83,11 @@ BEGIN
           , Object_PaidKind.Id        AS PaidKindId
           , Object_PaidKind.ValueData AS PaidKindName
 
+          , Object_Juridical.Id        AS JuridicalId
+          , Object_Juridical.ValueData AS JuridicalName
+
+          , Object_Contract_View.EndDate_Term
+
      FROM Object_Contract_View
           LEFT JOIN ObjectDate AS ObjectDate_Signing
                                ON ObjectDate_Signing.ObjectId = Object_Contract_View.ContractId
@@ -87,7 +95,8 @@ BEGIN
 
           LEFT JOIN tmpDelayCreditLimit ON tmpDelayCreditLimit.ContractId = Object_Contract_View.ContractId
 
-          LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
+          LEFT JOIN Object AS Object_PaidKind  ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
+          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Object_Contract_View.JuridicalId
 
      WHERE Object_Contract_View.isErased = FALSE 
        -- !!!ТОЛЬКО ГП!!!
