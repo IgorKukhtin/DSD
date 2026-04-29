@@ -1,4 +1,4 @@
--- Function: gpSelect_Object_TT_effie
+ -- Function: gpSelect_Object_TT_effie
 
 DROP FUNCTION IF EXISTS gpSelect_Object_TT_effie ( TVarChar);
 
@@ -271,8 +271,8 @@ $BODY$
           , ''                                            ::TVarChar AS recTimeBeg
           , ''                                            ::TVarChar AS recTimeEnd
           , NULL                                          ::Integer  AS timeInTT
-          , '' /*COALESCE (Object_Retail.ValueData, 'нет')*/     ::TVarChar AS retailerName
-          , '' /*COALESCE (Object_Retail.Id ::TVarChar, zfCalc_UserAdmin() ::TVarChar)*/ ::TVarChar AS retailerExtId
+          , COALESCE (Object_Retail.ValueData, 'нет')     ::TVarChar AS retailerName
+          , COALESCE (Object_Retail.Id ::TVarChar, zfCalc_UserAdmin() ::TVarChar) ::TVarChar AS retailerExtId
           , ''                                            ::TVarChar AS territorialFeatureExtId
           , Object_Region.Id                              ::TVarChar AS salePointDistrictExtId
           , Object_Region.ValueData                       ::TVarChar AS salePointDistrictName
@@ -303,6 +303,12 @@ $BODY$
                               AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
           LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = Object_TT_effie.PartnerId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                               ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
+                              AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
+          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+
 
           LEFT JOIN Object AS Object_Area ON Object_Area.Id = Object_TT_effie.AreaId
 

@@ -106,6 +106,56 @@ BEGIN
      THEN
           RAISE EXCEPTION 'Ошибка.<Физ.лицо> должно быть заполнено.';
      END IF;
+     
+
+     -- проверка - такая должность + разряд должны быть в Штатном
+     IF inIsMain = TRUE
+     THEN
+         IF NOT EXISTS (WITH tmpMovement AS (SELECT *
+                                             FROM (SELECT Movement.* 
+                                                        , ROW_NUMBER() OVER (PARTITION BY MovementLinkObject_Unit.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
+                                                   FROM Movement
+                                                        INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                                                      ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                                                     AND MovementLinkObject_Unit.DescId     = zc_MovementLinkObject_Unit()
+                                                                                     AND MovementLinkObject_Unit.ObjectId   = inUnitId
+                                                   WHERE Movement.DescId = zc_Movement_StaffList()
+                                                     AND Movement.StatusId <> zc_Enum_Status_Erased() 
+                                                  ) AS tmp
+                                             WHERE tmp.Ord = 1
+                                            )
+                           , tmpMI AS (SELECT MovementItem.*
+                                       FROM MovementItem
+                                       WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                         AND MovementItem.DescId = zc_MI_Master()
+                                         AND MovementItem.isErased = FALSE
+                                         AND MovementItem.ObjectId = inPositionId
+                                       )  
+                          , tmpMILinkObject AS (SELECT MovementItemLinkObject.*
+                                                FROM MovementItemLinkObject
+                                                WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                                  AND MovementItemLinkObject.DescId IN (zc_MILinkObject_PositionLevel()
+                                                                                       )
+                                               )
+                        SELECT 1
+                        FROM tmpMI
+                             LEFT JOIN tmpMILinkObject AS MILinkObject_PositionLevel
+                                                       ON MILinkObject_PositionLevel.MovementItemId = tmpMI.Id
+                                                      AND MILinkObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel()
+                        WHERE COALESCE (MILinkObject_PositionLevel.ObjectId, 0) = COALESCE (inPositionLevelId, 0)
+                       )
+         THEN
+             RAISE EXCEPTION 'Ошибка.В штатном расписании не предусмотрено <%> для % % % % % % .'
+                           , lfGet_Object_ValueData_sh (inStaffListKindId)
+                           , CHR (13)
+                           , lfGet_Object_ValueData_sh (inUnitId)
+                           , CHR (13)
+                           , lfGet_Object_ValueData_sh (inPositionId)
+                           , CHR (13)
+                           , CASE WHEN inPositionLevelId > 0 THEN lfGet_Object_ValueData_sh (inPositionLevelId) ELSE '' END
+                            ;
+         END IF;
+     END IF;
 
 
      -- проверка есть ли уже такой документ
