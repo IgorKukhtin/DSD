@@ -4,7 +4,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Inte
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
@@ -25,6 +26,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
     IN inStorageId             Integer   , -- Место хранения 
     IN inPartionModelId        Integer   , -- Модель
     IN inPartionGoodsId        Integer   , -- Партии товаров (для партии расхода если с МО)
+    IN inSubjectDocId          Integer   , -- Основание для перемещения
     IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -56,6 +58,7 @@ BEGIN
                                           , inStorageId           := inStorageId
                                           , inPartionModelId      := inPartionModelId
                                           , inPartionGoodsId      := inPartionGoodsId
+                                          , inSubjectDocId        := inSubjectDocId
                                           , inUserId              := vbUserId
                                            ) AS tmp;
 
@@ -66,6 +69,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 27.04.26         *
  18.10.22         * asset_two
  02.08.17         * add inGoodsKindCompleteId
  29.05.15                                        *

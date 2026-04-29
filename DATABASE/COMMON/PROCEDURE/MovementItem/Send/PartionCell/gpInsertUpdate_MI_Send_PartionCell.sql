@@ -62,6 +62,7 @@ BEGIN
                                              , inStorageId           := COALESCE (MILinkObject_Storage.ObjectId,0)      ::Integer
                                              , inPartionModelId      := COALESCE (MILinkObject_PartionModel.ObjectId,0) ::Integer
                                              , inPartionGoodsId      := COALESCE (MILinkObject_PartionGoods.ObjectId,0) ::Integer
+                                             , inSubjectDocId        := COALESCE (MILinkObject_SubjectDoc.ObjectId,0)   ::Integer
                                              , inUserId              := vbUserId                         ::Integer
                                               ) 
      --FROM gpSelect_MovementItem_Send (inMovementId:= inMovementId, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= inSession) AS tmp  
@@ -86,6 +87,10 @@ BEGIN
           LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset_two
                                            ON MILinkObject_Asset_two.MovementItemId = MovementItem.Id
                                           AND MILinkObject_Asset_two.DescId = zc_MILinkObject_Asset_two()
+
+          LEFT JOIN MovementItemLinkObject AS MILinkObject_SubjectDoc
+                                           ON MILinkObject_SubjectDoc.MovementItemId = MovementItem.Id
+                                          AND MILinkObject_SubjectDoc.DescId = zc_MILinkObject_SubjectDoc()
 
           LEFT JOIN MovementItemFloat AS MIFloat_CountPack
                                       ON MIFloat_CountPack.MovementItemId = MovementItem.Id

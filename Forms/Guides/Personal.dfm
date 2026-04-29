@@ -2216,7 +2216,7 @@ object PersonalForm: TPersonalForm
     OutputType = otResult
     Params = <>
     PackSize = 1
-    Left = 691
-    Top = 230
+    Left = 771
+    Top = 254
   end
 end

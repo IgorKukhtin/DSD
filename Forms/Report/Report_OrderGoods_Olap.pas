@@ -86,6 +86,12 @@ type
     cxLabel9: TcxLabel;
     edSearchPartnerInName: TcxTextEdit;
     PartnerInName: TcxGridDBColumn;
+    cxLabel10: TcxLabel;
+    edSearchGoodsNameParent: TcxTextEdit;
+    cxLabel11: TcxLabel;
+    edSearchGoodsCodeParent: TcxTextEdit;
+    GoodsCode_parent: TcxGridDBColumn;
+    GoodsName_parent: TcxGridDBColumn;
   private
   public
   end;

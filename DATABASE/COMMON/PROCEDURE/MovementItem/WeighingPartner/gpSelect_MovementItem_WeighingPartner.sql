@@ -30,7 +30,7 @@ RETURNS TABLE (Id Integer, GoodsCode Integer, GoodsName TVarChar
              , ChangePercentAmount TFloat, AmountChangePercent TFloat, ChangePercent TFloat
              , Price TFloat, CountForPrice TFloat
              , PricePartner TFloat
-             , PartionGoodsDate TDateTime, PartionGoodsDate_q TDateTime, PartionGoods TVarChar
+             , PartionGoodsDate TDateTime, PartionGoods TVarChar
              , PartionNum TFloat
              , GoodsKindName TVarChar, MeasureName TVarChar
              , BoxName TVarChar
@@ -46,7 +46,8 @@ RETURNS TABLE (Id Integer, GoodsCode Integer, GoodsName TVarChar
              , isReturnOut Boolean
              , Comment TVarChar 
              , PriceRetOutDate TDateTime
-             , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
+             , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar 
+             , SubjectDocId Integer, SubjectDocName  TVarChar
              , isErased Boolean
               )
 AS
@@ -157,7 +158,6 @@ end if;*/
                   , COALESCE (MIFloat_PricePartner.ValueData, 0)          AS PricePartner
 
                   , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())  ::TDateTime AS PartionGoodsDate
-                  , COALESCE (MIDate_PartionGoods_q.ValueData, zc_DateStart())::TDateTime AS PartionGoodsDate_q
                   , COALESCE (MIString_PartionGoods.ValueData, '')           AS PartionGoods
                   
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -166,6 +166,7 @@ end if;*/
                   , CASE WHEN inShowAll = TRUE THEN COALESCE (MILinkObject_Reason.ObjectId, 0)    ELSE 0 END AS ReasonId
                   , CASE WHEN inShowAll = TRUE THEN COALESCE (MILinkObject_Asset.ObjectId, 0)     ELSE 0 END AS AssetId
                   , CASE WHEN inShowAll = TRUE THEN COALESCE (MILinkObject_Asset_two.ObjectId, 0) ELSE 0 END AS AssetId_two
+                  , CASE WHEN inShowAll = TRUE THEN COALESCE (MILinkObject_SubjectDoc.ObjectId, 0) ELSE 0 END AS SubjectDocId
            
                   , CASE WHEN inShowAll = TRUE THEN MIDate_Insert.ValueData ELSE zc_DateStart() END AS InsertDate
                   , CASE WHEN inShowAll = TRUE THEN MIDate_Update.ValueData ELSE zc_DateStart() END AS UpdateDate
@@ -187,7 +188,8 @@ end if;*/
                   , COALESCE (MIFloat_SummPartner.ValueData,0)                ::TFloat    AS SummPartner 
                   , COALESCE (MIString_Comment.ValueData, '')                 :: TVarChar AS Comment
                   
-                  , tmpMIFloat_PartionNum.ValueData                  ::TFloat    AS PartionNum
+                  , tmpMIFloat_PartionNum.ValueData                  ::TFloat    AS PartionNum 
+                  
              FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                   INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                          AND MovementItem.DescId     = zc_MI_Master()
@@ -207,7 +209,6 @@ end if;*/
                                                 ON MIBoolean_ReturnOut.MovementItemId = MovementItem.Id
                                                AND MIBoolean_ReturnOut.DescId = zc_MIBoolean_ReturnOut()
 
-
                   LEFT JOIN MovementItemDate AS MIDate_Insert
                                              ON MIDate_Insert.MovementItemId = MovementItem.Id
                                             AND MIDate_Insert.DescId = zc_MIDate_Insert()
@@ -217,9 +218,6 @@ end if;*/
                   LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                              ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                             AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
-                  LEFT JOIN MovementItemDate AS MIDate_PartionGoods_q
-                                             ON MIDate_PartionGoods_q.MovementItemId = MovementItem.Id
-                                            AND MIDate_PartionGoods_q.DescId = zc_MIDate_PartionGoods_q()
 
                   LEFT JOIN MovementItemDate AS MIDate_PriceRetOut
                                              ON MIDate_PriceRetOut.MovementItemId = MovementItem.Id
@@ -361,6 +359,10 @@ end if;*/
                                                    ON MILinkObject_Asset_two.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_Asset_two.DescId = zc_MILinkObject_Asset_two()
 
+                  LEFT JOIN MovementItemLinkObject AS MILinkObject_SubjectDoc
+                                                   ON MILinkObject_SubjectDoc.MovementItemId = MovementItem.Id
+                                                  AND MILinkObject_SubjectDoc.DescId = zc_MILinkObject_SubjectDoc()
+
                   -- № паспорта
                   LEFT JOIN MovementItemFloat AS tmpMIFloat_PartionNum
                                               ON tmpMIFloat_PartionNum.MovementItemId = MovementItem.Id
@@ -415,7 +417,6 @@ end if;*/
                   , COALESCE (MIFloat_PricePartner.ValueData, 0)        AS PricePartner
                   
                   , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())   ::TDateTime AS PartionGoodsDate
-                  , COALESCE (MIDate_PartionGoods_q.ValueData, zc_DateStart()) ::TDateTime AS PartionGoodsDate
                   , COALESCE (MIString_PartionGoods.ValueData, '')           AS PartionGoods
 
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -425,6 +426,7 @@ end if;*/
 
                   , CASE WHEN inShowAll = TRUE THEN COALESCE (MILinkObject_Asset.ObjectId, 0)     ELSE 0 END AS AssetId
                   , CASE WHEN inShowAll = TRUE THEN COALESCE (MILinkObject_Asset_two.ObjectId, 0) ELSE 0 END AS AssetId_two
+                  , CASE WHEN inShowAll = TRUE THEN COALESCE (MILinkObject_SubjectDoc.ObjectId, 0) ELSE 0 END AS SubjectDocId
 
                   , zc_DateStart()  AS InsertDate
                   , zc_DateStart()  AS UpdateDate
@@ -472,9 +474,6 @@ end if;*/
                   LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                              ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                             AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
-                  LEFT JOIN MovementItemDate AS MIDate_PartionGoods_q
-                                             ON MIDate_PartionGoods_q.MovementItemId = MovementItem.Id
-                                            AND MIDate_PartionGoods_q.DescId = zc_MIDate_PartionGoods_q()
 
                   LEFT JOIN MovementItemDate AS MIDate_PriceRetOut
                                              ON MIDate_PriceRetOut.MovementItemId = MovementItem.Id
@@ -556,6 +555,10 @@ end if;*/
                                                    ON MILinkObject_Asset_two.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_Asset_two.DescId = zc_MILinkObject_Asset_two()
 
+                  LEFT JOIN MovementItemLinkObject AS MILinkObject_SubjectDoc
+                                                   ON MILinkObject_SubjectDoc.MovementItemId = MovementItem.Id
+                                                  AND MILinkObject_SubjectDoc.DescId = zc_MILinkObject_SubjectDoc()
+
                   -- № паспорта
                   LEFT JOIN MovementItemFloat AS tmpMIFloat_PartionNum
                                               ON tmpMIFloat_PartionNum.MovementItemId = MovementItem.Id
@@ -618,7 +621,6 @@ end if;*/
            , CASE WHEN tmpMI.PricePartner = 0 THEN NULL ELSE tmpMI.PricePartner END   :: TFloat AS PricePartner
            
            , CASE WHEN tmpMI.PartionGoodsDate   = zc_DateStart() THEN NULL ELSE tmpMI.PartionGoodsDate   END :: TDateTime AS PartionGoodsDate
-           , CASE WHEN tmpMI.PartionGoodsDate_q = zc_DateStart() THEN NULL ELSE tmpMI.PartionGoodsDate_q END :: TDateTime AS PartionGoodsDate_q
            , tmpMI.PartionGoods :: TVarChar AS PartionGoods
            , tmpMI.PartionNum   ::TFloat    AS PartionNum
 
@@ -654,6 +656,9 @@ end if;*/
            , Object_InfoMoney_View.InfoMoneyDestinationName
            , Object_InfoMoney_View.InfoMoneyName
            , Object_InfoMoney_View.InfoMoneyName_all
+
+           , Object_SubjectDoc.Id            AS SubjectDocId
+           , Object_SubjectDoc.ValueData     AS SubjectDocName
 
            , tmpMI.isErased
 
@@ -705,7 +710,6 @@ end if;*/
                   , tmpMI.PricePartner
 
                   , tmpMI.PartionGoodsDate
-                  , tmpMI.PartionGoodsDate_q
                   , tmpMI.PartionGoods
                   , tmpMI.GoodsKindId
                   , tmpMI.BoxId
@@ -715,6 +719,7 @@ end if;*/
 
                   , tmpMI.AssetId
                   , tmpMI.AssetId_two
+                  , tmpMI.SubjectDocId
 
                   , tmpMI.InsertDate
                   , tmpMI.UpdateDate
@@ -743,7 +748,6 @@ end if;*/
                    , tmpMI.CountForPrice 
                    , tmpMI.PricePartner
                    , tmpMI.PartionGoodsDate
-                   , tmpMI.PartionGoodsDate_q
                    , tmpMI.PartionGoods
                    , tmpMI.GoodsKindId
                    , tmpMI.BoxId
@@ -767,6 +771,7 @@ end if;*/
                    , tmpMI.isPriceWithVAT
                    , tmpMI.PriceRetOutDate
                    , tmpMI.isReturnOut
+                   , tmpMI.SubjectDocId
                    --, tmpMI.Comment
             ) AS tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
@@ -776,6 +781,7 @@ end if;*/
             LEFT JOIN Object AS Object_Reason ON Object_Reason.Id = tmpMI.ReasonId 
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = tmpMI.AssetId
             LEFT JOIN Object AS Object_Asset_two ON Object_Asset_two.Id = tmpMI.AssetId_two
+            LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = tmpMI.SubjectDocId
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId

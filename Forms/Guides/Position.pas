@@ -21,7 +21,7 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  DataModul, dsdCommon;
+  DataModul, dsdCommon, cxContainer, cxTextEdit, cxLabel, Vcl.ExtCtrls;
 
 type
   TPositionForm = class(TParentForm)
@@ -61,6 +61,10 @@ type
     PositionPropertyName: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    Panel: TPanel;
+    cxLabel4: TcxLabel;
+    edName_search: TcxTextEdit;
+    FieldFilter: TdsdFieldFilter;
   private
     { Private declarations }
   public

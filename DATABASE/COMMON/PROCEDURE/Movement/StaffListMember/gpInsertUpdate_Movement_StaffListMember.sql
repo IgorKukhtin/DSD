@@ -459,7 +459,34 @@ BEGIN
          vbDateOut    := inOperDate;
          vbPersonalId := inPersonalId_old;                    -- если уволен обновляем сущ. сотрудника
          vbIsDateOut  := True;
+         
+         --при увольнении по основному месту - автоматом в справ сотрудников остальные записи подработки тоже ставить "уволен" + дата увольнения - только если там было пусто
+         --т.е. находим все подработки сотрудника и устаовливаем дату увольнения
+         PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Personal_Out(), tmp.PersonalId, vbDateOut)
+         FROM (SELECT Object_Personal.Id   AS PersonalId
+               FROM Object AS Object_Personal
+                    INNER JOIN ObjectLink AS ObjectLink_Personal_Member
+                                          ON ObjectLink_Personal_Member.ObjectId = Object_Personal.Id
+                                         AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+                                         AND ObjectLink_Personal_Member.ChildObjectId = inMemberId
+                   
+                    LEFT JOIN ObjectDate AS ObjectDate_DateOut
+                                         ON ObjectDate_DateOut.ObjectId = Object_Personal.Id
+                                        AND ObjectDate_DateOut.DescId = zc_ObjectDate_Personal_Out()          
+                    LEFT JOIN ObjectDate AS ObjectDate_DateIn
+                                         ON ObjectDate_DateIn.ObjectId = Object_Personal.Id
+                                        AND ObjectDate_DateIn.DescId = zc_ObjectDate_Personal_In()             
 
+                    LEFT JOIN ObjectBoolean AS ObjectBoolean_Main
+                                            ON ObjectBoolean_Main.ObjectId = Object_Personal.Id
+                                           AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Personal_Main()
+
+               WHERE Object_Personal.DescId = zc_Object_Personal()
+                 AND COALESCE (ObjectBoolean_Main.ValueData, FALSE) = FALSE
+                 AND COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd()
+                 AND COALESCE (ObjectDate_DateIn.ValueData, zc_DateStart()) <= vbDateOut --
+                 AND Object_Personal.isErased = FALSE
+               ) AS tmp;
      END IF;
      --
      IF inStaffListKindId = zc_Enum_StaffListKind_Send() --Перевод

@@ -19,13 +19,15 @@ object PositionLevelForm: TPositionLevelForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 59
     Width = 440
-    Height = 350
+    Height = 317
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitTop = 26
+    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -79,6 +81,37 @@ object PositionLevelForm: TPositionLevelForm
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel: TPanel
+    Left = 0
+    Top = 26
+    Width = 440
+    Height = 33
+    Align = alTop
+    TabOrder = 5
+    ExplicitLeft = -135
+    ExplicitWidth = 575
+    object cxLabel4: TcxLabel
+      Left = 3
+      Top = 6
+      Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edName_search: TcxTextEdit
+      Left = 115
+      Top = 6
+      TabOrder = 1
+      DesignSize = (
+        120
+        21)
+      Width = 120
     end
   end
   object DataSource: TDataSource
@@ -461,5 +494,17 @@ object PositionLevelForm: TPositionLevelForm
     PropertiesCellList = <>
     Left = 136
     Top = 224
+  end
+  object FieldFilter: TdsdFieldFilter
+    TextEdit = edName_search
+    DataSet = ClientDataSet
+    Column = Name
+    ColumnList = <
+      item
+        Column = Name
+      end>
+    CheckBoxList = <>
+    Left = 272
+    Top = 24
   end
 end

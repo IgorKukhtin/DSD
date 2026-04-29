@@ -5079,13 +5079,13 @@ begin
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionMember_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPositionMember_ObjectForm');
-
+   }
   // должности
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPositionForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPositionEditForm');
-   }
+
   // Разряд должности
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionLevelForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPositionLevelForm');
@@ -5323,12 +5323,12 @@ end;
  procedure TLoadFormTest.LoadWeighingPartnerFormTest;
  begin
 
-   
+   {
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerJournal_protocolForm'));
    TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerJournal_protocolForm');
    //exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartner_ActDiffForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingPartner_ActDiffForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartner_ActDiffEditForm'));
