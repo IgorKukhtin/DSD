@@ -83,7 +83,7 @@ BEGIN
    -- END IF;
 
    -- проверка  уникальности для свойств: <ФИО> + <Подразделение> + <Должность> + <Разряд должности>
-   IF EXISTS (SELECT 1 FROM Object_Personal_View WHERE PersonalName = vbName AND isMain = inIsMain AND UnitId = inUnitId AND PositionId = COALESCE (inPositionId, 0) AND PositionLevelId = COALESCE (inPositionLevelId, 0) AND StorageLineId = COALESCE (inStorageLineId, 0) AND PersonalId <> COALESCE(ioId, 0))
+   IF EXISTS (SELECT 1 FROM Object_Personal_View WHERE PersonalName = vbName AND isMain = inIsMain AND UnitId = inUnitId AND PositionId = COALESCE (inPositionId, 0) AND PositionLevelId = COALESCE (inPositionLevelId, 0) AND StorageLineId = COALESCE (inStorageLineId, 0) AND PersonalId <> COALESCE(ioId, 0) AND isErased = FALSE)
    THEN
       RAISE EXCEPTION 'Значение <%>%для подразделения: <%>%должность: <%>% % % Основное место работы = % %не уникально в справочнике <%>.'
                     , vbName
