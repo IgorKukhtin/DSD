@@ -132,7 +132,8 @@ BEGIN
         -- совместительство и найден сотрудник, то метим на удаление  -- т.е. отмена проведения приема на работу
         IF COALESCE (vbisMain, FALSE) = FALSE AND COALESCE (vbPersonalId,0) <> 0
         THEN
-            PERFORM lpUpdate_Object_isErased (inObjectId:= vbPersonalId, inUserId:= vbUserId); 
+            PERFORM lpUpdate_Object_isErased (inObjectId:= vbPersonalId, inUserId:= vbUserId);
+            RETURN; 
             --RAISE EXCEPTION 'Admin - Test1 = OK';
         END IF; 
         

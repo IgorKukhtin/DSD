@@ -1094,7 +1094,13 @@ BEGIN
                                    INNER JOIN MovementItem ON MovementItem.MovementId = tmp.MovementId_Promo
                                                           AND MovementItem.DescId = zc_MI_Master()
                                                           AND MovementItem.isErased = FALSE
-                             )
+                             ) 
+         , tmpMLO_PromoSchemaKind AS (SELECT MovementLinkObject.*
+                                         FROM MovementLinkObject
+                                         WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMIPromo_all.MovementId_Promo FROM tmpMIPromo_all)
+                                           AND MovementLinkObject.DescId = zc_MovementLinkObject_PromoSchemaKind()
+                                        )
+                                        
          , tmpMILinkObject_GoodsKind AS (SELECT MILinkObject_GoodsKind.*
                                          FROM MovementItemLinkObject AS MILinkObject_GoodsKind
                                          WHERE MILinkObject_GoodsKind.MovementItemId IN (SELECT DISTINCT tmpMIPromo_all.MovementItemId FROM tmpMIPromo_all)
@@ -1148,9 +1154,9 @@ BEGIN
                                                                     ON MIFloat_PriceWithOutVAT.MovementItemId = tmpMIPromo_all.MovementItemId
                                                                    AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
                                -- Промо-механика
-                               LEFT JOIN MovementLinkObject AS MLO_PromoSchemaKind
-                                                            ON MLO_PromoSchemaKind.MovementId = tmpMIPromo_all.MovementId_Promo
-                                                           AND MLO_PromoSchemaKind.DescId     = zc_MovementLinkObject_PromoSchemaKind()
+                               LEFT JOIN tmpMLO_PromoSchemaKind AS MLO_PromoSchemaKind
+                                                                ON MLO_PromoSchemaKind.MovementId = tmpMIPromo_all.MovementId_Promo
+                                                               AND MLO_PromoSchemaKind.DescId     = zc_MovementLinkObject_PromoSchemaKind()
                                -- Товар (факт отгрузка), если он есть - тогда Промо-механика
                                LEFT JOIN tmpMILinkObject_promo AS MILinkObject_Goods_out
                                                                ON MILinkObject_Goods_out.MovementItemId = tmpMIPromo_all.MovementItemId
