@@ -61,7 +61,9 @@ BEGIN
     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
     --
-    vbIsGP := EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin());
+    vbIsGP := EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+           OR vbUserId IN (81243) -- Урасова Т.В.
+             ;
 
     -- Результат
     RETURN QUERY
