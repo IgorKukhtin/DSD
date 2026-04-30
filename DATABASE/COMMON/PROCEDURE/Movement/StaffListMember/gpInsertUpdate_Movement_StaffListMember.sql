@@ -109,7 +109,7 @@ BEGIN
      
 
      -- проверка - такая должность + разряд должны быть в Штатном
-     IF inIsMain = TRUE
+     IF inIsMain = TRUE AND NOT EXISTS (SELECT 1 FROM gpSelect_Object_Unit_StaffList (inSession:= inSession) AS gpSelect WHERE gpSelect.Id = inUnitId)
      THEN
          IF NOT EXISTS (WITH tmpMovement AS (SELECT *
                                              FROM (SELECT Movement.* 
