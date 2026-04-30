@@ -511,9 +511,13 @@ BEGIN
                                    , OH_JuridicalDetails_From.FullName                                        AS JuridicalName_From
                                    , OH_JuridicalDetails_From.JuridicalAddress                                AS JuridicalAddress_From
                                    , OH_JuridicalDetails_From.Phone                                           AS Phone_From
+
+                                   , View_Contract.JuridicalId                                                AS JuridicalId_To
+                                   , OH_JuridicalDetails_To.FullName                                          AS JuridicalName_To
                                    , OH_JuridicalDetails_To.OKPO                                              AS OKPO_To
                                    , View_Contract.InvNumber        		                              AS ContractName
                                    , Object_To.ValueData                                                      AS PartnerName
+                                   , Object_To.Id                                                             AS PartnerId
                                    , MovementString_InvNumberOrder.ValueData                                  AS InvNumber_Order
                               FROM Movement
                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_From
@@ -576,7 +580,14 @@ BEGIN
            , Movement.JuridicalAddress_From
            , Movement.Phone_From
            , Movement.ContractName
-           , Movement.PartnerName
+
+           , Movement.JuridicalId_To
+           , Movement.JuridicalName_To
+           , CASE WHEN Movement.JuridicalId_To = 4481349  -- Гермес Торгове підприємство ТОВ
+                       -- AND vbUserId = 5
+                       THEN Movement.JuridicalName_To || ' ' || COALESCE (ObjectString_Address.ValueData, '')
+                  ELSE Movement.PartnerName
+             END :: TVarChar AS PartnerName
 
            , Object_GoodsGroup.ValueData                                              AS GoodsGroupName
            , Object_Measure.ValueData                                                 AS MeasureName
@@ -766,6 +777,9 @@ BEGIN
 
        FROM tmpMI
             INNER JOIN tmpMovement_Params AS Movement ON Movement.Id =  tmpMI.MovementId
+            LEFT JOIN ObjectString AS ObjectString_Address
+                                   ON ObjectString_Address.ObjectId = Movement.PartnerId
+                                  AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
 
             LEFT JOIN tmpNewQuality ON tmpNewQuality.GoodsId = tmpMI.ObjectId
 
@@ -1179,8 +1193,12 @@ BEGIN
                                    , OH_JuridicalDetails_From.FullName                                        AS JuridicalName_From
                                    , OH_JuridicalDetails_From.JuridicalAddress                                AS JuridicalAddress_From
                                    , OH_JuridicalDetails_From.Phone                                           AS Phone_From
+
+                                   , View_Contract.JuridicalId                                                AS JuridicalId_To
+                                   , OH_JuridicalDetails_To.FullName                                          AS JuridicalName_To
                                    , OH_JuridicalDetails_To.OKPO                                              AS OKPO_To
                                    , View_Contract.InvNumber        		                              AS ContractName
+                                   , Object_To.Id                                                             AS PartnerId
                                    , Object_To.ValueData                                                      AS PartnerName
                                    , MovementString_InvNumberOrder.ValueData                                  AS InvNumber_Order
                               FROM Movement
@@ -1234,7 +1252,14 @@ BEGIN
            , Movement.JuridicalAddress_From
            , Movement.Phone_From
            , Movement.ContractName
-           , Movement.PartnerName
+
+           , Movement.JuridicalId_To
+           , Movement.JuridicalName_To
+           , CASE WHEN Movement.JuridicalId_To = 4481349  -- Гермес Торгове підприємство ТОВ
+                       --AND vbUserId = 5
+                       THEN Movement.JuridicalName_To || ' ' || COALESCE (ObjectString_Address.ValueData, '')
+                  ELSE Movement.PartnerName
+             END :: TVarChar AS PartnerName
 
            , Object_GoodsGroup.ValueData AS GoodsGroupName
            , Object_Measure.ValueData    AS MeasureName
@@ -1391,6 +1416,9 @@ BEGIN
 
        FROM tmpMI
             INNER JOIN tmpMovement_Params AS Movement ON Movement.Id =  tmpMI.MovementId
+            LEFT JOIN ObjectString AS ObjectString_Address
+                                   ON ObjectString_Address.ObjectId = Movement.PartnerId
+                                  AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
 
             LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = tmpMI.ObjectId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
