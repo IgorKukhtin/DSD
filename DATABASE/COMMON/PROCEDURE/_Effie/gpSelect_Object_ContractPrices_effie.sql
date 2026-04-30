@@ -69,7 +69,7 @@ $BODY$
                                   INNER JOIN tmpContract ON tmpContract.ContractId = ObjectLink_Contract_Juridical.ObjectId
 
                               WHERE ObjectLink_Partner_PriceList.DescId = zc_ObjectLink_Partner_PriceList()
-                                -- сть прайс
+                                -- есть прайс
                                 AND ObjectLink_Partner_PriceList.ChildObjectId > 0
                               )
 
@@ -135,7 +135,8 @@ $BODY$
                       FROM tmpPartner
                            -- этим контрагентам уже определили прайс
                            LEFT JOIN (SELECT DISTINCT tmpPartner_PriceList.PartnerId FROM tmpPartner_PriceList
-                                UNION SELECT DISTINCT tmpContractPriceList.PartnerId FROM tmpContractPriceList
+                              -- эти не здесь
+                              --UNION SELECT DISTINCT tmpContractPriceList.PartnerId FROM tmpContractPriceList
                                       ) AS tmp
                                         ON tmp.PartnerId = tmpPartner.Id
                       -- исключили таких
@@ -161,7 +162,15 @@ $BODY$
                     -- все прайсы
                     LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id       = ObjectLink_Juridical_PriceList.ChildObjectId
                                                       --AND Object_PriceList.isErased = FALSE
-                )
+
+                    -- эти здесь
+                    LEFT JOIN (SELECT DISTINCT tmpContractPriceList.PartnerId, tmpContractPriceList.ContractId FROM tmpContractPriceList
+                              ) AS tmpContractPriceList
+                                ON tmpContractPriceList.PartnerId  = tmpPartner.PartnerId
+                               AND tmpContractPriceList.ContractId  = tmpContract.ContractId
+                -- Если по договору нет Контрагента, берем всех
+                WHERE tmpContractPriceList.ContractId IS NULL
+               )
 
           -- только такие договора
         , tmp_Contract AS (SELECT DISTINCT gpSelect.extId :: Integer AS ContractId, gpSelect.PaidKindId, gpSelect.PaidKindName FROM gpSelect_Object_ContractHeaders_effie (inSession) AS gpSelect)

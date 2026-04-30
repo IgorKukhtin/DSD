@@ -86,7 +86,10 @@ BEGIN
           , Object_Juridical.Id        AS JuridicalId
           , Object_Juridical.ValueData AS JuridicalName
 
-          , Object_Contract_View.EndDate_Term
+          , CASE WHEN Object_Contract_View.ContractTermKindId = zc_Enum_ContractTermKind_Long()
+                      THEN zc_DateEnd()
+                 ELSE Object_Contract_View.EndDate_Term
+            END :: TDateTime AS EndDate_Term
 
      FROM Object_Contract_View
           LEFT JOIN ObjectDate AS ObjectDate_Signing
