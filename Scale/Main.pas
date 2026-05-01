@@ -305,6 +305,11 @@ type
     bbDeleteAll: TSpeedButton;
     GoodsKindCode: TcxGridDBColumn;
     RealWeight_1001: TcxGridDBColumn;
+    infoSubjectDocMIPanel: TPanel;
+    SubjectDocMIPanel: TPanel;
+    SubjectDocMILabel: TLabel;
+    EditSubjectDocMI: TcxButtonEdit;
+    SubjectDocName: TcxGridDBColumn;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -356,6 +361,8 @@ type
     procedure bbPrint_MIPassportClick(Sender: TObject);
     procedure bbTotal_1001_delClick(Sender: TObject);
     procedure bbDeleteAllClick(Sender: TObject);
+    procedure EditSubjectDocMIPropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
   private
     //aTest: Boolean;
     Scale_AP: IAPScale;
@@ -380,6 +387,7 @@ type
     procedure myActiveControl;
     procedure pSetDriverReturn;
     procedure pSetSubjectDoc;
+    procedure pSetSubjectDocMI;
     procedure pSetRetail;
     procedure pSetComment;
     procedure pSetInvNumberPartner;
@@ -672,6 +680,8 @@ begin
           ParamsMovement.ParamByName('OperDatePartner').AsDateTime:=Date;//!!!теперь эта даты!!!
           // еще эти
           EmptyValuesParams(ParamsMI);
+          ParamsMI.ParamByName('SubjectDocId_mi').AsInteger:=0;
+          ParamsMI.ParamByName('SubjectDocName_mi').AsString:='';
           //
           gpInitialize_MovementDesc;
           //
@@ -1901,8 +1911,17 @@ begin
                ParamsMovement.ParamByName('SubjectDocCode').AsInteger:=execParams.ParamByName('SubjectDocCode').AsInteger;
                ParamsMovement.ParamByName('SubjectDocName').AsString:=execParams.ParamByName('SubjectDocName').AsString;
                //
-               EditSubjectDoc.Text:=execParams.ParamByName('SubjectDocName').AsString;
+               if execParams.ParamByName('SubjectDocId').AsInteger = 0 then
+               begin
+                   ParamsMovement.ParamByName('SubjectDocCode').AsInteger:=0;
+                   ParamsMovement.ParamByName('SubjectDocName').AsString:='';
+               end;
                //
+               EditSubjectDoc.Text:=ParamsMovement.ParamByName('SubjectDocName').AsString;
+               //
+               //if ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Send
+               //then
+               //  ParamsMovement.ParamByName('DocumentComment').AsString:= ''
                with DialogStringValueForm do
                begin
                     LabelStringValue.Caption:='Ввод примечания для <'+execParams.ParamByName('SubjectDocName').AsString+'>';
@@ -1913,8 +1932,42 @@ begin
                     //
                     EditSubjectDoc.Text:= EditSubjectDoc.Text + ' / ' + ParamsMovement.ParamByName('DocumentComment').AsString;
                end;
+               EditSubjectDoc.Hint:=EditSubjectDoc.Text;
                //
                DMMainScaleForm.gpInsertUpdate_Scale_Movement(ParamsMovement);
+     end;
+     //
+     execParams.Free;
+end;
+//---------------------------------------------------------------------------------------------
+procedure TMainForm.pSetSubjectDocMI;
+var execParams:TParams;
+begin
+     if ParamsMovement.ParamByName('isSubjectDocMI').AsBoolean = FALSE then exit;
+     //
+     Create_ParamsSubjectDoc(execParams);
+     //
+     with execParams do
+     begin
+          ParamByName('SubjectDocId').AsInteger:=ParamsMI.ParamByName('SubjectDocId_mi').AsInteger;
+          ParamByName('SubjectDocCode').AsInteger:=ParamsMI.ParamByName('SubjectDocCode_mi').AsInteger;
+          ParamByName('SubjectDocName').asString:=ParamsMI.ParamByName('SubjectDocName_mi').asString;
+     end;
+     if GuideSubjectDocForm.Execute(execParams)
+     then begin
+               ParamsMI.ParamByName('SubjectDocId_mi').AsInteger:=execParams.ParamByName('SubjectDocId').AsInteger;
+               ParamsMI.ParamByName('SubjectDocCode_mi').AsInteger:=execParams.ParamByName('SubjectDocCode').AsInteger;
+               ParamsMI.ParamByName('SubjectDocName_mi').AsString:=execParams.ParamByName('SubjectDocName').AsString;
+               //
+               if execParams.ParamByName('SubjectDocId').AsInteger = 0 then
+               begin
+                   ParamsMI.ParamByName('SubjectDocCode_mi').AsInteger:=0;
+                   ParamsMI.ParamByName('SubjectDocName_mi').AsString:='';
+               end;
+               //
+               EditSubjectDocMI.Text:=ParamsMI.ParamByName('SubjectDocName_mi').AsString;
+               EditSubjectDocMI.Hint:=EditSubjectDocMI.Text;
+               //
      end;
      //
      execParams.Free;
@@ -2059,6 +2112,12 @@ begin
      then}
      if (ParamsMovement.ParamByName('isComment').AsBoolean = false)
      then pSetSubjectDoc;
+end;
+//---------------------------------------------------------------------------------------------
+procedure TMainForm.EditSubjectDocMIPropertiesButtonClick(Sender: TObject;
+  AButtonIndex: Integer);
+begin
+     pSetSubjectDocMI;
 end;
 //---------------------------------------------------------------------------------------------
 procedure TMainForm.EditReasonPropertiesButtonClick(Sender: TObject;
@@ -2462,6 +2521,22 @@ procedure TMainForm.WriteParamsMovement;
 begin
   with ParamsMovement do begin
 
+    TransportPanel.Visible:=(GetArrayList_Value_byName (Default_Array,'isTransport') = AnsiUpperCase('TRUE'))
+                      and ((ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Sale)
+                        or (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_SendOnPrice)
+                        or (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnIn)
+                        or (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
+                        or (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnOut)
+                          )
+                         ;
+    infoSubjectDocMIPanel.Visible:= ParamsMovement.ParamByName('isSubjectDocMI').AsBoolean = TRUE;
+    cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('SubjectDocName').Index].Visible:=infoSubjectDocMIPanel.Visible;
+    infoSubjectDocMIPanel.Top:= infoSubjectDocPanel.Top + infoSubjectDocPanel.Height;
+
+    if (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
+    then SubjectDocLabel.Caption:= 'Основ.Док-Перемещ.'
+    else SubjectDocLabel.Caption:= 'Основание Возврат';
+
     if ParamByName('MovementId').AsInteger=0
     then PanelMovement.Caption:='Новый <Документ>.'
     else PanelMovement.Caption:='Документ № <'+ParamByName('InvNumber').AsString+'>  от <'+DateToStr(ParamByName('OperDate_Movement').AsDateTime)+'>';
@@ -2525,6 +2600,10 @@ begin
      if ParamByName('DocumentComment').asString <> ''
      then EditSubjectDoc.Text:=ParamByName('SubjectDocName').asString + ' / ' + ParamByName('DocumentComment').asString
      else EditSubjectDoc.Text:=ParamByName('SubjectDocName').asString;
+     EditSubjectDoc.Hint:=EditSubjectDoc.Text;
+     //
+     EditSubjectDocMI.Text:=ParamsMI.ParamByName('SubjectDocName_mi').asString;
+     EditSubjectDocMI.Hint:=EditSubjectDocMI.Text;
      //
   end;
   //

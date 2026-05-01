@@ -2,7 +2,7 @@ object MainForm: TMainForm
   Left = 0
   Top = 0
   Caption = #1069#1082#1089#1087#1077#1076#1080#1094#1080#1103
-  ClientHeight = 688
+  ClientHeight = 845
   ClientWidth = 1084
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -24,10 +24,11 @@ object MainForm: TMainForm
     Left = 130
     Top = 66
     Width = 954
-    Height = 622
+    Height = 779
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitHeight = 622
     object ButtonPanel: TPanel
       Left = 0
       Top = 0
@@ -941,12 +942,13 @@ object MainForm: TMainForm
     end
     object infoPanelTotalSumm: TPanel
       Left = 0
-      Top = 581
+      Top = 738
       Width = 954
       Height = 41
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitTop = 581
       object gbRealWeight: TGroupBox
         Left = 249
         Top = 0
@@ -1138,9 +1140,11 @@ object MainForm: TMainForm
       Left = 0
       Top = 33
       Width = 954
-      Height = 548
+      Height = 705
       Align = alClient
       TabOrder = 2
+      ExplicitLeft = 1
+      ExplicitTop = 34
       object cxDBGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DS
@@ -1430,6 +1434,15 @@ object MainForm: TMainForm
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
           Width = 40
+        end
+        object SubjectDocName: TcxGridDBColumn
+          Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1058#1086#1074'-'#1055#1077#1088#1077#1084'.'
+          DataBinding.FieldName = 'SubjectDocName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1090#1086#1074#1072#1088
+          Options.Editing = False
+          Width = 80
         end
         object isBarCode: TcxGridDBColumn
           Caption = #1057#1082#1072#1085
@@ -1945,7 +1958,7 @@ object MainForm: TMainForm
     Left = 0
     Top = 66
     Width = 130
-    Height = 622
+    Height = 779
     Align = alLeft
     BevelOuter = bvNone
     Font.Charset = RUSSIAN_CHARSET
@@ -1955,6 +1968,7 @@ object MainForm: TMainForm
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 1
+    ExplicitHeight = 622
     object BarCodePanel: TPanel
       Left = 0
       Top = 78
@@ -2266,13 +2280,14 @@ object MainForm: TMainForm
     end
     object TransportPanel: TPanel
       Left = 0
-      Top = 622
+      Top = 665
       Width = 130
       Height = 211
       Align = alTop
       Alignment = taLeftJustify
       BevelOuter = bvSpace
       TabOrder = 8
+      ExplicitTop = 622
       object BarCodeTransportPanel: TPanel
         Left = 1
         Top = 1
@@ -2563,8 +2578,9 @@ object MainForm: TMainForm
         end
         object EditSubjectDoc: TcxButtonEdit
           Left = 3
-          Top = 15
+          Top = 14
           ParentFont = False
+          ParentShowHint = False
           Properties.Buttons = <
             item
               Default = True
@@ -2572,6 +2588,7 @@ object MainForm: TMainForm
             end>
           Properties.ReadOnly = True
           Properties.OnButtonClick = EditSubjectDocPropertiesButtonClick
+          ShowHint = True
           Style.Font.Charset = RUSSIAN_CHARSET
           Style.Font.Color = clBlack
           Style.Font.Height = -11
@@ -2642,13 +2659,14 @@ object MainForm: TMainForm
     end
     object infoReReturnInPanel: TPanel
       Left = 0
-      Top = 579
+      Top = 622
       Width = 130
       Height = 43
       Align = alTop
       Alignment = taLeftJustify
       BevelOuter = bvSpace
       TabOrder = 12
+      ExplicitTop = 579
       object ReReturnInPanel: TPanel
         Left = 1
         Top = 1
@@ -2792,16 +2810,76 @@ object MainForm: TMainForm
         TabOrder = 1
       end
     end
+    object infoSubjectDocMIPanel: TPanel
+      Left = 0
+      Top = 579
+      Width = 130
+      Height = 43
+      Align = alTop
+      Alignment = taLeftJustify
+      BevelOuter = bvSpace
+      TabOrder = 15
+      ExplicitTop = 580
+      object SubjectDocMIPanel: TPanel
+        Left = 1
+        Top = 1
+        Width = 128
+        Height = 39
+        Align = alTop
+        Alignment = taLeftJustify
+        BevelOuter = bvNone
+        TabOrder = 0
+        object SubjectDocMILabel: TLabel
+          Left = 0
+          Top = 0
+          Width = 120
+          Height = 14
+          Align = alTop
+          Alignment = taCenter
+          Caption = #1054#1089#1085#1086#1074'.'#1058#1086#1074#1072#1088'-'#1055#1077#1088#1077#1084#1077#1097'.'
+          Font.Charset = RUSSIAN_CHARSET
+          Font.Color = clMaroon
+          Font.Height = -11
+          Font.Name = 'Arial'
+          Font.Style = []
+          ParentFont = False
+        end
+        object EditSubjectDocMI: TcxButtonEdit
+          Left = 3
+          Top = 16
+          ParentFont = False
+          ParentShowHint = False
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          Properties.OnButtonClick = EditSubjectDocMIPropertiesButtonClick
+          ShowHint = True
+          Style.Font.Charset = RUSSIAN_CHARSET
+          Style.Font.Color = clBlack
+          Style.Font.Height = -11
+          Style.Font.Name = 'Arial'
+          Style.Font.Style = [fsBold]
+          Style.IsFontAssigned = True
+          TabOrder = 0
+          Text = 'EditSubjectDocMI'
+          Width = 120
+        end
+      end
+    end
   end
   object PanelInfoItem: TPanel
     Left = 130
     Top = 66
     Width = 0
-    Height = 622
+    Height = 779
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 2
     Visible = False
+    ExplicitHeight = 622
     object PanelProduction_Goods: TPanel
       Left = 0
       Top = 15
@@ -3054,12 +3132,13 @@ object MainForm: TMainForm
     end
     object infoPanelTotalWeight: TPanel
       Left = 0
-      Top = 585
+      Top = 742
       Width = 0
       Height = 37
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 4
+      ExplicitTop = 585
       object GBTotalWeight: TGroupBox
         Left = 0
         Top = 0

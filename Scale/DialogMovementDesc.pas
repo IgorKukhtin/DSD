@@ -119,6 +119,7 @@ begin
            ParamsMovement.ParamByName('isArticleLoss').asBoolean           := CDS.FieldByName('isArticleLoss').asBoolean;
            ParamsMovement.ParamByName('isTransport_link').asBoolean        := CDS.FieldByName('isTransport_link').asBoolean;
            ParamsMovement.ParamByName('isSubjectDoc').asBoolean            := CDS.FieldByName('isSubjectDoc').asBoolean;
+           ParamsMovement.ParamByName('isSubjectDocMI').asBoolean          := CDS.FieldByName('isSubjectDocMI').asBoolean;
            ParamsMovement.ParamByName('isComment').asBoolean               := CDS.FieldByName('isComment').asBoolean;
            ParamsMovement.ParamByName('isInvNumberPartner').asBoolean      := CDS.FieldByName('isInvNumberPartner').asBoolean;
            ParamsMovement.ParamByName('isInvNumberPartner_check').asBoolean:= CDS.FieldByName('isInvNumberPartner_check').asBoolean;
@@ -433,6 +434,7 @@ begin
           ParamByName('isArticleLoss').asBoolean           := CDS.FieldByName('isArticleLoss').asBoolean;
           ParamByName('isTransport_link').asBoolean        := CDS.FieldByName('isTransport_link').asBoolean;
           ParamByName('isSubjectDoc').asBoolean            := CDS.FieldByName('isSubjectDoc').asBoolean;
+          ParamByName('isSubjectDocMI').asBoolean          := CDS.FieldByName('isSubjectDocMI').asBoolean;
           ParamByName('isComment').asBoolean               := CDS.FieldByName('isComment').asBoolean;
           ParamByName('isInvNumberPartner').asBoolean      := CDS.FieldByName('isInvNumberPartner').asBoolean;
           ParamByName('isInvNumberPartner_check').asBoolean:= CDS.FieldByName('isInvNumberPartner_check').asBoolean;

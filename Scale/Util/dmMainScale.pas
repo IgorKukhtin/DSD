@@ -1020,6 +1020,7 @@ begin
        Params.AddParam('inTareId_10', ftInteger, ptInput, SettingMain.TareId_10);
 
        Params.AddParam('inPartionCellId', ftInteger, ptInput, execParamsMI.ParamByName('PartionCellId').AsInteger);
+       Params.AddParam('inSubjectDocId', ftInteger, ptInput, execParamsMI.ParamByName('SubjectDocId_mi').AsInteger);
 
        // Партия-Пересорт
        Params.AddParam('inGoodsId_out', ftInteger, ptInput, execParamsMI.ParamByName('GoodsId_out').AsInteger);
@@ -2432,6 +2433,7 @@ begin
                         execParamsMovement.ParamByName('isPartionDate_save').asBoolean:= CDS.FieldByName('isPartionDate_save').asBoolean;
                         execParamsMovement.ParamByName('isTransport_link').asBoolean:= CDS.FieldByName('isTransport_link').asBoolean;
                         execParamsMovement.ParamByName('isSubjectDoc').asBoolean:= CDS.FieldByName('isSubjectDoc').asBoolean;
+                        execParamsMovement.ParamByName('isSubjectDocMI').asBoolean := CDS.FieldByName('isSubjectDocMI').asBoolean;
                         execParamsMovement.ParamByName('isComment').asBoolean:= CDS.FieldByName('isComment').asBoolean;
                         execParamsMovement.ParamByName('isInvNumberPartner').asBoolean:= CDS.FieldByName('isInvNumberPartner').asBoolean;
                         execParamsMovement.ParamByName('isInvNumberPartner_check').asBoolean:= CDS.FieldByName('isInvNumberPartner_check').asBoolean;
@@ -2483,6 +2485,7 @@ begin
                         ParamsMovement.ParamByName('isPartionDate_save').asBoolean:= CDS.FieldByName('isPartionDate_save').asBoolean;
                         ParamsMovement.ParamByName('isTransport_link').asBoolean:= CDS.FieldByName('isTransport_link').asBoolean;
                         ParamsMovement.ParamByName('isSubjectDoc').asBoolean:= CDS.FieldByName('isSubjectDoc').asBoolean;
+                        ParamsMovement.ParamByName('isSubjectDocMI').asBoolean := CDS.FieldByName('isSubjectDocMI').asBoolean;
                         ParamsMovement.ParamByName('isComment').asBoolean:= CDS.FieldByName('isComment').asBoolean;
                         ParamsMovement.ParamByName('isInvNumberPartner').asBoolean:= CDS.FieldByName('isInvNumberPartner').asBoolean;
                         ParamsMovement.ParamByName('isInvNumberPartner_check').asBoolean:= CDS.FieldByName('isInvNumberPartner_check').asBoolean;

@@ -390,6 +390,7 @@ begin
      ParamAdd(Params,'isOldPeriod',ftBoolean);
 
      ParamAdd(Params,'isSubjectDoc',ftBoolean);
+     ParamAdd(Params,'isSubjectDocMI',ftBoolean);
      ParamAdd(Params,'isComment',ftBoolean);
      ParamAdd(Params,'isInvNumberPartner',ftBoolean);
      ParamAdd(Params,'isInvNumberPartner_check',ftBoolean);
@@ -649,6 +650,10 @@ begin
          ParamAdd(Params,'StorageLineId',ftInteger);     // Линия пр-ва
          ParamAdd(Params,'StorageLineCode',ftInteger);   // Линия пр-ва
          ParamAdd(Params,'StorageLineName',ftString);    // Линия пр-ва
+
+         ParamAdd(Params,'SubjectDocId_mi',ftInteger);
+         ParamAdd(Params,'SubjectDocCode_mi',ftInteger);
+         ParamAdd(Params,'SubjectDocName_mi',ftString);
 
          ParamAdd(Params,'RealWeight_Get',ftFloat);      //
          ParamAdd(Params,'RealWeight',ftFloat);          // Реальный вес (без учета: минус тара и % скидки для кол-ва)
@@ -1235,6 +1240,12 @@ begin
           or(Items[i].Name = 'GoodsCode_1001')
           or(Items[i].Name = 'GoodsKindCode_1001')
 
+          or(((Items[i].Name = 'SubjectDocId_mi')
+            or(Items[i].Name = 'SubjectDocCode_mi')
+            or(Items[i].Name = 'SubjectDocName_mi')
+             )
+         and (ParamsMovement.ParamByName('isSubjectDocMI').AsBoolean = TRUE)
+            )
          then
          else
 
