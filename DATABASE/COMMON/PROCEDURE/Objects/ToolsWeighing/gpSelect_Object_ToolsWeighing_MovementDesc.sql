@@ -35,6 +35,7 @@ RETURNS TABLE (Number              Integer
              , isArticleLoss             Boolean -- ScaleCeh - проверка на установку <Статья списания>
              , isTransport_link          Boolean -- Scale - проверка <Штрих код Путевой лист>
              , isSubjectDoc              Boolean -- Scale + ScaleCeh - будет проверка на ввод <Основание Возврат>
+             , isSubjectDocMI            Boolean -- Scale + ScaleCeh - будет проверка на ввод <Основание Возврат>
              , isComment                 Boolean -- Scale + ScaleCeh - будет диалог для
              , isInvNumberPartner        Boolean -- 
              , isInvNumberPartner_check  Boolean -- 
@@ -111,6 +112,7 @@ BEGIN
                                        , isArticleLoss            Boolean
                                        , isTransport_link         Boolean
                                        , isSubjectDoc             Boolean
+                                       , isSubjectDocMI           Boolean
                                        , isComment                Boolean
                                        , isInvNumberPartner       Boolean
                                        , isInvNumberPartner_check Boolean
@@ -140,7 +142,7 @@ BEGIN
     -- формирование
     INSERT INTO _tmpToolsWeighing (Number, MovementDescId, MovementDescId_next, FromId, ToId, FromId_next, ToId_next
                                  , PaidKindId, InfoMoneyId, GoodsId_ReWork, DocumentKindId, GoodsKindWeighingGroupId, ColorGridValue, OrderById, isSendOnPriceIn
-                                 , isPartionGoodsDate, isPartionDate_save, isStorageLine, isArticleLoss, isTransport_link, isSubjectDoc, isComment, isInvNumberPartner, isInvNumberPartner_check, isDocPartner, isPersonalGroup, isOrderInternal
+                                 , isPartionGoodsDate, isPartionDate_save, isStorageLine, isArticleLoss, isTransport_link, isSubjectDoc, isSubjectDocMI, isComment, isInvNumberPartner, isInvNumberPartner_check, isDocPartner, isPersonalGroup, isOrderInternal
                                  , isSticker_Ceh, isSticker_KVK, isLockStartWeighing, isKVK, isListInventory, isAsset
                                  , isPartionCell, isPartionPassport, isReReturnIn, isCloseInventory, isCalc_Sh, isRePack, isPeresort, isEtiketka
                                  , isOperCountPartner, isOperPricePartner, isReturnOut_Date, isCalc_PriceVat
@@ -201,6 +203,7 @@ BEGIN
             , CASE WHEN tmp.isArticleLoss             ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isArticleLoss
             , CASE WHEN tmp.isTransport_link          ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isTransport_link
             , CASE WHEN tmp.isSubjectDoc              ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isSubjectDoc
+            , CASE WHEN tmp.isSubjectDocMI            ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isSubjectDocMI
             , CASE WHEN tmp.isComment                 ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isComment
             , CASE WHEN tmp.isInvNumberPartner        ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isInvNumberPartner
             , CASE WHEN tmp.isInvNumberPartner_check  ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isInvNumberPartner_check
@@ -259,6 +262,7 @@ BEGIN
                         , CASE WHEN inIsCeh = TRUE AND vbIsSticker = FALSE THEN gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END              || tmp.Number, 'isStorageLine',      'FALSE',                                                     inSession) ELSE ''      END AS isStorageLine
                         , CASE WHEN inIsCeh = TRUE  OR vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isTransport_link',   'FALSE',                                                     inSession)              END AS isTransport_link
                         , CASE WHEN                    vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isSubjectDoc',       'FALSE',                                                     inSession)              END AS isSubjectDoc
+                        , CASE WHEN inIsCeh = TRUE  OR vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isSubjectDocMI',     'FALSE',                                                     inSession)              END AS isSubjectDocMI
                         , CASE WHEN                    vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isComment',          'FALSE',                                                     inSession)              END AS isComment
 
                         , CASE WHEN inIsCeh = TRUE  OR vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isInvNumberPartner',       'FALSE',                                               inSession)              END AS isInvNumberPartner
@@ -568,6 +572,7 @@ BEGIN
            , _tmpToolsWeighing.isArticleLoss
            , _tmpToolsWeighing.isTransport_link
            , _tmpToolsWeighing.isSubjectDoc
+           , _tmpToolsWeighing.isSubjectDocMI
            , _tmpToolsWeighing.isComment
            , _tmpToolsWeighing.isInvNumberPartner
            , _tmpToolsWeighing.isInvNumberPartner_check
@@ -712,6 +717,7 @@ BEGIN
             , FALSE AS isArticleLoss
             , FALSE AS isTransport_link
             , FALSE AS isSubjectDoc
+            , FALSE AS isSubjectDocMI
             , FALSE AS isComment
             , FALSE AS isInvNumberPartner
             , FALSE AS isInvNumberPartner_check

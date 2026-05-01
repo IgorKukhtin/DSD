@@ -34,7 +34,9 @@ RETURNS TABLE (MovementItemId Integer, GoodsCode Integer, GoodsName TVarChar, Me
              , GoodsKindCode Integer, GoodsKindName TVarChar
              , BoxId Integer, BoxName TVarChar
              , PriceListName  TVarChar
-             , ReasonName  TVarChar, AssetId  Integer, AssetName  TVarChar
+             , ReasonName  TVarChar
+             , SubjectDocId Integer, SubjectDocName TVarChar
+             , AssetId  Integer, AssetName  TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
              , isBarCode   Boolean
                --
@@ -135,6 +137,7 @@ BEGIN
                            , COALESCE (MILinkObject_Box.ObjectId, 0)       AS BoxId
                            , COALESCE (MILinkObject_PriceList.ObjectId, 0) AS PriceListId
                            , COALESCE (MILinkObject_Reason.ObjectId, 0)    AS ReasonId
+                           , COALESCE (MILinkObject_SubjectDoc.ObjectId, 0)AS SubjectDocId
                            , COALESCE (MILinkObject_Asset.ObjectId, 0)     AS AssetId
 
                            , MIDate_Insert.ValueData AS InsertDate
@@ -309,6 +312,9 @@ BEGIN
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Reason
                                                             ON MILinkObject_Reason.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_Reason.DescId         = zc_MILinkObject_Reason()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_SubjectDoc
+                                                            ON MILinkObject_SubjectDoc.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_SubjectDoc.DescId         = zc_MILinkObject_SubjectDoc()
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                                             ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_Asset.DescId         = zc_MILinkObject_Asset()
@@ -595,6 +601,10 @@ BEGIN
            , Object_Box.ValueData            AS BoxName
            , Object_PriceList.ValueData      AS PriceListName
            , (Object_Reason.ValueData || ' (' || Object_ReturnKind.ValueData || ')') :: TVarChar AS ReasonName
+
+           , Object_SubjectDoc.Id        AS SubjectDocId
+           , Object_SubjectDoc.ValueData AS SubjectDocName
+
            , Object_Asset.Id                 AS  AssetId
            , (CASE WHEN -- Партия-Пересорт
                         tmpMI.GoodsId_out > 0 AND Object_Asset.ValueData IS NULL
@@ -696,6 +706,8 @@ BEGIN
             LEFT JOIN Object AS Object_Box ON Object_Box.Id = tmpMI.BoxId
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = tmpMI.PriceListId
             LEFT JOIN Object AS Object_Reason ON Object_Reason.Id = tmpMI.ReasonId
+            LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = tmpMI.SubjectDocId
+
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = tmpMI.AssetId
 
             -- Партия-Пересорт

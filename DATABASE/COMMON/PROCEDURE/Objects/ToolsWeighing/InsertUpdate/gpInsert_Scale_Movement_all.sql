@@ -1369,6 +1369,7 @@ BEGIN
                                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
                                   , COALESCE (MILinkObject_Box.ObjectId, 0)             AS BoxId
                                   , COALESCE (MILinkObject_Asset.ObjectId, 0)           AS AssetId
+                                  , COALESCE (MILinkObject_SubjectDoc.ObjectId, 0)      AS SubjectDocId
 
                                   , MIDate_PartionGoods.ValueData                       AS PartionGoodsDate
                                   , COALESCE (MIString_PartionGoods.ValueData, '')      AS PartionGoods
@@ -1444,6 +1445,9 @@ BEGIN
                                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                                                     ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                                                    AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_SubjectDoc
+                                                                    ON MILinkObject_SubjectDoc.MovementItemId = MovementItem.Id
+                                                                   AND MILinkObject_SubjectDoc.DescId         = zc_MILinkObject_SubjectDoc()
 
                                    LEFT JOIN MovementItemFloat AS MIFloat_AmountChangePercent
                                                                ON MIFloat_AmountChangePercent.MovementItemId = MovementItem.Id
@@ -1642,6 +1646,7 @@ BEGIN
                                                            , inStorageId           := NULL
                                                            , inPartionModelId      := NULL
                                                            , inPartionGoodsId      := NULL
+                                                           , inSubjectDocId        := tmp.SubjectDocId
                                                            , inUserId              := vbUserId
                                                             )
 
@@ -1692,6 +1697,7 @@ BEGIN
                         , MAX (tmp.BoxId) AS BoxId
                           --
                         , tmp.AssetId
+                        , tmp.SubjectDocId
                         , tmp.PartionGoodsDate
                         , tmp.PartionGoods
                         , tmp.PartNumber
@@ -1726,6 +1732,7 @@ BEGIN
                               , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE THEN NULL ELSE COALESCE (MIString_PartNumber.ValueData, '')   END AS PartNumber
 
                               , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
+                              , COALESCE (MILinkObject_SubjectDoc.ObjectId, 0) AS SubjectDocId
 
                               , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsPeresort = TRUE
                                           THEN MovementItem.Amount -- Партия-Пересорт
@@ -1932,6 +1939,9 @@ BEGIN
                               LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                                                ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                                               AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_SubjectDoc
+                                                            ON MILinkObject_SubjectDoc.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_SubjectDoc.DescId         = zc_MILinkObject_SubjectDoc()
 
                               LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                                    ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
@@ -1987,6 +1997,7 @@ BEGIN
                               , tmpMI.PartNumber
 
                               , tmpMI.AssetId
+                              , tmpMI.SubjectDocId
 
                               , CASE WHEN vbMovementDescId = zc_Movement_ReturnIn() AND vbMovementId_find > 0
                                           THEN 0 -- не заполняется - берем из реального взвешивания
@@ -2039,6 +2050,7 @@ BEGIN
                           , tmp.GoodsKindId
                         --, tmp.BoxId
                           , tmp.AssetId
+                          , tmp.SubjectDocId
                           , tmp.PartionGoodsDate
                           , tmp.PartionGoods
                           , tmp.PartNumber

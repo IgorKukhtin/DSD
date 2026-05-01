@@ -16,9 +16,16 @@
                                          , TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar
                                          , Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean
                                          , TDateTime, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar, TVarChar);*/
-DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat
+/*DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat
                                          , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                          , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                         , Integer, Integer, TDateTime, TDateTime, TFloat, TFloat
+                                         , TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar
+                                         , Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean
+                                         , TDateTime, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar, TVarChar);*/
+DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat
+                                         , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                         , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                          , Integer, Integer, TDateTime, TDateTime, TFloat, TFloat
                                          , TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar
                                          , Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean
@@ -69,6 +76,7 @@ CREATE OR REPLACE FUNCTION gpInsert_Scale_MI(
     IN inTareId_10             Integer   , --
 
     IN inPartionCellId         Integer   , --
+    IN inSubjectDocId          Integer   , --
 
     -- Партия-Пересорт
     IN inGoodsId_out           Integer   , --
@@ -79,7 +87,7 @@ CREATE OR REPLACE FUNCTION gpInsert_Scale_MI(
     IN inAmount_out_calc       TFloat    , --
 
     IN inPrice                 TFloat    , -- Цена
-     IN inPrice_Return          TFloat    , -- Цена или !!!Цена по спецификации!!!
+    IN inPrice_Return          TFloat    , -- Цена или !!!Цена по спецификации!!!
     IN inCountForPrice         TFloat    , -- Цена за количество или !!!Количество у поставщика!!!
     IN inCountForPrice_Return  TFloat    , -- Цена за количество
     IN inDayPrior_PriceReturn  Integer,
@@ -1201,6 +1209,13 @@ BEGIN
                                                            , inBranchCode          := inBranchCode
                                                            , inSession             := inSession
                                                             );
+
+         -- дописали св-во 
+         IF inSubjectDocId > 0
+         THEN
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_SubjectDoc(), vbId, inSubjectDocId);
+         END IF;
+
 
          -- дописали св-во для SPEC
          IF vbMovementDescId IN (zc_Movement_Income())

@@ -118,6 +118,7 @@ $BODY$
 
   DECLARE vbGoodsId Integer;
   DECLARE vbGoodsKindId Integer;
+  DECLARE vbMeasureId Integer;
   DECLARE vbAmountPartner TFloat;
   DECLARE vbAmountOrder TFloat;
   DECLARE vbPersentReal TFloat;
@@ -132,7 +133,7 @@ BEGIN
      inUserId:= ABS (inUserId);
 
      -- проверка отклонения по кол-ву
-     vbPersent_check:= 25;
+     vbPersent_check:= 19.99;
 
 
 /*IF inUserId in (zfCalc_UserAdmin() :: Integer) -- , zc_Enum_Process_Auto_PrimeCost(), 9459)
@@ -197,11 +198,13 @@ END IF;*/
      THEN
          -- если есть хоть 1 товар у которого кол > на vbPersent_check% чем в заявка выдаем сообщение
          SELECT tmp.GoodsId
-           , tmp.GoodsKindId
-           , tmp.AmountPartner
-           , tmp.AmountOrder
-           , tmp.PersentReal
-             INTO vbGoodsId, vbGoodsKindId, vbAmountPartner, vbAmountOrder, vbPersentReal
+              , tmp.GoodsKindId
+              , tmp.MeasureId
+              , tmp.AmountPartner
+              , tmp.AmountOrder
+              , tmp.PersentReal
+              , tmp.PersentReal
+                INTO vbGoodsId, vbGoodsKindId, vbMeasureId, vbAmountPartner, vbAmountOrder, vbPersentReal
          FROM
            (WITH
             tmpMIOrder AS (SELECT MovementItem.ObjectId AS GoodsId
@@ -247,18 +250,26 @@ END IF;*/
 
               SELECT tmpMISale.GoodsId
                    , tmpMISale.GoodsKindId
+                   , COALESCE (ObjectLink_Goods_Measure.ChildObjectId, 0) AS MeasureId
                    , COALESCE (tmpMISale.AmountPartner,0) AS AmountPartner
                    , COALESCE (tmpMIOrder.Amount,0)       AS AmountOrder
                    , CASE WHEN tmpMIOrder.Amount > 0
                           THEN CAST ((COALESCE (tmpMISale.AmountPartner,0) - COALESCE (tmpMIOrder.Amount,0)) * 100 / COALESCE (tmpMIOrder.Amount,0) AS NUMERIC (16,1))
                           ELSE 100
-                          END AS PersentReal
+                     END AS PersentReal
               FROM tmpMISale
+                   LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                        ON ObjectLink_Goods_Measure.ObjectId      = tmpMISale.GoodsId
+                                       AND ObjectLink_Goods_Measure.DescId        = zc_ObjectLink_Goods_Measure()
                    LEFT JOIN tmpMIOrder ON tmpMIOrder.GoodsId     = tmpMISale.GoodsId
                                        AND tmpMIOrder.GoodsKindId = tmpMISale.GoodsKindId
-              WHERE COALESCE (tmpMISale.AmountPartner,0) - COALESCE (tmpMIOrder.Amount,0) > COALESCE (tmpMIOrder.Amount15, 0)
+              WHERE ((COALESCE (tmpMISale.AmountPartner,0) - COALESCE (tmpMIOrder.Amount,0) > COALESCE (tmpMIOrder.Amount15, 0) AND COALESCE (ObjectLink_Goods_Measure.ChildObjectId, 0) <> zc_Measure_Sh())
+                  OR (COALESCE (tmpMISale.AmountPartner,0) - COALESCE (tmpMIOrder.Amount,0) > 0 AND ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh())
+                    )
+               -- !!! замовлення в яких більше 0.1 кілограма.
+               AND (COALESCE (tmpMIOrder.Amount,0) = 0 OR tmpMIOrder.Amount >= 0.1)
                -- !!! замовлення в яких більше 2,7 кілограма.
-               AND (COALESCE (tmpMIOrder.Amount,0) = 0 OR tmpMIOrder.Amount > 2.7)
+               AND (COALESCE (tmpMIOrder.Amount,0) = 0 OR tmpMIOrder.Amount >= 2.7)
                --AND (COALESCE (tmpMIOrder.Amount,0) = 0 OR tmpMIOrder.Amount > 5)
                --AND inUserId <> 5
               LIMIT 1
@@ -272,7 +283,7 @@ END IF;*/
                              , CHR (13)
                              , lfGet_Object_ValueData_sh (vbGoodsKindId)
                              , CHR (13)
-                             , zfConvert_FloatToString (vbPersent_check)
+                             , zfConvert_FloatToString (CASE WHEN vbMeasureId = zc_Measure_Sh() THEN 0 ELSE vbPersent_check END)
                              , '%'
                              , CHR (13)
                              , zfConvert_FloatToString (vbAmountPartner)

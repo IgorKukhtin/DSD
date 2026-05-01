@@ -44,6 +44,7 @@ BEGIN
                            , zc_Movement_SheetWorkTimeClose()
                            , zc_Movement_PersonalGroupSummAdd()
                            , zc_Movement_StaffList(), zc_Movement_StaffListMember()
+                           , zc_Movement_OrderGoods()
                             )
      THEN
           RETURN; -- !!!выход!!!
