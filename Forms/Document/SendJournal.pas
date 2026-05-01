@@ -67,6 +67,9 @@ type
     macUpdate_TotalLines_list: TMultiAction;
     macUpdate_TotalLines: TMultiAction;
     bbUpdate_TotalLines: TdxBarButton;
+    actPrintSubjectDoc: TdsdPrintAction;
+    bbPrintSubjectDoc: TdxBarButton;
+    dxBarSeparator1: TdxBarSeparator;
   private
     { Private declarations }
   public

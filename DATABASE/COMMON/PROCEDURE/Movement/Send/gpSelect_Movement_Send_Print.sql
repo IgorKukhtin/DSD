@@ -164,6 +164,7 @@ BEGIN
                    , MILinkObject_Asset.ObjectId        AS AssetId
                    , MILinkObject_Asset_two.ObjectId    AS AssetId_two
                    , MILinkObject_PartionGoods.ObjectId AS PartionGoodsId
+                   , 0                                  AS SubjectDocId
                    , SUM (MovementItem.Amount)          AS Amount
                    , SUM (COALESCE (MIFloat_Count.ValueData, 0))     AS Count
                    , SUM (COALESCE (MIFloat_CountPack.ValueData, 0)) AS CountPack
@@ -226,6 +227,7 @@ BEGIN
                    , MILinkObject_Asset.ObjectId        AS AssetId
                    , MILinkObject_Asset_two.ObjectId    AS AssetId_two
                    , MILinkObject_PartionGoods.ObjectId AS PartionGoodsId
+                   , MILO_SubjectDoc.ObjectId           AS SubjectDocId
                    , MovementItem.Amount                AS Amount
                    , COALESCE (MIFloat_Count.ValueData, 0)     AS Count
                    , COALESCE (MIFloat_CountPack.ValueData, 0) AS CountPack
@@ -264,6 +266,10 @@ BEGIN
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionGoods
                                                     ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
+
+                   LEFT JOIN MovementItemLinkObject AS MILO_SubjectDoc
+                                                    ON MILO_SubjectDoc.MovementItemId = MovementItem.Id
+                                                   AND MILO_SubjectDoc.DescId = zc_MILinkObject_SubjectDoc()
 
               WHERE MovementItem.MovementId = CASE WHEN vbIsWeighing = TRUE THEN inMovementId_Weighing ELSE inMovementId END
                 AND MovementItem.DescId     = CASE WHEN vbIsProductionOut = TRUE AND vbIsWeighing = FALSE THEN zc_MI_Child() ELSE zc_MI_Master() END
@@ -311,7 +317,8 @@ BEGIN
            , Object_Storage_Partion.ValueData   AS StorageName_Partion
            , Object_Unit.ValueData              AS UnitName
 
-           , ObjectFloat_WmsCellNum.ValueData   AS WmsCellNum
+           , ObjectFloat_WmsCellNum.ValueData   AS WmsCellNum 
+           , Object_SubjectDoc.ValueData        AS SubjectDocName
 
        FROM tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
@@ -329,6 +336,7 @@ BEGIN
 
             LEFT JOIN Object AS Object_Asset     ON Object_Asset.Id     = tmpMI.AssetId
             LEFT JOIN Object AS Object_Asset_two ON Object_Asset_two.Id = tmpMI.AssetId_two
+            LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = tmpMI.SubjectDocId
             
             LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMI.PartionGoodsId
             LEFT JOIN ObjectFloat AS ObjectFloat_Price ON ObjectFloat_Price.ObjectId = Object_PartionGoods.Id                   -- цена

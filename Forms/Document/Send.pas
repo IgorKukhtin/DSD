@@ -262,6 +262,8 @@ type
     actUpdate_MI_Send_Movement: TdsdExecStoredProc;
     bbSendJournalChoice: TdxBarButton;
     actSubjectDocFormMaster: TOpenChoiceForm;
+    actPrintSubjectDoc: TdsdPrintAction;
+    bbPrintSubjectDoc: TdxBarButton;
   private
     { Private declarations }
   public

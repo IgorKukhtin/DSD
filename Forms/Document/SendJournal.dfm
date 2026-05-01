@@ -434,7 +434,58 @@ inherited SendJournalForm: TSendJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    object actPrintGroup: TdsdPrintAction [17]
+    object actPrintSubjectDoc: TdsdPrintAction [17]
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'Id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'Id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintNoGroup
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintNoGroup
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1054#1089#1085#1086#1074#1072#1085#1080#1077')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1054#1089#1085#1086#1074#1072#1085#1080#1077')'
+      ImageIndex = 23
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'SubjectDocName;GoodsCode;GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Send_SubjectDoc'
+      ReportNameParam.Value = 'PrintMovement_Send_SubjectDoc'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintGroup: TdsdPrintAction [18]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -484,7 +535,7 @@ inherited SendJournalForm: TSendJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint: TdsdPrintAction [18]
+    object actPrint: TdsdPrintAction [19]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -965,6 +1016,14 @@ inherited SendJournalForm: TSendJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintSubjectDoc'
+        end
+        item
+          Visible = True
+          ItemName = 'Separator'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrintSaleOrder'
         end
         item
@@ -990,6 +1049,16 @@ inherited SendJournalForm: TSendJournalForm
     object bbUpdate_TotalLines: TdxBarButton
       Action = macUpdate_TotalLines
       Category = 0
+    end
+    object bbPrintSubjectDoc: TdxBarButton
+      Action = actPrintSubjectDoc
+      Category = 0
+    end
+    object dxBarSeparator1: TdxBarSeparator
+      Caption = 'New Separator'
+      Category = 0
+      Hint = 'New Separator'
+      Visible = ivAlways
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

@@ -407,10 +407,10 @@ begin
   exit;
 
   LoadReportFromFile('Продажа и возврат контрагенты', ReportPath + '\Отчеты (товарные)\Продажа и возврат контрагенты.fr3');
-  }
+
   LoadReportFromFile('Продажа и возврат контрагенты (укр)', ReportPath + '\Отчеты (товарные)\Продажа и возврат контрагенты (укр).fr3');
   exit;
-  {
+
   LoadReportFromFile('Отчет движение по товару (для всех)', ReportPath + '\Отчеты (товарные)\Отчет движение по товару (для всех).fr3');
   LoadReportFromFile('Отчет движение по товару (склад ГП)', ReportPath + '\Отчеты (товарные)\Отчет движение по товару (склад ГП).fr3');
   exit;
@@ -560,21 +560,21 @@ begin
   LoadReportFromFile('Акт обвалки (4218) отчетAll', ReportPath + '\Отчеты (производство)\Акт обвалки (4218) отчетAll.fr3');
   LoadReportFromFile('Акт обвалки (4001) отчетAll', ReportPath + '\Отчеты (производство)\Акт обвалки (4001) отчетAll.fr3');
   LoadReportFromFile('Акт обвалки (4134) отчетAll', ReportPath + '\Отчеты (производство)\Акт обвалки (4134) отчетAll.fr3');
-  }
+
   LoadReportFromFile('Акт обвалки (4134) отчетAll_test', ReportPath + '\Отчеты (производство)\Акт обвалки (4134) отчетAll_test.fr3');
    exit;
-  { exit;
+   exit;
 
   LoadReportFromFile('Акт обвалки (4134) отчет(партии)', ReportPath + '\Отчеты (производство)\Акт обвалки (4134) отчет(партии).fr3');
   exit;
-  }
+
 
   LoadReportFromFile('Акт обвалки (its) отчет', ReportPath + '\Отчеты (производство)\Акт обвалки (its) отчет.fr3');
   LoadReportFromFile('Акт обвалки (4134) отчет', ReportPath + '\Отчеты (производство)\Акт обвалки (4134) отчет.fr3');
   LoadReportFromFile('Акт обвалки (4218) отчет', ReportPath + '\Отчеты (производство)\Акт обвалки (4218) отчет.fr3');
   LoadReportFromFile('Акт обвалки (4001) отчет', ReportPath + '\Отчеты (производство)\Акт обвалки (4001) отчет.fr3');
   exit;
-  {
+
   LoadReportFromFile('Акт обвалки (its)', ReportPath + '\Производство\Акт обвалки (its).fr3');
   LoadReportFromFile('Акт обвалки (4134)', ReportPath + '\Производство\Акт обвалки (4134).fr3');
 
@@ -783,20 +783,20 @@ begin
 
   LoadReportFromFile('PrintMovement_TTN_03012025', ReportPath + '\Товарный Учет\PrintMovement_TTN_03012025.fr3');
   LoadReportFromFile('PrintMovement_TTN_43233918_03012025', ReportPath + '\Товарный Учет\PrintMovement_TTN_43233918_03012025.fr3');
-  }
+
   LoadReportFromFile('PrintMovement_TTN_03012025_Fora', ReportPath + '\Товарный Учет\PrintMovement_TTN_03012025_Fora.fr3');
   exit;
-  {
+
   LoadReportFromFile('PrintMovement_TTN_071021', ReportPath + '\Товарный Учет\PrintMovement_TTN_071021.fr3');
 
   LoadReportFromFile('PrintMovement_TTN', ReportPath + '\Товарный Учет\PrintMovement_TTN.fr3');
   exit;
   LoadReportFromFile('PrintMovement_SalePackGross', ReportPath + '\Товарный Учет\PrintMovement_SalePackGross.fr3');
   exit;
-  }
+
   LoadReportFromFile('PrintMovement_SendPackGross', ReportPath + '\Товарный Учет\PrintMovement_SendPackGross.fr3');
   exit;
-  {
+
   LoadReportFromFile('PrintMovement_SalePack21', ReportPath + '\Товарный Учет\PrintMovement_SalePack21.fr3');
 
   LoadReportFromFile('PrintMovement_Sale32294926', ReportPath + '\Товарный Учет\PrintMovement_Sale32294926.fr3');
@@ -829,8 +829,10 @@ begin
   LoadReportFromFile('PrintMovement_ReturnOut', ReportPath + '\Товарный Учет\PrintMovement_ReturnOut.fr3');
 
   LoadReportFromFile('PrintMovement_Send', ReportPath + '\Товарный Учет\PrintMovement_Send.fr3');
+  }
+  LoadReportFromFile('PrintMovement_Send_SubjectDoc', ReportPath + '\Товарный Учет\PrintMovement_Send_SubjectDoc.fr3');
   exit;
-
+  {
   LoadReportFromFile('PrintMovement_Inventory', ReportPath + '\Товарный Учет\PrintMovement_Inventory.fr3');
 
   LoadReportFromFile('PrintMovement_Sale_Order', ReportPath + '\Товарный Учет\PrintMovement_Sale_Order.fr3');
