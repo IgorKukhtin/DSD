@@ -10,6 +10,7 @@ inherited SendForm: TSendForm
     Top = 118
     Width = 1186
     Height = 540
+    ExplicitLeft = -64
     ExplicitTop = 118
     ExplicitWidth = 1186
     ExplicitHeight = 540
@@ -2148,6 +2149,7 @@ inherited SendForm: TSendForm
     Width = 1186
     Height = 92
     TabOrder = 3
+    ExplicitTop = 8
     ExplicitWidth = 1186
     ExplicitHeight = 92
     inherited edInvNumber: TcxTextEdit
@@ -2322,13 +2324,23 @@ inherited SendForm: TSendForm
     end
     object cbisRePack: TcxCheckBox
       Left = 300
-      Top = 63
+      Top = 48
       Caption = #1055#1077#1088#1077#1087#1072#1082
       ParentShowHint = False
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 22
       Width = 67
+    end
+    object cbisKh: TcxCheckBox
+      Left = 300
+      Top = 69
+      Caption = #1050#1091#1093#1085#1103
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 23
+      Width = 61
     end
   end
   object cxLabel6: TcxLabel [2]
@@ -4611,6 +4623,19 @@ inherited SendForm: TSendForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1055#1077#1088#1077#1087#1072#1082' ('#1044#1072'/'#1053#1077#1090')'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1055#1077#1088#1077#1087#1072#1082' ('#1044#1072'/'#1053#1077#1090')'
     end
+    object actUpdate_isKh: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isKh
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isKh
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1050#1091#1093#1085#1103' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1050#1091#1093#1085#1103' ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 79
+    end
     object actSendJournalChoice: TOpenChoiceForm
       Category = 'NewMov'
       MoveParams = <>
@@ -4867,6 +4892,10 @@ inherited SendForm: TSendForm
         item
           Visible = True
           ItemName = 'bbUpdate_isRePack'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_isKh'
         end
         item
           Visible = True
@@ -5168,6 +5197,10 @@ inherited SendForm: TSendForm
       Action = actPrintSubjectDoc
       Category = 0
     end
+    object bbUpdate_isKh: TdxBarButton
+      Action = actUpdate_isKh
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
@@ -5462,6 +5495,13 @@ inherited SendForm: TSendForm
         Component = GuidesProductionDoc
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isKh'
+        Value = Null
+        Component = cbisKh
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -7235,7 +7275,7 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 730
+    Left = 666
     Top = 296
   end
   object spSelectPrint_Pack: TdsdStoredProc
@@ -7297,5 +7337,37 @@ inherited SendForm: TSendForm
     PackSize = 1
     Left = 266
     Top = 312
+  end
+  object spUpdate_isKh: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Send_isKh'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisKh'
+        Value = False
+        Component = cbisKh
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisKh'
+        Value = False
+        Component = cbisKh
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 602
+    Top = 288
   end
 end

@@ -1642,7 +1642,7 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 402
+    Left = 418
     Top = 412
   end
   object GuidesDepartment: TdsdGuides

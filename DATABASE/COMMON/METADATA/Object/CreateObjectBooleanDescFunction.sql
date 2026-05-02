@@ -388,7 +388,12 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_notStaffList() RETURNS Integer 
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_notStaffList', 'Исключить из ШР' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_notStaffList');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_notMemberGoods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_notMemberGoods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_notMemberGoods', 'Исключить из Отоварки' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_notMemberGoods');
 
+
+ 
 
 
 

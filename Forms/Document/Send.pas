@@ -264,6 +264,10 @@ type
     actSubjectDocFormMaster: TOpenChoiceForm;
     actPrintSubjectDoc: TdsdPrintAction;
     bbPrintSubjectDoc: TdxBarButton;
+    cbisKh: TcxCheckBox;
+    spUpdate_isKh: TdsdStoredProc;
+    actUpdate_isKh: TdsdExecStoredProc;
+    bbUpdate_isKh: TdxBarButton;
   private
     { Private declarations }
   public
