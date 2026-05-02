@@ -5085,7 +5085,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPositionForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPositionEditForm');
-
+  exit;
   // Разряд должности
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionLevelForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPositionLevelForm');

@@ -18,7 +18,8 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, Vcl.Menus, dsdAddOn, cxPropertiesStore,
   dsdDB, dsdAction, Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons,
-  cxLabel, cxTextEdit, dsdGuides, cxMaskEdit, cxButtonEdit, dsdCommon;
+  cxLabel, cxTextEdit, dsdGuides, cxMaskEdit, cxButtonEdit, dsdCommon,
+  cxCheckBox;
 
 type
   TPositionEditForm = class(TParentForm)
@@ -41,6 +42,7 @@ type
     cxLabel2: TcxLabel;
     cePositionProperty: TcxButtonEdit;
     GuidesPositionProperty: TdsdGuides;
+    cbnotMemberGoods: TcxCheckBox;
   private
     { Private declarations }
   public

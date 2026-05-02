@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1086#1083#1078#1085#1086#1089#1090#1100'>'
-  ClientHeight = 257
+  ClientHeight = 301
   ClientWidth = 347
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 71
-    Top = 217
+    Top = 265
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 215
-    Top = 217
+    Top = 265
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -94,6 +94,13 @@
     Properties.ReadOnly = True
     TabOrder = 9
     Width = 273
+  end
+  object cbnotMemberGoods: TcxCheckBox
+    Left = 32
+    Top = 215
+    Caption = #1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1054#1090#1086#1074#1072#1088#1082#1080' ('#1044#1072'/'#1053#1077#1090')'
+    TabOrder = 10
+    Width = 196
   end
   object ActionList: TActionList
     Left = 320
@@ -171,6 +178,14 @@
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisnotMemberGoods'
+        Value = Null
+        Component = cbnotMemberGoods
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 320
@@ -185,7 +200,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 31
-    Top = 201
+    Top = 249
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Position'
@@ -241,6 +256,13 @@
         Component = GuidesPositionProperty
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isnotMemberGoods'
+        Value = Null
+        Component = cbnotMemberGoods
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

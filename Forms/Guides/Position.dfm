@@ -3,7 +3,7 @@ object PositionForm: TPositionForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1044#1086#1083#1078#1085#1086#1089#1090#1080'>'
   ClientHeight = 379
-  ClientWidth = 575
+  ClientWidth = 606
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,16 +20,14 @@ object PositionForm: TPositionForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 59
-    Width = 575
+    Width = 606
     Height = 320
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitTop = 26
-    ExplicitWidth = 530
-    ExplicitHeight = 353
+    ExplicitWidth = 575
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -57,13 +55,13 @@ object PositionForm: TPositionForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 60
+        Width = 59
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 201
+        Width = 174
       end
       object SheetWorkTimeName: TcxGridDBColumn
         Caption = #1056#1077#1078#1080#1084' '#1088#1072#1073#1086#1090#1099' ('#1064#1072#1073#1083#1086#1085' '#1090#1072#1073#1077#1083#1103' '#1088'.'#1074#1088'.)'
@@ -72,7 +70,7 @@ object PositionForm: TPositionForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1056#1077#1078#1080#1084' '#1088#1072#1073#1086#1090#1099' ('#1064#1072#1073#1083#1086#1085' '#1090#1072#1073#1077#1083#1103' '#1088'.'#1074#1088'.)'
         Options.Editing = False
-        Width = 152
+        Width = 163
       end
       object PositionPropertyName: TcxGridDBColumn
         Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
@@ -80,7 +78,15 @@ object PositionForm: TPositionForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 101
+        Width = 100
+      end
+      object isnotMemberGoods: TcxGridDBColumn
+        Caption = #1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1054#1090#1086#1074#1072#1088#1082#1080
+        DataBinding.FieldName = 'isnotMemberGoods'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 94
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -99,11 +105,11 @@ object PositionForm: TPositionForm
   object Panel: TPanel
     Left = 0
     Top = 26
-    Width = 575
+    Width = 606
     Height = 33
     Align = alTop
     TabOrder = 5
-    ExplicitTop = 20
+    ExplicitWidth = 575
     object cxLabel4: TcxLabel
       Left = 3
       Top = 6
