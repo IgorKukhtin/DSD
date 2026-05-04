@@ -3,7 +3,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
   ClientHeight = 532
   ClientWidth = 1140
   ExplicitWidth = 1156
-  ExplicitHeight = 567
+  ExplicitHeight = 571
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -565,6 +565,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     Width = 1140
     Height = 140
     TabOrder = 3
+    ExplicitTop = 5
     ExplicitWidth = 1140
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
@@ -773,15 +774,15 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Width = 118
     end
     object cxLabel17: TcxLabel
-      Left = 383
+      Left = 594
       Top = 88
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 383
+      Left = 594
       Top = 106
       TabOrder = 29
-      Width = 584
+      Width = 455
     end
     object cxLabel18: TcxLabel
       Left = 859
@@ -799,6 +800,20 @@ inherited TransferDebtInForm: TTransferDebtInForm
       TabOrder = 31
       Text = ' '
       Width = 190
+    end
+    object cxLabel22: TcxLabel
+      Left = 382
+      Top = 88
+      Caption = #1053#1072#1095'. '#1076#1072#1090#1072' '#1087#1088#1086#1076#1072#1078
+    end
+    object edStartDateTax: TcxDateEdit
+      Left = 382
+      Top = 106
+      EditValue = 42181d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 33
+      Width = 98
     end
   end
   object cxLabel5: TcxLabel [2]
@@ -1238,20 +1253,20 @@ inherited TransferDebtInForm: TTransferDebtInForm
         end
         item
           Name = 'inmask'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = TaxCorrectiveCDS
           ComponentItem = 'OperDate_Child'
           DataType = ftDateTime
@@ -1287,7 +1302,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         end
         item
           Name = 'OperDate_Tax'
-          Value = 'NULL'
+          Value = Null
           Component = TaxCorrectiveCDS
           ComponentItem = 'OperDate_Child'
           DataType = ftDateTime
@@ -1758,14 +1773,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
         end
         item
           Name = 'inmask'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = TaxCorrectiveCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -2485,7 +2500,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       end
       item
         Name = 'inMask'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2525,7 +2540,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         MultiSelectSeparator = ','
       end>
     Left = 128
-    Top = 56
+    Top = 40
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_TransferDebtIn'
@@ -2549,7 +2564,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -2617,14 +2632,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
       end
       item
         Name = 'Checked'
-        Value = 'False'
+        Value = False
         Component = edIsChecked
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
         Name = 'PriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -2799,6 +2814,13 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = ceComment
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartDateTax'
+        Value = Null
+        Component = edStartDateTax
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -2848,7 +2870,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       end
       item
         Name = 'inChecked'
-        Value = 'False'
+        Value = False
         Component = edIsChecked
         DataType = ftBoolean
         ParamType = ptInput
@@ -2856,7 +2878,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       end
       item
         Name = 'inPriceWithVAT'
-        Value = 'False'
+        Value = False
         Component = edPriceWithVAT
         DataType = ftBoolean
         ParamType = ptInput
@@ -3237,8 +3259,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 400
-    Top = 64
+    Left = 272
+    Top = 56
   end
   object ContractFromGuides: TdsdGuides
     KeyField = 'Id'
@@ -3267,8 +3289,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 512
-    Top = 72
+    Left = 496
+    Top = 8
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ReturnIn_Print'
@@ -3658,7 +3680,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
       end
       item
         Name = 'inStartDateTax'
-        Value = 'NULL'
+        Value = Null
+        Component = edStartDateTax
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3728,7 +3751,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
       end
       item
         Name = 'inStartDateTax'
-        Value = 'NULL'
+        Value = Null
+        Component = edStartDateTax
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4106,6 +4130,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
@@ -4118,7 +4143,10 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = -1
       end>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
     SearchAsFilter = False
+    PropertiesCellList = <>
     Left = 302
     Top = 457
   end

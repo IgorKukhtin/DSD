@@ -33,6 +33,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDa
              , isDocPartner Boolean, isDocPartner_real Boolean
              , isReason1 Boolean
              , isReason2 Boolean
+             , isKh Boolean
 
              , PersonalId1 Integer, PersonalName1 TVarChar
              , PersonalId2 Integer, PersonalName2 TVarChar
@@ -154,6 +155,7 @@ BEGIN
              , MovementBoolean_DocPartner.ValueData                                                   AS isDocPartner_real
              , COALESCE (MovementBoolean_Reason1.ValueData, False) ::Boolean AS isReason1
              , COALESCE (MovementBoolean_Reason2.ValueData, False) ::Boolean AS isReason2
+             , COALESCE (MovementBoolean_isKh.ValueData, FALSE)    ::Boolean AS isKh
 
              , Object_Personal1.Id AS PersonalId1, Object_Personal1.ValueData AS PersonalName1
              , Object_Personal2.Id AS PersonalId2, Object_Personal2.ValueData AS PersonalName2
@@ -251,6 +253,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Reason2
                                       ON MovementBoolean_Reason2.MovementId = Movement.Id
                                      AND MovementBoolean_Reason2.DescId = zc_MovementBoolean_Reason2()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_isKh
+                                      ON MovementBoolean_isKh.MovementId = Movement.Id
+                                     AND MovementBoolean_isKh.DescId = zc_MovementBoolean_isKh()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -404,6 +410,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 04.05.26         *
  13.01.26         *
  17.11.24         * isDocPartner
  08.11.23         *

@@ -400,7 +400,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 45
-      Width = 129
+      Width = 127
     end
     object cbReason2: TcxCheckBox
       Left = 1188
@@ -410,7 +410,17 @@ object WeighingPartnerForm: TWeighingPartnerForm
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 46
-      Width = 112
+      Width = 108
+    end
+    object cbisKh: TcxCheckBox
+      Left = 1298
+      Top = 99
+      Caption = #1050#1091#1093#1085#1103
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 47
+      Width = 61
     end
   end
   object cxPageControl: TcxPageControl
@@ -3483,6 +3493,13 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Name = 'isReason2'
         Value = Null
         Component = cbReason1
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isKh'
+        Value = Null
+        Component = cbisKh
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
