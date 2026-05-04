@@ -201,6 +201,13 @@ BEGIN
                                                                  OR tmpOrderFinanceProperty.ObjectId = Object_InfoMoney_View.InfoMoneyDestinationId
                                                                  OR tmpOrderFinanceProperty.ObjectId = Object_InfoMoney_View.InfoMoneyGroupId
                                                                    )
+                       UNION
+                        SELECT DISTINCT
+                               Object_InfoMoney_View.InfoMoneyId
+                             , 0 AS PaidKindId
+                             , 0 AS NumGroup
+                        FROM Object_InfoMoney_View
+                        WHERE inOrderFinanceId = 0
                        )
         -- Результат
         SELECT Object_JuridicalOrderFinance.Id  AS Id

@@ -60,6 +60,7 @@ RETURNS TABLE (Number              Integer
              , isOperPricePartner        Boolean -- Цена контрагента
              , isReturnOut_Date          Boolean -- Дата для цены возврат поставщику 
              , isCalc_PriceVat           Boolean -- Расчет цены с НДС или без
+             , isKh                      Boolean -- Scale - Кухня
                )
 AS
 $BODY$
@@ -137,6 +138,7 @@ BEGIN
                                        , isOperPricePartner       Boolean
                                        , isReturnOut_Date         Boolean
                                        , isCalc_PriceVat          Boolean
+                                       , isKh                     Boolean
                                        , ItemName                 TVarChar
                                         ) ON COMMIT DROP;
     -- формирование
@@ -145,7 +147,7 @@ BEGIN
                                  , isPartionGoodsDate, isPartionDate_save, isStorageLine, isArticleLoss, isTransport_link, isSubjectDoc, isSubjectDocMI, isComment, isInvNumberPartner, isInvNumberPartner_check, isDocPartner, isPersonalGroup, isOrderInternal
                                  , isSticker_Ceh, isSticker_KVK, isLockStartWeighing, isKVK, isListInventory, isAsset
                                  , isPartionCell, isPartionPassport, isReReturnIn, isCloseInventory, isCalc_Sh, isRePack, isPeresort, isEtiketka
-                                 , isOperCountPartner, isOperPricePartner, isReturnOut_Date, isCalc_PriceVat
+                                 , isOperCountPartner, isOperPricePartner, isReturnOut_Date, isCalc_PriceVat, isKh
                                  , ItemName
                                   )
        SELECT tmp.Number
@@ -228,6 +230,7 @@ BEGIN
             , CASE WHEN tmp.isOperPricePartner        ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isOperPricePartner
             , CASE WHEN tmp.isReturnOut_Date          ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isReturnOut_Date
             , CASE WHEN tmp.isCalc_PriceVat           ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isCalc_PriceVat
+            , CASE WHEN tmp.isKh                      ILIKE 'TRUE' THEN TRUE ELSE FALSE END AS isKh
 
             , CASE WHEN tmp.MovementDescId IN (zc_Movement_ProductionUnion() :: TVarChar) AND inBranchCode BETWEEN 201 AND 210 -- если Обвалка
                         THEN 'после Шприцевания' -- 'Упаковка'
@@ -291,6 +294,9 @@ BEGIN
                         , CASE WHEN                    inIsCeh     = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isOperPricePartner', 'FALSE',                                                     inSession)              END AS isOperPricePartner
                         , CASE WHEN                    inIsCeh     = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isReturnOut_Date',   'FALSE',                                                     inSession)              END AS isReturnOut_Date
                         , CASE WHEN                    inIsCeh     = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isCalc_PriceVat',    'FALSE',                                                     inSession)              END AS isCalc_PriceVat
+
+                        , CASE WHEN vbIsSticker = TRUE OR inIsCeh  = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isKh',               'FALSE',                                                     inSession)              END AS isKh
+                        
 
 
                    FROM (SELECT GENERATE_SERIES (1, vbCount) AS Number) AS tmp
@@ -598,6 +604,7 @@ BEGIN
            , _tmpToolsWeighing.isOperPricePartner
            , _tmpToolsWeighing.isReturnOut_Date
            , _tmpToolsWeighing.isCalc_PriceVat
+           , _tmpToolsWeighing.isKh
 
        FROM _tmpToolsWeighing
             LEFT JOIN Object AS Object_PriceList              ON Object_PriceList.Id              = zc_PriceList_Basis() AND _tmpToolsWeighing.MovementDescId = zc_Movement_SendOnPrice()
@@ -742,6 +749,7 @@ BEGIN
             , FALSE AS isOperPricePartner
             , FALSE AS isReturnOut_Date
             , FALSE AS isCalc_PriceVat
+            , FALSE AS isKh
 
        FROM (SELECT DISTINCT
                     _tmpToolsWeighing.MovementDescId
