@@ -49,8 +49,18 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
 
-     -- !!!Только просмотр Аудитор!!!
-     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+    -- !!!Только просмотр Аудитор!!!
+    PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
+
+    IF vbUserId IN (-1       -- Алб В.Г.
+                  , 13301676 -- Науменко Н.В.
+                  , 8056157  -- Білінська А.О.
+                  , 5843875  -- Трошина Я.О.
+                   )
+    THEN
+	RAISE EXCEPTION 'Ошибка.Нет прав.';
+    END IF;
 
 
     -- Результат
