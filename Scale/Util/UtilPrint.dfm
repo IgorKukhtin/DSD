@@ -1988,7 +1988,6 @@ object UtilPrintForm: TUtilPrintForm
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -2010,6 +2009,43 @@ object UtilPrintForm: TUtilPrintForm
       ReportNameParam.Value = 'PrintMovement_Send'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint_Send_kh: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint_Send
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Send
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1054#1089#1085#1086#1074#1072#1085#1080#1077')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1054#1089#1085#1086#1074#1072#1085#1080#1077')'
+      ImageIndex = 23
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'SubjectDocName;GoodsCode;GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Send_SubjectDoc'
+      ReportNameParam.Value = 'PrintMovement_Send_SubjectDoc'
+      ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString

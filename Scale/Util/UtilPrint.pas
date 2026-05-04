@@ -197,11 +197,12 @@ type
     spSelectPrint_OrderExternal_srv_r: TdsdStoredProc;
     spSelectPrintBox: TdsdStoredProc;
     actPrintBox: TdsdPrintAction;
+    actPrint_Send_kh: TdsdPrintAction;
   private
   end;
   //
   //
-  function Print_Movement (MovementDescId,MovementId,MovementId_by:Integer; myPrintCount:Integer; isPreview:Boolean; isSendOnPriceIn:Boolean):Boolean;
+  function Print_Movement (MovementDescId,MovementId,MovementId_by:Integer; myPrintCount:Integer; isPreview:Boolean; isSendOnPriceIn:Boolean; isKh:Boolean):Boolean;
   function Print_MovementDiff (MovementDescId,MovementId:Integer):Boolean;
   function Print_MovementReestrKind (MovementId_Reestr:Integer):Boolean;
   function Print_Tax      (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
@@ -250,7 +251,7 @@ begin
   UtilPrintForm.actPrint_Inventory.Execute;
 end;
 //------------------------------------------------------------------------------------------------
-procedure Print_Send (MovementId,MovementId_by: Integer);
+procedure Print_Send (MovementId,MovementId_by: Integer; isKh : Boolean);
 begin
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
   UtilPrintForm.FormParams.ParamByName('MovementId_by').Value := MovementId_by;
@@ -264,7 +265,9 @@ begin
    or (UtilPrintForm.spGetMovement.ParamByName('outDocumentKindId').Value = zc_Enum_DocumentKind_LakTo)
    or (UtilPrintForm.spGetMovement.ParamByName('outDocumentKindId').Value = zc_Enum_DocumentKind_LakFrom)
   then UtilPrintForm.actPrintCeh.Execute
-  else UtilPrintForm.actPrint_Send.Execute;
+  else if isKh = true
+       then UtilPrintForm.actPrint_Send_kh.Execute
+       else UtilPrintForm.actPrint_Send.Execute;
 end;
 //------------------------------------------------------------------------------------------------
 procedure Print_PackWeightDocument (MovementId: Integer; isPreview:Boolean);
@@ -564,7 +567,7 @@ begin
   UtilPrintForm.actPrint_ReestrKind.Execute;
 end;
 //------------------------------------------------------------------------------------------------
-function Print_Movement (MovementDescId, MovementId, MovementId_by: Integer; myPrintCount:Integer; isPreview:Boolean; isSendOnPriceIn:Boolean):Boolean;
+function Print_Movement (MovementDescId, MovementId, MovementId_by: Integer; myPrintCount:Integer; isPreview:Boolean; isSendOnPriceIn:Boolean; isKh:Boolean):Boolean;
 begin
      UtilPrintForm.PrintHeaderCDS.IndexFieldNames:='';
      UtilPrintForm.PrintItemsCDS.IndexFieldNames:='';
@@ -619,7 +622,7 @@ begin
 
                             else if (MovementDescId = zc_Movement_Send)
                                  or (MovementDescId = zc_Movement_ProductionUnion)
-                                  then Print_Send(MovementId,MovementId_by)
+                                  then Print_Send(MovementId,MovementId_by,isKh)
 
                             else if MovementDescId = zc_Movement_Loss
                                   then Print_Loss(MovementId)

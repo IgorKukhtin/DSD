@@ -915,6 +915,7 @@ begin
        Params.AddParam('inComment', ftString, ptInput, execParamsMovement.ParamByName('DocumentComment').AsString);
        //
        Params.AddParam('inIsListInventory', ftBoolean, ptInput, execParamsMovement.ParamByName('isListInventory').AsBoolean);
+       Params.AddParam('inIsKh', ftBoolean, ptInput, execParamsMovement.ParamByName('isKh').AsBoolean);
 
        Params.AddParam('inMovementId_reReturnIn', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId_reReturnIn').AsInteger);
        Params.AddParam('inIP', ftString, ptInput, SettingMain.IP_str);

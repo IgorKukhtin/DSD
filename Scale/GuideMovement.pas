@@ -828,6 +828,7 @@ begin
                             , 1     // myPrintCount
                             , TRUE  // isPreview
                             , FALSE // isSendOnPriceIn
+                            , CDS.FieldByName('isKh').AsBoolean
                              )
           else
               Print_Movement (CDS.FieldByName('MovementDescId').AsInteger
@@ -836,6 +837,7 @@ begin
                             , 1    // myPrintCount
                             , TRUE // isPreview
                             , DialogMovementDescForm.Get_isSendOnPriceIn(CDS.FieldByName('MovementDescNumber').AsInteger)
+                            , CDS.FieldByName('isKh').AsBoolean
                              );
      //
      if cbPrintTax.Checked

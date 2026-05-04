@@ -730,6 +730,7 @@ begin
                                 , DialogPrintForm.cbPrintPreview.Checked        // isPreview
                                 //, DialogMovementDescForm.Get_isSendOnPriceIn(ParamsMovement.ParamByName('MovementDescNumber').AsInteger)
                                 , ParamsMovement.ParamByName('isSendOnPriceIn').AsBoolean
+                                , ParamsMovement.ParamByName('isKh').AsBoolean
                                  );
      if (ParamsMovement.ParamByName('MovementId_begin_next').AsInteger > 0) and (Result = TRUE)
      then Result:=Print_Movement (ParamsMovement.ParamByName('MovementDescId_next').AsInteger
@@ -739,6 +740,7 @@ begin
                                 , DialogPrintForm.cbPrintPreview.Checked        // isPreview
                                 //, DialogMovementDescForm.Get_isSendOnPriceIn(ParamsMovement.ParamByName('MovementDescNumber').AsInteger)
                                 , ParamsMovement.ParamByName('isSendOnPriceIn').AsBoolean
+                                , ParamsMovement.ParamByName('isKh').AsBoolean
                                  );
      //
      //Tax
@@ -1106,6 +1108,14 @@ end;
 function TMainForm.GetParams_Goods (isRetail : Boolean; BarCode : String; isModeSave : Boolean) : Boolean;
 begin
      Result:=false;
+     //
+     if (ParamsMI.ParamByName('SubjectDocId_mi').AsInteger = 0)
+         and(ParamsMovement.ParamByName('isSubjectDocMI').AsBoolean = TRUE)
+     then begin
+         if MessageDlg('Ошибка.'+#10+#13+'Не установлено значение <Основание Товар-Перемещение>.'+#10+#13+'Хотите исправить?',mtConfirmation,mbYesNoCancel,0) = 6
+         then begin pSetSubjectDocMI; exit; end
+         else exit;
+     end;
      //
      if ParamsMovement.ParamByName('MovementDescId').asInteger=0
      then if GetParams_MovementDesc('')=false then exit;
