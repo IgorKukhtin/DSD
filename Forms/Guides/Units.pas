@@ -114,6 +114,10 @@ type
     actUpdate_notStaffList: TdsdExecStoredProc;
     macUpdate_notStaffList: TMultiAction;
     bbUpdate_notStaffList: TdxBarButton;
+    spUpdate_notMemberGoods: TdsdStoredProc;
+    actUpdate_notMemberGoods: TdsdExecStoredProc;
+    bbUpdate_notMemberGoods: TdxBarButton;
+    isnotMemberGoods: TcxGridDBColumn;
   private
     { Private declarations }
   public

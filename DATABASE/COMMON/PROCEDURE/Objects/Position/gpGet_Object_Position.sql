@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Position(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                SheetWorkTimeId Integer, SheetWorkTimeName TVarChar,
-               PositionPropertyId Integer, PositionPropertyName TVarChar,
+               PositionPropertyId Integer, PositionPropertyName TVarChar, 
+               isnotMemberGoods Boolean,
                isErased boolean) AS
 $BODY$
 BEGIN
@@ -27,6 +28,7 @@ BEGIN
            , CAST ('' as TVarChar)  AS SheetWorkTimeName
            , CAST (0 as Integer)    AS PositionPropertyId 
            , CAST ('' as TVarChar)  AS PositionPropertyName
+           , CAST (FALSE AS Boolean) AS isnotMemberGoods
            , CAST (NULL AS Boolean) AS isErased;
    ELSE
        RETURN QUERY 
@@ -38,6 +40,7 @@ BEGIN
          , Object_SheetWorkTime.ValueData AS SheetWorkTimeName
          , Object_PositionProperty.Id        AS PositionPropertyId 
          , Object_PositionProperty.ValueData AS PositionPropertyName
+         , COALESCE (ObjectBoolean_notMemberGoods.ValueData, FALSE) :: Boolean AS isnotMemberGoods
          , Object_Position.isErased       AS isErased
      FROM Object AS Object_Position
           LEFT JOIN ObjectLink AS ObjectLink_Position_SheetWorkTime
@@ -49,6 +52,10 @@ BEGIN
                                ON ObjectLink_Position_PositionProperty.ObjectId = Object_Position.Id
                               AND ObjectLink_Position_PositionProperty.DescId = zc_ObjectLink_Position_PositionProperty()
           LEFT JOIN Object AS Object_PositionProperty ON Object_PositionProperty.Id = ObjectLink_Position_PositionProperty.ChildObjectId
+
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_notMemberGoods
+                                  ON ObjectBoolean_notMemberGoods.ObjectId = Object_Position.Id
+                                 AND ObjectBoolean_notMemberGoods.DescId = zc_ObjectBoolean_Position_notMemberGoods()
 
      WHERE Object_Position.Id = inId;
    END IF;
@@ -70,4 +77,4 @@ ALTER FUNCTION gpGet_Object_Position(integer, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Position('2')
+-- SELECT * FROM gpGet_Object_Position(1, '2')

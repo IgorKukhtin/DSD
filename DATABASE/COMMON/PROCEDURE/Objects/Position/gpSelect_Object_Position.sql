@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Position(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                SheetWorkTimeId Integer, SheetWorkTimeName TVarChar,
                PositionPropertyId Integer, PositionPropertyName TVarChar,
+               isnotMemberGoods Boolean,
                isErased boolean) AS
 $BODY$
 BEGIN
@@ -27,6 +28,7 @@ BEGIN
          , Object_SheetWorkTime.ValueData AS SheetWorkTimeName
          , Object_PositionProperty.Id        AS PositionPropertyId 
          , Object_PositionProperty.ValueData AS PositionPropertyName
+         , COALESCE (ObjectBoolean_notMemberGoods.ValueData, FALSE) :: Boolean AS isnotMemberGoods
          , Object_Position.isErased       AS isErased
 
      FROM Object AS Object_Position
@@ -39,6 +41,11 @@ BEGIN
                                ON ObjectLink_Position_PositionProperty.ObjectId = Object_Position.Id
                               AND ObjectLink_Position_PositionProperty.DescId = zc_ObjectLink_Position_PositionProperty()
           LEFT JOIN Object AS Object_PositionProperty ON Object_PositionProperty.Id = ObjectLink_Position_PositionProperty.ChildObjectId
+
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_notMemberGoods
+                                  ON ObjectBoolean_notMemberGoods.ObjectId = Object_Position.Id
+                                 AND ObjectBoolean_notMemberGoods.DescId = zc_ObjectBoolean_Position_notMemberGoods()
+
      WHERE Object_Position.DescId = zc_Object_Position()
        AND (Object_Position.isErased = inIsShowAll OR inIsShowAll = TRUE)
 
@@ -51,6 +58,7 @@ BEGIN
          , '' :: TVarChar        AS SheetWorkTimeName
          , 0  :: Integer         AS PositionPropertyId 
          , '' :: TVarChar        AS PositionPropertyName
+         , CAST (FALSE AS Boolean) AS isnotMemberGoods
          , TRUE :: Boolean       AS isErased*/
 
      ;
@@ -64,6 +72,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 02.05.26         *
  28.03.25         *
  28.10.24         *
  16.11.16         * add SheetWorkTime

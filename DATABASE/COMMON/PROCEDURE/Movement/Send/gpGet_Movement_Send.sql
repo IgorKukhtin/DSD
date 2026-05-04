@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Comment TVarChar
              , isAuto Boolean
              , isRePack Boolean
+             , isKh Boolean
              , InsertName TVarChar
              , InsertDate TDateTime
              , MovementId_Send Integer, InvNumber_SendFull TVarChar
@@ -60,6 +61,7 @@ BEGIN
 
              , FALSE                                            AS isAuto
              , FALSE                                            AS isRePack
+             , FALSE                                            AS isKh
 
              , Object_Insert.ValueData                          AS InsertName
              , CURRENT_TIMESTAMP ::TDateTime                    AS InsertDate
@@ -100,6 +102,7 @@ BEGIN
 
            , COALESCE(MovementBoolean_isAuto.ValueData, False)    :: Boolean  AS isAuto
            , COALESCE (MovementBoolean_isRePack.ValueData, FALSE) :: Boolean  AS isRePack
+           , COALESCE (MovementBoolean_isKh.ValueData, FALSE)     :: Boolean  AS isKh
 
            , Object_Insert.ValueData                            AS InsertName
            , COALESCE (MovementDate_Insert.ValueData, Movement.OperDate) :: TDateTime AS InsertDate
@@ -155,6 +158,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_isRePack
                                       ON MovementBoolean_isRePack.MovementId = Movement.Id
                                      AND MovementBoolean_isRePack.DescId = zc_MovementBoolean_isRePack()
+            LEFT JOIN MovementBoolean AS MovementBoolean_isKh
+                                      ON MovementBoolean_isKh.MovementId = Movement.Id
+                                     AND MovementBoolean_isKh.DescId = zc_MovementBoolean_isKh()
 
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id

@@ -54,6 +54,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MemberIts(
   RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
+           vbisnotMemberGoods_Position Boolean;
+           vbisnotMemberGoods_Unit     Boolean;
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
@@ -92,9 +94,23 @@ BEGIN
        IF COALESCE (inJobSourceId,0) = 0 THEN RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <Источник информации о вакансии>.' ; END IF; 
    END IF;
 
+   --для основного места роботы
+   SELECT COALESCE (ObjectBoolean_Position_notMemberGoods.ValueData, FALSE)  AS isnotMemberGoods_Position
+        , COALESCE (ObjectBoolean_Unit_notMemberGoods.ValueData, FALSE)      AS isnotMemberGoods_Unit  
+  INTO vbisnotMemberGoods_Position, vbisnotMemberGoods_Unit 
+   FROM lfSelect_Object_Member_findPersonal ( zfCalc_UserAdmin()) AS lfSelect
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_Position_notMemberGoods
+                                  ON ObjectBoolean_Position_notMemberGoods.ObjectId = lfSelect.PositionId
+                                 AND ObjectBoolean_Position_notMemberGoods.DescId = zc_ObjectBoolean_Position_notMemberGoods()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Unit_notMemberGoods
+                                  ON ObjectBoolean_Unit_notMemberGoods.ObjectId = lfSelect.UnitId
+                                 AND ObjectBoolean_Unit_notMemberGoods.DescId = zc_ObjectBoolean_Unit_notMemberGoods()                            
+                           WHERE lfSelect.Ord = 1 
+                             AND memberId = inId;
  
    --проверка поля inMemberGoodsId_month inMemberGoodsId_holiday должны быть заполнены
-   IF COALESCE (inMemberGoodsId_month,0) = 0 AND COALESCE (inMemberGoodsId_holiday,0) = 0
+   IF COALESCE (inMemberGoodsId_month,0) = 0 AND COALESCE (inMemberGoodsId_holiday,0) = 0 
+    AND (vbisnotMemberGoods_Position = FALSE AND vbisnotMemberGoods_Unit = FALSE)
    THEN
        RAISE EXCEPTION 'Ошибка.Не заполнен реквизит <Отоварка щомісячна> или <Отоварка святкова>.' ;
    END IF;
@@ -171,7 +187,7 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_MemberGoods_holiday(), inId, inMemberGoodsId_holiday);
 
-   -- IF vbUserId = 9457 THEN RAISE EXCEPTION 'Test. OK'; END IF;
+    IF vbUserId = 9457 THEN RAISE EXCEPTION 'Test. OK'; END IF;
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;

@@ -388,7 +388,12 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_notStaffList() RETURNS Integer 
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_notStaffList', 'Исключить из ШР' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_notStaffList');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_notMemberGoods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_notMemberGoods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_notMemberGoods', 'Исключить из Отоварки' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_notMemberGoods');
 
+
+ 
 
 
 
@@ -1644,10 +1649,16 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_OrderFinance_InvNumber_Invoice() RET
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_OrderFinance(), 'zc_ObjectBoolean_OrderFinance_InvNumber_Invoice', ' 	Заполнение № счета (да/нет)' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_OrderFinance_InvNumber_Invoice');
  
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Position_notMemberGoods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Position_notMemberGoods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_OrderFinance(), 'zc_ObjectBoolean_Position_notMemberGoods', 'Исключить из Отоварки (да/нет)' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Position_notMemberGoods');
+ 
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 02.05.26         * zc_ObjectBoolean_Position_notMemberGoods
  17.03.26         * zc_ObjectBoolean_Goods_PLM
  05.02.26         * zc_ObjectBoolean_OrderFinance_InvNumber
                     zc_ObjectBoolean_OrderFinance_InvNumber_Invoice

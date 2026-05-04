@@ -38,6 +38,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isAvance Boolean,
                isnotBirthDay Boolean,
                isnotStaffList Boolean,
+               isnotMemberGoods Boolean,
                isErased Boolean,
                Address TVarChar,
                Comment TVarChar,
@@ -193,6 +194,7 @@ BEGIN
            , COALESCE (ObjectBoolean_Avance.ValueData, FALSE)           :: Boolean AS isAvance
            , COALESCE (ObjectBoolean_notBirthDay.ValueData, FALSE)      :: Boolean AS isnotBirthDay
            , COALESCE (ObjectBoolean_notStaffList.ValueData, FALSE)     :: Boolean AS isnotStaffList
+           , COALESCE (ObjectBoolean_notMemberGoods.ValueData, FALSE)   :: Boolean AS isnotMemberGoods
            , Object_Unit_View.isErased
 
            , ObjectString_Unit_Address.ValueData   AS Address
@@ -315,6 +317,9 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_notStaffList
                                     ON ObjectBoolean_notStaffList.ObjectId = Object_Unit_View.Id
                                    AND ObjectBoolean_notStaffList.DescId = zc_ObjectBoolean_Unit_notStaffList()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_notMemberGoods
+                                    ON ObjectBoolean_notMemberGoods.ObjectId = Object_Unit_View.Id
+                                   AND ObjectBoolean_notMemberGoods.DescId = zc_ObjectBoolean_Unit_notMemberGoods()
 
             LEFT JOIN ObjectDate AS ObjectDate_PersonalService
                                  ON ObjectDate_PersonalService.ObjectId = Object_Unit_View.Id
@@ -435,6 +440,7 @@ BEGIN
            , CAST (FALSE AS Boolean) AS isAvance
            , CAST (FALSE AS Boolean) AS isnotBirthDay
            , CAST (FALSE AS Boolean) AS isnotStaffList
+           , CAST (FALSE AS Boolean) AS isnotMemberGoods
            , FALSE AS isErased
            , CAST ('' as TVarChar)  AS Address
            , CAST ('' as TVarChar)  AS Comment
@@ -545,6 +551,7 @@ BEGIN
            , CAST (FALSE AS Boolean) AS isAvance
            , CAST (FALSE AS Boolean) AS isnotBirthDay
            , CAST (FALSE AS Boolean) AS isnotStaffList
+           , CAST (FALSE AS Boolean) AS isnotMemberGoods
            , FALSE AS isErased
            , CAST ('' as TVarChar)  AS Address
            , CAST ('' as TVarChar)  AS Comment
@@ -567,6 +574,7 @@ ALTER FUNCTION gpSelect_Object_Unit (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 02.05.26         *
  23.10.25         *
  14.08.25         * isnotBirthDay
  11.07.23         * AddressEDIN

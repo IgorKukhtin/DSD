@@ -1296,16 +1296,16 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendPartionCellEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendPartionCellEditForm');
-   }
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
- { exit;
+  //exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
   exit;
   //
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalChoiceForm');
   exit;
@@ -3963,18 +3963,18 @@ end;
 
 procedure TLoadFormTest.LoadUnitFormTest;
 begin
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_StaffListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_StaffListForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_PersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_PersonalForm');
    // exit;
    }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitForm');
-  // exit;
+   exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitEditForm');
   {
@@ -5085,7 +5085,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPositionForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPositionEditForm');
-
+  exit;
   // Разряд должности
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionLevelForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPositionLevelForm');

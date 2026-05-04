@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Comment TVarChar
              , isAuto Boolean 
              , isRePack Boolean
+             , isKh Boolean
              , UnionName TVarChar
              , UnionDate TDateTime
              , InsertDate TDateTime, InsertName TVarChar
@@ -119,6 +120,7 @@ BEGIN
 
            , COALESCE(MovementBoolean_isAuto.ValueData, False)    :: Boolean  AS isAuto
            , COALESCE (MovementBoolean_isRePack.ValueData, FALSE) :: Boolean  AS isRePack
+           , COALESCE (MovementBoolean_isKh.ValueData, FALSE)     :: Boolean  AS isKh
 
            , Object_Union.ValueData                 AS UnionName
            , MovementDate_Union.ValueData           AS UnionDate
@@ -196,6 +198,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_isRePack
                                       ON MovementBoolean_isRePack.MovementId = Movement.Id
                                      AND MovementBoolean_isRePack.DescId = zc_MovementBoolean_isRePack()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_isKh
+                                      ON MovementBoolean_isKh.MovementId = Movement.Id
+                                     AND MovementBoolean_isKh.DescId = zc_MovementBoolean_isKh()
 
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
@@ -286,6 +292,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.05.26         *
  01.05.25         * TotalLines
  17.07.24         *
  19.04.23         * StatusInsert....

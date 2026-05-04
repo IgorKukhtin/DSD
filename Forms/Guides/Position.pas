@@ -65,6 +65,7 @@ type
     cxLabel4: TcxLabel;
     edName_search: TcxTextEdit;
     FieldFilter: TdsdFieldFilter;
+    isnotMemberGoods: TcxGridDBColumn;
   private
     { Private declarations }
   public

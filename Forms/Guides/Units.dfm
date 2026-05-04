@@ -30,6 +30,8 @@ object UnitForm: TUnitForm
     Height = 394
     Align = alClient
     TabOrder = 1
+    ExplicitLeft = 32
+    ExplicitTop = -62
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ClientDS
@@ -379,6 +381,15 @@ object UnitForm: TUnitForm
         Options.Editing = False
         Width = 80
       end
+      object isnotMemberGoods: TcxGridDBColumn
+        Caption = #1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1054#1090#1086#1074#1072#1088#1082#1080
+        DataBinding.FieldName = 'isnotMemberGoods'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1054#1090#1086#1074#1072#1088#1082#1080' ('#1044#1072'/'#1053#1077#1090')'
+        Options.Editing = False
+        Width = 86
+      end
       object UnitCode_HistoryCost: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1087#1086#1076#1088'. ('#1089'/'#1089' '#1074#1086#1079#1074#1088#1072#1090')'
         DataBinding.FieldName = 'UnitCode_HistoryCost'
@@ -613,6 +624,18 @@ object UnitForm: TUnitForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_notMemberGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbStartLoad_CFO'
         end
         item
@@ -698,6 +721,10 @@ object UnitForm: TUnitForm
     end
     object bbUpdate_notStaffList: TdxBarButton
       Action = macUpdate_notStaffList
+      Category = 0
+    end
+    object bbUpdate_notMemberGoods: TdxBarButton
+      Action = actUpdate_notMemberGoods
       Category = 0
     end
   end
@@ -957,6 +984,22 @@ object UnitForm: TUnitForm
         end>
       Caption = 'actUpdate_isIrna'
       ImageIndex = 66
+    end
+    object actUpdate_notMemberGoods: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_notMemberGoods
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_notMemberGoods
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1054#1090#1086#1074#1072#1088#1082#1080'> '#1076#1072'/'#1085#1077#1090
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1054#1090#1086#1074#1072#1088#1082#1080'> '#1076#1072'/'#1085#1077#1090
+      ImageIndex = 76
     end
     object macUpdate_notStaffList: TMultiAction
       Category = 'DSDLib'
@@ -1265,5 +1308,31 @@ object UnitForm: TUnitForm
     PackSize = 1
     Left = 536
     Top = 216
+  end
+  object spUpdate_notMemberGoods: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Unit_notMemberGoods'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisnotMemberGoods'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isnotMemberGoods'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 504
+    Top = 280
   end
 end
