@@ -730,7 +730,7 @@ begin
                                 , DialogPrintForm.cbPrintPreview.Checked        // isPreview
                                 //, DialogMovementDescForm.Get_isSendOnPriceIn(ParamsMovement.ParamByName('MovementDescNumber').AsInteger)
                                 , ParamsMovement.ParamByName('isSendOnPriceIn').AsBoolean
-                                , ParamsMovement.ParamByName('isKh').AsBoolean
+                                , (ParamsMovement.ParamByName('isKh').AsBoolean) or (ParamsMovement.ParamByName('isSubjectDocMI').AsBoolean = TRUE)
                                  );
      if (ParamsMovement.ParamByName('MovementId_begin_next').AsInteger > 0) and (Result = TRUE)
      then Result:=Print_Movement (ParamsMovement.ParamByName('MovementDescId_next').AsInteger
@@ -740,7 +740,7 @@ begin
                                 , DialogPrintForm.cbPrintPreview.Checked        // isPreview
                                 //, DialogMovementDescForm.Get_isSendOnPriceIn(ParamsMovement.ParamByName('MovementDescNumber').AsInteger)
                                 , ParamsMovement.ParamByName('isSendOnPriceIn').AsBoolean
-                                , ParamsMovement.ParamByName('isKh').AsBoolean
+                                , (ParamsMovement.ParamByName('isKh').AsBoolean) or (ParamsMovement.ParamByName('isSubjectDocMI').AsBoolean = TRUE)
                                  );
      //
      //Tax

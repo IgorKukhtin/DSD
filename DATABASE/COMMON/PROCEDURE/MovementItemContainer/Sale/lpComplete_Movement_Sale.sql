@@ -5345,7 +5345,7 @@ end if;
                    )
      THEN
           -- Админу только отладка
-          if inUserId <> zfCalc_UserAdmin() :: Integer AND 1=1 -- AND inMovementId <>
+          if inUserId <> zfCalc_UserAdmin() :: Integer AND 1=1 -- AND inMovementId <> 34203255
           then
           --
           PERFORM lpInsertUpdate_Movement_Tax_From_Kind (inMovementId            := inMovementId

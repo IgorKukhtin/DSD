@@ -164,7 +164,7 @@ BEGIN
                    , MILinkObject_Asset.ObjectId        AS AssetId
                    , MILinkObject_Asset_two.ObjectId    AS AssetId_two
                    , MILinkObject_PartionGoods.ObjectId AS PartionGoodsId
-                   , 0                                  AS SubjectDocId
+                   , MILO_SubjectDoc.ObjectId           AS SubjectDocId
                    , SUM (MovementItem.Amount)          AS Amount
                    , SUM (COALESCE (MIFloat_Count.ValueData, 0))     AS Count
                    , SUM (COALESCE (MIFloat_CountPack.ValueData, 0)) AS CountPack
@@ -204,6 +204,10 @@ BEGIN
                                                     ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
 
+                   LEFT JOIN MovementItemLinkObject AS MILO_SubjectDoc
+                                                    ON MILO_SubjectDoc.MovementItemId = MovementItem.Id
+                                                   AND MILO_SubjectDoc.DescId = zc_MILinkObject_SubjectDoc()
+
               WHERE MovementItem.MovementId = CASE WHEN vbIsWeighing = TRUE THEN inMovementId_Weighing ELSE inMovementId END
                 AND MovementItem.DescId     = CASE WHEN vbIsProductionOut = TRUE AND  vbIsWeighing = FALSE THEN zc_MI_Child() ELSE zc_MI_Master() END
                 AND MovementItem.isErased   = FALSE
@@ -217,6 +221,8 @@ BEGIN
                      , MILinkObject_Asset.ObjectId
                      , MILinkObject_Asset_two.ObjectId
                      , MILinkObject_PartionGoods.ObjectId
+                     , MILO_SubjectDoc.ObjectId
+
              UNION ALL
               SELECT MovementItem.Id                    AS MovementItemId
                    , MovementItem.ObjectId              AS GoodsId

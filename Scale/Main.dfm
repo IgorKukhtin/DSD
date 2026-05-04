@@ -2855,8 +2855,7 @@ object MainForm: TMainForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
-          ExplicitLeft = -5
-          ExplicitTop = -1
+          ExplicitWidth = 120
         end
         object EditSubjectDocMI: TcxButtonEdit
           Left = 3

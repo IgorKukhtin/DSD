@@ -139,8 +139,11 @@ BEGIN
              , MF_ChangePercentAmount.ValueData    AS ChangePercentAmount
              , MB_Reason1.ValueData                AS isReason1
              , MB_Reason2.ValueData                AS isReason2
-             , MB_Kh.ValueData                     AS isKh
-             
+             , CASE WHEN COALESCE (MB_Kh.ValueData, FALSE) = TRUE
+                      OR COALESCE (MB_SubjectDoc.ValueData, FALSE) = TRUE
+                         THEN TRUE
+                    ELSE FALSE
+               END :: Boolean AS isKh
 
              , Movement_Parent.Id                      AS MovementId_parent
              , Movement_Parent.OperDate                AS OperDate_parent
@@ -282,6 +285,10 @@ BEGIN
 
             -- у Взвешивания - нашли Главный
             LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
+
+            LEFT JOIN MovementBoolean AS MB_SubjectDoc
+                                      ON MB_SubjectDoc.MovementId = Movement_Parent.Id
+                                     AND MB_SubjectDoc.DescId     = zc_MovementBoolean_isSubjectDoc()
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement_Parent.Id
@@ -575,7 +582,11 @@ BEGIN
              , MF_ChangePercentAmount.ValueData    AS ChangePercentAmount
              , MB_Reason1.ValueData                AS isReason1
              , MB_Reason2.ValueData                AS isReason2
-             , MB_Kh.ValueData                     AS isKh
+             , CASE WHEN COALESCE (MB_Kh.ValueData, FALSE) = TRUE
+                      OR COALESCE (MB_SubjectDoc.ValueData, FALSE) = TRUE
+                         THEN TRUE
+                    ELSE FALSE
+               END :: Boolean AS isKh
 
              , Movement_Parent.Id                      AS MovementId_parent
              , Movement_Parent.OperDate                AS OperDate_parent
@@ -713,6 +724,10 @@ BEGIN
 
             -- если Взвешивание - это Главный
             INNER JOIN Movement AS Movement_Parent ON Movement_Parent.ParentId = Movement.Id
+
+            LEFT JOIN MovementBoolean AS MB_SubjectDoc
+                                      ON MB_SubjectDoc.MovementId = Movement_Parent.Id
+                                     AND MB_SubjectDoc.DescId     = zc_MovementBoolean_isSubjectDoc()
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement_Parent.Id

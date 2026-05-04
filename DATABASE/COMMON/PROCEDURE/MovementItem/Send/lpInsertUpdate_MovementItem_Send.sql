@@ -350,6 +350,13 @@ BEGIN
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_SubjectDoc(), ioId, inSubjectDocId);
 
+     -- сохранили
+     IF inSubjectDocId > 0
+     THEN
+         PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isSubjectDoc(), inMovementId, TRUE);
+     END IF;
+
+
      -- сохранили связь с <Подразделение (для МО)> - теперь НЕ надо
      -- PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
      

@@ -35,7 +35,7 @@ BEGIN
 
      -- проверка RK + Склад Неликвид
      IF inFromId IN (zc_Unit_RK(), 9558031) AND COALESCE (inSubjectDocId, 0) = 0
-     AND inToId IN (8458, 8451) 
+     AND inToId IN (8458, 8451)
      AND inIsKh = FALSE
      THEN
          RAISE EXCEPTION 'Ошибка.%Нет прав формировать документ <Перемещение>.%Не заполнено <Основание для перемещения>.', CHR (13), CHR (13);
