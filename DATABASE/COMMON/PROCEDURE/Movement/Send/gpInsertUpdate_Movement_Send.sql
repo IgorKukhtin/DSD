@@ -32,6 +32,7 @@ BEGIN
                                          , inDocumentKindId   := inDocumentKindId
                                          , inSubjectDocId     := inSubjectDocId
                                          , inComment          := inComment
+                                         , inIsKh             := COALESCE ((SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_isKh()), FALSE)
                                          , inUserId           := vbUserId
                                           );
 

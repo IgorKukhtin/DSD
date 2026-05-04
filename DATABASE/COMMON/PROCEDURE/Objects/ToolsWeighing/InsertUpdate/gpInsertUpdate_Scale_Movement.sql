@@ -12,8 +12,9 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integ
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar, Boolean, Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar, Boolean, Integer, TVarChar, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar, Boolean, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar, Boolean, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer, TVarChar, Boolean, Boolean, Boolean, Integer, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar, Boolean, Integer, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer, TVarChar, Boolean, Boolean, Boolean, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar, Boolean, Boolean, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Scale_Movement(
     IN inId                     Integer   , -- Ключ объекта <Документ>
@@ -35,6 +36,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Scale_Movement(
     IN inBranchCode             Integer   , --
     IN inComment                TVarChar  , --
     IN inIsListInventory        Boolean   , -- Инвентаризация только для выбранных товаров
+    IN inIsKh                   Boolean   , -- Кухня
   --IN inIsReason1              Boolean   , -- Причина скидки в кол-ве температура
   --IN inIsReason2              Boolean   , -- Причина скидки в кол-ве качество
     IN inMovementId_reReturnIn  Integer   , -- ключ Документа заявка
@@ -182,6 +184,14 @@ BEGIN
           -- сохранили
           PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_List(), inId, inIsListInventory);
      END IF;
+
+     -- дописали св-во - Кухня
+     IF inMovementDescId = zc_Movement_Send() AND inIsKh = TRUE
+     THEN
+          -- сохранили
+          PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isKh(), inId, inIsKh);
+     END IF;
+
 
      -- сохранили свойство <IP>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_IP(), inId, inIP);

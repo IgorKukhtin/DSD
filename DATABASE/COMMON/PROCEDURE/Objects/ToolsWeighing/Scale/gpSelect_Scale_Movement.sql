@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Scale_Movement(
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar, MovementId_DocPartner Integer, OperDate TDateTime, OperDatePartner TDateTime, StatusCode Integer, StatusName TVarChar
              , StartWeighing TDateTime, EndWeighing TDateTime
-             , ChangePercentAmount TFloat, isReason1 Boolean, isReason2 Boolean
+             , ChangePercentAmount TFloat, isReason1 Boolean, isReason2 Boolean, isKh Boolean
 
              , MovementId_parent Integer, OperDate_parent TDateTime, OperDatePartner_parent TDateTime, InvNumber_parent TVarChar
              , MovementId_TransportGoods Integer, InvNumber_TransportGoods TVarChar, OperDate_TransportGoods TDateTime
@@ -139,6 +139,8 @@ BEGIN
              , MF_ChangePercentAmount.ValueData    AS ChangePercentAmount
              , MB_Reason1.ValueData                AS isReason1
              , MB_Reason2.ValueData                AS isReason2
+             , MB_Kh.ValueData                     AS isKh
+             
 
              , Movement_Parent.Id                      AS MovementId_parent
              , Movement_Parent.OperDate                AS OperDate_parent
@@ -270,6 +272,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MB_Reason2
                                       ON MB_Reason2.MovementId = Movement.Id
                                      AND MB_Reason2.DescId     = zc_MovementBoolean_Reason2()
+            LEFT JOIN MovementBoolean AS MB_Kh
+                                      ON MB_Kh.MovementId = Movement.Id
+                                     AND MB_Kh.DescId     = zc_MovementBoolean_isKh()
 
             LEFT JOIN MovementString AS MS_InvNumberPartner
                                      ON MS_InvNumberPartner.MovementId = Movement.Id
@@ -570,6 +575,7 @@ BEGIN
              , MF_ChangePercentAmount.ValueData    AS ChangePercentAmount
              , MB_Reason1.ValueData                AS isReason1
              , MB_Reason2.ValueData                AS isReason2
+             , MB_Kh.ValueData                     AS isKh
 
              , Movement_Parent.Id                      AS MovementId_parent
              , Movement_Parent.OperDate                AS OperDate_parent
@@ -701,6 +707,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MB_Reason2
                                       ON MB_Reason2.MovementId = Movement.Id
                                      AND MB_Reason2.DescId     = zc_MovementBoolean_Reason2()
+            LEFT JOIN MovementBoolean AS MB_Kh
+                                      ON MB_Kh.MovementId = Movement.Id
+                                     AND MB_Kh.DescId     = zc_MovementBoolean_isKh()
 
             -- если Взвешивание - это Главный
             INNER JOIN Movement AS Movement_Parent ON Movement_Parent.ParentId = Movement.Id

@@ -105,7 +105,8 @@ BEGIN
 
    -- Основное место работы - только одно
    IF inIsMain = TRUE
-      AND EXISTS (SELECT 1 FROM Object_Personal_View AS View_Personal WHERE View_Personal.MemberId = inMemberId AND View_Personal.isMain = TRUE AND View_Personal.PersonalId <> COALESCE(ioId, 0)) THEN
+      AND EXISTS (SELECT 1 FROM Object_Personal_View AS View_Personal WHERE View_Personal.MemberId = inMemberId AND View_Personal.isMain = TRUE AND View_Personal.PersonalId <> COALESCE(ioId, 0) AND isErased = FALSE)
+   THEN
       RAISE EXCEPTION 'Значение <Основное место работы> = ДА, уже установлено для подразделения: <%> должность: <%> разряд должности: <%>. Этот признак можно установить только 1 раз.'
                     , lfGet_Object_ValueData_sh ((SELECT View_Personal.UnitId          FROM Object_Personal_View AS View_Personal WHERE View_Personal.MemberId = inMemberId AND View_Personal.isMain = TRUE ORDER BY View_Personal.PersonalId LIMIT 1))
                     , lfGet_Object_ValueData_sh ((SELECT View_Personal.PositionId      FROM Object_Personal_View AS View_Personal WHERE View_Personal.MemberId = inMemberId AND View_Personal.isMain = TRUE ORDER BY View_Personal.PersonalId LIMIT 1))

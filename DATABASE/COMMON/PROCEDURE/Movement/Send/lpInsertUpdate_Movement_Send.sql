@@ -3,7 +3,8 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TVarChar, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TVarChar, Integer);
+-- DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TVarChar, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Send(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -14,6 +15,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Send(
     IN inDocumentKindId      Integer   , -- Тип документа (в документе)
     IN inSubjectDocId        Integer   , -- Основание для перемещения
     IN inComment             TVarChar  , -- Примечание
+    IN inIsKh                Boolean   , -- Кухня
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer AS
@@ -33,7 +35,8 @@ BEGIN
 
      -- проверка RK + Склад Неликвид
      IF inFromId IN (zc_Unit_RK(), 9558031) AND COALESCE (inSubjectDocId, 0) = 0
-     AND inToId IN (8458, 8451 )
+     AND inToId IN (8458, 8451) 
+     AND inIsKh = FALSE
      THEN
          RAISE EXCEPTION 'Ошибка.%Нет прав формировать документ <Перемещение>.%Не заполнено <Основание для перемещения>.', CHR (13), CHR (13);
      END IF;

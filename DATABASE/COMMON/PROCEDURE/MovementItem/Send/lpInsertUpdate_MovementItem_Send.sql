@@ -98,7 +98,7 @@ BEGIN
                          )
               AND inUserId <> 5
          THEN
-                  RAISE EXCEPTION 'Ошибка.Для товара <%>% указан неверный вид = <%>.% %'
+                  RAISE EXCEPTION 'Ошибка.Для товара <%>% указан неверный вид = <%>.% % %(%)'
                                  , lfGet_Object_ValueData (inGoodsId)
                                  , CHR (13)
                                  , lfGet_Object_ValueData_sh (inGoodsKindId)
@@ -114,6 +114,8 @@ BEGIN
                                                                WHERE MLO.MovementId = inMovementId
                                                                  AND MLO.DescId = zc_MovementLinkObject_To()
                                                              ))
+                                 , CHR (13)
+                                 , lfGet_Object_ValueData_sh (inUserId)
                                   ;
          END IF;
      END IF;
@@ -222,6 +224,7 @@ BEGIN
                       AND MLO.DescId   IN (zc_MovementLinkObject_From(), zc_MovementLinkObject_To())
                       AND MLO.ObjectId IN (SELECT tt.UnitId FROM Object_Unit_check_isOrder_View_two AS tt)
                     )
+            AND inUserId <> 5
          THEN
              -- если товара и вид товара нет в zc_ObjectBoolean_GoodsByGoodsKind_Order - тогда ошиибка
              IF NOT EXISTS (SELECT 1

@@ -501,6 +501,11 @@ BEGIN
                        THEN '  (оепеянпр)'
                   ELSE ''
              END
+
+          || CASE WHEN _tmpToolsWeighing.isKh = TRUE
+                       THEN '  (йсумъ})'
+                  ELSE ''
+             END
              
              ) :: TVarChar AS MovementDescName -- Б ЦПХДЕ
 
@@ -564,6 +569,11 @@ BEGIN
              END
           || CASE WHEN inBranchCode = 115
                        THEN '  (ондцнрнбйю)'
+                  ELSE ''
+             END
+
+          || CASE WHEN _tmpToolsWeighing.isKh = TRUE
+                       THEN '  (йсумъ})'
                   ELSE ''
              END
             ) :: TVarChar AS MovementDescName_master

@@ -1135,6 +1135,7 @@ BEGIN
                                                   , inDocumentKindId        := 0
                                                   , inSubjectDocId          := SubjectDocId
                                                   , inComment               := tmp.Comment
+                                                  , inIsKh                  := tmp.isKh
                                                   , inUserId                := vbUserId
                                                    )
                                           WHEN vbMovementDescId = zc_Movement_ProductionUnion()
@@ -1190,6 +1191,13 @@ BEGIN
             PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Order(), vbMovementId_begin
                                                        , (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Order() AND MLM.MovementChildId > 0)
                                                         );
+        END IF;
+
+        -- дописали св-во - Кухня
+        IF vbMovementDescId = zc_Movement_Send() AND EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_isKh() AND MB.ValueData = TRUE)
+        THEN
+             -- сохранили
+             PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isKh(), vbMovementId_begin, TRUE);
         END IF;
 
         -- дописали св-во - ЭТИКЕТКА
