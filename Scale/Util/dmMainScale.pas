@@ -2442,6 +2442,7 @@ begin
                         execParamsMovement.ParamByName('isAsset').asBoolean:= CDS.FieldByName('isAsset').asBoolean;
                         execParamsMovement.ParamByName('isReReturnIn').asBoolean:= CDS.FieldByName('isReReturnIn').asBoolean;
                         execParamsMovement.ParamByName('isPeresort').asBoolean:= CDS.FieldByName('isPeresort').asBoolean;
+                        execParamsMovement.ParamByName('isKh').asBoolean:= CDS.FieldByName('isKh').asBoolean;
 
                         execParamsMovement.ParamByName('isOperCountPartner').asBoolean      := CDS.FieldByName('isOperCountPartner').asBoolean;
                         execParamsMovement.ParamByName('isOperPricePartner').asBoolean      := CDS.FieldByName('isOperPricePartner').asBoolean;
@@ -2494,6 +2495,7 @@ begin
                         ParamsMovement.ParamByName('isAsset').asBoolean:= CDS.FieldByName('isAsset').asBoolean;
                         ParamsMovement.ParamByName('isReReturnIn').asBoolean:= CDS.FieldByName('isReReturnIn').asBoolean;
                         ParamsMovement.ParamByName('isPeresort').asBoolean:= CDS.FieldByName('isPeresort').asBoolean;
+                        ParamsMovement.ParamByName('isKh').asBoolean:= CDS.FieldByName('isKh').asBoolean;
 
                         ParamsMovement.ParamByName('isOperCountPartner').asBoolean      := CDS.FieldByName('isOperCountPartner').asBoolean;
                         ParamsMovement.ParamByName('isOperPricePartner').asBoolean      := CDS.FieldByName('isOperPricePartner').asBoolean;

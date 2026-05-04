@@ -507,6 +507,7 @@ begin
 
      ParamAddValue(Params,'isDocInsert',ftBoolean,FALSE);
 
+     ParamAddValue(Params,'isKh',ftBoolean,FALSE); // Кухня
 end;
 {------------------------------------------------------------------------}
 procedure Create_ParamsReason_global(var Params:TParams);

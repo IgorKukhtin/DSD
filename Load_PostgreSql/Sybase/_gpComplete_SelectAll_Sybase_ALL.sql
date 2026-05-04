@@ -562,7 +562,7 @@ END IF;
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND Movement.DescId IN (zc_Movement_Inventory())
     -- AND inIsBefoHistoryCost = FALSE
-       AND (inGroupId < 0 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
+       AND ((inGroupId < 0 AND tmpUnit_branch.UnitId IS NULL) -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
          OR (inGroupId = 0 AND tmpUnit_branch.UnitId IS NULL)
          OR (inGroupId > 0 AND tmpUnit_branch.UnitId IS NOT NULL)
            )
