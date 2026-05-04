@@ -222,6 +222,7 @@ type
     dxBarButton1: TdxBarButton;
     Action1: TAction;
     SubjectDocName: TcxGridDBColumn;
+    cbisKh: TcxCheckBox;
   private
   public
   end;

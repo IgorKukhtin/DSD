@@ -54,6 +54,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar, OperDat
              , IP TVarChar
              , isPromo Boolean
              , isReason1 Boolean, isReason2 Boolean
+             , isKh Boolean 
              , MovementPromo TVarChar
              , BranchCode    Integer
              , SubjectDocId Integer, SubjectDocName TVarChar
@@ -217,6 +218,7 @@ BEGIN
              , COALESCE (MovementBoolean_Promo.ValueData, False)  :: Boolean AS isPromo 
              , COALESCE (MovementBoolean_Reason1.ValueData, False) ::Boolean AS isReason1
              , COALESCE (MovementBoolean_Reason2.ValueData, False) ::Boolean AS isReason2
+             , COALESCE (MovementBoolean_isKh.ValueData, FALSE)    ::Boolean AS isKh
 
              , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndSale.ValueData) AS MovementPromo
 
@@ -306,6 +308,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Reason2
                                       ON MovementBoolean_Reason2.MovementId = Movement.Id
                                      AND MovementBoolean_Reason2.DescId = zc_MovementBoolean_Reason2()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_isKh
+                                      ON MovementBoolean_isKh.MovementId = Movement.Id
+                                     AND MovementBoolean_isKh.DescId = zc_MovementBoolean_isKh()
    
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId = Movement.Id
@@ -546,6 +552,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 04.05.26         *
  13.01.26         *
  17.11.24         * isDocPartner
  14.11.24         * InvNumberPartner

@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer, isMask Boolean, InvNumber TVarChar, InvNumberPartner 
              , PriceListId Integer, PriceListName TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
              , Comment TVarChar
+             , StartDateTax TDateTime
               )
 AS
 $BODY$
@@ -96,6 +97,8 @@ BEGIN
              , CAST ('' as TVarChar) 	    AS DocumentTaxKindName
              , CAST ('' as TVarChar) 	    AS Comment
 
+             , (DATE_TRUNC ('MONTH', inOperDate) - INTERVAL '4 MONTH') :: TDateTime AS StartDateTax
+
           FROM (SELECT CAST (NEXTVAL ('movement_transferdebtin_seq') AS TVarChar) AS InvNumber) AS tmpInvNum
                LEFT JOIN lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status ON 1 = 1
                LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate
@@ -160,6 +163,7 @@ BEGIN
            , Object_TaxKind.ValueData         	    AS DocumentTaxKindName
            , MovementString_Comment.ValueData       AS Comment
 
+           , (DATE_TRUNC ('MONTH', Movement.OperDate) - INTERVAL '4 MONTH') :: TDateTime AS StartDateTax
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -287,5 +291,5 @@ ALTER FUNCTION gpGet_Movement_TransferDebtIn (Integer, Boolean, TDateTime, TVarC
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_TransferDebtIn (inMovementId:= 0, inOperDate:=CURRENT_DATE,inSession:= '2')
--- SELECT * FROM gpGet_Movement_TransferDebtIn(inMovementId := 40859 , inOperDate := '25.01.2014',  inSession := '5');
+-- SELECT * FROM gpGet_Movement_TransferDebtIn (inMovementId:= 0, inMask:= False, inOperDate:=CURRENT_DATE,inSession:= '2')
+-- SELECT * FROM gpGet_Movement_TransferDebtIn(inMovementId := 40859 , inMask:= False, inOperDate := '25.01.2014',  inSession := '5');
