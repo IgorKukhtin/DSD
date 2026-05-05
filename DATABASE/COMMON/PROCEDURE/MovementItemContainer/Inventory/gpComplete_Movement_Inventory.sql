@@ -1615,7 +1615,7 @@ END IF;
               FROM tmpContainer_count
               GROUP BY tmpContainer_count.ContainerId_Goods, tmpContainer_count.GoodsId
              ) AS tmpContainer_count
-             LEFT JOIN tmpContainer_all AS tmpContainer ON tmpContainer.ContainerId_Goods = tmpContainer_count.ContainerId_Goods
+             LEFT JOIN tmpContainer_all_union AS tmpContainer ON tmpContainer.ContainerId_Goods = tmpContainer_count.ContainerId_Goods
              LEFT JOIN (SELECT MAX (_tmpItem.MovementItemId) AS MovementItemId, _tmpItem.ContainerId_Goods, MAX (_tmpItem.OperSumm) AS OperSumm_item
                              , MAX (CASE WHEN _tmpItem.isNotFact = TRUE THEN 1 ELSE 0 END) AS isNotFact_value
                         FROM _tmpItem

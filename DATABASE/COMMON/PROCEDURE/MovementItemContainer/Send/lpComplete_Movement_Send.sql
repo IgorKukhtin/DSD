@@ -15,6 +15,7 @@ $BODY$
 
   DECLARE vbOperDate TDateTime;
   DECLARE vbUnitId_from  Integer;
+  DECLARE vbUnitId_to    Integer;
   DECLARE vbWhereObjectId_Analyzer_From  Integer;
   DECLARE vbWhereObjectId_Analyzer_To    Integer;
 
@@ -63,11 +64,30 @@ BEGIN
      -- для оптимизации
      vbIsMember_to:= EXISTS (SELECT 1 FROM MovementLinkObject AS MLO JOIN Object ON Object.Id = MLO.ObjectId AND Object.DescId = zc_Object_Member() WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To());
      vbUnitId_from:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From());
+     vbUnitId_to:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To());
      
      
      -- Перепак для партионного учета
      vbIsRePack:= EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_isRePack() AND MB.ValueData = TRUE);
 
+     -- проверка RK + Склад Неликвид
+     IF vbUnitId_from IN (zc_Unit_RK(), 9558031)
+    AND vbUnitId_to IN (8458, 8451)
+    AND inUserId <> zc_Enum_Process_Auto_PrimeCost()
+    AND NOT EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_SubjectDoc() AND MLO.ObjectId > 0)
+    AND EXISTS (SELECT 1
+                FROM MovementItem
+                     LEFT JOIN MovementItemLinkObject AS MILO_SubjectDoc
+                                                      ON MILO_SubjectDoc.MovementItemId = MovementItem.Id
+                                                     AND MILO_SubjectDoc.DescId         = zc_MILinkObject_SubjectDoc()
+                WHERE MovementItem.MovementId = inMovementId
+                  AND MovementItem.DescId     = zc_MI_Master()
+                  AND MovementItem.isErased   = FALSE
+                  AND COALESCE (MILO_SubjectDoc.ObjectId, 0) = 0
+               )
+     THEN
+         RAISE EXCEPTION 'Ошибка.%Нет прав формировать документ <Перемещение>.%В документе не заполнено <Основание для перемещения>.', CHR (13), CHR (13);
+     END IF;
 
 
      -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!

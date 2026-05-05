@@ -167,7 +167,7 @@ BEGIN
            
           IF COALESCE (vbPersonalId, 0) = 0
           THEN         
-              RAISE EXCEPTION 'Ошибка.Сотрудник <%> не найден, должность = <%>, подразделение = <%> и суммой <%> .', inFIO, inPositionName, inUnitName, inSummCompensation;
+              RAISE EXCEPTION 'Ошибка.Сотрудник <%> не найден, должность = <%>, подразделение = <%> и суммой <%> .', inFIO, inPositionName, inUnitName, inAmount;
           END IF;
      END IF;
 
