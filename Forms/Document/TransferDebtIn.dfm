@@ -204,6 +204,9 @@ inherited TransferDebtInForm: TTransferDebtInForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -565,7 +568,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
     Width = 1140
     Height = 140
     TabOrder = 3
-    ExplicitTop = 5
     ExplicitWidth = 1140
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
@@ -4166,7 +4168,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       item
         Name = 'inStartDateSale'
         Value = 42181d
-        Component = edOperDate
+        Component = edStartDateTax
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
