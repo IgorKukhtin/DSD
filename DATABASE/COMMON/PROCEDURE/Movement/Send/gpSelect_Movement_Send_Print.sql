@@ -102,6 +102,7 @@ BEGIN
            , Object_Unit.ValueData                              AS UnitName_PersonalGroup
 
            , CASE WHEN TRIM (MovementString_Comment.ValueData) <> '' THEN ' / ' || MovementString_Comment.ValueData ELSE '' END :: TVarChar AS Comment
+           , COALESCE (MovementBoolean_isKh.ValueData, FALSE)     :: Boolean  AS isKh  --йсумъ
 
        FROM Movement
             LEFT JOIN MovementFloat AS MFloat_WeighingNumber
@@ -146,6 +147,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_isRePack
                                       ON MovementBoolean_isRePack.MovementId =  Movement.Id
                                      AND MovementBoolean_isRePack.DescId = zc_MovementBoolean_isRePack()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_isKh
+                                      ON MovementBoolean_isKh.MovementId = Movement.Id
+                                     AND MovementBoolean_isKh.DescId = zc_MovementBoolean_isKh()
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_Inventory())

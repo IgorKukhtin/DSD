@@ -63,7 +63,6 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitHeight = 370
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
