@@ -216,7 +216,7 @@ BEGIN
     , tmpGoods AS (SELECT tmpPartionGoods.PartnerId
                         , tmpPartionGoods.UnitId 
                    --   , COALESCE (tmpContainer.UnitId, tmpPartionGoods.UnitId) AS UnitId
-                        , tmpContainer.UnitId AS UnitId_Container
+                        , COALESCE (tmpContainer.UnitId, inUnitId) AS UnitId_Container
                    --     , tmpPartionGoods.OperDate  --
                         , tmpPartionGoods.GoodsId
                         , tmpPartionGoods.CurrencyId
