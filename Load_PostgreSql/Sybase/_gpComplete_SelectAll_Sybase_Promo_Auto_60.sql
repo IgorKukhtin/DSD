@@ -28,11 +28,11 @@ BEGIN
                 INNER JOIN MovementDate AS MovementDate_StartSale
                                         ON MovementDate_StartSale.MovementId = Movement.Id
                                        AND MovementDate_StartSale.DescId     = zc_MovementDate_StartSale()
-                                     --AND MovementDate_StartSale.ValueData  BETWEEN inStartDate AND inEndDate
+                                       AND MovementDate_StartSale.ValueData  BETWEEN inStartDate AND inEndDate
 
            WHERE Movement.DescId   IN (zc_Movement_Promo())
              AND Movement.StatusId = zc_Enum_Status_Complete()
-             AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+           --AND Movement.OperDate BETWEEN inStartDate AND inEndDate
 
           ) AS tmp
           LEFT JOIN Movement ON Movement.Id = tmp.MovementId
