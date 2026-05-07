@@ -122,9 +122,6 @@ $BODY$
                                 AND ObjectDate_EndDate.ValueData > CURRENT_DATE
                              )
 
-     -- Остальные - у Юр лица - все его контрагенты + если у него есть прайс
-   , tmpContractPriceList_list AS (SELECT DISTINCT tmpContractPriceList.PartnerId, tmpContractPriceList.ContractId FROM tmpContractPriceList)
-
      -- оптимизация
    , tmpList_1 AS (SELECT tmpPartner.Id AS PartnerId, tmpPartner.StreetId
                    FROM tmpPartner
@@ -137,56 +134,55 @@ $BODY$
                    -- исключили таких
                    WHERE tmp.PartnerId IS NULL
                   )
+     -- Остальные - у Юр лица - все его контрагенты + если у него есть прайс
+   , tmpContractPriceList_list AS (SELECT DISTINCT tmpContractPriceList.PartnerId, tmpContractPriceList.ContractId FROM tmpContractPriceList)
+
      -- оптимизация
-   , tmpList_2 AS (SELECT ObjectLink_Contract_Juridical.*
-                   FROM ObjectLink AS ObjectLink_Contract_Juridical
-                   WHERE -- только такие договора
-                         ObjectLink_Contract_Juridical.ObjectId IN (SELECT DISTINCT tmpContract.ContractId FROM tmpContract)
-                     AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
-                  )
-     -- оптимизация
-   , tmpList_3 AS (SELECT tmpList_1.PartnerId, tmpList_1.StreetId
-                        , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
-                        , ObjectLink_Contract_Juridical.ObjectId     AS ContractId
-                   FROM tmpList_1
-                        -- нашли Юр.лицо
-                        INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                              ON ObjectLink_Partner_Juridical.ObjectId = tmpList_1.PartnerId
-                                             AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
-                        -- нашли 
-                        INNER JOIN tmpList_2 AS ObjectLink_Contract_Juridical
-                                             ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                                            AND ObjectLink_Contract_Juridical.DescId        = zc_ObjectLink_Contract_Juridical()
-                        -- эти здесь
-                        LEFT JOIN tmpContractPriceList_list AS tmpContractPriceList_list
-                                                            ON tmpContractPriceList_list.PartnerId  = tmpList_1.PartnerId
-                                                           AND tmpContractPriceList_list.ContractId  = ObjectLink_Contract_Juridical.ObjectId
-                   -- Если по договору нет Контрагента, берем всех
-                   WHERE tmpContractPriceList_list.ContractId IS NULL
-                  )
+   , tmpContract_Juridical AS (SELECT ObjectLink_Contract_Juridical.*
+                               FROM ObjectLink AS ObjectLink_Contract_Juridical
+                               WHERE -- только такие договора
+                                     ObjectLink_Contract_Juridical.ObjectId IN (SELECT DISTINCT tmpContract.ContractId FROM tmpContract)
+                                 AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                              )
 
      -- Остальные - у Юр лица - все его контрагенты + если у него есть прайс
    , tmpIts AS (SELECT tmpPartner.PartnerId                                 AS PartnerId
                        -- всегда будет прайс
                      , COALESCE (Object_PriceList.Id, zc_PriceList_Basis()) AS PriceListId
                        --
-                     , tmpPartner.ContractId                                AS ContractId
+                     , ObjectLink_Contract_Juridical.ObjectId               AS ContractId
                      , tmpPartner.StreetId                                  AS StreetId
                      , FALSE                                                AS defaultPrice
 
-                FROM tmpList_3 AS tmpPartner
+                FROM tmpList_1 AS tmpPartner
+                    -- нашли Юр.лицо
+                    INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                          ON ObjectLink_Partner_Juridical.ObjectId = tmpPartner.PartnerId
+                                         AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+
+                    INNER JOIN tmpContract_Juridical AS ObjectLink_Contract_Juridical
+                                                     ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                                    AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+
                     -- нашли прайс
                     LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList
-                                         ON ObjectLink_Juridical_PriceList.ObjectId = tmpPartner.JuridicalId
+                                         ON ObjectLink_Juridical_PriceList.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                         AND ObjectLink_Juridical_PriceList.DescId = zc_ObjectLink_Juridical_PriceList()
                     -- все прайсы
                     LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id       = ObjectLink_Juridical_PriceList.ChildObjectId
                                                       --AND Object_PriceList.isErased = FALSE
 
+                    -- эти здесь
+                    LEFT JOIN tmpContractPriceList_list AS tmpContractPriceList
+                                                        ON tmpContractPriceList.PartnerId  = tmpPartner.PartnerId
+                                                       AND tmpContractPriceList.ContractId = ObjectLink_Contract_Juridical.ObjectId
+                -- Если по договору нет Контрагента, берем всех
+                WHERE tmpContractPriceList.ContractId IS NULL
                )
 
           -- только такие договора
         , tmp_Contract AS (SELECT DISTINCT gpSelect.extId :: Integer AS ContractId, gpSelect.PaidKindId, gpSelect.PaidKindName FROM gpSelect_Object_ContractHeaders_effie (inSession) AS gpSelect)
+
      -- Результат
      SELECT tmp.PriceListId         ::TVarChar AS priceHeaderExtId
           , tmp.ContractId          ::TVarChar AS contractHeaderExtId
