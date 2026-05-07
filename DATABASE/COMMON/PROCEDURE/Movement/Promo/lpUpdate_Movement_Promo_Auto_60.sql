@@ -40,12 +40,12 @@ end if;
           , Movement_Promo_View.OperDateEnd
 
             -- Дата документа
-          , Movement_Promo_View.OperDate - INTERVAL '60 DAY'
-          , Movement_Promo_View.OperDate - INTERVAL '1 DAY'
+        --, Movement_Promo_View.OperDate - INTERVAL '60 DAY'
+        --, Movement_Promo_View.OperDate - INTERVAL '1 DAY'
 
             -- Дата начала отгрузки по акционной цене
-        --, Movement_Promo_View.StartSale - INTERVAL '60 DAY'
-        --, Movement_Promo_View.StartSale - INTERVAL '1 DAY'
+          , Movement_Promo_View.StartSale - INTERVAL '60 DAY'
+          , Movement_Promo_View.StartSale - INTERVAL '1 DAY'
            -- Дата начала акции
         --, Movement_Promo_View.StartPromo - INTERVAL '60 DAY'
         --, Movement_Promo_View.StartPromo - INTERVAL '1 DAY'
