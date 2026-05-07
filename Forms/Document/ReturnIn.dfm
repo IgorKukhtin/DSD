@@ -1815,7 +1815,6 @@ inherited ReturnInForm: TReturnInForm
     Width = 1304
     Height = 169
     TabOrder = 3
-    ExplicitTop = -3
     ExplicitWidth = 1304
     ExplicitHeight = 169
     inherited edInvNumber: TcxTextEdit
@@ -2234,7 +2233,7 @@ inherited ReturnInForm: TReturnInForm
       Width = 95
     end
     object cbReExch: TcxCheckBox
-      Left = 971
+      Left = 974
       Top = 145
       Caption = #1060#1080#1079#1086#1073#1084#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True

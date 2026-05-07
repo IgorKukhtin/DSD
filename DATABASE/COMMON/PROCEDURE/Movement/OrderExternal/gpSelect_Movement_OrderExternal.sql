@@ -35,6 +35,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isPromo Boolean 
              , isManual Boolean
              , isEffie Boolean
+             , isReExch Boolean
              , MovementPromo TVarChar
              , Comment TVarChar
              , InsertName TVarChar
@@ -177,6 +178,7 @@ BEGIN
            , COALESCE (MovementBoolean_Promo.ValueData, FALSE)  ::Boolean AS isPromo
            , COALESCE (MovementBoolean_Manual.ValueData, FALSE) ::Boolean AS isManual
            , COALESCE (MovementBoolean_Effie.ValueData, FALSE)  ::Boolean AS isEffie
+           , COALESCE (MovementBoolean_ReExch.ValueData, False) ::Boolean AS isReExch
            , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndSale.ValueData) AS MovementPromo
 
            , MovementString_Comment.ValueData       AS Comment
@@ -341,6 +343,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Effie
                                       ON MovementBoolean_Effie.MovementId = Movement.Id
                                      AND MovementBoolean_Effie.DescId = zc_MovementBoolean_Effie()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_ReExch
+                                      ON MovementBoolean_ReExch.MovementId = Movement.Id
+                                     AND MovementBoolean_ReExch.DescId = zc_MovementBoolean_ReExch()
 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id

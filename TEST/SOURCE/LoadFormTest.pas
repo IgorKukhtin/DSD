@@ -4975,11 +4975,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobilePackEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobilePackEditForm');
   exit;
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileReturnInJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileReturnInJournalForm');
   //exit;
-  {//
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobilePromoJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobilePromoJournalForm');
 

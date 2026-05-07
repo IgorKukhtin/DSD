@@ -37,7 +37,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isMask Boolean  -- вернуть обратно False 
              , IsRemains Boolean
              , isManual Boolean
-             , isEffie Boolean 
+             , isEffie Boolean
+             , isReExch Boolean 
              , Comment TVarChar
              , InsertMobileDate TDateTime
              , UpdateMobileDate TDateTime
@@ -139,6 +140,7 @@ BEGIN
              , CAST (FALSE AS Boolean)                          AS IsRemains
              , CAST (FALSE AS Boolean)                          AS isManual
              , CAST (FALSE AS Boolean)                          AS isEffie
+             , CAST (FALSE AS Boolean)                          AS isReExch
              , CAST ('' as TVarChar) 		                    AS Comment
              
              , NULL :: TDateTime                                AS InsertMobileDate
@@ -249,6 +251,7 @@ BEGIN
            , COALESCE (MovementBoolean_Remains.ValueData, FALSE) ::Boolean AS IsRemains
            , COALESCE (MovementBoolean_Manual.ValueData, FALSE)  ::Boolean AS isManual
            , COALESCE (MovementBoolean_Effie.ValueData, FALSE)   ::Boolean AS isEffie
+           , COALESCE (MovementBoolean_ReExch.ValueData, False) :: Boolean AS isReExch
            , MovementString_Comment.ValueData       AS Comment
 
            , COALESCE (MovementDate_InsertMobile.ValueData, NULL)::TDateTime AS InsertMobileDate
@@ -315,6 +318,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Effie
                                       ON MovementBoolean_Effie.MovementId = Movement.Id
                                      AND MovementBoolean_Effie.DescId = zc_MovementBoolean_Effie()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_ReExch
+                                      ON MovementBoolean_ReExch.MovementId = Movement.Id
+                                     AND MovementBoolean_ReExch.DescId = zc_MovementBoolean_ReExch()
 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id

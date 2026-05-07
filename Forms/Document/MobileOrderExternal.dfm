@@ -2,7 +2,6 @@ inherited MobileOrderExternalForm: TMobileOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')>'
   ClientHeight = 411
   ClientWidth = 1362
-  ExplicitLeft = -181
   ExplicitWidth = 1378
   ExplicitHeight = 450
   PixelsPerInch = 96
@@ -745,6 +744,14 @@ inherited MobileOrderExternalForm: TMobileOrderExternalForm
       TabOrder = 45
       Width = 130
     end
+    object cbReExch: TcxCheckBox
+      Left = 669
+      Top = 87
+      Caption = #1060#1080#1079#1086#1073#1084#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+      Properties.ReadOnly = True
+      TabOrder = 46
+      Width = 119
+    end
   end
   object cxLabel21: TcxLabel [2]
     Left = 1223
@@ -1462,6 +1469,13 @@ inherited MobileOrderExternalForm: TMobileOrderExternalForm
         Value = Null
         Component = edUpdateMobileDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isReExch'
+        Value = Null
+        Component = cbReExch
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 216

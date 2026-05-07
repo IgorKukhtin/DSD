@@ -178,6 +178,7 @@ type
     AmountManual: TcxGridDBColumn;
     PromoSchemaKindName: TcxGridDBColumn;
     cbEffie: TcxCheckBox;
+    cbReExch: TcxCheckBox;
   private
     { Private declarations }
   public
