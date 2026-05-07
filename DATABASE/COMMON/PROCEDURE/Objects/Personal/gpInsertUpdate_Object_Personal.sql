@@ -43,9 +43,9 @@ $BODY$
    DECLARE vbCode Integer;
    DECLARE vbName TVarChar;
 BEGIN
+   vbSession_s:= inSession;
    IF zfConvert_StringToNumber (inSession) < 0
    THEN
-       vbSession_s:= inSession;
        inSession:= (-1 * zfConvert_StringToNumber (inSession)) :: TVarChar;
    END IF;
 
@@ -53,7 +53,7 @@ BEGIN
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Personal());
 
    -- проверка
-   IF zfConvert_StringToNumber (vbSession_s) >= 0 AND vbUserId <> 5
+   IF zfConvert_StringToNumber (vbSession_s) >= 0 -- AND vbUserId <> 5
    THEN
        RAISE EXCEPTION 'Ошибка.Нет прав.';
    END IF;

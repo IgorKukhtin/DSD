@@ -179,7 +179,7 @@ BEGIN
                                          , inIsMain                          := tmp.IsMain                          ::Boolean    -- Основное место работы
                                          , inNumBiz                          := tmp.NumBiz                          ::TVarChar
                                          , inComment                         := tmp.Comment                         ::TVarChar  
-                                         , inSession                         := inSession                           ::TVarChar   -- сессия пользователя 
+                                         , inSession                         := (-1 * vbUserId)                     ::TVarChar   -- сессия пользователя 
                                          )
     FROM gpGet_Movement_StaffListMember (inMovementId := vbMovementId_old
                                        , inOperDate := CURRENT_DATE ::TDateTime
