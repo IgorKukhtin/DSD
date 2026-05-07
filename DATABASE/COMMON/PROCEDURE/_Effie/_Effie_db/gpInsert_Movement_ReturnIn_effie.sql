@@ -16,6 +16,7 @@ $BODY$
    DECLARE vbPartnerId    Integer;
    DECLARE vbPaidKindId   Integer;
    DECLARE vbSubjectDocId Integer;
+   DECLARE vbIsReExch     Boolean;
 BEGIN
 
      -- Результат
@@ -29,6 +30,8 @@ BEGIN
                               , gpSelect.dbCreateDate_ch      -- Дата и время (в UTC) записи документа в БД Effie
                               , gpSelect.comments             -- Комментарии
                               , gpSelect.documentform         -- W - 1 Форма, B - 2 форма
+
+                              , gpSelect.isReExch             -- Физ обмен 1-ДА, 0 - НЕТ
 
                               , gpSelect.productExtId         -- Идентификатор товара
                               , gpSelect.productName          -- Название товара
@@ -47,6 +50,8 @@ BEGIN
                                              , order_returns.comments	          ::TVarChar
                                              , order_returns.documentform         ::TVarChar
 
+                                             , orders_attributes.Value            ::TVarChar AS isReExch
+
                                              , order_returns_items.productExtId   ::Integer    -- Идентификатор товара
                                              , order_returns_items.productName    ::TVarChar   -- Название товара
                                              , order_returns_items.quantity       ::TFloat     -- Количество товара
@@ -55,6 +60,8 @@ BEGIN
 
                                        FROM order_returns
                                             JOIN order_returns_items ON order_returns_items.orderextId = order_returns.extId
+                                            LEFT JOIN orders_attributes ON orders_attributes.orderextId = order_returns.extId
+                                                                       AND orders_attributes.Name ILIKE ' || CHR (39) || 'exchange' || CHR (39) || '
                                        WHERE order_returns.extId = ' || CHR (39) || inExtId || CHR (39)
                                        ) :: Text
                                      ) AS gpSelect (extId                TVarChar   -- Идентификатор заказа
@@ -67,6 +74,7 @@ BEGIN
                                                   , comments             TVarChar   -- Комментарии
                                                   , documentform         TVarChar   -- W - 1 Форма, B - 2 форма
 
+                                                  , isReExch              TVarChar
                                                   , productExtId          Integer    -- Идентификатор товара
                                                   , productName           TVarChar   -- Название товара
                                                   , quantity              TFloat     -- Количество товара
@@ -84,6 +92,8 @@ BEGIN
           , order_returns.dbCreateDate_ch      ::TDateTime  -- Дата и время (в UTC) записи документа в БД Effie
           , order_returns.comments	       ::TVarChar   -- Комментарии
           , order_returns.documentform         ::TVarChar   -- W - 1 Форма, B - 2 форма
+
+          , order_returns.isReExch             ::TVarChar   -- Физ обмен 1-ДА, 0 - НЕТ
 
           , order_returns.productExtId         ::Integer    -- Идентификатор товара
           , order_returns.productName          ::TVarChar   -- Название товара
@@ -121,21 +131,49 @@ BEGIN
     vbPartnerId:= (SELECT DISTINCT _tmpItem.clientExtId FROM _tmpItem);
     -- Поиск
     vbPaidKindId:= (SELECT DISTINCT CASE WHEN _tmpItem.documentform ILIKE '1' THEN zc_Enum_PaidKind_FirstForm() ELSE zc_Enum_PaidKind_SecondForm() END FROM _tmpItem);
+    -- Физ обмен 1 - ДА, 0 - НЕТ
+    vbIsReExch:= (SELECT DISTINCT CASE WHEN _tmpItem.isReExch ILIKE '1' THEN TRUE ELSE FALSE END FROM _tmpItem);
     -- Поиск
     vbUnitId:= (SELECT gpGet.UnitId_ret FROM gpGetMobile_Object_Const (inSession:= vbUserId :: TVarChar) AS gpGet);
 
 
+    -- Поиск - физ обмен
+    IF vbIsReExch = TRUE
+    THEN
+        vbContractId:= (SELECT Object_Contract_View.ContractId
+                        FROM ObjectLink AS ObjectLink_Partner_Juridical
+                             INNER JOIN Object_Contract_View ON Object_Contract_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+                                                            AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                                                            AND Object_Contract_View.InfoMoneyId IN (zc_Enum_InfoMoney_30101()) -- Готовая продукция
+                             -- физ обмен
+                             INNER JOIN ObjectBoolean AS ObjectBoolean_Contract_RealEx
+                                                      ON ObjectBoolean_Contract_RealEx.ObjectId  = Object_Contract_View.ContractId
+                                                     AND ObjectBoolean_Contract_RealEx.DescId    = zc_ObjectBoolean_Contract_RealEx()
+                                                     AND ObjectBoolean_Contract_RealEx.ValueData = TRUE
+
+                        WHERE ObjectLink_Partner_Juridical.ObjectId = vbPartnerId
+                          AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                        ORDER BY Object_Contract_View.EndDate DESC
+                        LIMIT 1
+                       );
+    END IF;
+
+
     -- Поиск - 1.1. - Все параметры
-    vbContractId:= (SELECT soldtable.contractid
-                    FROM soldtable
-                         JOIN _tmpItem ON _tmpItem.GoodsId= soldtable.GoodsId
-                                    --AND COALESCE (_tmpItem.GoodsKindId, 0) = COALESCE (soldtable.GoodsKindId, 0)
-                    WHERE soldtable.OperDate <= CURRENT_DATE - INTERVAL '14 DAY'
-                      AND soldtable.PartnerId = vbPartnerId
-                      AND soldtable.PaidKindId = vbPaidKindId
-                    ORDER BY soldtable.OperDate DESC
-                    LIMIT 1
-                   );
+    IF COALESCE (vbContractId, 0) = 0
+    THEN
+        vbContractId:= (SELECT soldtable.contractid
+                        FROM soldtable
+                             JOIN _tmpItem ON _tmpItem.GoodsId= soldtable.GoodsId
+                                        --AND COALESCE (_tmpItem.GoodsKindId, 0) = COALESCE (soldtable.GoodsKindId, 0)
+                        WHERE soldtable.OperDate <= CURRENT_DATE - INTERVAL '14 DAY'
+                          AND soldtable.PartnerId = vbPartnerId
+                          AND soldtable.PaidKindId = vbPaidKindId
+                        ORDER BY soldtable.OperDate DESC
+                        LIMIT 1
+                       );
+    END IF;
+
     -- Поиск - 1.2. - Все параметры
     IF COALESCE (vbContractId, 0) = 0
     THEN
@@ -188,8 +226,8 @@ BEGIN
                         FROM ObjectLink AS ObjectLink_Partner_Juridical
                              INNER JOIN Object_Contract_View ON Object_Contract_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
                                                             AND Object_Contract_View.PaidKindId = zc_Enum_PaidKind_SecondForm()
-                                                            AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
-                                                            AND View_Contract.InfoMoneyId IN (zc_Enum_InfoMoney_30101()) -- Готовая продукция
+                                                            AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                                                            AND Object_Contract_View.InfoMoneyId IN (zc_Enum_InfoMoney_30101()) -- Готовая продукция
                         WHERE ObjectLink_Partner_Juridical.ObjectId = vbPartnerId
                           AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
                         ORDER BY Object_Contract_View.EndDate DESC
@@ -221,7 +259,7 @@ BEGIN
     vbMovementId:= (WITH tmpParams AS (SELECT _tmpItem.extId                   AS GUID          -- Идентификатор заказа
                                             , _tmpItem.createDate_ch           AS InsertMobile  -- Дата и время создания документа на мобильном устройстве
                                             , _tmpItem.dbCreateDate_ch         AS UpdateMobile  -- Дата и время (в UTC) записи документа в БД Effie
-                                            , _tmpItem.comments	            AS Comments
+                                            , _tmpItem.comments	               AS Comments
                                             , MAX (_tmpItem.SubjectDocId)      AS SubjectDocId
                                        FROM _tmpItem
                                        GROUP BY _tmpItem.extId
@@ -247,6 +285,9 @@ BEGIN
                                                                  )
                    FROM tmpParams
                   );
+
+    -- сохранили свойство <Физ обмен>
+    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_ReExch(), vbMovementId, vbIsReExch);
 
     -- Строки Документа
     UPDATE _tmpItem SET MovementItemId = gpInsertUpdateMobileEffie_MI_ReturnIn
