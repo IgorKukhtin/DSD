@@ -81,7 +81,7 @@ BEGIN
      END IF;
 
      -- !!!замена!!!
-     inStartDateSale:= (SELECT CASE WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_PriceCorrective()) THEN inStartDateSale ELSE DATE_TRUNC ('MONTH', Movement.OperDate) - INTERVAL '4 MONTH' END FROM Movement WHERE Movement.Id = inMovementId);
+     inStartDateSale:= (SELECT CASE WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_PriceCorrective(), zc_Movement_TransferDebtIn()) THEN inStartDateSale ELSE DATE_TRUNC ('MONTH', Movement.OperDate) - INTERVAL '4 MONTH' END FROM Movement WHERE Movement.Id = inMovementId);
 
 
      -- таблица
