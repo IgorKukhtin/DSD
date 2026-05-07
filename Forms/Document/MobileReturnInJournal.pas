@@ -141,6 +141,7 @@ type
     UpdateMobileDate: TcxGridDBColumn;
     PeriodSecMobile: TcxGridDBColumn;
     edIsMobileDate: TcxCheckBox;
+    GUID: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -4978,7 +4978,7 @@ begin
    }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileReturnInJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileReturnInJournalForm');
-  //exit;
+  exit;
   {//
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobilePromoJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobilePromoJournalForm');
