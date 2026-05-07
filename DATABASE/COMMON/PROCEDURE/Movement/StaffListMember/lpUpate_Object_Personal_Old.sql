@@ -138,7 +138,8 @@ BEGIN
         END IF; 
         
         --Основное место работы
-        IF COALESCE (vbisMain, FALSE) = TRUE 
+        IF COALESCE (vbisMain, FALSE) = TRUE
+        THEN 
             IF COALESCE (vbPersonalId,0) <> 0
             THEN 
              --Если еще не помечен на удаление тогда выдем сообщение
@@ -149,12 +150,11 @@ BEGIN
                                     , CHR (13);
                 ELSE
                     RETURN;
-                END IF;
-        END IF;
-        --если не найден сотрудник по основному месту работы, например уже удалили
-        IF COALESCE (vbisMain, FALSE) = TRUE AND COALESCE (vbPersonalId,0) = 0
-        THEN 
-            RETURN;
+                END IF; 
+            ELSE 
+                --если не найден сотрудника по основному месту работы, например уже удалили
+                RETURN;
+            END IF;
         END IF;
         
     END IF; 
