@@ -65,7 +65,8 @@ RETURNS TABLE (Id Integer, Code Integer
              , isRealEx Boolean
              , isIrna Boolean
              , isNotTareReturning Boolean
-             , isMarketNot Boolean             
+             , isMarketNot Boolean
+             , isReExch Boolean             
 
              , DayTaxSummary TFloat
              , DocumentCount TFloat, DateDocument TDateTime
@@ -290,6 +291,7 @@ BEGIN
        , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)         :: Boolean AS isIrna
        , COALESCE (ObjectBoolean_NotTareReturning.ValueData, FALSE)   :: Boolean AS isNotTareReturning
        , COALESCE (ObjectBoolean_MarketNot.ValueData, FALSE)          :: Boolean AS isMarketNot
+       , COALESCE (ObjectBoolean_ReExch.ValueData, FALSE)             :: Boolean AS isReExch
        
        , ObjectFloat_DayTaxSummary.ValueData AS DayTaxSummary
        , ObjectFloat_DocumentCount.ValueData AS DocumentCount
@@ -406,6 +408,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_MarketNot
                                 ON ObjectBoolean_MarketNot.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_MarketNot.DescId = zc_ObjectBoolean_Contract_MarketNot()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_ReExch
+                                ON ObjectBoolean_ReExch.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_ReExch.DescId = zc_ObjectBoolean_Contract_ReExch()
 
         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Object_Contract_View.JuridicalId
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
@@ -573,7 +579,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 23.04.25         *
+ 23.04.25         * isReExch
  11.11.24         * isMarketNot
  26.09.23         * isNotTareReturning
  01.05.23         * NotVat

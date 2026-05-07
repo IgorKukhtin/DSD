@@ -583,6 +583,14 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
             Options.Editing = False
             Width = 80
           end
+          object isReExch: TcxGridDBColumn
+            Caption = #1060#1080#1079#1086#1073#1084#1077#1085' ('#1044#1072'/'#1053#1077#1090')'
+            DataBinding.FieldName = 'isReExch'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object IsEDI: TcxGridDBColumn
             Caption = 'EXITE'
             DataBinding.FieldName = 'isEDI'

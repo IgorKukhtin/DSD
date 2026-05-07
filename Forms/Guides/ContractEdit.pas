@@ -209,6 +209,7 @@ type
     GuidesJuridicalDoc_Next: TdsdGuides;
     cxLabel39: TcxLabel;
     edJuridicalDoc_NextDate: TcxDateEdit;
+    cbReExch: TcxCheckBox;
   private
     { Private declarations }
   public

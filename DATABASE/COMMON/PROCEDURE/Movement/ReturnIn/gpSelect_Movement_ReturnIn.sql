@@ -48,6 +48,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , isPromo Boolean
              , isWeighing_inf Boolean
              , isEffie Boolean
+             , isReExch Boolean
              , MovementPromo TVarChar
 
              , MovementId_OrderReturnTare Integer
@@ -419,6 +420,7 @@ WHERE 1=0
            , COALESCE (MovementBoolean_Promo.ValueData, FALSE) ::Boolean AS isPromo
            , CASE WHEN tmpWeighingPartner.ParentId IS NULL THEN FALSE ELSE TRUE END ::Boolean AS isWeighing_inf
            , COALESCE (MovementBoolean_Effie.ValueData, FALSE) ::Boolean AS isEffie
+           , COALESCE (MovementBoolean_ReExch.ValueData, FALSE) ::Boolean AS isReExch
 
            , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndReturn.ValueData) AS MovementPromo
            , Movement_OrderReturnTare.Id                                                                                                    AS MovementId_OrderReturnTare
@@ -501,6 +503,10 @@ WHERE 1=0
             LEFT JOIN MovementBoolean AS MovementBoolean_Effie
                                       ON MovementBoolean_Effie.MovementId = Movement.Id
                                      AND MovementBoolean_Effie.DescId = zc_MovementBoolean_Effie()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_ReExch
+                                      ON MovementBoolean_ReExch.MovementId = Movement.Id
+                                     AND MovementBoolean_ReExch.DescId = zc_MovementBoolean_ReExch()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Print
                                       ON MovementBoolean_Print.MovementId = Movement.Id
@@ -755,6 +761,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.05.26         *
  16.04.26         *
  06.06.25         * CorrSumm
  01.05.25         * TotalLines

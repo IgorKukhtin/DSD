@@ -341,6 +341,7 @@ type
     actUpdateMIChildDialog: TdsdInsertUpdateAction;
     actInsertMIChildDialog: TdsdInsertUpdateAction;
     cbEffie: TcxCheckBox;
+    cbReExch: TcxCheckBox;
   private
     { Private declarations }
   public

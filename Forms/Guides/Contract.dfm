@@ -1632,6 +1632,14 @@
           Options.Editing = False
           Width = 46
         end
+        object isReExch: TcxGridDBColumn
+          Caption = #1060#1080#1079#1086#1073#1084#1077#1085' '#1076#1083#1103' '#1074#1086#1079#1074#1088#1072#1090#1072' ('#1044#1072'/'#1053#1077#1090')'
+          DataBinding.FieldName = 'isReExch'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 70
+        end
         object IsErased: TcxGridDBColumn
           Caption = #1059#1076#1072#1083#1077#1085
           DataBinding.FieldName = 'isErased'
@@ -2149,6 +2157,18 @@
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_isReExch_Yes'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
           ItemName = 'bbStartLoad'
         end
         item
@@ -2358,6 +2378,22 @@
     object bbStartLoad_StatePersonal: TdxBarButton
       Action = macStartLoad_StatePersonal
       Category = 0
+    end
+    object bbUpdate_isReExch_Yes: TdxBarButton
+      Action = macUpdate_isReExch_Yes
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' '#1047#1085#1072#1095#1077#1085#1080#1077' <'#1060#1080#1079#1086#1073#1084#1077#1085' '#1076#1083#1103' '#1074#1086#1079#1074#1088#1072#1090#1072'> - '#1044#1072
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = macUpdate_isReExch_No
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' '#1047#1085#1072#1095#1077#1085#1080#1077' <'#1060#1080#1079#1086#1073#1084#1077#1085' '#1076#1083#1103' '#1074#1086#1079#1074#1088#1072#1090#1072'> - '#1053#1077#1090
+      Category = 0
+    end
+    object dxBarSeparator2: TdxBarSeparator
+      Caption = 'New Separator'
+      Category = 0
+      Hint = 'New Separator'
+      Visible = ivAlways
     end
   end
   object ActionList: TActionList
@@ -3889,6 +3925,88 @@
         end>
       isShowModal = False
     end
+    object macUpdate_isReExch_No: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_isReExch_No_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1083#1103' '#1042#1099#1073#1088#1072#1085#1085#1099#1093' '#1101#1083#1077#1084#1077#1085#1090#1086#1074' '#1047#1085#1072#1095#1077#1085#1080#1077' <'#1060#1080#1079#1086#1073#1084#1077#1085'> '#1085#1072' '#1053#1077#1090'?'
+      InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1077' '#1080#1079#1084#1077#1085#1077#1085#1086
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' '#1047#1085#1072#1095#1077#1085#1080#1077' <'#1060#1080#1079#1086#1073#1084#1077#1085'> - '#1053#1077#1090
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' '#1047#1085#1072#1095#1077#1085#1080#1077' <'#1060#1080#1079#1086#1073#1084#1077#1085'> - '#1053#1077#1090
+      ImageIndex = 77
+    end
+    object macUpdate_isReExch_No_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_isReExch_No
+        end>
+      View = cxGridDBTableView
+      Caption = 'macUpdate_'
+      ImageIndex = 77
+    end
+    object actUpdate_isReExch_No: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isReExch_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isReExch_No
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1060#1080#1079#1086#1073#1084#1077#1085'  '#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' " '#1053#1077#1090' '#1060#1080#1079#1086#1073#1084#1077#1085'"'
+      ImageIndex = 77
+    end
+    object macUpdate_isReExch_Yes: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_isReExch_Yes_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1083#1103' '#1042#1099#1073#1088#1072#1085#1085#1099#1093' '#1101#1083#1077#1084#1077#1085#1090#1086#1074' '#1047#1085#1072#1095#1077#1085#1080#1077' <'#1060#1080#1079#1086#1073#1084#1077#1085' '#1076#1083#1103' '#1074#1086#1079#1074#1088#1072#1090#1072 +
+        '> '#1085#1072' '#1044#1072'?'
+      InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1077' '#1080#1079#1084#1077#1085#1077#1085#1086
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' '#1047#1085#1072#1095#1077#1085#1080#1077' <'#1060#1080#1079#1086#1073#1084#1077#1085'> '#1085#1072' '#1044#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' '#1047#1085#1072#1095#1077#1085#1080#1077' <'#1060#1080#1079#1086#1073#1084#1077#1085'> '#1085#1072' '#1044#1072
+      ImageIndex = 76
+    end
+    object macUpdate_isReExch_Yes_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_isReExch_Yes
+        end>
+      View = cxGridDBTableView
+      Caption = 'macUpdate_isReExch_Yes_list'
+      ImageIndex = 76
+    end
+    object actUpdate_isReExch_Yes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isReExch_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isReExch_Yes
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' " '#1044#1072'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' " '#1044#1072'"'
+      ImageIndex = 76
+    end
     object JuridicalInvoiceChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -4417,8 +4535,8 @@
     Top = 224
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 88
-    Top = 256
+    Left = 320
+    Top = 368
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_Contract'
@@ -5807,5 +5925,53 @@
     PackSize = 1
     Left = 736
     Top = 184
+  end
+  object spUpdate_isReExch_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdateObject_Contract_isReExch'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisReExch'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 608
+    Top = 136
+  end
+  object spUpdate_isReExch_No: TdsdStoredProc
+    StoredProcName = 'gpUpdateObject_Contract_isReExch'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisReExch'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 608
+    Top = 168
   end
 end

@@ -380,6 +380,18 @@ type
     actGetImportSetting_StatePersonal: TdsdExecStoredProc;
     macStartLoad_StatePersonal: TMultiAction;
     bbStartLoad_StatePersonal: TdxBarButton;
+    spUpdate_isReExch_Yes: TdsdStoredProc;
+    spUpdate_isReExch_No: TdsdStoredProc;
+    actUpdate_isReExch_Yes: TdsdExecStoredProc;
+    actUpdate_isReExch_No: TdsdExecStoredProc;
+    macUpdate_isReExch_No_list: TMultiAction;
+    macUpdate_isReExch_No: TMultiAction;
+    macUpdate_isReExch_Yes_list: TMultiAction;
+    macUpdate_isReExch_Yes: TMultiAction;
+    bbUpdate_isReExch_Yes: TdxBarButton;
+    dxBarButton1: TdxBarButton;
+    dxBarSeparator2: TdxBarSeparator;
+    isReExch: TcxGridDBColumn;
 
   private
     { Private declarations }

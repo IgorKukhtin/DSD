@@ -434,9 +434,6 @@
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -796,6 +793,7 @@
     Width = 1290
     Height = 165
     TabOrder = 3
+    ExplicitTop = -4
     ExplicitWidth = 1290
     ExplicitHeight = 165
     inherited edInvNumber: TcxTextEdit
@@ -1235,6 +1233,14 @@
       Properties.ReadOnly = True
       TabOrder = 54
       Width = 95
+    end
+    object cbReExch: TcxCheckBox
+      Left = 112
+      Top = 140
+      Caption = #1060#1080#1079#1086#1073#1084#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+      Properties.ReadOnly = True
+      TabOrder = 55
+      Width = 118
     end
   end
   object edDocumentTaxKind: TcxButtonEdit [2]
@@ -4508,6 +4514,13 @@
         Value = Null
         Component = edCorrSumm
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isReExch'
+        Value = Null
+        Component = cbReExch
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 224

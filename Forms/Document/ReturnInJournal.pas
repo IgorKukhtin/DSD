@@ -189,6 +189,7 @@ type
     bbInsertFileName_csv: TdxBarButton;
     bbInsertFileName_csv_one: TdxBarButton;
     FileName: TcxGridDBColumn;
+    isReExch: TcxGridDBColumn;
   private
     { Private declarations }
   public
