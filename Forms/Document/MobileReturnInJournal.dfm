@@ -185,7 +185,23 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
             Options.Editing = False
             Width = 55
           end
-          object OperDatePartner: TcxGridDBColumn [4]
+          object isEffie: TcxGridDBColumn [4]
+            Caption = 'Effie ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isEffie'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object isReExch: TcxGridDBColumn [5]
+            Caption = #1060#1080#1079#1086#1073#1084#1077#1085' ('#1044#1072'/'#1053#1077#1090')'
+            DataBinding.FieldName = 'isReExch'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object OperDatePartner: TcxGridDBColumn [6]
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
@@ -193,7 +209,7 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
             Options.Editing = False
             Width = 70
           end
-          inherited colInvNumber: TcxGridDBColumn [5]
+          inherited colInvNumber: TcxGridDBColumn [7]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
@@ -519,14 +535,6 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 54
-          end
-          object isEffie: TcxGridDBColumn
-            Caption = 'Effie ('#1076#1072'/'#1085#1077#1090')'
-            DataBinding.FieldName = 'isEffie'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
           end
           object Checked: TcxGridDBColumn
             Caption = #1055#1088#1086#1074#1077#1088#1077#1085

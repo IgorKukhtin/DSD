@@ -42,6 +42,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , isList Boolean
              , isPromo Boolean
              , isEffie Boolean
+             , isReExch Boolean
              , MovementPromo TVarChar
 
              , InsertName TVarChar
@@ -193,6 +194,8 @@ BEGIN
 
            , COALESCE (MovementBoolean_Promo.ValueData, FALSE) ::Boolean AS isPromo
            , COALESCE (MovementBoolean_Effie.ValueData, FALSE) ::Boolean AS isEffie
+           , COALESCE (MovementBoolean_ReExch.ValueData, FALSE) ::Boolean AS isReExch
+
            , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndReturn.ValueData) AS MovementPromo
 
            , Object_User.ValueData                  AS InsertName
@@ -285,6 +288,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Effie
                                       ON MovementBoolean_Effie.MovementId = Movement.Id
                                      AND MovementBoolean_Effie.DescId = zc_MovementBoolean_Effie()
+            LEFT JOIN MovementBoolean AS MovementBoolean_ReExch
+                                      ON MovementBoolean_ReExch.MovementId = Movement.Id
+                                     AND MovementBoolean_ReExch.DescId = zc_MovementBoolean_ReExch()
 
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id
