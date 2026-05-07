@@ -716,7 +716,15 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1083#1103' '#1089#1087#1080#1089#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
-            Width = 58
+            Width = 88
+          end
+          object isReExch: TcxGridDBColumn
+            Caption = #1060#1080#1079#1086#1073#1084#1077#1085' ('#1044#1072'/'#1053#1077#1090')'
+            DataBinding.FieldName = 'isReExch'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'

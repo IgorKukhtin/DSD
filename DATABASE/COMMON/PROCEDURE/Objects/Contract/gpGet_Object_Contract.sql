@@ -48,6 +48,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , isNotVat Boolean
              , isNotTareReturning Boolean 
              , isMarketNot Boolean
+             , isReExch Boolean
              
              , PriceListId Integer, PriceListName TVarChar
              , PriceListPromoId Integer, PriceListPromoName TVarChar
@@ -153,6 +154,7 @@ BEGIN
            , CAST (FALSE AS Boolean)   AS isNotVat 
            , CAST (FALSE AS Boolean)   AS isNotTareReturning
            , CAST (FALSE AS Boolean)   AS isMarketNot
+           , CAST (FALSE AS Boolean)   AS isReExch
 
            , CAST (0 as Integer)       AS PriceListId 
            , CAST ('' as TVarChar)     AS PriceListName 
@@ -265,6 +267,7 @@ BEGIN
            , COALESCE (ObjectBoolean_NotVat.ValueData, False)             :: Boolean AS isNotVat
            , COALESCE (ObjectBoolean_NotTareReturning.ValueData, FALSE)   :: Boolean AS isNotTareReturning
            , COALESCE (ObjectBoolean_MarketNot.ValueData, FALSE)          :: Boolean AS isMarketNot
+           , COALESCE (ObjectBoolean_ReExch.ValueData, FALSE)             :: Boolean AS isReExch
            
            , Object_PriceList.Id         AS PriceListId 
            , Object_PriceList.ValueData  AS PriceListName 
@@ -368,7 +371,11 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_MarketNot
                                     ON ObjectBoolean_MarketNot.ObjectId = Object_Contract_View.ContractId
                                    AND ObjectBoolean_MarketNot.DescId = zc_ObjectBoolean_Contract_MarketNot()
-                               
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_ReExch
+                                    ON ObjectBoolean_ReExch.ObjectId = Object_Contract_View.ContractId
+                                   AND ObjectBoolean_ReExch.DescId = zc_ObjectBoolean_Contract_ReExch()
+
             LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
                                  ON ObjectLink_Contract_Personal.ObjectId = Object_Contract_View.ContractId
                                 AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
@@ -483,6 +490,7 @@ ALTER FUNCTION gpGet_Object_Contract (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 06.05.26         * isReExch
  23.04.25         *
  11.11.24         * isMarketNot
  26.09.23         * isNotTareReturning

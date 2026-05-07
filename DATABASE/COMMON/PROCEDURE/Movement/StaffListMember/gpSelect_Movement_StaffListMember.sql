@@ -30,6 +30,12 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , UpdateName TVarChar
              , InsertDate TDateTime
              , UpdateDate TDateTime
+             , Member_ReferId Integer
+             , Member_ReferCode Integer
+             , Member_ReferName TVarChar
+             , Member_MentorId Integer
+             , Member_MentorCode Integer
+             , Member_MentorName TVarChar
               )
 AS
 $BODY$
@@ -108,6 +114,13 @@ BEGIN
                                , ObjectLink_Personal_Unit.ChildObjectId           AS UnitId
                                , ObjectLink_Personal_Position.ChildObjectId       AS PositionId
                                , ObjectLink_Personal_PositionLevel.ChildObjectId  AS PositionLevelId
+
+                               , Object_Member_Refer.Id                           AS Member_ReferId
+                               , Object_Member_Refer.ObjectCode                   AS Member_ReferCode
+                               , Object_Member_Refer.ValueData                    AS Member_ReferName
+                               , Object_Member_Mentor.Id                          AS Member_MentorId
+                               , Object_Member_Mentor.ObjectCode                  AS Member_MentorCode
+                               , Object_Member_Mentor.ValueData                   AS Member_MentorName
                           FROM Object AS Object_Personal
                                INNER JOIN ObjectLink AS ObjectLink_Personal_Member
                                                      ON ObjectLink_Personal_Member.ObjectId = Object_Personal.Id
@@ -123,12 +136,12 @@ BEGIN
                                LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
                                                     ON ObjectLink_Personal_Position.ObjectId = Object_Personal.Id
                                                    AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
-                               LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Personal_Position.ChildObjectId
+                               --LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Personal_Position.ChildObjectId
 
                                LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
                                                     ON ObjectLink_Personal_PositionLevel.ObjectId = Object_Personal.Id
                                                    AND ObjectLink_Personal_PositionLevel.DescId = zc_ObjectLink_Personal_PositionLevel()
-                               LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = ObjectLink_Personal_PositionLevel.ChildObjectId
+                               --LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = ObjectLink_Personal_PositionLevel.ChildObjectId
 
                                LEFT JOIN ObjectDate AS ObjectDate_DateIn
                                                     ON ObjectDate_DateIn.ObjectId = Object_Personal.Id
@@ -136,6 +149,17 @@ BEGIN
                                LEFT JOIN ObjectDate AS ObjectDate_DateOut
                                                     ON ObjectDate_DateOut.ObjectId = Object_Personal.Id
                                                    AND ObjectDate_DateOut.DescId = zc_ObjectDate_Personal_Out()
+
+                               LEFT JOIN ObjectLink AS ObjectLink_Personal_Member_Refer
+                                                    ON ObjectLink_Personal_Member_Refer.ObjectId = Object_Personal.Id
+                                                   AND ObjectLink_Personal_Member_Refer.DescId = zc_ObjectLink_Personal_Member_Refer()
+                               LEFT JOIN Object AS Object_Member_Refer ON Object_Member_Refer.Id = ObjectLink_Personal_Member_Refer.ChildObjectId
+
+                               LEFT JOIN ObjectLink AS ObjectLink_Personal_Member_Mentor
+                                                    ON ObjectLink_Personal_Member_Mentor.ObjectId = Object_Personal.Id
+                                                   AND ObjectLink_Personal_Member_Mentor.DescId = zc_ObjectLink_Personal_Member_Mentor()
+                               LEFT JOIN Object AS Object_Member_Mentor ON Object_Member_Mentor.Id = ObjectLink_Personal_Member_Mentor.ChildObjectId
+
                           WHERE Object_Personal.DescId = zc_Object_Personal()
                           --  AND Object_Personal.isErased = FALSE
                        ) 
@@ -206,6 +230,12 @@ BEGIN
            , MovementDate_Insert.ValueData         AS InsertDate
            , MovementDate_Update.ValueData         AS UpdateDate
 
+           , tmpPersonal.Member_ReferId
+           , tmpPersonal.Member_ReferCode
+           , tmpPersonal.Member_ReferName
+           , tmpPersonal.Member_MentorId
+           , tmpPersonal.Member_MentorCode
+           , tmpPersonal.Member_MentorName 
        FROM tmpData AS Movement
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -302,6 +332,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 07.05.26         *
  26.02.26         *
  15.09.25         *
 */

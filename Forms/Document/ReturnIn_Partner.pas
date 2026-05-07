@@ -280,6 +280,7 @@ type
     bbsOpernForm: TdxBarSubItem;
     bbsPrint: TdxBarSubItem;
     cbEffie: TcxCheckBox;
+    cbReExch: TcxCheckBox;
   private
     { Private declarations }
   public

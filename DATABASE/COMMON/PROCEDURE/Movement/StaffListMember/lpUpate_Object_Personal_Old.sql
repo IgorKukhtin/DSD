@@ -138,15 +138,21 @@ BEGIN
         END IF; 
         
         --ќсновное место работы
-        IF COALESCE (vbisMain, FALSE) = TRUE AND COALESCE (vbPersonalId,0) <> 0
+        IF COALESCE (vbisMain, FALSE) = TRUE
         THEN 
-            --≈сли еще не помечен на удаление тогда выдем сообщение
-            IF (SELECT Object.isErased FROM Object WHERE Object.Id = vbPersonalId AND Object.DescId = zc_Object_Personal()) = FALSE
-            THEN
-                RAISE EXCEPTION '¬нимание. Ќе найден предыдущий документ дл€ сотрудника <%>, <%> нужно удалить сотрудника в справочнике.'
-                                 , (SELECT Object.ValueData FROM Object WHERE Object.Id = vbPersonalId AND Object.DescId = zc_Object_Personal())
-                                 , CHR (13);
-            ELSE
+            IF COALESCE (vbPersonalId,0) <> 0
+            THEN 
+             --≈сли еще не помечен на удаление тогда выдем сообщение
+                IF (SELECT Object.isErased FROM Object WHERE Object.Id = vbPersonalId AND Object.DescId = zc_Object_Personal()) = FALSE
+                THEN
+                   RAISE EXCEPTION '¬нимание. Ќе найден предыдущий документ дл€ сотрудника <%>, <%> нужно удалить сотрудника в справочнике.'
+                                    , (SELECT Object.ValueData FROM Object WHERE Object.Id = vbPersonalId AND Object.DescId = zc_Object_Personal())
+                                    , CHR (13);
+                ELSE
+                    RETURN;
+                END IF; 
+            ELSE 
+                --если не найден сотрудника по основному месту работы, например уже удалили
                 RETURN;
             END IF;
         END IF;

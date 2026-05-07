@@ -150,9 +150,9 @@ BEGIN
                                                     ON ObjectBoolean_Main.ObjectId = Object_Personal.Id
                                                    AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Personal_Main()                            
 
-          LEFT JOIN ObjectBoolean AS ObjectBoolean_Guide_Irna
-                                  ON ObjectBoolean_Guide_Irna.ObjectId = Object_Personal.Id
-                                 AND ObjectBoolean_Guide_Irna.DescId = zc_ObjectBoolean_Guide_Irna()
+                            LEFT JOIN ObjectBoolean AS ObjectBoolean_Guide_Irna
+                                                    ON ObjectBoolean_Guide_Irna.ObjectId = Object_Personal.Id
+                                                   AND ObjectBoolean_Guide_Irna.DescId = zc_ObjectBoolean_Guide_Irna()
                       WHERE Object_Personal.DescId = zc_Object_Personal()
                         AND Object_Personal.isErased = FALSE 
                        ) 

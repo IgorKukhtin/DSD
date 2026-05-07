@@ -38,6 +38,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNum
              , isPrinted Boolean
              , isWeighing_inf Boolean
              , isEffie Boolean
+             , isReExch Boolean
              , MovementId_OrderReturnTare Integer
              , InvNumber_OrderReturnTare  TVarChar
 
@@ -138,6 +139,8 @@ BEGIN
              , CAST (FALSE AS Boolean)                  AS isPrinted
              , CAST (FALSE AS Boolean)                  AS isWeighing_inf
              , CAST (FALSE AS Boolean)                  AS isEffie
+             , CAST (FALSE AS Boolean)                  AS isReExch
+
              ,  0                                       AS MovementId_OrderReturnTare
              , '' :: TVarChar                           AS InvNumber_OrderReturnTare
 
@@ -327,7 +330,8 @@ BEGIN
            , COALESCE (MovementBoolean_List.ValueData, FALSE) :: Boolean AS isList
            , COALESCE (MovementBoolean_Print.ValueData, False):: Boolean AS isPrinted
            , CASE WHEN tmpWeighingPartner.ParentId IS NULL THEN FALSE ELSE TRUE END ::Boolean AS isWeighing_inf
-           , COALESCE (MovementBoolean_Effie.ValueData, FALSE):: Boolean AS isEffie
+           , COALESCE (MovementBoolean_Effie.ValueData, FALSE)  :: Boolean AS isEffie 
+           , COALESCE (MovementBoolean_ReExch.ValueData, False) :: Boolean AS isReExch
 
            , Movement_OrderReturnTare.Id                                                                                                    AS MovementId_OrderReturnTare
            , ('π ' || Movement_OrderReturnTare.InvNumber || ' ÓÚ ' || Movement_OrderReturnTare.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_OrderReturnTare
@@ -379,6 +383,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Effie
                                       ON MovementBoolean_Effie.MovementId = inMovementId
                                      AND MovementBoolean_Effie.DescId = zc_MovementBoolean_Effie()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_ReExch
+                                      ON MovementBoolean_ReExch.MovementId = inMovementId
+                                     AND MovementBoolean_ReExch.DescId = zc_MovementBoolean_ReExch()
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  inMovementId
@@ -517,6 +525,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».     Ã‡Ì¸ÍÓ ƒ.¿.
+ 07.05.26         *
  16.04.26         *
  06.06.25         * CorrSumm
  16.02.23         * TransportGoods

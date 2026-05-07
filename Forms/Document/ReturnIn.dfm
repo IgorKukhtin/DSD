@@ -2233,6 +2233,14 @@ inherited ReturnInForm: TReturnInForm
       TabOrder = 52
       Width = 95
     end
+    object cbReExch: TcxCheckBox
+      Left = 971
+      Top = 145
+      Caption = #1060#1080#1079#1086#1073#1084#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+      Properties.ReadOnly = True
+      TabOrder = 53
+      Width = 120
+    end
   end
   object edDocumentTaxKind: TcxButtonEdit [2]
     Left = 867
@@ -6023,6 +6031,13 @@ inherited ReturnInForm: TReturnInForm
         Value = Null
         Component = edCorrSumm
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isReExch'
+        Value = Null
+        Component = cbReExch
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 224
