@@ -51,7 +51,11 @@ BEGIN
           UNION
            -- ObjectDate
            SELECT '<Field FieldName = "' || zfStrToXmlStr (ObjectDateDesc.ItemName)
-               || '" FieldValue = "' || COALESCE (CASE WHEN ObjectDate.DescId IN (zc_ObjectDate_ImportSettings_StartTime()
+               || '" FieldValue = "' || COALESCE (CASE WHEN ObjectDate.DescId IN (zc_ObjectDate_Personal_Out()
+                                                                                 )
+                                                        AND ObjectDate.ValueData = zc_DateEnd()
+                                                            THEN ''
+                                                       WHEN ObjectDate.DescId IN (zc_ObjectDate_ImportSettings_StartTime()
                                                                                 , zc_ObjectDate_ImportSettings_EndTime()
                                                                                 , zc_ObjectDate_User_UpdateMobileFrom()
                                                                                 , zc_ObjectDate_User_UpdateMobileTo()
