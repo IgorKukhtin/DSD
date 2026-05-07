@@ -167,26 +167,41 @@ BEGIN
      IF EXISTS (SELECT 1 FROM _tmpItemPeresort_new)
      THEN
          -- нашли MovementItemId - Master
-         UPDATE _tmpItemPeresort_new SET MovementItemId_to = tmpMI.MovementItemId_to
-         FROM (SELECT MovementItem.Id                                                                         AS MovementItemId_to
-                    , MovementItem.ObjectId                                                                   AS GoodsId_to
-                    , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)                                           AS GoodsKindId_to
-                    , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, MILinkObject_GoodsKind.ObjectId) AS Ord
+         UPDATE _tmpItemPeresort_new SET MovementItemId_to   = tmpMI.MovementItemId_to
+                                       , MovementItemId_from = tmpMI.MovementItemId_from
+         FROM (SELECT MovementItem.Id                                        AS MovementItemId_to
+                    , MovementItem.ObjectId                                  AS GoodsId_to
+                    , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)          AS GoodsKindId_to
+                    , MI_Child.Id                                            AS MovementItemId_from
+                    , MI_Child.ObjectId                                      AS GoodsId_from
+                    , COALESCE (MILinkObject_GoodsKind_child.ObjectId, 0)    AS GoodsKindId_from
+                    , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, MILinkObject_GoodsKind.ObjectId
+                                                    , MI_Child.ObjectId, MILinkObject_GoodsKind_child.ObjectId
+                                        ) AS Ord
                FROM MovementItem
                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                      ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                     AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                    INNER JOIN MovementItem AS MI_Child ON MI_Child.MovementId = vbMovementId_Peresort
+                                                       AND MI_Child.ParentId   = MovementItem.Id
+                                                       AND MI_Child.DescId     = zc_MI_Master()
+                                                       AND MI_Child.isErased   = FALSE
+                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind_child
+                                                     ON MILinkObject_GoodsKind_child.MovementItemId = MI_Child.Id
+                                                    AND MILinkObject_GoodsKind_child.DescId = zc_MILinkObject_GoodsKind()
                WHERE MovementItem.MovementId = vbMovementId_Peresort
                  AND MovementItem.DescId     = zc_MI_Master()
                  AND MovementItem.isErased   = FALSE
               ) AS tmpMI
-         WHERE _tmpItemPeresort_new.GoodsId_to     = tmpMI.GoodsId_to
-           AND _tmpItemPeresort_new.GoodsKindId_to = tmpMI.GoodsKindId_to
-           AND tmpMI.Ord                           = 1
+         WHERE _tmpItemPeresort_new.GoodsId_to       = tmpMI.GoodsId_to
+           AND _tmpItemPeresort_new.GoodsKindId_to   = tmpMI.GoodsKindId_to
+           AND _tmpItemPeresort_new.GoodsId_from     = tmpMI.GoodsId_from
+           AND _tmpItemPeresort_new.GoodsKindId_from = tmpMI.GoodsKindId_from
+           AND tmpMI.Ord                             = 1
         ;
 
          -- нашли MovementItemId - Child
-         UPDATE _tmpItemPeresort_new SET MovementItemId_from   = tmpMI.MovementItemId_from
+         /*UPDATE _tmpItemPeresort_new SET MovementItemId_from   = tmpMI.MovementItemId_from
          FROM (SELECT MI_Child.ParentId                                                                                      AS MovementItemId_to
                     , MI_Child.Id                                                                                            AS MovementItemId_from
                     , MI_Child.ObjectId                                                                                      AS GoodsId_from
@@ -204,7 +219,7 @@ BEGIN
            AND _tmpItemPeresort_new.GoodsId_from      = tmpMI.GoodsId_from
            AND _tmpItemPeresort_new.GoodsKindId_from  = tmpMI.GoodsKindId_from
            AND tmpMI.Ord                              = 1
-        ;
+        ;*/
 
 
          -- Проверка - что б ничего не делать
@@ -278,10 +293,12 @@ BEGIN
          -- сохранили в табл. элементы - Master
          UPDATE _tmpItemPeresort_new SET MovementItemId_to = tmpMI.MovementItemId_new
          FROM (SELECT tmp.MovementItemId_new, tmp.GoodsId_to, tmp.GoodsKindId_to
+                    , tmp.GoodsId_from, tmp.GoodsKindId_from
 
                FROM (SELECT tmp.GoodsId_to, tmp.GoodsKindId_to
-                          , -- сохранили элементы - Master
-                            lpInsertUpdate_MI_ProductionUnion_Master
+                          , tmp.GoodsId_from, tmp.GoodsKindId_from
+                            -- сохранили элементы - Master
+                          , lpInsertUpdate_MI_ProductionUnion_Master
                                                         (ioId                     := tmp.MovementItemId_to
                                                        , inMovementId             := vbMovementId_Peresort
                                                        , inGoodsId                := tmp.GoodsId_to
@@ -299,12 +316,15 @@ BEGIN
                                                         ) AS MovementItemId_new
                      FROM (-- обязательно взяли только там где нет составляющих
                            SELECT DISTINCT _tmpItemPeresort_new.MovementItemId_to, _tmpItemPeresort_new.GoodsId_to, _tmpItemPeresort_new.GoodsKindId_to, _tmpItemPeresort_new.Amount_to
+                                         , _tmpItemPeresort_new.GoodsId_from, _tmpItemPeresort_new.GoodsKindId_from
                            FROM _tmpItemPeresort_new
                           ) AS tmp
                     ) AS tmp
               ) AS tmpMI
-         WHERE _tmpItemPeresort_new.GoodsId_to     = tmpMI.GoodsId_to
-           AND _tmpItemPeresort_new.GoodsKindId_to = tmpMI.GoodsKindId_to
+         WHERE _tmpItemPeresort_new.GoodsId_to        = tmpMI.GoodsId_to
+           AND _tmpItemPeresort_new.GoodsKindId_to    = tmpMI.GoodsKindId_to
+           AND _tmpItemPeresort_new.GoodsId_from      = tmpMI.GoodsId_from
+           AND _tmpItemPeresort_new.GoodsKindId_from  = tmpMI.GoodsKindId_from
         ;
 
          -- сохранили элементы - Child
