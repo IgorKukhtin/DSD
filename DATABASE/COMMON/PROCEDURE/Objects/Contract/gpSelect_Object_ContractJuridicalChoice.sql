@@ -369,6 +369,11 @@ BEGIN
            OR tmpListBranch_Constraint.JuridicalId > 0
            OR ObjectBoolean_isBranchAll.ValueData = TRUE
            OR vbIsConstraint = FALSE
+           OR Object_Juridical.Id IN (10051009  -- рнп кэб╡б рнб
+                                    , 10417477  -- рнп п╡бме  рнб
+                                    , 12228157  -- рнп репмно╡кэ рнб
+                                    , 12228160  -- рнп п╡реик рнб
+                                     )
           )
    ;
    END IF;

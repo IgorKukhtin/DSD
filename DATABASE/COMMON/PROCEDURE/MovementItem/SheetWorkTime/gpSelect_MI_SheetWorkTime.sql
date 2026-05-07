@@ -49,6 +49,7 @@ BEGIN
         FROM (SELECT Object_Personal_View.*
                    , ROW_NUMBER() OVER (PARTITION BY Object_Personal_View.UnitId, Object_Personal_View.MemberId, Object_Personal_View.PositionId, Object_Personal_View.PositionLevelId
                                         ORDER BY CASE WHEN Object_Personal_View.isErased = TRUE THEN 1 ELSE 0 END ASC
+                                               , CASE WHEN COALESCE (Object_Personal_View.isMain, FALSE) = FALSE THEN 1 ELSE 0 END ASC
                                         ) AS Ord_find
               FROM Object_Personal_View
               WHERE Object_Personal_View.UnitId = inUnitId
@@ -71,6 +72,8 @@ BEGIN
                          THEN zc_DateEnd()
                     ELSE MAX (COALESCE (Object_Personal_View.DateOut_user, zc_DateStart()))
                END :: TDateTime AS DateOut
+             , Object_Personal_View.isMain
+
         FROM Object_Personal_View
         WHERE ((Object_Personal_View.DateOut >= vbStartDate AND Object_Personal_View.DateOut <= vbEndDate)
             OR (Object_Personal_View.DateIn >= vbStartDate AND Object_Personal_View.DateIn <= vbEndDate)
@@ -81,6 +84,7 @@ BEGIN
              --, Object_Personal_View.PersonalId
                , Object_Personal_View.PositionId
                , COALESCE (Object_Personal_View.PositionLevelId,0)
+               , Object_Personal_View.isMain
                 ;
 
      CREATE TEMP TABLE tmpDateOut_All ON COMMIT DROP AS
@@ -867,10 +871,6 @@ BEGIN
                                  AND COALESCE(tmpTotal.PersonalGroupId, 0)    = D.Key[4]
                                  AND COALESCE(tmpTotal.StorageLineId, 0)      = D.Key[5]
                                  AND COALESCE(tmpTotal.WorkTimeKindId_key, 0) = D.Key[6]
-         --возьмем отсюда дату увольнения
-         LEFT JOIN tmpListOut ON COALESCE(tmpListOut.MemberId, 0)           = D.Key[1]
-                             AND COALESCE(tmpListOut.PositionId, 0)         = D.Key[2]
-                             AND COALESCE(tmpListOut.PositionLevelId, 0)    = D.Key[3]
          --получить Id сотрудника
          LEFT JOIN tmpListPersonal ON tmpListPersonal.MemberId                     = D.Key[1]
                                   AND COALESCE(tmpListPersonal.PositionId, 0)      = D.Key[2]
@@ -878,6 +878,12 @@ BEGIN
                                   AND COALESCE(tmpListPersonal.PersonalGroupId, 0) = D.Key[4]
                                   AND COALESCE(tmpListPersonal.StorageLineId, 0)   = D.Key[5] 
          
+         --возьмем отсюда дату увольнения
+         LEFT JOIN tmpListOut ON COALESCE(tmpListOut.MemberId, 0)           = D.Key[1]
+                             AND COALESCE(tmpListOut.PositionId, 0)         = D.Key[2]
+                             AND COALESCE(tmpListOut.PositionLevelId, 0)    = D.Key[3]
+                             AND COALESCE(tmpListOut.isMain, FALSE)         = tmpListPersonal.isMain
+
          LEFT JOIN tmpMI_NumBiz ON tmpMI_NumBiz.MemberId                     = D.Key[1]
                                AND COALESCE(tmpMI_NumBiz.PositionId, 0)      = D.Key[2]
                                AND COALESCE(tmpMI_NumBiz.PositionLevelId, 0) = D.Key[3]

@@ -42,6 +42,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , isList Boolean
              , isPromo Boolean
              , isEffie Boolean
+             , isReExch Boolean
              , MovementPromo TVarChar
 
              , InsertName TVarChar
@@ -53,6 +54,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , UnitCode Integer
              , UnitName TVarChar
              , PositionName TVarChar
+             , GUID    TVarChar
               )
 AS
 $BODY$
@@ -192,6 +194,8 @@ BEGIN
 
            , COALESCE (MovementBoolean_Promo.ValueData, FALSE) ::Boolean AS isPromo
            , COALESCE (MovementBoolean_Effie.ValueData, FALSE) ::Boolean AS isEffie
+           , COALESCE (MovementBoolean_ReExch.ValueData, FALSE) ::Boolean AS isReExch
+
            , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndReturn.ValueData) AS MovementPromo
 
            , Object_User.ValueData                  AS InsertName
@@ -207,6 +211,9 @@ BEGIN
            , Object_Unit.ObjectCode                 AS UnitCode
            , Object_Unit.ValueData                  AS UnitName
            , Object_Position.ValueData              AS PositionName
+
+           , MovementString_GUID.ValueData          AS GUID
+
        FROM (SELECT Movement.Id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -239,7 +246,11 @@ BEGIN
                AND MovementDate_InsertMobile.DescId = zc_MovementDate_InsertMobile()                  
             ) AS tmpMovement
 
-             LEFT JOIN Movement ON Movement.Id = tmpMovement.Id
+            LEFT JOIN Movement ON Movement.Id = tmpMovement.Id
+
+            LEFT JOIN MovementString AS MovementString_GUID
+                                     ON MovementString_GUID.MovementId =  Movement.Id
+                                    AND MovementString_GUID.DescId = zc_MovementString_GUID()
 
             INNER JOIN MovementLinkObject AS MovementLinkObject_Insert
                                           ON MovementLinkObject_Insert.MovementId = Movement.Id
@@ -277,6 +288,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Effie
                                       ON MovementBoolean_Effie.MovementId = Movement.Id
                                      AND MovementBoolean_Effie.DescId = zc_MovementBoolean_Effie()
+            LEFT JOIN MovementBoolean AS MovementBoolean_ReExch
+                                      ON MovementBoolean_ReExch.MovementId = Movement.Id
+                                     AND MovementBoolean_ReExch.DescId = zc_MovementBoolean_ReExch()
 
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id
