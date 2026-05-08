@@ -210,11 +210,9 @@ BEGIN
                                                                           , inPartnerId           := tmpParams.PartnerId
                                                                           , inUnitId              := tmpParams.UnitId
                                                                         --, inPaidKindId          := tmpParams.PaidKindId
-                                                                          , inPaidKindId          := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = tmpParams.ContractId AND OL.DescId = zc_ObjectLink_Contract_PaidKind())
-                                                                          , inContractId          := CASE WHEN vbIsReExch = TRUE
+                                                                          , inPaidKindId          := CASE WHEN vbIsReExch = TRUE
                                                                                                                THEN -- физ обмен
-                                                                                                                   (SELECT Object_Contract_View.ContractId
-                                                                                                               
+                                                                                                                   (SELECT Object_Contract_View.PaidKindId
                                                                                                                     FROM ObjectLink AS ObjectLink_Partner_Juridical
                                                                                                                          INNER JOIN Object_Contract_View ON Object_Contract_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
                                                                                                                                                         AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
@@ -228,6 +226,28 @@ BEGIN
                                                                                                                     WHERE ObjectLink_Partner_Juridical.ObjectId = vbPartnerId
                                                                                                                       AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
                                                                                                                     ORDER BY Object_Contract_View.EndDate DESC
+                                                                                                                           , Object_Contract_View.ContractId DESC
+                                                                                                                    LIMIT 1
+                                                                                                                   )
+                                                                                                          ELSE (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = tmpParams.ContractId AND OL.DescId = zc_ObjectLink_Contract_PaidKind())
+                                                                                                     END
+                                                                          , inContractId          := CASE WHEN vbIsReExch = TRUE
+                                                                                                               THEN -- физ обмен
+                                                                                                                   (SELECT Object_Contract_View.ContractId
+                                                                                                                    FROM ObjectLink AS ObjectLink_Partner_Juridical
+                                                                                                                         INNER JOIN Object_Contract_View ON Object_Contract_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+                                                                                                                                                        AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                                                                                                                                                        AND Object_Contract_View.InfoMoneyId IN (zc_Enum_InfoMoney_30101()) -- Готовая продукция
+                                                                                                                         -- физ обмен
+                                                                                                                         INNER JOIN ObjectBoolean AS ObjectBoolean_Contract_RealEx
+                                                                                                                                                  ON ObjectBoolean_Contract_RealEx.ObjectId  = Object_Contract_View.ContractId
+                                                                                                                                                 AND ObjectBoolean_Contract_RealEx.DescId    = zc_ObjectBoolean_Contract_RealEx()
+                                                                                                                                                 AND ObjectBoolean_Contract_RealEx.ValueData = TRUE
+
+                                                                                                                    WHERE ObjectLink_Partner_Juridical.ObjectId = vbPartnerId
+                                                                                                                      AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                                                                                                                    ORDER BY Object_Contract_View.EndDate DESC
+                                                                                                                           , Object_Contract_View.ContractId DESC
                                                                                                                     LIMIT 1
                                                                                                                    )
                                                                                                           ELSE tmpParams.ContractId
