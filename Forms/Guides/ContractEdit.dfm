@@ -2,7 +2,6 @@
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1086#1075#1086#1074#1086#1088'>'
   ClientHeight = 713
   ClientWidth = 934
-  ExplicitTop = -93
   ExplicitWidth = 940
   ExplicitHeight = 742
   PixelsPerInch = 96
@@ -271,8 +270,6 @@
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 30
-    ExplicitLeft = 368
-    ExplicitTop = 5
     object cxGridContractCondition: TcxGrid
       Left = 0
       Top = 26
@@ -759,7 +756,7 @@
     Width = 162
   end
   object ceisPersonal: TcxCheckBox [49]
-    Left = 162
+    Left = 155
     Top = 5
     Hint = #1057#1083#1091#1078#1077#1073#1085#1072#1103' '#1079#1072#1087#1080#1089#1082#1072
     Caption = #1057#1083#1091#1078'. '#1079#1072#1087#1080#1089#1082#1072
@@ -769,7 +766,7 @@
     Width = 98
   end
   object ceIsUnique: TcxCheckBox [50]
-    Left = 270
+    Left = 255
     Top = 6
     Caption = #1056#1072#1089#1095#1077#1090' '#1076#1086#1083#1075#1072
     TabOrder = 51
@@ -1031,17 +1028,17 @@
     Width = 161
   end
   object cbisRealEx: TcxCheckBox [82]
-    Left = 270
+    Left = 255
     Top = 25
-    Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
-    Caption = #1060#1080#1079'. '#1086#1073#1084#1077#1085
+    Hint = #1060#1080#1079'. '#1086#1073#1084#1077#1085' ('#1087#1088#1086#1076#1072#1078#1072')'
+    Caption = #1060#1080#1079'. '#1086#1073#1084#1077#1085' ('#1087#1088#1086#1076'.)'
     ParentShowHint = False
     ShowHint = True
     TabOrder = 82
-    Width = 92
+    Width = 120
   end
   object cbNotVat: TcxCheckBox [83]
-    Left = 270
+    Left = 255
     Top = 45
     Hint = #1082#1083#1080#1077#1085#1090' '#1073#1077#1079' '#1053#1044#1057' ('#1089#1090#1072#1074#1082#1072' 0%)'
     Caption = #1073#1077#1079' '#1053#1044#1057' (0%)'
@@ -1053,21 +1050,21 @@
   object cbMarketNot: TcxCheckBox [84]
     Left = 78
     Top = 64
-    Hint = #1057#1083#1091#1078#1077#1073#1085#1072#1103' '#1079#1072#1087#1080#1089#1082#1072
-    Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1085#1099#1081' '#1076#1086#1089#1090#1091#1087' '#1084#1072#1088#1082#1077#1090#1080#1085#1075
+    Hint = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1085#1099#1081' '#1076#1086#1089#1090#1091#1087' '#1084#1072#1088#1082#1077#1090#1080#1085#1075
+    Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1085#1099#1081' '#1076#1086#1089#1090#1091#1087' '#1084#1072#1088#1082#1077#1090'.'
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 88
-    Width = 193
+    TabOrder = 87
+    Width = 180
   end
   object cbReExch: TcxCheckBox [85]
-    Left = 270
+    Left = 255
     Top = 64
-    Caption = #1060#1080#1079#1086#1073#1084#1077#1085' '#1074#1086#1079#1074#1088'.'
+    Caption = #1060#1080#1079#1086#1073#1084#1077#1085' ('#1079#1072#1082#1072#1079')'
     ParentShowHint = False
     ShowHint = True
     TabOrder = 89
-    Width = 117
+    Width = 114
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 587
