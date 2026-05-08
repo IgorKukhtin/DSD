@@ -2,7 +2,6 @@ inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')>'
   ClientHeight = 460
   ClientWidth = 1434
-  ExplicitLeft = -253
   ExplicitWidth = 1450
   ExplicitHeight = 499
   PixelsPerInch = 96
@@ -586,6 +585,7 @@ inherited OrderExternalForm: TOrderExternalForm
     Width = 1434
     Height = 140
     TabOrder = 3
+    ExplicitTop = 5
     ExplicitWidth = 1434
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
@@ -873,7 +873,7 @@ inherited OrderExternalForm: TOrderExternalForm
       Left = 8
       Top = 103
       TabOrder = 37
-      Width = 647
+      Width = 730
     end
     object cxLabel19: TcxLabel
       Left = 277
@@ -900,12 +900,12 @@ inherited OrderExternalForm: TOrderExternalForm
       Width = 128
     end
     object cxLabel20: TcxLabel
-      Left = 661
+      Left = 744
       Top = 85
       Caption = #1057#1090#1072#1090#1091#1089' ('#1086#1073#1084#1077#1085' '#1089' '#1042#1052#1057')'
     end
     object ceStatus_wms: TcxButtonEdit
-      Left = 661
+      Left = 744
       Top = 103
       Hint = #1057#1090#1072#1090#1091#1089' ('#1086#1073#1084#1077#1085' '#1089' '#1042#1052#1057')promo'
       ParentShowHint = False
@@ -927,7 +927,7 @@ inherited OrderExternalForm: TOrderExternalForm
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 42
-      Width = 168
+      Width = 144
     end
     object cbPrintComment: TcxCheckBox
       Left = 894
@@ -967,6 +967,14 @@ inherited OrderExternalForm: TOrderExternalForm
       Properties.ReadOnly = True
       TabOrder = 47
       Width = 126
+    end
+    object cbReExch: TcxCheckBox
+      Left = 618
+      Top = 85
+      Caption = #1060#1080#1079#1086#1073#1084#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+      Properties.ReadOnly = True
+      TabOrder = 48
+      Width = 119
     end
   end
   object cxLabel21: TcxLabel [2]
@@ -2716,6 +2724,13 @@ inherited OrderExternalForm: TOrderExternalForm
         Component = cbEffie
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isReExch'
+        Value = Null
+        Component = cbReExch
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -3896,8 +3911,8 @@ inherited OrderExternalForm: TOrderExternalForm
     FormNameParam.MultiSelectSeparator = ','
     PositionDataSet = 'ClientDataSet'
     Params = <>
-    Left = 712
-    Top = 96
+    Left = 600
+    Top = 120
   end
   object spUpdate_Status_wms: TdsdStoredProc
     StoredProcName = 'gpUpdate_OrderExternal_Status_wms'
@@ -3921,8 +3936,8 @@ inherited OrderExternalForm: TOrderExternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 784
-    Top = 64
+    Left = 896
+    Top = 16
   end
   object spGetReporNameBill: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_OrderExternal_ReportNameBill'

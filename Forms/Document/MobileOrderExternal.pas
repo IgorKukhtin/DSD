@@ -116,6 +116,7 @@ type
     edInsertMobileDate: TcxDateEdit;
     cxLabel22: TcxLabel;
     edUpdateMobileDate: TcxDateEdit;
+    cbReExch: TcxCheckBox;
   private
     { Private declarations }
   public

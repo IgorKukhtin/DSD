@@ -482,6 +482,14 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
             Options.Editing = False
             Width = 48
           end
+          object isReExch: TcxGridDBColumn
+            Caption = #1060#1080#1079#1086#1073#1084#1077#1085' ('#1044#1072'/'#1053#1077#1090')'
+            DataBinding.FieldName = 'isReExch'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object MovementPromo: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1072#1082#1094#1080#1103
             DataBinding.FieldName = 'MovementPromo'
