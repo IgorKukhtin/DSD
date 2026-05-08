@@ -32,6 +32,7 @@ BEGIN
                               , gpSelect.documentform         -- W - 1 Форма, B - 2 форма
 
                               , gpSelect.isReExch             -- Физ обмен 1-ДА, 0 - НЕТ
+                              , gpSelect.OperDate
 
                               , gpSelect.productExtId         -- Идентификатор товара
                               , gpSelect.productName          -- Название товара
@@ -50,7 +51,8 @@ BEGIN
                                              , order_returns.comments	          ::TVarChar
                                              , order_returns.documentform         ::TVarChar
 
-                                             , orders_attributes.Value            ::TVarChar AS isReExch
+                                             , 0                                  ::TVarChar AS isReExch
+                                             , order_returns_attributes.Value     ::TVarChar AS OperDate
 
                                              , order_returns_items.productExtId   ::Integer    -- Идентификатор товара
                                              , order_returns_items.productName    ::TVarChar   -- Название товара
@@ -60,8 +62,8 @@ BEGIN
 
                                        FROM order_returns
                                             JOIN order_returns_items ON order_returns_items.orderextId = order_returns.extId
-                                            LEFT JOIN orders_attributes ON orders_attributes.orderextId = order_returns.extId
-                                                                       AND orders_attributes.Name ILIKE ' || CHR (39) || 'exchange' || CHR (39) || '
+                                            LEFT JOIN order_returns_attributes ON order_returns_attributes.orderextId = order_returns.extId
+                                                                              AND order_returns_attributes.Name ILIKE ' || CHR (39) || 'ReturnDate' || CHR (39) || '
                                        WHERE order_returns.extId = ' || CHR (39) || inExtId || CHR (39)
                                        ) :: Text
                                      ) AS gpSelect (extId                TVarChar   -- Идентификатор заказа
@@ -74,12 +76,14 @@ BEGIN
                                                   , comments             TVarChar   -- Комментарии
                                                   , documentform         TVarChar   -- W - 1 Форма, B - 2 форма
 
-                                                  , isReExch              TVarChar
-                                                  , productExtId          Integer    -- Идентификатор товара
-                                                  , productName           TVarChar   -- Название товара
-                                                  , quantity              TFloat     -- Количество товара
-                                                  , reasonId              Integer
-                                                  , reasonName            TVarChar
+                                                  , isReExch             TVarChar
+                                                  , OperDate             TVarChar
+
+                                                  , productExtId         Integer    -- Идентификатор товара
+                                                  , productName          TVarChar   -- Название товара
+                                                  , quantity             TFloat     -- Количество товара
+                                                  , reasonId             Integer
+                                                  , reasonName           TVarChar
                                                    )
                         )
      -- Результат
@@ -94,6 +98,7 @@ BEGIN
           , order_returns.documentform         ::TVarChar   -- W - 1 Форма, B - 2 форма
 
           , order_returns.isReExch             ::TVarChar   -- Физ обмен 1-ДА, 0 - НЕТ
+          , order_returns.OperDate             ::TVarChar   -- Физ обмен 1-ДА, 0 - НЕТ
 
           , order_returns.productExtId         ::Integer    -- Идентификатор товара
           , order_returns.productName          ::TVarChar   -- Название товара
@@ -125,6 +130,9 @@ BEGIN
                               AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
     ;
 
+    -- тест
+    -- RAISE EXCEPTION 'Ошибка.<%>', (SELECT DISTINCT COALESCE (zfConvert_StringToDate (_tmpItem.OperDate), _tmpItem.createDate_ch) FROM _tmpItem);
+
     -- Поиск
     vbUserId:= (SELECT DISTINCT _tmpItem.UserId FROM _tmpItem);
     -- Поиск
@@ -132,7 +140,7 @@ BEGIN
     -- Поиск
     vbPaidKindId:= (SELECT DISTINCT CASE WHEN _tmpItem.documentform ILIKE '1' THEN zc_Enum_PaidKind_FirstForm() ELSE zc_Enum_PaidKind_SecondForm() END FROM _tmpItem);
     -- Физ обмен 1 - ДА, 0 - НЕТ
-    vbIsReExch:= (SELECT DISTINCT CASE WHEN _tmpItem.isReExch ILIKE '1' THEN TRUE ELSE FALSE END FROM _tmpItem);
+    vbIsReExch:= FALSE; -- (SELECT DISTINCT CASE WHEN _tmpItem.isReExch ILIKE '1' THEN TRUE ELSE FALSE END FROM _tmpItem);
     -- Поиск
     vbUnitId:= (SELECT gpGet.UnitId_ret FROM gpGetMobile_Object_Const (inSession:= vbUserId :: TVarChar) AS gpGet);
 
@@ -257,19 +265,21 @@ BEGIN
 
     -- Документ
     vbMovementId:= (WITH tmpParams AS (SELECT _tmpItem.extId                   AS GUID          -- Идентификатор заказа
+                                            , COALESCE (zfConvert_StringToDate (_tmpItem.OperDate), _tmpItem.createDate_ch) AS OperDate
                                             , _tmpItem.createDate_ch           AS InsertMobile  -- Дата и время создания документа на мобильном устройстве
                                             , _tmpItem.dbCreateDate_ch         AS UpdateMobile  -- Дата и время (в UTC) записи документа в БД Effie
                                             , _tmpItem.comments	               AS Comments
                                             , MAX (_tmpItem.SubjectDocId)      AS SubjectDocId
                                        FROM _tmpItem
                                        GROUP BY _tmpItem.extId
+                                              , _tmpItem.OperDate
                                               , _tmpItem.createDate_ch
                                               , _tmpItem.dbCreateDate_ch
                                               , _tmpItem.comments
                                       )
                     SELECT gpInsertUpdateMobile_Movement_ReturnIn(inGUID                := tmpParams.GUID
                                                                 , inInvNumber           := CAST (NEXTVAL ('movement_returnin_seq') AS TVarChar)
-                                                                , inOperDate            := DATE_TRUNC ('DAY', tmpParams.InsertMobile)
+                                                                , inOperDate            := DATE_TRUNC ('DAY', tmpParams.OperDate)
                                                                 , inStatusId            := zc_Enum_Status_UnComplete()
                                                                 , inPriceWithVAT        := FALSE
                                                                 , inInsertDate          := tmpParams.InsertMobile

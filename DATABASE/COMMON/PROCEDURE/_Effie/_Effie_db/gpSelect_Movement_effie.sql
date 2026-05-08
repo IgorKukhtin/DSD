@@ -153,6 +153,10 @@ BEGIN
 
 
      FROM _tmpresult AS Orders
+     WHERE Orders.extId NOT IN ('c885ae6f-5bec-45e3-9a36-6b6cb3a9ac56'
+                              , '918b5e6d-9bab-4689-b6d3-40c98c04d59b'
+                              , '34ae1c35-d7fa-42a8-b828-8be9d4d6fd00'
+                               )
     ;
 
 END;

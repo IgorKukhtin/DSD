@@ -15,6 +15,7 @@ $BODY$
    DECLARE vbPartnerId    Integer;
    DECLARE vbInsertMobile TDateTime;
    DECLARE vbDocDate      TDateTime;
+   DECLARE vbIsReExch     Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
@@ -63,6 +64,8 @@ BEGIN
                                   , gpSelect.warehouseExtId       -- Идентификатор склада
                                   , gpSelect.warehouseName        -- Название склада
 
+                                  , gpSelect.isReExch             -- Физ обмен 1-ДА, 0 - НЕТ
+
                                   , gpSelect.productExtId         -- Идентификатор товара
                                   , gpSelect.productName          -- Название товара
                                   , gpSelect.quantity             -- Количество товара
@@ -80,10 +83,12 @@ BEGIN
                                                  , Orders.priceHeaderExtId     ::Integer
                                                  , Orders.priceHeaderName      ::TVarChar
                                                  , Orders.contractHeaderExtId  ::Integer
-                                                 , Orders.comments	           ::TVarChar
+                                                 , Orders.comments	       ::TVarChar
                                                  , Orders.orderForm            ::TVarChar
                                                  , Orders.warehouseExtId       ::Integer
                                                  , Orders.warehouseName        ::TVarChar
+
+                                                 , orders_attributes.Value     ::TVarChar AS isReExch
 
                                                  , orders_items.productExtId   ::Integer    -- Идентификатор товара
                                                  , orders_items.productName    ::TVarChar   -- Название товара
@@ -92,6 +97,8 @@ BEGIN
 
                                            FROM Orders
                                                 JOIN orders_items ON orders_items.orderextId = Orders.extId
+                                                LEFT JOIN orders_attributes ON orders_attributes.orderextId = Orders.extId
+                                                                           AND orders_attributes.Name ILIKE ' || CHR (39) || 'exchange' || CHR (39) || '
                                            WHERE Orders.extId = ' || CHR (39) || inExtId || CHR (39)
                                            ) :: Text
                                          ) AS gpSelect (extId                TVarChar   -- Идентификатор заказа
@@ -109,6 +116,8 @@ BEGIN
                                                       , orderForm            TVarChar   -- W - 1 Форма, B - 2 форма
                                                       , warehouseExtId       Integer    -- Идентификатор склада
                                                       , warehouseName        TVarChar   -- Название склада
+
+                                                      , isReExch              TVarChar
 
                                                       , productExtId          Integer    -- Идентификатор товара
                                                       , productName           TVarChar   -- Название товара
@@ -128,10 +137,12 @@ BEGIN
               , Orders.priceHeaderExtId     ::Integer    -- Идентификатор прайса
               , Orders.priceHeaderName      ::TVarChar   -- Название прайса
               , Orders.contractHeaderExtId  ::Integer    -- Идентификатор контракта
-              , Orders.comments	        ::TVarChar   -- Комментарии
+              , Orders.comments	            ::TVarChar   -- Комментарии
               , Orders.orderForm            ::TVarChar   -- W - 1 Форма, B - 2 форма
               , Orders.warehouseExtId       ::Integer    -- Идентификатор склада
               , Orders.warehouseName        ::TVarChar   -- Название склада
+
+              , Orders.isReExch             ::TVarChar   -- Физ обмен 1-ДА, 0 - НЕТ
 
               , Orders.productExtId         ::Integer    -- Идентификатор товара
               , Orders.productName          ::TVarChar   -- Название товара
@@ -143,6 +154,9 @@ BEGIN
          FROM _tmpresult AS Orders
         ;
 
+
+         -- Физ обмен 1 - ДА, 0 - НЕТ
+         vbIsReExch:= (SELECT DISTINCT CASE WHEN _tmpItem.isReExch ILIKE '1' THEN TRUE ELSE FALSE END FROM _tmpItem);
 
          -- Параметры
          SELECT DISTINCT _tmpItem.clientExtId                       AS PartnerId
@@ -197,7 +211,27 @@ BEGIN
                                                                           , inUnitId              := tmpParams.UnitId
                                                                         --, inPaidKindId          := tmpParams.PaidKindId
                                                                           , inPaidKindId          := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = tmpParams.ContractId AND OL.DescId = zc_ObjectLink_Contract_PaidKind())
-                                                                          , inContractId          := tmpParams.ContractId
+                                                                          , inContractId          := CASE WHEN vbIsReExch = TRUE
+                                                                                                               THEN -- физ обмен
+                                                                                                                   (SELECT Object_Contract_View.ContractId
+                                                                                                               
+                                                                                                                    FROM ObjectLink AS ObjectLink_Partner_Juridical
+                                                                                                                         INNER JOIN Object_Contract_View ON Object_Contract_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+                                                                                                                                                        AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                                                                                                                                                        AND Object_Contract_View.InfoMoneyId IN (zc_Enum_InfoMoney_30101()) -- Готовая продукция
+                                                                                                                         -- физ обмен
+                                                                                                                         INNER JOIN ObjectBoolean AS ObjectBoolean_Contract_RealEx
+                                                                                                                                                  ON ObjectBoolean_Contract_RealEx.ObjectId  = Object_Contract_View.ContractId
+                                                                                                                                                 AND ObjectBoolean_Contract_RealEx.DescId    = zc_ObjectBoolean_Contract_RealEx()
+                                                                                                                                                 AND ObjectBoolean_Contract_RealEx.ValueData = TRUE
+
+                                                                                                                    WHERE ObjectLink_Partner_Juridical.ObjectId = vbPartnerId
+                                                                                                                      AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                                                                                                                    ORDER BY Object_Contract_View.EndDate DESC
+                                                                                                                    LIMIT 1
+                                                                                                                   )
+                                                                                                          ELSE tmpParams.ContractId
+                                                                                                     END
                                                                           , inPriceListId         := tmpParams.PriceListId
                                                                           , inPriceWithVAT        := COALESCE ((SELECT OB.ValueData FROM ObjectBoolean AS OB WHERE OB.ObjectId = tmpParams.PriceListId AND OB.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()), FALSE) :: Boolean
                                                                           , inVATPercent          := COALESCE ((SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = tmpParams.PriceListId AND OFl.DescId = zc_ObjectFloat_PriceList_VATPercent()), 20) :: TFloat
@@ -211,6 +245,9 @@ BEGIN
          -- сохранили свойство <Дата покуп.(Effie)>
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner_Effie(), vbMovementId, vbDocDate);
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner_Effie_orig(), vbMovementId, (SELECT DISTINCT DATE_TRUNC ('DAY', _tmpItem.docDate) FROM _tmpItem));
+
+         -- сохранили свойство <Физ обмен>
+         PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_ReExch(), vbMovementId, vbIsReExch);
 
 
          -- Строки Документа
@@ -268,4 +305,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsert_Movement_effie ('827150cf-c288-40bf-bd19-5d16b4780683', zc_Movement_OrderExternal(), zfCalc_UserAdmin()::TVarChar);
+-- SELECT * FROM gpInsert_Movement_effie ('7d301765-f3da-4100-8e65-a0f87035fa12', zc_Movement_OrderExternal(), zfCalc_UserAdmin()::TVarChar);
