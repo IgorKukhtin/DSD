@@ -49,7 +49,7 @@ BEGIN
                                                                              AND MovementLinkObject_OrderFinance.ObjectId   = inOrderFinanceId
                                            WHERE Movement.DescId = zc_Movement_OrderFinance()
                                              AND Movement.StatusId <> zc_Enum_Status_Erased()
-                                             AND Movement.OperDate BETWEEN inOperDate - INTERVAL '14 DAY' AND inOperDate + INTERVAL '7 DAY'
+                                             AND Movement.OperDate BETWEEN inOperDate - INTERVAL '100 DAY' AND inOperDate + INTERVAL '100 DAY'
                                              AND Movement.Id <> COALESCE (ioId, 0)
                                           )
         -- AND inUserId <> 5
@@ -69,7 +69,7 @@ BEGIN
                                                                              AND MovementLinkObject_OrderFinance.ObjectId   = inOrderFinanceId
                                            WHERE Movement.DescId = zc_Movement_OrderFinance()
                                              AND Movement.StatusId <> zc_Enum_Status_Erased()
-                                             AND Movement.OperDate BETWEEN inOperDate - INTERVAL '14 DAY' AND inOperDate + INTERVAL '7 DAY'
+                                             AND Movement.OperDate BETWEEN inOperDate - INTERVAL '100 DAY' AND inOperDate + INTERVAL '100 DAY'
                                              AND Movement.Id <> COALESCE (ioId, 0)
                                            ORDER BY Movement.Id
                                            LIMIT 1
@@ -86,7 +86,7 @@ BEGIN
                                                                              AND MovementLinkObject_OrderFinance.ObjectId   = inOrderFinanceId
                                            WHERE Movement.DescId = zc_Movement_OrderFinance()
                                              AND Movement.StatusId <> zc_Enum_Status_Erased()
-                                             AND Movement.OperDate BETWEEN inOperDate - INTERVAL '14 DAY' AND inOperDate + INTERVAL '7 DAY'
+                                             AND Movement.OperDate BETWEEN inOperDate - INTERVAL '100 DAY' AND inOperDate + INTERVAL '100 DAY'
                                              AND Movement.Id <> COALESCE (ioId, 0)
                                            ORDER BY Movement.Id
                                            LIMIT 1
