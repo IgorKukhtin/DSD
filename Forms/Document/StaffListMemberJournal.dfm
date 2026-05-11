@@ -278,41 +278,41 @@ inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
             Options.Editing = False
             Width = 120
           end
-          object StorageLineName1: TcxGridDBColumn
+          object StorageLineName_1: TcxGridDBColumn
             Caption = #1051#1080#1085#1080#1103' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072' 1'
-            DataBinding.FieldName = 'StorageLineName1'
+            DataBinding.FieldName = 'StorageLineName_1'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 90
           end
-          object StorageLineName2: TcxGridDBColumn
+          object StorageLineName_2: TcxGridDBColumn
             Caption = #1051#1080#1085#1080#1103' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072' 2'
-            DataBinding.FieldName = 'StorageLineName2'
+            DataBinding.FieldName = 'StorageLineName_2'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 90
           end
-          object StorageLineName3: TcxGridDBColumn
+          object StorageLineName_3: TcxGridDBColumn
             Caption = #1051#1080#1085#1080#1103' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072' 3'
-            DataBinding.FieldName = 'StorageLineName3'
+            DataBinding.FieldName = 'StorageLineName_3'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 90
           end
-          object StorageLineName4: TcxGridDBColumn
+          object StorageLineName_4: TcxGridDBColumn
             Caption = #1051#1080#1085#1080#1103' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072' 4'
-            DataBinding.FieldName = 'StorageLineName4'
+            DataBinding.FieldName = 'StorageLineName_4'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 90
           end
-          object StorageLineName5: TcxGridDBColumn
+          object StorageLineName_5: TcxGridDBColumn
             Caption = #1051#1080#1085#1080#1103' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072' 5'
-            DataBinding.FieldName = 'StorageLineName5'
+            DataBinding.FieldName = 'StorageLineName_5'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
