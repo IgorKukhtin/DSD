@@ -135,7 +135,7 @@ BEGIN
                             INNER JOIN ObjectLink AS ObjectLink_Personal_Member
                                                   ON ObjectLink_Personal_Member.ObjectId = Object_Personal.Id
                                                  AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
-                                                 AND ObjectLink_Personal_Member.ChildObjectId = (SELECT MLO.ObjectId FROM  MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_Member() AND MLO.MovementId = inMovementId)
+                                                 AND ObjectLink_Personal_Member.ChildObjectId = (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_Member() AND MLO.MovementId = inMovementId)
                             LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
                                                  ON ObjectLink_Personal_Position.ObjectId = Object_Personal.Id
                                                 AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
@@ -345,12 +345,20 @@ BEGIN
                                         AND MovementLinkObject_Update.DescId = zc_MovementLinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MovementLinkObject_Update.ObjectId
 
-            LEFT JOIN tmpPersonal ON tmpPersonal.UnitId = MovementLinkObject_Unit.ObjectId
+            LEFT JOIN tmpPersonal ON (COALESCE (MovementBoolean_Main.ValueData, FALSE) = TRUE               --по основному месту работы
+                                  AND tmpPersonal.isMain = TRUE
+                                  AND tmpPersonal.Ord = 1
+                                  AND tmpPersonal.Ord_personal = 1
+                                   ) OR 
+                                    --для ссовместительства
+                                    (COALESCE (MovementBoolean_Main.ValueData, FALSE) = FALSE
+                                 AND tmpPersonal.UnitId = MovementLinkObject_Unit.ObjectId
                                  AND tmpPersonal.PositionId = MovementLinkObject_Position.ObjectId
                                  AND COALESCE (tmpPersonal.PositionLevelId,0) = COALESCE (MovementLinkObject_PositionLevel.ObjectId,0)
-                                 AND tmpPersonal.isMain = COALESCE (MovementBoolean_Main.ValueData, FALSE)
+                                 AND tmpPersonal.isMain = FALSE
                                  AND tmpPersonal.Ord = 1
                                  AND tmpPersonal.Ord_personal = 1
+                               )
             --например если не проведенный док. и нужно найти оп старой должности
             LEFT JOIN tmpPersonal AS tmpPersonal_old
                                   ON tmpPersonal_old.UnitId = MovementLinkObject_Unit_old.ObjectId
