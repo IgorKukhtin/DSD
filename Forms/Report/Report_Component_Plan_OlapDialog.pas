@@ -37,7 +37,7 @@ type
     edGoodsGroup: TcxButtonEdit;
     GoodsGroupGuides: TdsdGuides;
     GuidesInfoMoney: TdsdGuides;
-    edPriceList: TcxButtonEdit;
+    edInfoMoney: TcxButtonEdit;
     cxLabel5: TcxLabel;
   private
     { Private declarations }
