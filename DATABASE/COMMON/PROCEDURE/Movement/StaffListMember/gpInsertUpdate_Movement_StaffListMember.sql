@@ -126,6 +126,7 @@ BEGIN
            INTO vbMovementId_find, vbStaffListKindId_find 
          FROM (SELECT Movement.Id AS  MovementId
                     , ROW_NUMBER() OVER (ORDER BY Movement.Id DESC, Movement.OperDate DESC) AS Ord
+                    , MovementLinkObject_StaffListKind.ObjectId AS StaffListKindId
                FROM Movement 
                     INNER JOIN MovementLinkObject AS MovementLinkObject_Member
                                                   ON MovementLinkObject_Member.MovementId = Movement.Id
