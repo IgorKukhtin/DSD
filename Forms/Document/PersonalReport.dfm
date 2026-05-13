@@ -4,7 +4,7 @@
   ClientHeight = 313
   ClientWidth = 605
   ExplicitWidth = 611
-  ExplicitHeight = 341
+  ExplicitHeight = 342
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -574,8 +574,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 190
-    Top = 147
+    Left = 182
+    Top = 163
   end
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
@@ -691,6 +691,23 @@
         Name = 'NameAll'
         Value = ''
         Component = GuidesCar
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
