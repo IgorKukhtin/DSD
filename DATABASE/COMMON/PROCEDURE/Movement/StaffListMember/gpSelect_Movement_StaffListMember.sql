@@ -35,7 +35,18 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , Member_ReferName TVarChar
              , Member_MentorId Integer
              , Member_MentorCode Integer
-             , Member_MentorName TVarChar
+             , Member_MentorName TVarChar 
+             --
+             , PersonalServiceListId Integer, PersonalServiceListName TVarChar
+             , PersonalServiceListOfficialId Integer, PersonalServiceListOfficialName TVarChar
+             , ServiceListId_AvanceF2 Integer, ServiceListName_AvanceF2 TVarChar
+             , ServiceListCardSecondId Integer, ServiceListCardSecondName TVarChar
+             , SheetWorkTimeId Integer, SheetWorkTimeName TVarChar
+             , StorageLineId_1 Integer, StorageLineName_1 TVarChar
+             , StorageLineId_2 Integer, StorageLineName_2 TVarChar
+             , StorageLineId_3 Integer, StorageLineName_3 TVarChar
+             , StorageLineId_4 Integer, StorageLineName_4 TVarChar
+             , StorageLineId_5 Integer, StorageLineName_5 TVarChar
               )
 AS
 $BODY$
@@ -104,6 +115,41 @@ BEGIN
                                                        , zc_MovementLinkObject_Update()
                                                         )
                      )
+          --линии производства
+        , tmpStorageLine AS (WITH
+                             tmp AS(SELECT ObjectLink_PersonalByStorageLine_Personal.ChildObjectId     AS PersonalId
+                                         , ObjectLink_PersonalByStorageLine_StorageLine.ChildObjectId  AS StorageLineId
+                                         , ROW_NUMBER() OVER (PARTITION BY ObjectLink_PersonalByStorageLine_Personal.ChildObjectId ORDER BY Object_PersonalByStorageLine) AS Ord
+                                    FROM Object AS Object_PersonalByStorageLine
+                                         INNER JOIN ObjectLink AS ObjectLink_PersonalByStorageLine_Personal
+                                                               ON ObjectLink_PersonalByStorageLine_Personal.ObjectId = Object_PersonalByStorageLine.Id
+                                                              AND ObjectLink_PersonalByStorageLine_Personal.DescId = zc_ObjectLink_PersonalByStorageLine_Personal()
+                                                             -- AND ObjectLink_PersonalByStorageLine_Personal.ChildObjectId IN (SELECT DISTINCT tmpPersonal.PersonalId FROM tmpPersonal)
+                                                               
+                                         LEFT JOIN ObjectLink AS ObjectLink_PersonalByStorageLine_StorageLine
+                                                              ON ObjectLink_PersonalByStorageLine_StorageLine.ObjectId = Object_PersonalByStorageLine.Id
+                                                             AND ObjectLink_PersonalByStorageLine_StorageLine.DescId = zc_ObjectLink_PersonalByStorageLine_StorageLine()
+                                    WHERE Object_PersonalByStorageLine.DescId = zc_Object_PersonalByStorageLine()
+                                      AND Object_PersonalByStorageLine.isErased = False
+                                    ) 
+                           , tmpOrd AS (SELECT tmp.PersonalId
+                                             , CASE WHEN tmp.Ord = 1 THEN tmp.StorageLineId ELSE 0 END AS StorageLineId_1
+                                             , CASE WHEN tmp.Ord = 2 THEN tmp.StorageLineId ELSE 0 END AS StorageLineId_2
+                                             , CASE WHEN tmp.Ord = 3 THEN tmp.StorageLineId ELSE 0 END AS StorageLineId_3
+                                             , CASE WHEN tmp.Ord = 4 THEN tmp.StorageLineId ELSE 0 END AS StorageLineId_4
+                                             , CASE WHEN tmp.Ord = 5 THEN tmp.StorageLineId ELSE 0 END AS StorageLineId_5
+                                        FROM tmp 
+                                        )
+                             SELECT tmp.PersonalId
+                                  , MAX (tmp.StorageLineId_1) AS StorageLineId_1
+                                  , MAX (tmp.StorageLineId_2) AS StorageLineId_2
+                                  , MAX (tmp.StorageLineId_3) AS StorageLineId_3
+                                  , MAX (tmp.StorageLineId_4) AS StorageLineId_4
+                                  , MAX (tmp.StorageLineId_5) AS StorageLineId_5
+                             FROM tmpOrd AS tmp
+                             GROUP BY tmp.PersonalId 
+                             )
+
 
           --дату приема берем по основному месту работы, но только если дата документа >= дата приема в сотрудниках
         , tmpPersonal AS (SELECT DISTINCT
@@ -121,6 +167,29 @@ BEGIN
                                , Object_Member_Mentor.Id                          AS Member_MentorId
                                , Object_Member_Mentor.ObjectCode                  AS Member_MentorCode
                                , Object_Member_Mentor.ValueData                   AS Member_MentorName
+
+                               , Object_PersonalServiceList.Id                    AS PersonalServiceListId
+                               , Object_PersonalServiceList.ValueData             AS PersonalServiceListName
+                               , Object_PersonalServiceListOfficial.Id            AS PersonalServiceListOfficialId
+                               , Object_PersonalServiceListOfficial.ValueData     AS PersonalServiceListOfficialName
+                               , Object_PersonalServiceListAvance_F2.Id           AS ServiceListId_AvanceF2
+                               , Object_PersonalServiceListAvance_F2.ValueData    AS ServiceListName_AvanceF2
+                               , Object_PersonalServiceListCardSecond.Id          AS ServiceListCardSecondId
+                               , Object_PersonalServiceListCardSecond.ValueData   AS ServiceListCardSecondName
+
+                               , Object_SheetWorkTime.Id                          AS SheetWorkTimeId
+                               , Object_SheetWorkTime.ValueData                   AS SheetWorkTimeName
+
+                               , Object_StorageLine1.Id                           AS StorageLineId_1
+                               , Object_StorageLine1.ValueData                    AS StorageLineName_1
+                               , Object_StorageLine2.Id                           AS StorageLineId_2
+                               , Object_StorageLine2.ValueData                    AS StorageLineName_2
+                               , Object_StorageLine3.Id                           AS StorageLineId_3
+                               , Object_StorageLine3.ValueData                    AS StorageLineName_3
+                               , Object_StorageLine4.Id                           AS StorageLineId_4
+                               , Object_StorageLine4.ValueData                    AS StorageLineName_4
+                               , Object_StorageLine5.Id                           AS StorageLineId_5
+                               , Object_StorageLine5.ValueData                    AS StorageLineName_5
                           FROM Object AS Object_Personal
                                INNER JOIN ObjectLink AS ObjectLink_Personal_Member
                                                      ON ObjectLink_Personal_Member.ObjectId = Object_Personal.Id
@@ -160,6 +229,45 @@ BEGIN
                                                    AND ObjectLink_Personal_Member_Mentor.DescId = zc_ObjectLink_Personal_Member_Mentor()
                                LEFT JOIN Object AS Object_Member_Mentor ON Object_Member_Mentor.Id = ObjectLink_Personal_Member_Mentor.ChildObjectId
 
+                               LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
+                                                    ON ObjectLink_Personal_PersonalServiceList.ObjectId = Object_Personal.Id
+                                                   AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+                               LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = ObjectLink_Personal_PersonalServiceList.ChildObjectId
+                     
+                               LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceListOfficial
+                                                    ON ObjectLink_Personal_PersonalServiceListOfficial.ObjectId = Object_Personal.Id
+                                                   AND ObjectLink_Personal_PersonalServiceListOfficial.DescId = zc_ObjectLink_Personal_PersonalServiceListOfficial()
+                               LEFT JOIN Object AS Object_PersonalServiceListOfficial ON Object_PersonalServiceListOfficial.Id = ObjectLink_Personal_PersonalServiceListOfficial.ChildObjectId
+                     
+                               LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceListCardSecond
+                                                    ON ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId = Object_Personal.Id
+                                                   AND ObjectLink_Personal_PersonalServiceListCardSecond.DescId = zc_ObjectLink_Personal_PersonalServiceListCardSecond()
+                               LEFT JOIN Object AS Object_PersonalServiceListCardSecond ON Object_PersonalServiceListCardSecond.Id = ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId
+                     
+                               LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Avance_F2
+                                                    ON ObjectLink_PersonalServiceList_Avance_F2.ObjectId = Object_Personal.Id
+                                                   AND ObjectLink_PersonalServiceList_Avance_F2.DescId = zc_ObjectLink_Personal_PersonalServiceListAvance_F2()
+                               LEFT JOIN Object AS Object_PersonalServiceListAvance_F2 ON Object_PersonalServiceListAvance_F2.Id = ObjectLink_PersonalServiceList_Avance_F2.ChildObjectId
+                     
+                               LEFT JOIN ObjectLink AS ObjectLink_Personal_SheetWorkTime
+                                                    ON ObjectLink_Personal_SheetWorkTime.ObjectId = Object_Personal.Id
+                                                   AND ObjectLink_Personal_SheetWorkTime.DescId = zc_ObjectLink_Personal_SheetWorkTime()
+                               LEFT JOIN Object AS Object_SheetWorkTime ON Object_SheetWorkTime.Id = ObjectLink_Personal_SheetWorkTime.ChildObjectId
+                               LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
+                                                    ON ObjectLink_Personal_PersonalGroup.ObjectId = Object_Personal.Id
+                                                   AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
+                               LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
+                               LEFT JOIN ObjectLink AS ObjectLink_Personal_StorageLine
+                                                    ON ObjectLink_Personal_StorageLine.ObjectId = Object_Personal.Id
+                                                   AND ObjectLink_Personal_StorageLine.DescId = zc_ObjectLink_Personal_StorageLine()
+                     
+                               LEFT JOIN tmpStorageLine ON tmpStorageLine.PersonalId = Object_Personal.Id                              
+                               LEFT JOIN Object AS Object_StorageLine1 ON Object_StorageLine1.Id = COALESCE (tmpStorageLine.StorageLineId_1, ObjectLink_Personal_StorageLine.ChildObjectId)
+                               LEFT JOIN Object AS Object_StorageLine2 ON Object_StorageLine2.Id = tmpStorageLine.StorageLineId_2
+                               LEFT JOIN Object AS Object_StorageLine3 ON Object_StorageLine3.Id = tmpStorageLine.StorageLineId_3
+                               LEFT JOIN Object AS Object_StorageLine4 ON Object_StorageLine4.Id = tmpStorageLine.StorageLineId_4
+                               LEFT JOIN Object AS Object_StorageLine5 ON Object_StorageLine5.Id = tmpStorageLine.StorageLineId_5
+          
                           WHERE Object_Personal.DescId = zc_Object_Personal()
                           --  AND Object_Personal.isErased = FALSE
                        ) 
@@ -235,7 +343,28 @@ BEGIN
            , tmpPersonal.Member_ReferName
            , tmpPersonal.Member_MentorId
            , tmpPersonal.Member_MentorCode
-           , tmpPersonal.Member_MentorName 
+           , tmpPersonal.Member_MentorName   
+           
+           , tmpPersonal.PersonalServiceListId
+           , tmpPersonal.PersonalServiceListName
+           , tmpPersonal.PersonalServiceListOfficialId
+           , tmpPersonal.PersonalServiceListOfficialName
+           , tmpPersonal.ServiceListId_AvanceF2
+           , tmpPersonal.ServiceListName_AvanceF2
+           , tmpPersonal.ServiceListCardSecondId
+           , tmpPersonal.ServiceListCardSecondName
+           , tmpPersonal.SheetWorkTimeId
+           , tmpPersonal.SheetWorkTimeName
+           , tmpPersonal.StorageLineId_1
+           , tmpPersonal.StorageLineName_1
+           , tmpPersonal.StorageLineId_2
+           , tmpPersonal.StorageLineName_2
+           , tmpPersonal.StorageLineId_3
+           , tmpPersonal.StorageLineName_3
+           , tmpPersonal.StorageLineId_4
+           , tmpPersonal.StorageLineName_4
+           , tmpPersonal.StorageLineId_5
+           , tmpPersonal.StorageLineName_5
        FROM tmpData AS Movement
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -332,10 +461,12 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.05.26         *
  07.05.26         *
  26.02.26         *
  15.09.25         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_StaffListMember (inStartDate:= '01.08.2023', inEndDate:= '01.08.2023', inIsErased:=true, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())
+-- 
+SELECT * FROM gpSelect_Movement_StaffListMember (inStartDate:= '01.08.2025', inEndDate:= '01.08.2025', inIsErased:=true, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())

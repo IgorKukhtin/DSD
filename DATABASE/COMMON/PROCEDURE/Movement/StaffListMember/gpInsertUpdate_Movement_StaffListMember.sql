@@ -64,6 +64,9 @@ $BODY$
            vbDateSend   TDateTime;
            vbIsDateOut  Boolean;
            vbIsDateSend Boolean;
+           vbStaffListKindId Integer;
+           vbMovementId_find Integer;
+           vbStaffListKindId_find Integer;
 
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -99,6 +102,144 @@ BEGIN
      THEN
           RAISE EXCEPTION 'Ошибка.Для <%> должно быть установлено Основное место работы = <НЕТ>.', lfGet_Object_ValueData_sh (inStaffListKindId);
      END IF;
+                              
+     --проверка, если уже был сохранен документ 4)нельзя в документе менять "вид оформления"
+     IF COALESCE (ioId,0) <> 0
+     THEN
+         --сохраненное значение
+         vbStaffListKindId := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = ioId AND MLO.DescId = zc_MovementLinkObject_StaffListKind());
+         IF COALESCE (vbStaffListKindId,0) <> COALESCE (inStaffListKindId,0)
+         THEN
+             --
+             RAISE EXCEPTION 'Ошибка.Нельзя изменять <Вид оформления в штат>';
+         END If;
+     END IF;
+
+     --проверка 1) если не уволен - нельзя повторно принять на любое основное место
+     vbMovementId_find:=0;
+     vbStaffListKindId_find:=0;
+     IF COALESCE (inStaffListKindId,0) = zc_Enum_StaffListKind_In() AND COALESCE (inIsMain,False) = TRUE
+     THEN
+         --ищем документы по основному месту работы , берем последний, 
+         SELECT tmp.MovementId
+              , tmp.StaffListKindId
+           INTO vbMovementId_find, vbStaffListKindId_find 
+         FROM (SELECT Movement.Id AS  MovementId
+                    , ROW_NUMBER() OVER (ORDER BY Movement.Id DESC, Movement.OperDate DESC) AS Ord
+               FROM Movement 
+                    INNER JOIN MovementLinkObject AS MovementLinkObject_Member
+                                                  ON MovementLinkObject_Member.MovementId = Movement.Id
+                                                 AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
+                                                 AND MovementLinkObject_Member.ObjectId = inMemberId
+    
+                    INNER JOIN MovementBoolean AS MovementBoolean_Main
+                                               ON MovementBoolean_Main.MovementId = Movement.Id
+                                              AND MovementBoolean_Main.DescId = zc_MovementBoolean_Main()
+                                              AND COALESCE (MovementBoolean_Main.ValueData, FALSE) = TRUE
+    
+                   LEFT JOIN MovementLinkObject AS MovementLinkObject_StaffListKind
+                                                ON MovementLinkObject_StaffListKind.MovementId = Movement.Id
+                                               AND MovementLinkObject_StaffListKind.DescId = zc_MovementLinkObject_StaffListKind()
+               WHERE Movement.DescId = zc_Movement_StaffListMember()
+                 AND Movement.OperDate <= inOperDate
+                 AND Movement.StatusId = zc_Enum_Status_Complete()
+                 AND Movement.Id <> ioId
+               ) AS tmp
+         WHERE Ord = 1;
+         --если это не док. увольнения тогда ошибка
+         IF COALESCE (vbMovementId_find,0) <> 0 AND COALESCE (vbStaffListKindId_find,0) <> zc_Enum_StaffListKind_Out()
+         THEN
+             RAISE EXCEPTION 'Ошибка.Нельзя повторно принять на основное место работы.';
+         END IF;
+     END IF;
+
+     /*   ??????????? как быть если несколько раз принимали на одну и туже должность, подойдет ли такое условие*/
+     --проверка 2)если уволен - нельзя еще раз уволить
+     vbMovementId_find:=0;
+     vbStaffListKindId_find:=0;
+     IF COALESCE (inStaffListKindId,0) = zc_Enum_StaffListKind_Out()
+     THEN
+         -- проверка есть ли уже документ увольнения
+         SELECT tmp.MovementId
+              , tmp.StaffListKindId
+        INTO vbMovementId_find, vbStaffListKindId_find 
+         FROM (SELECT Movement.Id  AS MovementId
+                    , MovementLinkObject_StaffListKind.ObjectId AS StaffListKindId
+                    , ROW_NUMBER() OVER (ORDER BY Movement.Id DESC, Movement.OperDate DESC) AS Ord
+               FROM Movement
+                    INNER JOIN MovementLinkObject AS MovementLinkObject_Member
+                                                  ON MovementLinkObject_Member.MovementId = Movement.Id
+                                                 AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
+                                                 AND MovementLinkObject_Member.ObjectId = inMemberId
+
+                    INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                  ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                 AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                 AND MovementLinkObject_Unit.ObjectId = inUnitId
+
+                    INNER JOIN MovementLinkObject AS MovementLinkObject_Position
+                                                  ON MovementLinkObject_Position.MovementId = Movement.Id
+                                                 AND MovementLinkObject_Position.DescId = zc_MovementLinkObject_Position()
+                                                 AND MovementLinkObject_Position.ObjectId = inPositionId
+
+                    LEFT JOIN MovementLinkObject AS MovementLinkObject_PositionLevel
+                                                 ON MovementLinkObject_PositionLevel.MovementId = Movement.Id
+                                                AND MovementLinkObject_PositionLevel.DescId = zc_MovementLinkObject_PositionLevel()
+
+                    LEFT JOIN MovementLinkObject AS MovementLinkObject_StaffListKind
+                                                 ON MovementLinkObject_StaffListKind.MovementId = Movement.Id
+                                                AND MovementLinkObject_StaffListKind.DescId = zc_MovementLinkObject_StaffListKind()
+               WHERE Movement.DescId = zc_Movement_StaffListMember()
+                 AND Movement.StatusId <> zc_Enum_Status_Erased()
+                 AND Movement.Id <> COALESCE (ioId,0)
+                 AND COALESCE (MovementLinkObject_PositionLevel.ObjectId,0) = COALESCE (inPositionLevelId,0)
+               ) AS tmp
+         WHERE tmp.Ord = 1; 
+         --
+         --если последний док. увольнения тогда ошибка
+         IF COALESCE (vbMovementId_find,0) <> 0 AND COALESCE (vbStaffListKindId_find,0) = zc_Enum_StaffListKind_Out()
+         THEN
+             RAISE EXCEPTION 'Ошибка.Нельзя повторно уволить сотрудника.';
+         END IF;
+     END IF;
+     
+     --проверка 3) если уволен - нельзя делать перевод 
+     vbMovementId_find:=0;
+     vbStaffListKindId_find:=0;
+     IF COALESCE (inStaffListKindId,0) = zc_Enum_StaffListKind_Send()
+     THEN
+         -- проверка есть ли уже документ увольнения , берем только основное место работы
+         SELECT tmp.MovementId
+              , tmp.StaffListKindId
+        INTO vbMovementId_find, vbStaffListKindId_find 
+         FROM (SELECT Movement.Id AS MovementId
+                    , MovementLinkObject_StaffListKind.ObjectId AS StaffListKindId
+                    , ROW_NUMBER() OVER (ORDER BY Movement.Id DESC, Movement.OperDate DESC) AS Ord
+               FROM Movement
+                    INNER JOIN MovementLinkObject AS MovementLinkObject_Member
+                                                  ON MovementLinkObject_Member.MovementId = Movement.Id
+                                                 AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
+                                                 AND MovementLinkObject_Member.ObjectId = inMemberId
+
+                    INNER JOIN MovementBoolean AS MovementBoolean_Main
+                                               ON MovementBoolean_Main.MovementId = Movement.Id
+                                              AND MovementBoolean_Main.DescId = zc_MovementBoolean_Main()
+                                              AND COALESCE (MovementBoolean_Main.ValueData, FALSE) = TRUE
+
+                    LEFT JOIN MovementLinkObject AS MovementLinkObject_StaffListKind
+                                                 ON MovementLinkObject_StaffListKind.MovementId = Movement.Id
+                                                AND MovementLinkObject_StaffListKind.DescId = zc_MovementLinkObject_StaffListKind()
+               WHERE Movement.DescId = zc_Movement_StaffListMember()
+                 AND Movement.StatusId <> zc_Enum_Status_Erased()
+                 AND Movement.Id <> COALESCE (ioId,0)
+               ) AS tmp
+         WHERE tmp.Ord = 1; 
+         --если последний док. увольнение тогда ошибка
+         IF COALESCE (vbMovementId_find,0) <> 0 AND COALESCE (vbStaffListKindId_find,0) = zc_Enum_StaffListKind_Out()
+         THEN
+             RAISE EXCEPTION 'Ошибка.Нельзя перевести уволенного сотрудника.';
+         END IF;
+     END IF;
 
 
      --проверка
@@ -106,7 +247,8 @@ BEGIN
      THEN
           RAISE EXCEPTION 'Ошибка.<Физ.лицо> должно быть заполнено.';
      END IF;
-     
+
+     --
 
      -- проверка - такая должность + разряд должны быть в Штатном
      IF inIsMain = TRUE AND NOT EXISTS (SELECT 1 FROM gpSelect_Object_Unit_StaffList (inSession:= inSession) AS gpSelect WHERE gpSelect.Id = inUnitId)

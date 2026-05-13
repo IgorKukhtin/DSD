@@ -2337,8 +2337,8 @@ inherited StaffListMemberForm: TStaffListMemberForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 84
-    Top = 479
+    Left = 116
+    Top = 487
   end
   object GuidesPersonalServiceListAvanceF2: TdsdGuides
     KeyField = 'Id'
