@@ -1979,6 +1979,23 @@ END IF;
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
+     -- Проверка
+     IF vbIsCorporate_From = TRUE AND vbInfoMoneyId_CorporateFrom NOT IN (zc_Enum_InfoMoney_20801() -- Алан
+                                                                        , zc_Enum_InfoMoney_20901() -- Ирна
+                                                                        , zc_Enum_InfoMoney_21001() -- Чапли
+                                                                        , zc_Enum_InfoMoney_21101() -- Дворкин
+                                                                        , zc_Enum_InfoMoney_21151() -- ЕКСПЕРТ-АГРОТРЕЙД
+                                                                        , zc_Enum_InfoMoney_21155() -- Фирменная торговля
+                                                                         )
+     THEN
+	 RAISE EXCEPTION 'Ошибка.Неправильно установлен признак %<Главное юр.лицо> = <ДА> %для <%>.'
+                        , CHR (13)
+                        , CHR (13)
+                        , lfGet_Object_ValueData_sh (vbJuridicalId_From)
+                         ;
+     END IF;
+     
+
      -- 2.0.1.1. определяется Счет(справочника) для проводок по долг Поставщику или Физ.лицу (подотчетные лица)
      UPDATE _tmpItem_SummPartner SET AccountId         = _tmpItem_byAccount.AccountId
                                    , AccountId_Transit = CASE WHEN vbOperDate <> vbOperDatePartner AND vbMemberId_From = 0 THEN zc_Enum_Account_110101() ELSE 0 END -- Транзит

@@ -43,6 +43,8 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_ScaleCeh_Movement_all());
      vbUserId:= lpGetUserBySession (inSession);
 
+-- test
+  if inMovementId IN (34279667, 34284773, 34280501, 34279210) then update Movement set StatusId = zc_Enum_Status_UnComplete() where Id= inMovementId; end if;
 
      -- проверка
      IF COALESCE (inMovementId, 0) = 0
@@ -651,6 +653,31 @@ BEGIN
 
                                     FROM gpGet_Movement_WeighingProduction (inMovementId:= inMovementId, inSession:= inSession) AS tmp
                                  );
+
+
+         -- !!!Проверка!!!!
+         IF EXISTS (SELECT 1
+                    FROM MovementLinkObject AS MLO
+                    WHERE MLO.MovementId = inMovementId
+                      AND MLO.DescId = zc_MovementLinkObject_DocumentKind()
+                      AND MLO.ObjectId IN (zc_Enum_DocumentKind_CuterWeight()
+                                         , zc_Enum_DocumentKind_RealWeight()
+                                         , zc_Enum_DocumentKind_RealDelicShp()
+                                         , zc_Enum_DocumentKind_RealDelicMsg()
+                                          )
+                   )
+             -- Если создался документ
+             AND vbMovementId_begin > 0
+             --
+             AND EXTRACT (HOUR FROM CURRENT_TIMESTAMP) >= 10
+         THEN
+	     RAISE EXCEPTION 'Ошибка.Для <%> нет прав на создание документа № <%> от <%>'
+                           , lfGet_Object_ValueData_sh ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_DocumentKind()))
+                           , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_begin)
+                           , (SELECT zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = vbMovementId_begin)
+                            ;
+         END IF;
+
 
          -- дописали св-во
          IF EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PersonalGroup() AND MLO.ObjectId > 0)
@@ -2077,7 +2104,7 @@ BEGIN
      END IF;
 
 
-if (vbUserId = 5 AND 1=1) OR inMovementId = 33154555
+if (vbUserId = 5 AND 1=1) -- OR inMovementId = 34279667
 then
     RAISE EXCEPTION 'Admin - Errr _end <%>  <%>', (select Movement.InvNumber from Movement where Movement.Id = vbMovementId_begin), vbMovementId_begin;
     -- 'Повторите действие через 3 мин.'
@@ -2100,4 +2127,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsert_ScaleCeh_Movement_all (inBranchCode:= 0, inMovementId:= 10, inOperDate:= '01.01.2015', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpInsert_ScaleCeh_Movement_all (inBranchCode:= 102, inMovementId:= 34279667, inOperDate:= '13.05.2026', inSession:= '2321579 ')
