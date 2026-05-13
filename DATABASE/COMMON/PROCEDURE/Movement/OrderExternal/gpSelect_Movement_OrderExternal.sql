@@ -425,10 +425,10 @@ BEGIN
 
        WHERE COALESCE (Object_From.DescId, 0) <> zc_Object_Unit()
          AND (tmpUnit_basis.UnitId > 0  OR vbIsUserOrder_basis = FALSE)
-         AND (vbUserId <> 5
+         /*AND (vbUserId <> 5
            OR MovementDate_OperDatePartner_Effie.ValueData <  (MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime 
            OR MovementDate_OperDatePartner_Effie_orig.ValueData <  (MovementDate_OperDatePartner.ValueData + (COALESCE (ObjectFloat_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime 
-             )
+             )*/
        ;
 
 END;
