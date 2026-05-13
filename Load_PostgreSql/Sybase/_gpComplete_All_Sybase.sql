@@ -31,7 +31,7 @@ THEN RETURN; END IF;
      
 
 
-if CURRENT_TIMESTAMP between '05.05.2026 7:55' and '05.05.2026 10:00' AND 1=1
+if CURRENT_TIMESTAMP between '11.05.2026 7:55' and '11.05.2026 10:00' AND 1=0
 then
     RAISE EXCEPTION 'Ошибка.ok-pause';
 end if;
@@ -49,10 +49,10 @@ END IF;
      --THEN RETURN; END IF;
 
      -- Розподільчий комплекс + Склад Брак + Склад Возвратов + Склад УТИЛЬ + Склад Утиль-сроки
-     /*IF EXISTS (SELECT 1  FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId IN (zc_Unit_RK()))
+     IF EXISTS (SELECT 1  FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId IN (zc_Unit_RK()))
         AND vbMovementDescId IN (zc_Movement_SendOnPrice())
         AND 1=0
-      THEN RETURN; END IF;*/
+      THEN RETURN; END IF;
 
 
    -- !!!ошщибка!!!
