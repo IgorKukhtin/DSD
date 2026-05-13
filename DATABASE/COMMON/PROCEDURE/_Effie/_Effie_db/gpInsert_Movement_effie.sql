@@ -166,7 +166,7 @@ BEGIN
                             , vbInsertMobile
                             , vbDocDate
          FROM _tmpItem;
-         
+
 
          -- Если Дата Пок должна быть позже Effie
          IF vbInsertMobile + (COALESCE ((SELECT ValueData FROM ObjectFloat WHERE ObjectId = vbPartnerId AND DescId = zc_ObjectFloat_Partner_PrepareDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL
@@ -212,44 +212,48 @@ BEGIN
                                                                         --, inPaidKindId          := tmpParams.PaidKindId
                                                                           , inPaidKindId          := CASE WHEN vbIsReExch = TRUE
                                                                                                                THEN -- физ обмен
-                                                                                                                   (SELECT Object_Contract_View.PaidKindId
-                                                                                                                    FROM ObjectLink AS ObjectLink_Partner_Juridical
-                                                                                                                         INNER JOIN Object_Contract_View ON Object_Contract_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
-                                                                                                                                                        AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
-                                                                                                                                                        AND Object_Contract_View.InfoMoneyId IN (zc_Enum_InfoMoney_30101()) -- Готовая продукция
-                                                                                                                         -- физ обмен
-                                                                                                                         INNER JOIN ObjectBoolean AS ObjectBoolean_Contract_RealEx
-                                                                                                                                                  ON ObjectBoolean_Contract_RealEx.ObjectId  = Object_Contract_View.ContractId
-                                                                                                                                                 AND ObjectBoolean_Contract_RealEx.DescId    = zc_ObjectBoolean_Contract_RealEx()
-                                                                                                                                                 AND ObjectBoolean_Contract_RealEx.ValueData = TRUE
+                                                                                                                   COALESCE ((SELECT Object_Contract_View.PaidKindId
+                                                                                                                              FROM ObjectLink AS ObjectLink_Partner_Juridical
+                                                                                                                                   INNER JOIN Object_Contract_View ON Object_Contract_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+                                                                                                                                                                  AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                                                                                                                                                                  AND Object_Contract_View.InfoMoneyId IN (zc_Enum_InfoMoney_30101()) -- Готовая продукция
+                                                                                                                                   -- физ обмен
+                                                                                                                                   INNER JOIN ObjectBoolean AS ObjectBoolean_Contract_ReExch
+                                                                                                                                                            ON ObjectBoolean_Contract_ReExch.ObjectId  = Object_Contract_View.ContractId
+                                                                                                                                                           AND ObjectBoolean_Contract_ReExch.DescId    = zc_ObjectBoolean_Contract_ReExch()
+                                                                                                                                                           AND ObjectBoolean_Contract_ReExch.ValueData = TRUE
 
-                                                                                                                    WHERE ObjectLink_Partner_Juridical.ObjectId = vbPartnerId
-                                                                                                                      AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
-                                                                                                                    ORDER BY Object_Contract_View.EndDate DESC
-                                                                                                                           , Object_Contract_View.ContractId DESC
-                                                                                                                    LIMIT 1
-                                                                                                                   )
+                                                                                                                              WHERE ObjectLink_Partner_Juridical.ObjectId = vbPartnerId
+                                                                                                                                AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                                                                                                                              ORDER BY Object_Contract_View.EndDate DESC
+                                                                                                                                     , Object_Contract_View.ContractId DESC
+                                                                                                                              LIMIT 1
+                                                                                                                             )
+                                                                                                                           , (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = tmpParams.ContractId AND OL.DescId = zc_ObjectLink_Contract_PaidKind())
+                                                                                                                            )
                                                                                                           ELSE (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = tmpParams.ContractId AND OL.DescId = zc_ObjectLink_Contract_PaidKind())
                                                                                                      END
                                                                           , inContractId          := CASE WHEN vbIsReExch = TRUE
                                                                                                                THEN -- физ обмен
-                                                                                                                   (SELECT Object_Contract_View.ContractId
-                                                                                                                    FROM ObjectLink AS ObjectLink_Partner_Juridical
-                                                                                                                         INNER JOIN Object_Contract_View ON Object_Contract_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
-                                                                                                                                                        AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
-                                                                                                                                                        AND Object_Contract_View.InfoMoneyId IN (zc_Enum_InfoMoney_30101()) -- Готовая продукция
-                                                                                                                         -- физ обмен
-                                                                                                                         INNER JOIN ObjectBoolean AS ObjectBoolean_Contract_RealEx
-                                                                                                                                                  ON ObjectBoolean_Contract_RealEx.ObjectId  = Object_Contract_View.ContractId
-                                                                                                                                                 AND ObjectBoolean_Contract_RealEx.DescId    = zc_ObjectBoolean_Contract_RealEx()
-                                                                                                                                                 AND ObjectBoolean_Contract_RealEx.ValueData = TRUE
+                                                                                                                   COALESCE ((SELECT Object_Contract_View.ContractId
+                                                                                                                              FROM ObjectLink AS ObjectLink_Partner_Juridical
+                                                                                                                                   INNER JOIN Object_Contract_View ON Object_Contract_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+                                                                                                                                                                  AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                                                                                                                                                                  AND Object_Contract_View.InfoMoneyId IN (zc_Enum_InfoMoney_30101()) -- Готовая продукция
+                                                                                                                                   -- физ обмен
+                                                                                                                                   INNER JOIN ObjectBoolean AS ObjectBoolean_Contract_ReExch
+                                                                                                                                                            ON ObjectBoolean_Contract_ReExch.ObjectId  = Object_Contract_View.ContractId
+                                                                                                                                                           AND ObjectBoolean_Contract_ReExch.DescId    = zc_ObjectBoolean_Contract_ReExch()
+                                                                                                                                                           AND ObjectBoolean_Contract_ReExch.ValueData = TRUE
 
-                                                                                                                    WHERE ObjectLink_Partner_Juridical.ObjectId = vbPartnerId
-                                                                                                                      AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
-                                                                                                                    ORDER BY Object_Contract_View.EndDate DESC
-                                                                                                                           , Object_Contract_View.ContractId DESC
-                                                                                                                    LIMIT 1
-                                                                                                                   )
+                                                                                                                              WHERE ObjectLink_Partner_Juridical.ObjectId = vbPartnerId
+                                                                                                                                AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                                                                                                                              ORDER BY Object_Contract_View.EndDate DESC
+                                                                                                                                     , Object_Contract_View.ContractId DESC
+                                                                                                                              LIMIT 1
+                                                                                                                             )
+                                                                                                                           , tmpParams.ContractId
+                                                                                                                            )
                                                                                                           ELSE tmpParams.ContractId
                                                                                                      END
                                                                           , inPriceListId         := tmpParams.PriceListId
@@ -306,7 +310,7 @@ BEGIN
      THEN
         -- сохранили свойство <Effie (да)>
         PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Effie(), vbMovementId, TRUE);
-    
+
         -- сохранили свойство <Дата/время создания заказа на мобильном устройстве>
         PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_InsertMobile(), vbMovementId, (SELECT DISTINCT _tmpItem.createDate_ch FROM _tmpItem));
         -- сохранили свойство <Дата/время создания заказа на мобильном устройстве>
