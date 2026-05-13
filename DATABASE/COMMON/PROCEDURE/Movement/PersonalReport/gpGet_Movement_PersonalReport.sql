@@ -40,6 +40,29 @@ BEGIN
           END IF;
 
      RETURN QUERY
+     WITH tmpPersonal AS (SELECT ObjectLink_Personal_Unit.ChildObjectId     AS UnitId
+                               , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Personal_Member.ChildObjectId
+                                                    -- сортировкой определяется приоритет для выбора, т.к. выбираем с Ord = 1
+                                                    ORDER BY CASE WHEN Object_Personal.isErased = FALSE THEN 0 ELSE 1 END
+                                                           , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN 0 ELSE 1 END
+                                                           , CASE WHEN ObjectBoolean_Main.ValueData = TRUE THEN 0 ELSE 1 END
+                                                           , ObjectLink_Personal_Member.ObjectId
+                                                   ) AS Ord
+                          FROM ObjectLink AS ObjectLink_Personal_Member
+                               LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Personal_Member.ObjectId
+                               LEFT JOIN ObjectDate AS ObjectDate_DateOut
+                                                    ON ObjectDate_DateOut.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                                   AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out()          
+                               LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                                    ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                                   AND ObjectLink_Personal_Unit.DescId   = zc_ObjectLink_Personal_Unit()
+                              
+                               LEFT JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                       ON ObjectBoolean_Main.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                                      AND ObjectBoolean_Main.DescId   = zc_ObjectBoolean_Personal_Main()
+                          WHERE ObjectLink_Personal_Member.ChildObjectId = inMemberId
+                            AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
+                         )
        SELECT
              0                                  AS Id
            , CAST (NEXTVAL ('movement_personalreport_seq') AS TVarChar) AS InvNumber
@@ -59,8 +82,8 @@ BEGIN
            , 0                                  AS ContractId
            , ''::TVarChar                       AS ContractInvNumber
 
-           , 0                                  AS UnitId
-           , CAST ('' as TVarChar)              AS UnitName
+           , Object_Unit.Id                     AS UnitId
+           , Object_Unit.ValueData              AS UnitName
            , 0                                  AS MoneyPlaceId
            , CAST ('' as TVarChar)              AS MoneyPlaceName
            , 0                                  AS CarId
@@ -68,7 +91,9 @@ BEGIN
 
            , 0                                  AS MovementId_Invoice
            , CAST ('' AS TVarChar)              AS InvNumber_Invoice
-       FROM Object AS Object_Member 
+       FROM Object AS Object_Member
+            LEFT JOIN tmpPersonal ON tmpPersonal.ord = 1
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId 
        WHERE Object_Member.Id = inMemberId
        ;
    END IF;

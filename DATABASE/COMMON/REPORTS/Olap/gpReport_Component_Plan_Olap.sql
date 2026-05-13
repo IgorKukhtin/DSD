@@ -14,9 +14,11 @@ RETURNS TABLE (MovementId  Integer
              , MonthDate   TDateTime 
              , Year        Integer 
              , WeekNumber  Integer 
-             --
-             , FromId      Integer 
-             , FromName    TVarChar 
+             -- 
+             , UnitId           Integer
+             , UnitName         TVarChar
+             , PartnerInId      Integer
+             , PartnerInName    TVarChar
   
              --ТОвар ГП            
              , GoodsId_gp          Integer
@@ -50,7 +52,8 @@ RETURNS TABLE (MovementId  Integer
              , Amount_fact_sh                 TFloat  --2.ФАКТ ИТОГО Расход 2.1+2+3+4
              , Amount_fact_Weight             TFloat  
              , Amount_income_sh               TFloat  -- Кол-во приход
-             , Amount_income_Weight           TFloat  
+             , Amount_income_Weight           TFloat
+             , Amount_income                  TFloat  
              , Summ_income                    TFloat              -- Сумма приход
   
              -- Товар ГП 
@@ -205,7 +208,7 @@ BEGIN
                                                                         
                          SELECT Movement.Id AS MovementId
                               , Movement.OperDate
-                              , MovementLinkObject_From.ObjectId AS FromId    --поставщик 
+                              , MovementLinkObject_From.ObjectId AS PartnerInId    --поставщик 
                               , MovementLinkObject_To.ObjectId   AS UnitId    --кому
                               , MovementItem.ObjectId AS GoodsId
                               , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -349,7 +352,7 @@ BEGIN
                        SELECT tmp.MovementId
                             , tmp.OperDate
                             , tmp.UnitId
-                            , 0                      AS FromId                   --поставщик
+                            , 0                      AS PartnerInId                   --поставщик
                             , tmp.GoodsId            AS GoodsId_gp               --ТОвар Гп
                             , tmp.GoodsKindId        AS GoodsKindId_gp           --Вид товара ГП
                             , 0                      AS GoodsId                  --Товар расход
@@ -370,7 +373,7 @@ BEGIN
                        SELECT tmp.MovementId
                             , tmp.OperDate
                             , tmp.UnitId
-                            , tmp.FromId                                         --поставщик 
+                            , tmp.PartnerInId                                         --поставщик 
                             , 0                      AS GoodsId_gp
                             , 0                      AS GoodsKindId_gp
                             , tmp.GoodsId
@@ -391,7 +394,7 @@ BEGIN
                        SELECT tmp.MovementId
                             , tmp.OperDate
                             , tmp.UnitId
-                            , 0                                       AS FromId                   --поставщик
+                            , 0                                       AS PartnerInId                   --поставщик
                             , tmp.GoodsId_gp
                             , tmp.GoodsKindId_gp
                             , tmp.GoodsId
@@ -469,8 +472,10 @@ BEGIN
            , EXTRACT (YEAR FROM tmpData.OperDate)    :: Integer AS Year
            , EXTRACT (WEEK FROM tmpData.OperDate)    :: Integer AS WeekNumber
            --
-           , Object_From.Id        ::Integer  AS FromId
-           , Object_From.ValueData ::TVarChar AS FromName
+           , Object_Unit.Id             ::Integer  AS UnitId
+           , Object_Unit.ValueData      ::TVarChar AS UnitName
+           , Object_PartnerIn.Id        ::Integer  AS PartnerInId
+           , Object_PartnerIn.ValueData ::TVarChar AS PartnerInName
 
            --ТОвар ГП
            , Object_Goods_gp.Id               AS GoodsId_gp 
@@ -485,14 +490,14 @@ BEGIN
            , Object_GoodsKind.Id              AS GoodsKindId
            , Object_GoodsKind.ValueData       AS GoodsKindName
            
-           , (tmpData.AmountSale_rk           * (CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS AmountSale_rk_sh           --1.1.Продано Покуп с РК
-           , (tmpData.AmountSale_rk           * (CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END)) ::TFloat AS AmountSale_rk_Weight
-           , (tmpData.AmountSendOnPrice_rk    * (CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS AmountSendOnPrice_rk_sh    --1.2.Расход на филиалы с РК  
-           , (tmpData.AmountSendOnPrice_rk    * (CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END)) ::TFloat AS AmountSendOnPrice_rk_Weight
-           , (tmpData.Amount_rk               * (CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS Amount_rk_sh               --Продано с РК 1.1 + 1.2  
-           , (tmpData.Amount_rk               * (CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END)) ::TFloat AS Amount_rk_Weight 
-           , (tmpData.Amount_produnion_master * (CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS Amount_produnion_master_sh --приход ПФ-ГП
-           , (tmpData.Amount_produnion_master * (CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END)) ::TFloat AS Amount_produnion_master_Weight
+           , (tmpData.AmountSale_rk           * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS AmountSale_rk_sh           --1.1.Продано Покуп с РК
+           , (tmpData.AmountSale_rk           * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam_gp.Weight ELSE 1 END)) ::TFloat AS AmountSale_rk_Weight
+           , (tmpData.AmountSendOnPrice_rk    * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS AmountSendOnPrice_rk_sh    --1.2.Расход на филиалы с РК  
+           , (tmpData.AmountSendOnPrice_rk    * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam_gp.Weight ELSE 1 END)) ::TFloat AS AmountSendOnPrice_rk_Weight
+           , (tmpData.Amount_rk               * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS Amount_rk_sh               --Продано с РК 1.1 + 1.2  
+           , (tmpData.Amount_rk               * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam_gp.Weight ELSE 1 END)) ::TFloat AS Amount_rk_Weight 
+           , (tmpData.Amount_produnion_master * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS Amount_produnion_master_sh --приход ПФ-ГП
+           , (tmpData.Amount_produnion_master * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam_gp.Weight ELSE 1 END)) ::TFloat AS Amount_produnion_master_Weight
            , (tmpData.Amount_produnion_ch     * (CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS Amount_produnion_ch_sh     --2.1
            , (tmpData.Amount_produnion_ch     * (CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END)) ::TFloat AS Amount_produnion_ch_Weight
            , (tmpData.Amount_sale             * (CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS Amount_sale_sh             --2.4
@@ -505,7 +510,8 @@ BEGIN
            , (tmpData.Amount_fact             * (CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END)) ::TFloat AS Amount_fact_Weight
            , (tmpData.Amount_income           * (CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS Amount_income_sh           -- Кол-во приход
            , (tmpData.Amount_income           * (CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END)) ::TFloat AS Amount_income_Weight
-           ,  tmpData.Summ_income   ::TFloat              -- Сумма приход
+           , tmpData.Amount_income  ::TFloat
+           , tmpData.Summ_income   ::TFloat              -- Сумма приход
 
            -- Товар ГП 
            , tmpGoodsParam_gp.MeasureId                AS MeasureId_gp
@@ -542,7 +548,7 @@ BEGIN
              LEFT JOIN Object AS Object_GoodsKind_gp ON Object_GoodsKind_gp.Id = tmpData.GoodsKindId_gp
              
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpData.UnitId
-             LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData.FromId
+             LEFT JOIN Object AS Object_PartnerIn ON Object_PartnerIn.Id = tmpData.PartnerInId
 
              LEFT JOIN tmpGoodsParam ON tmpGoodsParam.GoodsId = tmpData.GoodsId
              LEFT JOIN tmpGoodsParam AS tmpGoodsParam_gp ON tmpGoodsParam_gp.GoodsId = tmpData.GoodsId_gp
@@ -559,4 +565,7 @@ $BODY$
 */
 
 -- тест-
--- SELECT * FROM gpReport_Component_Plan_Olap (inStartDate:= '01.05.2026', inEndDate:= '02.05.2026', inGoodsGroupId:= 0/*1928*/, inInfoMoneyId:= 8911, inSession:= zfCalc_UserAdmin()) 
+-- 
+--  SELECT * FROM gpReport_Component_Plan_Olap (inStartDate:= '01.05.2026', inEndDate:= '01.05.2026', inGoodsGroupId:= 0/*1928*/, inInfoMoneyId:= 0, inSession:= zfCalc_UserAdmin()) 
+
+--Цена приход от поставщ.

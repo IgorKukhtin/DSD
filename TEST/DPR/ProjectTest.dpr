@@ -1661,7 +1661,9 @@ uses
   ChoiceCellMobileDialog in '..\..\Forms\Document\ChoiceCellMobileDialog.pas' {ChoiceCellMobileDialogForm: TParentForm},
   ChoiceCellMobile in '..\..\Forms\Document\ChoiceCellMobile.pas' {ChoiceCellMobileForm: TParentForm},
   StaffListMemberUnit in '..\..\Forms\Document\StaffListMemberUnit.pas' {StaffListMemberUnitForm: TParentForm},
-  Unit_StaffList in '..\..\Forms\Guides\Unit_StaffList.pas' {Unit_StaffListForm: TParentForm};
+  Unit_StaffList in '..\..\Forms\Guides\Unit_StaffList.pas' {Unit_StaffListForm: TParentForm},
+  Report_Component_Plan_OlapDialog in '..\..\Forms\Report\Report_Component_Plan_OlapDialog.pas' {Report_Component_Plan_OlapDialogForm: TParentForm},
+  Report_Component_Plan_Olap in '..\..\Forms\Report\Report_Component_Plan_Olap.pas' {Report_Component_Plan_OlapForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

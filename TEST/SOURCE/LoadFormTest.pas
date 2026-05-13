@@ -2744,6 +2744,12 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Component_Plan_OlapForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Component_Plan_OlapForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Component_Plan_OlapDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Component_Plan_OlapDialogForm');
+  exit;
+
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Personal_Cash_smsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Personal_Cash_smsForm');
@@ -5158,6 +5164,7 @@ end;
 
 procedure TLoadFormTest.LoadCarFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TObjectColorForm'));
   TdsdFormStorageFactory.GetStorage.Load('TObjectColorForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TObjectColorEditForm'));
@@ -5167,7 +5174,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCarPropertyForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCarPropertyEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCarPropertyEditForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBodyTypeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBodyTypeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBodyTypeEditForm'));
@@ -5180,9 +5187,10 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCarForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCarForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCarEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCarEditForm');
-  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCar_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCar_ObjectForm');
 end;
