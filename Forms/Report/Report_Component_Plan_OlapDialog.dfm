@@ -78,9 +78,9 @@ object Report_Component_Plan_OlapDialogForm: TReport_Component_Plan_OlapDialogFo
     TabOrder = 7
     Width = 373
   end
-  object edPriceList: TcxButtonEdit
-    Left = 11
-    Top = 122
+  object edInfoMoney: TcxButtonEdit
+    Left = 8
+    Top = 127
     Properties.Buttons = <
       item
         Default = True
@@ -204,12 +204,12 @@ object Report_Component_Plan_OlapDialogForm: TReport_Component_Plan_OlapDialogFo
   end
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
+    LookupControl = edInfoMoney
     FormNameParam.Value = 'TInfoMoney_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
-    ParentDataSet = 'TreeDataSet'
     Params = <
       item
         Name = 'Key'
@@ -229,7 +229,7 @@ object Report_Component_Plan_OlapDialogForm: TReport_Component_Plan_OlapDialogFo
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 149
-    Top = 110
+    Left = 253
+    Top = 126
   end
 end

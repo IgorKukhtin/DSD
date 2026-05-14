@@ -33,28 +33,21 @@ RETURNS TABLE (MovementId  Integer
              , GoodsKindId         Integer
              , GoodsKindName       TVarChar
              
-             , AmountSale_rk_sh               TFloat  --1.1.Продано Покуп с РК
-             , AmountSale_rk_Weight           TFloat  
-             , AmountSendOnPrice_rk_sh        TFloat  --1.2.Расход на филиалы с РК  
-             , AmountSendOnPrice_rk_Weight    TFloat  
-             , Amount_rk_sh                   TFloat  --Продано с РК 1.1 + 1.2  
-             , Amount_rk_Weight               TFloat  
-             , Amount_produnion_master_sh     TFloat  --приход ПФ-ГП
-             , Amount_produnion_master_Weight TFloat 
-             , Amount_produnion_ch_sh         TFloat  --2.1
-             , Amount_produnion_ch_Weight     TFloat  
-             , Amount_sale_sh                 TFloat  --2.4
-             , Amount_sale_Weight             TFloat  
-             , Amount_loss_sh                 TFloat  --2.2
-             , Amount_loss_Weight             TFloat  
-             , Amount_inv_sh                  TFloat  --2.3
-             , Amount_inv_Weight              TFloat  
-             , Amount_fact_sh                 TFloat  --2.ФАКТ ИТОГО Расход 2.1+2+3+4
-             , Amount_fact_Weight             TFloat  
-             , Amount_income_sh               TFloat  -- Кол-во приход
-             , Amount_income_Weight           TFloat
-             , Amount_income                  TFloat  
-             , Summ_income                    TFloat              -- Сумма приход
+             , AmountSale_rk_sh           TFloat  --1.1.Продано Покуп с РК
+             , AmountSale_rk              TFloat  
+             , AmountSendOnPrice_rk_sh    TFloat  --1.2.Расход на филиалы с РК  
+             , AmountSendOnPrice_rk       TFloat  
+             , Amount_rk_sh               TFloat  --Продано с РК 1.1 + 1.2  
+             , Amount_rk                  TFloat  
+             , Amount_produnion_master_sh TFloat  --приход ПФ-ГП
+             , Amount_produnion_master    TFloat 
+             , Amount_produnion_ch        TFloat  --2.1
+             , Amount_sale                TFloat  --2.4
+             , Amount_loss                TFloat  --2.2
+             , Amount_inv                 TFloat  --2.3
+             , Amount_fact                TFloat  --2.ФАКТ ИТОГО Расход 2.1+2+3+4
+             , Amount_income              TFloat  -- Кол-во приход
+             , Summ_income                TFloat  -- Сумма приход
   
              -- Товар ГП 
              , MeasureId_gp                Integer
@@ -491,27 +484,20 @@ BEGIN
            , Object_GoodsKind.ValueData       AS GoodsKindName
            
            , (tmpData.AmountSale_rk           * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS AmountSale_rk_sh           --1.1.Продано Покуп с РК
-           , (tmpData.AmountSale_rk           * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam_gp.Weight ELSE 1 END)) ::TFloat AS AmountSale_rk_Weight
+           , (tmpData.AmountSale_rk           * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam_gp.Weight ELSE 1 END)) ::TFloat AS AmountSale_rk
            , (tmpData.AmountSendOnPrice_rk    * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS AmountSendOnPrice_rk_sh    --1.2.Расход на филиалы с РК  
-           , (tmpData.AmountSendOnPrice_rk    * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam_gp.Weight ELSE 1 END)) ::TFloat AS AmountSendOnPrice_rk_Weight
+           , (tmpData.AmountSendOnPrice_rk    * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam_gp.Weight ELSE 1 END)) ::TFloat AS AmountSendOnPrice
            , (tmpData.Amount_rk               * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS Amount_rk_sh               --Продано с РК 1.1 + 1.2  
-           , (tmpData.Amount_rk               * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam_gp.Weight ELSE 1 END)) ::TFloat AS Amount_rk_Weight 
+           , (tmpData.Amount_rk               * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam_gp.Weight ELSE 1 END)) ::TFloat AS Amount_rk 
            , (tmpData.Amount_produnion_master * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS Amount_produnion_master_sh --приход ПФ-ГП
-           , (tmpData.Amount_produnion_master * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam_gp.Weight ELSE 1 END)) ::TFloat AS Amount_produnion_master_Weight
-           , (tmpData.Amount_produnion_ch     * (CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS Amount_produnion_ch_sh     --2.1
-           , (tmpData.Amount_produnion_ch     * (CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END)) ::TFloat AS Amount_produnion_ch_Weight
-           , (tmpData.Amount_sale             * (CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS Amount_sale_sh             --2.4
-           , (tmpData.Amount_sale             * (CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END)) ::TFloat AS Amount_sale_Weight
-           , (tmpData.Amount_loss             * (CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS Amount_loss_sh             --2.2
-           , (tmpData.Amount_loss             * (CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END)) ::TFloat AS Amount_loss_Weight
-           , (tmpData.Amount_inv              * (CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS Amount_inv_sh              --2.3
-           , (tmpData.Amount_inv              * (CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END)) ::TFloat AS Amount_inv_Weight
-           , (tmpData.Amount_fact             * (CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS Amount_fact_sh             --2.ФАКТ ИТОГО Расход 2.1+2+3+4
-           , (tmpData.Amount_fact             * (CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END)) ::TFloat AS Amount_fact_Weight
-           , (tmpData.Amount_income           * (CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS Amount_income_sh           -- Кол-во приход
-           , (tmpData.Amount_income           * (CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END)) ::TFloat AS Amount_income_Weight
-           , tmpData.Amount_income  ::TFloat
-           , tmpData.Summ_income   ::TFloat              -- Сумма приход
+           , (tmpData.Amount_produnion_master * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam_gp.Weight ELSE 1 END)) ::TFloat AS Amount_produnion_master
+           , tmpData.Amount_produnion_ch          ::TFloat AS Amount_produnion_ch_sh     --2.1
+           , tmpData.Amount_sale                  ::TFloat AS Amount_sale_sh             --2.4
+           , tmpData.Amount_loss                  ::TFloat AS Amount_loss_sh             --2.2
+           , tmpData.Amount_inv                   ::TFloat AS Amount_inv_sh              --2.3
+           , tmpData.Amount_fact                  ::TFloat AS Amount_fact_sh             --2.ФАКТ ИТОГО Расход 2.1+2+3+4
+           , tmpData.Amount_income                ::TFloat AS Amount_income_sh           -- Кол-во приход
+           , tmpData.Summ_income                  ::TFloat AS Summ_income                -- Сумма приход
 
            -- Товар ГП 
            , tmpGoodsParam_gp.MeasureId                AS MeasureId_gp

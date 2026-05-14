@@ -61,7 +61,7 @@ type
     GuidesGoodsGroup: TdsdGuides;
     cfPrice: TdsdPivotGridCalcFields;
     cxLabel5: TcxLabel;
-    edPriceList: TcxButtonEdit;
+    edInfoMoney: TcxButtonEdit;
     GuidesInfoMoney: TdsdGuides;
     edSearchGoodsName: TcxTextEdit;
     FieldFilter_Name: TdsdFieldFilter;
