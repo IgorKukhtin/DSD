@@ -2744,6 +2744,9 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Component_Plan_Olap_BIForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Component_Plan_Olap_BIForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Component_Plan_OlapForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Component_Plan_OlapForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Component_Plan_OlapDialogForm'));

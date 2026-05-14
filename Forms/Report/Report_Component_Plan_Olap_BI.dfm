@@ -1,7 +1,7 @@
-object Report_Component_Plan_OlapForm: TReport_Component_Plan_OlapForm
+object Report_Component_Plan_Olap_BIForm: TReport_Component_Plan_Olap_BIForm
   Left = 0
   Top = 0
-  Caption = #1054#1090#1095#1077#1090' <'#1055#1083#1072#1085' '#1087#1086' '#1082#1086#1084#1087#1086#1085#1077#1085#1090#1072#1084'>'
+  Caption = #1054#1090#1095#1077#1090' <'#1055#1083#1072#1085' '#1087#1086' '#1082#1086#1084#1087#1086#1085#1077#1085#1090#1072#1084'> BI'
   ClientHeight = 600
   ClientWidth = 1141
   Color = clBtnFace
@@ -650,7 +650,6 @@ object Report_Component_Plan_OlapForm: TReport_Component_Plan_OlapForm
     Align = alBottom
     TabOrder = 6
     Visible = False
-    ExplicitLeft = -8
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -1101,7 +1100,7 @@ object Report_Component_Plan_OlapForm: TReport_Component_Plan_OlapForm
     end
   end
   object spReport: TdsdStoredProc
-    StoredProcName = 'gpReport_Component_Plan_Olap'
+    StoredProcName = 'gpReport_Component_Plan_Olap_BI'
     DataSet = MasterCDS
     DataSets = <
       item
