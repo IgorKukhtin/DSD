@@ -304,11 +304,11 @@ BEGIN
                                                                       , zc_MovementLinkObject_To()
                                                                       )
                                      )
-
+                         -- Результат
                          SELECT Movement.Id AS MovementId
                               , Movement.OperDate
-                              , MovementLinkObject_From.ObjectId AS PartnerInId    --поставщик
-                              , MovementLinkObject_To.ObjectId   AS UnitId    --кому
+                              , MovementLinkObject_From.ObjectId AS PartnerInId --поставщик
+                              , MovementLinkObject_To.ObjectId   AS UnitId      --кому
                               , MovementItem.ObjectId AS GoodsId
                               , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                               , MovementItem.Amount              AS Amount_income
@@ -488,6 +488,7 @@ BEGIN
                             , 0 ::TFloat             AS Amount_income            -- Кол-во приход
                             , 0 ::TFloat             AS Summ_income              -- Сумма приход
                             , 0 ::TFloat             AS Amount_prod_out_calc     -- Расчет расх на производство - Компоненты
+                            , 0 ::TFloat             AS Amount_prod_in_calc  -- Приход ПФ-ГП - Расчет - ГП
 
                             , tmpChildReceiptTable.ReceiptId_parent AS ReceiptId_parent
                             , tmp.ReceiptId                         AS ReceiptId_from
@@ -521,6 +522,7 @@ BEGIN
                             , tmp.Amount_income      AS Amount_income            -- Кол-во приход
                             , tmp.Summ_income        AS Summ_income              -- Сумма приход
                             , 0 ::TFloat             AS Amount_prod_out_calc     -- Расчет расх на производство - Компоненты
+                            , 0 ::TFloat             AS Amount_prod_in_calc  -- Приход ПФ-ГП - Расчет - ГП
 
                             , 0 AS ReceiptId_parent
                             , 0 AS ReceiptId_from
@@ -555,6 +557,7 @@ BEGIN
                             , 0 ::TFloat                              AS Amount_income            -- Кол-во приход
                             , 0 ::TFloat                              AS Summ_income              -- Сумма приход
                             , 0 ::TFloat                              AS Amount_prod_out_calc     -- Расчет расх на производство - Компоненты
+                            , 0 ::TFloat                              AS Amount_prod_in_calc  -- Приход ПФ-ГП - Расчет - ГП
 
                             , 0 AS ReceiptId_parent
                             , 0 AS ReceiptId_from
@@ -584,6 +587,7 @@ BEGIN
                             , 0 ::TFloat                              AS Amount_income            -- Кол-во приход
                             , 0 ::TFloat                              AS Summ_income              -- Сумма приход
                             , 0 ::TFloat                              AS Amount_prod_out_calc     -- Расчет расх на производство - Компоненты
+                            , 0 ::TFloat                              AS Amount_prod_in_calc  -- Приход ПФ-ГП - Расчет - ГП
 
                             , 0 AS ReceiptId_parent
                             , 0 AS ReceiptId_from
@@ -618,6 +622,8 @@ BEGIN
                                    ELSE 0
                               END AS Amount_prod_out_calc
 
+                            , 0 ::TFloat                            AS Amount_prod_in_calc  -- Приход ПФ-ГП - Расчет - ГП
+
                             , tmpChildReceiptTable.ReceiptId_parent AS ReceiptId_parent
                             , tmp.ReceiptId                         AS ReceiptId_from
 
@@ -626,6 +632,115 @@ BEGIN
                             LEFT JOIN tmpChildReceiptTable ON tmpChildReceiptTable.ReceiptId = tmp.ReceiptId
                             -- Компоненты
                             INNER JOIN tmpGoods ON tmpGoods.GoodsId = tmpChildReceiptTable.GoodsId_out
+
+                      UNION ALL
+                       -- 6. Приход ПФ-ГП - Расчет - ГП
+                       SELECT tmp.MovementId
+                            , tmp.OperDate
+                            , tmp.UnitId
+                            , 0                                     AS PartnerInId              --поставщик
+                            , tmp.GoodsId                           AS GoodsId_gp               --Товар ГП
+                            , tmp.GoodsKindId                       AS GoodsKindId_gp           --Вид товара ГП
+                              -- Товар расход
+                            , CASE WHEN tmpChildReceiptTable_1.GoodsKindId_out = zc_GoodsKind_WorkProgress()
+                                        THEN tmpChildReceiptTable_1.GoodsId_out
+                                   WHEN tmpChildReceiptTable_2.GoodsKindId_out = zc_GoodsKind_WorkProgress()
+                                        THEN tmpChildReceiptTable_2.GoodsId_out
+                                   WHEN tmpChildReceiptTable_3.GoodsKindId_out = zc_GoodsKind_WorkProgress()
+                                        THEN tmpChildReceiptTable_3.GoodsId_out
+                                   WHEN tmpChildReceiptTable_4.GoodsKindId_out = zc_GoodsKind_WorkProgress()
+                                        THEN tmpChildReceiptTable_4.GoodsId_out
+                                   WHEN tmpChildReceiptTable_5.GoodsKindId_out = zc_GoodsKind_WorkProgress()
+                                        THEN tmpChildReceiptTable_5.GoodsId_out
+                              END AS GoodsId                  
+                              -- Вид товара расход
+                            , CASE WHEN tmpChildReceiptTable_1.GoodsKindId_out = zc_GoodsKind_WorkProgress()
+                                        THEN tmpChildReceiptTable_1.GoodsKindId_out
+                                   WHEN tmpChildReceiptTable_2.GoodsKindId_out = zc_GoodsKind_WorkProgress()
+                                        THEN tmpChildReceiptTable_2.GoodsKindId_out
+                                   WHEN tmpChildReceiptTable_3.GoodsKindId_out = zc_GoodsKind_WorkProgress()
+                                        THEN tmpChildReceiptTable_3.GoodsKindId_out
+                                   WHEN tmpChildReceiptTable_4.GoodsKindId_out = zc_GoodsKind_WorkProgress()
+                                        THEN tmpChildReceiptTable_4.GoodsKindId_out
+                                   WHEN tmpChildReceiptTable_5.GoodsKindId_out = zc_GoodsKind_WorkProgress()
+                                        THEN tmpChildReceiptTable_5.GoodsKindId_out
+                              END AS GoodsKindId
+
+                            , 0 ::TFloat                            AS AmountSale_rk            --1.1.Продано Покуп с РК
+                            , 0 ::TFloat                            AS AmountSendOnPrice_rk     --1.2.Расход на филиалы с РК
+                            , 0 ::TFloat                            AS Amount_rk                --Продано с РК 1.1 + 1.2
+                            , 0 ::TFloat                            AS Amount_prod_in           --приход ПФ-ГП
+                            , 0 ::TFloat                            AS Amount_prod_out          --2.1
+                            , 0 ::TFloat                            AS Amount_sale              --2.4
+                            , 0 ::TFloat                            AS Amount_loss              --2.2
+                            , 0 ::TFloat                            AS Amount_inv               --2.3
+                            , 0 ::TFloat                            AS Amount_fact              --2.ФАКТ ИТОГО Расход 2.1+2+3+4
+                            , 0 ::TFloat                            AS Amount_income            -- Кол-во приход
+                            , 0 ::TFloat                            AS Summ_income              -- Сумма приход
+
+                              
+                            , 0 ::TFloat                            AS Amount_prod_out_calc -- Расчет расх на производство - Компоненты
+                            , CASE WHEN tmpChildReceiptTable_1.GoodsKindId_out = zc_GoodsKind_WorkProgress()
+                                        THEN tmp.AmountPartner * tmpChildReceiptTable_1.Amount_out / tmpChildReceiptTable_1.Amount_in
+
+                                   WHEN tmpChildReceiptTable_2.GoodsKindId_out = zc_GoodsKind_WorkProgress()
+                                        THEN tmp.AmountPartner * tmpChildReceiptTable_1.Amount_out
+                                                               * tmpChildReceiptTable_2.Amount_out / tmpChildReceiptTable_2.Amount_in
+                                           / tmpChildReceiptTable_1.Amount_in
+
+                                   WHEN tmpChildReceiptTable_3.GoodsKindId_out = zc_GoodsKind_WorkProgress()
+                                        THEN tmp.AmountPartner * tmpChildReceiptTable_1.Amount_out
+                                                               * tmpChildReceiptTable_2.Amount_out / tmpChildReceiptTable_2.Amount_in
+                                                               * tmpChildReceiptTable_3.Amount_out / tmpChildReceiptTable_3.Amount_in
+                                           / tmpChildReceiptTable_1.Amount_in
+
+                                   WHEN tmpChildReceiptTable_4.GoodsKindId_out = zc_GoodsKind_WorkProgress()
+                                        THEN tmp.AmountPartner * tmpChildReceiptTable_1.Amount_out
+                                                               * tmpChildReceiptTable_2.Amount_out / tmpChildReceiptTable_2.Amount_in
+                                                               * tmpChildReceiptTable_3.Amount_out / tmpChildReceiptTable_3.Amount_in
+                                                               * tmpChildReceiptTable_4.Amount_out / tmpChildReceiptTable_4.Amount_in
+                                           / tmpChildReceiptTable_1.Amount_in
+
+                                   WHEN tmpChildReceiptTable_5.GoodsKindId_out = zc_GoodsKind_WorkProgress()
+                                        THEN tmp.AmountPartner * tmpChildReceiptTable_1.Amount_out
+                                                               * tmpChildReceiptTable_2.Amount_out / tmpChildReceiptTable_2.Amount_in
+                                                               * tmpChildReceiptTable_3.Amount_out / tmpChildReceiptTable_3.Amount_in
+                                                               * tmpChildReceiptTable_4.Amount_out / tmpChildReceiptTable_4.Amount_in
+                                                               * tmpChildReceiptTable_5.Amount_out / tmpChildReceiptTable_5.Amount_in
+                                           / tmpChildReceiptTable_1.Amount_in
+
+                                   ELSE -1
+
+                              END ::TFloat                            AS Amount_prod_in_calc  -- Приход ПФ-ГП - Расчет - ГП
+
+                            , tmpChildReceiptTable_1.ReceiptId_parent AS ReceiptId_parent
+                            , tmp.ReceiptId                           AS ReceiptId_from
+
+                       FROM tmpUnion_1 AS tmp
+                            -- Разворот по компонентам
+                            INNER JOIN tmpChildReceiptTable AS tmpChildReceiptTable_1
+                                                            ON tmpChildReceiptTable_1.ReceiptId      = tmp.ReceiptId
+                                                           AND tmpChildReceiptTable_1.ReceiptId_from > 0
+                            -- идем дальше - Разворот по компонентам
+                            LEFT JOIN tmpChildReceiptTable AS tmpChildReceiptTable_2
+                                                           ON tmpChildReceiptTable_2.ReceiptId      = tmpChildReceiptTable_1.ReceiptId_from
+                                                          AND tmpChildReceiptTable_2.ReceiptId_from > 0
+                                                          AND tmpChildReceiptTable_1.GoodsKindId_out <> zc_GoodsKind_WorkProgress()
+                            -- идем дальше - Разворот по компонентам
+                            LEFT JOIN tmpChildReceiptTable AS tmpChildReceiptTable_3
+                                                           ON tmpChildReceiptTable_3.ReceiptId      = tmpChildReceiptTable_2.ReceiptId_from
+                                                          AND tmpChildReceiptTable_3.ReceiptId_from > 0
+                                                          AND tmpChildReceiptTable_2.GoodsKindId_out <> zc_GoodsKind_WorkProgress()
+                            -- идем дальше - Разворот по компонентам
+                            LEFT JOIN tmpChildReceiptTable AS tmpChildReceiptTable_4
+                                                           ON tmpChildReceiptTable_4.ReceiptId      = tmpChildReceiptTable_3.ReceiptId_from
+                                                          AND tmpChildReceiptTable_4.ReceiptId_from > 0
+                                                          AND tmpChildReceiptTable_3.GoodsKindId_out <> zc_GoodsKind_WorkProgress()
+                            -- идем дальше - Разворот по компонентам
+                            LEFT JOIN tmpChildReceiptTable AS tmpChildReceiptTable_5
+                                                           ON tmpChildReceiptTable_5.ReceiptId      = tmpChildReceiptTable_4.ReceiptId_from
+                                                          AND tmpChildReceiptTable_5.ReceiptId_from > 0
+                                                          AND tmpChildReceiptTable_4.GoodsKindId_out <> zc_GoodsKind_WorkProgress()
                       )
 
          , tmpGoodsParam AS (SELECT tmpGoods.GoodsId
@@ -701,21 +816,22 @@ BEGIN
            , Object_GoodsKind.ValueData       AS GoodsKindName
 
              -- 1.1.Продано Покуп с РК - ГП
-           , (tmpData.AmountSale_rk           * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS AmountSale_rk_sh
+           , (tmpData.AmountSale_rk           * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                       ::TFloat AS AmountSale_rk_sh
            , (tmpData.AmountSale_rk           * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam_gp.Weight ELSE 1 END)) ::TFloat AS AmountSale_rk
              -- 1.2.Расход на филиалы с РК - ГП
-           , (tmpData.AmountSendOnPrice_rk    * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS AmountSendOnPrice_rk_sh
+           , (tmpData.AmountSendOnPrice_rk    * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                       ::TFloat AS AmountSendOnPrice_rk_sh
            , (tmpData.AmountSendOnPrice_rk    * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam_gp.Weight ELSE 1 END)) ::TFloat AS AmountSendOnPrice
              -- 1. Продано с РК 1.1 + 1.2 - ГП
-           , (tmpData.Amount_rk               * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS Amount_rk_sh
+           , (tmpData.Amount_rk               * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                       ::TFloat AS Amount_rk_sh
            , (tmpData.Amount_rk               * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam_gp.Weight ELSE 1 END)) ::TFloat AS Amount_rk
 
              -- Приход ПФ-ГП - факт - ГП
            , (tmpData.Amount_prod_in * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                       ::TFloat AS Amount_prod_in_sh
            , (tmpData.Amount_prod_in * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam_gp.Weight ELSE 1 END)) ::TFloat AS Amount_prod_in
              -- Приход ПФ-ГП - Расчет - ГП
-           , 0 :: TFloat AS Amount_prod_in_calc_sh
-           , 0 :: TFloat AS Amount_prod_in_calc
+
+           , (tmpData.Amount_prod_in_calc * (CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                       ::TFloat AS Amount_prod_in_calc_sh
+           , (tmpData.Amount_prod_in_calc * (CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END))    ::TFloat AS Amount_prod_in_calc
 
              -- Расчет расх на производство - Компоненты
            , tmpData.Amount_prod_out_calc :: TFloat AS Amount_prod_out_calc
