@@ -282,7 +282,7 @@ object Report_Component_Plan_OlapForm: TReport_Component_Plan_OlapForm
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
     object pvInfoMoneyName_gp: TcxDBPivotGridField
-      AreaIndex = 23
+      AreaIndex = 26
       IsCaptionAssigned = True
       Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' '#1043#1055
       DataBinding.FieldName = 'InfoMoneyName_parent'
@@ -593,6 +593,45 @@ object Report_Component_Plan_OlapForm: TReport_Component_Plan_OlapForm
       Styles.ColumnHeader = dmMain.cxRemainsContentStyle
       Visible = True
       UniqueName = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097'.'
+    end
+    object pvAmount_prod_in_calc_sh: TcxDBPivotGridField
+      AreaIndex = 23
+      IsCaptionAssigned = True
+      Caption = #1055#1088#1080#1093#1086#1076' '#1055#1060'-'#1043#1055' - '#1056#1072#1089#1095#1077#1090', '#1096#1090
+      DataBinding.FieldName = 'Amount_prod_in_calc_sh'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Visible = True
+      Width = 80
+      UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
+    end
+    object pvAmount_prod_in_calc: TcxDBPivotGridField
+      AreaIndex = 24
+      IsCaptionAssigned = True
+      Caption = #1055#1088#1080#1093#1086#1076' '#1055#1060'-'#1043#1055' - '#1056#1072#1089#1095#1077#1090', '#1074#1077#1089
+      DataBinding.FieldName = 'Amount_prod_in_calc'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Visible = True
+      Width = 80
+      UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
+    end
+    object pvAmount_prod_out_calc: TcxDBPivotGridField
+      AreaIndex = 25
+      IsCaptionAssigned = True
+      Caption = #1056#1072#1089#1095#1077#1090' '#1088#1072#1089#1093' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      DataBinding.FieldName = 'Amount_prod_out_calc'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Visible = True
+      Width = 80
+      UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
     object pvMovementId: TcxDBPivotGridField
       AreaIndex = 12
