@@ -24,6 +24,13 @@ BEGIN
          RETURN;
      END IF;
 
+
+     /*IF inMovementId = 34301363 
+     THEN
+         RETURN;
+     END IF;*/
+
+
      -- !!!для НАЛ - обнуление и выход!!!
      IF zc_Enum_PaidKind_SecondForm() = (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId IN (zc_MovementLinkObject_PaidKind(), zc_MovementLinkObject_PaidKindFrom()))
     AND inUserId <> zc_Enum_Process_Auto_ReturnIn()
