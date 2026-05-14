@@ -156,6 +156,11 @@ BEGIN
      WHERE Orders.extId NOT IN ('c885ae6f-5bec-45e3-9a36-6b6cb3a9ac56'
                               , '918b5e6d-9bab-4689-b6d3-40c98c04d59b'
                               , '34ae1c35-d7fa-42a8-b828-8be9d4d6fd00'
+                              
+                              , 'ac3f6134-88ab-4489-9976-8083eb987622'
+                              , '01aecd5a-2d26-4920-8057-17c3ab1ecf47'
+
+                              
                                )
     ;
 
