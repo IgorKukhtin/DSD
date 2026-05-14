@@ -1,8 +1,9 @@
--- Function: gpReport_Component_Plan_Olap_Table()
+-- Function: gpReport_Component_Plan_Olap_BI()
 
 DROP FUNCTION IF EXISTS gpReport_Component_Plan_Olap_Table (TDateTime, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Component_Plan_Olap_BI (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_Component_Plan_Olap_Table (
+CREATE OR REPLACE FUNCTION gpReport_Component_Plan_Olap_BI (
     IN inStartDate          TDateTime ,
     IN inEndDate            TDateTime ,
     IN inGoodsGroupId       Integer   ,
@@ -127,7 +128,32 @@ BEGIN
                   WHERE tmp.OperDate BETWEEN inStartDate AND inEndDate
                     AND (tmpGoods.GoodsId IS NOT NULL OR tmpGoods_gp.GoodsId IS NOT NULL)
                   )
-    
+             
+    , tmpGoodsGroup AS (SELECT tmpGoods.GoodsId
+                             , Object_GoodsGroup.Id                         AS GoodsGroupId
+                             , Object_GoodsGroup.ValueData                  AS GoodsGroupName
+                             , ObjectString_Goods_GoodsGroupFull.ValueData  AS GoodsGroupNameFull
+                        FROM (SELECT DISTINCT tmpData.GoodsId FROM tmpData
+                        UNION SELECT DISTINCT tmpData.GoodsId_gp FROM tmpData
+                              ) AS tmpGoods
+                             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpGoods.GoodsId
+                                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+                             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
+                             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpGoods.GoodsId
+                                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+                       )
+
+    , tmpInfoMoney AS (SELECT *
+                        FROM Object_InfoMoney_View
+                        WHERE Object_InfoMoney_View.InfoMoneyId IN (SELECT DISTINCT tmpData.InfoMoneyId FROM tmpData WHERE COALESCE (tmpData.InfoMoneyId,0) <> 0
+                                                              UNION SELECT DISTINCT tmpData.InfoMoneyId_gp FROM tmpData WHERE COALESCE (tmpData.InfoMoneyId_gp,0) <> 0
+                                                                    )
+                           
+                       )
+
       -- Результат
       SELECT tmpData.MovementId                      :: Integer   AS MovementId
            , tmpData.OperDate                        :: TDateTime AS OperDate
@@ -195,9 +221,9 @@ BEGIN
              -- Товар ГП
            , Object_Measure_gp.Id                         AS MeasureId_gp
            , Object_Measure_gp.ValueData                  AS MeasureName_gp
-           , Object_GoodsGroup.Id                         AS GoodsGroupId_gp
-           , Object_GoodsGroup.ValueData                  AS GoodsGroupName_gp
-           , ObjectString_Goods_GoodsGroupFull.ValueData  AS GoodsGroupNameFull_gp
+           , Object_GoodsGroup_gp.GoodsGroupId            AS GoodsGroupId_gp
+           , Object_GoodsGroup_gp.GoodsGroupName          AS GoodsGroupName_gp
+           , Object_GoodsGroup_gp.GoodsGroupNameFull      AS GoodsGroupNameFull_gp
            , Object_TradeMark_gp.Id                       AS TradeMarkId_gp
            , Object_TradeMark_gp.ValueData                AS TradeMarkName_gp
            , Object_InfoMoney_gp.InfoMoneyCode            AS InfoMoneyCode_gp
@@ -207,11 +233,11 @@ BEGIN
            , Object_InfoMoney_gp.InfoMoneyName_all        AS InfoMoneyName_all_gp
            , Object_InfoMoney_gp.InfoMoneyId              AS InfoMoneyId_gp
              -- Товар Компоненты
-           , Object_Measure.Id                              AS MeasureId
-           , Object_Measure.ValueData                       AS MeasureName
-           , Object_GoodsGroup_gp.Id                        AS GoodsGroupId
-           , Object_GoodsGroup_gp.ValueData                 AS GoodsGroupName
-           , ObjectString_Goods_GoodsGroupFull_gp.ValueData AS GoodsGroupNameFull
+           , Object_Measure.Id                            AS MeasureId
+           , Object_Measure.ValueData                     AS MeasureName
+           , Object_GoodsGroup.GoodsGroupId               AS GoodsGroupId
+           , Object_GoodsGroup.GoodsGroupName             AS GoodsGroupName
+           , Object_GoodsGroup.GoodsGroupNameFull         AS GoodsGroupNameFull
            , Object_InfoMoney.InfoMoneyCode
            , Object_InfoMoney.InfoMoneyGroupName
            , Object_InfoMoney.InfoMoneyDestinationName
@@ -226,31 +252,16 @@ BEGIN
              LEFT JOIN Object AS Object_Goods_gp ON Object_Goods_gp.Id = tmpData.GoodsId_gp
              LEFT JOIN Object AS Object_GoodsKind_gp ON Object_GoodsKind_gp.Id = tmpData.GoodsKindId_gp
              LEFT JOIN Object AS Object_Measure_gp ON Object_Measure_gp.Id = tmpData.MeasureId_gp
-             LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_gp ON Object_InfoMoney_gp.InfoMoneyId = tmpData.InfoMoneyId_gp
+             LEFT JOIN tmpInfoMoney AS Object_InfoMoney_gp ON Object_InfoMoney_gp.InfoMoneyId = tmpData.InfoMoneyId_gp
              LEFT JOIN Object AS Object_TradeMark_gp ON Object_TradeMark_gp.Id = tmpData.TradeMarkId_gp
-
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup_gp
-                                  ON ObjectLink_Goods_GoodsGroup_gp.ObjectId = tmpData.GoodsId_gp
-                                 AND ObjectLink_Goods_GoodsGroup_gp.DescId = zc_ObjectLink_Goods_GoodsGroup()
-             LEFT JOIN Object AS Object_GoodsGroup_gp ON Object_GoodsGroup_gp.Id = ObjectLink_Goods_GoodsGroup_gp.ChildObjectId
-
-             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull_gp
-                                    ON ObjectString_Goods_GoodsGroupFull_gp.ObjectId = tmpData.GoodsId_gp
-                                   AND ObjectString_Goods_GoodsGroupFull_gp.DescId = zc_ObjectString_Goods_GroupNameFull()
+             LEFT JOIN tmpGoodsGroup AS Object_GoodsGroup_gp ON Object_GoodsGroup_gp.GoodsId = tmpData.GoodsId_gp
              --
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpData.GoodsKindId
              LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = tmpData.MeasureId
-             LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney ON Object_InfoMoney.InfoMoneyId = tmpData.InfoMoneyId
+             LEFT JOIN tmpInfoMoney AS Object_InfoMoney ON Object_InfoMoney.InfoMoneyId = tmpData.InfoMoneyId
 
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpData.GoodsId
-                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
-
-             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
-                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpData.GoodsId
-                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+             LEFT JOIN tmpGoodsGroup AS Object_GoodsGroup ON Object_GoodsGroup.GoodsId = tmpData.GoodsId
   ;
 
 END;
@@ -264,4 +275,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Component_Plan_Olap_Table (inStartDate:= '01.04.2026', inEndDate:= '03.04.2026', inGoodsGroupId:= 0/*1928*/, inInfoMoneyId:= 8911, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_Component_Plan_Olap_BI (inStartDate:= '01.04.2026', inEndDate:= '03.04.2026', inGoodsGroupId:= 0/*1928*/, inInfoMoneyId:= 8911, inSession:= zfCalc_UserAdmin())
