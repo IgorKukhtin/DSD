@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpReport_Component_Plan_Olap (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Component_Plan_Olap (
-    IN inStartDate          TDateTime ,  
+    IN inStartDate          TDateTime ,
     IN inEndDate            TDateTime ,
     IN inGoodsGroupId       Integer   ,
     IN inInfoMoneyId        Integer   ,    -- уп статья (zc_ObjectLink_Goods_InfoMoney) - ограничиваем только Назв Товар Расход + вид
@@ -11,16 +11,16 @@ CREATE OR REPLACE FUNCTION gpReport_Component_Plan_Olap (
 )
 RETURNS TABLE (MovementId  Integer
              , OperDate    TDateTime
-             , MonthDate   TDateTime 
-             , Year        Integer 
-             , WeekNumber  Integer 
-             -- 
+             , MonthDate   TDateTime
+             , Year        Integer
+             , WeekNumber  Integer
+             --
              , UnitId           Integer
              , UnitName         TVarChar
              , PartnerInId      Integer
              , PartnerInName    TVarChar
-  
-             --ТОвар ГП            
+
+             --ТОвар ГП
              , GoodsId_gp          Integer
              , GoodsCode_gp        Integer
              , GoodsName_gp        TVarChar
@@ -32,24 +32,33 @@ RETURNS TABLE (MovementId  Integer
              , GoodsName           TVarChar
              , GoodsKindId         Integer
              , GoodsKindName       TVarChar
-             
-             , AmountSale_rk_sh           TFloat  --1.1.Продано Покуп с РК
-             , AmountSale_rk              TFloat  
-             , AmountSendOnPrice_rk_sh    TFloat  --1.2.Расход на филиалы с РК  
-             , AmountSendOnPrice_rk       TFloat  
-             , Amount_rk_sh               TFloat  --Продано с РК 1.1 + 1.2  
-             , Amount_rk                  TFloat  
-             , Amount_produnion_master_sh TFloat  --приход ПФ-ГП
-             , Amount_produnion_master    TFloat 
-             , Amount_produnion_ch        TFloat  --2.1
-             , Amount_sale                TFloat  --2.4
-             , Amount_loss                TFloat  --2.2
-             , Amount_inv                 TFloat  --2.3
-             , Amount_fact                TFloat  --2.ФАКТ ИТОГО Расход 2.1+2+3+4
-             , Amount_income              TFloat  -- Кол-во приход
-             , Summ_income                TFloat  -- Сумма приход
-  
-             -- Товар ГП 
+
+             , AmountSale_rk_sh            TFloat  -- 1.1.Продано Покуп с РК - ГП
+             , AmountSale_rk               TFloat
+             , AmountSendOnPrice_rk_sh     TFloat  -- 1.2.Расход на филиалы с РК - ГП
+             , AmountSendOnPrice_rk        TFloat
+             , Amount_rk_sh                TFloat  -- 1. Продано с РК 1.1 + 1.2 - ГП
+             , Amount_rk                   TFloat
+
+             , Amount_prod_in_sh           TFloat  -- Приход ПФ-ГП - факт - ГП
+             , Amount_prod_in              TFloat
+
+             , Amount_prod_in_calc_sh TFloat  -- Приход ПФ-ГП - Расчет - ГП
+             , Amount_prod_in_calc    TFloat
+
+               -- Расчет расх на производство - Компоненты
+             , Amount_prod_out_calc        TFloat
+
+             , Amount_prod_out             TFloat  -- 2.1 - Компоненты
+             , Amount_sale                 TFloat  -- 2.4 - Компоненты
+             , Amount_loss                 TFloat  -- 2.2 - Компоненты
+             , Amount_inv                  TFloat  -- 2.3 - Компоненты
+             , Amount_fact                 TFloat  -- 2.ФАКТ ИТОГО Расход 2.1+2+3+4 - Компоненты
+
+             , Amount_income               TFloat  -- Кол-во приход - Компоненты
+             , Summ_income                 TFloat  -- Сумма приход - Компоненты
+
+             -- Товар ГП
              , MeasureId_gp                Integer
              , MeasureName_gp              TVarChar
              , GoodsGroupId_gp             Integer
@@ -75,7 +84,7 @@ RETURNS TABLE (MovementId  Integer
              , InfoMoneyName               TVarChar
              , InfoMoneyName_all           TVarChar
              , InfoMoneyId                 Integer
-             )   
+             )
 AS
 $BODY$
     DECLARE vbUserId Integer;
@@ -92,9 +101,9 @@ BEGIN
       WITH tmpGoods AS (SELECT tmp.GoodsId
                         FROM (SELECT lfObject_Goods_byGoodsGroup.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup
                               WHERE inGoodsGroupId > 0
-                             UNION 
-                              SELECT Object.Id 
-                              FROM Object 
+                             UNION
+                              SELECT Object.Id
+                              FROM Object
                               WHERE Object.DescId = zc_Object_Goods()
                                 AND COALESCE (inGoodsGroupId, 0) = 0
                              ) AS tmp
@@ -106,7 +115,7 @@ BEGIN
 
            --две группы - ГП (1832) + Тушенка     (1979)
          , tmpGoods_gp AS (SELECT lfObject_Goods_byGoodsGroup.GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (1832) AS lfObject_Goods_byGoodsGroup
-                          UNION 
+                          UNION
                            SELECT lfObject_Goods_byGoodsGroup.GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (1979) AS lfObject_Goods_byGoodsGroup
                           )
 
@@ -122,11 +131,11 @@ BEGIN
                                     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                                       AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SendOnPrice())
                                       AND Movement.StatusId = zc_Enum_Status_Complete()
-                                    ) 
+                                    )
                        , tmpMI AS (SELECT MovementItem.*
                                    FROM MovementItem
                                        --огр. товаром ГП
-                                       INNER JOIN tmpGoods_gp ON tmpGoods_gp.GoodsId = MovementItem.ObjectId 
+                                       INNER JOIN tmpGoods_gp ON tmpGoods_gp.GoodsId = MovementItem.ObjectId
                                    WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMov.Id FROM tmpMov)
                                      AND MovementItem.isErased   = FALSE
                                      AND MovementItem.DescId     = zc_MI_Master()
@@ -169,11 +178,11 @@ BEGIN
                                      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                                        AND Movement.DescId = zc_Movement_Income()
                                        AND Movement.StatusId = zc_Enum_Status_Complete()
-                                     ) 
+                                     )
                         , tmpMI AS (SELECT MovementItem.*
                                     FROM MovementItem
                                         --огр. Товар Расход + вид
-                                        INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId 
+                                        INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
                                     WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMov.Id FROM tmpMov)
                                       AND MovementItem.isErased   = FALSE
                                       AND MovementItem.DescId     = zc_MI_Master()
@@ -187,7 +196,7 @@ BEGIN
                                           FROM MovementItemFloat
                                           WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                            AND MovementItemFloat.DescId IN (zc_MIFloat_Price()
-                                                                          , zc_MIFloat_CountForPrice() 
+                                                                          , zc_MIFloat_CountForPrice()
                                                                            )
                                           )
 
@@ -198,18 +207,18 @@ BEGIN
                                                                       , zc_MovementLinkObject_To()
                                                                       )
                                      )
-                                                                        
+
                          SELECT Movement.Id AS MovementId
                               , Movement.OperDate
-                              , MovementLinkObject_From.ObjectId AS PartnerInId    --поставщик 
+                              , MovementLinkObject_From.ObjectId AS PartnerInId    --поставщик
                               , MovementLinkObject_To.ObjectId   AS UnitId    --кому
                               , MovementItem.ObjectId AS GoodsId
                               , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                               , MovementItem.Amount              AS Amount_income
-                              , CAST ((MovementItem.Amount) * COALESCE (MIFloat_Price.ValueData, 0) 
+                              , CAST ((MovementItem.Amount) * COALESCE (MIFloat_Price.ValueData, 0)
                                       / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS NUMERIC (16, 2)
                                       ) :: TFloat AS Summ_income
-                         FROM tmpMov AS Movement 
+                         FROM tmpMov AS Movement
                               LEFT JOIN tmpMLO AS MovementLinkObject_From
                                                ON MovementLinkObject_From.MovementId = Movement.Id
                                               AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -231,7 +240,7 @@ BEGIN
                                                    AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
                         )
 
-           --3) юнион это все расходы для Назв Товар Расход + вид    
+           --3) юнион это все расходы для Назв Товар Расход + вид
            --   Movement_ProductionUnion (child) + Movement_Loss + Movement_Inventory + Movement_Sale
          , tmpUnion_3 AS (WITH
                           tmpMov AS (SELECT Movement.*
@@ -244,11 +253,11 @@ BEGIN
                                                              , zc_Movement_Sale()
                                                              )
                                      )
-                         --товары Расход 
+                         --товары Расход
                         , tmpMI AS (SELECT MovementItem.*
                                     FROM MovementItem
                                         --огр. Товар Расход + вид
-                                        INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId 
+                                        INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
                                     WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMov.Id FROM tmpMov)
                                       AND MovementItem.isErased   = FALSE
                                       --AND MovementItem.DescId     IN (zc_MI_Master(), zc_MI_Child())
@@ -259,7 +268,7 @@ BEGIN
                                       WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                        AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
                                       )
-                        
+
                         , tmpMLO AS (SELECT MovementLinkObject.*
                                      FROM MovementLinkObject
                                      WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMov.Id FROM tmpMov)
@@ -270,13 +279,13 @@ BEGIN
                                           FROM MovementItemFloat
                                           WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                            AND MovementItemFloat.DescId IN (zc_MIFloat_AmountPartner())
-                                          )                                      
+                                          )
                          --
                          --товары ГП ProductionUnion master + zc_GoodsKind_WorkProgress
                         , tmpMI_gp AS (SELECT MovementItem.*
                                        FROM MovementItem
-                                           --огр. Товар ГП 
-                                           INNER JOIN tmpGoods_gp ON tmpGoods_gp.GoodsId = MovementItem.ObjectId 
+                                           --огр. Товар ГП
+                                           INNER JOIN tmpGoods_gp ON tmpGoods_gp.GoodsId = MovementItem.ObjectId
                                        WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMov.Id FROM tmpMov WHERE tmpMov.DescId = zc_Movement_ProductionUnion())
                                          AND MovementItem.isErased   = FALSE
                                          AND MovementItem.DescId IN (zc_MI_Master())
@@ -288,7 +297,7 @@ BEGIN
                                           AND MovementItemLinkObject.ObjectId = zc_GoodsKind_WorkProgress()
                                          )
 
-                                               
+
                          SELECT Movement.Id                                   AS MovementId
                               , Movement.OperDate
                               , MovementLinkObject_From.ObjectId              AS UnitId    --
@@ -301,7 +310,7 @@ BEGIN
                               , CASE WHEN Movement.DescId = zc_Movement_ProductionUnion() THEN COALESCE (MovementItem.Amount, 0) ELSE 0 END  AS Amount_produnion_ch
                               , CASE WHEN Movement.DescId = zc_Movement_Loss() THEN COALESCE (MovementItem.Amount, 0) ELSE 0 END             AS Amount_loss
                               , CASE WHEN Movement.DescId = zc_Movement_Inventory() THEN COALESCE (MovementItem.Amount, 0) ELSE 0 END        AS Amount_Inv
-                         FROM tmpMov AS Movement 
+                         FROM tmpMov AS Movement
                               LEFT JOIN tmpMLO AS MovementLinkObject_From
                                                ON MovementLinkObject_From.MovementId = Movement.Id
                                               AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -324,12 +333,12 @@ BEGIN
                               , 0 AS GoodsKindId
                               , MovementItem.ObjectId                         AS GoodsId_gp
                               , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId_gp
-                              , 0                        ::TFloat AS Amount_sale        
+                              , 0                        ::TFloat AS Amount_sale
                               , COALESCE (MovementItem.Amount, 0) AS Amount_produnion_master
                               , 0                        ::TFloat AS Amount_produnion_ch
                               , 0                        ::TFloat AS Amount_loss
                               , 0                        ::TFloat AS Amount_Inv
-                         FROM tmpMov AS Movement 
+                         FROM tmpMov AS Movement
                               LEFT JOIN tmpMLO AS MovementLinkObject_From
                                                ON MovementLinkObject_From.MovementId = Movement.Id
                                               AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -359,14 +368,14 @@ BEGIN
                             , 0 ::TFloat             AS Amount_loss              --2.2
                             , 0 ::TFloat             AS Amount_inv               --2.3
                             , 0 ::TFloat             AS Amount_fact              --2.ФАКТ ИТОГО Расход 2.1+2+3+4
-                            , 0 ::TFloat             AS Amount_income            -- Кол-во приход 
-                            , 0 ::TFloat             AS Summ_income              -- Сумма приход 
+                            , 0 ::TFloat             AS Amount_income            -- Кол-во приход
+                            , 0 ::TFloat             AS Summ_income              -- Сумма приход
                        FROM tmpUnion_1 AS tmp
                       UNION
                        SELECT tmp.MovementId
                             , tmp.OperDate
                             , tmp.UnitId
-                            , tmp.PartnerInId                                         --поставщик 
+                            , tmp.PartnerInId                                         --поставщик
                             , 0                      AS GoodsId_gp
                             , 0                      AS GoodsKindId_gp
                             , tmp.GoodsId
@@ -380,8 +389,8 @@ BEGIN
                             , 0 ::TFloat             AS Amount_loss              --2.2
                             , 0 ::TFloat             AS Amount_inv               --2.3
                             , 0 ::TFloat             AS Amount_fact              --2.ФАКТ ИТОГО Расход 2.1+2+3+4
-                            , tmp.Amount_income      AS Amount_income            -- Кол-во приход 
-                            , tmp.Summ_income        AS Summ_income              -- Сумма приход 
+                            , tmp.Amount_income      AS Amount_income            -- Кол-во приход
+                            , tmp.Summ_income        AS Summ_income              -- Сумма приход
                        FROM tmpUnion_2 AS tmp
                       UNION
                        SELECT tmp.MovementId
@@ -404,9 +413,9 @@ BEGIN
                              + COALESCE (tmp.Amount_loss,0)
                              + COALESCE (tmp.Amount_inv,0)
                              + COALESCE (tmp.Amount_sale,0)) ::TFloat AS Amount_fact              --2.ФАКТ ИТОГО Расход 2.1+2+3+4
-                            , 0 ::TFloat                              AS Amount_income            -- Кол-во приход 
-                            , 0 ::TFloat                              AS Summ_income              -- Сумма приход 
-                       FROM tmpUnion_3 AS tmp 
+                            , 0 ::TFloat                              AS Amount_income            -- Кол-во приход
+                            , 0 ::TFloat                              AS Summ_income              -- Сумма приход
+                       FROM tmpUnion_3 AS tmp
                        )
 
 
@@ -458,7 +467,7 @@ BEGIN
                                   LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
                             )
 
-      -- Результат 
+      -- Результат
       SELECT tmpData.MovementId                      :: Integer   AS MovementId
            , tmpData.OperDate                        :: TDateTime AS OperDate
            , DATE_TRUNC ('MONTH', tmpData.OperDate)  :: TDateTime AS MonthDate
@@ -471,35 +480,55 @@ BEGIN
            , Object_PartnerIn.ValueData ::TVarChar AS PartnerInName
 
            --ТОвар ГП
-           , Object_Goods_gp.Id               AS GoodsId_gp 
+           , Object_Goods_gp.Id               AS GoodsId_gp
            , Object_Goods_gp.ObjectCode       AS GoodsCode_gp
            , Object_Goods_gp.ValueData        AS GoodsName_gp
            , Object_GoodsKind_gp.Id           AS GoodsKindId_gp
-           , Object_GoodsKind_gp.ValueData    AS GoodsKindName_gp  
+           , Object_GoodsKind_gp.ValueData    AS GoodsKindName_gp
            --Товар Расход
-           , Object_Goods.Id                  AS GoodsId 
+           , Object_Goods.Id                  AS GoodsId
            , Object_Goods.ObjectCode          AS GoodsCode
            , Object_Goods.ValueData           AS GoodsName
            , Object_GoodsKind.Id              AS GoodsKindId
            , Object_GoodsKind.ValueData       AS GoodsKindName
-           
-           , (tmpData.AmountSale_rk           * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS AmountSale_rk_sh           --1.1.Продано Покуп с РК
-           , (tmpData.AmountSale_rk           * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam_gp.Weight ELSE 1 END)) ::TFloat AS AmountSale_rk
-           , (tmpData.AmountSendOnPrice_rk    * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS AmountSendOnPrice_rk_sh    --1.2.Расход на филиалы с РК  
-           , (tmpData.AmountSendOnPrice_rk    * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam_gp.Weight ELSE 1 END)) ::TFloat AS AmountSendOnPrice
-           , (tmpData.Amount_rk               * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS Amount_rk_sh               --Продано с РК 1.1 + 1.2  
-           , (tmpData.Amount_rk               * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam_gp.Weight ELSE 1 END)) ::TFloat AS Amount_rk 
-           , (tmpData.Amount_produnion_master * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS Amount_produnion_master_sh --приход ПФ-ГП
-           , (tmpData.Amount_produnion_master * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam_gp.Weight ELSE 1 END)) ::TFloat AS Amount_produnion_master
-           , tmpData.Amount_produnion_ch          ::TFloat AS Amount_produnion_ch_sh     --2.1
-           , tmpData.Amount_sale                  ::TFloat AS Amount_sale_sh             --2.4
-           , tmpData.Amount_loss                  ::TFloat AS Amount_loss_sh             --2.2
-           , tmpData.Amount_inv                   ::TFloat AS Amount_inv_sh              --2.3
-           , tmpData.Amount_fact                  ::TFloat AS Amount_fact_sh             --2.ФАКТ ИТОГО Расход 2.1+2+3+4
-           , tmpData.Amount_income                ::TFloat AS Amount_income_sh           -- Кол-во приход
-           , tmpData.Summ_income                  ::TFloat AS Summ_income                -- Сумма приход
 
-           -- Товар ГП 
+             -- 1.1.Продано Покуп с РК - ГП
+           , (tmpData.AmountSale_rk           * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS AmountSale_rk_sh
+           , (tmpData.AmountSale_rk           * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam_gp.Weight ELSE 1 END)) ::TFloat AS AmountSale_rk
+             -- 1.2.Расход на филиалы с РК - ГП
+           , (tmpData.AmountSendOnPrice_rk    * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS AmountSendOnPrice_rk_sh
+           , (tmpData.AmountSendOnPrice_rk    * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam_gp.Weight ELSE 1 END)) ::TFloat AS AmountSendOnPrice
+             -- 1. Продано с РК 1.1 + 1.2 - ГП
+           , (tmpData.Amount_rk               * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS Amount_rk_sh
+           , (tmpData.Amount_rk               * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam_gp.Weight ELSE 1 END)) ::TFloat AS Amount_rk
+
+             -- Приход ПФ-ГП - факт - ГП
+           , (tmpData.Amount_produnion_master * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END))                    ::TFloat AS Amount_produnion_in_sh
+           , (tmpData.Amount_produnion_master * (CASE WHEN tmpGoodsParam_gp.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam_gp.Weight ELSE 1 END)) ::TFloat AS Amount_produnion_in
+             -- Приход ПФ-ГП - Расчет - ГП
+           , 0 :: TFloat AS Amount_prod_in_calc_sh
+           , 0 :: TFloat AS Amount_prod_in_calc
+
+            -- Расчет расх на производство - Компоненты
+           , 0 :: TFloat AS Amount_prod_out_calc
+
+             -- 2.1 - Компоненты
+           , tmpData.Amount_produnion_ch          ::TFloat AS Amount_prod_out
+             -- 2.4 - Компоненты
+           , tmpData.Amount_sale                  ::TFloat AS Amount_sale
+             -- 2.2 - Компоненты
+           , tmpData.Amount_loss                  ::TFloat AS Amount_loss
+             -- 2.3 - Компоненты
+           , tmpData.Amount_inv                   ::TFloat AS Amount_inv
+             --2. ФАКТ ИТОГО Расход 2.1+2+3+4 - Компоненты
+           , tmpData.Amount_fact                  ::TFloat AS Amount_fact
+
+             -- Кол-во приход - Компоненты
+           , tmpData.Amount_income                ::TFloat AS Amount_income
+             -- Сумма приход - Компоненты
+           , tmpData.Summ_income                  ::TFloat AS Summ_income
+
+             -- Товар ГП
            , tmpGoodsParam_gp.MeasureId                AS MeasureId_gp
            , tmpGoodsParam_gp.MeasureName              AS MeasureName_gp
            , tmpGoodsParam_gp.GoodsGroupId             AS GoodsGroupId_gp
@@ -513,7 +542,7 @@ BEGIN
            , tmpGoodsParam_gp.InfoMoneyName            AS InfoMoneyName_gp
            , tmpGoodsParam_gp.InfoMoneyName_all        AS InfoMoneyName_all_gp
            , tmpGoodsParam_gp.InfoMoneyId              AS InfoMoneyId_gp
-           --Товар расход
+             -- Товар Компоненты
            , tmpGoodsParam.MeasureId
            , tmpGoodsParam.MeasureName
            , tmpGoodsParam.GoodsGroupId
@@ -524,7 +553,7 @@ BEGIN
            , tmpGoodsParam.InfoMoneyDestinationName
            , tmpGoodsParam.InfoMoneyName
            , tmpGoodsParam.InfoMoneyName_all
-           , tmpGoodsParam.InfoMoneyId 
+           , tmpGoodsParam.InfoMoneyId
 
         FROM tmpData
 
@@ -532,14 +561,14 @@ BEGIN
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpData.GoodsKindId
              LEFT JOIN Object AS Object_Goods_gp ON Object_Goods_gp.Id = tmpData.GoodsId_gp
              LEFT JOIN Object AS Object_GoodsKind_gp ON Object_GoodsKind_gp.Id = tmpData.GoodsKindId_gp
-             
+
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpData.UnitId
              LEFT JOIN Object AS Object_PartnerIn ON Object_PartnerIn.Id = tmpData.PartnerInId
 
              LEFT JOIN tmpGoodsParam ON tmpGoodsParam.GoodsId = tmpData.GoodsId
              LEFT JOIN tmpGoodsParam AS tmpGoodsParam_gp ON tmpGoodsParam_gp.GoodsId = tmpData.GoodsId_gp
   ;
-         
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -550,8 +579,5 @@ $BODY$
  08.05.26         *
 */
 
--- тест-
--- 
---  SELECT * FROM gpReport_Component_Plan_Olap (inStartDate:= '01.05.2026', inEndDate:= '01.05.2026', inGoodsGroupId:= 0/*1928*/, inInfoMoneyId:= 0, inSession:= zfCalc_UserAdmin()) 
-
---Цена приход от поставщ.
+-- тест
+-- SELECT * FROM gpReport_Component_Plan_Olap (inStartDate:= '01.05.2026', inEndDate:= '01.05.2026', inGoodsGroupId:= 0/*1928*/, inInfoMoneyId:= 0, inSession:= zfCalc_UserAdmin())
