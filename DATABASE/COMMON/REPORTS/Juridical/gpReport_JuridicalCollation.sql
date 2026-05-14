@@ -66,7 +66,16 @@ $BODY$
    DECLARE vbPartionMovementId Integer;
 
    DECLARE vbIsInfoMoneyDestination_21500 Boolean;
+
+   DECLARE vbOperDate_Begin1 TDateTime;
+   DECLARE vbScript   TEXT;
+   DECLARE vb1        TEXT;
+   DECLARE vbValue1   Integer;
+   DECLARE vbTime1    INTERVAL;
 BEGIN
+     -- сразу запомнили время начала выполнения Проц.
+     vbOperDate_Begin1:= CLOCK_TIMESTAMP();
+
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
@@ -577,6 +586,54 @@ BEGIN
          , Operation.OperDate
           ;
 
+
+      vbValue1:= (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active');
+      -- сколько всего выполнялась проц;
+      vbTime1:= CLOCK_TIMESTAMP() - vbOperDate_Begin1;
+
+
+
+      vbScript:= 'INSERT INTO ResourseProtocol (UserId
+                                                , OperDate
+                                                , Value1
+                                                , Time1
+                                                , Time5
+                                                , ProcName
+                                                , ProtocolData
+                                                 )
+
+                       SELECT ' || vbUserId :: TVarChar ||'
+                            , ' || CHR (39) || zfConvert_DateTimeToString (CURRENT_TIMESTAMP) || CHR (39) || ' AS OperDate'
+                         ||', ' || vbValue1 :: TVarChar  || ' AS Value1'
+                         ||', ' || CHR (39) || vbTime1 :: TvarChar || CHR (39) || ' :: INTERVAL AS Time1'
+                         ||', ' || CHR (39) || zfConvert_DateTimeToString (CLOCK_TIMESTAMP()) || CHR (39) || ' AS Time5'
+                         ||', ' || CHR (39) || 'gpReport_JuridicalCollation (' || CASE WHEN inJuridicalId > 0 THEN lfGet_Object_ValueData_sh (inJuridicalId) WHEN inPartnerId > 0 THEN lfGet_Object_ValueData_sh (inPartnerId) ELSE 'inJuridicalId = 0' END  || ')'|| CHR (39)
+
+
+                              -- ProtocolData
+                         ||', ' || CHR (39)
+                                || zfConvert_DateToString (inStartDate)
+                         ||', ' || zfConvert_DateToString (inEndDate)
+                         ||', ' || inJuridicalId        :: TVarChar
+                         ||', ' || inPartnerId          :: TVarChar
+                         ||', ' || inContractId         :: TVarChar
+                         ||', ' || inAccountId          :: TVarChar
+                         ||', ' || inPaidKindId         :: TVarChar
+                         ||', ' || inInfoMoneyId        :: TVarChar
+                         ||', ' || inCurrencyId         :: TVarChar
+                         ||', ' || inMovementId_Partion :: TVarChar
+
+                         ||', ' || inSession
+                         || CHR (39)
+                           ;
+
+         -- Результат
+         vb1:= (SELECT *
+                FROM dblink_exec ('host=192.168.0.219 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'
+                                   -- Результат
+                                , vbScript));
+
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -602,5 +659,6 @@ $BODY$
 */
 
 -- тест
+-- SELECT * FROM ResourseProtocol where ProcName ilike '%gpReport_JuridicalCollation%' AND OperDate >= CURRENT_DATE - INTERVAL '1 DAY' ORDER BY Id DESC LIMIT 100
 -- SELECT * FROM gpReport_JuridicalCollation (inStartDate:= '01.01.2017', inEndDate:= '01.01.2017', inJuridicalId:= 0, inPartnerId:=0, inContractId:= 0, inAccountId:= 0, inPaidKindId:= 0, inInfoMoneyId:= 0, inCurrencyId:= 0, inMovementId_Partion:=0, inSession:= zfCalc_UserAdmin());
 -- select * from gpReport_JuridicalCollation(inStartDate := ('11.04.2023')::TDateTime , inEndDate := ('11.04.2023')::TDateTime , inJuridicalId := 6629649 , inPartnerId := 0 , inContractId := 0 , inAccountId := 0 , inPaidKindId := 0 , inInfoMoneyId := 0 , inCurrencyId := 0 , inMovementId_Partion := 0 ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');

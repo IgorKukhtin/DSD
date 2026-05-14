@@ -80,7 +80,7 @@ BEGIN
 
              , EXTRACT (DAY FROM PeriodClose.Period) :: Integer AS Period
              , PeriodClose.CloseDate
-             , CASE WHEN Object_User_excl.Id > 0 THEN PeriodClose.CloseDate_excl ELSE NULL END :: TDateTime AS CloseDate_excl
+             , CASE WHEN Object_User_excl.Id > 0 OR PeriodClose.UserByGroupId_excl > 0 THEN PeriodClose.CloseDate_excl ELSE NULL END :: TDateTime AS CloseDate_excl
              , PeriodClose.CloseDate_store
 
              , Object_User.Id        AS UserId
