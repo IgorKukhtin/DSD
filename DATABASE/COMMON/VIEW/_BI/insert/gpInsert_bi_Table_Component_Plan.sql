@@ -142,32 +142,7 @@ BEGIN
                   FROM gpReport_Component_Plan_Olap (inStartDate          := inStartDate
                                                    , inEndDate            := inEndDate
                                                    , inGoodsGroupId       := 0
-                                                   , inInfoMoneyId        := zc_Enum_InfoMoney_10201() -- Специи
-                                                   , inSession            := zfCalc_UserAdmin()
-                                                    ) AS tmpReport
-                 UNION ALL
-                  SELECT *
-                  FROM gpReport_Component_Plan_Olap (inStartDate          := inStartDate
-                                                   , inEndDate            := inEndDate
-                                                   , inGoodsGroupId       := 0
-                                                   , inInfoMoneyId        := zc_Enum_InfoMoney_10202() -- Оболочка
-                                                   , inSession            := zfCalc_UserAdmin()
-                                                    ) AS tmpReport
-                 UNION ALL
-                  SELECT *
-                  FROM gpReport_Component_Plan_Olap (inStartDate          := inStartDate
-                                                   , inEndDate            := inEndDate
-                                                   , inGoodsGroupId       := 0
-                                                   , inInfoMoneyId        := zc_Enum_InfoMoney_10203() -- Упаковка
-                                                   , inSession            := zfCalc_UserAdmin()
-                                                    ) AS tmpReport
-
-                 UNION ALL
-                  SELECT *
-                  FROM gpReport_Component_Plan_Olap (inStartDate          := inStartDate
-                                                   , inEndDate            := inEndDate
-                                                   , inGoodsGroupId       := 0
-                                                   , inInfoMoneyId        := zc_Enum_InfoMoney_10204() -- Прочее сырье
+                                                   , inInfoMoneyId        := 0
                                                    , inSession            := zfCalc_UserAdmin()
                                                     ) AS tmpReport
                  ) AS tmpReport
