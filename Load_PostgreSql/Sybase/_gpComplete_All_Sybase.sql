@@ -19,8 +19,7 @@ BEGIN
      -- сразу запомнили время начала выполнения Проц.
      --***vbOperDate_Begin1:= CLOCK_TIMESTAMP();
 
-if inMovementId  = 33851842 AND 1=1
-THEN RETURN; END IF;
+-- if inMovementId  = 33851842 AND 1=1 THEN RETURN; END IF;
 	
      -- нашли
      SELECT DescId, StatusId, StatusId_next, OperDate INTO vbMovementDescId, vbStatusId, vbStatusId_next, vbOperDate FROM Movement WHERE Id = inMovementId;
