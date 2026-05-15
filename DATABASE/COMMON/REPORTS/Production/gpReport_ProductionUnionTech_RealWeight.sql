@@ -18,8 +18,10 @@ RETURNS TABLE (MovementId            Integer
              , GoodsKindId         Integer
              , GoodsKindName       TVarChar
              
-             , RealWeight          TFloat
-             
+             , Amount       TFloat --Кол-во
+             , RealWeight   TFloat --Реал. вес
+             , WeightTare   TFloat --Вес тары
+             , HeadCount    TFloat --Кол. голов
   )
 AS
 $BODY$
@@ -60,7 +62,7 @@ BEGIN
                                           INNER JOIN MovementLinkObject AS MovementLinkObject_DocumentKind
                                                                         ON MovementLinkObject_DocumentKind.MovementId = Movement.Id
                                                                        AND MovementLinkObject_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
-                                                                       AND MovementLinkObject_DocumentKind.ObjectId IN (zc_Enum_DocumentKind_CuterWeight(), zc_Enum_DocumentKind_RealWeight())
+                                                                       AND MovementLinkObject_DocumentKind.ObjectId IN (zc_Enum_DocumentKind_RealWeight())
                                      )
 
     SELECT tmpData.MovementId
@@ -73,12 +75,27 @@ BEGIN
          , Object_Goods.ValueData      ::TVarChar AS GoodsName
          , Object_GoodsKind.Id         ::Integer  AS GoodsKindId
          , Object_GoodsKind.ValueData  ::TVarChar AS GoodsKindName
-           -- Вес КВК
-         , tmpData.Amount              :: TFloat  AS RealWeight 
+           --
+         , tmpData.Amount                ::TFloat AS Amount     --Кол-во
+         , MIFloat_RealWeight.ValueData  ::TFloat AS RealWeight --Реал. вес
+         , MIFloat_WeightTare.ValueData  ::TFloat AS WeightTare --Вес тары
+         , MIFloat_HeadCount.ValueData   ::TFloat AS HeadCount  --Кол. голов
 
     FROM tmpWeighingProduction AS tmpData
      LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpData.StatusId
      LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
+
+     LEFT JOIN MovementItemFloat AS MIFloat_RealWeight
+                                 ON MIFloat_RealWeight.MovementItemId = tmpData.MovementItemId
+                                AND MIFloat_RealWeight.DescId = zc_MIFloat_RealWeight()
+
+     LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
+                                 ON MIFloat_HeadCount.MovementItemId = tmpData.MovementItemId
+                                AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+                                
+     LEFT JOIN MovementItemFloat AS MIFloat_WeightTare
+                                 ON MIFloat_WeightTare.MovementItemId = tmpData.MovementItemId
+                                AND MIFloat_WeightTare.DescId = zc_MIFloat_WeightTare()
 
      LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
                                       ON MILO_GoodsKind.MovementItemId = tmpData.MovementItemId

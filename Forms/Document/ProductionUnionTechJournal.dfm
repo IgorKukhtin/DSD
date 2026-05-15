@@ -3867,8 +3867,8 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Caption = #1044#1072#1085#1085#1099#1077' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
-      Hint = #1044#1072#1085#1085#1099#1077' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
+      Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090' - '#1044#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103
+      Hint = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090' - '#1044#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103
       ImageIndex = 46
       FormName = 'TReport_ProductionUnionTech_RealWeightForm'
       FormNameParam.Value = 'TReport_ProductionUnionTech_RealWeightForm'

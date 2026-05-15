@@ -14,92 +14,20 @@ inherited Report_ProductionUnionTech_RealWeightForm: TReport_ProductionUnionTech
     Height = 289
     TabOrder = 3
     ExplicitTop = 59
-    ExplicitWidth = 1064
+    ExplicitWidth = 724
     ExplicitHeight = 289
     ClientRectBottom = 289
     ClientRectRight = 724
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1064
+      ExplicitWidth = 724
       ExplicitHeight = 289
       inherited cxGrid: TcxGrid
         Width = 724
         Height = 289
-        ExplicitWidth = 1064
+        ExplicitWidth = 724
         ExplicitHeight = 289
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
             item
               Format = ',0.####'
               Kind = skSum
@@ -108,18 +36,17 @@ inherited Report_ProductionUnionTech_RealWeightForm: TReport_ProductionUnionTech
             item
               Format = ',0.####'
               Kind = skSum
+              Column = Amount
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = HeadCount
             end
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
+              Column = WeightTare
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -128,25 +55,24 @@ inherited Report_ProductionUnionTech_RealWeightForm: TReport_ProductionUnionTech
               Column = RealWeight
             end
             item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = HeadCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = WeightTare
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -203,6 +129,16 @@ inherited Report_ProductionUnionTech_RealWeightForm: TReport_ProductionUnionTech
             HeaderAlignmentVert = vaCenter
             Width = 94
           end
+          object Amount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 53
+          end
           object RealWeight: TcxGridDBColumn
             Caption = #1056#1077#1072#1083'. '#1074#1077#1089
             DataBinding.FieldName = 'RealWeight'
@@ -210,6 +146,26 @@ inherited Report_ProductionUnionTech_RealWeightForm: TReport_ProductionUnionTech
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 86
+          end
+          object HeadCount: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
+            DataBinding.FieldName = 'HeadCount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object WeightTare: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1090#1072#1088#1099
+            DataBinding.FieldName = 'WeightTare'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
@@ -239,7 +195,7 @@ inherited Report_ProductionUnionTech_RealWeightForm: TReport_ProductionUnionTech
   inherited Panel: TPanel
     Width = 724
     Height = 33
-    ExplicitWidth = 1064
+    ExplicitWidth = 724
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 753
@@ -392,6 +348,7 @@ inherited Report_ProductionUnionTech_RealWeightForm: TReport_ProductionUnionTech
           MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1044#1072#1085#1085#1099#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103' ('#1050#1042#1050')'
+      ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
