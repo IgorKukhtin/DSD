@@ -993,8 +993,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   inherited DataPanel: TPanel
     Width = 1076
     Height = 35
-    ExplicitLeft = 112
-    ExplicitTop = 20
     ExplicitWidth = 1076
     ExplicitHeight = 35
     inherited edInvNumber: TcxTextEdit
@@ -3865,6 +3863,46 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1074#1099#1073#1086#1088#1086#1095#1085#1086' '#1054#1090#1095#1077#1090' '#1087#1086' '#1074#1099#1093#1086#1076#1072#1084' ('#1044#1077#1083#1080#1082#1072#1090#1077#1089#1099')'
       ImageIndex = 3
     end
+    object actReport_ProductionUnion_RealWeight: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1044#1072#1085#1085#1099#1077' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
+      Hint = #1044#1072#1085#1085#1099#1077' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
+      ImageIndex = 46
+      FormName = 'TReport_ProductionUnionTech_RealWeightForm'
+      FormNameParam.Value = 'TReport_ProductionUnionTech_RealWeightForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inMovementItemId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementItemId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInvNumber'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42086d
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ProductionUnionTech'
@@ -4013,6 +4051,10 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         item
           Visible = True
           ItemName = 'bbOpenFormOrderInternal'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
         end
         item
           Visible = True
@@ -4356,6 +4398,10 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Hint = #1076#1083#1103' '#1086#1076#1080#1085#1086#1075#1086' '#1090#1086#1074#1072#1088#1072
       Visible = ivAlways
       Control = cbPrintOne
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actReport_ProductionUnion_RealWeight
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

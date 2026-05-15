@@ -235,6 +235,8 @@ type
     spPrint_TaxExitUpdate_grid_term: TdsdStoredProc;
     cbPrintOne: TcxCheckBox;
     bbPrintOne: TdxBarControlContainerItem;
+    actReport_ProductionUnion_RealWeight: TdsdOpenForm;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public
