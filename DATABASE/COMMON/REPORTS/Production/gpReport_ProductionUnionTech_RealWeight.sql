@@ -11,6 +11,8 @@ RETURNS TABLE (MovementId            Integer
              , InvNumber             TVarChar
              , OperDate              TDateTime --TDateTime 
              , StatusCode            Integer
+             , DocumentKindName      TVarChar
+             , UserName              TVarChar
 
              , GoodsId             Integer
              , GoodsCode           Integer
@@ -22,6 +24,10 @@ RETURNS TABLE (MovementId            Integer
              , RealWeight   TFloat --Реал. вес
              , WeightTare   TFloat --Вес тары
              , HeadCount    TFloat --Кол. голов
+             
+             , PartionGoods TVarChar
+             , InsertDate TDateTime, UpdateDate TDateTime
+             
   )
 AS
 $BODY$
@@ -50,8 +56,10 @@ BEGIN
                                           , Movement.OperDate
                                           , Movement.InvNumber 
                                           , Movement.StatusId
-                                          , MovementLinkObject_DocumentKind.ObjectId AS DocumentKindId
-                                          , MovementItem.ObjectId AS GoodsId
+                                          , Object_User.ValueData         AS UserName
+                                          , Object_DocumentKind.Id        AS DocumentKindId
+                                          , Object_DocumentKind.ValueData AS DocumentKindName
+                                          , MovementItem.ObjectId         AS GoodsId
                                           , MovementItem.Amount
                                      FROM tmpPartionAll
                                           INNER JOIN MovementItem ON MovementItem.Id = tmpPartionAll.MovementItemId
@@ -63,13 +71,42 @@ BEGIN
                                                                         ON MovementLinkObject_DocumentKind.MovementId = Movement.Id
                                                                        AND MovementLinkObject_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
                                                                        AND MovementLinkObject_DocumentKind.ObjectId IN (zc_Enum_DocumentKind_RealWeight())
+                                          LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = MovementLinkObject_DocumentKind.ObjectId
+
+                                          LEFT JOIN MovementLinkObject AS MovementLinkObject_User
+                                                                       ON MovementLinkObject_User.MovementId = Movement.Id
+                                                                      AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
+                                          LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
                                      )
+         --данные из вх. MI для партии
+         , tmpMI_Partion AS (
+                             SELECT Movement_Partion.OperDate
+                                  , Movement_Partion.InvNumber
+                                  , MovementItem.Amount
+                                  , MIFloat_CuterCount.ValueData       AS CuterCount
+                                  , Object_GoodsKindComplete.ValueData AS GoodsKindCompleteName
+                             FROM MovementItem
+                             LEFT JOIN Movement AS Movement_Partion
+                                                ON Movement_Partion.Id = MovementItem.MovementId
+                                               AND Movement_Partion.DescId = zc_Movement_ProductionUnion()
+                             LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
+                                                              ON MILO_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                                             AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+                             LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILO_GoodsKindComplete.ObjectId
+                             LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
+                                                         ON MIFloat_CuterCount.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
+                             WHERE MovementItem.Id = inMovementItemId 
+                             )
+
 
     SELECT tmpData.MovementId
          , tmpData.MovementItemId
          , tmpData.InvNumber           ::TVarChar
          , tmpData.OperDate            ::TDateTime
-         , Object_Status.ObjectCode    ::Integer  AS StatusCode 
+         , Object_Status.ObjectCode    ::Integer  AS StatusCode
+         , tmpData.DocumentKindName    ::TVarChar
+         , tmpData.UserName            ::TVarChar AS UserName
          , Object_Goods.Id             ::Integer  AS GoodsId
          , Object_Goods.ObjectCode     ::Integer  AS GoodsCode
          , Object_Goods.ValueData      ::TVarChar AS GoodsName
@@ -81,6 +118,22 @@ BEGIN
          , MIFloat_WeightTare.ValueData  ::TFloat AS WeightTare --Вес тары
          , MIFloat_HeadCount.ValueData   ::TFloat AS HeadCount  --Кол. голов
 
+         , CASE WHEN MIString_PartionGoodsMI.ValueData <> ''
+                         THEN MIString_PartionGoodsMI.ValueData
+                WHEN inMovementItemId > 0
+                     THEN 
+                   ('кол.=<' || zfConvert_FloatToString (COALESCE (tmpMI_Partion.Amount, 0)) || '>'
+                 || ' кут.=<' || zfConvert_FloatToString (COALESCE (tmpMI_Partion.CuterCount, 0)) || '>'
+                 || ' вид=<' || COALESCE (tmpMI_Partion.GoodsKindCompleteName, '') || '>'
+                 || ' партия=<' || DATE (COALESCE (tmpMI_Partion.OperDate, zc_DateEnd())) || '>'
+                 || ' № <' || COALESCE (tmpMI_Partion.InvNumber, '') || '>'
+                   )
+                ELSE inMovementItemId :: TVarChar
+           END                       ::TVarChar  AS PartionGoods
+         
+         , MIDate_Insert.ValueData       ::TDateTime AS InsertDate
+         , MIDate_Update.ValueData       ::TDateTime AS UpdateDate
+         
     FROM tmpWeighingProduction AS tmpData
      LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpData.StatusId
      LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
@@ -101,7 +154,19 @@ BEGIN
                                       ON MILO_GoodsKind.MovementItemId = tmpData.MovementItemId
                                      AND MILO_GoodsKind.DescId = zc_MILinkObject_GoodsKind() and  1 = 0 
      LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILO_GoodsKind.ObjectId
-    ;
+     
+     LEFT JOIN MovementItemDate AS MIDate_Insert
+                                ON MIDate_Insert.MovementItemId = tmpData.MovementItemId
+                               AND MIDate_Insert.DescId = zc_MIDate_Insert()
+     LEFT JOIN MovementItemDate AS MIDate_Update
+                                ON MIDate_Update.MovementItemId = tmpData.MovementItemId
+                               AND MIDate_Update.DescId = zc_MIDate_Update()
+
+     LEFT JOIN MovementItemString AS MIString_PartionGoodsMI
+                                  ON MIString_PartionGoodsMI.MovementItemId = tmpData.MovementItemId
+                                 AND MIString_PartionGoodsMI.DescId = zc_MIString_PartionGoods()
+     LEFT JOIN tmpMI_Partion ON 1 = 1
+;
 
 END;
 $BODY$

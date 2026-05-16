@@ -44,6 +44,10 @@ type
     edInvNumber: TcxTextEdit;
     cxLabel4: TcxLabel;
     edOperDate: TcxDateEdit;
+    getMovementForm: TdsdStoredProc;
+    actGetForm: TdsdExecStoredProc;
+    actOpenForm: TdsdOpenForm;
+    actOpenDocument: TMultiAction;
   private
     { Private declarations }
   public
