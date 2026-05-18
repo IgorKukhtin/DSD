@@ -153,6 +153,7 @@ type
     procedure LoadPersonalTRansportFormTest;
     procedure LoadPartnerMapFormTest;
     procedure LoadPriceListFormTest;
+    procedure LoadPricePlanItemFormTest;
     procedure LoadPriceCorrectiveFormTest;
     procedure LoadProductionUnionFormTest;
     procedure LoadProductionSeparateFormTest;
@@ -2677,6 +2678,19 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListTaxDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListTaxDialogForm');
    }
+end;
+
+procedure TLoadFormTest.LoadPricePlanItemFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPricePlanItemForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPricePlanItemForm');
+  //exit;
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPricePlanItemGoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPricePlanItemGoodsForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPricePlanItemGoodsEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPricePlanItemGoodsEditForm');
 end;
 
 procedure TLoadFormTest.LoadQualityFormTest;

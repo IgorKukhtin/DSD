@@ -1665,7 +1665,10 @@ uses
   Report_Component_Plan_OlapDialog in '..\..\Forms\Report\Report_Component_Plan_OlapDialog.pas' {Report_Component_Plan_OlapDialogForm: TParentForm},
   Report_Component_Plan_Olap in '..\..\Forms\Report\Report_Component_Plan_Olap.pas' {Report_Component_Plan_OlapForm: TParentForm},
   Report_Component_Plan_Olap_BI in '..\..\Forms\Report\Report_Component_Plan_Olap_BI.pas' {Report_Component_Plan_Olap_BIForm: TParentForm},
-  Report_ProductionUnionTech_RealWeight in '..\..\Forms\Report\Report_ProductionUnionTech_RealWeight.pas' {Report_ProductionUnionTech_RealWeightForm: TParentForm};
+  Report_ProductionUnionTech_RealWeight in '..\..\Forms\Report\Report_ProductionUnionTech_RealWeight.pas' {Report_ProductionUnionTech_RealWeightForm: TParentForm},
+  PricePlanItemGoodsEdit in '..\..\Forms\Guides\PricePlanItemGoodsEdit.pas' {PricePlanItemGoodsEditForm: TParentForm},
+  PricePlanItemGoods in '..\..\Forms\Guides\PricePlanItemGoods.pas' {PricePlanItemGoodsForm: TParentForm},
+  PricePlanItem in '..\..\Forms\Guides\PricePlanItem.pas' {PricePlanItemForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
