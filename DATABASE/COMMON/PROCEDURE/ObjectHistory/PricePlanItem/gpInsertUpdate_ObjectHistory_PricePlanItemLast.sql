@@ -48,6 +48,7 @@ BEGIN
        -- проверка в настройках "Доступ к прайсу" - что это именно тот Прайс
        ELSEIF NOT EXISTS (SELECT 1 FROM Object_MemberPriceList_View AS MemberPriceList_View WHERE MemberPriceList_View.UserId = vbUserId AND MemberPriceList_View.PriceListId = inPriceListId)
           AND vbUserId <> 5
+          AND vbUserId <> 9457
        THEN
            RAISE EXCEPTION 'Ошибка. У пользователя <%>.%Нет прав корректировать прайс <%>.%Можно корректировать только такие Прайсы:% %'
                          , lfGet_Object_ValueData (vbUserId)

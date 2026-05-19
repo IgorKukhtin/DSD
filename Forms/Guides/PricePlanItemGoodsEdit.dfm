@@ -150,7 +150,7 @@
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_ObjectHistory_PriceListItemLast'
+    StoredProcName = 'gpInsertUpdate_ObjectHistory_PricePlanItemLast'
     DataSets = <>
     OutputType = otResult
     Params = <

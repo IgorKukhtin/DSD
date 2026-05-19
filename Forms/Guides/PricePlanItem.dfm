@@ -24,6 +24,7 @@ object PricePlanItemForm: TPricePlanItemForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitTop = 62
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -487,20 +488,11 @@ object PricePlanItemForm: TPricePlanItemForm
           ItemName = 'dxBarStatic'
         end
         item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbInsertRecord_TradeMark'
-        end
-        item
-          Visible = True
-          ItemName = 'bbChoiceFormTradeMark'
-        end
-        item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbPrint'
         end
@@ -814,9 +806,9 @@ object PricePlanItemForm: TPricePlanItemForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintObjectHistory_PriceListItem'
-      ReportNameParam.Name = 'PrintObjectHistory_PriceListItem'
-      ReportNameParam.Value = 'PrintObjectHistory_PriceListItem'
+      ReportName = 'PrintObjectHistory_PricePlanItem'
+      ReportNameParam.Name = 'PrintObjectHistory_PricePlanItem'
+      ReportNameParam.Value = 'PrintObjectHistory_PricePlanItem'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -882,8 +874,8 @@ object PricePlanItemForm: TPricePlanItemForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintObjectHistory_PriceListItem'
-      ReportNameParam.Value = 'PrintObjectHistory_PriceListItem'
+      ReportName = 'PrintObjectHistory_PricePlanItem'
+      ReportNameParam.Value = 'PrintObjectHistory_PricePlanItem'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -896,11 +888,7 @@ object PricePlanItemForm: TPricePlanItemForm
       MoveParams = <>
       Enabled = False
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate_Separate
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdate_Separate
-        end>
+      StoredProcList = <>
       Caption = #1088#1072#1089#1095#1077#1090' '#1094#1077#1085' '#1087#1086' '#1076#1085#1103#1084' - '#1086#1073#1074#1072#1083#1082#1072
       Hint = #1088#1072#1089#1095#1077#1090' '#1094#1077#1085' '#1087#1086' '#1076#1085#1103#1084' - '#1086#1073#1074#1072#1083#1082#1072
       QuestionBeforeExecute = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1088#1072#1089#1095#1077#1090' '#1094#1077#1085' '#1087#1086' '#1076#1085#1103#1084' - '#1086#1073#1074#1072#1083#1082#1072'?'
@@ -1162,7 +1150,7 @@ object PricePlanItemForm: TPricePlanItemForm
     Top = 16
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_ObjectHistory_PriceListItemLast'
+    StoredProcName = 'gpInsertUpdate_ObjectHistory_PricePlanItemLast'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1270,7 +1258,7 @@ object PricePlanItemForm: TPricePlanItemForm
     Top = 168
   end
   object dsdStoredProcPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_ObjectHistory_PriceListItem_Print'
+    StoredProcName = 'gpSelect_ObjectHistory_PricePlanItem_Print'
     DataSet = PrintItemsCDS
     DataSets = <
       item
@@ -1302,23 +1290,6 @@ object PricePlanItemForm: TPricePlanItemForm
     Params = <>
     Left = 724
     Top = 238
-  end
-  object spInsertUpdate_Separate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_ObjectHistory_PriceListItem_Separate'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inOperDate'
-        Value = Null
-        Component = edShowDate
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 656
-    Top = 136
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

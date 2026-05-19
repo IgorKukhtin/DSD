@@ -82,7 +82,6 @@ type
     actPrint: TdsdPrintAction;
     PrintItemsCDS: TClientDataSet;
     bbPrint: TdxBarButton;
-    spInsertUpdate_Separate: TdsdStoredProc;
     actInsertUpdate_Separate: TdsdExecStoredProc;
     bbInsertUpdate_Separate: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
