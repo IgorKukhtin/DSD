@@ -44,7 +44,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 -- test
-  if inMovementId IN (34279667, 34284773, 34280501, 34279210) then update Movement set StatusId = zc_Enum_Status_UnComplete() where Id= inMovementId; end if;
+  if inMovementId IN (34279667, 34284773, 34280501, 34279210, 34279253 ) then update Movement set StatusId = zc_Enum_Status_UnComplete() where Id= inMovementId; end if;
 
      -- проверка
      IF COALESCE (inMovementId, 0) = 0
@@ -2127,4 +2127,6 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsert_ScaleCeh_Movement_all (inBranchCode:= 102, inMovementId:= 34279667, inOperDate:= '13.05.2026', inSession:= '2321579 ')
+-- SELECT * FROM gpInsert_ScaleCeh_Movement_all (inBranchCode:= 102, inMovementId:= 34279667, inOperDate:= '12.05.2026', inSession:= '2321579')
+-- SELECT * FROM gpInsert_ScaleCeh_Movement_all (inBranchCode:= 102, inMovementId:= 34279253, inOperDate:= '12.05.2026', inSession:= '10381347')
+
