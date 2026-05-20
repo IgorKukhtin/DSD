@@ -2369,6 +2369,14 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              -- обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_1(), inMovementItemId, 0 :: TFloat);
 
+             -- обнулили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_1()
+                                                        , inPartionCellId := 0
+                                                        , inUserId        := vbUserId
+                                                         );
+
          ELSEIF vbPartionCellId_1 = zc_PartionCell_RK()
          THEN
              -- реальная ячейка
@@ -2395,6 +2403,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- привязали ячейку - Ячейка Отбор
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_1(), inMovementItemId, vbPartionCellId_1);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_1()
+                                                        , inPartionCellId := vbPartionCellId_1
+                                                        , inUserId        := vbUserId
+                                                         );
              -- закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_1(), inMovementItemId, TRUE);
              -- вернули
@@ -2411,8 +2426,15 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              outPartionCellNum_last := 1 ::Integer;
 
          ELSE
-             -- привязали ячейку
+             -- 3.1.привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_1(), inMovementItemId, vbPartionCellId_1);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_1()
+                                                        , inPartionCellId := vbPartionCellId_1
+                                                        , inUserId        := vbUserId
+                                                         );
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_1(), inMovementItemId, 0 :: TFloat);
              -- открыли
@@ -2436,6 +2458,14 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_2(), inMovementItemId, NULL);
              -- обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_2(), inMovementItemId, 0 :: TFloat);
+
+             -- обнулили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_2()
+                                                        , inPartionCellId := 0
+                                                        , inUserId        := vbUserId
+                                                         );
 
          ELSEIF vbPartionCellId_2 = zc_PartionCell_RK()
          THEN
@@ -2462,6 +2492,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- привязали ячейку - виртуальную
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_2(), inMovementItemId, vbPartionCellId_2);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_2()
+                                                        , inPartionCellId := vbPartionCellId_2
+                                                        , inUserId        := vbUserId
+                                                         );
              -- закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_2(), inMovementItemId, TRUE);
              --
@@ -2478,8 +2515,15 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              outPartionCellNum_last := 2 ::Integer;
 
          ELSE
-             -- привязали ячейку
+             -- 3.1.привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_2(), inMovementItemId, vbPartionCellId_2);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_2()
+                                                        , inPartionCellId := vbPartionCellId_2
+                                                        , inUserId        := vbUserId
+                                                         );
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_2(), inMovementItemId, 0 :: TFloat);
              -- открыли
@@ -2503,6 +2547,14 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_3(), inMovementItemId, NULL);
              -- обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_3(), inMovementItemId, 0 :: TFloat);
+
+             -- обнулили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_3()
+                                                        , inPartionCellId := 0
+                                                        , inUserId        := vbUserId
+                                                         );
 
          ELSEIF vbPartionCellId_3 = zc_PartionCell_RK()
          THEN
@@ -2529,6 +2581,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- привязали ячейку - виртуальную
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_3(), inMovementItemId, vbPartionCellId_3);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_3()
+                                                        , inPartionCellId := vbPartionCellId_3
+                                                        , inUserId        := vbUserId
+                                                         );
              -- закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_3(), inMovementItemId, TRUE);
              --
@@ -2545,8 +2604,15 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              outPartionCellNum_last := 3 ::Integer;
 
          ELSE
-             -- привязали ячейку
+             -- 3.1.привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_3(), inMovementItemId, vbPartionCellId_3);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_3()
+                                                        , inPartionCellId := vbPartionCellId_3
+                                                        , inUserId        := vbUserId
+                                                         );
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_3(), inMovementItemId, 0 :: TFloat);
              -- открыли
@@ -2570,6 +2636,14 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_4(), inMovementItemId, NULL);
              -- обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_4(), inMovementItemId, 0 :: TFloat);
+
+             -- обнулили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_4()
+                                                        , inPartionCellId := 0
+                                                        , inUserId        := vbUserId
+                                                         );
 
          ELSEIF vbPartionCellId_4 = zc_PartionCell_RK()
          THEN
@@ -2596,6 +2670,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- привязали ячейку - виртуальную
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_4(), inMovementItemId, vbPartionCellId_4);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_4()
+                                                        , inPartionCellId := vbPartionCellId_4
+                                                        , inUserId        := vbUserId
+                                                         );
              -- закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_4(), inMovementItemId, TRUE);
              --
@@ -2612,8 +2693,15 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              outPartionCellNum_last := 4 ::Integer;
 
          ELSE
-             -- привязали ячейку
+             -- 3.1.привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_4(), inMovementItemId, vbPartionCellId_4);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_4()
+                                                        , inPartionCellId := vbPartionCellId_4
+                                                        , inUserId        := vbUserId
+                                                         );
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_4(), inMovementItemId, 0 :: TFloat);
              -- открыли
@@ -2637,6 +2725,14 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_5(), inMovementItemId, NULL);
              -- 1.3.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_5(), inMovementItemId, 0 :: TFloat);
+
+             -- обнулили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_5()
+                                                        , inPartionCellId := 0
+                                                        , inUserId        := vbUserId
+                                                         );
 
          ELSEIF vbPartionCellId_5 = zc_PartionCell_RK()
          THEN
@@ -2663,6 +2759,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- 2.3.привязали ячейку - виртуальную
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_5(), inMovementItemId, vbPartionCellId_5);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_5()
+                                                        , inPartionCellId := vbPartionCellId_5
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 2.4.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_5(), inMovementItemId, TRUE);
              --
@@ -2681,6 +2784,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
          ELSE
              -- 3.1.привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_5(), inMovementItemId, vbPartionCellId_5);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_5()
+                                                        , inPartionCellId := vbPartionCellId_5
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 3.2.обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_5(), inMovementItemId, 0 :: TFloat);
              -- 3.3.открыли
@@ -2704,6 +2814,14 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_6(), inMovementItemId, NULL);
              -- 1.3.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_6(), inMovementItemId, 0 :: TFloat);
+
+             -- обнулили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_6()
+                                                        , inPartionCellId := 0
+                                                        , inUserId        := vbUserId
+                                                         );
 
          ELSEIF vbPartionCellId_6 = zc_PartionCell_RK()
          THEN
@@ -2730,6 +2848,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- 2.3.привязали ячейку - виртуальную
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_6(), inMovementItemId, vbPartionCellId_6);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_6()
+                                                        , inPartionCellId := vbPartionCellId_6
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 2.4.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_6(), inMovementItemId, TRUE);
              --
@@ -2748,6 +2873,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
          ELSE
              -- 3.1.привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_6(), inMovementItemId, vbPartionCellId_6);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_6()
+                                                        , inPartionCellId := vbPartionCellId_6
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 3.2.обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_6(), inMovementItemId, 0 :: TFloat);
              -- 3.3.открыли
@@ -2771,6 +2903,14 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_7(), inMovementItemId, NULL);
              -- 1.3.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_7(), inMovementItemId, 0 :: TFloat);
+
+             -- обнулили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_7()
+                                                        , inPartionCellId := 0
+                                                        , inUserId        := vbUserId
+                                                         );
 
          ELSEIF vbPartionCellId_7 = zc_PartionCell_RK()
          THEN
@@ -2797,6 +2937,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- 2.3.привязали ячейку - виртуальную
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_7(), inMovementItemId, vbPartionCellId_7);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_7()
+                                                        , inPartionCellId := vbPartionCellId_7
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 2.4.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_7(), inMovementItemId, TRUE);
              --
@@ -2815,6 +2962,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
          ELSE
              -- 3.1.привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_7(), inMovementItemId, vbPartionCellId_7);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_7()
+                                                        , inPartionCellId := vbPartionCellId_7
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 3.2.обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_7(), inMovementItemId, 0 :: TFloat);
              -- 3.3.открыли
@@ -2838,6 +2992,14 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_8(), inMovementItemId, NULL);
              -- 1.3.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_8(), inMovementItemId, 0 :: TFloat);
+
+             -- обнулили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_8()
+                                                        , inPartionCellId := 0
+                                                        , inUserId        := vbUserId
+                                                         );
 
          ELSEIF vbPartionCellId_8 = zc_PartionCell_RK()
          THEN
@@ -2864,6 +3026,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- 2.3.привязали ячейку - виртуальную
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_8(), inMovementItemId, vbPartionCellId_8);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_8()
+                                                        , inPartionCellId := vbPartionCellId_8
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 2.4.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_8(), inMovementItemId, TRUE);
              --
@@ -2882,6 +3051,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
          ELSE
              -- 3.1.привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_8(), inMovementItemId, vbPartionCellId_8);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_8()
+                                                        , inPartionCellId := vbPartionCellId_8
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 3.2.обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_8(), inMovementItemId, 0 :: TFloat);
              -- 3.3.открыли
@@ -2905,6 +3081,14 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_9(), inMovementItemId, NULL);
              -- 1.3.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_9(), inMovementItemId, 0 :: TFloat);
+
+             -- обнулили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_9()
+                                                        , inPartionCellId := 0
+                                                        , inUserId        := vbUserId
+                                                         );
 
          ELSEIF vbPartionCellId_9 = zc_PartionCell_RK()
          THEN
@@ -2931,6 +3115,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- 2.3.привязали ячейку - виртуальную
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_9(), inMovementItemId, vbPartionCellId_9);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_9()
+                                                        , inPartionCellId := vbPartionCellId_9
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 2.4.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_9(), inMovementItemId, TRUE);
              --
@@ -2949,6 +3140,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
          ELSE
              -- 3.1.привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_9(), inMovementItemId, vbPartionCellId_9);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_9()
+                                                        , inPartionCellId := vbPartionCellId_9
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 3.2.обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_9(), inMovementItemId, 0 :: TFloat);
              -- 3.3.открыли
@@ -2972,6 +3170,14 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_10(), inMovementItemId, NULL);
              -- 1.3.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_10(), inMovementItemId, 0 :: TFloat);
+
+             -- обнулили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_10()
+                                                        , inPartionCellId := 0
+                                                        , inUserId        := vbUserId
+                                                         );
 
          ELSEIF vbPartionCellId_10 = zc_PartionCell_RK()
          THEN
@@ -2998,6 +3204,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- 2.3.привязали ячейку - виртуальную
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_10(), inMovementItemId, vbPartionCellId_10);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_10()
+                                                        , inPartionCellId := vbPartionCellId_10
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 2.4.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_10(), inMovementItemId, TRUE);
              --
@@ -3016,6 +3229,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
          ELSE
              -- 3.1.привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_10(), inMovementItemId, vbPartionCellId_10);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_10()
+                                                        , inPartionCellId := vbPartionCellId_10
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 3.2.обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_10(), inMovementItemId, 0 :: TFloat);
              -- 3.3.открыли
@@ -3039,6 +3259,14 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_11(), inMovementItemId, NULL);
              -- 1.3.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_11(), inMovementItemId, 0 :: TFloat);
+
+             -- обнулили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_11()
+                                                        , inPartionCellId := 0
+                                                        , inUserId        := vbUserId
+                                                         );
 
          ELSEIF vbPartionCellId_11 = zc_PartionCell_RK()
          THEN
@@ -3065,6 +3293,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- 2.3.привязали ячейку - виртуальную
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_11(), inMovementItemId, vbPartionCellId_11);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_11()
+                                                        , inPartionCellId := vbPartionCellId_11
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 2.4.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_11(), inMovementItemId, TRUE);
              --
@@ -3083,6 +3318,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
          ELSE
              -- 3.1.привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_11(), inMovementItemId, vbPartionCellId_11);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_11()
+                                                        , inPartionCellId := vbPartionCellId_11
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 3.2.обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_11(), inMovementItemId, 0 :: TFloat);
              -- 3.3.открыли
@@ -3106,6 +3348,14 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_12(), inMovementItemId, NULL);
              -- 1.3.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_12(), inMovementItemId, 0 :: TFloat);
+
+             -- обнулили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_12()
+                                                        , inPartionCellId := 0
+                                                        , inUserId        := vbUserId
+                                                         );
 
          ELSEIF vbPartionCellId_12 = zc_PartionCell_RK()
          THEN
@@ -3132,6 +3382,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- 2.3.привязали ячейку - виртуальную
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_12(), inMovementItemId, vbPartionCellId_12);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_12()
+                                                        , inPartionCellId := vbPartionCellId_12
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 2.4.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_12(), inMovementItemId, TRUE);
              --
@@ -3150,6 +3407,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
          ELSE
              -- 3.1.привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_12(), inMovementItemId, vbPartionCellId_12);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_12()
+                                                        , inPartionCellId := vbPartionCellId_12
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 3.2.обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_12(), inMovementItemId, 0 :: TFloat);
              -- 3.3.открыли
@@ -3173,6 +3437,14 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_13(), inMovementItemId, NULL);
              -- 1.3.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_13(), inMovementItemId, 0 :: TFloat);
+
+             -- обнулили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_13()
+                                                        , inPartionCellId := 0
+                                                        , inUserId        := vbUserId
+                                                         );
 
          ELSEIF vbPartionCellId_13 = zc_PartionCell_RK()
          THEN
@@ -3199,6 +3471,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- 2.3.привязали ячейку - виртуальную
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_13(), inMovementItemId, vbPartionCellId_13);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_13()
+                                                        , inPartionCellId := vbPartionCellId_13
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 2.4.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_13(), inMovementItemId, TRUE);
              --
@@ -3217,6 +3496,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
          ELSE
              -- 3.1.привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_13(), inMovementItemId, vbPartionCellId_13);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_13()
+                                                        , inPartionCellId := vbPartionCellId_13
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 3.2.обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_13(), inMovementItemId, 0 :: TFloat);
              -- 3.3.открыли
@@ -3240,6 +3526,14 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_14(), inMovementItemId, NULL);
              -- 1.3.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_14(), inMovementItemId, 0 :: TFloat);
+
+             -- обнулили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_14()
+                                                        , inPartionCellId := 0
+                                                        , inUserId        := vbUserId
+                                                         );
 
          ELSEIF vbPartionCellId_14 = zc_PartionCell_RK()
          THEN
@@ -3266,6 +3560,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- 2.3.привязали ячейку - виртуальную
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_14(), inMovementItemId, vbPartionCellId_14);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_14()
+                                                        , inPartionCellId := vbPartionCellId_14
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 2.4.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_14(), inMovementItemId, TRUE);
              --
@@ -3284,6 +3585,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
          ELSE
              -- 3.1.привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_14(), inMovementItemId, vbPartionCellId_14);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_14()
+                                                        , inPartionCellId := vbPartionCellId_14
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 3.2.обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_14(), inMovementItemId, 0 :: TFloat);
              -- 3.3.открыли
@@ -3307,6 +3615,14 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_15(), inMovementItemId, NULL);
              -- 1.3.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_15(), inMovementItemId, 0 :: TFloat);
+
+             -- обнулили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_15()
+                                                        , inPartionCellId := 0
+                                                        , inUserId        := vbUserId
+                                                         );
 
          ELSEIF vbPartionCellId_15 = zc_PartionCell_RK()
          THEN
@@ -3333,6 +3649,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- 2.3.привязали ячейку - виртуальную
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_15(), inMovementItemId, vbPartionCellId_15);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_15()
+                                                        , inPartionCellId := vbPartionCellId_15
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 2.4.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_15(), inMovementItemId, TRUE);
              --
@@ -3351,6 +3674,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
          ELSE
              -- 3.1.привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_15(), inMovementItemId, vbPartionCellId_15);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_15()
+                                                        , inPartionCellId := vbPartionCellId_15
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 3.2.обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_15(), inMovementItemId, 0 :: TFloat);
              -- 3.3.открыли
@@ -3374,6 +3704,14 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_16(), inMovementItemId, NULL);
              -- 1.3.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_16(), inMovementItemId, 0 :: TFloat);
+
+             -- обнулили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_16()
+                                                        , inPartionCellId := 0
+                                                        , inUserId        := vbUserId
+                                                         );
 
          ELSEIF vbPartionCellId_16 = zc_PartionCell_RK()
          THEN
@@ -3400,6 +3738,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- 2.3.привязали ячейку - виртуальную
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_16(), inMovementItemId, vbPartionCellId_16);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_16()
+                                                        , inPartionCellId := vbPartionCellId_16
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 2.4.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_16(), inMovementItemId, TRUE);
              --
@@ -3418,6 +3763,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
          ELSE
              -- 3.1.привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_16(), inMovementItemId, vbPartionCellId_16);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_16()
+                                                        , inPartionCellId := vbPartionCellId_16
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 3.2.обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_16(), inMovementItemId, 0 :: TFloat);
              -- 3.3.открыли
@@ -3441,6 +3793,14 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_17(), inMovementItemId, NULL);
              -- 1.3.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_17(), inMovementItemId, 0 :: TFloat);
+
+             -- обнулили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_17()
+                                                        , inPartionCellId := 0
+                                                        , inUserId        := vbUserId
+                                                         );
 
          ELSEIF vbPartionCellId_17 = zc_PartionCell_RK()
          THEN
@@ -3467,6 +3827,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- 2.3.привязали ячейку - виртуальную
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_17(), inMovementItemId, vbPartionCellId_17);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_17()
+                                                        , inPartionCellId := vbPartionCellId_17
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 2.4.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_17(), inMovementItemId, TRUE);
              --
@@ -3485,6 +3852,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
          ELSE
              -- 3.1.привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_17(), inMovementItemId, vbPartionCellId_17);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_17()
+                                                        , inPartionCellId := vbPartionCellId_17
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 3.2.обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_17(), inMovementItemId, 0 :: TFloat);
              -- 3.3.открыли
@@ -3508,6 +3882,14 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_18(), inMovementItemId, NULL);
              -- 1.3.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_18(), inMovementItemId, 0 :: TFloat);
+
+             -- обнулили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_18()
+                                                        , inPartionCellId := 0
+                                                        , inUserId        := vbUserId
+                                                         );
 
          ELSEIF vbPartionCellId_18 = zc_PartionCell_RK()
          THEN
@@ -3534,6 +3916,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- 2.3.привязали ячейку - виртуальную
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_18(), inMovementItemId, vbPartionCellId_18);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_18()
+                                                        , inPartionCellId := vbPartionCellId_18
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 2.4.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_18(), inMovementItemId, TRUE);
              --
@@ -3552,6 +3941,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
          ELSE
              -- 3.1.привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_18(), inMovementItemId, vbPartionCellId_18);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_18()
+                                                        , inPartionCellId := vbPartionCellId_18
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 3.2.обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_18(), inMovementItemId, 0 :: TFloat);
              -- 3.3.открыли
@@ -3575,6 +3971,14 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_19(), inMovementItemId, NULL);
              -- 1.3.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_19(), inMovementItemId, 0 :: TFloat);
+
+             -- обнулили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_19()
+                                                        , inPartionCellId := 0
+                                                        , inUserId        := vbUserId
+                                                         );
 
          ELSEIF vbPartionCellId_19 = zc_PartionCell_RK()
          THEN
@@ -3601,6 +4005,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- 2.3.привязали ячейку - виртуальную
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_19(), inMovementItemId, vbPartionCellId_19);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_19()
+                                                        , inPartionCellId := vbPartionCellId_19
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 2.4.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_19(), inMovementItemId, TRUE);
              --
@@ -3619,6 +4030,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
          ELSE
              -- 3.1.привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_19(), inMovementItemId, vbPartionCellId_19);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_19()
+                                                        , inPartionCellId := vbPartionCellId_19
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 3.2.обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_19(), inMovementItemId, 0 :: TFloat);
              -- 3.3.открыли
@@ -3642,6 +4060,14 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_20(), inMovementItemId, NULL);
              -- 1.3.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_20(), inMovementItemId, 0 :: TFloat);
+
+             -- обнулили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_20()
+                                                        , inPartionCellId := 0
+                                                        , inUserId        := vbUserId
+                                                         );
 
          ELSEIF vbPartionCellId_20 = zc_PartionCell_RK()
          THEN
@@ -3668,6 +4094,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- 2.3.привязали ячейку - виртуальную
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_20(), inMovementItemId, vbPartionCellId_20);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_20()
+                                                        , inPartionCellId := vbPartionCellId_20
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 2.4.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_20(), inMovementItemId, TRUE);
              --
@@ -3686,6 +4119,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
          ELSE
              -- 3.1.привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_20(), inMovementItemId, vbPartionCellId_20);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_20()
+                                                        , inPartionCellId := vbPartionCellId_20
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 3.2.обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_20(), inMovementItemId, 0 :: TFloat);
              -- 3.3.открыли
@@ -3709,6 +4149,14 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_21(), inMovementItemId, NULL);
              -- 1.3.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_21(), inMovementItemId, 0 :: TFloat);
+
+             -- обнулили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_21()
+                                                        , inPartionCellId := 0
+                                                        , inUserId        := vbUserId
+                                                         );
 
          ELSEIF vbPartionCellId_21 = zc_PartionCell_RK()
          THEN
@@ -3735,6 +4183,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- 2.3.привязали ячейку - виртуальную
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_21(), inMovementItemId, vbPartionCellId_21);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_21()
+                                                        , inPartionCellId := vbPartionCellId_21
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 2.4.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_21(), inMovementItemId, TRUE);
              --
@@ -3753,6 +4208,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
          ELSE
              -- 3.1.привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_21(), inMovementItemId, vbPartionCellId_21);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_21()
+                                                        , inPartionCellId := vbPartionCellId_21
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 3.2.обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_21(), inMovementItemId, 0 :: TFloat);
              -- 3.3.открыли
@@ -3776,6 +4238,14 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_22(), inMovementItemId, NULL);
              -- 1.3.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_22(), inMovementItemId, 0 :: TFloat);
+
+             -- обнулили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_22()
+                                                        , inPartionCellId := 0
+                                                        , inUserId        := vbUserId
+                                                         );
 
          ELSEIF vbPartionCellId_22 = zc_PartionCell_RK()
          THEN
@@ -3802,6 +4272,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
              -- 2.3.привязали ячейку - виртуальную
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_22(), inMovementItemId, vbPartionCellId_22);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_22()
+                                                        , inPartionCellId := vbPartionCellId_22
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 2.4.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_22(), inMovementItemId, TRUE);
              --
@@ -3820,6 +4297,20 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
          ELSE
              -- 3.1.привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_22(), inMovementItemId, vbPartionCellId_22);
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_22()
+                                                        , inPartionCellId := vbPartionCellId_22
+                                                        , inUserId        := vbUserId
+                                                         );
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= inMovementItemId
+                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_22()
+                                                        , inPartionCellId := vbPartionCellId_22
+                                                        , inUserId        := vbUserId
+                                                         );
              -- 3.2.обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_22(), inMovementItemId, 0 :: TFloat);
              -- 3.3.открыли
