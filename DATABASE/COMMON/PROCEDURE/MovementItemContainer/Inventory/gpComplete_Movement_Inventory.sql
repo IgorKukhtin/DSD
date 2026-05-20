@@ -642,6 +642,7 @@ BEGIN
                                                             AND View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
                                                                                                         , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                                                                         , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                                                                        , zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
                                                                                                          )
                             LEFT JOIN tmpMIF_all AS MIFloat_Price
                                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -728,6 +729,7 @@ BEGIN
                                     AND (tmpMI.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
                                                                         , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                                         , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                                        , zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
                                                                          )
                                       -- или новая схема - товары ОС
                                       OR tmpMI.isAsset = TRUE
@@ -779,6 +781,7 @@ BEGIN
                                     AND (tmpMI.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
                                                                         , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                                         , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                                        , zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
                                                                          )
                                       -- или новая схема - товары ОС
                                       OR tmpMI.isAsset = TRUE
@@ -1054,6 +1057,7 @@ BEGIN
 
      -- !!!сначала!!!
      UPDATE _tmpItem SET ContainerId_Goods = 0 WHERE OperCount <> 0;
+
 
      -- определяется ContainerId_Goods для количественного учета
      UPDATE _tmpItem SET ContainerId_Goods = lpInsertUpdate_ContainerCount_Goods (inOperDate               := CASE WHEN vbOperDate = '31.10.2015' THEN '01.11.2015' WHEN vbOperDate = '31.12.2015' THEN '01.01.2016' ELSE vbOperDate END -- !!!только для филиалов 1 раз!!!
