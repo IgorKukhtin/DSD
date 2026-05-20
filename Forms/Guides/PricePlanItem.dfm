@@ -3,7 +3,7 @@ object PricePlanItemForm: TPricePlanItemForm
   Top = 0
   Caption = #1055#1088#1072#1081#1089' '#1083#1080#1089#1090' - '#1055#1088#1086#1089#1084#1086#1090#1088' / '#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1086#1089#1083#1077#1076#1085#1080#1093' '#1094#1077#1085' ('#1087#1083#1072#1085')'
   ClientHeight = 398
-  ClientWidth = 834
+  ClientWidth = 1181
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,13 +18,13 @@ object PricePlanItemForm: TPricePlanItemForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 67
-    Width = 834
+    Width = 1181
     Height = 331
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 62
+    ExplicitWidth = 834
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -307,29 +307,31 @@ object PricePlanItemForm: TPricePlanItemForm
   object Panel: TPanel
     Left = 0
     Top = 26
-    Width = 834
+    Width = 1181
     Height = 41
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitWidth = 834
     object cxLabel1: TcxLabel
-      Left = 16
+      Left = 14
       Top = 10
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090':'
     end
     object edPriceList: TcxButtonEdit
-      Left = 83
+      Left = 79
       Top = 9
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 1
       Width = 238
     end
     object edShowDate: TcxDateEdit
-      Left = 433
+      Left = 420
       Top = 9
       EditValue = 43831d
       Properties.SaveTime = False
@@ -338,18 +340,35 @@ object PricePlanItemForm: TPricePlanItemForm
       Width = 100
     end
     object cxLabel2: TcxLabel
-      Left = 339
+      Left = 326
       Top = 10
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1094#1077#1085' '#1085#1072':'
     end
+    object cxLabel4: TcxLabel
+      Left = 791
+      Top = 10
+      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' '#1076#1083#1103' '#1082#1086#1087#1080#1088#1086#1074#1072#1085#1080#1103':'
+    end
+    object edPriceListMask: TcxButtonEdit
+      Left = 948
+      Top = 9
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 5
+      Width = 222
+    end
   end
   object cxLabel3: TcxLabel
-    Left = 578
+    Left = 546
     Top = 36
     Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1094#1077#1085#1099' '#1089':'
   end
   object edOperDate: TcxDateEdit
-    Left = 679
+    Left = 647
     Top = 35
     EditValue = 43831d
     Properties.SaveTime = False
@@ -381,7 +400,7 @@ object PricePlanItemForm: TPricePlanItemForm
           'Date')
       end
       item
-        Component = PriceListGuides
+        Component = GuidesPriceList
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -489,22 +508,14 @@ object PricePlanItemForm: TPricePlanItemForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           BeginGroup = True
-          Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintGrid'
-        end
-        item
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -567,7 +578,7 @@ object PricePlanItemForm: TPricePlanItemForm
       ImageIndex = 3
     end
     object bbInsertUpdate_Separate: TdxBarButton
-      Action = actInsertUpdate_Separate
+      Action = actInsertUpdate_Mask
       Category = 0
       ImageIndex = 27
     end
@@ -590,6 +601,11 @@ object PricePlanItemForm: TPricePlanItemForm
     object bbChoiceFormTradeMark: TdxBarButton
       Action = actChoiceFormTradeMark
       Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actInsertUpdate_Mask
+      Category = 0
+      ImageIndex = 27
     end
   end
   object ActionList: TActionList
@@ -633,14 +649,14 @@ object PricePlanItemForm: TPricePlanItemForm
         item
           Name = 'PriceListId'
           Value = '0'
-          Component = PriceListGuides
+          Component = GuidesPriceList
           ComponentItem = 'Key'
           MultiSelectSeparator = ','
         end
         item
           Name = 'PriceListName'
           Value = ''
-          Component = PriceListGuides
+          Component = GuidesPriceList
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -730,7 +746,7 @@ object PricePlanItemForm: TPricePlanItemForm
         item
           Name = 'TextValue'
           Value = Null
-          Component = PriceListGuides
+          Component = GuidesPriceList
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -752,14 +768,14 @@ object PricePlanItemForm: TPricePlanItemForm
         item
           Name = 'PriceListId'
           Value = '0'
-          Component = PriceListGuides
+          Component = GuidesPriceList
           ComponentItem = 'Key'
           MultiSelectSeparator = ','
         end
         item
           Name = 'PriceListName'
           Value = ''
-          Component = PriceListGuides
+          Component = GuidesPriceList
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -794,7 +810,7 @@ object PricePlanItemForm: TPricePlanItemForm
         item
           Name = 'PriceListName'
           Value = Null
-          Component = PriceListGuides
+          Component = GuidesPriceList
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -862,7 +878,7 @@ object PricePlanItemForm: TPricePlanItemForm
         item
           Name = 'PriceListName'
           Value = 42005d
-          Component = PriceListGuides
+          Component = GuidesPriceList
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -883,16 +899,22 @@ object PricePlanItemForm: TPricePlanItemForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actInsertUpdate_Separate: TdsdExecStoredProc
+    object actInsertUpdate_Mask: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
-      StoredProcList = <>
-      Caption = #1088#1072#1089#1095#1077#1090' '#1094#1077#1085' '#1087#1086' '#1076#1085#1103#1084' - '#1086#1073#1074#1072#1083#1082#1072
-      Hint = #1088#1072#1089#1095#1077#1090' '#1094#1077#1085' '#1087#1086' '#1076#1085#1103#1084' - '#1086#1073#1074#1072#1083#1082#1072
-      QuestionBeforeExecute = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1088#1072#1089#1095#1077#1090' '#1094#1077#1085' '#1087#1086' '#1076#1085#1103#1084' - '#1086#1073#1074#1072#1083#1082#1072'?'
-      InfoAfterExecute = #1088#1072#1089#1095#1077#1090' '#1094#1077#1085' '#1087#1086' '#1076#1085#1103#1084' - '#1086#1073#1074#1072#1083#1082#1072' '#1086#1082#1086#1085#1095#1077#1085
+      StoredProc = spInsertUpdate_Mask
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_Mask
+        end
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1087#1088#1072#1081#1089#1072' '#1076#1083#1103' '#1082#1086#1087#1080#1088#1086#1074#1072#1085#1080#1103
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1087#1088#1072#1081#1089#1072' '#1076#1083#1103' '#1082#1086#1087#1080#1088#1086#1074#1072#1085#1080#1103
+      QuestionBeforeExecute = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1087#1088#1072#1081#1089#1072' '#1076#1083#1103' '#1082#1086#1087#1080#1088#1086#1074#1072#1085#1080#1103'?'
+      InfoAfterExecute = #1055#1077#1088#1077#1085#1086#1089' '#1076#1072#1085#1085#1099#1093' '#1080#1079' '#1087#1088#1072#1081#1089#1072' '#1076#1083#1103' '#1082#1086#1087#1080#1088#1086#1074#1072#1085#1080#1103' '#1074#1099#1087#1086#1083#1085#1077#1085
     end
     object actGet_error: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -944,7 +966,7 @@ object PricePlanItemForm: TPricePlanItemForm
         item
           Name = 'inPriceListId'
           Value = '0'
-          Component = PriceListGuides
+          Component = GuidesPriceList
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1060,7 +1082,7 @@ object PricePlanItemForm: TPricePlanItemForm
       item
         Name = 'inPriceListId'
         Value = '0'
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1119,7 +1141,7 @@ object PricePlanItemForm: TPricePlanItemForm
     Left = 296
     Top = 200
   end
-  object PriceListGuides: TdsdGuides
+  object GuidesPriceList: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPriceList
     Key = '0'
@@ -1132,7 +1154,7 @@ object PricePlanItemForm: TPricePlanItemForm
       item
         Name = 'Key'
         Value = '0'
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1140,7 +1162,7 @@ object PricePlanItemForm: TPricePlanItemForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1165,7 +1187,7 @@ object PricePlanItemForm: TPricePlanItemForm
       item
         Name = 'inPriceListId'
         Value = Null
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1252,7 +1274,7 @@ object PricePlanItemForm: TPricePlanItemForm
     RefreshAction = actRefresh
     ComponentList = <
       item
-        Component = PriceListGuides
+        Component = GuidesPriceList
       end>
     Left = 536
     Top = 168
@@ -1268,7 +1290,7 @@ object PricePlanItemForm: TPricePlanItemForm
       item
         Name = 'inPriceListId'
         Value = '0'
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1355,7 +1377,7 @@ object PricePlanItemForm: TPricePlanItemForm
       item
         Name = 'inPriceListId'
         Value = '0'
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1442,7 +1464,7 @@ object PricePlanItemForm: TPricePlanItemForm
       item
         Name = 'inPriceListId'
         Value = '0'
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1450,5 +1472,68 @@ object PricePlanItemForm: TPricePlanItemForm
     PackSize = 1
     Left = 168
     Top = 328
+  end
+  object GuidesPriceListMask: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPriceListMask
+    Key = '0'
+    FormNameParam.Value = 'TPriceListForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPriceListForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesPriceListMask
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPriceListMask
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 1016
+    Top = 24
+  end
+  object spInsertUpdate_Mask: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_ObjectHistory_PricePlanItem_Mask'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = 43831d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceListId'
+        Value = '0'
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceListId_mask'
+        Value = Null
+        Component = GuidesPriceListMask
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 872
+    Top = 144
   end
 end

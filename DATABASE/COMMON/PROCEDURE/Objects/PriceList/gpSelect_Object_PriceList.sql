@@ -12,6 +12,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_PriceList(
                , CurrencyId Integer, CurrencyName TVarChar
                , isIrna Boolean
                , isUser Boolean
+               , isTemp Boolean
+               , isMain Boolean
                , isErased Boolean
                 )
 AS
@@ -42,6 +44,8 @@ BEGIN
            , Object_Currency.ValueData            AS CurrencyName
            , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)   :: Boolean AS isIrna
            , COALESCE (ObjectBoolean_User.ValueData, FALSE)         :: Boolean AS isUser
+           , CASE WHEN COALESCE (ObjectBoolean_Temp.ValueData,FALSE) = TRUE  THEN TRUE ELSE FALSE END ::Boolean AS isTemp
+           , CASE WHEN COALESCE (ObjectBoolean_Temp.ValueData,FALSE) = FALSE THEN TRUE ELSE FALSE END ::Boolean AS isMain
            , Object_PriceList.isErased            AS isErased
        FROM Object AS Object_PriceList
             JOIN tmpIsErased on tmpIsErased.isErased= Object_PriceList.isErased
@@ -60,6 +64,10 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_User
                                     ON ObjectBoolean_User.ObjectId = Object_PriceList.Id
                                    AND ObjectBoolean_User.DescId = zc_ObjectBoolean_PriceList_User()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Temp
+                                    ON ObjectBoolean_Temp.ObjectId = Object_PriceList.Id
+                                   AND ObjectBoolean_Temp.DescId = zc_ObjectBoolean_PriceList_Temp()
 
             LEFT JOIN ObjectFloat AS ObjectFloat_VATPercent
                                   ON ObjectFloat_VATPercent.ObjectId = Object_PriceList.Id
@@ -83,6 +91,8 @@ BEGIN
            , '' :: TVarChar AS CurrencyName
            , FALSE :: Boolean AS isIrna
            , FALSE :: Boolean AS isUser
+           , FALSE :: Boolean AS isTemp
+           , TRUE  :: Boolean AS isMain
            , TRUE  :: Boolean AS isErased
       ;
 

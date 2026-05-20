@@ -8,6 +8,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_PriceList(
 )
   RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
                , PriceWithVAT Boolean, isUser Boolean
+               , isTemp Boolean
+               , isMain Boolean
                , VATPercent TFloat
                , CurrencyId Integer, CurrencyName TVarChar
 ) AS
@@ -26,6 +28,8 @@ BEGIN
            , CAST ('' as TVarChar)       AS Name
            , CAST (FALSE AS Boolean)     AS PriceWithVAT
            , FALSE            :: Boolean AS isUser
+           , FALSE            :: Boolean AS isTemp
+           , TRUE             ::Boolean  AS isMain
            , CAST (20 AS TFloat)         AS VATPercent
            , Object_Currency.Id          AS CurrencyId
            , Object_Currency.ValueData   AS CurrencyName
@@ -43,6 +47,8 @@ BEGIN
            , Object_PriceList.ValueData           AS Name
            , ObjectBoolean_PriceWithVAT.ValueData AS PriceWithVAT
            , COALESCE (ObjectBoolean_User.ValueData, FALSE) :: Boolean AS isUser
+           , CASE WHEN COALESCE (ObjectBoolean_Temp.ValueData,FALSE) = TRUE  THEN TRUE ELSE FALSE END ::Boolean AS isTemp
+           , CASE WHEN COALESCE (ObjectBoolean_Temp.ValueData,FALSE) = FALSE THEN TRUE ELSE FALSE END ::Boolean AS isMain
            , ObjectFloat_VATPercent.ValueData     AS VATPercent
            , Object_Currency.Id                   AS CurrencyId
            , Object_Currency.ValueData            AS CurrencyName
@@ -54,6 +60,10 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_User
                                     ON ObjectBoolean_User.ObjectId = Object_PriceList.Id
                                    AND ObjectBoolean_User.DescId = zc_ObjectBoolean_PriceList_User()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Temp
+                                    ON ObjectBoolean_Temp.ObjectId = Object_PriceList.Id
+                                   AND ObjectBoolean_Temp.DescId = zc_ObjectBoolean_PriceList_Temp()
 
             LEFT JOIN ObjectFloat AS ObjectFloat_VATPercent
                                   ON ObjectFloat_VATPercent.ObjectId = Object_PriceList.Id
@@ -75,6 +85,7 @@ ALTER FUNCTION gpGet_Object_PriceList (Integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 20.05.26         * Temp
  16.11.14                                        * add Currency...
  07.09.13                                        * add PriceWithVAT and VATPercent
  14.06.13          *

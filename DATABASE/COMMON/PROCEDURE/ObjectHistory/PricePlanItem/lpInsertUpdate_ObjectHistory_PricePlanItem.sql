@@ -1,6 +1,5 @@
 -- Function: lpInsertUpdate_ObjectHistory_PricePlanItem()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_ObjectHistory_PricePlanItem (Integer,Integer,Integer,TDateTime,TFloat,Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_ObjectHistory_PricePlanItem (Integer,Integer,Integer,Integer,TDateTime,TFloat,Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_ObjectHistory_PricePlanItem(
@@ -31,12 +30,14 @@ BEGIN
        -- поиск в настройках "Доступ к прайсу"
        IF NOT EXISTS (SELECT 1 FROM Object_MemberPriceList_View AS MemberPriceList_View WHERE MemberPriceList_View.UserId = inUserId)
           AND inUserId <> 5
+          AND inUserId <> 9457
        THEN
            RAISE EXCEPTION 'Ошибка. Нет прав корректировать прайс <%>', lfGet_Object_ValueData (inPriceListId);
 
        -- проверка в настройках "Доступ к прайсу" - что это именно тот Прайс
        ELSEIF NOT EXISTS (SELECT 1 FROM Object_MemberPriceList_View AS MemberPriceList_View WHERE MemberPriceList_View.UserId = inUserId AND MemberPriceList_View.PriceListId = inPriceListId)
           AND inUserId <> 5
+          AND inUserId <> 9457
        THEN
            RAISE EXCEPTION 'Ошибка. У пользователя <%>.%Нет прав корректировать прайс <%>.%Можно корректировать только такие Прайсы:% %'
                          , lfGet_Object_ValueData (inUserId)
