@@ -153,6 +153,7 @@ type
     procedure LoadPersonalTRansportFormTest;
     procedure LoadPartnerMapFormTest;
     procedure LoadPriceListFormTest;
+    procedure LoadPricePlanItemFormTest;
     procedure LoadPriceCorrectiveFormTest;
     procedure LoadProductionUnionFormTest;
     procedure LoadProductionSeparateFormTest;
@@ -1425,11 +1426,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournal_byReportForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournal_byReportForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalForm');
  // exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalForm');
   exit;
@@ -2136,23 +2137,28 @@ begin
 end;
 procedure TLoadFormTest.LoadProductionUnionFormTest;
 begin
+
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAmountFormDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAmountFormDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAmountForm_twoDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAmountForm_twoDialogForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionJournalForm');
   }
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionUnionTech_RealWeightForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionUnionTech_RealWeightForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechJournalForm');
-  //exit;
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechEditForm');
@@ -2672,6 +2678,19 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListTaxDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListTaxDialogForm');
    }
+end;
+
+procedure TLoadFormTest.LoadPricePlanItemFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPricePlanItemForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPricePlanItemForm');
+  //exit;
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPricePlanItemGoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPricePlanItemGoodsForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPricePlanItemGoodsEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPricePlanItemGoodsEditForm');
 end;
 
 procedure TLoadFormTest.LoadQualityFormTest;
@@ -5348,7 +5367,7 @@ end;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartner_bySaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingPartner_bySaleForm');
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerForm');
   //exit;
@@ -5356,10 +5375,11 @@ end;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerJournalForm');
    exit;
-  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerItemJournalForm'));
+   }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerItemJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerItemJournalForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerDialogForm');
   exit;

@@ -92,9 +92,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectHistoryFloat_CashSettings_PercPlanMobileApp(
 INSERT INTO ObjectHistoryFloatDesc (DescId, Code ,itemname)
 SELECT zc_ObjectHistory_CashSettings(), 'zc_ObjectHistoryFloat_CashSettings_PercPlanMobileApp','Процент от чеков для плана по мобильному приложению' WHERE NOT EXISTS (SELECT * FROM ObjectHistoryFloatDesc WHERE Id = zc_ObjectHistoryFloat_CashSettings_PercPlanMobileApp());
 
+
+CREATE OR REPLACE FUNCTION zc_ObjectHistoryFloat_PricePlanItem_Value() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectHistoryFloatDesc WHERE Code = 'zc_ObjectHistoryFloat_PricePlanItem_Value'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectHistoryFloatDesc (DescId, Code ,itemname)
+SELECT zc_ObjectHistory_PricePlanItem(), 'zc_ObjectHistoryFloat_PricePlanItem_Value','Цена в Цены прайс-листа (план)' WHERE NOT EXISTS (SELECT * FROM ObjectHistoryFloatDesc WHERE Id = zc_ObjectHistoryFloat_PricePlanItem_Value());
+ 
+ 
+ 
+ 
+ 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.   Шаблий О.В.
+ 18.05.26         * zc_ObjectHistoryFloat_PricePlanItem_Value
  10.07.23                                                                        * zc_ObjectHistoryFloat_CashSettings_PercPlanMobileApp
  08.03.23                                                                        * zc_ObjectHistoryFloat_CashSettings_FixedPercent...
  07.03.23                                                                        * zc_ObjectHistoryFloat_CashSettings_MarkPlanThreshol

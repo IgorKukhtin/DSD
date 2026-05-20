@@ -151,6 +151,7 @@ type
     OperDatePartner_Effie_sale: TcxGridDBColumn;
     OperDatePartner_sale_calc: TcxGridDBColumn;
     OperDatePartner_Effie_sale_orig: TcxGridDBColumn;
+    FromId: TcxGridDBColumn;
   private
     { Private declarations }
   public
