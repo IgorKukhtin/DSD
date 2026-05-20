@@ -674,6 +674,14 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             Options.Editing = False
             Width = 70
           end
+          object FromId: TcxGridDBColumn
+            Caption = #1050#1083#1102#1095'-2'
+            DataBinding.FieldName = 'FromId'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
         end
       end
     end

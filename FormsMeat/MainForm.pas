@@ -1629,6 +1629,8 @@ type
     N282: TMenuItem;
     actReport_Component_Plan_Olap_BI: TdsdOpenForm;
     miReport_Component_Plan_Olap_BI: TMenuItem;
+    actPricePlanItem: TdsdOpenForm;
+    N281: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

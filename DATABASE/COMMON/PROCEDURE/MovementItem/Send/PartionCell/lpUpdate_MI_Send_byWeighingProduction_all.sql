@@ -15,7 +15,7 @@ $BODY$
    DECLARE vbId_tmp Integer;
 BEGIN
        -- табл - результат
-       CREATE TEMP TABLE _tmpRes_PartionCell (MovementItemId_to Integer, MovementItemId_from Integer, MovementItemId_ChoiceCell Integer, PartionGoodsDate TDateTime) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpRes_PartionCell (MovementItemId_to Integer, MovementItemId_from Integer, DescId_MILO Integer, PartionCellId Integer, MovementItemId_ChoiceCell Integer, PartionGoodsDate TDateTime) ON COMMIT DROP;
 
        -- сохранили протокол
        WITH --
@@ -119,7 +119,7 @@ BEGIN
                                 , MovementItem.ObjectId                  AS GoodsId
                                 , COALESCE (MILO_GoodsKind.ObjectId, 0)  AS GoodsKindId
                                 , COALESCE (MID_PartionGoods.ValueData, inOperDate) AS PartionGoodsDate
-                                  -- є п/п - если несколько партий, 
+                                  -- є п/п - если несколько партий,
                                 , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, MILO_GoodsKind.ObjectId ORDER BY COALESCE (MID_PartionGoods.ValueData, inOperDate) ASC) AS Ord
                            FROM MovementItem
                                 LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
@@ -145,6 +145,8 @@ BEGIN
                                     , tmpMI_to.GoodsId
                                     , tmpMI_to.GoodsKindId
                                     , tmpMI_to.PartionGoodsDate
+                                    , tmpMI_from.DescId_MILO
+                                    , tmpMI_from.PartionCellId
                                       --
                                     , lpInsertUpdate_MovementItemLinkObject (tmpMI_from.DescId_MILO, tmpMI_to.MovementItemId, tmpMI_from.PartionCellId)
                                       --
@@ -275,6 +277,8 @@ BEGIN
                                     , tmpMI_to.GoodsId
                                     , tmpMI_to.GoodsKindId
                                     , tmpMI_to.PartionGoodsDate
+                                    , tmpMI_from.DescId_MILO
+                                    , tmpMI_from.PartionCellId
                                       -- сразу в место отбора
                                     , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_1(), tmpMI_to.MovementItemId, zc_PartionCell_RK())
                                       --
@@ -322,11 +326,13 @@ BEGIN
 
                                -- если партию не отправили в место хранени€
                                WHERE tmpMI_from.GoodsId IS NULL
-                                    
+
                           )
-       INSERT INTO _tmpRes_PartionCell (MovementItemId_to, MovementItemId_from, MovementItemId_ChoiceCell, PartionGoodsDate)
+       INSERT INTO _tmpRes_PartionCell (MovementItemId_to, MovementItemId_from, DescId_MILO, PartionCellId, MovementItemId_ChoiceCell, PartionGoodsDate)
           SELECT tmpMI_to_res.MovementItemId
                , tmpMI_from.MovementItemId
+               , tmpMI_to_res.DescId_MILO
+               , tmpMI_to_res.PartionCellId
                , tmpMI_to_res.MovementItemId_ChoiceCell
                , tmpMI_to_res.PartionGoodsDate
           FROM tmpMI_to_res
@@ -334,6 +340,16 @@ BEGIN
                                    AND tmpMI_from.GoodsKindId      = tmpMI_to_res.GoodsKindId
                                    AND tmpMI_from.PartionGoodsDate = tmpMI_to_res.PartionGoodsDate
          ;
+
+     -- сохранили - table
+     PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId_To
+                                                , inMovementItemId:= _tmpRes_PartionCell.MovementItemId_to
+                                                , inDescId_MILO   := _tmpRes_PartionCell.DescId_MILO
+                                                , inPartionCellId := _tmpRes_PartionCell.PartionCellId
+                                                , inUserId        := inUserId
+                                                 )
+     FROM _tmpRes_PartionCell
+    ;
 
        -- перенесли протокол по €чейкам ’ранени€ из ¬звешиваний
        INSERT INTO MovementItemProtocol (MovementItemId, OperDate, UserId, ProtocolData, isInsert)

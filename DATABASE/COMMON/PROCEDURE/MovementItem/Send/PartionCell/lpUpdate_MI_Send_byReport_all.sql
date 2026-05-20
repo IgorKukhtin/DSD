@@ -137,11 +137,11 @@ BEGIN
          DELETE FROM _tmpItem_PartionCell;
      ELSE
          -- таблица - элементы
-         CREATE TEMP TABLE _tmpItem_PartionCell (MovementId Integer, MovementItemId Integer, Amount TFloat, DescId_MILO Integer, PartionCellId Integer, isRePack Boolean, isMany Boolean) ON COMMIT DROP;
+         CREATE TEMP TABLE _tmpItem_PartionCell (MovementId Integer, MovementItemId Integer, Amount TFloat, DescId_MILO Integer, PartionCellId Integer, PartionCellId_new Integer, isRePack Boolean, isMany Boolean) ON COMMIT DROP;
      END IF;
 
 
-     INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, isRePack, isMany)
+     INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
        WITH -- 1 раз: для Партия дата в строчной части - если установлена (тогда не смотрим в документ)
             tmpMI_PartionDate AS (SELECT MovementItem.MovementId                  AS MovementId
                                        , MovementItem.Id                          AS MovementItemId
@@ -149,6 +149,8 @@ BEGIN
                                          -- текущее значение
                                        , COALESCE (MILO_PartionCell.DescId, 0)    AS DescId_MILO
                                        , COALESCE (MILO_PartionCell.ObjectId, 0)  AS PartionCellId
+                                         -- запишем потом
+                                       , 0 AS PartionCellId_new
                                          -- Несколько партий в Ячейке да/нет)
                                        , CASE MILO_PartionCell.DescId WHEN zc_MILinkObject_PartionCell_1()  THEN zc_MIBoolean_PartionCell_Many_1()
                                                                       WHEN zc_MILinkObject_PartionCell_2()  THEN zc_MIBoolean_PartionCell_Many_2()
@@ -380,6 +382,8 @@ BEGIN
               -- текущее значение
             , tmpMI.DescId_MILO
             , tmpMI.PartionCellId
+              -- запишем потом
+            , 0 AS PartionCellId_new
               -- Перепак
             , isRePack
               -- Несколько партий в Ячейке да/нет)
@@ -466,6 +470,9 @@ BEGIN
              -- 1.3.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_1(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
+
+             -- !!! здесь и так 0 !!!
+             -- UPDATE _tmpItem_PartionCell SET PartionCellId_new = 0 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_1();
 
      END IF;
 
@@ -922,6 +929,8 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_1(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_1_new)
              FROM _tmpItem_PartionCell
             ;
+             -- !!! сохранили еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_1_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_1();
 
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_1(), _tmpItem_PartionCell.MovementItemId, TRUE)
@@ -953,6 +962,11 @@ BEGIN
                    */
                   ) AS _tmpItem_PartionCell
             ;
+             -- !!! сохранили ячейку еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_1_new ELSE _tmpItem_PartionCell.PartionCellId END
+             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_1()
+            ;
+
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_1(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -1034,6 +1048,8 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_2(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_2_new)
              FROM _tmpItem_PartionCell
             ;
+             -- !!! сохранили еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_2_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_2();
 
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_2(), _tmpItem_PartionCell.MovementItemId, TRUE)
@@ -1067,6 +1083,11 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+             -- !!! сохранили ячейку еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_2_new ELSE _tmpItem_PartionCell.PartionCellId END
+             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_2()
+            ;
+
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_2(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -1141,6 +1162,8 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_3(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_3_new)
              FROM _tmpItem_PartionCell
             ;
+             -- !!! сохранили еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_3_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_3();
 
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_3(), _tmpItem_PartionCell.MovementItemId, TRUE)
@@ -1168,6 +1191,11 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+             -- !!! сохранили ячейку еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_3_new ELSE _tmpItem_PartionCell.PartionCellId END
+             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_3()
+            ;
+
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_3(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -1242,6 +1270,8 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_4(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_4_new)
              FROM _tmpItem_PartionCell
             ;
+             -- !!! сохранили еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_4_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_4();
 
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_4(), _tmpItem_PartionCell.MovementItemId, TRUE)
@@ -1269,6 +1299,11 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+             -- !!! сохранили ячейку еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_4_new ELSE _tmpItem_PartionCell.PartionCellId END
+             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_4()
+            ;
+
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_4(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -1343,6 +1378,8 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_5(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_5_new)
              FROM _tmpItem_PartionCell
             ;
+             -- !!! сохранили еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_5_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_5();
 
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_5(), _tmpItem_PartionCell.MovementItemId, TRUE)
@@ -1370,6 +1407,11 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+             -- !!! сохранили ячейку еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_5_new ELSE _tmpItem_PartionCell.PartionCellId END
+             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_5()
+            ;
+
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_5(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -1445,6 +1487,8 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_6(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_6_new)
              FROM _tmpItem_PartionCell
             ;
+             -- !!! сохранили еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_6_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_6();
 
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_6(), _tmpItem_PartionCell.MovementItemId, TRUE)
@@ -1472,6 +1516,11 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+             -- !!! сохранили ячейку еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_6_new ELSE _tmpItem_PartionCell.PartionCellId END
+             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_6()
+            ;
+
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_6(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -1547,6 +1596,8 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_7(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_7_new)
              FROM _tmpItem_PartionCell
             ;
+             -- !!! сохранили еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_7_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_7();
 
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_7(), _tmpItem_PartionCell.MovementItemId, TRUE)
@@ -1574,6 +1625,11 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+             -- !!! сохранили ячейку еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_7_new ELSE _tmpItem_PartionCell.PartionCellId END
+             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_7()
+            ;
+
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_7(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -1649,6 +1705,8 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_8(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_8_new)
              FROM _tmpItem_PartionCell
             ;
+             -- !!! сохранили еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_8_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_8();
 
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_8(), _tmpItem_PartionCell.MovementItemId, TRUE)
@@ -1676,6 +1734,11 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+             -- !!! сохранили ячейку еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_8_new ELSE _tmpItem_PartionCell.PartionCellId END
+             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_8()
+            ;
+
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_8(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -1751,6 +1814,8 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_9(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_9_new)
              FROM _tmpItem_PartionCell
             ;
+             -- !!! сохранили еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_9_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_9();
 
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_9(), _tmpItem_PartionCell.MovementItemId, TRUE)
@@ -1778,6 +1843,11 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+             -- !!! сохранили ячейку еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_9_new ELSE _tmpItem_PartionCell.PartionCellId END
+             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_9()
+            ;
+
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_9(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -1853,6 +1923,8 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_10(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_10_new)
              FROM _tmpItem_PartionCell
             ;
+             -- !!! сохранили еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_10_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_10();
 
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_10(), _tmpItem_PartionCell.MovementItemId, TRUE)
@@ -1880,6 +1952,11 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+             -- !!! сохранили ячейку еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_10_new ELSE _tmpItem_PartionCell.PartionCellId END
+             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_10()
+            ;
+
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_10(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -1955,6 +2032,8 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_11(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_11_new)
              FROM _tmpItem_PartionCell
             ;
+             -- !!! сохранили еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_11_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_11();
 
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_11(), _tmpItem_PartionCell.MovementItemId, TRUE)
@@ -1982,6 +2061,11 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+             -- !!! сохранили ячейку еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_11_new ELSE _tmpItem_PartionCell.PartionCellId END
+             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_11()
+            ;
+
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_11(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -2057,6 +2141,8 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_12(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_12_new)
              FROM _tmpItem_PartionCell
             ;
+             -- !!! сохранили еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_12_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_12();
 
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_12(), _tmpItem_PartionCell.MovementItemId, TRUE)
@@ -2084,6 +2170,11 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+             -- !!! сохранили ячейку еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_12_new ELSE _tmpItem_PartionCell.PartionCellId END
+             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_12()
+            ;
+
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_12(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -2158,6 +2249,8 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_13(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_13_new)
              FROM _tmpItem_PartionCell
             ;
+             -- !!! сохранили еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_13_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_13();
 
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_13(), _tmpItem_PartionCell.MovementItemId, TRUE)
@@ -2185,6 +2278,11 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+             -- !!! сохранили ячейку еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_13_new ELSE _tmpItem_PartionCell.PartionCellId END
+             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_13()
+            ;
+
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_13(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -2259,6 +2357,8 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_14(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_14_new)
              FROM _tmpItem_PartionCell
             ;
+             -- !!! сохранили еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_14_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_14();
 
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_14(), _tmpItem_PartionCell.MovementItemId, TRUE)
@@ -2286,6 +2386,11 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+             -- !!! сохранили ячейку еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_14_new ELSE _tmpItem_PartionCell.PartionCellId END
+             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_14()
+            ;
+
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_14(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -2360,6 +2465,8 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_15(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_15_new)
              FROM _tmpItem_PartionCell
             ;
+             -- !!! сохранили еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_15_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_15();
 
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_15(), _tmpItem_PartionCell.MovementItemId, TRUE)
@@ -2387,6 +2494,11 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+             -- !!! сохранили ячейку еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_15_new ELSE _tmpItem_PartionCell.PartionCellId END
+             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_15()
+            ;
+
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_15(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -2461,6 +2573,8 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_16(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_16_new)
              FROM _tmpItem_PartionCell
             ;
+             -- !!! сохранили еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_16_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_16();
 
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_16(), _tmpItem_PartionCell.MovementItemId, TRUE)
@@ -2488,6 +2602,11 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+             -- !!! сохранили ячейку еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_16_new ELSE _tmpItem_PartionCell.PartionCellId END
+             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_16()
+            ;
+
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_16(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -2562,6 +2681,8 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_17(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_17_new)
              FROM _tmpItem_PartionCell
             ;
+             -- !!! сохранили еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_17_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_17();
 
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_17(), _tmpItem_PartionCell.MovementItemId, TRUE)
@@ -2589,6 +2710,11 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+             -- !!! сохранили ячейку еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_17_new ELSE _tmpItem_PartionCell.PartionCellId END
+             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_17()
+            ;
+
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_17(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -2663,6 +2789,8 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_18(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_18_new)
              FROM _tmpItem_PartionCell
             ;
+             -- !!! сохранили еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_18_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_18();
 
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_18(), _tmpItem_PartionCell.MovementItemId, TRUE)
@@ -2690,6 +2818,11 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+             -- !!! сохранили ячейку еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_18_new ELSE _tmpItem_PartionCell.PartionCellId END
+             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_18()
+            ;
+
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_18(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -2764,6 +2897,8 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_19(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_19_new)
              FROM _tmpItem_PartionCell
             ;
+             -- !!! сохранили еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_19_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_19();
 
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_19(), _tmpItem_PartionCell.MovementItemId, TRUE)
@@ -2791,6 +2926,11 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+             -- !!! сохранили ячейку еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_19_new ELSE _tmpItem_PartionCell.PartionCellId END
+             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_19()
+            ;
+
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_19(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -2865,6 +3005,8 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_20(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_20_new)
              FROM _tmpItem_PartionCell
             ;
+             -- !!! сохранили еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_20_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_20();
 
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_20(), _tmpItem_PartionCell.MovementItemId, TRUE)
@@ -2892,6 +3034,11 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+             -- !!! сохранили ячейку еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_20_new ELSE _tmpItem_PartionCell.PartionCellId END
+             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_20()
+            ;
+
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_20(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -2966,6 +3113,8 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_21(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_21_new)
              FROM _tmpItem_PartionCell
             ;
+             -- !!! сохранили еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_21_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_21();
 
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_21(), _tmpItem_PartionCell.MovementItemId, TRUE)
@@ -2993,6 +3142,11 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+             -- !!! сохранили ячейку еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_21_new ELSE _tmpItem_PartionCell.PartionCellId END
+             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_21()
+            ;
+
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_21(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -3067,6 +3221,8 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_22(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_22_new)
              FROM _tmpItem_PartionCell
             ;
+             -- !!! сохранили еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_22_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_22();
 
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_22(), _tmpItem_PartionCell.MovementItemId, TRUE)
@@ -3094,6 +3250,11 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+             -- !!! сохранили ячейку еще здесь!!!
+             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_22_new ELSE _tmpItem_PartionCell.PartionCellId END
+             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_22()
+            ;
+
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_22(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -3114,12 +3275,21 @@ BEGIN
      END IF;
 
 
+     -- сохранили - table
+     PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := _tmpItem_PartionCell.MovementId
+                                                , inMovementItemId:= _tmpItem_PartionCell.MovementItemId
+                                                , inDescId_MILO   := _tmpItem_PartionCell.DescId_MILO
+                                                , inPartionCellId := _tmpItem_PartionCell.PartionCellId_new
+                                                , inUserId        := inUserId
+                                                 )
+     FROM _tmpItem_PartionCell
+    ;
+    
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (tmpItem.MovementItemId, inUserId, FALSE)
      FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell
           ) AS tmpItem
     ;
-    
     
     IF inUserId = 5 AND 1=0
     THEN

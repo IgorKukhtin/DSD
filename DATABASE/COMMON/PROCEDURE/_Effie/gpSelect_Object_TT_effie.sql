@@ -262,7 +262,7 @@ $BODY$
           , ''                                            ::TVarChar AS salePointDistributorExtId
           , ''                                            ::TVarChar AS customer
           , ''                                            ::TVarChar AS customerIsis
-          , ''                                            ::TVarChar AS banner
+          , COALESCE (Object_Retail.ValueData, 'нет')     ::TVarChar AS banner
           , Object_City.ValueData                         ::TVarChar AS address2
           , Object_Street.ValueData                       ::TVarChar AS address3
           , COALESCE (Object_TT_effie.HouseNumber,'')     ::TVarChar AS address4

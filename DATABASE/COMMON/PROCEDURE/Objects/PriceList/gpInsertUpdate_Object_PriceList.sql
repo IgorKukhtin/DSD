@@ -1,14 +1,16 @@
 -- Function: gpInsertUpdate_Object_PriceList (Integer, Integer, TVarChar, Boolean, TFloat, Integer, TVarChar)
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PriceList (Integer, Integer, TVarChar, Boolean, TFloat, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PriceList (Integer, Integer, TVarChar, Boolean, Boolean, TFloat, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PriceList (Integer, Integer, TVarChar, Boolean, Boolean, TFloat, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PriceList (Integer, Integer, TVarChar, Boolean, Boolean, Boolean, TFloat, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PriceList(
  INOUT ioId            Integer   ,     -- ключ объекта <Прайс листы> 
     IN inCode          Integer   ,     -- Код объекта <Прайс листы> 
     IN inName          TVarChar  ,     -- Название объекта <Прайс листы> 
     IN inPriceWithVAT  Boolean   ,     -- Цена с НДС (да/нет)  
-    IN inisUser        Boolean   ,     -- Ограниченный доступ
+    IN inisUser        Boolean   ,     -- Ограниченный досту
+    IN inisTemp        Boolean   ,     -- Временный
     IN inVATPercent    TFloat    ,     -- % НДС
     IN inCurrencyId    Integer   ,     -- Валюта
     IN inSession       TVarChar        -- сессия пользователя
@@ -48,6 +50,8 @@ BEGIN
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_PriceList_User(), ioId, inisUser);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_PriceList_Temp(), ioId, inisTemp);
    
    -- сохранили свойство <% НДС>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PriceList_VATPercent(), ioId, inVATPercent);
@@ -69,6 +73,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.05.26          * inisTemp
  29.03.24          * inisUser 
  16.11.14                                        * add Currency...
  11.01.13                                        * add lfGet_ObjectCode

@@ -479,7 +479,7 @@ object MemberSheetWorkTimeForm: TMemberSheetWorkTimeForm
           Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'Name'
+          ComponentItem = 'MemberName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -610,10 +610,14 @@ object MemberSheetWorkTimeForm: TMemberSheetWorkTimeForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
     Left = 224
     Top = 272
   end

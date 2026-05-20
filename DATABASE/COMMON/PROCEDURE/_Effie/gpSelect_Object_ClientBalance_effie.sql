@@ -159,7 +159,7 @@ BEGIN
                                       , SUM (tmpContainer.Amount) OVER (PARTITION BY tmpContainer.PartnerId, ABS (tmpContainer.Amount)) AS ResortSum
                                       , tmpContainer.ContractDate
                                  FROM tmpContainer
-                                      LEFT JOIN tmpMIContainer    ON tmpContainer.ContainerId      = tmpContainer.ContainerId
+                                      LEFT JOIN tmpMIContainer    ON tmpMIContainer.ContainerId    = tmpContainer.ContainerId
                                       LEFT JOIN tmpMIContainerNow ON tmpMIContainerNow.ContainerId = tmpContainer.ContainerId
                                 )
 

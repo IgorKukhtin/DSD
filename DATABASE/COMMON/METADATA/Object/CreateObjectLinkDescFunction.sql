@@ -572,6 +572,21 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_PriceListItem_GoodsKind()  RETURNS Inte
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_PriceListItem_GoodsKind', 'Вид товара', zc_Object_PriceListItem(), zc_Object_GoodsKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PriceListItem_GoodsKind');
 
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_PricePlanItem_PriceList() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PricePlanItem_PriceList'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_PricePlanItem_PriceList', 'Прайс-лист', zc_Object_PricePlanItem(), zc_Object_PriceList() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PricePlanItem_PriceList');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_PricePlanItem_Goods()  RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PricePlanItem_Goods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_PricePlanItem_Goods', 'Товар', zc_Object_PricePlanItem(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PricePlanItem_Goods');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_PricePlanItem_GoodsKind()  RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PricePlanItem_GoodsKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_PricePlanItem_GoodsKind', 'Вид товара', zc_Object_PricePlanItem(), zc_Object_GoodsKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PricePlanItem_GoodsKind');
+
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_RoleRight_Role() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_RoleRight_Role'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_RoleRight_Role', 'Ссылка на роль в справочнике указания ролей', zc_Object_RoleRight(), zc_Object_Role() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_RoleRight_Role');
@@ -3296,6 +3311,9 @@ SELECT 'zc_ObjectLink_GoodsGroupProperty_Parent', 'Аналитический классификатор',
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 18.05.26         * zc_ObjectLink_PricePlanItem_PriceList
+                    zc_ObjectLink_PricePlanItem_Goods
+                    zc_ObjectLink_PricePlanItem_GoodsKind
  23.10.25         * zc_ObjectLink_CFO_Member
  25.03.25         * zc_ObjectLink_Unit_Department_two
  21.03.25         * zc_ObjectLink_Box_Goods
