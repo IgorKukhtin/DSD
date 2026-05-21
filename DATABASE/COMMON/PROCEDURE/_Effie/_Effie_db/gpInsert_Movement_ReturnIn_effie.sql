@@ -170,13 +170,16 @@ BEGIN
     -- Поиск - 1.1. - Все параметры
     IF COALESCE (vbContractId, 0) = 0
     THEN
-        vbContractId:= (SELECT soldtable.contractid
-                        FROM soldtable
+        vbContractId:= (WITH tmpSoldtable AS (SELECT soldtable.*
+                                              FROM soldtable
+                                              WHERE soldtable.OperDate <= CURRENT_DATE - INTERVAL '14 DAY'
+                                                AND soldtable.PartnerId = vbPartnerId
+                                                AND soldtable.PaidKindId = vbPaidKindId
+                                             )
+                        SELECT soldtable.contractid
+                        FROM tmpSoldtable AS Soldtable
                              JOIN _tmpItem ON _tmpItem.GoodsId= soldtable.GoodsId
                                         --AND COALESCE (_tmpItem.GoodsKindId, 0) = COALESCE (soldtable.GoodsKindId, 0)
-                        WHERE soldtable.OperDate <= CURRENT_DATE - INTERVAL '14 DAY'
-                          AND soldtable.PartnerId = vbPartnerId
-                          AND soldtable.PaidKindId = vbPaidKindId
                         ORDER BY soldtable.OperDate DESC
                         LIMIT 1
                        );
@@ -185,8 +188,14 @@ BEGIN
     -- Поиск - 1.2. - Все параметры
     IF COALESCE (vbContractId, 0) = 0
     THEN
-        vbContractId:= (SELECT soldtable.contractid
-                        FROM soldtable
+        vbContractId:= (WITH tmpSoldtable AS (SELECT soldtable.*
+                                              FROM soldtable
+                                              WHERE soldtable.OperDate > CURRENT_DATE - INTERVAL '14 DAY'
+                                                AND soldtable.PartnerId = vbPartnerId
+                                                AND soldtable.PaidKindId = vbPaidKindId
+                                             )
+                        SELECT soldtable.contractid
+                        FROM tmpSoldtable AS Soldtable
                              JOIN _tmpItem ON _tmpItem.GoodsId= soldtable.GoodsId
                                         --AND COALESCE (_tmpItem.GoodsKindId, 0) = COALESCE (soldtable.GoodsKindId, 0)
                         WHERE soldtable.OperDate > CURRENT_DATE - INTERVAL '14 DAY'
@@ -200,13 +209,16 @@ BEGIN
     -- Поиск - 2.1. - без PaidKindId
     IF COALESCE (vbContractId, 0) = 0
     THEN
-        vbContractId:= (SELECT soldtable.contractid
-                        FROM soldtable
+        vbContractId:= (WITH tmpSoldtable AS (SELECT soldtable.*
+                                              FROM soldtable
+                                              WHERE soldtable.OperDate <= CURRENT_DATE - INTERVAL '14 DAY'
+                                                AND soldtable.PartnerId = vbPartnerId
+                                              --AND soldtable.PaidKindId = vbPaidKindId
+                                             )
+                        SELECT soldtable.contractid
+                        FROM tmpSoldtable AS soldtable
                              JOIN _tmpItem ON _tmpItem.GoodsId= soldtable.GoodsId
                                         --AND COALESCE (_tmpItem.GoodsKindId, 0) = COALESCE (soldtable.GoodsKindId, 0)
-                        WHERE soldtable.OperDate <= CURRENT_DATE - INTERVAL '14 DAY'
-                          AND soldtable.PartnerId = vbPartnerId
-                        --AND soldtable.PaidKindId = vbPaidKindId
                         ORDER BY soldtable.OperDate
                         LIMIT 1
                        );
@@ -214,14 +226,16 @@ BEGIN
     -- Поиск - 2.2. - без PaidKindId
     IF COALESCE (vbContractId, 0) = 0
     THEN
-        vbContractId:= (SELECT soldtable.contractid
-                        FROM soldtable
+        vbContractId:= (WITH tmpSoldtable AS (SELECT soldtable.*
+                                              FROM soldtable
+                                              WHERE soldtable.OperDate > CURRENT_DATE - INTERVAL '14 DAY'
+                                                AND soldtable.PartnerId = vbPartnerId
+                                              --AND soldtable.PaidKindId = vbPaidKindId
+                                             )
+                        SELECT soldtable.contractid
+                        FROM tmpSoldtable AS soldtable
                              JOIN _tmpItem ON _tmpItem.GoodsId= soldtable.GoodsId
                                         --AND COALESCE (_tmpItem.GoodsKindId, 0) = COALESCE (soldtable.GoodsKindId, 0)
-                        WHERE soldtable.OperDate > CURRENT_DATE - INTERVAL '14 DAY'
-                          AND soldtable.PartnerId = vbPartnerId
-                        --AND soldtable.PaidKindId = vbPaidKindId
-                        ORDER BY soldtable.OperDate
                         LIMIT 1
                        );
     END IF;
