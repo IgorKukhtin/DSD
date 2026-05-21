@@ -48,6 +48,8 @@ BEGIN
                       -- УП Статья назначения
                     , InfoMoneyId
 
+                    , ReceiptId_parent
+                    , ReceiptId_from
 
                       -- 1.1.Продано Покуп с РК - ГП
                     , AmountSale_rk_sh
@@ -81,9 +83,9 @@ BEGIN
                     , Summ_income
                      )
 
-            SELECT MovementId
+            SELECT 0 AS MovementId
                    -- Дата Документа
-                 , OperDate
+                 , DATE_TRUNC ('MONTH', OperDate) AS OperDate
 
                   -- Подразделение
                  , UnitId
@@ -106,37 +108,39 @@ BEGIN
                    -- УП Статья назначения
                  , InfoMoneyId
 
+                 , ReceiptId_parent
+                 , ReceiptId_from
 
                    -- 1.1.Продано Покуп с РК - ГП
-                 , AmountSale_rk_sh
-                 , AmountSale_rk
+                 , SUM (AmountSale_rk_sh)
+                 , SUM (AmountSale_rk)
                    -- 1.2.Расход на филиалы с РК - ГП
-                 , AmountSendOnPrice_rk_sh
-                 , AmountSendOnPrice_rk
+                 , SUM (AmountSendOnPrice_rk_sh)
+                 , SUM (AmountSendOnPrice_rk)
 
                    -- Приход ПФ-ГП - факт - ГП
-                 , Amount_prod_in_sh
-                 , Amount_prod_in
+                 , SUM (Amount_prod_in_sh)
+                 , SUM (Amount_prod_in)
 
                    -- Приход ПФ-ГП - Расчет - ГП
-                 , Amount_prod_in_calc_sh
-                 , Amount_prod_in_calc
+                 , SUM (Amount_prod_in_calc_sh)
+                 , SUM (Amount_prod_in_calc)
 
                    -- Расчет расх на производство - Компоненты
-                 , Amount_prod_out_calc
+                 , SUM (Amount_prod_out_calc)
 
                    -- 2.1.ФАКТ расх на производство - Компоненты
-                 , Amount_prod_out
+                 , SUM (Amount_prod_out)
                    -- 2.2.ФАКТ Списание - Компоненты
-                 , Amount_loss
+                 , SUM (Amount_loss)
                    -- 2.3.ФАКТ Инвентаризация - Компоненты
-                 , Amount_inv
+                 , SUM (Amount_inv)
                    -- 2.4.ФАКТ Продажа - Компоненты
-                 , Amount_sale
+                 , SUM (Amount_sale)
 
                    -- приход от поставщ. - Компоненты
-                 , Amount_income
-                 , Summ_income
+                 , SUM (Amount_income)
+                 , SUM (Summ_income)
 
             FROM (SELECT *
                   FROM gpReport_Component_Plan_Olap (inStartDate          := inStartDate
@@ -146,6 +150,29 @@ BEGIN
                                                    , inSession            := zfCalc_UserAdmin()
                                                     ) AS tmpReport
                  ) AS tmpReport
+            GROUP BY DATE_TRUNC ('MONTH', OperDate)
+                   , UnitId
+                     -- Поставщик
+                   , PartnerInId
+
+                     -- Товар ГП
+                   , GoodsId_gp
+                   , GoodsKindId_gp
+                   , MeasureId_gp
+                     -- УП Статья назначения
+                   , InfoMoneyId_gp
+                     -- Торговая марка
+                   , TradeMarkId_gp
+
+                     -- Товар - Компоненты
+                   , GoodsId
+                   , GoodsKindId
+                   , MeasureId
+                     -- УП Статья назначения
+                   , InfoMoneyId
+
+                   , ReceiptId_parent
+                   , ReceiptId_from
            ;
 
   -- Протокол
@@ -197,3 +224,6 @@ $BODY$
 -- DELETE FROM  _bi_Table_Component_Plan WHERE OperDate between '20.07.2025' and '20.07.2025'
 -- SELECT OperDate, sum(AmountSale_rk), sum(AmountSendOnPrice_rk)  FROM _bi_Table_Component_Planwhere OperDate between '01.04.2026' and '01.04.2026' GROUP BY OperDate ORDER BY 1 DESC, 2
 -- SELECT * FROM gpInsert_bi_Table_Component_Plan (inStartDate:= '01.04.2026', inEndDate:= '30.04.2026', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpInsert_bi_Table_Component_Plan (inStartDate:= '01.03.2026', inEndDate:= '31.03.2026', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpInsert_bi_Table_Component_Plan (inStartDate:= '01.02.2026', inEndDate:= '28.02.2026', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpInsert_bi_Table_Component_Plan (inStartDate:= '01.01.2026', inEndDate:= '31.01.2026', inSession:= zfCalc_UserAdmin())
