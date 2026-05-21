@@ -1189,6 +1189,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_MemberGoods_Comment() RETURNS Integer
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_MemberGoods_Comment', zc_Object_MemberGoods(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_MemberGoods_Comment');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_RouteTT_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_RouteTT_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_RouteTT_Comment', zc_Object_RouteTT(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_RouteTT_Comment');
                   
                   
                           
@@ -1809,6 +1812,7 @@ INSERT INTO ObjectStringDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 21.05.26         * zc_ObjectString_RouteTT_Comment
  09.12.25         * zc_ObjectString_Partner_GLNCodeCorporate_vch
  23.10.25         * zc_ObjectString_CFO_Comment
  27.09.25         * zc_ObjectString_GoodsQuality_Value21

@@ -1668,7 +1668,9 @@ uses
   Report_ProductionUnionTech_RealWeight in '..\..\Forms\Report\Report_ProductionUnionTech_RealWeight.pas' {Report_ProductionUnionTech_RealWeightForm: TParentForm},
   PricePlanItemGoodsEdit in '..\..\Forms\Guides\PricePlanItemGoodsEdit.pas' {PricePlanItemGoodsEditForm: TParentForm},
   PricePlanItemGoods in '..\..\Forms\Guides\PricePlanItemGoods.pas' {PricePlanItemGoodsForm: TParentForm},
-  PricePlanItem in '..\..\Forms\Guides\PricePlanItem.pas' {PricePlanItemForm: TParentForm};
+  PricePlanItem in '..\..\Forms\Guides\PricePlanItem.pas' {PricePlanItemForm: TParentForm},
+  RouteTT in '..\..\Forms\Guides\RouteTT.pas' {RouteTTForm: TParentForm},
+  RouteTTEdit in '..\..\Forms\Guides\RouteTTEdit.pas' {RouteTTEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

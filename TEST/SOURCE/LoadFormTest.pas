@@ -206,6 +206,7 @@ type
     procedure LoadRouteGroupFormTest;
     procedure LoadRouteNumFormTest;
     procedure LoadRouteSortingFormTest;
+    procedure LoadRouteTTFormTest;
     procedure LoadRateFuelKindFormTest;
     procedure LoadNameBeforeFormTest;
     procedure LoadSectionFormTest;
@@ -4591,6 +4592,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TRouteMemberEditForm');
 end;
 
+procedure TLoadFormTest.LoadRouteTTFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteTTForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRouteTTForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteTTEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRouteTTEditForm');
+ end;
 procedure TLoadFormTest.LoadRouteGroupFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteGroupForm'));
