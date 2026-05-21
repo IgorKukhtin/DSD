@@ -188,9 +188,27 @@ BEGIN
 
                          WHERE Movement.DescId = zc_Movement_OrderFinance()
                            AND Movement.StatusId IN (zc_Enum_Status_Complete()) -- zc_Enum_Status_UnComplete()
-                           AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '14 DAY' AND vbOperDate - INTERVAL '1 DAY'
+                           AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '31 DAY' AND vbOperDate - INTERVAL '1 DAY'
                          );
-
+     IF COALESCE (vbMovementId_old, 0) = 0
+     THEN
+         vbMovementId_old:= (SELECT Movement.Id
+                             FROM Movement
+                                  INNER JOIN MovementFloat AS MovementFloat_WeekNumber
+                                                           ON MovementFloat_WeekNumber.MovementId = Movement.Id
+                                                          AND MovementFloat_WeekNumber.DescId     = zc_MovementFloat_WeekNumber()
+                                                          AND MovementFloat_WeekNumber.ValueData  = vbWeekNumber_old
+                                  INNER JOIN MovementLinkObject AS MovementLinkObject_OrderFinance
+                                                                ON MovementLinkObject_OrderFinance.MovementId = Movement.Id
+                                                               AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
+                                                               AND MovementLinkObject_OrderFinance.ObjectId   = vbOrderFinanceId
+                             WHERE Movement.DescId = zc_Movement_OrderFinance()
+                               AND Movement.StatusId IN (zc_Enum_Status_UnComplete())
+                               AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '31 DAY' AND vbOperDate - INTERVAL '1 DAY'
+                             ORDER BY Movement.Id DESC
+                             LIMIT 1
+                            );
+     END IF;
 
      -- Если неделя еще не началась
      IF CURRENT_DATE < vbStartDate
