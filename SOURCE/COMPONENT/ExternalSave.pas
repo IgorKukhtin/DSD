@@ -121,6 +121,7 @@ end;
 function TFileExternalSave.Execute(var AFileName: string): boolean;
 var i: integer;
     CreateFile: boolean;
+    SaveCount_rec : Integer;
 begin
   result := false;
   CreateFile := false;
@@ -143,6 +144,9 @@ begin
     AFileName := FFileName;
 
   Self.Open(FFileName, CreateFile);
+  //ловим ошибку
+  SaveCount_rec:= FDataSet.RecordCount;
+  //
   FSourceDataSet.First;
   while not FSourceDataSet.Eof do begin
     FDataSet.Append;
@@ -152,6 +156,16 @@ begin
     FDataSet.Post;
     FSourceDataSet.Next;
   end;
+  //ловим ошибку
+  if (FDataSet.RecordCount - SaveCount_rec) <> FSourceDataSet.RecordCount
+  then begin
+         ShowMessage ('Ошибка.Выгружены не все данные.'+#10+#13+'Повторите Выгрузку еще раз'
+                     +#10+#13 + IntToStr(FDataSet.RecordCount) + ' - ' + IntToStr(SaveCount_rec) + ' = ' + IntToStr(FDataSet.RecordCount - SaveCount_rec) + ' <> ' + IntToStr(FSourceDataSet.RecordCount));
+         FDataSet.Close;
+         Result:= false;
+         exit;
+  end;
+  //
   FDataSet.Close;
   result := true;
 end;

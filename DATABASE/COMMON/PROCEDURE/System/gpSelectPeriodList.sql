@@ -8,11 +8,17 @@ BEGIN
   RETURN QUERY
    SELECT StartPeriod.StartDate::TDateTime, EndPeriod.EndDate::TDateTime
      FROM 
-       (SELECT ROW_NUMBER()OVER () AS RowNumber, s.StartDate FROM generate_series(inStartDate, inEndDate, '1 day') AS s(StartDate)) AS StartPeriod
-      JOIN (SELECT ROW_NUMBER()OVER () AS RowNumber, EndPeriod.EndDate FROM(
-              SELECT s.EndDate FROM generate_series(inStartDate + ('1 day')::INTERVAL - ('1 second')::interval,
-                              inEndDate, '1 day') AS s(EndDate)
-              UNION SELECT inEndDate ORDER BY 1) AS EndPeriod) AS EndPeriod ON StartPeriod.rownumber = EndPeriod.rowNumber;
+         (SELECT ROW_NUMBER()OVER () AS RowNumber, s.StartDate FROM generate_series(inStartDate, inEndDate, '1 day') AS s(StartDate)
+         ) AS StartPeriod
+         JOIN (SELECT ROW_NUMBER()OVER () AS RowNumber, EndPeriod.EndDate
+               FROM (SELECT s.EndDate
+                     FROM generate_series (inStartDate + ('1 day')::INTERVAL - ('1 second')::interval, inEndDate, '1 day') AS s(EndDate)
+                    UNION
+                     SELECT inEndDate ORDER BY 1) AS EndPeriod
+                    ) AS EndPeriod
+                      ON EndPeriod.rowNumber = StartPeriod.rownumber
+                     ;
 
 END;
-$BODY$LANGUAGE plpgsql;
+$BODY$
+  LANGUAGE plpgsql;

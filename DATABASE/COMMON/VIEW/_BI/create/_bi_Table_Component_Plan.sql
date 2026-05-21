@@ -40,6 +40,8 @@ TRUNCATE TABLE _bi_Table_Component_Plan;
               -- УП Статья назначения
             , InfoMoneyId      Integer
 
+            , ReceiptId_parent Integer
+            , ReceiptId_from   Integer
 
               -- 1.1.Продано Покуп с РК - ГП
             , AmountSale_rk_sh        TFloat

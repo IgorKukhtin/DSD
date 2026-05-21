@@ -23,13 +23,13 @@ $BODY$
      RETURN QUERY
      WITH
      tmp_employee AS (SELECT DISTINCT gpSelect.employeeExtId :: Integer AS MemberId FROM gpSelect_Object_EmployeesTT_effie('') AS gpSelect)
-   , tmpMember AS (SELECT ObjectLink_User_Member.ChildObjectId AS MemberId
+   , tmpMember AS (SELECT tmp_employee.MemberId
               
-                        , CASE WHEN ObjectLink_User_Member.ObjectId = 5866615 -- Матіюк В.Ю.
+                        , CASE WHEN tmp_employee.MemberId = 5866615 -- Матіюк В.Ю.
                                     THEN 8379 -- филиал Киев
-                               WHEN ObjectLink_User_Member.ObjectId = 10105228  -- Трубін О.С.
+                               WHEN tmp_employee.MemberId = 10105228 -- Трубін О.С.
                                     THEN 8381 -- филиал Харьков
-                               WHEN ObjectLink_User_Member.ObjectId = 9957690 -- Свідзінська І.І.
+                               WHEN tmp_employee.MemberId = 9957690  -- Свідзінська І.І.
                                     THEN 8374 -- филиал Одесса
                                WHEN ObjectLink_Unit_Branch.ChildObjectId = 8377 -- филиал Кр.Рог
                                     THEN zc_Branch_Basis()
@@ -38,25 +38,23 @@ $BODY$
                                ELSE COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
                           END AS BranchId
               
-                   FROM ObjectLink AS ObjectLink_User_Member
-                        INNER JOIN tmp_employee ON tmp_employee.MemberId = ObjectLink_User_Member.ChildObjectId
+                   FROM tmp_employee
                         /*INNER JOIN ObjectBoolean AS ObjectBoolean_ProjectMobile
-                                                 ON ObjectBoolean_ProjectMobile.ObjectId = ObjectLink_User_Member.ObjectId
+                                                 ON ObjectBoolean_ProjectMobile.ObjectId = tmp_employee.MemberId
                                                 AND ObjectBoolean_ProjectMobile.DescId = zc_ObjectBoolean_User_ProjectMobile()
                                                 AND COALESCE (ObjectBoolean_ProjectMobile.ValueData, FALSE) = TRUE*/
 
                         INNER JOIN Object AS Object_Member 
-                                          ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
+                                          ON Object_Member.Id = tmp_employee.MemberId
                                        --AND Object_Member.isErased = FALSE
 
                         LEFT JOIN lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
-                                                                                  ON lfSelect.MemberId = ObjectLink_User_Member.ChildObjectId
+                                                                                  ON lfSelect.MemberId = tmp_employee.MemberId
                                                                                  AND lfSelect.Ord      = 1
 
                         LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
-                                            ON ObjectLink_Unit_Branch.ObjectId = lfSelect.UnitId
-                                           AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
-                   WHERE ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+                                             ON ObjectLink_Unit_Branch.ObjectId = lfSelect.UnitId
+                                            AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
                    )
      --
      SELECT tmpMember.MemberId           ::TVarChar AS employeeExtId
@@ -78,7 +76,7 @@ $BODY$
           , TRUE                         ::Boolean  AS isDefaultWarehouse
           , FALSE                        ::Boolean  AS isDeleted
      FROM tmpMember
-         LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpMember.BranchId
+          LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpMember.BranchId
      ;
 
 END;
