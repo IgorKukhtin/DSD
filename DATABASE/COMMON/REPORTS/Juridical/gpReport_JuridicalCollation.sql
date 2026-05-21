@@ -592,40 +592,76 @@ BEGIN
       vbTime1:= CLOCK_TIMESTAMP() - vbOperDate_Begin1;
 
 
-
-      vbScript:= 'INSERT INTO ResourseProtocol (UserId
-                                                , OperDate
-                                                , Value1
-                                                , Time1
-                                                , Time5
-                                                , ProcName
-                                                , ProtocolData
-                                                 )
-
-                       SELECT ' || vbUserId :: TVarChar ||'
-                            , ' || CHR (39) || zfConvert_DateTimeToString (CURRENT_TIMESTAMP) || CHR (39) || ' AS OperDate'
-                         ||', ' || vbValue1 :: TVarChar  || ' AS Value1'
-                         ||', ' || CHR (39) || vbTime1 :: TvarChar || CHR (39) || ' :: INTERVAL AS Time1'
-                         ||', ' || CHR (39) || zfConvert_DateTimeToString (CLOCK_TIMESTAMP()) || CHR (39) || ' AS Time5'
-                         ||', ' || CHR (39) || 'gpReport_JuridicalCollation (' || CASE WHEN inJuridicalId > 0 THEN lfGet_Object_ValueData_sh (inJuridicalId) WHEN inPartnerId > 0 THEN lfGet_Object_ValueData_sh (inPartnerId) ELSE 'inJuridicalId = 0' END  || ')'|| CHR (39)
-
-
-                              -- ProtocolData
-                         ||', ' || CHR (39)
-                                || zfConvert_DateToString (inStartDate)
-                         ||', ' || zfConvert_DateToString (inEndDate)
-                         ||', ' || inJuridicalId        :: TVarChar
-                         ||', ' || inPartnerId          :: TVarChar
-                         ||', ' || inContractId         :: TVarChar
-                         ||', ' || inAccountId          :: TVarChar
-                         ||', ' || inPaidKindId         :: TVarChar
-                         ||', ' || inInfoMoneyId        :: TVarChar
-                         ||', ' || inCurrencyId         :: TVarChar
-                         ||', ' || inMovementId_Partion :: TVarChar
-
-                         ||', ' || inSession
-                         || CHR (39)
-                           ;
+      IF inSession = (zc_Enum_Process_Auto_PrimeCost() :: TVarChar)
+      THEN
+          vbScript:= 'INSERT INTO ResourseProtocol (UserId
+                                                    , OperDate
+                                                    , Value1
+                                                    , Time1
+                                                    , Time5
+                                                    , ProcName
+                                                    , ProtocolData
+                                                     )
+    
+                           SELECT ' || vbUserId :: TVarChar ||'
+                                , ' || CHR (39) || zfConvert_DateTimeToString (CURRENT_TIMESTAMP) || CHR (39) || ' AS OperDate'
+                             ||', ' || vbValue1 :: TVarChar  || ' AS Value1'
+                             ||', ' || CHR (39) || vbTime1 :: TvarChar || CHR (39) || ' :: INTERVAL AS Time1'
+                             ||', ' || CHR (39) || zfConvert_DateTimeToString (CLOCK_TIMESTAMP()) || CHR (39) || ' AS Time5'
+                             ||', ' || CHR (39) || 'gpReport_JuridicalCollation (' || CASE WHEN inJuridicalId > 0 THEN inJuridicalId :: TVarChar WHEN inPartnerId > 0 THEN inPartnerId :: TVarChar ELSE 'inJuridicalId = 0' END  || ')'|| CHR (39)
+    
+    
+                                  -- ProtocolData
+                             ||', ' || CHR (39)
+                                    || zfConvert_DateToString (inStartDate)
+                             ||', ' || zfConvert_DateToString (inEndDate)
+                             ||', ' || inJuridicalId        :: TVarChar
+                             ||', ' || inPartnerId          :: TVarChar
+                             ||', ' || inContractId         :: TVarChar
+                             ||', ' || inAccountId          :: TVarChar
+                             ||', ' || inPaidKindId         :: TVarChar
+                             ||', ' || inInfoMoneyId        :: TVarChar
+                             ||', ' || inCurrencyId         :: TVarChar
+                             ||', ' || inMovementId_Partion :: TVarChar
+    
+                             ||', ' || inSession
+                             || CHR (39)
+                               ;
+      ELSE
+          vbScript:= 'INSERT INTO ResourseProtocol (UserId
+                                                    , OperDate
+                                                    , Value1
+                                                    , Time1
+                                                    , Time5
+                                                    , ProcName
+                                                    , ProtocolData
+                                                     )
+    
+                           SELECT ' || vbUserId :: TVarChar ||'
+                                , ' || CHR (39) || zfConvert_DateTimeToString (CURRENT_TIMESTAMP) || CHR (39) || ' AS OperDate'
+                             ||', ' || vbValue1 :: TVarChar  || ' AS Value1'
+                             ||', ' || CHR (39) || vbTime1 :: TvarChar || CHR (39) || ' :: INTERVAL AS Time1'
+                             ||', ' || CHR (39) || zfConvert_DateTimeToString (CLOCK_TIMESTAMP()) || CHR (39) || ' AS Time5'
+                             ||', ' || CHR (39) || 'gpReport_JuridicalCollation (' || CASE WHEN inJuridicalId > 0 THEN REPLACE (lfGet_Object_ValueData_sh (inJuridicalId), CHR (39), CHR (32)) WHEN inPartnerId > 0 THEN REPLACE (lfGet_Object_ValueData_sh (inPartnerId), CHR (39), CHR (32)) ELSE 'inJuridicalId = 0' END  || ')'|| CHR (39)
+    
+    
+                                  -- ProtocolData
+                             ||', ' || CHR (39)
+                                    || zfConvert_DateToString (inStartDate)
+                             ||', ' || zfConvert_DateToString (inEndDate)
+                             ||', ' || inJuridicalId        :: TVarChar
+                             ||', ' || inPartnerId          :: TVarChar
+                             ||', ' || inContractId         :: TVarChar
+                             ||', ' || inAccountId          :: TVarChar
+                             ||', ' || inPaidKindId         :: TVarChar
+                             ||', ' || inInfoMoneyId        :: TVarChar
+                             ||', ' || inCurrencyId         :: TVarChar
+                             ||', ' || inMovementId_Partion :: TVarChar
+    
+                             ||', ' || inSession
+                             || CHR (39)
+                               ;
+      END IF;
 
          -- Результат
          vb1:= (SELECT *
