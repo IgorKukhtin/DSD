@@ -51,7 +51,7 @@ type
     Panel: TPanel;
     cxLabel1: TcxLabel;
     edPriceList: TcxButtonEdit;
-    PriceListGuides: TdsdGuides;
+    GuidesPriceList: TdsdGuides;
     edShowDate: TcxDateEdit;
     cxLabel2: TcxLabel;
     cxLabel3: TcxLabel;
@@ -82,7 +82,7 @@ type
     actPrint: TdsdPrintAction;
     PrintItemsCDS: TClientDataSet;
     bbPrint: TdxBarButton;
-    actInsertUpdate_Separate: TdsdExecStoredProc;
+    actInsertUpdate_Mask: TdsdExecStoredProc;
     bbInsertUpdate_Separate: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
     actPrintGrid: TdsdPrintAction;
@@ -115,6 +115,11 @@ type
     DescName: TcxGridDBColumn;
     PriceListCode: TcxGridDBColumn;
     PriceListName: TcxGridDBColumn;
+    GuidesPriceListMask: TdsdGuides;
+    cxLabel4: TcxLabel;
+    edPriceListMask: TcxButtonEdit;
+    spInsertUpdate_Mask: TdsdStoredProc;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public
