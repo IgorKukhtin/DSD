@@ -223,7 +223,7 @@ BEGIN
                , SUM (CASE WHEN lpSelect.isStart = TRUE THEN lpSelect.Amount_out ELSE 0 END) AS Amount_out_start
                , MAX (CASE WHEN lpSelect.isStart = TRUE THEN 1 ELSE 0 END) AS isStart
           FROM lpSelect_Object_ReceiptChildDetail (FALSE) AS lpSelect
-          WHERE lpSelect.isCost = FALSE AND lpSelect.ReceiptId_from = 0
+          WHERE lpSelect.isCost = FALSE -- AND lpSelect.ReceiptId_from = 0
           GROUP BY lpSelect.ReceiptId_parent, lpSelect.ReceiptId_from, lpSelect.ReceiptId
                  , lpSelect.GoodsId_in, lpSelect.GoodsKindId_in, lpSelect.Amount_in
                  , lpSelect.GoodsId_out, lpSelect.GoodsKindId_out
@@ -497,6 +497,7 @@ BEGIN
                             LEFT JOIN (SELECT MAX (tmpChildReceiptTable.ReceiptId_parent) AS ReceiptId_parent
                                             , tmpChildReceiptTable.ReceiptId
                                        FROM tmpChildReceiptTable
+                                       WHERE tmpChildReceiptTable.ReceiptId_from = 0
                                        GROUP BY tmpChildReceiptTable.ReceiptId
                                       ) AS tmpChildReceiptTable ON tmpChildReceiptTable.ReceiptId = tmp.ReceiptId
 
@@ -630,6 +631,7 @@ BEGIN
                        FROM tmpUnion_1 AS tmp
                             -- Разворот по компонентам
                             LEFT JOIN tmpChildReceiptTable ON tmpChildReceiptTable.ReceiptId = tmp.ReceiptId
+                                                          AND tmpChildReceiptTable.ReceiptId_from = 0
                             -- Компоненты
                             INNER JOIN tmpGoods ON tmpGoods.GoodsId = tmpChildReceiptTable.GoodsId_out
 
