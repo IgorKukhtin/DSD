@@ -116,6 +116,16 @@ type
     DescName: TcxGridDBColumn;
     PriceListCode: TcxGridDBColumn;
     PriceListName: TcxGridDBColumn;
+    spGetImportSettingId_plan: TdsdStoredProc;
+    actGetImportSettingPlan: TdsdExecStoredProc;
+    macStartLoadPlan: TMultiAction;
+    dxBarSubItem1: TdxBarSubItem;
+    dxBarButton1: TdxBarButton;
+    actPricePlanItemGoods: TdsdOpenForm;
+    dxBarButton2: TdxBarButton;
+    dxBarSeparator1: TdxBarSeparator;
+    actPricePlanItem: TdsdOpenForm;
+    bbPricePlanItem: TdxBarButton;
   private
     { Private declarations }
   public

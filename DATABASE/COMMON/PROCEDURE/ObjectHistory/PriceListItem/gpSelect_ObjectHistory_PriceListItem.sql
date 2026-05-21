@@ -37,6 +37,15 @@ RETURNS TABLE (Id Integer , ObjectId Integer
                 , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar
                 , InfoMoneyDestinationName TVarChar
                 , InfoMoneyName TVarChar, InfoMoneyId Integer
+                
+                --- План
+                , Id_plan         Integer
+                , StartDate_plan  TDateTime
+                , EndDate_plan    TDateTime
+                
+                , ValuePrice_plan TFloat
+                , PriceNoVAT_plan TFloat
+                , PriceWVAT_plan  TFloat
                )
 AS
 $BODY$
@@ -249,6 +258,36 @@ BEGIN
                  WHERE Object_Goods.DescId = zc_Object_Goods()
                )
 
+   , tmpPlanItem AS (SELECT ObjectHistory_PricePlanItem.Id
+                          , ObjectLink_PricePlanItem_Goods.ChildObjectId     AS GoodsId
+                          , ObjectLink_PricePlanItem_GoodsKind.ChildObjectId AS GoodsKindId
+                          , ObjectHistoryFloat_PricePlanItem_Value.ValueData AS ValuePrice
+                          , ObjectHistory_PricePlanItem.StartDate
+                          , ObjectHistory_PricePlanItem.EndDate
+                          , ObjectLink_PricePlanItem_PriceList.ChildObjectId AS PriceListId
+                     FROM ObjectLink AS ObjectLink_PricePlanItem_PriceList
+                          LEFT JOIN ObjectLink AS ObjectLink_PricePlanItem_Goods
+                                               ON ObjectLink_PricePlanItem_Goods.ObjectId = ObjectLink_PricePlanItem_PriceList.ObjectId
+                                              AND ObjectLink_PricePlanItem_Goods.DescId   = zc_ObjectLink_PricePlanItem_Goods()
+
+                          LEFT JOIN ObjectLink AS ObjectLink_PricePlanItem_GoodsKind
+                                               ON ObjectLink_PricePlanItem_GoodsKind.ObjectId = ObjectLink_PricePlanItem_PriceList.ObjectId
+                                              AND ObjectLink_PricePlanItem_GoodsKind.DescId   = zc_ObjectLink_PricePlanItem_GoodsKind()
+
+                          LEFT JOIN ObjectHistory AS ObjectHistory_PricePlanItem
+                                                  ON ObjectHistory_PricePlanItem.ObjectId = ObjectLink_PricePlanItem_PriceList.ObjectId
+                                                 AND ObjectHistory_PricePlanItem.DescId   = zc_ObjectHistory_PricePlanItem()
+                          LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PricePlanItem_Value
+                                                       ON ObjectHistoryFloat_PricePlanItem_Value.ObjectHistoryId = ObjectHistory_PricePlanItem.Id
+                                                      AND ObjectHistoryFloat_PricePlanItem_Value.DescId          = zc_ObjectHistoryFloat_PricePlanItem_Value()
+  
+                     WHERE ObjectLink_PricePlanItem_PriceList.DescId        = zc_ObjectLink_PricePlanItem_PriceList()
+                       AND ObjectLink_PricePlanItem_PriceList.ChildObjectId = inPriceListId
+                       AND ObjectHistory_PricePlanItem.EndDate   >= vbStartDate
+                       AND ObjectHistory_PricePlanItem.StartDate <= vbEndDate
+                    )
+
+
        -- Результат
        SELECT
              tmpPrice.PriceListItemId       AS Id
@@ -327,6 +366,27 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyDestinationName
            , Object_InfoMoney_View.InfoMoneyName
            , Object_InfoMoney_View.InfoMoneyId
+
+           --tmpPlanItem - План
+           , tmpPlanItem.Id         ::Integer   AS Id_plan
+           , tmpPlanItem.StartDate  ::TDateTime AS StartDate_plan
+           , tmpPlanItem.EndDate    ::TDateTime AS EndDate_plan
+           
+           , tmpPlanItem.ValuePrice ::TFloat    AS ValuePrice_plan
+
+             -- расчет цены без НДС, до 2 знаков
+           , CASE WHEN COALESCE (ObjectBoolean_PriceWithVAT.ValueData, FALSE) = TRUE
+                  THEN CAST (tmpPlanItem.ValuePrice - tmpPlanItem.ValuePrice * (COALESCE (ObjectFloat_VATPercent.ValueData, 0) / (COALESCE (ObjectFloat_VATPercent.ValueData, 0) + 100)) AS NUMERIC (16, 2))
+                  ELSE tmpPlanItem.ValuePrice
+             END ::TFloat AS PriceNoVAT_plan
+
+             -- расчет цены с НДС, до 2 знаков
+           , CASE WHEN COALESCE (ObjectBoolean_PriceWithVAT.ValueData, FALSE) <> TRUE
+                  THEN CAST ((tmpPlanItem.ValuePrice + tmpPlanItem.ValuePrice * (COALESCE (ObjectFloat_VATPercent.ValueData, 0) / 100)) AS NUMERIC (16, 2))
+                  ELSE CAST (tmpPlanItem.ValuePrice AS NUMERIC (16, 2))
+             END ::TFloat AS PriceWVAT_plan
+
+
        FROM tmpData AS tmpPrice
 
           LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = inPriceListId
@@ -399,6 +459,11 @@ BEGIN
                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
+          LEFT JOIN tmpPlanItem ON tmpPlanItem.PriceListId = Object_PriceList.Id
+                               AND tmpPlanItem.GoodsId = Object_Goods.Id
+                               AND COALESCE (tmpPlanItem.GoodsKindId,0) = COALESCE (Object_GoodsKind.Id,0)
+
+
        WHERE Object_Goods.DescId = zc_Object_Goods()
 
        ;
@@ -459,6 +524,35 @@ BEGIN
                           , tmp.GoodsId
                           , tmp.GoodsKindId
                   )
+
+   , tmpPlanItem AS (SELECT ObjectHistory_PricePlanItem.Id
+                          , ObjectLink_PricePlanItem_Goods.ChildObjectId     AS GoodsId
+                          , ObjectLink_PricePlanItem_GoodsKind.ChildObjectId AS GoodsKindId
+                          , ObjectHistoryFloat_PricePlanItem_Value.ValueData AS ValuePrice
+                          , ObjectHistory_PricePlanItem.StartDate
+                          , ObjectHistory_PricePlanItem.EndDate
+                          , ObjectLink_PricePlanItem_PriceList.ChildObjectId AS PriceListId
+                     FROM ObjectLink AS ObjectLink_PricePlanItem_PriceList
+                          LEFT JOIN ObjectLink AS ObjectLink_PricePlanItem_Goods
+                                               ON ObjectLink_PricePlanItem_Goods.ObjectId = ObjectLink_PricePlanItem_PriceList.ObjectId
+                                              AND ObjectLink_PricePlanItem_Goods.DescId   = zc_ObjectLink_PricePlanItem_Goods()
+
+                          LEFT JOIN ObjectLink AS ObjectLink_PricePlanItem_GoodsKind
+                                               ON ObjectLink_PricePlanItem_GoodsKind.ObjectId = ObjectLink_PricePlanItem_PriceList.ObjectId
+                                              AND ObjectLink_PricePlanItem_GoodsKind.DescId   = zc_ObjectLink_PricePlanItem_GoodsKind()
+
+                          LEFT JOIN ObjectHistory AS ObjectHistory_PricePlanItem
+                                                  ON ObjectHistory_PricePlanItem.ObjectId = ObjectLink_PricePlanItem_PriceList.ObjectId
+                                                 AND ObjectHistory_PricePlanItem.DescId   = zc_ObjectHistory_PricePlanItem()
+                          LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PricePlanItem_Value
+                                                       ON ObjectHistoryFloat_PricePlanItem_Value.ObjectHistoryId = ObjectHistory_PricePlanItem.Id
+                                                      AND ObjectHistoryFloat_PricePlanItem_Value.DescId          = zc_ObjectHistoryFloat_PricePlanItem_Value()
+  
+                     WHERE ObjectLink_PricePlanItem_PriceList.DescId        = zc_ObjectLink_PricePlanItem_PriceList()
+                       AND ObjectLink_PricePlanItem_PriceList.ChildObjectId = inPriceListId
+                       AND ObjectHistory_PricePlanItem.EndDate   >= vbStartDate
+                       AND ObjectHistory_PricePlanItem.StartDate <= vbEndDate
+                    )
 
        -- Результат
        SELECT
@@ -539,6 +633,26 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyDestinationName
            , Object_InfoMoney_View.InfoMoneyName
            , Object_InfoMoney_View.InfoMoneyId
+           
+           --tmpPlanItem - План
+           , tmpPlanItem.Id         ::Integer   AS Id_plan
+           , tmpPlanItem.StartDate  ::TDateTime AS StartDate_plan
+           , tmpPlanItem.EndDate    ::TDateTime AS EndDate_plan
+           
+           , tmpPlanItem.ValuePrice ::TFloat    AS ValuePrice_plan
+
+             -- расчет цены без НДС, до 2 знаков
+           , CASE WHEN COALESCE (ObjectBoolean_PriceWithVAT.ValueData, FALSE) = TRUE
+                  THEN CAST (tmpPlanItem.ValuePrice - tmpPlanItem.ValuePrice * (COALESCE (ObjectFloat_VATPercent.ValueData, 0) / (COALESCE (ObjectFloat_VATPercent.ValueData, 0) + 100)) AS NUMERIC (16, 2))
+                  ELSE tmpPlanItem.ValuePrice
+             END ::TFloat AS PriceNoVAT_plan
+
+             -- расчет цены с НДС, до 2 знаков
+           , CASE WHEN COALESCE (ObjectBoolean_PriceWithVAT.ValueData, FALSE) <> TRUE
+                  THEN CAST ((tmpPlanItem.ValuePrice + tmpPlanItem.ValuePrice * (COALESCE (ObjectFloat_VATPercent.ValueData, 0) / 100)) AS NUMERIC (16, 2))
+                  ELSE CAST (tmpPlanItem.ValuePrice AS NUMERIC (16, 2))
+             END ::TFloat AS PriceWVAT_plan
+           
 
        FROM ObjectLink AS ObjectLink_PriceListItem_PriceList
 
@@ -634,6 +748,10 @@ BEGIN
                                ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
+          LEFT JOIN tmpPlanItem ON tmpPlanItem.PriceListId = Object_PriceList.Id
+                               AND tmpPlanItem.GoodsId = Object_Goods.Id
+                               AND COALESCE (tmpPlanItem.GoodsKindId,0) = COALESCE (Object_GoodsKind.Id,0)
 
        WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
          AND (ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId OR inPriceListId = 0)

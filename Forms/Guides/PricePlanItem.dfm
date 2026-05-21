@@ -24,7 +24,6 @@ object PricePlanItemForm: TPricePlanItemForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 834
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -312,7 +311,6 @@ object PricePlanItemForm: TPricePlanItemForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitWidth = 834
     object cxLabel1: TcxLabel
       Left = 14
       Top = 10
@@ -1004,9 +1002,9 @@ object PricePlanItemForm: TPricePlanItemForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1055#1088#1072#1081#1089#1072' '#1080#1079' '#1092#1072#1081#1083#1072'?'
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1055#1088#1072#1081#1089#1072' ('#1087#1083#1072#1085') '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#1055#1088#1072#1081#1089' ('#1087#1083#1072#1085')'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#1055#1088#1072#1081#1089' ('#1087#1083#1072#1085')'
       ImageIndex = 41
     end
     object macUpdate_Zero: TMultiAction
@@ -1324,6 +1322,23 @@ object PricePlanItemForm: TPricePlanItemForm
       item
         Name = 'ImportSettingId'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListId'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListName'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 472

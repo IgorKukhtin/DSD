@@ -154,6 +154,55 @@ object PriceListItemForm: TPriceListItemForm
         Options.Editing = False
         Width = 54
       end
+      object StartDate_plan: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1089' ('#1094#1077#1085#1072' '#1087#1083#1072#1085')'
+        DataBinding.FieldName = 'StartDate_plan'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 40
+      end
+      object EndDate_plan: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1087#1086' ('#1094#1077#1085#1072' '#1087#1083#1072#1085')'
+        DataBinding.FieldName = 'EndDate_plan'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 43
+      end
+      object ValuePrice_plan: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' ('#1087#1083#1072#1085')'
+        DataBinding.FieldName = 'ValuePrice_plan'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 52
+      end
+      object PriceNoVAT_plan: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057' ('#1087#1083#1072#1085')'
+        DataBinding.FieldName = 'PriceNoVAT_plan'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 52
+      end
+      object PriceWVAT_plan: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1087#1083#1072#1085')'
+        DataBinding.FieldName = 'PriceWVAT_plan'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 54
+      end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -495,6 +544,14 @@ object PriceListItemForm: TPriceListItemForm
           ItemName = 'dxBarStatic'
         end
         item
+          Visible = True
+          ItemName = 'dxBarSubItem1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbInsertRecord_TradeMark'
@@ -607,6 +664,47 @@ object PriceListItemForm: TPriceListItemForm
       Action = actChoiceFormTradeMark
       Category = 0
     end
+    object dxBarSubItem1: TdxBarSubItem
+      Caption = #1055#1088#1072#1081#1089' '#1055#1083#1072#1085
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPricePlanItem'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
+        end>
+    end
+    object dxBarButton1: TdxBarButton
+      Action = macStartLoadPlan
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actPricePlanItemGoods
+      Category = 0
+    end
+    object dxBarSeparator1: TdxBarSeparator
+      Caption = 'New Separator'
+      Category = 0
+      Hint = 'New Separator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbPricePlanItem: TdxBarButton
+      Action = actPricePlanItem
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -634,6 +732,110 @@ object PriceListItemForm: TPriceListItemForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
+    end
+    object actPricePlanItem: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1072#1081#1089' '#1094#1077#1085' '#1090#1086#1074#1072#1088#1086#1074' ('#1055#1083#1072#1085')'
+      Hint = #1055#1088#1072#1081#1089' '#1094#1077#1085' '#1090#1086#1074#1072#1088#1086#1074' ('#1055#1083#1072#1085')'
+      ImageIndex = 26
+      FormName = 'TPricePlanItemForm'
+      FormNameParam.Value = 'TPricePlanItemForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'PriceListId'
+          Value = '0'
+          Component = PriceListGuides
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PriceListName'
+          Value = ''
+          Component = PriceListGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actPricePlanItemGoods: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088'/'#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1080#1089#1090#1086#1088#1080#1080' ('#1055#1083#1072#1085')'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088'/'#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1080#1089#1090#1086#1088#1080#1080' ('#1055#1083#1072#1085')'
+      ImageIndex = 28
+      FormName = 'TPricePlanItemGoodsForm'
+      FormNameParam.Value = 'TPricePlanItemGoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'PriceListId'
+          Value = '0'
+          Component = PriceListGuides
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PriceListName'
+          Value = ''
+          Component = PriceListGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object macStartLoadPlan: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSettingPlan
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1055#1088#1072#1081#1089#1072' ('#1087#1083#1072#1085') '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#1055#1088#1072#1081#1089' ('#1087#1083#1072#1085')'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#1055#1088#1072#1081#1089' ('#1087#1083#1072#1085')'
+      ImageIndex = 41
     end
     object actPriceListGoods: TdsdOpenForm
       Category = 'DSDLib'
@@ -1068,6 +1270,17 @@ object PriceListItemForm: TPriceListItemForm
         end>
       isShowModal = True
     end
+    object actGetImportSettingPlan: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId_plan
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId_plan
+        end>
+      Caption = 'actGetImportSetting'
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_ObjectHistory_PriceListItem'
@@ -1487,5 +1700,37 @@ object PriceListItemForm: TPriceListItemForm
     PackSize = 1
     Left = 168
     Top = 328
+  end
+  object spGetImportSettingId_plan: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TPricePlanItemForm;zc_Object_ImportSetting_PricePlanItem'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 624
+    Top = 256
   end
 end
