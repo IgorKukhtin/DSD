@@ -4,7 +4,9 @@ DROP FUNCTION IF EXISTS gpReport_GoodsMI_Internal (TDateTime, TDateTime, Integer
 --DROP FUNCTION IF EXISTS gpReport_GoodsMI_Internal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpReport_GoodsMI_Internal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpReport_GoodsMI_Internal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_Internal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_GoodsMI_Internal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_Internal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Internal (
     IN inStartDate    TDateTime ,
@@ -19,6 +21,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Internal (
     IN inIsSubjectDoc Boolean   , --показывать основания Да/Нет
     IN inIsDateDoc    Boolean   , --показывать Дата док-та (да/нет)
     IN inIsInvNumber  Boolean   , --показывать № док док-та (да/нет)
+    IN inIsPartion    Boolean   , --показывать партию или нет
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
@@ -491,6 +494,7 @@ BEGIN
                                LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
                                                              ON CLO_PartionGoods.ContainerId = tmpContainer.ContainerId
                                                             AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                                                            AND inIsPartion = TRUE
               
                          GROUP BY tmpContainer.MovementId
                                 , tmpContainer.ArticleLossId

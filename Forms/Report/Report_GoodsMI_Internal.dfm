@@ -821,7 +821,7 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
         Width = 114
       end
       object cbPartionGoods: TcxCheckBox
-        Left = 354
+        Left = 350
         Top = 7
         Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
         Properties.ReadOnly = False
@@ -2076,6 +2076,14 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
         Name = 'inisInvnumber'
         Value = Null
         Component = cbInvnumber
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsPartion'
+        Value = Null
+        Component = cbPartionGoods
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
