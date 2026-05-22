@@ -212,6 +212,10 @@ type
     BranchName_Personal: TcxGridDBColumn;
     UnitName_Personal: TcxGridDBColumn;
     isDayCount_30201: TcxGridDBColumn;
+    spGetImportSettingIdRouteTT: TdsdStoredProc;
+    actGetImportSettingRouteTT: TdsdExecStoredProc;
+    actStartLoadRouteTT: TMultiAction;
+    bbStartLoadRouteTT: TdxBarButton;
   private
     { Private declarations }
   public

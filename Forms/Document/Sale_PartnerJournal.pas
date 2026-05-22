@@ -288,6 +288,8 @@ type
     bbInsertFileName_csv: TdxBarButton;
     bbInsertFileName_csv_one: TdxBarButton;
     spTax_grid: TdsdStoredProc;
+    actUpdate_Commerc: TdsdInsertUpdateAction;
+    bbUpdate_Commerc: TdxBarButton;
   private
     { Private declarations }
   public

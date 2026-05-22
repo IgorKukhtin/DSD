@@ -522,6 +522,32 @@ inherited SaleJournalForm: TSaleJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object BonusFirstForm: TcxGridDBColumn
+            Caption = #1054#1073#1097#1080#1081' % '#1073#1086#1085#1091#1089#1072' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1091' '#1041#1053
+            DataBinding.FieldName = 'BonusFirstForm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1073#1097#1080#1081' % '#1073#1086#1085#1091#1089#1072' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1091' '#1041#1053
+            Options.Editing = False
+            Width = 80
+          end
+          object BonusSecondForm: TcxGridDBColumn
+            Caption = #1054#1073#1097#1080#1081' % '#1073#1086#1085#1091#1089#1072' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1091' '#1053#1072#1083
+            DataBinding.FieldName = 'BonusSecondForm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1073#1097#1080#1081' % '#1073#1086#1085#1091#1089#1072' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1091' '#1053#1072#1083
+            Options.Editing = False
+            Width = 80
+          end
           object PaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
@@ -614,6 +640,15 @@ inherited SaleJournalForm: TSaleJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object RouteTTName: TcxGridDBColumn
+            Caption = #1052#1072#1088#1096#1088#1091#1090' '#1058#1058
+            DataBinding.FieldName = 'RouteTTName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object RouteGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1084'. / '#1052#1072#1088#1096#1088#1091#1090
             DataBinding.FieldName = 'RouteGroupName'
@@ -632,7 +667,6 @@ inherited SaleJournalForm: TSaleJournalForm
           object InvNumber_Transport: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1055'.'#1083'.'
             DataBinding.FieldName = 'InvNumber_Transport'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1080
@@ -1243,2268 +1277,7 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       Caption = 'actGetFileName_csv'
     end
-    object macUpdate_TotalLines_list: TMultiAction [3]
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'Id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'Id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Name = 'Id'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.MultiSelectSeparator = ','
-        end>
-      ActionList = <
-        item
-          Action = actUpdate_TotalLines
-        end>
-      View = cxGridDBTableView
-      ImageIndex = 79
-    end
-    object macInsertFileName_csv_one: TMultiAction [4]
-      Category = 'Export_Csv'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actGetFileName_csv
-        end
-        item
-          Action = actInsertFileName_csv
-        end
-        item
-          Action = actExport_file_csv
-        end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1054#1076#1085#1091' '#1053#1072#1082#1083#1072#1076#1085#1091#1102' 1'#1057'-'#1055#1072#1074#1080#1083#1100#1086#1085#1099'?'
-      InfoAfterExecute = #1053#1072#1082#1083#1072#1076#1085#1072#1103' 1'#1057'-'#1055#1072#1074#1080#1083#1100#1086#1085#1099' '#1074#1099#1075#1088#1091#1078#1077#1085#1072
-      Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1054#1076#1085#1091' '#1053#1072#1082#1083#1072#1076#1085#1091#1102' 1'#1057'-'#1055#1072#1074#1080#1083#1100#1086#1085#1099
-      ImageIndex = 89
-    end
-    object actPrint_Quality_ReportName_list: TdsdExecStoredProc [5]
-      Category = 'Group_TTN_Quality'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGetReportNameQuality_list
-      StoredProcList = <
-        item
-          StoredProc = spGetReportNameQuality_list
-        end>
-      Caption = 'actPrint_Quality_ReportName'
-    end
-    object actPrintBoxTotal: TdsdPrintAction [6]
-      Category = 'Print'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProc = spSelectPrintBoxTotal
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrintBoxTotal
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1043#1086#1092#1088#1086#1090#1072#1088#1099' ('#1087#1086' '#1082#1083#1080#1077#1085#1090#1091')'
-      Hint = #1055#1077#1095#1072#1090#1100' '#1043#1086#1092#1088#1086#1090#1072#1088#1099' ('#1087#1086' '#1082#1083#1080#1077#1085#1090#1091')'
-      ImageIndex = 21
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintMovement_SalePackWeightTotal'
-      ReportNameParam.Value = 'PrintMovement_SalePackWeightTotal'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object actPrintSaleOrderTax: TdsdPrintAction [7]
-      Category = 'Print'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProc = spSelectPrint_SaleOrderTax
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint_SaleOrderTax
-        end>
-      Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1085#1072' %'
-      Hint = #1047#1072#1103#1074#1082#1072'/'#1086#1090#1075#1088#1091#1079#1082#1072' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1085#1072' %'
-      ImageIndex = 18
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName;PartionGoods'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintMovement_Sale_Order'
-      ReportNameParam.Value = 'PrintMovement_Sale_Order'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object macUpdate_PriceList: TMultiAction [8]
-      Category = 'UpdatePriceList'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actOpenChoicePriceList
-        end
-        item
-          Action = macUpdate_PriceList_list
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1054#1073#1085#1086#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1087#1086' '#1055#1088#1072#1081#1089#1091' '#1074' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1093'?'
-      InfoAfterExecute = #1042' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1093' '#1091#1089#1087#1077#1096#1085#1086' '#1086#1073#1085#1086#1074#1083#1077#1085#1099' '#1094#1077#1085#1099
-      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1087#1086' '#1055#1088#1072#1081#1089#1091
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1087#1086' '#1055#1088#1072#1081#1089#1091
-      ImageIndex = 56
-    end
-    object actUpdate_TotalLines: TdsdExecStoredProc [9]
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_TotalLines
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_TotalLines
-        end>
-      Caption = 'actUpdate_TotalLines'
-    end
-    object macUpdate_PriceList_list: TMultiAction [10]
-      Category = 'UpdatePriceList'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actUpdate_PriceList
-        end>
-      View = cxGridDBTableView
-      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1087#1086' '#1055#1088#1072#1081#1089#1091
-      ImageIndex = 56
-    end
-    object actPrint_QualityDoc_list: TdsdPrintAction [11]
-      Category = 'Group_TTN_Quality'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProc = spSelectPrint_Quality_list
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint_Quality_list
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
-      Hint = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
-      WithOutPreview = True
-      DataSets = <
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 'QualityCode;GoodsGroupName;GoodsName;GoodsKindName'
-        end
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDMaster2'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintMovement_Quality'
-      ReportNameParam.Value = Null
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameQuality'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object actUpdate_PriceList: TdsdExecStoredProc [12]
-      Category = 'UpdatePriceList'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_PriceList
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_PriceList
-        end>
-      Caption = 'actUpdate_PriceList'
-      ImageIndex = 56
-    end
-    object macUpdate_TotalLines: TMultiAction [13]
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'Id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'Id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Name = 'Id'
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.MultiSelectSeparator = ','
-        end>
-      ActionList = <
-        item
-          Action = macUpdate_TotalLines_list
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1090#1100' <'#1048#1090#1086#1075#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1089#1090#1088#1086#1082'>?'
-      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1087#1086#1083#1085#1077#1085#1099
-      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' <'#1048#1090#1086#1075#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1089#1090#1088#1086#1082'>'
-      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' <'#1048#1090#1086#1075#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1089#1090#1088#1086#1082'>'
-      ImageIndex = 79
-    end
-    object macPrint_TTN_Copy1_list: TMultiAction [14]
-      Category = 'Group_TTN_Quality'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      ActionList = <
-        item
-          Action = actSPPrintTTNProcName_list
-        end
-        item
-          Action = actPrint_TTN_copy1_list
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
-      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
-      ImageIndex = 15
-    end
-    object actInsertUpdate_Quality_byTransport: TdsdExecStoredProc [15]
-      Category = 'Group_TTN_Quality'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate_Quality_byTransport
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdate_Quality_byTransport
-        end>
-      Caption = 'InsertUpdate_Quality_byTransport'
-      Hint = 'InsertUpdate_TTN_byTransport'
-    end
-    object mactPrint_Sale_list: TMultiAction [16]
-      Category = 'Group_TTN_Quality'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      ActionList = <
-        item
-          Action = actSPPrintSaleProcName
-        end
-        item
-          Action = actPrint
-        end
-        item
-          Action = actSPSavePrintState
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
-      ImageIndex = 3
-      ShortCut = 16464
-    end
-    object actSPPrintTTNProcName_list: TdsdExecStoredProc [17]
-      Category = 'Group_TTN_Quality'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGetReporNameTTN
-      StoredProcList = <
-        item
-          StoredProc = spGetReporNameTTN
-        end>
-      Caption = 'actSPPrintTTNProcName_list'
-    end
-    object actInsertUpdate_TTN_byTransport: TdsdExecStoredProc [18]
-      Category = 'Group_TTN_Quality'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate_TTN_byTransport
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdate_TTN_byTransport
-        end>
-      Caption = 'InsertUpdate_TTN_byTransport'
-    end
-    object macPrint_TTN_final: TMultiAction [19]
-      Category = 'Print_TTN'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      ActionList = <
-        item
-          Action = actSPPrintTTNProcName
-        end
-        item
-          Action = actPrint_TTN_final
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1080#1090#1086#1075#1086#1074#1086#1081' '#1058#1058#1053
-      Hint = #1055#1077#1095#1072#1090#1100' '#1080#1090#1086#1075#1086#1074#1086#1081' '#1058#1058#1053
-      ImageIndex = 15
-    end
-    object actPrintReturnInDay_2copy: TdsdPrintAction [20]
-      Category = 'Group_TTN_Quality'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProc = spSelectPrintReturnInDay
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrintReturnInDay
-        end>
-      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1079#1072' '#1076#1072#1090#1091
-      Hint = #1042#1086#1079#1074#1088#1072#1090' '#1079#1072' '#1076#1072#1090#1091
-      ImageIndex = 19
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 'Id;GoodsName'
-        end>
-      CopiesCount = 2
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintMovement_ReturnInDay'
-      ReportNameParam.Value = 'PrintMovement_ReturnInDay'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object macPrintPack_2copy: TMultiAction [21]
-      Category = 'Group_TTN_Quality'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      ActionList = <
-        item
-          Action = actSPPrintSaleProcName
-        end
-        item
-          Action = actPrintPack_2copy
-        end
-        item
-          Action = actSPSavePrintState
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
-    end
-    object actPrint_TTN_final: TdsdPrintAction [22]
-      Category = 'Print_TTN'
-      MoveParams = <>
-      StoredProc = spSelectPrint_TTN_final
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint_TTN_final
-        end>
-      Caption = 'actPrint_TTN'
-      Hint = 'actPrint_TTN'
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintMovement_TTN'
-      ReportNameParam.Value = Null
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameTTN'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object actPrint_TTN_copy1_list: TdsdPrintAction [23]
-      Category = 'Group_TTN_Quality'
-      MoveParams = <>
-      StoredProc = spSelectPrint_TTN
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint_TTN
-        end>
-      Caption = 'actPrint_TTN'
-      Hint = 'actPrint_TTN'
-      WithOutPreview = True
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintMovement_TTN'
-      ReportNameParam.Value = Null
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameTTN'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object actPrintPack_2copy: TdsdPrintAction [24]
-      Category = 'Group_TTN_Quality'
-      MoveParams = <>
-      StoredProc = spSelectPrint
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      WithOutPreview = True
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end
-        item
-          DataSet = PrintItemsSverkaCDS
-          UserName = 'frxDBDSverka'
-        end>
-      CopiesCount = 2
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintMovement_Sale1_test'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = 'PrintMovement_Sale1_test'
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameSale'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object macPrintPack_3copy: TMultiAction [25]
-      Category = 'Group_TTN_Quality'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      ActionList = <
-        item
-          Action = actSPPrintSaleProcName
-        end
-        item
-          Action = actPrintPack_3copy
-        end
-        item
-          Action = actSPSavePrintState
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
-    end
-    object macPrint_TTN_Copy3_list: TMultiAction [26]
-      Category = 'Group_TTN_Quality'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      ActionList = <
-        item
-          Action = actSPPrintTTNProcName_list
-        end
-        item
-          Action = actPrint_TTN_copy3_list
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053' (3 '#1082#1086#1087#1080#1080')'
-      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
-      ImageIndex = 15
-    end
-    object actPrint_TTN_copy3_list: TdsdPrintAction [27]
-      Category = 'Group_TTN_Quality'
-      MoveParams = <>
-      StoredProc = spSelectPrint_TTN
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint_TTN
-        end>
-      Caption = 'actPrint_TTN'
-      Hint = 'actPrint_TTN'
-      WithOutPreview = True
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      CopiesCount = 3
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintMovement_TTN'
-      ReportNameParam.Value = Null
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameTTN'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object actPrintPack_3copy: TdsdPrintAction [28]
-      Category = 'Group_TTN_Quality'
-      MoveParams = <>
-      StoredProc = spSelectPrint
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      WithOutPreview = True
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end
-        item
-          DataSet = PrintItemsSverkaCDS
-          UserName = 'frxDBDSverka'
-        end>
-      CopiesCount = 3
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintMovement_Sale1_test'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = 'PrintMovement_Sale1_test'
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameSale'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object macPrint_QualityDoc_list: TMultiAction [29]
-      Category = 'Group_TTN_Quality'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      ActionList = <
-        item
-          Action = actPrint_Quality_ReportName_list
-        end
-        item
-          Action = actPrint_QualityDoc_list
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
-      Hint = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
-      ImageIndex = 16
-    end
-    object macPrint_TTN_Copy2_list: TMultiAction [30]
-      Category = 'Group_TTN_Quality'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      ActionList = <
-        item
-          Action = actSPPrintTTNProcName_list
-        end
-        item
-          Action = actPrint_TTN_copy2_list
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
-      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
-      ImageIndex = 15
-    end
-    object actPrint_TTN_copy2_list: TdsdPrintAction [31]
-      Category = 'Group_TTN_Quality'
-      MoveParams = <>
-      StoredProc = spSelectPrint_TTN
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint_TTN
-        end>
-      Caption = 'actPrint_TTN'
-      Hint = 'actPrint_TTN'
-      WithOutPreview = True
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      CopiesCount = 2
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintMovement_TTN'
-      ReportNameParam.Value = Null
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameTTN'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object macPrint_Group_list_cash_Ret: TMultiAction [32]
-      Category = 'Group_TTN_Quality'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      ActionList = <
-        item
-          Action = actInsertUpdate_Quality_byTransport
-        end
-        item
-          Action = macPrintPack_2copy
-        end
-        item
-          Action = macPrint_QualityDoc_list
-        end
-        item
-          Action = actPrintReturnInDay_2copy
-        end
-        item
-          Action = actUpdatePrintAuto_True
-        end>
-      View = cxGridDBTableView
-      Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
-      Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
-      ImageIndex = 44
-    end
-    object macPrint_Group_list: TMultiAction [33]
-      Category = 'Group_TTN_Quality'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      ActionList = <
-        item
-          Action = actInsertUpdate_TTN_byTransport
-        end
-        item
-          Action = actInsertUpdate_Quality_byTransport
-        end
-        item
-          Action = macPrintPack_2copy
-        end
-        item
-          Action = macPrint_TTN_Copy2_list
-        end
-        item
-          Action = macPrint_QualityDoc_list
-        end>
-      View = cxGridDBTableView
-      Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
-      Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
-      ImageIndex = 44
-    end
-    object macPrint_Group_cash: TMultiAction [34]
-      Category = 'Group_TTN_Quality'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      ActionList = <
-        item
-          Action = macPrint_Group_list_cash
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = 
-        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1087#1086#1083#1085#1080#1090#1100' '#1087#1072#1082#1077#1090#1085#1091#1102' '#1087#1077#1095#1072#1090#1100' ('#1089#1086#1079#1076#1072#1085#1080#1077' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1075#1086',' +
-        ' '#1087#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1086#1081'  '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1075#1086')? '
-      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1089#1086#1079#1076#1072#1085#1099', '#1087#1077#1095#1072#1090#1100' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
-      Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' ('#1053#1040#1051')'
-      Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' ('#1053#1040#1051')'
-      ImageIndex = 15
-    end
-    object macPrint_Group_list_cash: TMultiAction [35]
-      Category = 'Group_TTN_Quality'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      ActionList = <
-        item
-          Action = actInsertUpdate_Quality_byTransport
-        end
-        item
-          Action = macPrintPack_2copy
-        end
-        item
-          Action = macPrint_QualityDoc_list
-        end>
-      View = cxGridDBTableView
-      Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
-      Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
-      ImageIndex = 44
-    end
-    object macPrint_Group: TMultiAction [36]
-      Category = 'Group_TTN_Quality'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      ActionList = <
-        item
-          Action = macPrint_Group_list
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = 
-        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1087#1086#1083#1085#1080#1090#1100' '#1087#1072#1082#1077#1090#1085#1091#1102' '#1087#1077#1095#1072#1090#1100' ('#1089#1086#1079#1076#1072#1085#1080#1077' '#1058#1058#1053' '#1080'  '#1050#1072#1095#1077#1089#1090#1074 +
-        #1077#1085#1085#1086#1075#1086', '#1087#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1086#1081', '#1058#1058#1053', '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1075#1086')? '
-      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1089#1086#1079#1076#1072#1085#1099', '#1087#1077#1095#1072#1090#1100' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
-      Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' ('#1041#1053')'
-      Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' ('#1041#1053')'
-      ImageIndex = 44
-    end
-    object macPrint_Group_cash_Ret: TMultiAction [37]
-      Category = 'Group_TTN_Quality'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      ActionList = <
-        item
-          Action = actUpdatePrintAuto_False
-        end
-        item
-          Action = macPrint_Group_list_cash_Ret
-        end
-        item
-          Action = actUpdatePrintAuto_False
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = 
-        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1087#1086#1083#1085#1080#1090#1100' '#1087#1072#1082#1077#1090#1085#1091#1102' '#1087#1077#1095#1072#1090#1100' ('#1089#1086#1079#1076#1072#1085#1080#1077' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1075#1086',' +
-        ' '#1087#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1086#1081', '#1042#1086#1079#1074#1088#1072#1090#1072', '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1075#1086')? '
-      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1089#1086#1079#1076#1072#1085#1099', '#1087#1077#1095#1072#1090#1100' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
-      Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' + '#1074#1086#1079#1074#1088#1072#1090' ('#1053#1040#1051')'
-      Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' + '#1074#1086#1079#1074#1088#1072#1090' ('#1053#1040#1051')'
-      ImageIndex = 15
-    end
-    object actUpdatePrintAuto_True: TdsdExecStoredProc [38]
-      Category = 'Group_TTN_Quality'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdatePrintAuto_True
-      StoredProcList = <
-        item
-          StoredProc = spUpdatePrintAuto_True
-        end>
-      Caption = 'actUpdatePrintAuto_True'
-      Hint = #1091#1089#1090#1072#1085#1086#1074#1080#1090#1100' PrintAuto = True'
-    end
-    object actUpdatePrintAuto_False: TdsdExecStoredProc [39]
-      Category = 'Group_TTN_Quality'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdatePrintAuto_False
-      StoredProcList = <
-        item
-          StoredProc = spUpdatePrintAuto_False
-        end>
-      Caption = 'actUpdatePrintAuto_False'
-      Hint = #1091#1089#1090#1072#1085#1086#1074#1080#1090#1100' PrintAuto = False'
-    end
-    object macPrint_Sale2_TTN_Quality: TMultiAction [40]
-      Category = 'Group_TTN_Quality'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      ActionList = <
-        item
-          Action = macPrint_Sale2_TTN_Quality_list
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = 
-        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1087#1086#1083#1085#1080#1090#1100' '#1087#1072#1082#1077#1090#1085#1091#1102' '#1087#1077#1095#1072#1090#1100' ('#1089#1086#1079#1076#1072#1085#1080#1077' '#1058#1058#1053' '#1080'  '#1050#1072#1095#1077#1089#1090#1074 +
-        #1077#1085#1085#1086#1075#1086', '#1087#1077#1095#1072#1090#1100' 2 '#1053#1072#1082#1083#1072#1076#1085#1099#1093' , '#1058#1058#1053', '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1075#1086')? '
-      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1089#1086#1079#1076#1072#1085#1099', '#1087#1077#1095#1072#1090#1100' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
-      Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' ('#1041#1053') (2 '#1088#1072#1089#1093#1086#1076'+'#1090#1090#1085'+'#1082#1072#1095#1077#1089#1090#1074')'
-      Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' ('#1041#1053') (2 '#1088#1072#1089#1093#1086#1076'+'#1090#1090#1085'+'#1082#1072#1095#1077#1089#1090#1074')'
-      ImageIndex = 44
-    end
-    object macPrint_Sale2_TTN_Quality_list: TMultiAction [41]
-      Category = 'Group_TTN_Quality'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      ActionList = <
-        item
-          Action = actInsertUpdate_TTN_byTransport
-        end
-        item
-          Action = actInsertUpdate_Quality_byTransport
-        end
-        item
-          Action = macPrintPack_2copy
-        end
-        item
-          Action = macPrint_TTN_Copy1_list
-        end
-        item
-          Action = macPrint_QualityDoc_list
-        end>
-      View = cxGridDBTableView
-      Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
-      Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
-      ImageIndex = 44
-    end
-    object macPrint_Sale3_TTN_Quality: TMultiAction [42]
-      Category = 'Group_TTN_Quality'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      ActionList = <
-        item
-          Action = macPrint_Sale3_TTN_Quality_list
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = 
-        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1087#1086#1083#1085#1080#1090#1100' '#1087#1072#1082#1077#1090#1085#1091#1102' '#1087#1077#1095#1072#1090#1100' ('#1089#1086#1079#1076#1072#1085#1080#1077' '#1058#1058#1053' '#1080'  '#1050#1072#1095#1077#1089#1090#1074 +
-        #1077#1085#1085#1086#1075#1086', '#1087#1077#1095#1072#1090#1100' 3 '#1053#1072#1082#1083#1072#1076#1085#1099#1093', 3 '#1058#1058#1053', '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1075#1086')? '
-      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1089#1086#1079#1076#1072#1085#1099', '#1087#1077#1095#1072#1090#1100' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
-      Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' ('#1041#1053') (3 '#1088#1072#1089#1093#1086#1076'+3'#1090#1090#1085'+'#1082#1072#1095#1077#1089#1090#1074')'
-      Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' ('#1041#1053') (3 '#1088#1072#1089#1093#1086#1076'+3'#1090#1090#1085'+'#1082#1072#1095#1077#1089#1090#1074')'
-      ImageIndex = 44
-    end
-    object macPrint_Sale3_TTN_Quality_list: TMultiAction [43]
-      Category = 'Group_TTN_Quality'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      ActionList = <
-        item
-          Action = actInsertUpdate_TTN_byTransport
-        end
-        item
-          Action = actInsertUpdate_Quality_byTransport
-        end
-        item
-          Action = macPrintPack_3copy
-        end
-        item
-          Action = macPrint_TTN_Copy3_list
-        end
-        item
-          Action = macPrint_QualityDoc_list
-        end>
-      View = cxGridDBTableView
-      Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
-      Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
-      ImageIndex = 44
-    end
-    object macRoundAmountPartner: TMultiAction [44]
-      Category = 'UpdateAmount'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = ExecuteDialogUpdateAmountPartner
-        end
-        item
-          Action = macRoundAmountPartner_list
-        end>
-      QuestionBeforeExecute = 
-        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1054#1082#1088#1091#1075#1083#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' '#1074' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090 +
-        #1072#1093'?'
-      InfoAfterExecute = #1042' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1093' '#1091#1089#1087#1077#1096#1085#1086' '#1086#1082#1088#1091#1075#1083#1077#1085#1086' '#1082#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'.'
-      Caption = #1054#1082#1088#1091#1075#1083#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
-      Hint = #1054#1082#1088#1091#1075#1083#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
-      ImageIndex = 45
-    end
-    object actPrintBox: TdsdPrintAction [45]
-      Category = 'Print'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProc = spSelectPrintBox
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrintBox
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1043#1086#1092#1088#1086#1090#1072#1088#1099
-      Hint = #1055#1077#1095#1072#1090#1100' '#1043#1086#1092#1088#1086#1090#1072#1088#1099
-      ImageIndex = 17
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end
-        item
-          DataSet = PrintItemsSverkaCDS
-          UserName = 'frxDBDSverka'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintMovement_SalePackWeight'
-      ReportNameParam.Value = 'PrintMovement_SalePackWeight'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object actPrintSaleOrder: TdsdPrintAction [46]
-      Category = 'Print'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProc = spSelectPrint_SaleOrder
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint_SaleOrder
-        end>
-      Caption = #1047#1072#1103#1074#1082#1072'/'#1086#1090#1075#1088#1091#1079#1082#1072
-      Hint = #1047#1072#1103#1074#1082#1072'/'#1086#1090#1075#1088#1091#1079#1082#1072
-      ImageIndex = 21
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName;PartionGoods'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintMovement_Sale_Order'
-      ReportNameParam.Value = 'PrintMovement_Sale_Order'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object mactPrint_Account_List: TMultiAction [47]
-      Category = 'Print_Account'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      ActionList = <
-        item
-          Action = actPrint_Account_ReportName
-        end
-        item
-          Action = actDelete_LockUnique
-        end
-        item
-          Action = macInsert_LockUnique
-        end
-        item
-          Action = actPrint_Account_List
-        end>
-      QuestionBeforeExecute = #1053#1072#1087#1077#1095#1072#1090#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1099#1081' '#1089#1095#1077#1090' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?'
-      Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090#1072' '#1087#1086' '#1089#1087#1080#1089#1082#1091
-      Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090#1072' '#1087#1086' '#1089#1087#1080#1089#1082#1091
-      ImageIndex = 15
-    end
-    object actUpdateMI_Sale_PriceIn: TdsdExecStoredProc [48]
-      Category = 'UpdatePriceIn'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdateMI_Sale_PriceIn
-      StoredProcList = <
-        item
-          StoredProc = spUpdateMI_Sale_PriceIn
-        end>
-      Caption = 'actUpdateMI_Sale_PriceIn'
-      ImageIndex = 80
-    end
-    object actPrintPackGross: TdsdPrintAction [49]
-      Category = 'Print'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProc = spSelectPrint_Pack
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint_Pack
-        end>
-      Caption = #1059#1087#1072#1082'. '#1051#1080#1089#1090' '#1074#1077#1089' '#1041#1056#1059#1058#1058#1054
-      Hint = #1059#1087#1072#1082'. '#1051#1080#1089#1090' '#1074#1077#1089' '#1041#1056#1059#1058#1058#1054
-      ImageIndex = 16
-      DataSets = <
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 'MovementId;WeighingNumber;GoodsName'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintMovement_SalePackGross'
-      ReportNameParam.Name = 'PrintMovement_SalePackGross'
-      ReportNameParam.Value = 'PrintMovement_SalePackGross'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object actSPPrintTTNProcName: TdsdExecStoredProc [50]
-      Category = 'Print_TTN'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGetReporNameTTN
-      StoredProcList = <
-        item
-          StoredProc = spGetReporNameTTN
-        end>
-      Caption = 'actSPPrintTTNProcName'
-    end
-    object actPrintTEST: TdsdPrintAction [51]
-      Category = 'Print'
-      MoveParams = <>
-      StoredProc = spSelectPrint_test
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint_test
-        end>
-      Caption = 'TEST '#1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = 'TEST '#1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ImageIndex = 37
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end
-        item
-          DataSet = PrintItemsSverkaCDS
-          UserName = 'frxDBDSverka'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintMovement_Sale1_test'
-      ReportNameParam.Value = 'PrintMovement_Sale1_test'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object actPrint_Account_List: TdsdPrintAction [52]
-      Category = 'Print_Account'
-      MoveParams = <>
-      StoredProc = spSelectPrint_Total_List
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint_Total_List
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
-      Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end
-        item
-          DataSet = PrintItemsSverkaCDS
-          UserName = 'frxDBDSverka'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'NULL'
-      ReportNameParam.Name = #1057#1095#1077#1090
-      ReportNameParam.Value = ''
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameSaleBill'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object actPrint_Quality_ReportName: TdsdExecStoredProc [53]
-      Category = 'Print_QualityDoc'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGetReportNameQuality
-      StoredProcList = <
-        item
-          StoredProc = spGetReportNameQuality
-        end>
-      Caption = 'actPrint_Quality_ReportName'
-    end
-    object mactPrint_TTN2: TMultiAction [54]
-      Category = 'Print_TTN'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      ActionList = <
-        item
-          Action = actDialog_TTN
-        end
-        item
-          Action = actGet_TTN
-        end
-        item
-          Action = actSPPrintTTNProcName
-        end
-        item
-          Action = actPrint_TTN2
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053' ('#1073#1088#1091#1090#1090#1086')'
-      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053' ('#1073#1088#1091#1090#1090#1086')'
-      ImageIndex = 15
-    end
-    object macInsert_LockUnique: TMultiAction [55]
-      Category = 'Print_Total'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      ActionList = <
-        item
-          Action = actInsert_LockUnique
-        end>
-      View = cxGridDBTableView
-      Caption = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1089#1087#1080#1089#1082#1091
-      Hint = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1089#1087#1080#1089#1082#1091
-      ImageIndex = 3
-    end
-    object actPrint_PackWeight: TdsdPrintAction [56]
-      Category = 'Print_Fozzy'
-      MoveParams = <
-        item
-          FromParam.Name = 'Id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'Id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProc = spSelectPrint
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1090#1072#1088#1072' ('#1092#1086#1079#1079#1080')'
-      Hint = #1055#1077#1095#1072#1090#1100' '#1090#1072#1088#1072' ('#1092#1086#1079#1079#1080')'
-      ImageIndex = 19
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          ParamType = ptInputOutput
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintMovement_SalePackWeight_Fozzy'
-      ReportNameParam.Value = 'PrintMovement_SalePackWeight_Fozzy'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object mactPrint_Sale_Total_List: TMultiAction [57]
-      Category = 'Print_Total'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      ActionList = <
-        item
-          Action = actSPPrintSaleProcName
-        end
-        item
-          Action = actDelete_LockUnique
-        end
-        item
-          Action = macInsert_LockUnique
-        end
-        item
-          Action = actPrint_Total_List
-        end>
-      QuestionBeforeExecute = #1053#1072#1087#1077#1095#1072#1090#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1091#1102' '#1085#1072#1082#1083#1072#1076#1085#1091#1102' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?'
-      Caption = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1089#1087#1080#1089#1082#1091
-      Hint = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1089#1087#1080#1089#1082#1091
-      ImageIndex = 3
-    end
-    object actPrint_TTN2: TdsdPrintAction [58]
-      Category = 'Print_TTN'
-      MoveParams = <>
-      StoredProc = spSelectPrint_TTN2
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint_TTN2
-        end>
-      Caption = 'actPrint_TTN'
-      Hint = 'actPrint_TTN'
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintMovement_TTN'
-      ReportNameParam.Value = 'PrintMovement_TTN'
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameTTN'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object mactPrint_Sale_Total_To: TMultiAction [59]
-      Category = 'Print_Total'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      ActionList = <
-        item
-          Action = actSPPrintSaleProcName
-        end
-        item
-          Action = actPrint_Total_To
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1076#1083#1103' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
-      Hint = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1076#1083#1103' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
-      ImageIndex = 3
-    end
-    object mactPrint_Sale_Total: TMultiAction [60]
-      Category = 'Print_Total'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      ActionList = <
-        item
-          Action = actSPPrintSaleProcName
-        end
-        item
-          Action = actPrint_Total
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1076#1083#1103' '#1070#1088'.'#1083#1080#1094#1072
-      Hint = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1076#1083#1103' '#1070#1088'.'#1083#1080#1094#1072
-      ImageIndex = 3
-    end
-    object mactPrint_Sale: TMultiAction [61]
-      Category = 'Print'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      ActionList = <
-        item
-          Action = actSPPrintSaleProcName
-        end
-        item
-          Action = actPrint
-        end
-        item
-          Action = actSPSavePrintState
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
-      ImageIndex = 3
-      ShortCut = 16464
-    end
-    object actPrint_Total_To: TdsdPrintAction [62]
-      Category = 'Print_Total'
-      MoveParams = <>
-      StoredProc = spSelectPrint_Total_To
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint_Total_To
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end
-        item
-          DataSet = PrintItemsSverkaCDS
-          UserName = 'frxDBDSverka'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'NULL'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = Null
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameSale'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object actPrint_Total_List: TdsdPrintAction [63]
-      Category = 'Print_Total'
-      MoveParams = <>
-      StoredProc = spSelectPrint_Total_List
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint_Total_List
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1089#1087#1080#1089#1082#1091
-      Hint = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1089#1087#1080#1089#1082#1091
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end
-        item
-          DataSet = PrintItemsSverkaCDS
-          UserName = 'frxDBDSverka'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'NULL'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = Null
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameSale'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object actPrint_Total: TdsdPrintAction [64]
-      Category = 'Print_Total'
-      MoveParams = <>
-      StoredProc = spSelectPrint_Total
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint_Total
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end
-        item
-          DataSet = PrintItemsSverkaCDS
-          UserName = 'frxDBDSverka'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'NULL'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = Null
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameSale'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object actSPPrintSaleProcName: TdsdExecStoredProc [65]
-      Category = 'Print'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGetReportName
-      StoredProcList = <
-        item
-          StoredProc = spGetReportName
-        end>
-      Caption = 'actSPPrintSaleProcName'
-    end
-    object actPrintReturnInDay: TdsdPrintAction [66]
-      Category = 'Print'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProc = spSelectPrintReturnInDay
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrintReturnInDay
-        end>
-      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1079#1072' '#1076#1072#1090#1091
-      Hint = #1042#1086#1079#1074#1088#1072#1090' '#1079#1072' '#1076#1072#1090#1091
-      ImageIndex = 19
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 'Id;GoodsName'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintMovement_ReturnInDay'
-      ReportNameParam.Value = 'PrintMovement_ReturnInDay'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object actSPSavePrintState: TdsdExecStoredProc [67]
-      Category = 'Print'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spSavePrintState
-      StoredProcList = <
-        item
-          StoredProc = spSavePrintState
-        end>
-      Caption = 'actSPSavePrintState'
-    end
-    object actPrint: TdsdPrintAction [68]
-      Category = 'Print'
-      MoveParams = <>
-      StoredProc = spSelectPrint
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end
-        item
-          DataSet = PrintItemsSverkaCDS
-          UserName = 'frxDBDSverka'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'NULL'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = Null
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameSale'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object actDelete_LockUnique: TdsdExecStoredProc [69]
-      Category = 'Print_Total'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spDelete_LockUnique
-      StoredProcList = <
-        item
-          StoredProc = spDelete_LockUnique
-        end>
-      Caption = 'actDelete_LockUnique'
-    end
-    object actPrint_Tax_ReportName: TdsdExecStoredProc [70]
-      Category = 'Print_Tax'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGetReporNameTax
-      StoredProcList = <
-        item
-          StoredProc = spGetReporNameTax
-        end>
-      Caption = 'actPrint_Tax_ReportName'
-    end
-    object actPrintPack_Transport: TdsdPrintAction [71]
-      Category = 'Print_TTN'
-      MoveParams = <>
-      StoredProc = spSelectPrint
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1086#1081
-      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1086#1081
-      WithOutPreview = True
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end
-        item
-          DataSet = PrintItemsSverkaCDS
-          UserName = 'frxDBDSverka'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'NULL'
-      ReportNameParam.Name = #1057#1095#1077#1090
-      ReportNameParam.Value = Null
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameTransport'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object mactPrint_Tax_Us: TMultiAction [72]
-      Category = 'Print_Tax'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      ActionList = <
-        item
-          Action = actPrint_Tax_ReportName
-        end
-        item
-          Action = actPrintTax_Us
-        end>
-      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
-      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
-      ImageIndex = 16
-    end
-    object actPrint_ExpInvoice: TdsdPrintAction [73]
-      Category = 'Print_Export'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProc = spSelectPrint_ExpInvoice
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint_ExpInvoice
-        end>
-      Caption = #1048#1085#1074#1086#1081#1089' ('#1101#1082#1089#1087#1086#1088#1090')'
-      Hint = #1048#1085#1074#1086#1081#1089' ('#1101#1082#1089#1087#1086#1088#1090')'
-      ImageIndex = 22
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintMovement_SaleInvoice'
-      ReportNameParam.Name = 'PrintMovement_SaleInvoice'
-      ReportNameParam.Value = 'PrintMovement_SaleInvoice'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object actPrintTax_Us: TdsdPrintAction [74]
-      Category = 'Print_Tax'
-      MoveParams = <>
-      StoredProc = spSelectTax_Us
-      StoredProcList = <
-        item
-          StoredProc = spSelectTax_Us
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end
-        item
-          DataSet = PrintItemsSverkaCDS
-          UserName = 'frxDBDSverka'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'NULL'
-      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = Null
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameSaleTax'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object macRoundAmountPartner_list: TMultiAction [75]
-      Category = 'UpdateAmount'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actRoundAmountPartner
-        end>
-      View = cxGridDBTableView
-      Caption = #1054#1082#1088#1091#1075#1083#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
-      ImageIndex = 45
-    end
-    object actRoundAmountPartner: TdsdExecStoredProc [76]
-      Category = 'UpdateAmount'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_MI_AmountPartner_round
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_MI_AmountPartner_round
-        end>
-      Caption = 'actUpdate_MI_AmountPartner_round'
-    end
-    object actPrint_Pack: TdsdPrintAction [77]
-      Category = 'Print_Fozzy'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProc = spSelectPrint_Pack
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint_Pack
-        end>
-      Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' ('#1060#1086#1079#1079#1080' + '#1040#1096#1072#1085' + '#1076#1088#1091#1075#1080#1077'...)'
-      Hint = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' ('#1060#1086#1079#1079#1080' + '#1040#1096#1072#1085' + '#1076#1088#1091#1075#1080#1077'...)'
-      ImageIndex = 23
-      DataSets = <
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 'WeighingNumber;NumOrder'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintMovement_SalePack21'
-      ReportNameParam.Value = 'PrintMovement_SalePack21'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object actOpenReportForm: TdsdOpenForm [78]
+    object actOpenReportForm: TdsdOpenForm [3]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -3619,7 +1392,2316 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       isShowModal = False
     end
-    object actInsert_LockUnique: TdsdExecStoredProc [79]
+    object macUpdate_TotalLines_list: TMultiAction [4]
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'Id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'Id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'Id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actUpdate_TotalLines
+        end>
+      View = cxGridDBTableView
+      ImageIndex = 79
+    end
+    object macInsertFileName_csv_one: TMultiAction [5]
+      Category = 'Export_Csv'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetFileName_csv
+        end
+        item
+          Action = actInsertFileName_csv
+        end
+        item
+          Action = actExport_file_csv
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1054#1076#1085#1091' '#1053#1072#1082#1083#1072#1076#1085#1091#1102' 1'#1057'-'#1055#1072#1074#1080#1083#1100#1086#1085#1099'?'
+      InfoAfterExecute = #1053#1072#1082#1083#1072#1076#1085#1072#1103' 1'#1057'-'#1055#1072#1074#1080#1083#1100#1086#1085#1099' '#1074#1099#1075#1088#1091#1078#1077#1085#1072
+      Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1054#1076#1085#1091' '#1053#1072#1082#1083#1072#1076#1085#1091#1102' 1'#1057'-'#1055#1072#1074#1080#1083#1100#1086#1085#1099
+      ImageIndex = 89
+    end
+    object actPrint_Quality_ReportName_list: TdsdExecStoredProc [6]
+      Category = 'Group_TTN_Quality'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReportNameQuality_list
+      StoredProcList = <
+        item
+          StoredProc = spGetReportNameQuality_list
+        end>
+      Caption = 'actPrint_Quality_ReportName'
+    end
+    object actPrintBoxTotal: TdsdPrintAction [7]
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintBoxTotal
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintBoxTotal
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1043#1086#1092#1088#1086#1090#1072#1088#1099' ('#1087#1086' '#1082#1083#1080#1077#1085#1090#1091')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1043#1086#1092#1088#1086#1090#1072#1088#1099' ('#1087#1086' '#1082#1083#1080#1077#1085#1090#1091')'
+      ImageIndex = 21
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_SalePackWeightTotal'
+      ReportNameParam.Value = 'PrintMovement_SalePackWeightTotal'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintSaleOrderTax: TdsdPrintAction [8]
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint_SaleOrderTax
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_SaleOrderTax
+        end>
+      Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1085#1072' %'
+      Hint = #1047#1072#1103#1074#1082#1072'/'#1086#1090#1075#1088#1091#1079#1082#1072' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1085#1072' %'
+      ImageIndex = 18
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName;PartionGoods'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Sale_Order'
+      ReportNameParam.Value = 'PrintMovement_Sale_Order'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object macUpdate_PriceList: TMultiAction [9]
+      Category = 'UpdatePriceList'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actOpenChoicePriceList
+        end
+        item
+          Action = macUpdate_PriceList_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1054#1073#1085#1086#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1087#1086' '#1055#1088#1072#1081#1089#1091' '#1074' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1093'?'
+      InfoAfterExecute = #1042' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1093' '#1091#1089#1087#1077#1096#1085#1086' '#1086#1073#1085#1086#1074#1083#1077#1085#1099' '#1094#1077#1085#1099
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1087#1086' '#1055#1088#1072#1081#1089#1091
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1087#1086' '#1055#1088#1072#1081#1089#1091
+      ImageIndex = 56
+    end
+    object actUpdate_TotalLines: TdsdExecStoredProc [10]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_TotalLines
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_TotalLines
+        end>
+      Caption = 'actUpdate_TotalLines'
+    end
+    object macUpdate_PriceList_list: TMultiAction [11]
+      Category = 'UpdatePriceList'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_PriceList
+        end>
+      View = cxGridDBTableView
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1087#1086' '#1055#1088#1072#1081#1089#1091
+      ImageIndex = 56
+    end
+    object actPrint_QualityDoc_list: TdsdPrintAction [12]
+      Category = 'Group_TTN_Quality'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint_Quality_list
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Quality_list
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+      Hint = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+      WithOutPreview = True
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'QualityCode;GoodsGroupName;GoodsName;GoodsKindName'
+        end
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDMaster2'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Quality'
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameQuality'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actUpdate_Commerc: TdsdInsertUpdateAction [13]
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1076#1072#1078#1072' ('#1052#1086#1090#1080#1074#1072#1094#1080#1103' '#1082#1086#1084#1084#1077#1088#1094#1080#1080')'
+      Hint = #1055#1088#1086#1076#1072#1078#1072' ('#1052#1086#1090#1080#1074#1072#1094#1080#1103' '#1082#1086#1084#1084#1077#1088#1094#1080#1080')'
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TSale_CommercForm'
+      FormNameParam.Value = 'TSale_CommercForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 46023d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inChangePercentAmount'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inChangePercentAmount'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actUpdate_PriceList: TdsdExecStoredProc [14]
+      Category = 'UpdatePriceList'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_PriceList
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_PriceList
+        end>
+      Caption = 'actUpdate_PriceList'
+      ImageIndex = 56
+    end
+    object macUpdate_TotalLines: TMultiAction [15]
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'Id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'Id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'Id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = macUpdate_TotalLines_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1090#1100' <'#1048#1090#1086#1075#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1089#1090#1088#1086#1082'>?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1087#1086#1083#1085#1077#1085#1099
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' <'#1048#1090#1086#1075#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1089#1090#1088#1086#1082'>'
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' <'#1048#1090#1086#1075#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1089#1090#1088#1086#1082'>'
+      ImageIndex = 79
+    end
+    object macPrint_TTN_Copy1_list: TMultiAction [16]
+      Category = 'Group_TTN_Quality'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actSPPrintTTNProcName_list
+        end
+        item
+          Action = actPrint_TTN_copy1_list
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
+      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
+      ImageIndex = 15
+    end
+    object actInsertUpdate_Quality_byTransport: TdsdExecStoredProc [17]
+      Category = 'Group_TTN_Quality'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_Quality_byTransport
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_Quality_byTransport
+        end>
+      Caption = 'InsertUpdate_Quality_byTransport'
+      Hint = 'InsertUpdate_TTN_byTransport'
+    end
+    object mactPrint_Sale_list: TMultiAction [18]
+      Category = 'Group_TTN_Quality'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actSPPrintSaleProcName
+        end
+        item
+          Action = actPrint
+        end
+        item
+          Action = actSPSavePrintState
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
+      ImageIndex = 3
+      ShortCut = 16464
+    end
+    object actSPPrintTTNProcName_list: TdsdExecStoredProc [19]
+      Category = 'Group_TTN_Quality'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReporNameTTN
+      StoredProcList = <
+        item
+          StoredProc = spGetReporNameTTN
+        end>
+      Caption = 'actSPPrintTTNProcName_list'
+    end
+    object actInsertUpdate_TTN_byTransport: TdsdExecStoredProc [20]
+      Category = 'Group_TTN_Quality'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_TTN_byTransport
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_TTN_byTransport
+        end>
+      Caption = 'InsertUpdate_TTN_byTransport'
+    end
+    object macPrint_TTN_final: TMultiAction [21]
+      Category = 'Print_TTN'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actSPPrintTTNProcName
+        end
+        item
+          Action = actPrint_TTN_final
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1080#1090#1086#1075#1086#1074#1086#1081' '#1058#1058#1053
+      Hint = #1055#1077#1095#1072#1090#1100' '#1080#1090#1086#1075#1086#1074#1086#1081' '#1058#1058#1053
+      ImageIndex = 15
+    end
+    object actPrintReturnInDay_2copy: TdsdPrintAction [22]
+      Category = 'Group_TTN_Quality'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintReturnInDay
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintReturnInDay
+        end>
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1079#1072' '#1076#1072#1090#1091
+      Hint = #1042#1086#1079#1074#1088#1072#1090' '#1079#1072' '#1076#1072#1090#1091
+      ImageIndex = 19
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'Id;GoodsName'
+        end>
+      CopiesCount = 2
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_ReturnInDay'
+      ReportNameParam.Value = 'PrintMovement_ReturnInDay'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object macPrintPack_2copy: TMultiAction [23]
+      Category = 'Group_TTN_Quality'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actSPPrintSaleProcName
+        end
+        item
+          Action = actPrintPack_2copy
+        end
+        item
+          Action = actSPSavePrintState
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+    end
+    object actPrint_TTN_final: TdsdPrintAction [24]
+      Category = 'Print_TTN'
+      MoveParams = <>
+      StoredProc = spSelectPrint_TTN_final
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_TTN_final
+        end>
+      Caption = 'actPrint_TTN'
+      Hint = 'actPrint_TTN'
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_TTN'
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameTTN'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint_TTN_copy1_list: TdsdPrintAction [25]
+      Category = 'Group_TTN_Quality'
+      MoveParams = <>
+      StoredProc = spSelectPrint_TTN
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_TTN
+        end>
+      Caption = 'actPrint_TTN'
+      Hint = 'actPrint_TTN'
+      WithOutPreview = True
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_TTN'
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameTTN'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintPack_2copy: TdsdPrintAction [26]
+      Category = 'Group_TTN_Quality'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      WithOutPreview = True
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsSverkaCDS
+          UserName = 'frxDBDSverka'
+        end>
+      CopiesCount = 2
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Sale1_test'
+      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = 'PrintMovement_Sale1_test'
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameSale'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object macPrintPack_3copy: TMultiAction [27]
+      Category = 'Group_TTN_Quality'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actSPPrintSaleProcName
+        end
+        item
+          Action = actPrintPack_3copy
+        end
+        item
+          Action = actSPSavePrintState
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+    end
+    object macPrint_TTN_Copy3_list: TMultiAction [28]
+      Category = 'Group_TTN_Quality'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actSPPrintTTNProcName_list
+        end
+        item
+          Action = actPrint_TTN_copy3_list
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053' (3 '#1082#1086#1087#1080#1080')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
+      ImageIndex = 15
+    end
+    object actPrint_TTN_copy3_list: TdsdPrintAction [29]
+      Category = 'Group_TTN_Quality'
+      MoveParams = <>
+      StoredProc = spSelectPrint_TTN
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_TTN
+        end>
+      Caption = 'actPrint_TTN'
+      Hint = 'actPrint_TTN'
+      WithOutPreview = True
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      CopiesCount = 3
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_TTN'
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameTTN'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintPack_3copy: TdsdPrintAction [30]
+      Category = 'Group_TTN_Quality'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      WithOutPreview = True
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsSverkaCDS
+          UserName = 'frxDBDSverka'
+        end>
+      CopiesCount = 3
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Sale1_test'
+      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = 'PrintMovement_Sale1_test'
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameSale'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object macPrint_QualityDoc_list: TMultiAction [31]
+      Category = 'Group_TTN_Quality'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actPrint_Quality_ReportName_list
+        end
+        item
+          Action = actPrint_QualityDoc_list
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+      Hint = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+      ImageIndex = 16
+    end
+    object macPrint_TTN_Copy2_list: TMultiAction [32]
+      Category = 'Group_TTN_Quality'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actSPPrintTTNProcName_list
+        end
+        item
+          Action = actPrint_TTN_copy2_list
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
+      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
+      ImageIndex = 15
+    end
+    object actPrint_TTN_copy2_list: TdsdPrintAction [33]
+      Category = 'Group_TTN_Quality'
+      MoveParams = <>
+      StoredProc = spSelectPrint_TTN
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_TTN
+        end>
+      Caption = 'actPrint_TTN'
+      Hint = 'actPrint_TTN'
+      WithOutPreview = True
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      CopiesCount = 2
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_TTN'
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameTTN'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object macPrint_Group_list_cash_Ret: TMultiAction [34]
+      Category = 'Group_TTN_Quality'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actInsertUpdate_Quality_byTransport
+        end
+        item
+          Action = macPrintPack_2copy
+        end
+        item
+          Action = macPrint_QualityDoc_list
+        end
+        item
+          Action = actPrintReturnInDay_2copy
+        end
+        item
+          Action = actUpdatePrintAuto_True
+        end>
+      View = cxGridDBTableView
+      Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
+      Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
+      ImageIndex = 44
+    end
+    object macPrint_Group_list: TMultiAction [35]
+      Category = 'Group_TTN_Quality'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actInsertUpdate_TTN_byTransport
+        end
+        item
+          Action = actInsertUpdate_Quality_byTransport
+        end
+        item
+          Action = macPrintPack_2copy
+        end
+        item
+          Action = macPrint_TTN_Copy2_list
+        end
+        item
+          Action = macPrint_QualityDoc_list
+        end>
+      View = cxGridDBTableView
+      Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
+      Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
+      ImageIndex = 44
+    end
+    object macPrint_Group_cash: TMultiAction [36]
+      Category = 'Group_TTN_Quality'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = macPrint_Group_list_cash
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1087#1086#1083#1085#1080#1090#1100' '#1087#1072#1082#1077#1090#1085#1091#1102' '#1087#1077#1095#1072#1090#1100' ('#1089#1086#1079#1076#1072#1085#1080#1077' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1075#1086',' +
+        ' '#1087#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1086#1081'  '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1075#1086')? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1089#1086#1079#1076#1072#1085#1099', '#1087#1077#1095#1072#1090#1100' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
+      Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' ('#1053#1040#1051')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' ('#1053#1040#1051')'
+      ImageIndex = 15
+    end
+    object macPrint_Group_list_cash: TMultiAction [37]
+      Category = 'Group_TTN_Quality'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actInsertUpdate_Quality_byTransport
+        end
+        item
+          Action = macPrintPack_2copy
+        end
+        item
+          Action = macPrint_QualityDoc_list
+        end>
+      View = cxGridDBTableView
+      Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
+      Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
+      ImageIndex = 44
+    end
+    object macPrint_Group: TMultiAction [38]
+      Category = 'Group_TTN_Quality'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = macPrint_Group_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1087#1086#1083#1085#1080#1090#1100' '#1087#1072#1082#1077#1090#1085#1091#1102' '#1087#1077#1095#1072#1090#1100' ('#1089#1086#1079#1076#1072#1085#1080#1077' '#1058#1058#1053' '#1080'  '#1050#1072#1095#1077#1089#1090#1074 +
+        #1077#1085#1085#1086#1075#1086', '#1087#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1086#1081', '#1058#1058#1053', '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1075#1086')? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1089#1086#1079#1076#1072#1085#1099', '#1087#1077#1095#1072#1090#1100' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
+      Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' ('#1041#1053')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' ('#1041#1053')'
+      ImageIndex = 44
+    end
+    object macPrint_Group_cash_Ret: TMultiAction [39]
+      Category = 'Group_TTN_Quality'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actUpdatePrintAuto_False
+        end
+        item
+          Action = macPrint_Group_list_cash_Ret
+        end
+        item
+          Action = actUpdatePrintAuto_False
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1087#1086#1083#1085#1080#1090#1100' '#1087#1072#1082#1077#1090#1085#1091#1102' '#1087#1077#1095#1072#1090#1100' ('#1089#1086#1079#1076#1072#1085#1080#1077' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1075#1086',' +
+        ' '#1087#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1086#1081', '#1042#1086#1079#1074#1088#1072#1090#1072', '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1075#1086')? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1089#1086#1079#1076#1072#1085#1099', '#1087#1077#1095#1072#1090#1100' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
+      Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' + '#1074#1086#1079#1074#1088#1072#1090' ('#1053#1040#1051')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' + '#1074#1086#1079#1074#1088#1072#1090' ('#1053#1040#1051')'
+      ImageIndex = 15
+    end
+    object actUpdatePrintAuto_True: TdsdExecStoredProc [40]
+      Category = 'Group_TTN_Quality'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdatePrintAuto_True
+      StoredProcList = <
+        item
+          StoredProc = spUpdatePrintAuto_True
+        end>
+      Caption = 'actUpdatePrintAuto_True'
+      Hint = #1091#1089#1090#1072#1085#1086#1074#1080#1090#1100' PrintAuto = True'
+    end
+    object actUpdatePrintAuto_False: TdsdExecStoredProc [41]
+      Category = 'Group_TTN_Quality'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdatePrintAuto_False
+      StoredProcList = <
+        item
+          StoredProc = spUpdatePrintAuto_False
+        end>
+      Caption = 'actUpdatePrintAuto_False'
+      Hint = #1091#1089#1090#1072#1085#1086#1074#1080#1090#1100' PrintAuto = False'
+    end
+    object macPrint_Sale2_TTN_Quality: TMultiAction [42]
+      Category = 'Group_TTN_Quality'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = macPrint_Sale2_TTN_Quality_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1087#1086#1083#1085#1080#1090#1100' '#1087#1072#1082#1077#1090#1085#1091#1102' '#1087#1077#1095#1072#1090#1100' ('#1089#1086#1079#1076#1072#1085#1080#1077' '#1058#1058#1053' '#1080'  '#1050#1072#1095#1077#1089#1090#1074 +
+        #1077#1085#1085#1086#1075#1086', '#1087#1077#1095#1072#1090#1100' 2 '#1053#1072#1082#1083#1072#1076#1085#1099#1093' , '#1058#1058#1053', '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1075#1086')? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1089#1086#1079#1076#1072#1085#1099', '#1087#1077#1095#1072#1090#1100' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
+      Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' ('#1041#1053') (2 '#1088#1072#1089#1093#1086#1076'+'#1090#1090#1085'+'#1082#1072#1095#1077#1089#1090#1074')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' ('#1041#1053') (2 '#1088#1072#1089#1093#1086#1076'+'#1090#1090#1085'+'#1082#1072#1095#1077#1089#1090#1074')'
+      ImageIndex = 44
+    end
+    object macPrint_Sale2_TTN_Quality_list: TMultiAction [43]
+      Category = 'Group_TTN_Quality'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actInsertUpdate_TTN_byTransport
+        end
+        item
+          Action = actInsertUpdate_Quality_byTransport
+        end
+        item
+          Action = macPrintPack_2copy
+        end
+        item
+          Action = macPrint_TTN_Copy1_list
+        end
+        item
+          Action = macPrint_QualityDoc_list
+        end>
+      View = cxGridDBTableView
+      Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
+      Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
+      ImageIndex = 44
+    end
+    object macPrint_Sale3_TTN_Quality: TMultiAction [44]
+      Category = 'Group_TTN_Quality'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = macPrint_Sale3_TTN_Quality_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1087#1086#1083#1085#1080#1090#1100' '#1087#1072#1082#1077#1090#1085#1091#1102' '#1087#1077#1095#1072#1090#1100' ('#1089#1086#1079#1076#1072#1085#1080#1077' '#1058#1058#1053' '#1080'  '#1050#1072#1095#1077#1089#1090#1074 +
+        #1077#1085#1085#1086#1075#1086', '#1087#1077#1095#1072#1090#1100' 3 '#1053#1072#1082#1083#1072#1076#1085#1099#1093', 3 '#1058#1058#1053', '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1075#1086')? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1089#1086#1079#1076#1072#1085#1099', '#1087#1077#1095#1072#1090#1100' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
+      Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' ('#1041#1053') (3 '#1088#1072#1089#1093#1086#1076'+3'#1090#1090#1085'+'#1082#1072#1095#1077#1089#1090#1074')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' ('#1041#1053') (3 '#1088#1072#1089#1093#1086#1076'+3'#1090#1090#1085'+'#1082#1072#1095#1077#1089#1090#1074')'
+      ImageIndex = 44
+    end
+    object macPrint_Sale3_TTN_Quality_list: TMultiAction [45]
+      Category = 'Group_TTN_Quality'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actInsertUpdate_TTN_byTransport
+        end
+        item
+          Action = actInsertUpdate_Quality_byTransport
+        end
+        item
+          Action = macPrintPack_3copy
+        end
+        item
+          Action = macPrint_TTN_Copy3_list
+        end
+        item
+          Action = macPrint_QualityDoc_list
+        end>
+      View = cxGridDBTableView
+      Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
+      Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
+      ImageIndex = 44
+    end
+    object macRoundAmountPartner: TMultiAction [46]
+      Category = 'UpdateAmount'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogUpdateAmountPartner
+        end
+        item
+          Action = macRoundAmountPartner_list
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1054#1082#1088#1091#1075#1083#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' '#1074' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090 +
+        #1072#1093'?'
+      InfoAfterExecute = #1042' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1093' '#1091#1089#1087#1077#1096#1085#1086' '#1086#1082#1088#1091#1075#1083#1077#1085#1086' '#1082#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'.'
+      Caption = #1054#1082#1088#1091#1075#1083#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+      Hint = #1054#1082#1088#1091#1075#1083#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+      ImageIndex = 45
+    end
+    object actPrintBox: TdsdPrintAction [47]
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintBox
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintBox
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1043#1086#1092#1088#1086#1090#1072#1088#1099
+      Hint = #1055#1077#1095#1072#1090#1100' '#1043#1086#1092#1088#1086#1090#1072#1088#1099
+      ImageIndex = 17
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsSverkaCDS
+          UserName = 'frxDBDSverka'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_SalePackWeight'
+      ReportNameParam.Value = 'PrintMovement_SalePackWeight'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintSaleOrder: TdsdPrintAction [48]
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint_SaleOrder
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_SaleOrder
+        end>
+      Caption = #1047#1072#1103#1074#1082#1072'/'#1086#1090#1075#1088#1091#1079#1082#1072
+      Hint = #1047#1072#1103#1074#1082#1072'/'#1086#1090#1075#1088#1091#1079#1082#1072
+      ImageIndex = 21
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName;PartionGoods'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Sale_Order'
+      ReportNameParam.Value = 'PrintMovement_Sale_Order'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object mactPrint_Account_List: TMultiAction [49]
+      Category = 'Print_Account'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actPrint_Account_ReportName
+        end
+        item
+          Action = actDelete_LockUnique
+        end
+        item
+          Action = macInsert_LockUnique
+        end
+        item
+          Action = actPrint_Account_List
+        end>
+      QuestionBeforeExecute = #1053#1072#1087#1077#1095#1072#1090#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1099#1081' '#1089#1095#1077#1090' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?'
+      Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090#1072' '#1087#1086' '#1089#1087#1080#1089#1082#1091
+      Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090#1072' '#1087#1086' '#1089#1087#1080#1089#1082#1091
+      ImageIndex = 15
+    end
+    object actUpdateMI_Sale_PriceIn: TdsdExecStoredProc [50]
+      Category = 'UpdatePriceIn'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMI_Sale_PriceIn
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMI_Sale_PriceIn
+        end>
+      Caption = 'actUpdateMI_Sale_PriceIn'
+      ImageIndex = 80
+    end
+    object actPrintPackGross: TdsdPrintAction [51]
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint_Pack
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Pack
+        end>
+      Caption = #1059#1087#1072#1082'. '#1051#1080#1089#1090' '#1074#1077#1089' '#1041#1056#1059#1058#1058#1054
+      Hint = #1059#1087#1072#1082'. '#1051#1080#1089#1090' '#1074#1077#1089' '#1041#1056#1059#1058#1058#1054
+      ImageIndex = 16
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'MovementId;WeighingNumber;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_SalePackGross'
+      ReportNameParam.Name = 'PrintMovement_SalePackGross'
+      ReportNameParam.Value = 'PrintMovement_SalePackGross'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actSPPrintTTNProcName: TdsdExecStoredProc [52]
+      Category = 'Print_TTN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReporNameTTN
+      StoredProcList = <
+        item
+          StoredProc = spGetReporNameTTN
+        end>
+      Caption = 'actSPPrintTTNProcName'
+    end
+    object actPrintTEST: TdsdPrintAction [53]
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spSelectPrint_test
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_test
+        end>
+      Caption = 'TEST '#1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = 'TEST '#1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ImageIndex = 37
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsSverkaCDS
+          UserName = 'frxDBDSverka'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Sale1_test'
+      ReportNameParam.Value = 'PrintMovement_Sale1_test'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint_Account_List: TdsdPrintAction [54]
+      Category = 'Print_Account'
+      MoveParams = <>
+      StoredProc = spSelectPrint_Total_List
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Total_List
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
+      Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsSverkaCDS
+          UserName = 'frxDBDSverka'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1057#1095#1077#1090
+      ReportNameParam.Value = ''
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameSaleBill'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint_Quality_ReportName: TdsdExecStoredProc [55]
+      Category = 'Print_QualityDoc'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReportNameQuality
+      StoredProcList = <
+        item
+          StoredProc = spGetReportNameQuality
+        end>
+      Caption = 'actPrint_Quality_ReportName'
+    end
+    object mactPrint_TTN2: TMultiAction [56]
+      Category = 'Print_TTN'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actDialog_TTN
+        end
+        item
+          Action = actGet_TTN
+        end
+        item
+          Action = actSPPrintTTNProcName
+        end
+        item
+          Action = actPrint_TTN2
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053' ('#1073#1088#1091#1090#1090#1086')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053' ('#1073#1088#1091#1090#1090#1086')'
+      ImageIndex = 15
+    end
+    object macInsert_LockUnique: TMultiAction [57]
+      Category = 'Print_Total'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actInsert_LockUnique
+        end>
+      View = cxGridDBTableView
+      Caption = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1089#1087#1080#1089#1082#1091
+      Hint = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1089#1087#1080#1089#1082#1091
+      ImageIndex = 3
+    end
+    object actPrint_PackWeight: TdsdPrintAction [58]
+      Category = 'Print_Fozzy'
+      MoveParams = <
+        item
+          FromParam.Name = 'Id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'Id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1090#1072#1088#1072' ('#1092#1086#1079#1079#1080')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1090#1072#1088#1072' ('#1092#1086#1079#1079#1080')'
+      ImageIndex = 19
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_SalePackWeight_Fozzy'
+      ReportNameParam.Value = 'PrintMovement_SalePackWeight_Fozzy'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object mactPrint_Sale_Total_List: TMultiAction [59]
+      Category = 'Print_Total'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actSPPrintSaleProcName
+        end
+        item
+          Action = actDelete_LockUnique
+        end
+        item
+          Action = macInsert_LockUnique
+        end
+        item
+          Action = actPrint_Total_List
+        end>
+      QuestionBeforeExecute = #1053#1072#1087#1077#1095#1072#1090#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1091#1102' '#1085#1072#1082#1083#1072#1076#1085#1091#1102' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?'
+      Caption = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1089#1087#1080#1089#1082#1091
+      Hint = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1089#1087#1080#1089#1082#1091
+      ImageIndex = 3
+    end
+    object actPrint_TTN2: TdsdPrintAction [60]
+      Category = 'Print_TTN'
+      MoveParams = <>
+      StoredProc = spSelectPrint_TTN2
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_TTN2
+        end>
+      Caption = 'actPrint_TTN'
+      Hint = 'actPrint_TTN'
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_TTN'
+      ReportNameParam.Value = 'PrintMovement_TTN'
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameTTN'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object mactPrint_Sale_Total_To: TMultiAction [61]
+      Category = 'Print_Total'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actSPPrintSaleProcName
+        end
+        item
+          Action = actPrint_Total_To
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1076#1083#1103' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1076#1083#1103' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+      ImageIndex = 3
+    end
+    object mactPrint_Sale_Total: TMultiAction [62]
+      Category = 'Print_Total'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actSPPrintSaleProcName
+        end
+        item
+          Action = actPrint_Total
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1076#1083#1103' '#1070#1088'.'#1083#1080#1094#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1076#1083#1103' '#1070#1088'.'#1083#1080#1094#1072
+      ImageIndex = 3
+    end
+    object mactPrint_Sale: TMultiAction [63]
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actSPPrintSaleProcName
+        end
+        item
+          Action = actPrint
+        end
+        item
+          Action = actSPSavePrintState
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
+      ImageIndex = 3
+      ShortCut = 16464
+    end
+    object actPrint_Total_To: TdsdPrintAction [64]
+      Category = 'Print_Total'
+      MoveParams = <>
+      StoredProc = spSelectPrint_Total_To
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Total_To
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsSverkaCDS
+          UserName = 'frxDBDSverka'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameSale'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint_Total_List: TdsdPrintAction [65]
+      Category = 'Print_Total'
+      MoveParams = <>
+      StoredProc = spSelectPrint_Total_List
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Total_List
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1089#1087#1080#1089#1082#1091
+      Hint = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1087#1086' '#1089#1087#1080#1089#1082#1091
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsSverkaCDS
+          UserName = 'frxDBDSverka'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameSale'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint_Total: TdsdPrintAction [66]
+      Category = 'Print_Total'
+      MoveParams = <>
+      StoredProc = spSelectPrint_Total
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Total
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsSverkaCDS
+          UserName = 'frxDBDSverka'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameSale'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actSPPrintSaleProcName: TdsdExecStoredProc [67]
+      Category = 'Print'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReportName
+      StoredProcList = <
+        item
+          StoredProc = spGetReportName
+        end>
+      Caption = 'actSPPrintSaleProcName'
+    end
+    object actPrintReturnInDay: TdsdPrintAction [68]
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintReturnInDay
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintReturnInDay
+        end>
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1079#1072' '#1076#1072#1090#1091
+      Hint = #1042#1086#1079#1074#1088#1072#1090' '#1079#1072' '#1076#1072#1090#1091
+      ImageIndex = 19
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'Id;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_ReturnInDay'
+      ReportNameParam.Value = 'PrintMovement_ReturnInDay'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actSPSavePrintState: TdsdExecStoredProc [69]
+      Category = 'Print'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSavePrintState
+      StoredProcList = <
+        item
+          StoredProc = spSavePrintState
+        end>
+      Caption = 'actSPSavePrintState'
+    end
+    object actPrint: TdsdPrintAction [70]
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsSverkaCDS
+          UserName = 'frxDBDSverka'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameSale'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actDelete_LockUnique: TdsdExecStoredProc [71]
+      Category = 'Print_Total'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spDelete_LockUnique
+      StoredProcList = <
+        item
+          StoredProc = spDelete_LockUnique
+        end>
+      Caption = 'actDelete_LockUnique'
+    end
+    object actPrint_Tax_ReportName: TdsdExecStoredProc [72]
+      Category = 'Print_Tax'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReporNameTax
+      StoredProcList = <
+        item
+          StoredProc = spGetReporNameTax
+        end>
+      Caption = 'actPrint_Tax_ReportName'
+    end
+    object actPrintPack_Transport: TdsdPrintAction [73]
+      Category = 'Print_TTN'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1086#1081
+      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1086#1081
+      WithOutPreview = True
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsSverkaCDS
+          UserName = 'frxDBDSverka'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1057#1095#1077#1090
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameTransport'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object mactPrint_Tax_Us: TMultiAction [74]
+      Category = 'Print_Tax'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actPrint_Tax_ReportName
+        end
+        item
+          Action = actPrintTax_Us
+        end>
+      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
+      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
+      ImageIndex = 16
+    end
+    object actPrint_ExpInvoice: TdsdPrintAction [75]
+      Category = 'Print_Export'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint_ExpInvoice
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_ExpInvoice
+        end>
+      Caption = #1048#1085#1074#1086#1081#1089' ('#1101#1082#1089#1087#1086#1088#1090')'
+      Hint = #1048#1085#1074#1086#1081#1089' ('#1101#1082#1089#1087#1086#1088#1090')'
+      ImageIndex = 22
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_SaleInvoice'
+      ReportNameParam.Name = 'PrintMovement_SaleInvoice'
+      ReportNameParam.Value = 'PrintMovement_SaleInvoice'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintTax_Us: TdsdPrintAction [76]
+      Category = 'Print_Tax'
+      MoveParams = <>
+      StoredProc = spSelectTax_Us
+      StoredProcList = <
+        item
+          StoredProc = spSelectTax_Us
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsSverkaCDS
+          UserName = 'frxDBDSverka'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameSaleTax'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object macRoundAmountPartner_list: TMultiAction [77]
+      Category = 'UpdateAmount'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actRoundAmountPartner
+        end>
+      View = cxGridDBTableView
+      Caption = #1054#1082#1088#1091#1075#1083#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+      ImageIndex = 45
+    end
+    object actRoundAmountPartner: TdsdExecStoredProc [78]
+      Category = 'UpdateAmount'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MI_AmountPartner_round
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MI_AmountPartner_round
+        end>
+      Caption = 'actUpdate_MI_AmountPartner_round'
+    end
+    object actPrint_Pack: TdsdPrintAction [79]
+      Category = 'Print_Fozzy'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint_Pack
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Pack
+        end>
+      Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' ('#1060#1086#1079#1079#1080' + '#1040#1096#1072#1085' + '#1076#1088#1091#1075#1080#1077'...)'
+      Hint = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' ('#1060#1086#1079#1079#1080' + '#1040#1096#1072#1085' + '#1076#1088#1091#1075#1080#1077'...)'
+      ImageIndex = 23
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'WeighingNumber;NumOrder'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_SalePack21'
+      ReportNameParam.Value = 'PrintMovement_SalePack21'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actInsert_LockUnique: TdsdExecStoredProc [80]
       Category = 'Print_Total'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3630,7 +3712,7 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       Caption = 'spInsert_LockUnique'
     end
-    object actPrint_ExpSpec: TdsdPrintAction [80]
+    object actPrint_ExpSpec: TdsdPrintAction [81]
       Category = 'Print_Export'
       MoveParams = <
         item
@@ -3682,7 +3764,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object macPrintPack_Transport: TMultiAction [82]
+    object macPrintPack_Transport: TMultiAction [83]
       Category = 'Print_TTN'
       MoveParams = <
         item
@@ -3707,7 +3789,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
     end
-    object macPrintPackList_Transport: TMultiAction [83]
+    object macPrintPackList_Transport: TMultiAction [84]
       Category = 'Print_TTN'
       MoveParams = <
         item
@@ -3732,7 +3814,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1072#1082#1077#1090#1085#1072#1103' '#1087#1077#1095#1072#1090#1100' <'#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1072#1103'>'
       ImageIndex = 20
     end
-    object actPrintPack: TdsdPrintAction [84]
+    object actPrintPack: TdsdPrintAction [85]
       Category = 'Print'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -3776,7 +3858,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actChecked: TdsdExecStoredProc [88]
+    object actChecked: TdsdExecStoredProc [89]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3855,7 +3937,7 @@ inherited SaleJournalForm: TSaleJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    object actMovementCheck: TdsdOpenForm [97]
+    object actMovementCheck: TdsdOpenForm [98]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1096#1080#1073#1082#1080
@@ -3876,7 +3958,7 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       isShowModal = False
     end
-    object actTax: TdsdExecStoredProc [106]
+    object actTax: TdsdExecStoredProc [107]
       Category = 'Tax'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3891,7 +3973,7 @@ inherited SaleJournalForm: TSaleJournalForm
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>?'
       InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>.'
     end
-    object mactPrint_Account: TMultiAction [107]
+    object mactPrint_Account: TMultiAction [108]
       Category = 'Print_Account'
       MoveParams = <
         item
@@ -3917,7 +3999,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
       ImageIndex = 21
     end
-    object mactPrint_Tax_Client: TMultiAction [108]
+    object mactPrint_Tax_Client: TMultiAction [109]
       Category = 'Print_Tax'
       MoveParams = <
         item
@@ -3943,7 +4025,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       ImageIndex = 18
     end
-    object actPrintTax_Client: TdsdPrintAction [109]
+    object actPrintTax_Client: TdsdPrintAction [110]
       Category = 'Print_Tax'
       MoveParams = <>
       StoredProc = spSelectTax_Client
@@ -3986,7 +4068,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object ExecuteDialog: TExecuteDialog [110]
+    object ExecuteDialog: TExecuteDialog [111]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
@@ -4025,7 +4107,7 @@ inherited SaleJournalForm: TSaleJournalForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
-    object mactPrint_Transport: TMultiAction [111]
+    object mactPrint_Transport: TMultiAction [112]
       Category = 'Print_TTN'
       MoveParams = <
         item
@@ -4051,7 +4133,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1086#1081
       ImageIndex = 20
     end
-    object actPrint_Account: TdsdPrintAction [112]
+    object actPrint_Account: TdsdPrintAction [113]
       Category = 'Print_Account'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -4094,7 +4176,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Transport: TdsdPrintAction [113]
+    object actPrint_Transport: TdsdPrintAction [114]
       Category = 'Print_TTN'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -4137,7 +4219,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Account_ReportName: TdsdExecStoredProc [114]
+    object actPrint_Account_ReportName: TdsdExecStoredProc [115]
       Category = 'Print_Account'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -4148,7 +4230,7 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       Caption = 'actPrint_Account_ReportName'
     end
-    object actPrint_Transport_ReportName: TdsdExecStoredProc [115]
+    object actPrint_Transport_ReportName: TdsdExecStoredProc [116]
       Category = 'Print_TTN'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -4159,7 +4241,7 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       Caption = 'actPrint_Transport_ReportName'
     end
-    object actPrint_ExpPack: TdsdPrintAction [116]
+    object actPrint_ExpPack: TdsdPrintAction [117]
       Category = 'Print_Export'
       MoveParams = <
         item
@@ -4206,7 +4288,7 @@ inherited SaleJournalForm: TSaleJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Spec: TdsdPrintAction [117]
+    object actPrint_Spec: TdsdPrintAction [118]
       Category = 'Print_Fozzy'
       MoveParams = <
         item
@@ -5642,6 +5724,15 @@ inherited SaleJournalForm: TSaleJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_Commerc'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbComplete'
         end
         item
@@ -6313,6 +6404,10 @@ inherited SaleJournalForm: TSaleJournalForm
     end
     object bbInsertFileName_csv_one: TdxBarButton
       Action = macInsertFileName_csv_one
+      Category = 0
+    end
+    object bbUpdate_Commerc: TdxBarButton
+      Action = actUpdate_Commerc
       Category = 0
     end
   end

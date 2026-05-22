@@ -43,6 +43,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
              , MovementId_ReturnIn Integer, InvNumber_ReturnInFull TVarChar
              , PartionGoodsDate TDateTime
+             , RouteTTId Integer, RouteTTName TVarChar
+             , BonusFirstForm TFloat
+             , BonusSecondForm TFloat
               )
 AS
 $BODY$
@@ -130,6 +133,11 @@ BEGIN
              , 0                                    AS MovementId_ReturnIn
              , CAST ('' AS TVarChar)                AS InvNumber_ReturnInFull
              , inOperDate                           AS PartionGoodsDate
+
+             , 0                                    AS RouteTTId
+             , CAST ('' AS TVarChar)                AS RouteTTName
+             , CAST (0 AS TFloat)                   AS BonusFirstForm
+             , CAST (0 AS TFloat)                   AS BonusSecondForm
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object as Object_Currency ON Object_Currency.Id = zc_Enum_Currency_Basis();
@@ -303,6 +311,12 @@ BEGIN
                , ('№ ' || Movement_ReturnIn.InvNumber || ' от ' || Movement_ReturnIn.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_ReturnInFull
 
                , Movement.OperDate AS PartionGoodsDate
+
+               , Object_RouteTT.Id                                    ::Integer  AS RouteTTId
+               , Object_RouteTT.ValueData                             ::TVarChar AS RouteTTName
+               , COALESCE (MovementFloat_BonusFirstForm.ValueData,0)  ::TFloat   AS BonusFirstForm
+               , COALESCE (MovementFloat_BonusSecondForm.ValueData,0) ::TFloat   AS BonusSecondForm
+
            FROM Movement
                 LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -374,6 +388,13 @@ BEGIN
                 LEFT JOIN MovementFloat AS MovementFloat_CorrSumm
                                         ON MovementFloat_CorrSumm.MovementId = Movement.Id
                                        AND MovementFloat_CorrSumm.DescId = zc_MovementFloat_CorrSumm() 
+
+                LEFT JOIN MovementFloat AS MovementFloat_BonusFirstForm
+                                        ON MovementFloat_BonusFirstForm.MovementId = Movement.Id
+                                       AND MovementFloat_BonusFirstForm.DescId     = zc_MovementFloat_BonusFirstForm()
+                LEFT JOIN MovementFloat AS MovementFloat_BonusSecondForm
+                                        ON MovementFloat_BonusSecondForm.MovementId = Movement.Id
+                                       AND MovementFloat_BonusSecondForm.DescId     = zc_MovementFloat_BonusSecondForm()
  
                 LEFT JOIN tmpMLO AS MovementLinkObject_From
                                  ON MovementLinkObject_From.MovementId = Movement.Id
@@ -401,9 +422,14 @@ BEGIN
                 LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = MovementLinkObject_CurrencyDocument.ObjectId
 
                 LEFT JOIN tmpMLO AS MovementLinkObject_CurrencyPartner
-                                             ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id
-                                            AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
+                                 ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id
+                                AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
                 LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
+
+                LEFT JOIN tmpMLO AS MovementLinkObject_RouteTT
+                                 ON MovementLinkObject_RouteTT.MovementId = Movement.Id
+                                AND MovementLinkObject_RouteTT.DescId = zc_MovementLinkObject_RouteTT()
+                LEFT JOIN Object AS Object_RouteTT ON Object_RouteTT.Id = MovementLinkObject_RouteTT.ObjectId and Object_RouteTT.DescId = zc_Object_RouteTT()
 
                 LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                      ON ObjectLink_Partner_Juridical.ObjectId = Object_To.Id

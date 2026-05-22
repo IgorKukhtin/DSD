@@ -56,12 +56,19 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
                                                        Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
                                                        Integer, Integer,
                                                        TDateTime, TDateTime, Integer); */
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
+/*DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
                                                        TFloat, TFloat, TFloat,TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,
                                                        Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar
                                                        Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
                                                        Integer, Integer,
+                                                       TDateTime, TDateTime, Integer);*/
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
+                                                       TFloat, TFloat, TFloat,TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,
+                                                       Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar
+                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                                                       Integer, Integer,
                                                        TDateTime, TDateTime, Integer);
+
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
@@ -102,6 +109,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
     IN inRouteId             Integer   ,    -- Маршрут
     IN inRouteId_30201       Integer   ,    -- Маршрут мясное сырье 
     IN inRouteSortingId      Integer   ,    -- Сортировка маршрутов
+    IN inRouteTTId           Integer   ,    -- Маршрут ТТ
     
     IN inMemberTakeId        Integer   ,    -- Физ лицо (сотрудник экспедитор)
     IN inMemberSaler1Id      Integer   ,    -- Физ лицо(Продавец-1)
@@ -195,6 +203,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Juridical(), ioId, inJuridicalId);
    -- сохранили связь с <Маршруты>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Route(), ioId, inRouteId);
+   -- сохранили связь с <Маршруты ТТ>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_RouteTT(), ioId, inRouteTTId);
 
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Route30201(), ioId, inRouteId_30201);
@@ -268,6 +278,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И. 
+ 21.05.26         * inRouteTTId
  23.12.25         *
  07.11.24         * inPersonalSigningId
  04.07.24         *

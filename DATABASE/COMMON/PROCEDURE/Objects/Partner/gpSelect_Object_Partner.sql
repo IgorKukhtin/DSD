@@ -32,6 +32,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, BasisCode Integer,
                JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar, /*GLNCode_Juridical TVarChar,*/
                RetailId Integer, RetailName TVarChar,
                RouteId Integer, RouteCode Integer, RouteName TVarChar,
+               RouteTTId Integer, RouteTTCode Integer, RouteTTName TVarChar,
                RouteId_30201 Integer, RouteCode_30201 Integer, RouteName_30201 TVarChar,
                RouteSortingId Integer, RouteSortingCode Integer, RouteSortingName TVarChar,
 
@@ -262,6 +263,9 @@ BEGIN
          , Object_Route.Id                 AS RouteId
          , Object_Route.ObjectCode         AS RouteCode
          , Object_Route.ValueData          AS RouteName
+         , Object_RouteTT.Id               AS RouteTTId
+         , Object_RouteTT.ObjectCode       AS RouteTTCode
+         , Object_RouteTT.ValueData        AS RouteTTName
          , Object_Route_30201.Id           AS RouteId_30201
          , Object_Route_30201.ObjectCode   AS RouteCode_30201
          , Object_Route_30201.ValueData    AS RouteName_30201
@@ -543,6 +547,11 @@ BEGIN
                              AND ObjectLink_Partner_Route.DescId = zc_ObjectLink_Partner_Route()
          LEFT JOIN Object AS Object_Route ON Object_Route.Id = ObjectLink_Partner_Route.ChildObjectId
 
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_RouteTT
+                              ON ObjectLink_Partner_RouteTT.ObjectId = Object_Partner.Id
+                             AND ObjectLink_Partner_RouteTT.DescId = zc_ObjectLink_Partner_RouteTT()
+         LEFT JOIN Object AS Object_RouteTT ON Object_RouteTT.Id = ObjectLink_Partner_RouteTT.ChildObjectId
+
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Route_30201
                               ON ObjectLink_Partner_Route_30201.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_Route_30201.DescId = zc_ObjectLink_Partner_Route30201()
@@ -752,6 +761,9 @@ BEGIN
          , Object_Route.Id                 AS RouteId
          , Object_Route.ObjectCode         AS RouteCode
          , Object_Route.ValueData          AS RouteName
+         , Object_RouteTT.Id               AS RouteTTId
+         , Object_RouteTT.ObjectCode       AS RouteTTCode
+         , Object_RouteTT.ValueData        AS RouteTTName
          , Object_Route_30201.Id           AS RouteId_30201
          , Object_Route_30201.ObjectCode   AS RouteCode_30201
          , Object_Route_30201.ValueData    AS RouteName_30201
@@ -1033,6 +1045,11 @@ BEGIN
                              AND ObjectLink_Partner_Route.DescId = zc_ObjectLink_Partner_Route()
          LEFT JOIN Object AS Object_Route ON Object_Route.Id = ObjectLink_Partner_Route.ChildObjectId
 
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_RouteTT
+                              ON ObjectLink_Partner_RouteTT.ObjectId = Object_Partner.Id
+                             AND ObjectLink_Partner_RouteTT.DescId = zc_ObjectLink_Partner_RouteTT()
+         LEFT JOIN Object AS Object_RouteTT ON Object_RouteTT.Id = ObjectLink_Partner_RouteTT.ChildObjectId
+
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Route_30201
                               ON ObjectLink_Partner_Route_30201.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_Route_30201.DescId = zc_ObjectLink_Partner_Route30201()
@@ -1176,6 +1193,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 21.05.26         *
  05.01.25         *
  23.12.25         *
  09.12.25         * ...._vch

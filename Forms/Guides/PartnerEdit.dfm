@@ -319,12 +319,12 @@
   end
   object cxLabel20: TcxLabel [42]
     Left = 15
-    Top = 304
+    Top = 333
     Caption = #1056#1077#1075#1080#1086#1085
   end
   object ceArea: TcxButtonEdit [43]
     Left = 158
-    Top = 303
+    Top = 332
     Properties.Buttons = <
       item
         Default = True
@@ -336,12 +336,12 @@
   end
   object cxLabel21: TcxLabel [44]
     Left = 15
-    Top = 361
+    Top = 390
     Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1088#1075#1086#1074#1086#1081' '#1090#1086#1095#1082#1080
   end
   object cePartnerTag: TcxButtonEdit [45]
     Left = 158
-    Top = 360
+    Top = 389
     Properties.Buttons = <
       item
         Default = True
@@ -592,24 +592,24 @@
   end
   object cxLabel34: TcxLabel [79]
     Left = 15
-    Top = 390
+    Top = 419
     Caption = 'GPS ('#1096#1080#1088#1086#1090#1072')'
   end
   object edGPSN: TcxTextEdit [80]
     Left = 89
-    Top = 389
+    Top = 418
     Properties.ReadOnly = True
     TabOrder = 80
     Width = 92
   end
   object cxLabel35: TcxLabel [81]
     Left = 187
-    Top = 390
+    Top = 419
     Caption = 'GPS ('#1076#1086#1083#1075#1086#1090#1072')'
   end
   object edGPSE: TcxTextEdit [82]
     Left = 261
-    Top = 389
+    Top = 418
     Properties.ReadOnly = True
     TabOrder = 82
     Width = 92
@@ -695,12 +695,12 @@
   end
   object cxLabel38: TcxLabel [93]
     Left = 15
-    Top = 332
+    Top = 361
     Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1058#1058
   end
   object edCategory: TcxCurrencyEdit [94]
     Left = 158
-    Top = 331
+    Top = 360
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -745,12 +745,12 @@
   end
   object cxLabel47: TcxLabel [99]
     Left = 15
-    Top = 419
+    Top = 448
     Caption = #1055#1086#1076#1088#1072#1079#1076'.('#1079#1072#1103#1074#1082#1080' '#1084#1086#1073'.)'
   end
   object edUnitMobile: TcxButtonEdit [100]
     Left = 141
-    Top = 418
+    Top = 447
     Properties.Buttons = <
       item
         Default = True
@@ -762,7 +762,7 @@
   end
   object cxLabel41: TcxLabel [101]
     Left = 366
-    Top = 473
+    Top = 472
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077'('#1076#1083#1103' '#1087#1088#1086#1076#1072#1078#1080')'
   end
   object edMovementComment: TcxTextEdit [102]
@@ -908,34 +908,34 @@
     Width = 195
   end
   object cbEdiOrdspr_vch: TcxCheckBox [123]
-    Left = 15
-    Top = 472
+    Left = 16
+    Top = 501
     Caption = #1042#1063#1040#1057#1053#1054' - '#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
     TabOrder = 123
     Width = 160
   end
   object cbEdiInvoice_vch: TcxCheckBox [124]
     Left = 184
-    Top = 472
+    Top = 501
     Caption = #1042#1063#1040#1057#1053#1054' - '#1057#1095#1077#1090
     TabOrder = 124
     Width = 102
   end
   object cbEdiDesadv_vch: TcxCheckBox [125]
-    Left = 15
-    Top = 493
+    Left = 291
+    Top = 501
     Caption = #1042#1063#1040#1057#1053#1054' - '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
     TabOrder = 125
     Width = 154
   end
   object cxLabel53: TcxLabel [126]
     Left = 15
-    Top = 448
+    Top = 478
     Caption = #1042#1063#1040#1057#1053#1054' - '#1050#1086#1076' GLN - '#1055#1086#1089#1090#1072#1074#1097#1080#1082
   end
   object edGLNCodeCorporate_vch: TcxTextEdit [127]
     Left = 182
-    Top = 447
+    Top = 476
     TabOrder = 127
     Width = 171
   end
@@ -978,13 +978,30 @@
     TabOrder = 132
     Width = 202
   end
+  object cxLabel56: TcxLabel [133]
+    Left = 15
+    Top = 304
+    Caption = #1052#1072#1088#1096#1088#1091#1090' '#1058#1058
+  end
+  object ceRouteTT: TcxButtonEdit [134]
+    Left = 158
+    Top = 303
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 134
+    Width = 195
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 291
-    Top = 446
+    Left = 299
+    Top = 422
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 112
-    Top = 280
+    Left = 208
+    Top = 200
   end
   inherited ActionList: TActionList
     Left = 295
@@ -1326,6 +1343,14 @@
         Name = 'inRouteSortingId'
         Value = ''
         Component = dsdRouteSortingGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRouteTTId'
+        Value = Null
+        Component = GuidesRouteTT
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2314,6 +2339,21 @@
         Component = cbDayCount_30201
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RouteTTId'
+        Value = Null
+        Component = GuidesRouteTT
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RouteTTName'
+        Value = Null
+        Component = GuidesRouteTT
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 520
     Top = 452
@@ -2405,8 +2445,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 80
-    Top = 269
+    Left = 256
+    Top = 261
   end
   object dsdRouteGuides: TdsdGuides
     KeyField = 'Id'
@@ -2435,8 +2475,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 168
-    Top = 292
+    Left = 120
+    Top = 244
   end
   object dsdPriceListGuides: TdsdGuides
     KeyField = 'Id'
@@ -2957,8 +2997,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 200
-    Top = 264
+    Left = 208
+    Top = 259
   end
   object GuidesPriceList30201: TdsdGuides
     KeyField = 'Id'
@@ -3109,5 +3149,35 @@
       end>
     Left = 976
     Top = 91
+  end
+  object GuidesRouteTT: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceRouteTT
+    FormNameParam.Value = 'TRouteTTForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TRouteTTForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesRouteTT
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesRouteTT
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 129
+    Top = 299
   end
 end

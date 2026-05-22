@@ -69,6 +69,10 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , UnitName_Collation TVarChar
              , BranchName_Collation TVarChar 
              , FileName TVarChar
+
+             , RouteTTId Integer, RouteTTName TVarChar
+             , BonusFirstForm TFloat
+             , BonusSecondForm TFloat
              )
 AS
 $BODY$
@@ -386,6 +390,8 @@ end if;
                                                             , zc_MovementFloat_ParPartnerValue()
                                                             , zc_MovementFloat_TotalLines()
                                                             , zc_MovementFloat_CorrSumm()
+                                                            , zc_MovementFloat_BonusFirstForm()
+                                                            , zc_MovementFloat_BonusSecondForm()
                                                              )
                               )
    /* , tmpMovementFloat_VATPercent AS (SELECT MovementFloat.*
@@ -519,6 +525,12 @@ end if;
                                                WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                                                  AND MovementLinkObject.DescId = zc_MovementLinkObject_ReestrKind()
                                                )
+
+        , tmpMovementLinkObject_RouteTT AS (SELECT MovementLinkObject.*
+                                            FROM MovementLinkObject
+                                            WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                              AND MovementLinkObject.DescId = zc_MovementLinkObject_RouteTT()
+                                            )
 
         , tmpFrom AS (SELECT MovementLinkObject_From.MovementId
                            , Object_From.*
@@ -1022,6 +1034,11 @@ end if;
            , tmpContract_param.BranchName_Collation    ::TVarChar   
            
            , MovementString_FileName.ValueData         ::TVarChar AS FileName
+
+           , Object_RouteTT.Id                                    ::Integer  AS RouteTTId
+           , Object_RouteTT.ValueData                             ::TVarChar AS RouteTTName
+           , COALESCE (MovementFloat_BonusFirstForm.ValueData,0)  ::TFloat   AS BonusFirstForm
+           , COALESCE (MovementFloat_BonusSecondForm.ValueData,0) ::TFloat   AS BonusSecondForm
        FROM tmpMovement AS Movement
 
             LEFT JOIN tmpStatus AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -1159,6 +1176,13 @@ end if;
                                        ON MovementFloat_CorrSumm.MovementId = Movement.Id
                                       AND MovementFloat_CorrSumm.DescId     = zc_MovementFloat_CorrSumm()
 
+            LEFT JOIN tmpMovementFloat AS MovementFloat_BonusFirstForm
+                                       ON MovementFloat_BonusFirstForm.MovementId = Movement.Id
+                                      AND MovementFloat_BonusFirstForm.DescId     = zc_MovementFloat_BonusFirstForm()
+            LEFT JOIN tmpMovementFloat AS MovementFloat_BonusSecondForm
+                                       ON MovementFloat_BonusSecondForm.MovementId = Movement.Id
+                                      AND MovementFloat_BonusSecondForm.DescId     = zc_MovementFloat_BonusSecondForm()
+
             LEFT JOIN tmpFrom AS Object_From ON Object_From.MovementId = Movement.Id
             LEFT JOIN tmpTo AS Object_To ON Object_To.MovementId = Movement.Id
             LEFT JOIN tmpJuridicalTo AS Object_JuridicalTo ON Object_JuridicalTo.ToId = Object_To.Id
@@ -1208,6 +1232,12 @@ end if;
                                                             ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id
                                                            AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
             LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
+
+            LEFT JOIN tmpMovementLinkObject_RouteTT AS MovementLinkObject_RouteTT
+                                                    ON MovementLinkObject_RouteTT.MovementId = Movement.Id
+                                                   AND MovementLinkObject_RouteTT.DescId = zc_MovementLinkObject_RouteTT()
+            LEFT JOIN Object AS Object_RouteTT ON Object_RouteTT.Id = MovementLinkObject_RouteTT.ObjectId and Object_RouteTT.DescId = zc_Object_RouteTT()
+
 
             LEFT JOIN tmpMovement_Master AS Movement_DocumentMaster ON Movement_DocumentMaster.MovementId = Movement.Id
 
@@ -1353,6 +1383,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 22.05.26         *
  28.07.25         * isGofro
  06.06.25         *
  01.05.25         * TotalLines
