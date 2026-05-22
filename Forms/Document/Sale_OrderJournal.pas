@@ -376,6 +376,8 @@ type
     macInsertFileName_csv_one: TMultiAction;
     bbInsertFileName_csv: TdxBarButton;
     bbInsertFileName_csv_one: TdxBarButton;
+    actUpdate_Commerc: TdsdInsertUpdateAction;
+    bbUpdate_Commerc: TdxBarButton;
   private
     { Private declarations }
   public

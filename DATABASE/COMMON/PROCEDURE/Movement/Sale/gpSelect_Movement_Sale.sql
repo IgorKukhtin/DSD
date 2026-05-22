@@ -69,6 +69,11 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , UnitName_Collation TVarChar
              , BranchName_Collation TVarChar
              , FileName TVarChar
+             
+             , RouteTTId Integer, RouteTTName TVarChar
+             , BonusFirstForm TFloat
+             , BonusSecondForm TFloat
+             
               )
 AS
 $BODY$

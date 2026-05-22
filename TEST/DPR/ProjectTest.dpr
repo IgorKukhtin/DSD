@@ -1670,7 +1670,8 @@ uses
   PricePlanItemGoods in '..\..\Forms\Guides\PricePlanItemGoods.pas' {PricePlanItemGoodsForm: TParentForm},
   PricePlanItem in '..\..\Forms\Guides\PricePlanItem.pas' {PricePlanItemForm: TParentForm},
   RouteTT in '..\..\Forms\Guides\RouteTT.pas' {RouteTTForm: TParentForm},
-  RouteTTEdit in '..\..\Forms\Guides\RouteTTEdit.pas' {RouteTTEditForm: TParentForm};
+  RouteTTEdit in '..\..\Forms\Guides\RouteTTEdit.pas' {RouteTTEditForm: TParentForm},
+  Sale_Commerc in '..\..\Forms\Document\Sale_Commerc.pas' {Sale_CommercForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

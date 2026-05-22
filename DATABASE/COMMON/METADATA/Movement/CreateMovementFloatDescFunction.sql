@@ -942,11 +942,22 @@ INSERT INTO MovementFloatDesc(Code, ItemName)
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_AmountPlan_5', 'Итого План оплаты на 5.пт.' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_AmountPlan_5');  
 
+  CREATE OR REPLACE FUNCTION zc_MovementFloat_BonusFirstForm() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_BonusFirstForm'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_BonusFirstForm', 'Общий % бонуса по договору БН' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_BonusFirstForm');  
+
+  CREATE OR REPLACE FUNCTION zc_MovementFloat_BonusSecondForm() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_BonusSecondForm'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_BonusSecondForm', 'Общий % бонуса по договору Нал' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_BonusSecondForm');  
+
+
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 22.05.26         * zc_MovementFloat_BonusSecondForm
+                    zc_MovementFloat_BonusFirstForm
  07.11.25         * zc_MovementFloat_WeekNumber
  21.07.07         * zc_MovementFloat_SummStart
                     zc_MovementFloat_SummPF
