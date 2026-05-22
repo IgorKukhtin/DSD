@@ -37,7 +37,7 @@ BEGIN
 
             WHERE Movement.DescId = zc_Movement_OrderFinance()
               AND Movement.StatusId = zc_Enum_Status_UnComplete()
-              AND Movement.OperDate BETWEEN inStartDate - INTERVAL '14 DAY' AND inEndDate
+              AND Movement.OperDate BETWEEN inStartDate - INTERVAL '50 DAY' AND inEndDate
               -- кроме таких
               AND ObjectBoolean_Status_off.ObjectId IS NULL
            );

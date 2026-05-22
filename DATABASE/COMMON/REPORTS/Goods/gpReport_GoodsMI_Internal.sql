@@ -201,11 +201,18 @@ BEGIN
                                 AND inDescId = zc_Movement_Loss()
                                 AND COALESCE (MIContainer.AccountId, 0) NOT IN (12102, zc_Enum_Account_100301()) -- Прибыль текущего периода
                              )
+, tmpMILO_SubjectDoc_two AS (SELECT *
+                         FROM MovementItemLinkObject
+                         WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpSend_ProfitLoss.MovementItemId FROM tmpSend_ProfitLoss)
+                           AND MovementItemLinkObject.DescId IN (zc_MILinkObject_SubjectDoc())
+                        )
+
   , tmpSend_ProfitLoss_mi AS (SELECT tmp.Id
                                    , MovementItem.Amount
+                                   , COALESCE (MILO_SubjectDoc.ObjectId, 0) AS SubjectDocId
                                    , MILinkObject_Asset.ObjectId     AS AssetId
-                                   , 0 AS AssetId_two
-                                   --, MILinkObject_Asset_two.ObjectId AS AssetId_two
+                                   , 0                               AS AssetId_two
+                                 --, MILinkObject_Asset_two.ObjectId AS AssetId_two
                               FROM (SELECT MAX(tmpSend_ProfitLoss.Id) AS Id, tmpSend_ProfitLoss.MovementItemId, tmpSend_ProfitLoss.MovementId FROM tmpSend_ProfitLoss GROUP BY tmpSend_ProfitLoss.MovementItemId, tmpSend_ProfitLoss.MovementId
                                    ) AS tmp
                                    LEFT JOIN MovementItem ON MovementItem.Id         = tmp.MovementItemId
@@ -214,11 +221,27 @@ BEGIN
                                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                                                     ON MILinkObject_Asset.MovementItemId = tmp.MovementItemId
                                                                    AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+                                   LEFT JOIN tmpMILO_SubjectDoc_two AS MILO_SubjectDoc
+                                                                    ON MILO_SubjectDoc.MovementItemId = tmp.MovementItemId
+                                                                   AND MILO_SubjectDoc.DescId = zc_MILinkObject_SubjectDoc()
                                    /*LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset_two
                                                                     ON MILinkObject_Asset_two.MovementItemId = tmp.MovementItemId
                                                                    AND MILinkObject_Asset_two.DescId = zc_MILinkObject_Asset_two() */
                              )
-
+   , tmpSend_mi AS (SELECT DISTINCT MIContainer.MovementItemId
+                    FROM MovementItemContainer AS MIContainer
+                         INNER JOIN _tmpUnit ON _tmpUnit.UnitId     = MIContainer.WhereObjectId_analyzer
+                                            AND (_tmpUnit.UnitId_by = COALESCE (MIContainer.ObjectExtId_Analyzer, 0) OR _tmpUnit.UnitId_by = 0)
+                    WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                      AND MIContainer.MovementDescId = zc_Movement_Send()
+                      AND MIContainer.DescId = zc_MIContainer_Count()
+                      AND inDescId = zc_Movement_Send()
+                   )
+, tmpMILO_SubjectDoc AS (SELECT *
+                         FROM MovementItemLinkObject
+                         WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpSend_mi.MovementItemId FROM tmpSend_mi)
+                           AND MovementItemLinkObject.DescId IN (zc_MILinkObject_SubjectDoc())
+                        )
      , tmpCont AS (SELECT CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ContainerId END AS ContainerId
                         , MIContainer.MovementId
                         , CASE WHEN MIContainer.isActive = FALSE THEN MIContainer.WhereObjectId_analyzer ELSE MIContainer.ObjectExtId_Analyzer END AS UnitId
@@ -243,6 +266,7 @@ BEGIN
 
                         , MILinkObject_Asset.ObjectId     AS AssetId
                         , MILinkObject_Asset_two.ObjectId AS AssetId_two
+                        , COALESCE (MILO_SubjectDoc.ObjectId, 0) AS SubjectDocId
 
                    FROM MovementItemContainer AS MIContainer
                         INNER JOIN _tmpUnit ON _tmpUnit.UnitId    = MIContainer.WhereObjectId_analyzer
@@ -256,6 +280,11 @@ BEGIN
                                                          ON MILinkObject_Asset_two.MovementItemId = MIContainer.MovementItemId
                                                         AND MILinkObject_Asset_two.DescId = zc_MILinkObject_Asset_two()
                         --LEFT JOIN Object AS Object_Asset_two ON Object_Asset_two.Id = MILinkObject_Asset_two.ObjectId
+
+                        LEFT JOIN tmpMILO_SubjectDoc AS MILO_SubjectDoc
+                                                         ON MILO_SubjectDoc.MovementItemId = MIContainer.MovementItemId
+                                                        AND MILO_SubjectDoc.DescId = zc_MILinkObject_SubjectDoc()
+
                    WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                      AND MIContainer.MovementDescId = inDescId
                      AND COALESCE (MIContainer.AccountId,0) NOT IN (12102, zc_Enum_Account_100301 ()) -- Прибыль текущего периода
@@ -270,6 +299,7 @@ BEGIN
                           , MIContainer.MovementId
                           , MILinkObject_Asset.ObjectId
                           , MILinkObject_Asset_two.ObjectId
+                          , MILO_SubjectDoc.ObjectId
                   UNION ALL
                    SELECT CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ContainerId END AS ContainerId
                         , MIContainer.MovementId
@@ -295,6 +325,8 @@ BEGIN
 
                         , tmpSend_ProfitLoss_mi.AssetId
                         , tmpSend_ProfitLoss_mi.AssetId_two
+                        , tmpSend_ProfitLoss_mi.SubjectDocId
+
                    FROM tmpSend_ProfitLoss AS MIContainer
                         LEFT JOIN tmpSend_ProfitLoss_mi ON tmpSend_ProfitLoss_mi.Id = MIContainer.Id
                    GROUP BY CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ContainerId END
@@ -308,6 +340,7 @@ BEGIN
                           , MIContainer.MovementId
                           , tmpSend_ProfitLoss_mi.AssetId
                           , tmpSend_ProfitLoss_mi.AssetId_two
+                          , tmpSend_ProfitLoss_mi.SubjectDocId
                    )
 
      , tmpMovementString AS (SELECT MovementString.*
@@ -328,7 +361,7 @@ BEGIN
 
      , tmpMI AS (SELECT tmpCont.ContainerId
                       , COALESCE (MovementString_Comment.ValueData, '') AS Comment
-                      , tmpSubjectDoc.SubjectDocName
+                      , COALESCE (Object_SubjectDoc.ValueData, tmpSubjectDoc.SubjectDocName) AS SubjectDocName
                       , tmpCont.UnitId
                       , tmpCont.UnitId_by
                       , tmpCont.GoodsId
@@ -362,6 +395,7 @@ BEGIN
                       LEFT JOIN tmpMovementString AS MovementString_Comment
                                                   ON MovementString_Comment.MovementId = tmpCont.MovementId
                       LEFT JOIN tmpSubjectDoc ON tmpSubjectDoc.MovementId = tmpCont.MovementId
+                      LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = tmpCont.SubjectDocId
 
                  GROUP BY tmpCont.ContainerId
                         , COALESCE (MovementString_Comment.ValueData, '')
@@ -372,7 +406,7 @@ BEGIN
                         , tmpCont.AccountId
                         , tmpCont.ArticleLossId
                         , tmpCont.ContainerId_Analyzer
-                        , tmpSubjectDoc.SubjectDocName
+                        , COALESCE (Object_SubjectDoc.ValueData, tmpSubjectDoc.SubjectDocName)
                         , CASE WHEN inIsDateDoc   = TRUE OR inIsInvNumber = TRUE THEN Movement.OperDate  ELSE NULL END ::TDateTime
                         , CASE WHEN inIsInvNumber = TRUE THEN Movement.InvNumber ELSE ''   END ::TVarChar
                         , CASE WHEN inIsInvNumber = TRUE THEN Movement.Id        ELSE 0    END ::Integer
@@ -562,7 +596,9 @@ BEGIN
          , CASE WHEN vbIsGroup = TRUE
                 THEN 0
                 ELSE (SELECT COUNT(*)
-                      FROM tmpOperationGroup AS find
+                      FROM (SELECT DISTINCT tmpOperationGroup.GoodsId, tmpOperationGroup.GoodsKindId, tmpOperationGroup.OperDate, tmpOperationGroup.MovementId
+                            FROM tmpOperationGroup
+                           ) AS find
                       WHERE find.GoodsId     = tmpOperationGroup.GoodsId
                         AND find.GoodsKindId = tmpOperationGroup.GoodsKindId
                         AND find.OperDate    = tmpOperationGroup.OperDate
