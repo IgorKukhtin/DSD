@@ -388,25 +388,25 @@ BEGIN
 , tmpMILO AS (SELECT *
              FROM MovementItemLinkObject
              WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMIContainer_All.MovementItemId FROM tmpMIContainer_All)
-               AND MovementItemLinkObject.DescId IN ( zc_MILinkObject_Business(),zc_MILinkObject_Branch())
+               AND MovementItemLinkObject.DescId IN (zc_MILinkObject_Business(), zc_MILinkObject_Branch(), zc_MILinkObject_SubjectDoc())
           )
 , tmpMLO AS (SELECT *
              FROM MovementLinkObject
              WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMIContainer_All.MovementId FROM tmpMIContainer_All)
-               AND MovementLinkObject.DescId IN ( zc_MovementLinkObject_Contract(),zc_MovementLinkObject_SubjectDoc())
+               AND MovementLinkObject.DescId IN (zc_MovementLinkObject_Contract(), zc_MovementLinkObject_SubjectDoc())
           )
-, tmpMI_parent AS (SELECT *
-             FROM MovementItem
-             WHERE MovementItem.ParentId IN (SELECT DISTINCT tmpMIContainer_All.MovementItemId FROM tmpMIContainer_All)
-               AND MovementItem.DescId   = zc_MI_Detail()
-               AND MovementItem.isErased = FALSE  
-               AND inDescId = zc_Movement_ReturnIn()
-          )
-, tmpMILO_parent AS (SELECT *
-             FROM MovementItemLinkObject
-             WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_parent.Id FROM tmpMI_parent)
-               AND MovementItemLinkObject.DescId IN (zc_MILinkObject_Reason(),zc_MILinkObject_SubjectDoc())
-          )
+, tmpMI_detail AS (SELECT *
+                   FROM MovementItem
+                   WHERE MovementItem.ParentId IN (SELECT DISTINCT tmpMIContainer_All.MovementItemId FROM tmpMIContainer_All)
+                     AND MovementItem.DescId   = zc_MI_Detail()
+                     AND MovementItem.isErased = FALSE  
+                     AND inDescId = zc_Movement_ReturnIn()
+                  )
+, tmpMILO_detail AS (SELECT *
+                     FROM MovementItemLinkObject
+                     WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_detail.Id FROM tmpMI_detail)
+                       AND MovementItemLinkObject.DescId IN (zc_MILinkObject_Reason(), zc_MILinkObject_SubjectDoc())
+                    )
 
 , tmpContainer AS (SELECT MIContainer.WhereObjectId_analyzer  AS LocationId
                       , CASE WHEN inIsPartionGoods = TRUE THEN MIContainer.ContainerId          ELSE 0 END AS ContainerId
@@ -418,9 +418,9 @@ BEGIN
                       , MIContainer.ContainerIntId_analyzer
                       , MIContainer.isActive
 
-                      , COALESCE (MIContainer.AccountId, 0) AS AccountId
-                      , COALESCE (MLO_Business.ObjectId, 0) AS BusinessId
-                      , COALESCE (MLO_Branch.ObjectId, 0)   AS BranchId
+                      , COALESCE (MIContainer.AccountId, 0)  AS AccountId
+                      , COALESCE (MILO_Business.ObjectId, 0) AS BusinessId
+                      , COALESCE (MILO_Branch.ObjectId, 0)   AS BranchId
                       -- , _tmpGoods.InfoMoneyId AS InfoMoneyId_goods
                       -- , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN _tmpGoods.TradeMarkId ELSE 0 END AS TradeMarkId  
                       
@@ -507,10 +507,12 @@ BEGIN
                       INNER JOIN tmpMIContainer_All AS MIContainer
                                                     ON MIContainer.AnalyzerId = tmpAnalyzer.AnalyzerId
                                                      
-                      LEFT JOIN tmpMILO AS MLO_Business ON MLO_Business.MovementItemId = MIContainer.MovementItemId
-                                                       AND MLO_Business.DescId = zc_MILinkObject_Business()
-                      LEFT JOIN tmpMILO AS MLO_Branch ON MLO_Branch.MovementItemId = MIContainer.MovementItemId
-                                                     AND MLO_Branch.DescId = zc_MILinkObject_Branch()
+                      LEFT JOIN tmpMILO AS MILO_Business ON MILO_Business.MovementItemId = MIContainer.MovementItemId
+                                                        AND MILO_Business.DescId = zc_MILinkObject_Business()
+                      LEFT JOIN tmpMILO AS MILO_Branch ON MILO_Branch.MovementItemId = MIContainer.MovementItemId
+                                                      AND MILO_Branch.DescId = zc_MILinkObject_Branch()
+                      LEFT JOIN tmpMILO AS MILO_SubjectDoc ON MILO_SubjectDoc.MovementItemId = MIContainer.MovementItemId
+                                                          AND MILO_SubjectDoc.DescId = zc_MILinkObject_SubjectDoc()
 
                       LEFT JOIN tmpMov AS Movement ON Movement.Id = MIContainer.MovementId
                                                   AND inIsDate = TRUE   
@@ -525,18 +527,19 @@ BEGIN
                                                   AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
                                                   AND inDescId = zc_Movement_ReturnIn()
 
-                      LEFT JOIN tmpMI_parent AS MovementItem 
+                      LEFT JOIN tmpMI_detail AS MovementItem 
                                              ON MovementItem.ParentId = MIContainer.MovementItemId
                                             AND inDescId = zc_Movement_ReturnIn()
-                      LEFT JOIN tmpMILO_parent AS MILO_Reason
+                      LEFT JOIN tmpMILO_detail AS MILO_Reason
                                                ON MILO_Reason.MovementItemId = MovementItem.Id
                                               AND MILO_Reason.DescId = zc_MILinkObject_Reason()
                       LEFT JOIN Object AS Object_Reason ON Object_Reason.Id = MILO_Reason.ObjectId
 
-                      LEFT JOIN tmpMILO_parent AS MILO_SubjectDoc
-                                               ON MILO_SubjectDoc.MovementItemId = MovementItem.Id
-                                              AND MILO_SubjectDoc.DescId = zc_MILinkObject_SubjectDoc()
-                      LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = COALESCE (MILO_SubjectDoc.ObjectId, MovementLinkObject_SubjectDoc.ObjectId)
+                      LEFT JOIN tmpMILO_detail AS MILO_SubjectDoc_detail
+                                               ON MILO_SubjectDoc_detail.MovementItemId = MovementItem.Id
+                                              AND MILO_SubjectDoc_detail.DescId = zc_MILinkObject_SubjectDoc()
+                      LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = COALESCE (MILO_SubjectDoc.ObjectId, MILO_SubjectDoc_detail.ObjectId, MovementLinkObject_SubjectDoc.ObjectId)
+
                  GROUP BY MIContainer.WhereObjectId_analyzer
                         -- , CASE WHEN inIsGoods        = TRUE THEN MIContainer.ObjectId_analyzer    ELSE 0 END
                         , MIContainer.ObjectId_analyzer
@@ -547,8 +550,8 @@ BEGIN
                         , MIContainer.ContainerIntId_analyzer
                         , MIContainer.AccountId
                         , MIContainer.isActive
-                        , MLO_Business.ObjectId
-                        , MLO_Branch.ObjectId
+                        , MILO_Business.ObjectId
+                        , MILO_Branch.ObjectId
                         -- , _tmpGoods.InfoMoneyId
                         -- , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN _tmpGoods.TradeMarkId ELSE 0 END 
                       , CASE WHEN inIsDate = TRUE THEN Movement.OperDate ELSE NULL END
