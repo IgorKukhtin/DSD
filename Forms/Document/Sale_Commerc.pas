@@ -341,6 +341,13 @@ type
     bbtLoadExcel: TdxBarButton;
     spDelete_MI: TdsdStoredProc;
     actDelete_MI: TdsdExecStoredProc;
+    cxLabel56: TcxLabel;
+    ceRouteTT: TcxButtonEdit;
+    GuidesRouteTT: TdsdGuides;
+    edBonusFirstForm: TcxCurrencyEdit;
+    cxLabel32: TcxLabel;
+    edBonusSecondForm: TcxCurrencyEdit;
+    cxLabel33: TcxLabel;
   private
     { Private declarations }
   public

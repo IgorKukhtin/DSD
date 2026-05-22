@@ -8,22 +8,20 @@ inherited Sale_CommercForm: TSale_CommercForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 167
+    Top = 182
     Width = 1461
-    Height = 491
+    Height = 476
     ExplicitTop = 167
     ExplicitWidth = 1461
     ExplicitHeight = 491
-    ClientRectBottom = 491
+    ClientRectBottom = 476
     ClientRectRight = 1461
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1461
       ExplicitHeight = 467
       inherited cxGrid: TcxGrid
         Width = 1461
-        Height = 467
-        ExplicitLeft = -80
-        ExplicitTop = -61
+        Height = 452
         ExplicitWidth = 1461
         ExplicitHeight = 467
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -750,10 +748,10 @@ inherited Sale_CommercForm: TSale_CommercForm
   end
   inherited DataPanel: TPanel
     Width = 1461
-    Height = 141
+    Height = 156
     TabOrder = 3
     ExplicitWidth = 1461
-    ExplicitHeight = 141
+    ExplicitHeight = 156
     inherited edInvNumber: TcxTextEdit
       Left = 8
       ExplicitLeft = 8
@@ -875,8 +873,8 @@ inherited Sale_CommercForm: TSale_CommercForm
       Width = 128
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 490
-      Top = 63
+      Left = 489
+      Top = 62
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
       Properties.ReadOnly = True
@@ -884,7 +882,7 @@ inherited Sale_CommercForm: TSale_CommercForm
       Width = 40
     end
     object cxLabel7: TcxLabel
-      Left = 490
+      Left = 489
       Top = 45
       Caption = '% '#1053#1044#1057
     end
@@ -1103,6 +1101,37 @@ inherited Sale_CommercForm: TSale_CommercForm
       TabOrder = 44
       Width = 136
     end
+    object cxLabel56: TcxLabel
+      Left = 536
+      Top = 131
+      Caption = #1052#1072#1088#1096#1088#1091#1090' '#1058#1058':'
+    end
+    object ceRouteTT: TcxButtonEdit
+      Left = 607
+      Top = 130
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 46
+      Width = 193
+    end
+    object edBonusFirstForm: TcxCurrencyEdit
+      Left = 296
+      Top = 130
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0'
+      Properties.ReadOnly = True
+      TabOrder = 47
+      Width = 61
+    end
+    object cxLabel32: TcxLabel
+      Left = 171
+      Top = 131
+      Caption = '% '#1073#1086#1085#1091#1089#1072' '#1087#1086' '#1076#1086#1075'. '#1041#1053' :'
+    end
   end
   object cxLabel17: TcxLabel [2]
     Left = 1072
@@ -1267,7 +1296,7 @@ inherited Sale_CommercForm: TSale_CommercForm
     Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080
   end
   object edPartionGoodsDate: TcxDateEdit [22]
-    Left = 254
+    Left = 255
     Top = 103
     EditValue = 43831d
     Properties.SaveTime = False
@@ -1349,6 +1378,20 @@ inherited Sale_CommercForm: TSale_CommercForm
     Properties.ReadOnly = False
     TabOrder = 34
     Width = 101
+  end
+  object edBonusSecondForm: TcxCurrencyEdit [31]
+    Left = 487
+    Top = 130
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    Properties.ReadOnly = True
+    TabOrder = 35
+    Width = 43
+  end
+  object cxLabel33: TcxLabel [32]
+    Left = 363
+    Top = 131
+    Caption = '% '#1073#1086#1085#1091#1089#1072' '#1087#1086' '#1076#1086#1075'. '#1053#1072#1083' :'
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -4996,6 +5039,35 @@ inherited Sale_CommercForm: TSale_CommercForm
         Component = cbGofro
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BonusSecondForm'
+        Value = Null
+        Component = edBonusSecondForm
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BonusFirstForm'
+        Value = Null
+        Component = edBonusFirstForm
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RouteTTId'
+        Value = Null
+        Component = GuidesRouteTT
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RouteTTName'
+        Value = Null
+        Component = GuidesRouteTT
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -7843,5 +7915,36 @@ inherited Sale_CommercForm: TSale_CommercForm
     PackSize = 1
     Left = 832
     Top = 352
+  end
+  object GuidesRouteTT: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceRouteTT
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TRouteTTForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TRouteTTForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesRouteTT
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesRouteTT
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 705
+    Top = 115
   end
 end
