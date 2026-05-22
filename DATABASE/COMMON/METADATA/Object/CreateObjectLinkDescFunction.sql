@@ -515,6 +515,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Partner_Route() RETURNS Integer AS $BOD
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Partner_Route', 'Маршрут', zc_Object_Partner(), zc_Object_Route() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Partner_Route');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Partner_RouteTT() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Partner_RouteTT'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Partner_RouteTT', 'Маршрут ТТ', zc_Object_Partner(), zc_Object_RouteTT() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Partner_RouteTT');
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Partner_Route30201() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Partner_Route30201'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Partner_Route30201', 'Маршрут (сырье)', zc_Object_Partner(), zc_Object_Route() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Partner_Route30201');
@@ -558,6 +563,8 @@ SELECT 'zc_ObjectLink_Partner_GoodsProperty', 'Классификатор свойств товаров', z
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Partner_UnitMobile() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Partner_UnitMobile'); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Partner_UnitMobile', 'Подразделение(заявки мобильный)', zc_Object_Partner(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Partner_UnitMobile');
+
+
 
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_PriceListItem_PriceList() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PriceListItem_PriceList'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -3311,6 +3318,7 @@ SELECT 'zc_ObjectLink_GoodsGroupProperty_Parent', 'Аналитический классификатор',
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 21.05.26         * zc_ObjectLink_Partner_RouteTT
  18.05.26         * zc_ObjectLink_PricePlanItem_PriceList
                     zc_ObjectLink_PricePlanItem_Goods
                     zc_ObjectLink_PricePlanItem_GoodsKind

@@ -177,6 +177,9 @@ type
     cxLabel55: TcxLabel;
     edPrepareDayCount_30201: TcxCurrencyEdit;
     edDocumentDayCount_30201: TcxCurrencyEdit;
+    cxLabel56: TcxLabel;
+    ceRouteTT: TcxButtonEdit;
+    GuidesRouteTT: TdsdGuides;
 
   private
     { Private declara

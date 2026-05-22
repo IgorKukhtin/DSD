@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Partner_Personal() RETU
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Partner_Category() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Partner_Category' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Partner_UnitMobile() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Partner_UnitMobile' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Partner_Trade() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Partner_Trade' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Partner_RouteTT() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Partner_RouteTT' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 
 DO $$
 BEGIN
@@ -85,7 +86,14 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_Partner
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 10
                                   , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Partner())||'> - сохранение данных <>.'
-                                  , inEnumName:= 'zc_Enum_Process_Update_Object_Partner_Trade');
+                                  , inEnumName:= 'zc_Enum_Process_Update_Object_Partner_Trade');   
+
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_Partner_RouteTT()
+                                  , inDescId:= zc_Object_Process()
+                                  , inCode:= 12
+                                  , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Partner())||'> - сохранение данных <Маршруты ТТ>.'
+                                  , inEnumName:= 'zc_Enum_Process_Update_Object_Partner_RouteTT');
+
 END $$;
 
 

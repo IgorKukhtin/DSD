@@ -81,10 +81,17 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
                                                      , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
 */
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                      , Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar
                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);*/
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                     , Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                      , Integer, Integer
                                                      , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
@@ -134,7 +141,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     IN inRouteId             Integer   ,    -- Маршрут
     IN inRouteId_30201       Integer   ,    -- Маршрут мясное сырье    
     IN inRouteSortingId      Integer   ,    -- Сортировка маршрутов
-
+    IN inRouteTTId           Integer   ,    -- Маршрут ТТ
   
     IN inMemberTakeId        Integer   ,    -- Физ лицо(сотрудник экспедитор) 
     IN inMemberSaler1Id      Integer   ,    -- Физ лицо(Продавец-1)
@@ -273,6 +280,7 @@ BEGIN
                                         , inRouteId         := inRouteId
                                         , inRouteId_30201   := inRouteId_30201
                                         , inRouteSortingId  := inRouteSortingId
+                                        , inRouteTTId       := inRouteTTId
                                         , inMemberTakeId    := inMemberTakeId
                                         , inMemberSaler1Id  := inMemberSaler1Id
                                         , inMemberSaler2Id  := inMemberSaler2Id
@@ -333,6 +341,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.05.26         *
  05.01.26         *
  09.12.25         *
  07.11.24         *
