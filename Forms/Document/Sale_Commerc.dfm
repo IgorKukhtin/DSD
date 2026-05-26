@@ -2534,6 +2534,15 @@ inherited Sale_CommercForm: TSale_CommercForm
         end>
       isShowModal = False
     end
+    inherited actShowErased: TBooleanStoredProcAction
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectDetail
+        end>
+    end
     inherited actShowAll: TBooleanStoredProcAction
       StoredProcList = <
         item
