@@ -929,14 +929,10 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_1(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_1_new)
              FROM _tmpItem_PartionCell
             ;
-             -- !!! сохранили еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_1_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_1();
-
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_1(), _tmpItem_PartionCell.MovementItemId, TRUE)
              FROM _tmpItem_PartionCell
             ;
-
              -- 4.2. вернули
              outIsClose_1:= TRUE;
 
@@ -947,6 +943,30 @@ BEGIN
                 AND COALESCE (inPartionCellId_1, 0) = 0
              THEN
                  RAISE EXCEPTION 'Ошибка.Место хранение-1 не определено.%Нельзя поставить в отбор.', CHR (13);
+             END IF;
+
+             -- !!! сохранили еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_1())
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_1_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_1();
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_1_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_1()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_1()
+                         , inPartionCellId_1_new
+                         , inPartionCellId_1_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                   ;
              END IF;
 
      -- реальная ячейка
@@ -962,11 +982,6 @@ BEGIN
                    */
                   ) AS _tmpItem_PartionCell
             ;
-             -- !!! сохранили ячейку еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_1_new ELSE _tmpItem_PartionCell.PartionCellId END
-             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_1()
-            ;
-
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_1(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -987,6 +1002,37 @@ BEGIN
                    */
                   ) AS _tmpItem_PartionCell
             ;
+
+             -- !!! сохранили ячейку еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_1() AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_1_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_1()
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_1_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_1()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_1()
+                         , inPartionCellId_1_new
+                         , inPartionCellId_1_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                    WHERE tmp.isRePack = FALSE
+                   ;
+             END IF;
+
              -- вернули
              outPartionCellId_1:= inPartionCellId_1_new;
              outIsClose_1:= FALSE;
@@ -1048,14 +1094,10 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_2(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_2_new)
              FROM _tmpItem_PartionCell
             ;
-             -- !!! сохранили еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_2_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_2();
-
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_2(), _tmpItem_PartionCell.MovementItemId, TRUE)
              FROM _tmpItem_PartionCell
             ;
-
              -- 4.2. вернули
              outIsClose_2:= TRUE;
 
@@ -1074,6 +1116,31 @@ BEGIN
                                ;
              END IF;
 
+             -- !!! сохранили еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_2())
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_2_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_2();
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_2_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_2()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_2()
+                         , inPartionCellId_2_new
+                         , inPartionCellId_2_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                   ;
+             END IF;
+
+
      -- реальная ячейка
      ELSEIF inPartionCellId_2_new > 0
      THEN
@@ -1083,11 +1150,6 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
-             -- !!! сохранили ячейку еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_2_new ELSE _tmpItem_PartionCell.PartionCellId END
-             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_2()
-            ;
-
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_2(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -1100,6 +1162,36 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+
+             -- !!! сохранили ячейку еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_2() AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_2_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_2()
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_2_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_2()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_2()
+                         , inPartionCellId_2_new
+                         , inPartionCellId_2_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                    WHERE tmp.isRePack = FALSE
+                   ;
+             END IF;
 
              -- вернули
              outPartionCellId_2:= inPartionCellId_2_new;
@@ -1162,14 +1254,10 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_3(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_3_new)
              FROM _tmpItem_PartionCell
             ;
-             -- !!! сохранили еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_3_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_3();
-
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_3(), _tmpItem_PartionCell.MovementItemId, TRUE)
              FROM _tmpItem_PartionCell
             ;
-
              -- 4.2. вернули
              outIsClose_3:= TRUE;
 
@@ -1182,6 +1270,31 @@ BEGIN
                  RAISE EXCEPTION 'Ошибка.Место хранение-3 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
+
+             -- !!! сохранили еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_3())
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_3_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_3();
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_3_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_3()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_3()
+                         , inPartionCellId_3_new
+                         , inPartionCellId_3_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                   ;
+             END IF;
+
      -- реальная ячейка
      ELSEIF inPartionCellId_3_new > 0
      THEN
@@ -1191,11 +1304,6 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
-             -- !!! сохранили ячейку еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_3_new ELSE _tmpItem_PartionCell.PartionCellId END
-             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_3()
-            ;
-
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_3(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -1208,6 +1316,36 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+
+             -- !!! сохранили ячейку еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_3() AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_3_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_3()
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_3_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_3()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_3()
+                         , inPartionCellId_3_new
+                         , inPartionCellId_3_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                    WHERE tmp.isRePack = FALSE
+                   ;
+             END IF;
 
              -- вернули
              outPartionCellId_3:= inPartionCellId_3_new;
@@ -1270,9 +1408,6 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_4(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_4_new)
              FROM _tmpItem_PartionCell
             ;
-             -- !!! сохранили еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_4_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_4();
-
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_4(), _tmpItem_PartionCell.MovementItemId, TRUE)
              FROM _tmpItem_PartionCell
@@ -1290,6 +1425,30 @@ BEGIN
                  RAISE EXCEPTION 'Ошибка.Место хранение-4 не определено.%Нельзя поставить в отбор.%(%) (%)', CHR (13), CHR (13), inPartionCellId_4, lfGet_Object_ValueData_sh (inPartionCellId_4);
              END IF;
 
+             -- !!! сохранили еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_4())
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_4_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_4();
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_4_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_4()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_4()
+                         , inPartionCellId_4_new
+                         , inPartionCellId_4_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                   ;
+             END IF;
+
      -- реальная ячейка
      ELSEIF inPartionCellId_4_new > 0
      THEN
@@ -1299,11 +1458,6 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
-             -- !!! сохранили ячейку еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_4_new ELSE _tmpItem_PartionCell.PartionCellId END
-             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_4()
-            ;
-
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_4(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -1316,6 +1470,36 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+
+             -- !!! сохранили ячейку еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_4() AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_4_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_4()
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_4_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_4()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_4()
+                         , inPartionCellId_4_new
+                         , inPartionCellId_4_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                    WHERE tmp.isRePack = FALSE
+                   ;
+             END IF;
 
              -- вернули
              outPartionCellId_4:= inPartionCellId_4_new;
@@ -1378,14 +1562,10 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_5(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_5_new)
              FROM _tmpItem_PartionCell
             ;
-             -- !!! сохранили еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_5_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_5();
-
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_5(), _tmpItem_PartionCell.MovementItemId, TRUE)
              FROM _tmpItem_PartionCell
             ;
-
              -- 4.2. вернули
              outIsClose_5:= TRUE;
 
@@ -1398,6 +1578,30 @@ BEGIN
                  RAISE EXCEPTION 'Ошибка.Место хранение-5 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
+             -- !!! сохранили еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_5())
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_5_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_5();
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_5_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_5()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_5()
+                         , inPartionCellId_5_new
+                         , inPartionCellId_5_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                   ;
+             END IF;
+
      -- реальная ячейка
      ELSEIF inPartionCellId_5_new > 0
      THEN
@@ -1407,11 +1611,6 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
-             -- !!! сохранили ячейку еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_5_new ELSE _tmpItem_PartionCell.PartionCellId END
-             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_5()
-            ;
-
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_5(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -1424,6 +1623,36 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+
+             -- !!! сохранили ячейку еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_5() AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_5_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_5()
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_5_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_5()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_5()
+                         , inPartionCellId_5_new
+                         , inPartionCellId_5_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                    WHERE tmp.isRePack = FALSE
+                   ;
+             END IF;
 
              -- вернули
              outPartionCellId_5:= inPartionCellId_5_new;
@@ -1487,14 +1716,10 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_6(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_6_new)
              FROM _tmpItem_PartionCell
             ;
-             -- !!! сохранили еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_6_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_6();
-
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_6(), _tmpItem_PartionCell.MovementItemId, TRUE)
              FROM _tmpItem_PartionCell
             ;
-
              -- 4.2. вернули
              outIsClose_6:= TRUE;
 
@@ -1507,6 +1732,30 @@ BEGIN
                  RAISE EXCEPTION 'Ошибка.Место хранение-6 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
+             -- !!! сохранили еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_6())
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_6_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_6();
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_6_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_6()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_6()
+                         , inPartionCellId_6_new
+                         , inPartionCellId_6_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                   ;
+             END IF;
+
      -- реальная ячейка
      ELSEIF inPartionCellId_6_new > 0
      THEN
@@ -1516,11 +1765,6 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
-             -- !!! сохранили ячейку еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_6_new ELSE _tmpItem_PartionCell.PartionCellId END
-             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_6()
-            ;
-
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_6(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -1533,6 +1777,36 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+
+             -- !!! сохранили ячейку еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_6() AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_6_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_6()
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_6_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_6()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_6()
+                         , inPartionCellId_6_new
+                         , inPartionCellId_6_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                    WHERE tmp.isRePack = FALSE
+                   ;
+             END IF;
 
              -- вернули
              outPartionCellId_6:= inPartionCellId_6_new;
@@ -1596,14 +1870,10 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_7(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_7_new)
              FROM _tmpItem_PartionCell
             ;
-             -- !!! сохранили еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_7_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_7();
-
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_7(), _tmpItem_PartionCell.MovementItemId, TRUE)
              FROM _tmpItem_PartionCell
             ;
-
              -- 4.2. вернули
              outIsClose_7:= TRUE;
 
@@ -1616,6 +1886,30 @@ BEGIN
                  RAISE EXCEPTION 'Ошибка.Место хранение-7 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
+             -- !!! сохранили еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_7())
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_7_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_7();
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_7_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_7()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_7()
+                         , inPartionCellId_7_new
+                         , inPartionCellId_7_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                   ;
+             END IF;
+
      -- реальная ячейка
      ELSEIF inPartionCellId_7_new > 0
      THEN
@@ -1625,11 +1919,6 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
-             -- !!! сохранили ячейку еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_7_new ELSE _tmpItem_PartionCell.PartionCellId END
-             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_7()
-            ;
-
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_7(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -1642,6 +1931,36 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+
+             -- !!! сохранили ячейку еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_7() AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_7_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_7()
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_7_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_7()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_7()
+                         , inPartionCellId_7_new
+                         , inPartionCellId_7_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                    WHERE tmp.isRePack = FALSE
+                   ;
+             END IF;
 
              -- вернули
              outPartionCellId_7:= inPartionCellId_7_new;
@@ -1705,14 +2024,10 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_8(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_8_new)
              FROM _tmpItem_PartionCell
             ;
-             -- !!! сохранили еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_8_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_8();
-
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_8(), _tmpItem_PartionCell.MovementItemId, TRUE)
              FROM _tmpItem_PartionCell
             ;
-
              -- 4.2. вернули
              outIsClose_8:= TRUE;
 
@@ -1725,6 +2040,30 @@ BEGIN
                  RAISE EXCEPTION 'Ошибка.Место хранение-8 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
+             -- !!! сохранили еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_8())
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_8_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_8();
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_8_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_8()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_8()
+                         , inPartionCellId_8_new
+                         , inPartionCellId_8_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                   ;
+             END IF;
+
      -- реальная ячейка
      ELSEIF inPartionCellId_8_new > 0
      THEN
@@ -1734,11 +2073,6 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
-             -- !!! сохранили ячейку еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_8_new ELSE _tmpItem_PartionCell.PartionCellId END
-             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_8()
-            ;
-
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_8(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -1751,6 +2085,36 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+
+             -- !!! сохранили ячейку еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_8() AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_8_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_8()
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_8_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_8()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_8()
+                         , inPartionCellId_8_new
+                         , inPartionCellId_8_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                    WHERE tmp.isRePack = FALSE
+                   ;
+             END IF;
 
              -- вернули
              outPartionCellId_8:= inPartionCellId_8_new;
@@ -1814,14 +2178,10 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_9(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_9_new)
              FROM _tmpItem_PartionCell
             ;
-             -- !!! сохранили еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_9_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_9();
-
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_9(), _tmpItem_PartionCell.MovementItemId, TRUE)
              FROM _tmpItem_PartionCell
             ;
-
              -- 4.2. вернули
              outIsClose_9:= TRUE;
 
@@ -1834,6 +2194,30 @@ BEGIN
                  RAISE EXCEPTION 'Ошибка.Место хранение-9 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
+             -- !!! сохранили еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_9())
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_9_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_9();
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_9_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_9()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_9()
+                         , inPartionCellId_9_new
+                         , inPartionCellId_9_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                   ;
+             END IF;
+
      -- реальная ячейка
      ELSEIF inPartionCellId_9_new > 0
      THEN
@@ -1843,11 +2227,6 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
-             -- !!! сохранили ячейку еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_9_new ELSE _tmpItem_PartionCell.PartionCellId END
-             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_9()
-            ;
-
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_9(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -1860,6 +2239,36 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+
+             -- !!! сохранили ячейку еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_9() AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_9_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_9()
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_9_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_9()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_9()
+                         , inPartionCellId_9_new
+                         , inPartionCellId_9_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                    WHERE tmp.isRePack = FALSE
+                   ;
+             END IF;
 
              -- вернули
              outPartionCellId_9:= inPartionCellId_9_new;
@@ -1923,14 +2332,10 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_10(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_10_new)
              FROM _tmpItem_PartionCell
             ;
-             -- !!! сохранили еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_10_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_10();
-
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_10(), _tmpItem_PartionCell.MovementItemId, TRUE)
              FROM _tmpItem_PartionCell
             ;
-
              -- 4.2. вернули
              outIsClose_10:= TRUE;
 
@@ -1943,6 +2348,30 @@ BEGIN
                  RAISE EXCEPTION 'Ошибка.Место хранение-10 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
+             -- !!! сохранили еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_10())
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_10_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_10();
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_10_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_10()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_10()
+                         , inPartionCellId_10_new
+                         , inPartionCellId_10_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                   ;
+             END IF;
+
      -- реальная ячейка
      ELSEIF inPartionCellId_10_new > 0
      THEN
@@ -1952,11 +2381,6 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
-             -- !!! сохранили ячейку еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_10_new ELSE _tmpItem_PartionCell.PartionCellId END
-             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_10()
-            ;
-
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_10(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -1969,6 +2393,36 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+
+             -- !!! сохранили ячейку еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_10() AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_10_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_10()
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_10_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_10()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_10()
+                         , inPartionCellId_10_new
+                         , inPartionCellId_10_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                    WHERE tmp.isRePack = FALSE
+                   ;
+             END IF;
 
              -- вернули
              outPartionCellId_10:= inPartionCellId_10_new;
@@ -2032,14 +2486,10 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_11(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_11_new)
              FROM _tmpItem_PartionCell
             ;
-             -- !!! сохранили еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_11_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_11();
-
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_11(), _tmpItem_PartionCell.MovementItemId, TRUE)
              FROM _tmpItem_PartionCell
             ;
-
              -- 4.2. вернули
              outIsClose_11:= TRUE;
 
@@ -2052,6 +2502,30 @@ BEGIN
                  RAISE EXCEPTION 'Ошибка.Место хранение-11 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
+             -- !!! сохранили еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_11())
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_11_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_11();
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_11_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_11()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_11()
+                         , inPartionCellId_11_new
+                         , inPartionCellId_11_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                   ;
+             END IF;
+
      -- реальная ячейка
      ELSEIF inPartionCellId_11_new > 0
      THEN
@@ -2061,11 +2535,6 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
-             -- !!! сохранили ячейку еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_11_new ELSE _tmpItem_PartionCell.PartionCellId END
-             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_11()
-            ;
-
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_11(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -2078,6 +2547,36 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+
+             -- !!! сохранили ячейку еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_11() AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_11_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_11()
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_11_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_11()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_11()
+                         , inPartionCellId_11_new
+                         , inPartionCellId_11_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                    WHERE tmp.isRePack = FALSE
+                   ;
+             END IF;
 
              -- вернули
              outPartionCellId_11:= inPartionCellId_11_new;
@@ -2141,14 +2640,10 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_12(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_12_new)
              FROM _tmpItem_PartionCell
             ;
-             -- !!! сохранили еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_12_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_12();
-
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_12(), _tmpItem_PartionCell.MovementItemId, TRUE)
              FROM _tmpItem_PartionCell
             ;
-
              -- 4.2. вернули
              outIsClose_12:= TRUE;
 
@@ -2161,6 +2656,30 @@ BEGIN
                  RAISE EXCEPTION 'Ошибка.Место хранение-12 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
+             -- !!! сохранили еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_12())
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_12_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_12();
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_12_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_12()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_12()
+                         , inPartionCellId_12_new
+                         , inPartionCellId_12_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                   ;
+             END IF;
+
      -- реальная ячейка
      ELSEIF inPartionCellId_12_new > 0
      THEN
@@ -2170,11 +2689,6 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
-             -- !!! сохранили ячейку еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_12_new ELSE _tmpItem_PartionCell.PartionCellId END
-             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_12()
-            ;
-
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_12(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -2187,6 +2701,36 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+
+             -- !!! сохранили ячейку еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_12() AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_12_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_12()
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_12_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_12()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_12()
+                         , inPartionCellId_12_new
+                         , inPartionCellId_12_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                    WHERE tmp.isRePack = FALSE
+                   ;
+             END IF;
 
              -- вернули
              outPartionCellId_12:= inPartionCellId_12_new;
@@ -2249,14 +2793,10 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_13(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_13_new)
              FROM _tmpItem_PartionCell
             ;
-             -- !!! сохранили еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_13_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_13();
-
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_13(), _tmpItem_PartionCell.MovementItemId, TRUE)
              FROM _tmpItem_PartionCell
             ;
-
              -- 4.2. вернули
              outIsClose_13:= TRUE;
 
@@ -2269,6 +2809,30 @@ BEGIN
                  RAISE EXCEPTION 'Ошибка.Место хранение-13 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
+             -- !!! сохранили еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_13())
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_13_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_13();
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_13_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_13()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_13()
+                         , inPartionCellId_13_new
+                         , inPartionCellId_13_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                   ;
+             END IF;
+
      -- реальная ячейка
      ELSEIF inPartionCellId_13_new > 0
      THEN
@@ -2278,11 +2842,6 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
-             -- !!! сохранили ячейку еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_13_new ELSE _tmpItem_PartionCell.PartionCellId END
-             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_13()
-            ;
-
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_13(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -2295,6 +2854,36 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+
+             -- !!! сохранили ячейку еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_13() AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_13_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_13()
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_13_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_13()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_13()
+                         , inPartionCellId_13_new
+                         , inPartionCellId_13_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                    WHERE tmp.isRePack = FALSE
+                   ;
+             END IF;
 
              -- вернули
              outPartionCellId_13:= inPartionCellId_13_new;
@@ -2357,14 +2946,10 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_14(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_14_new)
              FROM _tmpItem_PartionCell
             ;
-             -- !!! сохранили еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_14_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_14();
-
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_14(), _tmpItem_PartionCell.MovementItemId, TRUE)
              FROM _tmpItem_PartionCell
             ;
-
              -- 4.2. вернули
              outIsClose_14:= TRUE;
 
@@ -2377,6 +2962,30 @@ BEGIN
                  RAISE EXCEPTION 'Ошибка.Место хранение-14 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
+             -- !!! сохранили еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_14())
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_14_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_14();
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_14_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_14()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_14()
+                         , inPartionCellId_14_new
+                         , inPartionCellId_14_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                   ;
+             END IF;
+
      -- реальная ячейка
      ELSEIF inPartionCellId_14_new > 0
      THEN
@@ -2386,11 +2995,6 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
-             -- !!! сохранили ячейку еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_14_new ELSE _tmpItem_PartionCell.PartionCellId END
-             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_14()
-            ;
-
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_14(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -2403,6 +3007,36 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+
+             -- !!! сохранили ячейку еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_14() AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_14_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_14()
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_14_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_14()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_14()
+                         , inPartionCellId_14_new
+                         , inPartionCellId_14_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                    WHERE tmp.isRePack = FALSE
+                   ;
+             END IF;
 
              -- вернули
              outPartionCellId_14:= inPartionCellId_14_new;
@@ -2465,14 +3099,10 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_15(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_15_new)
              FROM _tmpItem_PartionCell
             ;
-             -- !!! сохранили еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_15_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_15();
-
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_15(), _tmpItem_PartionCell.MovementItemId, TRUE)
              FROM _tmpItem_PartionCell
             ;
-
              -- 4.2. вернули
              outIsClose_15:= TRUE;
 
@@ -2485,6 +3115,30 @@ BEGIN
                  RAISE EXCEPTION 'Ошибка.Место хранение-15 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
+             -- !!! сохранили еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_15())
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_15_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_15();
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_15_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_15()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_15()
+                         , inPartionCellId_15_new
+                         , inPartionCellId_15_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                   ;
+             END IF;
+
      -- реальная ячейка
      ELSEIF inPartionCellId_15_new > 0
      THEN
@@ -2494,11 +3148,6 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
-             -- !!! сохранили ячейку еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_15_new ELSE _tmpItem_PartionCell.PartionCellId END
-             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_15()
-            ;
-
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_15(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -2511,6 +3160,36 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+
+             -- !!! сохранили ячейку еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_15() AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_15_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_15()
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_15_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_15()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_15()
+                         , inPartionCellId_15_new
+                         , inPartionCellId_15_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                    WHERE tmp.isRePack = FALSE
+                   ;
+             END IF;
 
              -- вернули
              outPartionCellId_15:= inPartionCellId_15_new;
@@ -2573,14 +3252,10 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_16(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_16_new)
              FROM _tmpItem_PartionCell
             ;
-             -- !!! сохранили еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_16_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_16();
-
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_16(), _tmpItem_PartionCell.MovementItemId, TRUE)
              FROM _tmpItem_PartionCell
             ;
-
              -- 4.2. вернули
              outIsClose_16:= TRUE;
 
@@ -2593,6 +3268,30 @@ BEGIN
                  RAISE EXCEPTION 'Ошибка.Место хранение-16 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
+             -- !!! сохранили еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_16())
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_16_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_16();
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_16_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_16()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_16()
+                         , inPartionCellId_16_new
+                         , inPartionCellId_16_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                   ;
+             END IF;
+
      -- реальная ячейка
      ELSEIF inPartionCellId_16_new > 0
      THEN
@@ -2602,11 +3301,6 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
-             -- !!! сохранили ячейку еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_16_new ELSE _tmpItem_PartionCell.PartionCellId END
-             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_16()
-            ;
-
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_16(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -2619,6 +3313,36 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+
+             -- !!! сохранили ячейку еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_16() AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_16_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_16()
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_16_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_16()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_16()
+                         , inPartionCellId_16_new
+                         , inPartionCellId_16_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                    WHERE tmp.isRePack = FALSE
+                   ;
+             END IF;
 
              -- вернули
              outPartionCellId_16:= inPartionCellId_16_new;
@@ -2681,14 +3405,10 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_17(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_17_new)
              FROM _tmpItem_PartionCell
             ;
-             -- !!! сохранили еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_17_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_17();
-
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_17(), _tmpItem_PartionCell.MovementItemId, TRUE)
              FROM _tmpItem_PartionCell
             ;
-
              -- 4.2. вернули
              outIsClose_17:= TRUE;
 
@@ -2701,6 +3421,30 @@ BEGIN
                  RAISE EXCEPTION 'Ошибка.Место хранение-17 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
+             -- !!! сохранили еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_17())
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_17_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_17();
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_17_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_17()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_17()
+                         , inPartionCellId_17_new
+                         , inPartionCellId_17_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                   ;
+             END IF;
+
      -- реальная ячейка
      ELSEIF inPartionCellId_17_new > 0
      THEN
@@ -2710,11 +3454,6 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
-             -- !!! сохранили ячейку еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_17_new ELSE _tmpItem_PartionCell.PartionCellId END
-             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_17()
-            ;
-
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_17(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -2727,6 +3466,36 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+
+             -- !!! сохранили ячейку еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_17() AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_17_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_17()
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_17_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_17()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_17()
+                         , inPartionCellId_17_new
+                         , inPartionCellId_17_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                    WHERE tmp.isRePack = FALSE
+                   ;
+             END IF;
 
              -- вернули
              outPartionCellId_17:= inPartionCellId_17_new;
@@ -2789,14 +3558,10 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_18(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_18_new)
              FROM _tmpItem_PartionCell
             ;
-             -- !!! сохранили еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_18_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_18();
-
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_18(), _tmpItem_PartionCell.MovementItemId, TRUE)
              FROM _tmpItem_PartionCell
             ;
-
              -- 4.2. вернули
              outIsClose_18:= TRUE;
 
@@ -2809,6 +3574,30 @@ BEGIN
                  RAISE EXCEPTION 'Ошибка.Место хранение-18 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
+             -- !!! сохранили еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_18())
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_18_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_18();
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_18_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_18()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_18()
+                         , inPartionCellId_18_new
+                         , inPartionCellId_18_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                   ;
+             END IF;
+
      -- реальная ячейка
      ELSEIF inPartionCellId_18_new > 0
      THEN
@@ -2818,11 +3607,6 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
-             -- !!! сохранили ячейку еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_18_new ELSE _tmpItem_PartionCell.PartionCellId END
-             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_18()
-            ;
-
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_18(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -2835,6 +3619,36 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+
+             -- !!! сохранили ячейку еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_18() AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_18_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_18()
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_18_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_18()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_18()
+                         , inPartionCellId_18_new
+                         , inPartionCellId_18_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                    WHERE tmp.isRePack = FALSE
+                   ;
+             END IF;
 
              -- вернули
              outPartionCellId_18:= inPartionCellId_18_new;
@@ -2897,14 +3711,10 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_19(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_19_new)
              FROM _tmpItem_PartionCell
             ;
-             -- !!! сохранили еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_19_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_19();
-
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_19(), _tmpItem_PartionCell.MovementItemId, TRUE)
              FROM _tmpItem_PartionCell
             ;
-
              -- 4.2. вернули
              outIsClose_19:= TRUE;
 
@@ -2917,6 +3727,30 @@ BEGIN
                  RAISE EXCEPTION 'Ошибка.Место хранение-19 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
+             -- !!! сохранили еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_19())
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_19_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_19();
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_19_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_19()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_19()
+                         , inPartionCellId_19_new
+                         , inPartionCellId_19_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                   ;
+             END IF;
+
      -- реальная ячейка
      ELSEIF inPartionCellId_19_new > 0
      THEN
@@ -2926,11 +3760,6 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
-             -- !!! сохранили ячейку еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_19_new ELSE _tmpItem_PartionCell.PartionCellId END
-             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_19()
-            ;
-
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_19(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -2943,6 +3772,36 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+
+             -- !!! сохранили ячейку еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_19() AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_19_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_19()
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_19_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_19()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_19()
+                         , inPartionCellId_19_new
+                         , inPartionCellId_19_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                    WHERE tmp.isRePack = FALSE
+                   ;
+             END IF;
 
              -- вернули
              outPartionCellId_19:= inPartionCellId_19_new;
@@ -3005,14 +3864,10 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_20(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_20_new)
              FROM _tmpItem_PartionCell
             ;
-             -- !!! сохранили еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_20_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_20();
-
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_20(), _tmpItem_PartionCell.MovementItemId, TRUE)
              FROM _tmpItem_PartionCell
             ;
-
              -- 4.2. вернули
              outIsClose_20:= TRUE;
 
@@ -3025,6 +3880,30 @@ BEGIN
                  RAISE EXCEPTION 'Ошибка.Место хранение-20 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
+             -- !!! сохранили еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_20())
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_20_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_20();
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_20_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_20()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_20()
+                         , inPartionCellId_20_new
+                         , inPartionCellId_20_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                   ;
+             END IF;
+
      -- реальная ячейка
      ELSEIF inPartionCellId_20_new > 0
      THEN
@@ -3034,11 +3913,6 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
-             -- !!! сохранили ячейку еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_20_new ELSE _tmpItem_PartionCell.PartionCellId END
-             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_20()
-            ;
-
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_20(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -3051,6 +3925,36 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+
+             -- !!! сохранили ячейку еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_20() AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_20_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_20()
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_20_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_20()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_20()
+                         , inPartionCellId_20_new
+                         , inPartionCellId_20_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                    WHERE tmp.isRePack = FALSE
+                   ;
+             END IF;
 
              -- вернули
              outPartionCellId_20:= inPartionCellId_20_new;
@@ -3113,14 +4017,10 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_21(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_21_new)
              FROM _tmpItem_PartionCell
             ;
-             -- !!! сохранили еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_21_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_21();
-
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_21(), _tmpItem_PartionCell.MovementItemId, TRUE)
              FROM _tmpItem_PartionCell
             ;
-
              -- 4.2. вернули
              outIsClose_21:= TRUE;
 
@@ -3133,6 +4033,30 @@ BEGIN
                  RAISE EXCEPTION 'Ошибка.Место хранение-21 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
+             -- !!! сохранили еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_21())
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_21_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_21();
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_21_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_21()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_21()
+                         , inPartionCellId_21_new
+                         , inPartionCellId_21_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                   ;
+             END IF;
+
      -- реальная ячейка
      ELSEIF inPartionCellId_21_new > 0
      THEN
@@ -3142,11 +4066,6 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
-             -- !!! сохранили ячейку еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_21_new ELSE _tmpItem_PartionCell.PartionCellId END
-             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_21()
-            ;
-
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_21(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -3159,6 +4078,36 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+
+             -- !!! сохранили ячейку еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_21() AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_21_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_21()
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_21_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_21()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_21()
+                         , inPartionCellId_21_new
+                         , inPartionCellId_21_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                    WHERE tmp.isRePack = FALSE
+                   ;
+             END IF;
 
              -- вернули
              outPartionCellId_21:= inPartionCellId_21_new;
@@ -3221,14 +4170,10 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_22(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_22_new)
              FROM _tmpItem_PartionCell
             ;
-             -- !!! сохранили еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_22_new WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_22();
-
              -- 4.1.закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_22(), _tmpItem_PartionCell.MovementItemId, TRUE)
              FROM _tmpItem_PartionCell
             ;
-
              -- 4.2. вернули
              outIsClose_22:= TRUE;
 
@@ -3241,6 +4186,30 @@ BEGIN
                  RAISE EXCEPTION 'Ошибка.Место хранение-22 не определено.%Нельзя поставить в отбор.', CHR (13);
              END IF;
 
+             -- !!! сохранили еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_22())
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_22_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_22();
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_22_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_22()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_22()
+                         , inPartionCellId_22_new
+                         , inPartionCellId_22_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                   ;
+             END IF;
+
      -- реальная ячейка
      ELSEIF inPartionCellId_22_new > 0
      THEN
@@ -3250,11 +4219,6 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
-             -- !!! сохранили ячейку еще здесь!!!
-             UPDATE _tmpItem_PartionCell SET PartionCellId_new = CASE WHEN _tmpItem_PartionCell.isRePack = FALSE THEN inPartionCellId_22_new ELSE _tmpItem_PartionCell.PartionCellId END
-             WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_22()
-            ;
-
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_22(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (-- все
@@ -3267,6 +4231,36 @@ BEGIN
                    SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.isRePack = FALSE
                   ) AS _tmpItem_PartionCell
             ;
+
+             -- !!! сохранили ячейку еще здесь!!!
+             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_22() AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если такая есть
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_22_new
+                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_22()
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+
+             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
+             THEN
+                 -- если первая запись
+                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_22_new
+                                               , DescId_MILO       = zc_MILinkObject_PartionCell_22()
+                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
+                   AND _tmpItem_PartionCell.isRePack    = FALSE
+                ;
+             ELSE
+                 -- если надо создать
+                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+                    SELECT DISTINCT
+                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_22()
+                         , inPartionCellId_22_new
+                         , inPartionCellId_22_new
+                         , NULL :: Boolean, NULL :: Boolean
+                    FROM _tmpItem_PartionCell AS tmp
+                    WHERE tmp.isRePack = FALSE
+                   ;
+             END IF;
 
              -- вернули
              outPartionCellId_22:= inPartionCellId_22_new;
