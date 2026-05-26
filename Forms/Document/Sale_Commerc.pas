@@ -348,6 +348,25 @@ type
     cxLabel32: TcxLabel;
     edBonusSecondForm: TcxCurrencyEdit;
     cxLabel33: TcxLabel;
+    cxTabSheetMarket: TcxTabSheet;
+    cxGridDetail: TcxGrid;
+    cxGridDBTableViewDetail: TcxGridDBTableView;
+    ContractCode_bonus_ch2: TcxGridDBColumn;
+    ContractName_bonus_ch2: TcxGridDBColumn;
+    ContractCode_ch2: TcxGridDBColumn;
+    ContractName_ch2: TcxGridDBColumn;
+    Amount_ch2: TcxGridDBColumn;
+    ContractConditionKindName_ch2: TcxGridDBColumn;
+    BonusKindName_ch2: TcxGridDBColumn;
+    PaidKindName_ch2: TcxGridDBColumn;
+    isErased_ch2: TcxGridDBColumn;
+    InfoMoneyName_ch2: TcxGridDBColumn;
+    Summa_ch2: TcxGridDBColumn;
+    cxGridLevelDetail: TcxGridLevel;
+    DBViewAddOnDetail: TdsdDBViewAddOn;
+    DetailDS: TDataSource;
+    DetailCDS: TClientDataSet;
+    spSelectDetail: TdsdStoredProc;
   private
     { Private declarations }
   public
