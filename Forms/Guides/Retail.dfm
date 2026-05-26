@@ -180,6 +180,31 @@ object RetailForm: TRetailForm
         Options.Editing = False
         Width = 90
       end
+      object SectionName: TcxGridDBColumn
+        Caption = #1057#1077#1075#1084#1077#1085#1090
+        DataBinding.FieldName = 'SectionName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 90
+      end
+      object KAMName: TcxGridDBColumn
+        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' (KAM)'
+        DataBinding.FieldName = 'KAMName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object KAM_addName: TcxGridDBColumn
+        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1087#1086#1084'.KAM)'
+        DataBinding.FieldName = 'KAM_addName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1086#1090#1088#1091#1076#1085#1080#1082'('#1087#1086#1084#1086#1097#1085#1080#1082' KAM)'
+        Options.Editing = False
+        Width = 90
+      end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -902,6 +927,7 @@ object RetailForm: TRetailForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 48
     Top = 216

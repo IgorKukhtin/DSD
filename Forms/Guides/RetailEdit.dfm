@@ -2,8 +2,8 @@ object RetailEditForm: TRetailEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100'>'
-  ClientHeight = 441
-  ClientWidth = 347
+  ClientHeight = 408
+  ClientWidth = 678
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -28,8 +28,8 @@ object RetailEditForm: TRetailEditForm
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 55
-    Top = 407
+    Left = 391
+    Top = 362
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -37,8 +37,8 @@ object RetailEditForm: TRetailEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 207
-    Top = 407
+    Left = 543
+    Top = 362
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -111,7 +111,7 @@ object RetailEditForm: TRetailEditForm
     Caption = #1054#1090#1074'. '#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1086#1075#1086' '#1086#1090#1076#1077#1083#1072
   end
   object cePersonalMarketing: TcxButtonEdit
-    Left = 8
+    Left = 10
     Top = 310
     Properties.Buttons = <
       item
@@ -128,7 +128,7 @@ object RetailEditForm: TRetailEditForm
     Caption = #1054#1090#1074'. '#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1082#1086#1084#1084#1077#1088#1095#1077#1089#1082#1086#1075#1086' '#1086#1090#1076#1077#1083#1072
   end
   object cePersonalTrade: TcxButtonEdit
-    Left = 8
+    Left = 10
     Top = 366
     Properties.Buttons = <
       item
@@ -186,9 +186,60 @@ object RetailEditForm: TRetailEditForm
     Top = 11
     Caption = #1050#1086#1083'. '#1079#1085'. '#1086#1082#1088'. '#1074#1077#1089#1072
   end
+  object cxLabel11: TcxLabel
+    Left = 359
+    Top = 53
+    Caption = #1057#1077#1075#1084#1077#1085#1090
+  end
+  object edSection: TcxButtonEdit
+    Left = 359
+    Top = 72
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 24
+    Width = 311
+  end
+  object cxLabel12: TcxLabel
+    Left = 359
+    Top = 98
+    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' (KAM)'
+  end
+  object edKAM: TcxButtonEdit
+    Left = 359
+    Top = 118
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 26
+    Width = 311
+  end
+  object cxLabel13: TcxLabel
+    Left = 359
+    Top = 145
+    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1087#1086#1084#1086#1097#1085#1080#1082' KAM)'
+  end
+  object edKAM_add: TcxButtonEdit
+    Left = 359
+    Top = 164
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 28
+    Width = 311
+  end
   object ActionList: TActionList
-    Left = 152
-    Top = 56
+    Left = 416
+    Top = 16
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -311,6 +362,30 @@ object RetailEditForm: TRetailEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inSectionId'
+        Value = Null
+        Component = GuidesSection
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKAMId'
+        Value = Null
+        Component = GuidesKAM
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKAMId'
+        Value = Null
+        Component = GuidesKAM_add
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inRoundWeight'
         Value = Null
         Component = ceRoundWeight
@@ -319,8 +394,8 @@ object RetailEditForm: TRetailEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 56
-    Top = 64
+    Left = 464
+    Top = 208
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -452,10 +527,55 @@ object RetailEditForm: TRetailEditForm
         Component = ceRoundWeight
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SectionId'
+        Value = Null
+        Component = GuidesSection
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SectionName'
+        Value = Null
+        Component = GuidesSection
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'KAMId'
+        Value = Null
+        Component = GuidesKAM
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'KAMName'
+        Value = Null
+        Component = GuidesKAM
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'KAM_addId'
+        Value = Null
+        Component = GuidesKAM_add
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'KAM_addName'
+        Value = Null
+        Component = GuidesKAM_add
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 224
-    Top = 128
+    Left = 408
+    Top = 200
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -595,5 +715,95 @@ object RetailEditForm: TRetailEditForm
       end>
     Left = 239
     Top = 203
+  end
+  object GuidesSection: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edSection
+    FormNameParam.Value = 'TSectionForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TSectionForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesSection
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesSection
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 516
+    Top = 45
+  end
+  object GuidesKAM: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edKAM
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonal_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesKAM
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesKAM
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 516
+    Top = 91
+  end
+  object GuidesKAM_add: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edKAM_add
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonal_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesKAM_add
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesKAM_add
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 516
+    Top = 137
   end
 end

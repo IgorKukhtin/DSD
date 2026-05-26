@@ -5,7 +5,9 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar,
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Retail(
  INOUT ioId                    Integer   ,     -- ключ объекта <Торговая сеть> 
@@ -19,6 +21,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Retail(
     IN inPersonalMarketingId   Integer   ,     -- Сотрудник (Ответственный представитель маркетингового отдела)
     IN inPersonalTradeId       Integer   ,     -- Сотрудник (Ответственный представитель коммерческого отдела)
     IN inClientKindId          Integer   ,     -- Категории покупателей     
+    IN inSectionId             Integer   ,     -- Сегмент
+    IN inKAMId                 Integer   ,     -- Сотрудник(KAM)
+    IN inKAM_addId             Integer   ,     -- Сотрудник(помощник KAM)
     IN inRoundWeight           TFloat    ,     -- Кол-во знаков для округления веса
     IN inSession               TVarChar        -- сессия пользователя
 )
@@ -73,6 +78,13 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Retail_ClientKind(), ioId, inClientKindId);  
 
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Retail_Section(), ioId, inSectionId);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Retail_KAM(), ioId, inKAMId);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Retail_KAM_add(), ioId, inKAM_addId);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
@@ -84,6 +96,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.05.26         *
  15.04.22         * inRoundWeight
  14.05.19         * inClientKindId
  29.01.19         * add OKPO
