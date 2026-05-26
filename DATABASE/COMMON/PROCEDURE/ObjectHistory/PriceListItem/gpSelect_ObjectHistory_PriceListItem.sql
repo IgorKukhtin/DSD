@@ -375,14 +375,14 @@ BEGIN
            , tmpPlanItem.ValuePrice ::TFloat    AS ValuePrice_plan
 
              -- расчет цены без НДС, до 2 знаков
-           , CASE WHEN COALESCE (ObjectBoolean_PriceWithVAT.ValueData, FALSE) = TRUE
-                  THEN CAST (tmpPlanItem.ValuePrice - tmpPlanItem.ValuePrice * (COALESCE (ObjectFloat_VATPercent.ValueData, 0) / (COALESCE (ObjectFloat_VATPercent.ValueData, 0) + 100)) AS NUMERIC (16, 2))
+           , CASE WHEN COALESCE (vbPriceWithVAT, FALSE) = TRUE
+                  THEN CAST (tmpPlanItem.ValuePrice - tmpPlanItem.ValuePrice * (COALESCE (vbVATPercent, 0) / (COALESCE (vbVATPercent, 0) + 100)) AS NUMERIC (16, 2))
                   ELSE tmpPlanItem.ValuePrice
              END ::TFloat AS PriceNoVAT_plan
 
              -- расчет цены с НДС, до 2 знаков
-           , CASE WHEN COALESCE (ObjectBoolean_PriceWithVAT.ValueData, FALSE) <> TRUE
-                  THEN CAST ((tmpPlanItem.ValuePrice + tmpPlanItem.ValuePrice * (COALESCE (ObjectFloat_VATPercent.ValueData, 0) / 100)) AS NUMERIC (16, 2))
+           , CASE WHEN COALESCE (vbPriceWithVAT, FALSE) <> TRUE
+                  THEN CAST ((tmpPlanItem.ValuePrice + tmpPlanItem.ValuePrice * (COALESCE (vbVATPercent, 0) / 100)) AS NUMERIC (16, 2))
                   ELSE CAST (tmpPlanItem.ValuePrice AS NUMERIC (16, 2))
              END ::TFloat AS PriceWVAT_plan
 
@@ -765,7 +765,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_ObjectHistory_PriceListItem (Integer, TDateTime, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_ObjectHistory_PriceListItem (Integer, TDateTime, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
