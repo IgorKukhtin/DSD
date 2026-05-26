@@ -1769,7 +1769,11 @@ CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_OrderGoods() RETURNS Integer AS
 CREATE OR REPLACE FUNCTION zc_Enum_ImportType_Retail_KAM() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_Retail_KAM' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_Retail_KAM() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_Retail_KAM' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
  
+ -- Загрузка для справочника Юр.лиц свойство Автозаказ
+CREATE OR REPLACE FUNCTION zc_Enum_ImportType_Juridical_OrderAuto() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_Juridical_OrderAuto' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_Juridical_OrderAuto() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_Juridical_OrderAuto' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
  
+  
  
 /*-------------------------------------------------------------------------------*/
 /*

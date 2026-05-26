@@ -17,7 +17,7 @@ $BODY$
            vbPersonalId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Object_Retail_KAM());
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Retail());
 
      IF COALESCE (inRetailName,'') = ''
      THEN
@@ -56,7 +56,7 @@ BEGIN
      END IF;
      
      -- сохранили связь с <>
-     PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Retail_KAM(), vbRetailId, inKAMId);
+     PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Retail_KAM(), vbRetailId, vbPersonalId);
      
      -- сохранили протокол
      PERFORM lpInsert_ObjectProtocol (vbRetailId, vbUserId);

@@ -175,7 +175,7 @@
           Properties.SaveTime = False
           Properties.ShowTime = False
           Properties.ValidateOnEnter = False
-          TabOrder = 17
+          TabOrder = 16
           Width = 129
         end
         object edStartPromo: TcxDateEdit
@@ -830,14 +830,21 @@
     Left = 8
     Top = 195
     Caption = #1042#1053' - Delnot, '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1072#1103' '#1086#1090#1087#1088#1072#1074#1082#1072
-    TabOrder = 34
+    TabOrder = 33
     Width = 225
   end
   object cbisEdiQuality: TcxCheckBox [33]
     Left = 8
-    Top = 214
+    Top = 212
     Caption = #1042#1053' - '#1044#1077#1082#1083#1072#1088#1072#1094#1080#1103', '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1072#1103' '#1086#1090#1087#1088#1072#1074#1082#1072
     TabOrder = 37
+    Width = 255
+  end
+  object cbOrderAuto: TcxCheckBox [34]
+    Left = 8
+    Top = 229
+    Caption = #1040#1074#1090#1086#1079#1072#1082#1072#1079' ('#1044#1072' / '#1053#1077#1090')'
+    TabOrder = 38
     Width = 255
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1464,6 +1471,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisOrderAuto'
+        Value = Null
+        Component = cbOrderAuto
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inDayTaxSummary'
         Value = Null
         Component = edDayTaxSummary
@@ -1784,6 +1799,13 @@
         Name = 'isEdiQuality'
         Value = Null
         Component = cbisEdiQuality
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isOrderAuto'
+        Value = Null
+        Component = cbOrderAuto
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isEdiComdoc Boolean,
                isEdiDelnot Boolean,
                isEdiQuality Boolean,
+               isOrderAuto Boolean ,
                VatPriceDate TDateTime,
                SectionId Integer, SectionName TVarChar,
                DocHeadeName TVarChar
@@ -82,6 +83,7 @@ BEGIN
            , CAST (FALSE AS Boolean)   AS isEdiComdoc
            , CAST (FALSE AS Boolean)   AS isEdiDelnot
            , CAST (FALSE AS Boolean)   AS isEdiQuality
+           , CAST (FALSE AS Boolean)   AS isOrderAuto
 
            , NULL         :: TDateTime AS VatPriceDate
 
@@ -133,7 +135,8 @@ BEGIN
            , COALESCE (ObjectBoolean_VchasnoEdi.ValueData, FALSE) :: Boolean   AS isVchasnoEdi
            , COALESCE (ObjectBoolean_isEdiComdoc.ValueData, FALSE) :: Boolean  AS isEdiComdoc
            , COALESCE (ObjectBoolean_isEdiDelnot.ValueData, FALSE) :: Boolean  AS isEdiDelnot
-           , COALESCE (ObjectBoolean_isEdiQuality.ValueData, FALSE):: Boolean  AS isEdiQuality
+           , COALESCE (ObjectBoolean_isEdiQuality.ValueData, FALSE):: Boolean  AS isEdiQuality 
+           , COALESCE (ObjectBoolean_OrderAuto.ValueData, FALSE)   :: Boolean  AS isOrderAuto
            , COALESCE (ObjectDate_VatPrice.ValueData, NULL)       :: TDateTime AS VatPriceDate
 
            , Object_Section.Id                AS SectionId
@@ -195,6 +198,10 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_isEdiQuality
                                    ON ObjectBoolean_isEdiQuality.ObjectId = Object_Juridical.Id
                                   AND ObjectBoolean_isEdiQuality.DescId = zc_ObjectBoolean_Juridical_isEdiQuality()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_OrderAuto
+                                   ON ObjectBoolean_OrderAuto.ObjectId = Object_Juridical.Id
+                                  AND ObjectBoolean_OrderAuto.DescId = zc_ObjectBoolean_Juridical_OrderAuto()
                                
            LEFT JOIN ObjectDate AS ObjectDate_VatPrice
                                 ON ObjectDate_VatPrice.ObjectId = Object_Juridical.Id

@@ -178,6 +178,7 @@ type
     cxLabel26: TcxLabel;
     edDocHeadeName: TcxTextEdit;
     cbisEdiQuality: TcxCheckBox;
+    cbOrderAuto: TcxCheckBox;
   private
     { Private declarations }
   public
