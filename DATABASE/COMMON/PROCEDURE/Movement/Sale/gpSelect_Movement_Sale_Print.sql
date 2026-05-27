@@ -85,12 +85,28 @@ BEGIN
                        );
 
      -- параметры из Взвешивания
-     vbStoreKeeperName:= (SELECT Object_User.ValueData
+     vbStoreKeeperName:= (SELECT CASE -- Фора ТОВ
+                                      WHEN ObjectLink_Partner_Juridical.ChildObjectId = 15616
+                                           THEN COALESCE (Object_Member.ValueData, Object_User.ValueData)
+                                      ELSE Object_User.ValueData
+                                 END
                           FROM Movement
                                LEFT JOIN MovementLinkObject AS MovementLinkObject_User
                                                             ON MovementLinkObject_User.MovementId = Movement.Id
                                                            AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
                                LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
+
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                            ON MovementLinkObject_To.MovementId = Movement.Id
+                                                           AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                               LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                    ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                                   AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                               LEFT JOIN ObjectLink AS OL_User_Member
+                                                    ON OL_User_Member.ObjectId = MovementLinkObject_User.ObjectId
+                                                   AND OL_User_Member.DescId   = zc_ObjectLink_User_Member()
+                               LEFT JOIN Object AS Object_Member ON Object_Member.Id = OL_User_Member.ChildObjectId
+
                           WHERE Movement.ParentId = inMovementId AND Movement.DescId IN (zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction())
                             AND Movement.StatusId = zc_Enum_Status_Complete()
                           LIMIT 1
@@ -777,11 +793,16 @@ END IF;
                  END
              ) :: TVarChar           AS PartnerAddress_To
 
-           , (CASE WHEN ObjectString_PostalCode.ValueData  <> '' THEN ObjectString_PostalCode.ValueData || ' '      ELSE '' END
-           || CASE WHEN View_Partner_Address.RegionName    <> '' THEN View_Partner_Address.RegionName   || ' обл., ' ELSE '' END
-           || CASE WHEN View_Partner_Address.ProvinceName  <> '' THEN View_Partner_Address.ProvinceName || ' р-н, '  ELSE '' END
-           || ObjectString_ToAddress.ValueData
-             ) :: TVarChar            AS PartnerAddressAll_To
+           , (CASE -- СІЛЬПО-ФУД ТОВ м. Запоріжжя вулиця Базова, 11
+                   WHEN View_Partner_Address.PartnerId = 877319 
+                        THEN ObjectString_ToAddress.ValueData
+
+                   ELSE CASE WHEN ObjectString_PostalCode.ValueData  <> '' THEN ObjectString_PostalCode.ValueData || ' '      ELSE '' END
+                     || CASE WHEN View_Partner_Address.RegionName    <> '' THEN View_Partner_Address.RegionName   || ' обл., ' ELSE '' END
+                     || CASE WHEN View_Partner_Address.ProvinceName  <> '' THEN View_Partner_Address.ProvinceName || ' р-н, '  ELSE '' END
+                     || ObjectString_ToAddress.ValueData
+              END) :: TVarChar       AS PartnerAddressAll_To
+
            , OH_JuridicalDetails_To.JuridicalId         AS JuridicalId_To
 
            , (CASE WHEN Object_To.Id IN (11216101) --AND vbUserId = 5
