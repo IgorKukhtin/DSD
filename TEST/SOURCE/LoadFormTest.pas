@@ -1897,20 +1897,22 @@ end;
 
 procedure TLoadFormTest.LoadReturnInFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnIn_CommercForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReturnIn_CommercForm');
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInChildDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInChildDialogForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalForm');
   //exit;
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnIn_PartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnIn_PartnerForm');
-
+   }
   //exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnIn_PartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnIn_PartnerJournalForm');

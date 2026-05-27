@@ -190,6 +190,8 @@ type
     bbInsertFileName_csv_one: TdxBarButton;
     FileName: TcxGridDBColumn;
     isReExch: TcxGridDBColumn;
+    actUpdate_Commerc: TdsdInsertUpdateAction;
+    bbtUpdate_Commerc: TdxBarButton;
   private
     { Private declarations }
   public

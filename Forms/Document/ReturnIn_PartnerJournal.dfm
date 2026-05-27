@@ -749,6 +749,41 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
             Options.Editing = False
             Width = 80
           end
+          object BonusFirstForm: TcxGridDBColumn
+            Caption = #1054#1073#1097#1080#1081' % '#1073#1086#1085#1091#1089#1072' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1091' '#1041#1053
+            DataBinding.FieldName = 'BonusFirstForm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1073#1097#1080#1081' % '#1073#1086#1085#1091#1089#1072' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1091' '#1041#1053
+            Options.Editing = False
+            Width = 80
+          end
+          object BonusSecondForm: TcxGridDBColumn
+            Caption = #1054#1073#1097#1080#1081' % '#1073#1086#1085#1091#1089#1072' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1091' '#1053#1072#1083
+            DataBinding.FieldName = 'BonusSecondForm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1073#1097#1080#1081' % '#1073#1086#1085#1091#1089#1072' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1091' '#1053#1072#1083
+            Options.Editing = False
+            Width = 80
+          end
+          object RouteTTName: TcxGridDBColumn
+            Caption = #1052#1072#1088#1096#1088#1091#1090' '#1058#1058
+            DataBinding.FieldName = 'RouteTTName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
         end
       end
     end
@@ -2098,6 +2133,44 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
       Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1054#1076#1085#1091' '#1053#1072#1082#1083#1072#1076#1085#1091#1102' 1'#1057'-'#1055#1072#1074#1080#1083#1100#1086#1085#1099
       ImageIndex = 89
     end
+    object actUpdate_Commerc: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1052#1086#1090#1080#1074#1072#1094#1080#1103' '#1082#1086#1084#1084#1077#1088#1094#1080#1080')'
+      Hint = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1052#1086#1090#1080#1074#1072#1094#1080#1103' '#1082#1086#1084#1084#1077#1088#1094#1080#1080')'
+      ImageIndex = 1
+      FormName = 'TReturnIn_CommercForm'
+      FormNameParam.Value = 'TReturnIn_CommercForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 46023d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 80
@@ -2170,6 +2243,15 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         item
           Visible = True
           ItemName = 'bbEdit'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Commerc'
         end
         item
           BeginGroup = True
@@ -2436,6 +2518,10 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
     end
     object bbInsertFileName_csv_one: TdxBarButton
       Action = macInsertFileName_csv_one
+      Category = 0
+    end
+    object bbUpdate_Commerc: TdxBarButton
+      Action = actUpdate_Commerc
       Category = 0
     end
   end

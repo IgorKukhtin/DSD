@@ -45,6 +45,10 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNum
              , MovementId_TransportGoods Integer
              , InvNumber_TransportGoods TVarChar
              , OperDate_TransportGoods TDateTime
+
+             , RouteTTId Integer, RouteTTName TVarChar
+             , BonusFirstForm TFloat
+             , BonusSecondForm TFloat
              )
 AS
 $BODY$
@@ -148,6 +152,11 @@ BEGIN
              , '' :: TVarChar                           AS InvNumber_TransportGoods
              , inOperDate                               AS OperDate_TransportGoods
 
+             , 0                                    AS RouteTTId
+             , CAST ('' AS TVarChar)                AS RouteTTName
+             , CAST (0 AS TFloat)                   AS BonusFirstForm
+             , CAST (0 AS TFloat)                   AS BonusSecondForm
+           
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate
                LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
@@ -340,6 +349,10 @@ BEGIN
            , Movement_TransportGoods.InvNumber      AS InvNumber_TransportGoods
            , COALESCE (Movement_TransportGoods.OperDate, Movement.OperDate) AS OperDate_TransportGoods
 
+           , Object_RouteTT.Id                                    ::Integer  AS RouteTTId
+           , Object_RouteTT.ValueData                             ::TVarChar AS RouteTTName
+           , COALESCE (MovementFloat_BonusFirstForm.ValueData,0)  ::TFloat   AS BonusFirstForm
+           , COALESCE (MovementFloat_BonusSecondForm.ValueData,0) ::TFloat   AS BonusSecondForm
        FROM tmpMovement AS Movement
             LEFT JOIN Movement AS Movement_PartionMovement ON Movement_PartionMovement.Id = vbMovementId_sale
             LEFT JOIN MovementDesc AS MovementDesc_PartionMovement ON MovementDesc_PartionMovement.Id = Movement_PartionMovement.DescId
@@ -431,6 +444,13 @@ BEGIN
                                     ON MovementFloat_CorrSumm.MovementId =  inMovementId
                                    AND MovementFloat_CorrSumm.DescId = zc_MovementFloat_CorrSumm()
 
+            LEFT JOIN MovementFloat AS MovementFloat_BonusFirstForm
+                                    ON MovementFloat_BonusFirstForm.MovementId = inMovementId
+                                   AND MovementFloat_BonusFirstForm.DescId     = zc_MovementFloat_BonusFirstForm()
+            LEFT JOIN MovementFloat AS MovementFloat_BonusSecondForm
+                                    ON MovementFloat_BonusSecondForm.MovementId = inMovementId
+                                   AND MovementFloat_BonusSecondForm.DescId     = zc_MovementFloat_BonusSecondForm()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = inMovementId
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -481,6 +501,11 @@ BEGIN
                                          ON MovementLinkObject_SubjectDoc.MovementId = inMovementId
                                         AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
             LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteTT
+                                         ON MovementLinkObject_RouteTT.MovementId = inMovementId
+                                        AND MovementLinkObject_RouteTT.DescId = zc_MovementLinkObject_RouteTT()
+            LEFT JOIN Object AS Object_RouteTT ON Object_RouteTT.Id = MovementLinkObject_RouteTT.ObjectId and Object_RouteTT.DescId = zc_Object_RouteTT()
 
             -- оптимизация
             LEFT JOIN tmpPriceList_in AS Object_PriceListIn ON Object_PriceListIn.Id = vbPriceListId_In

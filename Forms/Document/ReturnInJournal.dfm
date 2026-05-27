@@ -4,7 +4,6 @@ inherited ReturnInJournalForm: TReturnInJournalForm
   ClientWidth = 1114
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -237
   ExplicitWidth = 1130
   ExplicitHeight = 574
   PixelsPerInch = 96
@@ -855,6 +854,41 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             Options.Editing = False
             Width = 70
           end
+          object BonusFirstForm: TcxGridDBColumn
+            Caption = #1054#1073#1097#1080#1081' % '#1073#1086#1085#1091#1089#1072' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1091' '#1041#1053
+            DataBinding.FieldName = 'BonusFirstForm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1073#1097#1080#1081' % '#1073#1086#1085#1091#1089#1072' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1091' '#1041#1053
+            Options.Editing = False
+            Width = 80
+          end
+          object BonusSecondForm: TcxGridDBColumn
+            Caption = #1054#1073#1097#1080#1081' % '#1073#1086#1085#1091#1089#1072' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1091' '#1053#1072#1083
+            DataBinding.FieldName = 'BonusSecondForm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1073#1097#1080#1081' % '#1073#1086#1085#1091#1089#1072' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1091' '#1053#1072#1083
+            Options.Editing = False
+            Width = 80
+          end
+          object RouteTTName: TcxGridDBColumn
+            Caption = #1052#1072#1088#1096#1088#1091#1090' '#1058#1058
+            DataBinding.FieldName = 'RouteTTName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
         end
       end
     end
@@ -1033,7 +1067,45 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintPack_copy2: TdsdPrintAction [1]
+    object actUpdate_Commerc: TdsdInsertUpdateAction [1]
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1052#1086#1090#1080#1074#1072#1094#1080#1103' '#1082#1086#1084#1084#1077#1088#1094#1080#1080')'
+      Hint = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1052#1086#1090#1080#1074#1072#1094#1080#1103' '#1082#1086#1084#1084#1077#1088#1094#1080#1080')'
+      ImageIndex = 1
+      FormName = 'TReturnIn_CommercForm'
+      FormNameParam.Value = 'TReturnIn_CommercForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 46023d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actPrintPack_copy2: TdsdPrintAction [2]
       Category = 'PrintPack'
       MoveParams = <
         item
@@ -1094,7 +1166,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actExport: TMultiAction [2]
+    object actExport: TMultiAction [3]
       Category = 'Export_Email'
       MoveParams = <>
       ActionList = <
@@ -1121,7 +1193,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
       ImageIndex = 53
     end
-    object mactPrintPack_copy2: TMultiAction [3]
+    object mactPrintPack_copy2: TMultiAction [4]
       Category = 'PrintPack'
       MoveParams = <
         item
@@ -1150,7 +1222,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 44
     end
-    object mactPrintPack_copy3: TMultiAction [4]
+    object mactPrintPack_copy3: TMultiAction [5]
       Category = 'PrintPack'
       MoveParams = <
         item
@@ -1179,7 +1251,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 44
     end
-    object macPrint_Pack_list2: TMultiAction [5]
+    object macPrint_Pack_list2: TMultiAction [6]
       Category = 'PrintPack'
       MoveParams = <
         item
@@ -1203,7 +1275,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
       ImageIndex = 44
     end
-    object actExport_file_csv: TdsdStoredProcExportToFile [6]
+    object actExport_file_csv: TdsdStoredProcExportToFile [7]
       Category = 'Export_Csv'
       MoveParams = <>
       dsdStoredProcName = spSelectFileName_csv
@@ -1226,11 +1298,11 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       Left = 1208
       Top = 168
     end
-    inherited actInsert: TdsdInsertUpdateAction [7]
+    inherited actInsert: TdsdInsertUpdateAction [8]
       FormName = 'TReturnInForm'
       FormNameParam.Value = 'TReturnInForm'
     end
-    object macPrint_Pack_list3: TMultiAction [8]
+    object macPrint_Pack_list3: TMultiAction [9]
       Category = 'PrintPack'
       MoveParams = <
         item
@@ -1254,7 +1326,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077
       ImageIndex = 44
     end
-    inherited actUpdate: TdsdInsertUpdateAction [9]
+    inherited actUpdate: TdsdInsertUpdateAction [10]
       FormName = 'TReturnInForm'
       FormNameParam.Value = 'TReturnInForm'
       GuiParams = <
@@ -1280,7 +1352,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    object macPrint_Grid3: TMultiAction [10]
+    object macPrint_Grid3: TMultiAction [11]
       Category = 'PrintPack'
       MoveParams = <
         item
@@ -1308,7 +1380,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' (3 '#1082#1086#1087#1080#1080')'
       ImageIndex = 44
     end
-    object macPrint_Grid2: TMultiAction [11]
+    object macPrint_Grid2: TMultiAction [12]
       Category = 'PrintPack'
       MoveParams = <
         item
@@ -1336,15 +1408,15 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' (2 '#1082#1086#1087#1080#1080')'
       ImageIndex = 44
     end
-    inherited actRefresh: TdsdDataSetRefresh [12]
+    inherited actRefresh: TdsdDataSetRefresh [13]
     end
-    inherited actUnComplete: TdsdChangeMovementStatus [13]
+    inherited actUnComplete: TdsdChangeMovementStatus [14]
     end
-    inherited actComplete: TdsdChangeMovementStatus [14]
+    inherited actComplete: TdsdChangeMovementStatus [15]
     end
-    inherited actSetErased: TdsdChangeMovementStatus [15]
+    inherited actSetErased: TdsdChangeMovementStatus [16]
     end
-    object actTaxCorrective: TdsdExecStoredProc [16]
+    object actTaxCorrective: TdsdExecStoredProc [17]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1363,7 +1435,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1089' '#1087#1088 +
         #1080#1074#1103#1079#1082#1086#1081')>.'
     end
-    object actCorrective: TdsdExecStoredProc [17]
+    object actCorrective: TdsdExecStoredProc [18]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1382,9 +1454,9 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1073#1077#1079' ' +
         #1087#1088#1080#1074#1103#1079#1082#1080')>.'
     end
-    inherited actMovementItemContainer: TdsdOpenForm [18]
+    inherited actMovementItemContainer: TdsdOpenForm [19]
     end
-    object actPrintAkt: TdsdPrintAction [19]
+    object actPrintAkt: TdsdPrintAction [20]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -1434,7 +1506,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintPack: TdsdPrintAction [20]
+    object actPrintPack: TdsdPrintAction [21]
       Category = 'PrintPack'
       MoveParams = <
         item
@@ -1487,9 +1559,9 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    inherited actShowErased: TBooleanStoredProcAction [21]
+    inherited actShowErased: TBooleanStoredProcAction [22]
     end
-    object actPrint: TdsdPrintAction [22]
+    object actPrint: TdsdPrintAction [23]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -1542,27 +1614,27 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    inherited mactReCompleteList: TMultiAction [23]
+    inherited mactReCompleteList: TMultiAction [24]
     end
-    inherited actGridToExcel: TdsdGridToExcel [24]
+    inherited actGridToExcel: TdsdGridToExcel [25]
     end
-    inherited mactCompleteList: TMultiAction [25]
+    inherited mactCompleteList: TMultiAction [26]
     end
-    inherited actInsertMask: TdsdInsertUpdateAction [26]
+    inherited actInsertMask: TdsdInsertUpdateAction [27]
     end
-    inherited mactUnCompleteList: TMultiAction [27]
+    inherited mactUnCompleteList: TMultiAction [28]
     end
-    inherited spReCompete: TdsdExecStoredProc [28]
+    inherited spReCompete: TdsdExecStoredProc [29]
     end
-    inherited MovementProtocolOpenForm: TdsdOpenForm [30]
+    inherited MovementProtocolOpenForm: TdsdOpenForm [31]
     end
-    inherited mactSimpleReCompleteList: TMultiAction [31]
+    inherited mactSimpleReCompleteList: TMultiAction [32]
     end
-    inherited mactSimpleCompleteList: TMultiAction [32]
+    inherited mactSimpleCompleteList: TMultiAction [33]
     end
-    inherited mactSimpleUncompleteList: TMultiAction [33]
+    inherited mactSimpleUncompleteList: TMultiAction [34]
     end
-    inherited mactSimpleErasedList: TMultiAction [34]
+    inherited mactSimpleErasedList: TMultiAction [35]
     end
     object actSPPrintProcNamePriceCorr: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -2486,6 +2558,15 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbtUpdate_Commerc'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbComplete'
         end
         item
@@ -2768,6 +2849,10 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     end
     object bbInsertFileName_csv_one: TdxBarButton
       Action = macInsertFileName_csv_one
+      Category = 0
+    end
+    object bbtUpdate_Commerc: TdxBarButton
+      Action = actUpdate_Commerc
       Category = 0
     end
   end

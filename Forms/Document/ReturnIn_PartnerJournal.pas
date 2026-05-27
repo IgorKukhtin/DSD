@@ -171,6 +171,8 @@ type
     bbInsertFileName_csv: TdxBarButton;
     bbInsertFileName_csv_one: TdxBarButton;
     FileName: TcxGridDBColumn;
+    actUpdate_Commerc: TdsdInsertUpdateAction;
+    bbUpdate_Commerc: TdxBarButton;
   private
     { Private declarations }
   public

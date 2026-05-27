@@ -80,6 +80,10 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , RouteName TVarChar
 
              , FileName TVarChar
+
+             , RouteTTId Integer, RouteTTName TVarChar
+             , BonusFirstForm TFloat
+             , BonusSecondForm TFloat
               )
 AS
 $BODY$
@@ -472,6 +476,10 @@ WHERE 1=0
              --
            , MovementString_FileName.ValueData         ::TVarChar  AS FileName
 
+           , Object_RouteTT.Id                                    ::Integer  AS RouteTTId
+           , Object_RouteTT.ValueData                             ::TVarChar AS RouteTTName
+           , COALESCE (MovementFloat_BonusFirstForm.ValueData,0)  ::TFloat   AS BonusFirstForm
+           , COALESCE (MovementFloat_BonusSecondForm.ValueData,0) ::TFloat   AS BonusSecondForm
        FROM tmpMovement
 
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
@@ -588,6 +596,13 @@ WHERE 1=0
                                     ON MovementFloat_CorrSumm.MovementId = Movement.Id
                                    AND MovementFloat_CorrSumm.DescId = zc_MovementFloat_CorrSumm()
 
+            LEFT JOIN MovementFloat AS MovementFloat_BonusFirstForm
+                                    ON MovementFloat_BonusFirstForm.MovementId = Movement.Id
+                                   AND MovementFloat_BonusFirstForm.DescId     = zc_MovementFloat_BonusFirstForm()
+            LEFT JOIN MovementFloat AS MovementFloat_BonusSecondForm
+                                    ON MovementFloat_BonusSecondForm.MovementId = Movement.Id
+                                   AND MovementFloat_BonusSecondForm.DescId     = zc_MovementFloat_BonusSecondForm()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -659,6 +674,11 @@ WHERE 1=0
                                          ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
                                         AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
             LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteTT
+                                         ON MovementLinkObject_RouteTT.MovementId = Movement.Id
+                                        AND MovementLinkObject_RouteTT.DescId = zc_MovementLinkObject_RouteTT()
+            LEFT JOIN Object AS Object_RouteTT ON Object_RouteTT.Id = MovementLinkObject_RouteTT.ObjectId and Object_RouteTT.DescId = zc_Object_RouteTT()
 
 --add Tax
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
