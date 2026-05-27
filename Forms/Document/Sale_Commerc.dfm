@@ -3,8 +3,7 @@ inherited Sale_CommercForm: TSale_CommercForm
   ClientHeight = 657
   ClientWidth = 1468
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitLeft = -304
-  ExplicitTop = -64
+  ExplicitTop = -41
   ExplicitWidth = 1484
   ExplicitHeight = 696
   PixelsPerInch = 96
@@ -14,18 +13,18 @@ inherited Sale_CommercForm: TSale_CommercForm
     Width = 1468
     Height = 475
     ExplicitTop = 182
-    ExplicitWidth = 1461
-    ExplicitHeight = 476
+    ExplicitWidth = 1468
+    ExplicitHeight = 475
     ClientRectBottom = 475
     ClientRectRight = 1468
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1461
-      ExplicitHeight = 452
+      ExplicitWidth = 1468
+      ExplicitHeight = 451
       inherited cxGrid: TcxGrid
         Width = 1468
         Height = 451
-        ExplicitWidth = 1461
-        ExplicitHeight = 452
+        ExplicitWidth = 1468
+        ExplicitHeight = 451
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -993,12 +992,251 @@ inherited Sale_CommercForm: TSale_CommercForm
         end
       end
     end
+    object cxTabSheetMarket: TcxTabSheet
+      Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075
+      ImageIndex = 1
+      object cxGridDetail: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 1468
+        Height = 451
+        Align = alClient
+        PopupMenu = PopupMenu
+        TabOrder = 0
+        ExplicitLeft = 254
+        ExplicitTop = 32
+        object cxGridDBTableViewDetail: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = DetailDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_ch2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_ch2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = ContractName_bonus_ch2
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object ContractCode_bonus_ch2: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'. ('#1091#1089#1083'. '#1073#1086#1085#1091#1089#1072')'
+            DataBinding.FieldName = 'ContractCode_bonus'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 85
+          end
+          object ContractName_bonus_ch2: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'. ('#1091#1089#1083'. '#1073#1086#1085#1091#1089#1072')'
+            DataBinding.FieldName = 'ContractName_bonus'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 160
+          end
+          object ContractCode_ch2: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'. ('#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103')'
+            DataBinding.FieldName = 'ContractCode'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsKindChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object ContractName_ch2: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'. ('#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103')'
+            DataBinding.FieldName = 'ContractName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 116
+          end
+          object ContractConditionKindName_ch2: TcxGridDBColumn
+            Caption = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
+            DataBinding.FieldName = 'ContractConditionKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 177
+          end
+          object BonusKindName_ch2: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1073#1086#1085#1091#1089#1072
+            DataBinding.FieldName = 'BonusKindName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 124
+          end
+          object PaidKindName_ch2: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaidKindName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 159
+          end
+          object Amount_ch2: TcxGridDBColumn
+            Caption = '% '#1073#1086#1085#1091#1089#1072
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 101
+          end
+          object InfoMoneyName_ch2: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077')'
+            DataBinding.FieldName = 'InfoMoneyName'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 155
+          end
+          object Summa_ch2: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072', '#1075#1088#1085
+            DataBinding.FieldName = 'Summa'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 78
+          end
+          object isErased_ch2: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isErased'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+        end
+        object cxGridLevelDetail: TcxGridLevel
+          GridView = cxGridDBTableViewDetail
+        end
+      end
+    end
   end
   inherited DataPanel: TPanel
     Width = 1468
     Height = 156
     TabOrder = 3
-    ExplicitWidth = 1461
+    ExplicitWidth = 1468
     ExplicitHeight = 156
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -2115,6 +2353,19 @@ inherited Sale_CommercForm: TSale_CommercForm
       PrinterNameParam.MultiSelectSeparator = ','
     end
     inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectDetail
+        end>
       RefreshOnTabSetChanges = True
     end
     object actAssetGoodsChoiceForm: TOpenChoiceForm [17]
@@ -2282,6 +2533,24 @@ inherited Sale_CommercForm: TSale_CommercForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    inherited actShowErased: TBooleanStoredProcAction
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectDetail
+        end>
+    end
+    inherited actShowAll: TBooleanStoredProcAction
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectDetail
+        end>
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
@@ -5632,8 +5901,8 @@ inherited Sale_CommercForm: TSale_CommercForm
       item
         Control = edCorrSumm
       end>
-    Left = 232
-    Top = 193
+    Left = 168
+    Top = 265
   end
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
@@ -7810,8 +8079,8 @@ inherited Sale_CommercForm: TSale_CommercForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1266
-    Top = 288
+    Left = 1090
+    Top = 328
   end
   object HeaderExit: THeaderExit
     ExitList = <
@@ -7827,8 +8096,8 @@ inherited Sale_CommercForm: TSale_CommercForm
       item
       end>
     Action = actInsert_MI_Sale_byReturnIn
-    Left = 1264
-    Top = 240
+    Left = 1088
+    Top = 280
   end
   object spUpdateMask: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_Sale_isMask'
@@ -8144,8 +8413,8 @@ inherited Sale_CommercForm: TSale_CommercForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1312
-    Top = 368
+    Left = 1152
+    Top = 288
   end
   object spDelete_MI: TdsdStoredProc
     StoredProcName = 'gpDelete_MI_Sale'
@@ -8194,5 +8463,72 @@ inherited Sale_CommercForm: TSale_CommercForm
       end>
     Left = 705
     Top = 115
+  end
+  object DBViewAddOnDetail: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewDetail
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = True
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <
+      item
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
+      end>
+    ColumnEnterList = <
+      item
+        Column = Amount_ch2
+      end
+      item
+      end>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
+    Left = 1342
+    Top = 289
+  end
+  object DetailDS: TDataSource
+    DataSet = DetailCDS
+    Left = 1312
+    Top = 352
+  end
+  object DetailCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 1376
+    Top = 360
+  end
+  object spSelectDetail: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItem_Sale_Detail'
+    DataSet = DetailCDS
+    DataSets = <
+      item
+        DataSet = DetailCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1248
+    Top = 304
   end
 end

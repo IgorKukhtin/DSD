@@ -19,7 +19,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, dsdCommon;
 
 type
   TRetailEditForm = class(TParentForm)
@@ -59,6 +59,15 @@ type
     GuidesClientKind: TdsdGuides;
     ceRoundWeight: TcxCurrencyEdit;
     cxLabel10: TcxLabel;
+    cxLabel11: TcxLabel;
+    edSection: TcxButtonEdit;
+    GuidesSection: TdsdGuides;
+    cxLabel12: TcxLabel;
+    edKAM: TcxButtonEdit;
+    GuidesKAM: TdsdGuides;
+    cxLabel13: TcxLabel;
+    edKAM_add: TcxButtonEdit;
+    GuidesKAM_add: TdsdGuides;
   private
     { Private declarations }
   public

@@ -23,7 +23,7 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
   cxGrid, cxSplitter, cxButtonEdit, cxCurrencyEdit, cxContainer, Vcl.ComCtrls,
   dxCore, cxDateUtils, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar,
-  cxLabel, dsdCommon;
+  cxLabel, dsdCommon, ExternalLoad;
 
 type
   TJuridicalForm = class(TParentForm)
@@ -146,6 +146,12 @@ type
     PrintFormName_ttn: TcxGridDBColumn;
     DocHeadeName: TcxGridDBColumn;
     isEdiQuality: TcxGridDBColumn;
+    isOrderAuto: TcxGridDBColumn;
+    spGetImportSettingId: TdsdStoredProc;
+    actGetImportSetting: TdsdExecStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actStartLoad: TMultiAction;
+    bbStartLoad: TdxBarButton;
   private
     { Private declarations }
   public

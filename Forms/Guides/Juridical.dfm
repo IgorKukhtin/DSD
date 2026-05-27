@@ -368,6 +368,14 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 80
       end
+      object isOrderAuto: TcxGridDBColumn
+        Caption = #1040#1074#1090#1086#1079#1072#1082#1072#1079' ('#1044#1072'/'#1053#1077#1090')'
+        DataBinding.FieldName = 'isOrderAuto'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 78
+      end
       object VatPriceDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1089#1093'. '#1088#1072#1089#1095'. '#1094#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1089#1090#1088'.)'
         DataBinding.FieldName = 'VatPriceDate'
@@ -822,6 +830,14 @@ object JuridicalForm: TJuridicalForm
         end
         item
           Visible = True
+          ItemName = 'bbStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -931,11 +947,24 @@ object JuridicalForm: TJuridicalForm
       Visible = ivAlways
       Control = cxLabel2
     end
+    object bbStartLoad: TdxBarButton
+      Action = actStartLoad
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 208
     Top = 136
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = '0'
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <>
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1569,6 +1598,36 @@ object JuridicalForm: TJuridicalForm
       Caption = 'macUpdate_isIrna_list'
       ImageIndex = 66
     end
+    object actGetImportSetting: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSetting'
+    end
+    object actStartLoad: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1089#1074#1086#1081#1089#1090#1074#1072' <'#1040#1074#1090#1086#1079#1072#1082#1072#1079' ('#1044#1072'/'#1053#1077#1090')> '#1080#1079' '#1092#1072#1081#1083#1072' ?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#1089#1074#1086#1081#1089#1090#1074#1086' <'#1040#1074#1090#1086#1079#1072#1082#1072#1079' ('#1044#1072'/'#1053#1077#1090')>'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#1089#1074#1086#1081#1089#1090#1074#1086' <'#1040#1074#1090#1086#1079#1072#1082#1072#1079' ('#1044#1072'/'#1053#1077#1090')>'
+      ImageIndex = 41
+    end
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 272
@@ -1959,5 +2018,37 @@ object JuridicalForm: TJuridicalForm
     PackSize = 1
     Left = 408
     Top = 184
+  end
+  object spGetImportSettingId: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TJuridicalForm;zc_Object_ImportSetting_Juridical_OrderAuto'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 704
+    Top = 304
   end
 end

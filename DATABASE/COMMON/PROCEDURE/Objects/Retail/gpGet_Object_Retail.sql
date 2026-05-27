@@ -17,6 +17,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PersonalTradeId Integer, PersonalTradeName TVarChar
              , ClientKindId Integer, ClientKindName TVarChar
              , StickerHeaderId Integer, StickerHeaderName TVarChar
+             , SectionId Integer, SectionName TVarChar
+             , KAMId Integer, KAMCode Integer, KAMName TVarChar
+             , KAM_addId Integer, KAM_addCode Integer, KAM_addName TVarChar
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -50,6 +53,15 @@ BEGIN
 
            , 0   :: Integer          AS StickerHeaderId
            , ''  :: TVarChar         AS StickerHeaderName
+
+           , 0   :: Integer         AS SectionId
+           , ''  :: TVarChar        AS SectionName
+           , 0   :: Integer         AS KAMId
+           , 0   :: Integer         AS KAMCode
+           , ''  :: TVarChar        AS KAMName
+           , 0   :: Integer         AS KAM_addId
+           , 0   :: Integer         AS KAM_addCode
+           , ''  :: TVarChar        AS KAM_addName
            
            , CAST (NULL AS Boolean)  AS isErased;
    ELSE
@@ -77,6 +89,16 @@ BEGIN
            , Object_ClientKind.ValueData         AS ClientKindName  
            , Object_StickerHeader.Id             AS StickerHeaderId
            , Object_StickerHeader.ValueData      AS StickerHeaderName
+
+           , Object_Section.Id                   AS SectionId
+           , Object_Section.ValueData            AS SectionName
+           , Object_KAM.Id                       AS KAMId
+           , Object_KAM.ObjectCode               AS KAMCode
+           , Object_KAM.ValueData                AS KAMName
+           , Object_KAM_add.Id                   AS KAM_addId
+           , Object_KAM_add.ObjectCode           AS KAM_addCode
+           , Object_KAM_add.ValueData            AS KAM_addName
+
            , Object_Retail.isErased   AS isErased
 
        FROM OBJECT AS Object_Retail
@@ -127,6 +149,22 @@ BEGIN
                              ON ObjectLink_Retail_StickerHeader.ObjectId = Object_Retail.Id
                             AND ObjectLink_Retail_StickerHeader.DescId = zc_ObjectLink_Retail_ClientKind()
         LEFT JOIN Object AS Object_StickerHeader ON Object_StickerHeader.Id = ObjectLink_Retail_StickerHeader.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Retail_Section
+                             ON ObjectLink_Retail_Section.ObjectId = Object_Retail.Id
+                            AND ObjectLink_Retail_Section.DescId = zc_ObjectLink_Retail_Section()
+        LEFT JOIN Object AS Object_Section ON Object_Section.Id = ObjectLink_Retail_Section.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Retail_KAM
+                             ON ObjectLink_Retail_KAM.ObjectId = Object_Retail.Id
+                            AND ObjectLink_Retail_KAM.DescId = zc_ObjectLink_Retail_KAM()
+        LEFT JOIN Object AS Object_KAM ON Object_KAM.Id = ObjectLink_Retail_KAM.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Retail_KAM_add
+                             ON ObjectLink_Retail_KAM_add.ObjectId = Object_Retail.Id
+                            AND ObjectLink_Retail_KAM_add.DescId = zc_ObjectLink_Retail_KAM_add()
+        LEFT JOIN Object AS Object_KAM_add ON Object_KAM_add.Id = ObjectLink_Retail_KAM_add.ChildObjectId
+
        WHERE Object_Retail.Id = inId;
    END IF; 
   

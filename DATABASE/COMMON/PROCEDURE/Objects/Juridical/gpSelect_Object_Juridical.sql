@@ -45,6 +45,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, BasisCode Integer,
                isEdiComdoc Boolean,
                isEdiDelnot Boolean,
                isEdiQuality Boolean,
+               isOrderAuto Boolean,
                isErased Boolean,
                PrintFormName_sale_ff  TVarChar,
                PrintFormName_sale_sf  TVarChar,
@@ -273,6 +274,7 @@ BEGIN
        , COALESCE (ObjectBoolean_isEdiComdoc.ValueData, FALSE) :: Boolean  AS isEdiComdoc
        , COALESCE (ObjectBoolean_isEdiDelnot.ValueData, FALSE) :: Boolean  AS isEdiDelnot
        , COALESCE (ObjectBoolean_isEdiQuality.ValueData, FALSE):: Boolean  AS isEdiQuality
+       , COALESCE (ObjectBoolean_OrderAuto.ValueData, FALSE)   :: Boolean  AS isOrderAuto
 
        , Object_Juridical.isErased   AS isErased
 
@@ -345,6 +347,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_isEdiQuality
                                 ON ObjectBoolean_isEdiQuality.ObjectId = Object_Juridical.Id
                                AND ObjectBoolean_isEdiQuality.DescId = zc_ObjectBoolean_Juridical_isEdiQuality()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_OrderAuto
+                                ON ObjectBoolean_OrderAuto.ObjectId = Object_Juridical.Id
+                               AND ObjectBoolean_OrderAuto.DescId = zc_ObjectBoolean_Juridical_OrderAuto()
 
         LEFT JOIN tmpObjectDate AS ObjectDate_VatPrice
                              ON ObjectDate_VatPrice.ObjectId = Object_Juridical.Id
@@ -487,6 +493,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.05.26         *
  14.04.25         * isEdiDelnot
  07.04.25         * isEdiInvoice
  14.03.25         * isVchasnoEdi
