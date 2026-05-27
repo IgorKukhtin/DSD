@@ -14,6 +14,21 @@ AS
 $BODY$
 BEGIN
      
+     IF NOT EXISTS (SELECT 1 FROM Object WHERE Id = inPartionCellId AND DescId = zc_Object_PartionCell()) AND inPartionCellId > 0
+     THEN
+	 RAISE EXCEPTION 'Ошибка.История ячейки хранения для % <%> № <%> от <%> % (%)(%)(%)(%)'
+	                , CHR (13)
+	                , (SELECT MovementDesc.ItemName FROM Movement JOIN MovementDesc ON MovementDesc.Id = Movement.DescId WHERE Movement.Id = inMovementId)
+	                , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId)
+	                , (SELECT zfConvert_DateToString (Movement.OperDate)  FROM Movement WHERE Movement.Id = inMovementId)
+	                , CHR (13)
+	                , inMovementId    
+	                , inMovementItemId
+	                , inDescId_MILO  
+	                , inPartionCellId
+	                 ;
+     END IF:
+
          UPDATE MI_PartionCell SET PartionCellId = inPartionCellId, MovementId = inMovementId, UserId = inUserId, OperDate = CURRENT_TIMESTAMP
          WHERE MovementItemId = inMovementItemId AND DescId_MILO = inDescId_MILO
         ;

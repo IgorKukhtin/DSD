@@ -132,7 +132,7 @@ BEGIN
             , Movement.OperDate  ::TDateTime  AS OperDate
             , Movement.InvNumber ::TVarChar   AS InvNumber
             , tmpMILO_PartionCell.Amount      AS Amount
-            
+
        FROM tmpPartionCell AS Object
            -- зан€тые €чейки - показать MovementItem
            JOIN tmpMILO_PartionCell ON tmpMILO_PartionCell.ObjectId = Object.Id
@@ -164,5 +164,46 @@ $BODY$
  17.05.26                                        *
 */
 
+/*
+ TRUNCATE TABLE MI_PartionCell;
+ SELECT * 
+             , lpInsertUpdate_MI_PartionCell_table (inMovementId    := MovementId
+                                                        , inMovementItemId:= MovementItemId
+                                                        , inDescId_MILO   := DescId_MILO
+                                                        , inPartionCellId := Id
+                                                        , inUserId        := 0
+                                                         )
+FROM lpSelect_MI_PartionCell_table_test(inSession := '5');
+
+
+SELECT 1, MovementId, MovementItemId, DescId_MILO, PartionCellId, UserId, OperDate FROM MI_PartionCell where MovementItemId in (357226795)
+union
+SELECT 2, MovementId, MovementItemId, DescId_MILO, Id, null, PartionGoodsDate FROM lpSelect_MI_PartionCell_table_test(inSession := '5') AS lpSelect where MovementItemId = 357226795
+order by MovementItemId, DescId_MILO, 1
+
+*/
+
 -- тест
--- SELECT * FROM lpSelect_MI_PartionCell_table_test(inSession := '5');
+SELECT *
+FROM lpSelect_MI_PartionCell_table_test(inSession := '5') AS lpSelect
+     FULL JOIN (SELECT *
+                FROM MI_PartionCell
+                     INNER JOIN MovementItem ON MovementItem.Id = MI_PartionCell.MovementItemId
+                                            AND MovementItem.isErased = FALSE
+                     INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+                     -- RK
+                     INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                   ON MovementLinkObject_To.MovementId = Movement.Id
+                                                  AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                                  AND MovementLinkObject_To.ObjectId   = zc_Unit_RK()
+                WHERE MI_PartionCell.PartionCellId NOT IN  (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                   AND ((Movement.DescId = zc_Movement_Send() AND Movement.StatusId <> zc_Enum_Status_Erased())
+                     OR (Movement.DescId   = zc_Movement_WeighingProduction()
+                     AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                        )
+                       )
+               ) AS MI_PartionCell
+                 ON MI_PartionCell.PartionCellId  = lpSelect.Id
+                AND MI_PartionCell.MovementItemId = lpSelect.MovementItemId
+                AND MI_PartionCell.DescId_MILO    = lpSelect.DescId_MILO
+WHERE MI_PartionCell.MovementItemId IS NULL OR lpSelect.MovementItemId IS NULL

@@ -36,7 +36,12 @@ BEGIN
              || ' '|| inItemName;
 
    -- находим значение дл€ <ѕолное название>
-   vbValue:= (SELECT Object_ToolsWeighing_View.ValueData FROM Object_ToolsWeighing_View WHERE Object_ToolsWeighing_View.NameFull = vbNameFull);
+   /*IF 1 < (SELECT COUNT(*) FROM Object_ToolsWeighing_View WHERE Object_ToolsWeighing_View.NameFull = vbNameFull)
+   THEN
+   END IF;*/
+
+   -- находим значение дл€ <ѕолное название>
+   vbValue:= (SELECT (Object_ToolsWeighing_View.ValueData) FROM Object_ToolsWeighing_View WHERE Object_ToolsWeighing_View.NameFull = vbNameFull);
 
    -- если не найдено значение дл€ <ѕолное название>
    IF vbValue IS NULL

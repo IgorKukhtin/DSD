@@ -39,7 +39,12 @@ $BODY$
 
    DECLARE vbPriceListId Integer;
    DECLARE vbOperDate_pl TDateTime;
+
+   DECLARE vbUserId_save Integer;
 BEGIN
+     vbUserId_save:= inUserId;
+     IF inUserId < 0 THEN inUserId:= -1 * inUserId; END IF;
+
      -- Проверка
      IF COALESCE (inGoodsId, 0) = 0 AND 1=0
      THEN

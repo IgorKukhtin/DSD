@@ -135,13 +135,15 @@ BEGIN
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE '_tmpItem_PartionCell')
      THEN
          DELETE FROM _tmpItem_PartionCell;
+         DELETE FROM _tmpItem_PartionCell_table;
      ELSE
          -- таблица - элементы
-         CREATE TEMP TABLE _tmpItem_PartionCell (MovementId Integer, MovementItemId Integer, Amount TFloat, DescId_MILO Integer, PartionCellId Integer, PartionCellId_new Integer, isRePack Boolean, isMany Boolean) ON COMMIT DROP;
+         CREATE TEMP TABLE _tmpItem_PartionCell (MovementId Integer, MovementItemId Integer, Amount TFloat, DescId_MILO Integer, PartionCellId Integer, isRePack Boolean, isMany Boolean) ON COMMIT DROP;
+         CREATE TEMP TABLE _tmpItem_PartionCell_table (MovementId Integer, MovementItemId Integer, Amount TFloat, DescId_MILO Integer, PartionCellId Integer) ON COMMIT DROP;
      END IF;
 
 
-     INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
+     INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, isRePack, isMany)
        WITH -- 1 раз: для Партия дата в строчной части - если установлена (тогда не смотрим в документ)
             tmpMI_PartionDate AS (SELECT MovementItem.MovementId                  AS MovementId
                                        , MovementItem.Id                          AS MovementItemId
@@ -382,8 +384,6 @@ BEGIN
               -- текущее значение
             , tmpMI.DescId_MILO
             , tmpMI.PartionCellId
-              -- запишем потом
-            , 0 AS PartionCellId_new
               -- Перепак
             , isRePack
               -- Несколько партий в Ячейке да/нет)
@@ -946,28 +946,12 @@ BEGIN
              END IF;
 
              -- !!! сохранили еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_1())
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_1_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_1();
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_1_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_1()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_1()
-                         , inPartionCellId_1_new
-                         , inPartionCellId_1_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_1()
+                     , inPartionCellId_1_new
+                FROM _tmpItem_PartionCell AS tmp
+               ;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_1_new > 0
@@ -1004,34 +988,13 @@ BEGIN
             ;
 
              -- !!! сохранили ячейку еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_1() AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_1_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_1()
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_1_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_1()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_1()
-                         , inPartionCellId_1_new
-                         , inPartionCellId_1_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                    WHERE tmp.isRePack = FALSE
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_1()
+                     , inPartionCellId_1_new
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.isRePack = FALSE
+               ;
 
              -- вернули
              outPartionCellId_1:= inPartionCellId_1_new;
@@ -1117,29 +1080,12 @@ BEGIN
              END IF;
 
              -- !!! сохранили еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_2())
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_2_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_2();
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_2_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_2()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_2()
-                         , inPartionCellId_2_new
-                         , inPartionCellId_2_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                   ;
-             END IF;
-
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_2()
+                     , inPartionCellId_2_new
+                FROM _tmpItem_PartionCell AS tmp
+               ;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_2_new > 0
@@ -1164,34 +1110,13 @@ BEGIN
             ;
 
              -- !!! сохранили ячейку еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_2() AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_2_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_2()
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_2_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_2()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_2()
-                         , inPartionCellId_2_new
-                         , inPartionCellId_2_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                    WHERE tmp.isRePack = FALSE
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_2()
+                     , inPartionCellId_2_new
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.isRePack = FALSE
+               ;
 
              -- вернули
              outPartionCellId_2:= inPartionCellId_2_new;
@@ -1272,28 +1197,12 @@ BEGIN
 
 
              -- !!! сохранили еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_3())
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_3_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_3();
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_3_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_3()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_3()
-                         , inPartionCellId_3_new
-                         , inPartionCellId_3_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_3()
+                     , inPartionCellId_3_new
+                FROM _tmpItem_PartionCell AS tmp
+               ;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_3_new > 0
@@ -1318,34 +1227,13 @@ BEGIN
             ;
 
              -- !!! сохранили ячейку еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_3() AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_3_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_3()
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_3_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_3()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_3()
-                         , inPartionCellId_3_new
-                         , inPartionCellId_3_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                    WHERE tmp.isRePack = FALSE
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_3()
+                     , inPartionCellId_3_new
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.isRePack = FALSE
+               ;
 
              -- вернули
              outPartionCellId_3:= inPartionCellId_3_new;
@@ -1426,28 +1314,12 @@ BEGIN
              END IF;
 
              -- !!! сохранили еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_4())
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_4_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_4();
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_4_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_4()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_4()
-                         , inPartionCellId_4_new
-                         , inPartionCellId_4_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_4()
+                     , inPartionCellId_4_new
+                FROM _tmpItem_PartionCell AS tmp
+               ;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_4_new > 0
@@ -1472,34 +1344,13 @@ BEGIN
             ;
 
              -- !!! сохранили ячейку еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_4() AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_4_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_4()
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_4_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_4()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_4()
-                         , inPartionCellId_4_new
-                         , inPartionCellId_4_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                    WHERE tmp.isRePack = FALSE
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_4()
+                     , inPartionCellId_4_new
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.isRePack = FALSE
+               ;
 
              -- вернули
              outPartionCellId_4:= inPartionCellId_4_new;
@@ -1579,28 +1430,12 @@ BEGIN
              END IF;
 
              -- !!! сохранили еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_5())
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_5_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_5();
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_5_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_5()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_5()
-                         , inPartionCellId_5_new
-                         , inPartionCellId_5_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_5()
+                     , inPartionCellId_5_new
+                FROM _tmpItem_PartionCell AS tmp
+               ;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_5_new > 0
@@ -1625,34 +1460,13 @@ BEGIN
             ;
 
              -- !!! сохранили ячейку еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_5() AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_5_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_5()
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_5_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_5()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_5()
-                         , inPartionCellId_5_new
-                         , inPartionCellId_5_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                    WHERE tmp.isRePack = FALSE
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_5()
+                     , inPartionCellId_5_new
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.isRePack = FALSE
+               ;
 
              -- вернули
              outPartionCellId_5:= inPartionCellId_5_new;
@@ -1733,28 +1547,12 @@ BEGIN
              END IF;
 
              -- !!! сохранили еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_6())
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_6_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_6();
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_6_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_6()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_6()
-                         , inPartionCellId_6_new
-                         , inPartionCellId_6_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_6()
+                     , inPartionCellId_6_new
+                FROM _tmpItem_PartionCell AS tmp
+               ;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_6_new > 0
@@ -1779,34 +1577,13 @@ BEGIN
             ;
 
              -- !!! сохранили ячейку еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_6() AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_6_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_6()
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_6_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_6()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_6()
-                         , inPartionCellId_6_new
-                         , inPartionCellId_6_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                    WHERE tmp.isRePack = FALSE
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_6()
+                     , inPartionCellId_6_new
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.isRePack = FALSE
+               ;
 
              -- вернули
              outPartionCellId_6:= inPartionCellId_6_new;
@@ -1887,28 +1664,12 @@ BEGIN
              END IF;
 
              -- !!! сохранили еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_7())
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_7_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_7();
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_7_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_7()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_7()
-                         , inPartionCellId_7_new
-                         , inPartionCellId_7_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_7()
+                     , inPartionCellId_7_new
+                FROM _tmpItem_PartionCell AS tmp
+               ;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_7_new > 0
@@ -1933,34 +1694,13 @@ BEGIN
             ;
 
              -- !!! сохранили ячейку еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_7() AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_7_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_7()
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_7_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_7()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_7()
-                         , inPartionCellId_7_new
-                         , inPartionCellId_7_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                    WHERE tmp.isRePack = FALSE
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_7()
+                     , inPartionCellId_7_new
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.isRePack = FALSE
+               ;
 
              -- вернули
              outPartionCellId_7:= inPartionCellId_7_new;
@@ -2041,28 +1781,12 @@ BEGIN
              END IF;
 
              -- !!! сохранили еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_8())
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_8_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_8();
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_8_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_8()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_8()
-                         , inPartionCellId_8_new
-                         , inPartionCellId_8_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_8()
+                     , inPartionCellId_8_new
+                FROM _tmpItem_PartionCell AS tmp
+               ;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_8_new > 0
@@ -2087,34 +1811,13 @@ BEGIN
             ;
 
              -- !!! сохранили ячейку еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_8() AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_8_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_8()
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_8_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_8()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_8()
-                         , inPartionCellId_8_new
-                         , inPartionCellId_8_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                    WHERE tmp.isRePack = FALSE
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_8()
+                     , inPartionCellId_8_new
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.isRePack = FALSE
+               ;
 
              -- вернули
              outPartionCellId_8:= inPartionCellId_8_new;
@@ -2195,28 +1898,12 @@ BEGIN
              END IF;
 
              -- !!! сохранили еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_9())
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_9_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_9();
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_9_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_9()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_9()
-                         , inPartionCellId_9_new
-                         , inPartionCellId_9_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_9()
+                     , inPartionCellId_9_new
+                FROM _tmpItem_PartionCell AS tmp
+               ;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_9_new > 0
@@ -2241,34 +1928,13 @@ BEGIN
             ;
 
              -- !!! сохранили ячейку еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_9() AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_9_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_9()
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_9_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_9()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_9()
-                         , inPartionCellId_9_new
-                         , inPartionCellId_9_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                    WHERE tmp.isRePack = FALSE
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_9()
+                     , inPartionCellId_9_new
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.isRePack = FALSE
+               ;
 
              -- вернули
              outPartionCellId_9:= inPartionCellId_9_new;
@@ -2349,28 +2015,12 @@ BEGIN
              END IF;
 
              -- !!! сохранили еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_10())
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_10_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_10();
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_10_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_10()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_10()
-                         , inPartionCellId_10_new
-                         , inPartionCellId_10_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_10()
+                     , inPartionCellId_10_new
+                FROM _tmpItem_PartionCell AS tmp
+               ;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_10_new > 0
@@ -2395,34 +2045,13 @@ BEGIN
             ;
 
              -- !!! сохранили ячейку еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_10() AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_10_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_10()
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_10_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_10()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_10()
-                         , inPartionCellId_10_new
-                         , inPartionCellId_10_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                    WHERE tmp.isRePack = FALSE
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_10()
+                     , inPartionCellId_10_new
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.isRePack = FALSE
+               ;
 
              -- вернули
              outPartionCellId_10:= inPartionCellId_10_new;
@@ -2503,28 +2132,12 @@ BEGIN
              END IF;
 
              -- !!! сохранили еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_11())
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_11_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_11();
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_11_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_11()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_11()
-                         , inPartionCellId_11_new
-                         , inPartionCellId_11_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_11()
+                     , inPartionCellId_11_new
+                FROM _tmpItem_PartionCell AS tmp
+               ;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_11_new > 0
@@ -2549,34 +2162,13 @@ BEGIN
             ;
 
              -- !!! сохранили ячейку еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_11() AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_11_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_11()
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_11_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_11()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_11()
-                         , inPartionCellId_11_new
-                         , inPartionCellId_11_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                    WHERE tmp.isRePack = FALSE
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_11()
+                     , inPartionCellId_11_new
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.isRePack = FALSE
+               ;
 
              -- вернули
              outPartionCellId_11:= inPartionCellId_11_new;
@@ -2657,28 +2249,12 @@ BEGIN
              END IF;
 
              -- !!! сохранили еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_12())
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_12_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_12();
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_12_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_12()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_12()
-                         , inPartionCellId_12_new
-                         , inPartionCellId_12_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_12()
+                     , inPartionCellId_12_new
+                FROM _tmpItem_PartionCell AS tmp
+               ;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_12_new > 0
@@ -2703,34 +2279,13 @@ BEGIN
             ;
 
              -- !!! сохранили ячейку еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_12() AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_12_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_12()
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_12_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_12()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_12()
-                         , inPartionCellId_12_new
-                         , inPartionCellId_12_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                    WHERE tmp.isRePack = FALSE
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_12()
+                     , inPartionCellId_12_new
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.isRePack = FALSE
+               ;
 
              -- вернули
              outPartionCellId_12:= inPartionCellId_12_new;
@@ -2810,28 +2365,12 @@ BEGIN
              END IF;
 
              -- !!! сохранили еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_13())
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_13_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_13();
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_13_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_13()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_13()
-                         , inPartionCellId_13_new
-                         , inPartionCellId_13_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_13()
+                     , inPartionCellId_13_new
+                FROM _tmpItem_PartionCell AS tmp
+               ;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_13_new > 0
@@ -2856,34 +2395,13 @@ BEGIN
             ;
 
              -- !!! сохранили ячейку еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_13() AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_13_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_13()
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_13_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_13()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_13()
-                         , inPartionCellId_13_new
-                         , inPartionCellId_13_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                    WHERE tmp.isRePack = FALSE
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_13()
+                     , inPartionCellId_13_new
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.isRePack = FALSE
+               ;
 
              -- вернули
              outPartionCellId_13:= inPartionCellId_13_new;
@@ -2963,28 +2481,12 @@ BEGIN
              END IF;
 
              -- !!! сохранили еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_14())
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_14_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_14();
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_14_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_14()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_14()
-                         , inPartionCellId_14_new
-                         , inPartionCellId_14_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_14()
+                     , inPartionCellId_14_new
+                FROM _tmpItem_PartionCell AS tmp
+               ;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_14_new > 0
@@ -3009,34 +2511,13 @@ BEGIN
             ;
 
              -- !!! сохранили ячейку еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_14() AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_14_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_14()
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_14_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_14()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_14()
-                         , inPartionCellId_14_new
-                         , inPartionCellId_14_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                    WHERE tmp.isRePack = FALSE
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_14()
+                     , inPartionCellId_14_new
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.isRePack = FALSE
+               ;
 
              -- вернули
              outPartionCellId_14:= inPartionCellId_14_new;
@@ -3116,28 +2597,12 @@ BEGIN
              END IF;
 
              -- !!! сохранили еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_15())
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_15_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_15();
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_15_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_15()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_15()
-                         , inPartionCellId_15_new
-                         , inPartionCellId_15_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_15()
+                     , inPartionCellId_15_new
+                FROM _tmpItem_PartionCell AS tmp
+               ;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_15_new > 0
@@ -3162,34 +2627,13 @@ BEGIN
             ;
 
              -- !!! сохранили ячейку еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_15() AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_15_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_15()
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_15_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_15()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_15()
-                         , inPartionCellId_15_new
-                         , inPartionCellId_15_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                    WHERE tmp.isRePack = FALSE
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_15()
+                     , inPartionCellId_15_new
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.isRePack = FALSE
+               ;
 
              -- вернули
              outPartionCellId_15:= inPartionCellId_15_new;
@@ -3269,28 +2713,12 @@ BEGIN
              END IF;
 
              -- !!! сохранили еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_16())
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_16_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_16();
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_16_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_16()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_16()
-                         , inPartionCellId_16_new
-                         , inPartionCellId_16_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_16()
+                     , inPartionCellId_16_new
+                FROM _tmpItem_PartionCell AS tmp
+               ;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_16_new > 0
@@ -3315,34 +2743,13 @@ BEGIN
             ;
 
              -- !!! сохранили ячейку еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_16() AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_16_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_16()
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_16_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_16()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_16()
-                         , inPartionCellId_16_new
-                         , inPartionCellId_16_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                    WHERE tmp.isRePack = FALSE
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_16()
+                     , inPartionCellId_16_new
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.isRePack = FALSE
+               ;
 
              -- вернули
              outPartionCellId_16:= inPartionCellId_16_new;
@@ -3422,28 +2829,12 @@ BEGIN
              END IF;
 
              -- !!! сохранили еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_17())
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_17_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_17();
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_17_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_17()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_17()
-                         , inPartionCellId_17_new
-                         , inPartionCellId_17_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_17()
+                     , inPartionCellId_17_new
+                FROM _tmpItem_PartionCell AS tmp
+               ;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_17_new > 0
@@ -3468,34 +2859,13 @@ BEGIN
             ;
 
              -- !!! сохранили ячейку еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_17() AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_17_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_17()
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_17_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_17()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_17()
-                         , inPartionCellId_17_new
-                         , inPartionCellId_17_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                    WHERE tmp.isRePack = FALSE
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_17()
+                     , inPartionCellId_17_new
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.isRePack = FALSE
+               ;
 
              -- вернули
              outPartionCellId_17:= inPartionCellId_17_new;
@@ -3575,28 +2945,12 @@ BEGIN
              END IF;
 
              -- !!! сохранили еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_18())
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_18_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_18();
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_18_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_18()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_18()
-                         , inPartionCellId_18_new
-                         , inPartionCellId_18_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_18()
+                     , inPartionCellId_18_new
+                FROM _tmpItem_PartionCell AS tmp
+               ;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_18_new > 0
@@ -3621,34 +2975,13 @@ BEGIN
             ;
 
              -- !!! сохранили ячейку еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_18() AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_18_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_18()
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_18_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_18()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_18()
-                         , inPartionCellId_18_new
-                         , inPartionCellId_18_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                    WHERE tmp.isRePack = FALSE
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_18()
+                     , inPartionCellId_18_new
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.isRePack = FALSE
+               ;
 
              -- вернули
              outPartionCellId_18:= inPartionCellId_18_new;
@@ -3728,28 +3061,12 @@ BEGIN
              END IF;
 
              -- !!! сохранили еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_19())
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_19_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_19();
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_19_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_19()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_19()
-                         , inPartionCellId_19_new
-                         , inPartionCellId_19_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_19()
+                     , inPartionCellId_19_new
+                FROM _tmpItem_PartionCell AS tmp
+               ;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_19_new > 0
@@ -3774,34 +3091,13 @@ BEGIN
             ;
 
              -- !!! сохранили ячейку еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_19() AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_19_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_19()
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_19_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_19()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_19()
-                         , inPartionCellId_19_new
-                         , inPartionCellId_19_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                    WHERE tmp.isRePack = FALSE
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_19()
+                     , inPartionCellId_19_new
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.isRePack = FALSE
+               ;
 
              -- вернули
              outPartionCellId_19:= inPartionCellId_19_new;
@@ -3881,28 +3177,12 @@ BEGIN
              END IF;
 
              -- !!! сохранили еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_20())
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_20_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_20();
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_20_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_20()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_20()
-                         , inPartionCellId_20_new
-                         , inPartionCellId_20_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_20()
+                     , inPartionCellId_20_new
+                FROM _tmpItem_PartionCell AS tmp
+               ;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_20_new > 0
@@ -3927,34 +3207,13 @@ BEGIN
             ;
 
              -- !!! сохранили ячейку еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_20() AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_20_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_20()
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_20_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_20()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_20()
-                         , inPartionCellId_20_new
-                         , inPartionCellId_20_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                    WHERE tmp.isRePack = FALSE
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_20()
+                     , inPartionCellId_20_new
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.isRePack = FALSE
+               ;
 
              -- вернули
              outPartionCellId_20:= inPartionCellId_20_new;
@@ -4034,28 +3293,12 @@ BEGIN
              END IF;
 
              -- !!! сохранили еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_21())
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_21_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_21();
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_21_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_21()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_21()
-                         , inPartionCellId_21_new
-                         , inPartionCellId_21_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_21()
+                     , inPartionCellId_21_new
+                FROM _tmpItem_PartionCell AS tmp
+               ;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_21_new > 0
@@ -4080,34 +3323,13 @@ BEGIN
             ;
 
              -- !!! сохранили ячейку еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_21() AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_21_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_21()
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_21_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_21()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_21()
-                         , inPartionCellId_21_new
-                         , inPartionCellId_21_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                    WHERE tmp.isRePack = FALSE
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_21()
+                     , inPartionCellId_21_new
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.isRePack = FALSE
+               ;
 
              -- вернули
              outPartionCellId_21:= inPartionCellId_21_new;
@@ -4187,28 +3409,12 @@ BEGIN
              END IF;
 
              -- !!! сохранили еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_22())
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_22_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_22();
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_22_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_22()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_22()
-                         , inPartionCellId_22_new
-                         , inPartionCellId_22_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_22()
+                     , inPartionCellId_22_new
+                FROM _tmpItem_PartionCell AS tmp
+               ;
 
      -- реальная ячейка
      ELSEIF inPartionCellId_22_new > 0
@@ -4233,34 +3439,13 @@ BEGIN
             ;
 
              -- !!! сохранили ячейку еще здесь!!!
-             IF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_22() AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если такая есть
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_22_new
-                 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_22()
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-
-             ELSEIF EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.DescId_MILO = 0 AND _tmpItem_PartionCell.isRePack = FALSE)
-             THEN
-                 -- если первая запись
-                 UPDATE _tmpItem_PartionCell SET PartionCellId_new = inPartionCellId_22_new
-                                               , DescId_MILO       = zc_MILinkObject_PartionCell_22()
-                 WHERE _tmpItem_PartionCell.DescId_MILO = 0
-                   AND _tmpItem_PartionCell.isRePack    = FALSE
-                ;
-             ELSE
-                 -- если надо создать
-                 INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId, PartionCellId_new, isRePack, isMany)
-                    SELECT DISTINCT
-                           tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_22()
-                         , inPartionCellId_22_new
-                         , inPartionCellId_22_new
-                         , NULL :: Boolean, NULL :: Boolean
-                    FROM _tmpItem_PartionCell AS tmp
-                    WHERE tmp.isRePack = FALSE
-                   ;
-             END IF;
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, zc_MILinkObject_PartionCell_22()
+                     , inPartionCellId_22_new
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.isRePack = FALSE
+               ;
 
              -- вернули
              outPartionCellId_22:= inPartionCellId_22_new;
@@ -4270,13 +3455,13 @@ BEGIN
 
 
      -- сохранили - table
-     PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := _tmpItem_PartionCell.MovementId
-                                                , inMovementItemId:= _tmpItem_PartionCell.MovementItemId
-                                                , inDescId_MILO   := _tmpItem_PartionCell.DescId_MILO
-                                                , inPartionCellId := _tmpItem_PartionCell.PartionCellId_new
+     PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := _tmpItem_PartionCell_table.MovementId
+                                                , inMovementItemId:= _tmpItem_PartionCell_table.MovementItemId
+                                                , inDescId_MILO   := _tmpItem_PartionCell_table.DescId_MILO
+                                                , inPartionCellId := _tmpItem_PartionCell_table.PartionCellId
                                                 , inUserId        := inUserId
                                                  )
-     FROM _tmpItem_PartionCell
+     FROM _tmpItem_PartionCell_table
     ;
     
      -- сохранили протокол
@@ -4285,9 +3470,12 @@ BEGIN
           ) AS tmpItem
     ;
     
-    IF inUserId = 5 AND 1=0
+    IF inUserId = 5 AND 1=1
     THEN
-        RAISE EXCEPTION 'Ошибка.test = ok.';
+        RAISE EXCEPTION 'Ошибка.test = % %.'
+                       , (select count(*) from MI_PartionCell where MovementItemId in (357353069))
+                       , (select count(*) from _tmpItem_PartionCell_table where MovementItemId in (357353069, 357353069))
+                        ;
     END IF;
 
 

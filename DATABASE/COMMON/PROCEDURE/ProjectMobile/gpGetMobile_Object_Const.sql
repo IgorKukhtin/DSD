@@ -65,71 +65,134 @@ BEGIN
          RETURN;
      END IF;*/
 
+     IF EXISTS (SELECT 1 FROM Object WHERE Object.Id = vbUserId AND Object.DescId = zc_Object_Member())
+     THEN
+         -- нашли параметры
+         SELECT lfSelect.MemberId                    AS MemberId
+              , lfSelect.PersonalId                  AS PersonalId
+              , CASE WHEN vbUserId = 5866615 -- Матіюк В.Ю.
+                          THEN 8411 -- Склад ГП ф.Киев
+    
+                     WHEN vbUserId = 10105228  -- Трубін О.С.
+                          THEN 8425 -- Склад ГП ф.Харьков
+    
+                     WHEN vbUserId = 9957690 -- Свідзінська І.І.
+                          THEN 346093 -- Склад ГП ф.Одеса
+    
+                     ELSE lfSelect.UnitId
+                END AS UnitId
+    
+              , CASE WHEN vbUserId = 5866615 -- Матіюк В.Ю.
+                          THEN 8379 -- филиал Киев
+    
+                     WHEN vbUserId = 10105228  -- Трубін О.С.
+                          THEN 8381 -- филиал Харьков
+    
+                     WHEN vbUserId = 9957690 -- Свідзінська І.І.
+                          THEN 8374 -- филиал Одесса
+    
+                     WHEN ObjectLink_Unit_Branch.ChildObjectId = 8377 -- филиал Кр.Рог
+                          THEN zc_Branch_Basis()
+    
+                     WHEN ObjectLink_Unit_Branch.ChildObjectId = 301310 -- филиал Запорожье
+                          THEN zc_Branch_Basis()
+    
+                     ELSE COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
+                END AS BranchId
+    
+              , CASE WHEN vbUserId = 5866615 -- Матіюк В.Ю.
+                          THEN 8379 -- филиал Киев
+    
+                     WHEN vbUserId = 10105228  -- Трубін О.С.
+                          THEN 8381 -- филиал Харьков
+    
+                     WHEN vbUserId = 9957690 -- Свідзінська І.І.
+                          THEN 8374 -- филиал Одесса
+    
+                     WHEN ObjectLink_Unit_Branch.ChildObjectId = 8377 -- филиал Кр.Рог
+                          THEN zc_Branch_Basis()
+    
+                     ELSE COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
+                END AS BranchId_cash
+    
+    
+                INTO vbMemberId, vbPersonalId, vbUnitId, vbBranchId, vbBranchId_cash
+    
+         FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+              LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                   ON ObjectLink_Unit_Branch.ObjectId = lfSelect.UnitId
+                                  AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
+         WHERE lfSelect.MemberId = vbUserId
+           AND lfSelect.Ord      = 1
+        ;
 
-     -- нашли параметры
-     SELECT ObjectLink_User_Member.ChildObjectId AS MemberId
-          , lfSelect.PersonalId                  AS PersonalId
-          , CASE WHEN vbUserId = 5866615 -- Матіюк В.Ю.
-                      THEN 8411 -- Склад ГП ф.Киев
+     ELSE
+         -- нашли параметры
+         SELECT ObjectLink_User_Member.ChildObjectId AS MemberId
+              , lfSelect.PersonalId                  AS PersonalId
+              , CASE WHEN vbUserId = 5866615 -- Матіюк В.Ю.
+                          THEN 8411 -- Склад ГП ф.Киев
+    
+                     WHEN vbUserId = 10105228  -- Трубін О.С.
+                          THEN 8425 -- Склад ГП ф.Харьков
+    
+                     WHEN vbUserId = 9957690 -- Свідзінська І.І.
+                          THEN 346093 -- Склад ГП ф.Одеса
+    
+                     ELSE lfSelect.UnitId
+                END AS UnitId
+    
+              , CASE WHEN vbUserId = 5866615 -- Матіюк В.Ю.
+                          THEN 8379 -- филиал Киев
+    
+                     WHEN vbUserId = 10105228  -- Трубін О.С.
+                          THEN 8381 -- филиал Харьков
+    
+                     WHEN vbUserId = 9957690 -- Свідзінська І.І.
+                          THEN 8374 -- филиал Одесса
+    
+                     WHEN ObjectLink_Unit_Branch.ChildObjectId = 8377 -- филиал Кр.Рог
+                          THEN zc_Branch_Basis()
+    
+                     WHEN ObjectLink_Unit_Branch.ChildObjectId = 301310 -- филиал Запорожье
+                          THEN zc_Branch_Basis()
+    
+                     ELSE COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
+                END AS BranchId
+    
+              , CASE WHEN vbUserId = 5866615 -- Матіюк В.Ю.
+                          THEN 8379 -- филиал Киев
+    
+                     WHEN vbUserId = 10105228  -- Трубін О.С.
+                          THEN 8381 -- филиал Харьков
+    
+                     WHEN vbUserId = 9957690 -- Свідзінська І.І.
+                          THEN 8374 -- филиал Одесса
+    
+                     WHEN ObjectLink_Unit_Branch.ChildObjectId = 8377 -- филиал Кр.Рог
+                          THEN zc_Branch_Basis()
+    
+                     ELSE COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
+                END AS BranchId_cash
+    
+    
+                INTO vbMemberId, vbPersonalId, vbUnitId, vbBranchId, vbBranchId_cash
+    
+         FROM ObjectLink AS ObjectLink_User_Member
+              LEFT JOIN lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                                                                        ON lfSelect.MemberId = ObjectLink_User_Member.ChildObjectId
+                                                                       AND lfSelect.Ord      = 1
+              LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                   ON ObjectLink_Unit_Branch.ObjectId = lfSelect.UnitId
+                                  AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
+         WHERE ObjectLink_User_Member.ObjectId = CASE WHEN vbUserId = 5 OR vbUserId = 9457 THEN 1059546 -- !!!ВРЕМЕННО - ДЛЯ ТЕСТА!!! - Админ    -> 1059546  - Ищик Н.Н.
+                                                    --WHEN vbUserId = 1123966 THEN 81169 -- !!!ВРЕМЕННО - ДЛЯ ТЕСТА!!! - test_mob -> 1000168 - Молдован Е.А.
+                                                      ELSE vbUserId
+                                                 END
+           AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+        ;
 
-                 WHEN vbUserId = 10105228  -- Трубін О.С.
-                      THEN 8425 -- Склад ГП ф.Харьков
-
-                 WHEN vbUserId = 9957690 -- Свідзінська І.І.
-                      THEN 346093 -- Склад ГП ф.Одеса
-
-                 ELSE lfSelect.UnitId
-            END AS UnitId
-
-          , CASE WHEN vbUserId = 5866615 -- Матіюк В.Ю.
-                      THEN 8379 -- филиал Киев
-
-                 WHEN vbUserId = 10105228  -- Трубін О.С.
-                      THEN 8381 -- филиал Харьков
-
-                 WHEN vbUserId = 9957690 -- Свідзінська І.І.
-                      THEN 8374 -- филиал Одесса
-
-                 WHEN ObjectLink_Unit_Branch.ChildObjectId = 8377 -- филиал Кр.Рог
-                      THEN zc_Branch_Basis()
-
-                 WHEN ObjectLink_Unit_Branch.ChildObjectId = 301310 -- филиал Запорожье
-                      THEN zc_Branch_Basis()
-
-                 ELSE COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
-            END AS BranchId
-
-          , CASE WHEN vbUserId = 5866615 -- Матіюк В.Ю.
-                      THEN 8379 -- филиал Киев
-
-                 WHEN vbUserId = 10105228  -- Трубін О.С.
-                      THEN 8381 -- филиал Харьков
-
-                 WHEN vbUserId = 9957690 -- Свідзінська І.І.
-                      THEN 8374 -- филиал Одесса
-
-                 WHEN ObjectLink_Unit_Branch.ChildObjectId = 8377 -- филиал Кр.Рог
-                      THEN zc_Branch_Basis()
-
-                 ELSE COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
-            END AS BranchId_cash
-
-
-            INTO vbMemberId, vbPersonalId, vbUnitId, vbBranchId, vbBranchId_cash
-
-     FROM ObjectLink AS ObjectLink_User_Member
-          LEFT JOIN lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
-                                                                    ON lfSelect.MemberId = ObjectLink_User_Member.ChildObjectId
-                                                                   AND lfSelect.Ord      = 1
-          LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
-                               ON ObjectLink_Unit_Branch.ObjectId = lfSelect.UnitId
-                              AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
-     WHERE ObjectLink_User_Member.ObjectId = CASE WHEN vbUserId = 5 OR vbUserId = 9457 THEN 1059546 -- !!!ВРЕМЕННО - ДЛЯ ТЕСТА!!! - Админ    -> 1059546  - Ищик Н.Н.
-                                                --WHEN vbUserId = 1123966 THEN 81169 -- !!!ВРЕМЕННО - ДЛЯ ТЕСТА!!! - test_mob -> 1000168 - Молдован Е.А.
-                                                  ELSE vbUserId
-                                             END
-       AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
-    ;
+     END IF;
 
      -- проверка - свойство должно быть установлено
      IF COALESCE (vbMemberId, 0) =  0 THEN

@@ -261,7 +261,7 @@ BEGIN
                                                                           , inVATPercent          := COALESCE ((SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = tmpParams.PriceListId AND OFl.DescId = zc_ObjectFloat_PriceList_VATPercent()), 20) :: TFloat
                                                                           , inChangePercent       := COALESCE ((SELECT Object_Contract_View.ChangePercent FROM Object_Contract_View WHERE Object_Contract_View.ContractId = tmpParams.ContractId), 0) :: TFloat
                                                                           , inInsertDate          := tmpParams.InsertMobile
-                                                                          , inSession             := (SELECT OL.ObjectId FROM ObjectLink AS OL WHERE OL.ChildObjectId = tmpParams.MemberId AND OL.DescId = zc_ObjectLink_User_Member()) :: TVarChar
+                                                                          , inSession             := COALESCE ((SELECT OL.ObjectId FROM ObjectLink AS OL WHERE OL.ChildObjectId = tmpParams.MemberId AND OL.DescId = zc_ObjectLink_User_Member()), tmpParams.MemberId) :: TVarChar
                                                                            )
                         FROM tmpParams
                        );

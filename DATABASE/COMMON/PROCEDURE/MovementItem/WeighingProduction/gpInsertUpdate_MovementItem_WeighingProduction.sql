@@ -337,6 +337,14 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemLinkObject (vbDescId_MILO_PartionCell, ioId, inPartionCellId);
              -- открыли
              PERFORM lpInsertUpdate_MovementItemBoolean (vbDescId_MIBoolean_PartionCell, ioId, FALSE);
+
+             -- сохранили в table
+             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                        , inMovementItemId:= ioId
+                                                        , inDescId_MILO   := vbDescId_MILO_PartionCell
+                                                        , inPartionCellId := inPartionCellId
+                                                        , inUserId        := vbUserId
+                                                         );
          END IF;
 
 
