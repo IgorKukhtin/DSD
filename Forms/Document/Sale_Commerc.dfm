@@ -3,7 +3,6 @@ inherited Sale_CommercForm: TSale_CommercForm
   ClientHeight = 657
   ClientWidth = 1468
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitTop = -41
   ExplicitWidth = 1484
   ExplicitHeight = 696
   PixelsPerInch = 96
@@ -1003,8 +1002,6 @@ inherited Sale_CommercForm: TSale_CommercForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitLeft = 254
-        ExplicitTop = 32
         object cxGridDBTableViewDetail: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -1110,13 +1107,6 @@ inherited Sale_CommercForm: TSale_CommercForm
           object ContractName_bonus_ch2: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'. ('#1091#1089#1083'. '#1073#1086#1085#1091#1089#1072')'
             DataBinding.FieldName = 'ContractName_bonus'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1125,14 +1115,6 @@ inherited Sale_CommercForm: TSale_CommercForm
           object ContractCode_ch2: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'. ('#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103')'
             DataBinding.FieldName = 'ContractCode'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actGoodsKindChoice
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1156,13 +1138,6 @@ inherited Sale_CommercForm: TSale_CommercForm
           object BonusKindName_ch2: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1073#1086#1085#1091#1089#1072
             DataBinding.FieldName = 'BonusKindName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1197,9 +1172,6 @@ inherited Sale_CommercForm: TSale_CommercForm
           object InfoMoneyName_ch2: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077')'
             DataBinding.FieldName = 'InfoMoneyName'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -4447,10 +4419,6 @@ inherited Sale_CommercForm: TSale_CommercForm
         item
           Visible = True
           ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbsUnLoad'
         end
         item
           Visible = True
