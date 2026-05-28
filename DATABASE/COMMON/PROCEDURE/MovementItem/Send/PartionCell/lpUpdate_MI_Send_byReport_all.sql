@@ -471,8 +471,14 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_1(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
-             -- !!! здесь и так 0 !!!
-             -- UPDATE _tmpItem_PartionCell SET PartionCellId_new = 0 WHERE _tmpItem_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_1();
+             -- обнулили в table
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, tmp.DescId_MILO
+                     , 0
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_1()
+               ;
 
      END IF;
 
@@ -492,6 +498,15 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_2(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
+             -- обнулили в table
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, tmp.DescId_MILO
+                     , 0
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_2()
+               ;
+
      END IF;
 
      -- 1.3. если выполн€етс€ "обнулили €чейку"
@@ -509,6 +524,15 @@ BEGIN
              -- 1.3.обнулили €чейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_3(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
+
+             -- обнулили в table
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, tmp.DescId_MILO
+                     , 0
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_3()
+               ;
 
      END IF;
 
@@ -529,6 +553,15 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_4(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
+             -- обнулили в table
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, tmp.DescId_MILO
+                     , 0
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_4()
+               ;
+
      END IF;
 
      -- 1.5. если выполн€етс€ "обнулили €чейку"
@@ -546,6 +579,15 @@ BEGIN
              -- 1.3.обнулили €чейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_5(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
+
+             -- обнулили в table
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, tmp.DescId_MILO
+                     , 0
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_5()
+               ;
 
      END IF;
 
@@ -566,6 +608,15 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_6(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
+             -- обнулили в table
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, tmp.DescId_MILO
+                     , 0
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_6()
+               ;
+
      END IF;
 
      -- 1.7. если выполн€етс€ "обнулили €чейку"
@@ -583,6 +634,15 @@ BEGIN
              -- 1.3.обнулили €чейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_7(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
+
+             -- обнулили в table
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, tmp.DescId_MILO
+                     , 0
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_7()
+               ;
 
      END IF;
 
@@ -603,6 +663,15 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_8(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
+             -- обнулили в table
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, tmp.DescId_MILO
+                     , 0
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_8()
+               ;
+
      END IF;
 
 
@@ -621,6 +690,15 @@ BEGIN
              -- 1.3.обнулили €чейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_9(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
+
+             -- обнулили в table
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, tmp.DescId_MILO
+                     , 0
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_9()
+               ;
 
      END IF;
 
@@ -641,6 +719,15 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_10(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
+             -- обнулили в table
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, tmp.DescId_MILO
+                     , 0
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_10()
+               ;
+
      END IF;
 
 
@@ -659,6 +746,15 @@ BEGIN
              -- 1.3.обнулили €чейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_11(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
+
+             -- обнулили в table
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, tmp.DescId_MILO
+                     , 0
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_11()
+               ;
 
      END IF;
 
@@ -679,6 +775,15 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_12(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
+             -- обнулили в table
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, tmp.DescId_MILO
+                     , 0
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_12()
+               ;
+
      END IF;
 
 
@@ -698,6 +803,15 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_13(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
+             -- обнулили в table
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, tmp.DescId_MILO
+                     , 0
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_13()
+               ;
+
      END IF;
 
      -- 1.14. если выполн€етс€ "обнулили €чейку"
@@ -715,6 +829,15 @@ BEGIN
              -- 1.3.обнулили €чейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_14(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
+
+             -- обнулили в table
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, tmp.DescId_MILO
+                     , 0
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_14()
+               ;
 
      END IF;
 
@@ -735,6 +858,15 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_15(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
+             -- обнулили в table
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, tmp.DescId_MILO
+                     , 0
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_15()
+               ;
+
      END IF;
 
 
@@ -753,6 +885,15 @@ BEGIN
              -- 1.3.обнулили €чейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_16(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
+
+             -- обнулили в table
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, tmp.DescId_MILO
+                     , 0
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_16()
+               ;
 
      END IF;
 
@@ -773,6 +914,15 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_17(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
+             -- обнулили в table
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, tmp.DescId_MILO
+                     , 0
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_17()
+               ;
+
      END IF;
 
 
@@ -791,6 +941,15 @@ BEGIN
              -- 1.3.обнулили €чейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_18(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
+
+             -- обнулили в table
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, tmp.DescId_MILO
+                     , 0
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_18()
+               ;
 
      END IF;
 
@@ -811,6 +970,15 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_19(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
+             -- обнулили в table
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, tmp.DescId_MILO
+                     , 0
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_19()
+               ;
+
      END IF;
 
 
@@ -829,6 +997,15 @@ BEGIN
              -- 1.3.обнулили €чейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_20(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
+
+             -- обнулили в table
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, tmp.DescId_MILO
+                     , 0
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_20()
+               ;
 
      END IF;
 
@@ -849,6 +1026,15 @@ BEGIN
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_21(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
+             -- обнулили в table
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, tmp.DescId_MILO
+                     , 0
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_21()
+               ;
+
      END IF;
 
 
@@ -867,6 +1053,15 @@ BEGIN
              -- 1.3.обнулили €чейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_22(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
+
+             -- обнулили в table
+             INSERT INTO _tmpItem_PartionCell_table (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+                SELECT DISTINCT
+                       tmp.MovementId, tmp.MovementItemId, tmp.Amount, tmp.DescId_MILO
+                     , 0
+                FROM _tmpItem_PartionCell AS tmp
+                WHERE tmp.DescId_MILO = zc_MILinkObject_PartionCell_22()
+               ;
 
      END IF;
 
@@ -3473,8 +3668,8 @@ BEGIN
     IF inUserId = 5 AND 1=1
     THEN
         RAISE EXCEPTION 'ќшибка.test = % %.'
-                       , (select count(*) from MI_PartionCell where MovementItemId in (357353069))
-                       , (select count(*) from _tmpItem_PartionCell_table where MovementItemId in (357353069, 357353069))
+                       , (select count(*) from MI_PartionCell where MovementItemId in (357214019))
+                       , (select count(*) from _tmpItem_PartionCell_table where MovementItemId in (357214019))
                         ;
     END IF;
 

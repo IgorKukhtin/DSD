@@ -2370,12 +2370,15 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_1(), inMovementItemId, 0 :: TFloat);
 
              -- обнулили в table
-             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
-                                                        , inMovementItemId:= inMovementItemId
-                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_1()
-                                                        , inPartionCellId := 0
-                                                        , inUserId        := vbUserId
-                                                         );
+             IF EXISTS (SELECT 1 FROM MI_PartionCell WHERE MI_PartionCell.MovementItemId = inMovementItemId AND MI_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_1() AND MI_PartionCell.PartionCellId > 0)
+             THEN
+                 PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                            , inMovementItemId:= inMovementItemId
+                                                            , inDescId_MILO   := zc_MILinkObject_PartionCell_1()
+                                                            , inPartionCellId := 0
+                                                            , inUserId        := vbUserId
+                                                             );
+             END IF;
 
          ELSEIF vbPartionCellId_1 = zc_PartionCell_RK()
          THEN
@@ -2460,12 +2463,15 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_2(), inMovementItemId, 0 :: TFloat);
 
              -- обнулили в table
-             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
-                                                        , inMovementItemId:= inMovementItemId
-                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_2()
-                                                        , inPartionCellId := 0
-                                                        , inUserId        := vbUserId
-                                                         );
+             IF EXISTS (SELECT 1 FROM MI_PartionCell WHERE MI_PartionCell.MovementItemId = inMovementItemId AND MI_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_2() AND MI_PartionCell.PartionCellId > 0)
+             THEN
+                 PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                            , inMovementItemId:= inMovementItemId
+                                                            , inDescId_MILO   := zc_MILinkObject_PartionCell_2()
+                                                            , inPartionCellId := 0
+                                                            , inUserId        := vbUserId
+                                                             );
+             END IF;
 
          ELSEIF vbPartionCellId_2 = zc_PartionCell_RK()
          THEN
@@ -2549,12 +2555,15 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_3(), inMovementItemId, 0 :: TFloat);
 
              -- обнулили в table
-             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
-                                                        , inMovementItemId:= inMovementItemId
-                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_3()
-                                                        , inPartionCellId := 0
-                                                        , inUserId        := vbUserId
-                                                         );
+             IF EXISTS (SELECT 1 FROM MI_PartionCell WHERE MI_PartionCell.MovementItemId = inMovementItemId AND MI_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_3() AND MI_PartionCell.PartionCellId > 0)
+             THEN
+                 PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                            , inMovementItemId:= inMovementItemId
+                                                            , inDescId_MILO   := zc_MILinkObject_PartionCell_3()
+                                                            , inPartionCellId := 0
+                                                            , inUserId        := vbUserId
+                                                             );
+             END IF;
 
          ELSEIF vbPartionCellId_3 = zc_PartionCell_RK()
          THEN
@@ -2638,12 +2647,15 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_4(), inMovementItemId, 0 :: TFloat);
 
              -- обнулили в table
-             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
-                                                        , inMovementItemId:= inMovementItemId
-                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_4()
-                                                        , inPartionCellId := 0
-                                                        , inUserId        := vbUserId
-                                                         );
+             IF EXISTS (SELECT 1 FROM MI_PartionCell WHERE MI_PartionCell.MovementItemId = inMovementItemId AND MI_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_4() AND MI_PartionCell.PartionCellId > 0)
+             THEN
+                 PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                            , inMovementItemId:= inMovementItemId
+                                                            , inDescId_MILO   := zc_MILinkObject_PartionCell_4()
+                                                            , inPartionCellId := 0
+                                                            , inUserId        := vbUserId
+                                                             );
+             END IF;
 
          ELSEIF vbPartionCellId_4 = zc_PartionCell_RK()
          THEN
@@ -2727,12 +2739,15 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_5(), inMovementItemId, 0 :: TFloat);
 
              -- обнулили в table
-             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+             IF EXISTS (SELECT 1 FROM MI_PartionCell WHERE MI_PartionCell.MovementItemId = inMovementItemId AND MI_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_5() AND MI_PartionCell.PartionCellId > 0)
+             THEN
+                 PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
                                                         , inMovementItemId:= inMovementItemId
                                                         , inDescId_MILO   := zc_MILinkObject_PartionCell_5()
                                                         , inPartionCellId := 0
                                                         , inUserId        := vbUserId
                                                          );
+             END IF;
 
          ELSEIF vbPartionCellId_5 = zc_PartionCell_RK()
          THEN
@@ -2816,12 +2831,15 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_6(), inMovementItemId, 0 :: TFloat);
 
              -- обнулили в table
-             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
-                                                        , inMovementItemId:= inMovementItemId
-                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_6()
-                                                        , inPartionCellId := 0
-                                                        , inUserId        := vbUserId
-                                                         );
+             IF EXISTS (SELECT 1 FROM MI_PartionCell WHERE MI_PartionCell.MovementItemId = inMovementItemId AND MI_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_6() AND MI_PartionCell.PartionCellId > 0)
+             THEN
+                 PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                            , inMovementItemId:= inMovementItemId
+                                                            , inDescId_MILO   := zc_MILinkObject_PartionCell_6()
+                                                            , inPartionCellId := 0
+                                                            , inUserId        := vbUserId
+                                                             );
+             END IF;
 
          ELSEIF vbPartionCellId_6 = zc_PartionCell_RK()
          THEN
@@ -2905,12 +2923,15 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_7(), inMovementItemId, 0 :: TFloat);
 
              -- обнулили в table
-             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
-                                                        , inMovementItemId:= inMovementItemId
-                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_7()
-                                                        , inPartionCellId := 0
-                                                        , inUserId        := vbUserId
-                                                         );
+             IF EXISTS (SELECT 1 FROM MI_PartionCell WHERE MI_PartionCell.MovementItemId = inMovementItemId AND MI_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_7() AND MI_PartionCell.PartionCellId > 0)
+             THEN
+                 PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                            , inMovementItemId:= inMovementItemId
+                                                            , inDescId_MILO   := zc_MILinkObject_PartionCell_7()
+                                                            , inPartionCellId := 0
+                                                            , inUserId        := vbUserId
+                                                             );
+             END IF;
 
          ELSEIF vbPartionCellId_7 = zc_PartionCell_RK()
          THEN
@@ -2994,12 +3015,15 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_8(), inMovementItemId, 0 :: TFloat);
 
              -- обнулили в table
-             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
-                                                        , inMovementItemId:= inMovementItemId
-                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_8()
-                                                        , inPartionCellId := 0
-                                                        , inUserId        := vbUserId
-                                                         );
+             IF EXISTS (SELECT 1 FROM MI_PartionCell WHERE MI_PartionCell.MovementItemId = inMovementItemId AND MI_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_8() AND MI_PartionCell.PartionCellId > 0)
+             THEN
+                 PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                            , inMovementItemId:= inMovementItemId
+                                                            , inDescId_MILO   := zc_MILinkObject_PartionCell_8()
+                                                            , inPartionCellId := 0
+                                                            , inUserId        := vbUserId
+                                                             );
+             END IF;
 
          ELSEIF vbPartionCellId_8 = zc_PartionCell_RK()
          THEN
@@ -3083,12 +3107,15 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_9(), inMovementItemId, 0 :: TFloat);
 
              -- обнулили в table
-             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
-                                                        , inMovementItemId:= inMovementItemId
-                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_9()
-                                                        , inPartionCellId := 0
-                                                        , inUserId        := vbUserId
-                                                         );
+             IF EXISTS (SELECT 1 FROM MI_PartionCell WHERE MI_PartionCell.MovementItemId = inMovementItemId AND MI_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_9() AND MI_PartionCell.PartionCellId > 0)
+             THEN
+                 PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                            , inMovementItemId:= inMovementItemId
+                                                            , inDescId_MILO   := zc_MILinkObject_PartionCell_9()
+                                                            , inPartionCellId := 0
+                                                            , inUserId        := vbUserId
+                                                             );
+             END IF;
 
          ELSEIF vbPartionCellId_9 = zc_PartionCell_RK()
          THEN
@@ -3172,12 +3199,15 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_10(), inMovementItemId, 0 :: TFloat);
 
              -- обнулили в table
-             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
-                                                        , inMovementItemId:= inMovementItemId
-                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_10()
-                                                        , inPartionCellId := 0
-                                                        , inUserId        := vbUserId
-                                                         );
+             IF EXISTS (SELECT 1 FROM MI_PartionCell WHERE MI_PartionCell.MovementItemId = inMovementItemId AND MI_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_10() AND MI_PartionCell.PartionCellId > 0)
+             THEN
+                 PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                            , inMovementItemId:= inMovementItemId
+                                                            , inDescId_MILO   := zc_MILinkObject_PartionCell_10()
+                                                            , inPartionCellId := 0
+                                                            , inUserId        := vbUserId
+                                                             );
+             END IF;
 
          ELSEIF vbPartionCellId_10 = zc_PartionCell_RK()
          THEN
@@ -3261,12 +3291,15 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_11(), inMovementItemId, 0 :: TFloat);
 
              -- обнулили в table
-             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
-                                                        , inMovementItemId:= inMovementItemId
-                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_11()
-                                                        , inPartionCellId := 0
-                                                        , inUserId        := vbUserId
-                                                         );
+             IF EXISTS (SELECT 1 FROM MI_PartionCell WHERE MI_PartionCell.MovementItemId = inMovementItemId AND MI_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_11() AND MI_PartionCell.PartionCellId > 0)
+             THEN
+                 PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                            , inMovementItemId:= inMovementItemId
+                                                            , inDescId_MILO   := zc_MILinkObject_PartionCell_11()
+                                                            , inPartionCellId := 0
+                                                            , inUserId        := vbUserId
+                                                             );
+             END IF;
 
          ELSEIF vbPartionCellId_11 = zc_PartionCell_RK()
          THEN
@@ -3350,12 +3383,15 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_12(), inMovementItemId, 0 :: TFloat);
 
              -- обнулили в table
-             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
-                                                        , inMovementItemId:= inMovementItemId
-                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_12()
-                                                        , inPartionCellId := 0
-                                                        , inUserId        := vbUserId
-                                                         );
+             IF EXISTS (SELECT 1 FROM MI_PartionCell WHERE MI_PartionCell.MovementItemId = inMovementItemId AND MI_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_12() AND MI_PartionCell.PartionCellId > 0)
+             THEN
+                 PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                            , inMovementItemId:= inMovementItemId
+                                                            , inDescId_MILO   := zc_MILinkObject_PartionCell_12()
+                                                            , inPartionCellId := 0
+                                                            , inUserId        := vbUserId
+                                                             );
+             END IF;
 
          ELSEIF vbPartionCellId_12 = zc_PartionCell_RK()
          THEN
@@ -3439,12 +3475,15 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_13(), inMovementItemId, 0 :: TFloat);
 
              -- обнулили в table
-             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
-                                                        , inMovementItemId:= inMovementItemId
-                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_13()
-                                                        , inPartionCellId := 0
-                                                        , inUserId        := vbUserId
-                                                         );
+             IF EXISTS (SELECT 1 FROM MI_PartionCell WHERE MI_PartionCell.MovementItemId = inMovementItemId AND MI_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_13() AND MI_PartionCell.PartionCellId > 0)
+             THEN
+                 PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                            , inMovementItemId:= inMovementItemId
+                                                            , inDescId_MILO   := zc_MILinkObject_PartionCell_13()
+                                                            , inPartionCellId := 0
+                                                            , inUserId        := vbUserId
+                                                             );
+             END IF;
 
          ELSEIF vbPartionCellId_13 = zc_PartionCell_RK()
          THEN
@@ -3528,12 +3567,15 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_14(), inMovementItemId, 0 :: TFloat);
 
              -- обнулили в table
-             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
-                                                        , inMovementItemId:= inMovementItemId
-                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_14()
-                                                        , inPartionCellId := 0
-                                                        , inUserId        := vbUserId
-                                                         );
+             IF EXISTS (SELECT 1 FROM MI_PartionCell WHERE MI_PartionCell.MovementItemId = inMovementItemId AND MI_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_14() AND MI_PartionCell.PartionCellId > 0)
+             THEN
+                 PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                            , inMovementItemId:= inMovementItemId
+                                                            , inDescId_MILO   := zc_MILinkObject_PartionCell_14()
+                                                            , inPartionCellId := 0
+                                                            , inUserId        := vbUserId
+                                                             );
+             END IF;
 
          ELSEIF vbPartionCellId_14 = zc_PartionCell_RK()
          THEN
@@ -3617,12 +3659,15 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_15(), inMovementItemId, 0 :: TFloat);
 
              -- обнулили в table
-             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
-                                                        , inMovementItemId:= inMovementItemId
-                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_15()
-                                                        , inPartionCellId := 0
-                                                        , inUserId        := vbUserId
-                                                         );
+             IF EXISTS (SELECT 1 FROM MI_PartionCell WHERE MI_PartionCell.MovementItemId = inMovementItemId AND MI_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_15() AND MI_PartionCell.PartionCellId > 0)
+             THEN
+                 PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                            , inMovementItemId:= inMovementItemId
+                                                            , inDescId_MILO   := zc_MILinkObject_PartionCell_15()
+                                                            , inPartionCellId := 0
+                                                            , inUserId        := vbUserId
+                                                             );
+             END IF;
 
          ELSEIF vbPartionCellId_15 = zc_PartionCell_RK()
          THEN
@@ -3706,12 +3751,15 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_16(), inMovementItemId, 0 :: TFloat);
 
              -- обнулили в table
-             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
-                                                        , inMovementItemId:= inMovementItemId
-                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_16()
-                                                        , inPartionCellId := 0
-                                                        , inUserId        := vbUserId
-                                                         );
+             IF EXISTS (SELECT 1 FROM MI_PartionCell WHERE MI_PartionCell.MovementItemId = inMovementItemId AND MI_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_16() AND MI_PartionCell.PartionCellId > 0)
+             THEN
+                 PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                            , inMovementItemId:= inMovementItemId
+                                                            , inDescId_MILO   := zc_MILinkObject_PartionCell_16()
+                                                            , inPartionCellId := 0
+                                                            , inUserId        := vbUserId
+                                                             );
+             END IF;
 
          ELSEIF vbPartionCellId_16 = zc_PartionCell_RK()
          THEN
@@ -3795,12 +3843,15 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_17(), inMovementItemId, 0 :: TFloat);
 
              -- обнулили в table
-             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
-                                                        , inMovementItemId:= inMovementItemId
-                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_17()
-                                                        , inPartionCellId := 0
-                                                        , inUserId        := vbUserId
-                                                         );
+             IF EXISTS (SELECT 1 FROM MI_PartionCell WHERE MI_PartionCell.MovementItemId = inMovementItemId AND MI_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_17() AND MI_PartionCell.PartionCellId > 0)
+             THEN
+                 PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                            , inMovementItemId:= inMovementItemId
+                                                            , inDescId_MILO   := zc_MILinkObject_PartionCell_17()
+                                                            , inPartionCellId := 0
+                                                            , inUserId        := vbUserId
+                                                             );
+             END IF;
 
          ELSEIF vbPartionCellId_17 = zc_PartionCell_RK()
          THEN
@@ -3884,12 +3935,15 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_18(), inMovementItemId, 0 :: TFloat);
 
              -- обнулили в table
-             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
-                                                        , inMovementItemId:= inMovementItemId
-                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_18()
-                                                        , inPartionCellId := 0
-                                                        , inUserId        := vbUserId
-                                                         );
+             IF EXISTS (SELECT 1 FROM MI_PartionCell WHERE MI_PartionCell.MovementItemId = inMovementItemId AND MI_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_18() AND MI_PartionCell.PartionCellId > 0)
+             THEN
+                 PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                            , inMovementItemId:= inMovementItemId
+                                                            , inDescId_MILO   := zc_MILinkObject_PartionCell_18()
+                                                            , inPartionCellId := 0
+                                                            , inUserId        := vbUserId
+                                                             );
+             END IF;
 
          ELSEIF vbPartionCellId_18 = zc_PartionCell_RK()
          THEN
@@ -3973,12 +4027,15 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_19(), inMovementItemId, 0 :: TFloat);
 
              -- обнулили в table
-             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
-                                                        , inMovementItemId:= inMovementItemId
-                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_19()
-                                                        , inPartionCellId := 0
-                                                        , inUserId        := vbUserId
-                                                         );
+             IF EXISTS (SELECT 1 FROM MI_PartionCell WHERE MI_PartionCell.MovementItemId = inMovementItemId AND MI_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_19() AND MI_PartionCell.PartionCellId > 0)
+             THEN
+                 PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                            , inMovementItemId:= inMovementItemId
+                                                            , inDescId_MILO   := zc_MILinkObject_PartionCell_19()
+                                                            , inPartionCellId := 0
+                                                            , inUserId        := vbUserId
+                                                             );
+             END IF;
 
          ELSEIF vbPartionCellId_19 = zc_PartionCell_RK()
          THEN
@@ -4062,12 +4119,15 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_20(), inMovementItemId, 0 :: TFloat);
 
              -- обнулили в table
-             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
-                                                        , inMovementItemId:= inMovementItemId
-                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_20()
-                                                        , inPartionCellId := 0
-                                                        , inUserId        := vbUserId
-                                                         );
+             IF EXISTS (SELECT 1 FROM MI_PartionCell WHERE MI_PartionCell.MovementItemId = inMovementItemId AND MI_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_20() AND MI_PartionCell.PartionCellId > 0)
+             THEN
+                 PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                            , inMovementItemId:= inMovementItemId
+                                                            , inDescId_MILO   := zc_MILinkObject_PartionCell_20()
+                                                            , inPartionCellId := 0
+                                                            , inUserId        := vbUserId
+                                                             );
+             END IF;
 
          ELSEIF vbPartionCellId_20 = zc_PartionCell_RK()
          THEN
@@ -4151,12 +4211,15 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_21(), inMovementItemId, 0 :: TFloat);
 
              -- обнулили в table
-             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
-                                                        , inMovementItemId:= inMovementItemId
-                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_21()
-                                                        , inPartionCellId := 0
-                                                        , inUserId        := vbUserId
-                                                         );
+             IF EXISTS (SELECT 1 FROM MI_PartionCell WHERE MI_PartionCell.MovementItemId = inMovementItemId AND MI_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_21() AND MI_PartionCell.PartionCellId > 0)
+             THEN
+                 PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                            , inMovementItemId:= inMovementItemId
+                                                            , inDescId_MILO   := zc_MILinkObject_PartionCell_21()
+                                                            , inPartionCellId := 0
+                                                            , inUserId        := vbUserId
+                                                             );
+             END IF;
 
          ELSEIF vbPartionCellId_21 = zc_PartionCell_RK()
          THEN
@@ -4240,12 +4303,15 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_22(), inMovementItemId, 0 :: TFloat);
 
              -- обнулили в table
-             PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
-                                                        , inMovementItemId:= inMovementItemId
-                                                        , inDescId_MILO   := zc_MILinkObject_PartionCell_22()
-                                                        , inPartionCellId := 0
-                                                        , inUserId        := vbUserId
-                                                         );
+             IF EXISTS (SELECT 1 FROM MI_PartionCell WHERE MI_PartionCell.MovementItemId = inMovementItemId AND MI_PartionCell.DescId_MILO = zc_MILinkObject_PartionCell_22() AND MI_PartionCell.PartionCellId > 0)
+             THEN
+                 PERFORM lpInsertUpdate_MI_PartionCell_table (inMovementId    := inMovementId
+                                                            , inMovementItemId:= inMovementItemId
+                                                            , inDescId_MILO   := zc_MILinkObject_PartionCell_22()
+                                                            , inPartionCellId := 0
+                                                            , inUserId        := vbUserId
+                                                             );
+             END IF;
 
          ELSEIF vbPartionCellId_22 = zc_PartionCell_RK()
          THEN
