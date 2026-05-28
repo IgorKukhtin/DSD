@@ -57,8 +57,7 @@ BEGIN
     IF COALESCE (vbisMain, FALSE) = TRUE
     THEN 
         SELECT tmp.MovementId
-            -- , tmp.StaffListKindId
-       INTO vbMovementId_old 
+               INTO vbMovementId_old 
         FROM (SELECT Movement.Id AS  MovementId
                    , ROW_NUMBER() OVER (ORDER BY Movement.Id DESC, Movement.OperDate DESC) AS Ord
               FROM Movement 
@@ -70,7 +69,7 @@ BEGIN
                    INNER JOIN MovementBoolean AS MovementBoolean_Main
                                               ON MovementBoolean_Main.MovementId = Movement.Id
                                              AND MovementBoolean_Main.DescId = zc_MovementBoolean_Main()
-                                             AND COALESCE (MovementBoolean_Main.ValueData, FALSE) = TRUE
+                                             AND MovementBoolean_Main.ValueData = TRUE
               WHERE Movement.DescId = zc_Movement_StaffListMember()
                 AND Movement.OperDate <= vbOperDate
                 AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -142,13 +141,15 @@ BEGIN
         THEN 
             IF COALESCE (vbPersonalId,0) <> 0
             THEN 
-             --Если еще не помечен на удаление тогда выдем сообщение
-                IF (SELECT Object.isErased FROM Object WHERE Object.Id = vbPersonalId AND Object.DescId = zc_Object_Personal()) = FALSE
+                --Если еще не помечен на удаление тогда выдем сообщение
+                IF EXISTS (SELECT 1 FROM Object WHERE Object.Id = vbPersonalId AND Object.DescId = zc_Object_Personal() AND Object.isErased = FALSE)
+                   AND vbStaffListKindId NOT IN (zc_Enum_StaffListKind_Send())
                 THEN
                    RAISE EXCEPTION 'Внимание. Не найден предыдущий документ для сотрудника <%>, <%> нужно удалить сотрудника в справочнике.'
                                     , (SELECT Object.ValueData FROM Object WHERE Object.Id = vbPersonalId AND Object.DescId = zc_Object_Personal())
                                     , CHR (13);
                 ELSE
+                    IF vbUserId = 5 THEN RAISE EXCEPTION 'Admin - Test = Не найден предыдущий документ'; END IF;
                     RETURN;
                 END IF; 
             ELSE 
