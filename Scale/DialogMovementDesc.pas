@@ -98,6 +98,11 @@ begin
      begin
            CDS.Locate('Number',GetArrayList_Value_byName(Default_Array,'MovementNumber'),[]);
 
+           ParamsMovement.ParamByName('SubjectDocId').AsInteger:=0;
+           ParamsMovement.ParamByName('SubjectDocCode').AsInteger:=0;
+           ParamsMovement.ParamByName('SubjectDocName').asString:='';
+           ParamsMovement.ParamByName('DocumentComment').AsString:='';
+
            ParamsMovement.ParamByName('OrderExternalId').AsInteger        := 0;
            ParamsMovement.ParamByName('OrderExternal_DescId').AsInteger   := 0;
            ParamsMovement.ParamByName('OrderExternal_BarCode').asString   := '';
@@ -419,6 +424,11 @@ begin
           //then ShowMessage('После завершения <Нового> взвешивания возврат к текущему будет произведен автоматически.');
           if ParamsMovement_local.ParamByName('isMovementId_check').asBoolean = FALSE
           then ParamByName('MovementId').AsInteger:=0; // т.е. будет Insert, иначе Update
+          //
+          ParamByName('SubjectDocId').AsInteger:=0;
+          ParamByName('SubjectDocCode').AsInteger:=0;
+          ParamByName('SubjectDocName').asString:='';
+          ParamByName('DocumentComment').AsString:='';
           //
           ParamByName('ColorGridValue').AsInteger          := CDS.FieldByName('ColorGridValue').asInteger;
           ParamByName('MovementDescNumber').AsInteger      := CDS.FieldByName('Number').asInteger;

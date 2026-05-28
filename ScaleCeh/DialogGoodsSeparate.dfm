@@ -93,8 +93,8 @@ inherited DialogGoodsSeparateForm: TDialogGoodsSeparateForm
         Style.IsFontAssigned = True
         Properties.Alignment.Horz = taCenter
         Properties.Alignment.Vert = taVCenter
-        ExplicitTop = 19
-        ExplicitHeight = 26
+        ExplicitTop = 58
+        ExplicitHeight = 17
         AnchorX = 234
         AnchorY = 65
       end
@@ -114,7 +114,6 @@ inherited DialogGoodsSeparateForm: TDialogGoodsSeparateForm
         Style.IsFontAssigned = True
         Properties.Alignment.Horz = taLeftJustify
         Properties.Alignment.Vert = taVCenter
-        ExplicitTop = 1
         AnchorY = 46
       end
       object UnitLabel: TcxLabel

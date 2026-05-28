@@ -1370,6 +1370,7 @@ begin
                                 , StrToInt(DialogPrintForm.PrintCountEdit.Text) // myPrintCount
                                 , DialogPrintForm.cbPrintPreview.Checked        // isPreview
                                 , DialogMovementDescForm.Get_isSendOnPriceIn(ParamsMovement.ParamByName('MovementDescNumber').AsInteger)
+                                , FALSE // isKh
                                  );
      //
      //PackGross

@@ -440,6 +440,7 @@ begin
                         , 1    // myPrintCount
                         , TRUE // isPreview
                         , FALSE // DialogMovementDescForm.Get_isSendOnPriceIn(CDS.FieldByName('MovementDescNumber').AsInteger)
+                        , FALSE // isKh
                          );
      //
      if cbPrintPackGross.Checked
