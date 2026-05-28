@@ -360,7 +360,7 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 
 CREATE OR REPLACE FUNCTION zc_MovementLinkObject_SubjectDoc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_SubjectDoc'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
-  SELECT 'zc_MovementLinkObject_SubjectDoc', 'Пользователь, кот. объединил документы' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_SubjectDoc');
+  SELECT 'zc_MovementLinkObject_SubjectDoc', 'Основание' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_SubjectDoc');
 
 CREATE OR REPLACE FUNCTION zc_MovementLinkObject_CheckedHead() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_CheckedHead'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
