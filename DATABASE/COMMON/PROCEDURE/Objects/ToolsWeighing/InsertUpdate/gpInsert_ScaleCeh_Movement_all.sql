@@ -2104,7 +2104,7 @@ BEGIN
      END IF;
 
 
-if (vbUserId = 5 AND 1=1) -- OR inMovementId = 34279667
+if (vbUserId = 5 AND 1=1) -- OR inMovementId = 34404010 
 then
     RAISE EXCEPTION 'Admin - Errr _end <%>  <%>', (select Movement.InvNumber from Movement where Movement.Id = vbMovementId_begin), vbMovementId_begin;
     -- 'Повторите действие через 3 мин.'

@@ -63,6 +63,11 @@ BEGIN
                                                            , zc_MILinkObject_PartionCell_22()
                                                             ))
            AND vbUserId <> 5
+           AND vbUserId NOT IN (5223009  -- Мурсалова Оксана, 
+                              , 651642   -- Гармаш С.М.
+                              , 9431252  -- Грановська Ліза
+                              , 12632747 -- Корнюшина Таня
+                               )
         THEN
             RAISE EXCEPTION 'Ошибка.Нет прав удалять.Установлена ячейка хранения <%>.'
                           , (SELECT lfGet_Object_ValueData_sh (MILO_PartionCell.ObjectId)
