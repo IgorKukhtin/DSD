@@ -16,6 +16,26 @@ RETURNS TABLE (Id Integer, ParentId Integer
              , PaidKindId Integer, PaidKindName TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , isErased Boolean
+
+             -- дата, з якої діє ціна. 
+             , StartDate_fact      TDateTime    --Дата з (факт)
+             , StartDate_In        TDateTime    --Дата з (база)
+             , StartDate_Plan      TDateTime    --Дата з (план)
+  
+             , Price_fact            TFloat  --«Ціна факт по договору» - цена факт по прайсу со скидкой
+             , Summ_fact             TFloat  --Сумма 
+             , Price_In              TFloat  --«Ціна вхідна» - цена вход. по прайсу (База 
+             , Summ_In               TFloat  --Сумма         
+             , Price_Plan            TFloat  --«Ціна план по договору» -- цена факт по прайсу со скидкой
+             , Summ_Plan             TFloat  --Сумма 
+             , Price_BonusFirst      TFloat  --«Ціна Бонус (1) план по договору» та суму -  «Ціна план по договору» * Загальний % бонусу з формую оплати «БН».
+             , Summ_BonusFirst       TFloat  --Сумма 
+             , Price_BonusSecond     TFloat  --«Ціна Бонус (2) план по договору» та суму -  «Ціна план по договору» * Загальний % бонусу з формую оплати «НАЛ».
+             , Summ_BonusSecond      TFloat  --Сумма 
+             , PricePlan_BonusFirst  TFloat  --«Ціна Бонус (1) факт по договору» та суму - «Ціна факт по договору» * Загальний % бонусу з формую оплати «БН».
+             , SummPlan_BonusFirst   TFloat  --Сумма
+             , PricePlan_BonusSecond TFloat  -- «Ціна Бонус (2) факт по договору» та суму - «Ціна факт по договору» * Загальний % бонусу з формую оплати «НАЛ».
+             , SummPlan_BonusSecond  TFloat  --Сумма
               )
 AS
 $BODY$
