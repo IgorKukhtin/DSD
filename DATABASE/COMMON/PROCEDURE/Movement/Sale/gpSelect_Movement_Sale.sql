@@ -74,6 +74,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , BonusFirstForm TFloat
              , BonusSecondForm TFloat
              
+             , UserId_order    Integer
+             , UserName_order  TVarChar
+             , OrderSourceName TVarChar
               )
 AS
 $BODY$

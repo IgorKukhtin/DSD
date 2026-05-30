@@ -73,7 +73,11 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , RouteTTId Integer, RouteTTName TVarChar
              , BonusFirstForm TFloat
              , BonusSecondForm TFloat
-             )
+
+             , UserId_order    Integer
+             , UserName_order  TVarChar
+             , OrderSourceName TVarChar
+              )
 AS
 $BODY$
    DECLARE vbIsIrna Boolean;
@@ -1039,6 +1043,14 @@ end if;
            , Object_RouteTT.ValueData                             ::TVarChar AS RouteTTName
            , COALESCE (MovementFloat_BonusFirstForm.ValueData,0)  ::TFloat   AS BonusFirstForm
            , COALESCE (MovementFloat_BonusSecondForm.ValueData,0) ::TFloat   AS BonusSecondForm
+
+           , Object_Insert_order.Id          AS UserId_order
+           , Object_Insert_order.ValueData   AS UserName_order
+           , CASE WHEN MovementString_DealId.ValueData <> ''         THEN 'Вчасно'
+                  WHEN MovementLinkMovement_Order_edi.MovementId > 0 THEN 'EDI'
+                  ELSE Object_Insert_order.ValueData
+             END :: TVarChar AS OrderSourceName
+
        FROM tmpMovement AS Movement
 
             LEFT JOIN tmpStatus AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -1293,6 +1305,20 @@ end if;
             LEFT JOIN Movement AS Movement_order ON Movement_order.Id = MovementLinkMovement_Order.MovementChildId
             LEFT JOIN tmpRoute AS Object_Route ON Object_Route.MovementId = MovementLinkMovement_Order.MovementChildId
 
+            -- Автор Заявки
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert_order
+                                         ON MovementLinkObject_Insert_order.MovementId = Movement_order.Id
+                                        AND MovementLinkObject_Insert_order.DescId     = zc_MovementLinkObject_Insert()
+            LEFT JOIN Object AS Object_Insert_order ON Object_Insert_order.Id = MovementLinkObject_Insert_order.ObjectId
+
+            -- Док EDI
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order_edi
+                                           ON MovementLinkMovement_Order_edi.MovementId = Movement_order.Id
+                                          AND MovementLinkMovement_Order_edi.DescId = zc_MovementLinkMovement_Order()
+            LEFT JOIN MovementString AS MovementString_DealId
+                                     ON MovementString_DealId.MovementId = MovementLinkMovement_Order_edi.MovementChildId
+                                    AND MovementString_DealId.DescId     = zc_MovementString_DealId()
+
             LEFT JOIN tmpPersonal AS Object_Personal ON Object_Personal.MovementId = MovementLinkMovement_Order.MovementChildId
 
             LEFT JOIN tmpOL_Route_RouteGroup AS ObjectLink_Route_RouteGroup
@@ -1431,4 +1457,4 @@ $BODY$
 --select * from gpSelect_Movement_Sale_DATA(instartdate := ('23.10.2024')::TDateTime , inenddate := ('23.10.2024')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inUserId:= zfCalc_UserAdmin() :: Integer);
 
 
-select * from gpSelect_Movement_Sale_DATA(instartdate := ('01.08.2025')::TDateTime , inenddate := ('01.08.2025')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inUserId:= zfCalc_UserAdmin() :: Integer);
+select * from gpSelect_Movement_Sale_DATA(instartdate := ('01.05.2026')::TDateTime , inenddate := ('30.05.2026')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inUserId:= zfCalc_UserAdmin() :: Integer);
