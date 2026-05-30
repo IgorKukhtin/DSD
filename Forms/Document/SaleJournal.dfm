@@ -5,6 +5,8 @@ inherited SaleJournalForm: TSaleJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -497
+  ExplicitTop = -17
   ExplicitWidth = 1390
   ExplicitHeight = 680
   PixelsPerInch = 96
@@ -1027,6 +1029,23 @@ inherited SaleJournalForm: TSaleJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 120
+          end
+          object OrderSourceName: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086#1088' '#1079#1072#1103#1074#1082#1080
+            DataBinding.FieldName = 'OrderSourceName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object UserName_order: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1079#1072#1103#1074#1082#1072')'
+            DataBinding.FieldName = 'UserName_order'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
         end
       end
