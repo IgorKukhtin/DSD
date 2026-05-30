@@ -11,17 +11,17 @@ inherited ReturnIn_CommercForm: TReturnIn_CommercForm
     Width = 1320
     Height = 473
     ExplicitTop = 227
-    ExplicitWidth = 1458
+    ExplicitWidth = 1320
     ExplicitHeight = 473
     ClientRectBottom = 473
     ClientRectRight = 1320
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1510
+      ExplicitWidth = 1320
       ExplicitHeight = 449
       inherited cxGrid: TcxGrid
         Width = 1320
         Height = 311
-        ExplicitWidth = 1510
+        ExplicitWidth = 1320
         ExplicitHeight = 311
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -458,6 +458,157 @@ inherited ReturnIn_CommercForm: TReturnIn_CommercForm
             Options.Editing = False
             Width = 136
           end
+          object StartDate_Plan: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1079' ('#1087#1083#1072#1085')'
+            DataBinding.FieldName = 'StartDate_Plan'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
+          object StartDate_In: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1079' ('#1073#1072#1079#1072')'
+            DataBinding.FieldName = 'StartDate_In'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
+          object StartDate_fact: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1079' ('#1092#1072#1082#1090')'
+            DataBinding.FieldName = 'StartDate_fact'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
+          object Summ_Plan: TcxGridDBColumn
+            Caption = #1057#1091#1084#1072' '#1087#1083#1072#1085' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1091
+            DataBinding.FieldName = 'Summ_Plan'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Price_In: TcxGridDBColumn
+            Caption = #1062#1110#1085#1072' '#1074#1093#1110#1076#1085#1072
+            DataBinding.FieldName = 'Price_In'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Summ_In: TcxGridDBColumn
+            Caption = #1057#1091#1084#1072' '#1074#1093#1110#1076#1085#1072
+            DataBinding.FieldName = 'Summ_In'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Price_fact: TcxGridDBColumn
+            Caption = #1062#1110#1085#1072' '#1092#1072#1082#1090' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1091
+            DataBinding.FieldName = 'Price_fact'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Summ_fact: TcxGridDBColumn
+            Caption = #1057#1091#1084#1072' '#1092#1072#1082#1090' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1091
+            DataBinding.FieldName = 'Summ_fact'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Price_BonusFirst: TcxGridDBColumn
+            Caption = #1062#1110#1085#1072' '#1041#1086#1085#1091#1089' (1) '#1087#1083#1072#1085' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1091
+            DataBinding.FieldName = 'Price_BonusFirst'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Summ_BonusFirst: TcxGridDBColumn
+            Caption = #1057#1091#1084#1072' '#1041#1086#1085#1091#1089' (1) '#1087#1083#1072#1085' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1091
+            DataBinding.FieldName = 'Summ_BonusFirst'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Price_BonusSecond: TcxGridDBColumn
+            Caption = #1062#1110#1085#1072' '#1041#1086#1085#1091#1089' (2) '#1087#1083#1072#1085' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1091
+            DataBinding.FieldName = 'Price_BonusSecond'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Summ_BonusSecond: TcxGridDBColumn
+            Caption = #1057#1091#1084#1072' '#1041#1086#1085#1091#1089' (2) '#1087#1083#1072#1085' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1091
+            DataBinding.FieldName = 'Summ_BonusSecond'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object PricePlan_BonusFirst: TcxGridDBColumn
+            Caption = #1062#1110#1085#1072' '#1041#1086#1085#1091#1089' (1) '#1092#1072#1082#1090' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1091
+            DataBinding.FieldName = 'PricePlan_BonusFirst'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object SummPlan_BonusFirst: TcxGridDBColumn
+            Caption = #1057#1091#1084#1072' '#1041#1086#1085#1091#1089' (1) '#1092#1072#1082#1090' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1091
+            DataBinding.FieldName = 'SummPlan_BonusFirst'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object PricePlan_BonusSecond: TcxGridDBColumn
+            Caption = #1062#1110#1085#1072' '#1041#1086#1085#1091#1089' (2) '#1092#1072#1082#1090' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1091
+            DataBinding.FieldName = 'PricePlan_BonusSecond'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object SummPlan_BonusSecond: TcxGridDBColumn
+            Caption = #1057#1091#1084#1072' '#1041#1086#1085#1091#1089' (2) '#1092#1072#1082#1090' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1091
+            DataBinding.FieldName = 'SummPlan_BonusSecond'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
         end
       end
       object cxGrid1: TcxGrid
@@ -468,7 +619,6 @@ inherited ReturnIn_CommercForm: TReturnIn_CommercForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 1510
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -811,13 +961,14 @@ inherited ReturnIn_CommercForm: TReturnIn_CommercForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitWidth = 1510
       end
     end
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
+      ExplicitTop = 0
       ExplicitWidth = 1510
+      ExplicitHeight = 0
       object l: TcxGrid
         Left = 0
         Top = 0
@@ -1176,7 +1327,9 @@ inherited ReturnIn_CommercForm: TReturnIn_CommercForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075
       ImageIndex = 2
+      ExplicitTop = 0
       ExplicitWidth = 1458
+      ExplicitHeight = 0
       object cxGridDetail_commerc: TcxGrid
         Left = 0
         Top = 0
@@ -1334,7 +1487,7 @@ inherited ReturnIn_CommercForm: TReturnIn_CommercForm
     Width = 1320
     Height = 201
     TabOrder = 3
-    ExplicitWidth = 1458
+    ExplicitWidth = 1320
     ExplicitHeight = 201
     inherited edInvNumber: TcxTextEdit
       Left = 8
