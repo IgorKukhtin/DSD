@@ -510,7 +510,7 @@ AS  (SELECT
                                                       AND COALESCE (MovementItemContainer.AccountId, 0) <> zc_Enum_Account_110101()
                                                       -- !!!временное решение!!!
                                                       AND MovementItemContainer.MovementId NOT IN (SELECT Movement_Report_Wage_Model_View.Id FROM Movement_Report_Wage_Model_View)
-                                                    --AND (MovementItemContainer.MovementId = 15479819 OR inSession <> '5')
+                                                    --AND (MovementItemContainer.MovementId = 34263751 OR vbUserId <> 5)
                                                     
                       -- формовка 1день,кг
                       LEFT OUTER JOIN MovementItemFloat AS MIF_AmountForm ON MIF_AmountForm.MovementItemId = MovementItemContainer.MovementItemId
