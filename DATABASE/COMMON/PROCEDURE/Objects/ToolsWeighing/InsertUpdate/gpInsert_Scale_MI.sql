@@ -188,6 +188,28 @@ BEGIN
      END IF;
 
 
+     -- (22) Перемещение: Розподільчий комплекс => ЦЕХ пакування (ЭТИКЕТКА)
+     IF EXISTS (SELECT 1 FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_MovementDescNumber() AND MF.ValueData = 22)
+        AND inBranchCode = 1
+        AND EXISTS (SELECT 1
+                    FROM ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 LEFT JOIN Object_InfoMoney_View AS View_InfoMoney
+                                                                 ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                    WHERE ObjectLink_Goods_InfoMoney.ObjectId = inGoodsId
+                      AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                      AND View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30102()) -- Ирна + Готовая продукция + Тушенка
+                   )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав для%Перемещение: Розподільчий комплекс => ЦЕХ пакування (ЭТИКЕТКА)%<%>.'
+                        , CHR (13)
+                        , CHR (13)
+                        , lfGet_Object_ValueData (inGoodsId)
+                         ;
+     END IF;
+        
+
+
+
      -- !!!замена, приходит вес - из него получаем м. или шт.
      /*IF EXISTS (SELECT FROM ObjectLink AS OL_Measure WHERE OL_Measure.ChildObjectId NOT IN (zc_Measure_Kg(), zc_Measure_Sh()) AND OL_Measure.ObjectId = inGoodsId AND OL_Measure.DescId = zc_ObjectLink_Goods_Measure())
      THEN
@@ -1422,7 +1444,7 @@ BEGIN
      END IF; -- if vbMessageText = ''
 
      -- Результат
-     RETURN QUERY
+     RETURN QUERYё
        SELECT vbId, vbTotalSumm, COALESCE (vbTotalSummPartner, 0) :: TFloat, vbMessageText :: Text MessageText;
 
 END;

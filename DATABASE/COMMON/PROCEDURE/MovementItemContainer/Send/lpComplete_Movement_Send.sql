@@ -85,6 +85,18 @@ BEGIN
                   AND MovementItem.isErased   = FALSE
                   AND COALESCE (MILO_SubjectDoc.ObjectId, 0) = 0
                )
+    AND EXISTS (SELECT 1
+                FROM MovementItem
+                             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                  ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
+                                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney
+                                                             ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                WHERE MovementItem.MovementId = inMovementId
+                  AND MovementItem.DescId     = zc_MI_Master()
+                  AND MovementItem.isErased   = FALSE
+                  AND View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30102()) -- Ирна + Готовая продукция + Тушенка
+               )
      THEN
          RAISE EXCEPTION 'Ошибка.%Нет прав формировать документ <Перемещение>.%В документе не заполнено <Основание для перемещения>.', CHR (13), CHR (13);
      END IF;
@@ -901,8 +913,8 @@ BEGIN
                               -- накопительно
                             , SUM (COALESCE (tmpContainer_rem.Amount_rem, Container.Amount) + COALESCE (tmpContainer_rem_RK.Amount_invent, 0))
                                                OVER (PARTITION BY tmpMI.GoodsId, tmpMI.GoodsKindId
-                                                     ORDER BY CASE WHEN tmpMI.is_30100 = TRUE AND Container.Amount + COALESCE (tmpContainer_rem_RK.Amount_invent, 0) > 0 THEN 0 ELSE 1 END
-                                                            , CASE WHEN tmpMI.is_30100 = TRUE AND Container.Amount + COALESCE (tmpContainer_rem_RK.Amount_invent, 0) < 0 THEN 0 ELSE 1 END
+                                                     ORDER BY CASE WHEN tmpMI.is_30100 = TRUE AND Container.Amount + COALESCE (tmpContainer_rem_RK.Amount_invent, 0) > 0 THEN 0 ELSE 1 END ASC
+                                                            , CASE WHEN tmpMI.is_30100 = TRUE AND Container.Amount + COALESCE (tmpContainer_rem_RK.Amount_invent, 0) < 0 THEN 0 ELSE 1 END ASC
                                                             , CASE WHEN tmpMI.is_30100 = TRUE THEN Container.PartionGoodsDate ELSE zc_DateStart() END ASC
                                                               --
                                                               --
@@ -920,8 +932,9 @@ BEGIN
                                                     )  AS AmountSUM
                               -- !!!Надо отловить ПОСЛЕДНИЙ!!!
                             , ROW_NUMBER()     OVER (PARTITION BY tmpMI.GoodsId, tmpMI.GoodsKindId
-                                                     ORDER BY CASE WHEN tmpMI.is_30100 = TRUE AND Container.Amount + COALESCE (tmpContainer_rem_RK.Amount_invent, 0) > 0 THEN 0 ELSE 1 END
-                                                            , CASE WHEN tmpMI.is_30100 = TRUE AND Container.Amount + COALESCE (tmpContainer_rem_RK.Amount_invent, 0) < 0 THEN 0 ELSE 1 END
+                                                     ORDER BY -- наоборот
+                                                              CASE WHEN tmpMI.is_30100 = TRUE AND Container.Amount + COALESCE (tmpContainer_rem_RK.Amount_invent, 0) > 0 THEN 0 ELSE 1 END DESC
+                                                            , CASE WHEN tmpMI.is_30100 = TRUE AND Container.Amount + COALESCE (tmpContainer_rem_RK.Amount_invent, 0) < 0 THEN 0 ELSE 1 END DESC
                                                               -- наоборот
                                                             , CASE WHEN tmpMI.is_30100 = TRUE THEN Container.PartionGoodsDate ELSE zc_DateStart() END DESC
                                                               --

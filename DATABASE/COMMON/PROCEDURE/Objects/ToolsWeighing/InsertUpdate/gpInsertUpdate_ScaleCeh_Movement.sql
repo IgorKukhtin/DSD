@@ -34,6 +34,7 @@ $BODY$
 
    DECLARE vbDocumentKindId Integer;
    DECLARE vbIsRePack Boolean;
+   DECLARE vbIsSubjectDoc Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_ScaleCeh_Movement());
@@ -57,6 +58,31 @@ BEGIN
                                                                 ) AS RetV
                               ) AS tmp
                         );
+
+     IF inMovementDescId = zc_Movement_Send() AND inBranchCode = 1
+        AND EXTRACT (HOUR FROM CURRENT_TIMESTAMP) >= 10
+     THEN
+        -- определили IsSubjectDoc
+        vbIsSubjectDoc:= (SELECT CASE WHEN TRIM (tmp.RetV) ILIKE 'TRUE' THEN TRUE ELSE FALSE END :: Boolean
+                          FROM (SELECT gpGet_ToolsWeighing_Value (inLevel1      := 'ScaleCeh_' || inBranchCode
+                                                                , inLevel2      := 'Movement'
+                                                                , inLevel3      := 'MovementDesc_' || CASE WHEN inMovementDescNumber < 10 THEN '0' ELSE '' END || (inMovementDescNumber :: Integer) :: TVarChar
+                                                                , inItemName    := 'isSubjectDoc'
+                                                                , inDefaultValue:= 'FALSE'
+                                                                , inSession     := inSession
+                                                                 ) AS RetV
+                               ) AS tmp
+                         );
+        -- определили IsSubjectDoc
+        IF vbIsSubjectDoc = FALSE AND inSubjectDocId > 0
+        THEN
+            RAISE EXCEPTION 'Ошибка.Для Документ указано основание <%>.'
+                          , lfGet_Object_ValueData_sh (inSubjectDocId)
+                           ;
+     END IF;
+        
+     END IF;
+
 
      IF inMovementDescId = zc_Movement_Send()
     AND inFromId = 8451 -- ЦЕХ пакування

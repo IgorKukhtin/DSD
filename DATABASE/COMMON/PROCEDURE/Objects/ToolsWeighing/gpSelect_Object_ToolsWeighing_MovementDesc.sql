@@ -503,10 +503,15 @@ BEGIN
              END
 
           || CASE WHEN _tmpToolsWeighing.isKh = TRUE
-                       THEN '  ( ”’Õﬂ})'
+                       THEN '  ( ”’Õﬂ)'
                   ELSE ''
              END
              
+          || CASE WHEN inBranchCode = 1 AND inIsCeh = FALSE AND _tmpToolsWeighing.Number = 22
+                       THEN '  (›“» ≈“ ¿)'
+                  ELSE ''
+             END
+
              ) :: TVarChar AS MovementDescName -- ‚ „Ë‰Â
 
            , ('(' || _tmpToolsWeighing.Number :: TVarChar ||') '
@@ -573,9 +578,15 @@ BEGIN
              END
 
           || CASE WHEN _tmpToolsWeighing.isKh = TRUE
-                       THEN '  ( ”’Õﬂ})'
+                       THEN '  ( ”’Õﬂ)'
                   ELSE ''
              END
+
+          || CASE WHEN inBranchCode = 1 AND inIsCeh = FALSE AND _tmpToolsWeighing.Number = 22
+                       THEN '  (›“» ≈“ ¿)'
+                  ELSE ''
+             END
+                   
             ) :: TVarChar AS MovementDescName_master
 
            , MovementDesc_next.ItemName AS MovementDescName_next

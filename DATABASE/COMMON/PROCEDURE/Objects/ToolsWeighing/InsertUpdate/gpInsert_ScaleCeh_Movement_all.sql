@@ -2106,7 +2106,11 @@ BEGIN
 
 if (vbUserId = 5 AND 1=1) -- OR inMovementId = 34404010 
 then
-    RAISE EXCEPTION 'Admin - Errr _end <%>  <%>', (select Movement.InvNumber from Movement where Movement.Id = vbMovementId_begin), vbMovementId_begin;
+    RAISE EXCEPTION 'Admin - Errr _end <%>  <%>  <%>'
+                  , (select Movement.InvNumber from Movement where Movement.Id = vbMovementId_begin)
+                  , vbMovementId_begin
+                  , (select distinct lfGet_Object_ValueData_sh (MLO.ObjectId) FROM MovementLinkObject AS MLO WHERE MLO.MovementId = vbMovementId_begin AND MLO.DescId = zc_MovementLinkObject_SubjectDoc())
+                   ;
     -- 'Повторите действие через 3 мин.'
 end if;
 
