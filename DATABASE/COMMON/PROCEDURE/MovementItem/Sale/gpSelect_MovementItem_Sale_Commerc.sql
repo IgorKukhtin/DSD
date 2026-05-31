@@ -659,17 +659,17 @@ BEGIN
            , COALESCE (tmpPriceListBasis_kind.StartDate, tmpPriceListBasis.StartDate)     :: TDateTime AS StartDate_In
            , COALESCE (tmpPriceListPlan_kind.StartDate, tmpPriceListPlan.StartDate)       :: TDateTime AS StartDate_Plan
 
-           , CAST (COALESCE (tmpPriceList_kind.Price_Change, tmpPriceListPlan.Price_Change) AS TFloat)     AS Price_fact           --цена факт по прайсу со скидкой
+           , CAST (COALESCE (tmpPriceList_kind.Price_Change, tmpPriceList.Price_Change) AS TFloat)     AS Price_fact           --цена факт по прайсу со скидкой
            , 0                                                                           ::TFloat          AS Summ_fact            --Сумма факт по прайсу со скидкой
            , CAST (COALESCE (tmpPriceListBasis_kind.Price, tmpPriceListBasis.Price) AS TFloat)             AS Price_In             --цена вход. по прайсу (База_ 
            , 0                                                                           ::TFloat          AS Summ_In              --Сумма вход. по прайсу         
            , CAST (COALESCE (tmpPriceListPlan_kind.Price_Change, tmpPriceListPlan.Price_Change) AS TFloat) AS Price_Plan  --цена факт по прайсу со скидкой
            , 0                                                                           ::TFloat          AS Summ_Plan   --Сумма факт по прайсу со скидкой
 
-           , CAST (COALESCE (tmpPriceList_kind.Price_Change, tmpPriceListPlan.Price_Change)
+           , CAST (COALESCE (tmpPriceList_kind.Price_Change, tmpPriceList.Price_Change)
                    * (1 + vbBonusFirstForm / 100)  AS TFloat)                                              AS Price_BonusFirst      --«Ціна Бонус (1) план по договору» та суму -  «Ціна план по договору» * Загальний % бонусу з формую оплати «БН».
            , 0                                                                           ::TFloat          AS Summ_BonusFirst       --Сумма 
-           , CAST (COALESCE (tmpPriceList_kind.Price_Change, tmpPriceListPlan.Price_Change)
+           , CAST (COALESCE (tmpPriceList_kind.Price_Change, tmpPriceList.Price_Change)
                    * (1 + vbBonusSecondForm / 100)  AS TFloat)                                             AS Price_BonusSecond      --«Ціна Бонус (2) план по договору» та суму -  «Ціна план по договору» * Загальний % бонусу з формую оплати «НАЛ».
            , 0                                                                           ::TFloat          AS Summ_BonusSecond       --Сумма 
 
@@ -937,8 +937,8 @@ BEGIN
            , COALESCE (tmpPriceListBasis_kind.StartDate, tmpPriceListBasis.StartDate)     :: TDateTime AS StartDate_In
            , COALESCE (tmpPriceListPlan_kind.StartDate, tmpPriceListPlan.StartDate) :: TDateTime AS StartDate_Plan
 
-           , CAST (COALESCE (tmpPriceList_kind.Price_Change, tmpPriceListPlan.Price_Change) AS TFloat)     AS Price_fact      --цена факт по прайсу со скидкой
-           , (CAST (COALESCE (tmpPriceList_kind.Price_Change, tmpPriceListPlan.Price_Change) AS TFloat)
+           , CAST (COALESCE (tmpPriceList_kind.Price_Change, tmpPriceList.Price_Change) AS TFloat)     AS Price_fact      --цена факт по прайсу со скидкой
+           , (CAST (COALESCE (tmpPriceList_kind.Price_Change, tmpPriceList.Price_Change) AS TFloat)
               * tmpMI_Goods.AmountPartner)                                               ::TFloat          AS Summ_fact       --Сумма факт по прайсу со скидкой
            , CAST (COALESCE (tmpPriceListBasis_kind.Price, tmpPriceListBasis.Price) AS TFloat)                   AS Price_In    --цена вход. по прайсу (База_ 
            , (CAST (COALESCE (tmpPriceListBasis_kind.Price, tmpPriceListBasis.Price) AS TFloat)
@@ -947,14 +947,14 @@ BEGIN
            , (CAST (COALESCE (tmpPriceListPlan_kind.Price_Change, tmpPriceListPlan.Price_Change) AS TFloat)
               * tmpMI_Goods.AmountPartner)                                               ::TFloat          AS Summ_Plan   --Сумма факт по прайсу со скидкой
 
-           , CAST (COALESCE (tmpPriceList_kind.Price_Change, tmpPriceListPlan.Price_Change)
+           , CAST (COALESCE (tmpPriceList_kind.Price_Change, tmpPriceList.Price_Change)
                    * (1 + vbBonusFirstForm / 100)  AS TFloat)                                              AS Price_BonusFirst      --«Ціна Бонус (1) план по договору» та суму -  «Ціна план по договору» * Загальний % бонусу з формую оплати «БН».
-           , (CAST (COALESCE (tmpPriceList_kind.Price_Change, tmpPriceListPlan.Price_Change)
+           , (CAST (COALESCE (tmpPriceList_kind.Price_Change, tmpPriceList.Price_Change)
                    * (1 + vbBonusFirstForm / 100)  AS TFloat)
               * tmpMI_Goods.AmountPartner)                                               ::TFloat          AS Summ_BonusFirst       --Сумма 
-           , CAST (COALESCE (tmpPriceList_kind.Price_Change, tmpPriceListPlan.Price_Change)
+           , CAST (COALESCE (tmpPriceList_kind.Price_Change, tmpPriceList.Price_Change)
                    * (1 + vbBonusSecondForm / 100)  AS TFloat)                                                 AS Price_BonusSecond      --«Ціна Бонус (2) план по договору» та суму -  «Ціна план по договору» * Загальний % бонусу з формую оплати «НАЛ».
-           , (CAST (COALESCE (tmpPriceList_kind.Price_Change, tmpPriceListPlan.Price_Change)
+           , (CAST (COALESCE (tmpPriceList_kind.Price_Change, tmpPriceList.Price_Change)
                    * (1 + vbBonusSecondForm / 100)  AS TFloat)
               * tmpMI_Goods.AmountPartner)                                               ::TFloat          AS Summ_BonusSecond       --Сумма 
 
@@ -1538,8 +1538,8 @@ BEGIN
            , COALESCE (tmpPriceListBasis_kind.StartDate, tmpPriceListBasis.StartDate)     :: TDateTime AS StartDate_In
            , COALESCE (tmpPriceListPlan_kind.StartDate, tmpPriceListPlan.StartDate) :: TDateTime AS StartDate_Plan
 
-           , CAST (COALESCE (tmpPriceList_kind.Price_Change, tmpPriceListPlan.Price_Change) AS TFloat)     AS Price_fact      --цена факт по прайсу со скидкой
-           , (CAST (COALESCE (tmpPriceList_kind.Price_Change, tmpPriceListPlan.Price_Change) AS TFloat)
+           , CAST (COALESCE (tmpPriceList_kind.Price_Change, tmpPriceList.Price_Change) AS TFloat)     AS Price_fact      --цена факт по прайсу со скидкой
+           , (CAST (COALESCE (tmpPriceList_kind.Price_Change, tmpPriceList.Price_Change) AS TFloat)
               * tmpMI_Goods.AmountPartner)                                               ::TFloat          AS Summ_fact       --Сумма факт по прайсу со скидкой
            , CAST (COALESCE (tmpPriceListBasis_kind.Price, tmpPriceListBasis.Price) AS TFloat)                   AS Price_In    --цена вход. по прайсу (База_ 
            , (CAST (COALESCE (tmpPriceListBasis_kind.Price, tmpPriceListBasis.Price) AS TFloat)
@@ -1548,14 +1548,14 @@ BEGIN
            , (CAST (COALESCE (tmpPriceListPlan_kind.Price_Change, tmpPriceListPlan.Price_Change) AS TFloat)
               * tmpMI_Goods.AmountPartner)                                               ::TFloat          AS Summ_Plan   --Сумма факт по прайсу со скидкой
 
-           , CAST (COALESCE (tmpPriceList_kind.Price_Change, tmpPriceListPlan.Price_Change)
+           , CAST (COALESCE (tmpPriceList_kind.Price_Change, tmpPriceList.Price_Change)
                    * (1 + vbBonusFirstForm / 100)  AS TFloat)                                              AS Price_BonusFirst      --«Ціна Бонус (1) план по договору» та суму -  «Ціна план по договору» * Загальний % бонусу з формую оплати «БН».
-           , (CAST (COALESCE (tmpPriceList_kind.Price_Change, tmpPriceListPlan.Price_Change)
+           , (CAST (COALESCE (tmpPriceList_kind.Price_Change, tmpPriceList.Price_Change)
                    * (1 + vbBonusFirstForm / 100)  AS TFloat)
               * tmpMI_Goods.AmountPartner)                                               ::TFloat          AS Summ_BonusFirst       --Сумма 
-           , CAST (COALESCE (tmpPriceList_kind.Price_Change, tmpPriceListPlan.Price_Change)
+           , CAST (COALESCE (tmpPriceList_kind.Price_Change, tmpPriceList.Price_Change)
                    * (1 + vbBonusSecondForm / 100)  AS TFloat)                                                 AS Price_BonusSecond      --«Ціна Бонус (2) план по договору» та суму -  «Ціна план по договору» * Загальний % бонусу з формую оплати «НАЛ».
-           , (CAST (COALESCE (tmpPriceList_kind.Price_Change, tmpPriceListPlan.Price_Change)
+           , (CAST (COALESCE (tmpPriceList_kind.Price_Change, tmpPriceList.Price_Change)
                    * (1 + vbBonusSecondForm / 100)  AS TFloat)
               * tmpMI_Goods.AmountPartner)                                               ::TFloat          AS Summ_BonusSecond       --Сумма 
 

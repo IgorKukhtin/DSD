@@ -304,8 +304,11 @@ BEGIN
            , Object_JuridicalFrom.id             AS JuridicalId_From
            , Object_JuridicalFrom.ValueData      AS JuridicalName_From
 
-           , (SELECT tmpPriceList.PriceListId   FROM tmpPriceList) AS PriceListId
-           , (SELECT tmpPriceList.PriceListName FROM tmpPriceList) AS PriceListName
+           --, (SELECT tmpPriceList.PriceListId   FROM tmpPriceList) AS PriceListId
+           --, (SELECT tmpPriceList.PriceListName FROM tmpPriceList) AS PriceListName
+
+           , Object_PriceList.Id                        AS PriceListId
+           , Object_PriceList.Valuedata                 AS PriceListName
 
            , Object_PriceListIn.Id                    AS PriceListInId
            , Object_PriceListIn.ValueData :: TVarChar AS PriceListInName
@@ -494,6 +497,12 @@ BEGIN
                                         AND MovementLinkObject_MemberExp.DescId = zc_MovementLinkObject_MemberExp()
             LEFT JOIN Object AS Object_MemberExp ON Object_MemberExp.Id = MovementLinkObject_MemberExp.ObjectId
 
+            --
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
+                                         ON MovementLinkObject_PriceList.MovementId = Movement.Id
+                                        AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = COALESCE (MovementLinkObject_PriceList.ObjectId, (SELECT tmpPriceList.PriceListId FROM tmpPriceList) )
+            
             -- оптимизация
             LEFT JOIN tmpReestrKind AS Object_ReestrKind ON Object_ReestrKind.Id = vbReestrKindId
 
