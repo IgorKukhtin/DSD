@@ -440,8 +440,8 @@ BEGIN
                                OR (CLO_Member.ObjectId = vbMemberId AND vbMemberId  > 0)
                                  )
                           )
-     -- Вернем остатки ПАРТИЙ, если их списали в следующем месяце
-   , tmpContainer_rem_sale AS (SELECT Container.Id AS ContainerId
+   -- Вернем остатки ПАРТИЙ, если их списали в следующем месяце
+ , tmpContainer_rem_sale_1 AS (SELECT Container.Id AS ContainerId
                                       -- добавятся расходы
                                     , Container.Amount - SUM (COALESCE (MIContainer.Amount, 0)) AS Amount_rem
 
@@ -464,10 +464,6 @@ BEGIN
                                                                     ON CLO_Unit.ContainerId = Container.Id
                                                                    AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
                                                                    AND CLO_Unit.ObjectId    = vbUnitId
-                                     -- без Товар в пути
-                                     LEFT JOIN ContainerLinkObject AS CLO_Account
-                                                                   ON CLO_Account.ContainerId = Container.Id
-                                                                  AND CLO_Account.DescId      = zc_ContainerLinkObject_Account()
                                      -- !!!
                                      LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                                                    ON CLO_GoodsKind.ContainerId = Container.Id
@@ -502,9 +498,6 @@ BEGIN
                                  --!!!не пустая партия!!!
                                  AND COALESCE (CLO_PartionGoods.ObjectId, -1) NOT IN (80132, 0)
 
-                                 -- без Товар в пути
-                                 AND CLO_Account.ObjectId IS NULL
-
                                GROUP BY Container.Id, Container.Amount
                                       , COALESCE (CLO_PartionGoods.ObjectId, 0)
                                       , CASE WHEN ObjectLink_PartionCell.ChildObjectId = zc_PartionCell_RK()
@@ -518,6 +511,24 @@ BEGIN
                                --HAVING SUM (COALESCE (MIContainer.Amount, 0)) <> 0
                                -- !!!
                                HAVING Container.Amount - SUM (COALESCE (MIContainer.Amount, 0)) > 0
+                              )
+   , tmpContainer_rem_sale AS (SELECT tmpContainer_rem_sale_1.ContainerId
+                                      -- добавятся расходы
+                                    , tmpContainer_rem_sale_1.Amount_rem
+
+                                    , tmpContainer_rem_sale_1.PartionGoodsId
+                                    , tmpContainer_rem_sale_1.PartionGoodsDate
+
+                                    , tmpContainer_rem_sale_1.GoodsId
+                                    , tmpContainer_rem_sale_1.GoodsKindId
+
+                               FROM tmpContainer_rem_sale_1
+                                     -- без Товар в пути
+                                     LEFT JOIN ContainerLinkObject AS CLO_Account
+                                                                   ON CLO_Account.ContainerId = tmpContainer_rem_sale_1.ContainerId
+                                                                  AND CLO_Account.DescId      = zc_ContainerLinkObject_Account()
+                               -- без Товар в пути
+                               WHERE CLO_Account.ObjectId IS NULL
                               )
                -- !!! - 02 - учет для ГП - партии по датам
              , tmp_02 AS (SELECT DISTINCT Container.Id               AS ContainerId
@@ -604,6 +615,7 @@ BEGIN
                                LEFT JOIN ContainerLinkObject AS CLO_Account
                                                              ON CLO_Account.ContainerId = Container.Id
                                                             AND CLO_Account.DescId      = zc_ContainerLinkObject_Account()
+                                                            AND 1=0
                                -- !!!
                                LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                                              ON CLO_GoodsKind.ContainerId = Container.Id

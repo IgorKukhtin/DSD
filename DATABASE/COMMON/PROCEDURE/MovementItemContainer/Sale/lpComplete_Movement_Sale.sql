@@ -1272,8 +1272,8 @@ end if;
                      -- AND vbIsPartionCell_from = FALSE
                     )
 
-     -- Вернем остатки ПАРТИЙ, если их списали в следующем месяце
-   , tmpContainer_rem_sale AS (SELECT Container.Id AS ContainerId
+   -- Вернем остатки ПАРТИЙ, если их списали в следующем месяце
+ , tmpContainer_rem_sale_1 AS (SELECT Container.Id AS ContainerId
                                       -- добавятся расходы
                                     , Container.Amount - SUM (COALESCE (MIContainer.Amount, 0)) AS Amount_rem
 
@@ -1296,10 +1296,6 @@ end if;
                                                                     ON CLO_Unit.ContainerId = Container.Id
                                                                    AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
                                                                    AND CLO_Unit.ObjectId    = vbUnitId_From
-                                     -- без Товар в пути
-                                     LEFT JOIN ContainerLinkObject AS CLO_Account
-                                                                   ON CLO_Account.ContainerId = Container.Id
-                                                                  AND CLO_Account.DescId      = zc_ContainerLinkObject_Account()
                                      -- !!!
                                      LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                                                    ON CLO_GoodsKind.ContainerId = Container.Id
@@ -1334,9 +1330,6 @@ end if;
                                  --!!!не пустая партия!!!
                                  AND COALESCE (CLO_PartionGoods.ObjectId, -1) NOT IN (80132, 0)
 
-                                 -- без Товар в пути
-                                 AND CLO_Account.ObjectId IS NULL
-
                                GROUP BY Container.Id, Container.Amount
                                       , COALESCE (CLO_PartionGoods.ObjectId, 0)
                                       , CASE WHEN ObjectLink_PartionCell.ChildObjectId = zc_PartionCell_RK()
@@ -1350,6 +1343,25 @@ end if;
                                --HAVING SUM (COALESCE (MIContainer.Amount, 0)) <> 0
                                -- !!!
                                HAVING Container.Amount - SUM (COALESCE (MIContainer.Amount, 0)) > 0
+                              )
+     -- Вернем остатки ПАРТИЙ, если их списали в следующем месяце
+   , tmpContainer_rem_sale AS (SELECT tmpContainer_rem_sale_1.ContainerId
+                                      -- добавятся расходы
+                                    , tmpContainer_rem_sale_1.Amount_rem
+
+                                    , tmpContainer_rem_sale_1.PartionGoodsId
+                                    , tmpContainer_rem_sale_1.PartionGoodsDate
+
+                                    , tmpContainer_rem_sale_1.GoodsId
+                                    , tmpContainer_rem_sale_1.GoodsKindId
+
+                               FROM tmpContainer_rem_sale_1
+                                     -- без Товар в пути
+                                     LEFT JOIN ContainerLinkObject AS CLO_Account
+                                                                   ON CLO_Account.ContainerId = tmpContainer_rem_sale_1.ContainerId
+                                                                  AND CLO_Account.DescId      = zc_ContainerLinkObject_Account()
+                              -- без Товар в пути
+                               WHERE CLO_Account.ObjectId IS NULL
                               )
          -- !!! - 02 - учет для ГП - партии по датам + ячейки
        , tmp_02 AS (SELECT Container.Id                                          AS ContainerId
@@ -1438,6 +1450,7 @@ end if;
                          LEFT JOIN ContainerLinkObject AS CLO_Account
                                                        ON CLO_Account.ContainerId = Container.Id
                                                       AND CLO_Account.DescId      = zc_ContainerLinkObject_Account()
+                                                      AND 1=0
 
                          -- !!!
                          LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
@@ -5525,6 +5538,25 @@ $BODY$
 */
 
 /*
+-- err on Container + zc_ContainerLinkObject_Account
+select MovementDesc.Code, Movement.Id, Movement.OperDate, count(*) -- , Object.*
+from MovementItemContainer AS MIContainer
+           JOIN Object on Object.Id = MIContainer.ObjectId_Analyzer
+           JOIN Movement on Movement.Id = MIContainer.MovementId
+           JOIN MovementDesc on MovementDesc.Id = Movement.DescId 
+           -- Товар в пути
+           JOIN ContainerLinkObject AS CLO_Account
+                                    ON CLO_Account.ContainerId = MIContainer.ContainerId
+                                   AND CLO_Account.DescId      = zc_ContainerLinkObject_Account()
+                                   AND CLO_Account.ObjectId    > 0
+WHERE MIContainer.OperDate       between '01.04.2026' and '30.04.2026'
+AND MIContainer.MovementDescId IN ( zc_Movement_Sale(), zc_Movement_SendOnPrice(), zc_Movement_Loss())
+AND MIContainer.DescId = 1
+and MIContainer.AccountId is null
+group by MovementDesc.Code, Movement.Id, Movement.OperDate order by 4 desc
+
+
+-- InsertUpdate.....
 select Movement.*
 --     , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), MovementItem.Id, MovementFloat_ChangePercent.ValueData)
      FROM Movement
