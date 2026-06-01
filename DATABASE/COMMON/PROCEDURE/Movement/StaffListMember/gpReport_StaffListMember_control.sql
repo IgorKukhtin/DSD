@@ -269,7 +269,7 @@ BEGIN
              END                            ::TVarChar  AS Text_control
            , tmp.DateIn                     ::TDateTime
            , tmp.DateSend                   ::TDateTime
-           , tmp.DateOut                    ::TDateTime
+           , CASE WHEN tmp.DateOut = zc_DateEnd() THEN NULL ELSE tmp.DateOut END ::TDateTime
            , Object_Member.Id               ::Integer   AS MemberId
            , Object_Member.ObjectCode       ::Integer   AS MemberCode
            , Object_Member.ValueData        ::TVarChar  AS MemberName
@@ -281,7 +281,7 @@ BEGIN
            , Object_Unit.ValueData          ::TVarChar  AS UnitName
            , tmp.isMain                     ::Boolean   AS isMain
            , tmp.isOfficial                 ::Boolean   AS isOfficial
-           , CASE WHEN COALESCE (tmp.DateOut, zc_DateEnd()) <> zc_DateEnd() THEN TRUE ELSE FALSE END ::Boolean AS isDateOut
+           , CASE WHEN COALESCE (tmp.DateOut, zc_DateEnd()) <> zc_DateEnd() OR COALESCE (tmp.DateOut_object, zc_DateEnd()) <> zc_DateEnd() THEN TRUE ELSE FALSE END ::Boolean AS isDateOut
            --
            , Object_Position_object.Id             ::Integer   AS PositionId_object
            , Object_Position_object.ValueData      ::TVarChar  AS PositionName_object
@@ -291,7 +291,7 @@ BEGIN
            , Object_Unit_object.ValueData          ::TVarChar  AS UnitName_object
            , tmp.DateIn_object                     ::TDateTime AS DateIn_object
            , tmp.DateSend_object                   ::TDateTime AS DateSend_object
-           , tmp.DateOut_object                    ::TDateTime AS DateOut_object
+           , CASE WHEN tmp.DateOut_object = zc_DateEnd() THEN NULL ELSE tmp.DateOut_object END ::TDateTime AS DateOut_object
            , tmp.isOfficial_object                 ::Boolean   AS isOfficial_object
            , COALESCE (tmp.isErased_object, FALSE) ::Boolean   AS isErased_object
       FROM tmpErr AS tmp
