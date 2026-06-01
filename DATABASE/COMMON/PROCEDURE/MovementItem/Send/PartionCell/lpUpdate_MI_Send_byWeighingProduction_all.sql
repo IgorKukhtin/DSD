@@ -19,7 +19,7 @@ BEGIN
 
        -- сохранили протокол
        WITH --
-            tmpMI_from AS (SELECT MovementItem.Id                              AS MovementItemId
+        tmpMI_from_all AS (SELECT MovementItem.Id                              AS MovementItemId
                                 , MovementItem.ObjectId                        AS GoodsId
                                 , COALESCE (MILO_GoodsKind.ObjectId, 0)        AS GoodsKindId
                                   -- текущее значение
@@ -115,6 +115,72 @@ BEGIN
                              AND MovementItem.DescId     = zc_MI_Master()
                              AND MovementItem.isErased   = FALSE
                           )
+
+            -- «десь уже замена
+          , tmpMI_from AS (SELECT tmpMI_from_all.MovementItemId
+                                , tmpMI_from_all.GoodsId
+                                , tmpMI_from_all.GoodsKindId
+                                  -- «амена на новый Desc
+                                , CASE tmpMI_list.Ord WHEN 1 THEN zc_MILinkObject_PartionCell_1()
+                                                      WHEN 2 THEN zc_MILinkObject_PartionCell_2()
+                                                      WHEN 3 THEN zc_MILinkObject_PartionCell_3()
+                                                      WHEN 4 THEN zc_MILinkObject_PartionCell_4()
+                                                      WHEN 5 THEN zc_MILinkObject_PartionCell_5()
+                                                      WHEN 6 THEN zc_MILinkObject_PartionCell_6()
+                                                      WHEN 7 THEN zc_MILinkObject_PartionCell_7()
+                                                      WHEN 8 THEN zc_MILinkObject_PartionCell_8()
+                                                      WHEN 9 THEN zc_MILinkObject_PartionCell_9()
+                                                      WHEN 10 THEN zc_MILinkObject_PartionCell_10()
+                                                      WHEN 11 THEN zc_MILinkObject_PartionCell_11()
+                                                      WHEN 12 THEN zc_MILinkObject_PartionCell_12()
+                                                      WHEN 13 THEN zc_MILinkObject_PartionCell_13()
+                                                      WHEN 14 THEN zc_MILinkObject_PartionCell_14()
+                                                      WHEN 15 THEN zc_MILinkObject_PartionCell_15()
+                                                      WHEN 16 THEN zc_MILinkObject_PartionCell_16()
+                                                      WHEN 17 THEN zc_MILinkObject_PartionCell_17()
+                                                      WHEN 18 THEN zc_MILinkObject_PartionCell_18()
+                                                      WHEN 19 THEN zc_MILinkObject_PartionCell_19()
+                                                      WHEN 20 THEN zc_MILinkObject_PartionCell_20()
+                                                      WHEN 21 THEN zc_MILinkObject_PartionCell_21()
+                                                      WHEN 22 THEN zc_MILinkObject_PartionCell_22()
+                                  END AS DescId_MILO
+                                  -- текущее значение
+                                , tmpMI_list.PartionCellId
+                                , tmpMI_list.PartionCellId_real
+
+                                , tmpMI_from_all.PartionGoodsDate
+
+                           FROM -- берем только один
+                                (SELECT MAX (tmpMI_from_all.MovementItemId) AS MovementItemId
+                                      , tmpMI_from_all.GoodsId
+                                      , tmpMI_from_all.GoodsKindId
+                                      , tmpMI_from_all.PartionGoodsDate
+                                 FROM tmpMI_from_all
+                                 GROUP BY tmpMI_from_all.GoodsId
+                                        , tmpMI_from_all.GoodsKindId
+                                        , tmpMI_from_all.PartionGoodsDate
+                                ) tmpMI_from_all
+                                LEFT JOIN -- ѕостроили вертикально
+                                          (SELECT tmpMI_list.*
+                                                  -- теперь будут такие дески
+                                                , ROW_NUMBER() OVER (PARTITION BY tmpMI_list.GoodsId, tmpMI_list.GoodsKindId, tmpMI_list.PartionGoodsDate ORDER BY tmpMI_list.DescId_MILO, tmpMI_list.PartionCellId) AS Ord
+                                           FROM -- ѕостроили вертикально
+                                                (SELECT DISTINCT
+                                                      , tmpMI_from_all.GoodsId
+                                                      , tmpMI_from_all.GoodsKindId
+                                                      , tmpMI_from_all.PartionGoodsDate
+                                                        -- текущее значение
+                                                      , tmpMI_from_all.DescId_MILO
+                                                      , tmpMI_from_all.PartionCellId
+                                                      , tmpMI_from_all.PartionCellId_real
+                                                 FROM tmpMI_from_all
+                                                ) AS tmpMI_list
+                                          ) AS tmpMI_list
+                                            ON tmpMI_list.GoodsId          = tmpMI_from_all.GoodsId
+                                           AND tmpMI_list.GoodsKindId      = tmpMI_from_all.GoodsKindId
+                                           AND tmpMI_list.PartionGoodsDate = tmpMI_from_all.PartionGoodsDate
+                          )
+
             , tmpMI_to AS (SELECT MovementItem.Id                        AS MovementItemId
                                 , MovementItem.ObjectId                  AS GoodsId
                                 , COALESCE (MILO_GoodsKind.ObjectId, 0)  AS GoodsKindId
