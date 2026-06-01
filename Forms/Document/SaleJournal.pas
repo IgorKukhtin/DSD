@@ -426,6 +426,8 @@ type
     spTax_grid: TdsdStoredProc;
     actUpdate_Commerc: TdsdInsertUpdateAction;
     bbUpdate_Commerc: TdxBarButton;
+    OrderSourceName: TcxGridDBColumn;
+    UserName_order: TcxGridDBColumn;
   private
     { Private declarations }
   public

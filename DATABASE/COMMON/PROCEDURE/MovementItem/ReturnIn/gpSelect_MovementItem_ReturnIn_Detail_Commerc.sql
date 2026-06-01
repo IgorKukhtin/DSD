@@ -116,7 +116,11 @@ BEGIN
 
            , tmpMI_Detail.isErased
        FROM tmpMI_Detail
-            INNER JOIN Object AS Object_Contract_bonus ON Object_Contract_bonus.Id = tmpMI_Detail.ContractId_bonus AND Object_Contract_bonus.DescId = zc_Object_Contract()
+            -- Только если Договор
+            INNER JOIN Object AS Object_Contract_bonus ON Object_Contract_bonus.Id = tmpMI_Detail.ContractId_bonus
+                                                      -- Только если Договор
+                                                      AND Object_Contract_bonus.DescId = zc_Object_Contract()
+            --
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = tmpMI_Detail.ContractId
             LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = tmpMI_Detail.ContractConditionKindId
             LEFT JOIN Object AS Object_BonusKind ON Object_BonusKind.Id = tmpMI_Detail.BonusKindId

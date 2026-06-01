@@ -3085,8 +3085,10 @@ end if;
                                                   );
 
      -- 6.0.7. формируется -
-     PERFORM lpInsertUpdate_MovementItem_Detail_auto (inMovementId:= inMovementId, inUserId:= inUserId);
+     -- PERFORM lpInsertUpdate_MovementItem_Detail_auto (inMovementId:= inMovementId, inUserId:= inUserId);
 
+     -- 6.0.8. формируется - Мотивація комерції
+     PERFORM lpComplete_Movement_Recalc_commerc (inMovementId:= inMovementId, inMovementDescId:= zc_Movement_ReturnIn(), inUserId:= inUserId);
 
      -- 6.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();

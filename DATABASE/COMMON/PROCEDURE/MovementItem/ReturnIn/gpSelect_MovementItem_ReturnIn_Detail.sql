@@ -30,9 +30,11 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
      
     -- оптимизация
-    IF NOT EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Detail())
+    IF (NOT EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Detail())
        -- !!!
-       OR 1=1
+     OR 1=1
+       )
+ --AND vbUserId <> 5
     THEN
         RETURN;
     END IF;
