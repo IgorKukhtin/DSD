@@ -464,6 +464,10 @@ BEGIN
                                                                     ON CLO_Unit.ContainerId = Container.Id
                                                                    AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
                                                                    AND CLO_Unit.ObjectId    = vbUnitId
+                                     -- без Товар в пути
+                                     LEFT JOIN ContainerLinkObject AS CLO_Account
+                                                                   ON CLO_Account.ContainerId = Container.Id
+                                                                  AND CLO_Account.DescId      = zc_ContainerLinkObject_Account()
                                      -- !!!
                                      LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                                                    ON CLO_GoodsKind.ContainerId = Container.Id
@@ -497,6 +501,9 @@ BEGIN
                                      )
                                  --!!!не пустая партия!!!
                                  AND COALESCE (CLO_PartionGoods.ObjectId, -1) NOT IN (80132, 0)
+
+                                 -- без Товар в пути
+                                 AND CLO_Account.ObjectId IS NULL
 
                                GROUP BY Container.Id, Container.Amount
                                       , COALESCE (CLO_PartionGoods.ObjectId, 0)
@@ -593,6 +600,10 @@ BEGIN
                                                               ON CLO_Unit.ContainerId = Container.Id
                                                              AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
                                                              AND CLO_Unit.ObjectId    = vbUnitId
+                               -- без Товар в пути
+                               LEFT JOIN ContainerLinkObject AS CLO_Account
+                                                             ON CLO_Account.ContainerId = Container.Id
+                                                            AND CLO_Account.DescId      = zc_ContainerLinkObject_Account()
                                -- !!!
                                LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                                              ON CLO_GoodsKind.ContainerId = Container.Id
@@ -619,6 +630,9 @@ BEGIN
                             AND COALESCE (CLO_PartionGoods.ObjectId, -1) NOT IN (80132, 0)
                             -- НЕ списываем ЭТУ партию - здесь вообще
                             AND ObjectLink_PartionCell.ObjectId IS NULL
+
+                            -- без Товар в пути
+                            AND CLO_Account.ObjectId IS NULL
                         )
      -- Список всех партий
    , tmpContainer_list AS (-- по партиям для Общефирменные
