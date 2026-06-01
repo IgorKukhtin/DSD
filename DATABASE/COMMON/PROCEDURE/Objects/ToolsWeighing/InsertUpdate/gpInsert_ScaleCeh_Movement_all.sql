@@ -1165,7 +1165,7 @@ BEGIN
                            , COALESCE (MILinkObject_Asset.ObjectId, 0)       AS AssetId
                            , COALESCE (MILinkObject_Asset_two.ObjectId, 0)   AS AssetId_two
 
-                           , 0 :: Integer AS PartionCellId
+                           , 0 AS PartionCellId -- COALESCE (MILO_PartionCell_1.ObjectId, 0) :: Integer AS PartionCellId
 
                            , COALESCE (MIString_PartNumber.ValueData, '')    AS PartNumber
 
@@ -1282,6 +1282,10 @@ BEGIN
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalKVK
                                                             ON MILinkObject_PersonalKVK.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_PersonalKVK.DescId         = zc_MILinkObject_PersonalKVK()
+
+                           --LEFT JOIN MovementItemLinkObject AS MILO_PartionCell_1
+                           --                                 ON MILO_PartionCell_1.MovementItemId = MovementItem.Id
+                           --                                AND MILO_PartionCell_1.DescId         = zc_MILinkObject_PartionCell_1()
 
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
