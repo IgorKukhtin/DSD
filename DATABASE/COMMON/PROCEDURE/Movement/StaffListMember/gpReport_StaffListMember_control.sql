@@ -303,7 +303,8 @@ BEGIN
            LEFT JOIN Object AS Object_Unit_object ON Object_Unit_object.Id = tmp.UnitId_object
            LEFT JOIN Object AS Object_Position_object ON Object_Position_object.Id = tmp.PositionId_object
            LEFT JOIN Object AS Object_PositionLevel_object ON Object_PositionLevel_object.Id = tmp.PositionLevelId_object
- ;
+     WHERE COALESCE (tmp.isErased_object, FALSE) = FALSE
+    ;
 
 END;
 $BODY$
