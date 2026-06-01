@@ -2,8 +2,8 @@ object RouteTTForm: TRouteTTForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1052#1072#1088#1096#1088#1091#1090#1099' '#1058#1058'>'
-  ClientHeight = 276
-  ClientWidth = 557
+  ClientHeight = 295
+  ClientWidth = 908
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,14 @@ object RouteTTForm: TRouteTTForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 557
-    Height = 250
+    Width = 908
+    Height = 269
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 557
+    ExplicitHeight = 250
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -228,6 +230,14 @@ object RouteTTForm: TRouteTTForm
         end
         item
           Visible = True
+          ItemName = 'bbStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbToExcel'
         end
         item
@@ -277,6 +287,10 @@ object RouteTTForm: TRouteTTForm
     end
     object bbShowAll: TdxBarButton
       Action = actShowAll
+      Category = 0
+    end
+    object bbStartLoad: TdxBarButton
+      Action = actStartLoad
       Category = 0
     end
   end
@@ -429,6 +443,45 @@ object RouteTTForm: TRouteTTForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object actGetImportSetting: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSetting'
+    end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <>
+    end
+    object actStartLoad: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1052#1072#1088#1096#1088#1091#1090#1086#1074' '#1058#1058' '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1079#1072#1074#1077#1088#1096#1077#1085#1072
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
+      ImageIndex = 41
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_RouteTT'
@@ -502,5 +555,42 @@ object RouteTTForm: TRouteTTForm
     PropertiesCellList = <>
     Left = 48
     Top = 216
+  end
+  object spGetImportSettingId: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TRouteTTForm;zc_Object_ImportSetting_RouteTT'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 448
+    Top = 88
+  end
+  object FormParams: TdsdFormParams
+    Params = <>
+    Left = 376
+    Top = 160
   end
 end

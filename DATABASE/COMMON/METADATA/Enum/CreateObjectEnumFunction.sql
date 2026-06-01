@@ -1773,12 +1773,17 @@ CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_Retail_KAM() RETURNS Integer AS
 CREATE OR REPLACE FUNCTION zc_Enum_ImportType_Juridical_OrderAuto() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_Juridical_OrderAuto' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_Juridical_OrderAuto() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_Juridical_OrderAuto' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
  
-  
+ -- Загрузка для справочника Маршрут ТТ
+CREATE OR REPLACE FUNCTION zc_Enum_ImportType_RouteTT() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_RouteTT' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_RouteTT() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_RouteTT' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+ 
+    
  
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 01.06.26         * Загрузка Маршруты ТТ (RouteTT)
  03.02.26         * Загрузка OrderFinanceSB
  16.01.26         * ЗП Загрузка OrderFinance
  23.10.25         * Загрузка CFO для Unit
