@@ -428,6 +428,7 @@ type
     bbUpdate_Commerc: TdxBarButton;
     OrderSourceName: TcxGridDBColumn;
     UserName_order: TcxGridDBColumn;
+    UnitName_order: TcxGridDBColumn;
   private
     { Private declarations }
   public

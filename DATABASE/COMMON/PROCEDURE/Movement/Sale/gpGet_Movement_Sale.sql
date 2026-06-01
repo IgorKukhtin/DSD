@@ -45,7 +45,12 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PartionGoodsDate TDateTime
              , RouteTTId Integer, RouteTTName TVarChar
              , BonusFirstForm TFloat
-             , BonusSecondForm TFloat
+             , BonusSecondForm TFloat 
+             , UserId_order    Integer
+             , UserName_order  TVarChar
+             , UnitId_order    Integer
+             , UnitName_order  TVarChar
+             , OrderSourceName TVarChar             
               )
 AS
 $BODY$
@@ -139,6 +144,12 @@ BEGIN
              , CAST (0 AS TFloat)                   AS BonusFirstForm
              , CAST (0 AS TFloat)                   AS BonusSecondForm
 
+             , 0                         AS UserId_order
+             , CAST ('' as TVarChar)     AS UserName_order
+             , 0                         AS UnitId_order
+             , CAST ('' as TVarChar)     AS UnitName_order
+             , CAST ('' as TVarChar)     AS OrderSourceName
+
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object as Object_Currency ON Object_Currency.Id = zc_Enum_Currency_Basis();
      ELSE
@@ -197,6 +208,18 @@ BEGIN
            WITH tmpMS  AS (SELECT * FROM MovementString       WHERE MovementString.MovementId       = inMovementId)
               , tmpMLO AS (SELECT * FROM MovementLinkObject   WHERE MovementLinkObject.MovementId   = inMovementId)
               , tmpMLM AS (SELECT * FROM MovementLinkMovement WHERE MovementLinkMovement.MovementId = inMovementId)
+
+              , tmpPersonal_byUser AS (SELECT ObjectLink_User_Member.ObjectId AS UserId
+                                            , lfSelect.MemberId
+                                            , lfSelect.UnitId
+                                            , Object_Unit_order.ValueData AS UnitName
+                                       FROM lfSelect_Object_Member_findPersonal (zfCalc_UserAdmin()) AS lfSelect 
+                                            INNER JOIN ObjectLink AS ObjectLink_User_Member
+                                                                  ON ObjectLink_User_Member.ChildObjectId = lfSelect.MemberId
+                                                                 AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                                      LEFT JOIN Object AS Object_Unit_order ON Object_Unit_order.Id = lfSelect.UnitId         
+                                      )
+
            SELECT
                  Movement.Id                                    AS Id
                , Movement.InvNumber                             AS InvNumber
@@ -317,6 +340,15 @@ BEGIN
                , COALESCE (MovementFloat_BonusFirstForm.ValueData,0)  ::TFloat   AS BonusFirstForm
                , COALESCE (MovementFloat_BonusSecondForm.ValueData,0) ::TFloat   AS BonusSecondForm
 
+           , Object_Insert_order.Id         AS UserId_order
+           , Object_Insert_order.ValueData   AS UserName_order 
+           , tmpPersonal_byUser.UnitId       AS UnitId_order
+           , tmpPersonal_byUser.UnitName     AS UnitName_order
+           
+           , CASE WHEN MovementString_DealId.ValueData <> ''         THEN 'Вчасно'
+                  WHEN MovementLinkMovement_Order_edi.MovementId > 0 THEN 'EDI'
+                  ELSE Object_Insert_order.ValueData
+             END :: TVarChar AS OrderSourceName
            FROM Movement
                 LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -499,7 +531,23 @@ BEGIN
                                               ON MovementLinkMovement_ReturnIn.MovementId = Movement.Id
                                              AND MovementLinkMovement_ReturnIn.DescId     = zc_MovementLinkMovement_ReturnIn()
                LEFT JOIN Movement AS Movement_ReturnIn ON Movement_ReturnIn.Id = MovementLinkMovement_ReturnIn.MovementChildId
-              
+ 
+            -- Док EDI
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order_edi
+                                           ON MovementLinkMovement_Order_edi.MovementId = Movement_Order.Id
+                                          AND MovementLinkMovement_Order_edi.DescId = zc_MovementLinkMovement_Order()
+            LEFT JOIN MovementString AS MovementString_DealId
+                                     ON MovementString_DealId.MovementId = MovementLinkMovement_Order_edi.MovementChildId
+                                    AND MovementString_DealId.DescId     = zc_MovementString_DealId()
+ 
+            -- Автор Заявки
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert_order
+                                         ON MovementLinkObject_Insert_order.MovementId = Movement_Order.Id
+                                        AND MovementLinkObject_Insert_order.DescId     = zc_MovementLinkObject_Insert()
+            LEFT JOIN Object AS Object_Insert_order ON Object_Insert_order.Id = MovementLinkObject_Insert_order.ObjectId
+            LEFT JOIN tmpPersonal_byUser ON tmpPersonal_byUser.UserId = MovementLinkObject_Insert_order.ObjectId
+
+             
            WHERE Movement.Id     = inMovementId
              AND Movement.DescId = zc_Movement_Sale()
              --AND COALESCE (Movement_Production.StatusId, 0) <> zc_Enum_Status_Erased()

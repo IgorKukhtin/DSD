@@ -1747,7 +1747,7 @@ procedure TLoadFormTest.LoadSaleFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_CommercForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_CommercForm');
-  exit;
+  //exit;
    {
    TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PartionQEditForm'));
    TdsdFormStorageFactory.GetStorage.Load('TSale_PartionQEditForm');
