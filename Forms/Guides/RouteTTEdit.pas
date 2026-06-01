@@ -40,6 +40,18 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxLabel4: TcxLabel;
     ceComment: TcxTextEdit;
+    cxLabel5: TcxLabel;
+    cePosition: TcxButtonEdit;
+    GuidesPosition: TdsdGuides;
+    cePersonalGroup: TcxButtonEdit;
+    cxLabel3: TcxLabel;
+    GuidesPersonalGroup: TdsdGuides;
+    cxLabel7: TcxLabel;
+    ceUnit: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
+    edPersonal: TcxButtonEdit;
+    cxLabel6: TcxLabel;
+    GuidesPersonal: TdsdGuides;
   private
     { Private declarations }
   public

@@ -102,8 +102,8 @@ BEGIN
      vbOperDate_promo:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner());
 
      -- Прайс лист входящий
-     --vbPriceListInId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PriceListIn());
-     vbPriceListInId:= COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PriceListIn()) , zc_PriceList_Basis());
+     vbPriceListInId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PriceListIn());
+     --vbPriceListInId:= COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PriceListIn()) , zc_PriceList_Basis());
      
      -- Цены с НДС (прайс входящий)
      vbPriceWithVAT_plin:= COALESCE ((SELECT OB.ValueData FROM ObjectBoolean AS OB WHERE OB.ObjectId = vbPriceListInId AND OB.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()), FALSE);
@@ -349,6 +349,17 @@ BEGIN
                                   FROM lfSelect_ObjectHistory_PricePlanItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS lfSelect
                                   ) 
 
+            -- Цены из прайса базового прайса
+          , tmpPriceListBasis AS (SELECT lfSelect.GoodsId     AS GoodsId
+                                       , lfSelect.GoodsKindId AS GoodsKindId
+                                       , lfSelect.StartDate
+                                       --, CASE WHEN vbPriceWithVAT_plin = FALSE OR vbVATPercent_plin = 0 THEN lfSelect.ValuePrice ELSE lfSelect.ValuePrice / vbVATPercent_plin END AS Price_PriceList
+                                       --, CASE WHEN vbPriceWithVAT_plin = TRUE  OR vbVATPercent_plin = 0 THEN lfSelect.ValuePrice ELSE lfSelect.ValuePrice * vbVATPercent_plin END AS Price_PriceList_vat
+                                        --цена по прайсу
+                                       , lfSelect.ValuePrice AS Price
+                                  FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= inOperDate) AS lfSelect
+                                 )
+
    , tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
                                   , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) AS GoodsKindId
                              FROM ObjectBoolean AS ObjectBoolean_Order
@@ -540,12 +551,12 @@ BEGIN
 
            --
            , COALESCE (tmpPrice_kind.StartDate, tmpPrice.StartDate)         :: TDateTime AS StartDate_fact
-           , COALESCE (tmpPriceListIn_kind.StartDate, tmpPriceListIn.StartDate)     :: TDateTime AS StartDate_In
+           , COALESCE (tmpPriceListBasis_kind.StartDate, tmpPriceListBasis.StartDate)     :: TDateTime AS StartDate_In
            , COALESCE (tmpPriceListPlan_kind.StartDate, tmpPriceListPlan.StartDate) :: TDateTime AS StartDate_Plan
 
            , CAST (COALESCE (tmpPrice_kind.Price_Change, tmpPriceListPlan.Price_Change) AS TFloat)     AS Price_fact           --цена факт по прайсу со скидкой
            , 0                                                                           ::TFloat          AS Summ_fact            --Сумма факт по прайсу со скидкой
-           , CAST (COALESCE (tmpPriceListIn_kind.Price, tmpPriceListIn.Price) AS TFloat)                   AS Price_In             --цена вход. по прайсу (База_ 
+           , CAST (COALESCE (tmpPriceListBasis_kind.Price, tmpPriceListBasis.Price) AS TFloat)                   AS Price_In             --цена вход. по прайсу (База_ 
            , 0                                                                           ::TFloat          AS Summ_In              --Сумма вход. по прайсу         
            , CAST (COALESCE (tmpPriceListPlan_kind.Price_Change, tmpPriceListPlan.Price_Change) AS TFloat) AS Price_Plan  --цена факт по прайсу со скидкой
            , 0                                                                           ::TFloat          AS Summ_Plan   --Сумма факт по прайсу со скидкой
@@ -598,6 +609,12 @@ BEGIN
                                         ON tmpPriceListPlan_kind.GoodsId = tmpGoods.GoodsId
                                        AND COALESCE (tmpPriceListPlan_kind.GoodsKindId,0) = COALESCE (tmpGoods.GoodsKindId,0)
 
+            -- привязываем 2 раза вх. цены по виду товара и без
+            LEFT JOIN tmpPriceListBasis ON tmpPriceListBasis.GoodsId = tmpGoods.GoodsId
+                                    AND tmpPriceListBasis.GoodsKindId IS NULL
+            LEFT JOIN tmpPriceListBasis AS tmpPriceListBasis_kind
+                                     ON tmpPriceListBasis_kind.GoodsId = tmpGoods.GoodsId
+                                    AND COALESCE (tmpPriceListBasis_kind.GoodsKindId,0) = COALESCE (tmpGoods.GoodsKindId,0)
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId
@@ -706,14 +723,14 @@ BEGIN
 
            --
            , COALESCE (tmpPrice_kind.StartDate, tmpPrice.StartDate)         :: TDateTime AS StartDate_fact
-           , COALESCE (tmpPriceListIn_kind.StartDate, tmpPriceListIn.StartDate)     :: TDateTime AS StartDate_In
+           , COALESCE (tmpPriceListBasis_kind.StartDate, tmpPriceListBasis.StartDate)     :: TDateTime AS StartDate_In
            , COALESCE (tmpPriceListPlan_kind.StartDate, tmpPriceListPlan.StartDate) :: TDateTime AS StartDate_Plan
 
            , CAST (COALESCE (tmpPrice_kind.Price_Change, tmpPriceListPlan.Price_Change) AS TFloat)     AS Price_fact      --цена факт по прайсу со скидкой
            , (CAST (COALESCE (tmpPrice_kind.Price_Change, tmpPriceListPlan.Price_Change) AS TFloat)
               * tmpResult.AmountPartner)                                               ::TFloat            AS Summ_fact       --Сумма факт по прайсу со скидкой
-           , CAST (COALESCE (tmpPriceListIn_kind.Price, tmpPriceListIn.Price) AS TFloat)                   AS Price_In    --цена вход. по прайсу (База_ 
-           , (CAST (COALESCE (tmpPriceListIn_kind.Price, tmpPriceListIn.Price) AS TFloat)
+           , CAST (COALESCE (tmpPriceListBasis_kind.Price, tmpPriceListBasis.Price) AS TFloat)                   AS Price_In    --цена вход. по прайсу (База_ 
+           , (CAST (COALESCE (tmpPriceListBasis_kind.Price, tmpPriceListBasis.Price) AS TFloat)
               * tmpResult.AmountPartner)                                               ::TFloat            AS Summ_In       --Сумма вход. по прайсу         
            , CAST (COALESCE (tmpPriceListPlan_kind.Price_Change, tmpPriceListPlan.Price_Change) AS TFloat) AS Price_Plan  --цена факт по прайсу со скидкой
            , (CAST (COALESCE (tmpPriceListPlan_kind.Price_Change, tmpPriceListPlan.Price_Change) AS TFloat)
@@ -785,11 +802,11 @@ BEGIN
                                        AND COALESCE (tmpPriceListPlan_kind.GoodsKindId,0) = COALESCE (tmpResult.GoodsKindId,0)
 
             -- привязываем 2 раза вх. цены по виду товара и без
-            LEFT JOIN tmpPriceListIn ON tmpPriceListIn.GoodsId = tmpResult.GoodsId
-                                    AND tmpPriceListIn.GoodsKindId IS NULL
-            LEFT JOIN tmpPriceListIn AS tmpPriceListIn_kind
-                                     ON tmpPriceListIn_kind.GoodsId = tmpResult.GoodsId
-                                    AND COALESCE (tmpPriceListIn_kind.GoodsKindId,0) = COALESCE (tmpResult.GoodsKindId,0)
+            LEFT JOIN tmpPriceListBasis ON tmpPriceListBasis.GoodsId = tmpResult.GoodsId
+                                    AND tmpPriceListBasis.GoodsKindId IS NULL
+            LEFT JOIN tmpPriceListBasis AS tmpPriceListBasis_kind
+                                     ON tmpPriceListBasis_kind.GoodsId = tmpResult.GoodsId
+                                    AND COALESCE (tmpPriceListBasis_kind.GoodsKindId,0) = COALESCE (tmpResult.GoodsKindId,0)
 
             LEFT JOIN Movement AS Movement_PartionMovement ON Movement_PartionMovement.Id = tmpResult.MovementId_sale
             LEFT JOIN MovementDesc AS MovementDesc_PartionMovement ON MovementDesc_PartionMovement.Id = Movement_PartionMovement.DescId
@@ -1005,17 +1022,6 @@ BEGIN
                        FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS lfSelect
                       )
 
-      -- Цены из прайса входящего
-    , tmpPriceListIn AS (SELECT lfSelect.GoodsId     AS GoodsId
-                              , lfSelect.GoodsKindId AS GoodsKindId
-                              , lfSelect.StartDate
-                              , CASE WHEN vbPriceWithVAT_plin = FALSE OR vbVATPercent_plin = 0 THEN lfSelect.ValuePrice ELSE lfSelect.ValuePrice / vbVATPercent_plin END AS Price_PriceList
-                              , CASE WHEN vbPriceWithVAT_plin = TRUE  OR vbVATPercent_plin = 0 THEN lfSelect.ValuePrice ELSE lfSelect.ValuePrice * vbVATPercent_plin END AS Price_PriceList_vat
-                               --цена по прайсу
-                              , lfSelect.ValuePrice AS Price
-                         FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListInId, inOperDate:= inOperDate) AS lfSelect
-                        )
-
     , tmpPriceList_Plan AS (SELECT lfSelect.GoodsId
                                  , lfSelect.GoodsKindId 
                                  , lfSelect.StartDate
@@ -1026,6 +1032,16 @@ BEGIN
                             FROM lfSelect_ObjectHistory_PricePlanItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS lfSelect
                             ) 
 
+      -- Цены из прайса базового прайса
+    , tmpPriceListBasis AS (SELECT lfSelect.GoodsId     AS GoodsId
+                                 , lfSelect.GoodsKindId AS GoodsKindId
+                                 , lfSelect.StartDate
+                                 --, CASE WHEN vbPriceWithVAT_plin = FALSE OR vbVATPercent_plin = 0 THEN lfSelect.ValuePrice ELSE lfSelect.ValuePrice / vbVATPercent_plin END AS Price_PriceList
+                                 --, CASE WHEN vbPriceWithVAT_plin = TRUE  OR vbVATPercent_plin = 0 THEN lfSelect.ValuePrice ELSE lfSelect.ValuePrice * vbVATPercent_plin END AS Price_PriceList_vat
+                                  --цена по прайсу
+                                 , lfSelect.ValuePrice AS Price
+                            FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= inOperDate) AS lfSelect
+                           )
 
    , tmpMovementItem_child AS (SELECT MovementItem.*
                                FROM MovementItem
@@ -1240,14 +1256,14 @@ BEGIN
 
            --
            , COALESCE (tmpPrice_kind.StartDate, tmpPrice.StartDate)         :: TDateTime AS StartDate_fact
-           , COALESCE (tmpPriceListIn_kind.StartDate, tmpPriceListIn.StartDate)     :: TDateTime AS StartDate_In
+           , COALESCE (tmpPriceListBasis_kind.StartDate, tmpPriceListBasis.StartDate)     :: TDateTime AS StartDate_In
            , COALESCE (tmpPriceListPlan_kind.StartDate, tmpPriceListPlan.StartDate) :: TDateTime AS StartDate_Plan
 
            , CAST (COALESCE (tmpPrice_kind.Price_Change, tmpPriceListPlan.Price_Change) AS TFloat)     AS Price_fact      --цена факт по прайсу со скидкой
            , (CAST (COALESCE (tmpPrice_kind.Price_Change, tmpPriceListPlan.Price_Change) AS TFloat)
               * tmpResult.AmountPartner)                                               ::TFloat            AS Summ_fact       --Сумма факт по прайсу со скидкой
-           , CAST (COALESCE (tmpPriceListIn_kind.Price, tmpPriceListIn.Price) AS TFloat)                   AS Price_In    --цена вход. по прайсу (База_ 
-           , (CAST (COALESCE (tmpPriceListIn_kind.Price, tmpPriceListIn.Price) AS TFloat)
+           , CAST (COALESCE (tmpPriceListBasis_kind.Price, tmpPriceListBasis.Price) AS TFloat)                   AS Price_In    --цена вход. по прайсу (База_ 
+           , (CAST (COALESCE (tmpPriceListBasis_kind.Price, tmpPriceListBasis.Price) AS TFloat)
               * tmpResult.AmountPartner)                                               ::TFloat            AS Summ_In       --Сумма вход. по прайсу         
            , CAST (COALESCE (tmpPriceListPlan_kind.Price_Change, tmpPriceListPlan.Price_Change) AS TFloat) AS Price_Plan  --цена факт по прайсу со скидкой
            , (CAST (COALESCE (tmpPriceListPlan_kind.Price_Change, tmpPriceListPlan.Price_Change) AS TFloat)
@@ -1318,11 +1334,11 @@ BEGIN
                                        AND COALESCE (tmpPriceListPlan_kind.GoodsKindId,0) = COALESCE (tmpResult.GoodsKindId,0)
 
             -- привязываем 2 раза вх. цены по виду товара и без
-            LEFT JOIN tmpPriceListIn ON tmpPriceListIn.GoodsId = tmpResult.GoodsId
-                                    AND tmpPriceListIn.GoodsKindId IS NULL
-            LEFT JOIN tmpPriceListIn AS tmpPriceListIn_kind
-                                     ON tmpPriceListIn_kind.GoodsId = tmpResult.GoodsId
-                                    AND COALESCE (tmpPriceListIn_kind.GoodsKindId,0) = COALESCE (tmpResult.GoodsKindId,0)
+            LEFT JOIN tmpPriceListBasis ON tmpPriceListBasis.GoodsId = tmpResult.GoodsId
+                                    AND tmpPriceListBasis.GoodsKindId IS NULL
+            LEFT JOIN tmpPriceListBasis AS tmpPriceListBasis_kind
+                                     ON tmpPriceListBasis_kind.GoodsId = tmpResult.GoodsId
+                                    AND COALESCE (tmpPriceListBasis_kind.GoodsKindId,0) = COALESCE (tmpResult.GoodsKindId,0)
 
             LEFT JOIN Movement AS Movement_PartionMovement ON Movement_PartionMovement.Id = tmpResult.MovementId_sale
             LEFT JOIN MovementDesc AS MovementDesc_PartionMovement ON MovementDesc_PartionMovement.Id = Movement_PartionMovement.DescId

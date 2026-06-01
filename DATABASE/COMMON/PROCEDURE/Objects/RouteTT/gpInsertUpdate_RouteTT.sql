@@ -1,11 +1,16 @@
 -- Function: gpInsertUpdate_Object_RouteTT()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_RouteTT(Integer, Integer, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_RouteTT(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_RouteTT(
  INOUT ioId                  Integer   ,    -- ключ объекта <>
     IN inCode                Integer   ,    -- Код объекта
-    IN inName                TVarChar  ,    -- Название объекта
+    IN inName                TVarChar  ,    -- Название объекта 
+    IN inUnitId              Integer   ,    --
+    IN inPersonalId          Integer   ,    --
+    IN inPositionId          Integer   ,    --
+    IN inPersonalGroupId     Integer   ,    --
     IN inComment             TVarChar  ,    -- Примечание
     IN inSession             TVarChar       -- сессия пользователя
 )
@@ -18,6 +23,23 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_RouteTT());
    vbUserId:= lpGetUserBySession (inSession);
 
+   --проверка
+   -- все поля должны быть заполнены, разрешить не заполнять только Personal, если выбрали Personal - автоматом заполнили ТОЛЬКО должность + PersonalGroup
+   IF COALESCE (inUnitId,0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка. Параметр <Подразделение> должен быть заполнен.';
+   END IF;
+
+   IF COALESCE (inPositionId,0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка. Параметр <Должность> должен быть заполнен.';
+   END IF;
+
+   IF COALESCE (inPersonalGroupId,0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка. Параметр <Группа Сотрудников> должен быть заполнен.';
+   END IF;
+   
    -- Если код не установлен, определяем его каи последний+1
    inCode:=lfGet_ObjectCode (inCode, zc_Object_RouteTT());
 
@@ -26,6 +48,16 @@ BEGIN
 
    -- сохранили <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_RouteTT_Comment(), ioId, inComment);
+
+
+   -- сохранили связь с < >
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_RouteTT_Unit(), ioId, inUnitId);  
+   -- сохранили связь с < >
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_RouteTT_Personal(), ioId, inPersonalId);
+   -- сохранили связь с < >
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_RouteTT_Position(), ioId, inPositionId);
+   -- сохранили связь с < >
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_RouteTT_PersonalGroup(), ioId, inPersonalGroupId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

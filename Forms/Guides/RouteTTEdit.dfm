@@ -2,8 +2,8 @@ object RouteTTEditForm: TRouteTTEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1052#1072#1088#1096#1088#1091#1090#1099' '#1058#1058'>'
-  ClientHeight = 195
-  ClientWidth = 303
+  ClientHeight = 373
+  ClientWidth = 299
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -28,8 +28,8 @@ object RouteTTEditForm: TRouteTTEditForm
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 41
-    Top = 154
+    Left = 38
+    Top = 339
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -37,8 +37,8 @@ object RouteTTEditForm: TRouteTTEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 185
-    Top = 154
+    Left = 182
+    Top = 339
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -61,14 +61,82 @@ object RouteTTEditForm: TRouteTTEditForm
   end
   object cxLabel4: TcxLabel
     Left = 10
-    Top = 99
+    Top = 280
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit
     Left = 10
-    Top = 118
+    Top = 299
     TabOrder = 7
     Width = 273
+  end
+  object cxLabel5: TcxLabel
+    Left = 10
+    Top = 186
+    Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+  end
+  object cePosition: TcxButtonEdit
+    Left = 10
+    Top = 205
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 9
+    Width = 273
+  end
+  object cePersonalGroup: TcxButtonEdit
+    Left = 10
+    Top = 253
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 10
+    Width = 273
+  end
+  object cxLabel3: TcxLabel
+    Left = 10
+    Top = 231
+    Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1080' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074' '
+  end
+  object cxLabel7: TcxLabel
+    Left = 10
+    Top = 99
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+  end
+  object ceUnit: TcxButtonEdit
+    Left = 10
+    Top = 117
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 13
+    Width = 273
+  end
+  object edPersonal: TcxButtonEdit
+    Left = 10
+    Top = 160
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 14
+    Width = 273
+  end
+  object cxLabel6: TcxLabel
+    Left = 10
+    Top = 143
+    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
   end
   object ActionList: TActionList
     Left = 152
@@ -131,6 +199,38 @@ object RouteTTEditForm: TRouteTTEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalId'
+        Value = Null
+        Component = GuidesPersonal
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPositionId'
+        Value = Null
+        Component = GuidesPosition
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalGroupId'
+        Value = Null
+        Component = GuidesPersonalGroup
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = ceComment
@@ -185,6 +285,66 @@ object RouteTTEditForm: TRouteTTEditForm
         Component = ceComment
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalId'
+        Value = Null
+        Component = GuidesPersonal
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalName'
+        Value = Null
+        Component = GuidesPersonal
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionId'
+        Value = Null
+        Component = GuidesPosition
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionName'
+        Value = Null
+        Component = GuidesPosition
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalGroupId'
+        Value = Null
+        Component = GuidesPersonalGroup
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalGroupName'
+        Value = Null
+        Component = GuidesPersonalGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 184
@@ -202,11 +362,165 @@ object RouteTTEditForm: TRouteTTEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 264
-    Top = 138
+    Left = 232
+    Top = 306
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 224
     Top = 56
+  end
+  object GuidesPosition: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePosition
+    FormNameParam.Value = 'TPositionForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPositionForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPosition
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPosition
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 199
+    Top = 168
+  end
+  object GuidesPersonalGroup: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePersonalGroup
+    FormNameParam.Value = 'TPersonalGroupForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonalGroupForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPersonalGroup
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPersonalGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 159
+    Top = 232
+  end
+  object GuidesUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 200
+    Top = 103
+  end
+  object GuidesPersonal: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonal
+    FormNameParam.Value = 'TPersonal_ChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonal_ChoiceForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPersonal
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPersonal
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionId'
+        Value = Null
+        Component = GuidesPosition
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionName'
+        Value = Null
+        Component = GuidesPosition
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalGroupId'
+        Value = Null
+        Component = GuidesPersonalGroup
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalGroupName'
+        Value = Null
+        Component = GuidesPersonalGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 151
+    Top = 136
   end
 end

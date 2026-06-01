@@ -77,7 +77,7 @@
       end
       object cxLabel5: TcxLabel
         Left = 16
-        Top = 128
+        Top = 132
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
       end
       object cxLabel6: TcxLabel
@@ -145,7 +145,7 @@
       end
       object cePersonalGroup: TcxButtonEdit
         Left = 124
-        Top = 105
+        Top = 104
         Properties.Buttons = <
           item
             Default = True
