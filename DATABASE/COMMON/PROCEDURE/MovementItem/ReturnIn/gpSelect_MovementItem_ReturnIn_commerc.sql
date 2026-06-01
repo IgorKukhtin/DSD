@@ -357,7 +357,7 @@ BEGIN
                                        --, CASE WHEN vbPriceWithVAT_plin = TRUE  OR vbVATPercent_plin = 0 THEN lfSelect.ValuePrice ELSE lfSelect.ValuePrice * vbVATPercent_plin END AS Price_PriceList_vat
                                         --цена по прайсу
                                        , lfSelect.ValuePrice AS Price
-                                  FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= inOperDate) AS lfSelect
+                                  FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_BasisComerc(), inOperDate:= inOperDate) AS lfSelect
                                  )
 
    , tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
@@ -1040,7 +1040,7 @@ BEGIN
                                  --, CASE WHEN vbPriceWithVAT_plin = TRUE  OR vbVATPercent_plin = 0 THEN lfSelect.ValuePrice ELSE lfSelect.ValuePrice * vbVATPercent_plin END AS Price_PriceList_vat
                                   --цена по прайсу
                                  , lfSelect.ValuePrice AS Price
-                            FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= inOperDate) AS lfSelect
+                            FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_BasisComerc(), inOperDate:= inOperDate) AS lfSelect
                            )
 
    , tmpMovementItem_child AS (SELECT MovementItem.*

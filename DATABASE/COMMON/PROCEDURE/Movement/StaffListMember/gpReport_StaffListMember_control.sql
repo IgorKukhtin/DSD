@@ -22,7 +22,8 @@ RETURNS TABLE (Text_control      TVarChar
              , UnitId            Integer  
              , UnitName          TVarChar 
              , isMain            Boolean  
-             , isOfficial        Boolean  
+             , isOfficial        Boolean 
+             , isDateOut         Boolean
            --
              , PositionId_object         Integer
              , PositionName_object       TVarChar
@@ -280,6 +281,7 @@ BEGIN
            , Object_Unit.ValueData          ::TVarChar  AS UnitName
            , tmp.isMain                     ::Boolean   AS isMain
            , tmp.isOfficial                 ::Boolean   AS isOfficial
+           , CASE WHEN COALESCE (tmp.DateOut, zc_DateEnd()) <> zc_DateEnd() THEN TRUE ELSE FALSE END ::Boolean AS isDateOut
            --
            , Object_Position_object.Id             ::Integer   AS PositionId_object
            , Object_Position_object.ValueData      ::TVarChar  AS PositionName_object
