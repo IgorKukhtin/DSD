@@ -22,7 +22,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  cxBlobEdit, dsdCommon;
+  cxBlobEdit, dsdCommon, ExternalLoad;
 
 type
   TRouteTTForm = class(TParentForm)
@@ -60,6 +60,12 @@ type
     Comment: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    spGetImportSettingId: TdsdStoredProc;
+    actGetImportSetting: TdsdExecStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actStartLoad: TMultiAction;
+    bbStartLoad: TdxBarButton;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public

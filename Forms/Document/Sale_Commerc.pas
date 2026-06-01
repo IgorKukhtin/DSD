@@ -367,6 +367,15 @@ type
     DetailDS: TDataSource;
     DetailCDS: TClientDataSet;
     spSelectDetail: TdsdStoredProc;
+    cxLabel34: TcxLabel;
+    edOrderSource: TcxButtonEdit;
+    GuidesOrderSource: TdsdGuides;
+    cxLabel35: TcxLabel;
+    edUser_order: TcxButtonEdit;
+    GuidesUser_order: TdsdGuides;
+    cxLabel36: TcxLabel;
+    edUnit_order: TcxButtonEdit;
+    GuidesUnit_order: TdsdGuides;
   private
     { Private declarations }
   public

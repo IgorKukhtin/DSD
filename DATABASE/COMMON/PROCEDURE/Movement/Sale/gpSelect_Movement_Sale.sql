@@ -76,6 +76,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              
              , UserId_order    Integer
              , UserName_order  TVarChar
+             , UnitName_order  TVarChar
              , OrderSourceName TVarChar
               )
 AS

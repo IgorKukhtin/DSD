@@ -76,6 +76,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
 
              , UserId_order    Integer
              , UserName_order  TVarChar
+             , UnitName_order  TVarChar
              , OrderSourceName TVarChar
               )
 AS
@@ -857,6 +858,18 @@ end if;
                                  LEFT JOIN Object_Personal_View AS Object_PersonalCollation ON Object_PersonalCollation.PersonalId = ObjectLink_Contract_PersonalCollation.ChildObjectId
                                 )
 
+  --для UserId_order нужно получить подразделение по осн. месту работу
+        , tmpPersonal_byUser AS (SELECT ObjectLink_User_Member.ObjectId AS UserId
+                                      , lfSelect.MemberId
+                                      , lfSelect.UnitId
+                                      , Object_Unit_order.ValueData AS UnitName
+                                 FROM lfSelect_Object_Member_findPersonal (zfCalc_UserAdmin()) AS lfSelect 
+                                      INNER JOIN ObjectLink AS ObjectLink_User_Member
+                                                            ON ObjectLink_User_Member.ChildObjectId = lfSelect.MemberId
+                                                           AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                                LEFT JOIN Object AS Object_Unit_order ON Object_Unit_order.Id = lfSelect.UnitId         
+                                )
+ 
      -- Результат
      SELECT  Movement.Id                                    AS Id
            , Movement.InvNumber                             AS InvNumber
@@ -1046,6 +1059,7 @@ end if;
 
            , Object_Insert_order.Id          AS UserId_order
            , Object_Insert_order.ValueData   AS UserName_order
+           , tmpPersonal_byUser.UnitName     AS UnitName_order
            , CASE WHEN MovementString_DealId.ValueData <> ''         THEN 'Вчасно'
                   WHEN MovementLinkMovement_Order_edi.MovementId > 0 THEN 'EDI'
                   ELSE Object_Insert_order.ValueData
@@ -1310,6 +1324,7 @@ end if;
                                          ON MovementLinkObject_Insert_order.MovementId = Movement_order.Id
                                         AND MovementLinkObject_Insert_order.DescId     = zc_MovementLinkObject_Insert()
             LEFT JOIN Object AS Object_Insert_order ON Object_Insert_order.Id = MovementLinkObject_Insert_order.ObjectId
+            LEFT JOIN tmpPersonal_byUser ON tmpPersonal_byUser.UserId = MovementLinkObject_Insert_order.ObjectId
 
             -- Док EDI
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order_edi
@@ -1457,4 +1472,4 @@ $BODY$
 --select * from gpSelect_Movement_Sale_DATA(instartdate := ('23.10.2024')::TDateTime , inenddate := ('23.10.2024')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inUserId:= zfCalc_UserAdmin() :: Integer);
 
 
-select * from gpSelect_Movement_Sale_DATA(instartdate := ('01.05.2026')::TDateTime , inenddate := ('30.05.2026')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inUserId:= zfCalc_UserAdmin() :: Integer);
+--select * from gpSelect_Movement_Sale_DATA(instartdate := ('01.05.2026')::TDateTime , inenddate := ('01.05.2026')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inUserId:= zfCalc_UserAdmin() :: Integer);
