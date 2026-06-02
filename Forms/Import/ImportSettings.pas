@@ -92,6 +92,7 @@ type
     lbSearchName: TcxLabel;
     edSearchName: TcxTextEdit;
     FieldFilter: TdsdFieldFilter;
+    clId: TcxGridDBColumn;
   private
     { Private declarations }
   public
