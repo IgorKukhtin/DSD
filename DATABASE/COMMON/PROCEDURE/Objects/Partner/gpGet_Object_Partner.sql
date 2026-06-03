@@ -63,6 +63,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar,
              
              , TypeCommercId Integer, TypeCommercName TVarChar
              , UnitCommercId Integer, UnitCommercName TVarChar
+             , PersonalGroupCommercId Integer, PersonalGroupCommercName TVarChar
                ) AS
 $BODY$
 BEGIN
@@ -212,7 +213,9 @@ BEGIN
            , CAST (0 as Integer)    AS TypeCommercId 
            , CAST ('' as TVarChar)  AS TypeCommercName
            , CAST (0 as Integer)    AS UnitCommercId 
-           , CAST ('' as TVarChar)  AS UnitCommercName
+           , CAST ('' as TVarChar)  AS UnitCommercName 
+           , CAST (0 as Integer)    AS PersonalGroupCommercId
+           , CAST ('' as TVarChar)  AS PersonalGroupCommercName
            ;
    ELSE
        RETURN QUERY 
@@ -356,6 +359,8 @@ BEGIN
            , Object_TypeCommerc.ValueData ::TVarChar AS TypeCommercName
            , Object_UnitCommerc.Id        ::Integer  AS UnitCommercId 
            , Object_UnitCommerc.ValueData ::TVarChar AS UnitCommercName
+           , Object_PersonalGroupCommerc.Id        ::Integer  AS PersonalGroupCommercId
+           , Object_PersonalGroupCommerc.ValueData ::TVarChar AS PersonalGroupCommercName
        FROM Object AS Object_Partner
            LEFT JOIN ObjectString AS Partner_GLNCode 
                                   ON Partner_GLNCode.ObjectId = Object_Partner.Id
@@ -512,11 +517,13 @@ BEGIN
                                 ON ObjectLink_Partner_RouteTT.ObjectId = Object_Partner.Id 
                                AND ObjectLink_Partner_RouteTT.DescId = zc_ObjectLink_Partner_RouteTT()
            LEFT JOIN Object AS Object_RouteTT ON Object_RouteTT.Id = ObjectLink_Partner_RouteTT.ChildObjectId
-
+           --
            LEFT JOIN ObjectLink AS ObjectLink_RouteTT_Unit
                                 ON ObjectLink_RouteTT_Unit.ObjectId = ObjectLink_Partner_RouteTT.ChildObjectId
                                AND ObjectLink_RouteTT_Unit.DescId = zc_ObjectLink_RouteTT_Unit()
-           --LEFT JOIN Object AS Object_Unit_RouteTT ON Object_Unit_RouteTT.Id = ObjectLink_RouteTT_Unit.ChildObjectId
+           LEFT JOIN ObjectLink AS ObjectLink_RouteTT_PersonalGroup
+                                ON ObjectLink_RouteTT_PersonalGroup.ObjectId = ObjectLink_Partner_RouteTT.ChildObjectId
+                               AND ObjectLink_RouteTT_PersonalGroup.DescId = zc_ObjectLink_RouteTT_PersonalGroup()
 
            LEFT JOIN ObjectLink AS ObjectLink_Partner_Route_30201
                                 ON ObjectLink_Partner_Route_30201.ObjectId = Object_Partner.Id
@@ -610,6 +617,12 @@ BEGIN
                                AND COALESCE (ObjectLink_Partner_RouteTT.ChildObjectId, 0) = 0  --если в маршруте ТТ пусто - только тогда показываем zc_ObjectLink_Partner_UnitCommerc
            LEFT JOIN Object AS Object_UnitCommerc ON Object_UnitCommerc.Id = COALESCE (ObjectLink_Partner_UnitCommerc.ChildObjectId, ObjectLink_RouteTT_Unit.ChildObjectId)
 
+           LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalGroupCommerc
+                                ON ObjectLink_Partner_PersonalGroupCommerc.ObjectId = Object_Partner.Id
+                               AND ObjectLink_Partner_PersonalGroupCommerc.DescId = zc_ObjectLink_Partner_PersonalGroupCommerc()
+                               AND COALESCE (ObjectLink_Partner_RouteTT.ChildObjectId, 0) = 0  --если в маршруте ТТ пусто - только тогда показываем zc_ObjectLink_Partner_UnitCommerc
+           LEFT JOIN Object AS Object_PersonalGroupCommerc ON Object_PersonalGroupCommerc.Id = COALESCE (ObjectLink_Partner_PersonalGroupCommerc.ChildObjectId, ObjectLink_RouteTT_PersonalGroup.ChildObjectId)
+
            LEFT JOIN ObjectLink AS ObjectLink_City_CityKind                                          -- по улице
                                 ON ObjectLink_City_CityKind.ObjectId = Object_Street_View.CityId
                                AND ObjectLink_City_CityKind.DescId = zc_ObjectLink_City_CityKind()
@@ -637,6 +650,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.06.26         *
  21.05.26         *
  05.01.25         *
  23.12.25         * 
@@ -669,4 +683,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpGet_Object_Partner (0, 0, 1, '2')
---select * from gpGet_Object_Partner(inId := 212570 , inMaskId := 0 , inJuridicalId := 0 ,  inSession := '5');
+-- select * from gpGet_Object_Partner(inId := 0 , inMaskId := 0 , inJuridicalId := 0 ,  inSession := '5');

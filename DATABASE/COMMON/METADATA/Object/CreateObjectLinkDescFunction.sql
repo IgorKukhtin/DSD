@@ -572,6 +572,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Partner_UnitCommerc() RETURNS Integer A
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Partner_UnitCommerc', 'Отдел коммерции', zc_Object_Partner(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Partner_UnitCommerc');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Partner_PersonalGroupCommerc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Partner_PersonalGroupCommerc'); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Partner_PersonalGroupCommerc', 'Группа Сотрудников', zc_Object_Partner(), zc_Object_PersonalGroup() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Partner_PersonalGroupCommerc');
+
+
 
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_PriceListItem_PriceList() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PriceListItem_PriceList'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -3359,6 +3364,9 @@ SELECT 'zc_ObjectLink_GoodsGroupProperty_Parent', 'Аналитический классификатор',
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 03.06.26         * zc_ObjectLink_Partner_PersonalGroupCommerc
+                    zc_ObjectLink_Partner_TypeCommerc
+                    zc_ObjectLink_Partner_UnitCommerc
  26.05.26         * zc_ObjectLink_Retail_Section
                     zc_ObjectLink_Retail_KAM
                     zc_ObjectLink_Retail_KAM_add

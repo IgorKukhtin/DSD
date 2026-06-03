@@ -186,6 +186,9 @@ type
     cxLabel58: TcxLabel;
     edUnitCommerc: TcxButtonEdit;
     GuidesUnitCommerc: TdsdGuides;
+    cxLabel59: TcxLabel;
+    edPersonalGroupCommerc: TcxButtonEdit;
+    GuidesPersonalGroupCommerc: TdsdGuides;
 
   private
     { Private declara

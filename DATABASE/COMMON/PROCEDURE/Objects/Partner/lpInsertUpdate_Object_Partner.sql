@@ -74,7 +74,12 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
                                                        Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
                                                        Integer, Integer, Integer, Integer,
                                                        TDateTime, TDateTime, Integer);
-   
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
+                                                       TFloat, TFloat, TFloat,TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,
+                                                       Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar
+                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                                                       Integer, Integer, Integer, Integer, Integer,
+                                                       TDateTime, TDateTime, Integer);   
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
@@ -132,7 +137,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
        
     IN inUnitMobileId        Integer   ,    -- Подразделение(заявки мобильный)
     IN inTypeCommercId       Integer   ,    -- Тип отгрузки
-    IN inUnitCommercId       Integer   ,    -- Отдео комменции
+    IN inUnitCommercId       Integer   ,    -- Отдео комменции 
+    IN inPersonalGroupCommercId  Integer   ,    -- Группа Сотрудников
 
     IN inPriceListId         Integer   ,    -- Прайс-лист
     IN inPriceListId_30201   Integer   ,    -- Прайс-лист мясное сырье
@@ -252,12 +258,14 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Partner_PriceListPromo(), ioId, inPriceListPromoId);
 
-    -- сохранили свойство <>
+   -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_UnitMobile(), ioId, inUnitMobileId);
-    -- сохранили свойство <>
+   -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_TypeCommerc(), ioId, inTypeCommercId);
-    -- сохранили свойство <>
+   -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_UnitCommerc(), ioId, CASE WHEN COALESCE (inRouteTTId,0) <> 0 THEN NULL ELSE inUnitCommercId END);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalGroupCommerc(), ioId, CASE WHEN COALESCE (inRouteTTId,0) <> 0 THEN NULL ELSE inPersonalGroupCommercId END);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Partner_StartPromo(), ioId, DATE (inStartPromo));

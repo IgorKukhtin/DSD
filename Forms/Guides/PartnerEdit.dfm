@@ -1,23 +1,23 @@
 ﻿inherited PartnerEditForm: TPartnerEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
-  ClientHeight = 560
+  ClientHeight = 589
   ClientWidth = 1087
   ExplicitWidth = 1093
-  ExplicitHeight = 589
+  ExplicitHeight = 618
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 762
-    Top = 527
+    Left = 780
+    Top = 556
     TabOrder = 2
-    ExplicitLeft = 762
-    ExplicitTop = 527
+    ExplicitLeft = 780
+    ExplicitTop = 556
   end
   inherited bbCancel: TcxButton
-    Left = 905
-    Top = 527
-    ExplicitLeft = 905
-    ExplicitTop = 527
+    Left = 937
+    Top = 556
+    ExplicitLeft = 937
+    ExplicitTop = 556
   end
   object edAddress: TcxTextEdit [2]
     Left = 158
@@ -1013,11 +1013,28 @@
     Width = 212
   end
   object cxLabel58: TcxLabel [137]
-    Left = 381
-    Top = 529
+    Left = 15
+    Top = 561
     Caption = #1054#1090#1076#1077#1083' '#1082#1086#1084#1084#1077#1088#1094#1080#1080
   end
   object edUnitCommerc: TcxButtonEdit [138]
+    Left = 141
+    Top = 560
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 138
+    Width = 212
+  end
+  object cxLabel59: TcxLabel [139]
+    Left = 381
+    Top = 529
+    Caption = #1043#1088#1091#1087#1087#1072' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074
+  end
+  object edPersonalGroupCommerc: TcxButtonEdit [140]
     Left = 507
     Top = 528
     Properties.Buttons = <
@@ -1026,7 +1043,7 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 138
+    TabOrder = 140
     Width = 212
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1513,6 +1530,14 @@
         Name = 'inUnitCommercId'
         Value = Null
         Component = GuidesUnitCommerc
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalGroupCommercId'
+        Value = Null
+        Component = GuidesPersonalGroupCommerc
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2434,6 +2459,21 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalGroupCommercId'
+        Value = Null
+        Component = GuidesPersonalGroupCommerc
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalGroupCommercName'
+        Value = Null
+        Component = GuidesPersonalGroupCommerc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 520
     Top = 452
@@ -3273,6 +3313,23 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalGroupId'
+        Value = Null
+        Component = GuidesPersonalGroupCommerc
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalGroupName'
+        Value = Null
+        Component = GuidesPersonalGroupCommerc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 129
     Top = 299
@@ -3329,6 +3386,36 @@
         Name = 'TextValue'
         Value = ''
         Component = GuidesUnitCommerc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 224
+    Top = 541
+  end
+  object GuidesPersonalGroupCommerc: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonalGroupCommerc
+    FormNameParam.Value = 'TPersonalGroupForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonalGroupForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPersonalGroupCommerc
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPersonalGroupCommerc
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
