@@ -10,7 +10,7 @@ AS
                            , linkItemExtId
                            , isDefaultWarehouse
                            , isDeleted
-                      FROM dblink ('host=192.168.0.228 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
+                      FROM dblink ('host=192.168.0.219 dbname=project port=5432 user=project password=sqoII5szOnrcZxJVF1BL'::text
                                  , ('SELECT employeeExtId
                                           , warehouseExtId
                                           , linkItemTypeId

@@ -22,7 +22,7 @@ $BODY$
      -- Результат
      RETURN QUERY
      WITH
-     tmp_employee AS (SELECT DISTINCT gpSelect.employeeExtId :: Integer AS MemberId FROM gpSelect_Object_EmployeesTT_effie('') AS gpSelect)
+     tmp_employee AS (SELECT DISTINCT gpSelect.extId :: Integer AS MemberId FROM gpSelect_Object_Employees_effie('') AS gpSelect)
    , tmpMember AS (SELECT tmp_employee.MemberId
               
                         , CASE WHEN tmp_employee.MemberId = 5866615 -- Матіюк В.Ю.
@@ -37,6 +37,8 @@ $BODY$
                                     THEN zc_Branch_Basis()
                                ELSE COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
                           END AS BranchId
+
+                        , Object_Member.isErased
               
                    FROM tmp_employee
                         /*INNER JOIN ObjectBoolean AS ObjectBoolean_ProjectMobile
@@ -77,6 +79,7 @@ $BODY$
           , FALSE                        ::Boolean  AS isDeleted
      FROM tmpMember
           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpMember.BranchId
+     WHERE Object_Branch.ObjectCode > 0 OR tmpMember.isErased = FALSE
      ;
 
 END;
