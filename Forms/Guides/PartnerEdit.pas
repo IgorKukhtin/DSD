@@ -180,6 +180,12 @@ type
     cxLabel56: TcxLabel;
     ceRouteTT: TcxButtonEdit;
     GuidesRouteTT: TdsdGuides;
+    cxLabel57: TcxLabel;
+    edTypeCommerc: TcxButtonEdit;
+    GuidesTypeCommerc: TdsdGuides;
+    cxLabel58: TcxLabel;
+    edUnitCommerc: TcxButtonEdit;
+    GuidesUnitCommerc: TdsdGuides;
 
   private
     { Private declara

@@ -25,7 +25,6 @@ object PartnerForm: TPartnerForm
     Height = 381
     Align = alClient
     TabOrder = 1
-    ExplicitHeight = 380
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -344,6 +343,24 @@ object PartnerForm: TPartnerForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1086#1090#1075#1088#1091#1079#1082#1080' ('#1079#1072#1103#1074#1082#1080' '#1089' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086')'
+        Options.Editing = False
+        Width = 70
+      end
+      object TypeCommercName: TcxGridDBColumn
+        Caption = #1058#1080#1087' '#1086#1090#1075#1088#1091#1079#1082#1080
+        DataBinding.FieldName = 'TypeCommercName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object UnitCommercName: TcxGridDBColumn
+        Caption = #1054#1090#1076#1077#1083' '#1082#1086#1084#1084#1077#1088#1094#1080#1080
+        DataBinding.FieldName = 'UnitCommercName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 70
       end
@@ -1170,6 +1187,10 @@ object PartnerForm: TPartnerForm
         end
         item
           Visible = True
+          ItemName = 'bbStartLoadTypeComm'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic1'
         end
         item
@@ -1470,11 +1491,26 @@ object PartnerForm: TPartnerForm
       Action = actStartLoadRouteTT
       Category = 0
     end
+    object bbStartLoadTypeComm: TdxBarButton
+      Action = macStartLoadTypeComm
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 232
     Top = 144
+    object actGetImportSettingIdTypeComm: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingIdTypeComm
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingIdTypeComm
+        end>
+      Caption = 'actGetImportSetting'
+    end
     object actUpdate_PersonalMerch: TdsdExecStoredProc
       Category = 'Personal'
       MoveParams = <>
@@ -1486,6 +1522,25 @@ object PartnerForm: TPartnerForm
         end>
       Caption = 'actUpdate_PersonalMerch'
       ImageIndex = 76
+    end
+    object macStartLoadTypeComm: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSettingIdTypeComm
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1087#1072#1088#1072#1084#1077#1090#1088#1072' <'#1058#1080#1087' '#1086#1090#1075#1088#1091#1079#1082#1080'> '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#1058#1080#1087' '#1086#1090#1075#1088#1091#1079#1082#1080
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#1058#1080#1087' '#1086#1090#1075#1088#1091#1079#1082#1080
+      ImageIndex = 30
     end
     object actGetImportSettingRouteTT: TdsdExecStoredProc
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
@@ -3493,5 +3548,37 @@ object PartnerForm: TPartnerForm
     PackSize = 1
     Left = 632
     Top = 280
+  end
+  object spGetImportSettingIdTypeComm: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TPartnerForm;zc_Object_ImportSetting_PartnerTypeCommerc'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 624
+    Top = 368
   end
 end

@@ -216,6 +216,10 @@ type
     actGetImportSettingRouteTT: TdsdExecStoredProc;
     actStartLoadRouteTT: TMultiAction;
     bbStartLoadRouteTT: TdxBarButton;
+    spGetImportSettingIdTypeComm: TdsdStoredProc;
+    actGetImportSettingIdTypeComm: TdsdExecStoredProc;
+    macStartLoadTypeComm: TMultiAction;
+    bbStartLoadTypeComm: TdxBarButton;
   private
     { Private declarations }
   public

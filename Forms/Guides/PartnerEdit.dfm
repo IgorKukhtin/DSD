@@ -1,23 +1,23 @@
 ﻿inherited PartnerEditForm: TPartnerEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
-  ClientHeight = 528
+  ClientHeight = 560
   ClientWidth = 1087
   ExplicitWidth = 1093
-  ExplicitHeight = 557
+  ExplicitHeight = 589
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 735
-    Top = 501
+    Left = 762
+    Top = 527
     TabOrder = 2
-    ExplicitLeft = 735
-    ExplicitTop = 501
+    ExplicitLeft = 762
+    ExplicitTop = 527
   end
   inherited bbCancel: TcxButton
-    Left = 878
-    Top = 501
-    ExplicitLeft = 878
-    ExplicitTop = 501
+    Left = 905
+    Top = 527
+    ExplicitLeft = 905
+    ExplicitTop = 527
   end
   object edAddress: TcxTextEdit [2]
     Left = 158
@@ -616,7 +616,7 @@
   end
   object cxLabel36: TcxLabel [83]
     Left = 366
-    Top = 444
+    Top = 449
     Caption = #1043#1088#1072#1092#1080#1082' '#1079#1072#1074#1086#1079#1072':'
   end
   object cbDelivery1: TcxCheckBox [84]
@@ -994,6 +994,40 @@
     Properties.ReadOnly = True
     TabOrder = 134
     Width = 195
+  end
+  object cxLabel57: TcxLabel [135]
+    Left = 15
+    Top = 529
+    Caption = #1058#1080#1087' '#1086#1090#1075#1088#1091#1079#1082#1080
+  end
+  object edTypeCommerc: TcxButtonEdit [136]
+    Left = 141
+    Top = 528
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 136
+    Width = 212
+  end
+  object cxLabel58: TcxLabel [137]
+    Left = 381
+    Top = 529
+    Caption = #1054#1090#1076#1077#1083' '#1082#1086#1084#1084#1077#1088#1094#1080#1080
+  end
+  object edUnitCommerc: TcxButtonEdit [138]
+    Left = 507
+    Top = 528
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 138
+    Width = 212
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 299
@@ -1463,6 +1497,22 @@
         Name = 'inUnitMobileId'
         Value = Null
         Component = GuidesUnitMobile
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTypeCommercId'
+        Value = Null
+        Component = GuidesTypeCommerc
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitCommercId'
+        Value = Null
+        Component = GuidesUnitCommerc
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2354,6 +2404,36 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TypeCommercId'
+        Value = Null
+        Component = GuidesTypeCommerc
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TypeCommercName'
+        Value = Null
+        Component = GuidesTypeCommerc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitCommercId'
+        Value = Null
+        Component = GuidesUnitCommerc
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitCommercName'
+        Value = Null
+        Component = GuidesUnitCommerc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 520
     Top = 452
@@ -3176,8 +3256,85 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = GuidesUnitCommerc
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = GuidesUnitCommerc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 129
     Top = 299
+  end
+  object GuidesTypeCommerc: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edTypeCommerc
+    FormNameParam.Value = 'TTypeCommercForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TTypeCommercForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesTypeCommerc
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesTypeCommerc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 232
+    Top = 517
+  end
+  object GuidesUnitCommerc: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnitCommerc
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnitCommerc
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnitCommerc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 590
+    Top = 509
   end
 end

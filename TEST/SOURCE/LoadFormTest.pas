@@ -246,6 +246,7 @@ type
     procedure LoadTradeMarkFormTest;
     procedure LoadTelegramGroupFormTest;
     procedure LoadToolsWeighingFormTest;
+    procedure LoadTypeCommercFormTest;
     procedure LoadViewPriceListFormTest;
     procedure LoadVisitFormTest;
     procedure LoadUnionFormTest;
@@ -3941,6 +3942,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PromoDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PromoDialogForm');
   }
+end;
+
+procedure TLoadFormTest.LoadTypeCommercFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTypeCommercForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTypeCommercForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTypeCommercEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTypeCommercEditForm');
 end;
 
 procedure TLoadFormTest.LoadVisitFormTest;

@@ -1193,6 +1193,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_RouteTT_Comment() RETURNS Integer AS 
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_RouteTT_Comment', zc_Object_RouteTT(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_RouteTT_Comment');
                   
+CREATE OR REPLACE FUNCTION zc_ObjectString_TypeCommerc_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_TypeCommerc_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_TypeCommerc_Comment', zc_Object_TypeCommerc(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_TypeCommerc_Comment');
+                  
                   
                           
                           

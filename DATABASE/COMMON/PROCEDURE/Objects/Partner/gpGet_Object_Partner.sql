@@ -59,7 +59,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar,
              , MovementComment TVarChar
              , BranchCode TVarChar
              , BranchJur TVarChar
-             , Terminal TVarChar
+             , Terminal TVarChar 
+             
+             , TypeCommercId Integer, TypeCommercName TVarChar
+             , UnitCommercId Integer, UnitCommercName TVarChar
                ) AS
 $BODY$
 BEGIN
@@ -206,6 +209,10 @@ BEGIN
            , CAST ('' as TVarChar)  AS BranchJur 
            , CAST ('' as TVarChar)  AS Terminal
 
+           , CAST (0 as Integer)    AS TypeCommercId 
+           , CAST ('' as TVarChar)  AS TypeCommercName
+           , CAST (0 as Integer)    AS UnitCommercId 
+           , CAST ('' as TVarChar)  AS UnitCommercName
            ;
    ELSE
        RETURN QUERY 
@@ -344,6 +351,11 @@ BEGIN
            , ObjectString_BranchCode.ValueData ::TVarChar AS BranchCode
            , ObjectString_BranchJur.ValueData  ::TVarChar AS BranchJur
            , ObjectString_Terminal.ValueData   ::TVarChar AS Terminal
+
+           , Object_TypeCommerc.Id        ::Integer  AS TypeCommercId 
+           , Object_TypeCommerc.ValueData ::TVarChar AS TypeCommercName
+           , Object_UnitCommerc.Id        ::Integer  AS UnitCommercId 
+           , Object_UnitCommerc.ValueData ::TVarChar AS UnitCommercName
        FROM Object AS Object_Partner
            LEFT JOIN ObjectString AS Partner_GLNCode 
                                   ON Partner_GLNCode.ObjectId = Object_Partner.Id
@@ -501,6 +513,11 @@ BEGIN
                                AND ObjectLink_Partner_RouteTT.DescId = zc_ObjectLink_Partner_RouteTT()
            LEFT JOIN Object AS Object_RouteTT ON Object_RouteTT.Id = ObjectLink_Partner_RouteTT.ChildObjectId
 
+           LEFT JOIN ObjectLink AS ObjectLink_RouteTT_Unit
+                                ON ObjectLink_RouteTT_Unit.ObjectId = ObjectLink_Partner_RouteTT.ChildObjectId
+                               AND ObjectLink_RouteTT_Unit.DescId = zc_ObjectLink_RouteTT_Unit()
+           --LEFT JOIN Object AS Object_Unit_RouteTT ON Object_Unit_RouteTT.Id = ObjectLink_RouteTT_Unit.ChildObjectId
+
            LEFT JOIN ObjectLink AS ObjectLink_Partner_Route_30201
                                 ON ObjectLink_Partner_Route_30201.ObjectId = Object_Partner.Id
                                AND ObjectLink_Partner_Route_30201.DescId = zc_ObjectLink_Partner_Route30201()
@@ -582,7 +599,17 @@ BEGIN
                                AND ObjectLink_Partner_UnitMobile.DescId = zc_ObjectLink_Partner_UnitMobile()
            LEFT JOIN Object AS Object_UnitMobile ON Object_UnitMobile.Id = ObjectLink_Partner_UnitMobile.ChildObjectId
 
-         
+           LEFT JOIN ObjectLink AS ObjectLink_Partner_TypeCommerc
+                                ON ObjectLink_Partner_TypeCommerc.ObjectId = Object_Partner.Id
+                               AND ObjectLink_Partner_TypeCommerc.DescId = zc_ObjectLink_Partner_TypeCommerc()
+           LEFT JOIN Object AS Object_TypeCommerc ON Object_TypeCommerc.Id = ObjectLink_Partner_TypeCommerc.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_Partner_UnitCommerc
+                                ON ObjectLink_Partner_UnitCommerc.ObjectId = Object_Partner.Id
+                               AND ObjectLink_Partner_UnitCommerc.DescId = zc_ObjectLink_Partner_UnitCommerc()
+                               AND COALESCE (ObjectLink_Partner_RouteTT.ChildObjectId, 0) = 0  --если в маршруте ТТ пусто - только тогда показываем zc_ObjectLink_Partner_UnitCommerc
+           LEFT JOIN Object AS Object_UnitCommerc ON Object_UnitCommerc.Id = COALESCE (ObjectLink_Partner_UnitCommerc.ChildObjectId, ObjectLink_RouteTT_Unit.ChildObjectId)
+
            LEFT JOIN ObjectLink AS ObjectLink_City_CityKind                                          -- по улице
                                 ON ObjectLink_City_CityKind.ObjectId = Object_Street_View.CityId
                                AND ObjectLink_City_CityKind.DescId = zc_ObjectLink_City_CityKind()

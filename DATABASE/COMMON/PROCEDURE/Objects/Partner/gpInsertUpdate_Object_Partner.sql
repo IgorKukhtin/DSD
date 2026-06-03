@@ -88,11 +88,18 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
                                                      , Integer, Integer
                                                      , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);*/
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                      , Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar
                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                      , Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar); */
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                     , Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , Integer, Integer, Integer, Integer
                                                      , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
 
@@ -159,7 +166,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     IN inPriceListId         Integer   ,    -- Прайс-лист
     IN inPriceListId_30201   Integer   ,    -- Прайс-лист мясное сырье
     IN inPriceListPromoId    Integer   ,    -- Прайс-лист(Акционный)
-    IN inUnitMobileId        Integer   ,    -- Подразделение(заявки мобильный)
+    IN inUnitMobileId        Integer   ,    -- Подразделение(заявки мобильный) 
+    IN inTypeCommercId       Integer   ,    -- Тип отгрузки
+    IN inUnitCommercId       Integer   ,    -- Отдео комменции
 
     IN inStartPromo          TDateTime ,    -- Дата начала акции
     IN inEndPromo            TDateTime ,    -- Дата окончания акции     
@@ -238,6 +247,13 @@ BEGIN
        inCode:= 0;
    END IF;
 
+   --проверка
+   IF COALESCE (inRouteTTId,0) = 0 AND COALESCE (inUnitCommercId,0) = 0 
+   THEN
+       RAISE EXCEPTION 'Ошибка.Должен быть заполнен один из параметров <Маршрут ТТ> или <Отдел коммерции>.';
+   END IF;
+
+
    -- !!! Если код не установлен, определяем его как последний+1
    vbCode:= lfGet_ObjectCode (inCode, zc_Object_Partner());
 
@@ -295,6 +311,8 @@ BEGIN
                                         , inPriceListId_30201 := inPriceListId_30201
                                         , inPriceListPromoId:= inPriceListPromoId
                                         , inUnitMobileId    := inUnitMobileId
+                                        , inTypeCommercId   := inTypeCommercId
+                                        , inUnitCommercId   := inUnitCommercId
                                         , inStartPromo      := inStartPromo
                                         , inEndPromo        := inEndPromo
                                         , inUserId          := vbUserId

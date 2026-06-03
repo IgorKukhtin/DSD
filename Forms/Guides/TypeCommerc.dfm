@@ -1,9 +1,9 @@
-object RouteTTForm: TRouteTTForm
+object TypeCommercForm: TTypeCommercForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1052#1072#1088#1096#1088#1091#1090#1099' '#1058#1058'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1080#1087' '#1086#1090#1075#1088#1091#1079#1082#1080'>'
   ClientHeight = 295
-  ClientWidth = 908
+  ClientWidth = 509
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,13 @@ object RouteTTForm: TRouteTTForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 908
+    Width = 509
     Height = 269
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 908
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -77,42 +78,6 @@ object RouteTTForm: TRouteTTForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 78
-      end
-      object UnitName: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-        DataBinding.FieldName = 'UnitName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 150
-      end
-      object PersonalName: TcxGridDBColumn
-        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
-        DataBinding.FieldName = 'PersonalName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 113
-      end
-      object UnitName_Personal: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
-        DataBinding.FieldName = 'UnitName_Personal'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 150
-      end
-      object PositionName: TcxGridDBColumn
-        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
-        DataBinding.FieldName = 'PositionName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 100
-      end
-      object PersonalGroupName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072
-        DataBinding.FieldName = 'PersonalGroupName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 133
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -228,10 +193,6 @@ object RouteTTForm: TRouteTTForm
         end
         item
           Visible = True
-          ItemName = 'bbStartLoad'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -302,8 +263,8 @@ object RouteTTForm: TRouteTTForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TRouteTTEditForm'
-      FormNameParam.Value = 'TRouteTTEditForm'
+      FormName = 'TTypeCommercEditForm'
+      FormNameParam.Value = 'TTypeCommercEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -338,8 +299,8 @@ object RouteTTForm: TRouteTTForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TRouteTTEditForm'
-      FormNameParam.Value = 'TRouteTTEditForm'
+      FormName = 'TTypeCommercEditForm'
+      FormNameParam.Value = 'TTypeCommercEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -374,21 +335,6 @@ object RouteTTForm: TRouteTTForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UnitId'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'UnitId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UnitName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'UnitName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -497,7 +443,7 @@ object RouteTTForm: TRouteTTForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_RouteTT'
+    StoredProcName = 'gpSelect_Object_TypeCommerc'
     DataSet = ClientDataSet
     DataSets = <
       item

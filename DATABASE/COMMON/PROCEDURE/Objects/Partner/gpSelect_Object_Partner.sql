@@ -72,7 +72,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, BasisCode Integer,
                MovementComment TVarChar,
                BranchCode TVarChar,
                BranchJur TVarChar,
-               Terminal TVarChar
+               Terminal TVarChar,
+               TypeCommercId Integer, TypeCommercName TVarChar,
+               UnitCommercId Integer, UnitCommercName TVarChar
               )
 AS
 $BODY$
@@ -369,6 +371,11 @@ BEGIN
          , ObjectString_BranchCode.ValueData ::TVarChar AS BranchCode
          , ObjectString_BranchJur.ValueData  ::TVarChar AS BranchJur   
          , ObjectString_Terminal.ValueData   ::TVarChar AS Terminal
+
+         , Object_TypeCommerc.Id             ::Integer  AS TypeCommercId 
+         , Object_TypeCommerc.ValueData      ::TVarChar AS TypeCommercName
+         , Object_UnitCommerc.Id             ::Integer  AS UnitCommercId 
+         , Object_UnitCommerc.ValueData      ::TVarChar AS UnitCommercName
      FROM tmpIsErased
          INNER JOIN tmpPartner AS Object_Partner
                                ON Object_Partner.isErased = tmpIsErased.isErased
@@ -651,6 +658,16 @@ BEGIN
                              AND ObjectLink_Partner_UnitMobile.DescId = zc_ObjectLink_Partner_UnitMobile()
          LEFT JOIN Object AS Object_UnitMobile ON Object_UnitMobile.Id = ObjectLink_Partner_UnitMobile.ChildObjectId
 
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_TypeCommerc
+                              ON ObjectLink_Partner_TypeCommerc.ObjectId = Object_Partner.Id
+                             AND ObjectLink_Partner_TypeCommerc.DescId = zc_ObjectLink_Partner_UnitMobile()
+         LEFT JOIN Object AS Object_TypeCommerc ON Object_TypeCommerc.Id = ObjectLink_Partner_TypeCommerc.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_UnitCommerc
+                              ON ObjectLink_Partner_UnitCommerc.ObjectId = Object_Partner.Id
+                             AND ObjectLink_Partner_UnitCommerc.DescId = zc_ObjectLink_Partner_UnitCommerc()
+         LEFT JOIN Object AS Object_UnitCommerc ON Object_UnitCommerc.Id = ObjectLink_Partner_UnitCommerc.ChildObjectId
+
          LEFT JOIN ObjectBoolean AS ObjectBoolean_isBranchAll
                                  ON ObjectBoolean_isBranchAll.ObjectId = Object_Juridical.Id
                                 AND ObjectBoolean_isBranchAll.DescId   = zc_ObjectBoolean_Juridical_isBranchAll()
@@ -865,6 +882,11 @@ BEGIN
          , ObjectString_BranchCode.ValueData ::TVarChar AS BranchCode
          , ObjectString_BranchJur.ValueData  ::TVarChar AS BranchJur
          , ObjectString_Terminal.ValueData   ::TVarChar AS Terminal
+
+         , Object_TypeCommerc.Id             ::Integer  AS TypeCommercId 
+         , Object_TypeCommerc.ValueData      ::TVarChar AS TypeCommercName
+         , Object_UnitCommerc.Id             ::Integer  AS UnitCommercId 
+         , Object_UnitCommerc.ValueData      ::TVarChar AS UnitCommercName
      FROM tmpIsErased
          INNER JOIN Object AS Object_Partner
                            ON Object_Partner.isErased = tmpIsErased.isErased
@@ -1050,6 +1072,10 @@ BEGIN
                              AND ObjectLink_Partner_RouteTT.DescId = zc_ObjectLink_Partner_RouteTT()
          LEFT JOIN Object AS Object_RouteTT ON Object_RouteTT.Id = ObjectLink_Partner_RouteTT.ChildObjectId
 
+         LEFT JOIN ObjectLink AS ObjectLink_RouteTT_Unit
+                              ON ObjectLink_RouteTT_Unit.ObjectId = ObjectLink_Partner_RouteTT.ChildObjectId
+                             AND ObjectLink_RouteTT_Unit.DescId = zc_ObjectLink_RouteTT_Unit()
+
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Route_30201
                               ON ObjectLink_Partner_Route_30201.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_Route_30201.DescId = zc_ObjectLink_Partner_Route30201()
@@ -1146,6 +1172,17 @@ BEGIN
                               ON ObjectLink_Partner_UnitMobile.ObjectId = Object_Partner.Id
                              AND ObjectLink_Partner_UnitMobile.DescId = zc_ObjectLink_Partner_UnitMobile()
          LEFT JOIN Object AS Object_UnitMobile ON Object_UnitMobile.Id = ObjectLink_Partner_UnitMobile.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_TypeCommerc
+                              ON ObjectLink_Partner_TypeCommerc.ObjectId = Object_Partner.Id
+                             AND ObjectLink_Partner_TypeCommerc.DescId = zc_ObjectLink_Partner_TypeCommerc()
+         LEFT JOIN Object AS Object_TypeCommerc ON Object_TypeCommerc.Id = ObjectLink_Partner_TypeCommerc.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_UnitCommerc
+                              ON ObjectLink_Partner_UnitCommerc.ObjectId = Object_Partner.Id
+                             AND ObjectLink_Partner_UnitCommerc.DescId = zc_ObjectLink_Partner_UnitCommerc() 
+                             AND COALESCE (ObjectLink_Partner_RouteTT.ChildObjectId, 0) = 0  --если в маршруте ТТ пусто - только тогда показываем zc_ObjectLink_Partner_UnitCommerc
+         LEFT JOIN Object AS Object_UnitCommerc ON Object_UnitCommerc.Id = COALESCE (ObjectLink_Partner_UnitCommerc.ChildObjectId, ObjectLink_RouteTT_Unit.ChildObjectId)
 
          LEFT JOIN ObjectBoolean AS ObjectBoolean_isBranchAll
                                  ON ObjectBoolean_isBranchAll.ObjectId = Object_Juridical.Id

@@ -1672,7 +1672,9 @@ uses
   RouteTT in '..\..\Forms\Guides\RouteTT.pas' {RouteTTForm: TParentForm},
   RouteTTEdit in '..\..\Forms\Guides\RouteTTEdit.pas' {RouteTTEditForm: TParentForm},
   Sale_Commerc in '..\..\Forms\Document\Sale_Commerc.pas' {Sale_CommercForm: TParentForm},
-  ReturnIn_Commerc in '..\..\Forms\Document\ReturnIn_Commerc.pas' {ReturnIn_CommercForm: TParentForm};
+  ReturnIn_Commerc in '..\..\Forms\Document\ReturnIn_Commerc.pas' {ReturnIn_CommercForm: TParentForm},
+  TypeCommercEdit in '..\..\Forms\Guides\TypeCommercEdit.pas' {TypeCommercEditForm: TParentForm},
+  TypeCommerc in '..\..\Forms\Guides\TypeCommerc.pas' {TypeCommercForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
