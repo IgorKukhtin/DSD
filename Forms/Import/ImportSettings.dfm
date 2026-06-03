@@ -12,19 +12,20 @@ inherited ImportSettingsForm: TImportSettingsForm
     Top = 56
     Width = 1184
     Height = 283
+    ExplicitTop = 56
     ExplicitWidth = 1184
-    ExplicitHeight = 313
+    ExplicitHeight = 283
     ClientRectBottom = 283
     ClientRectRight = 1184
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1184
-      ExplicitHeight = 313
+      ExplicitHeight = 283
       inherited cxGrid: TcxGrid
         Width = 697
         Height = 283
         Align = alLeft
         ExplicitWidth = 697
-        ExplicitHeight = 313
+        ExplicitHeight = 283
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Inserting = True
           Styles.Content = nil
@@ -208,6 +209,15 @@ inherited ImportSettingsForm: TImportSettingsForm
             HeaderAlignmentHorz = taCenter
             Width = 80
           end
+          object clId: TcxGridDBColumn
+            Caption = #1050#1083#1102#1095
+            DataBinding.FieldName = 'Id'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object clisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
@@ -225,7 +235,6 @@ inherited ImportSettingsForm: TImportSettingsForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitHeight = 313
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -307,7 +316,6 @@ inherited ImportSettingsForm: TImportSettingsForm
         Height = 283
         AutoPosition = False
         Control = cxGrid
-        ExplicitHeight = 313
       end
     end
   end
@@ -318,9 +326,6 @@ inherited ImportSettingsForm: TImportSettingsForm
     Height = 30
     Align = alTop
     TabOrder = 5
-    ExplicitLeft = 8
-    ExplicitTop = 34
-    ExplicitWidth = 874
     object lbSearchName: TcxLabel
       Left = 10
       Top = 3
