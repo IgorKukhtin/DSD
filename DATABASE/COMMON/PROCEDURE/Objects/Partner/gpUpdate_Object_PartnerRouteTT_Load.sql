@@ -30,27 +30,36 @@ BEGIN
          RETURN;
      END IF;
 
-     -- находим контрагента
-     vbPartnerId := (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inPartnerCode AND Object.DescId = zc_Object_Partner() Limit 1);
+     -- проверка
+     IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.ObjectCode = inPartnerCode AND Object.DescId = zc_Object_Partner())
+     THEN
+         RAISE EXCEPTION 'Ошибка.Найдено несколько значений Контрагент по коду = <(%) %>.', inPartnerCode, inPartnerName;
+     END IF;
+
+     -- находим контрагента по коду
+     vbPartnerId := (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inPartnerCode AND Object.DescId = zc_Object_Partner());
      
      IF COALESCE (vbPartnerId,0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Контрагент <(%) %> не найден', inPartnerCode, inPartnerName;
+         RAISE EXCEPTION 'Ошибка.Не найден Контрагент по коду = <(%) %>.', inPartnerCode, inPartnerName;
+     END IF;
+
+
+     -- проверка
+     IF 1 < (SELECT COUNT(*) FROM Object WHERE TRIM (Object.ValueData) ILIKE TRIM (inRouteTTName) AND Object.DescId = zc_Object_RouteTT())
+     THEN
+         RAISE EXCEPTION 'Ошибка.Найдено несколько значений Маршрут ТТ = <%> не найден', inRouteTTName;
      END IF;
 
      -- находим маршрут TT по наименованию
-     vbRouteTTId := (SELECT Object.Id FROM Object WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (inRouteTTName)) AND Object.DescId = zc_Object_RouteTT() Limit 1);
+     vbRouteTTId := (SELECT Object.Id FROM Object WHERE TRIM (Object.ValueData) ILIKE TRIM (inRouteTTName) AND Object.DescId = zc_Object_RouteTT());
+     -- проверка
      IF COALESCE (vbRouteTTId,0) = 0
      THEN
-         --сохраняем новый элемент
-         vbRouteTTId := gpInsertUpdate_Object_RouteTT (ioId      := 0
-                                                     , inCode    := 0
-                                                     , inName    := TRIM (inRouteTTName) ::TVarChar
-                                                     , inComment := ''        ::TVarChar
-                                                     , inSession := inSession ::TVarChar
-                                                      );
+         RAISE EXCEPTION 'Ошибка.Маршрут ТТ = <%> не найден', inRouteTTName;
      END IF;
      
+
      -- сохранили связь с <Маршруты ТТ>
      PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_RouteTT(), vbPartnerId, vbRouteTTId);
      
