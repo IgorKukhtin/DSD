@@ -224,7 +224,9 @@ BEGIN
            , MovementDate_DateRegistered.ValueData      AS DateRegistered
            , COALESCE (MovementDate_DateRegistered.ValueData, inEndDate) :: TDateTime AS DateRegistered_notNull
            , CASE WHEN COALESCE (MovementDate_DateRegistered.ValueData, zc_DateEnd()) = zc_DateEnd() THEN EXTRACT ('DAY' from ((Movement.OperDate + INTERVAL '18 DAY') - Current_Date)) 
-                  ELSE 18 - (EXTRACT ('DAY' from (MovementDate_DateRegistered.ValueData - Movement.OperDate)))
+                  ELSE CASE WHEN MovementDate_DateRegistered.ValueData < Movement.OperDate THEN 0 
+                            ELSE 18 - (EXTRACT ('DAY' from (MovementDate_DateRegistered.ValueData - Movement.OperDate)))
+                       END
              END ::Integer AS DayForRegister
            , MovementString_InvNumberRegistered.ValueData   AS InvNumberRegistered
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
