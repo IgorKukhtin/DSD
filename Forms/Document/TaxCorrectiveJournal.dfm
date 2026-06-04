@@ -61,6 +61,11 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = CorrSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummPVAT_child
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -97,6 +102,11 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = CorrSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummPVAT_child
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -361,6 +371,17 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object TotalSummPVAT_child: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1085#1072#1083#1086#1075'.)'
+            DataBinding.FieldName = 'TotalSummPVAT_child'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+          end
           object CorrSumm: TcxGridDBColumn
             Caption = #1050#1086#1088#1088'. '#1089#1091#1084#1084#1099' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'CorrSumm'
@@ -419,6 +440,17 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
+          end
+          object DayForRegister: TcxGridDBColumn
+            Caption = #1044#1085#1077#1081' '#1076#1083#1103' '#1088#1077#1075#1080#1089#1090#1088'.'
+            DataBinding.FieldName = 'DayForRegister'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1090#1072#1083#1086#1089#1100' '#1076#1085#1077#1081' '#1076#1083#1103' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
+            Width = 86
           end
           object InfoMoneyGroupName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -487,6 +519,13 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 30
+          end
+          object isElectron_child: TcxGridDBColumn
+            Caption = #1069#1083#1077#1082#1090#1088'. ('#1085#1072#1083#1086#1075'.)'
+            DataBinding.FieldName = 'isElectron_child'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
           end
           object IsMedoc: TcxGridDBColumn
             Caption = #1052#1077#1076#1086#1082

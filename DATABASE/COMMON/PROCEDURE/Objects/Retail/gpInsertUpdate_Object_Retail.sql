@@ -30,13 +30,20 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Retail(
   RETURNS integer AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbCode_calc Integer;   
+   DECLARE vbCode_calc Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Retail());
 
    -- пытаемся найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
+   
+   --проверка на изменеие параметров КАМ
+   IF COALESCE (inKAMId,0) <> (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Retail_KAM() AND OL.ObjectId = ioId)
+   OR COALESCE (inKAM_addId,0) <> (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Retail_KAM_add() AND OL.ObjectId = ioId)
+   THEN
+       vbUserId := lpCheckRight(inSession, zc_Enum_Process_Update_Object_Retail_KAM());
+   END IF;
 
    -- Если код не установлен, определяем его каи последний+1
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Retail());

@@ -12,10 +12,12 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_TaxCorrective(
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , Checked Boolean, Document Boolean, DocumentValue TVarChar, DateRegistered TDateTime, DateRegistered_notNull TDateTime, InvNumberRegistered TVarChar
+             , Checked Boolean, Document Boolean, DocumentValue TVarChar, DateRegistered TDateTime, DateRegistered_notNull TDateTime, DayForRegister Integer, InvNumberRegistered TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat
              , TotalCount TFloat
-             , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
+             , TotalSummVAT TFloat, TotalSummMVAT TFloat
+             , TotalSummPVAT TFloat, TotalSummPVAT_child TFloat
+             , TotalSumm TFloat
              , CorrSumm TFloat
              , InvNumberPartner Integer
              , FromId Integer, FromName_inf TVarChar, FromName TVarChar, OKPO_From TVarChar, OKPO_Retail TVarChar, INN_From TVarChar , RetailName_From TVarChar
@@ -26,7 +28,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , TaxKindId Integer, TaxKindName TVarChar
              , DocumentMasterId Integer, InvNumber_Master TVarChar, InvNumberPartner_Master TVarChar, isPartner Boolean
              , DocumentChildId Integer, OperDate_Child TDateTime, InvNumberPartner_Child TVarChar
-             , isError Boolean
+             , isError Boolean, isElectron_child Boolean
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , InvNumberBranch TVarChar, BranchName TVarChar
              , isEDI Boolean
@@ -194,6 +196,21 @@ BEGIN
                                             AND Object_Branch.isErased = FALSE
                                           GROUP BY Object_PersonalBookkeeper_View.MemberId
                                          )
+       , tmpMovementFloat_child AS (SELECT MovementFloat.*
+                                    FROM MovementFloat
+                                    WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMLM_Child.MovementChildId FROM tmpMLM_Child)
+                                       AND MovementFloat.DescId IN (zc_MovementFloat_TotalSummPVAT()
+                                                                  , zc_MovementFloat_CorrSumm()
+                                                                   )
+                                    )
+
+       , tmpMovementBoolean_child AS (SELECT MovementBoolean.*
+                                      FROM MovementBoolean
+                                      WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpMLM_Child.MovementChildId FROM tmpMLM_Child)
+                                         AND MovementBoolean.DescId IN (zc_MovementBoolean_Electron()
+                                                                       )
+                                      ) 
+                                   
      -- Результат
      SELECT
              Movement.Id                                AS Id
@@ -206,6 +223,7 @@ BEGIN
            , CASE WHEN MovementBoolean_Document.ValueData = TRUE THEN 'V' ELSE '-' END :: TVarChar AS DocumentValue
            , MovementDate_DateRegistered.ValueData      AS DateRegistered
            , COALESCE (MovementDate_DateRegistered.ValueData, inEndDate) :: TDateTime AS DateRegistered_notNull
+           , CASE WHEN COALESCE (MovementDate_DateRegistered.ValueData, zc_DateEnd()) = zc_DateEnd() THEN EXTRACT ( 'DAY' from ((Movement.OperDate + INTERVAL '18 DAY') - Current_Date)) ELSE 0 END ::Integer AS DayForRegister
            , MovementString_InvNumberRegistered.ValueData   AS InvNumberRegistered
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
@@ -214,7 +232,8 @@ BEGIN
            , (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) + COALESCE (MovementFloat_CorrSumm.ValueData, 0)) :: TFloat AS TotalSummVAT
            , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
 
-           , (MovementFloat_TotalSummPVAT.ValueData + COALESCE (MovementFloat_CorrSumm.ValueData, 0)) :: TFloat AS TotalSummPVAT
+           , (MovementFloat_TotalSummPVAT.ValueData + COALESCE (MovementFloat_CorrSumm.ValueData, 0))             :: TFloat AS TotalSummPVAT
+           , (MovementFloat_TotalSummPVAT_child.ValueData + COALESCE (MovementFloat_CorrSumm_child.ValueData, 0)) :: TFloat AS TotalSummPVAT_child
 
            , (MovementFloat_TotalSumm.ValueData + COALESCE (MovementFloat_CorrSumm.ValueData, 0)) :: TFloat AS TotalSumm
 
@@ -299,6 +318,7 @@ BEGIN
                         THEN TRUE
                         ELSE FALSE
                    END AS Boolean) AS isError
+           , COALESCE (MovementBoolean_Electron_child.ValueData, FALSE)  ::Boolean AS isElectron_child
            , View_InfoMoney.InfoMoneyGroupName
            , View_InfoMoney.InfoMoneyDestinationName
            , View_InfoMoney.InfoMoneyCode
@@ -539,7 +559,7 @@ BEGIN
                                     AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Electron
-                                      ON MovementBoolean_Electron.MovementId =  Movement.Id
+                                      ON MovementBoolean_Electron.MovementId = Movement.Id
                                      AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_ChildEDI
                                            ON MovementLinkMovement_ChildEDI.MovementId = Movement.Id 
@@ -561,6 +581,18 @@ BEGIN
             
             LEFT JOIN tmpMIDetail_TaxCorrective ON tmpMIDetail_TaxCorrective.MovementId = Movement.Id
             LEFT JOIN tmpMIDetail_tax ON tmpMIDetail_tax.MovementId = MovementLinkMovement_Child.MovementChildId 
+
+            LEFT JOIN tmpMovementFloat_child AS MovementFloat_TotalSummPVAT_child
+                                             ON MovementFloat_TotalSummPVAT_child.MovementId = MovementLinkMovement_Child.MovementChildId
+                                            AND MovementFloat_TotalSummPVAT_child.DescId = zc_MovementFloat_TotalSummPVAT()
+
+            LEFT JOIN tmpMovementFloat_child AS MovementFloat_CorrSumm_child
+                                             ON MovementFloat_CorrSumm_child.MovementId = MovementLinkMovement_Child.MovementChildId
+                                            AND MovementFloat_CorrSumm_child.DescId = zc_MovementFloat_CorrSumm()
+
+            LEFT JOIN tmpMovementBoolean_child AS MovementBoolean_Electron_child
+                                               ON MovementBoolean_Electron_child.MovementId = MovementLinkMovement_Child.MovementChildId
+                                              AND MovementBoolean_Electron_child.DescId = zc_MovementBoolean_Electron()
            ;
 
 END;
