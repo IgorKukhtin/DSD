@@ -881,7 +881,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     end
     object edDocumentTax: TcxButtonEdit
       Left = 895
-      Top = 63
+      Top = 59
       Properties.Buttons = <
         item
           Default = True
@@ -3197,7 +3197,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
-    Left = 920
+    Left = 880
     Top = 41
   end
   object HeaderSaverDocChild: THeaderSaver
