@@ -256,7 +256,7 @@ BEGIN
    END IF;
 
    --проверка
-   IF COALESCE (inRouteTTId,0) = 0 AND COALESCE (inUnitCommercId,0) = 0 
+   IF COALESCE (inRouteTTId,0) = 0 AND COALESCE (inUnitCommercId,0) = 0 AND 1=0
    THEN
        RAISE EXCEPTION 'Ошибка.Должен быть заполнен один из параметров <Маршрут ТТ> или <Отдел коммерции>.';
    END IF;
