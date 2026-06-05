@@ -1635,6 +1635,11 @@ type
     miRouteTT: TMenuItem;
     actTypeCommerc: TdsdOpenForm;
     miTypeCommerc: TMenuItem;
+    actCommercLocal: TdsdOpenForm;
+    actCommercRetail: TdsdOpenForm;
+    miCommercLocal: TMenuItem;
+    miCommercRetail: TMenuItem;
+    N283: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

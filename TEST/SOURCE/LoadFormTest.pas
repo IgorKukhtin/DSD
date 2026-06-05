@@ -47,6 +47,9 @@ type
     procedure LoadChoiceCellFormTest;
     procedure LoadChoiceCellMovementFormTest;
     procedure LoadClientKindFormTest;
+    procedure LoadCommercLocalFormTest;
+    procedure LoadCommercRetailFormTest;
+
     procedure LoadConditionPromoFormTest;
     procedure LoadContractKindFormTest;
     procedure LoadContractFormTest;
@@ -5331,6 +5334,22 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TClientKindEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TClientKindEditForm');
 
+end;
+
+procedure TLoadFormTest.LoadCommercLocalFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommercLocalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCommercLocalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommercLocalEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCommercLocalEditForm');
+end;
+
+procedure TLoadFormTest.LoadCommercRetailFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommercRetailForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCommercRetailForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommercRetailEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCommercRetailEditForm');
 end;
 
 procedure TLoadFormTest.LoadRateFuelKindFormTest;
