@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , PriceWithVAT Boolean, VATPercent TFloat
              , TotalCount TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat
-             , TotalSummPVAT TFloat, TotalSummPVAT_child TFloat
+             , TotalSummPVAT TFloat, TotalSummPVAT_child TFloat, TotalSummVAT_child TFloat
              , TotalSumm TFloat
              , CorrSumm TFloat
              , InvNumberPartner Integer
@@ -200,6 +200,7 @@ BEGIN
                                     FROM MovementFloat
                                     WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMLM_Child.MovementChildId FROM tmpMLM_Child)
                                        AND MovementFloat.DescId IN (zc_MovementFloat_TotalSummPVAT()
+                                                                  , zc_MovementFloat_TotalSummMVAT()
                                                                   , zc_MovementFloat_CorrSumm()
                                                                    )
                                     )
@@ -223,10 +224,11 @@ BEGIN
            , CASE WHEN MovementBoolean_Document.ValueData = TRUE THEN 'V' ELSE '-' END :: TVarChar AS DocumentValue
            , MovementDate_DateRegistered.ValueData      AS DateRegistered
            , COALESCE (MovementDate_DateRegistered.ValueData, inEndDate) :: TDateTime AS DateRegistered_notNull
-           , CASE WHEN COALESCE (MovementDate_DateRegistered.ValueData, zc_DateEnd()) = zc_DateEnd() THEN EXTRACT ('DAY' from ((Movement.OperDate + INTERVAL '18 DAY') - Current_Date)) 
-                  ELSE CASE WHEN MovementDate_DateRegistered.ValueData < Movement.OperDate THEN 0 
-                            ELSE 18 - (EXTRACT ('DAY' from (MovementDate_DateRegistered.ValueData - Movement.OperDate)))
-                       END
+           , CASE WHEN COALESCE (MovementDate_DateRegistered.ValueData, zc_DateEnd()) <> zc_DateEnd() AND MovementBoolean_Electron.ValueData = TRUE 
+                       THEN CASE WHEN MovementDate_DateRegistered.ValueData < Movement.OperDate THEN 0 
+                                  ELSE 18 - (EXTRACT ('DAY' from (MovementDate_DateRegistered.ValueData - Movement.OperDate)))
+                            END
+                  ELSE EXTRACT ('DAY' from ((Movement.OperDate + INTERVAL '18 DAY') - Current_Date)) 
              END ::Integer AS DayForRegister
            , MovementString_InvNumberRegistered.ValueData   AS InvNumberRegistered
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
@@ -238,6 +240,7 @@ BEGIN
 
            , (MovementFloat_TotalSummPVAT.ValueData + COALESCE (MovementFloat_CorrSumm.ValueData, 0))             :: TFloat AS TotalSummPVAT
            , (MovementFloat_TotalSummPVAT_child.ValueData + COALESCE (MovementFloat_CorrSumm_child.ValueData, 0)) :: TFloat AS TotalSummPVAT_child
+           , (COALESCE (MovementFloat_TotalSummPVAT_child.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT_child.ValueData, 0) + COALESCE (MovementFloat_CorrSumm_child.ValueData, 0)) :: TFloat AS TotalSummVAT_child
 
            , (MovementFloat_TotalSumm.ValueData + COALESCE (MovementFloat_CorrSumm.ValueData, 0)) :: TFloat AS TotalSumm
 
@@ -589,6 +592,9 @@ BEGIN
             LEFT JOIN tmpMovementFloat_child AS MovementFloat_TotalSummPVAT_child
                                              ON MovementFloat_TotalSummPVAT_child.MovementId = MovementLinkMovement_Child.MovementChildId
                                             AND MovementFloat_TotalSummPVAT_child.DescId = zc_MovementFloat_TotalSummPVAT()
+            LEFT JOIN tmpMovementFloat_child AS MovementFloat_TotalSummMVAT_child
+                                             ON MovementFloat_TotalSummMVAT_child.MovementId = MovementLinkMovement_Child.MovementChildId
+                                            AND MovementFloat_TotalSummMVAT_child.DescId = zc_MovementFloat_TotalSummMVAT()
 
             LEFT JOIN tmpMovementFloat_child AS MovementFloat_CorrSumm_child
                                              ON MovementFloat_CorrSumm_child.MovementId = MovementLinkMovement_Child.MovementChildId
