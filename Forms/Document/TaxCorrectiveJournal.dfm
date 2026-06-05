@@ -4,6 +4,8 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   ClientWidth = 1097
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog1
+  ExplicitLeft = -220
+  ExplicitTop = -47
   ExplicitWidth = 1113
   ExplicitHeight = 574
   PixelsPerInch = 96
@@ -380,6 +382,18 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 85
+          end
+          object TotalSummVAT_child: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057' ('#1085#1072#1083#1086#1075'.)'
+            DataBinding.FieldName = 'TotalSummVAT_child'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 85
           end
           object CorrSumm: TcxGridDBColumn
@@ -445,8 +459,8 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             Caption = #1044#1085#1077#1081' '#1076#1083#1103' '#1088#1077#1075#1080#1089#1090#1088'.'
             DataBinding.FieldName = 'DayForRegister'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.;-,0.; ;'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = '0.'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1089#1090#1072#1083#1086#1089#1100' '#1076#1085#1077#1081' '#1076#1083#1103' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080

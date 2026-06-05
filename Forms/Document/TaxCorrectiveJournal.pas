@@ -148,6 +148,7 @@ type
     macUpdateBranch: TMultiAction;
     bbUpdateBranch: TdxBarButton;
     isUKTZ_new: TcxGridDBColumn;
+    TotalSummVAT_child: TcxGridDBColumn;
   private
     { Private declarations }
   public
