@@ -709,9 +709,9 @@ BEGIN
        -- , tmpCarTrailer_param.Length :: TVarChar  AS Length_tr
        -- , tmpCarTrailer_param.Width  :: TVarChar  AS Width_tr
        -- , tmpCarTrailer_param.Height :: TVarChar  AS Height_tr
-          , (select tmpCar_param.Length from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarTrailerId) :: TVarChar  AS Length_tr
-          , (select tmpCar_param.Width  from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarTrailerId) :: TVarChar  AS Width_tr
-          , (select tmpCar_param.Height from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarTrailerId) :: TVarChar  AS Height_tr 
+          , COALESCE ((select tmpCar_param.Length from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarTrailerId) :: Integer,0) :: Integer  AS Length_tr
+          , COALESCE ((select tmpCar_param.Width  from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarTrailerId) :: Integer,0) :: Integer  AS Width_tr
+          , COALESCE ((select tmpCar_param.Height from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarTrailerId) :: Integer,0) :: Integer  AS Height_tr 
           --надпись в шапке док. Продажи
           , vbDocHeadeName_sale  ::TVarChar AS DocHeadeName_sale
 

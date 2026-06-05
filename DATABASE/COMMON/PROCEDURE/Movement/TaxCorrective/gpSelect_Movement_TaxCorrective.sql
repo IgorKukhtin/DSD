@@ -223,7 +223,11 @@ BEGIN
            , CASE WHEN MovementBoolean_Document.ValueData = TRUE THEN 'V' ELSE '-' END :: TVarChar AS DocumentValue
            , MovementDate_DateRegistered.ValueData      AS DateRegistered
            , COALESCE (MovementDate_DateRegistered.ValueData, inEndDate) :: TDateTime AS DateRegistered_notNull
-           , CASE WHEN COALESCE (MovementDate_DateRegistered.ValueData, zc_DateEnd()) = zc_DateEnd() THEN EXTRACT ( 'DAY' from ((Movement.OperDate + INTERVAL '18 DAY') - Current_Date)) ELSE 0 END ::Integer AS DayForRegister
+           , CASE WHEN COALESCE (MovementDate_DateRegistered.ValueData, zc_DateEnd()) = zc_DateEnd() THEN EXTRACT ('DAY' from ((Movement.OperDate + INTERVAL '18 DAY') - Current_Date)) 
+                  ELSE CASE WHEN MovementDate_DateRegistered.ValueData < Movement.OperDate THEN 0 
+                            ELSE 18 - (EXTRACT ('DAY' from (MovementDate_DateRegistered.ValueData - Movement.OperDate)))
+                       END
+             END ::Integer AS DayForRegister
            , MovementString_InvNumberRegistered.ValueData   AS InvNumberRegistered
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
