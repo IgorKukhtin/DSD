@@ -13,7 +13,7 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
   -- проверка прав пользователя на вызов процедуры
-  vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetUnErased_MI_Sale_Partner());
+  vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetUnErased_MI_Sale());
 
   -- устанавливаем новое значение
   outIsErased:= lpSetUnErased_MovementItem (inMovementItemId:= inMovementItemId, inUserId:= vbUserId);
