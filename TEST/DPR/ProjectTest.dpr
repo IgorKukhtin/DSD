@@ -1674,7 +1674,11 @@ uses
   Sale_Commerc in '..\..\Forms\Document\Sale_Commerc.pas' {Sale_CommercForm: TParentForm},
   ReturnIn_Commerc in '..\..\Forms\Document\ReturnIn_Commerc.pas' {ReturnIn_CommercForm: TParentForm},
   TypeCommercEdit in '..\..\Forms\Guides\TypeCommercEdit.pas' {TypeCommercEditForm: TParentForm},
-  TypeCommerc in '..\..\Forms\Guides\TypeCommerc.pas' {TypeCommercForm: TParentForm};
+  TypeCommerc in '..\..\Forms\Guides\TypeCommerc.pas' {TypeCommercForm: TParentForm},
+  CommercLocal in '..\..\Forms\Guides\CommercLocal.pas' {CommercLocalForm: TParentForm},
+  CommercLocalEdit in '..\..\Forms\Guides\CommercLocalEdit.pas' {CommercLocalEditForm: TParentForm},
+  CommercRetailEdit in '..\..\Forms\Guides\CommercRetailEdit.pas' {CommercRetailEditForm: TParentForm},
+  CommercRetail in '..\..\Forms\Guides\CommercRetail.pas' {CommercRetailForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

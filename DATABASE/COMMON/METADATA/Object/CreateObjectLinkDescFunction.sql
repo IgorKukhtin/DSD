@@ -2454,6 +2454,60 @@ INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_RouteTT_PersonalGroup', 'Группа сотрудников', zc_Object_RouteTT(), zc_Object_PersonalGroup() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_RouteTT_PersonalGroup');
 
 
+  CREATE OR REPLACE FUNCTION zc_ObjectLink_CommercLocal_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommercLocal_Unit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_CommercLocal_Unit', 'Відділ комерції', zc_Object_CommercLocal(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommercLocal_Unit');
+
+ CREATE OR REPLACE FUNCTION zc_ObjectLink_CommercLocal_Position_1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommercLocal_Position_1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_CommercLocal_Position_1', 'Посада(Рівень 1)', zc_Object_CommercLocal(), zc_Object_Position() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommercLocal_Position_1');
+
+ CREATE OR REPLACE FUNCTION zc_ObjectLink_CommercLocal_PersonalGroup_1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommercLocal_PersonalGroup_1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_CommercLocal_PersonalGroup_1', 'Группа(Рівень 1)', zc_Object_CommercLocal(), zc_Object_PersonalGroup() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommercLocal_PersonalGroup_1');
+
+ CREATE OR REPLACE FUNCTION zc_ObjectLink_CommercLocal_Position_2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommercLocal_Position_2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_CommercLocal_Position_2', 'Посада(Рівень 2)', zc_Object_CommercLocal(), zc_Object_Position() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommercLocal_Position_2');
+
+ CREATE OR REPLACE FUNCTION zc_ObjectLink_CommercLocal_PersonalGroup_2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommercLocal_PersonalGroup_2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_CommercLocal_PersonalGroup_2', 'Группа(Рівень 2)', zc_Object_CommercLocal(), zc_Object_PersonalGroup() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommercLocal_PersonalGroup_2');
+
+ CREATE OR REPLACE FUNCTION zc_ObjectLink_CommercLocal_Position_3() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommercLocal_Position_3'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_CommercLocal_Position_3', 'Посада(Рівень 3)', zc_Object_CommercLocal(), zc_Object_Position() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommercLocal_Position_3');
+
+ CREATE OR REPLACE FUNCTION zc_ObjectLink_CommercLocal_Position_4() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommercLocal_Position_4'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_CommercLocal_Position_4', 'Посада(Рівень 4)', zc_Object_CommercLocal(), zc_Object_Position() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommercLocal_Position_4');
+
+ CREATE OR REPLACE FUNCTION zc_ObjectLink_CommercLocal_Position_5() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommercLocal_Position_5'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_CommercLocal_Position_5', 'Посада(Рівень 5)', zc_Object_CommercLocal(), zc_Object_Position() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommercLocal_Position_5');
+
+ CREATE OR REPLACE FUNCTION zc_ObjectLink_CommercLocal_Position_6() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommercLocal_Position_6'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_CommercLocal_Position_6', 'Посада(Рівень 6)', zc_Object_CommercLocal(), zc_Object_Position() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommercLocal_Position_6');
+
+ CREATE OR REPLACE FUNCTION zc_ObjectLink_CommercRetail_Position_1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommercRetail_Position_1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_CommercRetail_Position_1', 'Посада(Рівень 1)', zc_Object_CommercRetail(), zc_Object_Position() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommercRetail_Position_1');
+
+ CREATE OR REPLACE FUNCTION zc_ObjectLink_CommercRetail_Position_2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommercRetail_Position_2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_CommercRetail_Position_2', 'Посада(Рівень 2)', zc_Object_CommercRetail(), zc_Object_Position() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommercRetail_Position_2');
+
+ CREATE OR REPLACE FUNCTION zc_ObjectLink_CommercRetail_Position_3() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommercRetail_Position_3'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_CommercRetail_Position_3', 'Посада(Рівень 3)', zc_Object_CommercRetail(), zc_Object_Position() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommercRetail_Position_3');
+
+ CREATE OR REPLACE FUNCTION zc_objectlink_commercretail_retail() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_objectlink_commercretail_retail'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_objectlink_commercretail_retail', 'Торгівельна мережа', zc_Object_CommercRetail(), zc_Object_retail() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_objectlink_commercretail_retail');
+ 
+ 
+ 
 
 
 

@@ -1782,11 +1782,21 @@ CREATE OR REPLACE FUNCTION zc_Enum_ImportType_RouteTT() RETURNS Integer AS $BODY
 CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_RouteTT() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_RouteTT' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
  
     
+ -- Загрузка для справочника   Структура комерції (Роздріб, HoReCa, Регіональні мережі)
+CREATE OR REPLACE FUNCTION zc_Enum_ImportType_CommercRetail() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_CommercRetail' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_CommercRetail() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_CommercRetail' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
  
+ 
+  -- Загрузка для справочника   Структура комерції (мережі)
+CREATE OR REPLACE FUNCTION zc_Enum_ImportType_CommercLocal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_CommercLocal' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_CommercLocal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_CommercLocal' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+ 
+  
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 05.06.26         * 
  01.06.26         * Загрузка Маршруты ТТ (RouteTT)
  03.02.26         * Загрузка OrderFinanceSB
  16.01.26         * ЗП Загрузка OrderFinance
