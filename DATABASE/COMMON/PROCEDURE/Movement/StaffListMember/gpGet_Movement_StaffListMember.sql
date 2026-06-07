@@ -252,7 +252,8 @@ BEGIN
            , Object_Member_Mentor.ValueData                   AS Member_MentorName
 
 
-           , COALESCE (MovementBoolean_Official.ValueData, FALSE) ::Boolean  AS isOfficial
+         --, COALESCE (MovementBoolean_Official.ValueData, FALSE) ::Boolean  AS isOfficial
+           , COALESCE (ObjectBoolean_Official.ValueData, FALSE)   ::Boolean  AS isOfficial
            , COALESCE (MovementBoolean_Main.ValueData, FALSE)     ::Boolean  AS isMain
 
            , MovementString_NumBiz.ValueData                      ::TVarChar AS NumBiz
@@ -278,10 +279,6 @@ BEGIN
                                       ON MovementBoolean_Main.MovementId = Movement.Id
                                      AND MovementBoolean_Main.DescId = zc_MovementBoolean_Main()
 
-            LEFT JOIN MovementBoolean AS MovementBoolean_Official
-                                      ON MovementBoolean_Official.MovementId = Movement.Id
-                                     AND MovementBoolean_Official.DescId = zc_MovementBoolean_Official()
-
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
@@ -294,6 +291,9 @@ BEGIN
                                          ON MovementLinkObject_Member.MovementId = Movement.Id
                                         AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = MovementLinkObject_Member.ObjectId
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Official
+                                    ON ObjectBoolean_Official.ObjectId = MovementLinkObject_Member.ObjectId
+                                   AND ObjectBoolean_Official.DescId   = zc_ObjectBoolean_Member_Official()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_ReasonOut
                                          ON MovementLinkObject_ReasonOut.MovementId = Movement.Id

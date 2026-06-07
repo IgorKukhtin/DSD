@@ -69,6 +69,12 @@ BEGIN
 
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Official(), ioId, inisOfficial);
+
+     -- !!!сохранили свойство <Оформлен официально>!!!
+     PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Member_Official(), inMemberId, inIsOfficial);
+     -- сохранили протокол
+     PERFORM lpInsert_ObjectProtocol (inMemberId, inUserId);
+
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Main(), ioId, inisMain);
      -- сохранили связь с <>

@@ -16,7 +16,7 @@ CREATE OR REPLACE FUNCTION lpInsert_Movement_StaffListMember(
     IN inUnitId_old          Integer   , --
     IN inReasonOutId         Integer   , --
     IN inStaffListKindId     Integer   , --
-    IN inisOfficial          Boolean   , --
+    IN inIsOfficial          Boolean   , --
     IN inisMain              Boolean   , --
     IN inNumBiz              TVarChar  , --
     IN inComment             TVarChar  , -- 
@@ -70,7 +70,13 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_StaffListKind(), ioId, inStaffListKindId);
 
      -- сохранили связь с <>
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Official(), ioId, inisOfficial);
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Official(), ioId, inIsOfficial);
+
+     -- !!!сохранили свойство <Оформлен официально>!!!
+     PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Member_Official(), inMemberId, inIsOfficial);
+     -- сохранили протокол
+     PERFORM lpInsert_ObjectProtocol (inMemberId, inUserId);
+
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Main(), ioId, inisMain);
      -- сохранили связь с <>

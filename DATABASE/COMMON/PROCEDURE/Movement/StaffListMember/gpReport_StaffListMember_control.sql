@@ -79,8 +79,7 @@ BEGIN
    , tmpMovementBoolean AS (SELECT MovementBoolean.*
                             FROM MovementBoolean
                             WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpMovement_all.Id FROM tmpMovement_all) 
-                              AND MovementBoolean.DescId IN (zc_MovementBoolean_Official()
-                                                           , zc_MovementBoolean_Main()
+                              AND MovementBoolean.DescId IN (zc_MovementBoolean_Main()
                                                             )
                             )       
 
@@ -113,7 +112,6 @@ BEGIN
    , tmpMovement AS (SELECT tmpMovement_all.*
                           , MovementLinkObject_Member.ObjectId        AS MemberId
                           , MovementLinkObject_StaffListKind.ObjectId AS StaffListKindId        --zc_Enum_StaffListKind_Send()  zc_Enum_StaffListKind_Out() zc_Enum_StaffListKind_Add() zc_Enum_StaffListKind_In()                   
-                          , COALESCE (MovementBoolean_Official.ValueData, FALSE) ::Boolean  AS isOfficial
                           , COALESCE (MovementBoolean_Main.ValueData, FALSE)     ::Boolean  AS isMain
                           , MovementLinkObject_Position.ObjectId AS PositionId
                           , MovementLinkObject_PositionLevel.ObjectId AS PositionLevelId
@@ -134,10 +132,6 @@ BEGIN
                                            ON MovementLinkObject_StaffListKind.MovementId = tmpMovement_all.Id
                                           AND MovementLinkObject_StaffListKind.DescId = zc_MovementLinkObject_StaffListKind() --and 1=0
 
-                          LEFT JOIN tmpMovementBoolean AS MovementBoolean_Official
-                                         ON MovementBoolean_Official.MovementId = tmpMovement_all.Id
-                                        AND MovementBoolean_Official.DescId = zc_MovementBoolean_Official()-- and 1=0
-  
                           LEFT JOIN tmpMLO AS MovementLinkObject_Position
                                            ON MovementLinkObject_Position.MovementId = tmpMovement_all.Id
                                           AND MovementLinkObject_Position.DescId = zc_MovementLinkObject_Position()-- and 1=0
@@ -216,7 +210,6 @@ BEGIN
                              WHEN COALESCE (Movement_in.Id,0) <> 0 THEN COALESCE (Movement_in.PositionLevelId, 0)
                         END  AS PositionLevelId
                       , Movement_in.isMain
-                      , Movement_in.isOfficial
                  FROM tmpMember_byMovement AS tmpMember
                       LEFT JOIN tmpMovement_main_in   AS Movement_in ON Movement_in.MemberId = tmpMember.MemberId
                       LEFT JOIN tmpMovement_main_send AS Movement_send ON Movement_send.MemberId = tmpMember.MemberId
@@ -229,7 +222,6 @@ BEGIN
                 SELECT *
                 FROM (SELECT tmpData.MemberId
                            , tmpData.isMain
-                           , tmpData.isOfficial
                            , tmpData.UnitId
                            , tmpData.PositionId
                            , tmpData.PositionLevelId
@@ -248,8 +240,7 @@ BEGIN
                       FROM tmpData
                            LEFT JOIN tmpPersonal_main AS tmpPersonal ON tmpPersonal.MemberId = tmpData.MemberId
                       ) AS tmp
-                 WHERE COALESCE (tmp.isOfficial, FALSE)   <> COALESCE (tmp.isOfficial_object, FALSE)
-                    OR COALESCE (tmp.UnitId,0)            <> COALESCE (tmp.UnitId_object,0)
+                 WHERE COALESCE (tmp.UnitId,0)            <> COALESCE (tmp.UnitId_object,0)
                     OR COALESCE (tmp.PositionId,0)        <> COALESCE (tmp.PositionId_object,0)
                     OR COALESCE (tmp.PositionLevelId,0)   <> COALESCE (tmp.PositionLevelId_object,0)
                     OR COALESCE (tmp.DateIn, zc_DateEnd())  <> COALESCE (tmp.DateIn_object, zc_DateEnd())
@@ -264,7 +255,7 @@ BEGIN
                   WHEN COALESCE (tmp.DateIn, zc_DateEnd())  <> COALESCE (tmp.DateIn_object, zc_DateEnd()) THEN 'Дата приема'
                   WHEN COALESCE (tmp.DateSend, zc_DateEnd())<> COALESCE (tmp.DateSend_object, zc_DateEnd()) THEN 'Дата перевода'
                   WHEN COALESCE (tmp.DateOut, zc_DateEnd()) <> COALESCE (tmp.DateOut_object, zc_DateEnd()) THEN 'Дата увольнения'
-                  WHEN COALESCE (tmp.isOfficial, FALSE)   <> COALESCE (tmp.isOfficial_object, FALSE) THEN 'Оформлен официально'
+                --WHEN COALESCE (tmp.isOfficial, FALSE)   <> COALESCE (tmp.isOfficial_object, FALSE) THEN 'Оформлен официально'
                   ELSE ''
              END                            ::TVarChar  AS Text_control
            , tmp.DateIn                     ::TDateTime
@@ -280,7 +271,8 @@ BEGIN
            , Object_Unit.Id                 ::Integer   AS UnitId
            , Object_Unit.ValueData          ::TVarChar  AS UnitName
            , tmp.isMain                     ::Boolean   AS isMain
-           , tmp.isOfficial                 ::Boolean   AS isOfficial
+         --, tmp.isOfficial                 ::Boolean   AS isOfficial
+           , tmp.isOfficial_object          ::Boolean   AS isOfficial
            , CASE WHEN COALESCE (tmp.DateOut, zc_DateEnd()) <> zc_DateEnd() OR COALESCE (tmp.DateOut_object, zc_DateEnd()) <> zc_DateEnd() THEN TRUE ELSE FALSE END ::Boolean AS isDateOut
            --
            , Object_Position_object.Id             ::Integer   AS PositionId_object
@@ -317,4 +309,4 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpReport_StaffListMember_control (inUnitId :=0 , inMemberId:= 0, inIsErased:=TRUE, inSession:= zfCalc_UserAdmin())    --8428 "Відділ маркетингу та реклами"
+-- SELECT * FROM gpReport_StaffListMember_control (inUnitId :=0 , inMemberId:= 0, inIsErased:=TRUE, inSession:= zfCalc_UserAdmin())    --8428 "Відділ маркетингу та реклами"

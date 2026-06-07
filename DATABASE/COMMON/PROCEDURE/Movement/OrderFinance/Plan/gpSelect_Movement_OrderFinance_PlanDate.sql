@@ -109,12 +109,31 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
                -- касса (место выдачи)
              , CashId                  Integer
              , CashName                TVarChar
+
+               -- Учитывается в долгах План прошлой недели да/нет
+             , isPlan_1_old         Boolean
+             , isPlan_2_old         Boolean
+             , isPlan_3_old         Boolean
+             , isPlan_4_old         Boolean
+             , isPlan_5_old         Boolean
+               -- План прошлой недели (Согласовано)
+             , AmountPlan_1_old     TFloat
+             , AmountPlan_2_old     TFloat
+             , AmountPlan_3_old     TFloat
+             , AmountPlan_4_old     TFloat
+             , AmountPlan_5_old     TFloat
               )
 
 AS
 $BODY$
-   DECLARE vbUserId         Integer;
-   DECLARE vbIsDocumentUser Boolean;
+   DECLARE vbUserId            Integer;
+   DECLARE vbWeekNumber_old    Integer;
+   DECLARE vbIsDocumentUser    Boolean;
+   DECLARE vbIsPlan_1_old      Boolean;
+   DECLARE vbIsPlan_2_old      Boolean;
+   DECLARE vbIsPlan_3_old      Boolean;
+   DECLARE vbIsPlan_4_old      Boolean;
+   DECLARE vbIsPlan_5_old      Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderFinance());
@@ -128,6 +147,38 @@ BEGIN
      inStartDate:= zfCalc_Week_StartDate (inStartDate, inStartWeekNumber :: TFloat);
      -- временно, только 1 неделя
      inEndDate:= zfCalc_Week_EndDate (inStartDate, inStartWeekNumber :: TFloat);
+     
+     -- нашли план прошлой недели
+     vbWeekNumber_old:= EXTRACT (WEEK FROM inStartDate - INTERVAL '7 DAY');
+     -- нашли
+     vbIsPlan_1_old:= FALSE;
+     vbIsPlan_2_old:= FALSE;
+     vbIsPlan_3_old:= FALSE;
+     vbIsPlan_4_old:= FALSE;
+     vbIsPlan_5_old:= FALSE;
+     -- Если неделя еще не началась
+     IF CURRENT_DATE < inStartDate
+        -- или пн. до 11:00 + нет данных за пятн.
+        OR (CURRENT_DATE = inStartDate AND EXTRACT (HOUR FROM CURRENT_DATE) <= 10
+            AND NOT EXISTS (SELECT 1
+                            FROM Object AS Object_GlobalConst
+                                 INNER JOIN ObjectDate AS ActualBankStatement
+                                                       ON ActualBankStatement.DescId    = zc_ObjectDate_GlobalConst_ActualBankStatement()
+                                                      AND ActualBankStatement.ObjectId  = Object_GlobalConst.Id
+                                                      -- здесь пятн.
+                                                      AND ActualBankStatement.ValueData >= inStartDate  - INTERVAL '3 DAY'
+                            WHERE Object_GlobalConst.DescId = zc_Object_GlobalConst()
+                              AND Object_GlobalConst.Id = zc_Enum_GlobalConst_BankAccountDate()
+                           )
+
+           )
+     THEN
+         -- берем план птн.
+         vbIsPlan_5_old:= TRUE;
+     ELSE
+         -- НЕ берем план птн.
+         vbIsPlan_5_old:= FALSE;
+     END IF;
 
 
      -- Результат
@@ -147,7 +198,6 @@ BEGIN
                          AND Movement.StatusId IN (SELECT tmpStatus.StatusId FROM tmpStatus)
                          AND Movement.OperDate BETWEEN inStartDate - INTERVAL '1 MONTH' AND inEndDate
                       )
-
      , tmpMLO AS (SELECT * FROM MovementLinkObject AS MLO WHERE MLO.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement) AND MLO.DescId = zc_MovementLinkObject_OrderFinance())
 
      , tmpMI_Master AS (SELECT MovementItem.*
@@ -1100,6 +1150,59 @@ BEGIN
                                          AND Object_JuridicalOrderFinance.isErased = FALSE
                                      -- AND inBankMainId = 0
                                       )
+   -- план прошлой недели
+ , tmpMovement_old AS (SELECT Movement.*
+                            , MovementFloat_WeekNumber.ValueData AS WeekNumber
+                       FROM Movement
+                            INNER JOIN MovementFloat AS MovementFloat_WeekNumber
+                                                     ON MovementFloat_WeekNumber.MovementId = Movement.Id
+                                                    AND MovementFloat_WeekNumber.DescId = zc_MovementFloat_WeekNumber()
+                                                    AND MovementFloat_WeekNumber.ValueData = vbWeekNumber_old
+                            INNER JOIN MovementLinkObject AS MovementLinkObject_OrderFinance
+                                                          ON MovementLinkObject_OrderFinance.MovementId = Movement.Id
+                                                         AND MovementLinkObject_OrderFinance.DescId     = zc_MovementLinkObject_OrderFinance()
+                            -- если Заполнение № заявки 1С (да/нет) = ДА
+                            LEFT JOIN ObjectBoolean AS ObjectBoolean_InvNumber
+                                                    ON ObjectBoolean_InvNumber.ObjectId  = MovementLinkObject_OrderFinance.ObjectId
+                                                   AND ObjectBoolean_InvNumber.DescId    = zc_ObjectBoolean_OrderFinance_InvNumber()
+                                                   AND ObjectBoolean_InvNumber.ValueData = TRUE
+                            -- если Заполнение № счета (да/нет) = ДА
+                            LEFT JOIN ObjectBoolean AS ObjectBoolean_Invoice
+                                                    ON ObjectBoolean_Invoice.ObjectId  = MovementLinkObject_OrderFinance.ObjectId
+                                                   AND ObjectBoolean_Invoice.DescId    = zc_ObjectBoolean_OrderFinance_InvNumber_Invoice()
+                                                   AND ObjectBoolean_Invoice.ValueData = TRUE
+
+                       WHERE Movement.DescId = zc_Movement_OrderFinance()
+                         AND Movement.StatusId IN (SELECT tmpStatus.StatusId FROM tmpStatus)
+                         AND Movement.OperDate BETWEEN inStartDate - INTERVAL '2 MONTH' AND inEndDate
+                         -- если Заполнение № заявки 1С (да/нет) = НЕТ
+                         AND (ObjectBoolean_InvNumber.ObjectId IS NULL
+                           -- если Заполнение № счета (да/нет) = НЕТ
+                         AND ObjectBoolean_Invoice.ObjectId IS NULL
+                             )
+                      )
+     , tmpMI_old AS (SELECT MovementItem.Id                AS MovementItemId
+                          , MovementItem.ObjectId          AS JuridicalId
+                          , MILinkObject_Contract.ObjectId AS ContractId
+                     FROM MovementItem
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                                            ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                     WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement_old.Id FROM tmpMovement_old)
+                       AND MovementItem.DescId     = zc_MI_Master()
+                       AND MovementItem.isErased   = FALSE
+                    )
+     , tmpMovementItemFloat_old AS (SELECT *
+                                    FROM MovementItemFloat
+                                    WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_old.MovementItemId FROM tmpMI_old)
+                                      AND MovementItemFloat.DescId IN (zc_MIFloat_AmountPlan_1()
+                                                                     , zc_MIFloat_AmountPlan_2()
+                                                                     , zc_MIFloat_AmountPlan_3()
+                                                                     , zc_MIFloat_AmountPlan_4()
+                                                                     , zc_MIFloat_AmountPlan_5()
+                                                                      )
+                                   )
+
    -- Результат
    SELECT tmpMovement.MovementId
         , tmpMovement.InvNumber
@@ -1171,7 +1274,7 @@ BEGIN
           -- Нач. долг
         , tmpMI.AmountRemains   :: TFloat AS AmountRemains
           -- Долг с отсрочкой
-        , tmpMI.AmountPartner   :: TFloat AS AmountPartner
+        , (COALESCE (tmpMI.AmountPartner, 0) - CASE WHEN vbIsPlan_5_old = TRUE THEN COALESCE (MIFloat_AmountPlan_5_old.ValueData, 0) ELSE 0 END)  :: TFloat AS AmountPartner
           -- Приход
         , tmpMI.AmountSumm      :: TFloat AS AmountSumm
           -- Просроченный долг 7 дн.
@@ -1265,6 +1368,20 @@ BEGIN
         , tmpMI.CashId
         , tmpMI.CashName
 
+          -- Учитывается в долгах План прошлой недели да/нет
+        , vbIsPlan_1_old AS isPlan_1_old
+        , vbIsPlan_2_old AS isPlan_2_old
+        , vbIsPlan_3_old AS isPlan_3_old
+        , vbIsPlan_4_old AS isPlan_4_old
+        , CASE WHEN MIFloat_AmountPlan_5_old.ValueData > 0 THEN vbIsPlan_5_old ELSE FALSE END :: Boolean AS isPlan_5_old
+
+          -- План прошлой недели (Согласовано)
+        , MIFloat_AmountPlan_1_old.ValueData  AS AmountPlan_1_old
+        , MIFloat_AmountPlan_2_old.ValueData  AS AmountPlan_2_old
+        , MIFloat_AmountPlan_3_old.ValueData  AS AmountPlan_3_old
+        , MIFloat_AmountPlan_4_old.ValueData  AS AmountPlan_4_old
+        , MIFloat_AmountPlan_5_old.ValueData  AS AmountPlan_5_old
+
    FROM tmpMovement_Data AS tmpMovement
 
         INNER JOIN tmpMI_Data AS tmpMI ON tmpMI.MovementId = tmpMovement.MovementId
@@ -1273,6 +1390,25 @@ BEGIN
 
         -- Child - Данные с № заявки 1С
         --LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI.Id
+
+        -- план прошлой недели
+        LEFT JOIN tmpMI_old ON tmpMI_old.JuridicalId = tmpMI.JuridicalId
+                           AND tmpMI_old.ContractId  = tmpMI.ContractId
+        LEFT JOIN tmpMovementItemFloat_old AS MIFloat_AmountPlan_1_old
+                                           ON MIFloat_AmountPlan_1_old.MovementItemId = tmpMI_old.MovementItemId
+                                          AND MIFloat_AmountPlan_1_old.DescId = zc_MIFloat_AmountPlan_1()
+        LEFT JOIN tmpMovementItemFloat_old AS MIFloat_AmountPlan_2_old
+                                           ON MIFloat_AmountPlan_2_old.MovementItemId = tmpMI_old.MovementItemId
+                                          AND MIFloat_AmountPlan_2_old.DescId = zc_MIFloat_AmountPlan_2()
+        LEFT JOIN tmpMovementItemFloat_old AS MIFloat_AmountPlan_3_old
+                                           ON MIFloat_AmountPlan_3_old.MovementItemId = tmpMI_old.MovementItemId
+                                          AND MIFloat_AmountPlan_3_old.DescId = zc_MIFloat_AmountPlan_3()
+        LEFT JOIN tmpMovementItemFloat_old AS MIFloat_AmountPlan_4_old
+                                           ON MIFloat_AmountPlan_4_old.MovementItemId = tmpMI_old.MovementItemId
+                                          AND MIFloat_AmountPlan_4_old.DescId = zc_MIFloat_AmountPlan_4()
+        LEFT JOIN tmpMovementItemFloat_old AS MIFloat_AmountPlan_5_old
+                                           ON MIFloat_AmountPlan_5_old.MovementItemId = tmpMI_old.MovementItemId
+                                          AND MIFloat_AmountPlan_5_old.DescId = zc_MIFloat_AmountPlan_5()
 
         LEFT JOIN tmpContractCondition ON tmpContractCondition.ContractId = tmpMI.ContractId
                                       AND tmpMovement.OperDate BETWEEN tmpContractCondition.StartDate AND tmpContractCondition.EndDate

@@ -79,8 +79,7 @@ BEGIN
         , tmpMovementBoolean AS (SELECT MovementBoolean.*
                                  FROM MovementBoolean
                                  WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement) 
-                                   AND MovementBoolean.DescId IN (zc_MovementBoolean_Official()
-                                                                , zc_MovementBoolean_Main()
+                                   AND MovementBoolean.DescId IN (zc_MovementBoolean_Main()
                                                                  )
                                  )       
 
@@ -324,7 +323,9 @@ BEGIN
            , Object_StaffListKind.Id               AS StaffListKindId
            , Object_StaffListKind.ValueData        AS StaffListKindName
 
-           , COALESCE (MovementBoolean_Official.ValueData, FALSE) ::Boolean  AS isOfficial
+         --, COALESCE (MovementBoolean_Official.ValueData, FALSE) ::Boolean  AS isOfficial
+           , COALESCE (ObjectBoolean_Official.ValueData, FALSE)   ::Boolean  AS isOfficial
+
            , COALESCE (MovementBoolean_Main.ValueData, FALSE)     ::Boolean  AS isMain
            , CASE WHEN Object_StaffListKind.Id = zc_Enum_StaffListKind_Out() THEN TRUE
                   ELSE COALESCE (tmpPersonal.isDateOut, FALSE)
@@ -381,10 +382,6 @@ BEGIN
                                          ON MovementBoolean_Main.MovementId = Movement.Id
                                         AND MovementBoolean_Main.DescId = zc_MovementBoolean_Main()
 
-            LEFT JOIN tmpMovementBoolean AS MovementBoolean_Official
-                                         ON MovementBoolean_Official.MovementId = Movement.Id
-                                        AND MovementBoolean_Official.DescId = zc_MovementBoolean_Official()
-
             LEFT JOIN tmpMovementString AS MovementString_Comment
                                         ON MovementString_Comment.MovementId = Movement.Id
                                        AND MovementString_Comment.DescId = zc_MovementString_Comment()
@@ -394,6 +391,9 @@ BEGIN
                                        AND MovementString_NumBiz.DescId = zc_MovementString_NumBiz()
 
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = Movement.MemberId
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Official
+                                    ON ObjectBoolean_Official.ObjectId = Movement.MemberId
+                                   AND ObjectBoolean_Official.DescId   = zc_ObjectBoolean_Member_Official()
 
             LEFT JOIN tmpMLO AS MovementLinkObject_ReasonOut
                              ON MovementLinkObject_ReasonOut.MovementId = Movement.Id
@@ -469,4 +469,4 @@ $BODY$
 
 -- тест
 -- 
-SELECT * FROM gpSelect_Movement_StaffListMember (inStartDate:= '01.08.2025', inEndDate:= '01.08.2025', inIsErased:=true, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_StaffListMember (inStartDate:= '01.08.2025', inEndDate:= '01.08.2025', inIsErased:=true, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())
