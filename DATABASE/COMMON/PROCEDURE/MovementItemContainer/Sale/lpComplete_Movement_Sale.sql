@@ -1379,6 +1379,8 @@ end if;
                                              AND Container.DescId   = zc_Container_Count()
                                              -- есть остаток
                                              AND Container.Amount   > 0
+                                             -- временно для 05.2026
+                                             -- AND Container.Id NOT IN (15206929)
                          INNER JOIN ContainerLinkObject AS CLO_Unit
                                                         ON CLO_Unit.ContainerId = Container.Id
                                                        AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
@@ -1422,6 +1424,8 @@ end if;
                     FROM tmpMI_summ AS tmpMI
                          INNER JOIN tmpContainer_rem_sale ON tmpContainer_rem_sale.GoodsId     = tmpMI.GoodsId
                                                          AND tmpContainer_rem_sale.GoodsKindId = tmpMI.GoodsKindId
+                    -- временно для 05.2026
+                    -- WHERE tmpContainer_rem_sale.ContainerId NOT IN (15206929)
                    )
 
          -- !!! - 03 - учет для ГП - партии по датам
@@ -1442,6 +1446,8 @@ end if;
                                              AND Container.DescId   = zc_Container_Count()
                                              -- НЕТ остатка
                                              AND Container.Amount   <= 0
+                                             -- временно для 05.2026
+                                             -- AND Container.Id NOT IN (15206929)
                          INNER JOIN ContainerLinkObject AS CLO_Unit
                                                         ON CLO_Unit.ContainerId = Container.Id
                                                        AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()

@@ -95,6 +95,7 @@ BEGIN
 
      IF EXISTS (SELECT 1 FROM Object WHERE Object.DescId = zc_Object_Personal() AND Object.Id = inMemberId)
      THEN
+         -- Если передали Сотрудник
          SELECT Object_Personal.Id                                      AS PersonalId
               , COALESCE (ObjectBoolean_Personal_Main.ValueData, FALSE) AS isMain
                 INTO vbPersonalId, vbIsMain
@@ -125,7 +126,7 @@ BEGIN
                         AND ObjectLink_Personal_Member.DescId          = zc_ObjectLink_Personal_Member()
                      )
          -- выбираем только одного
-         SELECT COALESCE (tmp1.PersonalId, COALESCE (tmp2.PersonalId, tmp3.PersonalId)) AS PersonalId
+         SELECT COALESCE (tmp1.PersonalId, tmp2.PersonalId, tmp3.PersonalId) AS PersonalId
               , COALESCE (ObjectBoolean_Personal_Main.ValueData, FALSE)                 AS isMain
                 INTO vbPersonalId, vbIsMain
          FROM Object AS Object_Member
@@ -140,20 +141,125 @@ BEGIN
               LEFT JOIN tmp AS tmp3 ON tmp3.MemberId   = Object_Member.Id
                                    AND tmp3.PositionId = inPositionId
               LEFT JOIN ObjectBoolean AS ObjectBoolean_Personal_Main
-                                      ON ObjectBoolean_Personal_Main.ObjectId = COALESCE (tmp1.PersonalId, COALESCE (tmp2.PersonalId, tmp3.PersonalId))
+                                      ON ObjectBoolean_Personal_Main.ObjectId = COALESCE (tmp1.PersonalId, tmp2.PersonalId, tmp3.PersonalId)
                                      AND ObjectBoolean_Personal_Main.DescId = zc_ObjectBoolean_Personal_Main()
          WHERE Object_Member.DescId = zc_Object_Member()
            AND Object_Member.Id     =  inMemberId
-         ORDER BY CASE WHEN ObjectBoolean_Personal_Main.ValueData = TRUE THEN 0 ELSE 1 END, COALESCE (tmp1.PersonalId, COALESCE (tmp2.PersonalId, tmp3.PersonalId))
+         ORDER BY CASE WHEN ObjectBoolean_Personal_Main.ValueData = TRUE THEN 0 ELSE 1 END, COALESCE (tmp1.PersonalId, tmp2.PersonalId, tmp3.PersonalId)
          LIMIT 1
          ;
      END IF;
+     
+     -- Если нужен поиск по документам
+     IF COALESCE (vbPersonalId, 0) = 0
+     THEN
+         -- Если был Прием на работу
+         IF EXISTS (SELECT Movement.*
+                    FROM MovementLinkObject AS MLO_Member
+                         JOIN Movement ON Movement.Id       = MLO_Member.MovementId
+                                      AND Movement.DescId   = zc_Movement_StaffListMember()
+                                      AND Movement.StatusId = zc_Enum_Status_Complete()
+                         JOIN MovementBoolean AS MB_Main
+                                              ON MB_Main.MovementId = MLO_Member.MovementId
+                                             AND MB_Main.DescId     = zc_MovementBoolean_Main()
+                                             -- Только Основное место
+                                             AND MB_Main.ValueData  = TRUE
+                         -- Прием на работу
+                         INNER JOIN MovementLinkObject AS MLO_StaffListKind
+                                                       ON MLO_StaffListKind.MovementId = MLO_Member.MovementId
+                                                      AND MLO_StaffListKind.DescId     = zc_MovementLinkObject_StaffListKind()
+                                                      AND MLO_StaffListKind.ObjectId   = zc_Enum_StaffListKind_In()
+
+                         INNER JOIN MovementLinkObject AS MLO_Unit
+                                                       ON MLO_Unit.MovementId = MLO_Member.MovementId
+                                                      AND MLO_Unit.DescId     = zc_MovementLinkObject_Unit()
+                                                      AND MLO_Unit.ObjectId   = inUnitId
+                         INNER JOIN MovementLinkObject AS MLO_Position
+                                                       ON MLO_Position.MovementId = MLO_Member.MovementId
+                                                      AND MLO_Position.DescId     = zc_MovementLinkObject_Position()
+                                                      AND MLO_Position.ObjectId   = inPositionId
+                    WHERE MLO_Member.ObjectId = inMemberId
+                      AND MLO_Member.DescId   = zc_MovementLinkObject_Member()
+                   )
+         -- Или был Перевод
+         OR EXISTS (SELECT Movement.*
+                    FROM MovementLinkObject AS MLO_Member
+                         JOIN Movement ON Movement.Id       = MLO_Member.MovementId
+                                      AND Movement.DescId   = zc_Movement_StaffListMember()
+                                      AND Movement.StatusId = zc_Enum_Status_Complete()
+                         JOIN MovementBoolean AS MB_Main
+                                              ON MB_Main.MovementId = MLO_Member.MovementId
+                                             AND MB_Main.DescId     = zc_MovementBoolean_Main()
+                                             -- Только Основное место
+                                             AND MB_Main.ValueData  = TRUE
+                         -- Перевод
+                         INNER JOIN MovementLinkObject AS MLO_StaffListKind
+                                                       ON MLO_StaffListKind.MovementId = MLO_Member.MovementId
+                                                      AND MLO_StaffListKind.DescId     = zc_MovementLinkObject_StaffListKind()
+                                                      AND MLO_StaffListKind.ObjectId   = zc_Enum_StaffListKind_Send()
+
+                         INNER JOIN MovementLinkObject AS MLO_Unit_old
+                                                       ON MLO_Unit_old.MovementId = MLO_Member.MovementId
+                                                      AND MLO_Unit_old.DescId     = zc_MovementLinkObject_Unit_old()
+                                                      AND MLO_Unit_old.ObjectId   = inUnitId
+                         INNER JOIN MovementLinkObject AS MLO_Position_old
+                                                       ON MLO_Position_old.MovementId = MLO_Member.MovementId
+                                                      AND MLO_Position_old.DescId     = zc_MovementLinkObject_Position_old()
+                                                      AND MLO_Position_old.ObjectId   = inPositionId
+                    WHERE MLO_Member.ObjectId = inMemberId
+                      AND MLO_Member.DescId   = zc_MovementLinkObject_Member()
+                   )
+         THEN
+             -- проверка
+             IF 1 < (SELECT COUNT(*)
+                     FROM ObjectLink AS ObjectLink_Personal_Member
+                          INNER JOIN Object AS Object_Personal ON Object_Personal.Id       = ObjectLink_Personal_Member.ObjectId
+                                                              AND Object_Personal.isErased = FALSE
+                          INNER JOIN ObjectBoolean AS ObjectBoolean_Personal_Main
+                                                   ON ObjectBoolean_Personal_Main.ObjectId  = ObjectLink_Personal_Member.ObjectId
+                                                  AND ObjectBoolean_Personal_Main.DescId    = zc_ObjectBoolean_Personal_Main()
+                                                  AND ObjectBoolean_Personal_Main.ValueData = TRUE
+                      WHERE ObjectLink_Personal_Member.ChildObjectId = inMemberId
+                        AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
+                     )
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Найдено несколько записей %Основное место работы = <ДА> %ФИО = <%> % <%> % <%> % Сумма = <%>.'
+                               , CHR (13)
+                               , CHR (13)
+                               , lfGet_Object_ValueData (inMemberId)
+                               , CHR (13)
+                               , lfGet_Object_ValueData (inPositionId)
+                               , CHR (13)
+                               , lfGet_Object_ValueData (inUnitId)
+                               , CHR (13)
+                               , zfConvert_FloatToString (inAmount)
+                                ;
+             END IF;
+
+             -- Тогда можно искать по Физ.Лицу + основное место работы
+             SELECT ObjectLink_Personal_Member.ObjectId   AS PersonalId
+                  , ObjectBoolean_Personal_Main.ValueData AS isMain
+                    INTO vbPersonalId, vbIsMain
+             FROM ObjectLink AS ObjectLink_Personal_Member
+                  INNER JOIN Object AS Object_Personal ON Object_Personal.Id       = ObjectLink_Personal_Member.ObjectId
+                                                      AND Object_Personal.isErased = FALSE
+                  INNER JOIN ObjectBoolean AS ObjectBoolean_Personal_Main
+                                           ON ObjectBoolean_Personal_Main.ObjectId  = ObjectLink_Personal_Member.ObjectId
+                                          AND ObjectBoolean_Personal_Main.DescId    = zc_ObjectBoolean_Personal_Main()
+                                          AND ObjectBoolean_Personal_Main.ValueData = TRUE
+              WHERE ObjectLink_Personal_Member.ChildObjectId = inMemberId
+                AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
+             ;
+         END IF;
+
+     END IF;
+
 
 
      -- проверка
      IF COALESCE (vbPersonalId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Не определно <ФИО (сотрудник)> у <%> + <%> + <%> для Сумма = <%>.'
+         RAISE EXCEPTION 'Ошибка.Не определено <ФИО (сотрудник)> у <%> + <%> + <%> для Сумма = <%>.'
                        , lfGet_Object_ValueData (inMemberId)
                        , lfGet_Object_ValueData (inPositionId)
                        , lfGet_Object_ValueData (inUnitId)

@@ -546,7 +546,7 @@ BEGIN
      END IF;
 
     -- Для Теста
-    if vbUserId IN (9457) then RAISE EXCEPTION 'Test.Ok. <%>', (SELECT COUNT (*) FROM _tmpMessagePersonalService); end if;
+    if vbUserId IN (9457,5) then RAISE EXCEPTION 'Test.Ok. <%>', (SELECT COUNT (*) FROM _tmpMessagePersonalService); end if;
 
     outPersonalServiceDate := CURRENT_TIMESTAMP;
 
