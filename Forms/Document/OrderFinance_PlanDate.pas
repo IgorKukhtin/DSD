@@ -116,6 +116,12 @@ type
     FieldFilter: TdsdFieldFilter;
     OperDate_next: TcxGridDBColumn;
     CashName: TcxGridDBColumn;
+    isPlan_5_old: TcxGridDBColumn;
+    AmountPlan_5_old: TcxGridDBColumn;
+    AmountPlan_1_old: TcxGridDBColumn;
+    AmountPlan_2_old: TcxGridDBColumn;
+    AmountPlan_3_old: TcxGridDBColumn;
+    AmountPlan_4_old: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -107,6 +107,31 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
               Format = ',0.00'
               Kind = skSum
               Column = AmountPlan_next
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountPlan_5_old
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountPlan_1_old
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountPlan_2_old
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountPlan_3_old
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountPlan_4_old
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -198,6 +223,31 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = JuridicalName
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountPlan_5_old
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountPlan_1_old
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountPlan_2_old
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountPlan_3_old
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountPlan_4_old
             end>
           OptionsData.Deleting = False
           OptionsView.GroupByBox = True
@@ -898,6 +948,78 @@ inherited OrderFinance_PlanDateForm: TOrderFinance_PlanDateForm
             Options.Editing = False
             VisibleForCustomization = False
             Width = 60
+          end
+          object AmountPlan_1_old: TcxGridDBColumn
+            Caption = '*'#1055#1083#1072#1085' *1.'#1087#1085'.'
+            DataBinding.FieldName = 'AmountPlan_1_old'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085' '#1087#1088#1086#1096#1083#1086#1081' '#1085#1077#1076#1077#1083#1080' '#1085#1072' *1.'#1087#1085'.'
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountPlan_2_old: TcxGridDBColumn
+            Caption = '*'#1055#1083#1072#1085' *2.'#1074#1090'.'
+            DataBinding.FieldName = 'AmountPlan_2_old'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085' '#1087#1088#1086#1096#1083#1086#1081' '#1085#1077#1076#1077#1083#1080' '#1085#1072' *2.'#1074#1090'.'
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountPlan_3_old: TcxGridDBColumn
+            Caption = '*'#1055#1083#1072#1085' *3.'#1089#1088'.'
+            DataBinding.FieldName = 'AmountPlan_3_old'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085' '#1087#1088#1086#1096#1083#1086#1081' '#1085#1077#1076#1077#1083#1080' '#1085#1072' *3.'#1089#1088'.'
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountPlan_4_old: TcxGridDBColumn
+            Caption = '*'#1055#1083#1072#1085' *4.'#1095#1090'.'
+            DataBinding.FieldName = 'AmountPlan_4_old'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085' '#1087#1088#1086#1096#1083#1086#1081' '#1085#1077#1076#1077#1083#1080' '#1085#1072' *4.'#1095#1090'.'
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountPlan_5_old: TcxGridDBColumn
+            Caption = '*'#1055#1083#1072#1085' *5.'#1087#1090'.'
+            DataBinding.FieldName = 'AmountPlan_5_old'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085' '#1087#1088#1086#1096#1083#1086#1081' '#1085#1077#1076#1077#1083#1080' '#1085#1072' *5.'#1087#1090'.'
+            Options.Editing = False
+            Width = 70
+          end
+          object isPlan_5_old: TcxGridDBColumn
+            Caption = '*'#1055#1083#1072#1085' ('#1076'/'#1085') *5.'#1087#1090'.'
+            DataBinding.FieldName = 'isPlan_5_old'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = 
+              #1042' '#1092#1086#1088#1084#1091#1083#1077' "'#1044#1086#1083#1075#1080'" '#1076#1086#1073#1072#1074#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090') '#1055#1083#1072#1085' '#1087#1088#1086#1096#1083#1086#1081' '#1085#1077#1076#1077#1083#1080' '#1085#1072' *5.'#1087#1090 +
+              '.'
+            Options.Editing = False
+            Width = 55
           end
         end
       end
