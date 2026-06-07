@@ -213,6 +213,7 @@ BEGIN
            THEN
                 -- то галочку "уволен" та "дату звільнення" можуть =
                 IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 12367417) -- Устанавливать <Дата увольнения> - офіційно оформлений
+                   OR inUnitId = 295670 -- Павільйони
                 THEN
                     -- можуть
                     PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Personal_Out(), ioId, inDateOut);
