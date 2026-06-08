@@ -225,11 +225,17 @@ BEGIN
            , MovementDate_DateRegistered.ValueData      AS DateRegistered
            , COALESCE (MovementDate_DateRegistered.ValueData, inEndDate) :: TDateTime AS DateRegistered_notNull
            , CASE WHEN COALESCE (MovementDate_DateRegistered.ValueData, zc_DateEnd()) <> zc_DateEnd() AND MovementBoolean_Electron.ValueData = TRUE 
-                       THEN CASE WHEN MovementDate_DateRegistered.ValueData < Movement.OperDate THEN 0 
-                                  ELSE 18 - (EXTRACT ('DAY' from (MovementDate_DateRegistered.ValueData - Movement.OperDate)))
+                       THEN CASE WHEN 1=1
+                                      THEN 18 - (EXTRACT ('DAY' from (MovementDate_DateRegistered.ValueData - Movement.OperDate)))
+                                 WHEN MovementDate_DateRegistered.ValueData < Movement.OperDate
+                                      THEN 0 
+                                 ELSE 18 - (EXTRACT ('DAY' from (MovementDate_DateRegistered.ValueData - Movement.OperDate)))
                             END
-                  ELSE EXTRACT ('DAY' from ((Movement.OperDate + INTERVAL '18 DAY') - Current_Date)) 
+                  WHEN (Movement.OperDate + INTERVAL '18 DAY') <= CURRENT_DATE -- AND vbUserId = 5
+                       THEN EXTRACT ('DAY' from ((Movement.OperDate + INTERVAL '18 DAY') - CURRENT_DATE)) - 1
+                  ELSE EXTRACT ('DAY' from ((Movement.OperDate + INTERVAL '18 DAY') - CURRENT_DATE)) 
              END ::Integer AS DayForRegister
+
            , MovementString_InvNumberRegistered.ValueData   AS InvNumberRegistered
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent

@@ -90,11 +90,11 @@ BEGIN
     --проверить соответствие контракта клиенту
     IF COALESCE(inContractId,0) <> 0
     THEN
-        vbPartnerDescId = (Select DescId from Object Where Id = inPartnerId);
+        vbPartnerDescId = (Select DescId from Object WHERE Id = inPartnerId);
         IF vbPartnerDescId = zc_Object_Juridical()
         THEN
             IF NOT EXISTS(Select 1 from Object_Contract_View 
-                          Where Object_Contract_View.ContractId = inContractId 
+                          WHERE Object_Contract_View.ContractId = inContractId 
                             AND Object_Contract_View.JuridicalId = inPartnerId)
             THEN
                 RAISE EXCEPTION 'Ошибка. <Договор> несоответствует <Партнеру>.';
@@ -105,7 +105,7 @@ BEGIN
             IF NOT EXISTS(Select 1 from Object_Contract_View
                               Inner Join ObjectLink ON ObjectLink.ChildObjectId = Object_Contract_View.JuridicalId
                                                    AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()
-                          Where Object_Contract_View.ContractId = inContractId 
+                          WHERE Object_Contract_View.ContractId = inContractId 
                             AND ObjectLink.ObjectId = inPartnerId)
             THEN
                 RAISE EXCEPTION 'Ошибка. Несоответствие контракта и партнера.';
@@ -116,7 +116,7 @@ BEGIN
             IF NOT EXISTS(Select 1 from Object_Contract_View
                               Inner Join ObjectLink ON ObjectLink.ObjectId = Object_Contract_View.JuridicalId
                                                    AND ObjectLink.DescId = zc_ObjectLink_Juridical_Retail()
-                          Where Object_Contract_View.ContractId = inContractId 
+                          WHERE Object_Contract_View.ContractId = inContractId 
                             AND ObjectLink.ChildObjectId = inPartnerId)
             THEN
                 RAISE EXCEPTION 'Ошибка. Несоответствие контракта и партнера.';
@@ -142,23 +142,25 @@ BEGIN
     THEN
         PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_PriceList(), inParentId, outPriceListId);
     END IF;
+
     --Обновляем сотрудника маркетингового отдела
-    IF (SELECT DescId FROM OBJECT WHERE Id = inPartnerId) = zc_Object_Retail()
+    IF (SELECT DescId FROM Object WHERE Id = inPartnerId) = zc_Object_Retail()
     THEN
         outPersonalMarketingId := (SELECT ObjectLink_Retail_PersonalMarketing.ChildObjectId 
                                    FROM ObjectLink AS ObjectLink_Retail_PersonalMarketing
                                    WHERE ObjectLink_Retail_PersonalMarketing.ObjectId = inPartnerId 
                                      AND ObjectLink_Retail_PersonalMarketing.DescId = zc_ObjectLink_Retail_PersonalMarketing());
-    ELSIF (SELECT DescId FROM OBJECT WHERE Id = inPartnerId) = zc_Object_Juridical()
+    ELSIF (SELECT DescId FROM Object WHERE Id = inPartnerId) = zc_Object_Juridical()
     THEN
         outPersonalMarketingId := (SELECT ObjectLink_Retail_PersonalMarketing.ChildObjectId 
                                   FROM ObjectLink AS ObjectLink_Juridical_Retail
                                       INNER JOIN ObjectLink AS ObjectLink_Retail_PersonalMarketing 
                                                             ON ObjectLink_Retail_PersonalMarketing.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
                                                            AND ObjectLink_Retail_PersonalMarketing.DescId = zc_ObjectLink_Retail_PersonalMarketing() 
-                                   Where ObjectLink_Juridical_Retail.ObjectId = inPartnerId 
+                                   WHERE ObjectLink_Juridical_Retail.ObjectId = inPartnerId 
                                      AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail());
-    ELSIF (SELECT DescId FROM OBJECT WHERE Id = inPartnerId) = zc_Object_Partner()
+
+    ELSIF (SELECT DescId FROM Object WHERE Id = inPartnerId) = zc_Object_Partner()
     THEN
         outPersonalMarketingId := (SELECT ObjectLink_Retail_PersonalMarketing.ChildObjectId 
                                   FROM ObjectLink AS ObjectLink_Partner_Juridical
@@ -168,8 +170,9 @@ BEGIN
                                       INNER JOIN ObjectLink AS ObjectLink_Retail_PersonalMarketing 
                                                             ON ObjectLink_Retail_PersonalMarketing.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
                                                            AND ObjectLink_Retail_PersonalMarketing.DescId = zc_ObjectLink_Retail_PersonalMarketing() 
-                                   Where ObjectLink_Partner_Juridical.ObjectId = inPartnerId 
-                                     AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical());
+                                   WHERE ObjectLink_Partner_Juridical.ObjectId = inPartnerId 
+                                     AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                  );
     END IF;
     if COALESCE(outPersonalMarketingId,0) <> 0
     THEN
@@ -177,37 +180,41 @@ BEGIN
     END IF;
     
     --Обновляем сотрудника Коммерческого отдела
-    IF (SELECT DescId FROM OBJECT WHERE Id = inPartnerId) = zc_Object_Partner()
+    IF (SELECT DescId FROM Object WHERE Id = inPartnerId) = zc_Object_Partner()
     THEN
-        outPersonalTradeId := (SELECT ObjectLink_Partner_Personal.ChildObjectId 
-                              FROM ObjectLink AS ObjectLink_Partner_Personal
-                              WHERE ObjectLink_Partner_Personal.ObjectId = inPartnerId 
-                                AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal());
-    ELSIF (SELECT DescId FROM OBJECT WHERE Id = inPartnerId) = zc_Object_Juridical()
+        outPersonalTradeId := (SELECT ObjectLink_Retail_PersonalTrade.ChildObjectId 
+                               FROM ObjectLink AS ObjectLink_Partner_Juridical
+                                   INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                         ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                                        AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                 INNER JOIN ObjectLink AS ObjectLink_Retail_PersonalTrade
+                                                       ON ObjectLink_Retail_PersonalTrade.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
+                                                      AND ObjectLink_Retail_PersonalTrade.DescId = zc_ObjectLink_Retail_PersonalTrade() 
+                                WHERE ObjectLink_Partner_Juridical.ObjectId = inPartnerId 
+                                  AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                               );
+
+    ELSIF (SELECT DescId FROM Object WHERE Id = inPartnerId) = zc_Object_Juridical()
     THEN
-        outPersonalTradeId := (SELECT ObjectLink_Partner_Personal.ChildObjectId 
-                              FROM ObjectLink AS ObjectLink_Partner_Juridical
-                                  INNER JOIN ObjectLink AS ObjectLink_Partner_Personal
-                                                        ON ObjectLink_Partner_Personal.ObjectId = ObjectLink_Partner_Juridical.ObjectId
-                                                       AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal() 
-                              WHERE ObjectLink_Partner_Juridical.ChildObjectId = inPartnerId 
-                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                              LIMIT 1);
-    ELSIF (SELECT DescId FROM OBJECT WHERE Id = inPartnerId) = zc_Object_retail()
+        outPersonalTradeId := (SELECT ObjectLink_Retail_PersonalTrade.ChildObjectId 
+                               FROM ObjectLink AS ObjectLink_Juridical_Retail
+                                    INNER JOIN ObjectLink AS ObjectLink_Retail_PersonalTrade
+                                                          ON ObjectLink_Retail_PersonalTrade.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
+                                                         AND ObjectLink_Retail_PersonalTrade.DescId = zc_ObjectLink_Retail_PersonalTrade() 
+                               WHERE ObjectLink_Juridical_Retail.ObjectId = inPartnerId 
+                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                              );
+
+    ELSIF (SELECT DescId FROM Object WHERE Id = inPartnerId) = zc_Object_Retail()
     THEN
-        outPersonalTradeId := (SELECT ObjectLink_Partner_Personal.ChildObjectId 
-                              FROM ObjectLink AS ObjectLink_Juridical_Retail
-                                  INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                                        ON ObjectLink_Partner_Juridical.ChildObjectId = ObjectLink_Juridical_Retail.ObjectId
-                                                       AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                                  INNER JOIN ObjectLink AS ObjectLink_Partner_Personal
-                                                        ON ObjectLink_Partner_Personal.ObjectId = ObjectLink_Partner_Juridical.ObjectId
-                                                       AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
-                              WHERE ObjectLink_Juridical_Retail.ChildObjectId = inPartnerId 
-                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                              LIMIT 1);
+        outPersonalTradeId := (SELECT ObjectLink_Retail_PersonalTrade.ChildObjectId 
+                               FROM ObjectLink AS ObjectLink_Retail_PersonalTrade
+                               WHERE ObjectLink_Retail_PersonalTrade.ObjectId = inPartnerId 
+                                 AND ObjectLink_Retail_PersonalTrade.DescId = zc_ObjectLink_Retail_PersonalTrade() 
+                              );
     END IF;
-    if COALESCE(outPersonalTradeId,0) <> 0
+
+    IF COALESCE(outPersonalTradeId,0) <> 0
     THEN
         PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_PersonalTrade(), inParentId, outPersonalTradeId);
     END IF;
