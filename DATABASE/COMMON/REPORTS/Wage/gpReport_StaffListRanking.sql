@@ -298,7 +298,7 @@ BEGIN
                                 LEFT JOIN tmpMovement_main_send AS Movement_send ON Movement_send.MemberId = tmpMember.MemberId
                                                                AND Movement_send.OperDate >= Movement_in.OperDate 
                                 LEFT JOIN tmpMovement_main_out  AS Movement_out ON Movement_out.MemberId = tmpMember.MemberId
-                                                               AND Movement_out.OperDate > Movement_in.OperDate
+                                                               AND Movement_out.OperDate >= Movement_in.OperDate
                            WHERE COALESCE (Movement_out.OperDate, zc_DateEnd()) = zc_DateEnd()
                         UNION
                            SELECT tmpMovement_add.UnitId
@@ -317,7 +317,7 @@ BEGIN
                                                                 AND Movement_out.UnitId = tmpMovement_add.UnitId
                                                                 AND Movement_out.PositionId = tmpMovement_add.PositionId
                                                                 AND COALESCE (Movement_out.PositionLevelId,0) = COALESCE (tmpMovement_add.PositionLevelId,0)
-                                                                AND Movement_out.OperDate > tmpMovement_add.OperDate
+                                                                AND Movement_out.OperDate >= tmpMovement_add.OperDate
                            WHERE COALESCE (Movement_out.OperDate, zc_DateEnd()) = zc_DateEnd() 
                          )
 
