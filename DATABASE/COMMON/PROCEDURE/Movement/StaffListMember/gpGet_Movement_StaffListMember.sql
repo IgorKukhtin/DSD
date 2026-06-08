@@ -189,7 +189,7 @@ BEGIN
                                                    AND tmpPersonal.isMain = vbisMain
                                                  )
                            , tmp AS(SELECT tmpByStorageLine.StorageLineId
-                                         , ROW_NUMBER() OVER (PARTITION BY tmpByStorageLine.PersonalId ORDER BY tmpByStorageLine.Id_max) AS Ord
+                                         , ROW_NUMBER() OVER (ORDER BY tmpByStorageLine.Id_max) AS Ord
                                     FROM (SELECT ObjectLink_PersonalByStorageLine_StorageLine.ChildObjectId  AS StorageLineId
                                                , MAX (Object_PersonalByStorageLine.Id) AS Id_max
                                           FROM Object AS Object_PersonalByStorageLine
