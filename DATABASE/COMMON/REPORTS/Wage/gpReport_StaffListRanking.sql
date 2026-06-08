@@ -330,7 +330,9 @@ BEGIN
                      , STRING_AGG ( COALESCE (tmpData.MemberName,'')
                                   , CHR (10) || CHR (13) order by tmpData.MemberName)     AS MemberName
                      , STRING_AGG ( COALESCE (tmpData.MemberName_add,'')
-                                  , CHR (10) || CHR (13) order by tmpData.MemberName_add) AS MemberName_add
+                                  , CHR (10) || CHR (13) order by tmpData.MemberName_add) AS MemberName_add        
+                       --для дальнейшего вывода вакансий, т.к. CHR (10) || CHR (13) при COALESCE - не дает NULL (((
+                     , SUM (CASE WHEN COALESCE (tmpData.MemberName,'') <> '' THEN 1 ELSE 0 END) AS CountMember   --
                 FROM tmpData
                      INNER JOIN ObjectLink AS ObjectLink_Unit_Department
                                            ON ObjectLink_Unit_Department.ObjectId = tmpData.UnitId
@@ -564,6 +566,7 @@ BEGIN
                                AS NUMERIC (16,0))   ::TFloat    AS Persent_diff
                        , tmpFact.MemberName
                        , tmpFact.MemberName_add
+                       , tmpFact.CountMember
                   FROM tmpData AS Movement
                        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Movement.UnitId
                        LEFT JOIN Object AS Object_Department ON Object_Department.Id = Movement.DepartmentId
@@ -610,6 +613,7 @@ BEGIN
                        , 0                                 ::TFloat    AS Persent_diff
                        , tmpFact.MemberName
                        , tmpFact.MemberName_add
+                       , tmpFact.CountMember
                   FROM tmpFact
                        LEFT JOIN tmpData AS Movement
                                          ON Movement.UnitId = tmpFact.UnitId
@@ -673,7 +677,7 @@ BEGIN
          , 0    :: TFloat AS Total_diff
          , FALSE ::Boolean AS isTotal
     FROM tmpResult
-    WHERE tmpResult.MemberName IS NOT NULL
+    WHERE tmpResult.CountMember > 0  --tmpResult.MemberName IS NOT NULL
   UNION
     SELECT tmpResult.DepartmentId
          , tmpResult.DepartmentName       ::TVarChar
@@ -694,7 +698,7 @@ BEGIN
          , CASE WHEN tmpMember.MemberName IS NULL THEN tmpResult.Amount_diff ELSE 0 END    ::TFloat AS Amount_diff
          , CASE WHEN tmpMember.MemberName IS NULL THEN tmpResult.Persent_diff ELSE 0 END   ::TFloat AS Persent_diff
          , 'Вакансія'   ::Text       AS MemberName
-         , ''           ::Text       AS MemberName_add
+         , CASE WHEN tmpMember.MemberName IS NULL THEN tmpResult.MemberName_add ELSE '' END ::Text       AS MemberName_add
          , 'Вакансія'    ::TVarChar   AS Vacancy
 
          , zc_Color_Red()    ::Integer AS Color_vacancy
@@ -709,12 +713,12 @@ BEGIN
          , FALSE ::Boolean AS isTotal
     FROM tmpResult
          LEFT JOIN tmpResult AS tmpMember
-                             ON tmpMember.MemberName IS NOT NULL
+                             ON tmpMember.CountMember > 0 --tmpMember.MemberName IS NOT NULL
                             AND tmpMember.UnitId = tmpResult.UnitId
                             AND tmpMember.PositionId = tmpResult.PositionId
                             AND COALESCE (tmpMember.PositionLevelId,0) = COALESCE (tmpResult.PositionLevelId,0)
     WHERE COALESCE (tmpResult.Amount_diff, 0) < 0
-      AND tmpMember.MemberName IS NULL
+      AND COALESCE (tmpResult.CountMember,0) = 0 --tmpMember.MemberName IS NULL
   UNION
     -- 1) итого план 2) итого факт 3)итого дельта
     SELECT tmpResult.DepartmentId
@@ -760,7 +764,31 @@ BEGIN
          , SUM (COALESCE (tmpResult.AmountFact,0))    :: TFloat AS TotalFact
          , (SUM (COALESCE (tmpResult.AmountFact,0)) - SUM (COALESCE (tmpResult.AmountPlan,0))) :: TFloat AS Total_diff
          , TRUE ::Boolean AS isTotal
-    FROM tmpResult
+    FROM (SELECT tmpResult.DepartmentId
+                , tmpResult.DepartmentName       ::TVarChar
+                , tmpResult.UnitId               ::Integer
+                , tmpResult.UnitName             ::TVarChar
+                , COALESCE (tmpResult.AmountPlan,0)    :: TFloat AS AmountPlan
+                , COALESCE (tmpResult.AmountFact,0)    :: TFloat AS AmountFact
+           FROM tmpResult
+           WHERE tmpResult.CountMember > 0
+          UNION ALL
+           SELECT tmpResult.DepartmentId
+                , tmpResult.DepartmentName       ::TVarChar
+                , tmpResult.UnitId               ::Integer
+                , tmpResult.UnitName             ::TVarChar
+                , COALESCE (tmpResult.AmountPlan,0)    :: TFloat AS AmountPlan
+                , COALESCE (tmpResult.AmountFact,0)    :: TFloat AS AmountFact 
+           FROM tmpResult
+                LEFT JOIN tmpResult AS tmpMember
+                                    ON tmpMember.CountMember > 0 --tmpMember.MemberName IS NOT NULL
+                                   AND tmpMember.UnitId = tmpResult.UnitId
+                                   AND tmpMember.PositionId = tmpResult.PositionId
+                                   AND COALESCE (tmpMember.PositionLevelId,0) = COALESCE (tmpResult.PositionLevelId,0)
+           WHERE COALESCE (tmpResult.Amount_diff, 0) < 0
+             AND COALESCE (tmpResult.CountMember,0) = 0
+             AND tmpMember.MemberName IS NULL
+           ) AS tmpResult
     GROUP BY tmpResult.DepartmentId
            , tmpResult.DepartmentName
            , tmpResult.UnitId
