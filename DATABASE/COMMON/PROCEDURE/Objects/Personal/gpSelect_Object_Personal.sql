@@ -130,7 +130,7 @@ BEGIN
                             )
 
         , tmpStorageLine AS (SELECT ObjectLink_PersonalByStorageLine_Personal.ChildObjectId AS PersonalId
-                                  , String_AGG (Object_StorageLine.ValueData, '; ')  AS StorageLineName
+                                  , String_AGG (Object_StorageLine.ValueData, '; ' ORDER BY Object_StorageLine.ValueData)  AS StorageLineName
                              FROM Object AS Object_PersonalByStorageLine
                                   LEFT JOIN ObjectLink AS ObjectLink_PersonalByStorageLine_Personal
                                                        ON ObjectLink_PersonalByStorageLine_Personal.ObjectId = Object_PersonalByStorageLine.Id
