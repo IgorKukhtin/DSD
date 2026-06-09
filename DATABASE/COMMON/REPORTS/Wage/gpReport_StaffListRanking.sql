@@ -326,7 +326,7 @@ BEGIN
                      , ObjectLink_Unit_Department.ChildObjectId AS DepartmentId
                      , tmpData.UnitId
                      , tmpData.PositionId
-                     , tmpData.PositionLevelId
+                     , COALESCE (tmpData.PositionLevelId,0) AS PositionLevelId
                      , STRING_AGG ( COALESCE (tmpData.MemberName,'')
                                   , CHR (10) || CHR (13) order by tmpData.MemberName)     AS MemberName
                      , STRING_AGG ( COALESCE (tmpData.MemberName_add,'')
@@ -350,153 +350,8 @@ BEGIN
                 GROUP BY  ObjectLink_Unit_Department.ChildObjectId
                                     , tmpData.UnitId
                                     , tmpData.PositionId
-                                    , tmpData.PositionLevelId
+                                    , COALESCE (tmpData.PositionLevelId,0)
                 )
-  
-  --было так
-  /*(WITH
-                tmp AS (SELECT MovementLinkObject_Unit.ObjectId          AS UnitId
-                             , ObjectLink_Unit_Department.ChildObjectId  AS DepartmentId
-                             , MovementLinkObject_Position.ObjectId      AS PositionId
-                             , MovementLinkObject_PositionLevel.ObjectId AS PositionLevelId
-                             , MovementBoolean_Main.ValueData            AS isMain
-                             , MovementLinkObject_Member.ObjectId        AS MemberId
-                             , Movement.Id                               AS MovementId
-                             , Movement.OperDate                         AS OperDate
-                             , MovementLinkObject_StaffListKind.ObjectId AS StaffListKindId
-                             , ROW_NUMBER () OVER (PARTITION BY MovementLinkObject_Unit.ObjectId
-                                                              , MovementLinkObject_Member.ObjectId
-                                                              , CASE WHEN MovementBoolean_Main.ValueData = TRUE THEN 0 ELSE 1 END -- по гл. должности нужно взять 1, для по совместительству всех
-
-                                                   ORDER BY Movement.OperDate DESC, Movement.Id DESC, CASE WHEN MovementBoolean_Main.ValueData = TRUE THEN 0 ELSE 1 END
-                                                   ) AS Ord
-                            --, 1 AS Amount
-                        FROM Movement
-                           INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                                        AND (MovementLinkObject_Unit.ObjectId IN (SELECT DISTINCT tmpMovement.UnitId FROM tmpMovement)
-                                                          OR inUnitId = 0
-                                                            )
-                           INNER JOIN ObjectLink AS ObjectLink_Unit_Department
-                                                 ON ObjectLink_Unit_Department.ObjectId = MovementLinkObject_Unit.ObjectId
-                                                AND ObjectLink_Unit_Department.DescId = zc_ObjectLink_Unit_Department()
-                                                AND (ObjectLink_Unit_Department.ChildObjectId = inDepartmentId OR inDepartmentId = 0)
-
-                           -- Исключить из ШР
-                           LEFT JOIN ObjectBoolean AS ObjectBoolean_Unit_notStaffList
-                                                   ON ObjectBoolean_Unit_notStaffList.ObjectId  = MovementLinkObject_Unit.ObjectId
-                                                  AND ObjectBoolean_Unit_notStaffList.DescId    = zc_ObjectBoolean_Unit_notStaffList()
-                                                  AND ObjectBoolean_Unit_notStaffList.ValueData = TRUE
-
-                           INNER JOIN MovementLinkObject AS MovementLinkObject_StaffListKind
-                                                         ON MovementLinkObject_StaffListKind.MovementId = Movement.Id
-                                                        AND MovementLinkObject_StaffListKind.DescId = zc_MovementLinkObject_StaffListKind()
-                                                        --AND MovementLinkObject_StaffListKind.ObjectId
-
-                           LEFT JOIN MovementLinkObject AS MovementLinkObject_Position
-                                                        ON MovementLinkObject_Position.MovementId = Movement.Id
-                                                       AND MovementLinkObject_Position.DescId = zc_MovementLinkObject_Position()
-                           LEFT JOIN Object AS Object_Position ON Object_Position.Id = MovementLinkObject_Position.ObjectId
-
-                           LEFT JOIN MovementLinkObject AS MovementLinkObject_PositionLevel
-                                                        ON MovementLinkObject_PositionLevel.MovementId = Movement.Id
-                                                       AND MovementLinkObject_PositionLevel.DescId = zc_MovementLinkObject_PositionLevel()
-                           LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = MovementLinkObject_PositionLevel.ObjectId
-
-                           LEFT JOIN MovementLinkObject AS MovementLinkObject_Member
-                                                        ON MovementLinkObject_Member.MovementId = Movement.Id
-                                                       AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
-
-                           LEFT JOIN MovementBoolean AS MovementBoolean_Main
-                                                     ON MovementBoolean_Main.MovementId = Movement.Id
-                                                    AND MovementBoolean_Main.DescId = zc_MovementBoolean_Main()
-
-                        WHERE Movement.DescId = zc_Movement_StaffListMember()
-                          AND Movement.OperDate <= inStartDate
-                          AND Movement.StatusId = zc_Enum_Status_Complete()
-                          -- Исключить из ШР
-                          AND ObjectBoolean_Unit_notStaffList.ObjectId IS NULL
-                        )
-                --определяем уволенных
-              , tmp_Out AS (SELECT tmp.*
-                            FROM tmp
-                            WHERE tmp.StaffListKindId = zc_Enum_StaffListKind_Out()
-                              AND tmp.OperDate <= inStartDate
-                            )
-              , tmp_add AS (SELECT SUM (tmp.Amount_add) AS Amount_add --совместительство
-                                 , tmp.UnitId
-                                 , tmp.PositionId
-                                 , COALESCE (tmp.PositionLevelId,0) AS PositionLevelId
-                                 , STRING_AGG ( Object_Member.ValueData
-                                              , CHR (10)||CHR (13) order by Object_Member.ValueData) AS MemberName_add
-                            FROM (
-                                  SELECT tmp.*
-                                      , 1 ::TFloat AS Amount_add
-                                  FROM tmp
-                                      LEFT JOIN tmp AS tmp1 ON tmp1.OperDate = tmp.OperDate
-                                                           AND tmp1.UnitId = tmp.UnitId
-                                                           AND tmp1.PositionId = tmp.PositionId
-                                                           AND tmp1.PositionLevelId = tmp.PositionLevelId
-                                                           AND tmp1.MemberId = tmp.MemberId
-                                                           AND tmp1.isMain = TRUE
-                                      LEFT JOIN tmp_Out ON tmp_Out.OperDate >= tmp.OperDate
-                                                       AND tmp_Out.UnitId = tmp.UnitId
-                                                       AND tmp_Out.PositionId = tmp.PositionId
-                                                       AND tmp_Out.PositionLevelId = tmp.PositionLevelId
-                                                       AND tmp_Out.MemberId = tmp.MemberId
-                                                       AND tmp_Out.isMain = FALSE
-                                  WHERE (tmp.isMain = FALSE)
-                                    AND tmp.StaffListKindId <> zc_Enum_StaffListKind_Out()
-                                    AND tmp1.MemberId IS NULL
-                                    AND tmp_Out.MemberId IS NULL
-                                 ) AS tmp
-                                 LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmp.MemberId
-                            GROUP BY tmp.UnitId
-                                   , tmp.PositionId
-                                   , COALESCE (tmp.PositionLevelId,0)
-                            )
-
-
-                SELECT SUM (tmp.Amount)         AS Amount
-                     , COALESCE(tmp_add.Amount_add,0) AS Amount_add --совместительство
-                     , tmp.DepartmentId
-                     , tmp.UnitId
-                     , tmp.PositionId
-                     , tmp.PositionLevelId
-                     , STRING_AGG ( tmp.MemberName
-                                  , CHR (10) || CHR (13) order by tmp.MemberName) AS MemberName
-                     , tmp_add.MemberName_add
-                FROM (SELECT tmp.*
-                          , Object_Member.ValueData AS MemberName
-                          , 1 ::TFloat AS Amount
-                      FROM tmp
-                           LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmp.MemberId
-
-                           LEFT JOIN tmp_Out ON tmp_Out.OperDate >= tmp.OperDate
-                                            AND tmp_Out.UnitId = tmp.UnitId
-                                            AND tmp_Out.PositionId = tmp.PositionId
-                                            AND tmp_Out.PositionLevelId = tmp.PositionLevelId
-                                            AND tmp_Out.MemberId = tmp.MemberId
-                                            AND tmp_Out.isMain = TRUE
-
-                      WHERE (tmp.isMain = TRUE AND tmp.Ord = 1)
-                       AND tmp.StaffListKindId <> zc_Enum_StaffListKind_Out()
-                       AND tmp_Out.MemberId IS NULL
-                    ) AS tmp
-                     LEFT JOIN tmp_add ON tmp_add.UnitId = tmp.UnitId
-                                      AND tmp_add.PositionId = tmp.PositionId
-                                      AND tmp_add.PositionLevelId = tmp.PositionLevelId
-                GROUP BY tmp.UnitId
-                       , tmp.DepartmentId
-                       , tmp.PositionId
-                       , tmp.PositionLevelId
-                       , COALESCE(tmp_add.Amount_add,0)
-                       , tmp_add.MemberName_add
-                )
- */
- --------***********
-
 
   , tmpData AS (SELECT Movement.DepartmentId
                      , Movement.UnitId
@@ -585,12 +440,7 @@ BEGIN
                                         AND tmpFact.PositionId = Movement.PositionId
                                         AND COALESCE (tmpFact.PositionLevelId,0) = COALESCE (Movement.PositionLevelId,0)
                                         --AND Movement.Ord = 1
-                 /* ORDER BY Object_Department.ValueData
-                         , Object_Unit.ValueData
-                         , Object_Position.ValueData
-                         , Object_PositionLevel.ValueData
-                         , tmpFact.MemberName
-                         , tmpFact.MemberName_add    */
+
                 -- Факт для которого нет плана
                  UNION
                   SELECT Object_Department.Id                          AS DepartmentId
@@ -633,12 +483,6 @@ BEGIN
                                            AND ObjectLink_Position_PositionProperty.DescId = zc_ObjectLink_Position_PositionProperty()
                        LEFT JOIN Object AS Object_PositionProperty ON Object_PositionProperty.Id = ObjectLink_Position_PositionProperty.ChildObjectId
                   WHERE Movement.PositionId IS NULL
-                /*  ORDER BY Object_Department.ValueData
-                         , Object_Unit.ValueData
-                         , Object_Position.ValueData
-                         , Object_PositionLevel.ValueData
-                         , tmpFact.MemberName
-                         , tmpFact.MemberName_add     */
            )
 
 
