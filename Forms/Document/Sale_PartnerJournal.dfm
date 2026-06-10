@@ -3804,6 +3804,56 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
+    object actPrint_Metro: TdsdPrintAction
+      Category = 'Print_Metro'
+      MoveParams = <
+        item
+          FromParam.Name = 'Id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'Id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1052#1077#1090#1088#1086' '#1090#1086#1074#1072#1088#1085#1072' '#1085#1072#1082#1083#1072#1076#1085#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1052#1077#1090#1088#1086' '#1090#1086#1074#1072#1088#1085#1072' '#1085#1072#1082#1083#1072#1076#1085#1072
+      ImageIndex = 22
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Sale32049199_1page'
+      ReportNameParam.Value = 'PrintMovement_Sale32049199_1page'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -4176,6 +4226,10 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Metro'
+        end
+        item
+          Visible = True
           ItemName = 'bbBarSeparator'
         end
         item
@@ -4399,6 +4453,10 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     end
     object bbUpdate_Commerc: TdxBarButton
       Action = actUpdate_Commerc
+      Category = 0
+    end
+    object bbPrint_Metro: TdxBarButton
+      Action = actPrint_Metro
       Category = 0
     end
   end

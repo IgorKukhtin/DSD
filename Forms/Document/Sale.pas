@@ -341,6 +341,8 @@ type
     bbtLoadExcel: TdxBarButton;
     spDelete_MI: TdsdStoredProc;
     actDelete_MI: TdsdExecStoredProc;
+    actPrint_Metro: TdsdPrintAction;
+    bbPrint_Metro: TdxBarButton;
   private
     { Private declarations }
   public
