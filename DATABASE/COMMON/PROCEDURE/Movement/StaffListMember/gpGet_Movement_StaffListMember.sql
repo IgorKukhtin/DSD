@@ -44,10 +44,33 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
 AS
 $BODY$
    DECLARE vbUserId Integer;
+           vbUnitId Integer;
+           vbPositionId Integer;
+           vbPositionLevelId Integer; 
+           vbisMain Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_StaffListMember());
      vbUserId:= lpGetUserBySession (inSession);
+     
+     --
+     vbUnitId := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO
+                  WHERE MLO.MovementId = inMovementId
+                    AND MLO.DescId = zc_MovementLinkObject_Unit());
+     vbPositionId := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO
+                      WHERE MLO.MovementId = inMovementId
+                        AND MLO.DescId = zc_MovementLinkObject_Position());
+     vbPositionLevelId := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO
+                           WHERE MLO.MovementId = inMovementId
+                             AND MLO.DescId = zc_MovementLinkObject_PositionLevel());
+     
+     vbisMain := (SELECT COALESCE (MB.ValueData, FALSE) ::Boolean FROM MovementBoolean AS MB
+                  WHERE MB.MovementId = inMovementId
+                    AND MB.DescId = zc_MovementBoolean_Main());
+
+
+
+
 
     IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -130,7 +153,7 @@ BEGIN
                             , ROW_NUMBER() OVER(PARTITION BY Object_Personal.Id, ObjectLink_Personal_Unit.ChildObjectId, ObjectLink_Personal_Position.ChildObjectId, COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId,0), COALESCE (ObjectBoolean_Main.ValueData, FALSE) ) AS Ord
                             --если 2 сотрудника с одинаковыми подразделением,  должностью , разрядом - берем последнего
                             , ROW_NUMBER() OVER(PARTITION BY ObjectLink_Personal_Unit.ChildObjectId, ObjectLink_Personal_Position.ChildObjectId, COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId,0), COALESCE (ObjectBoolean_Main.ValueData, FALSE)
-                                                ORDER BY COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE) ASC, Object_Personal.Id ASC) AS Ord_personal
+                                                ORDER BY COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE) ASC, Object_Personal.Id Desc) AS Ord_personal
                        FROM Object AS Object_Personal
                             INNER JOIN ObjectLink AS ObjectLink_Personal_Member
                                                   ON ObjectLink_Personal_Member.ObjectId = Object_Personal.Id
@@ -154,41 +177,50 @@ BEGIN
                                                     ON ObjectBoolean_Guide_Irna.ObjectId = Object_Personal.Id
                                                    AND ObjectBoolean_Guide_Irna.DescId = zc_ObjectBoolean_Guide_Irna()
                       WHERE Object_Personal.DescId = zc_Object_Personal()
-                        AND Object_Personal.isErased = FALSE 
+                        AND Object_Personal.isErased = FALSE
                        ) 
 
         , tmpStorageLine AS (WITH
-                             tmp AS(SELECT ObjectLink_PersonalByStorageLine_Personal.ChildObjectId     AS PersonalId
-                                         , ObjectLink_PersonalByStorageLine_StorageLine.ChildObjectId  AS StorageLineId
-                                         , ROW_NUMBER() OVER (PARTITION BY ObjectLink_PersonalByStorageLine_Personal.ChildObjectId ORDER BY Object_PersonalByStorageLine) AS Ord
-                                    FROM Object AS Object_PersonalByStorageLine
-                                         INNER JOIN ObjectLink AS ObjectLink_PersonalByStorageLine_Personal
-                                                               ON ObjectLink_PersonalByStorageLine_Personal.ObjectId = Object_PersonalByStorageLine.Id
-                                                              AND ObjectLink_PersonalByStorageLine_Personal.DescId = zc_ObjectLink_PersonalByStorageLine_Personal()
-                                                              AND ObjectLink_PersonalByStorageLine_Personal.ChildObjectId IN (SELECT DISTINCT tmpPersonal.PersonalId FROM tmpPersonal)
-                                                               
-                                         LEFT JOIN ObjectLink AS ObjectLink_PersonalByStorageLine_StorageLine
-                                                              ON ObjectLink_PersonalByStorageLine_StorageLine.ObjectId = Object_PersonalByStorageLine.Id
-                                                             AND ObjectLink_PersonalByStorageLine_StorageLine.DescId = zc_ObjectLink_PersonalByStorageLine_StorageLine()
-                                    WHERE Object_PersonalByStorageLine.DescId = zc_Object_PersonalByStorageLine()
-                                      AND Object_PersonalByStorageLine.isErased = False
+                             tmpPersonal_doc AS (SELECT *
+                                                 FROM tmpPersonal
+                                                 WHERE tmpPersonal.UnitId = vbUnitId
+                                                   AND tmpPersonal.PositionId = vbPositionId
+                                                   AND COALESCE (tmpPersonal.PositionLevelId,0) = COALESCE (vbPositionLevelId,0)
+                                                   AND tmpPersonal.isMain = vbisMain
+                                                 )
+                           , tmp AS(SELECT tmpByStorageLine.StorageLineId
+                                         , ROW_NUMBER() OVER (ORDER BY tmpByStorageLine.Id_max) AS Ord
+                                    FROM (SELECT ObjectLink_PersonalByStorageLine_StorageLine.ChildObjectId  AS StorageLineId
+                                               , MAX (Object_PersonalByStorageLine.Id) AS Id_max
+                                          FROM Object AS Object_PersonalByStorageLine
+                                               INNER JOIN ObjectLink AS ObjectLink_PersonalByStorageLine_Personal
+                                                                     ON ObjectLink_PersonalByStorageLine_Personal.ObjectId = Object_PersonalByStorageLine.Id
+                                                                    AND ObjectLink_PersonalByStorageLine_Personal.DescId = zc_ObjectLink_PersonalByStorageLine_Personal()
+                                                                    AND ObjectLink_PersonalByStorageLine_Personal.ChildObjectId IN (SELECT DISTINCT tmpPersonal_doc.PersonalId FROM tmpPersonal_doc)
+                                                                     
+                                               LEFT JOIN ObjectLink AS ObjectLink_PersonalByStorageLine_StorageLine
+                                                                    ON ObjectLink_PersonalByStorageLine_StorageLine.ObjectId = Object_PersonalByStorageLine.Id
+                                                                   AND ObjectLink_PersonalByStorageLine_StorageLine.DescId = zc_ObjectLink_PersonalByStorageLine_StorageLine()
+                                          WHERE Object_PersonalByStorageLine.DescId = zc_Object_PersonalByStorageLine()
+                                            AND Object_PersonalByStorageLine.isErased = False
+                                            AND COALESCE (ObjectLink_PersonalByStorageLine_StorageLine.ChildObjectId,0) > 0
+                                          GROUP BY ObjectLink_PersonalByStorageLine_StorageLine.ChildObjectId
+                                          ) AS tmpByStorageLine
                                     ) 
-                           , tmpOrd AS (SELECT tmp.PersonalId
-                                             , CASE WHEN tmp.Ord = 1 THEN tmp.StorageLineId ELSE 0 END AS StorageLineId_1
+                           , tmpOrd AS (SELECT CASE WHEN tmp.Ord = 1 THEN tmp.StorageLineId ELSE 0 END AS StorageLineId_1
                                              , CASE WHEN tmp.Ord = 2 THEN tmp.StorageLineId ELSE 0 END AS StorageLineId_2
                                              , CASE WHEN tmp.Ord = 3 THEN tmp.StorageLineId ELSE 0 END AS StorageLineId_3
                                              , CASE WHEN tmp.Ord = 4 THEN tmp.StorageLineId ELSE 0 END AS StorageLineId_4
                                              , CASE WHEN tmp.Ord = 5 THEN tmp.StorageLineId ELSE 0 END AS StorageLineId_5
                                         FROM tmp 
                                         )
-                             SELECT tmp.PersonalId
-                                  , MAX (tmp.StorageLineId_1) AS StorageLineId_1
+                             SELECT MAX (tmp.StorageLineId_1) AS StorageLineId_1
                                   , MAX (tmp.StorageLineId_2) AS StorageLineId_2
                                   , MAX (tmp.StorageLineId_3) AS StorageLineId_3
                                   , MAX (tmp.StorageLineId_4) AS StorageLineId_4
                                   , MAX (tmp.StorageLineId_5) AS StorageLineId_5
                              FROM tmpOrd AS tmp
-                             GROUP BY tmp.PersonalId 
+                             --GROUP BY tmp.PersonalId 
                              )
 
        SELECT
@@ -367,7 +399,6 @@ BEGIN
                                  AND tmpPersonal_old.isMain = COALESCE (MovementBoolean_Main.ValueData, FALSE)
                                  AND tmpPersonal_old.Ord = 1
                                  AND tmpPersonal_old.Ord_personal = 1
-
             
           LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
                                ON ObjectLink_Personal_PersonalServiceList.ObjectId = tmpPersonal.PersonalId
@@ -399,9 +430,9 @@ BEGIN
           LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
           LEFT JOIN ObjectLink AS ObjectLink_Personal_StorageLine
                                ON ObjectLink_Personal_StorageLine.ObjectId = tmpPersonal.PersonalId
-                              AND ObjectLink_Personal_StorageLine.DescId = zc_ObjectLink_Personal_StorageLine()
+                              AND ObjectLink_Personal_StorageLine.DescId = zc_ObjectLink_Personal_StorageLine() and 1 = 0 --только новый справочник
 
-          LEFT JOIN tmpStorageLine ON tmpStorageLine.PersonalId = tmpPersonal.PersonalId                              
+          LEFT JOIN tmpStorageLine ON 1 = 1 --tmpStorageLine.PersonalId = tmpPersonal.PersonalId                              
           LEFT JOIN Object AS Object_StorageLine1 ON Object_StorageLine1.Id = COALESCE (tmpStorageLine.StorageLineId_1, ObjectLink_Personal_StorageLine.ChildObjectId)
           LEFT JOIN Object AS Object_StorageLine2 ON Object_StorageLine2.Id = tmpStorageLine.StorageLineId_2
           LEFT JOIN Object AS Object_StorageLine3 ON Object_StorageLine3.Id = tmpStorageLine.StorageLineId_3
@@ -434,4 +465,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpGet_Movement_StaffListMember(inMovementId := 34057076 , inOperDate := ('16.09.2025')::TDateTime ,  inSession := '9457');
+-- select * from gpGet_Movement_StaffListMember(inMovementId := 34478434 , inOperDate := ('16.09.2025')::TDateTime ,  inSession := '9457');
