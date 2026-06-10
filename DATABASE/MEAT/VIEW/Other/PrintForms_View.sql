@@ -1143,6 +1143,8 @@ AS
                                           , '44915740' -- Нове юр.лице Корвус
                                           , '45606092' -- Гелері Фудз
                                           , '32294897' -- Фора
+                                          , '32049199' -- Metro
+
                                            )
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
@@ -1197,8 +1199,9 @@ AS
                                       , '45606092' -- Гелері Фудз 
                                        )
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
-      UNION
-      -- Печать ТТН для ОКПО  32294897  c 01.03.2025 
+
+     UNION
+      -- Печать ТТН для ОКПО  32294897 c 01.03.2025 
       SELECT
              zc_Movement_TransportGoods()
            , CAST ('TransportGoods' AS TVarChar)
@@ -1214,6 +1217,22 @@ AS
                                        )
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
 
+     UNION
+      -- Печать ТТН для ОКПО  32049199 c 01.03.2025 
+      SELECT
+             zc_Movement_TransportGoods()
+           , CAST ('TransportGoods' AS TVarChar)
+           , CAST ('03.01.2025' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , CAST (0 AS INTEGER)
+           , CAST ('PrintMovement_TTN_03012025_Metro' AS TVarChar)
+           , CAST ('' AS TVarChar)                      AS DocHeadeName
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('32049199' 
+                                       )
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
 
 
 

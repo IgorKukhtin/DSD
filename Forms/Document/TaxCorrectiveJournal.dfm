@@ -4,8 +4,6 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   ClientWidth = 1097
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog1
-  ExplicitLeft = -220
-  ExplicitTop = -47
   ExplicitWidth = 1113
   ExplicitHeight = 574
   PixelsPerInch = 96
@@ -68,6 +66,11 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummPVAT_child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummVAT_child
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -109,6 +112,11 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummPVAT_child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummVAT_child
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
