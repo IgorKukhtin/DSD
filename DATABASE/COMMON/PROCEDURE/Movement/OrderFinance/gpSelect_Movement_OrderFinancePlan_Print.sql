@@ -82,7 +82,7 @@ BEGIN
                                                     AND MovementFloat_WeekNumber.ValueData = inWeekNumber
                        WHERE Movement.DescId = zc_Movement_OrderFinance()
                          AND Movement.StatusId IN (SELECT tmpStatus.StatusId FROM tmpStatus)
-                         AND Movement.OperDate BETWEEN inOperDate - INTERVAL '14 DAY' AND inOperDate + INTERVAL '14 DAY'
+                         AND Movement.OperDate BETWEEN inOperDate - INTERVAL '31 DAY' AND inOperDate + INTERVAL '14 DAY'
                        )
      , tmpMLO_OrderFinance AS (SELECT *
                                FROM MovementLinkObject
