@@ -3176,8 +3176,8 @@ inherited Sale_OrderForm: TSale_OrderForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_SalePackWeight_Fozzy'
-      ReportNameParam.Value = 'PrintMovement_SalePackWeight_Fozzy'
+      ReportName = 'PrintMovement_Sale32049199_1page'
+      ReportNameParam.Value = 'PrintMovement_Sale32049199_1page'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
