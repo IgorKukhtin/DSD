@@ -24,7 +24,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon,
-  ExternalLoad;
+  ExternalLoad, cxSplitter;
 
 type
   TSale_CommercForm = class(TAncestorDocumentForm)
@@ -376,6 +376,49 @@ type
     cxLabel36: TcxLabel;
     edUnit_order: TcxButtonEdit;
     GuidesUnit_order: TdsdGuides;
+    cxTabSheetCommerc: TcxTabSheet;
+    ComRetailDS: TDataSource;
+    ComRetailCDS: TClientDataSet;
+    dsdDBViewAddOnComRetail: TdsdDBViewAddOn;
+    cxGridComLocal: TcxGrid;
+    cxGridDBTableViewComLocal: TcxGridDBTableView;
+    Ord_ch4: TcxGridDBColumn;
+    PersonalName_ch4: TcxGridDBColumn;
+    UnitName_ch4: TcxGridDBColumn;
+    PositionName_ch4: TcxGridDBColumn;
+    PersonalGroupName_ch4: TcxGridDBColumn;
+    cxGridLevelComLocal: TcxGridLevel;
+    cxGridComRetail: TcxGrid;
+    cxGridDBTableViewComRetail: TcxGridDBTableView;
+    SectionName_ch5: TcxGridDBColumn;
+    RetailName_ch5: TcxGridDBColumn;
+    PositionName_2_ch5: TcxGridDBColumn;
+    PositionName_3_ch5: TcxGridDBColumn;
+    cxGridLevelComRetail: TcxGridLevel;
+    cxSplitter1: TcxSplitter;
+    ComLocalDS: TDataSource;
+    ComLocalCDS: TClientDataSet;
+    dsdDBViewAddOnComLocal: TdsdDBViewAddOn;
+    spSelectComLocal: TdsdStoredProc;
+    spSelectComRetail: TdsdStoredProc;
+    edSection: TcxButtonEdit;
+    cxLabel37: TcxLabel;
+    GuidesSection: TdsdGuides;
+    cxLabel38: TcxLabel;
+    ceRetail: TcxButtonEdit;
+    GuidesRetail: TdsdGuides;
+    cxLabel57: TcxLabel;
+    edTypeCommerc: TcxButtonEdit;
+    GuidesTypeCommerc: TdsdGuides;
+    cbOrderAuto: TcxCheckBox;
+    cxLabel39: TcxLabel;
+    GuidesUnitCommerc: TdsdGuides;
+    edUnitCommerc: TcxButtonEdit;
+    cxLabel59: TcxLabel;
+    edPersonalGroupCommerc: TcxButtonEdit;
+    GuidesPersonalGroupCommerc: TdsdGuides;
+    bbPrint_Metro: TdxBarButton;
+    actPrint_Metro: TdsdPrintAction;
   private
     { Private declarations }
   public
