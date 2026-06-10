@@ -725,7 +725,8 @@ END IF;
     LEFT JOIN Movement ON Movement.Id = tmp.MovementId
     LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 
-    --INNER JOIN tmpMovContainer ON tmpMovContainer.MovementId = tmp.MovementId
+    -- INNER JOIN tmpMovContainer ON tmpMovContainer.MovementId = tmp.MovementId
+    -- WHERE tmp.MovementId IN (select _tmpMov_05_2026.MovementId from _tmpMov_05_2026)
 
     -- WHERE tmp.MovementId >= 2212722 OR tmp.Code = 'zc_Movement_Inventory'
     ;
