@@ -579,6 +579,9 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_ReExch() RETURNS integer AS $BODY$
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_ReExch', 'Физ обмен (да/нет)'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_ReExch');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_NotBudgPromo() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_NotBudgPromo'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_NotBudgPromo', 'Вне бюджета(да/нет)'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_NotBudgPromo');
 
 
 

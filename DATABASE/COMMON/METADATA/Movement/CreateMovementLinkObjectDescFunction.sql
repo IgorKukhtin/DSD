@@ -487,6 +487,13 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_RouteTT() RETURNS Integer AS $B
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_RouteTT', 'Маршрут TT' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_RouteTT');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_NotBudgPromo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_NotBudgPromo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_NotBudgPromo', 'Классификатор Вне бюджета' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_NotBudgPromo');
+
+
+
+
 
 
 

@@ -2164,7 +2164,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionJournalForm');
-  }
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionUnionTech_RealWeightForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionUnionTech_RealWeightForm');
@@ -2172,11 +2172,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechJournalForm');
   exit;
-  {
+ }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechEditForm');
   exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionPeresortJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionPeresortJournalForm');
   exit;
