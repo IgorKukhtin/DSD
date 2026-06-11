@@ -1678,7 +1678,9 @@ uses
   CommercLocal in '..\..\Forms\Guides\CommercLocal.pas' {CommercLocalForm: TParentForm},
   CommercLocalEdit in '..\..\Forms\Guides\CommercLocalEdit.pas' {CommercLocalEditForm: TParentForm},
   CommercRetailEdit in '..\..\Forms\Guides\CommercRetailEdit.pas' {CommercRetailEditForm: TParentForm},
-  CommercRetail in '..\..\Forms\Guides\CommercRetail.pas' {CommercRetailForm: TParentForm};
+  CommercRetail in '..\..\Forms\Guides\CommercRetail.pas' {CommercRetailForm: TParentForm},
+  NotBudgPromo in '..\..\Forms\Guides\NotBudgPromo.pas' {NotBudgPromoForm: TParentForm},
+  NotBudgPromoEdit in '..\..\Forms\Guides\NotBudgPromoEdit.pas' {NotBudgPromoEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

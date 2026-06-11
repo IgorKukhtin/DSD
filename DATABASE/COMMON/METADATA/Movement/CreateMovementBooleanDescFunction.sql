@@ -589,6 +589,7 @@ INSERT INTO MovementBooleanDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 11.06.26         * zc_MovementBoolean_NotBudgPromo
  02.05.26         * zc_MovementBoolean_isKh
  08.04.26         * zc_MovementBoolean_Effie
  14.01.26         * zc_MovementBoolean_SignSB

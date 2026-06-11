@@ -1640,6 +1640,8 @@ type
     miCommercLocal: TMenuItem;
     miCommercRetail: TMenuItem;
     N283: TMenuItem;
+    actNotBudgPromo: TdsdOpenForm;
+    miNotBudgPromo: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
