@@ -1,4 +1,4 @@
--- Function: gpSelect_Movement_Tax_Print()
+ -- Function: gpSelect_Movement_Tax_Print()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar);
 
@@ -1347,11 +1347,13 @@ order by 4*/
                                   ELSE 0
                              END AS NUMERIC (16,4))
 
-                  ELSE CAST (CASE WHEN vbPriceWithVAT = TRUE
+                  ELSE -- CAST (
+                             CASE WHEN vbPriceWithVAT = TRUE
                                   THEN CAST (tmpMI.Price - tmpMI.Price * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 4))
                                   ELSE tmpMI.Price
                              END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
-                       AS NUMERIC (16,2))
+                       -- AS NUMERIC (16,2))
+
              END AS PriceNoVAT
 
            , CASE WHEN vbPriceWithVAT = FALSE
