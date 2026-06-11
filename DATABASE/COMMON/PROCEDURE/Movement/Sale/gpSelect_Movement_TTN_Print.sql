@@ -558,7 +558,7 @@ BEGIN
                            THEN ObjectString_ToAddress.ValueData
 
                        -- Корвус ПП м. Київ вул. Антоновича буд.50 (РЕГАЛ)
-                       WHEN View_Partner_Address.PartnerId = 10799525;
+                       WHEN View_Partner_Address.PartnerId = 10799525
                            THEN CASE WHEN ObjectString_PostalCode.ValueData  <> '' THEN ObjectString_PostalCode.ValueData || ' '      ELSE '' END
                              || CASE WHEN View_Partner_Address.RegionName    <> '' THEN View_Partner_Address.RegionName   || ' обл., ' ELSE '' END
                              || CASE WHEN View_Partner_Address.ProvinceName  <> '' THEN View_Partner_Address.ProvinceName || ' р-н, '  ELSE '' END
