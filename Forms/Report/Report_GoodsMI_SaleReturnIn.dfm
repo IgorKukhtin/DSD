@@ -4,6 +4,7 @@
   ClientWidth = 1362
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -468
   ExplicitWidth = 1378
   ExplicitHeight = 459
   PixelsPerInch = 96
@@ -445,6 +446,14 @@
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
+          end
+          object OKPO: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054
+            DataBinding.FieldName = 'OKPO'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object ContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'

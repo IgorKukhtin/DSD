@@ -144,6 +144,7 @@ type
     sbisMonth: TcxCheckBox;
     actPrint_byPartner_ukr: TdsdPrintAction;
     bbPrint_byPartner_ukr: TdxBarButton;
+    OKPO: TcxGridDBColumn;
   private
     { Private declarations }
   public
