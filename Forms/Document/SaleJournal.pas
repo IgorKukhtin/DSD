@@ -429,6 +429,8 @@ type
     OrderSourceName: TcxGridDBColumn;
     UserName_order: TcxGridDBColumn;
     UnitName_order: TcxGridDBColumn;
+    actPrint_Metro: TdsdPrintAction;
+    bbPrint_Metro: TdxBarButton;
   private
     { Private declarations }
   public

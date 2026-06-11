@@ -45,12 +45,20 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PartionGoodsDate TDateTime
              , RouteTTId Integer, RouteTTName TVarChar
              , BonusFirstForm TFloat
-             , BonusSecondForm TFloat 
+             , BonusSecondForm TFloat
+             -- 
              , UserId_order    Integer
              , UserName_order  TVarChar
              , UnitId_order    Integer
              , UnitName_order  TVarChar
-             , OrderSourceName TVarChar             
+             , OrderSourceName TVarChar
+             --
+             , isOrderAuto Boolean
+             , SectionId Integer, SectionName TVarChar
+             , RetailId Integer, RetailName TVarChar
+             , TypeCommercId Integer, TypeCommercName TVarChar
+             , UnitCommercId Integer, UnitCommercName TVarChar
+             , PersonalGroupCommercId Integer, PersonalGroupCommercName TVarChar
               )
 AS
 $BODY$
@@ -148,7 +156,20 @@ BEGIN
              , CAST ('' as TVarChar)     AS UserName_order
              , 0                         AS UnitId_order
              , CAST ('' as TVarChar)     AS UnitName_order
-             , CAST ('' as TVarChar)     AS OrderSourceName
+             , CAST ('' as TVarChar)     AS OrderSourceName 
+             --
+             , FALSE                                AS isOrderAuto
+             , 0                                    AS SectionId
+             , CAST ('' AS TVarChar)                AS SectionName
+             , 0                                    AS RetailId
+             , CAST ('' AS TVarChar)                AS RetailName
+             , 0                                    AS TypeCommercId
+             , CAST ('' AS TVarChar)                AS TypeCommercName
+             , 0                                    AS UnitCommercId
+             , CAST ('' AS TVarChar)                AS UnitCommercName
+             , 0                                    AS PersonalGroupCommercId
+             , CAST ('' AS TVarChar)                AS PersonalGroupCommercName
+             
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object as Object_Currency ON Object_Currency.Id = zc_Enum_Currency_Basis();
@@ -340,15 +361,28 @@ BEGIN
                , COALESCE (MovementFloat_BonusFirstForm.ValueData,0)  ::TFloat   AS BonusFirstForm
                , COALESCE (MovementFloat_BonusSecondForm.ValueData,0) ::TFloat   AS BonusSecondForm
 
-           , Object_Insert_order.Id         AS UserId_order
-           , Object_Insert_order.ValueData   AS UserName_order 
-           , tmpPersonal_byUser.UnitId       AS UnitId_order
-           , tmpPersonal_byUser.UnitName     AS UnitName_order
+               , Object_Insert_order.Id         AS UserId_order
+               , Object_Insert_order.ValueData   AS UserName_order 
+               , tmpPersonal_byUser.UnitId       AS UnitId_order
+               , tmpPersonal_byUser.UnitName     AS UnitName_order
+               
+               , CASE WHEN MovementString_DealId.ValueData <> ''         THEN 'Вчасно'
+                      WHEN MovementLinkMovement_Order_edi.MovementId > 0 THEN 'EDI'
+                      ELSE Object_Insert_order.ValueData
+                 END :: TVarChar AS OrderSourceName
+               --
+               , COALESCE (ObjectBoolean_OrderAuto.ValueData, FALSE)   :: Boolean  AS isOrderAuto
+               , Object_Section.Id                AS SectionId
+               , Object_Section.ValueData         AS SectionName
+               , Object_Retail.Id                 AS RetailId
+               , Object_Retail.ValueData          AS RetailName
+               , Object_TypeCommerc.Id        ::Integer  AS TypeCommercId 
+               , Object_TypeCommerc.ValueData ::TVarChar AS TypeCommercName
+               , Object_UnitCommerc.Id        ::Integer  AS UnitCommercId 
+               , Object_UnitCommerc.ValueData ::TVarChar AS UnitCommercName
+               , Object_PersonalGroupCommerc.Id        ::Integer  AS PersonalGroupCommercId
+               , Object_PersonalGroupCommerc.ValueData ::TVarChar AS PersonalGroupCommercName
            
-           , CASE WHEN MovementString_DealId.ValueData <> ''         THEN 'Вчасно'
-                  WHEN MovementLinkMovement_Order_edi.MovementId > 0 THEN 'EDI'
-                  ELSE Object_Insert_order.ValueData
-             END :: TVarChar AS OrderSourceName
            FROM Movement
                 LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -547,7 +581,49 @@ BEGIN
             LEFT JOIN Object AS Object_Insert_order ON Object_Insert_order.Id = MovementLinkObject_Insert_order.ObjectId
             LEFT JOIN tmpPersonal_byUser ON tmpPersonal_byUser.UserId = MovementLinkObject_Insert_order.ObjectId
 
-             
+            --
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_OrderAuto
+                                    ON ObjectBoolean_OrderAuto.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                   AND ObjectBoolean_OrderAuto.DescId = zc_ObjectBoolean_Juridical_OrderAuto()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Section
+                                 ON ObjectLink_Juridical_Section.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                AND ObjectLink_Juridical_Section.DescId = zc_ObjectLink_Juridical_Section()
+            LEFT JOIN Object AS Object_Section ON Object_Section.Id = ObjectLink_Juridical_Section.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_Partner_TypeCommerc
+                                ON ObjectLink_Partner_TypeCommerc.ObjectId = Object_To.Id
+                               AND ObjectLink_Partner_TypeCommerc.DescId = zc_ObjectLink_Partner_TypeCommerc()
+           LEFT JOIN Object AS Object_TypeCommerc ON Object_TypeCommerc.Id = ObjectLink_Partner_TypeCommerc.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_Partner_RouteTT
+                                ON ObjectLink_Partner_RouteTT.ObjectId = Object_To.Id 
+                               AND ObjectLink_Partner_RouteTT.DescId = zc_ObjectLink_Partner_RouteTT()
+           --
+           LEFT JOIN ObjectLink AS ObjectLink_RouteTT_Unit
+                                ON ObjectLink_RouteTT_Unit.ObjectId = ObjectLink_Partner_RouteTT.ChildObjectId
+                               AND ObjectLink_RouteTT_Unit.DescId = zc_ObjectLink_RouteTT_Unit()
+           LEFT JOIN ObjectLink AS ObjectLink_RouteTT_PersonalGroup
+                                ON ObjectLink_RouteTT_PersonalGroup.ObjectId = ObjectLink_Partner_RouteTT.ChildObjectId
+                               AND ObjectLink_RouteTT_PersonalGroup.DescId = zc_ObjectLink_RouteTT_PersonalGroup()
+
+           LEFT JOIN ObjectLink AS ObjectLink_Partner_UnitCommerc
+                                ON ObjectLink_Partner_UnitCommerc.ObjectId = Object_To.Id
+                               AND ObjectLink_Partner_UnitCommerc.DescId = zc_ObjectLink_Partner_UnitCommerc()
+                               AND COALESCE (ObjectLink_Partner_RouteTT.ChildObjectId, 0) = 0  --если в маршруте ТТ пусто - только тогда показываем zc_ObjectLink_Partner_UnitCommerc
+           LEFT JOIN Object AS Object_UnitCommerc ON Object_UnitCommerc.Id = COALESCE (ObjectLink_Partner_UnitCommerc.ChildObjectId, ObjectLink_RouteTT_Unit.ChildObjectId)
+
+           LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalGroupCommerc
+                                ON ObjectLink_Partner_PersonalGroupCommerc.ObjectId = Object_To.Id
+                               AND ObjectLink_Partner_PersonalGroupCommerc.DescId = zc_ObjectLink_Partner_PersonalGroupCommerc()
+                               AND COALESCE (ObjectLink_Partner_RouteTT.ChildObjectId, 0) = 0  --если в маршруте ТТ пусто - только тогда показываем zc_ObjectLink_Partner_UnitCommerc
+           LEFT JOIN Object AS Object_PersonalGroupCommerc ON Object_PersonalGroupCommerc.Id = COALESCE (ObjectLink_Partner_PersonalGroupCommerc.ChildObjectId, ObjectLink_RouteTT_PersonalGroup.ChildObjectId)
+            
            WHERE Movement.Id     = inMovementId
              AND Movement.DescId = zc_Movement_Sale()
              --AND COALESCE (Movement_Production.StatusId, 0) <> zc_Enum_Status_Erased()

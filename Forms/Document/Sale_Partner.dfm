@@ -3096,6 +3096,43 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1088#1088'.'#1089#1091#1084#1084#1099' '#1087#1086#1082#1091#1087'.>'
       ImageIndex = 38
     end
+    object actPrint_Metro: TdsdPrintAction
+      Category = 'Print_Metro'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1052#1077#1090#1088#1086' '#1090#1086#1074#1072#1088#1085#1072' '#1085#1072#1082#1083#1072#1076#1085#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1052#1077#1090#1088#1086' '#1090#1086#1074#1072#1088#1085#1072' '#1085#1072#1082#1083#1072#1076#1085#1072
+      ImageIndex = 22
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Sale32049199_1page'
+      ReportNameParam.Value = 'PrintMovement_Sale32049199_1page'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -3496,6 +3533,10 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Metro'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint_PackWeight'
         end
         item
@@ -3601,6 +3642,16 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     end
     object bbUpdate_CorrSumm: TdxBarButton
       Action = macUpdate_CorrSumm
+      Category = 0
+    end
+    object dxBarSubItem1: TdxBarSubItem
+      Caption = 'New SubItem'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <>
+    end
+    object bbPrint_Metro: TdxBarButton
+      Action = actPrint_Metro
       Category = 0
     end
   end

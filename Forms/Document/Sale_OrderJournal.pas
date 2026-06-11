@@ -378,6 +378,8 @@ type
     bbInsertFileName_csv_one: TdxBarButton;
     actUpdate_Commerc: TdsdInsertUpdateAction;
     bbUpdate_Commerc: TdxBarButton;
+    actPrint_Metro: TdsdPrintAction;
+    bbPrint_Metro: TdxBarButton;
   private
     { Private declarations }
   public

@@ -277,6 +277,9 @@ type
     actRefresh_Get: TdsdDataSetRefresh;
     macUpdate_CorrSumm: TMultiAction;
     bbUpdate_CorrSumm: TdxBarButton;
+    actPrint_Metro: TdsdPrintAction;
+    dxBarSubItem1: TdxBarSubItem;
+    bbPrint_Metro: TdxBarButton;
   private
     { Private declarations }
   public

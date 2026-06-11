@@ -664,7 +664,12 @@ begin
    LoadReportFromFile('PrintMovement_ReestrPeriod', ReportPath + '\Товарный Учет\PrintMovement_ReestrPeriod.fr3');
    LoadReportFromFile('PrintMovement_ReestrStartPeriod', ReportPath + '\Товарный Учет\PrintMovement_ReestrStartPeriod.fr3');
    exit;
+   }
 
+   LoadReportFromFile('PrintMovement_Sale32049199_1page', ReportPath + '\Товарный Учет\PrintMovement_Sale32049199_1page.fr3');
+   exit;
+
+   {
   LoadReportFromFile('PrintMovement_TransferDebtOut', ReportPath + '\Товарный Учет\PrintMovement_TransferDebtOut.fr3');
 
   LoadReportFromFile('PrintMovement_Sale38017026', ReportPath + '\Товарный Учет\PrintMovement_Sale38017026.fr3');
