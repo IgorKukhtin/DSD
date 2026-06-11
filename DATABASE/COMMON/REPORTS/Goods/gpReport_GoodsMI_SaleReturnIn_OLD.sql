@@ -28,7 +28,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , JuridicalGroupName TVarChar
              , BranchId Integer, BranchCode Integer, BranchName TVarChar
              , BusinessId Integer, BusinessCode Integer, BusinessName TVarChar
-             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar/*, OKPO TVarChar*/
+             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar
              , RetailName TVarChar, RetailReportName TVarChar
              , AreaName TVarChar, PartnerTagName TVarChar, PartnerCategory TFloat
              , Address TVarChar, RegionName TVarChar, ProvinceName TVarChar, CityKindName TVarChar, CityName TVarChar/*, ProvinceCityName TVarChar, StreetKindName TVarChar, StreetName TVarChar*/
@@ -278,20 +278,20 @@ BEGIN
                                          JOIN ReportContainerLink ON ReportContainerLink.ContainerId = ContainerLO_ProfitLoss.ContainerId
                                                                  AND ReportContainerLink.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
                                          JOIN ContainerLinkObject AS ContainerLO_Juridical
-                                                                  ON ContainerLO_Juridical.ContainerId = ReportContainerLink.ChildContainerId
+                                                                  ON ContainerLO_Juridical.ContainerId = NULL -- ReportContainerLink.ChildContainerId
                                                                  AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
                                                                  -- AND (ContainerLO_Juridical.ObjectId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
                                          LEFT JOIN _tmpJuridical ON _tmpJuridical.JuridicalId = ContainerLO_Juridical.ObjectId
                                          JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
-                                                                  ON ContainerLinkObject_InfoMoney.ContainerId = ReportContainerLink.ChildContainerId
+                                                                  ON ContainerLinkObject_InfoMoney.ContainerId = NULL -- ReportContainerLink.ChildContainerId
                                                                  AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
                                                                  AND (ContainerLinkObject_InfoMoney.ObjectId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
                                          JOIN ContainerLinkObject AS ContainerLinkObject_PaidKind
-                                                                  ON ContainerLinkObject_PaidKind.ContainerId = ReportContainerLink.ChildContainerId
+                                                                  ON ContainerLinkObject_PaidKind.ContainerId = NULL -- ReportContainerLink.ChildContainerId
                                                                  AND ContainerLinkObject_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
                                                                  AND (ContainerLinkObject_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
                                          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Contract
-                                                                       ON ContainerLinkObject_Contract.ContainerId = ReportContainerLink.ChildContainerId
+                                                                       ON ContainerLinkObject_Contract.ContainerId = NULL -- ReportContainerLink.ChildContainerId
                                                                       AND ContainerLinkObject_Contract.DescId = zc_ContainerLinkObject_Contract()
                                WHERE (_tmpJuridical.JuridicalId > 0 OR vbIsJuridical = FALSE)
                               ) AS tmpListContainer
@@ -353,6 +353,7 @@ BEGIN
           , Object_Juridical.Id         AS JuridicalId
           , Object_Juridical.ObjectCode AS JuridicalCode
           , Object_Juridical.ValueData  AS JuridicalName
+          , '' :: TVarChar AS OKPO
 
           , Object_Retail.ValueData       AS RetailName
           , Object_RetailReport.ValueData AS RetailReportName
@@ -697,4 +698,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_SaleReturnIn_OLD (inStartDate:= '01.01.2019', inEndDate:= '01.01.2019', inBranchId:= 0, inAreaId:= 0, inRetailId:= 1, inJuridicalId:= 0, inPaidKindId:= 0, inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= 0, inIsPartner:= TRUE, inIsTradeMark:= FALSE, inIsGoods:= FALSE, inIsGoodsKind:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_SaleReturnIn_OLD (inStartDate:= '01.01.2026', inEndDate:= '01.01.2026', inBranchId:= 0, inAreaId:= 0, inRetailId:= 1, inJuridicalId:= 0, inPaidKindId:= 0, inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= 0, inIsPartner:= TRUE, inIsTradeMark:= FALSE, inIsGoods:= FALSE, inIsGoodsKind:= FALSE, inSession:= zfCalc_UserAdmin());

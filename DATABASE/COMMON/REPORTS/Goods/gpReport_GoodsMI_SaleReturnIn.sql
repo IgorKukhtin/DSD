@@ -37,7 +37,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , BranchId Integer, BranchCode Integer, BranchName TVarChar
              , BusinessId Integer, BusinessCode Integer, BusinessName TVarChar
              
-             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar/*, OKPO TVarChar*/
+             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar
              , RetailName TVarChar, RetailReportName TVarChar
              , SectionId Integer, SectionName TVarChar
              , AreaName TVarChar, PartnerTagName TVarChar, PartnerCategory TFloat
@@ -361,7 +361,7 @@ BEGIN
                                     , gpReport.GoodsPlatformName
                                     , gpReport.JuridicalGroupName
                                     , gpReport.BranchId, gpReport.BranchCode, gpReport.BranchName
-                                    , gpReport.JuridicalId, gpReport.JuridicalCode, gpReport.JuridicalName
+                                    , gpReport.JuridicalId, gpReport.JuridicalCode, gpReport.JuridicalName, gpReport.OKPO
                                     , gpReport.RetailName, gpReport.RetailReportName
                                     , gpReport.AreaName, gpReport.PartnerTagName, gpReport.PartnerCategory
                                     , gpReport.Address, gpReport.RegionName, gpReport.ProvinceName, gpReport.CityKindName, gpReport.CityName
@@ -431,7 +431,7 @@ BEGIN
                                     , gpReport.GoodsPlatformName
                                     , gpReport.JuridicalGroupName
                                     , gpReport.BranchId, gpReport.BranchCode, gpReport.BranchName
-                                    , gpReport.JuridicalId, gpReport.JuridicalCode, gpReport.JuridicalName
+                                    , gpReport.JuridicalId, gpReport.JuridicalCode, gpReport.JuridicalName, gpReport.OKPO
                                     , gpReport.RetailName, gpReport.RetailReportName
                                     , gpReport.AreaName, gpReport.PartnerTagName, gpReport.PartnerCategory
                                     , gpReport.Address, gpReport.RegionName, gpReport.ProvinceName, gpReport.CityKindName, gpReport.CityName
@@ -508,7 +508,7 @@ BEGIN
             , gpReport.JuridicalGroupName
             , gpReport.BranchId, gpReport.BranchCode, gpReport.BranchName
             , 0 :: Integer AS BusinessId, 0 :: Integer AS BusinessCode, '' :: TVarChar AS BusinessName 
-            , gpReport.JuridicalId, gpReport.JuridicalCode, gpReport.JuridicalName
+            , gpReport.JuridicalId, gpReport.JuridicalCode, gpReport.JuridicalName, gpReport.OKPO
             , gpReport.RetailName, gpReport.RetailReportName
             , Object_Section.Id                 AS SectionId
             , Object_Section.ValueData          AS SectionName
@@ -608,7 +608,7 @@ BEGIN
               , gpReport.GoodsPlatformName
               , gpReport.JuridicalGroupName
               , gpReport.BranchId, gpReport.BranchCode, gpReport.BranchName
-              , gpReport.JuridicalId, gpReport.JuridicalCode, gpReport.JuridicalName
+              , gpReport.JuridicalId, gpReport.JuridicalCode, gpReport.JuridicalName, gpReport.OKPO
               , gpReport.RetailName, gpReport.RetailReportName
               , gpReport.AreaName, gpReport.PartnerTagName, gpReport.PartnerCategory
               , gpReport.Address, gpReport.RegionName, gpReport.ProvinceName, gpReport.CityKindName, gpReport.CityName
@@ -1143,9 +1143,9 @@ BEGIN
                                                     LEFT JOIN tmpObject_GoodsPropertyValue_basis AS tmpObject_GoodsPropertyValue
                                                                                                  ON tmpObject_GoodsPropertyValue.ObjectId = tmpGoodsProperty_find.ObjectId 
                                                )
+        , tmpJuridicalDetails AS (SELECT * FROM ObjectHistory_JuridicalDetails_View WHERE ObjectHistory_JuridicalDetails_View.JuridicalId IN (SELECT DISTINCT tmpOperationGroup.JuridicalId FROM tmpOperationGroup))
 
-
-     -----
+     -- Результат
      SELECT Object_GoodsGroup.ValueData        AS GoodsGroupName
           , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
           , Object_Goods.Id                    AS GoodsId
@@ -1175,7 +1175,7 @@ BEGIN
           , Object_Juridical.Id              AS JuridicalId
           , Object_Juridical.ObjectCode      AS JuridicalCode
           , Object_Juridical.ValueData       AS JuridicalName
-          /*, '' :: TVarChar                   AS OKPO*/
+          , ObjectHistory_JuridicalDetails_View.OKPO
 
           , Object_Retail.ValueData          AS RetailName
           , Object_RetailReport.ValueData    AS RetailReportName
@@ -1330,6 +1330,7 @@ BEGIN
           LEFT JOIN Object AS Object_GoodsPlatform ON Object_GoodsPlatform.Id = ObjectLink_Goods_GoodsPlatform.ChildObjectId
 
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpOperationGroup.JuridicalId
+          LEFT JOIN tmpJuridicalDetails AS ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
 
           LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
                                  ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
@@ -1475,7 +1476,5 @@ select * FROM gpReport_GoodsMI_SaleReturnIn(inStartDate := ('01.10.2025')::TDate
     , inIsDate :=  'False' , inIsMonth  :=  'False',  inSession :=  '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');
 */
 
-
-
 -- select * from gpReport_GoodsMI_SaleReturnIn (inStartDate := ('01.03.2026')::TDateTime , inEndDate := ('11.03.2026')::TDateTime , inBranchId := 8374 , inAreaId := 0 , inRetailId := 0 , inJuridicalId := 0 , inPaidKindId := 3 , inTradeMarkId := 0 , inGoodsGroupId := 0 , inInfoMoneyId := 0 , inIsPartner := 'True' , inIsTradeMark := 'False' , inIsGoods := 'True' , inIsGoodsKind := 'True' , inisContract := 'False' , inIsOLAP := 'True' , inIsDate := 'False' , inisMonth := 'False' ,  inSession := '351808');
--- select * from gpReport_GoodsMI_SaleReturnIn (inStartDate := ('02.11.2025')::TDateTime , inEndDate := ('31.12.2025')::TDateTime , inBranchId := 0 , inAreaId := 0 , inRetailId := 0 , inJuridicalId := 0 , inPaidKindId := 0 , inTradeMarkId := 0 , inGoodsGroupId := 633112 , inInfoMoneyId := 0 , inIsPartner := 'True' , inIsTradeMark := 'False' , inIsGoods := 'True' , inIsGoodsKind := 'True' , inisContract := 'False' , inIsOLAP := 'False' , inIsDate := 'False' , inisMonth := 'False' ,  inSession := '9457');
+-- select * from gpReport_GoodsMI_SaleReturnIn (inStartDate := ('02.01.2026')::TDateTime , inEndDate := ('02.01.2026')::TDateTime , inBranchId := 0 , inAreaId := 0 , inRetailId := 0 , inJuridicalId := 0 , inPaidKindId := 0 , inTradeMarkId := 0 , inGoodsGroupId := 633112 , inInfoMoneyId := 0 , inIsPartner := 'True' , inIsTradeMark := 'False' , inIsGoods := 'True' , inIsGoodsKind := 'True' , inisContract := 'False' , inIsOLAP := 'False' , inIsDate := 'False' , inisMonth := 'False' ,  inSession := '9457');

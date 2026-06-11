@@ -28,7 +28,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , JuridicalGroupName TVarChar
              , BranchId Integer, BranchCode Integer, BranchName TVarChar
              , BusinessId Integer, BusinessCode Integer, BusinessName TVarChar
-             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar/*, OKPO TVarChar*/
+             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar
              , RetailName TVarChar, RetailReportName TVarChar
              , AreaName TVarChar, PartnerTagName TVarChar, PartnerCategory TFloat
              , Address TVarChar, RegionName TVarChar, ProvinceName TVarChar, CityKindName TVarChar, CityName TVarChar/*, ProvinceCityName TVarChar, StreetKindName TVarChar, StreetName TVarChar*/
@@ -465,6 +465,7 @@ BEGIN
           , Object_Juridical.Id         AS JuridicalId
           , Object_Juridical.ObjectCode AS JuridicalCode
           , Object_Juridical.ValueData  AS JuridicalName
+          , '' :: TVarChar AS OKPO
 
           , Object_Retail.ValueData       AS RetailName
           , Object_RetailReport.ValueData AS RetailReportName
@@ -648,4 +649,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_SaleReturnIn_OLD_TWO (inStartDate:= '01.01.2019', inEndDate:= '01.01.2019', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_SaleReturnIn_OLD_TWO (inStartDate:= '01.01.2026', inEndDate:= '01.01.2026', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inSession:= zfCalc_UserAdmin());

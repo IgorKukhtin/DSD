@@ -36,7 +36,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsPlatformName TVarChar
              , JuridicalGroupName TVarChar
              , BranchId Integer, BranchCode Integer, BranchName TVarChar
-             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar/*, OKPO TVarChar*/
+             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar
              , RetailName TVarChar, RetailReportName TVarChar
              , AreaName TVarChar, PartnerTagName TVarChar, PartnerCategory TFloat
              , Address TVarChar, RegionName TVarChar, ProvinceName TVarChar, CityKindName TVarChar, CityName TVarChar/*, ProvinceCityName TVarChar, StreetKindName TVarChar, StreetName TVarChar*/
@@ -70,6 +70,7 @@ $BODY$
    DECLARE vbUserId Integer;
 
    DECLARE vbObjectId_Constraint_Branch Integer;
+   DECLARE vbGoodsPropertyId_basis Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
@@ -93,6 +94,9 @@ BEGIN
     inInfoMoneyId:= COALESCE (inInfoMoneyId, 0);
     inPaidKindId := COALESCE (inPaidKindId, 0);
     inBranchId   := COALESCE (inBranchId, 0);
+
+    --
+    vbGoodsPropertyId_basis := zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0);
 
 
     -- Результат
@@ -501,8 +505,7 @@ BEGIN
                                                                                     AND tmpObject_GoodsPropertyValue.GoodsPropertyId = tmpGoodsProperty_find.GoodsPropertyId
                                         )
 
- , tmpObject_GoodsPropertyValue_basis AS (SELECT tmpGoodsProperty.GoodsPropertyId
-                                               , ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+ , tmpObject_GoodsPropertyValue_basis AS (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                                , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId AS GoodsId
                                                , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
                                                , Object_GoodsPropertyValue.ValueData  AS Name
@@ -528,6 +531,7 @@ BEGIN
                                                     ) AS tmpGoodsProperty_find
                                                     LEFT JOIN tmpObject_GoodsPropertyValue_basis AS tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
                                               )
+        , tmpJuridicalDetails AS (SELECT * FROM ObjectHistory_JuridicalDetails_View WHERE ObjectHistory_JuridicalDetails_View.JuridicalId IN (SELECT DISTINCT tmpOperationGroup.JuridicalId FROM tmpOperationGroup))
 
      -- Результат
      SELECT Object_GoodsGroup.ValueData        AS GoodsGroupName
@@ -558,6 +562,7 @@ BEGIN
           , Object_Juridical.Id         AS JuridicalId
           , Object_Juridical.ObjectCode AS JuridicalCode
           , Object_Juridical.ValueData  AS JuridicalName
+          , ObjectHistory_JuridicalDetails_View.OKPO
 
           , Object_Retail.ValueData       AS RetailName
           , Object_RetailReport.ValueData AS RetailReportName
@@ -666,6 +671,8 @@ BEGIN
                                 AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpOperationGroup.JuridicalId
+          LEFT JOIN tmpJuridicalDetails AS ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
+
           LEFT JOIN Object AS Object_Partner   ON Object_Partner.Id   = tmpOperationGroup.PartnerId
           LEFT JOIN ObjectString AS ObjectString_Address
                                  ON ObjectString_Address.ObjectId = Object_Partner.Id
@@ -711,10 +718,10 @@ BEGIN
                                                 AND tmpObject_GoodsPropertyValue.GoodsKindId = tmpOperationGroup.GoodsKindId 
           LEFT JOIN tmpObject_GoodsPropertyValueGroup ON tmpObject_GoodsPropertyValueGroup.GoodsPropertyId = tmpOperationGroup.GoodsPropertyId
                                                      AND tmpObject_GoodsPropertyValueGroup.GoodsId =tmpOperationGroup.GoodsId
-                                                     AND tmpObject_GoodsPropertyValue.GoodsId IS NULL and  1=0
+                                                     AND tmpObject_GoodsPropertyValue.GoodsId IS NULL
           LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = tmpOperationGroup.GoodsId
-                                                      AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = tmpOperationGroup.GoodsKindId and 1=0
-          LEFT JOIN tmpObject_GoodsPropertyValueGroup_basis ON tmpObject_GoodsPropertyValueGroup_basis.GoodsId =tmpOperationGroup.GoodsId and 1=0
+                                                      AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = tmpOperationGroup.GoodsKindId
+          LEFT JOIN tmpObject_GoodsPropertyValueGroup_basis ON tmpObject_GoodsPropertyValueGroup_basis.GoodsId =tmpOperationGroup.GoodsId
 
 
     ;
@@ -745,4 +752,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_SaleReturnIn_Olap (inStartDate:= '01.01.2025', inEndDate:= '01.01.2025', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsContract:= FALSE, inIsJuridical_Branch:= FALSE, inIsJuridical_where:= FALSE, inIsPartner_where:= FALSE, inIsGoods_where:= FALSE, inIsCost:= FALSE,  inisMonth := 'False'  inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_SaleReturnIn_Olap (inStartDate:= '01.01.2026', inEndDate:= '01.01.2026', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsContract:= FALSE, inIsJuridical_Branch:= FALSE, inIsJuridical_where:= FALSE, inIsPartner_where:= FALSE, inIsGoods_where:= FALSE, inIsCost:= FALSE,  inIsDate := 'False',  inSession:= zfCalc_UserAdmin());
