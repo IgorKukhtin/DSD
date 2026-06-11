@@ -36,6 +36,7 @@ $BODY$
     DECLARE vbMovementDescId  Integer;
     DECLARE vbMovementId_TG   Integer;
     DECLARE vbMovementId_Sale Integer;
+    DECLARE vbDocHeadeName_sale TVarChar;
     
 BEGIN
      -- сразу запомнили время начала выполнения Проц.
@@ -202,7 +203,13 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Документ <%>.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId);
     END IF;
 
-
+    --
+    vbDocHeadeName_sale := (SELECT PrintForms_View.DocHeadeName
+                            FROM PrintForms_View
+                            WHERE CURRENT_DATE BETWEEN PrintForms_View.StartDate AND PrintForms_View.EndDate
+                              AND PrintForms_View.PrintFormName = (SELECT * FROM gpGet_Movement_Sale_ReportName(inMovementId, inSession))
+                            LIMIT 1 --могут быть несколько юр. лиц, или наоборот без юр лица, а нам важно получить для формы фр3 DocHeadeName  
+                           );
 
      --
     OPEN Cursor1 FOR
@@ -583,10 +590,12 @@ BEGIN
 
           , (select tmpCar_param.VIN  from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId) :: TVarChar  AS VIN 
  
-          , (select tmpCar_param.Length from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarTrailerId) :: TVarChar  AS Length_tr
-          , (select tmpCar_param.Width  from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarTrailerId) :: TVarChar  AS Width_tr
-          , (select tmpCar_param.Height from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarTrailerId) :: TVarChar  AS Height_tr 
-          
+          , COALESCE ((select tmpCar_param.Length from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarTrailerId) :: Integer,0) :: Integer  AS Length_tr
+          , COALESCE ((select tmpCar_param.Width  from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarTrailerId) :: Integer,0) :: Integer  AS Width_tr
+          , COALESCE ((select tmpCar_param.Height from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarTrailerId) :: Integer,0) :: Integer  AS Height_tr 
+
+           --надпись в шапке док. Продажи
+          , vbDocHeadeName_sale  ::TVarChar AS DocHeadeName_sale         
        FROM Movement
             LEFT JOIN tmpTransportGoods ON tmpTransportGoods.MovementId_Sale = Movement.Id
 
@@ -917,7 +926,9 @@ BEGIN
            , 'від 0 до 6' ::TVarChar AS Temperatura_Text
 
            , ObjectString_QualityINN.ValueData   :: TVarChar AS QualityINN
-           , Object_GoodsGroupProperty.ValueData :: TVarChar AS GoodsGroupPropertyName
+           , Object_GoodsGroupProperty.ValueData :: TVarChar AS GoodsGroupPropertyName  
+            --надпись в шапке док. Продажи
+           , vbDocHeadeName_sale  ::TVarChar AS DocHeadeName_sale
        FROM tmpMI
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId

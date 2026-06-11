@@ -813,6 +813,13 @@
         Component = ceAmountForm
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountForm_two'
+        Value = Null
+        Component = ceAmountForm_two
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 257
     Top = 275

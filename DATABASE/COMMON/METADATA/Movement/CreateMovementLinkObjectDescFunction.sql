@@ -487,6 +487,13 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_RouteTT() RETURNS Integer AS $B
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_RouteTT', 'Маршрут TT' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_RouteTT');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_NotBudgPromo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_NotBudgPromo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_NotBudgPromo', 'Классификатор Вне бюджета' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_NotBudgPromo');
+
+
+
+
 
 
 
@@ -734,6 +741,7 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 11.06.26         * zc_MovementLinkObject_NotBudgPromo
  13.01.25         * zc_MovementLinkObject_PositionComplete6, 7, 8
                     zc_MovementLinkObject_PersonalComplete6, 7, 8
  07.11.25         * zc_MovementLinkObject_Update_report

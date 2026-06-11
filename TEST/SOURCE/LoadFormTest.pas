@@ -125,6 +125,7 @@ type
     procedure LoadMobileReportFormTest;
     procedure LoadModelServiceFormTest;
     procedure LoadMovementFormTest;
+    procedure LoadNotBudgPromoFormTest;
     procedure LoadOrderCarInfoFormTest;
     procedure LoadOrderGoodsFormTest;
     procedure LoadOrderFinanceFormTest;
@@ -2164,7 +2165,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionJournalForm');
-  }
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionUnionTech_RealWeightForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionUnionTech_RealWeightForm');
@@ -2172,11 +2173,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechJournalForm');
   exit;
-  {
+ }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechEditForm');
   exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionPeresortJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionPeresortJournalForm');
   exit;
@@ -5130,6 +5131,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMovementJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementGoodsJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementGoodsJournalForm');
+end;
+
+procedure TLoadFormTest.LoadNotBudgPromoFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TNotBudgPromoForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TNotBudgPromoForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TNotBudgPromoEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TNotBudgPromoEditForm');
 end;
 
 procedure TLoadFormTest.LoadPositionFormTest;

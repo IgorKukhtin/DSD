@@ -579,6 +579,9 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_ReExch() RETURNS integer AS $BODY$
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_ReExch', 'Физ обмен (да/нет)'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_ReExch');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_NotBudgPromo() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_NotBudgPromo'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_NotBudgPromo', 'Вне бюджета(да/нет)'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_NotBudgPromo');
 
 
 
@@ -586,6 +589,7 @@ INSERT INTO MovementBooleanDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 11.06.26         * zc_MovementBoolean_NotBudgPromo
  02.05.26         * zc_MovementBoolean_isKh
  08.04.26         * zc_MovementBoolean_Effie
  14.01.26         * zc_MovementBoolean_SignSB
