@@ -1,8 +1,9 @@
--- Function: gpSelect_Movement_CommercLocal()
+-- Function: gpSelect_Object_CommercLocal_byMovement()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_CommercLocal (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_CommercLocal_byMovement (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_CommercLocal(
+CREATE OR REPLACE FUNCTION gpSelect_Object_CommercLocal_byMovement(
     IN inMovementId          Integer  , -- ключ Документа
     IN inSession             TVarChar   -- сессия пользователя
 )
@@ -328,6 +329,6 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_CommercLocal (inMovementId:= 40874, inSession := zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Object_CommercLocal_byMovement (inMovementId:= 40874, inSession := zfCalc_UserAdmin());
 
---select * from gpSelect_Movement_CommercLocal(inMovementId := 34499291 ,  inSession := '9457');
+--select * from gpSelect_Object_CommercLocal_byMovement(inMovementId := 34499291 ,  inSession := '9457');
