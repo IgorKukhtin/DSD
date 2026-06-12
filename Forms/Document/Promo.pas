@@ -636,6 +636,10 @@ type
     InsertRecord_out: TInsertRecord;
     dxBarButton1: TdxBarButton;
     Comment_tsout: TcxGridDBColumn;
+    cbNotBudgPromo: TcxCheckBox;
+    cxLabel30: TcxLabel;
+    GuidesNotBudgPromo: TdsdGuides;
+    edNotBudgPromo: TcxButtonEdit;
   private
     { Private declarations }
   public

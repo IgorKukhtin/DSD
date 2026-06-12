@@ -103,6 +103,8 @@ type
     bbInsertUpdate_MI_Promo_Detail: TdxBarButton;
     spInsertUpdate_MI_Promo_Detail: TdsdStoredProc;
     PromoSchemaKindName: TcxGridDBColumn;
+    NotBudgPromoName: TcxGridDBColumn;
+    isNotBudgPromo: TcxGridDBColumn;
   private
     { Private declarations }
   public

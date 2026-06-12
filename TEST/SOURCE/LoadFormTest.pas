@@ -3945,10 +3945,10 @@ begin
    }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PromoForm');
-   {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PromoDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PromoDialogForm');
-  }
+
 end;
 
 procedure TLoadFormTest.LoadTypeCommercFormTest;

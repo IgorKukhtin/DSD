@@ -595,6 +595,22 @@ inherited Report_PromoForm: TReport_PromoForm
             Options.Editing = False
             Width = 45
           end
+          object NotBudgPromoName: TcxGridDBColumn
+            Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1042#1085#1077' '#1073#1102#1076#1078#1077#1090#1072
+            DataBinding.FieldName = 'NotBudgPromoName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 123
+          end
+          object isNotBudgPromo: TcxGridDBColumn
+            Caption = #1042#1085#1077' '#1073#1102#1076#1078#1077#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isNotBudgPromo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 92
+          end
           object OperDate: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1091#1089' '#1074#1085#1077#1089#1077#1085#1080#1103' '#1074' '#1073#1072#1079#1091
             DataBinding.FieldName = 'OperDate'
@@ -1018,6 +1034,13 @@ inherited Report_PromoForm: TReport_PromoForm
       TabOrder = 10
       Width = 252
     end
+    object cbNotBudgPromo: TcxCheckBox
+      Left = 689
+      Top = 32
+      Caption = #1042#1085#1077' '#1073#1102#1076#1078#1077#1090#1072
+      TabOrder = 11
+      Width = 98
+    end
   end
   inherited ActionList: TActionList
     object actPrint1: TdsdPrintAction
@@ -1210,6 +1233,14 @@ inherited Report_PromoForm: TReport_PromoForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isNotBudgPromo'
+          Value = Null
+          Component = cbNotBudgPromo
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1344,6 +1375,14 @@ inherited Report_PromoForm: TReport_PromoForm
         Name = 'inisGoodsKind'
         Value = Null
         Component = cbGoodsKind
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNotBudgPromo'
+        Value = Null
+        Component = cbNotBudgPromo
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

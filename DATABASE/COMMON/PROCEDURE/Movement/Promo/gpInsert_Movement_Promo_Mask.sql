@@ -37,6 +37,7 @@ BEGIN
                                           , inChecked        := False         ::Boolean
                                           , inIsPromo        := tmp.IsPromo 
                                           , inisCost         := tmp.isCost
+                                          , inIsNotBudgPromo := tmp.IsNotBudgPromo  -- Вне бюджета(да/нет)
                                           , inCostPromo      := tmp.CostPromo
                                           , inComment        := '' ::TVarChar
                                           , inCommentMain    := tmp.CommentMain
@@ -44,7 +45,8 @@ BEGIN
                                           , inPersonalTradeId:= tmp.PersonalTradeId
                                           , inPersonalId     := tmp.PersonalId 
                                           , inPaidKindId     := tmp.PaidKindId 
-                                          , inPromoSchemaKindId := tmp.PromoSchemaKindId
+                                          , inPromoSchemaKindId := tmp.PromoSchemaKindId 
+                                          , inNotBudgPromoId := tmp.NotBudgPromoId  --Классификатор Вне бюджета
                                           , inUserId         := vbUserId
                                            )
      FROM gpGet_Movement_Promo (ioId, inOperDate, 'False', inSession) AS tmp;
@@ -105,6 +107,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+  11.06.26        *
   07.05.21        *
 */
 

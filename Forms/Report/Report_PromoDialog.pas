@@ -20,7 +20,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCheckBox;
+  cxCheckBox, dsdCommon;
 
 type
   TReport_PromoDialogForm = class(TAncestorDialogForm)
@@ -38,6 +38,7 @@ type
     cxLabel6: TcxLabel;
     ceJuridical: TcxButtonEdit;
     GuidesJuridical: TdsdGuides;
+    cbNotBudgPromo: TcxCheckBox;
   private
     { Private declarations }
   public

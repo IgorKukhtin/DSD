@@ -92,6 +92,7 @@ type
     GuidesJuridical: TdsdGuides;
     Days_Sale: TcxGridDBColumn;
     Days_Real: TcxGridDBColumn;
+    cbNotBudgPromo: TcxCheckBox;
   private
     { Private declarations }
   public

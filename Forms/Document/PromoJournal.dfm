@@ -417,6 +417,22 @@ inherited PromoJournalForm: TPromoJournalForm
             VisibleForCustomization = False
             Width = 60
           end
+          object NotBudgPromoName: TcxGridDBColumn
+            Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1042#1085#1077' '#1073#1102#1076#1078#1077#1090#1072
+            DataBinding.FieldName = 'NotBudgPromoName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 123
+          end
+          object isNotBudgPromo: TcxGridDBColumn
+            Caption = #1042#1085#1077' '#1073#1102#1076#1078#1077#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isNotBudgPromo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
         end
       end
     end
