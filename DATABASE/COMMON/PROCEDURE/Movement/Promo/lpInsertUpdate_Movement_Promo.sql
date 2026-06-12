@@ -16,9 +16,14 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateT
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, Integer, Integer
                                                      , TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime
                                                      , Boolean, Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer); */
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, Integer, Integer
+/*DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, Integer, Integer
                                                      , TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime
                                                      , Boolean, Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer);
+*/
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, Integer, Integer
+                                                     , TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime
+                                                     , Boolean, Boolean, Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
+
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Promo(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
     IN inInvNumber             TVarChar   , -- Номер документа
@@ -36,7 +41,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Promo(
     IN inCheckDate             TDateTime  , -- Дата согласования
     IN inChecked               Boolean    , -- Согласовано
     IN inIsPromo               Boolean    , -- Акция   
-    IN inisCost                Boolean    , -- Затраты
+    IN inisCost                Boolean    , -- Затраты 
+    IN inIsNotBudgPromo        Boolean    , -- Вне бюджета(да/нет)
     IN inCostPromo             TFloat     , -- Стоимость участия в акции
     IN inComment               TVarChar   , -- Примечание
     IN inCommentMain           TVarChar   , -- Примечание (Общее)
@@ -45,6 +51,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Promo(
     IN inPersonalId            Integer    , -- Ответственный представитель маркетингового отдела 
     IN inPaidKindId            Integer    , 
     IN inPromoSchemaKindId     Integer    , -- промо-механика
+    IN inNotBudgPromoId        Integer    , -- Классификатор Вне бюджета
 --    IN inSignInternalId        Integer    , 
     IN inUserId                Integer      -- пользователь
 )
@@ -147,6 +154,8 @@ BEGIN
     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Promo(), ioId, inIsPromo);
     -- сохранили свойство <Затраты>
     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Cost(), ioId, inIsCost);
+    -- сохранили свойство <>
+    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_NotBudgPromo(), ioId, inIsNotBudgPromo);
          
     -- Стоимость участия в акции
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CostPromo(), ioId, inCostPromo);
@@ -161,6 +170,8 @@ BEGIN
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalTrade(), ioId, inPersonalTradeId);
     -- Ответственный представитель маркетингового отдела
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Personal(), ioId, inPersonalId);
+    -- сохранили свойство <>
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_NotBudgPromo(), ioId, inNotBudgPromoId); 
     -- модель подписи
     --PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_SignInternal(), ioId, inSignInternalId);
 
@@ -186,6 +197,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 11.06.26         *
  23.09.25         *
  06.07.20         *
  01.08.17         *

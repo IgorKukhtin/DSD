@@ -24,13 +24,23 @@ DROP FUNCTION IF EXISTS gpSelect_Report_Promo(
     TVarChar   --сессия пользователя
 );*/
 
-
+/*DROP FUNCTION IF EXISTS gpSelect_Report_Promo(
+    TDateTime, --дата начала периода
+    TDateTime, --дата окончания периода
+    Boolean,   --показать только Акции
+    Boolean,   --показать только Тендеры
+    Boolean,   -- группировать по видам
+    Integer,   --подразделение
+    Integer,   --юр.лицо
+    TVarChar   --сессия пользователя
+);*/
 DROP FUNCTION IF EXISTS gpSelect_Report_Promo(
     TDateTime, --дата начала периода
     TDateTime, --дата окончания периода
     Boolean,   --показать только Акции
     Boolean,   --показать только Тендеры
     Boolean,   -- группировать по видам
+    Boolean,   -- Вне бюджета(да/нет)
     Integer,   --подразделение
     Integer,   --юр.лицо
     TVarChar   --сессия пользователя
@@ -40,7 +50,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Report_Promo(
     IN inEndDate        TDateTime, --дата окончания периода
     IN inIsPromo        Boolean,   --показать только Акции
     IN inIsTender       Boolean,   --показать только Тендеры
-    IN inIsGoodsKind    Boolean,   --группировать по видам
+    IN inIsGoodsKind    Boolean,   --группировать по видам 
+    IN inisNotBudgPromo Boolean,   -- Вне бюджета(да/нет)
     IN inUnitId         Integer,   --подразделение
     IN inJuridicalId    Integer,   --юр.лицо
     IN inSession        TVarChar   --сессия пользователя
@@ -61,6 +72,8 @@ RETURNS TABLE(
     ,RetailName           TBlob     --Сеть, в которой проходит акция
     ,AreaName             TBlob     --Регион
     ,JuridicalName_str    TBlob     --юр.лица
+    , NotBudgPromoId Integer, NotBudgPromoName TVarChar, isNotBudgPromo Boolean
+
     ,GoodsName            TVarChar  --Позиция
     ,GoodsCode            Integer   --Код позиции
     ,MeasureName          TVarChar  --единица измерения
@@ -124,6 +137,7 @@ RETURNS TABLE(
     , AmountReal_Sale_Weight        TFloat --                                 вес
     , AmountRealPromo_Sale_Sh       TFloat -- 4)AmountRealPromo_60 / 60 * Days_Sale шт                
     , AmountRealPromo_Sale_Weight   TFloat --                                       вес
+    
     )
 AS
 $BODY$
@@ -189,7 +203,8 @@ BEGIN
                                , MovementDate_StartSale.ValueData            AS StartSale          --Дата начала отгрузки по акционной цене
                                , MovementDate_EndSale.ValueData              AS EndSale            --Дата окончания отгрузки по акционной цене
                                , MovementLinkObject_Unit.ObjectId            AS UnitId
-                               , COALESCE (MovementBoolean_Promo.ValueData, FALSE)   :: Boolean AS isPromo  -- акция (да/нет)
+                               , COALESCE (MovementBoolean_Promo.ValueData, FALSE)          :: Boolean AS isPromo         -- акция (да/нет)     
+                               , COALESCE (MovementBoolean_NotBudgPromo.ValueData, FALSE)   :: Boolean AS isNotBudgPromo  -- Вне бюджета (да/нет)
                                , COALESCE(MovementLinkObject_PriceList.ObjectId, zc_PriceList_Basis()) AS PriceListId
                           FROM Movement AS Movement_Promo
                              LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -206,6 +221,9 @@ BEGIN
                                                        ON MovementBoolean_Promo.MovementId = Movement_Promo.Id
                                                       AND MovementBoolean_Promo.DescId = zc_MovementBoolean_Promo()
 
+                             LEFT JOIN MovementBoolean AS MovementBoolean_NotBudgPromo
+                                                       ON MovementBoolean_NotBudgPromo.MovementId = Movement_Promo.Id
+                                                      AND MovementBoolean_NotBudgPromo.DescId = zc_MovementBoolean_NotBudgPromo()
                              -- нужно определить прайслист , а по нему значение НДС , для расчете цены с НДС
                              LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
                                                           ON MovementLinkObject_PriceList.MovementId = Movement_Promo.Id
@@ -220,9 +238,11 @@ BEGIN
                        --AND Movement_Promo.StatusId = zc_Enum_Status_Complete()
                          AND Movement_Promo.StatusId <> zc_Enum_Status_Erased()
                          AND (  (COALESCE (MovementBoolean_Promo.ValueData, FALSE) = TRUE AND inIsPromo = TRUE)
-                             OR (COALESCE (MovementBoolean_Promo.ValueData, FALSE) = FALSE AND inIsTender = TRUE)
-                             OR (inIsPromo = FALSE AND inIsTender = FALSE)
+                             OR (COALESCE (MovementBoolean_Promo.ValueData, FALSE) = FALSE AND inIsTender = TRUE) 
+                             OR (COALESCE (MovementBoolean_NotBudgPromo.ValueData, FALSE) = FALSE AND inisNotBudgPromo = TRUE)
+                             OR (inIsPromo = FALSE AND inIsTender = FALSE AND inisNotBudgPromo = FALSE)
                              )
+                         --AND (COALESCE (MovementBoolean_NotBudgPromo.ValueData, FALSE) = inisNotBudgPromo)
                           )
           -- Для Прайсластов определяем НДС
         , tmpVAT AS (SELECT tmp.PriceListId
@@ -256,7 +276,8 @@ BEGIN
                               , MovementString_CommentMain.ValueData        AS CommentMain        --Примечание (общее)
                               , COALESCE (Movement_Promo.isPromo, FALSE)   :: Boolean AS isPromo  -- акция (да/нет)
                               , COALESCE (MovementBoolean_Checked.ValueData, FALSE) :: Boolean AS Checked  -- согласовано (да/нет)
-
+                              , COALESCE (Movement_Promo.isNotBudgPromo, FALSE)     :: Boolean AS isNotBudgPromo  -- Вне бюджета (да/нет)
+                              
                               , Object_PromoStateKind.Id                    AS PromoStateKindId        --Состояние акции
                               , Object_PromoStateKind.ValueData             AS PromoStateKindName      --Состояние акции
 
@@ -278,6 +299,9 @@ BEGIN
                                 END AS Color_PromoStateKind
                                 
                               , tmpVAT.VATPercent   --НДС из прайслиста
+
+                              , Object_NotBudgPromo.Id                 AS NotBudgPromoId
+                              , Object_NotBudgPromo.ValueData          AS NotBudgPromoName
                          FROM tmpMovement AS Movement_Promo
                              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Promo.StatusId
                              LEFT JOIN MovementDate AS MovementDate_StartPromo
@@ -339,6 +363,11 @@ BEGIN
                                                           ON MovementLinkObject_PromoStateKind.MovementId = Movement_Promo.Id
                                                          AND MovementLinkObject_PromoStateKind.DescId = zc_MovementLinkObject_PromoStateKind()
                              LEFT JOIN Object AS Object_PromoStateKind ON Object_PromoStateKind.Id = MovementLinkObject_PromoStateKind.ObjectId
+
+                             LEFT JOIN MovementLinkObject AS MovementLinkObject_NotBudgPromo
+                                                          ON MovementLinkObject_NotBudgPromo.MovementId = Movement_Promo.Id
+                                                         AND MovementLinkObject_NotBudgPromo.DescId = zc_MovementLinkObject_NotBudgPromo()
+                             LEFT JOIN Object AS Object_NotBudgPromo ON Object_NotBudgPromo.Id = MovementLinkObject_NotBudgPromo.ObjectId
                              
                              LEFT JOIN tmpVAT ON tmpVAT.PriceListId = Movement_Promo.PriceListId
                         )
@@ -781,7 +810,11 @@ COALESCE (-- первый - автоматом сформированные MovementItem - всегда Контрагент
           , Movement_Promo.PromoStateKindName   ::TVarChar
           , Movement_Promo.Color_PromoStateKind :: Integer
           , tmpSign.strSign                     ::TVarChar-- -- эл.подписи  -- 
-          
+
+          , Movement_Promo.NotBudgPromoId       ::Integer
+          , Movement_Promo.NotBudgPromoName     ::TVarChar
+          , Movement_Promo.isNotBudgPromo       ::Boolean
+ 
           , (EXTRACT (DAY from Movement_Promo.EndSale - Movement_Promo.StartSale) + 1)         ::Integer AS Days_Sale
           , (EXTRACT (DAY from Movement_Promo.OperDateEnd - Movement_Promo.OperDateStart) + 1) ::Integer AS Days_Real 
           --                                       
@@ -814,6 +847,10 @@ COALESCE (-- первый - автоматом сформированные MovementItem - всегда Контрагент
           , Movement_Promo.AreaName ::TBlob AS AreaName
             
           , Movement_Promo.JuridicalName_str ::TBlob AS JuridicalName_str
+
+          , Movement_Promo.NotBudgPromoId       ::Integer
+          , Movement_Promo.NotBudgPromoName     ::TVarChar
+          , Movement_Promo.isNotBudgPromo       ::Boolean
 
           , MI_PromoGoods.GoodsName
           , MI_PromoGoods.GoodsCode
@@ -910,6 +947,7 @@ COALESCE (-- первый - автоматом сформированные MovementItem - всегда Контрагент
           , ((COALESCE (MI_PromoGoods.AmountReal_60Weight,0)     - COALESCE (MI_PromoGoods.AmountRetIn_60Weight,0))      / 60 * Movement_Promo.Days_Sale ::Integer) ::TFloat AS AmountReal_Sale_Weight   
           , ((COALESCE (MI_PromoGoods.AmountRealPromo_60Sh,0)    - COALESCE (MI_PromoGoods.AmountRetInPromo_60Sh,0))     / 60 * Movement_Promo.Days_Sale ::Integer) ::TFloat AS AmountRealPromo_Sale_Sh    -- 4)AmountRealPromo_60 / 60 * Days_Sale                   
           , ((COALESCE (MI_PromoGoods.AmountRealPromo_60Weight,0)- COALESCE (MI_PromoGoods.AmountRetInPromo_60Weight,0)) / 60 * Movement_Promo.Days_Sale ::Integer) ::TFloat AS AmountRealPromo_Sale_Weight
+
         FROM
             tmp_Promo AS Movement_Promo
             LEFT OUTER JOIN tmpMI_PromoGoods AS MI_PromoGoods ON MI_PromoGoods.MovementId = Movement_Promo.Id
@@ -925,6 +963,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+ 11.06.26         *
  24.01.25         *
  07.11.17         *
  25.07.17         *
@@ -935,4 +974,4 @@ $BODY$
 -- SELECT * FROM gpSelect_Report_Promo (inStartDate:= ('01.04.2024')::TDateTime , inEndDate:= ('01.04.2024')::TDateTime , inIsPromo := 'False' , inIsTender := 'False' ,inIsGoodsKind := 'true', inUnitId := 0 ,  inSession := '5'::TVarchar) -- where invnumber = 6862
 
 -- select * from gpSelect_Report_Promo (inStartDate := ('01.02.2026')::TDateTime , inEndDate := ('01.02.2026')::TDateTime , inIsPromo := 'True' , inIsTender := 'False' , inisGoodsKind := 'False' , inUnitId := 0 , inJuridicalId := 0 ,  inSession := '5');
-
+-- select * from gpSelect_Report_Promo (inStartDate := ('01.02.2026')::TDateTime , inEndDate := ('01.02.2026')::TDateTime , inIsPromo := 'False' , inIsTender := 'False' , inisNotBudgPromo :='TRUE' , inisGoodsKind := 'False' , inUnitId := 0 , inJuridicalId := 0 ,  inSession := '5');

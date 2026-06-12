@@ -54,6 +54,10 @@ CREATE OR REPLACE VIEW Movement_Promo_View AS
       , Object_PaidKind.Id                          AS PaidKindId
       , Object_PaidKind.ValueData                   AS PaidKindName      
       , COALESCE (MovementBoolean_Cost.ValueData, FALSE)    :: Boolean AS isCOst   -- затраты (да/нет)      
+
+      , Object_NotBudgPromo.Id                 AS NotBudgPromoId
+      , Object_NotBudgPromo.ValueData          AS NotBudgPromoName
+      , COALESCE (MovementBoolean_NotBudgPromo.ValueData, FALSE) ::Boolean AS isNotBudgPromo
     FROM Movement AS Movement_Promo 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Promo.StatusId
 
@@ -133,6 +137,15 @@ CREATE OR REPLACE VIEW Movement_Promo_View AS
                                   ON MovementBoolean_TaxPromo.MovementId = Movement_Promo.Id
                                  AND MovementBoolean_TaxPromo.DescId = zc_MovementBoolean_TaxPromo()
 
+        LEFT JOIN MovementBoolean AS MovementBoolean_NotBudgPromo
+                                  ON MovementBoolean_NotBudgPromo.MovementId = Movement_Promo.Id
+                                 AND MovementBoolean_NotBudgPromo.DescId = zc_MovementBoolean_NotBudgPromo()
+ 
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_NotBudgPromo
+                                     ON MovementLinkObject_NotBudgPromo.MovementId = Movement_Promo.Id
+                                    AND MovementLinkObject_NotBudgPromo.DescId = zc_MovementLinkObject_NotBudgPromo()
+        LEFT JOIN Object AS Object_NotBudgPromo ON Object_NotBudgPromo.Id = MovementLinkObject_NotBudgPromo.ObjectId
+
         LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                      ON MovementLinkObject_Unit.MovementId = Movement_Promo.Id
                                     AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
@@ -189,6 +202,7 @@ ALTER TABLE Movement_Promo_View
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
+ 11.06.26         *
  23.09.25         *
  31.10.15                                                         * 
 */

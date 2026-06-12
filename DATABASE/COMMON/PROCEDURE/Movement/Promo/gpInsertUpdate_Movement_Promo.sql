@@ -16,9 +16,15 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateT
                                                      , TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime
                                                      , Boolean, Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);  */
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, Integer, Integer
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, Integer, Integer
                                                      , TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime
                                                      , Boolean, Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
+*/
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, Integer, Integer
+                                                     , TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime
+                                                     , Boolean, Boolean, Boolean, Boolean
+                                                     , TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Promo(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
     IN inInvNumber             TVarChar   , -- Номер документа
@@ -36,7 +42,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Promo(
     IN inCheckDate             TDateTime  , -- Дата согласования
     IN inChecked               Boolean    , -- Согласовано
     IN inIsPromo               Boolean    , -- Акция  
-    IN inisCost                Boolean    , -- Затраты
+    IN inisCost                Boolean    , -- Затраты  
+    IN inIsNotBudgPromo        Boolean    , -- Вне бюджета(да/нет)
     IN inCostPromo             TFloat     , -- Стоимость участия в акции
     IN inComment               TVarChar   , -- Примечание
     IN inCommentMain           TVarChar   , -- Примечание (Общее)
@@ -44,7 +51,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Promo(
     IN inPersonalTradeId       Integer    , -- Ответственный представитель коммерческого отдела
     IN inPersonalId            Integer    , -- Ответственный представитель маркетингового отдела
     IN inPaidKindId            Integer    , --
-    IN inPromoSchemaKindId     Integer    , -- промо-механика
+    IN inPromoSchemaKindId     Integer    , -- промо-механика 
+    IN inNotBudgPromoId        Integer    , -- Классификатор Вне бюджета
     --IN inSignInternalId        Integer    , -- модель подписи
     IN inSession               TVarChar     -- сессия пользователя
 )
@@ -89,6 +97,7 @@ BEGIN
                                         , inChecked        := inChecked         --Согласовано
                                         , inIsPromo        := inIsPromo	        --акция          
                                         , inisCost         := inisCost          --Затраты
+                                        , inIsNotBudgPromo := inIsNotBudgPromo  -- Вне бюджета(да/нет)
                                         , inCostPromo      := inCostPromo       --Стоимость участия в акции
                                         , inComment        := inComment         --Примечание
                                         , inCommentMain    := inCommentMain     --Примечание (Общее)
@@ -97,6 +106,7 @@ BEGIN
                                         , inPersonalId     := inPersonalId      --Ответственный представитель маркетингового отдела   
                                         , inPaidKindId     := inPaidKindId 
                                         , inPromoSchemaKindId := inPromoSchemaKindId -- Промо-механика
+                                        , inNotBudgPromoId := inNotBudgPromoId  --Классификатор Вне бюджета
                                         --, inSignInternalId := inSignInternalId  -- модель подписи
                                         , inUserId         := vbUserId
                                         ) AS tmp;
@@ -108,6 +118,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.
+ 11.06.26         *
  23.09.25         * Промо-механика
 -- 09.04.20         * inSignInternalId
  01.08.17         * add inCheckDate

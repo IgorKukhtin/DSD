@@ -1,22 +1,22 @@
 inherited Report_PromoDialogForm: TReport_PromoDialogForm
-  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
-  ClientHeight = 196
+  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1072#1082#1094#1080#1103#1084
+  ClientHeight = 229
   ClientWidth = 468
   ExplicitWidth = 474
-  ExplicitHeight = 224
+  ExplicitHeight = 258
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 114
-    Top = 155
+    Top = 187
     ExplicitLeft = 114
-    ExplicitTop = 155
+    ExplicitTop = 187
   end
   inherited bbCancel: TcxButton
     Left = 258
-    Top = 155
+    Top = 187
     ExplicitLeft = 258
-    ExplicitTop = 155
+    ExplicitTop = 187
   end
   object cxLabel1: TcxLabel [2]
     Left = 26
@@ -46,12 +46,12 @@ inherited Report_PromoDialogForm: TReport_PromoDialogForm
   end
   object cxLabel17: TcxLabel [6]
     Left = 23
-    Top = 73
+    Top = 105
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
   object edUnit: TcxButtonEdit [7]
     Left = 139
-    Top = 72
+    Top = 104
     Properties.Buttons = <
       item
         Default = True
@@ -62,34 +62,34 @@ inherited Report_PromoDialogForm: TReport_PromoDialogForm
     Width = 301
   end
   object cbPromo: TcxCheckBox [8]
-    Left = 5
+    Left = 26
     Top = 35
     Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1040#1082#1094#1080#1080
     TabOrder = 8
     Width = 144
   end
   object cbTender: TcxCheckBox [9]
-    Left = 151
+    Left = 215
     Top = 35
     Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1058#1077#1085#1076#1077#1088#1099
     TabOrder = 9
     Width = 161
   end
   object cbGoodsKind: TcxCheckBox [10]
-    Left = 309
-    Top = 35
+    Left = 26
+    Top = 62
     Caption = #1075#1088#1091#1087#1087#1080#1088#1086#1074#1072#1090#1100' '#1087#1086' '#1074#1080#1076#1072#1084
     TabOrder = 10
     Width = 145
   end
   object cxLabel6: TcxLabel [11]
     Left = 56
-    Top = 115
+    Top = 147
     Caption = #1070#1088'. '#1083#1080#1094#1086
   end
   object ceJuridical: TcxButtonEdit [12]
     Left = 139
-    Top = 114
+    Top = 146
     Properties.Buttons = <
       item
         Default = True
@@ -99,23 +99,30 @@ inherited Report_PromoDialogForm: TReport_PromoDialogForm
     TabOrder = 12
     Width = 301
   end
+  object cbNotBudgPromo: TcxCheckBox [13]
+    Left = 215
+    Top = 62
+    Caption = #1042#1085#1077' '#1073#1102#1076#1078#1077#1090#1072
+    TabOrder = 13
+    Width = 98
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 128
-    Top = 147
+    Top = 179
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 29
-    Top = 147
+    Top = 179
   end
   inherited ActionList: TActionList
-    Left = 156
-    Top = 146
+    Left = 188
+    Top = 170
   end
   inherited FormParams: TdsdFormParams
     Params = <
       item
         Name = 'StartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -123,7 +130,7 @@ inherited Report_PromoDialogForm: TReport_PromoDialogForm
       end
       item
         Name = 'EndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -186,9 +193,17 @@ inherited Report_PromoDialogForm: TReport_PromoDialogForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isNotBudgPromo'
+        Value = Null
+        Component = cbNotBudgPromo
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 197
-    Top = 147
+    Top = 179
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -218,13 +233,13 @@ inherited Report_PromoDialogForm: TReport_PromoDialogForm
         MultiSelectSeparator = ','
       end>
     Left = 369
-    Top = 59
+    Top = 91
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
     Left = 232
-    Top = 67
+    Top = 99
   end
   object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
@@ -251,6 +266,6 @@ inherited Report_PromoDialogForm: TReport_PromoDialogForm
         MultiSelectSeparator = ','
       end>
     Left = 265
-    Top = 105
+    Top = 137
   end
 end

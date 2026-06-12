@@ -57,6 +57,7 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , strSignNo        TVarChar    -- ФИО пользователей. - ожидается эл. подпись 
              
              , OperDateOrder_text TVarChar
+             , NotBudgPromoId Integer, NotBudgPromoName TVarChar, isNotBudgPromo Boolean
              )
 AS
 $BODY$
@@ -142,6 +143,10 @@ BEGIN
           , NULL::TVarChar                                    AS strSign
           , NULL::TVarChar                                    AS strSignNo
           , NULL::TVarChar                                    AS OperDateOrder_text 
+
+          , 0                                                 AS NotBudgPromoId
+          , NULL::TVarChar                                    AS NotBudgPromoName
+          , CAST (FALSE AS Boolean)                           AS isNotBudgPromo
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
             LEFT OUTER JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
             LEFT JOIN Object AS Object_SignInternal ON Object_SignInternal.Id = vbSignInternalId
@@ -221,6 +226,10 @@ BEGIN
           , tmpSign.strSignNo  
           
           , tmpOperDateOrder.OperDateOrder_text ::TVarChar           
+
+          , Movement_Promo.NotBudgPromoId    ::Integer
+          , Movement_Promo.NotBudgPromoName  ::TVarChar
+          , Movement_Promo.isNotBudgPromo    ::Boolean
         FROM Movement_Promo_View AS Movement_Promo
              LEFT JOIN lpSelect_MI_Sign (inMovementId:= Movement_Promo.Id ) AS tmpSign ON tmpSign.Id = Movement_Promo.Id   -- эл.подписи  --
              LEFT JOIN Object AS Object_SignInternal ON Object_SignInternal.Id = tmpSign.SignInternalId
@@ -237,6 +246,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 11.06.26         *
  23.09.25         * PromoSchemaKind
  01.05.23         *
  07.05.21         * add inMask
