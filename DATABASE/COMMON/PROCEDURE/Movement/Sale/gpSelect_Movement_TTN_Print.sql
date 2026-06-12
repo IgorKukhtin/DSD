@@ -552,9 +552,18 @@ BEGIN
                THEN
                  (CASE WHEN vbDescId = zc_Movement_SendOnPrice() AND ObjectString_Unit_Address_to.ValueData <> '' AND ObjectString_Unit_Address_to.ValueData NOT ILIKE '% - O - %'
                            THEN ObjectString_Unit_Address_to.ValueData
+
                        -- СІЛЬПО-ФУД ТОВ м. Запоріжжя вулиця Базова, 11
                        WHEN View_Partner_Address.PartnerId = 877319 
                            THEN ObjectString_ToAddress.ValueData
+
+                       -- Корвус ПП м. Київ вул. Антоновича буд.50 (РЕГАЛ)
+                       WHEN View_Partner_Address.PartnerId = 10799525;
+                           THEN CASE WHEN ObjectString_PostalCode.ValueData  <> '' THEN ObjectString_PostalCode.ValueData || ' '      ELSE '' END
+                             || CASE WHEN View_Partner_Address.RegionName    <> '' THEN View_Partner_Address.RegionName   || ' обл., ' ELSE '' END
+                             || CASE WHEN View_Partner_Address.ProvinceName  <> '' THEN View_Partner_Address.ProvinceName || ' р-н, '  ELSE '' END
+                             || zfCalc_Text_replace(ObjectString_ToAddress.ValueData, '(РЕГАЛ)', '')
+
                        ELSE CASE WHEN ObjectString_PostalCode.ValueData  <> '' THEN ObjectString_PostalCode.ValueData || ' '      ELSE '' END
                        
                          || CASE WHEN View_Partner_Address.RegionName    <> '' THEN View_Partner_Address.RegionName   || ' обл., ' ELSE '' END
