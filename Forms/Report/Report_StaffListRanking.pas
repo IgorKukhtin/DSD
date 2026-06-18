@@ -61,6 +61,8 @@ type
     BoldRecord_unit: TcxGridDBColumn;
     isTotal: TcxGridDBColumn;
     ColorFon_unit: TcxGridDBColumn;
+    NppPersonalReport: TcxGridDBColumn;
+    PositionCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

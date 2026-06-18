@@ -129,12 +129,29 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
             Options.Editing = False
             Width = 88
           end
+          object NppPersonalReport: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'NppPersonalReport'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1087'/'#1087' '#1076#1083#1103' '#1086#1090#1095#1077#1090#1072' '#1064#1090#1072#1090#1085#1072#1103' '#1088#1072#1089#1089#1090#1072#1085#1086#1074#1082#1072
+            Options.Editing = False
+            Width = 55
+          end
           object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 130
+          end
+          object PositionCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1083#1078#1085'.'
+            DataBinding.FieldName = 'PositionCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
           object PositionName: TcxGridDBColumn
             Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
@@ -950,11 +967,11 @@ inherited Report_StaffListRankingForm: TReport_StaffListRankingForm
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit
-    FormNameParam.Value = 'TUnitForm'
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnitForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
