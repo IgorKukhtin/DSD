@@ -7,7 +7,7 @@ DROP FUNCTION IF EXISTS gpSelect_StaffListItemChoice (TDateTime, Integer, Intege
 CREATE OR REPLACE FUNCTION gpSelect_StaffListItemChoice(
     IN inStartDate      TDateTime , --
     IN inUnitId         Integer,   --подразделение
-    IN inDepartmentId   Integer,   --Департамент 
+    IN inDepartmentId   Integer,   --Департамент
     IN inPositionId     Integer,   --должность
     IN inSession        TVarChar   --сессия пользователя
 )
@@ -17,12 +17,13 @@ RETURNS TABLE(Id  Integer
             , UnitId                         Integer
             , UnitName                       TVarChar
             , PositionId                     Integer
+            , PositionCode                   Integer
             , PositionName                   TVarChar
             , PositionLevelId                Integer
             , PositionLevelName              TVarChar
-            , PositionPropertyName           TVarChar  --Классификатор должности 
-            , PersonalId                     Integer   --Менеджер по персоналу 
-            , PersonalName                   TVarChar  -- 
+            , PositionPropertyName           TVarChar  --Классификатор должности
+            , PersonalId                     Integer   --Менеджер по персоналу
+            , PersonalName                   TVarChar  --
             , StaffHoursDayName              TVarChar  --График работы
             , StaffHoursName                 TVarChar  --Години роботи
 )
@@ -39,7 +40,7 @@ BEGIN
 
     WITH
     tmpMovement AS (SELECT tmp.*
-                    FROM (SELECT Movement.* 
+                    FROM (SELECT Movement.*
                                , MovementLinkObject_Unit.ObjectId AS UnitId
                                , ObjectLink_Unit_Department.ChildObjectId AS DepartmentId
                                , ROW_NUMBER() OVER (PARTITION BY MovementLinkObject_Unit.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
@@ -52,7 +53,7 @@ BEGIN
                                                    AND ObjectLink_Unit_Department.DescId = zc_ObjectLink_Unit_Department()
                           WHERE Movement.DescId = zc_Movement_StaffList()
                             AND Movement.OperDate <= inStartDate --AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-                            AND Movement.StatusId <> zc_Enum_Status_Erased() 
+                            AND Movement.StatusId <> zc_Enum_Status_Erased()
                             AND (MovementLinkObject_Unit.ObjectId = inUnitId OR inUnitId = 0)
                             AND (ObjectLink_Unit_Department.ChildObjectId = inDepartmentId OR inDepartmentId = 0)
                          ) AS tmp
@@ -64,7 +65,7 @@ BEGIN
                 AND MovementItem.DescId = zc_MI_Master()
                 AND MovementItem.isErased = FALSE
                 AND (MovementItem.ObjectId = inPositionId OR inPositionId = 0)
-              )  
+              )
 
   , tmpMILinkObject AS (SELECT MovementItemLinkObject.*
                         FROM MovementItemLinkObject
@@ -83,7 +84,7 @@ BEGIN
                    )
 
   , tmpData AS (SELECT Movement.DepartmentId
-                     , Movement.UnitId 
+                     , Movement.UnitId
                      , Movement.Id
                      , MovementItem.Id       AS MovementItemId
                      , MovementItem.ObjectId AS PositionId
@@ -92,9 +93,9 @@ BEGIN
                 FROM tmpMovement AS Movement
                      LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Movement.UnitId
                      LEFT JOIN Object AS Object_Department ON Object_Department.Id = Movement.DepartmentId
-                    
+
                      LEFT JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
-            
+
                      LEFT JOIN tmpMILinkObject AS MILinkObject_PositionLevel
                                                ON MILinkObject_PositionLevel.MovementItemId = MovementItem.Id
                                               AND MILinkObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel()
@@ -102,18 +103,19 @@ BEGIN
   -- результат
     SELECT Movement.Id                       ::Integer
          , Object_Department.Id                          AS DepartmentId
-         , Object_Department.ValueData       ::TVarChar  AS DepartmentName      
-         , Object_Unit.Id                    ::Integer   AS UnitId              
-         , Object_Unit.ValueData             ::TVarChar  AS UnitName            
-         , Object_Position.Id                ::Integer   AS PositionId          
-         , Object_Position.ValueData         ::TVarChar  AS PositionName        
-         , Object_PositionLevel.Id           ::Integer   AS PositionLevelId     
-         , Object_PositionLevel.ValueData    ::TVarChar  AS PositionLevelName   
+         , Object_Department.ValueData       ::TVarChar  AS DepartmentName
+         , Object_Unit.Id                    ::Integer   AS UnitId
+         , Object_Unit.ValueData             ::TVarChar  AS UnitName
+         , Object_Position.Id                ::Integer   AS PositionId
+         , Object_Position.ObjectCode        ::Integer   AS PositionCode
+         , Object_Position.ValueData         ::TVarChar  AS PositionName
+         , Object_PositionLevel.Id           ::Integer   AS PositionLevelId
+         , Object_PositionLevel.ValueData    ::TVarChar  AS PositionLevelName
          , Object_PositionProperty.ValueData ::TVarChar  AS PositionPropertyName
          , Object_Personal.Id                ::Integer   AS PersonalId
-         , Object_Personal.ValueData         ::TVarChar  AS PersonalName        
-         , Object_StaffHoursDay.ValueData    ::TVarChar  AS StaffHoursDayName   
-         , Object_StaffHours.ValueData       ::TVarChar  AS StaffHoursName      
+         , Object_Personal.ValueData         ::TVarChar  AS PersonalName
+         , Object_StaffHoursDay.ValueData    ::TVarChar  AS StaffHoursDayName
+         , Object_StaffHours.ValueData       ::TVarChar  AS StaffHoursName
     FROM tmpData AS Movement
          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Movement.UnitId
          LEFT JOIN Object AS Object_Department ON Object_Department.Id = Movement.DepartmentId
@@ -141,7 +143,7 @@ BEGIN
          LEFT JOIN Object AS Object_PositionProperty ON Object_PositionProperty.Id = ObjectLink_Position_PositionProperty.ChildObjectId
 
     ORDER BY Object_Department.ValueData
-           , Object_Unit.ValueData  
+           , Object_Unit.ValueData
            , Object_Position.ValueData
            , Object_PositionLevel.ValueData
     ;

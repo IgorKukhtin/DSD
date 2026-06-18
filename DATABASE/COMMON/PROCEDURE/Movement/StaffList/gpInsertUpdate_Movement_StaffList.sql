@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_Movement_StaffList()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_StaffList (Integer, TVarChar, TDateTime, Integer, TVarChar,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_StaffList (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_StaffList(
  INOUT ioId                     Integer   , -- Ключ объекта <Документ>
     IN inInvNumber              TVarChar  , -- Номер документа
     IN inOperDate               TDateTime , -- Дата документа
     IN inUnitId                 Integer   , -- подразделение
+    IN inPersonalId             Integer   , -- Менеджер по персоналу
     IN inComment                TVarChar  , -- Примечание
     IN inSession                TVarChar    -- сессия пользователя
 )
@@ -23,11 +25,14 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_StaffList(), inInvNumber, inOperDate, Null);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_StaffList(), inInvNumber, inOperDate, NULL);
 
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, inUnitId); 
      
+     -- сохранили связь с <>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Personal(), ioId, inPersonalId); 
+
      --Руководитель подразделения
      vbPersonalHeadId := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inUnitId AND OL.DescId = zc_ObjectLink_Unit_PersonalHead());
      -- сохранили связь с <>

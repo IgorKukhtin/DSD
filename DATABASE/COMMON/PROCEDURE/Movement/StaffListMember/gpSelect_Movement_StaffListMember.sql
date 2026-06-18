@@ -14,10 +14,10 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , DateIn TDateTime, DateSend TDateTime, DateOut TDateTime
              , StatusId Integer, StatusCode Integer, StatusName TVarChar
              , MemberId Integer, MemberCode Integer, MemberName TVarChar
-             , PositionId Integer, PositionName TVarChar
+             , PositionId Integer, PositionCode Integer, PositionName TVarChar
              , PositionLevelId Integer, PositionLevelName TVarChar
              , UnitId Integer, UnitName TVarChar
-             , PositionId_old Integer, PositionName_old TVarChar
+             , PositionId_old Integer, PositionCode_old Integer, PositionName_old TVarChar
              , PositionLevelId_old Integer, PositionLevelName_old TVarChar
              , UnitId_old Integer, UnitName_old TVarChar
              , ReasonOutId Integer, ReasonOutName TVarChar
@@ -116,8 +116,7 @@ BEGIN
                      )
 
           --дату приема берем по основному месту работы, но только если дата документа >= дата приема в сотрудниках
-        , tmpPersonal AS (SELECT DISTINCT
-                                 ObjectLink_Personal_Member.ChildObjectId AS MemberId
+        , tmpPersonal AS (SELECT ObjectLink_Personal_Member.ChildObjectId AS MemberId
                                , ObjectDate_DateIn.ValueData              AS DateIn
                                , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN NULL ELSE ObjectDate_DateOut.ValueData END AS DateOut
                                , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN FALSE ELSE TRUE END AS isDateOut
@@ -144,6 +143,15 @@ BEGIN
                                , Object_SheetWorkTime.Id                          AS SheetWorkTimeId
                                , Object_SheetWorkTime.ValueData                   AS SheetWorkTimeName
 
+                                 -- № п/п
+                               , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Personal_Member.ChildObjectId
+                                                               , ObjectLink_Personal_Unit.ChildObjectId  
+                                                               , ObjectLink_Personal_Position.ChildObjectId
+                                                               , ObjectLink_Personal_PositionLevel.ChildObjectId
+                                                    ORDER BY CASE WHEN Object_Personal.isErased = FALSE THEN 0 ELSE 1 END ASC
+                                                           , COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) DESC
+                                                   ) AS Ord
+
                           FROM Object AS Object_Personal
                                INNER JOIN ObjectLink AS ObjectLink_Personal_Member
                                                      ON ObjectLink_Personal_Member.ObjectId = Object_Personal.Id
@@ -152,9 +160,9 @@ BEGIN
                                                      ON ObjectLink_Personal_Unit.ObjectId = Object_Personal.Id
                                                     AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
                                INNER JOIN ObjectBoolean AS ObjectBoolean_Main
-                                                        ON ObjectBoolean_Main.ObjectId = Object_Personal.Id
-                                                       AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Personal_Main()
-                                                       AND COALESCE (ObjectBoolean_Main.ValueData, FALSE) = TRUE
+                                                        ON ObjectBoolean_Main.ObjectId  = Object_Personal.Id
+                                                       AND ObjectBoolean_Main.DescId    = zc_ObjectBoolean_Personal_Main()
+                                                       AND ObjectBoolean_Main.ValueData = TRUE
 
                                LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
                                                     ON ObjectLink_Personal_Position.ObjectId = Object_Personal.Id
@@ -366,6 +374,7 @@ BEGIN
            , Object_Member.ValueData               AS MemberName
 
            , Object_Position.Id                    AS PositionId
+           , Object_Position.ObjectCode            AS PositionCode
            , Object_Position.ValueData             AS PositionName
            , Object_PositionLevel.Id               AS PositionLevelId
            , Object_PositionLevel.ValueData        AS PositionLevelName
@@ -373,6 +382,7 @@ BEGIN
            , Object_Unit.ValueData                 AS UnitName
 
            , Object_Position_old.Id                AS PositionId_old
+           , Object_Position_old.ObjectCode        AS PositionCode_old
            , Object_Position_old.ValueData         AS PositionName_old
            , Object_PositionLevel_old.Id           AS PositionLevelId_old
            , Object_PositionLevel_old.ValueData    AS PositionLevelName_old
@@ -512,6 +522,7 @@ BEGIN
                                  AND COALESCE (tmpPersonal.UnitId,0)          = COALESCE (MovementLinkObject_Unit.ObjectId,0) 
                                  AND COALESCE (tmpPersonal.PositionId,0)      = COALESCE (MovementLinkObject_Position.ObjectId,0) 
                                  AND COALESCE (tmpPersonal.PositionLevelId,0) = COALESCE (MovementLinkObject_PositionLevel.ObjectId,0) 
+                                 AND tmpPersonal.Ord = 1
                               --   AND Object_StaffListKind.Id IN (zc_Enum_StaffListKind_Send(), zc_Enum_StaffListKind_Out())
 
             LEFT JOIN tmpStorageLine ON tmpStorageLine.MemberId = Movement.MemberId

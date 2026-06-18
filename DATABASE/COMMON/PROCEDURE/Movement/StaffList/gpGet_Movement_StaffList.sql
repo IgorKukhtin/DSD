@@ -6,20 +6,21 @@ DROP FUNCTION IF EXISTS gpGet_Movement_StaffList (Integer, TDateTime, Boolean, T
 CREATE OR REPLACE FUNCTION gpGet_Movement_StaffList(
     IN inMovementId        Integer   , -- ключ Документа
     IN inOperDate          TDateTime , --
-    IN inMask              Boolean  , -- добавить по маске  
+    IN inMask              Boolean  , -- добавить по маске
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , UnitId Integer, UnitName TVarChar                               -- Подразделение
+             , PersonalId Integer, PersonalName TVarChar                       -- Менеджер по персоналу
              , PersonalHeadId Integer, PersonalHeadName TVarChar               -- Руководитель подразделения
-             , DepartmentId Integer, DepartmentName TVarChar                   -- Департамент 
+             , DepartmentId Integer, DepartmentName TVarChar                   -- Департамент
              , Department_twoId Integer, Department_twoName TVarChar
              , Comment TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
              , UpdateName TVarChar
-             , UpdateDate TDateTime 
+             , UpdateDate TDateTime
              --
              , Count_1         TFloat     --кол. понедельников
              , Count_2         TFloat     --кол. ВТ
@@ -27,7 +28,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Count_4         TFloat     --кол. ЧТ
              , Count_5         TFloat     --кол. ПТ
              , Count_6         TFloat     --кол. СБ
-             , Count_7         TFloat     --кол. ВС 
+             , Count_7         TFloat     --кол. ВС
 
              , isMask Boolean --вернуть false
               )
@@ -40,26 +41,26 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Get_Movement_StaffList());
      vbUserId:= lpGetUserBySession (inSession);
-     
+
 
      -- создаем док по маске
      IF COALESCE (inMask, False) = True
      THEN
      inMovementId := gpInsert_Movement_StaffList_Mask (ioId        := inMovementId
                                                      , inOperDate  := inOperDate
-                                                     , inSession   := inSession); 
+                                                     , inSession   := inSession);
      END IF;
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
      RETURN QUERY
-     WITH 
+     WITH
      --кол. дней по дням недели
      tmpDay AS (WITH
                 tmpDate AS (SELECT GENERATE_SERIES (DATE_TRUNC ('MONTH', inOperDate)
                                                   , DATE_TRUNC ('MONTH',inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
                                                   , '1 DAY' :: INTERVAL
-                                                  ) AS OperDate) 
+                                                  ) AS OperDate)
 
                 SELECT SUM (CASE WHEN tmpWeekDay.Number = 1 THEN 1 ELSE 0 END) AS Count_1
                      , SUM (CASE WHEN tmpWeekDay.Number = 2 THEN 1 ELSE 0 END) AS Count_2
@@ -70,7 +71,7 @@ BEGIN
                      , SUM (CASE WHEN tmpWeekDay.Number = 7 THEN 1 ELSE 0 END) AS Count_7
                 FROM tmpDate
                      LEFT JOIN zfCalc_DayOfWeekName (tmpDate.OperDate) AS tmpWeekDay ON 1=1
-               ) 
+               )
        SELECT 0 AS Id
             , CAST (NEXTVAL ('Movement_StaffList_seq') as TVarChar) AS InvNumber
             , inOperDate            AS OperDate                            --CURRENT_DATE
@@ -79,6 +80,8 @@ BEGIN
 
             , 0                     AS UnitId
             , ''       :: TVarChar  AS UnitName
+            , 0                     AS PersonalId
+            , ''       :: TVarChar  AS PersonalName
             , 0                     AS PersonalHeadId
             , ''       :: TVarChar  AS PersonalHeadName
             , 0                     AS DepartmentId
@@ -100,7 +103,7 @@ BEGIN
             , tmpDay.Count_5      ::TFloat
             , tmpDay.Count_6      ::TFloat
             , tmpDay.Count_7      ::TFloat
-            
+
             , CAST (FALSE AS Boolean) AS isMask
        FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
@@ -117,7 +120,7 @@ BEGIN
                                                   ) AS OperDate
                             FROM Movement
                             WHERE Movement.Id = inMovementId
-                            ) 
+                            )
 
                 SELECT SUM (CASE WHEN tmpWeekDay.Number = 1 THEN 1 ELSE 0 END) AS Count_1
                      , SUM (CASE WHEN tmpWeekDay.Number = 2 THEN 1 ELSE 0 END) AS Count_2
@@ -128,9 +131,9 @@ BEGIN
                      , SUM (CASE WHEN tmpWeekDay.Number = 7 THEN 1 ELSE 0 END) AS Count_7
                 FROM tmpDate
                      LEFT JOIN zfCalc_DayOfWeekName (tmpDate.OperDate) AS tmpWeekDay ON 1=1
-                ) 
-                
- 
+                )
+
+
        SELECT Movement.Id
             , Movement.InvNumber               AS InvNumber
             , Movement.OperDate
@@ -139,6 +142,8 @@ BEGIN
 
             , Object_Unit.Id                   AS UnitId
             , Object_Unit.ValueData            AS UnitName
+            , Object_Personal.Id               AS PersonalId
+            , Object_Personal.ValueData        AS PersonalName
             , Object_PersonalHead.Id           AS PersonalHeadId
             , Object_PersonalHead.ValueData    AS PersonalHeadName
             , Object_Department.Id             AS DepartmentId
@@ -152,7 +157,7 @@ BEGIN
             , MovementDate_Insert.ValueData    AS InsertDate
             , Object_Update.ValueData          AS UpdateName
             , MovementDate_Update.ValueData    AS UpdateDate
-            
+
             , tmpDay.Count_1      ::TFloat
             , tmpDay.Count_2      ::TFloat
             , tmpDay.Count_3      ::TFloat
@@ -160,7 +165,7 @@ BEGIN
             , tmpDay.Count_5      ::TFloat
             , tmpDay.Count_6      ::TFloat
             , tmpDay.Count_7      ::TFloat
-            
+
             , CAST (FALSE AS Boolean) AS isMask
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -184,6 +189,10 @@ BEGIN
                                 AND ObjectLink_Unit_Department_two.DescId = zc_ObjectLink_Unit_Department_two()
             LEFT JOIN Object AS Object_Department_two ON Object_Department_two.Id = ObjectLink_Unit_Department_two.ChildObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
+                                         ON MovementLinkObject_Personal.MovementId = Movement.Id
+                                        AND MovementLinkObject_Personal.DescId     = zc_MovementLinkObject_Personal()
+            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = MovementLinkObject_Personal.ObjectId
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalHead
                                          ON MovementLinkObject_PersonalHead.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalHead.DescId = zc_MovementLinkObject_PersonalHead()

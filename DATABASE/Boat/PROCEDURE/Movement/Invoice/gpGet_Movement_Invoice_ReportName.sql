@@ -78,14 +78,26 @@ BEGIN
       );
 
      -- Названия файла - для сохранения PDF
-     vbInvoiceFileName := 'Invoice_'||COALESCE((SELECT COALESCE (MovementString_ReceiptNumber.ValueData, 'XXX')||'_'||
-                                                       zfConvert_DateShortToString (Movement.OperDate)
-                                                FROM Movement
-                                                     -- Официальный номер квитанции - Quittung Nr
-                                                     LEFT JOIN MovementString AS MovementString_ReceiptNumber
-                                                                              ON MovementString_ReceiptNumber.MovementId = Movement.Id
-                                                                             AND MovementString_ReceiptNumber.DescId = zc_MovementString_ReceiptNumber()
-                                                WHERE Movement.Id = inMovementId), 'XXXX_XXXX');
+     IF EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_InvoiceKind() AND MLO.ObjectId = zc_Enum_InvoiceKind_Proforma())
+     THEN
+        vbInvoiceFileName := 'PI_'||COALESCE((SELECT COALESCE (Movement.InvNumber, '')||'_'||
+                                                          zfConvert_DateShortToString (Movement.OperDate)
+                                                   FROM Movement
+                                                        -- Официальный номер квитанции - Quittung Nr
+                                                        LEFT JOIN MovementString AS MovementString_ReceiptNumber
+                                                                                 ON MovementString_ReceiptNumber.MovementId = Movement.Id
+                                                                                AND MovementString_ReceiptNumber.DescId = zc_MovementString_ReceiptNumber()
+                                                   WHERE Movement.Id = inMovementId), '_XXXX');
+     ELSE
+        vbInvoiceFileName := 'Invoice_'||COALESCE((SELECT COALESCE (MovementString_ReceiptNumber.ValueData, 'XXX')||'_'||
+                                                          zfConvert_DateShortToString (Movement.OperDate)
+                                                   FROM Movement
+                                                        -- Официальный номер квитанции - Quittung Nr
+                                                        LEFT JOIN MovementString AS MovementString_ReceiptNumber
+                                                                                 ON MovementString_ReceiptNumber.MovementId = Movement.Id
+                                                                                AND MovementString_ReceiptNumber.DescId = zc_MovementString_ReceiptNumber()
+                                                   WHERE Movement.Id = inMovementId), 'XXXX_XXXX');
+     END IF;
 
      /*IF vbInvoiceFileName NOT ILIKE '%.pdf'
      THEN

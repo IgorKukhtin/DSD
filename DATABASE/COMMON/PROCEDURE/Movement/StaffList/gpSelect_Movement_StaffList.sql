@@ -1,7 +1,7 @@
 -- Function: gpSelect_Movement_StaffList()
+
 DROP FUNCTION IF EXISTS gpSelect_Movement_StaffList (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_StaffList (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_StaffList(
     IN inStartDate         TDateTime , --
@@ -14,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_StaffList(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , UnitId Integer, UnitName TVarChar                               -- Подразделение
+             , PersonalId Integer, PersonalName TVarChar                       -- Менеджер по персоналу
              , PersonalHeadId Integer, PersonalHeadName TVarChar               -- Руководитель подразделения
              , DepartmentId Integer, DepartmentName TVarChar                   -- Департамент 
              , Department_twoId Integer, Department_twoName TVarChar
@@ -55,6 +56,8 @@ BEGIN
 
             , Object_Unit.Id                     AS UnitId
             , Object_Unit.ValueData              AS UnitName
+            , Object_Personal.Id                 AS PersonalId
+            , Object_Personal.ValueData          AS PersonalName
             , Object_PersonalHead.Id             AS PersonalHeadId
             , Object_PersonalHead.ValueData      AS PersonalHeadName
             , Object_Department.Id               AS DepartmentId
@@ -94,6 +97,11 @@ BEGIN
                                 AND ObjectLink_Unit_Department_two.DescId = zc_ObjectLink_Unit_Department_two()
             LEFT JOIN Object AS Object_Department_two ON Object_Department_two.Id = ObjectLink_Unit_Department_two.ChildObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
+                                         ON MovementLinkObject_Personal.MovementId = Movement.Id
+                                        AND MovementLinkObject_Personal.DescId     = zc_MovementLinkObject_Personal()
+            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = MovementLinkObject_Personal.ObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalHead
                                          ON MovementLinkObject_PersonalHead.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalHead.DescId = zc_MovementLinkObject_PersonalHead()
@@ -130,4 +138,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_StaffList (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013',inJuridicalBasisId:=0,  inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_StaffList (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013',inJuridicalBasisId:=0, inUnitId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
