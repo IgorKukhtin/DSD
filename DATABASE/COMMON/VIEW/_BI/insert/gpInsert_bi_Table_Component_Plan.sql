@@ -83,9 +83,11 @@ BEGIN
                     , Summ_income
                      )
 
-            SELECT 0 AS MovementId
+            SELECT --0 AS MovementId
+                   MovementId
                    -- Дата Документа
-                 , DATE_TRUNC ('MONTH', OperDate) AS OperDate
+               --, DATE_TRUNC ('MONTH', OperDate) AS OperDate
+                 , OperDate
 
                   -- Подразделение
                  , UnitId
@@ -150,7 +152,9 @@ BEGIN
                                                    , inSession            := zfCalc_UserAdmin()
                                                     ) AS tmpReport
                  ) AS tmpReport
-            GROUP BY DATE_TRUNC ('MONTH', OperDate)
+            GROUP BY MovementId
+                   , OperDate
+                 --, DATE_TRUNC ('MONTH', OperDate)
                    , UnitId
                      -- Поставщик
                    , PartnerInId
@@ -223,7 +227,21 @@ $BODY$
 -- тест
 -- DELETE FROM  _bi_Table_Component_Plan WHERE OperDate between '20.07.2025' and '20.07.2025'
 -- SELECT OperDate, sum(AmountSale_rk), sum(AmountSendOnPrice_rk)  FROM _bi_Table_Component_Planwhere OperDate between '01.04.2026' and '01.04.2026' GROUP BY OperDate ORDER BY 1 DESC, 2
+-- SELECT * FROM gpInsert_bi_Table_Component_Plan (inStartDate:= '01.05.2026', inEndDate:= '31.05.2026', inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpInsert_bi_Table_Component_Plan (inStartDate:= '01.04.2026', inEndDate:= '30.04.2026', inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpInsert_bi_Table_Component_Plan (inStartDate:= '01.03.2026', inEndDate:= '31.03.2026', inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpInsert_bi_Table_Component_Plan (inStartDate:= '01.02.2026', inEndDate:= '28.02.2026', inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpInsert_bi_Table_Component_Plan (inStartDate:= '01.01.2026', inEndDate:= '31.01.2026', inSession:= zfCalc_UserAdmin())
+
+-- SELECT * FROM gpInsert_bi_Table_Component_Plan (inStartDate:= '01.12.2025', inEndDate:= '31.12.2025', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpInsert_bi_Table_Component_Plan (inStartDate:= '01.11.2025', inEndDate:= '30.11.2025', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpInsert_bi_Table_Component_Plan (inStartDate:= '01.10.2025', inEndDate:= '31.10.2025', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpInsert_bi_Table_Component_Plan (inStartDate:= '01.09.2025', inEndDate:= '30.09.2025', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpInsert_bi_Table_Component_Plan (inStartDate:= '01.08.2025', inEndDate:= '31.08.2025', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpInsert_bi_Table_Component_Plan (inStartDate:= '01.07.2025', inEndDate:= '31.07.2025', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpInsert_bi_Table_Component_Plan (inStartDate:= '01.06.2025', inEndDate:= '30.06.2025', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpInsert_bi_Table_Component_Plan (inStartDate:= '01.05.2025', inEndDate:= '31.05.2025', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpInsert_bi_Table_Component_Plan (inStartDate:= '01.04.2025', inEndDate:= '30.04.2025', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpInsert_bi_Table_Component_Plan (inStartDate:= '01.03.2025', inEndDate:= '31.03.2025', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpInsert_bi_Table_Component_Plan (inStartDate:= '01.02.2025', inEndDate:= '28.02.2025', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpInsert_bi_Table_Component_Plan (inStartDate:= '01.01.2025', inEndDate:= '31.01.2025', inSession:= zfCalc_UserAdmin())

@@ -1199,9 +1199,46 @@ end if;
                   GROUP BY tmpMI.GoodsId, tmpMI.GoodsKindId, tmpMI.InfoMoneyDestinationId, tmpMI.InfoMoneyId
                  )
 
+     -- если партия указана, найдем сразу нужную
+   , tmpContainer_find AS (SELECT tmpMI.MovementItemId
+                                , tmpMI.GoodsId
+                                , tmpMI.GoodsKindId
+                                , tmpMI.OperCount           AS Amount
+                                , Container.Id              AS ContainerId
+                                , CLO_PartionGoods.ObjectId AS PartionGoodsId
+                                  -- !!!на всякий случай!!!
+                                , ROW_NUMBER() OVER (PARTITION BY tmpMI.MovementItemId ORDER BY Container.Id ASC) AS Ord
+                           FROM tmpMI
+                                INNER JOIN Container ON Container.ObjectId = tmpMI.GoodsId
+                                                    AND Container.DescId   = zc_Container_Count()
+                                                    -- есть остаток
+                                                    AND Container.Amount   > 0
+                                INNER JOIN ContainerLinkObject AS CLO_Unit
+                                                               ON CLO_Unit.ContainerId = Container.Id
+                                                              AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
+                                                              AND CLO_Unit.ObjectId    = vbUnitId_from
+                                                              AND vbUnitId_from > 0
+                                -- !!!
+                                LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                              ON CLO_PartionGoods.ContainerId = Container.Id
+                                                             AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+                                INNER JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
+                                                                        AND Object_PartionGoods.ValueData <> '0'
+                                                                        AND Object_PartionGoods.ValueData = tmpMI.PartionGoods
+
+                           -- партия установлена
+                           WHERE tmpMI.PartionGoods <> ''
+                            -- учет - по партиям
+                             AND tmpMI.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_70100() -- Инвестиции + Капитальные инвестиции
+                                                                , zc_Enum_InfoMoneyDestination_70200() -- Инвестиции + Капитальный ремонт
+                                                                , zc_Enum_InfoMoneyDestination_70300() -- Инвестиции + Долгосрочные инвестиции
+                                                                , zc_Enum_InfoMoneyDestination_70400() -- Инвестиции + Капитальное строительство
+                                                                , zc_Enum_InfoMoneyDestination_70500() -- Инвестиции + НМА
+                                                                 )
+                          )
          -- !!! - 01 - по партиям для Общефирменные
        , tmp_01 AS (-- 1. для zc_ContainerLinkObject_Unit
-                  /*SELECT Container.Id                                          AS ContainerId
+                    /*SELECT Container.Id                                          AS ContainerId
                          , tmpMI.GoodsId                                         AS GoodsId
                          , 0                                                     AS GoodsKindId
                          , Container.Amount                                      AS Amount
@@ -1234,6 +1271,7 @@ end if;
                                                          , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                                           )
                    UNION ALL*/
+
                     -- 2. для zc_ContainerLinkObject_Member
                     SELECT Container.Id                                          AS ContainerId
                          , tmpMI.GoodsId                                         AS GoodsId
@@ -1797,7 +1835,7 @@ end if;
               _tmp.MovementItemId
 
               -- !!!или подбор партий!!!
-            , _tmp.ContainerId_Goods AS ContainerId_Goods
+            , COALESCE (tmpContainer_find.ContainerId, _tmp.ContainerId_Goods) AS ContainerId_Goods
             , 0 AS ContainerId_Count
             , 0 AS ContainerId_GoodsPartner
 
@@ -2015,7 +2053,7 @@ end if;
               END AS isPromo
 
               -- Партии товара, сформируем позже - !!!или подбор партий!!!
-            , _tmp.PartionGoodsId_Item AS PartionGoodsId
+            , COALESCE (tmpContainer_find.PartionGoodsId, _tmp.PartionGoodsId_Item) AS PartionGoodsId
 
 
             , _tmp.PriceListPrice
@@ -2245,6 +2283,10 @@ end if;
                    LEFT JOIN tmpPL_Jur ON tmpPL_Jur.GoodsId     = tmpMI.GoodsId
                                       AND tmpPL_Jur.GoodsKindId IS NULL
              ) AS _tmp
+             -- нашли - если партия указана
+             LEFT JOIN tmpContainer_find  ON tmpContainer_find.MovementItemId     = _tmp.MovementItemId
+                                         -- !!!на всякий случай!!!
+                                         AND tmpContainer_find.Ord                = 1
             ;
 
      -- !!!надо определить - есть ли скидка в цене!!!

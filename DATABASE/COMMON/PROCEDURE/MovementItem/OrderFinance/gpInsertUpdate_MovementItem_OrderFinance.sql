@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_MovementItem_OrderFinance()
+ -- Function: gpInsertUpdate_MovementItem_OrderFinance()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 
@@ -102,6 +102,7 @@ BEGIN
                           AND MovementItem.ObjectId   = inJuridicalId
                           AND MovementItem.isErased   = FALSE
                        )
+        AND inContractId > 0
      THEN
          RAISE EXCEPTION 'Ошибка.Нет прав изменять Договор.';
      END IF;

@@ -249,6 +249,7 @@ BEGIN
                                                                                                    , zc_Enum_InfoMoney_10202() -- Оболочка
                                                                                                    , zc_Enum_InfoMoney_10203() -- Упаковка
                                                                                                    , zc_Enum_InfoMoney_10204() -- Прочее сырье
+                                                                                                   , zc_Enum_InfoMoney_20601() -- Прочие материалы
                                                                                                     )
                                                     AND inInfoMoneyId = 0
                                                        )

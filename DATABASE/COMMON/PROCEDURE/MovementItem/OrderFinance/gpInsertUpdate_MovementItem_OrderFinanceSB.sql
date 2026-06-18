@@ -98,8 +98,12 @@ BEGIN
 
      END IF;
 
+     -- если БН = обнуляем
+     IF EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = inContractId AND OL.DescId = zc_ObjectLink_Contract_PaidKind() AND OL.ChildObjectId = zc_Enum_PaidKind_FirstForm())
+     THEN
+         inCashId := NULL;
      -- если не заполнено в стоке берем из шапки документа
-     IF COALESCE (inCashId,0) = 0
+     ELSEIF COALESCE (inCashId,0) = 0
      THEN
          inCashId := COALESCE (inCashId_top);
      END IF;

@@ -2143,6 +2143,8 @@ END IF;
                                                                                                        )
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения 5)Партии накладной
                                                                            ELSE CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                                                                                      -- МНМА
+                                                                                      AND tmp.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20300()
                                                                                 THEN
                                                                                 lpInsertFind_Container (inContainerDescId   := zc_Container_SummAsset()
                                                                                                       , inParentId          := NULL
@@ -2198,6 +2200,8 @@ END IF;
                                                                , CASE WHEN vbMemberId_From = 0 AND (vbInvoiceSumm <> 0 OR vbInvoiceSumm_Currency <> 0)
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения 5)Партии накладной
                                                                            THEN CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                                                                                      -- МНМА
+                                                                                      AND tmp.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20300()
                                                                                 THEN
                                                                                 lpInsertFind_Container (inContainerDescId   := zc_Container_SummAsset()
                                                                                                       , inParentId          := NULL
@@ -2265,6 +2269,8 @@ END IF;
                                                                            THEN 0
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения 5)Партии накладной
                                                                            ELSE CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                                                                                      -- МНМА
+                                                                                      AND tmp.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20300()
                                                                                 THEN
                                                                                 lpInsertFind_Container (inContainerDescId   := zc_Container_SummAsset()
                                                                                                       , inParentId          := NULL
@@ -2317,9 +2323,9 @@ END IF;
                                                                                                        )
                                                                                 END
                                                                  END AS ContainerId_Transit
-           FROM (SELECT _tmpItem_SummPartner.AccountId, _tmpItem_SummPartner.AccountId_Transit, _tmpItem_SummPartner.BusinessId, _tmpItem_SummPartner.InfoMoneyId
+           FROM (SELECT DISTINCT
+                       _tmpItem_SummPartner.AccountId, _tmpItem_SummPartner.AccountId_Transit, _tmpItem_SummPartner.BusinessId, _tmpItem_SummPartner.InfoMoneyId, _tmpItem_SummPartner.InfoMoneyDestinationId
                  FROM _tmpItem_SummPartner
-                 GROUP BY _tmpItem_SummPartner.AccountId, _tmpItem_SummPartner.AccountId_Transit, _tmpItem_SummPartner.BusinessId, _tmpItem_SummPartner.InfoMoneyId
                 ) AS tmp
           ) AS tmp
      WHERE _tmpItem_SummPartner.AccountId         = tmp.AccountId

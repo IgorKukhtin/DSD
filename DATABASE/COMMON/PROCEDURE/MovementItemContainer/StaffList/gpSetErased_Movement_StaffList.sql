@@ -19,6 +19,10 @@ BEGIN
                                  , inUserId     := vbUserId);
 
 
+      -- сохранили свойство <Дата корректировки>
+      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Update(), inMovementId, CURRENT_TIMESTAMP);
+      -- сохранили связь с <Пользователь>
+      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Update(), inMovementId, vbUserId);
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

@@ -1925,6 +1925,8 @@ end if;
                                                     -- Упаковка Мяса (тоже ПФ-ГП)
                                                     WHEN vbIsPartionDate_Unit_From = TRUE
                                                      AND vbUnitId_From <> vbUnitId_To
+                                                   --AND vbUnitId_From NOT IN (8447 -- ЦЕХ ковбасних виробів
+                                                   --                         )
                                                      AND _tmpItemChild.PartionGoodsDate <> zc_DateEnd()
                                                      -- и это НЕ группа - ЦЕХ колбаса+дел-сы
                                                       -- AND NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = vbUnitId_From AND OL.ChildObjectId = 8446 AND OL.DescId = zc_ObjectLink_Unit_Parent())
@@ -1945,10 +1947,12 @@ end if;
                                                     -- Производство ПФ-ГП
                                                     WHEN vbIsPartionDate_Unit_From = TRUE
                                                      AND _tmpItemChild.PartionGoodsDate <> zc_DateEnd()
-                                                     AND _tmpItemChild.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Общефирменные + Ирна
-                                                                                                , zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
-                                                                                                , zc_Enum_InfoMoneyDestination_30200()  -- Доходы + Мясное сырье
-                                                                                                 )
+                                                     AND (_tmpItemChild.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Общефирменные + Ирна
+                                                                                                 , zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
+                                                                                                 , zc_Enum_InfoMoneyDestination_30200()  -- Доходы + Мясное сырье
+                                                                                                  )
+                                                       OR _tmpItemChild.GoodsId = 13650009 -- !!!надо для 4066 Ковбаски в АСОРТИМЕНТІ сирі ТМ Алан!!!!
+                                                         )
                                                         THEN lpInsertFind_Object_PartionGoods (inOperDate             := _tmpItemChild.PartionGoodsDate
                                                                                              , inGoodsKindId_complete := _tmpItemChild.GoodsKindId_complete
                                                                                               )
@@ -2067,11 +2071,10 @@ end if;
 IF 1=0
 THEN
 -- , (select CLO_PartionGoods.ObjectId from ContainerLinkObject AS CLO_PartionGoods where CLO_PartionGoods.ContainerId = Container.ContainerId AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()) as PartionGoodsId
-
-    RAISE EXCEPTION 'Ошибка.<%>  <%>   <%>'
-, (select _tmpItem_pr.PartionGoodsId from _tmpItem_pr )
-, (select _tmpItem_pr.PartionGoodsDate_mi from _tmpItem_pr )
-, (select _tmpItemChild.ContainerId_GoodsFrom from _tmpItemChild )
+    RAISE EXCEPTION 'Ошибка.<%>  <%>'
+, (select _tmpItem_pr.PartionGoodsId from _tmpItem_pr  where _tmpItem_pr.MovementItemId = 359418983 )
+, (select _tmpItem_pr.PartionGoodsDate_mi from _tmpItem_pr where _tmpItem_pr.MovementItemId = 359419152  )
+-- , (select _tmpItemChild.ContainerId_GoodsFrom from _tmpItemChild )
 ;
 end if;
 
@@ -2155,6 +2158,7 @@ end if;
                                                   -- select * from Object where DescId = zc_Object_Goods() and ObjectCode = 1256
                                                   AND _tmpItem_pr.GoodsId IN (1138737  -- !!!надо для 1256 ШКУРА СВ замоч. Чапли!!!!
                                                                             , 10691948 -- !!!надо для 4074 КОВБАСА ДЛЯ СМАЖЕННЯ ДОМАШНЯ н/ф зі свинини охолоджений!!!!
+                                                                            , 13650009 -- !!!надо для 4066 Ковбаски в АСОРТИМЕНТІ сирі ТМ Алан!!!!
                                                                              )
                                                                            
                                                    --AND _tmpItem_pr.InfoMoneyId = zc_Enum_InfoMoney_10102() -- Основное сырье + Мясное сырье + Свинина - !!!надо для ШКУРА СВ замоч. Чапли!!!!

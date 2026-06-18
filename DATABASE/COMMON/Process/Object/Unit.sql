@@ -5,6 +5,8 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Unit_HistoryCost() RETU
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Unit_Personal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Unit_Personal' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Unit_notBirthDay() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Unit_notBirthDay' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Unit_notStaffList() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Unit_notStaffList' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Unit_NppPersonalReport() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Unit_NppPersonalReport' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
+
 
 
 DO $$
@@ -53,6 +55,12 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_Unit_no
                                   , inName:= 'сохранение данных - справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Unit())||'>.'
                                   , inEnumName:= 'zc_Enum_Process_Update_Object_Unit_notStaffList');
                                   
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_Unit_NppPersonalReport()
+                                  , inDescId:= zc_Object_Process()
+                                  , inCode:= 5
+                                  , inName:= 'сохранение данных - справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Unit())||'>.'
+                                  , inEnumName:= 'zc_Enum_Process_Update_Object_Unit_NppPersonalReport');
+
  -- заливка прав - InsertUpdate
  PERFORM gpInsertUpdate_Object_RoleProcess (ioId        := tmpData.RoleRightId
                                           , inRoleId    := tmpRole.RoleId

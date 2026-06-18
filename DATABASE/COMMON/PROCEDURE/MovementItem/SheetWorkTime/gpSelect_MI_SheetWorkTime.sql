@@ -62,7 +62,7 @@ BEGIN
      CREATE TEMP TABLE tmpListOut ON COMMIT DROP AS
         SELECT Object_Personal_View.MemberId
              , MAX (Object_Personal_View.PersonalId) AS PersonalId
-             , Object_Personal_View.PositionId 
+             , Object_Personal_View.PositionId
              , COALESCE (Object_Personal_View.PositionLevelId,0) AS PositionLevelId
              , MAX (CASE WHEN Object_Personal_View.DateIn >= vbStartDate AND Object_Personal_View.DateIn <= vbEndDate
                               THEN Object_Personal_View.DateIn
@@ -181,8 +181,8 @@ BEGIN
                                         --     THEN 13816530 -- светло серый  15395562
                                         ELSE tmpOperDate.Color_Calc
                                    END AS Color_Calc
-                                   --  выходн дни - желтым фоном + праздничные - зеленым, определяется в zc_Object_Calendar  
-                                   
+                                   --  выходн дни - желтым фоном + праздничные - зеленым, определяется в zc_Object_Calendar
+
                                  , MIString_NumBiz.ValueData AS NumBiz
                             FROM tmpOperDate
                                  JOIN Movement ON Movement.operDate = tmpOperDate.OperDate
@@ -306,7 +306,7 @@ BEGIN
                                  , tmpMovement_all.ShortName
                                  , tmpMovement_all.isErased
                                  , tmpMovement_all.Color_Calc AS Color_Calc
-                                   --  выходн дни - желтым фоном + праздничные - зеленым, определяется в zc_Object_Calendar 
+                                   --  выходн дни - желтым фоном + праздничные - зеленым, определяется в zc_Object_Calendar
                                  , tmpMovement_all.NumBiz
                             FROM tmpMovement_all
                                  -- если в этот день заполнены день 12ч
@@ -415,14 +415,14 @@ BEGIN
                  , COALESCE (tmpDateOut.WorkTimeKindId, tmp.ObjectId) AS ObjectId
                  , COALESCE (tmpDateOut.ShortName, tmp.ShortName)     AS ShortName
                  , tmp.isErased
-                 , tmp.Color_Calc 
+                 , tmp.Color_Calc
                  , tmp.NumBiz
 
             FROM tmpMovement AS tmp
                  -- если был принят не сначала месяца или уволен в течении месяца отмечаем Х
                  LEFT JOIN tmpDateOut ON tmpDateOut.OperDate   = tmp.OperDate
                                      AND tmpDateOut.MemberId   = tmp.MemberId
-                                     AND tmpDateOut.PositionId = tmp.PositionId 
+                                     AND tmpDateOut.PositionId = tmp.PositionId
                                      AND tmpDateOut.PositionLevelId = tmp.PositionLevelId
                                      AND tmp.Amount            = 0
                                      AND tmp.ObjectId NOT IN (zc_Enum_WorkTimeKind_Holiday())
@@ -441,7 +441,7 @@ BEGIN
                  , tmp.WorkTimeKindId AS ObjectId
                  , tmp.ShortName
                  , 1 AS isErased
-                 , tmp.Color_Calc 
+                 , tmp.Color_Calc
                  , tmpMovement.NumBiz
             FROM tmpDateOut AS tmp
                  LEFT JOIN tmpMovement ON tmpMovement.OperDate   = tmp.OperDate
@@ -666,7 +666,7 @@ BEGIN
               , tmp.WorkTimeKindId_key
               , tmp.ObjectId
       ;
-      
+
 
  CREATE TEMP TABLE tmpMI_NumBiz ON COMMIT DROP AS
       SELECT tmpMI.MemberId
@@ -742,7 +742,7 @@ BEGIN
                , tmpListPersonal.PersonalId
                --, CASE WHEN COALESCE (tmpMI_NumBiz.NumBiz,'') <> '' THEN tmpMI_NumBiz.NumBiz ELSE tmpListPersonal.NumBiz END ::TVarChar AS NumBiz
                , COALESCE (tmpMI_NumBiz.NumBiz ::TVarChar , tmpListPersonal.NumBiz)  ::TVarChar AS NumBiz
-                
+
                  '
                || vbFieldNameText ||
         ' FROM
@@ -785,32 +785,55 @@ BEGIN
                                                               AND (tmpMI.isErased = 1 OR ' || inIsErased :: TVarChar || ' = TRUE)
                                          ) AS Movement_Data
                                         FULL JOIN
-                                         (SELECT tmpOperDate.OperDate,
-                                                 COALESCE(Object_Personal_View.MemberId, 0)                   AS MemberId,
-                                                 COALESCE(ObjectLink_Personal_Position.ChildObjectId, 0)      AS PositionId,
-                                                 COALESCE(ObjectLink_Personal_PositionLevel.ChildObjectId, 0) AS PositionLevelId,
-                                                 COALESCE(ObjectLink_Personal_PersonalGroup.ChildObjectId, 0) AS PersonalGroupId,
-                                                 COALESCE(Object_Personal_View.StorageLineId, 0)              AS StorageLineId,
-                                                 tmpOperDate.Color_Calc
-                                            FROM tmpOperDate, Object_Personal_View -- ON 1=1 -- inUnitId <> 8451 -- кроме УПАКОВКИ
-                                                 LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
-                                                                      ON ObjectLink_Personal_Position.ObjectId = Object_Personal_View.PersonalId
-                                                                     AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
-                                                 LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
-                                                                      ON ObjectLink_Personal_PositionLevel.ObjectId = Object_Personal_View.PersonalId
-                                                                     AND ObjectLink_Personal_PositionLevel.DescId = zc_ObjectLink_Personal_PositionLevel()
-                                                 LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
-                                                                      ON ObjectLink_Personal_Unit.ObjectId = Object_Personal_View.PersonalId
-                                                                     AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
-                                                 LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
-                                                                      ON ObjectLink_Personal_PersonalGroup.ObjectId = Object_Personal_View.PersonalId
-                                                                     AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
-                                            WHERE Object_Personal_View.isErased = FALSE
-                                              -- кроме УПАКОВКИ
---                                              AND inUnitId <> 8451
-                                              --
-                                              AND ObjectLink_Personal_Unit.ChildObjectId = ' || inUnitId :: TVarChar ||
-                                        ') AS Object_Data
+                                         (WITH tmpPersonal_SL AS (SELECT tmpOperDate.OperDate,
+                                                                         COALESCE(Object_Personal_View.MemberId, 0)        AS MemberId,
+                                                                         COALESCE(Object_Personal_View.PositionId, 0)      AS PositionId,
+                                                                         COALESCE(Object_Personal_View.PositionLevelId, 0) AS PositionLevelId,
+                                                                         COALESCE(Object_Personal_View.PersonalGroupId, 0) AS PersonalGroupId,
+                                                                         COALESCE(Object_Personal_View.StorageLineId, 0)   AS StorageLineId,
+                                                                         tmpOperDate.Color_Calc
+                                                                  FROM tmpOperDate, Object_Personal_View -- ON 1=1 -- inUnitId <> 8451 -- кроме УПАКОВКИ
+                                                                  WHERE Object_Personal_View.isErased = FALSE
+                                                                    -- кроме УПАКОВКИ
+                                  --                                  AND inUnitId <> 8451
+                                                                    --
+                                                                    AND Object_Personal_View.UnitId = ' || inUnitId :: TVarChar ||'
+                                  
+                                                                 UNION
+                                                                  SELECT tmpOperDate.OperDate,
+                                                                         COALESCE(Object_Personal_View.MemberId, 0)        AS MemberId,
+                                                                         COALESCE(Object_Personal_View.PositionId, 0)      AS PositionId,
+                                                                         COALESCE(Object_Personal_View.PositionLevelId, 0) AS PositionLevelId,
+                                                                         COALESCE(Object_Personal_View.PersonalGroupId, 0) AS PersonalGroupId,
+                                                                         COALESCE(ObjectLink_PersonalByStorageLine_StorageLine.ChildObjectId, 0) AS StorageLineId,
+                                                                         tmpOperDate.Color_Calc
+                                                                  FROM tmpOperDate, Object_Personal_View -- ON 1=1 -- inUnitId <> 8451 -- кроме УПАКОВКИ
+                                                                       INNER JOIN ObjectLink AS ObjectLink_PersonalByStorageLine_Personal
+                                                                                             ON ObjectLink_PersonalByStorageLine_Personal.ChildObjectId = Object_Personal_View.PersonalId
+                                                                                            AND ObjectLink_PersonalByStorageLine_Personal.DescId        = zc_ObjectLink_PersonalByStorageLine_Personal()
+                                                                       INNER JOIN Object AS Object_PersonalByStorageLine ON Object_PersonalByStorageLine.Id       = ObjectLink_PersonalByStorageLine_Personal.ObjectId
+                                                                                                                        AND Object_PersonalByStorageLine.isErased = FALSE
+                                                                       INNER JOIN ObjectLink AS ObjectLink_PersonalByStorageLine_StorageLine
+                                                                                             ON ObjectLink_PersonalByStorageLine_StorageLine.ObjectId      = Object_PersonalByStorageLine.Id
+                                                                                            AND ObjectLink_PersonalByStorageLine_StorageLine.DescId        = zc_ObjectLink_PersonalByStorageLine_StorageLine()
+                                                                                            AND ObjectLink_PersonalByStorageLine_StorageLine.ChildObjectId > 0
+                                                                                                                        
+                                                                  WHERE Object_Personal_View.isErased = FALSE
+                                                                    -- кроме УПАКОВКИ
+                                  --                                  AND inUnitId <> 8451
+                                                                    --
+                                                                    AND Object_Personal_View.UnitId = ' || inUnitId :: TVarChar ||'
+                                                                    
+                                                                )
+                                          SELECT tmpPersonal_SL.OperDate,
+                                                 tmpPersonal_SL.MemberId,
+                                                 tmpPersonal_SL.PositionId,
+                                                 tmpPersonal_SL.PositionLevelId,
+                                                 tmpPersonal_SL.PersonalGroupId,
+                                                 tmpPersonal_SL.StorageLineId,
+                                                 tmpPersonal_SL.Color_Calc
+                                            FROM tmpPersonal_SL
+                                         ) AS Object_Data
                                            ON Object_Data.OperDate = Movement_Data.OperDate
                                           AND Object_Data.MemberId = Movement_Data.MemberId
                                           AND Object_Data.PositionId = Movement_Data.PositionId
@@ -876,8 +899,8 @@ BEGIN
                                   AND COALESCE(tmpListPersonal.PositionId, 0)      = D.Key[2]
                                   AND COALESCE(tmpListPersonal.PositionLevelId, 0) = D.Key[3]
                                   AND COALESCE(tmpListPersonal.PersonalGroupId, 0) = D.Key[4]
-                                  AND COALESCE(tmpListPersonal.StorageLineId, 0)   = D.Key[5] 
-         
+                                  AND COALESCE(tmpListPersonal.StorageLineId, 0)   = D.Key[5]
+
          --возьмем отсюда дату увольнения
          LEFT JOIN tmpListOut ON COALESCE(tmpListOut.MemberId, 0)           = D.Key[1]
                              AND COALESCE(tmpListOut.PositionId, 0)         = D.Key[2]
@@ -888,7 +911,7 @@ BEGIN
                                AND COALESCE(tmpMI_NumBiz.PositionId, 0)      = D.Key[2]
                                AND COALESCE(tmpMI_NumBiz.PositionLevelId, 0) = D.Key[3]
                                AND COALESCE(tmpMI_NumBiz.PersonalGroupId, 0) = D.Key[4]
-                               AND COALESCE(tmpMI_NumBiz.StorageLineId, 0)   = D.Key[5] 
+                               AND COALESCE(tmpMI_NumBiz.StorageLineId, 0)   = D.Key[5]
 
         '
       /*ORDER BY Object_Member.ValueData

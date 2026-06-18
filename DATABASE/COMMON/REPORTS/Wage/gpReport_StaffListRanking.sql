@@ -14,8 +14,10 @@ RETURNS TABLE(
               DepartmentId         Integer
             , DepartmentName       TVarChar
             , UnitId               Integer
+            , NppPersonalReport    Integer
             , UnitName             TVarChar
             , PositionId           Integer
+            , PositionCode         Integer
             , PositionName         TVarChar
             , PositionLevelId      Integer
             , PositionLevelName    TVarChar
@@ -62,12 +64,16 @@ BEGIN
     tmpMovement AS (SELECT tmp.*
                     FROM (SELECT Movement.*
                                , MovementLinkObject_Unit.ObjectId AS UnitId
+                               , MovementLinkObject_Personal.ObjectId AS PersonalId
                                , ObjectLink_Unit_Department.ChildObjectId AS DepartmentId
                                , ROW_NUMBER() OVER (PARTITION BY MovementLinkObject_Unit.ObjectId, MovementLinkObject_Unit.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
                           FROM Movement
                                LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                             ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
+                                                            ON MovementLinkObject_Personal.MovementId = Movement.Id
+                                                           AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
                                LEFT JOIN ObjectLink AS ObjectLink_Unit_Department
                                                     ON ObjectLink_Unit_Department.ObjectId = MovementLinkObject_Unit.ObjectId
                                                    AND ObjectLink_Unit_Department.DescId = zc_ObjectLink_Unit_Department()
@@ -76,7 +82,7 @@ BEGIN
                                                        ON ObjectBoolean_Unit_notStaffList.ObjectId  = MovementLinkObject_Unit.ObjectId
                                                       AND ObjectBoolean_Unit_notStaffList.DescId    = zc_ObjectBoolean_Unit_notStaffList()
                                                       AND ObjectBoolean_Unit_notStaffList.ValueData = TRUE
-                                                   
+
                           WHERE Movement.DescId = zc_Movement_StaffList()
                             AND Movement.OperDate <= inStartDate --AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                             AND Movement.StatusId <> zc_Enum_Status_Erased()
@@ -159,24 +165,24 @@ BEGIN
   , tmpFact AS (WITH
                --все документы
                 tmpMovement_all AS (SELECT *
-                                       
+
                                     FROM Movement
-                                                                    
+
                                     WHERE Movement.DescId = zc_Movement_StaffListMember()
                                       AND Movement.StatusId = zc_Enum_Status_Complete()
                                       AND Movement.OperDate <= inStartDate
                                     )
-           
+
               , tmpMovementBoolean AS (SELECT MovementBoolean.*
                                        FROM MovementBoolean
-                                       WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpMovement_all.Id FROM tmpMovement_all) 
+                                       WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpMovement_all.Id FROM tmpMovement_all)
                                          AND MovementBoolean.DescId IN (zc_MovementBoolean_Main())
-                                       )       
-           
+                                       )
+
               , tmpMLO AS (SELECT MovementLinkObject.*
                            FROM MovementLinkObject
-                           WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement_all.Id FROM tmpMovement_all) 
-                             AND MovementLinkObject.DescId IN (zc_MovementLinkObject_StaffListKind() 
+                           WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement_all.Id FROM tmpMovement_all)
+                             AND MovementLinkObject.DescId IN (zc_MovementLinkObject_StaffListKind()
                                                              , zc_MovementLinkObject_Member()
                                                              , zc_MovementLinkObject_Position()
                                                              , zc_MovementLinkObject_PositionLevel()
@@ -186,42 +192,42 @@ BEGIN
                --все докум. т.к. могут быть перводы и увольнения
               , tmpMovement AS (SELECT tmpMovement_all.*
                                      , MovementLinkObject_Member.ObjectId        AS MemberId
-                                     , MovementLinkObject_StaffListKind.ObjectId AS StaffListKindId               
+                                     , MovementLinkObject_StaffListKind.ObjectId AS StaffListKindId
                                      , COALESCE (MovementBoolean_Main.ValueData, FALSE)     ::Boolean  AS isMain
                                      , MovementLinkObject_Position.ObjectId      AS PositionId
                                      , MovementLinkObject_PositionLevel.ObjectId AS PositionLevelId
                                      , MovementLinkObject_Unit.ObjectId          AS UnitId
-                                FROM tmpMovement_all 
+                                FROM tmpMovement_all
 
                                      LEFT JOIN tmpMovementBoolean AS MovementBoolean_Main
                                                                   ON MovementBoolean_Main.MovementId = tmpMovement_all.Id
-                                                                 AND MovementBoolean_Main.DescId = zc_MovementBoolean_Main()  
+                                                                 AND MovementBoolean_Main.DescId = zc_MovementBoolean_Main()
 
                                      LEFT JOIN tmpMLO AS MovementLinkObject_Unit
                                                       ON MovementLinkObject_Unit.MovementId = tmpMovement_all.Id
                                                      AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                                                    
+
                                      LEFT JOIN tmpMLO AS MovementLinkObject_Member
                                                       ON MovementLinkObject_Member.MovementId = tmpMovement_all.Id
-                                                     AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member() 
-                                                      
-                                                   
+                                                     AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
+
+
                                      LEFT JOIN tmpMLO AS MovementLinkObject_StaffListKind
                                                       ON MovementLinkObject_StaffListKind.MovementId = tmpMovement_all.Id
                                                      AND MovementLinkObject_StaffListKind.DescId = zc_MovementLinkObject_StaffListKind()-- and 1=0
-           
+
                                      LEFT JOIN tmpMLO AS MovementLinkObject_Position
                                                       ON MovementLinkObject_Position.MovementId = tmpMovement_all.Id
                                                      AND MovementLinkObject_Position.DescId = zc_MovementLinkObject_Position()-- and 1=0
-           
+
                                      LEFT JOIN tmpMLO AS MovementLinkObject_PositionLevel
                                                       ON MovementLinkObject_PositionLevel.MovementId = tmpMovement_all.Id
                                                      AND MovementLinkObject_PositionLevel.DescId = zc_MovementLinkObject_PositionLevel()
                                 )
 
-  
-             --выбираем для isMain=True последний документ приема (для понимания когда принят на работу) 
-              , tmpMovement_main_in AS (SELECT * 
+
+             --выбираем для isMain=True последний документ приема (для понимания когда принят на работу)
+              , tmpMovement_main_in AS (SELECT *
                                         FROM (SELECT *
                                                    , ROW_NUMBER() OVER (PARTITION BY tmpMovement.MemberId ORDER BY tmpMovement.OperDate DESC) AS Ord
                                               FROM tmpMovement
@@ -230,56 +236,56 @@ BEGIN
                                               ) AS tmp
                                         WHERE tmp.ord = 1
                                         )
-               --прием посовместительству все документы 
-              , tmpMovement_add AS (SELECT * 
+               --прием посовместительству все документы
+              , tmpMovement_add AS (SELECT *
                                     FROM (SELECT *
                                                , ROW_NUMBER() OVER (PARTITION BY tmpMovement.MemberId ORDER BY tmpMovement.OperDate DESC) AS Ord
                                           FROM tmpMovement
                                           WHERE tmpMovement.isMain = FALSE
                                             AND tmpMovement.StaffListKindId IN (zc_Enum_StaffListKind_In(),zc_Enum_StaffListKind_Add())
                                           ) AS tmp
-                                    )  
-              --выбираем для isMain=True последний документ перевода  
-              , tmpMovement_main_send AS (SELECT * 
+                                    )
+              --выбираем для isMain=True последний документ перевода
+              , tmpMovement_main_send AS (SELECT *
                                           FROM (SELECT *
                                                      , ROW_NUMBER() OVER (PARTITION BY tmpMovement.MemberId ORDER BY tmpMovement.OperDate DESC) AS Ord
                                                 FROM tmpMovement
                                                 WHERE tmpMovement.isMain = TRUE
-                                                  AND tmpMovement.StaffListKindId = zc_Enum_StaffListKind_Send()  
+                                                  AND tmpMovement.StaffListKindId = zc_Enum_StaffListKind_Send()
                                                 ) AS tmp
                                           WHERE tmp.ord = 1
                                           )
-              --выбираем для isMain=True последний документ увольнения  
-              , tmpMovement_main_out AS (SELECT * 
+              --выбираем для isMain=True последний документ увольнения
+              , tmpMovement_main_out AS (SELECT *
                                           FROM (SELECT *
                                                      , ROW_NUMBER() OVER (PARTITION BY tmpMovement.MemberId ORDER BY tmpMovement.OperDate DESC) AS Ord
                                                 FROM tmpMovement
                                                 WHERE tmpMovement.isMain = TRUE
-                                                  AND tmpMovement.StaffListKindId = zc_Enum_StaffListKind_Out()  
+                                                  AND tmpMovement.StaffListKindId = zc_Enum_StaffListKind_Out()
                                                 ) AS tmp
                                           WHERE tmp.ord = 1
                                           )
-           
-              --выбираем для isMain=FALSE ВСЕ документы увольнения  
-              , tmpMovement_Nomain_out AS (SELECT * 
+
+              --выбираем для isMain=FALSE ВСЕ документы увольнения
+              , tmpMovement_Nomain_out AS (SELECT *
                                           FROM (SELECT *
                                                      , ROW_NUMBER() OVER (PARTITION BY tmpMovement.MemberId ORDER BY tmpMovement.OperDate DESC) AS Ord
                                                 FROM tmpMovement
                                                 WHERE tmpMovement.isMain = FALSE
-                                                  AND tmpMovement.StaffListKindId = zc_Enum_StaffListKind_Out()  
+                                                  AND tmpMovement.StaffListKindId = zc_Enum_StaffListKind_Out()
                                                 ) AS tmp
                                           )
-           
+
               , tmpMember_byMovement AS (SELECT DISTINCT tmpMovement.MemberId
                                          FROM tmpMovement
                                          WHERE tmpMovement.isMain = TRUE
                                          )
              --данные по физ лицу - прием, перевод, совмещение без уволенных
-             , tmpData AS (--основное место работы 
+             , tmpData AS (--основное место работы
                            SELECT CASE WHEN COALESCE (Movement_send.Id,0) <> 0 THEN COALESCE (Movement_send.UnitId, 0)
                                        WHEN COALESCE (Movement_in.Id,0) <> 0 THEN COALESCE (Movement_in.UnitId, 0)
-                                  END  AS UnitId 
-                                
+                                  END  AS UnitId
+
                                 , CASE WHEN COALESCE (Movement_send.Id,0) <> 0 THEN COALESCE (Movement_send.PositionId, 0)
                                        WHEN COALESCE (Movement_in.Id,0) <> 0 THEN COALESCE (Movement_in.PositionId, 0)
                                   END  AS PositionId
@@ -287,7 +293,7 @@ BEGIN
                                        WHEN COALESCE (Movement_in.Id,0) <> 0 THEN COALESCE (Movement_in.PositionLevelId, 0)
                                   END  AS PositionLevelId
                                 , TRUE AS isMain
-          
+
                                 , Object_Member.ValueData AS MemberName
                                 , NULL ::TVarChar         AS MemberName_add
                                 , 1 ::TFloat AS Amount
@@ -296,29 +302,29 @@ BEGIN
                                 LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpMember.MemberId
                                 LEFT JOIN tmpMovement_main_in   AS Movement_in ON Movement_in.MemberId = tmpMember.MemberId
                                 LEFT JOIN tmpMovement_main_send AS Movement_send ON Movement_send.MemberId = tmpMember.MemberId
-                                                               AND Movement_send.OperDate >= Movement_in.OperDate 
+                                                               AND Movement_send.OperDate >= Movement_in.OperDate
                                 LEFT JOIN tmpMovement_main_out  AS Movement_out ON Movement_out.MemberId = tmpMember.MemberId
                                                                AND Movement_out.OperDate >= Movement_in.OperDate
                            WHERE COALESCE (Movement_out.OperDate, zc_DateEnd()) = zc_DateEnd()
                         UNION
                            SELECT tmpMovement_add.UnitId
                                 , tmpMovement_add.PositionId
-                                , tmpMovement_add.PositionLevelId 
+                                , tmpMovement_add.PositionLevelId
                                 , FALSE      AS isMain
-          
+
                                 , NULL ::TVarChar AS MemberName
                                 , Object_Member.ValueData AS MemberName_add
                                 , 0 ::TFloat AS Amount
                                 , 1 ::TFloat AS Amount_add
                            FROM tmpMovement_add
                                 LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpMovement_add.MemberId
-                                LEFT JOIN tmpMovement_Nomain_out AS Movement_out 
+                                LEFT JOIN tmpMovement_Nomain_out AS Movement_out
                                                                  ON Movement_out.MemberId = tmpMovement_add.MemberId
                                                                 AND Movement_out.UnitId = tmpMovement_add.UnitId
                                                                 AND Movement_out.PositionId = tmpMovement_add.PositionId
                                                                 AND COALESCE (Movement_out.PositionLevelId,0) = COALESCE (tmpMovement_add.PositionLevelId,0)
                                                                 AND Movement_out.OperDate >= tmpMovement_add.OperDate
-                           WHERE COALESCE (Movement_out.OperDate, zc_DateEnd()) = zc_DateEnd() 
+                           WHERE COALESCE (Movement_out.OperDate, zc_DateEnd()) = zc_DateEnd()
                          )
 
                 SELECT SUM (tmpData.Amount)                 AS Amount     --основное место работы
@@ -330,7 +336,7 @@ BEGIN
                      , STRING_AGG ( COALESCE (tmpData.MemberName,'')
                                   , CHR (10) || CHR (13) order by tmpData.MemberName)     AS MemberName
                      , STRING_AGG ( COALESCE (tmpData.MemberName_add,'')
-                                  , CHR (10) || CHR (13) order by tmpData.MemberName_add) AS MemberName_add        
+                                  , CHR (10) || CHR (13) order by tmpData.MemberName_add) AS MemberName_add
                        --для дальнейшего вывода вакансий, т.к. CHR (10) || CHR (13) при COALESCE - не дает NULL (((
                      , SUM (CASE WHEN COALESCE (tmpData.MemberName,'') <> '' THEN 1 ELSE 0 END) AS CountMember   --
                 FROM tmpData
@@ -343,7 +349,7 @@ BEGIN
                                              ON ObjectBoolean_Unit_notStaffList.ObjectId  = tmpData.UnitId
                                             AND ObjectBoolean_Unit_notStaffList.DescId    = zc_ObjectBoolean_Unit_notStaffList()
                                             AND ObjectBoolean_Unit_notStaffList.ValueData = TRUE
- 
+
                 WHERE tmpData.UnitId = inUnitId OR inUnitId = 0
                   -- Исключить из ШР
                   AND ObjectBoolean_Unit_notStaffList.ObjectId IS NULL
@@ -355,6 +361,7 @@ BEGIN
 
   , tmpData AS (SELECT Movement.DepartmentId
                      , Movement.UnitId
+                     , Movement.PersonalId AS PersonalId_mov
                      , MovementItem.ObjectId AS PositionId
                      , COALESCE (MILinkObject_PositionLevel.ObjectId,0) AS PositionLevelId
                      --, ROW_NUMBER() OVER (PARTITION BY Movement.DepartmentId, Movement.UnitId, MovementItem.ObjectId, COALESCE (MILinkObject_PositionLevel.ObjectId,0)) AS Ord
@@ -391,23 +398,47 @@ BEGIN
                                          AND MIFloat_AmountReport.DescId = zc_MIFloat_AmountReport()
                 GROUP BY Movement.DepartmentId
                        , Movement.UnitId
+                       , Movement.PersonalId
                        , MovementItem.ObjectId
                        , COALESCE (MILinkObject_PositionLevel.ObjectId,0)
                        , MILinkObject_Personal.ObjectId
                        , MILinkObject_StaffHoursDay.ObjectId
                        , MILinkObject_StaffHours.ObjectId
                      )
+    -- нашли очередность
+  , tmpNppPersonalReport AS (SELECT ObjectFloat_Unit_NppPersonalReport.ObjectId  AS UnitId
+                                  , ObjectFloat_Unit_NppPersonalReport.ValueData AS NppPersonalReport
+                             FROM ObjectFloat AS ObjectFloat_Unit_NppPersonalReport
+                             WHERE ObjectFloat_Unit_NppPersonalReport.ValueData > 0
+                               AND ObjectFloat_Unit_NppPersonalReport.DescId   = zc_ObjectFloat_Unit_NppPersonalReport()
+                            )
+    -- посчитали очередность если ее не ввели
+  , tmpNppPersonalReport_calc AS (SELECT Object_Unit.Id                                           AS UnitId
+                                       , ROW_NUMBER() OVER (ORDER BY Object_Unit.ValueData ASC)   AS Ord
+                                       , COALESCE (tmpNppPersonalReport_max.NppPersonalReport, 0) AS NppPersonalReport_max
+                                  FROM Object AS Object_Unit
+                                       LEFT JOIN (SELECT MAX (tmpNppPersonalReport.NppPersonalReport) AS NppPersonalReport FROM tmpNppPersonalReport) AS tmpNppPersonalReport_max ON 1=1
+                                       LEFT JOIN tmpNppPersonalReport ON tmpNppPersonalReport.UnitId = Object_Unit.Id
+                                  WHERE Object_Unit.DescId = zc_Object_Unit()
+                                    AND tmpNppPersonalReport.UnitId IS NULL
+                                 )
+
   , tmpResult AS (SELECT Object_Department.Id                          AS DepartmentId
                        , Object_Department.ValueData       ::TVarChar  AS DepartmentName
                        , Object_Unit.Id                    ::Integer   AS UnitId
+                       , COALESCE (ObjectFloat_Unit_NppPersonalReport.NppPersonalReport, tmpNppPersonalReport_calc.NppPersonalReport_max + tmpNppPersonalReport_calc.ord) ::Integer AS NppPersonalReport
                        , Object_Unit.ValueData             ::TVarChar  AS UnitName
                        , Object_Position.Id                ::Integer   AS PositionId
+                       , Object_Position.ObjectCode        ::Integer   AS PositionCode
                        , Object_Position.ValueData         ::TVarChar  AS PositionName
                        , Object_PositionLevel.Id           ::Integer   AS PositionLevelId
                        , Object_PositionLevel.ValueData    ::TVarChar  AS PositionLevelName
                        , Object_PositionProperty.ValueData ::TVarChar  AS PositionPropertyName
                        , Object_Personal.Id                ::Integer   AS PersonalId
                        , Object_Personal.ValueData         ::TVarChar  AS PersonalName
+                       , Object_Personal_mov.Id            ::Integer   AS PersonalId_mov
+                       , Object_Personal_mov.ValueData     ::TVarChar  AS PersonalName_mov
+                       
                        , Object_StaffHoursDay.ValueData    ::TVarChar  AS StaffHoursDayName
                        , Object_StaffHours.ValueData       ::TVarChar  AS StaffHoursName
                        , COALESCE (Movement.AmountPlan, 0) ::TFloat AS AmountPlan         -- ШР для отчета из документа
@@ -424,10 +455,17 @@ BEGIN
                        , tmpFact.CountMember
                   FROM tmpData AS Movement
                        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Movement.UnitId
+
+                       LEFT JOIN tmpNppPersonalReport AS ObjectFloat_Unit_NppPersonalReport
+                                                      ON ObjectFloat_Unit_NppPersonalReport.UnitId = Object_Unit.Id
+                       LEFT JOIN tmpNppPersonalReport_calc AS tmpNppPersonalReport_calc
+                                                           ON tmpNppPersonalReport_calc.UnitId = Object_Unit.Id
+
                        LEFT JOIN Object AS Object_Department ON Object_Department.Id = Movement.DepartmentId
                        LEFT JOIN Object AS Object_Position ON Object_Position.Id = Movement.PositionId
                        LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = Movement.PositionLevelId
                        LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = Movement.PersonalId
+                       LEFT JOIN Object AS Object_Personal_mov ON Object_Personal_mov.Id = Movement.PersonalId_mov
                        LEFT JOIN Object AS Object_StaffHoursDay ON Object_StaffHoursDay.Id = Movement.StaffHoursDayId
                        LEFT JOIN Object AS Object_StaffHours ON Object_StaffHours.Id = Movement.StaffHoursId
 
@@ -442,18 +480,22 @@ BEGIN
                                         --AND Movement.Ord = 1
 
                 -- Факт для которого нет плана
-                 UNION
+                 UNION ALL
                   SELECT Object_Department.Id                          AS DepartmentId
                        , Object_Department.ValueData       ::TVarChar  AS DepartmentName
                        , Object_Unit.Id                    ::Integer   AS UnitId
+                       , COALESCE (ObjectFloat_Unit_NppPersonalReport.NppPersonalReport, tmpNppPersonalReport_calc.NppPersonalReport_max + tmpNppPersonalReport_calc.ord) ::Integer AS NppPersonalReport
                        , Object_Unit.ValueData             ::TVarChar  AS UnitName
                        , Object_Position.Id                ::Integer   AS PositionId
+                       , Object_Position.ObjectCode        ::Integer   AS PositionCode
                        , Object_Position.ValueData         ::TVarChar  AS PositionName
                        , Object_PositionLevel.Id           ::Integer   AS PositionLevelId
                        , Object_PositionLevel.ValueData    ::TVarChar  AS PositionLevelName
                        , Object_PositionProperty.ValueData ::TVarChar  AS PositionPropertyName
                        , 0                                 ::Integer   AS PersonalId
                        , ''                                ::TVarChar  AS PersonalName
+                       , 0                                 ::Integer   AS PersonalId_mov
+                       , ''                                ::TVarChar  AS PersonalName_mov
                        , ''                                ::TVarChar  AS StaffHoursDayName
                        , ''                                ::TVarChar  AS StaffHoursName
                        , 0                                 ::TFloat    AS AmountPlan         -- ШР для отчета из документа
@@ -471,6 +513,12 @@ BEGIN
                                         AND COALESCE (Movement.PositionLevelId,0) = COALESCE (tmpFact.PositionLevelId,0)
 
                        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpFact.UnitId
+
+                       LEFT JOIN tmpNppPersonalReport AS ObjectFloat_Unit_NppPersonalReport
+                                                      ON ObjectFloat_Unit_NppPersonalReport.UnitId = Object_Unit.Id
+                       LEFT JOIN tmpNppPersonalReport_calc AS tmpNppPersonalReport_calc
+                                                           ON tmpNppPersonalReport_calc.UnitId = Object_Unit.Id
+
                        LEFT JOIN Object AS Object_Department ON Object_Department.Id = tmpFact.DepartmentId
                        LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpFact.PositionId
                        LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = tmpFact.PositionLevelId
@@ -491,8 +539,10 @@ BEGIN
     SELECT tmpResult.DepartmentId
          , tmpResult.DepartmentName       ::TVarChar
          , tmpResult.UnitId               ::Integer
+         , tmpResult.NppPersonalReport    ::Integer
          , tmpResult.UnitName             ::TVarChar
          , tmpResult.PositionId           ::Integer
+         , tmpResult.PositionCode         ::Integer
          , tmpResult.PositionName         ::TVarChar
          , tmpResult.PositionLevelId      ::Integer
          , tmpResult.PositionLevelName    ::TVarChar
@@ -522,12 +572,15 @@ BEGIN
          , FALSE ::Boolean AS isTotal
     FROM tmpResult
     WHERE tmpResult.CountMember > 0  --tmpResult.MemberName IS NOT NULL
-  UNION
+
+   UNION ALL
     SELECT tmpResult.DepartmentId
          , tmpResult.DepartmentName       ::TVarChar
          , tmpResult.UnitId               ::Integer
+         , tmpResult.NppPersonalReport    ::Integer
          , tmpResult.UnitName             ::TVarChar
          , tmpResult.PositionId           ::Integer
+         , tmpResult.PositionCode         ::Integer
          , tmpResult.PositionName         ::TVarChar
          , tmpResult.PositionLevelId      ::Integer
          , tmpResult.PositionLevelName    ::TVarChar
@@ -563,19 +616,22 @@ BEGIN
                             AND COALESCE (tmpMember.PositionLevelId,0) = COALESCE (tmpResult.PositionLevelId,0)
     WHERE COALESCE (tmpResult.Amount_diff, 0) < 0
       AND COALESCE (tmpResult.CountMember,0) = 0 --tmpMember.MemberName IS NULL
-  UNION
+
+  UNION ALL
     -- 1) итого план 2) итого факт 3)итого дельта
     SELECT tmpResult.DepartmentId
          , tmpResult.DepartmentName       ::TVarChar
          , tmpResult.UnitId               ::Integer
+         , tmpResult.NppPersonalReport    ::Integer
          , tmpResult.UnitName             ::TVarChar
          , 0      ::Integer  AS PositionId
+         , 0      ::Integer  AS PositionCode
          , ''     ::TVarChar AS PositionName
          , 0      ::Integer  AS PositionLevelId
          , ''     ::TVarChar AS PositionLevelName
-         , ''     ::TVarChar AS PositionPropertyName    
-         , 0      ::Integer  AS PersonalId
-         , ''     ::TVarChar AS PersonalName
+         , ''     ::TVarChar AS PositionPropertyName
+         , tmpResult.PersonalId_mov      ::Integer  AS PersonalId
+         , tmpResult.PersonalName_mov    ::TVarChar AS PersonalName
          , ''     ::TVarChar AS StaffHoursDayName
          , ''     ::TVarChar AS StaffHoursName
 
@@ -611,7 +667,10 @@ BEGIN
     FROM (SELECT tmpResult.DepartmentId
                 , tmpResult.DepartmentName       ::TVarChar
                 , tmpResult.UnitId               ::Integer
+                , tmpResult.NppPersonalReport    ::Integer
                 , tmpResult.UnitName             ::TVarChar
+                , tmpResult.PersonalId_mov
+                , tmpResult.PersonalName_mov
                 , COALESCE (tmpResult.AmountPlan,0)    :: TFloat AS AmountPlan
                 , COALESCE (tmpResult.AmountFact,0)    :: TFloat AS AmountFact
            FROM tmpResult
@@ -620,9 +679,12 @@ BEGIN
            SELECT tmpResult.DepartmentId
                 , tmpResult.DepartmentName       ::TVarChar
                 , tmpResult.UnitId               ::Integer
+                , tmpResult.NppPersonalReport    ::Integer
                 , tmpResult.UnitName             ::TVarChar
+                , tmpResult.PersonalId_mov
+                , tmpResult.PersonalName_mov
                 , COALESCE (tmpResult.AmountPlan,0)    :: TFloat AS AmountPlan
-                , COALESCE (tmpResult.AmountFact,0)    :: TFloat AS AmountFact 
+                , COALESCE (tmpResult.AmountFact,0)    :: TFloat AS AmountFact
            FROM tmpResult
                 LEFT JOIN tmpResult AS tmpMember
                                     ON tmpMember.CountMember > 0 --tmpMember.MemberName IS NOT NULL
@@ -636,7 +698,10 @@ BEGIN
     GROUP BY tmpResult.DepartmentId
            , tmpResult.DepartmentName
            , tmpResult.UnitId
+           , tmpResult.NppPersonalReport
            , tmpResult.UnitName
+           , tmpResult.PersonalId_mov
+           , tmpResult.PersonalName_mov
 
    --- добавить строки Вакансия, если кол-во факт меньше штатного
 
@@ -650,9 +715,6 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  29.08.25         *
 */
--- тест
--- SELECT * FROM gpReport_StaffListRanking (inStartDate:= '02.10.2025'::TDateTime, inUnitId := 7271510 , inDepartmentId := 0 , inSession := '5');
-
 
 
 /*
@@ -662,7 +724,7 @@ $BODY$
      tmpMovement_all AS (SELECT *
                              , MovementLinkObject_Unit.ObjectId AS UnitId
                          FROM Movement
-                                                         
+
                          WHERE Movement.DescId = zc_Movement_StaffListMember()
                            AND Movement.StatusId = zc_Enum_Status_Complete() --zc_Enum_Status_Erased()
                            AND Movement.OperDate <= inStartDate
@@ -670,51 +732,51 @@ $BODY$
 
    , tmpMovementBoolean AS (SELECT MovementBoolean.*
                             FROM MovementBoolean
-                            WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpMovement_all.Id FROM tmpMovement_all) 
+                            WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpMovement_all.Id FROM tmpMovement_all)
                               AND MovementBoolean.DescId IN (zc_MovementBoolean_Official()
                                                            , zc_MovementBoolean_Main()
                                                             )
-                            )       
+                            )
 
    , tmpMovementDate AS (SELECT MovementDate.*
                          FROM MovementDate
-                         WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMovement_all.Id FROM tmpMovement_all) 
+                         WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMovement_all.Id FROM tmpMovement_all)
                            AND MovementDate.DescId IN (zc_MovementDate_Insert()
                                                         , zc_MovementDate_Update()
                                                          )
                          )
    , tmpMLO AS (SELECT MovementLinkObject.*
                 FROM MovementLinkObject
-                WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement_all.Id FROM tmpMovement_all) 
-                  AND MovementLinkObject.DescId IN (zc_MovementLinkObject_StaffListKind() 
+                WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement_all.Id FROM tmpMovement_all)
+                  AND MovementLinkObject.DescId IN (zc_MovementLinkObject_StaffListKind()
                                                   , zc_MovementLinkObject_Member()
                                                   , zc_MovementLinkObject_Position()
                                                   , zc_MovementLinkObject_PositionLevel()
                                                   , zc_MovementLinkObject_Unit()
                                                    )
                 )
-     --все докум. 
+     --все докум.
    , tmpMovement AS (SELECT tmpMovement_all.*
                           , MovementLinkObject_Member.ObjectId        AS MemberId
-                          , MovementLinkObject_StaffListKind.ObjectId AS StaffListKindId        --zc_Enum_StaffListKind_Send()  zc_Enum_StaffListKind_Out() zc_Enum_StaffListKind_Add() zc_Enum_StaffListKind_In()                   
+                          , MovementLinkObject_StaffListKind.ObjectId AS StaffListKindId        --zc_Enum_StaffListKind_Send()  zc_Enum_StaffListKind_Out() zc_Enum_StaffListKind_Add() zc_Enum_StaffListKind_In()
                           , COALESCE (MovementBoolean_Official.ValueData, FALSE) ::Boolean  AS isOfficial
                           , COALESCE (MovementBoolean_Main.ValueData, FALSE)     ::Boolean  AS isMain
                           , MovementLinkObject_Position.ObjectId      AS PositionId
                           , MovementLinkObject_PositionLevel.ObjectId AS PositionLevelId
                           , MovementLinkObject_Unit.ObjectId          AS UnitId
-                     FROM tmpMovement_all 
+                     FROM tmpMovement_all
                           LEFT JOIN tmpMLO AS MovementLinkObject_Unit
                                            ON MovementLinkObject_Unit.MovementId = tmpMovement_all.Id
                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                                         
+
                           LEFT JOIN tmpMLO AS MovementLinkObject_Member
                                             ON MovementLinkObject_Member.MovementId = tmpMovement_all.Id
-                                           AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member() 
-                                           
+                                           AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
+
                           LEFT JOIN tmpMovementBoolean AS MovementBoolean_Main
                                                        ON MovementBoolean_Main.MovementId = tmpMovement_all.Id
-                                                      AND MovementBoolean_Main.DescId = zc_MovementBoolean_Main()  
-                                        
+                                                      AND MovementBoolean_Main.DescId = zc_MovementBoolean_Main()
+
                           LEFT JOIN tmpMLO AS MovementLinkObject_StaffListKind
                                            ON MovementLinkObject_StaffListKind.MovementId = tmpMovement_all.Id
                                           AND MovementLinkObject_StaffListKind.DescId = zc_MovementLinkObject_StaffListKind() --and 1=0
@@ -722,7 +784,7 @@ $BODY$
                           LEFT JOIN tmpMovementBoolean AS MovementBoolean_Official
                                          ON MovementBoolean_Official.MovementId = tmpMovement_all.Id
                                         AND MovementBoolean_Official.DescId = zc_MovementBoolean_Official()-- and 1=0
-  
+
                           LEFT JOIN tmpMLO AS MovementLinkObject_Position
                                            ON MovementLinkObject_Position.MovementId = tmpMovement_all.Id
                                           AND MovementLinkObject_Position.DescId = zc_MovementLinkObject_Position()-- and 1=0
@@ -731,14 +793,14 @@ $BODY$
                                            ON MovementLinkObject_PositionLevel.MovementId = tmpMovement_all.Id
                                           AND MovementLinkObject_PositionLevel.DescId = zc_MovementLinkObject_PositionLevel()
                     --
-                    /* WHERE (MovementLinkObject_Unit.ObjectId = inUnitId  OR inUnitId = 0)
-                       AND COALESCE (MovementBoolean_Main.ValueData, FALSE) = TRUE  
-                    */
+                    --WHERE (MovementLinkObject_Unit.ObjectId = inUnitId  OR inUnitId = 0)
+                    -- AND COALESCE (MovementBoolean_Main.ValueData, FALSE) = TRUE
+
                      )
 
-  
-   --выбираем для isMain=True последний документ приема (для понимания когда принят на работу) 
-   , tmpMovement_main_in AS (SELECT * 
+
+   --выбираем для isMain=True последний документ приема (для понимания когда принят на работу)
+   , tmpMovement_main_in AS (SELECT *
                              FROM (SELECT *
                                         , ROW_NUMBER() OVER (PARTITION BY tmpMovement.MemberId ORDER BY tmpMovement.OperDate DESC) AS Ord
                                    FROM tmpMovement
@@ -747,8 +809,8 @@ $BODY$
                                    ) AS tmp
                              WHERE tmp.ord = 1
                              )
-   --прием посовместительству все документы 
-      , tmpMovement_add AS (SELECT * 
+   --прием посовместительству все документы
+      , tmpMovement_add AS (SELECT *
                             FROM (SELECT *
                                        , ROW_NUMBER() OVER (PARTITION BY tmpMovement.MemberId ORDER BY tmpMovement.OperDate DESC) AS Ord
                                   FROM tmpMovement
@@ -756,35 +818,35 @@ $BODY$
                                     AND tmpMovement.StaffListKindId IN (zc_Enum_StaffListKind_In(),zc_Enum_StaffListKind_Add())
                                   ) AS tmp
                             --WHERE tmp.ord = 1
-                            )  
-   --выбираем для isMain=True последний документ перевода  
-   , tmpMovement_main_send AS (SELECT * 
+                            )
+   --выбираем для isMain=True последний документ перевода
+   , tmpMovement_main_send AS (SELECT *
                                FROM (SELECT *
                                           , ROW_NUMBER() OVER (PARTITION BY tmpMovement.MemberId ORDER BY tmpMovement.OperDate DESC) AS Ord
                                      FROM tmpMovement
                                      WHERE tmpMovement.isMain = TRUE
-                                       AND tmpMovement.StaffListKindId = zc_Enum_StaffListKind_Send()  
+                                       AND tmpMovement.StaffListKindId = zc_Enum_StaffListKind_Send()
                                      ) AS tmp
                                WHERE tmp.ord = 1
                                )
-   --выбираем для isMain=True последний документ увольнения  
-   , tmpMovement_main_out AS (SELECT * 
+   --выбираем для isMain=True последний документ увольнения
+   , tmpMovement_main_out AS (SELECT *
                                FROM (SELECT *
                                           , ROW_NUMBER() OVER (PARTITION BY tmpMovement.MemberId ORDER BY tmpMovement.OperDate DESC) AS Ord
                                      FROM tmpMovement
                                      WHERE tmpMovement.isMain = TRUE
-                                       AND tmpMovement.StaffListKindId = zc_Enum_StaffListKind_Out()  
+                                       AND tmpMovement.StaffListKindId = zc_Enum_StaffListKind_Out()
                                      ) AS tmp
                                WHERE tmp.ord = 1
                                )
 
-   --выбираем для isMain=FALSE документы увольнения  
-   , tmpMovement_Nomain_out AS (SELECT * 
+   --выбираем для isMain=FALSE документы увольнения
+   , tmpMovement_Nomain_out AS (SELECT *
                                FROM (SELECT *
                                           , ROW_NUMBER() OVER (PARTITION BY tmpMovement.MemberId ORDER BY tmpMovement.OperDate DESC) AS Ord
                                      FROM tmpMovement
                                      WHERE tmpMovement.isMain = TRUE
-                                       AND tmpMovement.StaffListKindId = zc_Enum_StaffListKind_Out()  
+                                       AND tmpMovement.StaffListKindId = zc_Enum_StaffListKind_Out()
                                      ) AS tmp
                                WHERE tmp.ord = 1
                                )
@@ -803,11 +865,11 @@ $BODY$
                               WHERE tmpMovement.isMain = TRUE
                               )
    --данные по физ лицу - прием, перевод, увольнение
-   , tmpData AS (--основное место работы 
+   , tmpData AS (--основное место работы
                  SELECT CASE WHEN COALESCE (Movement_send.Id,0) <> 0 THEN COALESCE (Movement_send.UnitId, 0)
                              WHEN COALESCE (Movement_in.Id,0) <> 0 THEN COALESCE (Movement_in.UnitId, 0)
-                        END  AS UnitId 
-                      
+                        END  AS UnitId
+
                       , CASE WHEN COALESCE (Movement_send.Id,0) <> 0 THEN COALESCE (Movement_send.PositionId, 0)
                              WHEN COALESCE (Movement_in.Id,0) <> 0 THEN COALESCE (Movement_in.PositionId, 0)
                         END  AS PositionId
@@ -823,7 +885,7 @@ $BODY$
                       LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpMember.MemberId
                       LEFT JOIN tmpMovement_main_in   AS Movement_in ON Movement_in.MemberId = tmpMember.MemberId
                       LEFT JOIN tmpMovement_main_send AS Movement_send ON Movement_send.MemberId = tmpMember.MemberId
-                                                     AND Movement_send.OperDate >= Movement_in.OperDate 
+                                                     AND Movement_send.OperDate >= Movement_in.OperDate
                       LEFT JOIN tmpMovement_main_out  AS Movement_out ON Movement_out.MemberId = tmpMember.MemberId
                                                      AND Movement_out.OperDate > Movement_in.OperDate
                  WHERE COALESCE (Movement_out.OperDate, zc_DateEnd()) = zc_DateEnd()
@@ -831,7 +893,7 @@ $BODY$
                  SELECT tmpMovement_add.UnitId
                       , tmpMovement_add.MemberId
                       , tmpMovement_add.PositionId
-                      , tmpMovement_add.PositionLevelId 
+                      , tmpMovement_add.PositionLevelId
                       , FALSE      AS isMain
                       , tmpMember.MemberId
                       , Object_Member.ValueData
@@ -839,13 +901,13 @@ $BODY$
                       , 1 ::TFloat AS Amount_add
                  FROM tmpMovement_add
                       LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpMember.MemberId
-                      LEFT JOIN tmpMovement_Nomain_out AS Movement_out 
+                      LEFT JOIN tmpMovement_Nomain_out AS Movement_out
                                                        ON Movement_out.MemberId = tmpMember.MemberId
                                                       AND Movement_out.UnitId = tmpMember.UnitId
                                                       AND Movement_out.PositionId = tmpMember.PositionId
                                                       AND COALESCE (Movement_out.PositionLevelId,0) = COALESCE (tmpMember.PositionLevelId,0)
                                                       AND Movement_out.OperDate > tmpMovement_add.OperDate
-                 WHERE COALESCE (Movement_out.OperDate, zc_DateEnd()) = zc_DateEnd() 
+                 WHERE COALESCE (Movement_out.OperDate, zc_DateEnd()) = zc_DateEnd()
                )
 
    SELECT *
@@ -853,8 +915,9 @@ $BODY$
                               INNER JOIN ObjectLink AS ObjectLink_Unit_Department
                                                  ON ObjectLink_Unit_Department.ObjectId = tmpData.UnitId
                                                 AND ObjectLink_Unit_Department.DescId = zc_ObjectLink_Unit_Department()
-                                                AND (ObjectLink_Unit_Department.ChildObjectId = inDepartmentId OR inDepartmentId = 0) 
+                                                AND (ObjectLink_Unit_Department.ChildObjectId = inDepartmentId OR inDepartmentId = 0)
    WHERE tmpData.UnitId = inUnitId OR inUnitId = 0
-   
-
 */
+
+-- тест
+-- SELECT * FROM gpReport_StaffListRanking (inStartDate:= '02.10.2026'::TDateTime, inUnitId := 7271510 , inDepartmentId := 0 , inSession := '5');

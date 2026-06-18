@@ -45,7 +45,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isPersonalService Boolean, PersonalServiceDate TDateTime,
                GLN TVarChar, KATOTTG TVarChar,
                AddressEDIN TVarChar,
-               CFOId Integer, CFOName TVarChar
+               CFOId Integer, CFOName TVarChar,
+               NppPersonalReport Integer
 
 ) AS
 $BODY$
@@ -209,10 +210,16 @@ BEGIN
            
            , Object_CFO.Id                           ::Integer   AS CFOId
            , Object_CFO.ValueData                    ::TVarChar  AS CFOName
+
+           , ObjectFloat_Unit_NppPersonalReport.ValueData  ::Integer AS NppPersonalReport
+
        FROM Object_Unit_View
             LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = Object_Unit_View.Id
             LEFT JOIN Object_AccountDirection AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = Object_Unit_View.AccountDirectionId
 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Unit_NppPersonalReport
+                                  ON ObjectFloat_Unit_NppPersonalReport.ObjectId = Object_Unit_View.Id
+                                 AND ObjectFloat_Unit_NppPersonalReport.DescId   = zc_ObjectFloat_Unit_NppPersonalReport()
             LEFT JOIN ObjectString AS ObjectString_Unit_Address
                                    ON ObjectString_Unit_Address.ObjectId = Object_Unit_View.Id
                                   AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
@@ -454,6 +461,9 @@ BEGIN
 
            , CAST (0 as Integer)    AS CFOId
            , CAST ('' as TVarChar)  AS CFOName
+
+           , CAST (0 as Integer)    AS NppPersonalReport
+
        FROM Object as Object_Partner
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                                  ON ObjectLink_Unit_Branch.ObjectId = Object_Partner.Id
@@ -563,6 +573,8 @@ BEGIN
  
            , CAST (0 as Integer)    AS CFOId
            , CAST ('' as TVarChar)  AS CFOName
+
+           , CAST (0 as Integer)    AS NppPersonalReport
       ;
 
 END;
