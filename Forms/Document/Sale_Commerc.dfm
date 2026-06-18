@@ -3,6 +3,7 @@ inherited Sale_CommercForm: TSale_CommercForm
   ClientHeight = 657
   ClientWidth = 1506
   AddOnFormData.OnLoadAction = actSetDefaults
+  ExplicitTop = -41
   ExplicitWidth = 1522
   ExplicitHeight = 696
   PixelsPerInch = 96
@@ -1215,7 +1216,6 @@ inherited Sale_CommercForm: TSale_CommercForm
         TabOrder = 0
         LookAndFeel.NativeStyle = True
         LookAndFeel.SkinName = 'UserSkin'
-        ExplicitHeight = 202
         object cxGridDBTableViewComLocal: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ComLocalDS
@@ -1371,7 +1371,6 @@ inherited Sale_CommercForm: TSale_CommercForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridComRetail
-        ExplicitTop = 202
       end
     end
   end
@@ -9120,7 +9119,7 @@ inherited Sale_CommercForm: TSale_CommercForm
     Top = 505
   end
   object spSelectComLocal: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_CommercLocal'
+    StoredProcName = 'gpSelect_Object_CommercLocal_byMovement'
     DataSet = ComLocalCDS
     DataSets = <
       item
