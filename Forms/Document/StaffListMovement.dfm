@@ -121,6 +121,56 @@ inherited StaffListMovementForm: TStaffListMovementForm
               Format = ',0.####'
               Kind = skSum
               Column = Staff_Summ_total_add_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountReport
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = StaffCount_1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = StaffCount_2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = StaffCount_3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = StaffCount_4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = StaffCount_5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = StaffCount_6
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = StaffCount_7
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalStaffCount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -227,6 +277,56 @@ inherited StaffListMovementForm: TStaffListMovementForm
               Format = ',0.####'
               Kind = skSum
               Column = Staff_Summ_total_add_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountReport
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = StaffCount_1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = StaffCount_2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = StaffCount_3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = StaffCount_4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = StaffCount_5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = StaffCount_6
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = StaffCount_7
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalStaffCount
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -298,6 +398,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 58
           end
           object Amount: TcxGridDBColumn [5]
             Caption = #1064#1056' '#1076#1083#1103' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -743,7 +844,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
       Width = 148
     end
     object cxLabel7: TcxLabel
-      Left = 890
+      Left = 889
       Top = 45
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
     end
@@ -758,7 +859,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
         end>
       Properties.ReadOnly = True
       TabOrder = 13
-      Width = 187
+      Width = 125
     end
     object cxLabel24: TcxLabel
       Left = 348
@@ -870,10 +971,27 @@ inherited StaffListMovementForm: TStaffListMovementForm
       TabOrder = 25
       Width = 28
     end
+    object cxLabel18: TcxLabel
+      Left = 889
+      Top = 5
+      Caption = #1052#1077#1085#1077#1076#1078#1077#1088' '#1087#1086' '#1087#1077#1088#1089#1086#1085#1072#1083#1091
+    end
+    object cePersonal: TcxButtonEdit
+      Left = 889
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 27
+      Width = 256
+    end
   end
   object edUpdateName: TcxButtonEdit [2]
-    Left = 889
-    Top = 23
+    Left = 1020
+    Top = 63
     Properties.Buttons = <
       item
         Default = True
@@ -882,11 +1000,11 @@ inherited StaffListMovementForm: TStaffListMovementForm
       end>
     Properties.ReadOnly = True
     TabOrder = 6
-    Width = 187
+    Width = 125
   end
   object cxLabel4: TcxLabel [3]
-    Left = 889
-    Top = 5
+    Left = 1020
+    Top = 45
     Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
   end
   object edUpdateDate: TcxDateEdit [4]
@@ -1273,6 +1391,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -1280,6 +1399,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
         end
         item
           Name = 'GoodsName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PositionName'
           DataType = ftString
@@ -1698,6 +1818,21 @@ inherited StaffListMovementForm: TStaffListMovementForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'PersonalId'
+        Value = Null
+        Component = GuidesPersonal
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalName'
+        Value = Null
+        Component = GuidesPersonal
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'Comment'
         Value = 0.000000000000000000
         Component = ceComment
@@ -1857,6 +1992,14 @@ inherited StaffListMovementForm: TStaffListMovementForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMemberId'
+        Value = Null
+        Component = GuidesPersonal
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = 'False'
         Component = ceComment
@@ -1897,24 +2040,7 @@ inherited StaffListMovementForm: TStaffListMovementForm
         Control = edDepartment
       end
       item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
+        Control = cePersonal
       end>
     Left = 272
     Top = 201
@@ -2322,8 +2448,8 @@ inherited StaffListMovementForm: TStaffListMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 743
-    Top = 15
+    Left = 751
+    Top = 95
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -2404,5 +2530,35 @@ inherited StaffListMovementForm: TStaffListMovementForm
     PackSize = 1
     Left = 282
     Top = 328
+  end
+  object GuidesPersonal: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePersonal
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonal_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPersonal
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPersonal
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 847
+    Top = 87
   end
 end

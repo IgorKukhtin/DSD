@@ -133,7 +133,6 @@ inherited StaffListJournalForm: TStaffListJournalForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           OptionsView.HeaderHeight = 40
           Styles.Content = nil
@@ -182,13 +181,28 @@ inherited StaffListJournalForm: TStaffListJournalForm
             Options.Editing = False
             Width = 96
           end
+          object PersonalName: TcxGridDBColumn
+            Caption = #1052#1077#1085#1077#1076#1078#1077#1088' '#1087#1086' '#1087#1077#1088#1089#1086#1085#1072#1083#1091
+            DataBinding.FieldName = 'PersonalName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actPersonalChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
           object PersonalHeadName: TcxGridDBColumn
             Caption = #1056#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
             DataBinding.FieldName = 'PersonalHeadName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 116
+            Width = 110
           end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -490,6 +504,18 @@ inherited StaffListJournalForm: TStaffListJournalForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actUpdateCDS: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdatePersonal
+      StoredProcList = <
+        item
+          StoredProc = spUpdatePersonal
+        end>
+      Caption = 'actUpdateCDS'
+      DataSource = MasterDS
+    end
     object actPrintSaleOrder: TdsdPrintAction
       Category = 'Print'
       MoveParams = <
@@ -585,6 +611,33 @@ inherited StaffListJournalForm: TStaffListJournalForm
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPersonalChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PersonalForm'
+      FormName = 'TPersonal_ObjectForm'
+      FormNameParam.Value = 'TPersonal_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
     object macInsertMask: TMultiAction
       Category = 'DSDLib'
@@ -1167,5 +1220,30 @@ inherited StaffListJournalForm: TStaffListJournalForm
     PackSize = 1
     Left = 585
     Top = 362
+  end
+  object spUpdatePersonal: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_StaffList_Personal'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PersonalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 336
+    Top = 288
   end
 end

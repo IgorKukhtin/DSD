@@ -87,6 +87,7 @@ type
     cxLabel1: TcxLabel;
     edPositionLevel_serch: TcxTextEdit;
     isMain: TcxGridDBColumn;
+    PositionCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

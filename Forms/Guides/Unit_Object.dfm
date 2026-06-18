@@ -1,5 +1,5 @@
 inherited Unit_ObjectForm: TUnit_ObjectForm
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' ('#1089#1087#1080#1089#1086#1082')>'
   ClientHeight = 398
   ClientWidth = 702
   ExplicitWidth = 718
@@ -25,7 +25,6 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -36,6 +35,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             DataBinding.FieldName = 'ParentName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object Code: TcxGridDBColumn
@@ -43,6 +43,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             DataBinding.FieldName = 'Code'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 40
           end
           object Name: TcxGridDBColumn
@@ -50,11 +51,24 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             DataBinding.FieldName = 'Name'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 150
+          end
+          object NppPersonalReport: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087' ('#1086#1090#1095#1077#1090')'
+            DataBinding.FieldName = 'NppPersonalReport'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1087'/'#1087' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1076#1083#1103' '#1086#1090#1095#1077#1090#1072' '#1064#1090#1072#1090#1085#1072#1103' '#1088#1072#1089#1089#1090#1072#1085#1086#1074#1082#1072
+            Width = 70
           end
           object KATOTTG: TcxGridDBColumn
             Caption = #1050#1040#1058#1054#1058#1058#1043
             DataBinding.FieldName = 'KATOTTG'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -62,6 +76,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           end
           object GLN: TcxGridDBColumn
             DataBinding.FieldName = 'GLN'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -70,27 +85,34 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           object AddressEDIN: TcxGridDBColumn
             Caption = #1040#1076#1088#1077#1089' '#1076#1083#1103' EDIN'
             DataBinding.FieldName = 'AddressEDIN'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 95
           end
           object Address: TcxGridDBColumn
             Caption = #1040#1076#1088#1077#1089
             DataBinding.FieldName = 'Address'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object CityName: TcxGridDBColumn
             Caption = #1043#1086#1088#1086#1076
             DataBinding.FieldName = 'CityName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object CityKindName: TcxGridDBColumn
             Caption = #1042#1080#1076
             DataBinding.FieldName = 'CityKindName'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 105
@@ -98,6 +120,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           object RegionName: TcxGridDBColumn
             Caption = #1054#1073#1083#1072#1089#1090#1100
             DataBinding.FieldName = 'RegionName'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 153
@@ -105,6 +128,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           object ProvinceName: TcxGridDBColumn
             Caption = #1056#1072#1081#1086#1085
             DataBinding.FieldName = 'ProvinceName'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 113
@@ -114,13 +138,16 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             DataBinding.FieldName = 'BranchName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object BusinessName: TcxGridDBColumn
             Caption = #1041#1080#1079#1085#1077#1089
             DataBinding.FieldName = 'BusinessName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object JuridicalName: TcxGridDBColumn
@@ -129,6 +156,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object DepartmentName: TcxGridDBColumn
@@ -150,6 +178,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           object RouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090
             DataBinding.FieldName = 'RouteName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -158,8 +187,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           object RouteSortingName: TcxGridDBColumn
             Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
             DataBinding.FieldName = 'RouteSortingName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object PartnerCode: TcxGridDBColumn
@@ -174,6 +205,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           object PartnerName: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
             DataBinding.FieldName = 'PartnerName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -221,6 +253,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 40
           end
         end
@@ -358,6 +391,18 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end>
       isShowModal = False
     end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = MasterDS
+    end
   end
   inherited MasterDS: TDataSource
     Top = 88
@@ -426,5 +471,31 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 136
     Top = 184
+  end
+  object spInsertUpdate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Unit_NppPersonalReport'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNppPersonalReport'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'NppPersonalReport'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 112
+    Top = 328
   end
 end

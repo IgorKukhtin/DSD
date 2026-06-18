@@ -110,6 +110,9 @@ type
     Staff_Summ_add_calc: TcxGridDBColumn;
     Staff_Summ_total_real_calc: TcxGridDBColumn;
     Staff_Summ_total_add_calc: TcxGridDBColumn;
+    cxLabel18: TcxLabel;
+    cePersonal: TcxButtonEdit;
+    GuidesPersonal: TdsdGuides;
   private
     { Private declarations }
   public

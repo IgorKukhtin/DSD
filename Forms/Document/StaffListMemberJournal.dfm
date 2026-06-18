@@ -121,6 +121,15 @@ inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
             Options.Editing = False
             Width = 106
           end
+          object PositionCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1083#1078#1085'.'
+            DataBinding.FieldName = 'PositionCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1083#1078#1085#1086#1089#1090#1100' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
+            Options.Editing = False
+            Width = 55
+          end
           object PositionName: TcxGridDBColumn
             Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
             DataBinding.FieldName = 'PositionName'
@@ -146,6 +155,15 @@ inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
             HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1076#1086' '#1087#1077#1088#1077#1074#1086#1076#1072
             Options.Editing = False
             Width = 106
+          end
+          object PositionCode_old: TcxGridDBColumn
+            Caption = '***'#1050#1086#1076' '#1076#1086#1083#1078#1085'.'
+            DataBinding.FieldName = 'PositionCode_old'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1083#1078#1085#1086#1089#1090#1100' '#1076#1086' '#1087#1077#1088#1077#1074#1086#1076#1072
+            Options.Editing = False
+            Width = 55
           end
           object PositionName_old: TcxGridDBColumn
             Caption = '***'#1044#1086#1083#1078#1085#1086#1089#1090#1100
@@ -376,10 +394,10 @@ inherited StaffListMemberJournalForm: TStaffListMemberJournalForm
     ExplicitWidth = 975
     ExplicitHeight = 67
     inherited deStart: TcxDateEdit
-      EditValue = 44927d
+      EditValue = 46023d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 44927d
+      EditValue = 46023d
     end
     object lbSearchName: TcxLabel
       Left = 4

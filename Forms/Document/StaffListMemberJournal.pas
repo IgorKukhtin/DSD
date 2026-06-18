@@ -68,6 +68,8 @@ type
     actUpdateUnit: TdsdInsertUpdateAction;
     bbInsertUnit: TdxBarButton;
     bbUpdateUnit: TdxBarButton;
+    PositionCode: TcxGridDBColumn;
+    PositionCode_old: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -20,7 +20,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon,
+  cxCurrencyEdit;
 
 type
   TUnit_ObjectForm = class(TAncestorEnumForm)
@@ -40,6 +41,9 @@ type
     CityName: TcxGridDBColumn;
     Address: TcxGridDBColumn;
     DepartmentName: TcxGridDBColumn;
+    spInsertUpdate: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
+    NppPersonalReport: TcxGridDBColumn;
   private
     { Private declarations }
   public

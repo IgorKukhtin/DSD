@@ -59,6 +59,10 @@ type
     macCopyFromGrid: TMultiAction;
     spCopyrFromGrid: TdsdStoredProc;
     bbCopyFromGrid: TdxBarButton;
+    PersonalName: TcxGridDBColumn;
+    actPersonalChoiceForm: TOpenChoiceForm;
+    actUpdateCDS: TdsdUpdateDataSet;
+    spUpdatePersonal: TdsdStoredProc;
   private
     { Private declarations }
   public

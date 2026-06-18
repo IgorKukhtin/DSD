@@ -58,6 +58,14 @@ inherited StaffListItemChoiceForm: TStaffListItemChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 130
           end
+          object PositionCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1083#1078#1085'.'
+            DataBinding.FieldName = 'PositionCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object PositionName: TcxGridDBColumn
             Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
             DataBinding.FieldName = 'PositionName'

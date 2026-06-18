@@ -66,6 +66,7 @@ type
     cxLabel12: TcxLabel;
     cePosition: TcxButtonEdit;
     GuidesPosition: TdsdGuides;
+    PositionCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

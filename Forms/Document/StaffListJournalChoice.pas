@@ -55,6 +55,7 @@ type
     bbmacInsertMask: TdxBarButton;
     actChoiceGuides: TdsdChoiceGuides;
     bbChoiceGuides: TdxBarButton;
+    PersonalName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -6,6 +6,7 @@ inherited StaffListJournalChoiceForm: TStaffListJournalChoiceForm
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitTop = -47
   ExplicitWidth = 1080
   ExplicitHeight = 574
   PixelsPerInch = 96
@@ -15,7 +16,7 @@ inherited StaffListJournalChoiceForm: TStaffListJournalChoiceForm
     Height = 478
     TabOrder = 3
     ExplicitWidth = 1064
-    ExplicitHeight = 504
+    ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 1064
     inherited tsMain: TcxTabSheet
@@ -176,13 +177,21 @@ inherited StaffListJournalChoiceForm: TStaffListJournalChoiceForm
             Options.Editing = False
             Width = 96
           end
+          object PersonalName: TcxGridDBColumn
+            Caption = #1052#1077#1085#1077#1076#1078#1077#1088' '#1087#1086' '#1087#1077#1088#1089#1086#1085#1072#1083#1091
+            DataBinding.FieldName = 'PersonalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
           object PersonalHeadName: TcxGridDBColumn
             Caption = #1056#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
             DataBinding.FieldName = 'PersonalHeadName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 116
+            Width = 110
           end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
