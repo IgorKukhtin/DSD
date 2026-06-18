@@ -318,7 +318,7 @@ END IF;
 
 
      -- !!!14. - Income!!!
-     IF vbMovementDescId = zc_Movement_Income() AND 1=1
+     IF vbMovementDescId IN (zc_Movement_Income(), zc_Movement_IncomeAsset()) AND 1=1
      THEN
              -- создаются временные таблицы - для формирование данных для проводок
              PERFORM lpComplete_Movement_Income_CreateTemp();
