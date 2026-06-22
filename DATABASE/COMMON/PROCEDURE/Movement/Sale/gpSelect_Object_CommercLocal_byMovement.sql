@@ -1,6 +1,5 @@
 -- Function: gpSelect_Object_CommercLocal_byMovement()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_CommercLocal (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_CommercLocal_byMovement (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_CommercLocal_byMovement(
@@ -21,6 +20,7 @@ $BODY$
           vbUnitId          Integer;
           vbPositionId_1      Integer;
           vbPersonalGroupId_1 Integer;
+          vbBranchId          Integer;
 BEGIN
 
      -- проверка прав пользовател€ на вызов процедуры
@@ -43,14 +43,17 @@ BEGIN
      --данные по пользователю дл€ определени€ данных из справочника CommercLocal 
      SELECT tmpPersonal.PersonalId
           , tmpPersonal.UnitId
+          , ObjectLink_Unit_Branch.ChildObjectId            AS BranchId         --филиал пользовател€
           , tmpPersonal.PositionId
           , ObjectLink_Personal_PersonalGroup.ChildObjectId AS PersonalGroupId
-    INTO vbPersonalId, vbUnitId, vbPositionId_1, vbPersonalGroupId_1 
+          
+    INTO vbPersonalId, vbUnitId, vbBranchId, vbPositionId_1, vbPersonalGroupId_1 
      FROM (SELECT lfSelect.MemberId
                 , lfSelect.PersonalId 
                 , lfSelect.UnitId
                 , lfSelect.PositionId
            FROM lfSelect_Object_Member_findPersonal (zfCalc_UserAdmin()) AS lfSelect
+           --WHERE  lfSelect.PersonalId = 565053 --тест дл€ филиала  иев
            ) AS tmpPersonal
            INNER JOIN ObjectLink AS ObjectLink_User_Member
                                  ON ObjectLink_User_Member.ChildObjectId = tmpPersonal.MemberId
@@ -59,12 +62,17 @@ BEGIN
            LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
                                 ON ObjectLink_Personal_PersonalGroup.ObjectId = tmpPersonal.PersonalId
                                AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
+
+           LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                ON ObjectLink_Unit_Branch.ObjectId = tmpPersonal.UnitId
+                               AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+          -- LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
      ;
  
-
          -- –езультат
          RETURN QUERY 
          WITH
+         --получем строку справочника, у которой подразд+ должность ур.1 + группа сотр. 1 соответствуют  пользователю созд. за€вку
          tmpCommercLocal AS (SELECT Object_CommercLocal.Id
                                   , Object_Unit.Id                      ::Integer  AS UnitId
                                   , Object_Unit.ValueData               ::TVarChar AS UnitName
@@ -140,30 +148,42 @@ BEGIN
                               AND Object_CommercLocal.isErased = FALSE
                               AND COALESCE (ObjectLink_CommercLocal_PersonalGroup_1.ChildObjectId,0) = COALESCE (vbPersonalGroupId_1,0)
                              )
+                --список сотрудников из подразделени€ ѕользовател€ за€вки
               , tmpPersonal_byUnit AS (SELECT Object_Personal.Id                              AS PersonalId
                                             , Object_Personal.ValueData                       AS PersonalName
                                             , ObjectLink_Personal_Position.ChildObjectId      AS PositionId
                                             , ObjectLink_Personal_PersonalGroup.ChildObjectId AS PersonalGroupId
+                                            , Object_PersonalGroup.ValueData                  AS PersonalGroupName
                                             , ObjectLink_Personal_Unit.ChildObjectId          AS UnitId
+                                            , Object_Unit.ValueData                           AS UnitName
+                                            , ObjectLink_Unit_Branch.ChildObjectId            AS BranchId
                                        FROM Object AS Object_Personal
-                                            INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                            LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
                                                                   ON ObjectLink_Personal_Unit.ObjectId = Object_Personal.Id
                                                                  AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
-                                                                 AND ObjectLink_Personal_Unit.ChildObjectId = vbUnitId
+                                                                 --AND ObjectLink_Personal_Unit.ChildObjectId = vbUnitId
+                                            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
+
+                                            LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                                                 ON ObjectLink_Unit_Branch.ObjectId = ObjectLink_Personal_Unit.ChildObjectId
+                                                                AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                                            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
+
                                             LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
                                                                  ON ObjectLink_Personal_Position.ObjectId = Object_Personal.Id
                                                                 AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
                                             LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
                                                                  ON ObjectLink_Personal_PersonalGroup.ObjectId = Object_Personal.Id
                                                                 AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
-                                                                 
+                                            LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId                     
                                        WHERE Object_Personal.DescId = zc_Object_Personal()
                                          AND Object_Personal.isErased = FALSE 
+                                         AND (ObjectLink_Unit_Branch.ChildObjectId = vbBranchId OR ObjectLink_Personal_Unit.ChildObjectId = vbUnitId)
                                        )
 
               , tmpLevel1 AS (SELECT 1 AS Ord 
                                    , Object_Position_1.ValueData       AS PositionName
-                                   , Object_PersonalGroup_1.ValueData  AS PersonalGroupName
+                                   , Object_PersonalGroup_1.ValueData ::TVarChar AS PersonalGroupName
                                    , Object_Personal.ValueData         AS PersonalName
                                    , Object_Unit.ValueData             AS UnitName
                               FROM object AS Object_Personal
@@ -175,149 +195,129 @@ BEGIN
 
               , tmpLevel2 AS (SELECT 2 AS Ord 
                                    , tmpCommercLocal.PositionName_2       AS PositionName
-                                   , tmpCommercLocal.PersonalGroupName_2  AS PersonalGroupName
-                                   , String_AGG (Object_Personal.ValueData, CHR (10) || CHR (13) order by Object_Personal.ValueData)   AS PersonalName
-                                   , Object_Unit.ValueData                AS UnitName
+                                   , tmpCommercLocal.PersonalGroupName_2 ::TVarChar  AS PersonalGroupName
+                                   , String_AGG (tmpPersonal.PersonalName, CHR (10) || CHR (13) order by tmpPersonal.PersonalName) ::Text  AS PersonalName
+                                   , tmpCommercLocal.UnitName            AS UnitName
                               FROM tmpCommercLocal
-                                   LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
-                                                        ON ObjectLink_Personal_PersonalGroup.ChildObjectId = tmpCommercLocal.PersonalGroupId_2
-                                                       AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
-
-                                   LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
-                                                        ON ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
-                                                       AND ObjectLink_Personal_Position.ChildObjectId = tmpCommercLocal.PositionId_2  --149847
-                                                       AND ObjectLink_Personal_Position.ObjectId = ObjectLink_Personal_PersonalGroup.ObjectId 
-
-                                   LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
-                                                        ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Personal_Position.ObjectId
-                                                       AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
- 
-                                   LEFT JOIN object AS Object_Personal ON Object_Personal.Id = ObjectLink_Personal_Position.ObjectId AND Object_Personal.isErased = FALSE
-                                   LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
-WHERE Object_Personal.isErased = FALSE
+                                   INNER JOIN tmpPersonal_byUnit AS tmpPersonal
+                                                                 ON tmpPersonal.UnitId = tmpCommercLocal.UnitId
+                                                                AND tmpPersonal.PositionId = tmpCommercLocal.PositionId_2
+                                                                AND COALESCE (tmpPersonal.PersonalGroupId,0) = COALESCE (tmpCommercLocal.PersonalGroupId_2,0)
+                                                               -- AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
                               GROUP BY tmpCommercLocal.PositionName_2
                                      , tmpCommercLocal.PersonalGroupName_2
-                                     , Object_Unit.ValueData
+                                     , tmpCommercLocal.UnitName
                               )
 
               , tmpLevel3 AS (SELECT 3 AS Ord 
-                                   , tmpCommercLocal.PositionName_3        AS PositionName
-                                   , Object_PersonalGroup.ValueData      AS PersonalGroupName
+                                   , tmpCommercLocal.PositionName_3                     AS PositionName
+                                   , String_AGG (DISTINCT tmpPersonal.PersonalGroupName, '; ') ::TVarChar AS PersonalGroupName
                                    , String_AGG (tmpPersonal.PersonalName, CHR (10) || CHR (13) order by tmpPersonal.PersonalName) ::Text  AS PersonalName
-                                   , tmpCommercLocal.UnitName            AS UnitName
+                                   , tmpCommercLocal.UnitName                           AS UnitName
                               FROM tmpCommercLocal
                                    LEFT JOIN tmpPersonal_byUnit AS tmpPersonal
-                                                                ON tmpPersonal.PositionId = tmpCommercLocal.PositionId_3
+                                                                ON tmpPersonal.UnitId = tmpCommercLocal.UnitId
+                                                               AND tmpPersonal.PositionId = tmpCommercLocal.PositionId_3
                                                                -- AND tmpPersonal.PersonalGroupId = tmpCommercLocal.PersonalGroupId_3
-
-                                   LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
-                                                        ON ObjectLink_Personal_PersonalGroup.ObjectId = tmpPersonal.PersonalId
-                                                       AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
-                                   LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
                               GROUP BY tmpCommercLocal.PositionName_3
-                                     , Object_PersonalGroup.ValueData
+                                     --, Object_PersonalGroup.ValueData
                                      , tmpCommercLocal.UnitName
                               )
                , tmpLevel4 AS (SELECT 4 AS Ord 
-                                   , tmpCommercLocal.PositionName_4        AS PositionName
-                                   , Object_PersonalGroup.ValueData      AS PersonalGroupName
+                                   , tmpCommercLocal.PositionName_4                     AS PositionName
+                                   , String_AGG (DISTINCT tmpPersonal.PersonalGroupName, '; ') ::TVarChar AS PersonalGroupName
                                    , String_AGG (tmpPersonal.PersonalName, CHR (10) || CHR (13) order by tmpPersonal.PersonalName) ::Text  AS PersonalName
-                                   , tmpCommercLocal.UnitName            AS UnitName
+                                   , tmpPersonal.UnitName                               AS UnitName
                               FROM tmpCommercLocal
                                    LEFT JOIN tmpPersonal_byUnit AS tmpPersonal
-                                                                ON tmpPersonal.PositionId = tmpCommercLocal.PositionId_4
+                                                                ON tmpPersonal.BranchId = vbBranchId
+                                                               AND tmpPersonal.PositionId = tmpCommercLocal.PositionId_4
 
-                                   LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
-                                                        ON ObjectLink_Personal_PersonalGroup.ObjectId = tmpPersonal.PersonalId
-                                                       AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
-                                   LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
                               GROUP BY tmpCommercLocal.PositionName_4
-                                     , Object_PersonalGroup.ValueData
-                                     , tmpCommercLocal.UnitName
+                                     --, Object_PersonalGroup.ValueData
+                                     , tmpPersonal.UnitName
                               )
 
               , tmpLevel5 AS (SELECT 5 AS Ord 
                                    , tmpCommercLocal.PositionName_5        AS PositionName
-                                   , Object_PersonalGroup.ValueData      AS PersonalGroupName
+                                   , String_AGG (DISTINCT tmpPersonal.PersonalGroupName, '; ') ::TVarChar  AS PersonalGroupName
                                    , String_AGG (tmpPersonal.PersonalName, CHR (10) || CHR (13) order by tmpPersonal.PersonalName) ::Text  AS PersonalName
-                                   , tmpCommercLocal.UnitName            AS UnitName
+                                    , tmpPersonal.UnitName            AS UnitName
                               FROM tmpCommercLocal
                                    LEFT JOIN tmpPersonal_byUnit AS tmpPersonal
                                                                 ON tmpPersonal.PositionId = tmpCommercLocal.PositionId_5
-
-                                   LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
-                                                        ON ObjectLink_Personal_PersonalGroup.ObjectId = tmpPersonal.PersonalId
-                                                       AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
-                                   LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
                               GROUP BY tmpCommercLocal.PositionName_5
-                                     , Object_PersonalGroup.ValueData
-                                     , tmpCommercLocal.UnitName
+                                     , tmpPersonal.UnitName
                               )
 
               , tmpLevel6 AS (SELECT 6 AS Ord 
                                    , tmpCommercLocal.PositionName_6        AS PositionName
-                                   , Object_PersonalGroup.ValueData      AS PersonalGroupName
+                                   , String_AGG (DISTINCT tmpPersonal.PersonalGroupName, '; ') ::TVarChar AS PersonalGroupName
                                    , String_AGG (tmpPersonal.PersonalName, CHR (10) || CHR (13) order by tmpPersonal.PersonalName) ::Text  AS PersonalName
-                                   , tmpCommercLocal.UnitName            AS UnitName
+                                   , tmpPersonal.UnitName            AS UnitName
                               FROM tmpCommercLocal
                                    LEFT JOIN tmpPersonal_byUnit AS tmpPersonal
                                                                 ON tmpPersonal.PositionId = tmpCommercLocal.PositionId_6
 
-                                   LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
-                                                        ON ObjectLink_Personal_PersonalGroup.ObjectId = tmpPersonal.PersonalId
-                                                       AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
-                                   LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
                               GROUP BY tmpCommercLocal.PositionName_6
-                                     , Object_PersonalGroup.ValueData
-                                     , tmpCommercLocal.UnitName
+                                     , tmpPersonal.UnitName
                               )              
 
-
-           SELECT tmp.Ord 
-                , tmp.PositionName
-                , tmp.PersonalGroupName
-                , tmp.PersonalName ::Text
-                , tmp.UnitName           
-           FROM tmpLevel1 AS tmp
-          UNION ALL
-           SELECT tmp.Ord 
-                , tmp.PositionName
-                , tmp.PersonalGroupName
-                , tmp.PersonalName ::Text
-                , tmp.UnitName           
-           FROM tmpLevel2 AS tmp
-          UNION 
-           SELECT tmp.Ord 
-                , tmp.PositionName
-                , tmp.PersonalGroupName
-                , tmp.PersonalName ::Text
-                , tmp.UnitName           
-           FROM tmpLevel3 AS tmp
-          UNION 
-           SELECT tmp.Ord 
-                , tmp.PositionName
-                , tmp.PersonalGroupName
-                , tmp.PersonalName ::Text
-                , tmp.UnitName           
-           FROM tmpLevel4 AS tmp
-          UNION 
-           SELECT tmp.Ord 
-                , tmp.PositionName
-                , tmp.PersonalGroupName
-                , tmp.PersonalName ::Text
-                , tmp.UnitName           
-           FROM tmpLevel5 AS tmp
-          UNION 
-           SELECT tmp.Ord 
-                , tmp.PositionName
-                , tmp.PersonalGroupName
-                , tmp.PersonalName ::Text
-                , tmp.UnitName           
-           FROM tmpLevel6 AS tmp
-          order by 1
+         SELECT tmp.Ord               ::Integer
+              , tmp.PositionName      ::TVarChar
+              , tmp.PersonalGroupName ::TVarChar
+              , tmp.PersonalName      ::Text
+              , tmp.UnitName          ::TVarChar 
+         FROM (SELECT tmp.Ord 
+                    , tmp.PositionName
+                    , tmp.PersonalGroupName
+                    , tmp.PersonalName ::Text
+                    , tmp.UnitName           
+               FROM tmpLevel1 AS tmp
+              UNION ALL
+               SELECT tmp.Ord 
+                    , tmp.PositionName
+                    , tmp.PersonalGroupName
+                    , tmp.PersonalName ::Text
+                    , tmp.UnitName           
+               FROM tmpLevel2 AS tmp
+              UNION 
+               SELECT tmp.Ord 
+                    , tmp.PositionName
+                    , tmp.PersonalGroupName
+                    , tmp.PersonalName ::Text
+                    , tmp.UnitName           
+               FROM tmpLevel3 AS tmp
+              UNION 
+               SELECT tmp.Ord 
+                    , tmp.PositionName
+                    , tmp.PersonalGroupName
+                    , tmp.PersonalName ::Text
+                    , tmp.UnitName           
+               FROM tmpLevel4 AS tmp
+              UNION 
+               SELECT tmp.Ord 
+                    , tmp.PositionName
+                    , tmp.PersonalGroupName
+                    , tmp.PersonalName ::Text
+                    , tmp.UnitName           
+               FROM tmpLevel5 AS tmp
+              UNION 
+               SELECT tmp.Ord 
+                    , tmp.PositionName
+                    , tmp.PersonalGroupName
+                    , tmp.PersonalName ::Text
+                    , tmp.UnitName           
+               FROM tmpLevel6 AS tmp
+              ) AS tmp
+        ORDER BY tmp.Ord
            ;
 
-
+      (Ord Integer
+             , PositionName TVarChar
+             , PersonalGroupName TVarChar
+             , PersonalName Text
+             , UnitName TVarChar
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -331,4 +331,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_Object_CommercLocal_byMovement (inMovementId:= 40874, inSession := zfCalc_UserAdmin());
 
---select * from gpSelect_Object_CommercLocal_byMovement(inMovementId := 34499291 ,  inSession := '9457');
+-- select * from gpSelect_Object_CommercLocal_byMovement(inMovementId := 34499291 ,  inSession := '9457');
