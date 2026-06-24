@@ -569,7 +569,6 @@ BEGIN
                                  , SUM (COALESCE (tmpMI_detail.Amount_main,0))  AS Amount_main_det
                                  , SUM (COALESCE (tmpMI_detail.AmountMain_part,0))  AS AmountMain_part_det
                                  , SUM (COALESCE (tmpMI_detail.Part_main,0))        AS Part_main_det
-
                             FROM tmpMI_WorkProgress_in_gr AS tmpMI_WorkProgress_in
                                  --LEFT JOIN tmpMI_WorkProgress_oth ON tmpMI_WorkProgress_oth.ContainerId = tmpMI_WorkProgress_in.ContainerId
 
@@ -773,7 +772,7 @@ BEGIN
          , tmpResult.TaxLossVPR :: TFloat
            -- ФАКТ % впрыска - Производство технолог: Вес П/Ф после массажера (расчет) разделить Куттеров факт (расчет) минус (Рецептуры: Вес П/Ф (ГП) минус Вес после шприцевания) минус  (Вес П/Ф (ГП) минус % вприска)
          , CASE WHEN COALESCE (tmpResult.CuterCount_calc,0) <> 0 THEN ((COALESCE (tmpResult.Amount_WorkProgress_in,0) - COALESCE (tmpResult.Amount_out,0)) / COALESCE (tmpResult.CuterCount_calc,0)
-                                                                     - (COALESCE (tmpResult.ValuePF_in_sum ,0) - COALESCE (tmpResult.RealDelicShp_sum,0))
+                                                                     - (COALESCE (tmpResult.ValuePF_in ,0) - COALESCE (tmpResult.RealDelicShp,0))
                                                                      - (COALESCE (tmpResult.RealDelicShp,0) - COALESCE (tmpResult.TaxLossVPR ,0))
                                                                       )
                 ELSE 0
@@ -783,7 +782,7 @@ BEGIN
          , (-- ФАКТ
             CASE WHEN COALESCE (tmpResult.CuterCount_calc,0) <> 0 THEN ((COALESCE (tmpResult.Amount_WorkProgress_in,0) - COALESCE (tmpResult.Amount_out,0))
                                                                         / COALESCE (tmpResult.CuterCount_calc,0)
-                                                                      - (COALESCE (tmpResult.ValuePF_in_sum ,0) - COALESCE (tmpResult.RealDelicShp_sum,0))
+                                                                      - (COALESCE (tmpResult.ValuePF_in ,0) - COALESCE (tmpResult.RealDelicShp,0))
                                                                       - (COALESCE (tmpResult.RealDelicShp,0) - COALESCE (tmpResult.TaxLossVPR ,0))
                                                                        )
                 ELSE 0
@@ -918,7 +917,7 @@ BEGIN
                       ABS (-- ФАКТ
                            CASE WHEN COALESCE (tmpResult.CuterCount_calc,0) <> 0 THEN ((COALESCE (tmpResult.Amount_WorkProgress_in,0) - COALESCE (tmpResult.Amount_out,0))
                                                                                        / COALESCE (tmpResult.CuterCount_calc,0)
-                                                                                     - (COALESCE (tmpResult.ValuePF_in_sum ,0) - COALESCE (tmpResult.RealDelicShp_sum,0))
+                                                                                     - (COALESCE (tmpResult.ValuePF_in ,0) - COALESCE (tmpResult.RealDelicShp,0))
                                                                                      - (COALESCE (tmpResult.RealDelicShp,0) - COALESCE (tmpResult.TaxLossVPR ,0))
                                                                                       )
                                ELSE 0
@@ -932,7 +931,7 @@ BEGIN
             END ::Boolean AS isPrint
 
           , tmpResult.ContainerId :: Integer AS ContainerId
-
+  
      FROM tmpResult
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpResult.GoodsId
           LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = tmpResult.GoodsKindId_Complete
@@ -1008,3 +1007,75 @@ $BODY$
 -- тест
 -- SELECT * FROM gpReport_ProductionUnion_TaxExitUpdate(inStartDate := ('01.07.2024')::TDateTime , inEndDate := ('01.07.2024')::TDateTime , inFromId := 8448 , inToId := 8448 , inParam:=0, inIsList:= FALSE, inIsNotPartion:= TRUE, inSession := '9457');
 -- SELECT * FROM gpReport_ProductionUnion_TaxExitUpdate(inStartDate := ('17.11.2024')::TDateTime , inEndDate := ('19.11.2024')::TDateTime , inFromId := 8448 , inToId := 8448 , inParam := 0 , inIsList := 'False' , inIsListReport := 'False' , inisPartion := 'True' , inIsTerm := 'True', inSession := '5');
+
+/*
+
+select GoodsGroupNameFull 
+             , GoodsId , GoodsCode , GoodsName 
+             , GoodsKindId_Complete , GoodsKindName_Complete , MeasureName 
+             --, PartionGoodsDate 
+             , SUM (RealDelicShp) :: TFloat AS RealDelicShp
+             , SUM (RealWeightShp_calc) :: TFloat AS RealWeightShp_calc
+             , SUM (AmountShp_diff) ::TFloat AS AmountShp_diff 
+             , AVG (Amount_Humidity) ::TFloat AS Amount_Humidity
+             , MAX (TaxLossVPR):: TFloat AS TaxLossVPR
+             , AVG (TaxLossVPR_fact) ::TFloat AS TaxLossVPR_fact
+             , (AVG (TaxLossVPR_fact) - MAX (TaxLossVPR)) ::TFloat AS  TaxLoss_diff 
+             , SUM (AmountReceipt) ::TFloat AS AmountReceipt
+             , SUM (RealWeightMsg_calc) ::TFloat AS RealWeightMsg_calc
+             , (SUM (RealWeightMsg_calc) -  SUM (AmountReceipt)) ::TFloat AS AmountMsg_diff
+             , SUM (TaxLossCEH) ::TFloat AS TaxLossCEH
+             , SUM (TaxLossCEH_fact) ::TFloat AS TaxLossCEH_fact
+             , (SUM (TaxLossCEH_fact) -SUM (TaxLossCEH)) ::TFloat AS TaxLossCEH_diff 
+             , SUM (AmountTRM_befor_plan) ::TFloat AS AmountTRM_befor_plan
+             , SUM (AmountTRM_befor_fact) ::TFloat AS AmountTRM_befor_fact
+              , (SUM (AmountTRM_befor_fact) - SUM (AmountTRM_befor_plan) )  ::TFloat AS AmountTRM_befor_diff
+             , AVG (TaxLossTRM) ::TFloat AS TaxLossTRM
+             , AVG (TaxLossTRM_fact) ::TFloat AS TaxLossTRM_fact
+             , AVG (TaxLossTRM_diff) ::TFloat AS TaxLossTRM_diff
+             , AVG (TaxExit) ::TFloat AS TaxExit
+             , AVG (TaxExit_fact) ::TFloat AS TaxExit_fact
+             , (AVG (TaxExit_fact)  - AVG (TaxExit)) ::TFloat AS TaxExit_diff 
+             , SUM (Amount_GP_in) ::TFloat AS Amount_GP_in
+             , SUM (ValueGP) ::TFloat AS ValueGP 
+             , AVG (ValuePF) ::TFloat AS ValuePF
+             , AVG (ValueGP_diff) ::TFloat AS ValueGP_diff
+             , AVG (ValuePF_diff) ::TFloat AS ValuePF_diff
+
+          /*   , CuterCount_inf  ::TFloat  -- Куттеров факт
+             , CuterCount_calcinf  ::TFloat -- Куттеров факт (расчет)
+             , RealWeightShpinf    ::TFloat  -- Вес п/ф факт (шпр)
+             , RealWeightShp_calcinf  ::TFloat   -- Вес П/Ф после шприцевания (расчет)
+
+             , Amountinf       ::TFloat   -- Факт кол-во
+             , Amount_inf_calc ::TFloat   -- Факт кол-во
+
+             , RealWeightMsg_inf ::TFloat  --Вес п/ф факт (мсж)
+             , RealWeightMsg_calcinf     ::TFloat    --Вес П/Ф после массажера (расчет)
+             , Amount_outinf  ::TFloat   -- Переходящий П/Ф (расход), кг
+             , RealWeight_inf  TFloat     -- Вес п/ф факт
+             --детальная часть
+             , Amount_main_det     ::TFloat   --кол-во факт
+             , AmountMain_part_det ::TFloat   --Переходящий П/Ф (расход), кг
+             , Part_main_det       ::TFloat   --доля
+     */        , isPrint    ::Boolean           --
+
+             --, ContainerId 
+
+from gpReport_ProductionUnion_TaxExitUpdate(inStartDate := ('01.05.2026')::TDateTime , inEndDate := ('31.05.2026')::TDateTime , inFromId := 8448 , inToId := 8448 
+, inParam := 0 , inIsList := 'False'::Boolean , inIsListReport := 'False'::Boolean , inIsNotPartion := 'False' ::Boolean, inIsTerm := 'False' ::Boolean,  inSession := '9457'::TVarChar) 
+where goodscode = 323
+GROUP BY GoodsGroupNameFull 
+             , GoodsId , GoodsCode , GoodsName 
+             , GoodsKindId_Complete , GoodsKindName_Complete , MeasureName 
+            -- , PartionGoodsDate 
+ , isPrint    
+ 
+  -----
+ 
+ SELECT *
+from gpReport_ProductionUnion_TaxExitUpdate(inStartDate := ('01.05.2026')::TDateTime , inEndDate := ('31.05.2026')::TDateTime , inFromId := 8448 , inToId := 8448 
+, inParam := 0 , inIsList := 'False'::Boolean , inIsListReport := 'False'::Boolean , inIsNotPartion := 'False' ::Boolean, inIsTerm := 'False' ::Boolean,  inSession := '9457'::TVarChar) 
+where goodscode = 323
+
+*/
