@@ -824,12 +824,21 @@ BEGIN
            -- ПЛАН Потери (терм.), % - Рецептуры
          , tmpResult.TaxLossTRM :: TFloat
            -- ФАКТ Потери (терм.), %
-         , CASE WHEN COALESCE (tmpResult.CuterCount_calc ,0) <> 0 AND (COALESCE (tmpResult.Amount_WorkProgress_in,0) - COALESCE (tmpResult.Amount_out,0)) <> 0
+        /* , CASE WHEN COALESCE (tmpResult.CuterCount_calc ,0) <> 0 AND (COALESCE (tmpResult.Amount_WorkProgress_in,0) - COALESCE (tmpResult.Amount_out,0)) <> 0
                 THEN ((COALESCE (tmpResult.RealWeight,0) / tmpResult.CuterCount_calc) - COALESCE (tmpResult.Amount_GP_in,0)/ tmpResult.CuterCount_calc  )
                     /  ((COALESCE (tmpResult.Amount_WorkProgress_in,0) - COALESCE (tmpResult.Amount_out,0)) / tmpResult.CuterCount_calc  )
                        * 100
                 ELSE 0
+           END   ::TFloat AS  TaxLossTRM_fact*/
+
+         , CASE WHEN CASE WHEN COALESCE (tmpResult.CuterCount_calc,0) <> 0 THEN COALESCE (tmpResult.RealWeight,0) / tmpResult.CuterCount_calc ELSE 0 END <> 0
+                THEN ((CASE WHEN COALESCE (tmpResult.CuterCount_calc,0) <> 0 THEN COALESCE (tmpResult.RealWeight,0) / tmpResult.CuterCount_calc ELSE 0 END 
+                     - CASE WHEN COALESCE (tmpResult.CuterCount_calc ,0) <> 0 THEN COALESCE (tmpResult.Amount_GP_in,0)/ tmpResult.CuterCount_calc ELSE 0 END) * 100 )
+                      / (CASE WHEN COALESCE (tmpResult.CuterCount_calc,0) <> 0 THEN COALESCE (tmpResult.RealWeight,0) / tmpResult.CuterCount_calc ELSE 0 END )
+                
+           ELSE 0
            END   ::TFloat AS  TaxLossTRM_fact
+
            -- ОТКЛ Потери (терм.), %
          , (CASE WHEN COALESCE (tmpResult.CuterCount_calc ,0) <> 0 AND (COALESCE (tmpResult.Amount_WorkProgress_in,0) - COALESCE (tmpResult.Amount_out,0)) <> 0
                 THEN ((COALESCE (tmpResult.RealWeight,0) / tmpResult.CuterCount_calc) - COALESCE (tmpResult.Amount_GP_in,0)/ tmpResult.CuterCount_calc  )
@@ -844,7 +853,7 @@ BEGIN
           , tmpResult.TaxExit :: TFloat  AS TaxExit  --Выход ГП , кг план
 
             -- ФАКТ Выход ГП, кг
-          , CASE WHEN COALESCE (tmpResult.CuterCount_calc ,0) <> 0 THEN COALESCE (tmpResult.Amount_GP_in,0)/tmpResult.CuterCount_calc ELSE 0 END ::TFloat  AS TaxExit_fact
+          , CASE WHEN COALESCE (tmpResult.CuterCount_calc ,0) <> 0 THEN COALESCE (tmpResult.Amount_GP_in,0)/ tmpResult.CuterCount_calc ELSE 0 END ::TFloat  AS TaxExit_fact
             -- ОТКЛ Выход ГП, кг
           , (CAST (CASE WHEN COALESCE (tmpResult.CuterCount_calc ,0) <> 0 THEN COALESCE (tmpResult.Amount_GP_in,0)/tmpResult.CuterCount_calc ELSE 0 END
             - COALESCE (tmpResult.TaxExit,0) AS NUMERIC (16,2)))  :: TFloat  AS TaxExit_diff
