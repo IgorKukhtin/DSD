@@ -91,7 +91,7 @@ object CommercLocalEditForm: TCommercLocalEditForm
     Width = 273
   end
   object cxLabel3: TcxLabel
-    Left = 10
+    Left = 8
     Top = 103
     Caption = #1043#1088#1091#1087#1072' ('#1056#1110#1074#1077#1085#1100' 1) '#9
   end

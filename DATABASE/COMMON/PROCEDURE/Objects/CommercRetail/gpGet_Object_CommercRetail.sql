@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , PositionId_1 Integer, PositionCode_1 Integer, PositionName_1 TVarChar
              , PositionId_2 Integer, PositionCode_2 Integer, PositionName_2 TVarChar
              , PositionId_3 Integer, PositionCode_3 Integer, PositionName_3 TVarChar
+             , PersonalGroupId_1 Integer, PersonalGroupCode_1 Integer, PersonalGroupName_1 TVarChar
              , Comment TVarChar
 ) AS
 $BODY$BEGIN
@@ -36,7 +37,10 @@ $BODY$BEGIN
            , ''    ::TVarChar AS PositionName_2 
            , 0     ::Integer  AS PositionId_3
            , 0     ::Integer  AS PositionCode_3
-           , ''    ::TVarChar AS PositionName_3
+           , ''    ::TVarChar AS PositionName_3 
+           , 0     ::Integer  AS PersonalGroupId_1
+           , 0     ::Integer  AS PersonalGroupCode_1
+           , ''    ::TVarChar AS PersonalGroupName_1
            , ''    ::TVarChar AS Comment
            ;
    ELSE
@@ -58,6 +62,10 @@ $BODY$BEGIN
          , Object_Position_3.Id                ::Integer  AS PositionId_3
          , Object_Position_3.ObjectCode        ::Integer  AS PositionCode_3
          , Object_Position_3.ValueData         ::TVarChar AS PositionName_3
+
+         , Object_PersonalGroup_1.Id           ::Integer  AS PersonalGroupId_1
+         , Object_PersonalGroup_1.ObjectCode   ::Integer  AS PersonalGroupCode_1
+         , Object_PersonalGroup_1.ValueData    ::TVarChar AS PersonalGroupName_1
 
          , ObjectString_Comment.ValueData AS Comment
      FROM Object AS Object_CommercRetail
@@ -84,6 +92,11 @@ $BODY$BEGIN
                                ON ObjectLink_CommercRetail_Position_3.ObjectId = Object_CommercRetail.Id
                               AND ObjectLink_CommercRetail_Position_3.DescId = zc_ObjectLink_CommercRetail_Position_3()
           LEFT JOIN Object AS Object_Position_3 ON Object_Position_3.Id = ObjectLink_CommercRetail_Position_3.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_CommercRetail_PersonalGroup_1
+                               ON ObjectLink_CommercRetail_PersonalGroup_1.ObjectId = Object_CommercRetail.Id
+                              AND ObjectLink_CommercRetail_PersonalGroup_1.DescId = zc_ObjectLink_CommercRetail_PersonalGroup_1()
+          LEFT JOIN Object AS Object_PersonalGroup_1 ON Object_PersonalGroup_1.Id = ObjectLink_CommercRetail_PersonalGroup_1.ChildObjectId
 
        WHERE Object_CommercRetail.DescId = zc_Object_CommercRetail()
          AND Object_CommercRetail.Id = inId;

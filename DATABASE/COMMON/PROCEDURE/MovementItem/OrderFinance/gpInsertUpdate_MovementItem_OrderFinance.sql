@@ -1,12 +1,14 @@
  -- Function: gpInsertUpdate_MovementItem_OrderFinance()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinance (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinance(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId            Integer   , -- Ключ объекта <Документ>
     IN inJuridicalId           Integer   , --
-    IN inContractId            Integer   , --
+    IN inContractId            Integer   , -- 
+    IN inPersonalId            Integer   , --
   --IN inBankAccountId         Integer   , --
     IN inAmount                TFloat    , -- Первичный план на неделю
  INOUT ioAmount_old            TFloat    , -- ***Первичный план на неделю
@@ -215,6 +217,7 @@ BEGIN
                                                   , inMovementId           := inMovementId
                                                   , inJuridicalId          := inJuridicalId
                                                   , inContractId           := inContractId
+                                                  , inPersonalId           := inPersonalId
                                                   , inCashId               := NULL
                                                   , inAmount               := inAmount
                                                   , inAmount_next          := ioAmountPlan_next

@@ -50,6 +50,9 @@ type
     GuidesPosition_3: TdsdGuides;
     cePosition_3: TcxButtonEdit;
     cxLabel8: TcxLabel;
+    cxLabel3: TcxLabel;
+    cePersonalGroup_1: TcxButtonEdit;
+    GuidesPersonalGroup_1: TdsdGuides;
   private
     { Private declarations }
   public

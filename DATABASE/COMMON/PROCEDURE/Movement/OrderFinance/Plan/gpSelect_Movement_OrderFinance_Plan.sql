@@ -41,6 +41,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , OKPO TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
+             , PersonalId Integer, PersonalName TVarChar   -- Ответственный за закупку/оплату
              , PaidKindName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, NumGroup Integer
              , Condition TVarChar, ContractStateKindCode Integer
@@ -227,6 +228,7 @@ BEGIN
                                      WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                        AND MovementItemLinkObject.DescId IN (zc_MILinkObject_Insert()
                                                                            , zc_MILinkObject_Update()
+                                                                           , zc_MILinkObject_Personal()
                                                                             )
                                      )
      , tmpMovementItemString AS (SELECT *
@@ -601,6 +603,8 @@ BEGIN
                             , Object_Contract.Id               AS ContractId
                             , Object_Contract.ObjectCode       AS ContractCode
                             , Object_Contract.ValueData        AS ContractName
+                            , Object_Personal.Id                   AS PersonalId
+                            , Object_Personal.ValueData ::TVarChar AS PersonalName
                             , Object_PaidKind.Id               AS PaidKindId
                             , Object_PaidKind.ValueData        AS PaidKindName
                             , Object_InfoMoney.Id              AS InfoMoneyId
@@ -727,6 +731,15 @@ BEGIN
                              LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = View_Contract.PaidKindId
                              --LEFT JOIN tmpContractCondition ON tmpContractCondition.ContractId = Object_Contract.Id
 
+                             LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
+                                                  ON ObjectLink_Contract_Personal.ObjectId = View_Contract.ContractId
+                                                 AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
+                             --LEFT JOIN Object AS Object_Personal_Contract ON Object_Personal_Contract.Id = ObjectLink_Contract_Personal.ChildObjectId
+
+                             LEFT JOIN tmpMILO_Contract AS MILinkObject_Personal
+                                                        ON MILinkObject_Personal.MovementItemId = MovementItem.Id
+                                                       AND MILinkObject_Personal.DescId = zc_MILinkObject_Personal()
+                             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = COALESCE (MILinkObject_Personal.ObjectId,ObjectLink_Contract_Personal.ChildObjectId) 
                       -- Только БН
                       WHERE View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm()
                      )
@@ -1041,7 +1054,9 @@ BEGIN
         , tmpMI.OKPO
         , tmpMI.ContractId
         , tmpMI.ContractCode
-        , tmpMI.ContractName
+        , tmpMI.ContractName 
+        , tmpMI.PersonalId
+        , tmpMI.PersonalName ::TVarChar
         , tmpMI.PaidKindName
         , tmpMI.InfoMoneyId
         , tmpMI.InfoMoneyCode

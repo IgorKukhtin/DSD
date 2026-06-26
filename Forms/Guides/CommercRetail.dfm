@@ -26,7 +26,6 @@ object CommercRetailForm: TCommercRetailForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 908
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -87,6 +86,14 @@ object CommercRetailForm: TCommercRetailForm
       object PositionName_1: TcxGridDBColumn
         Caption = #1055#1086#1089#1072#1076#1072' ('#1056#1110#1074#1077#1085#1100' 1)'
         DataBinding.FieldName = 'PositionName_1'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 124
+      end
+      object PersonalGroupName_1: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1072' ('#1056#1110#1074#1077#1085#1100' 1)'
+        DataBinding.FieldName = 'PersonalGroupName_1'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False

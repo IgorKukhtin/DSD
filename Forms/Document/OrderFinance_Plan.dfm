@@ -373,6 +373,15 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
             Options.Editing = False
             Width = 100
           end
+          object PersonalName: TcxGridDBColumn
+            Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1079#1072#1082#1091#1087#1082#1091'/'#1086#1087#1083#1072#1090#1091
+            DataBinding.FieldName = 'PersonalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1079#1072#1082#1091#1087#1082#1091'/'#1086#1087#1083#1072#1090#1091
+            Options.Editing = False
+            Width = 118
+          end
           object JuridicalCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1102#1088'.'#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalCode'

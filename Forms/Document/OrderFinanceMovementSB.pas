@@ -400,6 +400,7 @@ type
     mactUpdate_SignWait_1_Yes: TMultiAction;
     bbExport_msg_0: TdxBarButton;
     OperDate_Plan_day: TcxGridDBColumn;
+    actPersonalChoiceForm: TOpenChoiceForm;
   private
   public
   end;

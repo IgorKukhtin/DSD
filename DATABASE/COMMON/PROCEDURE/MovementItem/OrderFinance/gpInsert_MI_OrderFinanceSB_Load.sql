@@ -225,6 +225,7 @@ BEGIN
                                                   , inMovementId            := inMovementId          ::Integer
                                                   , inJuridicalId           := CASE WHEN vbObjectId > 0 THEN vbObjectId ELSE vbInfoMoneyId END
                                                   , inContractId            := vbContractId          ::Integer
+                                                  , inPersonalId            := 0                     ::Integer
                                                   , inCashId                := vbCashId              ::Integer
                                                   , inAmount                := 0
                                                   , inAmount_next           := 0
