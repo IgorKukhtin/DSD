@@ -2,7 +2,7 @@ object CommercRetailEditForm: TCommercRetailEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1076#1072#1090#1080'/'#1047#1084#1110#1085#1080#1090#1080' <'#1057#1090#1088#1091#1082#1090#1091#1088#1072' '#1082#1086#1084#1077#1088#1094#1110#1111' ('#1052#1077#1088#1077#1078#1110')>'
-  ClientHeight = 221
+  ClientHeight = 203
   ClientWidth = 574
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -17,8 +17,8 @@ object CommercRetailEditForm: TCommercRetailEditForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 326
-    Top = 184
+    Left = 171
+    Top = 168
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -26,8 +26,8 @@ object CommercRetailEditForm: TCommercRetailEditForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 472
-    Top = 184
+    Left = 317
+    Top = 168
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -61,12 +61,12 @@ object CommercRetailEditForm: TCommercRetailEditForm
   end
   object cxLabel5: TcxLabel
     Left = 10
-    Top = 58
+    Top = 100
     Caption = #1055#1086#1089#1072#1076#1072' ('#1056#1110#1074#1077#1085#1100' 1) '#9
   end
   object cePosition_1: TcxButtonEdit
     Left = 10
-    Top = 77
+    Top = 119
     Properties.Buttons = <
       item
         Default = True
@@ -94,8 +94,8 @@ object CommercRetailEditForm: TCommercRetailEditForm
     Width = 182
   end
   object cePosition_2: TcxButtonEdit
-    Left = 10
-    Top = 123
+    Left = 296
+    Top = 73
     Properties.Buttons = <
       item
         Default = True
@@ -106,13 +106,13 @@ object CommercRetailEditForm: TCommercRetailEditForm
     Width = 273
   end
   object cxLabel6: TcxLabel
-    Left = 10
-    Top = 104
+    Left = 296
+    Top = 54
     Caption = #1055#1086#1089#1072#1076#1072' ('#1056#1110#1074#1077#1085#1100' 2) '#9
   end
   object cePosition_3: TcxButtonEdit
-    Left = 10
-    Top = 169
+    Left = 296
+    Top = 119
     Properties.Buttons = <
       item
         Default = True
@@ -123,18 +123,18 @@ object CommercRetailEditForm: TCommercRetailEditForm
     Width = 273
   end
   object cxLabel8: TcxLabel
-    Left = 10
-    Top = 150
+    Left = 296
+    Top = 100
     Caption = #1055#1086#1089#1072#1076#1072' ('#1056#1110#1074#1077#1085#1100' 3) '#9
   end
   object cxLabel3: TcxLabel
-    Left = 296
-    Top = 58
+    Left = 10
+    Top = 57
     Caption = #1043#1088#1091#1087#1072' ('#1056#1110#1074#1077#1085#1100' 1) '#9
   end
   object cePersonalGroup_1: TcxButtonEdit
-    Left = 296
-    Top = 77
+    Left = 10
+    Top = 76
     Properties.Buttons = <
       item
         Default = True
@@ -256,8 +256,8 @@ object CommercRetailEditForm: TCommercRetailEditForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 32
-    Top = 192
+    Left = 40
+    Top = 154
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_CommercRetail'
@@ -376,8 +376,8 @@ object CommercRetailEditForm: TCommercRetailEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 200
-    Top = 181
+    Left = 486
+    Top = 131
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 296
@@ -411,7 +411,7 @@ object CommercRetailEditForm: TCommercRetailEditForm
         MultiSelectSeparator = ','
       end>
     Left = 119
-    Top = 64
+    Top = 106
   end
   object GuidesRetail: TdsdGuides
     KeyField = 'Id'
@@ -470,8 +470,8 @@ object CommercRetailEditForm: TCommercRetailEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 111
-    Top = 102
+    Left = 397
+    Top = 52
   end
   object GuidesPosition_3: TdsdGuides
     KeyField = 'Id'
@@ -500,8 +500,8 @@ object CommercRetailEditForm: TCommercRetailEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 111
-    Top = 148
+    Left = 397
+    Top = 98
   end
   object GuidesPersonalGroup_1: TdsdGuides
     KeyField = 'Id'
@@ -530,7 +530,7 @@ object CommercRetailEditForm: TCommercRetailEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 445
-    Top = 67
+    Left = 159
+    Top = 66
   end
 end
