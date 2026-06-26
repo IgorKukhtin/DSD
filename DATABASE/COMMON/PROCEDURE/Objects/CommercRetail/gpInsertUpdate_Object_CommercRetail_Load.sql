@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_CommercRetail_Load()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CommercRetail_Load (Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CommercRetail_Load (Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CommercRetail_Load(
     IN inCommercRetailCode    Integer   ,
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CommercRetail_Load(
     IN inPositionName_1       TVarChar  ,
     IN inPositionName_2       TVarChar  ,
     IN inPositionName_3       TVarChar  ,
+    IN inPersonalGroupName_1  TVarChar  ,
     IN inSession              TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -19,6 +21,7 @@ $BODY$
            vbPositionId_1      Integer;
            vbPositionId_2      Integer;
            vbPositionId_3      Integer;
+           vbPersonalGroupId_1 Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Juridical());
@@ -113,6 +116,24 @@ BEGIN
          END IF;
      END IF;
 
+     -- Группа 1
+     IF COALESCE (inPersonalGroupName_1,'') <> ''
+     THEN
+         -- проверка
+         IF 1 < (SELECT COUNT(*) FROM Object WHERE TRIM (Object.ValueData) ILIKE TRIM (inPersonalGroupName_1) AND Object.DescId = zc_Object_PersonalGroup())
+         THEN
+             RAISE EXCEPTION 'Помилка.Знайдено кілька значень Група співробітників = <%>', inPersonalGroupName_1;
+         END IF;
+     
+         -- находим 
+         vbPersonalGroupId_1 := (SELECT Object.Id FROM Object WHERE TRIM (Object.ValueData) ILIKE TRIM (inPersonalGroupName_1) AND Object.DescId = zc_Object_PersonalGroup());
+
+         IF COALESCE (vbPersonalGroupId_1,0) = 0
+         THEN 
+             RAISE EXCEPTION 'Помилка.Групу співробітників = <%> не знайдено', inPersonalGroupName_1;
+         END IF;
+     END IF;
+
      -- сохранили елемент<>
      PERFORM gpInsertUpdate_Object_CommercRetail (ioId          := COALESCE (vbCommercRetailId,0)    ::Integer
                                                , inCode         := COALESCE (vbCommercRetailCode,0)  ::Integer
@@ -120,6 +141,7 @@ BEGIN
                                                , inPositionId_1 := vbPositionId_1                ::Integer
                                                , inPositionId_2 := vbPositionId_2                ::Integer
                                                , inPositionId_3 := vbPositionId_3                ::Integer
+                                               , inPersonalGroupId_1 := vbPersonalGroupId_1      ::Integer
                                                , inComment      := ''                            ::TVarChar
                                                , inSession      := inSession                     ::TVarChar
                                                );   

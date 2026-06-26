@@ -331,6 +331,7 @@ type
     mactSign_1_Yes: TMultiAction;
     AmountPlan_next: TcxGridDBColumn;
     AmountPlan_next_old: TcxGridDBColumn;
+    actPersonalChoiceForm: TOpenChoiceForm;
   private
   public
   end;

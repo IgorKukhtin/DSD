@@ -918,6 +918,22 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
             Options.Editing = False
             Width = 100
           end
+          object PersonalName: TcxGridDBColumn
+            Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1079#1072#1082#1091#1087#1082#1091'/'#1086#1087#1083#1072#1090#1091
+            DataBinding.FieldName = 'PersonalName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actPersonalChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1079#1072#1082#1091#1087#1082#1091'/'#1086#1087#1083#1072#1090#1091
+            Width = 118
+          end
           object StartDate: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088' '#1089
             DataBinding.FieldName = 'StartDate'
@@ -3316,6 +3332,35 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
       ErasedFieldName = 'isErased'
       DataSource = ChildDS
     end
+    object actPersonalChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PersonalChoiceForm'
+      FormName = 'TPersonal_ObjectForm'
+      FormNameParam.Value = 'TPersonal_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object SetUnErasedChild: TdsdUpdateErased
       Category = 'Child'
       TabSheet = cxTabSheetMain
@@ -5226,7 +5271,7 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
   object MasterDS: TDataSource
     DataSet = MasterCDS
     Left = 70
-    Top = 311
+    Top = 327
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
@@ -5284,6 +5329,14 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ContractId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PersonalId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -5986,8 +6039,8 @@ object OrderFinanceMovementSBForm: TOrderFinanceMovementSBForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 502
-    Top = 240
+    Left = 558
+    Top = 184
   end
   object spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderFinance_SetUnErased'

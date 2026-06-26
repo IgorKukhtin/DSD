@@ -9139,7 +9139,7 @@ inherited Sale_CommercForm: TSale_CommercForm
     Top = 528
   end
   object spSelectComRetail: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_CommercRetail'
+    StoredProcName = 'gpSelect_Object_CommercRetail_byMovement'
     DataSet = ComRetailCDS
     DataSets = <
       item

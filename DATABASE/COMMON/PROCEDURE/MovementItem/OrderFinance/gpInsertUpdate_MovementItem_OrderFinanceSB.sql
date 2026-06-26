@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_OrderFinanceSB()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinanceSB (Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinanceSB (Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinanceSB (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinanceSB(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinanceSB(
     IN inMovementId            Integer   , -- Ключ объекта <Документ>
     IN inJuridicalId           Integer   , --
     IN inContractId            Integer   , --
+    IN inPersonalId            Integer   , 
     IN inCashId_top            Integer   , --
     IN inCashId                Integer   , --
   --IN inBankAccountId         Integer   , --
@@ -135,6 +137,7 @@ BEGIN
                                                   , inMovementId           := inMovementId
                                                   , inJuridicalId          := inJuridicalId
                                                   , inContractId           := inContractId
+                                                  , inPersonalId           := inPersonalId
                                                   , inCashId               := inCashId
                                                   , inAmount               := 0
                                                   , inAmount_next          := 0

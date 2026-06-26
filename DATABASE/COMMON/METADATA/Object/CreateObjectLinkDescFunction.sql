@@ -2505,8 +2505,12 @@ INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
  CREATE OR REPLACE FUNCTION zc_objectlink_commercretail_retail() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_objectlink_commercretail_retail'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_objectlink_commercretail_retail', 'Торгівельна мережа', zc_Object_CommercRetail(), zc_Object_retail() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_objectlink_commercretail_retail');
+
+ CREATE OR REPLACE FUNCTION zc_ObjectLink_CommercRetail_PersonalGroup_1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommercRetail_PersonalGroup_1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_CommercRetail_PersonalGroup_1', 'Группа(Рівень 1)', zc_Object_CommercRetail(), zc_Object_PersonalGroup() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommercRetail_PersonalGroup_1');
  
- 
+  
  
 
 

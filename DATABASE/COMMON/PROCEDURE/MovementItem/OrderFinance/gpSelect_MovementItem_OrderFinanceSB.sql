@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, MovementItemId_child Integer
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, NumGroup Integer
              , Condition TVarChar, ContractStateKindCode Integer
              , StartDate TDateTime, EndDate_real TDateTime, EndDate TVarChar, PersonalName_contract TVarChar
+             , PersonalId Integer, PersonalName TVarChar   -- Ответственный за закупку/оплату
                -- Касса (место выдачи)
              , CashId Integer, CashName TVarChar
 
@@ -811,6 +812,7 @@ BEGIN
                          , COALESCE (tmpMI_Child.MovementItemId, 0) AS MovementItemId_child
                          , tmpMI.ObjectId                           AS ObjectId
                          , tmpMI.ContractId                         AS ContractId
+                         , MILinkObject_Personal.ObjectId           AS PersonalId
                          , tmpMI.isErased                           AS isErased
 
                          , tmpMI_Child.GoodsName                    AS GoodsName_Child
@@ -922,6 +924,10 @@ BEGIN
                                                              ON MILO_Update.MovementItemId = tmpMI.Id
                                                             AND MILO_Update.DescId = zc_MILinkObject_Update()
                          LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
+ 
+                         LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_Personal
+                                                             ON MILinkObject_Personal.MovementItemId = tmpMI.Id
+                                                            AND MILinkObject_Personal.DescId = zc_MILinkObject_Personal()
                   )
 
        -- Результат
@@ -956,8 +962,10 @@ BEGIN
            , (''|| CASE WHEN View_Contract.ContractTermKindId = zc_Enum_ContractTermKind_Long() THEN '* ' ELSE '' END
                 || (LPAD (EXTRACT (Day FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||LPAD (EXTRACT (Month FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||EXTRACT (YEAR FROM View_Contract.EndDate_term) :: TVarChar)
              ) ::TVarChar AS EndDate
-           , Object_Personal.ValueData ::TVarChar AS PersonalName_contract
-
+           , Object_Personal_contract.ValueData ::TVarChar AS PersonalName_contract
+           
+           , Object_Personal.Id                   AS PersonalId
+           , Object_Personal.ValueData ::TVarChar AS PersonalName
              -- касса (место выдачи)
            , Object_Cash.Id                    ::Integer    AS CashId
            , Object_Cash.ValueData             ::TVarChar   AS CashName
@@ -1198,7 +1206,7 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
                                  ON ObjectLink_Contract_Personal.ObjectId = View_Contract.ContractId
                                 AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
-            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Contract_Personal.ChildObjectId
+            LEFT JOIN Object AS Object_Personal_contract ON Object_Personal_contract.Id = ObjectLink_Contract_Personal.ChildObjectId
 
             -- УП-статья + № группы
             LEFT JOIN tmpInfoMoney_OrderF ON tmpInfoMoney_OrderF.InfoMoneyId = Object_InfoMoney.Id
@@ -1210,6 +1218,7 @@ BEGIN
                                 AND Object_Juridical.DescId = zc_Object_Partner()
             LEFT JOIN Object AS Object_Juridical_inf ON Object_Juridical_inf.Id = ObjectLink_Partner_Juridical.ObjectId
 
+            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = COALESCE (MovementItem.PersonalId, ObjectLink_Contract_Personal.ChildObjectId)
         WHERE vbIsUser_where = FALSE
            OR MovementItem.InsertId = vbUserId
 
@@ -1253,7 +1262,10 @@ BEGIN
            , (''|| CASE WHEN View_Contract.ContractTermKindId = zc_Enum_ContractTermKind_Long() THEN '* ' ELSE '' END
                 || (LPAD (EXTRACT (Day FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||LPAD (EXTRACT (Month FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||EXTRACT (YEAR FROM View_Contract.EndDate_term) :: TVarChar)
              ) ::TVarChar AS EndDate
-           , Object_Personal.ValueData ::TVarChar AS PersonalName_contract
+           , Object_Personal_Contract.ValueData ::TVarChar AS PersonalName_contract
+
+           , Object_Personal.Id                   AS PersonalId
+           , Object_Personal.ValueData ::TVarChar AS PersonalName
 
              -- касса (место выдачи)
            , 0            ::Integer   AS CashId
@@ -1426,7 +1438,7 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
                                  ON ObjectLink_Contract_Personal.ObjectId = View_Contract.ContractId
                                 AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
-            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Contract_Personal.ChildObjectId
+            LEFT JOIN Object AS Object_Personal_Contract ON Object_Personal_Contract.Id = ObjectLink_Contract_Personal.ChildObjectId
 
             -- УП-статья + № группы
             LEFT JOIN tmpInfoMoney_OrderF ON tmpInfoMoney_OrderF.InfoMoneyId = Object_InfoMoney.Id
@@ -1437,6 +1449,8 @@ BEGIN
                                 AND ObjectLink_Partner_Juridical.DescId        = zc_ObjectLink_Partner_Juridical()
                                 AND Object_Juridical.DescId = zc_Object_Partner()
             LEFT JOIN Object AS Object_Juridical_inf ON Object_Juridical_inf.Id = ObjectLink_Partner_Juridical.ObjectId
+
+            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Contract_Personal.ChildObjectId       --если не установлено , то Сотрудник
 
        WHERE tmpMI.ObjectId IS NULL
       ;

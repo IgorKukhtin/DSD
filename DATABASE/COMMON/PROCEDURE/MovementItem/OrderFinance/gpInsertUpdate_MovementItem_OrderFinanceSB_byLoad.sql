@@ -2,14 +2,16 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinanceSB_byLoad (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinanceSB_byLoad (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinanceSB_byLoad (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinanceSB_byLoad (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderFinanceSB_byLoad (Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderFinanceSB_byLoad(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId            Integer   , -- Ключ объекта <Документ>
     IN inJuridicalId           Integer   , --
-    IN inContractId            Integer   , --
+    IN inContractId            Integer   , -- 
+    IN inPersonalId            Integer   , 
     IN inCashId_top            Integer   , --
     IN inCashId                Integer   , --
     IN inAmount                TFloat    , -- *** Предварительный План на неделю
@@ -286,6 +288,8 @@ BEGIN
 
     -- сохранили связь с <касса место выдачи>
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Cash(), ioId, inCashId);
+    -- сохранили связь с <>
+    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Personal(), ioId, inPersonalId);
 
     -- сохранили свойство <>
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment_Partner(), ioId, inComment_Partner);

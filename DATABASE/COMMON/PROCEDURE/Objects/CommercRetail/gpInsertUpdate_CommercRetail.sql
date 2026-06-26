@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_CommercRetail()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CommercRetail(Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CommercRetail(Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CommercRetail(
  INOUT ioId                    Integer   ,    -- ключ объекта <>
@@ -8,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CommercRetail(
     IN inRetailId              Integer   ,    --
     IN inPositionId_1          Integer   ,    --
     IN inPositionId_2          Integer   ,    --
-    IN inPositionId_3          Integer   ,    --
+    IN inPositionId_3          Integer   ,    -- 
+    IN inPersonalGroupId_1     Integer   ,    --
     IN inComment               TVarChar  ,    -- Примечание
     IN inSession               TVarChar       -- сессия пользователя
 )
@@ -45,7 +47,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_CommercRetail_Position_2(), ioId, inPositionId_2);
    -- сохранили связь с < >
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_CommercRetail_Position_3(), ioId, inPositionId_3);
-
+   -- сохранили связь с < >
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_CommercRetail_PersonalGroup_1(), ioId, inPersonalGroupId_1);
+   
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 

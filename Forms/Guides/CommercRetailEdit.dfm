@@ -2,8 +2,8 @@ object CommercRetailEditForm: TCommercRetailEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1076#1072#1090#1080'/'#1047#1084#1110#1085#1080#1090#1080' <'#1057#1090#1088#1091#1082#1090#1091#1088#1072' '#1082#1086#1084#1077#1088#1094#1110#1111' ('#1052#1077#1088#1077#1078#1110')>'
-  ClientHeight = 342
-  ClientWidth = 299
+  ClientHeight = 203
+  ClientWidth = 574
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,8 +17,8 @@ object CommercRetailEditForm: TCommercRetailEditForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 32
-    Top = 304
+    Left = 171
+    Top = 168
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -26,8 +26,8 @@ object CommercRetailEditForm: TCommercRetailEditForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 178
-    Top = 304
+    Left = 317
+    Top = 168
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -46,27 +46,27 @@ object CommercRetailEditForm: TCommercRetailEditForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 3
-    Width = 273
+    Width = 81
   end
   object cxLabel4: TcxLabel
-    Left = 10
-    Top = 236
+    Left = 296
+    Top = 11
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit
-    Left = 10
-    Top = 256
+    Left = 296
+    Top = 30
     TabOrder = 5
     Width = 273
   end
   object cxLabel5: TcxLabel
     Left = 10
-    Top = 99
+    Top = 100
     Caption = #1055#1086#1089#1072#1076#1072' ('#1056#1110#1074#1077#1085#1100' 1) '#9
   end
   object cePosition_1: TcxButtonEdit
     Left = 10
-    Top = 118
+    Top = 119
     Properties.Buttons = <
       item
         Default = True
@@ -77,13 +77,13 @@ object CommercRetailEditForm: TCommercRetailEditForm
     Width = 273
   end
   object cxLabel7: TcxLabel
-    Left = 10
-    Top = 57
+    Left = 101
+    Top = 11
     Caption = #1058#1086#1088#1075#1110#1074#1077#1083#1100#1085#1072' '#1084#1077#1088#1077#1078#1072' '#9
   end
   object ceRetail: TcxButtonEdit
-    Left = 10
-    Top = 76
+    Left = 101
+    Top = 30
     Properties.Buttons = <
       item
         Default = True
@@ -91,11 +91,11 @@ object CommercRetailEditForm: TCommercRetailEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 9
-    Width = 273
+    Width = 182
   end
   object cePosition_2: TcxButtonEdit
-    Left = 10
-    Top = 164
+    Left = 296
+    Top = 73
     Properties.Buttons = <
       item
         Default = True
@@ -106,13 +106,13 @@ object CommercRetailEditForm: TCommercRetailEditForm
     Width = 273
   end
   object cxLabel6: TcxLabel
-    Left = 10
-    Top = 145
+    Left = 296
+    Top = 54
     Caption = #1055#1086#1089#1072#1076#1072' ('#1056#1110#1074#1077#1085#1100' 2) '#9
   end
   object cePosition_3: TcxButtonEdit
-    Left = 10
-    Top = 210
+    Left = 296
+    Top = 119
     Properties.Buttons = <
       item
         Default = True
@@ -123,13 +123,30 @@ object CommercRetailEditForm: TCommercRetailEditForm
     Width = 273
   end
   object cxLabel8: TcxLabel
-    Left = 10
-    Top = 191
+    Left = 296
+    Top = 100
     Caption = #1055#1086#1089#1072#1076#1072' ('#1056#1110#1074#1077#1085#1100' 3) '#9
   end
+  object cxLabel3: TcxLabel
+    Left = 10
+    Top = 57
+    Caption = #1043#1088#1091#1087#1072' ('#1056#1110#1074#1077#1085#1100' 1) '#9
+  end
+  object cePersonalGroup_1: TcxButtonEdit
+    Left = 10
+    Top = 76
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 15
+    Width = 273
+  end
   object ActionList: TActionList
-    Left = 192
-    Top = 64
+    Left = 472
+    Top = 135
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -212,6 +229,14 @@ object CommercRetailEditForm: TCommercRetailEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPersonalGroupId_1'
+        Value = Null
+        Component = GuidesPersonalGroup_1
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = ceComment
@@ -220,7 +245,7 @@ object CommercRetailEditForm: TCommercRetailEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 232
+    Left = 496
     Top = 2
   end
   object dsdFormParams: TdsdFormParams
@@ -232,6 +257,7 @@ object CommercRetailEditForm: TCommercRetailEditForm
         MultiSelectSeparator = ','
       end>
     Left = 40
+    Top = 154
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_CommercRetail'
@@ -318,9 +344,25 @@ object CommercRetailEditForm: TCommercRetailEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalGroupId_1'
+        Value = Null
+        Component = GuidesPersonalGroup_1
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalGroupName_1'
+        Value = Null
+        Component = GuidesPersonalGroup_1
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 144
+    Left = 400
+    Top = 8
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -334,12 +376,12 @@ object CommercRetailEditForm: TCommercRetailEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 224
-    Top = 262
+    Left = 486
+    Top = 131
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 224
-    Top = 56
+    Left = 296
+    Top = 103
   end
   object GuidesPosition_1: TdsdGuides
     KeyField = 'Id'
@@ -369,7 +411,7 @@ object CommercRetailEditForm: TCommercRetailEditForm
         MultiSelectSeparator = ','
       end>
     Left = 119
-    Top = 105
+    Top = 106
   end
   object GuidesRetail: TdsdGuides
     KeyField = 'Id'
@@ -398,8 +440,8 @@ object CommercRetailEditForm: TCommercRetailEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 80
-    Top = 71
+    Left = 182
+    Top = 25
   end
   object GuidesPosition_2: TdsdGuides
     KeyField = 'Id'
@@ -428,8 +470,8 @@ object CommercRetailEditForm: TCommercRetailEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 111
-    Top = 143
+    Left = 397
+    Top = 52
   end
   object GuidesPosition_3: TdsdGuides
     KeyField = 'Id'
@@ -458,7 +500,37 @@ object CommercRetailEditForm: TCommercRetailEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 111
-    Top = 189
+    Left = 397
+    Top = 98
+  end
+  object GuidesPersonalGroup_1: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePersonalGroup_1
+    FormNameParam.Value = 'TPersonalGroupForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonalGroupForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPersonalGroup_1
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPersonalGroup_1
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 159
+    Top = 66
   end
 end

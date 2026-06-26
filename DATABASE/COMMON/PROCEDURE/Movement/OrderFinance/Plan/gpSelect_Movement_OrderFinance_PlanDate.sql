@@ -40,7 +40,8 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , MovementItemId Integer
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , OKPO TVarChar
-             , ContractId Integer, ContractCode Integer, ContractName TVarChar, PersonalName_contract TVarChar
+             , ContractId Integer, ContractCode Integer, ContractName TVarChar, PersonalName_contract TVarChar 
+             , PersonalId Integer, PersonalName TVarChar   -- Ответственный за закупку/оплату
              , PaidKindName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, NumGroup Integer
              , Condition TVarChar, ContractStateKindCode Integer
@@ -484,6 +485,7 @@ BEGIN
                                        AND MovementItemLinkObject.DescId IN (zc_MILinkObject_Insert()
                                                                            , zc_MILinkObject_Update()
                                                                            , zc_MILinkObject_Cash()
+                                                                           , zc_MILinkObject_Personal()
                                                                             )
                                     )
      , tmpMovementItemString AS (SELECT *
@@ -735,6 +737,9 @@ BEGIN
                             , Object_Contract.ObjectCode       AS ContractCode
                             , Object_Contract.ValueData        AS ContractName
 
+                            , Object_Personal.Id                   AS PersonalId
+                            , Object_Personal.ValueData ::TVarChar AS PersonalName
+
                             , CASE WHEN View_Contract.PaidKindId > 0 THEN Object_PaidKind.ValueData
                                    WHEN COALESCE (ObjectBoolean_OrderFinance_OperDate.ValueData, FALSE) = FALSE THEN Object_PaidKind_1.ValueData
                                    WHEN Object_InfoMoney.Id = MovementItem.ObjectId THEN Object_PaidKind_2.ValueData
@@ -751,7 +756,7 @@ BEGIN
                             , (''|| CASE WHEN View_Contract.ContractTermKindId = zc_Enum_ContractTermKind_Long() THEN '* ' ELSE '' END
                                  || (LPAD (EXTRACT (Day FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||LPAD (EXTRACT (Month FROM View_Contract.EndDate_term) :: TVarChar,2,'0') ||'.'||EXTRACT (YEAR FROM View_Contract.EndDate_term) :: TVarChar)
                               ) ::TVarChar AS EndDate
-                            , Object_Personal.ValueData ::TVarChar AS PersonalName_contract
+                            , Object_Personal_Contract.ValueData ::TVarChar AS PersonalName_contract
 
 
                             , MIFloat_AmountRemains.ValueData   :: TFloat AS AmountRemains
@@ -884,7 +889,12 @@ BEGIN
                              LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
                                                   ON ObjectLink_Contract_Personal.ObjectId = View_Contract.ContractId
                                                  AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
-                             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Contract_Personal.ChildObjectId
+                             LEFT JOIN Object AS Object_Personal_Contract ON Object_Personal_Contract.Id = ObjectLink_Contract_Personal.ChildObjectId
+
+                             LEFT JOIN tmpMILO_Contract AS MILinkObject_Personal
+                                                        ON MILinkObject_Personal.MovementItemId = MovementItem.Id
+                                                       AND MILinkObject_Personal.DescId = zc_MILinkObject_Personal()
+                             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = COALESCE (MILinkObject_Personal.ObjectId,ObjectLink_Contract_Personal.ChildObjectId) 
                      )
 
        --
@@ -1258,6 +1268,7 @@ BEGIN
         , tmpMI.ContractCode
         , CASE WHEN tmpMI.ContractName <> '' THEN tmpMI.ContractName ELSE tmpMI.Comment_Contract END :: TVarChar AS ContractName
         , tmpMI.PersonalName_contract  ::TVarChar
+        , tmpMI.PersonalId, tmpMI.PersonalName
         , tmpMI.PaidKindName
         , tmpMI.InfoMoneyId
         , tmpMI.InfoMoneyCode
