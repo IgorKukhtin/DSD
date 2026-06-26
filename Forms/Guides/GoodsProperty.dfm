@@ -134,7 +134,7 @@ object GoodsPropertyForm: TGoodsPropertyForm
         Caption = '% '#1086#1090#1082#1083'. '#1076#1083#1103' '#1074#1083#1086#1078'.'
         DataBinding.FieldName = 'TaxDoc'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 0
+        Properties.DecimalPlaces = 2
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter

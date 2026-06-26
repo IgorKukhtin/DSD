@@ -386,10 +386,10 @@ BEGIN
                  , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END * (MovementFloat_TotalSumm.ValueData + vbCorrSumm) AS TotalSumm_sign
 
                  , COALESCE (Object_Partner.ValueData, Object_From.ValueData) AS FromName
-                 , Object_To.ValueData               		    AS ToName
+                 , Object_To.ValueData               		  AS ToName
                  , (Object_PaidKind.Id - 2) :: TVarChar           AS PaidKindName_user
-                 , Object_PaidKind.ValueData         		      AS PaidKindName
-                 , View_Contract.InvNumber        		          AS ContractName
+                 , Object_PaidKind.ValueData         		  AS PaidKindName
+                 , View_Contract.InvNumber        		  AS ContractName
                  , ObjectDate_Signing.ValueData                   AS ContractSigningDate
                  , View_Contract.ContractKindName                 AS ContractKind
 
@@ -431,6 +431,8 @@ BEGIN
                  --, COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AS OperDate_cacl
                  , vbOperDate_cacl AS OperDate_cacl
                  , COALESCE (vbJuridicalDocumentId, View_Contract.JuridicalBasisId, Object_To.Id) AS ToId_calc
+
+                 , CASE WHEN View_Contract.InvNumber ILIKE '%ξαμεν%' OR View_Contract.InvNumber ILIKE '%ξαμ³ν%' THEN TRUE ELSE FALSE END :: Boolean AS isPrintText
 
              FROM tmpMovement AS Movement
                   LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId

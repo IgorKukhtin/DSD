@@ -986,7 +986,7 @@ END IF;
              END :: TVarChar AS OrderComment
            , CASE WHEN Movement.DescId = zc_Movement_Loss() THEN TRUE ELSE FALSE END isMovementLoss
 
-           , CASE WHEN Position(UPPER('ξαμεν') in UPPER(View_Contract.InvNumber)) > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPrintText
+           , CASE WHEN View_Contract.InvNumber ILIKE '%ξαμεν%' OR View_Contract.InvNumber ILIKE '%ξαμ³ν%' THEN TRUE ELSE FALSE END :: Boolean AS isPrintText
 
            , CASE WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm() THEN TRUE ELSE FALSE END :: Boolean AS isFirstForm
 
