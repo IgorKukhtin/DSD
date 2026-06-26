@@ -926,7 +926,7 @@ BEGIN
                          LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
  
                          LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_Personal
-                                                             ON MILinkObject_Personal.MovementItemId = MovementItem.Id
+                                                             ON MILinkObject_Personal.MovementItemId = tmpMI.Id
                                                             AND MILinkObject_Personal.DescId = zc_MILinkObject_Personal()
                   )
 
