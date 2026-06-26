@@ -125,7 +125,9 @@ BEGIN
               , tmp.StaffListKindId
            INTO vbMovementId_find, vbStaffListKindId_find 
          FROM (SELECT Movement.Id AS  MovementId
-                    , ROW_NUMBER() OVER (ORDER BY Movement.Id DESC, Movement.OperDate DESC) AS Ord
+                    , ROW_NUMBER() OVER (ORDER BY Movement.OperDate DESC
+                                                , CASE WHEN MovementLinkObject_StaffListKind.ObjectId = zc_Enum_StaffListKind_Out() THEN 1 ELSE 0 END DESC 
+                                                , Movement.Id  DESC) AS Ord
                     , MovementLinkObject_StaffListKind.ObjectId AS StaffListKindId
                FROM Movement 
                     INNER JOIN MovementLinkObject AS MovementLinkObject_Member
@@ -166,7 +168,10 @@ BEGIN
         INTO vbMovementId_find, vbStaffListKindId_find 
          FROM (SELECT Movement.Id  AS MovementId
                     , MovementLinkObject_StaffListKind.ObjectId AS StaffListKindId
-                    , ROW_NUMBER() OVER (ORDER BY Movement.Id DESC, Movement.OperDate DESC) AS Ord
+                    , ROW_NUMBER() OVER (ORDER BY Movement.OperDate DESC
+                                                , CASE WHEN MovementLinkObject_StaffListKind.ObjectId = zc_Enum_StaffListKind_Out() THEN 1 ELSE 0 END DESC 
+                                                , Movement.Id  DESC                                
+                                         )  AS Ord
                FROM Movement
                     INNER JOIN MovementLinkObject AS MovementLinkObject_Member
                                                   ON MovementLinkObject_Member.MovementId = Movement.Id
@@ -215,7 +220,9 @@ BEGIN
         INTO vbMovementId_find, vbStaffListKindId_find 
          FROM (SELECT Movement.Id AS MovementId
                     , MovementLinkObject_StaffListKind.ObjectId AS StaffListKindId
-                    , ROW_NUMBER() OVER (ORDER BY Movement.Id DESC, Movement.OperDate DESC) AS Ord
+                    , ROW_NUMBER() OVER (ORDER BY Movement.OperDate DESC
+                                                , CASE WHEN MovementLinkObject_StaffListKind.ObjectId = zc_Enum_StaffListKind_Out() THEN 1 ELSE 0 END DESC 
+                                                , Movement.Id DESC) AS Ord
                FROM Movement
                     INNER JOIN MovementLinkObject AS MovementLinkObject_Member
                                                   ON MovementLinkObject_Member.MovementId = Movement.Id
