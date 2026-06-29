@@ -1972,8 +1972,8 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
       end
       item
       end>
-    Left = 368
-    Top = 48
+    Left = 384
+    Top = 8
   end
   object GuidesWeek_Date1: TdsdGuides
     KeyField = 'WeekNumber'
@@ -2341,8 +2341,8 @@ inherited OrderFinance_PlanForm: TOrderFinance_PlanForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 464
-    Top = 56
+    Left = 480
+    Top = 24
   end
   object spGet_CurrentWeekDay: TdsdStoredProc
     StoredProcName = 'spGet_CurrentWeekDay'
