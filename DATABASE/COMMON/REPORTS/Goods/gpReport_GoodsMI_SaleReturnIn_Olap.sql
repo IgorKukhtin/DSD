@@ -63,7 +63,12 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , DayOfWeekName_Full TVarChar
              -- сумма вх (схема павильоны)
              , Sale_SummIn_pav TFloat
-             , ReturnIn_SummIn_pav TFloat
+             , ReturnIn_SummIn_pav TFloat 
+             -- Вне бюджета вес+шт+ сумма+с/с 
+             , Actions_Weight_NotBudg    TFloat
+             , Actions_Sh_NotBudg        TFloat
+             , Actions_Summ_NotBudg      TFloat
+             , Actions_SummCost_NotBudg  TFloat
               )
 AS
 $BODY$
@@ -363,7 +368,12 @@ BEGIN
                               , SUM (CASE WHEN inIsCost = TRUE THEN SoldTable.Return_SummCost_40200 ELSE 0 END) AS Return_SummCost_40200
                               -- сумма вх (схема павильоны)
                               , SUM (SoldTable.Sale_SummIn_pav)     AS Sale_SummIn_pav
-                              , SUM (SoldTable.ReturnIn_SummIn_pav) AS ReturnIn_SummIn_pav  
+                              , SUM (SoldTable.ReturnIn_SummIn_pav) AS ReturnIn_SummIn_pav
+                              --Вне бюджета вес+шт+с/с + сумма                            
+                              , SUM (SoldTable.Actions_Weight_NotBudg)   AS Actions_Weight_NotBudg  
+                              , SUM (SoldTable.Actions_Sh_NotBudg)       AS Actions_Sh_NotBudg      
+                              , SUM (SoldTable.Actions_Summ_NotBudg)     AS Actions_Summ_NotBudg    
+                              , SUM (SoldTable.Actions_SummCost_NotBudg) AS Actions_SummCost_NotBudg
                               
                               , zfCalc_GoodsPropertyId (SoldTable.ContractId, SoldTable.JuridicalId, SoldTable.PartnerId) AS GoodsPropertyId
                          FROM SoldTable
@@ -458,6 +468,11 @@ BEGIN
                               -- сумма вх (схема павильоны)
                              OR SUM (SoldTable.Sale_SummIn_pav) <> 0
                              OR SUM (SoldTable.ReturnIn_SummIn_pav) <> 0
+
+                             OR SUM (SoldTable.Actions_Weight_NotBudg) <> 0
+                             OR SUM (SoldTable.Actions_Sh_NotBudg) <> 0      
+                             OR SUM (SoldTable.Actions_Summ_NotBudg) <> 0   
+                             OR SUM (SoldTable.Actions_SummCost_NotBudg) <> 0
                         )
 
         -- выбираем данные по признаку товара ТОП из GoodsByGoodsKind
@@ -650,6 +665,11 @@ BEGIN
          -- сумма вх (схема павильоны)
          , tmpOperationGroup.Sale_SummIn_pav     :: TFloat AS Sale_SummIn_pav
          , tmpOperationGroup.ReturnIn_SummIn_pav :: TFloat AS ReturnIn_SummIn_pav
+         --вне бюджета
+         , tmpOperationGroup.Actions_Weight_NotBudg    :: TFloat AS Actions_Weight_NotBudg  
+         , tmpOperationGroup.Actions_Sh_NotBudg        :: TFloat AS Actions_Sh_NotBudg      
+         , tmpOperationGroup.Actions_Summ_NotBudg      :: TFloat AS Actions_Summ_NotBudg    
+         , tmpOperationGroup.Actions_SummCost_NotBudg  :: TFloat AS Actions_SummCost_NotBudg
      FROM tmpOperationGroup
           -- LEFT JOIN _tmp_noDELETE_Partner ON _tmp_noDELETE_Partner.FromId = tmpOperationGroup.PartnerId AND 1 = 0
 
@@ -733,6 +753,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 29.06.26         *
  15.03.22         * 
  25.08.21         * add PaidKind
  03.06.21         * add isTop

@@ -4,7 +4,6 @@
   ClientWidth = 1362
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -468
   ExplicitWidth = 1378
   ExplicitHeight = 459
   PixelsPerInch = 96
@@ -193,6 +192,26 @@
               Format = ',0.####'
               Kind = skSum
               Column = Count_TT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Actions_Weight_NotBudg
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Actions_Sh_NotBudg
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Actions_Summ_NotBudg
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Actions_SummCost_NotBudg
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -364,6 +383,26 @@
               Format = ',0.####'
               Kind = skSum
               Column = Count_TT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Actions_Weight_NotBudg
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Actions_Sh_NotBudg
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Actions_Summ_NotBudg
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Actions_SummCost_NotBudg
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -1139,6 +1178,50 @@
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object Actions_Weight_NotBudg: TcxGridDBColumn
+            Caption = #1042#1085#1077' '#1073#1102#1076#1078#1077#1090#1072' '#1074#1077#1089
+            DataBinding.FieldName = 'Actions_Weight_NotBudg'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object Actions_Sh_NotBudg: TcxGridDBColumn
+            Caption = #1042#1085#1077' '#1073#1102#1076#1078#1077#1090#1072' '#1096#1090
+            DataBinding.FieldName = 'Actions_Sh_NotBudg'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object Actions_Summ_NotBudg: TcxGridDBColumn
+            Caption = #1042#1085#1077' '#1073#1102#1076#1078#1077#1090#1072' '#1089#1091#1084#1084#1072
+            DataBinding.FieldName = 'Actions_Summ_NotBudg'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object Actions_SummCost_NotBudg: TcxGridDBColumn
+            Caption = #1042#1085#1077' '#1073#1102#1076#1078#1077#1090#1072' '#1089'/'#1089
+            DataBinding.FieldName = 'Actions_SummCost_NotBudg'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

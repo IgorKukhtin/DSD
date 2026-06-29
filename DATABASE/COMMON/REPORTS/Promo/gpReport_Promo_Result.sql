@@ -30,6 +30,9 @@ RETURNS TABLE(
     ,DateFinalPromo       TDateTime --Дата проведения акции
     ,MonthPromo           TDateTime --Месяц акции
     ,CheckDate            TDateTime --дата согласования
+    ,NotBudgPromoId       Integer   --Классификатор вне бюджета
+    ,NotBudgPromoName     TVarChar  --Классификатор вне бюджета
+    ,isNotBudgPromo       Boolean   --Вне бюджета (да/нет)
     ,RetailName           TBlob     --Сеть, в которой проходит акция
     ,AreaName             TBlob     --Регион
     ,JuridicalName_str    TBlob     --юр.лица
@@ -95,20 +98,20 @@ BEGIN
                     FROM Movement_Promo_View AS Movement_Promo
                     
                          LEFT JOIN Movement AS Movement_PromoPartner 
-                                             ON Movement_PromoPartner.ParentId = Movement_Promo.Id
-                                            AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
-                                            AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
-                          LEFT JOIN MovementItem AS MI_PromoPartner
-                                                 ON MI_PromoPartner.MovementId = Movement_PromoPartner.ID
-                                                AND MI_PromoPartner.DescId     = zc_MI_Master()
-                                                AND MI_PromoPartner.IsErased   = FALSE
-                          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                               ON ObjectLink_Partner_Juridical.ObjectId = MI_PromoPartner.ObjectId
-                                              AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
-                          INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                                ON ObjectLink_Juridical_Retail.ObjectId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MI_PromoPartner.ObjectId)
-                                               AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
-                                              AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
+                                            ON Movement_PromoPartner.ParentId = Movement_Promo.Id
+                                           AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
+                                           AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
+                         LEFT JOIN MovementItem AS MI_PromoPartner
+                                                ON MI_PromoPartner.MovementId = Movement_PromoPartner.ID
+                                               AND MI_PromoPartner.DescId     = zc_MI_Master()
+                                               AND MI_PromoPartner.IsErased   = FALSE
+                         LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                              ON ObjectLink_Partner_Juridical.ObjectId = MI_PromoPartner.ObjectId
+                                             AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                         INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                               ON ObjectLink_Juridical_Retail.ObjectId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MI_PromoPartner.ObjectId)
+                                              AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
+                                             AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
 
                     WHERE (Movement_Promo.Id = inMovementId OR inMovementId = 0)
                       AND (Movement_Promo.StartSale BETWEEN inStartDate AND inEndDate
@@ -212,6 +215,10 @@ BEGIN
           , Movement_Promo.EndPromo           --*Дата окончания акции
           , Movement_Promo.MonthPromo         --* месяц акции
           , Movement_Promo.CheckDate          -- дата согласования
+
+          , Movement_Promo.NotBudgPromoId    ::Integer    --Классификатор Вне бюджета
+          , Movement_Promo.NotBudgPromoName  ::TVarChar
+          , Movement_Promo.isNotBudgPromo    ::Boolean    --Вне бюджета (да/нет)
 
           , COALESCE ((SELECT STRING_AGG (DISTINCT COALESCE (MovementString_Retail.ValueData, Object_Retail.ValueData),'; ')
                        FROM Movement AS Movement_PromoPartner
