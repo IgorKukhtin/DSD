@@ -390,10 +390,9 @@ type
     cxGridLevelComLocal: TcxGridLevel;
     cxGridComRetail: TcxGrid;
     cxGridDBTableViewComRetail: TcxGridDBTableView;
-    SectionName_ch5: TcxGridDBColumn;
-    RetailName_ch5: TcxGridDBColumn;
-    PositionName_2_ch5: TcxGridDBColumn;
-    PositionName_3_ch5: TcxGridDBColumn;
+    UnitName_ch5: TcxGridDBColumn;
+    PersonalGroupNamech5: TcxGridDBColumn;
+    PersonalName_ch5: TcxGridDBColumn;
     cxGridLevelComRetail: TcxGridLevel;
     cxSplitter1: TcxSplitter;
     ComLocalDS: TDataSource;
@@ -419,6 +418,7 @@ type
     GuidesPersonalGroupCommerc: TdsdGuides;
     bbPrint_Metro: TdxBarButton;
     actPrint_Metro: TdsdPrintAction;
+    Ord_ch5: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -275,49 +275,49 @@ BEGIN
                     , tmp.UnitName           
                FROM tmpLevel1 AS tmp
               UNION ALL
-               SELECT tmp.Ord 
-                    , tmp.PositionName
-                    , tmp.PersonalGroupName
+               SELECT 2 AS Ord
+                    , COALESCE (tmp.PositionName, tmpCommercLocal.PositionName_2)           AS PositionName
+                    , COALESCE (tmp.PersonalGroupName, tmpCommercLocal.PersonalGroupName_2) AS PersonalGroupName
                     , tmp.PersonalName ::Text
-                    , tmp.UnitName           
-               FROM tmpLevel2 AS tmp
+                    , COALESCE (tmp.UnitName, tmpCommercLocal.UnitName) AS UnitName           
+               FROM tmpCommercLocal
+                    LEFT JOIN tmpLevel2 AS tmp ON 1 = 1
               UNION 
-               SELECT tmp.Ord 
-                    , tmp.PositionName
+               SELECT 3 AS Ord 
+                    , COALESCE (tmp.PositionName, tmpCommercLocal.PositionName_3) AS PositionName
                     , tmp.PersonalGroupName
                     , tmp.PersonalName ::Text
-                    , tmp.UnitName           
-               FROM tmpLevel3 AS tmp
+                    , COALESCE (tmp.UnitName, tmpCommercLocal.UnitName) AS UnitName           
+               FROM tmpCommercLocal
+                    LEFT JOIN tmpLevel3 AS tmp ON 1 = 1
               UNION 
-               SELECT tmp.Ord 
-                    , tmp.PositionName
+               SELECT 4 AS Ord 
+                    , COALESCE (tmp.PositionName, tmpCommercLocal.PositionName_4) AS PositionName
                     , tmp.PersonalGroupName
                     , tmp.PersonalName ::Text
-                    , tmp.UnitName           
-               FROM tmpLevel4 AS tmp
+                    , COALESCE (tmp.UnitName, tmpCommercLocal.UnitName) AS UnitName           
+               FROM tmpCommercLocal
+                    LEFT JOIN tmpLevel4 AS tmp ON 1 = 1
               UNION 
-               SELECT tmp.Ord 
-                    , tmp.PositionName
+               SELECT 5 AS Ord 
+                    , COALESCE (tmp.PositionName, tmpCommercLocal.PositionName_5) AS PositionName
                     , tmp.PersonalGroupName
                     , tmp.PersonalName ::Text
-                    , tmp.UnitName           
-               FROM tmpLevel5 AS tmp
+                    , COALESCE (tmp.UnitName, tmpCommercLocal.UnitName) AS UnitName           
+               FROM tmpCommercLocal
+                    LEFT JOIN tmpLevel5 AS tmp ON 1 = 1
               UNION 
-               SELECT tmp.Ord 
-                    , tmp.PositionName
+               SELECT 6 AS Ord 
+                    , COALESCE (tmp.PositionName, tmpCommercLocal.PositionName_6) AS PositionName
                     , tmp.PersonalGroupName
                     , tmp.PersonalName ::Text
-                    , tmp.UnitName           
-               FROM tmpLevel6 AS tmp
+                    , COALESCE (tmp.UnitName, tmpCommercLocal.UnitName) AS UnitName           
+               FROM tmpCommercLocal
+                    LEFT JOIN tmpLevel6 AS tmp ON 1 = 1
               ) AS tmp
         ORDER BY tmp.Ord
            ;
 
-      (Ord Integer
-             , PositionName TVarChar
-             , PersonalGroupName TVarChar
-             , PersonalName Text
-             , UnitName TVarChar
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
