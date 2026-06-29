@@ -28,6 +28,9 @@ RETURNS TABLE(
     ,DateFinalPromo       TDateTime --Дата проведения акции
     ,MonthPromo           TDateTime --Месяц акции
     ,CheckDate            TDateTime --дата согласования
+    ,NotBudgPromoId       Integer   --Классификатор вне бюджета
+    ,NotBudgPromoName     TVarChar  --Классификатор вне бюджета
+    ,isNotBudgPromo       Boolean   --Вне бюджета (да/нет)
     ,RetailName           TBlob     --Сеть, в которой проходит акция
     ,AreaName             TBlob     --Регион
     ,JuridicalName_str    TBlob     --юр.лица
@@ -692,6 +695,10 @@ BEGIN
           , Movement_Promo.EndPromo           --*Дата окончания акции
           , Movement_Promo.MonthPromo         --* месяц акции
           , Movement_Promo.CheckDate          -- дата согласования
+
+          , Movement_Promo.NotBudgPromoId    ::Integer    --Классификатор Вне бюджета
+          , Movement_Promo.NotBudgPromoName  ::TVarChar
+          , Movement_Promo.isNotBudgPromo    ::Boolean    --Вне бюджета (да/нет)
 
           , COALESCE ((SELECT STRING_AGG (DISTINCT COALESCE (MovementString_Retail.ValueData, Object_Retail.ValueData),'; ')
                        FROM Movement AS Movement_PromoPartner
