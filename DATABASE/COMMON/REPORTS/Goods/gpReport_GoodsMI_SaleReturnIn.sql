@@ -481,15 +481,11 @@ BEGIN
                                     , gpReport.Sale_SummIn_pav     :: TFloat
                                     , gpReport.ReturnIn_SummIn_pav :: TFloat 
                                    -- 
-                                    , 0 ::TFloat AS Actions_Weight_NotBudg
-                                    , 0 ::TFloat AS Actions_Sh_NotBudg
-                                    , 0 ::TFloat AS Actions_Summ_NotBudg
-                                    , 0 ::TFloat AS Actions_SummCost_NotBudg 
-                                    /*, gpReport.Actions_Weight_NotBudg   ::TFloat AS Actions_Weight_NotBudg
+                                    , gpReport.Actions_Weight_NotBudg   ::TFloat AS Actions_Weight_NotBudg
                                     , gpReport.Actions_Sh_NotBudg       ::TFloat AS Actions_Sh_NotBudg
                                     , gpReport.Actions_Summ_NotBudg     ::TFloat AS Actions_Summ_NotBudg
                                     , gpReport.Actions_SummCost_NotBudg ::TFloat AS Actions_SummCost_NotBudg
-                                    */
+                                    
                                FROM gpReport_GoodsMI_SaleReturnIn (vbEndDate_olap + INTERVAL '1 DAY'
                                                                  , inEndDate
                                                                  , inBranchId
