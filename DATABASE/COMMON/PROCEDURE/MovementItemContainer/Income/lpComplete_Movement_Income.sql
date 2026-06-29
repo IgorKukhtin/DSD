@@ -2144,7 +2144,7 @@ END IF;
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения 5)Партии накладной
                                                                            ELSE CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
                                                                                       -- МНМА
-                                                                                      AND tmp.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20300()
+                                                                                      -- AND tmp.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20300()
                                                                                 THEN
                                                                                 lpInsertFind_Container (inContainerDescId   := zc_Container_SummAsset()
                                                                                                       , inParentId          := NULL
@@ -2201,7 +2201,7 @@ END IF;
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения 5)Партии накладной
                                                                            THEN CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
                                                                                       -- МНМА
-                                                                                      AND tmp.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20300()
+                                                                                      -- AND tmp.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20300()
                                                                                 THEN
                                                                                 lpInsertFind_Container (inContainerDescId   := zc_Container_SummAsset()
                                                                                                       , inParentId          := NULL
@@ -2270,7 +2270,7 @@ END IF;
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения 5)Партии накладной
                                                                            ELSE CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
                                                                                       -- МНМА
-                                                                                      AND tmp.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20300()
+                                                                                      -- AND tmp.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20300()
                                                                                 THEN
                                                                                 lpInsertFind_Container (inContainerDescId   := zc_Container_SummAsset()
                                                                                                       , inParentId          := NULL
@@ -3340,8 +3340,8 @@ END IF;
             , _tmpItem.GoodsId                           AS ObjectId_Analyzer        -- Товар
             , vbWhereObjectId_Analyzer                   AS WhereObjectId_Analyzer   -- Подраделение или...
             , vbContainerId_Analyzer                     AS ContainerId_Analyzer     -- в ОПиУ не нужен, НО здесь Контейнер - по долгам поставщика
-            , vbUnitId                                   AS ObjectIntId_Analyzer     -- Подраделение (ОПиУ)
-            , 0                                          AS ObjectExtId_Analyzer     -- Филиал (ОПиУ), а могло быть zc_Branch_Basis()
+            , _tmpItem.GoodsKindId                       AS ObjectIntId_Analyzer     -- Подраделение (ОПиУ)
+            , vbObjectExtId_Analyzer                     AS ObjectExtId_Analyzer     -- Поставщик, а могло быть Филиал (ОПиУ), а могло быть zc_Branch_Basis()
             , _tmpItem.ContainerId_Goods                 AS ContainerIntId_Analyzer  -- Контейнер "товар"
             , 0                                          AS ParentId
             , 1 * (_tmpItem.OperSumm_Partner + _tmpItem.OperSumm_Packer)

@@ -300,7 +300,7 @@ BEGIN
                            , CHR (13)
                            , lfGet_Object_ValueData_sh (inUnitId)
                            , CHR (13)
-                           , lfGet_Object_ValueData_sh (inPositionId)
+                           , lfGet_Object_ValueData (inPositionId)
                            , CHR (13)
                            , CASE WHEN inPositionLevelId > 0 THEN lfGet_Object_ValueData_sh (inPositionLevelId) ELSE '' END
                             ;

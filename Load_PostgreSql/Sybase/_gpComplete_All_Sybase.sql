@@ -30,7 +30,7 @@ BEGIN
      
 
 
-if CURRENT_TIMESTAMP between '05.06.2026 7:55' and '05.06.2026 10:00' AND 1=1
+if CURRENT_TIMESTAMP between '24.06.2026 7:55' and '24.06.2026 10:00' AND 1=1
 then
     RAISE EXCEPTION 'Ошибка.ok-pause';
 end if;

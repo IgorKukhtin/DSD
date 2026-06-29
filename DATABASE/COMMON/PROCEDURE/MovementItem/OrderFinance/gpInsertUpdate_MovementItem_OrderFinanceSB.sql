@@ -192,7 +192,7 @@ BEGIN
 
 
     -- тест
-    --if vbUserId IN (5, 9457) then RAISE EXCEPTION 'Админ.Test Ok. outAmountPlan_total =  <%>', outAmountPlan_total; end if;
+    if vbUserId IN (5, 9457) then RAISE EXCEPTION 'Админ.Test Ok. outAmountPlan_total =  <%>', outAmountPlan_total; end if;
 
 END;
 $BODY$

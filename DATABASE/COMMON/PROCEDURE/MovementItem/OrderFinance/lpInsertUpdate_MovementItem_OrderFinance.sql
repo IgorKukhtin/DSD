@@ -172,7 +172,7 @@ BEGIN
      END IF;
 
      -- сохранили <Ёлемент документа> - ѕервичный план на неделю
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inJuridicalId, inMovementId, inAmount, NULL);
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inJuridicalId, inMovementId, inAmount, NULL, inUserId);
 
      -- сохранили свойство <ѕлатежный план на неделю>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan_next(), ioId, inAmount_next);
