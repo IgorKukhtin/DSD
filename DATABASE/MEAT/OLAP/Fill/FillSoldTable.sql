@@ -49,6 +49,7 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                        , RegionId, ProvinceId, CityKindId, CityId, ProvinceCityId, StreetKindId, StreetId
 
                        , Actions_Weight, Actions_Sh, Actions_SummCost, Actions_Summ
+                       , Actions_Weight_NotBudg, Actions_Sh_NotBudg, Actions_SummCost_NotBudg, Actions_Summ_NotBudg
                        , Sale_Summ, Sale_Summ_10200, Sale_Summ_10250, Sale_Summ_10300, Sale_SummCost, Sale_SummCost_10500, Sale_SummCost_40200
                        , Sale_Amount_Weight, Sale_Amount_Sh, Sale_AmountPartner_Weight, Sale_AmountPartner_Sh, Sale_Amount_10500_Weight, Sale_Amount_40200_Weight
                        , Return_Summ, Return_Summ_10300, Return_Summ_10700, Return_SummCost, Return_SummCost_40200
@@ -89,6 +90,7 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                               , MIContainer.ObjectIntId_Analyzer      AS GoodsKindId
 
                               , SUM (CASE WHEN tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = FALSE AND MIFloat_PromoMovement.ValueData > 0 THEN 1 * MIContainer.Amount ELSE 0 END) AS Actions_Summ
+                              , SUM (CASE WHEN tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = FALSE AND MB_NotBudgPromo.ValueData = TRUE THEN 1 * MIContainer.Amount ELSE 0 END) AS Actions_Summ_NotBudg
                               , SUM (CASE WHEN tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = FALSE THEN  1 * MIContainer.Amount ELSE 0 END) AS Sale_Summ
                               , SUM (CASE WHEN tmpAnalyzer.isSale = FALSE AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS Return_Summ
 
@@ -102,6 +104,7 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                               , SUM (CASE WHEN tmpAnalyzer.isSale = FALSE AND tmpAnalyzer.isSumm = FALSE THEN  1 * MIContainer.Amount ELSE 0 END) AS Return_Amount
 
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400() AND MIFloat_PromoMovement.ValueData > 0 THEN -1 * MIContainer.Amount ELSE 0 END) AS Actions_AmountPartner
+                              , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400() AND MB_NotBudgPromo.ValueData = TRUE THEN -1 * MIContainer.Amount ELSE 0 END) AS Actions_AmountPartner_NotBudg
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400()     THEN -1 * MIContainer.Amount ELSE 0 END) AS Sale_AmountPartner
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_10800() THEN  1 * MIContainer.Amount ELSE 0 END) AS Return_AmountPartner
 
@@ -110,6 +113,7 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_40200() THEN  1 * MIContainer.Amount ELSE 0 END) AS Return_Amount_40200
 
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10400() AND MIFloat_PromoMovement.ValueData > 0 THEN -1 * COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Actions_SummCost
+                              , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10400() AND MB_NotBudgPromo.ValueData = TRUE THEN -1 * COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Actions_SummCost_NotBudg
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10400() THEN -1 * COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Sale_SummCost
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10500() THEN -1 * COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Sale_SummCost_10500
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_40200() THEN      COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Sale_SummCost_40200
@@ -143,6 +147,10 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                               LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
                                                           ON MIFloat_PromoMovement.MovementItemId = MIContainer.MovementItemId
                                                          AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+                              LEFT JOIN MovementBoolean AS MB_NotBudgPromo
+                                                        ON MB_NotBudgPromo.MovementId = MIFloat_PromoMovement.ValueData :: Integer
+                                                       AND MB_NotBudgPromo.DescId     = zc_MovementBoolean_NotBudgPromo()
+
                               LEFT JOIN MovementItemFloat AS MIFloat_PriceIn
                                                           ON MIFloat_PriceIn.MovementItemId = MIContainer.MovementItemId
                                                          AND MIFloat_PriceIn.DescId         = zc_MIFloat_PriceIn()
@@ -374,7 +382,14 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                  , tmpOperation_SaleReturn.GoodsId
                  , tmpOperation_SaleReturn.GoodsKindId
 
-                 , (tmpOperation_SaleReturn.Actions_Summ) AS Actions_Summ
+                 , (tmpOperation_SaleReturn.Actions_Summ)          AS Actions_Summ
+                 , (tmpOperation_SaleReturn.Actions_AmountPartner) AS Actions_AmountPartner
+                 , (tmpOperation_SaleReturn.Actions_SummCost)      AS Actions_SummCost
+
+                 , (tmpOperation_SaleReturn.Actions_Summ_NotBudg)          AS Actions_Summ_NotBudg
+                 , (tmpOperation_SaleReturn.Actions_AmountPartner_NotBudg) AS Actions_AmountPartner_NotBudg
+                 , (tmpOperation_SaleReturn.Actions_SummCost_NotBudg)      AS Actions_SummCost_NotBudg
+
                  , (tmpOperation_SaleReturn.Sale_Summ)    AS Sale_Summ
                  , (tmpOperation_SaleReturn.Return_Summ)  AS Return_Summ
 
@@ -387,7 +402,6 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                  , (tmpOperation_SaleReturn.Sale_Amount)    AS Sale_Amount
                  , (tmpOperation_SaleReturn.Return_Amount)  AS Return_Amount
 
-                 , (tmpOperation_SaleReturn.Actions_AmountPartner) AS Actions_AmountPartner
                  , (tmpOperation_SaleReturn.Sale_AmountPartner)    AS Sale_AmountPartner
                  , (tmpOperation_SaleReturn.Return_AmountPartner)  AS Return_AmountPartner
 
@@ -395,7 +409,6 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                  , (tmpOperation_SaleReturn.Sale_Amount_40200)
                  , (tmpOperation_SaleReturn.Return_Amount_40200)
 
-                 , (tmpOperation_SaleReturn.Actions_SummCost)    AS Actions_SummCost
                  , (tmpOperation_SaleReturn.Sale_SummCost)       AS Sale_SummCost
                  , (tmpOperation_SaleReturn.Sale_SummCost_10500) AS Sale_SummCost_10500
                  , (tmpOperation_SaleReturn.Sale_SummCost_40200) AS Sale_SummCost_40200
@@ -436,6 +449,13 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                  , tmpBonus.GoodsKindId
 
                  , 0 AS Actions_Summ
+                 , 0 AS Actions_AmountPartner
+                 , 0 AS Actions_SummCost
+
+                 , 0 AS Actions_Summ_NotBudg
+                 , 0 AS Actions_AmountPartner_NotBudg
+                 , 0 AS Actions_SummCost_NotBudg
+
                  , 0 AS Sale_Summ
                  , 0 AS Return_Summ
 
@@ -448,7 +468,6 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                  , 0 AS Sale_Amount
                  , 0 AS Return_Amount
 
-                 , 0 AS Actions_AmountPartner
                  , 0 AS Sale_AmountPartner
                  , 0 AS Return_AmountPartner
 
@@ -456,7 +475,6 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                  , 0 AS Sale_Amount_40200
                  , 0 AS Return_Amount_40200
 
-                 , 0 AS Actions_SummCost
                  , 0 AS Sale_SummCost
                  , 0 AS Sale_SummCost_10500
                  , 0 AS Sale_SummCost_40200
@@ -490,7 +508,14 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                  , tmpOperation_all.GoodsId
                  , tmpOperation_all.GoodsKindId
 
-                 , SUM (tmpOperation_all.Actions_Summ) AS Actions_Summ
+                 , SUM (tmpOperation_all.Actions_Summ)          AS Actions_Summ
+                 , SUM (tmpOperation_all.Actions_AmountPartner) AS Actions_AmountPartner
+                 , SUM (tmpOperation_all.Actions_SummCost)      AS Actions_SummCost
+
+                 , SUM (tmpOperation_all.Actions_Summ_NotBudg)          AS Actions_Summ_NotBudg
+                 , SUM (tmpOperation_all.Actions_AmountPartner_NotBudg) AS Actions_AmountPartner_NotBudg
+                 , SUM (tmpOperation_all.Actions_SummCost_NotBudg)      AS Actions_SummCost_NotBudg
+
                  , SUM (tmpOperation_all.Sale_Summ)    AS Sale_Summ
                  , SUM (tmpOperation_all.Return_Summ)  AS Return_Summ
 
@@ -503,7 +528,6 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                  , SUM (tmpOperation_all.Sale_Amount)   AS Sale_Amount
                  , SUM (tmpOperation_all.Return_Amount) AS Return_Amount
 
-                 , SUM (tmpOperation_all.Actions_AmountPartner) AS Actions_AmountPartner
                  , SUM (tmpOperation_all.Sale_AmountPartner)    AS Sale_AmountPartner
                  , SUM (tmpOperation_all.Return_AmountPartner)  AS Return_AmountPartner
 
@@ -511,7 +535,6 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                  , SUM (tmpOperation_all.Sale_Amount_40200)   AS Sale_Amount_40200
                  , SUM (tmpOperation_all.Return_Amount_40200) AS Return_Amount_40200
 
-                 , SUM (tmpOperation_all.Actions_SummCost)    AS Actions_SummCost
                  , SUM (tmpOperation_all.Sale_SummCost)       AS Sale_SummCost
                  , SUM (tmpOperation_all.Sale_SummCost_10500) AS Sale_SummCost_10500
                  , SUM (tmpOperation_all.Sale_SummCost_40200) AS Sale_SummCost_40200
@@ -597,6 +620,11 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
            , tmpResult.Actions_SummCost
            , tmpResult.Actions_Summ
 
+           , tmpResult.Actions_AmountPartner_Weight_NotBudg AS Actions_Weight_NotBudg
+           , tmpResult.Actions_AmountPartner_Sh_NotBudg     AS Actions_Sh_NotBudg
+           , tmpResult.Actions_SummCost_NotBudg
+           , tmpResult.Actions_Summ_NotBudg
+
            , tmpResult.Sale_Summ
            , tmpResult.Sale_Summ_10200
            , tmpResult.Sale_Summ_10250
@@ -664,6 +692,15 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                  , tmpOperation.BonusTax
 
                  , SUM (tmpOperation.Actions_Summ) AS Actions_Summ
+                 , SUM (tmpOperation.Actions_AmountPartner * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Actions_AmountPartner_Weight
+                 , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpOperation.Actions_AmountPartner ELSE 0 END) AS Actions_AmountPartner_Sh
+                 , SUM (tmpOperation.Actions_SummCost)    AS Actions_SummCost
+
+                 , SUM (tmpOperation.Actions_Summ_NotBudg) AS Actions_Summ_NotBudg
+                 , SUM (tmpOperation.Actions_AmountPartner_NotBudg * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Actions_AmountPartner_Weight_NotBudg
+                 , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpOperation.Actions_AmountPartner_NotBudg ELSE 0 END) AS Actions_AmountPartner_Sh_NotBudg
+                 , SUM (tmpOperation.Actions_SummCost_NotBudg)    AS Actions_SummCost_NotBudg
+
                  , SUM (tmpOperation.Sale_Summ)    AS Sale_Summ
                  , SUM (tmpOperation.Return_Summ)  AS Return_Summ
 
@@ -683,14 +720,10 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                  , SUM (tmpOperation.Return_AmountPartner * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Return_AmountPartner_Weight
                  , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpOperation.Return_AmountPartner ELSE 0 END) AS Return_AmountPartner_Sh
 
-                 , SUM (tmpOperation.Actions_AmountPartner * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Actions_AmountPartner_Weight
-                 , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpOperation.Actions_AmountPartner ELSE 0 END) AS Actions_AmountPartner_Sh
-
                  , SUM (tmpOperation.Sale_Amount_10500 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Sale_Amount_10500_Weight
                  , SUM (tmpOperation.Sale_Amount_40200 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Sale_Amount_40200_Weight
                  , SUM (tmpOperation.Return_Amount_40200 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Return_Amount_40200_Weight
 
-                 , SUM (tmpOperation.Actions_SummCost)    AS Actions_SummCost
                  , SUM (tmpOperation.Sale_SummCost)       AS Sale_SummCost
                  , SUM (tmpOperation.Sale_SummCost_10500) AS Sale_SummCost_10500
                  , SUM (tmpOperation.Sale_SummCost_40200) AS Sale_SummCost_40200
@@ -818,6 +851,8 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
            , 0 AS RegionId, 0 AS ProvinceId, 0 AS CityKindId, 0 AS CityId, 0 AS ProvinceCityId, 0 AS StreetKindId, 0 AS StreetId
 
            , 0 AS Actions_Weight, 0 AS Actions_Sh, 0 AS Actions_SummCost, 0 AS Actions_Summ
+           , 0 AS Actions_Weight_NotBudg, 0 AS Actions_Sh_NotBudg, 0 AS Actions_SummCost_NotBudg, 0 AS Actions_Summ_NotBudg
+
            , 0 AS Sale_Summ, 0 AS Sale_Summ_10200, 0 AS Sale_Summ_10250, 0 AS Sale_Summ_10300, 0 AS Sale_SummCost, 0 AS Sale_SummCost_10500, 0 AS Sale_SummCost_40200
            , 0 AS Sale_Amount_Weight, 0 AS Sale_Amount_Sh, 0 AS Sale_AmountPartner_Weight, 0 AS Sale_AmountPartner_Sh, 0 AS Sale_Amount_10500_Weight, 0 AS Sale_Amount_40200_Weight
            , 0 AS Return_Summ, 0 AS Return_Summ_10300, 0 AS Return_Summ_10700, 0 AS Return_SummCost, 0 AS Return_SummCost_40200

@@ -70,6 +70,14 @@ BEGIN
                                                                   AND MIContainer.MovementDescId = zc_Movement_PersonalService()
                                                                   AND MIContainer.Amount         <> 0
                                                                   AND MIContainer.AnalyzerId     <> zc_Enum_AnalyzerId_PersonalService_SummDiff()
+                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                                               ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
+                                                              AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
+                                  LEFT JOIN ObjectBoolean AS ObjectBoolean_NotSheetWorkTime
+                                                          ON ObjectBoolean_NotSheetWorkTime.ObjectId  = MovementLinkObject_PersonalServiceList.ObjectId 
+                                                         AND ObjectBoolean_NotSheetWorkTime.DescId    = zc_ObjectBoolean_PersonalServiceList_NotSheetWorkTime()
+                                                         AND ObjectBoolean_NotSheetWorkTime.ValueData = TRUE
+                             WHERE ObjectBoolean_NotSheetWorkTime.ObjectId IS NULL
                              LIMIT 1
                           );
 
