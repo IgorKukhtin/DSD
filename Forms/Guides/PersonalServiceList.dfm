@@ -327,6 +327,15 @@ object PersonalServiceListForm: TPersonalServiceListForm
         Options.Editing = False
         Width = 75
       end
+      object isNotSheetWorkTime: TcxGridDBColumn
+        Caption = #1053#1077#1090' '#1087#1088#1086#1074#1077#1088#1082#1080' '#1087#1086' '#1090#1072#1073#1077#1083#1102' ('#1044#1072' / '#1053#1077#1090')'
+        DataBinding.FieldName = 'isNotSheetWorkTime'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1053#1077#1090' '#1087#1088#1086#1074#1077#1088#1082#1080' '#1087#1086' '#1090#1072#1073#1077#1083#1102' ('#1044#1072' / '#1053#1077#1090')'
+        Options.Editing = False
+        Width = 75
+      end
       object KoeffSummCardSecond: TcxGridDBColumn
         Caption = #1050#1086#1101#1092#1092'. '#1074#1099#1075#1088'. 2'#1092'.'
         DataBinding.FieldName = 'KoeffSummCardSecond'
@@ -607,6 +616,14 @@ object PersonalServiceListForm: TPersonalServiceListForm
         end
         item
           Visible = True
+          ItemName = 'bbNotSheetWorkTime'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoice'
         end
         item
@@ -711,6 +728,10 @@ object PersonalServiceListForm: TPersonalServiceListForm
     end
     object bbOpenReport_sms: TdxBarButton
       Action = actOpenReport_sms
+      Category = 0
+    end
+    object bbNotSheetWorkTime: TdxBarButton
+      Action = macUpdate_NotSheetWorkTime
       Category = 0
     end
   end
@@ -1022,6 +1043,33 @@ object PersonalServiceListForm: TPersonalServiceListForm
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
+    end
+    object actUpdate_NotSheetWorkTime: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_NotSheetWorkTime
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_NotSheetWorkTime
+        end>
+      Caption = #1053#1077#1090' '#1087#1088#1086#1074#1077#1088#1082#1080' '#1087#1086' '#1090#1072#1073#1077#1083#1102' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1053#1077#1090' '#1087#1088#1086#1074#1077#1088#1082#1080' '#1087#1086' '#1090#1072#1073#1077#1083#1102' ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 80
+    end
+    object macUpdate_NotSheetWorkTime: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_NotSheetWorkTime
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1053#1077#1090' '#1087#1088#1086#1074#1077#1088#1082#1080' '#1087#1086' '#1090#1072#1073#1077#1083#1102' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1053#1077#1090' '#1087#1088#1086#1074#1077#1088#1082#1080' '#1087#1086' '#1090#1072#1073#1077#1083#1102' ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 80
     end
     object actUpdate_Sms: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1440,5 +1488,31 @@ object PersonalServiceListForm: TPersonalServiceListForm
     PackSize = 1
     Left = 483
     Top = 182
+  end
+  object spUpdate_NotSheetWorkTime: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_PersonalServiceList_NotSheetWorkTime'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNotSheetWorkTime'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isNotSheetWorkTime'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 595
+    Top = 190
   end
 end

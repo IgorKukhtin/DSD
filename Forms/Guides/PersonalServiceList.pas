@@ -115,6 +115,10 @@ type
     bbUpdate_Sms: TdxBarButton;
     actOpenReport_sms: TdsdOpenForm;
     bbOpenReport_sms: TdxBarButton;
+    spUpdate_NotSheetWorkTime: TdsdStoredProc;
+    actUpdate_NotSheetWorkTime: TdsdExecStoredProc;
+    macUpdate_NotSheetWorkTime: TMultiAction;
+    bbNotSheetWorkTime: TdxBarButton;
   private
     { Private declarations }
   public

@@ -4,7 +4,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_PersonalServiceList_Per
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_PersonalServiceList_User() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_PersonalServiceList_User' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_PersonalServiceList_Sms() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_PersonalServiceList_Sms' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Report_Personal_Cash_sms() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Report_Personal_Cash_sms' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
-
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_PersonalServiceList_NotSheetWorkTime() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_PersonalServiceList_NotSheetWorkTime' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_isErased_PersonalServiceList() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_isErased_PersonalServiceList' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 
@@ -51,6 +51,17 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Report_Personal_Cash_
                                   , inCode:= 6
                                   , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_PersonalServiceList())||'> - просмотр данных.'
                                   , inEnumName:= 'zc_Enum_Process_Report_Personal_Cash_sms');
+
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_PersonalServiceList_Sms()
+                                  , inDescId:= zc_Object_Process()
+                                  , inCode:= 7
+                                  , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_PersonalServiceList())||'> - сохранение данных.'
+                                  , inEnumName:= 'zc_Enum_Process_Update_Object_PersonalServiceList_Sms');
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_PersonalServiceList_NotSheetWorkTime()
+                                  , inDescId:= zc_Object_Process()
+                                  , inCode:= 7
+                                  , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_PersonalServiceList())||'> - изменение данных.'
+                                  , inEnumName:= 'zc_Enum_Process_Update_PersonalServiceList_NotSheetWorkTime');
 END $$;
 
 
@@ -58,6 +69,7 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.06.26         *
  08.11.22         *
  25.05.20         *
  12.09.14         *
