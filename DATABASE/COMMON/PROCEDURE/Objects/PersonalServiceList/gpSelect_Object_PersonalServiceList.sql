@@ -37,6 +37,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isNotAuto Boolean
              , isNotRound Boolean
              , isSms Boolean
+             , isNotSheetWorkTime Boolean
              , isErased Boolean
               )
 AS
@@ -158,6 +159,7 @@ BEGIN
            , COALESCE (ObjectBoolean_NotAuto.ValueData, FALSE)         ::Boolean AS isNotAuto
            , COALESCE (ObjectBoolean_NotRound.ValueData, FALSE)        ::Boolean AS isNotRound 
            , COALESCE (ObjectBoolean_Sms.ValueData, FALSE)             ::Boolean AS isSms
+           , COALESCE (ObjectBoolean_NotSheetWorkTime.ValueData, FALSE) ::Boolean AS isNotSheetWorkTime
 
            , Object_PersonalServiceList.isErased  AS isErased
 
@@ -209,6 +211,10 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Sms
                                    ON ObjectBoolean_Sms.ObjectId  = Object_PersonalServiceList.Id
                                   AND ObjectBoolean_Sms.DescId    = zc_ObjectBoolean_PersonalServiceList_Sms()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_NotSheetWorkTime
+                                   ON ObjectBoolean_NotSheetWorkTime.ObjectId = Object_PersonalServiceList.Id
+                                  AND ObjectBoolean_NotSheetWorkTime.DescId = zc_ObjectBoolean_PersonalServiceList_NotSheetWorkTime()
 
            LEFT JOIN ObjectFloat AS ObjectFloat_Compensation
                                  ON ObjectFloat_Compensation.ObjectId = Object_PersonalServiceList.Id 
@@ -369,6 +375,7 @@ BEGIN
            , FALSE ::Boolean AS isNotAuto
            , FALSE ::Boolean AS isNotRound
            , FALSE ::Boolean AS isSms
+           , FALSE ::Boolean AS isNotSheetWorkTime
            , TRUE :: Boolean AS isErased
 
    ;

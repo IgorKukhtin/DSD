@@ -75,6 +75,11 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , isRealEx Boolean -- Физ обмен договор   
              --аналитический классификатор товара
              , GoodsGroupPropertyId Integer, GoodsGroupPropertyName TVarChar, GoodsGroupPropertyId_Parent Integer, GoodsGroupPropertyName_Parent TVarChar
+              -- Вне бюджета вес+шт+ сумма+с/с 
+             , Actions_Weight_NotBudg    TFloat
+             , Actions_Sh_NotBudg        TFloat
+             , Actions_Summ_NotBudg      TFloat
+             , Actions_SummCost_NotBudg  TFloat
               )
 AS
 $BODY$
@@ -176,7 +181,12 @@ BEGIN
             , Object_GoodsGroupProperty.Id              AS GoodsGroupPropertyId
             , Object_GoodsGroupProperty.ValueData       AS GoodsGroupPropertyName
             , Object_GoodsGroupPropertyParent.Id        AS GoodsGroupPropertyId_Parent
-            , Object_GoodsGroupPropertyParent.ValueData AS GoodsGroupPropertyName_Parent
+            , Object_GoodsGroupPropertyParent.ValueData AS GoodsGroupPropertyName_Parent 
+            --
+            , 0 ::TFloat AS Actions_Weight_NotBudg
+            , 0 ::TFloat AS Actions_Sh_NotBudg
+            , 0 ::TFloat AS Actions_Summ_NotBudg
+            , 0 ::TFloat AS Actions_SummCost_NotBudg
        FROM gpReport_GoodsMI_SaleReturnIn_OLD (inStartDate
                                              , inEndDate
                                              , inBranchId
@@ -229,7 +239,11 @@ BEGIN
             , Object_GoodsGroupProperty.ValueData       AS GoodsGroupPropertyName
             , Object_GoodsGroupPropertyParent.Id        AS GoodsGroupPropertyId_Parent
             , Object_GoodsGroupPropertyParent.ValueData AS GoodsGroupPropertyName_Parent
-            
+            --
+            , 0 ::TFloat AS Actions_Weight_NotBudg
+            , 0 ::TFloat AS Actions_Sh_NotBudg
+            , 0 ::TFloat AS Actions_Summ_NotBudg
+            , 0 ::TFloat AS Actions_SummCost_NotBudg            
        FROM gpReport_GoodsMI_SaleReturnIn_OLD_TWO (inStartDate
                                                  , inEndDate
                                                  , inBranchId
@@ -392,6 +406,11 @@ BEGIN
                                     -- сумма вх (схема павильоны)
                                     , gpReport.Sale_SummIn_pav     :: TFloat
                                     , gpReport.ReturnIn_SummIn_pav :: TFloat
+                                                --
+                                    , gpReport.Actions_Weight_NotBudg   ::TFloat AS Actions_Weight_NotBudg
+                                    , gpReport.Actions_Sh_NotBudg       ::TFloat AS Actions_Sh_NotBudg
+                                    , gpReport.Actions_Summ_NotBudg     ::TFloat AS Actions_Summ_NotBudg
+                                    , gpReport.Actions_SummCost_NotBudg ::TFloat AS Actions_SummCost_NotBudg
                                FROM gpReport_GoodsMI_SaleReturnIn_Olap (inStartDate
                                                                       , vbEndDate_olap
                                                                       , inBranchId
@@ -460,7 +479,13 @@ BEGIN
                                     , gpReport.OperDate           ::TDateTime
                                     , gpReport.DayOfWeekName_Full ::TVarChar
                                     , gpReport.Sale_SummIn_pav     :: TFloat
-                                    , gpReport.ReturnIn_SummIn_pav :: TFloat
+                                    , gpReport.ReturnIn_SummIn_pav :: TFloat 
+                                   -- 
+                                    , gpReport.Actions_Weight_NotBudg   ::TFloat AS Actions_Weight_NotBudg
+                                    , gpReport.Actions_Sh_NotBudg       ::TFloat AS Actions_Sh_NotBudg
+                                    , gpReport.Actions_Summ_NotBudg     ::TFloat AS Actions_Summ_NotBudg
+                                    , gpReport.Actions_SummCost_NotBudg ::TFloat AS Actions_SummCost_NotBudg
+                                    
                                FROM gpReport_GoodsMI_SaleReturnIn (vbEndDate_olap + INTERVAL '1 DAY'
                                                                  , inEndDate
                                                                  , inBranchId
@@ -575,6 +600,12 @@ BEGIN
             , Object_GoodsGroupProperty.ValueData       AS GoodsGroupPropertyName
             , Object_GoodsGroupPropertyParent.Id        AS GoodsGroupPropertyId_Parent
             , Object_GoodsGroupPropertyParent.ValueData AS GoodsGroupPropertyName_Parent 
+            
+            --
+            , SUM (gpReport.Actions_Weight_NotBudg)   ::TFloat AS Actions_Weight_NotBudg
+            , SUM (gpReport.Actions_Sh_NotBudg)       ::TFloat AS Actions_Sh_NotBudg
+            , SUM (gpReport.Actions_Summ_NotBudg)     ::TFloat AS Actions_Summ_NotBudg
+            , SUM (gpReport.Actions_SummCost_NotBudg) ::TFloat AS Actions_SummCost_NotBudg
        FROM tmpData AS gpReport
           LEFT JOIN ObjectBoolean AS ObjectBoolean_RealEx
                                   ON ObjectBoolean_RealEx.ObjectId = gpReport.ContractId
@@ -905,6 +936,11 @@ BEGIN
                               , ROW_NUMBER() OVER (PARTITION BY COALESCE (ContainerLO_Juridical.ObjectId, 0)
                                                  , CASE WHEN MIContainer.MovementDescId = zc_Movement_ChangePercent() THEN ContainerLO_Juridical.ObjectId WHEN MIContainer.MovementDescId = zc_Movement_Service() THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END
                                                  , MIContainer.ObjectId_Analyzer) AS Ord
+
+                              , 0 ::TFloat AS Actions_Weight_NotBudg
+                              , 0 ::TFloat AS Actions_Sh_NotBudg
+                              , 0 ::TFloat AS Actions_Summ_NotBudg
+                              , 0 ::TFloat AS Actions_SummCost_NotBudg
                          FROM tmpAnalyzer
                               INNER JOIN MovementItemContainer AS MIContainer
                                                                ON MIContainer.AnalyzerId = tmpAnalyzer.AnalyzerId
@@ -1026,6 +1062,11 @@ BEGIN
 
                               --
                               , zfCalc_GoodsPropertyId (ContainerLinkObject_Contract.ObjectId, COALESCE (tmpOperationGroup2.JuridicalId, tmpOperationGroup2.PartnerId), tmpOperationGroup2.PartnerId) AS GoodsPropertyId
+
+                              , SUM (COALESCE (tmpOperationGroup2.Actions_Weight_NotBudg,0))   ::TFloat AS Actions_Weight_NotBudg
+                              , SUM (COALESCE (tmpOperationGroup2.Actions_Sh_NotBudg,0))       ::TFloat AS Actions_Sh_NotBudg
+                              , SUM (COALESCE (tmpOperationGroup2.Actions_Summ_NotBudg,0))     ::TFloat AS Actions_Summ_NotBudg
+                              , SUM (COALESCE (tmpOperationGroup2.Actions_SummCost_NotBudg,0)) ::TFloat AS Actions_SummCost_NotBudg
 
                          FROM tmpOperationGroup2
                               LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Contract
@@ -1285,6 +1326,12 @@ BEGIN
          , Object_GoodsGroupProperty.ValueData       AS GoodsGroupPropertyName
          , Object_GoodsGroupPropertyParent.Id        AS GoodsGroupPropertyId_Parent
          , Object_GoodsGroupPropertyParent.ValueData AS GoodsGroupPropertyName_Parent
+         
+         --
+         , COALESCE (tmpOperationGroup.Actions_Weight_NotBudg,0)   ::TFloat AS Actions_Weight_NotBudg
+         , COALESCE (tmpOperationGroup.Actions_Sh_NotBudg,0)       ::TFloat AS Actions_Sh_NotBudg
+         , COALESCE (tmpOperationGroup.Actions_Summ_NotBudg,0)     ::TFloat AS Actions_Summ_NotBudg
+         , COALESCE (tmpOperationGroup.Actions_SummCost_NotBudg,0) ::TFloat AS Actions_SummCost_NotBudg
      FROM tmpOperationGroup
 
           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpOperationGroup.BranchId
@@ -1424,6 +1471,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 29.06.26         *
  10.03.26         * 
  02.11.22         * add Section
  15.03.22         *

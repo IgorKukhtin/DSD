@@ -3,7 +3,6 @@ inherited Sale_CommercForm: TSale_CommercForm
   ClientHeight = 657
   ClientWidth = 1506
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitTop = -41
   ExplicitWidth = 1522
   ExplicitHeight = 696
   PixelsPerInch = 96
@@ -1211,11 +1210,12 @@ inherited Sale_CommercForm: TSale_CommercForm
         Left = 0
         Top = 0
         Width = 1506
-        Height = 272
+        Height = 200
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = True
         LookAndFeel.SkinName = 'UserSkin'
+        ExplicitHeight = 209
         object cxGridDBTableViewComLocal: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ComLocalDS
@@ -1234,7 +1234,6 @@ inherited Sale_CommercForm: TSale_CommercForm
           OptionsData.CancelOnExit = False
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsData.Inserting = False
           OptionsView.CellAutoHeight = True
           OptionsView.Footer = True
@@ -1256,7 +1255,7 @@ inherited Sale_CommercForm: TSale_CommercForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 124
+            Width = 184
           end
           object PersonalGroupName_ch4: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1072' '#1089#1087#1110#1074#1088#1086#1073#1110#1090#1085#1080#1082#1110#1074
@@ -1264,7 +1263,7 @@ inherited Sale_CommercForm: TSale_CommercForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 124
+            Width = 160
           end
           object PersonalName_ch4: TcxGridDBColumn
             Caption = #1055#1030#1041
@@ -1272,7 +1271,7 @@ inherited Sale_CommercForm: TSale_CommercForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 128
+            Width = 350
           end
           object UnitName_ch4: TcxGridDBColumn
             Caption = #1042#1110#1076#1076#1110#1083
@@ -1280,7 +1279,7 @@ inherited Sale_CommercForm: TSale_CommercForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 150
+            Width = 230
           end
         end
         object cxGridLevelComLocal: TcxGridLevel
@@ -1289,9 +1288,9 @@ inherited Sale_CommercForm: TSale_CommercForm
       end
       object cxGridComRetail: TcxGrid
         Left = 0
-        Top = 280
+        Top = 208
         Width = 1506
-        Height = 104
+        Height = 176
         Align = alBottom
         TabOrder = 1
         LookAndFeel.NativeStyle = True
@@ -1310,53 +1309,54 @@ inherited Sale_CommercForm: TSale_CommercForm
           Images = dmMain.SortImageList
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsData.CancelOnExit = False
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsData.Inserting = False
+          OptionsView.CellAutoHeight = True
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
-          OptionsView.HeaderHeight = 40
+          OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object RetailName_ch5: TcxGridDBColumn
-            Caption = #1058#1086#1088#1075#1110#1074#1077#1083#1100#1085#1072' '#1084#1077#1088#1077#1078#1072
-            DataBinding.FieldName = 'RetailName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 150
-          end
-          object SectionName_ch5: TcxGridDBColumn
-            Caption = #1057#1077#1075#1084#1077#1085#1090
-            DataBinding.FieldName = 'SectionName'
+          object Ord_ch5: TcxGridDBColumn
+            Caption = #1056#1110#1074#1077#1085#1100
+            DataBinding.FieldName = 'Ord'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 67
           end
-          object PositionName_1_ch5: TcxGridDBColumn
-            Caption = #1055#1086#1089#1072#1076#1072' ('#1056#1110#1074#1077#1085#1100' 1)'
-            DataBinding.FieldName = 'PositionName_1'
+          object PositionName_ch5: TcxGridDBColumn
+            Caption = #1055#1086#1089#1072#1076#1072
+            DataBinding.FieldName = 'PositionName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 124
+            Width = 207
           end
-          object PositionName_2_ch5: TcxGridDBColumn
-            Caption = #1055#1086#1089#1072#1076#1072' ('#1056#1110#1074#1077#1085#1100' 2)'
-            DataBinding.FieldName = 'PositionName_2'
+          object PersonalGroupNamech5: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1072' '#1089#1087#1110#1074#1088#1086#1073#1110#1090#1085#1080#1082#1110#1074
+            DataBinding.FieldName = 'PersonalGroupName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 124
+            Width = 159
           end
-          object PositionName_3_ch5: TcxGridDBColumn
-            Caption = #1055#1086#1089#1072#1076#1072' ('#1056#1110#1074#1077#1085#1100' 3)'
-            DataBinding.FieldName = 'PositionName_3'
+          object PersonalName_ch5: TcxGridDBColumn
+            Caption = #1055#1030#1041
+            DataBinding.FieldName = 'PersonalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 124
+            Width = 350
+          end
+          object UnitName_ch5: TcxGridDBColumn
+            Caption = #1042#1110#1076#1076#1110#1083
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 244
           end
         end
         object cxGridLevelComRetail: TcxGridLevel
@@ -1365,12 +1365,13 @@ inherited Sale_CommercForm: TSale_CommercForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 272
+        Top = 200
         Width = 1506
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridComRetail
+        ExplicitTop = 217
       end
     end
   end
@@ -2654,6 +2655,9 @@ inherited Sale_CommercForm: TSale_CommercForm
         end
         item
           StoredProc = spSelectComLocal
+        end
+        item
+          StoredProc = spSelectComRetail
         end>
       RefreshOnTabSetChanges = True
     end
@@ -6241,7 +6245,7 @@ inherited Sale_CommercForm: TSale_CommercForm
         Guides = GuidesTo
       end>
     Left = 104
-    Top = 256
+    Top = 328
   end
   inherited HeaderSaver: THeaderSaver
     ControlList = <
@@ -6318,7 +6322,7 @@ inherited Sale_CommercForm: TSale_CommercForm
         Control = edCorrSumm
       end>
     Left = 192
-    Top = 273
+    Top = 313
   end
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
@@ -6327,13 +6331,13 @@ inherited Sale_CommercForm: TSale_CommercForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Sale_SetErased'
-    Left = 718
+    Left = 822
     Top = 512
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Sale_SetUnErased'
-    Left = 718
-    Top = 464
+    Left = 766
+    Top = 456
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_Sale'
@@ -6758,8 +6762,8 @@ inherited Sale_CommercForm: TSale_CommercForm
       end>
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Left = 404
-    Top = 236
+    Left = 388
+    Top = 340
   end
   object spSelectTax_Us: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Tax_Print'
@@ -7008,8 +7012,8 @@ inherited Sale_CommercForm: TSale_CommercForm
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 516
-    Top = 281
+    Left = 492
+    Top = 353
   end
   object spGetReporNameTax: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale_ReportNameTax'
@@ -7196,7 +7200,7 @@ inherited Sale_CommercForm: TSale_CommercForm
       end>
     PackSize = 1
     Left = 375
-    Top = 280
+    Top = 336
   end
   object GuidesRouteSorting: TdsdGuides
     KeyField = 'Id'
@@ -7791,8 +7795,8 @@ inherited Sale_CommercForm: TSale_CommercForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 391
-    Top = 472
+    Left = 367
+    Top = 424
   end
   object spSelectPrint_Spec: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_Spec_Print'
@@ -7845,8 +7849,8 @@ inherited Sale_CommercForm: TSale_CommercForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 487
-    Top = 522
+    Left = 471
+    Top = 578
   end
   object spSelectPrint_ExpInvoice: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_ExpInvoice_Print'
@@ -7935,7 +7939,7 @@ inherited Sale_CommercForm: TSale_CommercForm
       end>
     PackSize = 1
     Left = 767
-    Top = 424
+    Top = 368
   end
   object spSelectPrint_SaleOrder: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_Order_Print'
@@ -8104,8 +8108,8 @@ inherited Sale_CommercForm: TSale_CommercForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 287
-    Top = 264
+    Left = 295
+    Top = 320
   end
   object spSavePrintState: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Sale_Print'
