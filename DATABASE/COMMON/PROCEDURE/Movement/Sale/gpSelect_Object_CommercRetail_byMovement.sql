@@ -30,16 +30,20 @@ BEGIN
 
      SELECT ObjectLink_Juridical_Retail.ChildObjectId
     INTO vbRetailId 
-     FROM MovementLinkObject AS MovementLinkObject_To
+     FROM Movement
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                       ON MovementLinkObject_Partner.MovementId = Movement.Id        
+                                      AND MovementLinkObject_Partner.DescId = CASE WHEN Movement.DescId = zc_Movement_Sale() THEN zc_MovementLinkObject_To()
+                                                                                   WHEN Movement.DescId = zc_Movement_ReturnIn() THEN zc_MovementLinkObject_From()
+                                                                              END
           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                               ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                               ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_Partner.ObjectId
                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
 
           LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                               AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-     WHERE MovementLinkObject_To.MovementId = inMovementId        
-       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To();
+     WHERE Movement.Id = 34432173 -- inMovementId  ;
 
 --vbRetailId := 992487;
 
