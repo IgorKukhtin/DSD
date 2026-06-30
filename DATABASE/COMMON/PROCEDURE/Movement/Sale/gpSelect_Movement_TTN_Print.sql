@@ -402,27 +402,33 @@ BEGIN
                              , CASE WHEN COALESCE (ObjectFloat_Height.ValueData,0) = 0 THEN '0' ELSE CAST (ObjectFloat_Height.ValueData AS NUMERIC (16,0)) ::TVarChar END :: TVarChar  AS Height
                              , COALESCE (ObjectFloat_Weight.ValueData, 0) AS Weight
                              , COALESCE (ObjectFloat_Year.ValueData, 0)   AS Year
-                             , ObjectString_VIN.ValueData                 AS VIN
+                             , ObjectString_VIN.ValueData                 AS VIN 
+                             , Object_CarProperty.ValueData               AS CarPropertyName
                         FROM tmpCar_all AS tmp
                              ---
                              LEFT JOIN tmpObjectFloat_car AS ObjectFloat_Length
-                                                   ON ObjectFloat_Length.ObjectId = tmp.CarId
-                                                  AND ObjectFloat_Length.DescId IN (zc_ObjectFloat_Car_Length(),zc_ObjectFloat_CarExternal_Length())
+                                                          ON ObjectFloat_Length.ObjectId = tmp.CarId
+                                                         AND ObjectFloat_Length.DescId IN (zc_ObjectFloat_Car_Length(),zc_ObjectFloat_CarExternal_Length())
                              LEFT JOIN tmpObjectFloat_car AS ObjectFloat_Width
-                                                   ON ObjectFloat_Width.ObjectId = tmp.CarId
-                                                  AND ObjectFloat_Width.DescId IN (zc_ObjectFloat_Car_Width(),zc_ObjectFloat_CarExternal_Width())
+                                                          ON ObjectFloat_Width.ObjectId = tmp.CarId
+                                                         AND ObjectFloat_Width.DescId IN (zc_ObjectFloat_Car_Width(),zc_ObjectFloat_CarExternal_Width())
                              LEFT JOIN tmpObjectFloat_car AS ObjectFloat_Height
-                                                   ON ObjectFloat_Height.ObjectId = tmp.CarId
-                                                  AND ObjectFloat_Height.DescId IN (zc_ObjectFloat_Car_Height(), zc_ObjectFloat_CarExternal_Height())
+                                                          ON ObjectFloat_Height.ObjectId = tmp.CarId
+                                                         AND ObjectFloat_Height.DescId IN (zc_ObjectFloat_Car_Height(), zc_ObjectFloat_CarExternal_Height())
                              LEFT JOIN tmpObjectFloat_car AS ObjectFloat_Weight
-                                                   ON ObjectFloat_Weight.ObjectId = tmp.CarId
-                                                  AND ObjectFloat_Weight.DescId IN (zc_ObjectFloat_Car_Weight(), zc_ObjectFloat_CarExternal_Weight())
+                                                          ON ObjectFloat_Weight.ObjectId = tmp.CarId
+                                                         AND ObjectFloat_Weight.DescId IN (zc_ObjectFloat_Car_Weight(), zc_ObjectFloat_CarExternal_Weight())
                              LEFT JOIN tmpObjectFloat_car AS ObjectFloat_Year
-                                                   ON ObjectFloat_Year.ObjectId = tmp.CarId
-                                                  AND ObjectFloat_Year.DescId IN (zc_ObjectFloat_Car_Year(), zc_ObjectFloat_CarExternal_Year())
+                                                          ON ObjectFloat_Year.ObjectId = tmp.CarId
+                                                         AND ObjectFloat_Year.DescId IN (zc_ObjectFloat_Car_Year(), zc_ObjectFloat_CarExternal_Year())
                              LEFT JOIN tmpObjectString_car AS ObjectString_VIN
-                                                    ON ObjectString_VIN.ObjectId = tmp.CarId
-                                                   AND ObjectString_VIN.DescId IN (zc_ObjectString_Car_VIN(), zc_ObjectString_CarExternal_VIN())
+                                                           ON ObjectString_VIN.ObjectId = tmp.CarId
+                                                          AND ObjectString_VIN.DescId IN (zc_ObjectString_Car_VIN(), zc_ObjectString_CarExternal_VIN())
+
+                             LEFT JOIN ObjectLink AS Car_CarProperty
+                                                  ON Car_CarProperty.ObjectId = tmp.CarId
+                                                 AND Car_CarProperty.DescId = zc_ObjectLink_Car_CarProperty()
+                             LEFT JOIN Object AS Object_CarProperty ON Object_CarProperty.Id = Car_CarProperty.ChildObjectId
                         )
 
             , t1 AS (SELECT *
@@ -669,6 +675,7 @@ BEGIN
         --, tmpCar_param.Length :: TVarChar  AS Length
         --, tmpCar_param.Width  :: TVarChar  AS Width
         --, tmpCar_param.Height :: TVarChar  AS Height
+          
           , (select tmpCar_param.Length from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId) :: Integer  AS Length
           , (select tmpCar_param.Width  from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId) :: Integer  AS Width
           , (select tmpCar_param.Height from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId) :: Integer  AS Height
@@ -714,6 +721,7 @@ BEGIN
 
         --, tmpCar_param.VIN  ::TVarChar AS VIN
           , (select tmpCar_param.VIN  from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId) :: TVarChar  AS VIN
+          , (select tmpCar_param.CarPropertyName from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId) ::TVarChar AS CarPropertyName
 
        -- , tmpCarTrailer_param.Length :: TVarChar  AS Length_tr
        -- , tmpCarTrailer_param.Width  :: TVarChar  AS Width_tr

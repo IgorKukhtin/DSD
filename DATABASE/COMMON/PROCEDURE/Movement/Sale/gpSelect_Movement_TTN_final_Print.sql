@@ -306,6 +306,7 @@ BEGIN
                              , COALESCE (ObjectFloat_Weight.ValueData, 0) AS Weight
                              , COALESCE (ObjectFloat_Year.ValueData, 0)   AS Year
                              , ObjectString_VIN.ValueData                 AS VIN
+                             , Object_CarProperty.ValueData               AS CarPropertyName
                         FROM tmpCar_all AS tmp
                              ---
                              LEFT JOIN tmpObjectFloat_car AS ObjectFloat_Length
@@ -326,6 +327,10 @@ BEGIN
                              LEFT JOIN tmpObjectString_car AS ObjectString_VIN
                                                     ON ObjectString_VIN.ObjectId = tmp.CarId
                                                    AND ObjectString_VIN.DescId IN (zc_ObjectString_Car_VIN(), zc_ObjectString_CarExternal_VIN())
+                             LEFT JOIN ObjectLink AS Car_CarProperty
+                                                  ON Car_CarProperty.ObjectId = tmp.CarId
+                                                 AND Car_CarProperty.DescId = zc_ObjectLink_Car_CarProperty()
+                             LEFT JOIN Object AS Object_CarProperty ON Object_CarProperty.Id = Car_CarProperty.ChildObjectId
                         )
 
             , t1 AS (SELECT *
@@ -588,7 +593,8 @@ BEGIN
           , CASE WHEN (select tmpCar_param.Year from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId) > 0
                      THEN  (select tmpCar_param.Year :: Integer from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId) :: TVarChar ELSE '' END ::TVarChar AS Year
 
-          , (select tmpCar_param.VIN  from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId) :: TVarChar  AS VIN 
+          , (select tmpCar_param.VIN  from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId) :: TVarChar  AS VIN
+          , (select tmpCar_param.CarPropertyName from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarId) ::TVarChar AS CarPropertyName 
  
           , COALESCE ((select tmpCar_param.Length from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarTrailerId) :: Integer,0) :: Integer  AS Length_tr
           , COALESCE ((select tmpCar_param.Width  from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarTrailerId) :: Integer,0) :: Integer  AS Width_tr
