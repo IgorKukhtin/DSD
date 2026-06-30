@@ -1419,6 +1419,13 @@ end if;
                                              AND Container.Amount   > 0
                                              -- временно для 05.2026
                                              -- AND Container.Id NOT IN (15206929)
+                         -- Не должно быть прихода с будущей партией
+                         LEFT JOIN MovementItemContainer AS MIContainer
+                                                         ON MIContainer.ContainerId = Container.Id
+                                                        -- !!!следующий месяц
+                                                        AND MIContainer.OperDate       >= DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH'
+                                                        AND MIContainer.isActive       = TRUE
+                                                        AND MIContainer.MovementDescId <> zc_Movement_Inventory()
                          INNER JOIN ContainerLinkObject AS CLO_Unit
                                                         ON CLO_Unit.ContainerId = Container.Id
                                                        AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
@@ -1450,6 +1457,8 @@ end if;
                           )
                       --!!!не пустая партия!!!
                       AND COALESCE (CLO_PartionGoods.ObjectId, -1) NOT IN (80132, 0)
+                      -- Не должно быть прихода с будущей партией
+                      AND MIContainer.ContainerId IS NULL
 
                    UNION ALL
                     -- Добавили ПАРТИИ, если их списали в следующем месяце
@@ -1462,8 +1471,17 @@ end if;
                     FROM tmpMI_summ AS tmpMI
                          INNER JOIN tmpContainer_rem_sale ON tmpContainer_rem_sale.GoodsId     = tmpMI.GoodsId
                                                          AND tmpContainer_rem_sale.GoodsKindId = tmpMI.GoodsKindId
+                         -- Не должно быть прихода с будущей партией
+                         LEFT JOIN MovementItemContainer AS MIContainer
+                                                         ON MIContainer.ContainerId = tmpContainer_rem_sale.ContainerId
+                                                        -- !!!следующий месяц
+                                                        AND MIContainer.OperDate       >= DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH'
+                                                        AND MIContainer.isActive       = TRUE
+                                                        AND MIContainer.MovementDescId <> zc_Movement_Inventory()
                     -- временно для 05.2026
                     -- WHERE tmpContainer_rem_sale.ContainerId NOT IN (15206929)
+                    -- Не должно быть прихода с будущей партией
+                    WHERE MIContainer.ContainerId IS NULL
                    )
 
          -- !!! - 03 - учет для ГП - партии по датам
@@ -1490,6 +1508,13 @@ end if;
                                                         ON CLO_Unit.ContainerId = Container.Id
                                                        AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
                                                        AND CLO_Unit.ObjectId    = vbUnitId_From
+                         -- Не должно быть прихода с будущей партией
+                         LEFT JOIN MovementItemContainer AS MIContainer
+                                                         ON MIContainer.ContainerId = Container.Id
+                                                        -- !!!следующий месяц
+                                                        AND MIContainer.OperDate       >= DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH'
+                                                        AND MIContainer.isActive       = TRUE
+                                                        AND MIContainer.MovementDescId <> zc_Movement_Inventory()
                          -- без Товар в пути
                          LEFT JOIN ContainerLinkObject AS CLO_Account
                                                        ON CLO_Account.ContainerId = Container.Id
@@ -1528,9 +1553,10 @@ end if;
                       AND COALESCE (CLO_PartionGoods.ObjectId, -1) NOT IN (80132, 0)
                       -- НЕ списываем ЭТУ партию - здесь вообще
                       AND ObjectLink_PartionCell.ObjectId IS NULL
-
                       -- без Товар в пути
                       AND CLO_Account.ObjectId IS NULL
+                      -- Не должно быть прихода с будущей партией
+                      AND MIContainer.ContainerId IS NULL
                    )
   , tmpContainer_list AS (-- по партиям для Общефирменные
                           SELECT tmp_01.ContainerId

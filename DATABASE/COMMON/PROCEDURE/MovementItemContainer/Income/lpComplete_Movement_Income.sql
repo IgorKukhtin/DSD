@@ -2144,7 +2144,7 @@ END IF;
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения 5)Партии накладной
                                                                            ELSE CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
                                                                                       -- МНМА
-                                                                                      -- AND tmp.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20300()
+                                                                                      AND tmp.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20300()
                                                                                 THEN
                                                                                 lpInsertFind_Container (inContainerDescId   := zc_Container_SummAsset()
                                                                                                       , inParentId          := NULL
@@ -2201,7 +2201,7 @@ END IF;
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения 5)Партии накладной
                                                                            THEN CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
                                                                                       -- МНМА
-                                                                                      -- AND tmp.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20300()
+                                                                                      AND tmp.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20300()
                                                                                 THEN
                                                                                 lpInsertFind_Container (inContainerDescId   := zc_Container_SummAsset()
                                                                                                       , inParentId          := NULL
@@ -2270,7 +2270,7 @@ END IF;
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения 5)Партии накладной
                                                                            ELSE CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
                                                                                       -- МНМА
-                                                                                      -- AND tmp.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20300()
+                                                                                      AND tmp.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20300()
                                                                                 THEN
                                                                                 lpInsertFind_Container (inContainerDescId   := zc_Container_SummAsset()
                                                                                                       , inParentId          := NULL
@@ -2339,6 +2339,8 @@ END IF;
      UPDATE _tmpItem_SummPartner_To SET ContainerId_Goods = tmp.ContainerId
      FROM                            (SELECT _tmpItem.GoodsId
                                            , CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                                                   -- МНМА
+                                                   AND _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20300()
                                              THEN
                                                   lpInsertUpdate_ContainerCount_Asset (inOperDate               := vbOperDate -- по "Дате склад"
                                                                                      , inUnitId                 := vbPartnerId_To
@@ -2417,6 +2419,8 @@ END IF;
      UPDATE _tmpItem_SummPartner_To SET ContainerId = tmp.ContainerId
      FROM              (SELECT tmp.AccountId, tmp.BusinessId, tmp.InfoMoneyId
                              , CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                                     -- МНМА
+                                     AND tmp.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20300()
                                          THEN lpInsertFind_Container (inContainerDescId   := zc_Container_SummAsset()
                                                                     , inParentId          := NULL
                                                                     , inObjectId          := tmp.AccountId
@@ -2467,9 +2471,8 @@ END IF;
                                                                      )
                                END AS ContainerId
 
-           FROM (SELECT _tmpItem_SummPartner.AccountId, _tmpItem_SummPartner.BusinessId, _tmpItem_SummPartner.InfoMoneyId
+           FROM (SELECT DISTINCT _tmpItem_SummPartner.AccountId, _tmpItem_SummPartner.BusinessId, _tmpItem_SummPartner.InfoMoneyId, _tmpItem_SummPartner.InfoMoneyDestinationId
                  FROM _tmpItem_SummPartner_To AS _tmpItem_SummPartner
-                 GROUP BY _tmpItem_SummPartner.AccountId, _tmpItem_SummPartner.BusinessId, _tmpItem_SummPartner.InfoMoneyId
                 ) AS tmp
           ) AS tmp
      WHERE _tmpItem_SummPartner_To.AccountId         = tmp.AccountId
@@ -2857,6 +2860,8 @@ END IF;
 
      -- 1.2.1.1. определяется ContainerId_Goods для проводок по количественному учету - если НЕ спецодежда
      UPDATE _tmpItem SET ContainerId_Goods = CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                                                   -- МНМА
+                                                   AND _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20300()
                                              THEN
                                              lpInsertUpdate_ContainerCount_Asset (inOperDate               := vbOperDate
                                                                                 , inUnitId                 := vbUnitId
@@ -2957,6 +2962,8 @@ END IF;
        -- остаток с плюсом
        SELECT 0
             , CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                    -- МНМА
+                    AND _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20300()
                         THEN zc_MIContainer_CountAsset()
                         ELSE zc_MIContainer_Count()
               END AS DescId
@@ -3008,6 +3015,8 @@ END IF;
       UNION ALL
        SELECT 0
             , CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                    -- МНМА
+                    AND _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20300()
                         THEN zc_MIContainer_CountAsset()
                         ELSE zc_MIContainer_Count()
               END AS DescId
@@ -3031,6 +3040,8 @@ END IF;
       UNION ALL
        SELECT 0
             , CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                    -- МНМА
+                    AND _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20300()
                         THEN zc_MIContainer_CountAsset()
                         ELSE zc_MIContainer_Count()
               END AS DescId
@@ -3146,6 +3157,8 @@ END IF;
 
      -- 1.3.2.1. определяется ContainerId_Summ для проводок по суммовому учету + формируется Аналитика <элемент с/с> - если НЕ спецодежда
      UPDATE _tmpItem SET ContainerId_Summ =  CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                                                   -- МНМА
+                                                   AND _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20300()
                                              THEN
                                                   lpInsertUpdate_ContainerSumm_Asset (inOperDate               := vbOperDate
                                                                                     , inUnitId                 := vbUnitId
@@ -3223,6 +3236,8 @@ END IF;
        -- c/c остаток с плюсом
        SELECT 0
             , CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                    -- МНМА
+                    AND _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20300()
                         THEN zc_MIContainer_SummAsset()
                         ELSE zc_MIContainer_Summ()
               END AS DescId
@@ -3278,6 +3293,8 @@ END IF;
       UNION ALL
        SELECT 0
             , CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                    -- МНМА
+                    AND _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20300()
                         THEN zc_MIContainer_SummAsset()
                         ELSE zc_MIContainer_Summ()
               END AS DescId
@@ -3302,6 +3319,8 @@ END IF;
       UNION ALL
        SELECT 0
             , CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                    -- МНМА
+                    AND _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20300()
                         THEN zc_MIContainer_SummAsset()
                         ELSE zc_MIContainer_Summ()
               END AS DescId
@@ -3330,6 +3349,8 @@ END IF;
                                        , ParentId, Amount, OperDate, isActive)
        SELECT 0
             , CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                    -- МНМА
+                    AND _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20300()
                         THEN zc_MIContainer_SummAsset()
                         ELSE zc_MIContainer_Summ()
               END AS DescId
@@ -3368,6 +3389,8 @@ RAISE EXCEPTION '<%>   %'
        -- это обычная проводка
        SELECT 0
             , CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                    -- МНМА
+                    AND _tmpItem_SummPartner.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20300()
                         THEN zc_MIContainer_SummAsset()
                         ELSE zc_MIContainer_Summ()
               END AS DescId
@@ -3394,6 +3417,8 @@ RAISE EXCEPTION '<%>   %'
        -- это взаимозачет - 1.1.
        SELECT 0
             , CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                    -- МНМА
+                    AND _tmpItem_SummPartner.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20300()
                         THEN zc_MIContainer_SummAsset()
                         ELSE zc_MIContainer_Summ()
               END AS DescId
@@ -3411,7 +3436,7 @@ RAISE EXCEPTION '<%>   %'
             , 1 * vbInvoiceSumm                       AS Amount
             , vbOperDatePartner                       AS OperDate
             , FALSE                                   AS isActive
-       FROM (SELECT DISTINCT _tmpItem_SummPartner.ContainerId, _tmpItem_SummPartner.AccountId, _tmpItem_SummPartner.ContainerId_re
+       FROM (SELECT DISTINCT _tmpItem_SummPartner.ContainerId, _tmpItem_SummPartner.AccountId, _tmpItem_SummPartner.ContainerId_re, _tmpItem_SummPartner.InfoMoneyDestinationId
              FROM _tmpItem_SummPartner
              WHERE vbInvoiceSumm <> 0
             ) AS _tmpItem_SummPartner
@@ -3419,6 +3444,8 @@ RAISE EXCEPTION '<%>   %'
        -- это взаимозачет - 1.2.
        SELECT 0
             , CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                    -- МНМА
+                    AND _tmpItem_SummPartner.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20300()
                         THEN zc_MIContainer_SummAsset()
                         ELSE zc_MIContainer_Summ()
               END AS DescId
@@ -3436,7 +3463,7 @@ RAISE EXCEPTION '<%>   %'
             , -1 * vbInvoiceSumm                      AS Amount
             , vbOperDatePartner                       AS OperDate
             , FALSE                                   AS isActive
-       FROM (SELECT DISTINCT _tmpItem_SummPartner.ContainerId, _tmpItem_SummPartner.AccountId, _tmpItem_SummPartner.ContainerId_re
+       FROM (SELECT DISTINCT _tmpItem_SummPartner.ContainerId, _tmpItem_SummPartner.AccountId, _tmpItem_SummPartner.ContainerId_re, _tmpItem_SummPartner.InfoMoneyDestinationId
              FROM _tmpItem_SummPartner
              WHERE vbInvoiceSumm <> 0
             ) AS _tmpItem_SummPartner
@@ -3503,6 +3530,8 @@ RAISE EXCEPTION '<%>   %'
        -- это две проводки для счета Транзит
        SELECT 0
             , CASE WHEN vbOperDate >= zc_DateStart_Asset() AND vbMovementDescId = zc_Movement_IncomeAsset()
+                    -- МНМА
+                    AND _tmpItem_SummPartner.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20300()
                         THEN zc_MIContainer_SummAsset()
                         ELSE zc_MIContainer_Summ()
               END AS DescId

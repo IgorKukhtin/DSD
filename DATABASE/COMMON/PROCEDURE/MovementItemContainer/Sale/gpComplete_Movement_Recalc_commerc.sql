@@ -1,15 +1,17 @@
--- Function: lpComplete_Movement_Recalc_commerc (Integer, Integer, Integer)
+-- Function: gpComplete_Movement_Recalc_commerc (Integer, Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS lpComplete_Movement_Recalc_commerc (Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS gpComplete_Movement_Recalc_commerc (Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION lpComplete_Movement_Recalc_commerc(
+CREATE OR REPLACE FUNCTION gpComplete_Movement_Recalc_commerc(
     IN inMovementId        Integer  , -- ключ Документа
     IN inMovementDescId    Integer  , --
-    IN inUserId            Integer    -- Пользователь
+    IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS VOID
 AS
 $BODY$
+   DECLARE vbUserId      Integer;
    DECLARE vbPriceListId Integer;
    DECLARE vbPartnerId   Integer;
    DECLARE vbRouteTtId   Integer;
@@ -18,6 +20,9 @@ $BODY$
    DECLARE vbPaidKindId  Integer;
    DECLARE vbOperDatePartner TDateTime;
 BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpGetUserBySession (inSession);
+
      -- нашли
      vbOperDatePartner:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner());
      -- нашли
@@ -64,7 +69,8 @@ BEGIN
      END IF;
      
 
-     IF inUserId = 5
+     --IF inUserId = 5
+     IF 1 = 1
      THEN
 
      -- Бонусы
@@ -596,7 +602,7 @@ BEGIN
                                                     , inPaidKindId              := _tmpBonus.PaidKindId
                                                     , inInfoMoneyId             := _tmpBonus.InfoMoneyId
                                                     , inBonusValue              := _tmpBonus.BonusValue
-                                                    , inUserId                  := inUserId
+                                                    , inUserId                  := vbUserId
                                                      )
      FROM _tmpBonus
     ;
@@ -613,6 +619,5 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM lpComplete_Movement_Recalc_commerc (inMovementId:= 34407362, inMovementDescId:= zc_Movement_ReturnIn(), inUserId:= zfCalc_UserAdmin() :: Integer)
--- SELECT * FROM lpComplete_Movement_Recalc_commerc (inMovementId:= 34334385, inMovementDescId:= zc_Movement_Sale(), inUserId:= zfCalc_UserAdmin() :: Integer)  -- 2390061
--- SELECT * FROM lpComplete_Movement_Recalc_commerc (inMovementId:= 34349185 , inMovementDescId:= zc_Movement_Sale(), inUserId:= zfCalc_UserAdmin() :: Integer) -- 2390994
+-- SELECT * FROM gpComplete_Movement_Recalc_commerc (inMovementId:= 34407362, inMovementDescId:= zc_Movement_ReturnIn(), inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpComplete_Movement_Recalc_commerc (inMovementId:= 34334385, inMovementDescId:= zc_Movement_Sale(), inSession:= zfCalc_UserAdmin())

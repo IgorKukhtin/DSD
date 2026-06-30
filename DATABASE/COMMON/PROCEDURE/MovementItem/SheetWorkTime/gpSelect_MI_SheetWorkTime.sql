@@ -719,7 +719,8 @@ BEGIN
                , Object_Member.ObjectCode            AS MemberCode
                , Object_Member.ValueData             AS MemberName
                , Object_Position.Id                  AS PositionId
-               , (''('' || Object_Position.ObjectCode :: TVarChar || '')'' || Object_Position.ValueData) :: TVarChar           AS PositionName
+               , Object_Position.ObjectCode          AS PositionCode
+               , Object_Position.ValueData           AS PositionName
                , Object_PositionLevel.Id             AS PositionLevelId
                , Object_PositionLevel.ValueData      AS PositionLevelName
                , Object_PersonalGroup.Id             AS PersonalGroupId
