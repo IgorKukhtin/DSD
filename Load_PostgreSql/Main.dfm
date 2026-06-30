@@ -2473,7 +2473,7 @@ object MainForm: TMainForm
     end
     object cb100MSec: TCheckBox
       Left = 153
-      Top = 459
+      Top = 466
       Width = 76
       Height = 17
       Caption = '100MSec'
@@ -2629,6 +2629,21 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 54
+    end
+    object cbSaleCommerc: TCheckBox
+      Tag = 30
+      Left = 97
+      Top = 446
+      Width = 141
+      Height = 17
+      Caption = #1056#1072#1089#1095#1077#1090' Commerc'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clHighlight
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 55
     end
   end
   object LogPanel: TPanel

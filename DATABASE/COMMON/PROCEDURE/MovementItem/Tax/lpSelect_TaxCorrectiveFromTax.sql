@@ -47,16 +47,11 @@ BEGIN
     THEN
 
     RETURN QUERY
-    WITH -- документ - корректировка
-         tmpMovement AS (SELECT MovementLinkObject_DocumentTaxKind.ObjectId AS DocumentTaxKindId
-                         FROM Movement
-                              LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
-                                                           ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
-                                                          AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
-                         WHERE Movement.Id = inMovementId
-                        )
-         -- Строчная часть налоговой с № п/п
-       , tmpMITax AS (SELECT * FROM lpSelect_TaxFromTaxCorrective (vbMovementId_tax))
+    WITH -- Строчная часть налоговой с № п/п
+         tmpMITax AS (SELECT * FROM lpSelect_TaxFromTaxCorrective (vbMovementId_tax
+                                                                   -- документ - корректировка
+                                                                 , (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
+                                                                  ))
          -- Строчная часть корректировки
        , tmpMICorrective AS
                     (SELECT MovementItem.ObjectId                         AS GoodsId

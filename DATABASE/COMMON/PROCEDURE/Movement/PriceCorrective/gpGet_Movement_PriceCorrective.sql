@@ -97,7 +97,7 @@ BEGIN
            , Object_Status.ValueData         	    AS StatusName
 
            , Movement.ParentId                      AS MovementId_Tax
-           , (zfConvert_StringToNumber (Movement_Parent.InvNumberPartner) || ' от ' || Movement_Parent.OperDate :: Date :: TVarChar ) :: TVarChar AS InvNumber_Tax
+           , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumberPartner, Movement_Parent.OperDate, Movement_Parent.StatusId) :: TVarChar AS InvNumber_Tax
            , COALESCE (MovementBoolean_Checked.ValueData, FALSE) :: Boolean   AS Checked
 
            , MovementBoolean_PriceWithVAT.ValueData AS PriceWithVAT

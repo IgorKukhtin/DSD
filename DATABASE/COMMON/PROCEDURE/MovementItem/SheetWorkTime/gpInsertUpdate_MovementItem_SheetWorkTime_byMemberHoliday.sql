@@ -71,7 +71,7 @@ BEGIN
                                                                   AND MIContainer.Amount         <> 0
                                                                   AND MIContainer.AnalyzerId     <> zc_Enum_AnalyzerId_PersonalService_SummDiff()
                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
-                                                               ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
+                                                               ON MovementLinkObject_PersonalServiceList.MovementId = MIContainer.MovementId
                                                               AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
                                   LEFT JOIN ObjectBoolean AS ObjectBoolean_NotSheetWorkTime
                                                           ON ObjectBoolean_NotSheetWorkTime.ObjectId  = MovementLinkObject_PersonalServiceList.ObjectId 

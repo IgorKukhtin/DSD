@@ -78,6 +78,7 @@ BEGIN
      WITH -- все корр + налог., для 1-ого док. Возврат
           tmpMovementCorr AS (SELECT MovementLinkMovement_Master.MovementId     AS MovementId_corr
                                    , MovementLinkMovement_Child.MovementChildId AS MovementId_tax
+                                   , Movement.OperDate                          AS OperDate_corr
                               FROM MovementLinkMovement AS MovementLinkMovement_Master
                                    -- только проведенные корр.
                                    INNER JOIN Movement ON Movement.Id       = MovementLinkMovement_Master.MovementId
@@ -92,8 +93,9 @@ BEGIN
                              )
                 -- строчная часть всех налоговых
               , tmpMI_Tax AS (SELECT DISTINCT lpSelect.*
-                              FROM (SELECT DISTINCT tmpMovementCorr.MovementId_tax FROM tmpMovementCorr) AS tmp
-                                   INNER JOIN lpSelect_TaxFromTaxCorrective (inMovementId:= tmp.MovementId_tax
+                              FROM (SELECT DISTINCT tmpMovementCorr.MovementId_tax, tmpMovementCorr.OperDate_corr FROM tmpMovementCorr) AS tmp
+                                   INNER JOIN lpSelect_TaxFromTaxCorrective (inMovementId            := tmp.MovementId_tax
+                                                                           , inOperDate_TaxCorrective:= tmp.OperDate_corr
                                                                             ) AS lpSelect ON lpSelect.MovementId = tmp.MovementId_tax
                              )
         -- результат - корректировки + налог + № п/п

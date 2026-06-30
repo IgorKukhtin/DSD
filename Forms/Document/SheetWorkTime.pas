@@ -119,6 +119,7 @@ type
     bbOpenProtocolMember: TdxBarButton;
     bbOpenProtocolPersonal: TdxBarButton;
     NumBiz: TcxGridDBBandedColumn;
+    PositionCode: TcxGridDBBandedColumn;
   private
   public
   end;

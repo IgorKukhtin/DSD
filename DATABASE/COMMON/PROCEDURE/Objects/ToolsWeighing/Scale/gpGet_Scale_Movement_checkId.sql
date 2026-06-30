@@ -19,7 +19,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     IF EXISTS (SELECT MovementId FROM MovementItem WHERE MovementId = inMovementId AND isErased = FALSE)
+     IF EXISTS (SELECT MovementId FROM MovementItem WHERE MovementId = inMovementId) -- AND isErased = FALSE
      THEN
          -- Результат
          RETURN QUERY

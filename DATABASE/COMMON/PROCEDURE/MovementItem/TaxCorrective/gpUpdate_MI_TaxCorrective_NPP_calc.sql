@@ -578,7 +578,7 @@ BEGIN
                  )
 
              -- Строчная часть налоговой с № п/п
-           , tmpMI_tax AS (SELECT * FROM lpSelect_TaxFromTaxCorrective (vbMovementId_tax))
+           , tmpMI_tax AS (SELECT * FROM lpSelect_TaxFromTaxCorrective (vbMovementId_tax, vbOperDate))
               -- ТЕКУЩАЯ ОДНА - корректировка + № п/п из налоговой
             , tmpMI_Corr_curr AS
                  (SELECT tmpMI_Corr_curr_all.Id

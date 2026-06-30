@@ -315,6 +315,7 @@ type
     spUpdateSMSKyivstar_false: TdsdStoredProc;
     actUpdateSMSKyivstar_true: TdsdExecStoredProc;
     actUpdateSMSKyivstar_false: TdsdExecStoredProc;
+    cbSaleCommerc: TCheckBox;
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure StopButtonClick(Sender: TObject);
@@ -431,6 +432,7 @@ type
     procedure pCompleteDocument_Promo;
     procedure pCompleteDocument_Promo_60;
     procedure pCompleteDocument_Currency;
+    procedure pCompleteDocument_SaleCommerc;
     procedure pUpdateTransport_PartnerCount;
 
     procedure pUnCompleteDocument_StatusId_next;
@@ -2233,8 +2235,8 @@ procedure TMainForm.StartProcess;
                if (GroupId_branch <=0) and (((not cbHistoryCost_8379.Checked) and (not cbHistoryCost_8374.Checked) and (not cbHistoryCost_oth.Checked)) or cbHistoryCost_0.Checked)
                then cbPromo.Checked:=true;
                //Расчет Currency
-               if (GroupId_branch <=0) and (((not cbHistoryCost_8379.Checked) and (not cbHistoryCost_8374.Checked) and (not cbHistoryCost_oth.Checked)) or cbHistoryCost_0.Checked)
-               then cbCurrency.Checked:=true;
+               //if (GroupId_branch <=0) and (((not cbHistoryCost_8379.Checked) and (not cbHistoryCost_8374.Checked) and (not cbHistoryCost_oth.Checked)) or cbHistoryCost_0.Checked)
+               //then cbCurrency.Checked:=true;
 
                //Проводим+Распроводим
                cbComplete.Checked:=true;
@@ -2267,6 +2269,21 @@ begin
                //
                fBeginPartion_Period;
                pSend_Promo_Message_telegram;
+     end;
+
+     if (ParamStr(2)='autoCurrency')
+     then begin
+               cbCurrency.Checked:=true;
+               //
+               pLoad_https_Currency_all;
+               pCompleteDocument_Currency;
+     end;
+
+     if (ParamStr(2)='autoCommerc')
+     then begin
+               cbSaleCommerc.Checked:=true;
+               //
+               pCompleteDocument_SaleCommerc
      end;
 
      if (ParamStr(2)='autoFillSoldTable_curr')
@@ -3919,6 +3936,9 @@ begin
      if (not fStop)and(GroupId_branch <= 0) then pCompleteDocument_Currency;
      // ВСЕГДА - Привязка Возвраты
      if (not fStop)and(GroupId_branch <= 0) {and ((ParamStr(4) <> '-') or (isPeriodTwo = true))} then pCompleteDocument_ReturnIn_Auto;
+     // SaleCommerc
+     if (not fStop)and(GroupId_branch <= 0) then pCompleteDocument_SaleCommerc;
+
      //
      if (ParamStr(6)='next-') and (isPeriodTwo = true)
      then exit;
@@ -4767,6 +4787,75 @@ begin
      myDisabledCB(cbReturnIn_Auto);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pCompleteDocument_SaleCommerc;
+var MSec_complete : Integer;
+begin
+     if (not cbSaleCommerc.Checked)or(not cbSaleCommerc.Enabled) then exit;
+     //
+     myEnabledCB(cbSaleCommerc);
+     //
+     fromZConnection.Connected:=false;
+     //
+     fromZConnection.Connected:=false;
+     with fromZQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select * from gpComplete_SelectAll_Sybase_Sale_Commerc('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+')');
+        Add('order by OperDate,MovementId,InvNumber');
+        //Open;
+        fTryOpenSq(fromZQuery);
+
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+
+        myLogMemo_add('start Расчет Commerc' + '('+IntToStr(RecordCount)+') ' + StartDateCompleteEdit.Text + ' - ' + EndDateCompleteEdit.Text);
+        cbSaleCommerc.Caption:='('+IntToStr(RecordCount)+') Расчет Commerc';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc_two.StoredProcName:='gpComplete_Movement_Recalc_commerc';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inMovementDescId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
+             toStoredProc_two.Params.ParamByName('inMovementDescId').Value:=FieldByName('MovementDescId').AsInteger;
+             if not myExecToStoredProc_two then ;//exit;
+             //
+             try MSec_complete:=StrToInt(SessionIdEdit.Text);if MSec_complete<=0 then MSec_complete:=100;except MSec_complete:=100;end;
+             if cb100MSec.Checked then
+             begin SessionIdEdit.Text:=IntToStr(MSec_complete);
+                   //if MSec_complete > 6 * 1000
+                   //then myLogMemo_add('SessionIdEdit.Text');
+                   MyDelay(MSec_complete);
+             end;
+             //
+             Next;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myLogMemo_add('end Расчет Commerc');
+     myDisabledCB(cbSaleCommerc);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pCompleteDocument_Currency;
   function myAdd :String;
   begin
@@ -4868,7 +4957,7 @@ begin
         Gauge.MaxValue:=RecordCount;
 
         myLogMemo_add('start UnComplete Для StatusId_next ' + '('+IntToStr(RecordCount)+') ' + StartDateCompleteEdit.Text + ' - ' + DateToStr(Date-1));
-        cbCurrency.Caption:='('+IntToStr(RecordCount)+') StatusId_next.';
+        cbUnComplete_StatusId_next.Caption:='('+IntToStr(RecordCount)+') StatusId_next.';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;

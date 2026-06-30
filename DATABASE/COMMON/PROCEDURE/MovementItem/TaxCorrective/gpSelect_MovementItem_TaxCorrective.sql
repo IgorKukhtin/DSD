@@ -73,7 +73,9 @@ BEGIN
                   FROM lpSelect_TaxFromTaxCorrective ((SELECT MLM.MovementChildId
                                                        FROM MovementLinkMovement AS MLM
                                                        WHERE MLM.MovementId = inMovementId 
-                                                         AND MLM.DescId = zc_MovementLinkMovement_Child())
+                                                         AND MLM.DescId = zc_MovementLinkMovement_Child()
+                                                      )
+                                                    , vbOperDate
                                                      ) AS tmp
                   )
 
@@ -366,7 +368,9 @@ BEGIN
                   FROM lpSelect_TaxFromTaxCorrective ((SELECT MLM.MovementChildId
                                                        FROM MovementLinkMovement AS MLM
                                                        WHERE MLM.MovementId = inMovementId 
-                                                         AND MLM.DescId = zc_MovementLinkMovement_Child())
+                                                         AND MLM.DescId = zc_MovementLinkMovement_Child()
+                                                      )
+                                                    , vbOperDate
                                                      ) AS tmp
                   )
 

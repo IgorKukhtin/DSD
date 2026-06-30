@@ -185,12 +185,12 @@ BEGIN
          , tmpOperationGroup.Amount        :: TFloat AS Amount
          , tmpOperationGroup.Amount_Weight :: TFloat AS Amount_Weight
          , tmpOperationGroup.Amount_sh     :: TFloat AS Amount_Sh
-         , CASE WHEN tmpOperationGroup.Amount <> 0 THEN (tmpOperationGroup.Summ + tmpOperationGroup.Summ_ProfitLoss) / tmpOperationGroup.Amount ELSE 0 END :: TFloat AS Price
+         , CASE WHEN tmpOperationGroup.Amount <> 0 THEN ABS ((tmpOperationGroup.Summ + CASE WHEN inDescId <> zc_Movement_Income() THEN tmpOperationGroup.Summ_ProfitLoss ELSE 0 END) / tmpOperationGroup.Amount) ELSE 0 END :: TFloat AS Price
 
          , tmpOperationGroup.AmountPartner        :: TFloat AS AmountPartner
          , tmpOperationGroup.AmountPartner_Weight :: TFloat AS AmountPartner_Weight
          , tmpOperationGroup.AmountPartner_sh     :: TFloat AS AmountPartner_Sh
-         , CASE WHEN tmpOperationGroup.AmountPartner <> 0 THEN tmpOperationGroup.Summ / tmpOperationGroup.AmountPartner ELSE 0 END :: TFloat AS PricePartner
+         , CASE WHEN tmpOperationGroup.AmountPartner <> 0 THEN ABS (tmpOperationGroup.Summ / tmpOperationGroup.AmountPartner) ELSE 0 END :: TFloat AS PricePartner
 
          , (tmpOperationGroup.Amount_Weight - tmpOperationGroup.AmountPartner_Weight) :: TFloat AS AmountDiff_Weight
          , (tmpOperationGroup.Amount_sh     - tmpOperationGroup.AmountPartner_sh)     :: TFloat AS AmountDiff_Sh
@@ -207,7 +207,7 @@ BEGIN
 
      FROM (SELECT CASE WHEN vbIsGroup = TRUE THEN 0 ELSE tmpContainer.GoodsId END AS GoodsId
                 , tmpContainer.LocationId
-                , COALESCE (ContainerLO_Juridical.ObjectId,  COALESCE (ContainerLO_Member.ObjectId, 0 )) AS JuridicalId
+                , COALESCE (ContainerLO_Juridical.ObjectId, ContainerLO_Member.ObjectId, 0) AS JuridicalId
                 -- , COALESCE (ContainerLO_Partner.ObjectId, COALESCE (ContainerLO_Member.ObjectId, 0))     AS PartnerId
                 , tmpContainer.PartnerId
                 , CASE WHEN ContainerLO_Member.ObjectId > 0 THEN zc_Enum_PaidKind_SecondForm() ELSE COALESCE (ContainerLO_PaidKind.ObjectId,0) END AS PaidKindId
@@ -227,7 +227,7 @@ BEGIN
                 , SUM (tmpContainer.AmountPartner * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END) AS AmountPartner_Weight
                 , SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpContainer.Amount        ELSE 0 END) AS Amount_Sh
                 , SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpContainer.AmountPartner ELSE 0 END) AS AmountPartner_Sh
-                , SUM (tmpContainer.Summ + tmpContainer.Summ_ProfitLoss) AS Summ
+                , SUM (tmpContainer.Summ + CASE WHEN inDescId <> zc_Movement_Income() THEN tmpContainer.Summ_ProfitLoss ELSE 0 END) AS Summ
                 , SUM (tmpContainer.Summ_ProfitLoss + tmpContainer.Summ_ProfitLoss_partner) AS Summ_ProfitLoss
                 , SUM (tmpContainer.HeadCount)                           AS HeadCount
 
@@ -235,7 +235,7 @@ BEGIN
                       , MIContainer.ObjectId_analyzer                  AS GoodsId
                       , CASE WHEN vbIsGroup = TRUE THEN 0 WHEN Object_GoodsKind.DescId = zc_Object_GoodsKind() THEN COALESCE (MIContainer.ObjectIntId_Analyzer, 0) ELSE 0 END AS GoodsKindId
                       , MIContainer.ContainerId_analyzer               AS ContainerId_analyzer
-                      , MIContainer.ObjectExtId_Analyzer               AS PartnerId
+                      , COALESCE (MIContainer.ObjectExtId_Analyzer, MLO_From.ObjectId) AS PartnerId
                       , MIContainer.WhereObjectId_analyzer             AS LocationId
                       , CASE WHEN inIsDate = TRUE OR inIsMonth = TRUE OR inIsMovement = TRUE THEN MIContainer.MovementId ELSE 0 END AS MovementId
                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.MovementDescId = zc_Movement_Income() AND MIContainer.isActive = TRUE
@@ -277,7 +277,7 @@ BEGIN
                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()
                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()
                                    AND MIContainer.MovementDescId = zc_Movement_ReturnOut()
-                                   AND MIContainer.isActive = TRUE and 1=0  -- задваивает цену 
+                                   AND MIContainer.isActive = TRUE -- and 1=0  -- задваивает цену 
                                        THEN 1 * MIContainer.Amount
 
                                   WHEN MIContainer.DescId = zc_MIContainer_Summ()
@@ -296,6 +296,11 @@ BEGIN
                                                  AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
                                                  AND MIContainer.DescId = zc_MIContainer_Count()
                                                  AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_Count_40200()
+                      LEFT JOIN MovementLinkObject AS MLO_From
+                                                   ON MLO_From.MovementId =  MIContainer.MovementId
+                                                  AND MLO_From.DescId     = zc_MovementLinkObject_From()
+                                                  AND inDescId            = zc_Movement_Income()
+
                  WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                    AND MIContainer.MovementDescId = inDescId
                    -- AND MIContainer.isActive = CASE WHEN inDescId = zc_Movement_Income() THEN TRUE ELSE FALSE END
@@ -308,7 +313,7 @@ BEGIN
                         , CASE WHEN vbIsGroup = TRUE THEN 0 WHEN Object_GoodsKind.DescId = zc_Object_GoodsKind() THEN COALESCE (MIContainer.ObjectIntId_Analyzer, 0) ELSE 0 END
                         , MIContainer.ContainerId_analyzer
                         , MIContainer.WhereObjectId_analyzer
-                        , MIContainer.ObjectExtId_Analyzer
+                        , COALESCE (MIContainer.ObjectExtId_Analyzer, MLO_From.ObjectId)
                         , CASE WHEN inIsDate = TRUE OR inIsMonth = TRUE OR inIsMovement = TRUE THEN MIContainer.MovementId ELSE 0 END
                 ) AS tmpContainer
                       INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpContainer.GoodsId
@@ -319,7 +324,8 @@ BEGIN
 
                       LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
                                                     ON CLO_PartionGoods.ContainerId = tmpContainer.ContainerId
-                                                   AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                                                   AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+                                                   AND inDescId                     = zc_Movement_Income()
 
                       LEFT JOIN ContainerLinkObject AS ContainerLO_Juridical
                                                     ON ContainerLO_Juridical.ContainerId = tmpContainer.ContainerId_analyzer
@@ -356,7 +362,7 @@ BEGIN
                              , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE COALESCE (CLO_PartionGoods.ObjectId, 0) END
                              -- , COALESCE (ContainerLO_Partner.ObjectId, COALESCE (ContainerLO_Member.ObjectId, 0))
                              , tmpContainer.PartnerId
-                             , COALESCE (ContainerLO_Juridical.ObjectId,  COALESCE (ContainerLO_Member.ObjectId, 0 ))
+                             , COALESCE (ContainerLO_Juridical.ObjectId, ContainerLO_Member.ObjectId, 0)
                              , COALESCE (ContainerLO_InfoMoney.ObjectId, 0)
 
                              , CASE WHEN inIsDate = TRUE THEN Movement.OperDate ELSE NULL END
@@ -422,4 +428,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_IncomeByPartner (inStartDate:= '01.11.2017', inEndDate:= '01.11.2017', inDescId:= zc_Movement_Income(), inJuridicalId:=0, inPaidKindId:=0, inInfoMoneyId:=0, inUnitGroupId:=0, inUnitId:= 0, inGoodsGroupId:= 0, inIsDate := FALSE, inIsMonth:=False, inIsMovement := FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_IncomeByPartner (inStartDate:= '01.11.2027', inEndDate:= '01.11.2027', inDescId:= zc_Movement_Income(), inJuridicalId:=0, inPaidKindId:=0, inInfoMoneyId:=0, inUnitGroupId:=0, inUnitId:= 0, inGoodsGroupId:= 0, inIsDate := FALSE, inIsMonth:=False, inIsMovement := FALSE, inSession:= zfCalc_UserAdmin());
