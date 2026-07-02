@@ -239,7 +239,7 @@ BEGIN
                          AND Movement_Promo.StatusId <> zc_Enum_Status_Erased()
                          AND (  (COALESCE (MovementBoolean_Promo.ValueData, FALSE) = TRUE AND inIsPromo = TRUE)
                              OR (COALESCE (MovementBoolean_Promo.ValueData, FALSE) = FALSE AND inIsTender = TRUE) 
-                             OR (COALESCE (MovementBoolean_NotBudgPromo.ValueData, FALSE) = FALSE AND inisNotBudgPromo = TRUE)
+                             OR (COALESCE (MovementBoolean_NotBudgPromo.ValueData, FALSE) = TRUE AND inisNotBudgPromo = TRUE)
                              OR (inIsPromo = FALSE AND inIsTender = FALSE AND inisNotBudgPromo = FALSE)
                              )
                          --AND (COALESCE (MovementBoolean_NotBudgPromo.ValueData, FALSE) = inisNotBudgPromo)
