@@ -634,7 +634,9 @@ BEGIN
      IF inStaffListKindId = zc_Enum_StaffListKind_In()        --Прием на работу
      OR inStaffListKindId = zc_Enum_StaffListKind_Add()       --Прием по совместительству
      THEN
-         vbDateIn := inOperDate;
+         vbDateIn  := inOperDate;
+         vbDateOut := Null;
+         vbIsDateOut := False;
      END IF;
      --
      IF inStaffListKindId = zc_Enum_StaffListKind_Out()       --Увольнение

@@ -11,7 +11,6 @@ inherited Sale_CommercForm: TSale_CommercForm
     Top = 249
     Width = 1506
     Height = 408
-    Properties.ActivePage = cxTabSheetCommerc
     ExplicitTop = 249
     ExplicitWidth = 1506
     ExplicitHeight = 408
@@ -1587,8 +1586,8 @@ inherited Sale_CommercForm: TSale_CommercForm
       Width = 140
     end
     object cxLabel12: TcxLabel
-      Left = 88
-      Top = 0
+      Left = 85
+      Top = 5
       Caption = #8470' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
     end
     object edInvNumberPartner: TcxTextEdit
@@ -1670,7 +1669,7 @@ inherited Sale_CommercForm: TSale_CommercForm
       Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075#1086#1074#1086#1088#1072
     end
     object edInvNumberOrder: TcxButtonEdit
-      Left = 168
+      Left = 171
       Top = 23
       Properties.Buttons = <
         item
@@ -2377,7 +2376,6 @@ inherited Sale_CommercForm: TSale_CommercForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       Caption = #1044#1072#1085#1085#1099#1077' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
       Hint = #1044#1072#1085#1085#1099#1077' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
       ImageIndex = 46
@@ -2661,9 +2659,6 @@ inherited Sale_CommercForm: TSale_CommercForm
         end>
       RefreshOnTabSetChanges = True
     end
-    inherited actGridToExcel: TdsdGridToExcel
-      Enabled = False
-    end
     object actAssetGoodsChoiceForm: TOpenChoiceForm [17]
       Category = 'DSDLib'
       MoveParams = <>
@@ -2702,7 +2697,6 @@ inherited Sale_CommercForm: TSale_CommercForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1080#1074#1103#1079#1082#1080' '#1074#1086#1079#1074#1088#1072#1090#1086#1074' '#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' '#1055#1088#1086#1076#1072#1078#1080'>'
       Hint = #1054#1090#1095#1077#1090' <'#1055#1088#1080#1074#1103#1079#1082#1080' '#1074#1086#1079#1074#1088#1072#1090#1086#1074' '#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' '#1055#1088#1086#1076#1072#1078#1080'>'
       ImageIndex = 25
@@ -3656,7 +3650,6 @@ inherited Sale_CommercForm: TSale_CommercForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'>'
       ImageIndex = 26
@@ -3692,7 +3685,6 @@ inherited Sale_CommercForm: TSale_CommercForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1047#1072#1103#1074#1082#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1047#1072#1103#1074#1082#1072'>'
       ImageIndex = 24
@@ -3728,7 +3720,6 @@ inherited Sale_CommercForm: TSale_CommercForm
       Category = 'Promo'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1040#1082#1094#1080#1103'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1040#1082#1094#1080#1103'>'
       ImageIndex = 29
@@ -4074,7 +4065,6 @@ inherited Sale_CommercForm: TSale_CommercForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
       ImageIndex = 32
@@ -7782,8 +7772,8 @@ inherited Sale_CommercForm: TSale_CommercForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 52
-    Top = 8
+    Left = 28
+    Top = 16
   end
   object spSelectPrint_ExpPack: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_ExpPack_Print'
