@@ -21,11 +21,22 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbOperDatePartner TDateTime;
+          vbTotalSumm TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Sale());
      vbUserId:= lpGetUserBySession (inSession);
      
+     --
+     vbTotalSumm := (SELECT (COALESCE (MovementFloat_TotalSumm.ValueData, 0) + COALESCE (MovementFloat_CorrSumm.ValueData, 0)) :: TFloat
+                     FROM MovementFloat AS MovementFloat_TotalSumm
+                         -- Корректировка суммы
+                         LEFT JOIN tmpMovementFloat AS MovementFloat_CorrSumm
+                                                    ON MovementFloat_CorrSumm.MovementId = inMovementId
+                                                   AND MovementFloat_CorrSumm.DescId     = zc_MovementFloat_CorrSumm()
+                     WHERE MovementFloat_TotalSumm.MovementId = inMovementId
+                       AND MovementFloat_TotalSumm.DescId IN (zc_MovementFloat_TotalSumm())
+                     ) ::TFloat;
 
      -- Результат
      RETURN QUERY
@@ -71,7 +82,7 @@ BEGIN
            , tmpMI_Detail.ParentId
 
            , tmpMI_Detail.Amount             :: TFloat AS Amount
-           , 0                               :: TFloat AS Summa
+           , (vbTotalSumm * tmpMI_Detail.Amount / 100) :: TFloat AS Summa
            , Object_Contract_bonus.Id                  AS ContractId_bonus
            , Object_Contract_bonus.ObjectCode          AS ContractCode_bonus
            , Object_Contract_bonus.ValueData           AS ContractName_bonus

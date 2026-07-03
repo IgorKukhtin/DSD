@@ -1,25 +1,25 @@
 inherited ReturnIn_CommercForm: TReturnIn_CommercForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1052#1086#1090#1080#1074#1072#1094#1080#1103' '#1082#1086#1084#1084#1077#1088#1094#1080#1080')>'
   ClientHeight = 700
-  ClientWidth = 1320
-  ExplicitWidth = 1336
+  ClientWidth = 1380
+  ExplicitWidth = 1396
   ExplicitHeight = 739
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 227
-    Width = 1320
+    Width = 1380
     Height = 473
     ExplicitTop = 227
     ExplicitWidth = 1320
     ExplicitHeight = 473
     ClientRectBottom = 473
-    ClientRectRight = 1320
+    ClientRectRight = 1380
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1320
       ExplicitHeight = 449
       inherited cxGrid: TcxGrid
-        Width = 1320
+        Width = 1380
         Height = 311
         ExplicitWidth = 1320
         ExplicitHeight = 311
@@ -614,11 +614,12 @@ inherited ReturnIn_CommercForm: TReturnIn_CommercForm
       object cxGrid1: TcxGrid
         Left = 0
         Top = 319
-        Width = 1320
+        Width = 1380
         Height = 130
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 1320
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -956,27 +957,26 @@ inherited ReturnIn_CommercForm: TReturnIn_CommercForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 311
-        Width = 1320
+        Width = 1380
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitWidth = 1320
       end
     end
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 1510
-      ExplicitHeight = 0
+      ExplicitWidth = 1320
       object l: TcxGrid
         Left = 0
         Top = 0
-        Width = 1320
+        Width = 1380
         Height = 449
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1510
+        ExplicitWidth = 1320
         object lDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TaxCorrectiveDS
@@ -1327,20 +1327,16 @@ inherited ReturnIn_CommercForm: TReturnIn_CommercForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 1458
-      ExplicitHeight = 0
+      ExplicitWidth = 1320
       object cxGridDetail_commerc: TcxGrid
         Left = 0
         Top = 0
-        Width = 1320
+        Width = 1380
         Height = 449
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitLeft = 56
-        ExplicitTop = 80
-        ExplicitWidth = 1510
+        ExplicitWidth = 1320
         object cxGridDBTableViewDetail_commerc: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS_commerc
@@ -1482,9 +1478,184 @@ inherited ReturnIn_CommercForm: TReturnIn_CommercForm
         end
       end
     end
+    object cxTabSheetCommerc: TcxTabSheet
+      Caption = #1057#1090#1088#1091#1082#1090#1091#1088#1072' '#1082#1086#1084#1077#1088#1094#1110#1111
+      ImageIndex = 3
+      ExplicitWidth = 1320
+      object cxGridComRetail: TcxGrid
+        Left = 0
+        Top = 273
+        Width = 1380
+        Height = 176
+        Align = alBottom
+        TabOrder = 0
+        LookAndFeel.NativeStyle = True
+        LookAndFeel.SkinName = 'UserSkin'
+        ExplicitTop = 271
+        object cxGridDBTableViewComRetail: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = ComRetailDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Inserting = False
+          OptionsView.CellAutoHeight = True
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object Ord_ch5: TcxGridDBColumn
+            Caption = #1056#1110#1074#1077#1085#1100
+            DataBinding.FieldName = 'Ord'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object PositionName_ch5: TcxGridDBColumn
+            Caption = #1055#1086#1089#1072#1076#1072
+            DataBinding.FieldName = 'PositionName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 207
+          end
+          object PersonalGroupNamech5: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1072' '#1089#1087#1110#1074#1088#1086#1073#1110#1090#1085#1080#1082#1110#1074
+            DataBinding.FieldName = 'PersonalGroupName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 159
+          end
+          object PersonalName_ch5: TcxGridDBColumn
+            Caption = #1055#1030#1041
+            DataBinding.FieldName = 'PersonalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 350
+          end
+          object UnitName_ch5: TcxGridDBColumn
+            Caption = #1042#1110#1076#1076#1110#1083
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 244
+          end
+        end
+        object cxGridLevelComRetail: TcxGridLevel
+          GridView = cxGridDBTableViewComRetail
+        end
+      end
+      object cxSplitter2: TcxSplitter
+        Left = 0
+        Top = 265
+        Width = 1380
+        Height = 8
+        HotZoneClassName = 'TcxMediaPlayer8Style'
+        AlignSplitter = salBottom
+        Control = cxGridComRetail
+        ExplicitTop = 0
+        ExplicitWidth = 1320
+      end
+      object cxGridComLocal: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 1380
+        Height = 265
+        Align = alClient
+        TabOrder = 2
+        LookAndFeel.NativeStyle = True
+        LookAndFeel.SkinName = 'UserSkin'
+        ExplicitWidth = 1506
+        ExplicitHeight = 200
+        object cxGridDBTableViewComLocal: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = ComLocalDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = PersonalName_ch4
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Inserting = False
+          OptionsView.CellAutoHeight = True
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object Ord_ch4: TcxGridDBColumn
+            Caption = #1056#1110#1074#1077#1085#1100
+            DataBinding.FieldName = 'Ord'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 67
+          end
+          object PositionName_ch4: TcxGridDBColumn
+            Caption = #1055#1086#1089#1072#1076#1072
+            DataBinding.FieldName = 'PositionName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 184
+          end
+          object PersonalGroupName_ch4: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1072' '#1089#1087#1110#1074#1088#1086#1073#1110#1090#1085#1080#1082#1110#1074
+            DataBinding.FieldName = 'PersonalGroupName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 160
+          end
+          object PersonalName_ch4: TcxGridDBColumn
+            Caption = #1055#1030#1041
+            DataBinding.FieldName = 'PersonalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 350
+          end
+          object UnitName_ch4: TcxGridDBColumn
+            Caption = #1042#1110#1076#1076#1110#1083
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 230
+          end
+        end
+        object cxGridLevelComLocal: TcxGridLevel
+          GridView = cxGridDBTableViewComLocal
+        end
+      end
+    end
   end
   inherited DataPanel: TPanel
-    Width = 1320
+    Width = 1380
     Height = 201
     TabOrder = 3
     ExplicitWidth = 1320
@@ -2232,6 +2403,12 @@ inherited ReturnIn_CommercForm: TReturnIn_CommercForm
         end
         item
           StoredProc = spSelectDetail_commerc
+        end
+        item
+          StoredProc = spSelectComLocal
+        end
+        item
+          StoredProc = spSelectComRetail
         end>
       RefreshOnTabSetChanges = True
     end
@@ -7722,8 +7899,8 @@ inherited ReturnIn_CommercForm: TReturnIn_CommercForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1130
-    Top = 346
+    Left = 1074
+    Top = 338
   end
   object spSelectDetail_commerc: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_ReturnIn_Detail_Commerc'
@@ -7750,8 +7927,8 @@ inherited ReturnIn_CommercForm: TReturnIn_CommercForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1144
-    Top = 512
+    Left = 928
+    Top = 432
   end
   object DBViewAddOnDetail_commerc: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -7768,8 +7945,8 @@ inherited ReturnIn_CommercForm: TReturnIn_CommercForm
     ShowFieldImageList = <>
     ViewDocumentList = <>
     PropertiesCellList = <>
-    Left = 1158
-    Top = 377
+    Left = 1054
+    Top = 385
   end
   object GuidesReturnKind: TdsdGuides
     KeyField = 'Id'
@@ -8245,5 +8422,123 @@ inherited ReturnIn_CommercForm: TReturnIn_CommercForm
       end>
     Left = 561
     Top = 187
+  end
+  object dsdDBViewAddOnComRetail: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewComRetail
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = True
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <
+      item
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
+      end>
+    ColumnEnterList = <
+      item
+        Column = Amount_ch2
+      end
+      item
+      end>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
+    Left = 1158
+    Top = 537
+  end
+  object ComRetailCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 1184
+    Top = 560
+  end
+  object ComRetailDS: TDataSource
+    DataSet = ComRetailCDS
+    Left = 1120
+    Top = 568
+  end
+  object dsdDBViewAddOnComLocal: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewComLocal
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = True
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <
+      item
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
+      end>
+    ColumnEnterList = <
+      item
+        Column = Amount_ch2
+      end
+      item
+      end>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
+    Left = 990
+    Top = 537
+  end
+  object ComLocalDS: TDataSource
+    DataSet = ComLocalCDS
+    Left = 960
+    Top = 568
+  end
+  object ComLocalCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 1024
+    Top = 568
+  end
+  object spSelectComLocal: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_CommercLocal_byMovement'
+    DataSet = ComLocalCDS
+    DataSets = <
+      item
+        DataSet = ComLocalCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1280
+    Top = 512
+  end
+  object spSelectComRetail: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_CommercRetail_byMovement'
+    DataSet = ComRetailCDS
+    DataSets = <
+      item
+        DataSet = ComRetailCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1272
+    Top = 576
   end
 end

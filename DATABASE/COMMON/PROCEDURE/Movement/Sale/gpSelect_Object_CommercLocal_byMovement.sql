@@ -28,7 +28,9 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     SELECT MovementLinkObject_Insert_order.ObjectId AS UserId_order
+     SELECT CASE WHEN Movement.DescId = zc_Movement_Sale() THEN MovementLinkObject_Insert_order.ObjectId
+                 WHEN Movement.DescId = zc_Movement_ReturnIn() THEN MovementLinkObject_Insert.ObjectId
+            END AS UserId_order
     INTO vbUserId_order
      FROM Movement
           LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
@@ -38,6 +40,10 @@ BEGIN
           LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert_order
                                        ON MovementLinkObject_Insert_order.MovementId = MovementLinkMovement_Order.MovementChildId
                                       AND MovementLinkObject_Insert_order.DescId     = zc_MovementLinkObject_Insert()
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
+                                       ON MovementLinkObject_Insert.MovementId = Movement.Id
+                                      AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
      WHERE Movement.Id = inMovementId;
 
      --данные по пользователю для определения данных из справочника CommercLocal 

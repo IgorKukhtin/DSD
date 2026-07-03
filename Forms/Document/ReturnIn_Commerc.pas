@@ -322,6 +322,32 @@ type
     cxLabel34: TcxLabel;
     edBonusSecondForm: TcxCurrencyEdit;
     GuidesRouteTT: TdsdGuides;
+    cxTabSheetCommerc: TcxTabSheet;
+    cxGridComRetail: TcxGrid;
+    cxGridDBTableViewComRetail: TcxGridDBTableView;
+    Ord_ch5: TcxGridDBColumn;
+    PositionName_ch5: TcxGridDBColumn;
+    PersonalGroupNamech5: TcxGridDBColumn;
+    PersonalName_ch5: TcxGridDBColumn;
+    UnitName_ch5: TcxGridDBColumn;
+    cxGridLevelComRetail: TcxGridLevel;
+    cxSplitter2: TcxSplitter;
+    cxGridComLocal: TcxGrid;
+    cxGridDBTableViewComLocal: TcxGridDBTableView;
+    Ord_ch4: TcxGridDBColumn;
+    PositionName_ch4: TcxGridDBColumn;
+    PersonalGroupName_ch4: TcxGridDBColumn;
+    PersonalName_ch4: TcxGridDBColumn;
+    UnitName_ch4: TcxGridDBColumn;
+    cxGridLevelComLocal: TcxGridLevel;
+    dsdDBViewAddOnComRetail: TdsdDBViewAddOn;
+    ComRetailCDS: TClientDataSet;
+    ComRetailDS: TDataSource;
+    dsdDBViewAddOnComLocal: TdsdDBViewAddOn;
+    ComLocalDS: TDataSource;
+    ComLocalCDS: TClientDataSet;
+    spSelectComLocal: TdsdStoredProc;
+    spSelectComRetail: TdsdStoredProc;
   private
     { Private declarations }
   public

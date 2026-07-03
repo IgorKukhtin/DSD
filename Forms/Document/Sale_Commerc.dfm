@@ -1215,7 +1215,6 @@ inherited Sale_CommercForm: TSale_CommercForm
         TabOrder = 0
         LookAndFeel.NativeStyle = True
         LookAndFeel.SkinName = 'UserSkin'
-        ExplicitHeight = 209
         object cxGridDBTableViewComLocal: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ComLocalDS
@@ -1371,7 +1370,6 @@ inherited Sale_CommercForm: TSale_CommercForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridComRetail
-        ExplicitTop = 217
       end
     end
   end
@@ -1588,8 +1586,8 @@ inherited Sale_CommercForm: TSale_CommercForm
       Width = 140
     end
     object cxLabel12: TcxLabel
-      Left = 88
-      Top = 0
+      Left = 85
+      Top = 5
       Caption = #8470' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
     end
     object edInvNumberPartner: TcxTextEdit
@@ -1671,7 +1669,7 @@ inherited Sale_CommercForm: TSale_CommercForm
       Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075#1086#1074#1086#1088#1072
     end
     object edInvNumberOrder: TcxButtonEdit
-      Left = 168
+      Left = 171
       Top = 23
       Properties.Buttons = <
         item
@@ -7774,8 +7772,8 @@ inherited Sale_CommercForm: TSale_CommercForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 52
-    Top = 8
+    Left = 28
+    Top = 16
   end
   object spSelectPrint_ExpPack: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_ExpPack_Print'
@@ -9085,8 +9083,8 @@ inherited Sale_CommercForm: TSale_CommercForm
   end
   object ComLocalDS: TDataSource
     DataSet = ComLocalCDS
-    Left = 1216
-    Top = 536
+    Left = 1184
+    Top = 528
   end
   object ComLocalCDS: TClientDataSet
     Aggregates = <>
@@ -9119,8 +9117,8 @@ inherited Sale_CommercForm: TSale_CommercForm
     ShowFieldImageList = <>
     ViewDocumentList = <>
     PropertiesCellList = <>
-    Left = 1238
-    Top = 505
+    Left = 1206
+    Top = 497
   end
   object spSelectComLocal: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_CommercLocal_byMovement'

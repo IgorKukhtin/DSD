@@ -1907,6 +1907,7 @@ procedure TLoadFormTest.LoadReturnInFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnIn_CommercForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnIn_CommercForm');
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInChildDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInChildDialogForm');
