@@ -20,6 +20,8 @@ $BODY$
    DECLARE vbUserId     Integer;
    DECLARE vbPersonalId Integer;
    DECLARE vbMemberId   Integer;
+   DECLARE vbPersonalId_2 Integer;
+   DECLARE vbMemberId_2   Integer;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
@@ -27,8 +29,23 @@ BEGIN
 
       -- Определяем сотрудника для пользователя
       vbPersonalId:= (SELECT PersonalId FROM gpGetMobile_Object_Const (inSession));
+
       -- Определяем
       vbMemberId:= (SELECT OL.ChildObjectId AS MemberId FROM ObjectLink AS OL WHERE OL.ObjectId = vbPersonalId AND OL.DescId   = zc_ObjectLink_Personal_Member());
+
+      -- Дрепина Н.В.
+      IF vbUserId = 1156041
+      THEN -- Тимошенко Ельнара Юсиф Кизи
+           vbPersonalId_2:= (SELECT PersonalId FROM gpGetMobile_Object_Const ('13762728'));
+           vbMemberId_2:= (SELECT OL.ChildObjectId AS MemberId FROM ObjectLink AS OL WHERE OL.ObjectId = vbPersonalId_2 AND OL.DescId   = zc_ObjectLink_Personal_Member());
+      END IF;
+
+      -- Тимошенко Ельнара Юсиф Кизи
+      IF vbUserId = 13762728
+      THEN -- Дрепина Н.В.
+           vbPersonalId_2:= (SELECT PersonalId FROM gpGetMobile_Object_Const ('1156041'));
+           vbMemberId_2:= (SELECT OL.ChildObjectId AS MemberId FROM ObjectLink AS OL WHERE OL.ObjectId = vbPersonalId_2 AND OL.DescId   = zc_ObjectLink_Personal_Member());
+      END IF;
 
       -- Результат
       IF vbPersonalId IS NOT NULL
@@ -36,7 +53,7 @@ BEGIN
            RETURN QUERY
              WITH tmpPersonal AS (SELECT OL.ObjectId AS PersonalId
                                   FROM ObjectLink AS OL
-                                  WHERE OL.ChildObjectId = vbMemberId
+                                  WHERE OL.ChildObjectId IN (vbMemberId, vbMemberId_2)
                                     AND OL.DescId        = zc_ObjectLink_Personal_Member()
                                  )
                 , tmpPartner AS (-- если vbPersonalId - Сотрудник (торговый)
