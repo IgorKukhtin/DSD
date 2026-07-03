@@ -74,7 +74,12 @@ BEGIN
           RAISE EXCEPTION 'Ошибка.Найдено несколько ФИО в справочнике Физ.лиц, ФИО = <%>.', TRIM (REPLACE (inPersonalName, '`', CHR (39)));
      END IF;
      --находим должность
-     vbPositionId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_object_Position() AND Object.ValueData ILIKE TRIM (inPositionName));
+     vbPositionId := (SELECT Object_Personal_View.PositionId
+                      FROM Object_Personal_View
+                      WHERE Object_Personal_View.MemberId = vbMemberId
+                        AND TRIM (Object_Personal_View.PositionName) ILIKE TRIM (inPositionName)
+                        AND Object_Personal_View.isErased = FALSE
+                     );
      
      IF COALESCE (vbPositionId,0) = 0
      THEN 
@@ -85,7 +90,7 @@ BEGIN
       --находим сотрудника
      SELECT lfSelect.PersonalId
           , lfSelect.UnitId    
-   INTO vbPersonalId, vbUnitId
+            INTO vbPersonalId, vbUnitId
      FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
      WHERE lfSelect.Ord = 1
        AND lfSelect.MemberId = vbMemberId AND lfSelect.PositionId = vbPositionId
