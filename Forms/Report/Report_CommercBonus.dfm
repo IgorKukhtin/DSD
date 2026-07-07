@@ -1336,6 +1336,66 @@ inherited Report_CommercBonusForm: TReport_CommercBonusForm
         end>
       Caption = 'actGet_Check'
     end
+    object actOpenMovementForm: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 28
+      FormName = 'Sale'
+      FormNameParam.Value = 'Sale'
+      FormNameParam.Component = FormParams
+      FormNameParam.ComponentItem = 'FormName'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate_Movement'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inChangePercentAmount'
+          Value = 0.000000000000000000
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object mactOpenDocument: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetForm
+        end
+        item
+          Action = actOpenMovementForm
+        end>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 28
+    end
     object actOpenReportJuridicalCollationForm: TdsdOpenForm
       Category = 'DSDLib'
       TabSheet = tsMain
@@ -1482,6 +1542,17 @@ inherited Report_CommercBonusForm: TReport_CommercBonusForm
         end>
       isShowModal = False
     end
+    object actGetForm: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = getMovementForm
+      StoredProcList = <
+        item
+          StoredProc = getMovementForm
+        end>
+      Caption = 'actGetForm'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -1588,6 +1659,10 @@ inherited Report_CommercBonusForm: TReport_CommercBonusForm
           ItemName = 'dxBarStatic'
         end
         item
+          Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbReportJuridicalCollation'
@@ -1663,6 +1738,10 @@ inherited Report_CommercBonusForm: TReport_CommercBonusForm
     end
     object bbInsertUpdate_ByGrid_koeff: TdxBarButton
       Action = macInsertUpdate_ByGrid_koeff
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = mactOpenDocument
       Category = 0
     end
   end
@@ -2491,5 +2570,86 @@ inherited Report_CommercBonusForm: TReport_CommercBonusForm
     PackSize = 1
     Left = 456
     Top = 240
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'PersonalName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ServiceDate'
+        Value = 44927d
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormName'
+        Value = 'TSale_CommercForm'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 672
+    Top = 170
+  end
+  object getMovementForm: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Form'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FormName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 568
+    Top = 176
+  end
+  object TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Form'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormName'
+        Value = Null
+        ComponentItem = 'FormName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 440
+    Top = 176
   end
 end

@@ -93,6 +93,12 @@ type
     macInsertUpdate_ByGrid_list_Koeff: TMultiAction;
     actInsertUpdate_ByGrid_Koeff: TdsdExecStoredProc;
     bbInsertUpdate_ByGrid_koeff: TdxBarButton;
+    FormParams: TdsdFormParams;
+    getMovementForm: TdsdStoredProc;
+    actGetForm: TdsdExecStoredProc;
+    actOpenMovementForm: TdsdOpenForm;
+    mactOpenDocument: TMultiAction;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

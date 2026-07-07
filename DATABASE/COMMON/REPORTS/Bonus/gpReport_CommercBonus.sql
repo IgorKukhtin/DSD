@@ -95,10 +95,10 @@ BEGIN
                                                         ON MovementLinkObject_To.MovementId = Movement.Id        
                                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
 
-                           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                                ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
-                                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                                               AND (ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
+                           INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                 ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                                AND (ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
                       WHERE Movement.DescId   = zc_Movement_Sale()
                         AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                         AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -363,9 +363,7 @@ BEGIN
            LEFT JOIN tmpPersonal_byMember ON tmpPersonal_byMember.PersonalId = Object_Personal.PersonalId
 
       WHERE (Object_Branch.Id = inBranchId OR inBranchId = 0) 
-        AND (((tmpPersonal_byMember.PersonalId IS NOT NULL AND inPaidKindId = zc_Enum_PaidKind_SecondForm()) OR inMemberId = 0)
-         OR  inPaidKindId = zc_Enum_PaidKind_FirstForm()
-            )
+        AND ((tmpPersonal_byMember.PersonalId IS NOT NULL) OR inMemberId = 0)
        ;
 
 END;
