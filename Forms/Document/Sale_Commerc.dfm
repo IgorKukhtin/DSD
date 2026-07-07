@@ -1206,6 +1206,9 @@ inherited Sale_CommercForm: TSale_CommercForm
     object cxTabSheetCommerc: TcxTabSheet
       Caption = #1057#1090#1088#1091#1082#1090#1091#1088#1072' '#1082#1086#1084#1077#1088#1094#1110#1111
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridComLocal: TcxGrid
         Left = 0
         Top = 0
@@ -1365,7 +1368,7 @@ inherited Sale_CommercForm: TSale_CommercForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 200
-        Width = 1506
+        Width = 8
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
