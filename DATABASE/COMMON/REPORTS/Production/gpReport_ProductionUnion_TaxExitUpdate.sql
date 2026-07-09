@@ -559,7 +559,7 @@ BEGIN
                                    --
                                  , MAX (tmpMI_WorkProgress_in.MovementId)    AS MovementId
 
-                                 , SUM ((COALESCE (tmpMI_detail.Amount_main,0) - COALESCE (tmpMI_detail.AmountMain_part,0))/100) AS CuterCount_calc -- Куттеров факт (расчет)
+                                 , SUM ((COALESCE (tmpMI_detail.Amount_main,0) - COALESCE (tmpMI_detail.AmountMain_part,0))/100) :: TFloat AS CuterCount_calc -- Куттеров факт (расчет)
                                  , SUM (COALESCE (tmpMI_WorkProgress_in.Amount_out,0) ) AS Amount_out
 
                                    -- ПЛАН Вес после массажера, кг
