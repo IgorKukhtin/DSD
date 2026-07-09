@@ -6491,11 +6491,11 @@ begin
     end;
 
     // для теста -
-    //testStringStream:= TStringStream.Create('', TEncoding.UTF8);
-    //Stream.Position := 0;
-    //testStringStream.CopyFrom(Stream, 0);
-    //testStringStream.SaveToFile('test_Condra.txt');
-    //testStringStream.Free;
+    testStringStream:= TStringStream.Create('', TEncoding.UTF8);
+    Stream.Position := 0;
+    testStringStream.CopyFrom(Stream, 0);
+    testStringStream.SaveToFile('test_Quality_vch.txt');
+    testStringStream.Free;
 
 
     if IdHTTP.ResponseCode in [200,201] then
@@ -7448,12 +7448,18 @@ begin
   //
   FMetadata_fileParam.Value := HeaderDataSet.FieldByName('FileName_pdf').AsString;
 
-  FMetadata_certificate_typeParam.Value:= HeaderDataSet.FieldByName('certificate_type').AsString; // Тип сертифікату (quality_certificate, manufacturers_declaration)
-  FMetadata_descriptionParam.Value:= HeaderDataSet.FieldByName('description').AsString; // Опис сертифікату (1-256 символів)
-  FMetadata_number_Quality_vchParam.Value:= HeaderDataSet.FieldByName('number_Quality_vch').AsString; // Номер сертифікату (1-128 символів)
-  FMetadata_date_of_issueParam.Value:= HeaderDataSet.FieldByName('date_of_issue').AsString; // Дата видачі сертифікату
-  FMetadata_active_fromParam.Value:= HeaderDataSet.FieldByName('active_from.').AsString; // Дата початку дії сертифікату
-  FMetadata_active_toParam.Value:= HeaderDataSet.FieldByName('active_to').AsString; // Дата закінчення дії сертифікату
+  // Тип сертифікату (quality_certificate, manufacturers_declaration)
+  FMetadata_certificate_typeParam.Value:= HeaderDataSet.FieldByName('certificate_type').AsString;
+  // Опис сертифікату (1-256 символів)
+  FMetadata_descriptionParam.Value:= HeaderDataSet.FieldByName('description').AsString;
+  // Номер сертифікату (1-128 символів)
+  FMetadata_number_Quality_vchParam.Value:= HeaderDataSet.FieldByName('number_Quality_vch').AsString;
+  // Дата видачі сертифікату
+  FMetadata_date_of_issueParam.Value:= HeaderDataSet.FieldByName('date_of_issue').AsString;
+  // Дата початку дії сертифікату
+  FMetadata_active_fromParam.Value:= HeaderDataSet.FieldByName('active_from').AsString;
+  // Дата закінчення дії сертифікату
+  FMetadata_active_toParam.Value:= HeaderDataSet.FieldByName('active_to').AsString;
 
 {  FMetadata_sender_glnParam.Value := HeaderDataSet.FieldByName('sender_gln').AsString;
   FMetadata_recipient_glnParam.Value := HeaderDataSet.FieldByName('recipient_gln').AsString;
