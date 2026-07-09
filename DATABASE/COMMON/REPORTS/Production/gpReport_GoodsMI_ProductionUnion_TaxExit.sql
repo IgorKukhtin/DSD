@@ -148,7 +148,7 @@ BEGIN
          -- подразделения из группы 
        , tmpUnit_oth AS (-- "Участок мясного сырья", но исключения - !!!захардкодил!!!
                          SELECT tmpSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8439) AS tmpSelect
-                         WHERE inFromId NOT IN (951601, 981821) -- ЦЕХ упаковки мясо + ЦЕХ шприц. мясо
+                         WHERE inFromId NOT IN (951601, 981821, 13802329) -- ЦЕХ упаковки мясо + ЦЕХ шприц. мясо + Цех м'ясних напівфабрикатів
                            AND tmpSelect.UnitId NOT IN (133049)-- "Склад реализации мясо"
                            /*AND (tmpSelect.UnitId NOT IN (133049)-- "Склад реализации мясо"
                              OR (inFromId         = 8448    -- ЦЕХ деликатесов
@@ -384,7 +384,7 @@ BEGIN
 
          , tmpResult.Amount_WorkProgress_in :: TFloat   AS Amount_WorkProgress_in
          , tmpResult.CuterCount :: TFloat               AS CuterCount
-         , CASE WHEN inFromId IN (951601, 981821) -- ЦЕХ упаковки мясо + ЦЕХ шприц. мясо
+         , CASE WHEN inFromId IN (951601, 981821, 13802329) -- ЦЕХ упаковки мясо + ЦЕХ шприц. мясо + Цех м'ясних напівфабрикатів
                      AND COALESCE (tmpResult.RealWeight, 0) = 0
                      THEN tmpResult.Amount_WorkProgress_in
                 ELSE tmpResult.RealWeight
