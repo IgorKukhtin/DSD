@@ -42,7 +42,7 @@ BEGIN
      -- проверка
      IF vbUserId = 9457
      THEN
-        -- RAISE EXCEPTION 'Тест.Ok. <%>, <%>, <%>', ioIsGoodsGroupIn, ioIsGoodsGroupExc, ioIsList;
+         RAISE EXCEPTION 'Тест.Ok. <%>, <%>, <%>', ioIsGoodsGroupIn, ioIsGoodsGroupExc, ioIsList;
      END IF;
 
      
