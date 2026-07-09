@@ -837,8 +837,8 @@ WHERE vbUserId NOT IN (6561986) -- Брикова В.В.
                                              , inGoodsKindId            := Object_GoodsKind.Id
                                              , inInfoMoneyDestinationId := Object_InfoMoney_View.InfoMoneyDestinationId
                                              , inInfoMoneyId            := Object_InfoMoney_View.InfoMoneyId
-                                             , inIsWeightMain           := COALESCE (MIBoolean_WeightMain.ValueData, tmpMI_ReceiptChild.isWeightMain)
-                                             , inIsTaxExit              := COALESCE (MIBoolean_WeightMain.ValueData, tmpMI_ReceiptChild.isWeightMain)
+                                             , inIsWeightMain           := case when vbUserId = 5 AND 1=0 then true else COALESCE (MIBoolean_WeightMain.ValueData, tmpMI_ReceiptChild.isWeightMain) end
+                                             , inIsTaxExit              := case when vbUserId = 5 AND 1=0 then true else COALESCE (MIBoolean_WeightMain.ValueData, tmpMI_ReceiptChild.isWeightMain) end
                                               ) AS GroupNumber
 
             , CASE 
