@@ -755,30 +755,29 @@ inherited InventoryForm: TInventoryForm
       Width = 270
     end
     object cbisGoodsGroupIn: TcxCheckBox
-      Left = 515
+      Left = 514
       Top = 63
-      Caption = #1058#1086#1083#1100#1082#1086' '#1074#1099#1073#1088'. '#1075#1088#1091#1087#1087#1072
-      Properties.ReadOnly = False
+      Hint = #1058#1086#1083#1100#1082#1086' '#1074#1099#1073#1088'. '#1075#1088#1091#1087#1087#1072
+      Properties.ReadOnly = True
       State = cbsChecked
       TabOrder = 12
-      Width = 134
+      Width = 20
     end
     object cbisGoodsGroupExc: TcxCheckBox
-      Left = 655
+      Left = 675
       Top = 63
-      Caption = #1050#1088#1086#1084#1077' '#1074#1099#1073#1088'. '#1075#1088#1091#1087#1087#1099
-      Properties.ReadOnly = False
+      Hint = #1050#1088#1086#1084#1077' '#1074#1099#1073#1088'. '#1075#1088#1091#1087#1087#1099
+      Properties.ReadOnly = True
       TabOrder = 13
-      Width = 129
+      Width = 21
     end
     object cbList: TcxCheckBox
-      Left = 793
+      Left = 836
       Top = 63
       Hint = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103' '#1090#1086#1083#1100#1082#1086' '#1087#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1085#1099#1084' '#1090#1086#1074#1072#1088#1072#1089
-      Caption = #1055#1077#1088#1077#1089#1086#1088#1090
-      Properties.ReadOnly = False
+      Properties.ReadOnly = True
       TabOrder = 14
-      Width = 122
+      Width = 22
     end
     object cxLabel18: TcxLabel
       Left = 796
@@ -796,6 +795,31 @@ inherited InventoryForm: TInventoryForm
       Properties.ReadOnly = True
       TabOrder = 16
       Width = 157
+    end
+    object cxButton1: TcxButton
+      Left = 538
+      Top = 63
+      Width = 125
+      Height = 21
+      Action = actUpdate_isGoodsGroupIn
+      TabOrder = 17
+    end
+    object cxButton2: TcxButton
+      Left = 699
+      Top = 63
+      Width = 125
+      Height = 21
+      Action = actUpdate_isGoodsGroupExc
+      TabOrder = 18
+    end
+    object cxButton3: TcxButton
+      Left = 860
+      Top = 63
+      Width = 81
+      Height = 21
+      Hint = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103' '#1090#1086#1083#1100#1082#1086' '#1087#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1085#1099#1084' '#1090#1086#1074#1072#1088#1072#1089
+      Action = actUpdate_isList
+      TabOrder = 19
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1234,7 +1258,41 @@ inherited InventoryForm: TInventoryForm
         item
         end>
     end
-    object actStorageChoice: TOpenChoiceForm [30]
+    object actUpdate_isGoodsGroupIn: TdsdExecStoredProc [30]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isGoodsGroupIn
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isGoodsGroupIn
+        end>
+      Caption = #1058#1086#1083#1100#1082#1086' '#1074#1099#1073#1088'. '#1075#1088#1091#1087#1087#1072
+    end
+    object actUpdate_isGoodsGroupExc: TdsdExecStoredProc [31]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isGoodsGroupExc
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isGoodsGroupExc
+        end>
+      Caption = #1050#1088#1086#1084#1077' '#1074#1099#1073#1088'. '#1075#1088#1091#1087#1087#1099
+      Hint = #1050#1088#1086#1084#1077' '#1074#1099#1073#1088'. '#1075#1088#1091#1087#1087#1099
+    end
+    object actUpdate_isList: TdsdExecStoredProc [32]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isList
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isList
+        end>
+      Caption = #1055#1077#1088#1077#1089#1086#1088#1090
+    end
+    object actStorageChoice: TOpenChoiceForm [33]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1261,7 +1319,7 @@ inherited InventoryForm: TInventoryForm
         end>
       isShowModal = True
     end
-    object actAssetChoice: TOpenChoiceForm [31]
+    object actAssetChoice: TOpenChoiceForm [34]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1288,7 +1346,7 @@ inherited InventoryForm: TInventoryForm
         end>
       isShowModal = True
     end
-    object actInsertUpdateMIAmount: TdsdExecStoredProc [32]
+    object actInsertUpdateMIAmount: TdsdExecStoredProc [35]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1308,7 +1366,7 @@ inherited InventoryForm: TInventoryForm
         #1085#1072' '#1076#1072#1090#1091'?'
       InfoAfterExecute = '<'#1050#1086#1083'-'#1074#1086'> '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1086#1089#1090#1072#1090#1082#1091' '#1085#1072' '#1076#1072#1090#1091' '#1079#1072#1087#1086#1083#1085#1077#1085#1086' '#1091#1089#1087#1077#1096#1085#1086'.'
     end
-    object actUnitChoice: TOpenChoiceForm [33]
+    object actUnitChoice: TOpenChoiceForm [36]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1335,7 +1393,7 @@ inherited InventoryForm: TInventoryForm
         end>
       isShowModal = True
     end
-    object actGoodsKindChoice: TOpenChoiceForm [34]
+    object actGoodsKindChoice: TOpenChoiceForm [37]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2701,27 +2759,24 @@ inherited InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioisGoodsGroupIn'
         Value = False
         Component = cbisGoodsGroupIn
         DataType = ftBoolean
-        ParamType = ptInputOutput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioisGoodsGroupExc'
         Value = False
         Component = cbisGoodsGroupExc
         DataType = ftBoolean
-        ParamType = ptInputOutput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisList'
         Value = ''
         Component = cbList
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -2796,16 +2851,13 @@ inherited InventoryForm: TInventoryForm
         Control = edTo
       end
       item
-        Control = cbisGoodsGroupExc
       end
       item
-        Control = cbisGoodsGroupIn
       end
       item
         Control = edGoodsGroup
       end
       item
-        Control = cbList
       end
       item
         Control = edPriceList
@@ -3390,12 +3442,6 @@ inherited InventoryForm: TInventoryForm
     IdParam.MultiSelectSeparator = ','
     ChangerList = <
       item
-        Control = cbisGoodsGroupExc
-      end
-      item
-        Control = cbisGoodsGroupIn
-      end
-      item
       end
       item
       end
@@ -3845,5 +3891,112 @@ inherited InventoryForm: TInventoryForm
     PackSize = 1
     Left = 590
     Top = 448
+  end
+  object spUpdate_isGoodsGroupIn: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Inventory_isGoodsGroupIn'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioisGoodsGroupIn'
+        Value = True
+        Component = cbisGoodsGroupIn
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioIsGoodsGroupExc'
+        Value = Null
+        Component = cbisGoodsGroupExc
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 714
+    Top = 176
+  end
+  object spUpdate_isGoodsGroupExc: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Inventory_isGoodsGroupExc'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioIsGoodsGroupIn'
+        Value = Null
+        Component = cbisGoodsGroupIn
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioisGoodsGroupExc'
+        Value = False
+        Component = cbisGoodsGroupExc
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 810
+    Top = 176
+  end
+  object spUpdate_isList: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Inventory_isList'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioIsGoodsGroupIn'
+        Value = Null
+        Component = cbisGoodsGroupIn
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioIsGoodsGroupExc'
+        Value = Null
+        Component = cbisGoodsGroupExc
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioisList'
+        Value = False
+        Component = cbList
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 866
+    Top = 176
   end
 end

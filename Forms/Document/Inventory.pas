@@ -24,7 +24,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  Vcl.StdCtrls, dsdCommon;
+  Vcl.StdCtrls, dsdCommon, cxButtons;
 
 type
   TInventoryForm = class(TAncestorDocumentForm)
@@ -175,6 +175,15 @@ type
     UpdateName: TcxGridDBColumn;
     isNotFact: TcxGridDBColumn;
     actPartionGoods20202Choice: TOpenChoiceForm;
+    spUpdate_isGoodsGroupIn: TdsdStoredProc;
+    spUpdate_isGoodsGroupExc: TdsdStoredProc;
+    spUpdate_isList: TdsdStoredProc;
+    actUpdate_isGoodsGroupIn: TdsdExecStoredProc;
+    cxButton1: TcxButton;
+    actUpdate_isGoodsGroupExc: TdsdExecStoredProc;
+    actUpdate_isList: TdsdExecStoredProc;
+    cxButton2: TcxButton;
+    cxButton3: TcxButton;
   private
     { Private declarations }
   public

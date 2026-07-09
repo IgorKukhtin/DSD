@@ -29,7 +29,7 @@ object AdvertisingEditForm: TAdvertisingEditForm
   end
   object cxButton1: TcxButton
     Left = 41
-    Top = 100
+    Top = 99
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -102,12 +102,14 @@ object AdvertisingEditForm: TAdvertisingEditForm
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = edCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -115,6 +117,7 @@ object AdvertisingEditForm: TAdvertisingEditForm
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 104
@@ -126,6 +129,7 @@ object AdvertisingEditForm: TAdvertisingEditForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 96
     Top = 8
@@ -141,17 +145,20 @@ object AdvertisingEditForm: TAdvertisingEditForm
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = edCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edName
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 184

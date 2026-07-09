@@ -2,7 +2,8 @@
 
 --DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Boolean, Boolean, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Boolean, Boolean, Boolean, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Inventory (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Inventory(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -12,9 +13,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Inventory(
     IN inToId                Integer   , -- Кому (в документе)
     IN inGoodsGroupId        Integer   , -- Группа товара
     IN inPriceListId         Integer   , -- Прайс лист
-    IN inIsGoodsGroupIn      Boolean   , -- Только выбр. группа
-    IN inIsGoodsGroupExc     Boolean   , -- Кроме выбр. группы
-    IN inisList              Boolean   , -- по всем товарам накладной
+    --IN inIsGoodsGroupIn      Boolean   , -- Только выбр. группа
+    --IN inIsGoodsGroupExc     Boolean   , -- Кроме выбр. группы
+    --IN inisList              Boolean   , -- по всем товарам накладной
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer AS
@@ -67,14 +68,7 @@ BEGIN
      -- сохранили связь с <Прайс лист>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PriceList(), ioId, inPriceListId);
 
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_GoodsGroupIn(), ioId, inIsGoodsGroupIn);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_GoodsGroupExc(), ioId, inIsGoodsGroupExc);
-
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_List(), ioId, inIsList);
-
+    
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
@@ -88,6 +82,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 09.07.26         *
  25.05.22         *
  22.07.21         *
  18.09.17         *

@@ -1644,6 +1644,12 @@ type
     miNotBudgPromo: TMenuItem;
     actReport_CommercBonus: TdsdOpenForm;
     miReport_CommercBonus: TMenuItem;
+    actProductionUnionTechPF: TdsdOpenForm;
+    actProductionUnionTechReceiptPF: TdsdOpenForm;
+    actOrderInternalBasisPF: TdsdOpenForm;
+    miProductionUnionTechPF: TMenuItem;
+    miProductionUnionTechReceiptPF: TMenuItem;
+    miOrderInternalBasisPF: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
