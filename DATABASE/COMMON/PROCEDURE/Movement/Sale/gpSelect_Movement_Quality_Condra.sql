@@ -28,19 +28,6 @@ RETURNS TABLE (MovementId_edi         Integer
              , doc_to_attach_id       TVarChar
              , doc_to_attach_number   TVarChar
              , MetaData               Text
-
-               -- Тип сертифікату (quality_certificate, manufacturers_declaration)
-             , certificate_type TVarChar
-               -- Опис сертифікату (1-256 символів)
-             , description      TVarChar
-               -- Номер сертифікату (1-128 символів)
-             , Quality_vch      TVarChar
-               -- Дата видачі сертифікату
-             , date_of_issue    TDateTime
-               -- Дата початку дії сертифікату
-             , active_from      TDateTime
-               -- Дата закінчення дії сертифікату
-             , active_to        TDateTime
               )
 AS
 $BODY$
@@ -59,7 +46,6 @@ BEGIN
      RETURN QUERY
        WITH tmpData AS (SELECT Movement.Id               AS MovementId
                              , Movement.InvNumber        AS InvNumber
-                             , MovementDate_OperDatePartner.ValueData AS OperDatePartner
                              , Movement_order.Id         AS MovementId_order
                              , Movement_EDI.Id           AS MovementId_edi
                            --, MovementString_InvNumberPartner.ValueData AS InvNumber_order
@@ -264,19 +250,6 @@ BEGIN
              ||'"doc_to_attach_id": "'  || COALESCE (tmpData.DocId_vch, '') || '",' -- DocumentId_vch -- VchasnoId
              ||'"doc_to_attach_number": "' || COALESCE (tmpData.InvNumber_order, '') || '"'
              ||'}') :: Text AS MetaData
-
-               -- Тип сертифікату (quality_certificate, manufacturers_declaration)
-             , 'manufacturers_declaration' ::TVarChar AS certificate_type
-               -- Опис сертифікату (1-256 символів)
-             , description      TVarChar
-               -- Номер сертифікату (1-128 символів)
-             , Quality_vch      TVarChar
-               -- Дата видачі сертифікату
-             , tmpData.OperDatePartner AS date_of_issue
-               -- Дата початку дії сертифікату
-             , tmpData.OperDatePartner AS active_from
-               -- Дата закінчення дії сертифікату
-             , tmpData.OperDatePartner AS active_to
 
        FROM gpGet_Movement_Quality_ReportName_export (inMovementId, inSession) AS gpGet
             LEFT JOIN tmpData ON tmpData.MovementId = inMovementId
