@@ -22,7 +22,6 @@ inherited MainForm: TMainForm
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = True
-    ExplicitTop = -6
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -357,7 +356,7 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'FromName'
-          Value = #1062#1077#1093' '#1084#39#1103#1089#1085#1080#1093' '#1085#1072#1087#1110#1074#1092#1072#1073#1088#1080#1082#1072#1090#1110#1074
+          Value = #1062#1077#1093' '#1084'`'#1103#1089#1085#1080#1093' '#1085#1072#1087#1110#1074#1092#1072#1073#1088#1080#1082#1072#1090#1110#1074
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -368,7 +367,7 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'ToName'
-          Value = #1062#1077#1093' '#1084#39#1103#1089#1085#1080#1093' '#1085#1072#1087#1110#1074#1092#1072#1073#1088#1080#1082#1072#1090#1110#1074
+          Value = #1062#1077#1093' '#1084'`'#1103#1089#1085#1080#1093' '#1085#1072#1087#1110#1074#1092#1072#1073#1088#1080#1082#1072#1090#1110#1074
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -454,7 +453,7 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'FromName'
-          Value = #1062#1077#1093' '#1084#39#1103#1089#1085#1080#1093' '#1085#1072#1087#1110#1074#1092#1072#1073#1088#1080#1082#1072#1090#1110#1074
+          Value = #1062#1077#1093' '#1084'`'#1103#1089#1085#1080#1093' '#1085#1072#1087#1110#1074#1092#1072#1073#1088#1080#1082#1072#1090#1110#1074
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -465,7 +464,7 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'ToName'
-          Value = #1062#1077#1093' '#1084#39#1103#1089#1085#1080#1093' '#1085#1072#1087#1110#1074#1092#1072#1073#1088#1080#1082#1072#1090#1110#1074
+          Value = #1062#1077#1093' '#1084'`'#1103#1089#1085#1080#1093' '#1085#1072#1087#1110#1074#1092#1072#1073#1088#1080#1082#1072#1090#1110#1074
           DataType = ftString
           MultiSelectSeparator = ','
         end>
