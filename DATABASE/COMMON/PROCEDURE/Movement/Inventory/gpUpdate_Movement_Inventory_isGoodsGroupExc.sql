@@ -11,11 +11,20 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_Inventory_isGoodsGroupExc(
 RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
-   
+   DECLARE vbStatusId Integer;
    DECLARE vbisGoodsGroupExc  Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Inventory());
+
+
+     -- определяем <Статус>
+     vbStatusId := (SELECT StatusId FROM Movement WHERE Id = inId);
+     -- проверка - проведенные/удаленные документы Изменять нельзя
+     IF vbStatusId <> zc_Enum_Status_UnComplete()
+     THEN
+         RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
+     END IF;
 
      --переопределяем, т.к. при нажатии кнопки нужно установить обратное значение 
      ioIsGoodsGroupExc := NOT ioIsGoodsGroupExc;
