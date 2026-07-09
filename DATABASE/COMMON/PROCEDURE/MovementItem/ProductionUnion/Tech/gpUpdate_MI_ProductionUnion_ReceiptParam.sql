@@ -32,6 +32,7 @@ BEGIN
    IF (inFromId <> inToId) OR (NOT EXISTS (SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect WHERE lfSelect.UnitId = inFromId)
                            -- AND inFromId <> 951601 -- ЦЕХ упаковки мясо
                            AND inFromId <> 981821   -- ЦЕХ шприц. мясо
+                           AND inFromId <> 13802329 -- Цех м'ясних напівфабрикатів
                            AND inFromId <> 2790412  -- ЦЕХ Тушенка
                            AND inFromId <> 8020711  -- ЦЕХ колбаса + деликатесы (Ирна)
                               )

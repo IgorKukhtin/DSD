@@ -89,6 +89,37 @@ BEGIN
                                      )
                                  -- без этого св-ва
                                  AND MovementBoolean_GoodsGroupExc.MovementId IS NULL
+
+                              UNION
+                               SELECT Movement.Id
+                               FROM Movement
+                                    LEFT JOIN MovementBoolean AS MovementBoolean_GoodsGroupExc
+                                                              ON MovementBoolean_GoodsGroupExc.MovementId = Movement.Id
+                                                             AND MovementBoolean_GoodsGroupExc.DescId     = zc_MovementBoolean_GoodsGroupExc()
+                                                             AND MovementBoolean_GoodsGroupExc.ValueData  = TRUE
+                                    
+                                    INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                  ON MovementLinkObject_From.MovementId = Movement.Id
+                                                                 AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                                 AND MovementLinkObject_From.ObjectId = inFromId
+                                                                 -- !!!захардкодил!!!
+                                                                 AND inFromId = 13802329-- Цех м'ясних напівфабрикатів
+                                    INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                           AND MovementItem.isErased = FALSE
+                                                           AND MovementItem.Amount <> 0
+                                    INNER JOIN ObjectLink ON ObjectLink.ObjectId = MovementItem.ObjectId
+                                                         AND ObjectLink.DescId = zc_ObjectLink_Goods_InfoMoney()
+                                    INNER JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink.ChildObjectId
+                                                                                      AND View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                               WHERE Movement.OperDate = DATE_TRUNC ('MONTH', inStartDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
+                                 AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                 AND Movement.DescId = zc_Movement_Inventory()
+                                 AND (EXTRACT (MONTH FROM Movement.OperDate) < EXTRACT (MONTH FROM CURRENT_DATE)
+                                   OR EXTRACT (YEAR FROM Movement.OperDate)  < EXTRACT (YEAR FROM CURRENT_DATE)
+                                     )
+                                 -- без этого св-ва
+                                 AND MovementBoolean_GoodsGroupExc.MovementId IS NULL
+
                               ) AS Movement
                                --LIMIT 1
                         );
@@ -236,7 +267,9 @@ BEGIN
                                   AND MovementItem.Amount <> 0
                                   -- !!!захардкодил!!!
                                   -- AND inFromId = 951601 -- ЦЕХ упаковки мясо
-                                  AND inFromId = 981821 -- ЦЕХ шприц. мясо
+                                  AND inFromId IN (981821   -- ЦЕХ шприц. мясо
+                                                 , 13802329 -- Цех м'ясних напівфабрикатів
+                                                  )
                                 GROUP BY MovementItem.ObjectId
                                        , MIDate_PartionGoods.ValueData
                                        , MILinkObject_GoodsKind.ObjectId
