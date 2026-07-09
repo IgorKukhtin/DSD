@@ -1929,10 +1929,11 @@ begin
             Connected:=false;
          end
          else
-         if ParamStr(1)='srv_a_dp_ua' then
+         if ParamStr(1)='srv_ss_dp_ua' then
          with toZConnection do begin
             Connected:=false;
-            HostName:='integer-srv-a.alan.dp.ua';
+            //HostName:='integer-srv-a.alan.dp.ua';
+            HostName:='integer-srv-2-ss.alan.dp.ua';
             //HostName:='192.168.0.219';
             User:='project';
             Password:='sqoII5szOnrcZxJVF1BL';
