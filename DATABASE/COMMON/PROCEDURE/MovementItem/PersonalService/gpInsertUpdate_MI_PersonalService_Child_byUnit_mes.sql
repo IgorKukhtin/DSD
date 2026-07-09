@@ -316,10 +316,11 @@ BEGIN
                                      ELSE MAX (COALESCE (Object_Personal_View.DateOut_user, zc_DateStart()))
                                 END :: TDateTime AS DateOut
                          FROM _tmpReport
-                             LEFT JOIN Object_Personal_View ON Object_Personal_View.MemberId = _tmpReport.MemberId
+                             LEFT JOIN Object_Personal_View ON Object_Personal_View.MemberId   = _tmpReport.MemberId
                                                            AND Object_Personal_View.PositionId = _tmpReport.PositionId
                                                            AND COALESCE (Object_Personal_View.PositionLevelId,0) = COALESCE (_tmpReport.PositionLevelId,0)
-                                                           AND Object_Personal_View.UnitId = inUnitId
+                                                           AND Object_Personal_View.UnitId     = inUnitId
+                                                           AND Object_Personal_View.IsErased   = FALSE
                          WHERE ((Object_Personal_View.DateOut >= vbStartDate AND Object_Personal_View.DateOut <= vbEndDate)
                              OR (Object_Personal_View.DateIn >= vbStartDate AND Object_Personal_View.DateIn <= vbEndDate)
                                 )
@@ -546,7 +547,17 @@ BEGIN
      END IF;
 
     -- Для Теста
-    if vbUserId IN (9457,5) then RAISE EXCEPTION 'Test.Ok. <%>', (SELECT COUNT (*) FROM _tmpMessagePersonalService); end if;
+    if vbUserId IN (9457, 5)
+    then RAISE EXCEPTION 'Test.Ok. <%>  <%> <%>  <%>     <%>  <%>'
+          , (SELECT COUNT (*) FROM _tmpMessagePersonalService)
+          , (SELECT _tmpMessagePersonalService.MemberId FROM _tmpMessagePersonalService limit 1)  
+          , (SELECT _tmpMessagePersonalService.PositionId FROM _tmpMessagePersonalService limit 1)  
+          , (SELECT _tmpMessagePersonalService.PersonalServiceListId FROM _tmpMessagePersonalService limit 1)  
+          , (SELECT _tmpMessagePersonalService.Name FROM _tmpMessagePersonalService limit 1)  
+          , (SELECT _tmpMessagePersonalService.Comment FROM _tmpMessagePersonalService limit 1)  
+          ; 
+
+    end if;
 
     outPersonalServiceDate := CURRENT_TIMESTAMP;
 

@@ -206,6 +206,9 @@ BEGIN
        WHERE (tmpPersonalServiceList_User.PersonalServiceListId > 0
            OR Object_PersonalServiceList.Id IS NULL
              )
+        AND (Object_PersonalServiceList.ValueData NOT ILIKE '%Костя%'
+          OR vbUserId NOT IN (5, 9457 , 4467766)
+            )
       ;
    
 END;

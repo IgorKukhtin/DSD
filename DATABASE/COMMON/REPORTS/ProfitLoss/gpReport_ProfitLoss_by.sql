@@ -88,7 +88,8 @@ BEGIN
                             */
                          -- Разрешение ОПиУ - есть доступ к просмотру ведомость Админ ЗП14:50 18.11.2025
                          NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 12966257)
-                         AND vbUserId NOT IN (5)
+                         OR 1=1
+                         -- AND vbUserId NOT IN (5)
                            ;
 
      -- Ограниченние - нет доступа к ОПиУ

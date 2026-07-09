@@ -11,7 +11,7 @@ type
 
   TEDIDocType = (ediOrder, ediComDoc, ediDesadv, ediDeclar, ediComDocSave, ediDelnotSave,
     ediReceipt, ediReturnComDoc, ediDeclarReturn, ediOrdrsp, ediInvoice, ediError,
-    ediRecadv, ediTTN, ediComDocSign, ediComDocSendSign, ediSendCondra, ediSignCondra);
+    ediRecadv, ediTTN, ediComDocSign, ediComDocSendSign, ediSendCondra, ediSignCondra, vchSendQuality);
   TSignType = (stDeclar, stComDoc);
 
   TConnectionParams = class(TPersistent)
@@ -193,6 +193,13 @@ type
     FMetadata_fileParam: TdsdParam;
     FMetadata_doc_to_attach_idParam: TdsdParam;
     FMetadata_doc_to_attach_numberParam: TdsdParam;
+    //Сертификат
+    FMetadata_certificate_typeParam: TdsdParam;   // Тип сертифікату (quality_certificate, manufacturers_declaration)
+    FMetadata_descriptionParam: TdsdParam;        // Опис сертифікату (1-256 символів)
+    FMetadata_number_Quality_vchParam: TdsdParam; // Номер сертифікату (1-128 символів)
+    FMetadata_date_of_issueParam: TdsdParam;      // Дата видачі сертифікату
+    FMetadata_active_fromParam: TdsdParam;        // Дата початку дії сертифікату
+    FMetadata_active_toParam: TdsdParam;          // Дата закінчення дії сертифікату
 
     FKeyFileNameParam: TdsdParam;
     FKeyUserNameParam: TdsdParam;
@@ -212,6 +219,7 @@ type
     function GetVchasnoEDI(ATypeExchange : Integer; ADataSet: TClientDataSet = Nil): Boolean;
     function POSTVchasnoEDI(ATypeExchange : Integer; AStream: TMemoryStream): Boolean;
     function POSTCondraEDI(ATypeExchange : Integer): Boolean;
+    function POSTQuality_vch(ATypeExchange : Integer): Boolean;
     function POSTSignVchasnoEDI: Boolean;
     function SignData(UserSign : String): Boolean;
     function OrderLoad : Boolean;
@@ -224,6 +232,7 @@ type
     function DoSendSignComDoc: Boolean;
     function DoSendCondra: Boolean;
     function DoSignCondra: Boolean;
+    function DoSendQuality_vch: Boolean;
 
     procedure ShowMessages(AMessage: String);
   public
@@ -5956,6 +5965,27 @@ begin
   FMetadata_doc_to_attach_numberParam.DataType := ftString;
   FMetadata_doc_to_attach_numberParam.Value := '';
 
+  // Тип сертифікату (quality_certificate, manufacturers_declaration)
+  FMetadata_certificate_typeParam:= TdsdParam.Create(nil);
+  FMetadata_certificate_typeParam.DataType := ftString;
+  FMetadata_certificate_typeParam.Value := '';
+  // Опис сертифікату (1-256 символів)
+  FMetadata_descriptionParam:= TdsdParam.Create(nil);
+  FMetadata_descriptionParam.DataType := ftString;
+  FMetadata_descriptionParam.Value := '';
+  // Номер сертифікату (1-128 символів)
+  FMetadata_number_Quality_vchParam:= TdsdParam.Create(nil);
+  FMetadata_number_Quality_vchParam.DataType := ftString;
+  FMetadata_number_Quality_vchParam.Value := '';
+  // Дата видачі сертифікату
+  FMetadata_date_of_issueParam:= TdsdParam.Create(nil);
+  FMetadata_date_of_issueParam.DataType := ftDate;
+  // Дата початку дії сертифікату
+  FMetadata_active_fromParam:= TdsdParam.Create(nil);
+  FMetadata_active_fromParam.DataType := ftDate;
+  // Дата закінчення дії сертифікату
+  FMetadata_active_toParam:= TdsdParam.Create(nil);
+  FMetadata_active_toParam.DataType := ftDate;
 
   FKeyFileNameParam := TdsdParam.Create(nil);
   FKeyFileNameParam.DataType := ftString;
@@ -5994,6 +6024,13 @@ begin
   FreeAndNil(FMetadata_fileParam);
   FreeAndNil(FMetadata_doc_to_attach_idParam);
   FreeAndNil(FMetadata_doc_to_attach_numberParam);
+  //Сертификат
+  FreeAndNil(FMetadata_certificate_typeParam);
+  FreeAndNil(FMetadata_descriptionParam);
+  FreeAndNil(FMetadata_number_Quality_vchParam);
+  FreeAndNil(FMetadata_date_of_issueParam);
+  FreeAndNil(FMetadata_active_fromParam);
+  FreeAndNil(FMetadata_active_toParam);
 
   FreeAndNil(FHostParam);
   FreeAndNil(FTokenParam);
@@ -6377,6 +6414,114 @@ begin
             FVchasnoIdParam.Value := jsonObj.Get('vchasno_id').JsonValue.Value
           else FVchasnoIdParam.Value := '';
         end;
+      finally
+        FreeAndNil(jsonObj);
+      end;
+      Result := True;
+    end;
+  finally
+    Stream.Free;
+    IdHTTP.Free;
+  end;
+end;
+
+// ATypeExchange
+// 0 - Отправить файла + методанные
+function TdsdVchasnoEDIAction.POSTQuality_vch(ATypeExchange : Integer): Boolean;
+  var IdHTTP: TCustomIdHTTP;
+      Params, S: String;
+      Stream: TIdMultiPartFormDataStream;
+      jsonObj: TJSONObject;
+      testStringStream:TStringStream;
+begin
+  inherited;
+  Result := False;
+
+  if (FTokenParam.Value = '') or
+     (FHostParam.Value = '') then
+  begin
+    ShowMessages('Не заполнены Host или Токен.');
+    Exit;
+  end;
+
+  // Непосредственно отправка
+
+  IdHTTP := TCustomIdHTTP.Create(Nil);
+  Stream := TIdMultiPartFormDataStream.Create;
+  try
+
+    // Поле JSON (можна задати ContentType)
+    //Stream.AddFormField('metadata', FMetadataParam.Value, 'utf-8').ContentType := 'application/json';
+    //
+
+    // Тип сертифікату (quality_certificate, manufacturers_declaration)
+    Stream.AddFormField('certificate_type', FMetadata_certificate_typeParam.Value);
+    // Опис сертифікату (1-256 символів)
+    if FMetadata_descriptionParam.Value <> ''        then Stream.AddFormField('description', FMetadata_descriptionParam.Value);
+    // Номер сертифікату (1-128 символів)
+    if FMetadata_number_Quality_vchParam.Value <> '' then Stream.AddFormField('number', FMetadata_number_Quality_vchParam.Value);
+    // Дата видачі сертифікату
+    Stream.AddFormField('date_of_issue', FMetadata_date_of_issueParam.Value);
+    // Дата початку дії сертифікату
+    Stream.AddFormField('active_from', FMetadata_active_fromParam.Value);
+    // Дата закінчення дії сертифікату
+    Stream.AddFormField('active_to', FMetadata_active_toParam.Value);
+    // Додаємо файл
+    Stream.AddFile('file', FFileNameParam.Value, 'application/pdf');
+
+    IdHTTP.Request.Clear;
+    IdHTTP.Request.ContentType := 'multipart/form-data; boundary=' + Stream.Boundary;
+    IdHTTP.Request.ContentLength := Stream.Size;
+    IdHTTP.Request.ContentEncoding := 'UTF-8';
+    IdHTTP.Request.Accept := '*/*';
+    IdHTTP.Request.AcceptEncoding := 'gzip, deflate, br';
+    IdHTTP.Request.Connection := 'keep-alive';
+    IdHTTP.Request.CustomHeaders.FoldLines := False;
+    IdHTTP.Request.CustomHeaders.AddValue('Authorization', FTokenParam.Value);
+    IdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
+
+    Params := '';
+//    Params := 'deal_id=' + FOrderParam.Value;
+//    if Params <> '' then Params := '?' + Params;
+
+    try
+      S := IdHTTP.Post(TIdURI.URLEncode(FHostParam.Value + Params), Stream);
+    except on E:EIdHTTPProtocolException  do
+                ShowMessages(e.ErrorMessage);
+    end;
+
+    // для теста -
+    //testStringStream:= TStringStream.Create('', TEncoding.UTF8);
+    //Stream.Position := 0;
+    //testStringStream.CopyFrom(Stream, 0);
+    //testStringStream.SaveToFile('test_Condra.txt');
+    //testStringStream.Free;
+
+
+    if IdHTTP.ResponseCode in [200,201] then
+    begin
+      jsonObj := TJSONObject.ParseJSONValue(S) as TJSONObject;
+      try
+        // ?для Condra не так?
+        if (jsonObj.Get('deal_status') <> nil) and (jsonObj.Get('deal_status').JsonValue.Value = 'in_work') and
+         (jsonObj.Get('document_id') <> nil)  then
+        begin
+          FDocumentIdParam.Value := jsonObj.Get('document_id').JsonValue.Value;
+          if jsonObj.Get('vchasno_id') <> nil then
+            FVchasnoIdParam.Value := jsonObj.Get('vchasno_id').JsonValue.Value
+          else FVchasnoIdParam.Value := '';
+        end
+        else
+        // Так для Condra
+        if (jsonObj.Get('vchasno_status') <> nil) and (jsonObj.Get('vchasno_status').JsonValue.Value = 'ready_to_be_signed') and
+         (jsonObj.Get('id') <> nil)  then
+        begin
+          FDocumentIdParam.Value := jsonObj.Get('id').JsonValue.Value;
+          //if jsonObj.Get('vchasno_id') <> nil then
+          //  FVchasnoIdParam.Value := jsonObj.Get('vchasno_id').JsonValue.Value
+          //else FVchasnoIdParam.Value := '';
+        end
+
       finally
         FreeAndNil(jsonObj);
       end;
@@ -7292,6 +7437,65 @@ begin
 end;
 
 
+function TdsdVchasnoEDIAction.DoSendQuality_vch: Boolean;
+begin
+  Result := False;
+  //Это ІД Desadv
+  if HeaderDataSet.FieldByName('DocId_vch').AsString = '' then Exit;
+
+  FFileNameParam.Value := HeaderDataSet.FieldByName('FileName').AsString;
+  FMetadataParam.Value := HeaderDataSet.FieldByName('Metadata').AsString;
+  //
+  FMetadata_fileParam.Value := HeaderDataSet.FieldByName('FileName_pdf').AsString;
+
+  FMetadata_certificate_typeParam.Value:= HeaderDataSet.FieldByName('certificate_type').AsString; // Тип сертифікату (quality_certificate, manufacturers_declaration)
+  FMetadata_descriptionParam.Value:= HeaderDataSet.FieldByName('description').AsString; // Опис сертифікату (1-256 символів)
+  FMetadata_number_Quality_vchParam.Value:= HeaderDataSet.FieldByName('number_Quality_vch').AsString; // Номер сертифікату (1-128 символів)
+  FMetadata_date_of_issueParam.Value:= HeaderDataSet.FieldByName('date_of_issue').AsString; // Дата видачі сертифікату
+  FMetadata_active_fromParam.Value:= HeaderDataSet.FieldByName('active_from.').AsString; // Дата початку дії сертифікату
+  FMetadata_active_toParam.Value:= HeaderDataSet.FieldByName('active_to').AsString; // Дата закінчення дії сертифікату
+
+{  FMetadata_sender_glnParam.Value := HeaderDataSet.FieldByName('sender_gln').AsString;
+  FMetadata_recipient_glnParam.Value := HeaderDataSet.FieldByName('recipient_gln').AsString;
+  FMetadata_buyer_glnParam.Value := HeaderDataSet.FieldByName('buyer_gln').AsString;
+  FMetadata_numberParam.Value := HeaderDataSet.FieldByName('number').AsString;
+  FMetadata_document_function_codeParam.Value := HeaderDataSet.FieldByName('document_function_code').AsString;
+  FMetadata_fileParam.Value := HeaderDataSet.FieldByName('FileName_pdf').AsString;
+  FMetadata_doc_to_attach_idParam.Value := HeaderDataSet.FieldByName('doc_to_attach_id').AsString;
+  FMetadata_doc_to_attach_numberParam.Value := HeaderDataSet.FieldByName('doc_to_attach_number').AsString;
+  }
+  //
+  try
+
+    // Отправляем файл документа
+    Result := POSTQuality_vch(0);
+
+    // Запишем в базу что сделали
+    try
+      EDI.FInsertVchasnoEventsDoc.ParamByName('inMovementId').Value := HeaderDataSet.FieldByName('MovementId_edi').asInteger;
+      EDI.FInsertVchasnoEventsDoc.ParamByName('inMovementId_send').Value := 0;
+      // ІД Condra
+      EDI.FInsertVchasnoEventsDoc.ParamByName('inDocumentId').Value :=FDocumentIdParam.Value;
+      //
+      EDI.FInsertVchasnoEventsDoc.ParamByName('inVchasnoId').Value :='';
+      // ІД Desadv
+      EDI.FInsertVchasnoEventsDoc.ParamByName('inId_doc').Value :=HeaderDataSet.FieldByName('DocId_vch').AsString;
+      //
+      if not Result = TRUE
+      then EDI.FInsertVchasnoEventsDoc.ParamByName('inEDIEvent').Value := 'Ошибка Отправки Вчасно Декларация'
+      else EDI.FInsertVchasnoEventsDoc.ParamByName('inEDIEvent').Value := 'Отправка Вчасно Декларация';
+      EDI.FInsertVchasnoEventsDoc.Execute;
+    finally
+      EDI.FInsertVchasnoEventsDoc.ParamByName('inMovementId_send').Value := 0;
+      EDI.FInsertVchasnoEventsDoc.ParamByName('inId_doc').Value := '';
+    end;
+
+  finally
+  end;
+
+end;
+
+
 function TdsdVchasnoEDIAction.DoSendCondra: Boolean;
 begin
   Result := False;
@@ -7364,6 +7568,8 @@ begin
 
     ediSendCondra : Result := DoSendCondra;
     ediSignCondra : Result := DoSignCondra;
+
+    vchSendQuality : Result := DoSendQuality_vch;
 
   else raise Exception.Create('Не описано метод обработки типа документов.');
   end;

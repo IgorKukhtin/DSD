@@ -171,7 +171,7 @@ BEGIN
      vbUnitFineSubjectId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Unit() AND TRIM (Object.ValueData) ILIKE TRIM (inUnitFineSubjectName));
      IF COALESCE (vbUnitFineSubjectId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Подразделение- Кем налагается взыскание <%> не найдено для Сотрудника <%> с кодом <%> и суммой <%> .', inUnitFineSubjectName, inFIO, inPersonalCode, inSummService;
+         RAISE EXCEPTION 'Ошибка.Подразделение (кем налагается взыскание) = <%> не найдено для Сотрудника (%)<%> и суммой <%> .', inUnitFineSubjectName, inPersonalCode, inFIO, inSummService;
      END IF;
 
 

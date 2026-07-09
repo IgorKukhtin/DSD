@@ -55,8 +55,10 @@ BEGIN
                          */
                          -- Разрешение ОПиУ - есть доступ к просмотру ведомость Админ ЗП
                          NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 12966257)
-                         AND vbUserId NOT IN (5)
-                           ;
+                         --
+                         OR 1=1
+                         -- AND vbUserId NOT IN (5)
+                        ;
 
 
      -- Ограниченние - нет доступа к ОПиУ
@@ -525,7 +527,7 @@ BEGIN
                                                                    -- AND zc_isHistoryCost_byInfoMoneyDetail() = TRUE
            LEFT JOIN Object AS Object_Direction   ON Object_Direction.Id = tmpReport.DirectionId
            LEFT JOIN Object AS Object_Destination_calc ON Object_Destination_calc.Id = tmpReport.ObjectId_inf
-           LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = CASE WHEN (vbIsUserRole_8813637 = TRUE OR vbUserId IN (9457, 4467766)) AND Object_Destination_calc.DescId IN (zc_Object_Personal(), zc_Object_Member()) THEN NULL ELSE tmpReport.ObjectId_inf END
+           LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = CASE WHEN (vbIsUserRole_8813637 = TRUE OR vbUserId IN (9457 , 4467766)) AND Object_Destination_calc.DescId IN (zc_Object_Personal(), zc_Object_Member()) THEN NULL ELSE tmpReport.ObjectId_inf END
 
            LEFT JOIN MovementDesc ON MovementDesc.Id = tmpReport.MovementDescId
 
