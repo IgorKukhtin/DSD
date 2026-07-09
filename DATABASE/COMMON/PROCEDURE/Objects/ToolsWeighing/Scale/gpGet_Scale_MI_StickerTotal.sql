@@ -124,7 +124,7 @@ BEGIN
                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
                                              AND MILinkObject_GoodsKind.ObjectId       = vbGoodsKindId
-            INNER JOIN MovementItemFloat AS MIFloat_PromoMovement
+            LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
                                          ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
                                         AND MIFloat_PromoMovement.DescId         = zc_MIFloat_PromoMovementId()
                                         AND MIFloat_PromoMovement.ValueData      = vbMovementId_Promo
@@ -142,7 +142,7 @@ BEGIN
          AND MovementItem.DescId     = zc_MI_Master()
          AND MovementItem.isErased   = FALSE
          AND MovementItem.ObjectId   = vbGoodsId
-         AND MovementItem.Id  BETWEEN vbMovementItemId_start AND inMovementItemId
+         AND MovementItem.Id  BETWEEN COALESCE (vbMovementItemId_start, 0) AND inMovementItemId
       ;
 
 END;
