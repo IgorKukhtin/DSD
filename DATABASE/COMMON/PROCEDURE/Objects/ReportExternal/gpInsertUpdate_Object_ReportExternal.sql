@@ -66,7 +66,7 @@ $BODY$
 -- !!!! -- UPDATE Object SET ValueData = '' WHERE DescId = zc_Object_ReportExternal() AND ValueData ilike 'gpReport_Cash';
 
 -- 01.11.2025
--- !!!! ++ UPDATE Object SET ValueData = '' WHERE DescId = zc_Object_ReportExternal() AND ValueData ilike 'gpSelect_MovementItem_ReturnIn';
+-- !!!! ++ UPDATE Object SET ValueData = '' WHERE DescId = zc_Object_ReportExternal() AND ValueData ilike 'gpReport_JuridicalCollation';
 -- !!!! ++ UPDATE Object SET ValueData = '' WHERE DescId = zc_Object_ReportExternal() AND ValueData ilike 'gpSelect_MovementItemChild_ReturnIn';
 
 -- SELECT * FROM Object WHERE DescId = zc_Object_ReportExternal() AND ValueData ilike 'gpSelectMobile_Object_GoodsListSale' ORDER BY Id DESC;

@@ -117,19 +117,12 @@ BEGIN
      END IF;
 
 
-     -- заполняем таблицу - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     INSERT INTO _tmpItem (MovementItemId, MovementId, OperDate, UnitId_From, MemberId_From, CarId_From, BranchId_From, UnitId_To, MemberId_To, CarId_To, BranchId_To
-                         , ContainerDescId, MIContainerId_To, MIContainerId_count_To, ContainerId_GoodsFrom, ContainerId_GoodsTo, ContainerId_countFrom, ContainerId_countTo, ObjectDescId, GoodsId, GoodsKindId, GoodsKindId_to, GoodsKindId_complete, AssetId, PartionGoods, PartionGoodsDate_From, PartionGoodsDate_To
-                         , OperCount, OperCountCount
-                         , AccountDirectionId_From, AccountDirectionId_To, InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
-                         , JuridicalId_basis_To, BusinessId_To
-                         , StorageId_mi, PartionGoodsId_mi
-                         , isPartionCount, isPartionSumm, isPartionDate_From, isPartionDate_To, isPartionGoodsKind_From, isPartionGoodsKind_To
-                         , PartionGoodsId_From, PartionGoodsId_To
-                         , ProfitLossGroupId, ProfitLossDirectionId, UnitId_ProfitLoss, BranchId_ProfitLoss, BusinessId_ProfitLoss
-                         , PartNumber, PartionModelId, isAsset
-                         , OperCount_start
-                          )
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE ('_tmpMI_all'))
+     THEN
+         DROP TABLE _tmpMI_all;
+     END IF;
+
+     CREATE TEMP TABLE _tmpMI_all ON COMMIT DROP AS
         WITH tmpMember AS (SELECT lfSelect.MemberId, lfSelect.UnitId
                            FROM lfSelect_Object_Member_findPersonal (lfGet_User_Session (inUserId)) AS lfSelect
                            WHERE vbIsMember_to = TRUE
@@ -142,7 +135,8 @@ BEGIN
  , tmpMILinkObject AS (SELECT * FROM MovementItemLinkObject WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_all.Id from tmpMI_all))
  , tmpCLO AS (SELECT * FROM ContainerLinkObject WHERE ContainerLinkObject.ContainerId IN (SELECT DISTINCT tmpMIFloat.ValueData :: Integer FROM tmpMIFloat WHERE tmpMIFloat.DescId = zc_MIFloat_ContainerId() AND vbMovementDescId = zc_Movement_SendAsset() AND tmpMIFloat.ValueData > 0))
 
-           , tmpMI AS (SELECT MovementItem.Id AS MovementItemId
+                       -- Результат
+                       SELECT MovementItem.Id AS MovementItemId
                             , MovementItem.MovementId
                             , Movement.OperDate
                             , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit()   THEN MovementLinkObject_From.ObjectId ELSE 0 END, 0) AS UnitId_From
@@ -470,7 +464,27 @@ BEGIN
                         WHERE Movement.Id = inMovementId
                           AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset())
                           AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
-                       )
+                       ;
+
+     --
+     ANALYZE _tmpMI_all;
+
+     -- заполняем таблицу - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     INSERT INTO _tmpItem (MovementItemId, MovementId, OperDate, UnitId_From, MemberId_From, CarId_From, BranchId_From, UnitId_To, MemberId_To, CarId_To, BranchId_To
+                         , ContainerDescId, MIContainerId_To, MIContainerId_count_To, ContainerId_GoodsFrom, ContainerId_GoodsTo, ContainerId_countFrom, ContainerId_countTo, ObjectDescId, GoodsId, GoodsKindId, GoodsKindId_to, GoodsKindId_complete, AssetId, PartionGoods, PartionGoodsDate_From, PartionGoodsDate_To
+                         , OperCount, OperCountCount
+                         , AccountDirectionId_From, AccountDirectionId_To, InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
+                         , JuridicalId_basis_To, BusinessId_To
+                         , StorageId_mi, PartionGoodsId_mi
+                         , isPartionCount, isPartionSumm, isPartionDate_From, isPartionDate_To, isPartionGoodsKind_From, isPartionGoodsKind_To
+                         , PartionGoodsId_From, PartionGoodsId_To
+                         , ProfitLossGroupId, ProfitLossDirectionId, UnitId_ProfitLoss, BranchId_ProfitLoss, BusinessId_ProfitLoss
+                         , PartNumber, PartionModelId, isAsset
+                         , OperCount_start
+                          )
+        WITH tmpMI AS (SELECT *
+                       FROM _tmpMI_all
+                      )
 , tmpContainer_asset AS (SELECT tmpMI.ContainerId_asset
                               , Container_count.DescId AS ContainerDescId
                                 -- тоже на всякий случай - Капитальные инвестиции + Производственное оборудование
@@ -2497,6 +2511,9 @@ END IF;
                                              LEFT JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ.Id
                                                                   AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
                                         WHERE vbIsPartionCell_from = TRUE
+                                          AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Ирна
+                                                                                , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                                                 )
                                        )
                 -- нашли с/с если нет для ContainerId_Goods
               , tmpHistoryCost_find AS (SELECT Container_Summ.ContainerId_GoodsFrom
@@ -3117,7 +3134,7 @@ END IF;
      -- Проверка - 3 - Подбор партий
      IF (vbIsPartionCell_from = TRUE OR vbIsPartionCell_to = TRUE)
         AND inUserId IN (5, zc_Enum_Process_Auto_PrimeCost() :: Integer)
-        AND EXISTS (SELECT MIContainer.MovementItemId, MIContainer.DescId FROM MovementItemContainer AS MIContainer WHERE MIContainer.MovementId = inMovementId AND MIContainer.DescId IN (zc_MIContainer_Count(), zc_MIContainer_Summ()) GROUP BY MIContainer.MovementItemId, MIContainer.DescId HAVING SUM (MIContainer.Amount) <> 0)
+        AND 0 < (SELECT COUNT(*) FROM MovementItemContainer AS MIContainer WHERE MIContainer.MovementId = inMovementId AND MIContainer.DescId IN (zc_MIContainer_Count(), zc_MIContainer_Summ()) GROUP BY MIContainer.MovementItemId, MIContainer.DescId HAVING SUM (MIContainer.Amount) <> 0)
      THEN
          RAISE EXCEPTION 'Ошибка.Подбор партий.% % № <%> от <%> %Товар = <%> %Вид = <%> %Кол-во = <%> %Сумма = <%> %Разница = <%> %Id = <%>'
                        , CHR (13)
