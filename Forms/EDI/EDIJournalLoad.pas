@@ -261,6 +261,9 @@ type
     mactVchasnoEDISignCondra: TMultiAction;
     actVchasnoEDISignCondra: TdsdVchasnoEDIAction;
     dxBarButton2: TdxBarButton;
+    mactVchasnoQuality: TMultiAction;
+    actVchasno_SendQuality: TdsdVchasnoEDIAction;
+    bbVchasnoQuality: TdxBarButton;
   private
     { Private declarations }
   public
