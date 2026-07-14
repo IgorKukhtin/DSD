@@ -109,6 +109,7 @@ BEGIN
                                   GROUP BY MIContainer.ContainerId
                                          , MIContainer.OperDate
                                          , MIContainer.isActive
+
                                  UNION ALL
                                   -- плюс Производство как перемещение - в zc_MI_Child
                                   SELECT MIContainer.ContainerId
@@ -126,6 +127,25 @@ BEGIN
                                     AND MIContainer.isActive               = TRUE
                                   GROUP BY MIContainer.ContainerId
                                          , MIContainer.OperDate
+
+                                 UNION ALL
+                                  -- плюс Производство как перемещение - в zc_MI_Child
+                                  SELECT MIContainer.ContainerId
+                                       , MIContainer.OperDate
+                                       , zc_MI_Child() AS DescId_mi
+                                       , SUM (MIContainer.Amount) AS OperCount
+                                  FROM MovementItemContainer AS MIContainer 
+                                       INNER JOIN tmpGoods ON tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
+                                  WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                    AND MIContainer.DescId                 = zc_MIContainer_Count()
+                                    AND MIContainer.WhereObjectId_Analyzer = inUnitId
+                                    -- AND MIContainer.ObjectExtId_Analyzer   <> inUnitId -- От кого пришло
+                                    AND MIContainer.ObjectExtId_Analyzer   = 13802329-- Цех м'ясних напівфабрикатів
+                                    AND MIContainer.MovementDescId         = zc_Movement_ProductionUnion()
+                                    AND MIContainer.isActive               = TRUE
+                                  GROUP BY MIContainer.ContainerId
+                                         , MIContainer.OperDate
+
                                  UNION ALL
                                   -- !!!ПЛЮС!!! Переработка zc_Enum_AnalyzerId_ReWork
                                   SELECT MIContainer.ContainerId
