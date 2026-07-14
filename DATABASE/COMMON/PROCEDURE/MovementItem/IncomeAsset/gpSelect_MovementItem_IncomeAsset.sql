@@ -104,6 +104,27 @@ BEGIN
                         FULL JOIN tmpMI_parent ON tmpMI_parent.MovementItemId = tmpMI.MIId_Invoice
                                              -- AND tmpMI_parent.GoodsId        = tmpMI.GoodsId
                   )
+   , tmpMI_Invoice AS (SELECT *
+                       FROM MovementItem
+                       WHERE MovementItem.Id IN (SELECT DISTINCT tmpResult.MIId_Invoice FROM tmpResult)
+                       ) 
+   , tmpMILO_Invoice AS (SELECT *
+                         FROM MovementItemLinkObject
+                         WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpResult.MIId_Invoice FROM tmpResult)
+                         )
+   , tmpMIFloat_Invoice AS (SELECT *
+                            FROM MovementItemFloat
+                            WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpResult.MIId_Invoice FROM tmpResult)
+                              AND MovementItemFloat.DescId = zc_MIFloat_Price()
+                            ) 
+
+   , tmpMovementString_Invoice AS (SELECT *
+                                   FROM MovementString
+                                   WHERE MovementString.MovementId IN (SELECT DISTINCT tmpMI_Invoice.MovementId FROM tmpMI_Invoice)
+                                   AND MovementString.DescId = zc_MovementString_InvNumberPartner()
+                                   )
+
+
          -- –езультат
          SELECT
              tmpMI.Id
@@ -148,22 +169,22 @@ BEGIN
                                   AND ObjectString_InvNumber.DescId = zc_ObjectString_Asset_InvNumber()
 
             -- это док. "—чет"
-            LEFT JOIN MovementItem AS MI_Invoice ON MI_Invoice.Id       = tmpMI.MIId_Invoice
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_Invoice_Goods
-                                             ON MILinkObject_Invoice_Goods.MovementItemId = tmpMI.MIId_Invoice
-                                            AND MILinkObject_Invoice_Goods.DescId = zc_MILinkObject_Goods()                                                                  
+            LEFT JOIN tmpMI_Invoice AS MI_Invoice ON MI_Invoice.Id       = tmpMI.MIId_Invoice
+            LEFT JOIN tmpMILO_Invoice AS MILinkObject_Invoice_Goods
+                                      ON MILinkObject_Invoice_Goods.MovementItemId = tmpMI.MIId_Invoice
+                                     AND MILinkObject_Invoice_Goods.DescId = zc_MILinkObject_Goods()                                                                  
             LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id                 = MI_Invoice.MovementId
                                                -- AND MILinkObject_Invoice_Goods.ObjectId = tmpMI.GoodsId
 
-            LEFT JOIN MovementItemFloat AS MIFloat_Price_Invoice
-                                        ON MIFloat_Price_Invoice.MovementItemId = tmpMI.MIId_Invoice
-                                       AND MIFloat_Price_Invoice.DescId = zc_MIFloat_Price()    
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit_Invoice
-                                             ON MILinkObject_Unit_Invoice.MovementItemId = tmpMI.MIId_Invoice
-                                            AND MILinkObject_Unit_Invoice.DescId = zc_MILinkObject_Unit()
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset_Invoice
-                                             ON MILinkObject_Asset_Invoice.MovementItemId = tmpMI.MIId_Invoice
-                                            AND MILinkObject_Asset_Invoice.DescId = zc_MILinkObject_Asset()                                                                  
+            LEFT JOIN tmpMIFloat_Invoice AS MIFloat_Price_Invoice
+                                         ON MIFloat_Price_Invoice.MovementItemId = tmpMI.MIId_Invoice
+                                        AND MIFloat_Price_Invoice.DescId = zc_MIFloat_Price()    
+            LEFT JOIN tmpMILO_Invoice AS MILinkObject_Unit_Invoice
+                                      ON MILinkObject_Unit_Invoice.MovementItemId = tmpMI.MIId_Invoice
+                                     AND MILinkObject_Unit_Invoice.DescId = zc_MILinkObject_Unit()
+            LEFT JOIN tmpMILO_Invoice AS MILinkObject_Asset_Invoice
+                                      ON MILinkObject_Asset_Invoice.MovementItemId = tmpMI.MIId_Invoice
+                                      AND MILinkObject_Asset_Invoice.DescId = zc_MILinkObject_Asset()                                                                  
 
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = COALESCE (tmpMI.UnitId , MILinkObject_Unit_Invoice.ObjectId)
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = COALESCE (tmpMI.AssetId , MILinkObject_Asset_Invoice.ObjectId)
@@ -172,9 +193,9 @@ BEGIN
                                   AND ObjectString_InvNumber_to.DescId = zc_ObjectString_Asset_InvNumber()
 
             LEFT JOIN MovementDesc AS MovementDesc_Invoice ON MovementDesc_Invoice.Id = Movement_Invoice.DescId
-            LEFT JOIN MovementString AS MovementString_InvNumberPartner_Invoice
-                                     ON MovementString_InvNumberPartner_Invoice.MovementId =  Movement_Invoice.Id
-                                    AND MovementString_InvNumberPartner_Invoice.DescId = zc_MovementString_InvNumberPartner()
+            LEFT JOIN tmpMovementString_Invoice AS MovementString_InvNumberPartner_Invoice
+                                                ON MovementString_InvNumberPartner_Invoice.MovementId = Movement_Invoice.Id
+                                               AND MovementString_InvNumberPartner_Invoice.DescId = zc_MovementString_InvNumberPartner()
        ;
 
 
@@ -192,3 +213,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_IncomeAsset (inMovementId:= 25173, inInvoiceId:=0, inShowAll:= TRUE,  inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_MovementItem_IncomeAsset (inMovementId:= 25173, inInvoiceId:=0, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- select * from gpSelect_MovementItem_IncomeAsset(inMovementId := 34738980 , inInvoiceId := 34716044 , inShowAll := 'False' , inIsErased := 'False' ,  inSession  := '5');
