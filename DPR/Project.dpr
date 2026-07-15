@@ -121,7 +121,8 @@ uses
   PdfiumLib in '..\SOURCE\Pdfium\PdfiumLib.pas',
   dsdCommon in '..\SOURCE\COMPONENT\dsdCommon.pas',
   invoice_delnote_base in '..\SOURCE\EDI\invoice_delnote_base.pas',
-  invoice_comdoc_vchasno in '..\SOURCE\EDI\invoice_comdoc_vchasno.pas';
+  invoice_comdoc_vchasno in '..\SOURCE\EDI\invoice_comdoc_vchasno.pas',
+  DesadvXML_vch in '..\SOURCE\EDI\DesadvXML_vch.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

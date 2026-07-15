@@ -200,6 +200,10 @@ type
     FMetadata_date_of_issueParam: TdsdParam;      // Дата видачі сертифікату
     FMetadata_active_fromParam: TdsdParam;        // Дата початку дії сертифікату
     FMetadata_active_toParam: TdsdParam;          // Дата закінчення дії сертифікату
+    FMetadata_domainParam: TdsdParam;             // time_limited or batch_limited
+    FMetadata_batch_numberParam: TdsdParam;       // № партии
+    FMetadata_goodsParam: TdsdParam;              // джейсон - Товары
+    FMetadata_activeParam: TdsdParam;             // джейсон - Активувати - змінити статус на active
 
     FKeyFileNameParam: TdsdParam;
     FKeyUserNameParam: TdsdParam;
@@ -220,6 +224,8 @@ type
     function POSTVchasnoEDI(ATypeExchange : Integer; AStream: TMemoryStream): Boolean;
     function POSTCondraEDI(ATypeExchange : Integer): Boolean;
     function POSTQuality_vch(ATypeExchange : Integer): Boolean;
+    function POSTQuality_vch_goods(DocId : String): Boolean;
+    function POSTQuality_vch_active(DocId : String): Boolean;
     function POSTSignVchasnoEDI: Boolean;
     function SignData(UserSign : String): Boolean;
     function OrderLoad : Boolean;
@@ -371,7 +377,7 @@ const
 
 implementation
 
-uses Windows, VCL.ActnList, DesadvXML, SysUtils, Dialogs, SimpleGauge,
+uses Windows, VCL.ActnList, DesadvXML, DesadvXML_vch, SysUtils, Dialogs, SimpleGauge,
   Variants, UtilConvert, ComObj, DeclarXML, InvoiceXML, DateUtils,
   FormStorage, UnilWin, OrdrspXML, StrUtils, StatusXML, RecadvXML,
   DesadvFozzXML, OrderSpFozzXML, IftminFozzXML, Registry, System.IniFiles,
@@ -5361,11 +5367,11 @@ end;
 
 procedure TEDI.DESADVSaveVchasnoEDI(HeaderDataSet, ItemsDataSet: TDataSet; Stream: TMemoryStream);
 var
-  DESADV: DesadvXML.IXMLDESADVType;
+  DESADV: DesadvXML_vch.IXMLDESADV;
   i: integer;
 begin
   // Создать XML
-  DESADV := DesadvXML.NewDESADV;
+  DESADV := DesadvXML_vch.NewDESADV;
   // Номер повідомлення про відвантаження
   DESADV.NUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
   // Дата Повідомлення про відвантаження
@@ -5400,7 +5406,7 @@ begin
   DESADV.HEAD.SENDER := HeaderDataSet.FieldByName('SenderGLNCode').asString;
   DESADV.HEAD.RECIPIENT := HeaderDataSet.FieldByName ('RecipientGLNCode').asString;
 
-  DESADV.HEAD.PACKINGSEQUENCE.HIERARCHICALID := '1';
+  //DESADV.HEAD.PACKINGSEQUENCE.HIERARCHICALID := '1';
 
   with ItemsDataSet do
   begin
@@ -5428,14 +5434,14 @@ begin
           FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
 
         // Кількість ящиків
-        if ItemsDataSet.FieldByName('Count_Box_fozz').AsFloat > 0
+        {if ItemsDataSet.FieldByName('Count_Box_fozz').AsFloat > 0
         then
             BOXESQUANTITY :=
               StringReplace(FormatFloat('0.##',
               ItemsDataSet.FieldByName('Count_Box_fozz').AsFloat),
-              FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+              FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);}
 
-        COUNTRYORIGIN := 'UA';
+        //COUNTRYORIGIN := 'UA';
         PRICE := StringReplace(FormatFloat('0.00', ItemsDataSet.FieldByName('Price').AsFloat),
           FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
 
@@ -5445,6 +5451,10 @@ begin
         // ПДВ
         TAXRATE:= StringReplace(FormatFloat('0.00', ItemsDataSet.FieldByName('VATPercent').AsFloat),
           FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+
+        //Номер партії
+        if ItemsDataSet.FieldByName('BATCHNUMBER').asString <> ''
+        then BATCHNUMBER := ItemsDataSet.FieldByName('BATCHNUMBER').asString;
 
       end;
       inc(i);
@@ -5820,6 +5830,8 @@ type
   private
     procedure OnStatusInfoEx(ASender: TObject; const AsslSocket: PSSL; const AWhere, Aret: TIdC_INT; const AType, AMsg: String);
   end;
+type
+  TIdHTTPAccess = class(TIdHTTP) end;
 
 { TCustomIdHTTP }
 
@@ -5986,6 +5998,22 @@ begin
   // Дата закінчення дії сертифікату
   FMetadata_active_toParam:= TdsdParam.Create(nil);
   FMetadata_active_toParam.DataType := ftDate;
+  // time_limited or batch_limited
+  FMetadata_domainParam:= TdsdParam.Create(nil);
+  FMetadata_domainParam.DataType := ftString;
+  FMetadata_domainParam.Value := '';
+  // № партии
+  FMetadata_batch_numberParam:= TdsdParam.Create(nil);
+  FMetadata_batch_numberParam.DataType := ftString;
+  FMetadata_batch_numberParam.Value := '';
+  // джейсон - Товары
+  FMetadata_goodsParam:= TdsdParam.Create(nil);
+  FMetadata_goodsParam.DataType := ftString;
+  FMetadata_goodsParam.Value := '';
+  // джейсон - Активувати - змінити статус на active
+  FMetadata_activeParam:= TdsdParam.Create(nil);
+  FMetadata_activeParam.DataType := ftString;
+  FMetadata_activeParam.Value := '';
 
   FKeyFileNameParam := TdsdParam.Create(nil);
   FKeyFileNameParam.DataType := ftString;
@@ -6031,6 +6059,10 @@ begin
   FreeAndNil(FMetadata_date_of_issueParam);
   FreeAndNil(FMetadata_active_fromParam);
   FreeAndNil(FMetadata_active_toParam);
+  FreeAndNil(FMetadata_domainParam);
+  FreeAndNil(FMetadata_batch_numberParam);
+  FreeAndNil(FMetadata_goodsParam);
+  FreeAndNil(FMetadata_activeParam);
 
   FreeAndNil(FHostParam);
   FreeAndNil(FTokenParam);
@@ -6466,6 +6498,11 @@ begin
     Stream.AddFormField('active_from', FMetadata_active_fromParam.Value);
     // Дата закінчення дії сертифікату
     Stream.AddFormField('active_to', FMetadata_active_toParam.Value);
+    // time_limited or batch_limited
+    Stream.AddFormField('domain', FMetadata_domainParam.Value);
+    // № партии
+    Stream.AddFormField('batch_number', FMetadata_batch_numberParam.Value);
+
     // Додаємо файл
     Stream.AddFile('file', FFileNameParam.Value, 'application/pdf');
 
@@ -6502,19 +6539,10 @@ begin
     begin
       jsonObj := TJSONObject.ParseJSONValue(S) as TJSONObject;
       try
-        // ?для Condra не так?
-        if (jsonObj.Get('deal_status') <> nil) and (jsonObj.Get('deal_status').JsonValue.Value = 'in_work') and
-         (jsonObj.Get('document_id') <> nil)  then
-        begin
-          FDocumentIdParam.Value := jsonObj.Get('document_id').JsonValue.Value;
-          if jsonObj.Get('vchasno_id') <> nil then
-            FVchasnoIdParam.Value := jsonObj.Get('vchasno_id').JsonValue.Value
-          else FVchasnoIdParam.Value := '';
-        end
-        else
         // Так для Condra
-        if (jsonObj.Get('vchasno_status') <> nil) and (jsonObj.Get('vchasno_status').JsonValue.Value = 'ready_to_be_signed') and
-         (jsonObj.Get('id') <> nil)  then
+        if (jsonObj.Get('status') <> nil) and (jsonObj.Get('status').JsonValue.Value = 'draft') and
+          (jsonObj.Get('id') <> nil)
+        then
         begin
           FDocumentIdParam.Value := jsonObj.Get('id').JsonValue.Value;
           //if jsonObj.Get('vchasno_id') <> nil then
@@ -6533,7 +6561,183 @@ begin
   end;
 end;
 
-// ATypeExchange
+function TdsdVchasnoEDIAction.POSTQuality_vch_active(DocId : String): Boolean;
+  var IdHTTP: TCustomIdHTTP;
+      Params: String;
+      S,RequestBody: TStream;
+      jsonObj: TJSONObject;
+      testStringStream:TStringStream;
+begin
+  inherited;
+  Result := False;
+
+  if (FTokenParam.Value = '') or
+     (FHostParam.Value = '') then
+  begin
+    ShowMessages('Не заполнены Host или Токен.');
+    Exit;
+  end;
+
+  // Непосредственно отправка
+
+  IdHTTP := TCustomIdHTTP.Create(Nil);
+  //Stream := TIdMultiPartFormDataStream.Create;
+  try
+
+    // Поле JSON (можна задати ContentType)
+    //Stream.AddFormField('products', FMetadata_goodsParam.Value, 'utf-8').ContentType := 'application/json';
+    RequestBody:= TStringStream.Create(FMetadata_activeParam.Value, TEncoding.UTF8);
+    //
+
+
+    IdHTTP.Request.Clear;
+    //IdHTTP.Request.ContentType := 'multipart/form-data; boundary=' + Stream.Boundary;
+    IdHTTP.Request.ContentType := 'application/json';
+    IdHTTP.Request.ContentLength := RequestBody.Size;
+    IdHTTP.Request.ContentEncoding := 'UTF-8';
+    IdHTTP.Request.Accept := '*/*';
+    IdHTTP.Request.AcceptEncoding := 'gzip, deflate, br';
+    IdHTTP.Request.Connection := 'keep-alive';
+    IdHTTP.Request.CustomHeaders.FoldLines := False;
+    IdHTTP.Request.CustomHeaders.AddValue('Authorization', FTokenParam.Value);
+    IdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
+
+    Params := '/' + DocId;
+
+    try
+      TCustomIdHTTP(IdHTTP).DoRequest('PATCH', FHostParam.Value + Params, RequestBody, S, []);
+    except on E:EIdHTTPProtocolException  do
+                ShowMessages(e.ErrorMessage);
+    end;
+
+    // для теста -
+    {testStringStream:= TStringStream.Create('', TEncoding.UTF8);
+    Stream.Position := 0;
+    testStringStream.CopyFrom(Stream, 0);
+    testStringStream.SaveToFile('test_Quality_vch_goods.txt');
+    testStringStream.Free;}
+    //RequestBody.SaveToFile('test_Quality_vch_active.txt');
+
+
+    if (1=0) and (IdHTTP.ResponseCode in [200,201]) then
+    begin
+      //jsonObj := TJSONObject.ParseJSONValue(S) as TJSONObject;
+      try
+        // Так для Condra
+        if (jsonObj.Get('vchasno_status') <> nil) and (jsonObj.Get('vchasno_status').JsonValue.Value = 'ready_to_be_signed') and
+         (jsonObj.Get('id') <> nil)  then
+        begin
+          //FDocumentIdParam.Value := jsonObj.Get('id').JsonValue.Value;
+          //if jsonObj.Get('vchasno_id') <> nil then
+          //  FVchasnoIdParam.Value := jsonObj.Get('vchasno_id').JsonValue.Value
+          //else FVchasnoIdParam.Value := '';
+        end
+
+      finally
+        FreeAndNil(jsonObj);
+      end;
+    end;
+    //
+    Result := IdHTTP.ResponseCode in [200,201];
+    if not result then ShowMessages('on Quality - active IdHTTP.ResponseCode = ' + IntToStr(IdHTTP.ResponseCode));
+    //
+  finally
+    //Stream.Free;
+    RequestBody.Free;
+    IdHTTP.Free;
+  end;
+end;
+
+function TdsdVchasnoEDIAction.POSTQuality_vch_goods(DocId : String): Boolean;
+  var IdHTTP: TCustomIdHTTP;
+      Params, S: String;
+      //Stream: TIdMultiPartFormDataStream;
+      RequestBody: TStringStream;
+      jsonObj: TJSONObject;
+      testStringStream:TStringStream;
+begin
+  inherited;
+  Result := False;
+
+  if (FTokenParam.Value = '') or
+     (FHostParam.Value = '') then
+  begin
+    ShowMessages('Не заполнены Host или Токен.');
+    Exit;
+  end;
+
+  // Непосредственно отправка
+
+  IdHTTP := TCustomIdHTTP.Create(Nil);
+  //Stream := TIdMultiPartFormDataStream.Create;
+  try
+
+    // Поле JSON (можна задати ContentType)
+    //Stream.AddFormField('products', FMetadata_goodsParam.Value, 'utf-8').ContentType := 'application/json';
+    RequestBody:= TStringStream.Create(FMetadata_goodsParam.Value, TEncoding.UTF8);
+    //
+
+
+    IdHTTP.Request.Clear;
+    //IdHTTP.Request.ContentType := 'multipart/form-data; boundary=' + Stream.Boundary;
+    IdHTTP.Request.ContentType := 'application/json';
+    IdHTTP.Request.ContentLength := RequestBody.Size;
+    IdHTTP.Request.ContentEncoding := 'UTF-8';
+    IdHTTP.Request.Accept := '*/*';
+    IdHTTP.Request.AcceptEncoding := 'gzip, deflate, br';
+    IdHTTP.Request.Connection := 'keep-alive';
+    IdHTTP.Request.CustomHeaders.FoldLines := False;
+    IdHTTP.Request.CustomHeaders.AddValue('Authorization', FTokenParam.Value);
+    IdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
+
+    //Host:='https://edi.vchasno.ua/api/v2/certificates';
+    Params := '/' + DocId + '/products';
+//    Params := 'deal_id=' + FOrderParam.Value;
+//    if Params <> '' then Params := '?' + Params;
+
+    try
+      S := IdHTTP.Post(TIdURI.URLEncode(FHostParam.Value + Params), RequestBody);
+    except on E:EIdHTTPProtocolException  do
+                ShowMessages(e.ErrorMessage);
+    end;
+
+    // для теста -
+    {testStringStream:= TStringStream.Create('', TEncoding.UTF8);
+    Stream.Position := 0;
+    testStringStream.CopyFrom(Stream, 0);
+    testStringStream.SaveToFile('test_Quality_vch_goods.txt');
+    testStringStream.Free;}
+    RequestBody.SaveToFile('test_Quality_vch_goods.txt');
+
+
+    if IdHTTP.ResponseCode in [200,201] then
+    begin
+      jsonObj := TJSONObject.ParseJSONValue(S) as TJSONObject;
+      try
+        // Так для Condra
+        if (jsonObj.Get('vchasno_status') <> nil) and (jsonObj.Get('vchasno_status').JsonValue.Value = 'ready_to_be_signed') and
+         (jsonObj.Get('id') <> nil)  then
+        begin
+          //FDocumentIdParam.Value := jsonObj.Get('id').JsonValue.Value;
+          //if jsonObj.Get('vchasno_id') <> nil then
+          //  FVchasnoIdParam.Value := jsonObj.Get('vchasno_id').JsonValue.Value
+          //else FVchasnoIdParam.Value := '';
+        end
+
+      finally
+        FreeAndNil(jsonObj);
+      end;
+      Result := True;
+    end;
+  finally
+    //Stream.Free;
+    RequestBody.Free;
+    IdHTTP.Free;
+  end;
+end;
+
+
+    // ATypeExchange
 // 0 - Отправить файла + методанные
 function TdsdVchasnoEDIAction.POSTCondraEDI(ATypeExchange : Integer): Boolean;
   var IdHTTP: TCustomIdHTTP;
@@ -7460,6 +7664,14 @@ begin
   FMetadata_active_fromParam.Value:= HeaderDataSet.FieldByName('active_from').AsString;
   // Дата закінчення дії сертифікату
   FMetadata_active_toParam.Value:= HeaderDataSet.FieldByName('active_to').AsString;
+  // time_limited or batch_limited
+  FMetadata_domainParam.Value:= HeaderDataSet.FieldByName('domain').AsString;
+  // № партии
+  FMetadata_batch_numberParam.Value:= HeaderDataSet.FieldByName('batch_number').AsString;
+  // джейсон - Товары
+  FMetadata_goodsParam.Value:= HeaderDataSet.FieldByName('MetaData_goods').AsString;
+  // джейсон - Активувати - змінити статус на active
+  FMetadata_activeParam.Value:= HeaderDataSet.FieldByName('MetaData_active').AsString;
 
 {  FMetadata_sender_glnParam.Value := HeaderDataSet.FieldByName('sender_gln').AsString;
   FMetadata_recipient_glnParam.Value := HeaderDataSet.FieldByName('recipient_gln').AsString;
@@ -7476,6 +7688,16 @@ begin
     // Отправляем файл документа
     Result := POSTQuality_vch(0);
 
+    // Крутим дальше - отправим товары
+    if FDocumentIdParam.Value <> ''
+    then
+        if Result then Result := POSTQuality_vch_goods(FDocumentIdParam.Value)
+    else
+        ShowMessage('Error on POSTQuality_vch_goods FDocumentIdParam.Value = 0');
+
+    // Крутим дальше - Активировать
+    if Result then Result := POSTQuality_vch_active(FDocumentIdParam.Value);
+
     // Запишем в базу что сделали
     try
       EDI.FInsertVchasnoEventsDoc.ParamByName('inMovementId').Value := HeaderDataSet.FieldByName('MovementId_edi').asInteger;
@@ -7488,8 +7710,8 @@ begin
       EDI.FInsertVchasnoEventsDoc.ParamByName('inId_doc').Value :=HeaderDataSet.FieldByName('DocId_vch').AsString;
       //
       if not Result = TRUE
-      then EDI.FInsertVchasnoEventsDoc.ParamByName('inEDIEvent').Value := 'Ошибка Отправки Вчасно Декларация'
-      else EDI.FInsertVchasnoEventsDoc.ParamByName('inEDIEvent').Value := 'Отправка Вчасно Декларация';
+      then EDI.FInsertVchasnoEventsDoc.ParamByName('inEDIEvent').Value := 'Ошибка Отправки Вчасно Е-Сертификат'
+      else EDI.FInsertVchasnoEventsDoc.ParamByName('inEDIEvent').Value := 'Отправка Вчасно Е-Сертификат';
       EDI.FInsertVchasnoEventsDoc.Execute;
     finally
       EDI.FInsertVchasnoEventsDoc.ParamByName('inMovementId_send').Value := 0;

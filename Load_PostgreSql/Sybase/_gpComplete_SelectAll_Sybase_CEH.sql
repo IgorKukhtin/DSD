@@ -18,8 +18,9 @@ BEGIN
      RETURN QUERY 
      WITH tmpUnit AS (SELECT tmp.UnitId,       TRUE AS isMain FROM lfSelect_Object_Unit_byGroup (8446) AS tmp -- ЦЕХ колбаса+дел-сы
             -- UNION ALL SELECT tmp.Id AS UnitId, TRUE AS isMain FROM Object AS tmp WHERE Id = 951601 -- ЦЕХ упаковки мясо
-            UNION ALL SELECT tmp.Id AS UnitId, TRUE AS isMain FROM Object AS tmp WHERE Id = 981821  -- ЦЕХ шприц. мясо
-            UNION ALL SELECT tmp.Id AS UnitId, TRUE AS isMain FROM Object AS tmp WHERE Id = 8020711 -- ЦЕХ колбаса + деликатесы (Ирна)
+            UNION ALL SELECT tmp.Id AS UnitId, TRUE AS isMain FROM Object AS tmp WHERE Id = 981821   -- ЦЕХ шприц. мясо
+            UNION ALL SELECT tmp.Id AS UnitId, TRUE AS isMain FROM Object AS tmp WHERE Id = 8020711  -- ЦЕХ колбаса + деликатесы (Ирна)
+            UNION ALL SELECT tmp.Id AS UnitId, TRUE AS isMain FROM Object AS tmp WHERE Id = 13802329 -- Цех м'ясних напівфабрикатів
                )
      -- !!!Internal!!!
      -- 5. Send + ProductionUnion + ProductionSeparate

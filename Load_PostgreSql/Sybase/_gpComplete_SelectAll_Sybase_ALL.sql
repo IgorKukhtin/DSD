@@ -232,7 +232,8 @@ END IF;
                          AND tmpUnit_To.UnitId > 0
                          AND 1=0
                       )
-
+-- , a2 AS (select DISTINCT a.* from a join MovementItem ON MovementItem.MovementId = a.MovementId AND MovementItem.isErased = false AND MovementItem.ObjectId = 3131745)
+-- select * from a where a.MovementId IN (select DISTINCT a2.MovementId from a2)
      -- Результат
      SELECT tmp.MovementId
           , tmp.OperDate
