@@ -55,6 +55,7 @@ $BODY$
     DECLARE vbUserKey  TVarChar;
 
     DECLARE vbIsSchema_fozz_desadv Boolean;
+    DECLARE vbIsBATCHNUMBER Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
@@ -71,6 +72,20 @@ END IF;
      -- определяется - Крыхта Владимир Николаевич * м. Дніпро вул. Стартова 26
      vbPartneFromId := 258612;
 
+
+     -- определяется Таврія
+     vbIsBATCHNUMBER:= EXISTS (SELECT
+                               FROM MovementLinkObject AS MLO
+                                    INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                          ON ObjectLink_Partner_Juridical.ObjectId = MLO.ObjectId
+                                                         AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                    INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                          ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                                         AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                                         AND ObjectLink_Juridical_Retail.ChildObjectId IN (310831) -- Таврія
+                               WHERE MLO.MovementId = inMovementId
+                                 AND MLO.DescId = zc_MovementLinkObject_To()
+                              );
 
      -- определяется Новая схема Сильпо - Desadv = BOXESQUANTITY (Кількість ящиків)
      vbIsSchema_fozz_desadv:= EXISTS (SELECT
@@ -758,6 +773,8 @@ END IF;
            , vbUserSeal AS UserSeal
            , vbUserKey  AS UserKey
 
+           , CASE WHEN vbIsBATCHNUMBER = TRUE THEN inMovementId :: TVarChar ELSE '' END :: TVarChar AS BATCHNUMBER
+
        FROM tmpMovement AS Movement
             -- Налоговая
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
@@ -1389,6 +1406,8 @@ END IF;
 
            , CAST ((tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat) AS Amount_Weight
 --           , CAST ((CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI.AmountPartner ELSE 0 END) AS TFloat) AS Amount_Sh
+
+           , CASE WHEN vbIsBATCHNUMBER = TRUE THEN inMovementId :: TVarChar ELSE '' END :: TVarChar AS BATCHNUMBER
 
        FROM tmpMI
 

@@ -44,7 +44,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 -- test
-  if inMovementId IN (34279667, 34284773, 34280501, 34279210, 34279253 ) then update Movement set StatusId = zc_Enum_Status_UnComplete() where Id= inMovementId; end if;
+  if inMovementId IN (34279667, 34284773, 34280501, 34279210, 34279253, 34706799  ) then update Movement set StatusId = zc_Enum_Status_UnComplete() where Id= inMovementId; end if;
 
      -- проверка
      IF COALESCE (inMovementId, 0) = 0
