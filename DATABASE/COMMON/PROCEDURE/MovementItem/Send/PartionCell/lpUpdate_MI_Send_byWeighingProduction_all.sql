@@ -15,7 +15,7 @@ $BODY$
    DECLARE vbId_tmp Integer;
 BEGIN
        -- табл - результат
-       CREATE TEMP TABLE _tmpRes_PartionCell (MovementItemId_to Integer, MovementItemId_from Integer, DescId_MILO Integer, PartionCellId Integer, MovementItemId_ChoiceCell Integer, PartionGoodsDate TDateTime) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpRes_PartionCell (MovementItemId_to Integer, MovementItemId_from Integer, DescId_MILO Integer, PartionCellId Integer, MovementItemId_ChoiceCell Integer, PartionGoodsDate TDateTime, GoodsId Integer, GoodsKindId Integer) ON COMMIT DROP;
 
        -- сохранили протокол
        WITH --
@@ -166,7 +166,7 @@ BEGIN
                                                 , ROW_NUMBER() OVER (PARTITION BY tmpMI_list.GoodsId, tmpMI_list.GoodsKindId, tmpMI_list.PartionGoodsDate ORDER BY tmpMI_list.DescId_MILO, tmpMI_list.PartionCellId) AS Ord
                                            FROM -- Построили вертикально
                                                 (SELECT DISTINCT
-                                                      , tmpMI_from_all.GoodsId
+                                                        tmpMI_from_all.GoodsId
                                                       , tmpMI_from_all.GoodsKindId
                                                       , tmpMI_from_all.PartionGoodsDate
                                                         -- текущее значение
@@ -394,13 +394,15 @@ BEGIN
                                WHERE tmpMI_from.GoodsId IS NULL
 
                           )
-       INSERT INTO _tmpRes_PartionCell (MovementItemId_to, MovementItemId_from, DescId_MILO, PartionCellId, MovementItemId_ChoiceCell, PartionGoodsDate)
+       INSERT INTO _tmpRes_PartionCell (MovementItemId_to, MovementItemId_from, DescId_MILO, PartionCellId, MovementItemId_ChoiceCell, PartionGoodsDate, GoodsId, GoodsKindId)
           SELECT tmpMI_to_res.MovementItemId
                , tmpMI_from.MovementItemId
                , tmpMI_to_res.DescId_MILO
                , tmpMI_to_res.PartionCellId
                , tmpMI_to_res.MovementItemId_ChoiceCell
                , tmpMI_to_res.PartionGoodsDate
+               , tmpMI_to_res.GoodsId
+               , tmpMI_to_res.GoodsKindId
           FROM tmpMI_to_res
                LEFT JOIN tmpMI_from ON tmpMI_from.GoodsId          = tmpMI_to_res.GoodsId
                                    AND tmpMI_from.GoodsKindId      = tmpMI_to_res.GoodsKindId
@@ -417,15 +419,41 @@ BEGIN
      FROM _tmpRes_PartionCell
     ;
 
+--
+-- RAISE EXCEPTION 'Ошибка.<%>  <%>'
+-- , (select COUNT(*) from _tmpRes_PartionCell where _tmpRes_PartionCell.MovementItemId_from = 361284455 )
+-- , (select COUNT(*) from _tmpRes_PartionCell where _tmpRes_PartionCell.MovementItemId_from = 361275472  )
+-- ;
+
        -- перенесли протокол по ячейкам Хранения из Взвешиваний
        INSERT INTO MovementItemProtocol (MovementItemId, OperDate, UserId, ProtocolData, isInsert)
+          WITH tmpMI_from_all AS (SELECT MovementItem.Id                              AS MovementItemId
+                                       , MovementItem.ObjectId                        AS GoodsId
+                                       , COALESCE (MILO_GoodsKind.ObjectId, 0)        AS GoodsKindId
+                                       , COALESCE (MID_PartionGoods.ValueData, inOperDate) AS PartionGoodsDate
+       
+                                  FROM MovementItem
+                                       LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
+                                                                        ON MILO_GoodsKind.MovementItemId  = MovementItem.Id
+                                                                       AND MILO_GoodsKind.DescId          = zc_MILinkObject_GoodsKind()
+                                       LEFT JOIN MovementItemDate AS MID_PartionGoods
+                                                                  ON MID_PartionGoods.MovementItemId = MovementItem.Id
+                                                                 AND MID_PartionGoods.DescId         = zc_MIDate_PartionGoods()
+                                  WHERE MovementItem.MovementId = inMovementId_from
+                                    AND MovementItem.DescId     = zc_MI_Master()
+                                    AND MovementItem.isErased   = FALSE
+                                 )
+          -- Результат
           SELECT _tmpRes_PartionCell.MovementItemId_to
                , MovementItemProtocol.OperDate
                , MovementItemProtocol.UserId
                , MovementItemProtocol.ProtocolData
                , MovementItemProtocol.isInsert
           FROM _tmpRes_PartionCell
-               JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = _tmpRes_PartionCell.MovementItemId_from
+               JOIN tmpMI_from_all ON tmpMI_from_all.GoodsId          = _tmpRes_PartionCell.GoodsId
+                                  AND tmpMI_from_all.GoodsKindId      = _tmpRes_PartionCell.GoodsKindId
+                                  AND tmpMI_from_all.PartionGoodsDate = _tmpRes_PartionCell.PartionGoodsDate
+               JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = tmpMI_from_all.MovementItemId
                                         AND MovementItemProtocol.ProtocolData ILIKE '%Ячейка%'
           -- нет перемещения в место хранения
           WHERE _tmpRes_PartionCell.MovementItemId_ChoiceCell = 0

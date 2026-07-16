@@ -6,7 +6,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Quality_Condra(
     IN inMovementId         Integer  , -- ключ Документа
     IN inSession            TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (MovementId_edi         Integer
+RETURNS TABLE (MovementId_sale        Integer
+             , MovementId_edi         Integer
                -- DocumentId
              , DocumentId_vch         TVarChar
                -- DealId
@@ -41,23 +42,195 @@ RETURNS TABLE (MovementId_edi         Integer
              , active_from      TDateTime
                -- Дата закінчення дії сертифікату
              , active_to        TDateTime
+               -- доступні значення 'time_limited' or 'batch_limited'".
+             , domain           TVarChar
+               -- № партии
+             , batch_number     TVarChar
+
+             , MetaData_goods   Text
+             , MetaData_active  TVarChar
               )
 AS
 $BODY$
     DECLARE vbUserId Integer;
+    DECLARE vbPartnerId Integer;
     DECLARE vbPaidKindId Integer;
     DECLARE vbContractId Integer;
+    DECLARE vbGoodsPropertyId Integer;
+    DECLARE vbGoodsPropertyId_basis Integer;
+    DECLARE vbOperDate TDateTime;
+    DECLARE vbIsGoodsCode Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
 
+     -- параметр из документа
+     vbOperDate  := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
      vbPaidKindId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId IN (zc_MovementLinkObject_PaidKind(), zc_MovementLinkObject_PaidKindTo()));
      vbContractId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId IN (zc_MovementLinkObject_Contract(), zc_MovementLinkObject_ContractTo()));
+     vbPartnerId := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId IN (zc_MovementLinkObject_To()));
+     vbGoodsPropertyId:= (SELECT zfCalc_GoodsPropertyId (vbContractId
+                                                       , COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbPartnerId AND OL.DescId = zc_ObjectLink_Partner_Juridical()), vbPartnerId)
+                                                       , vbPartnerId
+                                                        ));
+     -- параметр
+     vbGoodsPropertyId_basis:= (SELECT zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0));
+
+     -- Параметры - захардкодили
+     SELECT -- ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ"АРІТЕЙЛ"
+            CASE WHEN OH_JuridicalDetails_To.OKPO = '41135005'
+                      THEN TRUE
+                      ELSE FALSE
+            END AS isGoodsCode
+
+            INTO vbIsGoodsCode
+
+     FROM Movement
+          LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                 ON MovementDate_OperDatePartner.MovementId = Movement.Id
+                                AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                       ON MovementLinkObject_To.MovementId = Movement.Id
+                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                               ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+
+          LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
+                                                              ON OH_JuridicalDetails_To.JuridicalId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId)
+                                                             AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_To.StartDate
+                                                             AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_To.EndDate
+     WHERE Movement.Id     = inMovementId
+       AND Movement.DescId <> zc_Movement_SendOnPrice()
+     ;
 
      --
      RETURN QUERY
-       WITH tmpData AS (SELECT Movement.Id               AS MovementId
+       WITH tmpMI AS (SELECT DISTINCT
+                             MovementItem.ObjectId AS GoodsId
+                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                      FROM MovementItem
+                           LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                       ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                      WHERE MovementItem.MovementId = inMovementId
+                        AND MovementItem.DescId     = zc_MI_Master()
+                        AND MovementItem.isErased   = FALSE
+                        AND MIFloat_AmountPartner.ValueData > 0
+                     )
+     , tmpObject_GoodsPropertyValue AS
+                    (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                          , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
+                          , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+                          , Object_GoodsPropertyValue.ValueData  AS Name
+                            --
+                          , ObjectString_Article.ValueData       AS Article
+                          , ObjectString_ArticleGLN.ValueData    AS ArticleGLN
+                          , ObjectString_BarCode.ValueData       AS BarCode
+                          , ObjectString_BarCodeGLN.ValueData    AS BarCodeGLN
+                     FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
+                          ) AS tmpGoodsProperty
+                          INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                                ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                                               AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                          LEFT JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                          LEFT JOIN ObjectString AS ObjectString_BarCode
+                                                 ON ObjectString_BarCode.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
+                          LEFT JOIN ObjectString AS ObjectString_BarCodeGLN
+                                                 ON ObjectString_BarCodeGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                AND ObjectString_BarCodeGLN.DescId = zc_ObjectString_GoodsPropertyValue_BarCodeGLN()
+                          LEFT JOIN ObjectString AS ObjectString_Article
+                                                 ON ObjectString_Article.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_Article()
+                          LEFT JOIN ObjectString AS ObjectString_ArticleGLN
+                                                 ON ObjectString_ArticleGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                AND ObjectString_ArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
+                          INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                                ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                               AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                                               -- Только эти товары
+                                               AND ObjectLink_GoodsPropertyValue_Goods.ChildObjectId IN (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI)
+                          LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                               ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                              AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+                    )
+     , tmpObject_GoodsPropertyValueGroup AS
+                    (SELECT tmpObject_GoodsPropertyValue.GoodsId
+                          , tmpObject_GoodsPropertyValue.BarCode
+                          , tmpObject_GoodsPropertyValue.BarCodeGLN
+                          , tmpObject_GoodsPropertyValue.Article
+                          , tmpObject_GoodsPropertyValue.ArticleGLN
+                     FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE BarCode <> '' OR BarCodeGLN <> '' GROUP BY GoodsId
+                          ) AS tmpGoodsProperty_find
+                          LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
+                    )
+     , tmpObject_GoodsPropertyValue_basis AS
+                    (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId AS GoodsId
+                          , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+                          , Object_GoodsPropertyValue.ValueData  AS Name
+                     FROM (SELECT vbGoodsPropertyId_basis AS GoodsPropertyId
+                          ) AS tmpGoodsProperty
+                          INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                                ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                                               AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                          INNER JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                        AND Object_GoodsPropertyValue.ValueData <> ''
+                          INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                                ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                               AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                                               -- Только эти товары
+                                               AND ObjectLink_GoodsPropertyValue_Goods.ChildObjectId IN (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI)
+                          LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                               ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                              AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+                    )
+          , tmpDataMI AS
+                   (SELECT (CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
+                         , CASE WHEN 1=1 OR COALESCE (tmpObject_GoodsPropertyValueGroup.BarCodeGLN, COALESCE (tmpObject_GoodsPropertyValue.BarCodeGLN, '')) <> ''
+                                THEN COALESCE (tmpObject_GoodsPropertyValueGroup.BarCodeGLN, COALESCE (tmpObject_GoodsPropertyValue.BarCodeGLN, ''))
+                                ELSE COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode,    COALESCE (tmpObject_GoodsPropertyValue.BarCode, ''))
+                           END AS BarCodeGLN_Juridical
+                    FROM tmpMI
+                         LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = tmpMI.GoodsId
+                                                               AND tmpObject_GoodsPropertyValue.GoodsKindId = tmpMI.GoodsKindId
+                                                               AND (tmpObject_GoodsPropertyValue.Article <> ''
+                                                                 OR tmpObject_GoodsPropertyValue.ArticleGLN <> ''
+                                                                 OR tmpObject_GoodsPropertyValue.Name <> ''
+                                                                   )
+                         LEFT JOIN tmpObject_GoodsPropertyValueGroup ON tmpObject_GoodsPropertyValueGroup.GoodsId = tmpMI.GoodsId
+                                                                    AND tmpObject_GoodsPropertyValue.GoodsId IS NULL
+                         LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = tmpMI.GoodsId
+                                                                     AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = tmpMI.GoodsKindId
+
+                         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
+                         LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
+                         LEFT JOIN ObjectString AS ObjectString_Goods_BUH
+                                                ON ObjectString_Goods_BUH.ObjectId = tmpMI.GoodsId
+                                               AND ObjectString_Goods_BUH.DescId = zc_ObjectString_Goods_BUH()
+                         LEFT JOIN ObjectDate AS ObjectDate_BUH
+                                              ON ObjectDate_BUH.ObjectId = tmpMI.GoodsId
+                                             AND ObjectDate_BUH.DescId = zc_ObjectDate_Goods_BUH()
+
+                    ORDER BY CASE WHEN vbGoodsPropertyId IN (83954  -- Метро
+                                                           , 83963  -- Ашан
+                                                           , 404076 -- Новус
+                                                           , 83956  -- Фора
+                                                            )
+                                       THEN zfConvert_StringToNumber (COALESCE (tmpObject_GoodsPropertyValueGroup.Article, COALESCE (tmpObject_GoodsPropertyValue.Article, '0')))
+                                  ELSE '0'
+                             END :: Integer
+                           , CASE WHEN vbIsGoodsCode = TRUE THEN Object_Goods.ObjectCode ELSE 0 END
+                           , CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate >= ObjectDate_BUH.ValueData THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END
+                           , Object_GoodsKind.ValueData
+                           , Object_Goods.ValueData, Object_GoodsKind.ValueData
+                   )
+
+          , tmpData AS (SELECT Movement.Id               AS MovementId
                              , Movement.InvNumber        AS InvNumber
                              , MovementDate_OperDatePartner.ValueData AS OperDatePartner
                              , Movement_order.Id         AS MovementId_order
@@ -226,8 +399,11 @@ BEGIN
                         WHERE MovementLinkMovement_Order.MovementId = inMovementId
                           AND MovementLinkMovement_Order.DescId     = zc_MovementLinkMovement_Order()
                        )
+       -- Результат
        SELECT
-              tmpData.MovementId_edi
+              tmpData.MovementId AS MovementId_sale
+              -- DocumentId
+            , tmpData.MovementId_edi
               -- DocumentId
             , tmpData.DocumentId_vch
               -- DealId
@@ -270,7 +446,8 @@ BEGIN
              , 'quality_certificate' ::TVarChar AS certificate_type
                -- Опис сертифікату (1-256 символів)
            --, zfCalc_InvNumber_isErased ('', tmpData.InvNumber, tmpData.OperDatePartner, zc_Enum_Status_Complete()) AS description
-             , ('test : ' || tmpData.InvNumber) :: TVarChar AS description
+             , ('N ' || tmpData.InvNumber || ' ' || zfConvert_DateToString (tmpData.OperDatePartner)) :: TVarChar AS description
+           --, ('test : ' || tmpData.InvNumber) :: TVarChar AS description
                -- Номер сертифікату (1-128 символів)
              , tmpData.InvNumber AS number_Quality_vch
                -- Дата видачі сертифікату
@@ -279,6 +456,27 @@ BEGIN
              , tmpData.OperDatePartner AS active_from
                -- Дата закінчення дії сертифікату
              , (tmpData.OperDatePartner + INTERVAL '1 MONTH') :: TDateTime AS active_to
+
+               -- доступні значення 'time_limited' or 'batch_limited'".
+             , 'batch_limited' :: TVarChar AS domain 
+               -- № партии
+             , tmpData.MovementId :: TVarChar AS batch_number
+             
+              -- джейсон - Товары
+             , ('{"products": ['
+              || (SELECT STRING_AGG ('{' || '"ean_code": ' || '"' || tmpDataMI.BarCodeGLN_Juridical || '",'
+                                         || '"title": '    || '"' || REPLACE (tmpDataMI.GoodsName, '"', '\"') || '"}'
+                                   , ',' 
+                                    ) 
+                  FROM tmpDataMI
+                 )
+              ||']'
+              ||'}'
+               ) :: Text AS MetaData_goods
+               
+               -- джейсон - Активувати - змінити статус на active
+             , '{"status": "active"}' :: TVarChar AS MetaData_active
+             
 
        FROM gpGet_Movement_Quality_ReportName_export (inMovementId, inSession) AS gpGet
             LEFT JOIN tmpData ON tmpData.MovementId = inMovementId
@@ -296,4 +494,4 @@ $BODY$
 */
 
 -- тест
--- SELECT *, right (MetaData, 200) FROM gpSelect_Movement_Quality_Condra (inMovementId:= 31811109 , inSession:= zfCalc_UserAdmin());
+-- SELECT right (MetaData, 200), MetaData_goods, * FROM gpSelect_Movement_Quality_Condra (inMovementId:= 31811109 , inSession:= zfCalc_UserAdmin());

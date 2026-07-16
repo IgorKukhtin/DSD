@@ -11,8 +11,13 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
+     -- проверка прав пользователя на вызов ПРОЦЕДУРЫ
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_OrderFinance());
+
+     IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.StatusId = zc_Enum_Status_Complete())
+     THEN
+         vbUserId:= lpCheckRight (inSession, zc_Enum_Process_UnComplete_OrderFinance());
+     END IF;
 
      -- Удаляем Документ
      PERFORM lpSetErased_Movement (inMovementId := inMovementId
