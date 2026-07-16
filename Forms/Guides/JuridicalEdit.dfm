@@ -24,12 +24,12 @@
   end
   object edName: TcxTextEdit [2]
     Left = 8
-    Top = 52
+    Top = 47
     TabOrder = 0
     Width = 272
   end
   object cxLabel1: TcxLabel [3]
-    Left = 5
+    Left = 8
     Top = 29
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1075#1086' '#1083#1080#1094#1072
   end
@@ -760,7 +760,7 @@
     Width = 90
   end
   object edDayTaxSummary: TcxCurrencyEdit [23]
-    Left = 110
+    Left = 111
     Top = 83
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -771,7 +771,7 @@
   end
   object cxLabel21: TcxLabel [24]
     Left = 110
-    Top = 67
+    Top = 68
     Caption = #1055#1077#1088#1080#1086#1076' '#1074' '#1076#1085'. '#1076#1083#1103' '#1089#1074#1086#1076#1085#1086#1081' '#1053#1053
   end
   object cbisDiscountPrice: TcxCheckBox [25]
@@ -830,22 +830,29 @@
     Left = 8
     Top = 195
     Caption = #1042#1053' - Delnot, '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1072#1103' '#1086#1090#1087#1088#1072#1074#1082#1072
-    TabOrder = 33
+    TabOrder = 32
     Width = 225
   end
   object cbisEdiQuality: TcxCheckBox [33]
     Left = 8
     Top = 212
     Caption = #1042#1053' - '#1044#1077#1082#1083#1072#1088#1072#1094#1080#1103', '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1072#1103' '#1086#1090#1087#1088#1072#1074#1082#1072
-    TabOrder = 37
+    TabOrder = 36
     Width = 255
   end
   object cbOrderAuto: TcxCheckBox [34]
+    Left = 178
+    Top = 229
+    Caption = #1040#1074#1090#1086#1079#1072#1082#1072#1079
+    TabOrder = 38
+    Width = 80
+  end
+  object cbisEdiESert: TcxCheckBox [35]
     Left = 8
     Top = 229
-    Caption = #1040#1074#1090#1086#1079#1072#1082#1072#1079' ('#1044#1072' / '#1053#1077#1090')'
-    TabOrder = 38
-    Width = 255
+    Caption = #1042#1053' - '#1045'-'#1057#1077#1088#1090#1080#1092#1080#1082#1072#1090
+    TabOrder = 39
+    Width = 133
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 499
@@ -1471,6 +1478,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisEdiESert'
+        Value = Null
+        Component = cbisEdiESert
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisOrderAuto'
         Value = Null
         Component = cbOrderAuto
@@ -1808,6 +1823,13 @@
         Component = cbOrderAuto
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isEdiESert'
+        Value = Null
+        Component = cbisEdiESert
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 248
@@ -1840,8 +1862,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 112
-    Top = 258
+    Left = 96
+    Top = 266
   end
   object GoodsPropertyGuides: TdsdGuides
     KeyField = 'Id'
@@ -1870,8 +1892,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 184
-    Top = 258
+    Left = 200
+    Top = 266
   end
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'

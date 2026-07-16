@@ -13,6 +13,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarC
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, TVarChar, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, TVarChar, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, TVarChar, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, TVarChar, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
 
 
 
@@ -30,7 +31,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
     IN inIsVchasnoEdi        Boolean   ,    -- Обработка на платформе Вчасно EDI
     IN inIsEdiComdoc         Boolean   ,    -- ВН - Comdoc, автоматическая отправка
     IN inIsEdiDelnot         Boolean   ,    -- ВН - Delnot, автоматическая отправка
-    IN inIsEdiQuality        Boolean   ,    --
+    IN inIsEdiQuality        Boolean   ,    -- Вчасно Декларация
+    IN inIsEdiESert          Boolean   ,    -- Е-Сертификат
     IN inIsOrderAuto         Boolean   ,    -- Автозаказ 
     IN inDayTaxSummary       TFloat    ,    -- Кол-во дней для сводной налоговой
     IN inJuridicalGroupId    Integer   ,    -- Группы юридических лиц
@@ -135,7 +137,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_isEdiDelnot(), ioId, inIsEdiDelnot);
    -- сохранили свойство <Вчасно Декларация>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_isEdiQuality(), ioId, inIsEdiQuality);
-   -- сохранили свойство <Вчасно Декларация>
+   -- сохранили свойство < 	Е-Сертификат>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_isEdiESert(), ioId, inIsEdiESert);
+   -- сохранили свойство <Автозаказ>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_OrderAuto(), ioId, inIsOrderAuto);
    
    
@@ -246,6 +250,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 15.07.26         *
  11.08.25         * inDocHeadeName, inisEdiQuality
  14.04.25         * isEdiDelnot
  07.04.25         * isEdiInvoice
