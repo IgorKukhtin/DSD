@@ -1,0 +1,40 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]] ->> [[Enum_справочники|Enum]]
+
+-
+-
+
+|\4=.Справочник +Тип НДС+|
+|\4=.*zc_Object_TaxKind*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|31.05.23|
+|ObjectCode|Код|_.+||
+|ValueData|Название|||
+|zc_ObjectFloat_TaxKind_Value|Значение НДС|||
+|zc_ObjectString_Enum|Название функции|_.+||
+|zc_ObjectString_TaxKind_Code|Code|||
+|zc_ObjectString_TaxKind_Info|Описание НДС|||_=.NEW|
+|zc_ObjectString_TaxKind_Comment|Примечание НДС|||_=.NEW|
+
+-
+-
+
+|\3=.*Бизнес логика*|
+|=.функция|=.Описание|Значение|
+|*zc_Enum_TaxKind_WithVAT*|With VAT|_.19.0%|
+|*zc_Enum_TaxKind_NonEU*|Non-EU|_.0.0%|
+|*zc_Enum_TaxKind_Basis*|EU|_.0.0%|
+|*zc_Enum_TaxKind_Other*|Used|_.0.0%|
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|[[zc_Object_Goods|Товары]]|[[zc_Movement_Invoice|Счета]]|/11=.нет|/11=.нет|
+|[[zc_Object_PartionGoods|Партии товаров]]|/10=.|
+|[[zc_Object_ReceiptService|Работы/Услуги]]|
+|[[zc_Object_ProdOptions|Опции]]|
+|[[zc_Object_Partner|Поставщики]]|
+|[[zc_Object_Client|Клиенты]]|
+
+-
+-

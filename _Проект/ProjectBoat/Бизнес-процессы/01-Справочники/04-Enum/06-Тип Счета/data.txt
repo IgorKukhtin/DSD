@@ -1,0 +1,35 @@
+[[Wiki|Проект]] ->> [[Бизнес-процессы]] ->> [[Справочники]] ->> [[Пользовательские справочники|Пользовательские]] ->> [[Enum_справочники|Enum]]
+
+-
+-
+
+|\4=.Справочник +Тип Счета+|
+|\4=.*zc_Object_InvoiceKind*|
+|=.Поле *Object* или функция *DescId*|_.Свойство|=.расчет|=.Описание|
+|ObjectCode|Код|_.+||
+|ValueData|Название|||
+|zc_ObjectString_InvoiceKind_Comment|Примечание|||
+|zc_ObjectString_Enum|Название функции|_.+||
+
+-
+-
+
+|\2=.*Бизнес логика*|
+|=.функция|=.Описание|
+|*zc_Enum_InvoiceKind_PrePay*|Предоплата|
+|*zc_Enum_InvoiceKind_Pay*|Счет|
+|*zc_Enum_InvoiceKind_Return*|Возврат Предоплаты|
+|*zc_Enum_InvoiceKind_ReturnPay*|Возврат Счет|
+|*zc_Enum_InvoiceKind_Proforma*|Проформа|
+|*zc_Enum_InvoiceKind_Service*|Услуги|
+
+-
+-
+
+|\4=.Ссылки|
+|_.справочники|_.документы|_.строчная часть документов|_.проводки|
+|/11=.нет|[[zc_Movement_Invoice|Счета]]|/11=.нет|/11=.нет|
+
+-
+-
+
