@@ -19,6 +19,8 @@ RETURNS TABLE (-- Документ продажа - отправка в EDI
              , isEdiComdoc Boolean
                -- Вчасно - Декларация, автоматическая отправка
              , isEdiQuality Boolean
+               -- Вчасно - Е-Сертификат, автоматическая отправка
+             , isEdiESert Boolean
 
                -- Документ для отправки в EDI
              , InvNumber TVarChar, OperDate TDateTime, UpdateDate TDateTime
@@ -181,6 +183,8 @@ BEGIN
                  END:: Boolean AS isEdiComdoc
                  
                , COALESCE (ObjectBoolean_Juridical_EdiQuality.ValueData, FALSE) :: Boolean AS isEdiQuality
+               , COALESCE (ObjectBoolean_Juridical_EdiESert.ValueData, FALSE) :: Boolean AS isEdiESert
+               
 
 
                , Movement.InvNumber                             AS InvNumber
@@ -318,6 +322,10 @@ BEGIN
                 LEFT JOIN ObjectBoolean AS ObjectBoolean_Juridical_EdiQuality
                                         ON ObjectBoolean_Juridical_EdiQuality.ObjectId  = Object_JuridicalTo.Id
                                        AND ObjectBoolean_Juridical_EdiQuality.DescId    = zc_ObjectBoolean_Juridical_isEdiQuality()
+                -- Вчасно - Е-Сертификат, автоматическая отправка
+                LEFT JOIN ObjectBoolean AS ObjectBoolean_Juridical_EdiESert
+                                        ON ObjectBoolean_Juridical_EdiESert.ObjectId  = Object_JuridicalTo.Id
+                                       AND ObjectBoolean_Juridical_EdiESert.DescId    = zc_ObjectBoolean_Juridical_isEdiESert()
 
                 LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                      ON ObjectLink_Juridical_Retail.ObjectId = Object_JuridicalTo.Id
