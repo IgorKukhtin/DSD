@@ -101,6 +101,33 @@ BEGIN
                       ORDER BY MovementItem.Id DESC
                       LIMIT 1
                      )
+          , tmpMovementDate AS (SELECT *
+                                FROM MovementDate
+                                WHERE MovementDate.MovementId = inMovementId
+                                )                
+
+          , tmpMovementString AS (SELECT *
+                                FROM MovementString
+                                WHERE MovementString.MovementId = inMovementId
+                                )
+          , tmpMovementBoolean AS (SELECT *
+                                FROM MovementBoolean
+                                WHERE MovementBoolean.MovementId = inMovementId
+                                )
+
+          , tmpMovementFloat AS (SELECT *
+                                FROM MovementFloat
+                                WHERE MovementFloat.MovementId = inMovementId
+                                )
+          , tmpMovementLinkObject AS (SELECT *
+                                FROM MovementLinkObject
+                                WHERE MovementLinkObject.MovementId = inMovementId
+                                )
+          , tmpMovementLinkMovement AS (SELECT *
+                                FROM MovementLinkMovement
+                                WHERE MovementLinkMovement.MovementId = inMovementId
+                                )
+
          -- результат
          SELECT
                Movement.Id
@@ -127,8 +154,8 @@ BEGIN
              , ObjectLink_Unit_Parent.ChildObjectId  AS ToParentId
              , Object_PaidKind.Id                    AS PaidKindId
              , Object_PaidKind.ValueData             AS PaidKindName
-             , View_Contract_InvNumber.ContractId    AS ContractId
-             , View_Contract_InvNumber.InvNumber     AS ContractName
+             , Object_Contract.Id                    AS ContractId
+             , Object_Contract.ValueData             AS ContractName
 
              , COALESCE (Object_CurrencyDocument.Id, ObjectCurrencycyDocumentInf.Id)                AS CurrencyDocumentId
              , COALESCE (Object_CurrencyDocument.ValueData, ObjectCurrencycyDocumentInf.ValueData)  AS CurrencyDocumentName
@@ -150,44 +177,44 @@ BEGIN
            
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
-                                   ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+            LEFT JOIN tmpMovementDate AS MovementDate_OperDatePartner
+                                   ON MovementDate_OperDatePartner.MovementId = Movement.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-            LEFT JOIN MovementString AS MovementString_InvNumberPartner
+            LEFT JOIN tmpMovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
-            LEFT JOIN MovementString AS MovementString_Comment 
+            LEFT JOIN tmpMovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
-            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+            LEFT JOIN tmpMovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
-            LEFT JOIN MovementBoolean AS MovementBoolean_CurrencyUser
+            LEFT JOIN tmpMovementBoolean AS MovementBoolean_CurrencyUser
                                       ON MovementBoolean_CurrencyUser.MovementId = Movement.Id
                                      AND MovementBoolean_CurrencyUser.DescId = zc_MovementBoolean_CurrencyUser()
 
-            LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+            LEFT JOIN tmpMovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
-            LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+            LEFT JOIN tmpMovementFloat AS MovementFloat_ChangePercent
                                     ON MovementFloat_ChangePercent.MovementId =  Movement.Id
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
 
-            LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
+            LEFT JOIN tmpMovementFloat AS MovementFloat_CurrencyValue
                                     ON MovementFloat_CurrencyValue.MovementId =  Movement.Id
                                    AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
-            LEFT JOIN MovementFloat AS MovementFloat_ParValue
+            LEFT JOIN tmpMovementFloat AS MovementFloat_ParValue
                                     ON MovementFloat_ParValue.MovementId = Movement.Id
                                    AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+            LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+            LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
@@ -196,22 +223,22 @@ BEGIN
                                  ON ObjectLink_Unit_Parent.ObjectId = Object_To.Id 
                                 AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+            LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+            LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
+            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
+            LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_CurrencyDocument
                                          ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id
                                         AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
             LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = MovementLinkObject_CurrencyDocument.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner
+            LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_CurrencyPartner
                                          ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id
                                         AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
             LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
@@ -220,7 +247,7 @@ BEGIN
                              ON ObjectCurrencycyDocumentInf.descid= zc_Object_Currency()
                             AND ObjectCurrencycyDocumentInf.id = 14461
 
-            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
+            LEFT JOIN tmpMovementLinkMovement AS MovementLinkMovement_Transport
                                            ON MovementLinkMovement_Transport.MovementId = Movement.Id
                                           AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
             LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = MovementLinkMovement_Transport.MovementChildId
@@ -244,3 +271,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpGet_Movement_IncomeASset (inMovementId:= 1, inOperDate:= CURRENT_DATE, inSessiON:= zfCalc_UserAdmin())
+-- select * from gpGet_Movement_IncomeAsset(inMovementId := 34738980 , inOperDate := ('13.07.2026')::TDateTime ,  inSession := '5'); 

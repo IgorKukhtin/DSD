@@ -179,6 +179,7 @@ type
     edDocHeadeName: TcxTextEdit;
     cbisEdiQuality: TcxCheckBox;
     cbOrderAuto: TcxCheckBox;
+    cbisEdiESert: TcxCheckBox;
   private
     { Private declarations }
   public

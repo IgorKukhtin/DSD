@@ -45,6 +45,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, BasisCode Integer,
                isEdiComdoc Boolean,
                isEdiDelnot Boolean,
                isEdiQuality Boolean,
+               isEdiESert Boolean,
                isOrderAuto Boolean,
                isErased Boolean,
                PrintFormName_sale_ff  TVarChar,
@@ -274,6 +275,7 @@ BEGIN
        , COALESCE (ObjectBoolean_isEdiComdoc.ValueData, FALSE) :: Boolean  AS isEdiComdoc
        , COALESCE (ObjectBoolean_isEdiDelnot.ValueData, FALSE) :: Boolean  AS isEdiDelnot
        , COALESCE (ObjectBoolean_isEdiQuality.ValueData, FALSE):: Boolean  AS isEdiQuality
+       , COALESCE (ObjectBoolean_isEdiESert.ValueData, FALSE)  :: Boolean  AS isEdiESert
        , COALESCE (ObjectBoolean_OrderAuto.ValueData, FALSE)   :: Boolean  AS isOrderAuto
 
        , Object_Juridical.isErased   AS isErased
@@ -347,6 +349,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_isEdiQuality
                                 ON ObjectBoolean_isEdiQuality.ObjectId = Object_Juridical.Id
                                AND ObjectBoolean_isEdiQuality.DescId = zc_ObjectBoolean_Juridical_isEdiQuality()
+                               AND ObjectBoolean_isEdiDelnot.DescId = zc_ObjectBoolean_Juridical_isEdiDelnot()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_isEdiESert
+                                ON ObjectBoolean_isEdiESert.ObjectId = Object_Juridical.Id
+                               AND ObjectBoolean_isEdiESert.DescId = zc_ObjectBoolean_Juridical_isEdiESert()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_OrderAuto
                                 ON ObjectBoolean_OrderAuto.ObjectId = Object_Juridical.Id
@@ -493,6 +499,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 15.07.26         *
  26.05.26         *
  14.04.25         * isEdiDelnot
  07.04.25         * isEdiInvoice

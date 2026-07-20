@@ -1,3 +1,4 @@
+
 -- Function: gpReport_MotionGoods_AssetNoBalance()
 
 DROP FUNCTION IF EXISTS gpReport_MotionGoods_AssetNoBalance (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
@@ -411,266 +412,7 @@ BEGIN
                                 ) AS tmp
                           WHERE tmp.Ord = 1
                           )
-
-   -- Результат
-   SELECT View_Account.AccountGroupName, View_Account.AccountDirectionName
-        , View_Account.AccountId, View_Account.AccountCode, View_Account.AccountName
-        , (CASE WHEN tmpMIContainer_group.ContainerDescId_count IN (zc_Container_CountAsset(), zc_Container_SummAsset()) THEN '*з* ' ELSE '' END || COALESCE (View_Account.AccountName_all, '')) :: TVarChar AS AccountName_all
-        , ObjectDesc.ItemName            AS LocationDescName
-        , CAST (COALESCE(Object_Location.Id, 0) AS Integer)             AS LocationId
-        , Object_Location.ObjectCode     AS LocationCode
-        , CAST (COALESCE(Object_Location.ValueData,'') AS TVarChar)     AS LocationName
-
-        , Object_GoodsGroup.Id           AS GoodsGroupId
-        , Object_GoodsGroup.ValueData    AS GoodsGroupName
-        , ObjectString_Goods_GroupNameFull.ValueData         AS GoodsGroupNameFull
-        , ObjectDesc_Goods.ItemName      AS GoodsDescName
-        , CAST (COALESCE(Object_Goods.Id, 0) AS Integer)     AS GoodsId
-        , Object_Goods.ObjectCode        AS GoodsCode
-        , CAST (COALESCE(Object_Goods.ValueData, '') AS TVarChar)        AS GoodsName
-        , CAST (COALESCE(Object_GoodsKind.Id, 0) AS Integer)             AS GoodsKindId
-        , CAST (COALESCE(Object_GoodsKind.ValueData, '') AS TVarChar)    AS GoodsKindName
-        
-        , Object_Measure.ValueData       AS MeasureName  
-        , ObjectFloat_Weight.ValueData   AS Weight
-
-        , CAST (COALESCE(Object_PartionGoods.Id, 0) AS Integer)              AS PartionGoodsId
-        , COALESCE ( ObjectString_Asset_InvNumber.ValueData, Object_PartionGoods.ValueData,'') :: TVarChar AS PartionGoodsName
-        , COALESCE(ObjectDate_PartionGoods_Value.ValueData,Null) ::TDateTime AS PartionGoodsDate   --дата ввода в эксплуатацию
-        , zfCalc_PartionMovementName (Movement_PartionGoods.DescId, MovementDesc_PartionGoods.ItemName, Movement_PartionGoods.InvNumber, Movement_PartionGoods.OperDate) AS MovementPartionGoods_InvNumber
-
-        , Object_Asset_PartionModel.ValueData   ::TVarChar AS PartionModelName_asset
-        , COALESCE (ObjectFloat_KW.ValueData,0) :: TFloat  AS KW_asset
-
-        , Object_AssetTo.ObjectCode      AS AssetToCode
-        , Object_AssetTo.ValueData       AS AssetToName
-        , Object_AssetToGroup.ValueData  AS AssetToGroupName
-
-        , Object_Partner.ObjectCode      AS PartnerCode
-        , Object_Partner.ValueData       AS PartnerName
-
-        , Object_Storage.ValueData       AS StorageName
-        , Object_Unit.ObjectCode         AS UnitCode
-        , Object_Unit.ValueData          AS UnitName
-
-        , Object_Car.ValueData           AS CarName  --гос номер авто
-        , ObjectString_EngineNum.ValueData  :: TVarChar AS EngineNum  
-        , ObjectString_VIN.ValueData        :: TVarChar AS VIN
-        , RegistrationCertificate.ValueData :: TVarChar AS RegistrationCertificate
-        , Object_CarModel.ObjectCode AS CarModelCode
-        , Object_CarModel.ValueData  AS CarModelName 
-        , Object_CarType.ObjectCode  AS CarTypeCode
-        , Object_CarType.ValueData   AS CarTypeName
-        , Object_BodyType.ObjectCode AS BodyTypeCode
-        , Object_BodyType.ValueData  AS BodyTypeName 
-        , COALESCE (ObjectFloat_Year.ValueData,0) :: TFloat  AS Year_car
-
-        , ObjectDate_Release.ValueData             ::TDateTime  AS Release_Partion
-        , ObjectFloat_PartionGoods_Price.ValueData :: TFloat    AS Price_Partion
-        , ObjectString_PartNumber.ValueData        :: TVarChar  AS PartNumber_Partion
-        , Object_PartionModel.ValueData            :: TVarChar  AS Model_Partion
-        , Object_Partner_Partion.ValueData         :: TVarChar  AS PartnerName_Partion
-        , Object_Unit_Storage.ValueData            :: TVarChar  AS UnitName_Storage
-        , Object_Branch_Storage.ValueData          :: TVarChar  AS BranchName_Storage
-        , Object_AreaUnit_Storage.ValueData        :: TVarChar  AS AreaUnitName_Storage
-        , ObjectString_Storage_Room.ValueData      :: TVarChar  AS Room_Storage
-        , ObjectString_Storage_Address.ValueData   :: TVarChar  AS Address_Storage
-                
-
-        , CAST (tmpMIContainer_group.CountStart          AS TFloat) AS CountStart
-        , CAST (tmpMIContainer_group.CountStart * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END          AS TFloat) AS CountStart_Weight
-        , CAST (tmpMIContainer_group.CountEnd            AS TFloat) AS CountEnd
-        , CAST (tmpMIContainer_group.CountEnd * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END            AS TFloat) AS CountEnd_Weight
-        , CAST (tmpMIContainer_group.CountEnd_calc       AS TFloat) AS CountEnd_calc
-        , CAST (tmpMIContainer_group.CountEnd_calc * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END       AS TFloat) AS CountEnd_calc_Weight
-
-        , CAST (tmpMIContainer_group.CountIncome         AS TFloat) AS CountIncome
-        , CAST (tmpMIContainer_group.CountIncome * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END         AS TFloat) AS CountIncome_Weight
-        , CAST (tmpMIContainer_group.CountReturnOut      AS TFloat) AS CountReturnOut
-        , CAST (tmpMIContainer_group.CountReturnOut * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END      AS TFloat) AS CountReturnOut_Weight
-
-        , CAST (tmpMIContainer_group.CountSendIn         AS TFloat) AS CountSendIn
-        , CAST (tmpMIContainer_group.CountSendIn * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END         AS TFloat) AS CountSendIn_Weight
-        , CAST (tmpMIContainer_group.CountSendOut        AS TFloat) AS CountSendOut
-        , CAST (tmpMIContainer_group.CountSendOut * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END        AS TFloat) AS CountSendOut_Weight
-
-        , CAST (tmpMIContainer_group.CountSendOnPriceIn  AS TFloat) AS CountSendOnPriceIn
-        , CAST (tmpMIContainer_group.CountSendOnPriceIn * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END  AS TFloat) AS CountSendOnPriceIn_Weight
-
-        , CAST (tmpMIContainer_group.CountSendOnPrice_10500  AS TFloat) AS CountSendOnPrice_10500
-        , CAST (tmpMIContainer_group.CountSendOnPrice_10500 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END  AS TFloat) AS CountSendOnPrice_10500_Weight
-        , CAST (tmpMIContainer_group.CountSendOnPrice_40200  AS TFloat) AS CountSendOnPrice_40200
-        , CAST (tmpMIContainer_group.CountSendOnPrice_40200 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END  AS TFloat) AS CountSendOnPrice_40200_Weight
-        
-        
-        , CAST (tmpMIContainer_group.CountSendOnPriceOut AS TFloat) AS CountSendOnPriceOut
-        , CAST (tmpMIContainer_group.CountSendOnPriceOut * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END AS TFloat) AS CountSendOnPriceOut_Weight
-
-        , CAST (tmpMIContainer_group.CountSale           AS TFloat) AS CountSale
-        , CAST (tmpMIContainer_group.CountSale * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END           AS TFloat) AS CountSale_Weight
-        , CAST (tmpMIContainer_group.CountSale_10500     AS TFloat) AS CountSale_10500
-        , CAST (tmpMIContainer_group.CountSale_10500 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END     AS TFloat) AS CountSale_10500_Weight
-        , CAST (tmpMIContainer_group.CountSale_40208     AS TFloat) AS CountSale_40208
-        , CAST (tmpMIContainer_group.CountSale_40208 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END     AS TFloat) AS CountSale_40208_Weight
-
-        , CAST (tmpMIContainer_group.CountReturnIn       AS TFloat) AS CountReturnIn
-        , CAST (tmpMIContainer_group.CountReturnIn * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END       AS TFloat) AS CountReturnIn_Weight
-        , CAST (tmpMIContainer_group.CountReturnIn_40208 AS TFloat) AS CountReturnIn_40208
-        , CAST (tmpMIContainer_group.CountReturnIn_40208 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END AS TFloat) AS CountReturnIn_40208_Weight
-
-        , CAST (tmpMIContainer_group.CountLoss           AS TFloat) AS CountLoss
-        , CAST (tmpMIContainer_group.CountLoss * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END           AS TFloat) AS CountLoss_Weight
-        , CAST (tmpMIContainer_group.CountInventory      AS TFloat) AS CountInventory
-        , CAST (tmpMIContainer_group.CountInventory * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END      AS TFloat) AS CountInventory_Weight
-
-        , CAST (tmpMIContainer_group.CountProductionIn   AS TFloat) AS CountProductionIn
-        , CAST (tmpMIContainer_group.CountProductionIn * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END   AS TFloat) AS CountProductionIn_Weight
-        , CAST (tmpMIContainer_group.CountProductionOut  AS TFloat) AS CountProductionOut
-        , CAST (tmpMIContainer_group.CountProductionOut * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END  AS TFloat) AS CountProductionOut_Weight
-
-        , CAST (tmpMIContainer_group.CountTotalIn        AS TFloat) AS CountTotalIn
-        , CAST (tmpMIContainer_group.CountTotalIn * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END        AS TFloat) AS CountTotalIn_Weight
-        , CAST (tmpMIContainer_group.CountTotalOut       AS TFloat) AS CountTotalOut
-        , CAST (tmpMIContainer_group.CountTotalOut * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END       AS TFloat) AS CountTotalOut_Weight
-
-        , CAST (tmpMIContainer_group.SummStart            AS TFloat) AS SummStart
-        , CAST (tmpMIContainer_group.SummEnd              AS TFloat) AS SummEnd
-        , CAST (tmpMIContainer_group.SummEnd_calc         AS TFloat) AS SummEnd_calc
-        , CAST (tmpMIContainer_group.SummIncome           AS TFloat) AS SummIncome
-        , CAST (tmpMIContainer_group.SummReturnOut        AS TFloat) AS SummReturnOut
-        , CAST (tmpMIContainer_group.SummSendIn           AS TFloat) AS SummSendIn
-        , CAST (tmpMIContainer_group.SummSendOut          AS TFloat) AS SummSendOut
-        , CAST (tmpMIContainer_group.SummSendOnPriceIn    AS TFloat) AS SummSendOnPriceIn
-        , CAST (tmpMIContainer_group.SummSendOnPriceOut   AS TFloat) AS SummSendOnPriceOut
-        , CAST (tmpMIContainer_group.SummSendOnPrice_10500       AS TFloat) AS SummSendOnPrice_10500
-        , CAST (tmpMIContainer_group.SummSendOnPrice_40200       AS TFloat) AS SummSendOnPrice_40200
-        , CAST (tmpMIContainer_group.SummSale             AS TFloat) AS SummSale
-        , CAST (tmpMIContainer_group.SummSale_10500       AS TFloat) AS SummSale_10500
-        , CAST (tmpMIContainer_group.SummSale_40208       AS TFloat) AS SummSale_40208
-        , CAST (tmpMIContainer_group.SummReturnIn         AS TFloat) AS SummReturnIn
-        , CAST (tmpMIContainer_group.SummReturnIn_40208   AS TFloat) AS SummReturnIn_40208
-        , CAST (tmpMIContainer_group.SummLoss             AS TFloat) AS SummLoss
-        , CAST (tmpMIContainer_group.SummInventory        AS TFloat) AS SummInventory
-        , CAST (tmpMIContainer_group.SummInventory_RePrice AS TFloat) AS SummInventory_RePrice
-        , CAST (tmpMIContainer_group.SummProductionIn     AS TFloat) AS SummProductionIn
-        , CAST (tmpMIContainer_group.SummProductionOut    AS TFloat) AS SummProductionOut
-        , CAST (tmpMIContainer_group.SummTotalIn          AS TFloat) AS SummTotalIn
-        , CAST (tmpMIContainer_group.SummTotalOut         AS TFloat) AS SummTotalOut
-
-        , CAST (CASE WHEN tmpMIContainer_group.CountStart <> 0
-                          THEN tmpMIContainer_group.SummStart / tmpMIContainer_group.CountStart
-                     ELSE 0
-                END AS TFloat) AS PriceStart
-        , CAST (CASE WHEN tmpMIContainer_group.CountEnd <> 0
-                          THEN tmpMIContainer_group.SummEnd / tmpMIContainer_group.CountEnd
-                     ELSE 0
-                END AS TFloat) AS PriceEnd
-
-        , CAST (CASE WHEN tmpMIContainer_group.CountIncome <> 0
-                          THEN tmpMIContainer_group.SummIncome / tmpMIContainer_group.CountIncome
-                     ELSE 0
-                END AS TFloat) AS PriceIncome
-        , CAST (CASE WHEN tmpMIContainer_group.CountReturnOut <> 0
-                          THEN tmpMIContainer_group.SummReturnOut / tmpMIContainer_group.CountReturnOut
-                     ELSE 0
-                END AS TFloat) AS PriceReturnOut
-
-        , CAST (CASE WHEN tmpMIContainer_group.CountSendIn <> 0
-                          THEN tmpMIContainer_group.SummSendIn / tmpMIContainer_group.CountSendIn
-                     ELSE 0
-                END AS TFloat) AS PriceSendIn
-        , CAST (CASE WHEN tmpMIContainer_group.CountSendOut <> 0
-                          THEN tmpMIContainer_group.SummSendOut / tmpMIContainer_group.CountSendOut
-                     ELSE 0
-                END AS TFloat) AS PriceSendOut
-
-        , CAST (CASE WHEN tmpMIContainer_group.CountSendOnPriceIn <> 0
-                          THEN tmpMIContainer_group.SummSendOnPriceIn / tmpMIContainer_group.CountSendOnPriceIn
-                     ELSE 0
-                END AS TFloat) AS PriceSendOnPriceIn
-        , CAST (CASE WHEN tmpMIContainer_group.CountSendOnPriceOut <> 0
-                          THEN tmpMIContainer_group.SummSendOnPriceOut / tmpMIContainer_group.CountSendOnPriceOut
-                     ELSE 0
-                END AS TFloat) AS PriceSendOnPriceOut
-
-        , CAST (CASE WHEN tmpMIContainer_group.CountSale <> 0
-                          THEN tmpMIContainer_group.SummSale / tmpMIContainer_group.CountSale
-                     ELSE 0
-                END AS TFloat) AS PriceSale
-        , CAST (CASE WHEN tmpMIContainer_group.CountReturnIn <> 0
-                          THEN tmpMIContainer_group.SummReturnIn / tmpMIContainer_group.CountReturnIn
-                     ELSE 0
-                END AS TFloat) AS PriceReturnIn
-
-        , CAST (CASE WHEN tmpMIContainer_group.CountLoss <> 0
-                          THEN tmpMIContainer_group.SummLoss / tmpMIContainer_group.CountLoss
-                     ELSE 0
-                END AS TFloat) AS PriceLoss
-        , CAST (CASE WHEN tmpMIContainer_group.CountInventory <> 0
-                          THEN tmpMIContainer_group.SummInventory / tmpMIContainer_group.CountInventory
-                     ELSE 0
-                END AS TFloat) AS PriceInventory
-        , CAST (CASE WHEN tmpMIContainer_group.CountProductionIn <> 0
-                          THEN tmpMIContainer_group.SummProductionIn / tmpMIContainer_group.CountProductionIn
-                     ELSE 0
-                END AS TFloat) AS PriceProductionIn
-        , CAST (CASE WHEN tmpMIContainer_group.CountProductionOut <> 0
-                          THEN tmpMIContainer_group.SummProductionOut / tmpMIContainer_group.CountProductionOut
-                     ELSE 0
-                END AS TFloat) AS PriceProductionOut
-
-        , CAST (CASE WHEN tmpMIContainer_group.CountTotalIn <> 0
-                          THEN tmpMIContainer_group.SummTotalIn / tmpMIContainer_group.CountTotalIn
-                     ELSE 0
-                END AS TFloat) AS PriceTotalIn
-        , CAST (CASE WHEN tmpMIContainer_group.CountTotalOut <> 0
-                          THEN tmpMIContainer_group.SummTotalOut / tmpMIContainer_group.CountTotalOut
-                     ELSE 0
-                END AS TFloat) AS PriceTotalOut
-
-        , tmpMIContainer_group.CountProductionIn_by :: TFloat  -- приход с произв. (если с другого подр., т.е. не пересорт)
-        , (tmpMIContainer_group.CountProductionIn_by * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS CountProductionIn_by_Weight
-        , tmpMIContainer_group.SummProductionIn_by  :: TFloat -- приход с произв. (если с другого подр., т.е. не пересорт)
-        , tmpMIContainer_group.CountIn_by           :: TFloat -- приход с "выбранного" подр.
-        , (tmpMIContainer_group.CountIn_by * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS CountIn_by_Weight
-        , tmpMIContainer_group.SummIn_by            :: TFloat -- приход с "выбранного" подр.
-        , tmpMIContainer_group.CountOtherIn_by      :: TFloat -- приход другой
-        , (tmpMIContainer_group.CountOtherIn_by * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS CountOtherIn_by_Weight
-        , tmpMIContainer_group.SummOtherIn_by       :: TFloat -- приход другой
-
-        , tmpMIContainer_group.CountOut_by      :: TFloat -- расход на "выбранное" подр.
-        , (tmpMIContainer_group.CountOut_by * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS CountOut_by_Weight
-        , tmpMIContainer_group.SummOut_by       :: TFloat -- расход на "выбранное" подр.
-        , tmpMIContainer_group.CountOtherOut_by :: TFloat -- расход другой
-        , (tmpMIContainer_group.CountOtherOut_by * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS CountOtherOut_by_Weight
-        , tmpMIContainer_group.SummOtherOut_by  :: TFloat -- расход другой
-
-        , tmpPriceStart.Price AS PriceListStart
-        , tmpPriceEnd.Price   AS PriceListEnd
-
-        , View_InfoMoney.InfoMoneyId
-        , View_InfoMoney.InfoMoneyCode
-        , View_InfoMoney.InfoMoneyGroupName
-        , View_InfoMoney.InfoMoneyDestinationName
-        , View_InfoMoney.InfoMoneyName
-        , View_InfoMoney.InfoMoneyName_all
-
-        , View_InfoMoneyDetail.InfoMoneyId              AS InfoMoneyId_Detail
-        , View_InfoMoneyDetail.InfoMoneyCode            AS InfoMoneyCode_Detail
-        , View_InfoMoneyDetail.InfoMoneyGroupName       AS InfoMoneyGroupName_Detail
-        , View_InfoMoneyDetail.InfoMoneyDestinationName AS InfoMoneyDestinationName_Detail
-        , View_InfoMoneyDetail.InfoMoneyName            AS InfoMoneyName_Detail
-        , View_InfoMoneyDetail.InfoMoneyName_all        AS InfoMoneyName_all_Detail
-
-        , tmpMIContainer_group.ContainerId              AS ContainerId_Summ
-        , CAST (row_number() OVER () AS INTEGER)        AS LineNum
-
-        , CASE WHEN COALESCE (Object_Car.Id,0) <> 0 THEN 1
-               WHEN Object_Goods.DescId = zc_Object_Asset() THEN 2
-               ELSE 3
-          END                                 ::Integer AS NumGroup_print
-      FROM 
-        (SELECT (tmpMIContainer_all.AccountId) AS AccountId
+, tmpMIContainer_group AS (SELECT (tmpMIContainer_all.AccountId) AS AccountId
               , tmpMIContainer_all.ContainerDescId_count
               , tmpMIContainer_all.ContainerId
               , tmpMIContainer_all.LocationId
@@ -835,100 +577,131 @@ BEGIN
                 , tmpMIContainer_all.GoodsKindId
                 , tmpMIContainer_all.PartionGoodsId
                 , tmpMIContainer_all.AssetToId
-        ) AS tmpMIContainer_group
-
-        LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
-                                      ON CLO_InfoMoney.ContainerId = tmpMIContainer_group.ContainerId
-                                     AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-        LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = CLO_InfoMoney.ObjectId
-        LEFT JOIN ContainerLinkObject AS CLO_InfoMoneyDetail
-                                      ON CLO_InfoMoneyDetail.ContainerId = tmpMIContainer_group.ContainerId
-                                     AND CLO_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
-        LEFT JOIN Object_InfoMoney_View AS View_InfoMoneyDetail ON View_InfoMoneyDetail.InfoMoneyId = CLO_InfoMoneyDetail.ObjectId
-
-        LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMIContainer_group.GoodsId
-        LEFT JOIN ObjectDesc AS ObjectDesc_Goods ON ObjectDesc_Goods.Id = Object_Goods.DescId
-        LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMIContainer_group.GoodsKindId
-        LEFT JOIN Object AS Object_Location_find ON Object_Location_find.Id = tmpMIContainer_group.LocationId
-        LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Location_find.DescId
-
-        LEFT JOIN Object AS Object_Location ON Object_Location.Id = tmpMIContainer_group.LocationId
-        --если место учета водитель то по нему получаем авто
-        LEFT JOIN tmpCarDriver ON tmpCarDriver.MemberId = tmpMIContainer_group.LocationId 
-
-        LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                             ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
-                            AND ObjectLink_Goods_GoodsGroup.DescId in (zc_ObjectLink_Goods_GoodsGroup(), zc_ObjectLink_Asset_AssetGroup())
-        LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
-
-        LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
-                                                        AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-        LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-
-        LEFT JOIN ObjectString AS ObjectString_Asset_InvNumber ON ObjectString_Asset_InvNumber.ObjectId = Object_Goods.Id
-                                                              AND ObjectString_Asset_InvNumber.DescId = zc_ObjectString_Asset_InvNumber()
-
-        LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
-                               ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
-                              AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-        LEFT JOIN ObjectFloat AS ObjectFloat_Weight ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
-                             AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-
-        LEFT JOIN ObjectLink AS ObjectLink_Asset_Car
-                             ON ObjectLink_Asset_Car.ObjectId = Object_Goods.Id
-                            AND ObjectLink_Asset_Car.DescId = zc_ObjectLink_Asset_Car()
-        LEFT JOIN Object AS Object_Car ON Object_Car.Id = COALESCE (ObjectLink_Asset_Car.ChildObjectId, tmpCarDriver.CarId)
-
-        LEFT JOIN ObjectLink AS Car_CarModel
-                             ON Car_CarModel.ObjectId = Object_Car.Id
-                            AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
-        LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = Car_CarModel.ChildObjectId
+        ) 
+  --оптимизация
+ , tmpInfoMoney_View AS (SELECT *
+                         FROM Object_InfoMoney_View
+                        )
  
-        LEFT JOIN ObjectLink AS Car_CarType
-                             ON Car_CarType.ObjectId = Object_Car.Id
-                            AND Car_CarType.DescId = zc_ObjectLink_Car_CarType()
-        LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = Car_CarType.ChildObjectId
- 
-        LEFT JOIN ObjectLink AS Car_BodyType
-                             ON Car_BodyType.ObjectId = Object_Car.Id
-                            AND Car_BodyType.DescId = zc_ObjectLink_Car_BodyType()
-        LEFT JOIN Object AS Object_BodyType ON Object_BodyType.Id = Car_BodyType.ChildObjectId
- 
-        LEFT JOIN ObjectString AS ObjectString_EngineNum
-                               ON ObjectString_EngineNum.ObjectId = Object_Car.Id
-                              AND ObjectString_EngineNum.DescId = zc_ObjectString_Car_EngineNum()
+ , tmpAccount_View AS (SELECT *
+                       FROM Object_Account_View
+                       )
 
-        LEFT JOIN ObjectString AS RegistrationCertificate 
-                               ON RegistrationCertificate.ObjectId = Object_Car.Id 
-                              AND RegistrationCertificate.DescId = zc_ObjectString_Car_RegistrationCertificate()
-        LEFT JOIN ObjectString AS ObjectString_VIN
-                               ON ObjectString_VIN.ObjectId = Object_Car.Id
-                              AND ObjectString_VIN.DescId = zc_ObjectString_Car_VIN()
-        LEFT JOIN ObjectFloat AS ObjectFloat_Year
-                              ON ObjectFloat_Year.ObjectId = Object_Car.Id
-                             AND ObjectFloat_Year.DescId = zc_ObjectFloat_Car_Year()
+ , tmpCLO_InfoMoney AS (SELECT *
+                       FROM ContainerLinkObject
+                       WHERE ContainerLinkObject.ContainerId IN (SELECT DISTINCT tmpMIContainer_group.ContainerId FROM tmpMIContainer_group)
+                         AND ContainerLinkObject.DescId = zc_ContainerLinkObject_InfoMoney()
+                        )    
 
-        LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMIContainer_group.PartionGoodsId
-        LEFT JOIN Object AS Object_AssetTo ON Object_AssetTo.Id = tmpMIContainer_group.AssetToId
+ , tmpCLO_InfoMoneyDetail AS (SELECT *
+                       FROM ContainerLinkObject
+                       WHERE ContainerLinkObject.ContainerId IN (SELECT DISTINCT tmpMIContainer_group.ContainerId FROM tmpMIContainer_group)
+                         AND ContainerLinkObject.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
+                        )   
+   
+ , tmpGoods_param AS (SELECT Object_GoodsGroup.Id           AS GoodsGroupId
+                           , Object_GoodsGroup.ValueData    AS GoodsGroupName
+                           , ObjectString_Goods_GroupNameFull.ValueData         AS GoodsGroupNameFull
+                           , ObjectDesc_Goods.ItemName      AS GoodsDescName
+                           , CAST (COALESCE(Object_Goods.Id, 0) AS Integer)     AS GoodsId
+                           , Object_Goods.ObjectCode        AS GoodsCode
+                           , CAST (COALESCE(Object_Goods.ValueData, '') AS TVarChar)        AS GoodsName
+                           , Object_Goods.DescId            AS DescId_goods
+                           , Object_Measure.Id              AS MeasureId
+                           , Object_Measure.ValueData       AS MeasureName  
+                           , ObjectFloat_Weight.ValueData   AS Weight
+                           , ObjectString_Asset_InvNumber.ValueData  AS Asset_InvNumber
+                           , ObjectLink_Asset_Car.ChildObjectId AS CarId
+             
+                      
+                      FROM (SELECT DISTINCT tmpMIContainer_group.GoodsId FROM tmpMIContainer_group) AS tmpGoods
+                          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoods.GoodsId
+                          LEFT JOIN ObjectDesc AS ObjectDesc_Goods ON ObjectDesc_Goods.Id = Object_Goods.DescId
 
-        LEFT JOIN ObjectLink AS ObjectLink_AssetTo_GoodsGroup
-                             ON ObjectLink_AssetTo_GoodsGroup.ObjectId = Object_AssetTo.Id
-                            AND ObjectLink_AssetTo_GoodsGroup.DescId = zc_ObjectLink_Asset_AssetGroup()
-        LEFT JOIN Object AS Object_AssetToGroup ON Object_AssetToGroup.Id = ObjectLink_AssetTo_GoodsGroup.ChildObjectId
+                          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                               ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpGoods.GoodsId
+                                              AND ObjectLink_Goods_GoodsGroup.DescId in (zc_ObjectLink_Goods_GoodsGroup(), zc_ObjectLink_Asset_AssetGroup())
+                          LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
-        LEFT JOIN ObjectLink AS ObjectLink_Goods
-                             ON ObjectLink_Goods.ObjectId = tmpMIContainer_group.PartionGoodsId
+                          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure 
+                                               ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId
+                                              AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                          LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+                  
+                          LEFT JOIN ObjectString AS ObjectString_Asset_InvNumber
+                                                 ON ObjectString_Asset_InvNumber.ObjectId = tmpGoods.GoodsId
+                                                AND ObjectString_Asset_InvNumber.DescId = zc_ObjectString_Asset_InvNumber()
+                  
+                          LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
+                                                 ON ObjectString_Goods_GroupNameFull.ObjectId = tmpGoods.GoodsId
+                                                AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+                          LEFT JOIN ObjectFloat AS ObjectFloat_Weight ON ObjectFloat_Weight.ObjectId = tmpGoods.GoodsId
+                                               AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                  
+                          LEFT JOIN ObjectLink AS ObjectLink_Asset_Car
+                                               ON ObjectLink_Asset_Car.ObjectId = tmpGoods.GoodsId
+                                              AND ObjectLink_Asset_Car.DescId = zc_ObjectLink_Asset_Car()
+      
+                  )
+
+ , tmpPartionGoods_param AS (SELECT tmp.PartionGoodsId 
+        , Object_PartionGoods.ObjectCode AS PartionGoodsCode
+        , Object_PartionGoods.ValueData  AS PartionGoodsName
+        , ObjectDate_Release.ValueData             ::TDateTime  AS Release_Partion
+        , ObjectFloat_PartionGoods_Price.ValueData :: TFloat    AS Price_Partion
+        , ObjectString_PartNumber.ValueData        :: TVarChar  AS PartNumber_Partion
+        , Object_PartionModel.ValueData            :: TVarChar  AS Model_Partion
+        , Object_Partner_Partion.ValueData         :: TVarChar  AS PartnerName_Partion
+        , Object_Unit_Storage.ValueData            :: TVarChar  AS UnitName_Storage
+        , Object_Branch_Storage.ValueData          :: TVarChar  AS BranchName_Storage
+        , Object_AreaUnit_Storage.ValueData        :: TVarChar  AS AreaUnitName_Storage
+        , ObjectString_Storage_Room.ValueData      :: TVarChar  AS Room_Storage
+        , ObjectString_Storage_Address.ValueData   :: TVarChar  AS Address_Storage
+        , Object_Asset_PartionModel.ValueData   ::TVarChar AS PartionModelName_asset
+        , COALESCE (ObjectFloat_KW.ValueData,0) :: TFloat  AS KW_asset
+
+        , Object_Storage.ValueData       AS StorageName
+        , Object_Unit.ObjectCode         AS UnitCode
+        , Object_Unit.ValueData          AS UnitName
+        ,  COALESCE(ObjectDate_PartionGoods_Value.ValueData,Null) ::TDateTime AS PartionGoodsDate
+                             FROM (SELECT DISTINCT tmpMIContainer_group.PartionGoodsId FROM tmpMIContainer_group) AS tmp
+                               LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmp.PartionGoodsId
+                               
+ LEFT JOIN ObjectLink AS ObjectLink_Goods
+                             ON ObjectLink_Goods.ObjectId = tmp.PartionGoodsId
                             AND ObjectLink_Goods.DescId = zc_ObjectLink_PartionGoods_Goods()
         LEFT JOIN ObjectLink AS ObjectLink_Unit
-                             ON ObjectLink_Unit.ObjectId = tmpMIContainer_group.PartionGoodsId
+                             ON ObjectLink_Unit.ObjectId = tmp.PartionGoodsId
                             AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
+
         LEFT JOIN ObjectLink AS ObjectLink_Storage
-                             ON ObjectLink_Storage.ObjectId = tmpMIContainer_group.PartionGoodsId
+                             ON ObjectLink_Storage.ObjectId = tmp.PartionGoodsId
                             AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
         LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = ObjectLink_Storage.ChildObjectId
+        
+ LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value
+                             ON ObjectDate_PartionGoods_Value.ObjectId = tmp.PartionGoodsId
+                            AND ObjectDate_PartionGoods_Value.DescId = zc_ObjectDate_PartionGoods_Value()
 
-        LEFT JOIN ObjectDate AS ObjectDate_Release
+        LEFT JOIN ObjectFloat AS ObjectFloat_PartionGoods_Price
+                              ON ObjectFloat_PartionGoods_Price.ObjectId = tmp.PartionGoodsId
+                             AND ObjectFloat_PartionGoods_Price.DescId = zc_ObjectFloat_PartionGoods_Price()
+
+        LEFT JOIN ObjectLink AS ObjectLink_PartionModel
+                             ON ObjectLink_PartionModel.ObjectId = tmp.PartionGoodsId
+                            AND ObjectLink_PartionModel.DescId   = zc_ObjectLink_PartionGoods_PartionModel()
+        LEFT JOIN Object AS Object_PartionModel ON Object_PartionModel.Id = ObjectLink_PartionModel.ChildObjectId
+        LEFT JOIN ObjectString AS ObjectString_PartNumber
+                               ON ObjectString_PartNumber.ObjectId = tmp.PartionGoodsId
+                              AND ObjectString_PartNumber.DescId   = zc_ObjectString_PartionGoods_PartNumber()
+
+        LEFT JOIN ObjectLink AS ObjectLink_PartionGoods_Partner
+                             ON ObjectLink_PartionGoods_Partner.ObjectId = tmp.PartionGoodsId
+                            AND ObjectLink_PartionGoods_Partner.DescId   = zc_ObjectLink_PartionGoods_Partner()
+        LEFT JOIN Object AS Object_Partner_Partion ON Object_Partner_Partion.Id = ObjectLink_PartionGoods_Partner.ChildObjectId
+
+LEFT JOIN ObjectDate AS ObjectDate_Release
                              ON ObjectDate_Release.ObjectId = ObjectLink_Goods.ChildObjectId
                             AND ObjectDate_Release.DescId = zc_ObjectDate_Asset_Release()  
 
@@ -962,41 +735,347 @@ BEGIN
                             AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
         LEFT JOIN Object AS Object_Branch_Storage ON Object_Branch_Storage.Id = ObjectLink_Unit_Branch.ChildObjectId
 
-        LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value
-                             ON ObjectDate_PartionGoods_Value.ObjectId = tmpMIContainer_group.PartionGoodsId
-                            AND ObjectDate_PartionGoods_Value.DescId = zc_ObjectDate_PartionGoods_Value()
+        )        
+   , tmpMov_partion AS (
+                       SELECT tmp.PartionGoodsCode
+                             , zfCalc_PartionMovementName (Movement_PartionGoods.DescId, MovementDesc_PartionGoods.ItemName, Movement_PartionGoods.InvNumber, Movement_PartionGoods.OperDate) AS MovementPartionGoods_InvNumber
+                             , Object_Partner.ObjectCode      AS PartnerCode
+                             , Object_Partner.ValueData       AS PartnerName
+                       FROM (SELECT DISTINCT tmpPartionGoods_param.PartionGoodsCode FROM tmpPartionGoods_param) AS tmp
+                            LEFT JOIN Movement AS Movement_PartionGoods ON Movement_PartionGoods.Id = tmp.PartionGoodsCode
+                            LEFT JOIN MovementDesc AS MovementDesc_PartionGoods ON MovementDesc_PartionGoods.Id = Movement_PartionGoods.DescId
 
-        LEFT JOIN ObjectFloat AS ObjectFloat_PartionGoods_Price
-                              ON ObjectFloat_PartionGoods_Price.ObjectId = tmpMIContainer_group.PartionGoodsId
-                             AND ObjectFloat_PartionGoods_Price.DescId = zc_ObjectFloat_PartionGoods_Price()
+                            LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement_PartionGoods.Id
+                                                                    AND MLO_From.DescId = zc_MovementLinkObject_From()
+                            LEFT JOIN MovementItem AS MI_From ON MI_From.MovementId = Movement_PartionGoods.Id
+                                                             AND MI_From.DescId = zc_MI_Master()
+                                                             AND Movement_PartionGoods.DescId = zc_Movement_Service()
+                           LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = COALESCE (MI_From.ObjectId, MLO_From.ObjectId)
+                       )                                 
+                                       
+   -- Результат
+   SELECT View_Account.AccountGroupName, View_Account.AccountDirectionName
+        , View_Account.AccountId, View_Account.AccountCode, View_Account.AccountName
+        , (CASE WHEN tmpMIContainer_group.ContainerDescId_count IN (zc_Container_CountAsset(), zc_Container_SummAsset()) THEN '*з* ' ELSE '' END || COALESCE (View_Account.AccountName_all, '')) :: TVarChar AS AccountName_all
+        , ObjectDesc.ItemName            AS LocationDescName
+        , CAST (COALESCE(Object_Location.Id, 0) AS Integer)             AS LocationId
+        , Object_Location.ObjectCode     AS LocationCode
+        , CAST (COALESCE(Object_Location.ValueData,'') AS TVarChar)     AS LocationName
 
-        LEFT JOIN ObjectLink AS ObjectLink_PartionModel
-                             ON ObjectLink_PartionModel.ObjectId = tmpMIContainer_group.PartionGoodsId
-                            AND ObjectLink_PartionModel.DescId   = zc_ObjectLink_PartionGoods_PartionModel()
-        LEFT JOIN Object AS Object_PartionModel ON Object_PartionModel.Id = ObjectLink_PartionModel.ChildObjectId
-        LEFT JOIN ObjectString AS ObjectString_PartNumber
-                               ON ObjectString_PartNumber.ObjectId = tmpMIContainer_group.PartionGoodsId
-                              AND ObjectString_PartNumber.DescId   = zc_ObjectString_PartionGoods_PartNumber()
+        , tmpGoods_param.GoodsGroupId
+        , tmpGoods_param.GoodsGroupName
+        , tmpGoods_param.GoodsGroupNameFull
+        , tmpGoods_param.GoodsDescName
+        , tmpGoods_param.GoodsId
+        , tmpGoods_param.GoodsCode
+        , tmpGoods_param.GoodsName
+        , CAST (COALESCE(Object_GoodsKind.Id, 0) AS Integer)             AS GoodsKindId
+        , CAST (COALESCE(Object_GoodsKind.ValueData, '') AS TVarChar)    AS GoodsKindName
+        
+        , tmpGoods_param.MeasureName  
+        , tmpGoods_param.Weight
 
-        LEFT JOIN ObjectLink AS ObjectLink_PartionGoods_Partner
-                             ON ObjectLink_PartionGoods_Partner.ObjectId = tmpMIContainer_group.PartionGoodsId
-                            AND ObjectLink_PartionGoods_Partner.DescId   = zc_ObjectLink_PartionGoods_Partner()
-        LEFT JOIN Object AS Object_Partner_Partion ON Object_Partner_Partion.Id = ObjectLink_PartionGoods_Partner.ChildObjectId
+        , CAST (COALESCE(tmpPartionGoods_param.PartionGoodsId, 0) AS Integer)              AS PartionGoodsId
+        , COALESCE ( tmpGoods_param.Asset_InvNumber, tmpPartionGoods_param.PartionGoodsName,'') :: TVarChar AS PartionGoodsName
+        , COALESCE(tmpPartionGoods_param.PartionGoodsDate,Null) ::TDateTime AS PartionGoodsDate   --дата ввода в эксплуатацию
+        , tmpMov_partion.MovementPartionGoods_InvNumber
 
-        LEFT JOIN Movement AS Movement_PartionGoods ON Movement_PartionGoods.Id = Object_PartionGoods.ObjectCode
-        LEFT JOIN MovementDesc AS MovementDesc_PartionGoods ON MovementDesc_PartionGoods.Id = Movement_PartionGoods.DescId
+        , tmpPartionGoods_param.PartionModelName_asset   ::TVarChar AS PartionModelName_asset
+        , tmpPartionGoods_param.KW_asset                 :: TFloat  AS KW_asset
 
-        LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement_PartionGoods.Id
-                                                AND MLO_From.DescId = zc_MovementLinkObject_From()
-        LEFT JOIN MovementItem AS MI_From ON MI_From.MovementId = Movement_PartionGoods.Id
-                                         AND MI_From.DescId = zc_MI_Master()
-                                         AND Movement_PartionGoods.DescId = zc_Movement_Service()
-       LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = COALESCE (MI_From.ObjectId, MLO_From.ObjectId)
+        , Object_AssetTo.ObjectCode      AS AssetToCode
+        , Object_AssetTo.ValueData       AS AssetToName
+        , Object_AssetToGroup.ValueData  AS AssetToGroupName
 
-       LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = tmpMIContainer_group.AccountId
+        , tmpMov_partion.PartnerCode
+        , tmpMov_partion.PartnerName
+
+        , tmpPartionGoods_param.StorageName
+        , tmpPartionGoods_param.UnitCode
+        , tmpPartionGoods_param.UnitName
+
+        , Object_Car.ValueData           AS CarName  --гос номер авто
+        , ObjectString_EngineNum.ValueData  :: TVarChar AS EngineNum  
+        , ObjectString_VIN.ValueData        :: TVarChar AS VIN
+        , RegistrationCertificate.ValueData :: TVarChar AS RegistrationCertificate
+        , Object_CarModel.ObjectCode AS CarModelCode
+        , Object_CarModel.ValueData  AS CarModelName 
+        , Object_CarType.ObjectCode  AS CarTypeCode
+        , Object_CarType.ValueData   AS CarTypeName
+        , Object_BodyType.ObjectCode AS BodyTypeCode
+        , Object_BodyType.ValueData  AS BodyTypeName 
+        , COALESCE (ObjectFloat_Year.ValueData,0) :: TFloat  AS Year_car
+
+        , tmpPartionGoods_param.Release_Partion      ::TDateTime  AS Release_Partion
+        , tmpPartionGoods_param.Price_Partion        :: TFloat    AS Price_Partion
+        , tmpPartionGoods_param.PartNumber_Partion   :: TVarChar  AS PartNumber_Partion
+        , tmpPartionGoods_param.Model_Partion        :: TVarChar  AS Model_Partion
+        , tmpPartionGoods_param.PartnerName_Partion  :: TVarChar  AS PartnerName_Partion
+        , tmpPartionGoods_param.UnitName_Storage     :: TVarChar  AS UnitName_Storage
+        , tmpPartionGoods_param.BranchName_Storage   :: TVarChar  AS BranchName_Storage
+        , tmpPartionGoods_param.AreaUnitName_Storage :: TVarChar  AS AreaUnitName_Storage
+        , tmpPartionGoods_param.Room_Storage         :: TVarChar  AS Room_Storage
+        , tmpPartionGoods_param.Address_Storage      :: TVarChar  AS Address_Storage
+                
+
+        , CAST (tmpMIContainer_group.CountStart          AS TFloat) AS CountStart
+        , CAST (tmpMIContainer_group.CountStart * CASE WHEN tmpGoods_param.MeasureId = zc_Measure_Sh() THEN tmpGoods_param.Weight ELSE 1 END          AS TFloat) AS CountStart_Weight
+        , CAST (tmpMIContainer_group.CountEnd            AS TFloat) AS CountEnd
+        , CAST (tmpMIContainer_group.CountEnd * CASE WHEN tmpGoods_param.MeasureId = zc_Measure_Sh() THEN tmpGoods_param.Weight ELSE 1 END            AS TFloat) AS CountEnd_Weight
+        , CAST (tmpMIContainer_group.CountEnd_calc       AS TFloat) AS CountEnd_calc
+        , CAST (tmpMIContainer_group.CountEnd_calc * CASE WHEN tmpGoods_param.MeasureId = zc_Measure_Sh() THEN tmpGoods_param.Weight ELSE 1 END       AS TFloat) AS CountEnd_calc_Weight
+
+        , CAST (tmpMIContainer_group.CountIncome         AS TFloat) AS CountIncome
+        , CAST (tmpMIContainer_group.CountIncome * CASE WHEN tmpGoods_param.MeasureId = zc_Measure_Sh() THEN tmpGoods_param.Weight ELSE 1 END         AS TFloat) AS CountIncome_Weight
+        , CAST (tmpMIContainer_group.CountReturnOut      AS TFloat) AS CountReturnOut
+        , CAST (tmpMIContainer_group.CountReturnOut * CASE WHEN tmpGoods_param.MeasureId = zc_Measure_Sh() THEN tmpGoods_param.Weight ELSE 1 END      AS TFloat) AS CountReturnOut_Weight
+
+        , CAST (tmpMIContainer_group.CountSendIn         AS TFloat) AS CountSendIn
+        , CAST (tmpMIContainer_group.CountSendIn * CASE WHEN tmpGoods_param.MeasureId = zc_Measure_Sh() THEN tmpGoods_param.Weight ELSE 1 END         AS TFloat) AS CountSendIn_Weight
+        , CAST (tmpMIContainer_group.CountSendOut        AS TFloat) AS CountSendOut
+        , CAST (tmpMIContainer_group.CountSendOut * CASE WHEN tmpGoods_param.MeasureId = zc_Measure_Sh() THEN tmpGoods_param.Weight ELSE 1 END        AS TFloat) AS CountSendOut_Weight
+
+        , CAST (tmpMIContainer_group.CountSendOnPriceIn  AS TFloat) AS CountSendOnPriceIn
+        , CAST (tmpMIContainer_group.CountSendOnPriceIn * CASE WHEN tmpGoods_param.MeasureId = zc_Measure_Sh() THEN tmpGoods_param.Weight ELSE 1 END  AS TFloat) AS CountSendOnPriceIn_Weight
+
+        , CAST (tmpMIContainer_group.CountSendOnPrice_10500  AS TFloat) AS CountSendOnPrice_10500
+        , CAST (tmpMIContainer_group.CountSendOnPrice_10500 * CASE WHEN tmpGoods_param.MeasureId = zc_Measure_Sh() THEN tmpGoods_param.Weight ELSE 1 END  AS TFloat) AS CountSendOnPrice_10500_Weight
+        , CAST (tmpMIContainer_group.CountSendOnPrice_40200  AS TFloat) AS CountSendOnPrice_40200
+        , CAST (tmpMIContainer_group.CountSendOnPrice_40200 * CASE WHEN tmpGoods_param.MeasureId = zc_Measure_Sh() THEN tmpGoods_param.Weight ELSE 1 END  AS TFloat) AS CountSendOnPrice_40200_Weight
+        
+        
+        , CAST (tmpMIContainer_group.CountSendOnPriceOut AS TFloat) AS CountSendOnPriceOut
+        , CAST (tmpMIContainer_group.CountSendOnPriceOut * CASE WHEN tmpGoods_param.MeasureId = zc_Measure_Sh() THEN tmpGoods_param.Weight ELSE 1 END AS TFloat) AS CountSendOnPriceOut_Weight
+
+        , CAST (tmpMIContainer_group.CountSale           AS TFloat) AS CountSale
+        , CAST (tmpMIContainer_group.CountSale * CASE WHEN tmpGoods_param.MeasureId = zc_Measure_Sh() THEN tmpGoods_param.Weight ELSE 1 END           AS TFloat) AS CountSale_Weight
+        , CAST (tmpMIContainer_group.CountSale_10500     AS TFloat) AS CountSale_10500
+        , CAST (tmpMIContainer_group.CountSale_10500 * CASE WHEN tmpGoods_param.MeasureId = zc_Measure_Sh() THEN tmpGoods_param.Weight ELSE 1 END     AS TFloat) AS CountSale_10500_Weight
+        , CAST (tmpMIContainer_group.CountSale_40208     AS TFloat) AS CountSale_40208
+        , CAST (tmpMIContainer_group.CountSale_40208 * CASE WHEN tmpGoods_param.MeasureId = zc_Measure_Sh() THEN tmpGoods_param.Weight ELSE 1 END     AS TFloat) AS CountSale_40208_Weight
+
+        , CAST (tmpMIContainer_group.CountReturnIn       AS TFloat) AS CountReturnIn
+        , CAST (tmpMIContainer_group.CountReturnIn * CASE WHEN tmpGoods_param.MeasureId = zc_Measure_Sh() THEN tmpGoods_param.Weight ELSE 1 END       AS TFloat) AS CountReturnIn_Weight
+        , CAST (tmpMIContainer_group.CountReturnIn_40208 AS TFloat) AS CountReturnIn_40208
+        , CAST (tmpMIContainer_group.CountReturnIn_40208 * CASE WHEN tmpGoods_param.MeasureId = zc_Measure_Sh() THEN tmpGoods_param.Weight ELSE 1 END AS TFloat) AS CountReturnIn_40208_Weight
+
+        , CAST (tmpMIContainer_group.CountLoss           AS TFloat) AS CountLoss
+        , CAST (tmpMIContainer_group.CountLoss * CASE WHEN tmpGoods_param.MeasureId = zc_Measure_Sh() THEN tmpGoods_param.Weight ELSE 1 END           AS TFloat) AS CountLoss_Weight
+        , CAST (tmpMIContainer_group.CountInventory      AS TFloat) AS CountInventory
+        , CAST (tmpMIContainer_group.CountInventory * CASE WHEN tmpGoods_param.MeasureId = zc_Measure_Sh() THEN tmpGoods_param.Weight ELSE 1 END      AS TFloat) AS CountInventory_Weight
+
+        , CAST (tmpMIContainer_group.CountProductionIn   AS TFloat) AS CountProductionIn
+        , CAST (tmpMIContainer_group.CountProductionIn * CASE WHEN tmpGoods_param.MeasureId = zc_Measure_Sh() THEN tmpGoods_param.Weight ELSE 1 END   AS TFloat) AS CountProductionIn_Weight
+        , CAST (tmpMIContainer_group.CountProductionOut  AS TFloat) AS CountProductionOut
+        , CAST (tmpMIContainer_group.CountProductionOut * CASE WHEN tmpGoods_param.MeasureId = zc_Measure_Sh() THEN tmpGoods_param.Weight ELSE 1 END  AS TFloat) AS CountProductionOut_Weight
+
+        , CAST (tmpMIContainer_group.CountTotalIn        AS TFloat) AS CountTotalIn
+        , CAST (tmpMIContainer_group.CountTotalIn * CASE WHEN tmpGoods_param.MeasureId = zc_Measure_Sh() THEN tmpGoods_param.Weight ELSE 1 END        AS TFloat) AS CountTotalIn_Weight
+        , CAST (tmpMIContainer_group.CountTotalOut       AS TFloat) AS CountTotalOut
+        , CAST (tmpMIContainer_group.CountTotalOut * CASE WHEN tmpGoods_param.MeasureId = zc_Measure_Sh() THEN tmpGoods_param.Weight ELSE 1 END       AS TFloat) AS CountTotalOut_Weight
+
+        , CAST (tmpMIContainer_group.SummStart            AS TFloat) AS SummStart
+        , CAST (tmpMIContainer_group.SummEnd              AS TFloat) AS SummEnd
+        , CAST (tmpMIContainer_group.SummEnd_calc         AS TFloat) AS SummEnd_calc
+        , CAST (tmpMIContainer_group.SummIncome           AS TFloat) AS SummIncome
+        , CAST (tmpMIContainer_group.SummReturnOut        AS TFloat) AS SummReturnOut
+        , CAST (tmpMIContainer_group.SummSendIn           AS TFloat) AS SummSendIn
+        , CAST (tmpMIContainer_group.SummSendOut          AS TFloat) AS SummSendOut
+        , CAST (tmpMIContainer_group.SummSendOnPriceIn    AS TFloat) AS SummSendOnPriceIn
+        , CAST (tmpMIContainer_group.SummSendOnPriceOut   AS TFloat) AS SummSendOnPriceOut
+        , CAST (tmpMIContainer_group.SummSendOnPrice_10500       AS TFloat) AS SummSendOnPrice_10500
+        , CAST (tmpMIContainer_group.SummSendOnPrice_40200       AS TFloat) AS SummSendOnPrice_40200
+        , CAST (tmpMIContainer_group.SummSale             AS TFloat) AS SummSale
+        , CAST (tmpMIContainer_group.SummSale_10500       AS TFloat) AS SummSale_10500
+        , CAST (tmpMIContainer_group.SummSale_40208       AS TFloat) AS SummSale_40208
+        , CAST (tmpMIContainer_group.SummReturnIn         AS TFloat) AS SummReturnIn
+        , CAST (tmpMIContainer_group.SummReturnIn_40208   AS TFloat) AS SummReturnIn_40208
+        , CAST (tmpMIContainer_group.SummLoss             AS TFloat) AS SummLoss
+        , CAST (tmpMIContainer_group.SummInventory        AS TFloat) AS SummInventory
+        , CAST (tmpMIContainer_group.SummInventory_RePrice AS TFloat) AS SummInventory_RePrice
+        , CAST (tmpMIContainer_group.SummProductionIn     AS TFloat) AS SummProductionIn
+        , CAST (tmpMIContainer_group.SummProductionOut    AS TFloat) AS SummProductionOut
+        , CAST (tmpMIContainer_group.SummTotalIn          AS TFloat) AS SummTotalIn
+        , CAST (tmpMIContainer_group.SummTotalOut         AS TFloat) AS SummTotalOut
+
+        , CAST (CASE WHEN tmpMIContainer_group.CountStart <> 0
+                          THEN tmpMIContainer_group.SummStart / tmpMIContainer_group.CountStart
+                     ELSE 0
+                END AS TFloat) AS PriceStart
+        , CAST (CASE WHEN tmpMIContainer_group.CountEnd <> 0
+                          THEN tmpMIContainer_group.SummEnd / tmpMIContainer_group.CountEnd
+                     ELSE 0
+                END AS TFloat) AS PriceEnd
+
+        , CAST (CASE WHEN tmpMIContainer_group.CountIncome <> 0
+                          THEN tmpMIContainer_group.SummIncome / tmpMIContainer_group.CountIncome
+                     ELSE 0
+                END AS TFloat) AS PriceIncome
+        , CAST (CASE WHEN tmpMIContainer_group.CountReturnOut <> 0
+                          THEN tmpMIContainer_group.SummReturnOut / tmpMIContainer_group.CountReturnOut
+                     ELSE 0
+                END AS TFloat) AS PriceReturnOut
+
+        , CAST (CASE WHEN tmpMIContainer_group.CountSendIn <> 0
+                          THEN tmpMIContainer_group.SummSendIn / tmpMIContainer_group.CountSendIn
+                     ELSE 0
+                END AS TFloat) AS PriceSendIn
+        , CAST (CASE WHEN tmpMIContainer_group.CountSendOut <> 0
+                          THEN tmpMIContainer_group.SummSendOut / tmpMIContainer_group.CountSendOut
+                     ELSE 0
+                END AS TFloat) AS PriceSendOut
+
+        , CAST (CASE WHEN tmpMIContainer_group.CountSendOnPriceIn <> 0
+                          THEN tmpMIContainer_group.SummSendOnPriceIn / tmpMIContainer_group.CountSendOnPriceIn
+                     ELSE 0
+                END AS TFloat) AS PriceSendOnPriceIn
+        , CAST (CASE WHEN tmpMIContainer_group.CountSendOnPriceOut <> 0
+                          THEN tmpMIContainer_group.SummSendOnPriceOut / tmpMIContainer_group.CountSendOnPriceOut
+                     ELSE 0
+                END AS TFloat) AS PriceSendOnPriceOut
+
+        , CAST (CASE WHEN tmpMIContainer_group.CountSale <> 0
+                          THEN tmpMIContainer_group.SummSale / tmpMIContainer_group.CountSale
+                     ELSE 0
+                END AS TFloat) AS PriceSale
+        , CAST (CASE WHEN tmpMIContainer_group.CountReturnIn <> 0
+                          THEN tmpMIContainer_group.SummReturnIn / tmpMIContainer_group.CountReturnIn
+                     ELSE 0
+                END AS TFloat) AS PriceReturnIn
+
+        , CAST (CASE WHEN tmpMIContainer_group.CountLoss <> 0
+                          THEN tmpMIContainer_group.SummLoss / tmpMIContainer_group.CountLoss
+                     ELSE 0
+                END AS TFloat) AS PriceLoss
+        , CAST (CASE WHEN tmpMIContainer_group.CountInventory <> 0
+                          THEN tmpMIContainer_group.SummInventory / tmpMIContainer_group.CountInventory
+                     ELSE 0
+                END AS TFloat) AS PriceInventory
+        , CAST (CASE WHEN tmpMIContainer_group.CountProductionIn <> 0
+                          THEN tmpMIContainer_group.SummProductionIn / tmpMIContainer_group.CountProductionIn
+                     ELSE 0
+                END AS TFloat) AS PriceProductionIn
+        , CAST (CASE WHEN tmpMIContainer_group.CountProductionOut <> 0
+                          THEN tmpMIContainer_group.SummProductionOut / tmpMIContainer_group.CountProductionOut
+                     ELSE 0
+                END AS TFloat) AS PriceProductionOut
+
+        , CAST (CASE WHEN tmpMIContainer_group.CountTotalIn <> 0
+                          THEN tmpMIContainer_group.SummTotalIn / tmpMIContainer_group.CountTotalIn
+                     ELSE 0
+                END AS TFloat) AS PriceTotalIn
+        , CAST (CASE WHEN tmpMIContainer_group.CountTotalOut <> 0
+                          THEN tmpMIContainer_group.SummTotalOut / tmpMIContainer_group.CountTotalOut
+                     ELSE 0
+                END AS TFloat) AS PriceTotalOut
+
+        , tmpMIContainer_group.CountProductionIn_by :: TFloat  -- приход с произв. (если с другого подр., т.е. не пересорт)
+        , (tmpMIContainer_group.CountProductionIn_by * CASE WHEN tmpGoods_param.MeasureId = zc_Measure_Sh() THEN tmpGoods_param.Weight ELSE 1 END) :: TFloat AS CountProductionIn_by_Weight
+        , tmpMIContainer_group.SummProductionIn_by  :: TFloat -- приход с произв. (если с другого подр., т.е. не пересорт)
+        , tmpMIContainer_group.CountIn_by           :: TFloat -- приход с "выбранного" подр.
+        , (tmpMIContainer_group.CountIn_by * CASE WHEN tmpGoods_param.MeasureId = zc_Measure_Sh() THEN tmpGoods_param.Weight ELSE 1 END) :: TFloat AS CountIn_by_Weight
+        , tmpMIContainer_group.SummIn_by            :: TFloat -- приход с "выбранного" подр.
+        , tmpMIContainer_group.CountOtherIn_by      :: TFloat -- приход другой
+        , (tmpMIContainer_group.CountOtherIn_by * CASE WHEN tmpGoods_param.MeasureId = zc_Measure_Sh() THEN tmpGoods_param.Weight ELSE 1 END) :: TFloat AS CountOtherIn_by_Weight
+        , tmpMIContainer_group.SummOtherIn_by       :: TFloat -- приход другой
+
+        , tmpMIContainer_group.CountOut_by      :: TFloat -- расход на "выбранное" подр.
+        , (tmpMIContainer_group.CountOut_by * CASE WHEN tmpGoods_param.MeasureId = zc_Measure_Sh() THEN tmpGoods_param.Weight ELSE 1 END) :: TFloat AS CountOut_by_Weight
+        , tmpMIContainer_group.SummOut_by       :: TFloat -- расход на "выбранное" подр.
+        , tmpMIContainer_group.CountOtherOut_by :: TFloat -- расход другой
+        , (tmpMIContainer_group.CountOtherOut_by * CASE WHEN tmpGoods_param.MeasureId = zc_Measure_Sh() THEN tmpGoods_param.Weight ELSE 1 END) :: TFloat AS CountOtherOut_by_Weight
+        , tmpMIContainer_group.SummOtherOut_by  :: TFloat -- расход другой
+
+        , tmpPriceStart.Price AS PriceListStart
+        , tmpPriceEnd.Price   AS PriceListEnd
+
+        , View_InfoMoney.InfoMoneyId
+        , View_InfoMoney.InfoMoneyCode
+        , View_InfoMoney.InfoMoneyGroupName
+        , View_InfoMoney.InfoMoneyDestinationName
+        , View_InfoMoney.InfoMoneyName
+        , View_InfoMoney.InfoMoneyName_all
+
+        , View_InfoMoneyDetail.InfoMoneyId              AS InfoMoneyId_Detail
+        , View_InfoMoneyDetail.InfoMoneyCode            AS InfoMoneyCode_Detail
+        , View_InfoMoneyDetail.InfoMoneyGroupName       AS InfoMoneyGroupName_Detail
+        , View_InfoMoneyDetail.InfoMoneyDestinationName AS InfoMoneyDestinationName_Detail
+        , View_InfoMoneyDetail.InfoMoneyName            AS InfoMoneyName_Detail
+        , View_InfoMoneyDetail.InfoMoneyName_all        AS InfoMoneyName_all_Detail
+
+        , tmpMIContainer_group.ContainerId              AS ContainerId_Summ
+        , CAST (row_number() OVER () AS INTEGER)        AS LineNum
+
+        , CASE WHEN COALESCE (Object_Car.Id,0) <> 0 THEN 1
+               WHEN tmpGoods_param.DescId_goods = zc_Object_Asset() THEN 2
+               ELSE 3
+          END                                 ::Integer AS NumGroup_print
+      FROM tmpMIContainer_group
+
+        LEFT JOIN tmpCLO_InfoMoney AS CLO_InfoMoney
+                                   ON CLO_InfoMoney.ContainerId = tmpMIContainer_group.ContainerId
+                                  AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+        LEFT JOIN tmpInfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = CLO_InfoMoney.ObjectId
+        LEFT JOIN tmpCLO_InfoMoneyDetail AS CLO_InfoMoneyDetail
+                                         ON CLO_InfoMoneyDetail.ContainerId = tmpMIContainer_group.ContainerId
+                                        AND CLO_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
+        LEFT JOIN tmpInfoMoney_View AS View_InfoMoneyDetail ON View_InfoMoneyDetail.InfoMoneyId = CLO_InfoMoneyDetail.ObjectId
+
+        LEFT JOIN tmpGoods_param ON tmpGoods_param.GoodsId = tmpMIContainer_group.GoodsId
+        LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMIContainer_group.GoodsKindId
+        LEFT JOIN Object AS Object_Location_find ON Object_Location_find.Id = tmpMIContainer_group.LocationId
+        LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Location_find.DescId
+
+        LEFT JOIN Object AS Object_Location ON Object_Location.Id = tmpMIContainer_group.LocationId
+        --если место учета водитель то по нему получаем авто
+        LEFT JOIN tmpCarDriver ON tmpCarDriver.MemberId = tmpMIContainer_group.LocationId 
+
+        LEFT JOIN Object AS Object_Car ON Object_Car.Id = COALESCE (tmpGoods_param.CarId, tmpCarDriver.CarId)
+
+        LEFT JOIN ObjectLink AS Car_CarModel
+                             ON Car_CarModel.ObjectId = Object_Car.Id
+                            AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
+        LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = Car_CarModel.ChildObjectId
+ 
+        LEFT JOIN ObjectLink AS Car_CarType
+                             ON Car_CarType.ObjectId = Object_Car.Id
+                            AND Car_CarType.DescId = zc_ObjectLink_Car_CarType()
+        LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = Car_CarType.ChildObjectId
+ 
+        LEFT JOIN ObjectLink AS Car_BodyType
+                             ON Car_BodyType.ObjectId = Object_Car.Id
+                            AND Car_BodyType.DescId = zc_ObjectLink_Car_BodyType()
+        LEFT JOIN Object AS Object_BodyType ON Object_BodyType.Id = Car_BodyType.ChildObjectId
+ 
+        LEFT JOIN ObjectString AS ObjectString_EngineNum
+                               ON ObjectString_EngineNum.ObjectId = Object_Car.Id
+                              AND ObjectString_EngineNum.DescId = zc_ObjectString_Car_EngineNum()
+
+        LEFT JOIN ObjectString AS RegistrationCertificate 
+                               ON RegistrationCertificate.ObjectId = Object_Car.Id 
+                              AND RegistrationCertificate.DescId = zc_ObjectString_Car_RegistrationCertificate()
+        LEFT JOIN ObjectString AS ObjectString_VIN
+                               ON ObjectString_VIN.ObjectId = Object_Car.Id
+                              AND ObjectString_VIN.DescId = zc_ObjectString_Car_VIN()
+        LEFT JOIN ObjectFloat AS ObjectFloat_Year
+                              ON ObjectFloat_Year.ObjectId = Object_Car.Id
+                             AND ObjectFloat_Year.DescId = zc_ObjectFloat_Car_Year()
+
+        LEFT JOIN tmpPartionGoods_param ON tmpPartionGoods_param.PartionGoodsId = tmpMIContainer_group.PartionGoodsId
+        LEFT JOIN Object AS Object_AssetTo ON Object_AssetTo.Id = tmpMIContainer_group.AssetToId
+
+        LEFT JOIN ObjectLink AS ObjectLink_AssetTo_GoodsGroup
+                             ON ObjectLink_AssetTo_GoodsGroup.ObjectId = Object_AssetTo.Id
+                            AND ObjectLink_AssetTo_GoodsGroup.DescId = zc_ObjectLink_Asset_AssetGroup()
+        LEFT JOIN Object AS Object_AssetToGroup ON Object_AssetToGroup.Id = ObjectLink_AssetTo_GoodsGroup.ChildObjectId
+
+        LEFT JOIN tmpMov_partion ON tmpMov_partion.PartionGoodsCode = tmpPartionGoods_param.PartionGoodsCode
+       
+       LEFT JOIN tmpAccount_View AS View_Account ON View_Account.AccountId = tmpMIContainer_group.AccountId
 
        LEFT JOIN tmpPriceStart ON tmpPriceStart.GoodsId = tmpMIContainer_group.GoodsId
        LEFT JOIN tmpPriceEnd ON tmpPriceEnd.GoodsId = tmpMIContainer_group.GoodsId
+
       ;
 
 
@@ -1019,3 +1098,10 @@ $BODY$
 /*
 , когда место учета - авто и когда zc_ObjectLink_Asset_Car
 */
+
+   /*
+select * from gpReport_MotionGoods_AssetNoBalance
+(inStartDate := ('01.07.2026')::TDateTime , inEndDate := ('14.07.2026')::TDateTime , inAccountGroupId := 0 , inUnitGroupId := 0 , inLocationId := 8447 
+, inGoodsGroupId := 0 , inGoodsId := 0 , inUnitGroupId_by := 0 , inLocationId_by := 0 , inIsInfoMoney := 'False' ,  inSession := '5');
+
+   */

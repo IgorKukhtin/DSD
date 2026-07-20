@@ -368,6 +368,15 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 80
       end
+      object isEdiESert: TcxGridDBColumn
+        Caption = #1042#1053' - '#1045'-'#1057#1077#1088#1090#1080#1092#1080#1082#1072#1090', '#1072#1074#1090#1086'. '#1086#1090#1087#1088'.'
+        DataBinding.FieldName = 'isEdiESert'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1053' - '#1045'-'#1057#1077#1088#1090#1080#1092#1080#1082#1072#1090', '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1072#1103' '#1086#1090#1087#1088#1072#1074#1082#1072
+        Options.Editing = False
+        Width = 80
+      end
       object isOrderAuto: TcxGridDBColumn
         Caption = #1040#1074#1090#1086#1079#1072#1082#1072#1079' ('#1044#1072'/'#1053#1077#1090')'
         DataBinding.FieldName = 'isOrderAuto'

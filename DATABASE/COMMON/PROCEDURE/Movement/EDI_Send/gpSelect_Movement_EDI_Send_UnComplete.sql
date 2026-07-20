@@ -183,8 +183,12 @@ BEGIN
                  END:: Boolean AS isEdiComdoc
                  
                , COALESCE (ObjectBoolean_Juridical_EdiQuality.ValueData, FALSE) :: Boolean AS isEdiQuality
+<<<<<<< HEAD
                , COALESCE (ObjectBoolean_Juridical_EdiESert.ValueData, FALSE) :: Boolean AS isEdiESert
                
+=======
+               , COALESCE (ObjectBoolean_Juridical_isEdiESert.ValueData, FALSE) :: Boolean AS isEdiESert
+>>>>>>> origin/master
 
 
                , Movement.InvNumber                             AS InvNumber
@@ -323,10 +327,17 @@ BEGIN
                                         ON ObjectBoolean_Juridical_EdiQuality.ObjectId  = Object_JuridicalTo.Id
                                        AND ObjectBoolean_Juridical_EdiQuality.DescId    = zc_ObjectBoolean_Juridical_isEdiQuality()
                 -- Вчасно - Е-Сертификат, автоматическая отправка
+<<<<<<< HEAD
                 LEFT JOIN ObjectBoolean AS ObjectBoolean_Juridical_EdiESert
                                         ON ObjectBoolean_Juridical_EdiESert.ObjectId  = Object_JuridicalTo.Id
                                        AND ObjectBoolean_Juridical_EdiESert.DescId    = zc_ObjectBoolean_Juridical_isEdiESert()
 
+=======
+                LEFT JOIN ObjectBoolean AS ObjectBoolean_Juridical_isEdiESert
+                                        ON ObjectBoolean_Juridical_isEdiESert.ObjectId  = Object_JuridicalTo.Id
+                                       AND ObjectBoolean_Juridical_isEdiESert.DescId    = zc_ObjectBoolean_Juridical_isEdiESert()
+ 
+>>>>>>> origin/master
                 LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                      ON ObjectLink_Juridical_Retail.ObjectId = Object_JuridicalTo.Id
                                     AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
@@ -462,6 +473,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 15.07.26         * isEdiESert
  04.02.18                                        *
 */
 
